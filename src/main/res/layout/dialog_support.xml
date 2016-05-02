@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <Button
+      android:id="@+id/support_about_app"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:text="@string/about_this_application"
+      android:textAppearance="?android:textAppearanceMedium"
+      />
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:padding="8dp"
+        >
+
+      <com.pyamsoft.pydroid.tool.VectorTextView
+          android:id="@+id/support_one_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="4dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginLeft="8dp"
+          android:layout_marginRight="8dp"
+          android:layout_marginStart="8dp"
+          android:drawablePadding="16dp"
+          android:gravity="center_vertical"
+          app:drawableStart="@drawable/ic_donate_24dp"
+          />
+
+      <com.pyamsoft.pydroid.tool.VectorTextView
+          android:id="@+id/support_two_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="4dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginLeft="8dp"
+          android:layout_marginRight="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="4dp"
+          android:drawablePadding="16dp"
+          app:drawableStart="@drawable/ic_donate_24dp"
+          />
+
+      <com.pyamsoft.pydroid.tool.VectorTextView
+          android:id="@+id/support_five_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="4dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginLeft="8dp"
+          android:layout_marginRight="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="4dp"
+          android:drawablePadding="16dp"
+          app:drawableStart="@drawable/ic_donate_24dp"
+          />
+
+      <com.pyamsoft.pydroid.tool.VectorTextView
+          android:id="@+id/support_ten_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="8dp"
+          android:layout_marginLeft="8dp"
+          android:layout_marginRight="8dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="4dp"
+          android:drawablePadding="16dp"
+          app:drawableStart="@drawable/ic_donate_24dp"
+          />
+
+    </LinearLayout>
+
+  </ScrollView>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_marginTop="8dp"
+      android:paddingLeft="32dp"
+      android:paddingRight="32dp"
+      >
+
+    <ImageView
+        android:id="@+id/google_play"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:contentDescription="@string/blank"
+        android:src="@drawable/google_play"
+        />
+
+    <ImageView
+        android:id="@+id/blogger"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:contentDescription="@string/blank"
+        android:src="@drawable/blogger_icon"
+        />
+
+    <ImageView
+        android:id="@+id/google_plus"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:contentDescription="@string/blank"
+        android:src="@drawable/google_plus"
+        />
+
+    <ImageView
+        android:id="@+id/facebook"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:contentDescription="@string/blank"
+        android:src="@drawable/facebook_icon"
+        />
+
+  </LinearLayout>
+
+</LinearLayout>

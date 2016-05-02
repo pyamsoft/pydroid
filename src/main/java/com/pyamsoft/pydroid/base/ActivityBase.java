@@ -84,7 +84,7 @@ public abstract class ActivityBase extends AppCompatActivity
    * Override if you do not want the Window to behave like a fullscreen one
    */
   protected boolean isFakeFullscreen() {
-    return true;
+    return false;
   }
 
   @Override protected void onCreate(Bundle savedInstanceState) {

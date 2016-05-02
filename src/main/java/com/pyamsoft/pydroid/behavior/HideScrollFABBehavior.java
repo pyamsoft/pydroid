@@ -20,22 +20,18 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
-import com.pyamsoft.pydroid.tool.FABVisibilityController;
-import java.lang.ref.WeakReference;
 
 @SuppressWarnings({ "WeakerAccess", "unused" }) public class HideScrollFABBehavior
     extends FloatingActionButton.Behavior {
 
-  private final WeakReference<FABVisibilityController> weakController;
   private final int distanceNeeded;
   private boolean animating = false;
 
-  public HideScrollFABBehavior(final FABVisibilityController controller) {
-    this(controller, 0);
+  public HideScrollFABBehavior() {
+    this(0);
   }
 
-  public HideScrollFABBehavior(final FABVisibilityController controller, final int distance) {
-    weakController = new WeakReference<>(controller);
+  public HideScrollFABBehavior(final int distance) {
     distanceNeeded = distance;
     animating = false;
   }
@@ -53,18 +49,25 @@ import java.lang.ref.WeakReference;
       View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
     super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
         dyUnconsumed);
-    final FABVisibilityController controller = weakController.get();
-    if (controller != null && controller.isFABShown(child)) {
-      if (dyConsumed > distanceNeeded && child.isShown()) {
-        if (!animating) {
-          animating = true;
-          controller.onHideFAB();
-        }
-      } else if (dyConsumed < -distanceNeeded && !child.isShown()) {
-        if (!animating) {
-          animating = true;
-          controller.onShowFAB();
-        }
+    if (dyConsumed > distanceNeeded && child.isShown()) {
+      if (!animating) {
+        animating = true;
+        child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+          @Override public void onHidden(FloatingActionButton fab) {
+            super.onHidden(fab);
+            animating = false;
+          }
+        });
+      }
+    } else if (dyConsumed < -distanceNeeded && !child.isShown()) {
+      if (!animating) {
+        animating = true;
+        child.show(new FloatingActionButton.OnVisibilityChangedListener() {
+          @Override public void onShown(FloatingActionButton fab) {
+            super.onShown(fab);
+            animating = false;
+          }
+        });
       }
     }
   }

@@ -20,16 +20,22 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
-import com.pyamsoft.pydroid.tool.FABVisibilityController;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class IgnoreAppBarLayoutFABBehavior extends FloatingActionButton.Behavior {
 
-  private final WeakReference<FABVisibilityController> weakController;
+  private boolean control;
 
-  public IgnoreAppBarLayoutFABBehavior(final FABVisibilityController controller) {
-    weakController = new WeakReference<>(controller);
+  public IgnoreAppBarLayoutFABBehavior() {
+    this(true);
+  }
+
+  public IgnoreAppBarLayoutFABBehavior(final boolean b) {
+    control = b;
+  }
+
+  public final void setControl(final boolean b) {
+    control = b;
   }
 
   @Override
@@ -37,11 +43,8 @@ public class IgnoreAppBarLayoutFABBehavior extends FloatingActionButton.Behavior
       View dependency) {
     if (dependency instanceof AppBarLayout) {
       // If the adapter does not want to show the fab button, return false
-      final FABVisibilityController controller = weakController.get();
-      if (controller != null) {
-        if (!controller.isFABShown(child)) {
-          return false;
-        }
+      if (!control) {
+        return false;
       }
     }
     return super.onDependentViewChanged(parent, child, dependency);
@@ -49,17 +52,14 @@ public class IgnoreAppBarLayoutFABBehavior extends FloatingActionButton.Behavior
 
   @Override public boolean onLayoutChild(CoordinatorLayout parent, FloatingActionButton child,
       int layoutDirection) {
-    final FABVisibilityController controller = weakController.get();
-    if (controller != null) {
-      final List<View> dependencies = parent.getDependencies(child);
-      for (int i = 0, count = dependencies.size(); i < count; i++) {
-        final View dependency = dependencies.get(i);
-        if (dependency instanceof AppBarLayout) {
-          if (!controller.isFABShown(child)) {
-            return false;
-          }
-          break;
+    final List<View> dependencies = parent.getDependencies(child);
+    for (int i = 0, count = dependencies.size(); i < count; i++) {
+      final View dependency = dependencies.get(i);
+      if (dependency instanceof AppBarLayout) {
+        if (!control) {
+          return false;
         }
+        break;
       }
     }
     return super.onLayoutChild(parent, child, layoutDirection);

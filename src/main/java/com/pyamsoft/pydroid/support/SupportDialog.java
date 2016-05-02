@@ -72,6 +72,10 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
     presenter.create();
 
     packageName = getArguments().getString(ARG_PACKAGE);
+    if (packageName == null) {
+      throw new NullPointerException("Package Name cannot be NULL");
+    }
+
     APP_SKU_DONATE_ONE = packageName + SKU_DONATE_ONE;
     APP_SKU_DONATE_TWO = packageName + SKU_DONATE_TWO;
     APP_SKU_DONATE_FIVE = packageName + SKU_DONATE_FIVE;
@@ -186,10 +190,6 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
   }
 
   @Override public void onClick(View view) {
-    if (packageName == null || packageName.isEmpty()) {
-      Timber.e("Package Name is NULL");
-      return;
-    }
     final int id = view.getId();
     String sku = null;
     if (id == R.id.support_one_text) {
@@ -203,11 +203,11 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
     }
 
     if (sku != null) {
-      Timber.d("Attempt purchage of SKU: %s", sku);
+      Timber.d("Attempt purchase of SKU: %s", sku);
       final FragmentActivity activity = getActivity();
       if (activity instanceof ActivityBase) {
         final ActivityBase activityBase = (ActivityBase) activity;
-        activityBase.getBillingProcessor().purchase(activityBase, sku);
+        activityBase.purchase(sku);
       }
     } else {
       Timber.e("SKU is null");

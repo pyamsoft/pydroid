@@ -58,9 +58,9 @@ public final class GradientHoleDrawer extends HoleOverlay {
     final float radius = (float) target.getWidth() * 0.75F;
     setHoleRadius(radius);
 
-    Timber.d("X: %d", getX());
-    Timber.d("Y: %d", getY());
-    Timber.d("Radius: %d", getHoleRadius());
+    Timber.d("X: %f", getX());
+    Timber.d("Y: %f", getY());
+    Timber.d("Radius: %f", getHoleRadius());
   }
 
   private void prepareShader() {

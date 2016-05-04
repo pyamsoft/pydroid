@@ -132,7 +132,7 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Retrieves the value from the table and then removes the object
    */
-  @Nullable public final T get(final int key) {
+  @Nullable public final T pop(final int key) {
     Timber.d("Pop value at key: %d", key);
     final T result = sparseArray.get(key);
     sparseArray.remove(key);

@@ -23,38 +23,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.SparseArray;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import timber.log.Timber;
 
 /**
  * A fragment that retains data,
  */
-@SuppressWarnings({ "WeakerAccess", "unused" }) public final class DataHolderFragment<T>
-    extends Fragment {
+public final class DataHolderFragment<T> extends Fragment {
 
-  @NonNull private static final String TAG = DataHolderFragment.class.getSimpleName();
   @NonNull private final SparseArray<T> sparseArray = new SparseArray<>();
-
-  /**
-   * Remove all DataHolderFragments from the Fragment Manager
-   */
-  @SuppressWarnings("Convert2streamapi") public static void removeAll(final @NonNull FragmentActivity fragmentActivity) {
-    final FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
-    final List<Fragment> fragmentList = fragmentManager.getFragments();
-    for (final Fragment fragment : fragmentList) {
-      if (fragment instanceof DataHolderFragment) {
-        final DataHolderFragment dataHolderFragment = (DataHolderFragment) fragment;
-        dataHolderFragment.remove();
-      }
-    }
-  }
 
   /**
    * Get an Instance of DataHolderFragment
    */
-  @SuppressWarnings("unchecked") public static <I> DataHolderFragment<I> getInstance(
+  public static <I> DataHolderFragment<I> getInstance(
       final @NonNull FragmentActivity fragmentActivity, final @NonNull Class<I> clazz) {
     return getInstance(fragmentActivity.getSupportFragmentManager(), clazz);
   }
@@ -62,10 +44,10 @@ import timber.log.Timber;
   /**
    * Get an Instance of DataHolderFragment
    */
-  @SuppressWarnings("unchecked") public static <I> DataHolderFragment<I> getInstance(
+  public static <I> DataHolderFragment<I> getInstance(
       final @NonNull FragmentManager fragmentManager, final @NonNull Class<I> clazz) {
     final String tag = clazz.getName();
-    DataHolderFragment<I> dataHolderFragment =
+    @SuppressWarnings("unchecked") DataHolderFragment<I> dataHolderFragment =
         (DataHolderFragment<I>) fragmentManager.findFragmentByTag(tag);
     if (dataHolderFragment == null) {
       Timber.d("Create a new DataHolderFragment with TAG: %s", tag);
@@ -76,55 +58,43 @@ import timber.log.Timber;
   }
 
   /**
-   * Get an Instance of DataHolderFragment
+   * Remove all DataHolderFragments from the Fragment Manager
    */
-  @SuppressWarnings("unchecked")
-  public static <I> DataHolderFragment<Collection<I>> getCollectionInstance(
-      final @NonNull FragmentActivity fragmentActivity, final @NonNull Class<I> clazz) {
-    return getCollectionInstance(fragmentActivity.getSupportFragmentManager(), clazz);
+  public static void removeAll(final @NonNull FragmentActivity fragmentActivity) {
+    removeAll(fragmentActivity.getSupportFragmentManager());
   }
 
   /**
-   * Get an Instance of DataHolderFragment
+   * Remove all DataHolderFragments from the Fragment Manager
    */
-  @SuppressWarnings("unchecked")
-  public static <I> DataHolderFragment<Collection<I>> getCollectionInstance(
-      final @NonNull FragmentManager fragmentManager, final @NonNull Class<I> clazz) {
+  public static void removeAll(final @NonNull FragmentManager fragmentManager) {
+    final List<Fragment> fragmentList = fragmentManager.getFragments();
+    for (final Fragment fragment : fragmentList) {
+      if (fragment instanceof DataHolderFragment) {
+        fragmentManager.beginTransaction().remove(fragment).commit();
+      }
+    }
+  }
+
+  /**
+   * Remove a fragment based on its TAG
+   */
+  public static <I> void remove(final @NonNull FragmentActivity fragmentActivity,
+      final @NonNull Class<I> clazz) {
+    remove(fragmentActivity.getSupportFragmentManager(), clazz);
+  }
+
+  /**
+   * Remove a fragment based on its TAG
+   */
+  public static <I> void remove(final @NonNull FragmentManager fragmentManager,
+      final @NonNull Class<I> clazz) {
     final String tag = clazz.getName();
-    DataHolderFragment<Collection<I>> dataHolderFragment =
-        (DataHolderFragment<Collection<I>>) fragmentManager.findFragmentByTag(tag);
-    if (dataHolderFragment == null) {
-      Timber.d("Create a new DataHolderFragment<Collection> with TAG: %s", tag);
-      dataHolderFragment = new DataHolderFragment<>();
-      fragmentManager.beginTransaction().add(dataHolderFragment, tag).commit();
+    @SuppressWarnings("unchecked") final DataHolderFragment<I> dataHolderFragment =
+        (DataHolderFragment<I>) fragmentManager.findFragmentByTag(tag);
+    if (dataHolderFragment != null) {
+      fragmentManager.beginTransaction().remove(dataHolderFragment).commit();
     }
-    return dataHolderFragment;
-  }
-
-  /**
-   * Get an Instance of DataHolderFragment
-   */
-  @SuppressWarnings("unchecked") public static <K, V> DataHolderFragment<Map<K, V>> getMapInstance(
-      final @NonNull FragmentActivity fragmentActivity, final @NonNull Class<K> keyClass,
-      final @NonNull Class<V> valueClass) {
-    return getMapInstance(fragmentActivity.getSupportFragmentManager(), keyClass, valueClass);
-  }
-
-  /**
-   * Get an Instance of DataHolderFragment
-   */
-  @SuppressWarnings("unchecked") public static <K, V> DataHolderFragment<Map<K, V>> getMapInstance(
-      final @NonNull FragmentManager fragmentManager, final @NonNull Class<K> keyClass,
-      final @NonNull Class<V> valueClass) {
-    final String tag = keyClass.getName() + "|" + valueClass.getName();
-    DataHolderFragment<Map<K, V>> dataHolderFragment =
-        (DataHolderFragment<Map<K, V>>) fragmentManager.findFragmentByTag(tag);
-    if (dataHolderFragment == null) {
-      Timber.d("Create a new DataHolderFragment<Map> with TAG: %s", tag);
-      dataHolderFragment = new DataHolderFragment<>();
-      fragmentManager.beginTransaction().add(dataHolderFragment, tag).commit();
-    }
-    return dataHolderFragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -167,15 +137,5 @@ import timber.log.Timber;
     final T result = sparseArray.get(key);
     sparseArray.remove(key);
     return result;
-  }
-
-  /**
-   * Remove the data holder fragment from the Activity
-   *
-   * Usually called in onDestroy
-   */
-  public final void remove() {
-    clear();
-    getFragmentManager().beginTransaction().remove(this).commit();
   }
 }

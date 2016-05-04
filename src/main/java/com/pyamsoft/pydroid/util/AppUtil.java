@@ -28,6 +28,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
@@ -66,6 +67,16 @@ public final class AppUtil {
     final Uri uri = Uri.fromParts("package", cls.getPackage().getName(), null);
     detailIntent.setData(uri);
     return detailIntent;
+  }
+
+  /**
+   * Using the fragment manager to handle transactions, this guarantees that any old
+   * versions of the dialog fragment are removed before a new one is added.
+   */
+  public static void guaranteeSingleDialogFragment(final @NonNull FragmentActivity fragmentActivity,
+      final @NonNull DialogFragment dialogFragment, final @NonNull String tag) {
+    guaranteeSingleDialogFragment(fragmentActivity.getSupportFragmentManager(), dialogFragment,
+        tag);
   }
 
   /**

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.base;
 import android.support.annotation.NonNull;
 import java.lang.ref.WeakReference;
 
-public class PresenterImplBase<I> implements PresenterBase<I> {
+public abstract class PresenterImplBase<I> implements PresenterBase<I> {
 
   private WeakReference<I> weakView;
 

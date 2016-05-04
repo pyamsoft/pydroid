@@ -24,21 +24,15 @@ import java.util.Map;
 import java.util.Set;
 import timber.log.Timber;
 
-@SuppressWarnings("unused") public class PreferenceBase {
+public abstract class PreferenceBase {
 
   private final SharedPreferences p;
 
   protected PreferenceBase(final Context context) {
-    final String preference = createPreferenceFileName(context.getPackageName());
-    this.p = getSharedPreferences(context.getApplicationContext(), preference);
-  }
-
-  private static SharedPreferences getSharedPreferences(final Context c, final String p) {
-    return c.getApplicationContext().getSharedPreferences(p, Context.MODE_PRIVATE);
-  }
-
-  private static String createPreferenceFileName(final String str) {
-    return str + ".preferences";
+    final Context appContext = context.getApplicationContext();
+    final String preferenceName = appContext.getPackageName() + ".preferences";
+    this.p = appContext.getApplicationContext()
+        .getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
   }
 
   protected final PreferenceBase putLong(final String s, final long l) {
@@ -178,10 +172,9 @@ import timber.log.Timber;
     }
   }
 
-  @SuppressWarnings("unused") public static abstract class OnSharedPreferenceChangeListener
+  public static abstract class OnSharedPreferenceChangeListener
       implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String TAG = OnSharedPreferenceChangeListener.class.getSimpleName();
     private final Set<String> keys = new HashSet<>();
     private boolean isRegistered = false;
     private boolean isDebug = false;

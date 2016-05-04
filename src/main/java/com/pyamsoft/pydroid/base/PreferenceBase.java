@@ -19,6 +19,10 @@ package com.pyamsoft.pydroid.base;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -26,150 +30,125 @@ import timber.log.Timber;
 
 public abstract class PreferenceBase {
 
-  private final SharedPreferences p;
+  @NonNull private final SharedPreferences p;
 
-  protected PreferenceBase(final Context context) {
+  protected PreferenceBase(final @NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     final String preferenceName = appContext.getPackageName() + ".preferences";
     this.p = appContext.getApplicationContext()
         .getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
   }
 
-  protected final PreferenceBase putLong(final String s, final long l) {
-    if (p != null) {
-      p.edit().putLong(s, l).apply();
+  private static void offMainThread() {
+    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+      Timber.e("Call is running on same thread as MainLooper");
+      throw new MainThreadAccessException();
     }
+  }
+
+  @SuppressLint("CommitPrefEdits") @WorkerThread
+  protected final PreferenceBase put(@NonNull final String s, final long l) {
+    offMainThread();
+    p.edit().putLong(s, l).commit();
     return this;
   }
 
-  protected final PreferenceBase putString(final String s, final String st) {
-    if (p != null) {
-      p.edit().putString(s, st).apply();
-    }
+  @SuppressLint("CommitPrefEdits") @WorkerThread
+  protected final PreferenceBase put(@NonNull final String s, @Nullable final String st) {
+    offMainThread();
+    p.edit().putString(s, st).commit();
     return this;
   }
 
-  protected final PreferenceBase putInt(final String s, final int i) {
-    if (p != null) {
-      p.edit().putInt(s, i).apply();
-    }
+  @SuppressLint("CommitPrefEdits") @WorkerThread
+  protected final PreferenceBase put(@NonNull final String s, final int i) {
+    offMainThread();
+    p.edit().putInt(s, i).commit();
     return this;
   }
 
-  protected final PreferenceBase putFloat(final String s, final float f) {
-    if (p != null) {
-      p.edit().putFloat(s, f).apply();
-    }
+  @SuppressLint("CommitPrefEdits") @WorkerThread
+  protected final PreferenceBase put(@NonNull final String s, final float f) {
+    offMainThread();
+    p.edit().putFloat(s, f).commit();
     return this;
   }
 
-  protected final PreferenceBase putStringSet(final String s, final Set<String> st) {
-    if (p != null) {
-      p.edit().putStringSet(s, st).apply();
-    }
+  @SuppressLint("CommitPrefEdits") @WorkerThread
+  protected final PreferenceBase putSet(@NonNull final String s, @NonNull final Set<String> st) {
+    offMainThread();
+    p.edit().putStringSet(s, st).commit();
     return this;
   }
 
-  protected final PreferenceBase putBoolean(final String s, final boolean b) {
-    if (p != null) {
-      p.edit().putBoolean(s, b).apply();
-    }
+  @SuppressLint("CommitPrefEdits") @WorkerThread
+  protected final PreferenceBase put(@NonNull final String s, final boolean b) {
+    offMainThread();
+    p.edit().putBoolean(s, b).commit();
     return this;
   }
 
-  protected final long getLong(final String s, final long l) {
-    long ret = l;
-    if (p != null) {
-      ret = p.getLong(s, l);
-    }
-    return ret;
+  @WorkerThread protected final long get(@NonNull final String s, final long l) {
+    offMainThread();
+    return p.getLong(s, l);
   }
 
-  protected final String getString(final String s, final String st) {
-    String ret = st;
-    if (p != null) {
-      ret = p.getString(s, st);
-    }
-    return ret;
+  @WorkerThread protected final String get(@NonNull final String s, final @Nullable String st) {
+    offMainThread();
+    return p.getString(s, st);
   }
 
-  protected final int getInt(final String s, final int i) {
-    int ret = i;
-    if (p != null) {
-      ret = p.getInt(s, i);
-    }
-    return ret;
+  @WorkerThread protected final int get(@NonNull final String s, final int i) {
+    offMainThread();
+    return p.getInt(s, i);
   }
 
-  protected final float getFloat(final String s, final float f) {
-    float ret = f;
-    if (p != null) {
-      ret = p.getFloat(s, f);
-    }
-    return ret;
+  @WorkerThread protected final float get(@NonNull final String s, final float f) {
+    offMainThread();
+    return p.getFloat(s, f);
   }
 
-  protected final Set<String> getStringSet(final String s, final Set<String> st) {
-    Set<String> ret = st;
-    if (p != null) {
-      ret = p.getStringSet(s, st);
-    }
-    return ret;
+  @WorkerThread
+  protected final Set<String> getSet(@NonNull final String s, final @Nullable Set<String> st) {
+    offMainThread();
+    return p.getStringSet(s, st);
   }
 
-  protected final boolean getBoolean(final String s, final boolean b) {
-    boolean ret = b;
-    if (p != null) {
-      ret = p.getBoolean(s, b);
-    }
-    return ret;
+  @WorkerThread protected final boolean get(@NonNull final String s, final boolean b) {
+    offMainThread();
+    return p.getBoolean(s, b);
   }
 
-  public final boolean register(final SharedPreferences.OnSharedPreferenceChangeListener l) {
-    boolean ret = false;
-    if (p != null) {
-      p.registerOnSharedPreferenceChangeListener(l);
-      ret = true;
-    }
-    return ret;
+  @WorkerThread protected final Map<String, ?> getAll() {
+    offMainThread();
+    return p.getAll();
   }
 
-  protected final Map<String, ?> getAll() {
-    Map<String, ?> ret = null;
-    if (p != null) {
-      ret = p.getAll();
-    }
-    return ret;
+  @WorkerThread protected final boolean contains(@NonNull final String s) {
+    offMainThread();
+    return p.contains(s);
   }
 
-  public final boolean unregister(final SharedPreferences.OnSharedPreferenceChangeListener l) {
-    boolean ret = false;
-    if (p != null) {
-      p.unregisterOnSharedPreferenceChangeListener(l);
-      ret = true;
-    }
-    return ret;
-  }
-
-  protected final boolean contains(final String s) {
-    boolean ret = false;
-    if (p != null) {
-      ret = p.contains(s);
-    }
-    return ret;
-  }
-
-  protected final PreferenceBase remove(final String s) {
-    if (p != null) {
-      p.edit().remove(s).apply();
-    }
+  @SuppressLint("CommitPrefEdits") @WorkerThread
+  protected final PreferenceBase remove(@NonNull final String s) {
+    offMainThread();
+    p.edit().remove(s).commit();
     return this;
   }
 
-  @SuppressLint("CommitPrefEdits") public void clear() {
-    if (p != null) {
-      p.edit().clear().commit();
-    }
+  @WorkerThread @SuppressLint("CommitPrefEdits") public void clear() {
+    offMainThread();
+    p.edit().clear().commit();
+  }
+
+  @WorkerThread
+  public final void register(@NonNull final SharedPreferences.OnSharedPreferenceChangeListener l) {
+    p.registerOnSharedPreferenceChangeListener(l);
+  }
+
+  @WorkerThread public final void unregister(
+      @NonNull final SharedPreferences.OnSharedPreferenceChangeListener l) {
+    p.unregisterOnSharedPreferenceChangeListener(l);
   }
 
   public static abstract class OnSharedPreferenceChangeListener
@@ -179,20 +158,16 @@ public abstract class PreferenceBase {
     private boolean isRegistered = false;
     private boolean isDebug = false;
 
-    public OnSharedPreferenceChangeListener(final String... keysToListen) {
-      if (keysToListen != null) {
-        for (final String key : keysToListen) {
-          if (key != null) {
-            keys.add(key);
-          }
+    public OnSharedPreferenceChangeListener(@NonNull final String... keysToListen) {
+      for (final String key : keysToListen) {
+        if (key != null) {
+          keys.add(key);
         }
-      } else {
-        throw new RuntimeException("Initializing a new OnSharedPreferenceChangeListener "
-            + "that does not watch any keys");
       }
     }
 
-    @Override public final void onSharedPreferenceChanged(final SharedPreferences sharedPreferences,
+    @Override
+    public final void onSharedPreferenceChanged(@NonNull final SharedPreferences sharedPreferences,
         final String key) {
       if (keys.contains(key)) {
         preferenceChanged(sharedPreferences, key);
@@ -208,25 +183,32 @@ public abstract class PreferenceBase {
       return this;
     }
 
-    public final boolean register(final PreferenceBase util) {
-      boolean ret = false;
-      if (util != null && !isRegistered) {
-        ret = util.register(this);
+    public final void register(@NonNull final PreferenceBase util) {
+      if (!isRegistered) {
+        util.register(this);
         isRegistered = true;
       }
-      return ret;
     }
 
-    public final boolean unregister(final PreferenceBase util) {
-      boolean ret = false;
-      if (util != null && isRegistered) {
-        ret = util.unregister(this);
+    public final void unregister(@NonNull final PreferenceBase util) {
+      if (isRegistered) {
+        util.unregister(this);
         isRegistered = false;
       }
-      return ret;
     }
 
-    protected abstract void preferenceChanged(final SharedPreferences sharedPreferences,
-        final String key);
+    protected abstract void preferenceChanged(@NonNull final SharedPreferences sharedPreferences,
+        @NonNull final String key);
+  }
+
+  static final class MainThreadAccessException extends RuntimeException {
+
+    public MainThreadAccessException() {
+      this("Cannot access SharedPreferences on Main Thread");
+    }
+
+    public MainThreadAccessException(@NonNull String detailMessage) {
+      super(detailMessage);
+    }
   }
 }

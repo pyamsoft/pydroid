@@ -31,16 +31,22 @@ import timber.log.Timber;
 public abstract class PreferenceBase {
 
   @NonNull private final SharedPreferences p;
+  private boolean strict;
 
   protected PreferenceBase(final @NonNull Context context) {
+    this(context.getApplicationContext(), true);
+  }
+
+  protected PreferenceBase(final @NonNull Context context, final boolean strict) {
     final Context appContext = context.getApplicationContext();
     final String preferenceName = appContext.getPackageName() + ".preferences";
     this.p = appContext.getApplicationContext()
         .getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
+    this.strict = strict;
   }
 
-  private static void offMainThread() {
-    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+  private void offMainThread() {
+    if (Thread.currentThread() == Looper.getMainLooper().getThread() && strict) {
       Timber.e("Call is running on same thread as MainLooper");
       throw new MainThreadAccessException();
     }

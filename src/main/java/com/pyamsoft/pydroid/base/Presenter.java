@@ -18,13 +18,38 @@ package com.pyamsoft.pydroid.base;
 
 public interface Presenter<I> {
 
+  /**
+   * Bind the View to this presenter
+   *
+   * Usually called during the onCreate/onCreateView calls
+   */
   void onCreateView(I view);
 
+  /**
+   * Unind the View to this presenter
+   *
+   * Usually called during the onDestroy/onDestroyView calls
+   */
   void onDestroyView();
 
+  /**
+   * Used for registering the presenter to various bus subscriptions
+   *
+   * Generally called during onResume
+   */
   void onResume();
 
+  /**
+   * Used for unregistering the presenter from various bus subscriptions
+   *
+   * Generally called during onPause
+   */
   void onPause();
 
+  /**
+   * Called once the presenter is finally discarded
+   *
+   * Cleans up any remaining references to data
+   */
   void onDestroy();
 }

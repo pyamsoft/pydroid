@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.social;
 
 import com.pyamsoft.pydroid.base.Presenter;
 
-public interface SocialMediaPresenter extends Presenter<SocialMediaView> {
+public interface SocialMediaPresenter extends Presenter<SocialMediaPresenter.SocialMediaView> {
 
   void clickAppPage(String link);
 
@@ -29,4 +29,17 @@ public interface SocialMediaPresenter extends Presenter<SocialMediaView> {
   void clickBlogger();
 
   void clickFacebook();
+
+  interface SocialMediaView {
+
+    void onAppPageClicked(String link);
+
+    void onGooglePlayClicked(String link);
+
+    void onGooglePlusClicked(String link);
+
+    void onBloggerClicked(String link);
+
+    void onFacebookClicked(String link);
+  }
 }

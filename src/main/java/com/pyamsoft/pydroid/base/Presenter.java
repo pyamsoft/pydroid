@@ -18,9 +18,13 @@ package com.pyamsoft.pydroid.base;
 
 public interface Presenter<I> {
 
-  void destroy();
+  void onCreateView(I view);
 
-  void start(I view);
+  void onDestroyView();
 
-  void stop();
+  void onResume();
+
+  void onPause();
+
+  void onDestroy();
 }

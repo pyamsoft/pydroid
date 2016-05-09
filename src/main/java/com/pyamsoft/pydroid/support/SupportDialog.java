@@ -34,12 +34,12 @@ import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.social.SocialMediaPresenterImpl;
-import com.pyamsoft.pydroid.social.SocialMediaView;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import timber.log.Timber;
 
-public class SupportDialog extends DialogFragment implements View.OnClickListener, SocialMediaView {
+public class SupportDialog extends DialogFragment implements View.OnClickListener,
+    SocialMediaPresenter.SocialMediaView {
 
   @NonNull private static final String SKU_DONATE_ONE = ".donate.one";
   @NonNull private static final String SKU_DONATE_TWO = ".donate.two";
@@ -90,17 +90,17 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
   @Override public void onDestroyView() {
     super.onDestroyView();
     Timber.d("onDestroyView");
-    presenter.stop();
+    presenter.onDestroyView();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     Timber.d("onDestroy");
-    presenter.destroy();
+    presenter.onDestroy();
   }
 
   private Dialog init() {
-    presenter.start(this);
+    presenter.onCreateView(this);
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
 

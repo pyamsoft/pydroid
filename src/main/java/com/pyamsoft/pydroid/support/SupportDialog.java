@@ -38,8 +38,8 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import timber.log.Timber;
 
-public class SupportDialog extends DialogFragment implements View.OnClickListener,
-    SocialMediaPresenter.SocialMediaView {
+public class SupportDialog extends DialogFragment
+    implements View.OnClickListener, SocialMediaPresenter.SocialMediaView {
 
   @NonNull private static final String SKU_DONATE_ONE = ".donate.one";
   @NonNull private static final String SKU_DONATE_TWO = ".donate.two";
@@ -84,22 +84,6 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    return init();
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    Timber.d("onDestroyView");
-    presenter.onDestroyView();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    Timber.d("onDestroy");
-    presenter.onDestroy();
-  }
-
-  private Dialog init() {
     presenter.onCreateView(this);
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
@@ -136,6 +120,12 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
         (dialogInterface, i) -> {
           dialogInterface.dismiss();
         }).setView(rootView).create();
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    Timber.d("onDestroyView");
+    presenter.onDestroyView();
   }
 
   private void setDonationText(final TextView textView, final String title,

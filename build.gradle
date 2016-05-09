@@ -90,7 +90,7 @@ dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
   // Android support library.
-  // Design pulls in recyclver, support-v4 and appcompat
+  // Design pulls in recycler, support-v4 and appcompat
   compile 'com.android.support:design:23.3.0'
   compile 'com.android.support:animated-vector-drawable:23.3.0'
   compile 'com.android.support:support-vector-drawable:23.3.0'

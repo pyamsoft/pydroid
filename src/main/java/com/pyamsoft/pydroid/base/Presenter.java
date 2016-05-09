@@ -26,7 +26,8 @@ public interface Presenter<I> {
   void onCreateView(I view);
 
   /**
-   * Unind the View to this presenter
+   * Unbind the View to this presenter
+   * Discard any data associated
    *
    * Usually called during the onDestroy/onDestroyView calls
    */
@@ -45,11 +46,4 @@ public interface Presenter<I> {
    * Generally called during onPause
    */
   void onPause();
-
-  /**
-   * Called once the presenter is finally discarded
-   *
-   * Cleans up any remaining references to data
-   */
-  void onDestroy();
 }

@@ -36,10 +36,6 @@ public abstract class PresenterImpl<I> implements Presenter<I> {
     return view;
   }
 
-  @Override public void onDestroy() {
-
-  }
-
   @Override public void onCreateView(@NonNull I view) {
     this.weakView = new WeakReference<>(view);
   }

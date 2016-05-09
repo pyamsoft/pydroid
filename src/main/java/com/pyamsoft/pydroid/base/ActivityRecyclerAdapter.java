@@ -19,6 +19,6 @@ package com.pyamsoft.pydroid.base;
 import android.support.v7.widget.RecyclerView;
 import com.pyamsoft.pydroid.tool.ActivityLifecycleCallbacks;
 
-public abstract class ActivityRecyclerAdapterBase<T extends RecyclerView.ViewHolder>
+public abstract class ActivityRecyclerAdapter<T extends RecyclerView.ViewHolder>
     extends RecyclerView.Adapter<T> implements ActivityLifecycleCallbacks {
 }

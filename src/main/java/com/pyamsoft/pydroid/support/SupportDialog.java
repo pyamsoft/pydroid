@@ -69,7 +69,6 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Timber.d("onCreate");
-    presenter.create();
 
     packageName = getArguments().getString(ARG_PACKAGE);
     if (packageName == null) {
@@ -91,7 +90,7 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
   @Override public void onDestroyView() {
     super.onDestroyView();
     Timber.d("onDestroyView");
-    presenter.unbind();
+    presenter.stop();
   }
 
   @Override public void onDestroy() {
@@ -101,7 +100,7 @@ public class SupportDialog extends DialogFragment implements View.OnClickListene
   }
 
   private Dialog init() {
-    presenter.bind(this);
+    presenter.start(this);
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
 

@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.social;
 
-import com.pyamsoft.pydroid.base.PresenterImplBase;
+import com.pyamsoft.pydroid.base.PresenterImpl;
 
-public final class SocialMediaPresenterImpl extends PresenterImplBase<SocialMediaView>
+public final class SocialMediaPresenterImpl extends PresenterImpl<SocialMediaView>
     implements SocialMediaPresenter {
 
   @Override public void clickAppPage(String link) {

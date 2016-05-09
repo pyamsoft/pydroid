@@ -16,15 +16,20 @@
 
 package com.pyamsoft.pydroid.base;
 
-import android.support.v4.app.DialogFragment;
+@SuppressWarnings("WeakerAccess") public abstract class ValueRunnable<T> implements Runnable {
 
-public abstract class RetainedDialogFragmentBase extends DialogFragment {
+  private T value;
 
-  @Override public void onDestroyView() {
-    // Fixes a bug where even if the dialog is Retained, it is still destroyed on Orientation change
-    if (getDialog() != null && getRetainInstance()) {
-      getDialog().setDismissMessage(null);
-    }
-    super.onDestroyView();
+  public final void run(final T newValue) {
+    setValue(newValue);
+    run();
+  }
+
+  public final T getValue() {
+    return value;
+  }
+
+  public final void setValue(final T value) {
+    this.value = value;
   }
 }

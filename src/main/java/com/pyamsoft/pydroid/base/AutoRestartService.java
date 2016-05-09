@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
-public abstract class AutoRestartServiceBase extends Service {
+public abstract class AutoRestartService extends Service {
 
   // Allow for restarting the service on KitKat when the task is removed. There is a bug that
   // otherwise prevents this from working. Ugly hack workaround should fix most cases.
@@ -38,5 +38,5 @@ public abstract class AutoRestartServiceBase extends Service {
         pendingIntent);
   }
 
-  protected abstract Class<? extends AutoRestartServiceBase> getServiceClass();
+  protected abstract Class<? extends AutoRestartService> getServiceClass();
 }

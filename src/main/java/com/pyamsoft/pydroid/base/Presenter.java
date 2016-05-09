@@ -16,13 +16,11 @@
 
 package com.pyamsoft.pydroid.base;
 
-public interface PresenterBase<I> {
-
-  void create();
+public interface Presenter<I> {
 
   void destroy();
 
-  void bind(I view);
+  void start(I view);
 
-  void unbind();
+  void stop();
 }

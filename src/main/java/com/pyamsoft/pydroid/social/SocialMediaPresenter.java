@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.social;
 
-import com.pyamsoft.pydroid.base.PresenterBase;
+import com.pyamsoft.pydroid.base.Presenter;
 
-public interface SocialMediaPresenter extends PresenterBase<SocialMediaView> {
+public interface SocialMediaPresenter extends Presenter<SocialMediaView> {
 
   void clickAppPage(String link);
 

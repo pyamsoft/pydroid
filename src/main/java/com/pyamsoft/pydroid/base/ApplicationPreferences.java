@@ -28,16 +28,16 @@ import java.util.Map;
 import java.util.Set;
 import timber.log.Timber;
 
-public abstract class PreferenceBase {
+public abstract class ApplicationPreferences {
 
   @NonNull private final SharedPreferences p;
   private boolean strict;
 
-  protected PreferenceBase(final @NonNull Context context) {
+  protected ApplicationPreferences(final @NonNull Context context) {
     this(context.getApplicationContext(), true);
   }
 
-  protected PreferenceBase(final @NonNull Context context, final boolean strict) {
+  protected ApplicationPreferences(final @NonNull Context context, final boolean strict) {
     final Context appContext = context.getApplicationContext();
     final String preferenceName = appContext.getPackageName() + ".preferences";
     this.p = appContext.getApplicationContext()
@@ -53,42 +53,42 @@ public abstract class PreferenceBase {
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final PreferenceBase put(@NonNull final String s, final long l) {
+  protected final ApplicationPreferences put(@NonNull final String s, final long l) {
     offMainThread();
     p.edit().putLong(s, l).commit();
     return this;
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final PreferenceBase put(@NonNull final String s, @Nullable final String st) {
+  protected final ApplicationPreferences put(@NonNull final String s, @Nullable final String st) {
     offMainThread();
     p.edit().putString(s, st).commit();
     return this;
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final PreferenceBase put(@NonNull final String s, final int i) {
+  protected final ApplicationPreferences put(@NonNull final String s, final int i) {
     offMainThread();
     p.edit().putInt(s, i).commit();
     return this;
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final PreferenceBase put(@NonNull final String s, final float f) {
+  protected final ApplicationPreferences put(@NonNull final String s, final float f) {
     offMainThread();
     p.edit().putFloat(s, f).commit();
     return this;
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final PreferenceBase putSet(@NonNull final String s, @NonNull final Set<String> st) {
+  protected final ApplicationPreferences putSet(@NonNull final String s, @NonNull final Set<String> st) {
     offMainThread();
     p.edit().putStringSet(s, st).commit();
     return this;
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final PreferenceBase put(@NonNull final String s, final boolean b) {
+  protected final ApplicationPreferences put(@NonNull final String s, final boolean b) {
     offMainThread();
     p.edit().putBoolean(s, b).commit();
     return this;
@@ -136,7 +136,7 @@ public abstract class PreferenceBase {
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final PreferenceBase remove(@NonNull final String s) {
+  protected final ApplicationPreferences remove(@NonNull final String s) {
     offMainThread();
     p.edit().remove(s).commit();
     return this;
@@ -189,14 +189,14 @@ public abstract class PreferenceBase {
       return this;
     }
 
-    public final void register(@NonNull final PreferenceBase util) {
+    public final void register(@NonNull final ApplicationPreferences util) {
       if (!isRegistered) {
         util.register(this);
         isRegistered = true;
       }
     }
 
-    public final void unregister(@NonNull final PreferenceBase util) {
+    public final void unregister(@NonNull final ApplicationPreferences util) {
       if (isRegistered) {
         util.unregister(this);
         isRegistered = false;

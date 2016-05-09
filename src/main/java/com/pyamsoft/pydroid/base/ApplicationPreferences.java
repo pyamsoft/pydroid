@@ -31,7 +31,7 @@ import timber.log.Timber;
 public abstract class ApplicationPreferences {
 
   @NonNull private final SharedPreferences p;
-  private boolean strict;
+  private final boolean strict;
 
   protected ApplicationPreferences(final @NonNull Context context) {
     this(context.getApplicationContext(), true);

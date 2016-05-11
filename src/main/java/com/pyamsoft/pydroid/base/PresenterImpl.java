@@ -29,7 +29,7 @@ public abstract class PresenterImpl<I> implements Presenter<I> {
     this.weakView = new WeakReference<>(null);
   }
 
-  @CheckResult @Nullable protected final I get() {
+  @CheckResult @Nullable protected final I getView() {
     return weakView.get();
   }
 

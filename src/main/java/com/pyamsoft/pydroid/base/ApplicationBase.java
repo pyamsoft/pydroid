@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.base;
 
 import android.app.Application;
+import android.widget.Toast;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.crash.CrashHandler;
 import timber.log.Timber;
@@ -28,8 +29,9 @@ public abstract class ApplicationBase extends Application implements CrashHandle
 
     final int requiredVersion = requirePYDroidVersion();
     if (requiredVersion >= 0 && BuildConfig.VERSION_CODE != requiredVersion) {
-      throw new RuntimeException(
-          "Wrong PYDroid Version! The requires version is: " + requiredVersion);
+      final String err = "Wrong PYDroid Version! The requires version is: " + requiredVersion;
+      Toast.makeText(getApplicationContext(), err, Toast.LENGTH_LONG).show();
+      throw new RuntimeException(err);
     }
 
     // Fix for Bug 81083 GPS Bug

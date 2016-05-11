@@ -16,7 +16,9 @@
 
 package com.pyamsoft.pydroid.base;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.lang.ref.WeakReference;
 
 public abstract class PresenterImpl<I> implements Presenter<I> {
@@ -27,13 +29,8 @@ public abstract class PresenterImpl<I> implements Presenter<I> {
     this.weakView = new WeakReference<>(null);
   }
 
-  @NonNull protected final I get() throws NullPointerException {
-    final I view = weakView.get();
-    if (view == null) {
-      throw new NullPointerException("Presenter VIEW is NULL");
-    }
-
-    return view;
+  @CheckResult @Nullable protected final I get() {
+    return weakView.get();
   }
 
   @Override public void onCreateView(@NonNull I view) {

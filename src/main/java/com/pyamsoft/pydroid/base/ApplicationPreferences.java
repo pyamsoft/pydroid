@@ -81,7 +81,8 @@ public abstract class ApplicationPreferences {
   }
 
   @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final ApplicationPreferences putSet(@NonNull final String s, @NonNull final Set<String> st) {
+  protected final ApplicationPreferences putSet(@NonNull final String s,
+      @NonNull final Set<String> st) {
     offMainThread();
     p.edit().putStringSet(s, st).commit();
     return this;

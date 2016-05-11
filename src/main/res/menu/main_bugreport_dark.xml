@@ -19,8 +19,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:keep="@menu/main_support"
-    tools:ignore="UnusedResources">
+    tools:ignore="UnusedResources"
+    tools:keep="@menu/main_support">
 
   <item
       android:id="@+id/menu_bugreport"

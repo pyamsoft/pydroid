@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.base;
 
 import android.app.Application;
-import android.widget.Toast;
-import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.crash.CrashHandler;
 import timber.log.Timber;
 
@@ -26,13 +24,6 @@ public abstract class ApplicationBase extends Application implements CrashHandle
 
   @Override public void onCreate() {
     super.onCreate();
-
-    final int requiredVersion = requirePYDroidVersion();
-    if (requiredVersion >= 0 && BuildConfig.VERSION_CODE != requiredVersion) {
-      final String err = "Wrong PYDroid Version! The requires version is: " + requiredVersion;
-      Toast.makeText(getApplicationContext(), err, Toast.LENGTH_LONG).show();
-      throw new RuntimeException(err);
-    }
 
     // Fix for Bug 81083 GPS Bug
     try {
@@ -44,13 +35,6 @@ public abstract class ApplicationBase extends Application implements CrashHandle
     if (buildConfigDebug()) {
       Timber.plant(new Timber.DebugTree());
     }
-  }
-
-  /**
-   * Override with positive integer value to enforce strict runtime version checking
-   */
-  protected int requirePYDroidVersion() {
-    return 0;
   }
 
   protected abstract boolean buildConfigDebug();

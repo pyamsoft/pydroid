@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -39,9 +40,7 @@ public abstract class ApplicationPreferences {
 
   protected ApplicationPreferences(final @NonNull Context context, final boolean strict) {
     final Context appContext = context.getApplicationContext();
-    final String preferenceName = appContext.getPackageName() + ".preferences";
-    this.p = appContext.getApplicationContext()
-        .getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
+    this.p = PreferenceManager.getDefaultSharedPreferences(appContext);
     this.strict = strict;
   }
 

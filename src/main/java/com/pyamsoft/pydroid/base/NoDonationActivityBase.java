@@ -8,7 +8,7 @@ public abstract class NoDonationActivityBase extends ActivityBase {
     return false;
   }
 
-  @NonNull @Override protected String getPlayStoreAppPackage() {
+  @NonNull @Override protected final String getPlayStoreAppPackage() {
     return "";
   }
 }

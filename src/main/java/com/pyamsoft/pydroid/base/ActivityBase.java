@@ -48,8 +48,7 @@ import com.pyamsoft.pydroid.util.IMMLeakUtil;
 import java.util.List;
 import timber.log.Timber;
 
-public abstract class ActivityBase extends AppCompatActivity
-    implements BillingProcessor.IBillingHandler {
+abstract class ActivityBase extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
   private static final long BACK_PRESSED_DELAY = 1600L;
   @NonNull private static final String BUG_REPORT_TAG = "bug_report";

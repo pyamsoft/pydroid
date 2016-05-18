@@ -16,12 +16,13 @@
 
 package com.pyamsoft.pydroid.social;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.PresenterImpl;
 
 public final class SocialMediaPresenterImpl
     extends PresenterImpl<SocialMediaPresenter.SocialMediaView> implements SocialMediaPresenter {
 
-  @Override public void clickAppPage(String link) {
+  @Override public void clickAppPage(@NonNull String link) {
     final SocialMediaView mediaView = getView();
     if (mediaView != null) {
       final String fullLink = "market://details?id=" + link;

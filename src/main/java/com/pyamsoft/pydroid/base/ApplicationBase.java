@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.base;
 
 import android.app.Application;
+import android.support.annotation.CheckResult;
 import com.pyamsoft.pydroid.crash.CrashHandler;
 import timber.log.Timber;
 
@@ -37,7 +38,7 @@ public abstract class ApplicationBase extends Application implements CrashHandle
     }
   }
 
-  protected abstract boolean buildConfigDebug();
+  @CheckResult protected abstract boolean buildConfigDebug();
 
   /**
    * Override for custom crash log text

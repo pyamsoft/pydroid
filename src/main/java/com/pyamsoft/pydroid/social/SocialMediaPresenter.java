@@ -16,11 +16,12 @@
 
 package com.pyamsoft.pydroid.social;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.Presenter;
 
 public interface SocialMediaPresenter extends Presenter<SocialMediaPresenter.SocialMediaView> {
 
-  void clickAppPage(String link);
+  void clickAppPage(@NonNull String link);
 
   void clickGooglePlay();
 
@@ -32,14 +33,14 @@ public interface SocialMediaPresenter extends Presenter<SocialMediaPresenter.Soc
 
   interface SocialMediaView {
 
-    void onAppPageClicked(String link);
+    void onAppPageClicked(@NonNull String link);
 
-    void onGooglePlayClicked(String link);
+    void onGooglePlayClicked(@NonNull String link);
 
-    void onGooglePlusClicked(String link);
+    void onGooglePlusClicked(@NonNull String link);
 
-    void onBloggerClicked(String link);
+    void onBloggerClicked(@NonNull String link);
 
-    void onFacebookClicked(String link);
+    void onFacebookClicked(@NonNull String link);
   }
 }

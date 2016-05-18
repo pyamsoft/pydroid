@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.tool;
 
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,7 +37,7 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Get an Instance of DataHolderFragment
    */
-  public static <I> DataHolderFragment<I> getInstance(
+  @CheckResult @NonNull public static <I> DataHolderFragment<I> getInstance(
       final @NonNull FragmentActivity fragmentActivity, final @NonNull Class<I> clazz) {
     return getInstance(fragmentActivity.getSupportFragmentManager(), clazz);
   }
@@ -44,7 +45,7 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Get an Instance of DataHolderFragment
    */
-  public static <I> DataHolderFragment<I> getInstance(
+  @CheckResult @NonNull public static <I> DataHolderFragment<I> getInstance(
       final @NonNull FragmentManager fragmentManager, final @NonNull Class<I> clazz) {
     final String tag = clazz.getName();
     @SuppressWarnings("unchecked") DataHolderFragment<I> dataHolderFragment =
@@ -124,7 +125,7 @@ public final class DataHolderFragment<T> extends Fragment {
    *
    * It is up to the caller to remember the key
    */
-  public final void put(final int key, final T value) {
+  public final void put(final int key, final @NonNull T value) {
     Timber.d("Put value: %s into key: %d", value, key);
     sparseArray.put(key, value);
   }
@@ -132,7 +133,7 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Retrieves the value from the table and then removes the object
    */
-  @Nullable public final T pop(final int key) {
+  @CheckResult @Nullable public final T pop(final int key) {
     Timber.d("Pop value at key: %d", key);
     final T result = sparseArray.get(key);
     sparseArray.remove(key);

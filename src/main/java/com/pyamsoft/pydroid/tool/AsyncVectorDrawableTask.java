@@ -20,6 +20,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.widget.ImageView;
@@ -30,32 +33,32 @@ import timber.log.Timber;
 
 public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void, Drawable> {
 
-  private final WeakReference<ImageView> weakImage;
-  private final WeakReference<TabLayout.Tab> weakTab;
+  @Nullable private final WeakReference<ImageView> weakImage;
+  @Nullable private final WeakReference<TabLayout.Tab> weakTab;
   private final int color;
 
-  public AsyncVectorDrawableTask(final ImageView source) {
+  public AsyncVectorDrawableTask(final @NonNull ImageView source) {
     this(source, 0);
   }
 
-  @SuppressWarnings("WeakerAccess")
-  public AsyncVectorDrawableTask(final ImageView source, final int c) {
+  public AsyncVectorDrawableTask(final @NonNull ImageView source, final int c) {
     weakImage = new WeakReference<>(source);
     weakTab = null;
     color = c;
   }
 
-  @SuppressWarnings("WeakerAccess") public AsyncVectorDrawableTask(final TabLayout.Tab source) {
+  public AsyncVectorDrawableTask(final @NonNull TabLayout.Tab source) {
     this(source, 0);
   }
 
-  public AsyncVectorDrawableTask(final TabLayout.Tab source, final int c) {
+  public AsyncVectorDrawableTask(final @NonNull TabLayout.Tab source, final int c) {
     weakTab = new WeakReference<>(source);
     weakImage = null;
     color = c;
   }
 
-  @Override protected Drawable doInBackground(AsyncDrawable... asyncDrawables) {
+  @Nullable @CheckResult @Override
+  protected Drawable doInBackground(@Nullable AsyncDrawable... asyncDrawables) {
     Timber.d("doInBackground");
     if (asyncDrawables == null || asyncDrawables.length < 1) {
       Timber.e("AsyncVectorDrawable parameter not provided");
@@ -80,7 +83,7 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     return drawable;
   }
 
-  @Override protected void onPostExecute(Drawable drawable) {
+  @Override protected void onPostExecute(@Nullable Drawable drawable) {
     super.onPostExecute(drawable);
     if (drawable == null) {
       Timber.e("doInBackground failed.");
@@ -93,7 +96,7 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     }
   }
 
-  private boolean loadImage(Drawable drawable) {
+  private boolean loadImage(@NonNull Drawable drawable) {
     if (weakImage == null) {
       return false;
     } else {
@@ -110,7 +113,7 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     }
   }
 
-  private void loadTab(Drawable drawable) {
+  private void loadTab(@NonNull Drawable drawable) {
     if (weakTab != null) {
       Timber.d("loadTab");
       final TabLayout.Tab tab = weakTab.get();
@@ -124,7 +127,7 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     }
   }
 
-  @Override protected void onCancelled(Drawable drawable) {
+  @Override protected void onCancelled(@NonNull Drawable drawable) {
     super.onCancelled(drawable);
     Timber.e("Vector loading task cancelled");
     if (weakImage != null) {

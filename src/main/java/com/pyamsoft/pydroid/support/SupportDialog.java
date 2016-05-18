@@ -158,23 +158,23 @@ public class SupportDialog extends DialogFragment
     NetworkUtil.newLink(getContext(), link);
   }
 
-  @Override public void onGooglePlayClicked(String link) {
+  @Override public void onGooglePlayClicked(@NonNull String link) {
     onLinkClicked(link);
   }
 
-  @Override public void onGooglePlusClicked(String link) {
+  @Override public void onGooglePlusClicked(@NonNull String link) {
     onLinkClicked(link);
   }
 
-  @Override public void onBloggerClicked(String link) {
+  @Override public void onBloggerClicked(@NonNull String link) {
     onLinkClicked(link);
   }
 
-  @Override public void onFacebookClicked(String link) {
+  @Override public void onFacebookClicked(@NonNull String link) {
     onLinkClicked(link);
   }
 
-  @Override public void onAppPageClicked(String link) {
+  @Override public void onAppPageClicked(@NonNull String link) {
     onLinkClicked(link);
   }
 

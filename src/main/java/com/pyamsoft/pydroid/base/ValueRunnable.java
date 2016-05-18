@@ -16,20 +16,29 @@
 
 package com.pyamsoft.pydroid.base;
 
-@SuppressWarnings("WeakerAccess") public abstract class ValueRunnable<T> implements Runnable {
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import java.lang.ref.WeakReference;
 
-  private T value;
+public abstract class ValueRunnable<T> implements Runnable {
 
-  public final void run(final T newValue) {
+  @NonNull private WeakReference<T> weakValue;
+
+  public ValueRunnable() {
+    this.weakValue = new WeakReference<>(null);
+  }
+
+  public final void run(final @NonNull T newValue) {
     setValue(newValue);
     run();
   }
 
-  public final T getValue() {
-    return value;
+  @Nullable @CheckResult public final T getValue() {
+    return weakValue.get();
   }
 
-  public final void setValue(final T value) {
-    this.value = value;
+  public final void setValue(final @NonNull T value) {
+    this.weakValue = new WeakReference<>(value);
   }
 }

@@ -22,6 +22,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -49,45 +52,46 @@ public abstract class ActivityBase extends AppCompatActivity
     implements BillingProcessor.IBillingHandler {
 
   private static final long BACK_PRESSED_DELAY = 1600L;
-  private static final String BUG_REPORT_TAG = "bug_report";
-  private static final String SUPPORT_TAG = "support";
-  private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
+  @NonNull private static final String BUG_REPORT_TAG = "bug_report";
+  @NonNull private static final String SUPPORT_TAG = "support";
+  @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
 
   private boolean backBeenPressed;
-  private Handler handler;
-  private Toast backBeenPressedToast;
-  private Runnable backBeenPressedRunnable;
-  private BillingProcessor billingProcessor;
+  @Nullable private Handler handler;
+  @Nullable private Toast backBeenPressedToast;
+  @Nullable private Runnable backBeenPressedRunnable;
+  @Nullable private BillingProcessor billingProcessor;
 
   /**
    * Override if you do not want to handle IMM leaks
    */
-  protected boolean shouldHandleIMMLeaks() {
+  @CheckResult protected boolean shouldHandleIMMLeaks() {
     return true;
   }
 
   /**
    * Override this if you want normal back button behavior
    */
-  protected boolean shouldConfirmBackPress() {
+  @CheckResult protected boolean shouldConfirmBackPress() {
     return true;
   }
 
   /**
    * Override this if the application does not implement IAB donations
    */
-  protected boolean isDonationSupported() {
+  @CheckResult protected boolean isDonationSupported() {
     return true;
   }
 
   /**
    * Override if you do not want the Window to behave like a fullscreen one
    */
-  protected boolean isFakeFullscreen() {
+  @CheckResult protected boolean isFakeFullscreen() {
     return false;
   }
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    // These must go before the call to onCreate
     if (shouldHandleIMMLeaks()) {
       IMMLeakUtil.fixFocusedViewLeak(getApplication());
     }
@@ -96,7 +100,6 @@ public abstract class ActivityBase extends AppCompatActivity
     }
 
     super.onCreate(savedInstanceState);
-
     if (shouldConfirmBackPress()) {
       enableBackBeenPressedConfirmation();
     }
@@ -107,7 +110,7 @@ public abstract class ActivityBase extends AppCompatActivity
     }
   }
 
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
+  @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {
     final MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.main_support, menu);
     return true;
@@ -122,12 +125,16 @@ public abstract class ActivityBase extends AppCompatActivity
       super.onBackPressed();
     } else {
       backBeenPressed = true;
-      backBeenPressedToast.show();
-      handler.postDelayed(backBeenPressedRunnable, BACK_PRESSED_DELAY);
+      if (backBeenPressedToast != null) {
+        backBeenPressedToast.show();
+      }
+      if (handler != null && backBeenPressedRunnable != null) {
+        handler.postDelayed(backBeenPressedRunnable, BACK_PRESSED_DELAY);
+      }
     }
   }
 
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
+  @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     final int itemId = item.getItemId();
     boolean handled;
     if (itemId == R.id.menu_support) {
@@ -142,7 +149,7 @@ public abstract class ActivityBase extends AppCompatActivity
     return handled;
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
     if (isDonationSupported()) {
       if (billingProcessor == null) {
         throw new NullPointerException("Donation Supported Application has NULL Billing Processor");
@@ -165,7 +172,8 @@ public abstract class ActivityBase extends AppCompatActivity
     }
   }
 
-  @Override public final void onProductPurchased(String productId, TransactionDetails details) {
+  @Override public final void onProductPurchased(@NonNull String productId,
+      @NonNull TransactionDetails details) {
     Timber.d("onProductPurchased");
     Timber.d("Details: %s", details);
     if (isDonationSupported()) {
@@ -183,7 +191,7 @@ public abstract class ActivityBase extends AppCompatActivity
     Timber.d("onPurchaseHistoryRestored");
   }
 
-  @Override public final void onBillingError(int errorCode, Throwable error) {
+  @Override public final void onBillingError(int errorCode, @NonNull Throwable error) {
     Timber.e(error, "onBillingError: %d", errorCode);
   }
 
@@ -250,7 +258,7 @@ public abstract class ActivityBase extends AppCompatActivity
         new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
   }
 
-  protected final void enableShadows(final View bar, final View shadow) {
+  protected final void enableShadows(final @NonNull View bar, final @NonNull View shadow) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Lollipop.enableShadows(bar, shadow);
     } else {
@@ -258,7 +266,7 @@ public abstract class ActivityBase extends AppCompatActivity
     }
   }
 
-  protected final void disableShadows(final View bar, final View shadow) {
+  protected final void disableShadows(final @NonNull View bar, final @NonNull View shadow) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Lollipop.disableShadows(bar, shadow);
     } else {
@@ -266,16 +274,14 @@ public abstract class ActivityBase extends AppCompatActivity
     }
   }
 
-  protected final void animateActionBarToolbar(final Toolbar toolbar) {
-    if (toolbar == null) {
-      return;
-    }
+  protected final void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
     final View t = toolbar.getChildAt(0);
     if (t != null && t instanceof TextView &&
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       final TextView title = (TextView) t;
       AnimUtil.fadeIn(title).start();
     }
+
     final View amv = toolbar.getChildAt(1);
     if (amv != null && amv instanceof ActionMenuView) {
       final ActionMenuView actions = (ActionMenuView) amv;
@@ -293,7 +299,7 @@ public abstract class ActivityBase extends AppCompatActivity
     }
   }
 
-  public final void purchase(final String sku) {
+  public final void purchase(final @NonNull String sku) {
     if (isDonationSupported()) {
       if (billingProcessor == null) {
         throw new NullPointerException("Donation Supported Application has NULL Billing Processor");
@@ -304,42 +310,30 @@ public abstract class ActivityBase extends AppCompatActivity
     }
   }
 
-  protected abstract String getPlayStoreAppPackage();
+  @CheckResult @NonNull protected abstract String getPlayStoreAppPackage();
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) static class Lollipop {
 
-    static void enableShadows(final View t, final View shadow) {
-      if (t != null) {
-        final float elevation = AppUtil.convertToDP(t.getContext(), 8);
-        ViewCompat.setElevation(t, elevation);
-      }
-      if (shadow != null) {
-        shadow.setVisibility(View.GONE);
-      }
+    static void enableShadows(final @NonNull View t, final @NonNull View shadow) {
+      final float elevation = AppUtil.convertToDP(t.getContext(), 8);
+      ViewCompat.setElevation(t, elevation);
+      shadow.setVisibility(View.GONE);
     }
 
-    static void disableShadows(final View t, final View shadow) {
-      if (t != null) {
-        t.setElevation(0);
-      }
-      if (shadow != null) {
-        shadow.setVisibility(View.GONE);
-      }
+    static void disableShadows(final @NonNull View t, final @NonNull View shadow) {
+      t.setElevation(0);
+      shadow.setVisibility(View.GONE);
     }
   }
 
   static class OldAndroid {
 
-    static void enableShadows(final View shadow) {
-      if (shadow != null) {
-        shadow.setVisibility(View.VISIBLE);
-      }
+    static void enableShadows(final @NonNull View shadow) {
+      shadow.setVisibility(View.VISIBLE);
     }
 
-    static void disableShadows(final View shadow) {
-      if (shadow != null) {
-        shadow.setVisibility(View.GONE);
-      }
+    static void disableShadows(final @NonNull View shadow) {
+      shadow.setVisibility(View.GONE);
     }
   }
 }

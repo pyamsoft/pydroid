@@ -19,140 +19,119 @@ package com.pyamsoft.pydroid.base;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import timber.log.Timber;
 
+/**
+ * This class is intended as a convenient way to interact with single preferences at a time.
+ * If you are needing to work with multiple preferences at the same time, stick with the usual
+ * Android SharedPreferences implementation
+ */
 public abstract class ApplicationPreferences {
 
   @NonNull private final SharedPreferences p;
-  private final boolean strict;
 
   protected ApplicationPreferences(final @NonNull Context context) {
-    this(context.getApplicationContext(), true);
-  }
-
-  protected ApplicationPreferences(final @NonNull Context context, final boolean strict) {
     final Context appContext = context.getApplicationContext();
     this.p = PreferenceManager.getDefaultSharedPreferences(appContext);
-    this.strict = strict;
   }
 
-  private void offMainThread() {
-    if (Thread.currentThread() == Looper.getMainLooper().getThread() && strict) {
-      Timber.e("Call is running on same thread as MainLooper");
-      throw new MainThreadAccessException();
-    }
-  }
-
-  @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final ApplicationPreferences put(@NonNull final String s, final long l) {
-    offMainThread();
-    p.edit().putLong(s, l).commit();
+  @NonNull protected final ApplicationPreferences put(@NonNull final String s, final long l) {
+    p.edit().putLong(s, l).apply();
     return this;
   }
 
-  @SuppressLint("CommitPrefEdits") @WorkerThread
+  @NonNull
   protected final ApplicationPreferences put(@NonNull final String s, @Nullable final String st) {
-    offMainThread();
-    p.edit().putString(s, st).commit();
+    p.edit().putString(s, st).apply();
     return this;
   }
 
-  @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final ApplicationPreferences put(@NonNull final String s, final int i) {
-    offMainThread();
-    p.edit().putInt(s, i).commit();
+  @NonNull protected final ApplicationPreferences put(@NonNull final String s, final int i) {
+    p.edit().putInt(s, i).apply();
     return this;
   }
 
-  @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final ApplicationPreferences put(@NonNull final String s, final float f) {
-    offMainThread();
-    p.edit().putFloat(s, f).commit();
+  @NonNull protected final ApplicationPreferences put(@NonNull final String s, final float f) {
+    p.edit().putFloat(s, f).apply();
     return this;
   }
 
-  @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final ApplicationPreferences putSet(@NonNull final String s,
+  @NonNull protected final ApplicationPreferences putSet(@NonNull final String s,
       @NonNull final Set<String> st) {
-    offMainThread();
-    p.edit().putStringSet(s, st).commit();
+    p.edit().putStringSet(s, st).apply();
     return this;
   }
 
-  @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final ApplicationPreferences put(@NonNull final String s, final boolean b) {
-    offMainThread();
-    p.edit().putBoolean(s, b).commit();
+  @NonNull protected final ApplicationPreferences put(@NonNull final String s, final boolean b) {
+    p.edit().putBoolean(s, b).apply();
     return this;
   }
 
-  @WorkerThread protected final long get(@NonNull final String s, final long l) {
-    offMainThread();
+  @CheckResult protected final long get(@NonNull final String s, final long l) {
     return p.getLong(s, l);
   }
 
-  @WorkerThread protected final String get(@NonNull final String s, final @Nullable String st) {
-    offMainThread();
+  @CheckResult protected final String get(@NonNull final String s, final @Nullable String st) {
     return p.getString(s, st);
   }
 
-  @WorkerThread protected final int get(@NonNull final String s, final int i) {
-    offMainThread();
+  @CheckResult protected final int get(@NonNull final String s, final int i) {
     return p.getInt(s, i);
   }
 
-  @WorkerThread protected final float get(@NonNull final String s, final float f) {
-    offMainThread();
+  @CheckResult protected final float get(@NonNull final String s, final float f) {
     return p.getFloat(s, f);
   }
 
-  @WorkerThread
+  @CheckResult @Nullable
   protected final Set<String> getSet(@NonNull final String s, final @Nullable Set<String> st) {
-    offMainThread();
     return p.getStringSet(s, st);
   }
 
-  @WorkerThread protected final boolean get(@NonNull final String s, final boolean b) {
-    offMainThread();
+  @CheckResult protected final boolean get(@NonNull final String s, final boolean b) {
     return p.getBoolean(s, b);
   }
 
-  @WorkerThread protected final Map<String, ?> getAll() {
-    offMainThread();
+  @CheckResult @NonNull protected final Map<String, ?> getAll() {
     return p.getAll();
   }
 
-  @WorkerThread protected final boolean contains(@NonNull final String s) {
-    offMainThread();
+  @CheckResult protected final boolean contains(@NonNull final String s) {
     return p.contains(s);
   }
 
-  @SuppressLint("CommitPrefEdits") @WorkerThread
-  protected final ApplicationPreferences remove(@NonNull final String s) {
-    offMainThread();
-    p.edit().remove(s).commit();
+  @CheckResult protected final ApplicationPreferences remove(@NonNull final String s) {
+    p.edit().remove(s).apply();
     return this;
   }
 
-  @WorkerThread @SuppressLint("CommitPrefEdits") public void clear() {
-    offMainThread();
-    p.edit().clear().commit();
+  public void clear() {
+    clear(false);
   }
 
-  @WorkerThread
+  /**
+   * We want to guarantee that the preferences are cleared before continuing, so we block on the
+   * current thread
+   */
+  @SuppressLint("CommitPrefEdits") public void clear(final boolean commit) {
+    final SharedPreferences.Editor editor = p.edit().clear();
+    if (commit) {
+      editor.commit();
+    } else {
+      editor.apply();
+    }
+  }
+
   public final void register(@NonNull final SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.registerOnSharedPreferenceChangeListener(l);
   }
 
-  @WorkerThread public final void unregister(
+  public final void unregister(
       @NonNull final SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.unregisterOnSharedPreferenceChangeListener(l);
   }
@@ -160,34 +139,7 @@ public abstract class ApplicationPreferences {
   public static abstract class OnSharedPreferenceChangeListener
       implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private final Set<String> keys = new HashSet<>();
     private boolean isRegistered = false;
-    private boolean isDebug = false;
-
-    public OnSharedPreferenceChangeListener(@NonNull final String... keysToListen) {
-      for (final String key : keysToListen) {
-        if (key != null) {
-          keys.add(key);
-        }
-      }
-    }
-
-    @Override
-    public final void onSharedPreferenceChanged(@NonNull final SharedPreferences sharedPreferences,
-        final String key) {
-      if (keys.contains(key)) {
-        preferenceChanged(sharedPreferences, key);
-      } else {
-        if (isDebug) {
-          Timber.d("Key: %s not in key set", key);
-        }
-      }
-    }
-
-    public final OnSharedPreferenceChangeListener setDebug(final boolean debug) {
-      isDebug = debug;
-      return this;
-    }
 
     public final void register(@NonNull final ApplicationPreferences util) {
       if (!isRegistered) {
@@ -201,20 +153,6 @@ public abstract class ApplicationPreferences {
         util.unregister(this);
         isRegistered = false;
       }
-    }
-
-    protected abstract void preferenceChanged(@NonNull final SharedPreferences sharedPreferences,
-        @NonNull final String key);
-  }
-
-  static final class MainThreadAccessException extends RuntimeException {
-
-    public MainThreadAccessException() {
-      this("Cannot access SharedPreferences on Main Thread");
-    }
-
-    public MainThreadAccessException(@NonNull String detailMessage) {
-      super(detailMessage);
     }
   }
 }

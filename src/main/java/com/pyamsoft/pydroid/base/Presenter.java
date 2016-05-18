@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.base;
 
+import android.support.annotation.NonNull;
+
 public interface Presenter<I> {
 
   /**
@@ -23,7 +25,7 @@ public interface Presenter<I> {
    *
    * Usually called during the onCreate/onCreateView calls
    */
-  void onCreateView(I view);
+  void onCreateView(@NonNull I view);
 
   /**
    * Unbind the View to this presenter

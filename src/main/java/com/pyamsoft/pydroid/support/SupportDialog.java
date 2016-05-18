@@ -31,7 +31,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.base.ActivityBase;
+import com.pyamsoft.pydroid.base.DonationActivityBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.social.SocialMediaPresenterImpl;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -194,8 +194,8 @@ public class SupportDialog extends DialogFragment
     if (sku != null) {
       Timber.d("Attempt purchase of SKU: %s", sku);
       final FragmentActivity activity = getActivity();
-      if (activity instanceof ActivityBase) {
-        final ActivityBase activityBase = (ActivityBase) activity;
+      if (activity instanceof DonationActivityBase) {
+        final DonationActivityBase activityBase = (DonationActivityBase) activity;
         activityBase.purchase(sku);
       }
     } else {

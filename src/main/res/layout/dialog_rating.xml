@@ -31,7 +31,8 @@
         android:layout_above="@id/rating_btn_no_thanks"
         android:text="@string/rate_app_on_play_store"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        style="?attr/colorButtonNormal"
+        android:textColor="@android:color/white"
+        style="@style/Widget.AppCompat.Button.Colored"
         />
 
     <ScrollView

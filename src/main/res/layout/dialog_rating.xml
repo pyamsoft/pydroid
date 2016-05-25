@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rating_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:orientation="vertical"
+    >
+
+  <RelativeLayout
+      android:id="@+id/rating_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="28dp"
+      android:padding="8dp"
+      >
+
+    <Button
+        android:id="@+id/rating_btn_no_thanks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/no_thanks"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        style="?attr/buttonBarNegativeButtonStyle"
+        />
+
+    <Button
+        android:id="@+id/rating_btn_go_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rating_btn_no_thanks"
+        android:text="@string/rate_app_on_play_store"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        style="?attr/colorButtonNormal"
+        />
+
+    <TextView
+        android:id="@+id/rating_text_change"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/rating_btn_go_rate"
+        android:layout_alignParentTop="true"
+        />
+
+  </RelativeLayout>
+
+  <ImageView
+      android:id="@+id/rating_icon"
+      android:layout_width="56dp"
+      android:layout_height="56dp"
+      android:layout_gravity="center_horizontal|top"
+      android:contentDescription="@string/blank"
+      />
+
+</FrameLayout>

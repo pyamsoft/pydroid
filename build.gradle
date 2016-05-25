@@ -28,7 +28,7 @@ buildscript {
     classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
 
     // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.1'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.2'
 
     // Android APT
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
@@ -50,13 +50,40 @@ apply plugin: 'me.tatarka.retrolambda'
 android {
   compileSdkVersion 23
   buildToolsVersion '23.0.3'
-  defaultConfig {
-    minSdkVersion 16
-    targetSdkVersion 23
-    versionCode 12
-    versionName "1.3.5"
-    // For vector drawables
-    vectorDrawables.useSupportLibrary = true
+
+  def versionPropsFile = file('version.properties')
+
+  if (versionPropsFile.canRead()) {
+    def Properties versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+
+    def versionCodeNo = versionProps['VERSION_CODE'].toInteger()
+    versionProps['VERSION_CODE'] = versionCodeNo.toString()
+
+    def versionNameMajor = versionProps['VERSION_NAME_MAJOR'].toInteger()
+    versionProps['VERSION_NAME_MAJOR'] = versionNameMajor.toString()
+
+    def versionNameMinor = versionProps['VERSION_NAME_MINOR'].toInteger()
+    versionProps['VERSION_NAME_MINOR'] = versionNameMinor.toString()
+
+    def versionNamePatch = versionProps['VERSION_NAME_PATCH'].toInteger()
+    versionProps['VERSION_NAME_PATCH'] = versionNamePatch.toString()
+
+    def versionNameBuild = versionProps['VERSION_NAME_BUILD'].toInteger() + 1
+    versionProps['VERSION_NAME_BUILD'] = versionNameBuild.toString()
+
+
+    versionProps.store(versionPropsFile.newWriter(), null)
+    defaultConfig {
+      minSdkVersion 16
+      targetSdkVersion 23
+      versionCode versionCodeNo
+      versionName versionNameMajor + "." + versionNameMinor + "." + versionNamePatch + "." + versionNameBuild
+      // For vector drawables
+      vectorDrawables.useSupportLibrary = true
+    }
+  } else {
+    throw new GradleException("Could not read from version.properties");
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8

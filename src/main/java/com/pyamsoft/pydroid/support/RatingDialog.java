@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableTask;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -35,7 +36,7 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
   private SharedPreferences preferences;
-  @Nullable private AsyncVectorDrawableTask iconTask;
+  @Nullable private AsyncDrawableTask iconTask;
 
   private String rateLink;
   private Spannable changeLogText;
@@ -110,7 +111,7 @@ public class RatingDialog extends DialogFragment {
     final Button cancelButton = (Button) rootView.findViewById(R.id.rating_btn_no_thanks);
 
     ViewCompat.setElevation(icon, AppUtil.convertToDP(getContext(), 8));
-    iconTask = new AsyncVectorDrawableTask(icon);
+    iconTask = new AsyncDrawableTask(icon);
     iconTask.execute(new AsyncDrawable(getContext(), changeLogIcon));
     changeLog.setText(changeLogText);
     builder.setView(rootView);

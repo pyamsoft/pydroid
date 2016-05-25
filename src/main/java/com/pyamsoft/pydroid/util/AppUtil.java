@@ -118,7 +118,7 @@ public final class AppUtil {
   public static float convertToDP(final @NonNull Context c, final float px) {
     final DisplayMetrics m = c.getResources().getDisplayMetrics();
     final float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m);
-    Timber.d("Convert %d px to %d dp", px, dp);
+    Timber.d("Convert %f px to %f dp", px, dp);
     return dp;
   }
 }

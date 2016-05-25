@@ -35,6 +35,17 @@
         style="@style/Widget.AppCompat.Button.Colored"
         />
 
+    <TextView
+        android:id="@+id/rating_liking_the_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rating_btn_go_rate"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/liking_the_app"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

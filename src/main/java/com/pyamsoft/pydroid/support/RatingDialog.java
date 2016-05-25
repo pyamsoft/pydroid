@@ -7,13 +7,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.CheckResult;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
@@ -34,8 +32,6 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String PREFERENCE_TARGET = "rating_dialog_accepted_version";
   @NonNull private static final String CHANGE_LOG_TEXT = "change_log_text";
   @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
-  @NonNull private static final String CHANGE_LOG_BACKGROUND = "change_log_bgcolor";
-  @NonNull private static final String CHANGE_LOG_TEXT_COLOR = "change_log_textcolor";
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
   private SharedPreferences preferences;
@@ -45,15 +41,13 @@ public class RatingDialog extends DialogFragment {
   private Spannable changeLogText;
   private int versionCode;
   private @DrawableRes int changeLogIcon;
-  private @ColorRes int changeLogBackgroundColor;
-  private @ColorRes int textColor;
   private boolean acknowledged;
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider) {
     final SharedPreferences preferences =
         PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-    if (preferences.getInt(PREFERENCE_TARGET, 0) < provider.getApplicationVersion()) {
+    if (preferences.getInt(PREFERENCE_TARGET, 0) < provider.getChangeLogVersion()) {
       AppUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating");
     }
   }
@@ -61,12 +55,10 @@ public class RatingDialog extends DialogFragment {
   private static RatingDialog newInstance(final @NonNull ChangeLogProvider provider) {
     final RatingDialog fragment = new RatingDialog();
     final Bundle args = new Bundle();
-    args.putString(RATE_LINK, provider.getPlayStoreRateLink());
+    args.putString(RATE_LINK, provider.getChangeLogPackageName());
     args.putCharSequence(CHANGE_LOG_TEXT, provider.getChangeLogText());
-    args.putInt(VERSION_CODE, provider.getApplicationVersion());
+    args.putInt(VERSION_CODE, provider.getChangeLogVersion());
     args.putInt(CHANGE_LOG_ICON, provider.getChangeLogIcon());
-    args.putInt(CHANGE_LOG_BACKGROUND, provider.getChangeLogBackgroundColor());
-    args.putInt(CHANGE_LOG_TEXT_COLOR, provider.getChangeLogTextColor());
     fragment.setArguments(args);
     return fragment;
   }
@@ -82,8 +74,6 @@ public class RatingDialog extends DialogFragment {
     versionCode = launchArguments.getInt(VERSION_CODE, 0);
     changeLogText = (Spannable) launchArguments.getCharSequence(CHANGE_LOG_TEXT, null);
     changeLogIcon = launchArguments.getInt(CHANGE_LOG_ICON, 0);
-    changeLogBackgroundColor = launchArguments.getInt(CHANGE_LOG_BACKGROUND, 0);
-    textColor = launchArguments.getInt(CHANGE_LOG_TEXT_COLOR, 0);
 
     if (versionCode == 0) {
       throw new RuntimeException("Version code cannot be 0");
@@ -114,7 +104,6 @@ public class RatingDialog extends DialogFragment {
 
     final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_rating, null, false);
-    final View backgroundView = rootView.findViewById(R.id.rating_view);
     final ImageView icon = (ImageView) rootView.findViewById(R.id.rating_icon);
     final TextView changeLog = (TextView) rootView.findViewById(R.id.rating_text_change);
     final Button rateButton = (Button) rootView.findViewById(R.id.rating_btn_go_rate);
@@ -124,16 +113,6 @@ public class RatingDialog extends DialogFragment {
     iconTask = new AsyncVectorDrawableTask(icon);
     iconTask.execute(new AsyncDrawable(getContext(), changeLogIcon));
     changeLog.setText(changeLogText);
-
-    if (changeLogBackgroundColor != 0) {
-      backgroundView.setBackgroundColor(
-          ContextCompat.getColor(getActivity(), changeLogBackgroundColor));
-    }
-
-    if (textColor != 0) {
-      changeLog.setTextColor(ContextCompat.getColor(getActivity(), textColor));
-    }
-
     builder.setView(rootView);
 
     cancelButton.setOnClickListener(v -> {
@@ -163,14 +142,10 @@ public class RatingDialog extends DialogFragment {
 
     @CheckResult @NonNull Spannable getChangeLogText();
 
-    @CheckResult @DrawableRes int getChangeLogIcon();
+    @CheckResult int getChangeLogIcon();
 
-    @CheckResult @ColorRes int getChangeLogBackgroundColor();
+    @CheckResult @NonNull String getChangeLogPackageName();
 
-    @CheckResult @ColorRes int getChangeLogTextColor();
-
-    @CheckResult @NonNull String getPlayStoreRateLink();
-
-    @CheckResult int getApplicationVersion();
+    @CheckResult int getChangeLogVersion();
   }
 }

@@ -4,8 +4,6 @@
     android:id="@+id/rating_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@null"
-    android:orientation="vertical"
     >
 
   <RelativeLayout
@@ -36,13 +34,21 @@
         style="?attr/colorButtonNormal"
         />
 
-    <TextView
-        android:id="@+id/rating_text_change"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/rating_btn_go_rate"
         android:layout_alignParentTop="true"
-        />
+        android:layout_margin="16dp"
+        >
+
+      <TextView
+          android:id="@+id/rating_text_change"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+    </ScrollView>
 
   </RelativeLayout>
 

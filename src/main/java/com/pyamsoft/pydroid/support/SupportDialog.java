@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.base.DonationActivityBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
@@ -196,7 +197,12 @@ public class SupportDialog extends DialogFragment
       final FragmentActivity activity = getActivity();
       if (activity instanceof DonationActivityBase) {
         final DonationActivityBase activityBase = (DonationActivityBase) activity;
-        activityBase.purchase(sku);
+        if (BillingProcessor.isIabServiceAvailable(getActivity())) {
+          Timber.d("Do purchase %s", sku);
+          activityBase.purchase(sku);
+        } else {
+          activityBase.showDonationUnavailableDialog();
+        }
       }
     } else {
       Timber.e("SKU is null");

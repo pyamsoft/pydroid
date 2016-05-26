@@ -245,7 +245,7 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
         SupportDialog.newInstance(getPlayStoreAppPackage()), SUPPORT_TAG);
   }
 
-  private void showDonationUnavailableDialog() {
+  public final void showDonationUnavailableDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
   }

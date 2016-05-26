@@ -39,7 +39,6 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.support.BugReportDialog;
 import com.pyamsoft.pydroid.support.DonationUnavailableDialog;
 import com.pyamsoft.pydroid.support.SupportDialog;
 import com.pyamsoft.pydroid.util.AnimUtil;
@@ -138,9 +137,9 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     boolean handled;
     if (itemId == R.id.menu_support) {
       showSupportDialog();
-      handled = true;
-    } else if (itemId == R.id.menu_bugreport) {
-      showBugReportDialog();
+      if (!BillingProcessor.isIabServiceAvailable(this)) {
+        showDonationUnavailableDialog();
+      }
       handled = true;
     } else {
       handled = false;
@@ -241,18 +240,12 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     }
   }
 
-  private void showBugReportDialog() {
-    new BugReportDialog().show(getSupportFragmentManager(), null);
-    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new BugReportDialog(),
-        BUG_REPORT_TAG);
-  }
-
   private void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         SupportDialog.newInstance(getPlayStoreAppPackage()), SUPPORT_TAG);
   }
 
-  protected void showDonationUnavailableDialog() {
+  private void showDonationUnavailableDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
   }

@@ -77,6 +77,23 @@ public final class StringUtil {
     }
   }
 
+  @CheckResult @NonNull
+  public static SpannableStringBuilder createLineBreakBuilder(final @NonNull String... strs) {
+    final int size = strs.length;
+    if (size > 0) {
+      final int sizeWithBreaks = size * 2 - 1;
+      final String[] lineBreakStrings = new String[sizeWithBreaks];
+      int j = 0;
+      for (int i = 0; i < size; ++i, ++j) {
+        lineBreakStrings[j] = strs[i];
+        lineBreakStrings[++j] = "\n\n";
+      }
+      return createBuilder(lineBreakStrings);
+    } else {
+      throw new IllegalArgumentException("Cannot format empty array of strings");
+    }
+  }
+
   /**
    * Applies multiple Spans to a Spannable string Use passed in builder as the out parameter
    */

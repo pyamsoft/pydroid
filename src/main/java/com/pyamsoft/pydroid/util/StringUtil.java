@@ -86,7 +86,9 @@ public final class StringUtil {
       int j = 0;
       for (int i = 0; i < size; ++i, ++j) {
         lineBreakStrings[j] = strs[i];
-        lineBreakStrings[++j] = "\n\n";
+        if (++j < sizeWithBreaks) {
+          lineBreakStrings[j] = "\n\n";
+        }
       }
       return createBuilder(lineBreakStrings);
     } else {

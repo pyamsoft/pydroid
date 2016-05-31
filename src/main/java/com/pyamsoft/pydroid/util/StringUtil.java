@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -36,7 +37,7 @@ public final class StringUtil {
 
   }
 
-  @NonNull public static String xor(final @NonNull String s, final long r) {
+  @CheckResult @NonNull public static String xor(final @NonNull String s, final long r) {
     final char[] chars = s.toCharArray();
     for (int i = 0; i < chars.length; ++i) {
       chars[i] = (char) (chars[i] ^ r);
@@ -44,12 +45,14 @@ public final class StringUtil {
     return String.valueOf(chars);
   }
 
+  @CheckResult @NonNull
   public static String formatResString(final @NonNull Resources resources, final int stringId,
       final @NonNull Object... args) {
     final String format = resources.getString(stringId);
     return String.format(format, args);
   }
 
+  @CheckResult @NonNull
   public static String formatString(final @NonNull String fmt, final @NonNull Object... args) {
     return String.format(fmt, args);
   }
@@ -58,7 +61,8 @@ public final class StringUtil {
    * Takes an array of strings and creates a SpannableStringBuilder out of them If the array is
    * null or empty, returns null
    */
-  public static SpannableStringBuilder createBuilder(final @NonNull String... strs) {
+  @CheckResult @NonNull public static SpannableStringBuilder createBuilder(
+      final @NonNull String... strs) {
     final int size = strs.length;
     if (size > 0) {
       final SpannableStringBuilder strb = new SpannableStringBuilder(strs[0]);
@@ -69,7 +73,7 @@ public final class StringUtil {
       }
       return strb;
     } else {
-      return null;
+      throw new IllegalArgumentException("Cannot format empty array of strings");
     }
   }
 
@@ -97,6 +101,7 @@ public final class StringUtil {
     out.setSpan(new AbsoluteSizeSpan(size), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
   }
 
+  @CheckResult @NonNull
   public static TypedArray getAttributeFromAppearance(final @NonNull Context context,
       final int textAppearance, final int attr) {
     final TypedValue typedValue = new TypedValue();
@@ -104,7 +109,7 @@ public final class StringUtil {
     return context.obtainStyledAttributes(typedValue.data, new int[] { attr });
   }
 
-  public static int getTextSizeFromAppearance(final @NonNull Context context,
+  @CheckResult public static int getTextSizeFromAppearance(final @NonNull Context context,
       final int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textSize);
@@ -113,7 +118,7 @@ public final class StringUtil {
     return textSize;
   }
 
-  public static int getTextColorFromAppearance(final @NonNull Context context,
+  @CheckResult public static int getTextColorFromAppearance(final @NonNull Context context,
       final int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textColor);

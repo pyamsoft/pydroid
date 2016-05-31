@@ -28,7 +28,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.TypedValue;
 
-@SuppressWarnings({ "WeakerAccess", "unused" }) public final class StringUtil {
+public final class StringUtil {
 
   private static final int INDEX_ATTR = 0;
 
@@ -44,13 +44,13 @@ import android.util.TypedValue;
     return String.valueOf(chars);
   }
 
-  public static String formatResString(final Resources resources, final int stringId,
-      final Object... args) {
+  public static String formatResString(final @NonNull Resources resources, final int stringId,
+      final @NonNull Object... args) {
     final String format = resources.getString(stringId);
     return String.format(format, args);
   }
 
-  public static String formatString(final String fmt, final Object... args) {
+  public static String formatString(final @NonNull String fmt, final @NonNull Object... args) {
     return String.format(fmt, args);
   }
 
@@ -58,10 +58,7 @@ import android.util.TypedValue;
    * Takes an array of strings and creates a SpannableStringBuilder out of them If the array is
    * null or empty, returns null
    */
-  public static SpannableStringBuilder createBuilder(final String... strs) {
-    if (strs == null) {
-      return null;
-    }
+  public static SpannableStringBuilder createBuilder(final @NonNull String... strs) {
     final int size = strs.length;
     if (size > 0) {
       final SpannableStringBuilder strb = new SpannableStringBuilder(strs[0]);
@@ -79,44 +76,36 @@ import android.util.TypedValue;
   /**
    * Applies multiple Spans to a Spannable string Use passed in builder as the out parameter
    */
-  public static void multiSpannable(final Spannable out, final int start, final int stop,
-      final Object... spans) {
-    if (out == null || spans == null) {
-      return;
-    }
+  public static void multiSpannable(final @NonNull Spannable out, final int start, final int stop,
+      final @NonNull Object... spans) {
     for (final Object span : spans) {
       out.setSpan(span, start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
     }
   }
 
-  public static void colorSpan(final Spannable out, final int start, final int stop,
+  public static void colorSpan(final @NonNull Spannable out, final int start, final int stop,
       final int color) {
-    if (out != null) {
-      out.setSpan(new ForegroundColorSpan(color), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-    }
+    out.setSpan(new ForegroundColorSpan(color), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
   }
 
-  public static void boldSpan(final Spannable out, final int start, final int stop) {
-    if (out != null) {
-      out.setSpan(new StyleSpan(Typeface.BOLD), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-    }
+  public static void boldSpan(final @NonNull Spannable out, final int start, final int stop) {
+    out.setSpan(new StyleSpan(Typeface.BOLD), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
   }
 
-  public static void sizeSpan(final Spannable out, final int start, final int stop,
+  public static void sizeSpan(final @NonNull Spannable out, final int start, final int stop,
       final int size) {
-    if (out != null) {
-      out.setSpan(new AbsoluteSizeSpan(size), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-    }
+    out.setSpan(new AbsoluteSizeSpan(size), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
   }
 
-  public static TypedArray getAttributeFromAppearance(final Context context,
+  public static TypedArray getAttributeFromAppearance(final @NonNull Context context,
       final int textAppearance, final int attr) {
     final TypedValue typedValue = new TypedValue();
     context.getTheme().resolveAttribute(textAppearance, typedValue, true);
     return context.obtainStyledAttributes(typedValue.data, new int[] { attr });
   }
 
-  public static int getTextSizeFromAppearance(final Context context, final int textAppearance) {
+  public static int getTextSizeFromAppearance(final @NonNull Context context,
+      final int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textSize);
     final int textSize = a.getDimensionPixelSize(INDEX_ATTR, -1);
@@ -124,7 +113,8 @@ import android.util.TypedValue;
     return textSize;
   }
 
-  public static int getTextColorFromAppearance(final Context context, final int textAppearance) {
+  public static int getTextColorFromAppearance(final @NonNull Context context,
+      final int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textColor);
     final int textSize = a.getColor(INDEX_ATTR, -1);

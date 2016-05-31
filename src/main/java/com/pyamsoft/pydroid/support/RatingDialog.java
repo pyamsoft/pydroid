@@ -34,11 +34,10 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
-  private SharedPreferences preferences;
   @Nullable private AsyncDrawableTask iconTask;
-
-  private String rateLink;
-  private Spannable changeLogText;
+  @Nullable private SharedPreferences preferences;
+  @Nullable private String rateLink;
+  @Nullable private Spannable changeLogText;
   private int versionCode;
   private @DrawableRes int changeLogIcon;
   private boolean acknowledged;

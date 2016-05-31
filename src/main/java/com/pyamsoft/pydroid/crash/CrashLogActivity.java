@@ -20,6 +20,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -34,38 +36,27 @@ import timber.log.Timber;
 
 @SuppressLint("Registered") public final class CrashLogActivity extends AppCompatActivity {
 
-  public static final String APP_NAME = "APP_NAME";
-  public static final String CRASH_EMAIL = "CRASH_EMAIL";
-  public static final String CRASH_SUBJECT = "CRASH_SUBJECT";
-  public static final String CRASH_TEXT = "CRASH_TEXT";
-  public static final String CRASH_FILE = "CRASH_FILE";
-  public static final String BUG_REPORT = "BUG_REPORT";
-  private static final String[] DEFAULT_EMAIL = { "pyam.soft@gmail.com" };
-  private static final String DEFAULT_SUBJECT = "pyamsoft Application Crash Log";
-  private static final String DEFAULT_TEXT = "Crash log attached.";
-
-  private static final String[] BUGREPORT_EMAIL = DEFAULT_EMAIL;
-  private static final String BUGREPORT_SUBJECT = "pyamsoft Bug Report";
-  private static final String BUGREPORT_TEXT = "Please describe your bug report below:";
+  @NonNull public static final String APP_NAME = "APP_NAME";
+  @NonNull public static final String CRASH_EMAIL = "CRASH_EMAIL";
+  @NonNull public static final String CRASH_SUBJECT = "CRASH_SUBJECT";
+  @NonNull public static final String CRASH_TEXT = "CRASH_TEXT";
+  @NonNull public static final String CRASH_FILE = "CRASH_FILE";
+  @NonNull private static final String[] DEFAULT_EMAIL = { "pyam.soft@gmail.com" };
+  @NonNull private static final String DEFAULT_SUBJECT = "pyamsoft Application Crash Log";
+  @NonNull private static final String DEFAULT_TEXT = "Crash log attached.";
 
   // Can't use butterknife in libraries
-  private Button sendLog;
-  private TextView oopsText;
-
-  private Intent intent;
-
-  private boolean isBugReport;
+  @Nullable private Button sendLog;
+  @Nullable private TextView oopsText;
+  @Nullable private Intent intent;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     IMMLeakUtil.fixFocusedViewLeak(getApplication());
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_crashlog);
 
-    isBugReport = getIntent().getBooleanExtra(BUG_REPORT, false);
-
     findViews();
     formatOopsMessage();
-    setupMessage();
     setupMailIntent();
     setupSendLogButton();
   }
@@ -76,16 +67,12 @@ import timber.log.Timber;
       appName = "this pyamsoft Application";
     }
 
+    if (oopsText == null) {
+      throw new NullPointerException("OopsText is NULL");
+    }
+
     final String formatted = StringUtil.formatString(oopsText.getText().toString(), appName);
     oopsText.setText(formatted);
-  }
-
-  private void setupMessage() {
-    if (isBugReport) {
-      Timber.w("Exception thrown by User Bug Report");
-    } else {
-      Timber.w("Uncaught exception");
-    }
   }
 
   private void setupMailIntent() {
@@ -97,7 +84,7 @@ import timber.log.Timber;
     String[] emails = passedData.getStringArrayExtra(CRASH_EMAIL);
     if (emails == null || emails.length == 0) {
       Timber.w("Setting Default Email");
-      emails = (isBugReport ? BUGREPORT_EMAIL : DEFAULT_EMAIL);
+      emails = DEFAULT_EMAIL;
     } else {
       for (final String e : emails) {
         Timber.d("Setting emails: %s", e);
@@ -108,7 +95,7 @@ import timber.log.Timber;
     String subject = passedData.getStringExtra(CRASH_SUBJECT);
     if (subject == null || subject.isEmpty()) {
       Timber.w("Setting Default Subject");
-      subject = (isBugReport ? BUGREPORT_SUBJECT : DEFAULT_SUBJECT);
+      subject = DEFAULT_SUBJECT;
     } else {
       Timber.d("Setting subject: %s", subject);
     }
@@ -118,7 +105,7 @@ import timber.log.Timber;
     String text = passedData.getStringExtra(CRASH_TEXT);
     if (text == null || text.isEmpty()) {
       Timber.w("Setting Default Text");
-      text = (isBugReport ? BUGREPORT_TEXT : DEFAULT_TEXT);
+      text = DEFAULT_TEXT;
     } else {
       Timber.d("Setting text: %s", text);
     }
@@ -143,6 +130,9 @@ import timber.log.Timber;
   }
 
   private void setupSendLogButton() {
+    if (sendLog == null) {
+      throw new NullPointerException("Send Log Button is NULL");
+    }
     if (intent == null) {
       // No crash log available, no button
       sendLog.setVisibility(View.GONE);

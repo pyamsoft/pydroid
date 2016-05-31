@@ -60,16 +60,4 @@ public abstract class ApplicationBase extends Application implements CrashHandle
   @Override public String[] crashLogEmails() {
     return null;
   }
-
-  @Override public String[] bugReportEmails() {
-    return null;
-  }
-
-  @Override public String bugReportSubject() {
-    return null;
-  }
-
-  @Override public String bugReportText() {
-    return null;
-  }
 }

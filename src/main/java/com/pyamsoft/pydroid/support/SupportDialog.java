@@ -47,12 +47,12 @@ public class SupportDialog extends DialogFragment
   @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
   @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
   @NonNull private static final String ARG_PACKAGE = "package";
-  private final SocialMediaPresenter presenter;
-  private String APP_SKU_DONATE_ONE;
-  private String APP_SKU_DONATE_TWO;
-  private String APP_SKU_DONATE_FIVE;
-  private String APP_SKU_DONATE_TEN;
-  private String packageName;
+  @NonNull private final SocialMediaPresenter presenter;
+  @Nullable private String APP_SKU_DONATE_ONE;
+  @Nullable private String APP_SKU_DONATE_TWO;
+  @Nullable private String APP_SKU_DONATE_FIVE;
+  @Nullable private String APP_SKU_DONATE_TEN;
+  @Nullable private String packageName;
 
   public SupportDialog() {
     super();
@@ -86,6 +86,10 @@ public class SupportDialog extends DialogFragment
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     presenter.onCreateView(this);
+
+    if (packageName == null) {
+      throw new NullPointerException("No package name given to SupportDialog");
+    }
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
 
@@ -179,7 +183,7 @@ public class SupportDialog extends DialogFragment
     onLinkClicked(link);
   }
 
-  @Override public void onClick(View view) {
+  @Override public void onClick(@NonNull View view) {
     final int id = view.getId();
     String sku = null;
     if (id == R.id.support_one_text) {

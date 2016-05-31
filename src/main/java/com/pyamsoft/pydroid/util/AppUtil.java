@@ -45,24 +45,22 @@ public final class AppUtil {
 
   }
 
-  public static void setupFABBehavior(final FloatingActionButton fab,
-      final FloatingActionButton.Behavior behavior) {
-    if (fab != null) {
-      final ViewGroup.LayoutParams params = fab.getLayoutParams();
-      if (params instanceof CoordinatorLayout.LayoutParams) {
-        final CoordinatorLayout.LayoutParams coordParams = (CoordinatorLayout.LayoutParams) params;
-        if (behavior == null) {
-          Timber.d("Set default behavior");
-          coordParams.setBehavior(new FloatingActionButton.Behavior());
-        } else {
-          Timber.d("Set custom behavior");
-          coordParams.setBehavior(behavior);
-        }
+  public static void setupFABBehavior(final @NonNull FloatingActionButton fab,
+      final @Nullable FloatingActionButton.Behavior behavior) {
+    final ViewGroup.LayoutParams params = fab.getLayoutParams();
+    if (params instanceof CoordinatorLayout.LayoutParams) {
+      final CoordinatorLayout.LayoutParams coordParams = (CoordinatorLayout.LayoutParams) params;
+      if (behavior == null) {
+        Timber.d("Set default behavior");
+        coordParams.setBehavior(new FloatingActionButton.Behavior());
+      } else {
+        Timber.d("Set custom behavior");
+        coordParams.setBehavior(behavior);
       }
     }
   }
 
-  public static Intent getApplicationInfoIntent(final Class<? extends ApplicationBase> cls) {
+  public static Intent getApplicationInfoIntent(final @NonNull Class<? extends ApplicationBase> cls) {
     final Intent detailIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
     final Uri uri = Uri.fromParts("package", cls.getPackage().getName(), null);
     detailIntent.setData(uri);

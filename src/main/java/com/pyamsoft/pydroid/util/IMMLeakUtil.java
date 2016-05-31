@@ -24,6 +24,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.MessageQueue;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -37,6 +40,10 @@ import timber.log.Timber;
  */
 public final class IMMLeakUtil {
 
+  private IMMLeakUtil() {
+
+  }
+
   /**
    * Fix for https://code.google.com/p/android/issues/detail?id=171190 .
    *
@@ -47,7 +54,7 @@ public final class IMMLeakUtil {
    *
    * Should be called from {@link Activity#onCreate(Bundle)} )}.
    */
-  public static void fixFocusedViewLeak(Application application) {
+  public static void fixFocusedViewLeak(@NonNull Application application) {
 
     // LeakCanary reports this bug within IC_MR1 and M
     final int sdk = Build.VERSION.SDK_INT;
@@ -59,17 +66,17 @@ public final class IMMLeakUtil {
     final InputMethodManager inputMethodManager =
         (InputMethodManager) application.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-    final Field mServedViewField;
-    final Field mHField;
+    final Field servedViewField;
+    final Field lockField;
     final Method finishInputLockedMethod;
     final Method focusInMethod;
     try {
-      mServedViewField = InputMethodManager.class.getDeclaredField("mServedView");
-      mHField = InputMethodManager.class.getDeclaredField("mServedView");
+      servedViewField = InputMethodManager.class.getDeclaredField("mServedView");
+      lockField = InputMethodManager.class.getDeclaredField("mServedView");
       finishInputLockedMethod = InputMethodManager.class.getDeclaredMethod("finishInputLocked");
       focusInMethod = InputMethodManager.class.getDeclaredMethod("focusIn", View.class);
-      mServedViewField.setAccessible(true);
-      mHField.setAccessible(true);
+      servedViewField.setAccessible(true);
+      lockField.setAccessible(true);
       finishInputLockedMethod.setAccessible(true);
       focusInMethod.setAccessible(true);
     } catch (final Exception unexpected) {
@@ -82,14 +89,10 @@ public final class IMMLeakUtil {
     // https://gist.github.com/pyricau/4df64341cc978a7de414
     Timber.d("Register lifecycle callback to catch IMM Leaks");
     application.registerActivityLifecycleCallbacks(new LifecycleCallbacksAdapter() {
-      @Override public void onActivityStarted(final Activity activity) {
+      @Override public void onActivityStarted(@NonNull final Activity activity) {
         final ReferenceCleaner cleaner =
-            new ReferenceCleaner(inputMethodManager, mHField, mServedViewField,
+            new ReferenceCleaner(inputMethodManager, lockField, servedViewField,
                 finishInputLockedMethod);
-        if (activity == null) {
-          Timber.e("Activity is NULL");
-          return;
-        }
         final Window window = activity.getWindow();
         if (window == null) {
           Timber.e("Activity Window is NULL");
@@ -118,31 +121,34 @@ public final class IMMLeakUtil {
    * Simple class which allows us to not have to override every single callback, every single time.
    */
   public static class LifecycleCallbacksAdapter implements Application.ActivityLifecycleCallbacks {
-    @Override public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+    @Override
+    public void onActivityCreated(@NonNull Activity activity, @NonNull Bundle savedInstanceState) {
 
     }
 
-    @Override public void onActivityStarted(Activity activity) {
+    @Override public void onActivityStarted(@NonNull Activity activity) {
 
     }
 
-    @Override public void onActivityResumed(Activity activity) {
+    @Override public void onActivityResumed(@NonNull Activity activity) {
 
     }
 
-    @Override public void onActivityPaused(Activity activity) {
+    @Override public void onActivityPaused(@NonNull Activity activity) {
 
     }
 
-    @Override public void onActivityStopped(Activity activity) {
+    @Override public void onActivityStopped(@NonNull Activity activity) {
 
     }
 
-    @Override public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+    @Override
+    public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
 
     }
 
-    @Override public void onActivityDestroyed(Activity activity) {
+    @Override public void onActivityDestroyed(@NonNull Activity activity) {
 
     }
   }
@@ -151,20 +157,20 @@ public final class IMMLeakUtil {
       implements MessageQueue.IdleHandler, View.OnAttachStateChangeListener,
       ViewTreeObserver.OnGlobalFocusChangeListener {
 
-    private final InputMethodManager inputMethodManager;
-    private final Field mHField;
-    private final Field mServedViewField;
-    private final Method finishInputLockedMethod;
+    @NonNull private final InputMethodManager inputMethodManager;
+    @NonNull private final Field lockField;
+    @NonNull private final Field servedViewField;
+    @NonNull private final Method finishInputLockedMethod;
 
-    ReferenceCleaner(InputMethodManager inputMethodManager, Field mHField, Field mServedViewField,
-        Method finishInputLockedMethod) {
+    ReferenceCleaner(@NonNull InputMethodManager inputMethodManager, @NonNull Field lockField,
+        @NonNull Field servedViewField, @NonNull Method finishInputLockedMethod) {
       this.inputMethodManager = inputMethodManager;
-      this.mHField = mHField;
-      this.mServedViewField = mServedViewField;
+      this.lockField = lockField;
+      this.servedViewField = servedViewField;
       this.finishInputLockedMethod = finishInputLockedMethod;
     }
 
-    @Override public void onGlobalFocusChanged(View oldFocus, View newFocus) {
+    @Override public void onGlobalFocusChanged(@Nullable View oldFocus, @Nullable View newFocus) {
       if (newFocus == null) {
         return;
       }
@@ -175,16 +181,16 @@ public final class IMMLeakUtil {
       newFocus.addOnAttachStateChangeListener(this);
     }
 
-    @Override public void onViewAttachedToWindow(View v) {
+    @Override public void onViewAttachedToWindow(@NonNull View v) {
     }
 
-    @Override public void onViewDetachedFromWindow(View v) {
+    @Override public void onViewDetachedFromWindow(@NonNull View v) {
       v.removeOnAttachStateChangeListener(this);
       Looper.myQueue().removeIdleHandler(this);
       Looper.myQueue().addIdleHandler(this);
     }
 
-    @Override public boolean queueIdle() {
+    @CheckResult @Override public boolean queueIdle() {
       clearInputMethodManagerLeak();
       return false;
     }
@@ -193,10 +199,10 @@ public final class IMMLeakUtil {
     private void clearInputMethodManagerLeak() {
       try {
         Timber.d("Attempt to clear IMM leak");
-        final Object lock = mHField.get(inputMethodManager);
+        final Object lock = lockField.get(inputMethodManager);
         // This is highly dependent on the InputMethodManager implementation.
         synchronized (lock) {
-          final View servedView = (View) mServedViewField.get(inputMethodManager);
+          final View servedView = (View) servedViewField.get(inputMethodManager);
           if (servedView != null) {
 
             final boolean servedViewAttached = servedView.getWindowVisibility() != View.GONE;
@@ -233,7 +239,7 @@ public final class IMMLeakUtil {
       }
     }
 
-    private Activity extractActivity(Context context) {
+    @CheckResult @Nullable private Activity extractActivity(@NonNull Context context) {
       Timber.d("Extract the current activity from context");
       while (true) {
         if (context instanceof Application) {

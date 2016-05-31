@@ -24,15 +24,13 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import timber.log.Timber;
 
-@SuppressWarnings("unused") public final class NetworkUtil {
-
-  private static final String TAG = NetworkUtil.class.getSimpleName();
+public final class NetworkUtil {
 
   private NetworkUtil() {
 
   }
 
-  public static void newLink(final @NonNull Context c, final String link) {
+  public static void newLink(final @NonNull Context c, final @NonNull String link) {
     final Uri uri = Uri.parse(link);
     final Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

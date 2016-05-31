@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import java.io.File;
 import java.io.PrintWriter;
@@ -32,9 +33,8 @@ import timber.log.Timber;
 
 public final class CrashHandler implements Thread.UncaughtExceptionHandler {
 
-  private static final String CRASH_FILE_PREFIX = "CRASH_";
-  private static final String BUGREPORT_FILE_PREFIX = "BUGREPORT_";
-  private static final String CRASH_FILE_EXT = ".txt";
+  @NonNull private static final String CRASH_FILE_PREFIX = "CRASH_";
+  @NonNull private static final String CRASH_FILE_EXT = ".txt";
 
   @NonNull private final Context registeredContext;
   @NonNull private final CrashHandler.Provider provider;
@@ -55,9 +55,8 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     unregistered = true;
   }
 
-  @SuppressLint("NewApi")
-  private String createCrashLog(final Context context, final Throwable throwable,
-      final boolean isBugReport) {
+  @SuppressLint("NewApi") private String createCrashLog(final @NonNull Context context,
+      final @NonNull Throwable throwable) {
     final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
     final File dir = context.getApplicationContext().getFilesDir();
     if (dir == null) {
@@ -73,7 +72,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
       }
     }
 
-    final String prefix = (isBugReport) ? BUGREPORT_FILE_PREFIX : CRASH_FILE_PREFIX;
+    final String prefix = CRASH_FILE_PREFIX;
     final String crashFileName = prefix + timeStamp + CRASH_FILE_EXT;
 
     // Clear out old logs before making new ones
@@ -102,7 +101,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
   }
 
-  private void populateCrashLog(final Context context, PrintWriter printWriter,
+  private void populateCrashLog(final @NonNull Context context, @NonNull PrintWriter printWriter,
       final Throwable throwable) {
     printWriter.println("PACKAGE: " + context.getApplicationContext().getPackageName());
     printWriter.println();
@@ -128,10 +127,10 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     throwable.printStackTrace(printWriter);
   }
 
-  private boolean startCrashLogActivity(final Context context, final Throwable throwable) {
+  private boolean startCrashLogActivity(final @NonNull Context context,
+      final @NonNull Throwable throwable) {
     try {
-      boolean isBugReport = (throwable instanceof BugReportException);
-      final String crashLogPath = createCrashLog(context, throwable, isBugReport);
+      final String crashLogPath = createCrashLog(context, throwable);
       if (crashLogPath == null) {
         Timber.e("Could not create crash Log file");
         return false;
@@ -141,14 +140,10 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
       final Intent crashLogIntent =
           new Intent(provider.getApplicationPackageName() + ".crash.SEND_LOG");
       crashLogIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      crashLogIntent.putExtra(CrashLogActivity.CRASH_EMAIL,
-          isBugReport ? provider.bugReportEmails() : provider.crashLogEmails())
-          .putExtra(CrashLogActivity.CRASH_SUBJECT,
-              isBugReport ? provider.bugReportSubject() : provider.crashLogSubject())
-          .putExtra(CrashLogActivity.CRASH_TEXT,
-              isBugReport ? provider.bugReportText() : provider.crashLogText())
+      crashLogIntent.putExtra(CrashLogActivity.CRASH_EMAIL, provider.crashLogEmails())
+          .putExtra(CrashLogActivity.CRASH_SUBJECT, provider.crashLogSubject())
+          .putExtra(CrashLogActivity.CRASH_TEXT, provider.crashLogText())
           .putExtra(CrashLogActivity.CRASH_FILE, crashLogPath)
-          .putExtra(CrashLogActivity.BUG_REPORT, isBugReport)
           .putExtra(CrashLogActivity.APP_NAME, provider.appName());
       context.getApplicationContext().startActivity(crashLogIntent);
       return true;
@@ -175,13 +170,14 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     android.os.Process.killProcess(pid);
   }
 
-  private void continueWithOriginalCrash(final Thread thread, final Throwable throwable) {
+  private void continueWithOriginalCrash(final @NonNull Thread thread,
+      final @NonNull Throwable throwable) {
     // Pass through the original exception
     Timber.e("Pass original throwable");
     defaultUncaughtExceptionHandler.uncaughtException(thread, throwable);
   }
 
-  @Override public void uncaughtException(Thread thread, Throwable throwable) {
+  @Override public void uncaughtException(@NonNull Thread thread, @NonNull Throwable throwable) {
     // Avoids a potential stack overflow
     if (crashing) {
       return;
@@ -221,26 +217,20 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
 
   public interface Provider {
 
-    @NonNull String appName();
+    @CheckResult @NonNull String appName();
 
-    @NonNull String buildConfigApplicationId();
+    @CheckResult @NonNull String buildConfigApplicationId();
 
-    @NonNull String buildConfigVersionName();
+    @CheckResult @NonNull String buildConfigVersionName();
 
-    int buildConfigVersionCode();
+    @CheckResult int buildConfigVersionCode();
 
-    @NonNull String getApplicationPackageName();
+    @CheckResult @NonNull String getApplicationPackageName();
 
-    String crashLogText();
+    @CheckResult String crashLogText();
 
-    String crashLogSubject();
+    @CheckResult String crashLogSubject();
 
-    String[] crashLogEmails();
-
-    String bugReportText();
-
-    String bugReportSubject();
-
-    String[] bugReportEmails();
+    @CheckResult String[] crashLogEmails();
   }
 }

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.util;
 
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
@@ -23,9 +24,14 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
-@SuppressWarnings({ "WeakerAccess", "unused" }) public final class AnimUtil {
+public final class AnimUtil {
 
-  public static ViewPropertyAnimatorCompat popShow(final View v, final int startDelay,
+  private AnimUtil() {
+
+  }
+
+  @NonNull
+  public static ViewPropertyAnimatorCompat popShow(final @NonNull View v, final int startDelay,
       final int duration) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.overshoot);
@@ -54,7 +60,8 @@ import android.view.animation.Interpolator;
         });
   }
 
-  public static ViewPropertyAnimatorCompat popHide(final View v, final int startDelay,
+  @NonNull
+  public static ViewPropertyAnimatorCompat popHide(final @NonNull View v, final int startDelay,
       final int duration) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.overshoot);
@@ -84,7 +91,7 @@ import android.view.animation.Interpolator;
         });
   }
 
-  public static ViewPropertyAnimatorCompat fadeIn(final View v) {
+  @NonNull public static ViewPropertyAnimatorCompat fadeIn(final @NonNull View v) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     v.setAlpha(0f);
@@ -100,7 +107,7 @@ import android.view.animation.Interpolator;
         .setListener(null);
   }
 
-  public static ViewPropertyAnimatorCompat fadeAway(final View v) {
+  @NonNull public static ViewPropertyAnimatorCompat fadeAway(final @NonNull View v) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     v.setAlpha(1f);
@@ -114,7 +121,7 @@ import android.view.animation.Interpolator;
         .setListener(null);
   }
 
-  public static ViewPropertyAnimatorCompat flipVertical(final View v) {
+  @NonNull public static ViewPropertyAnimatorCompat flipVertical(final @NonNull View v) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     return ViewCompat.animate(v)

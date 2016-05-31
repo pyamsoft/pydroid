@@ -38,16 +38,15 @@ public final class DataHolderFragment<T> extends Fragment {
    * Get an Instance of DataHolderFragment
    */
   @CheckResult @NonNull public static <I> DataHolderFragment<I> getInstance(
-      final @NonNull FragmentActivity fragmentActivity, final @NonNull Class<I> clazz) {
-    return getInstance(fragmentActivity.getSupportFragmentManager(), clazz);
+      final @NonNull FragmentActivity fragmentActivity, final @NonNull String tag) {
+    return getInstance(fragmentActivity.getSupportFragmentManager(), tag);
   }
 
   /**
    * Get an Instance of DataHolderFragment
    */
   @CheckResult @NonNull public static <I> DataHolderFragment<I> getInstance(
-      final @NonNull FragmentManager fragmentManager, final @NonNull Class<I> clazz) {
-    final String tag = clazz.getName();
+      final @NonNull FragmentManager fragmentManager, final @NonNull String tag) {
     @SuppressWarnings("unchecked") DataHolderFragment<I> dataHolderFragment =
         (DataHolderFragment<I>) fragmentManager.findFragmentByTag(tag);
     if (dataHolderFragment == null) {
@@ -125,7 +124,7 @@ public final class DataHolderFragment<T> extends Fragment {
    *
    * It is up to the caller to remember the key
    */
-  public final void put(final int key, final @NonNull T value) {
+  public final void put(final int key, final @Nullable T value) {
     Timber.d("Put value: %s into key: %d", value, key);
     sparseArray.put(key, value);
   }

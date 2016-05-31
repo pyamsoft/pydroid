@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableTask;
-import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
@@ -46,9 +45,14 @@ public class RatingDialog extends DialogFragment {
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider) {
+    showRatingDialog(activity, provider, false);
+  }
+
+  public static void showRatingDialog(final @NonNull FragmentActivity activity,
+      final @NonNull ChangeLogProvider provider, final boolean force) {
     final SharedPreferences preferences =
         PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-    if (preferences.getInt(PREFERENCE_TARGET, 0) < provider.getChangeLogVersion()) {
+    if (force || preferences.getInt(PREFERENCE_TARGET, 0) < provider.getChangeLogVersion()) {
       AppUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating");
     }
   }

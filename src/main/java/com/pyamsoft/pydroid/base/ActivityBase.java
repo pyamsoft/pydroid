@@ -198,7 +198,7 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     consumeLeftOverPurchases();
   }
 
-  protected void setActionBarUpEnabled(final boolean enabled) {
+  public void setActionBarUpEnabled(final boolean enabled) {
     final ActionBar bar = getSupportActionBar();
     if (bar != null) {
       bar.setHomeButtonEnabled(enabled);

@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -60,11 +61,26 @@ public final class AppUtil {
     }
   }
 
-  public static Intent getApplicationInfoIntent(final @NonNull Class<? extends ApplicationBase> cls) {
-    final Intent detailIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-    final Uri uri = Uri.fromParts("package", cls.getPackage().getName(), null);
-    detailIntent.setData(uri);
-    return detailIntent;
+  @CheckResult @NonNull public static Intent getApplicationInfoIntent(
+      final @NonNull Class<? extends ApplicationBase> cls) {
+    final Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    i.addCategory(Intent.CATEGORY_DEFAULT);
+    i.setData(Uri.fromParts("package", cls.getPackage().getName(), null));
+    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+    return i;
+  }
+
+  @CheckResult @NonNull
+  public static Intent getAppDetailsIntent(final @NonNull Class<? extends ApplicationBase> cls) {
+    final Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    i.addCategory(Intent.CATEGORY_DEFAULT);
+    i.setData(Uri.fromParts("package", cls.getPackage().getName(), null));
+    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+    return i;
   }
 
   /**
@@ -113,7 +129,7 @@ public final class AppUtil {
     }
   }
 
-  public static float convertToDP(final @NonNull Context c, final float px) {
+  @CheckResult public static float convertToDP(final @NonNull Context c, final float px) {
     final DisplayMetrics m = c.getResources().getDisplayMetrics();
     final float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m);
     Timber.d("Convert %f px to %f dp", px, dp);

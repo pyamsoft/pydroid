@@ -67,10 +67,7 @@ import timber.log.Timber;
       appName = "this pyamsoft Application";
     }
 
-    if (oopsText == null) {
-      throw new NullPointerException("OopsText is NULL");
-    }
-
+    assert oopsText != null;
     final String formatted = StringUtil.formatString(oopsText.getText().toString(), appName);
     oopsText.setText(formatted);
   }
@@ -130,9 +127,7 @@ import timber.log.Timber;
   }
 
   private void setupSendLogButton() {
-    if (sendLog == null) {
-      throw new NullPointerException("Send Log Button is NULL");
-    }
+    assert sendLog != null;
     if (intent == null) {
       // No crash log available, no button
       sendLog.setVisibility(View.GONE);

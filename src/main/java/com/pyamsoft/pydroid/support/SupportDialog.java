@@ -87,14 +87,14 @@ public class SupportDialog extends DialogFragment
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     presenter.onCreateView(this);
 
-    if (packageName == null) {
-      throw new NullPointerException("No package name given to SupportDialog");
-    }
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
 
     final Button aboutApp = (Button) rootView.findViewById(R.id.support_about_app);
-    aboutApp.setOnClickListener(view -> presenter.clickAppPage(packageName));
+    aboutApp.setOnClickListener(view -> {
+      assert packageName != null;
+      presenter.clickAppPage(packageName);
+    });
 
     final TextView oneTitle = (TextView) rootView.findViewById(R.id.support_one_text);
     final TextView twoTitle = (TextView) rootView.findViewById(R.id.support_two_text);

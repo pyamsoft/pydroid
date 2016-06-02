@@ -149,9 +149,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
 
   @Override protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
     if (isDonationSupported()) {
-      if (billingProcessor == null) {
-        throw new NullPointerException("Donation Supported Application has NULL Billing Processor");
-      }
       if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
         super.onActivityResult(requestCode, resultCode, data);
       }
@@ -163,9 +160,7 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
   @Override protected void onDestroy() {
     super.onDestroy();
     if (isDonationSupported()) {
-      if (billingProcessor == null) {
-        throw new NullPointerException("Donation Supported Application has NULL Billing Processor");
-      }
+      assert billingProcessor != null;
       billingProcessor.release();
     }
   }
@@ -175,10 +170,8 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     Timber.d("onProductPurchased");
     Timber.d("Details: %s", details);
     if (isDonationSupported()) {
-      if (billingProcessor == null) {
-        throw new NullPointerException("Donation Supported Application has NULL Billing Processor");
-      }
       Timber.d("Consume item: %s with token %s", details.productId, details.purchaseToken);
+      assert billingProcessor != null;
       billingProcessor.consumePurchase(productId);
     } else {
       throw new NullPointerException("Tried to consume purchase with NULL BillingProcessor");
@@ -293,9 +286,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
 
   public final void purchase(final @NonNull String sku) {
     if (isDonationSupported()) {
-      if (billingProcessor == null) {
-        throw new NullPointerException("Donation Supported Application has NULL Billing Processor");
-      }
       billingProcessor.purchase(this, sku);
     } else {
       Timber.e("Cannot call purchases in a non-donation supported Application");

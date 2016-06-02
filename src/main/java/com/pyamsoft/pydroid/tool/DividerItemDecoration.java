@@ -37,9 +37,7 @@ public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
   public DividerItemDecoration(@NonNull Context context, int orientation) {
     final TypedArray a = context.obtainStyledAttributes(ATTRS);
     final Drawable drawable = a.getDrawable(0);
-    if (drawable == null) {
-      throw new NullPointerException("Drawable is NULL");
-    }
+    assert drawable != null;
     dividerDrawable = drawable;
     a.recycle();
     setOrientation(orientation);

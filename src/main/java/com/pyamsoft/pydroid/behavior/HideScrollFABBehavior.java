@@ -32,6 +32,7 @@ import android.view.View;
   }
 
   public HideScrollFABBehavior(final int distance) {
+    super();
     distanceNeeded = distance;
     animating = false;
   }

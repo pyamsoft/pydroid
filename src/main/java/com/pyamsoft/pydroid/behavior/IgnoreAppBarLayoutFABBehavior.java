@@ -31,6 +31,7 @@ public class IgnoreAppBarLayoutFABBehavior extends FloatingActionButton.Behavior
   }
 
   public IgnoreAppBarLayoutFABBehavior(final boolean b) {
+    super();
     control = b;
   }
 

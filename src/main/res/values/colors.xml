@@ -15,6 +15,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <color name="amber500" tools:keep="@color/amber500">#ffffc107</color>

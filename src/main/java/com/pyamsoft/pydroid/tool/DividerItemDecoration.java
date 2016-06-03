@@ -28,9 +28,9 @@ import android.view.View;
 
 public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-  @NonNull private static final int[] ATTRS = new int[] { android.R.attr.listDivider };
   public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
   public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
+  @NonNull private static final int[] ATTRS = new int[] { android.R.attr.listDivider };
   @NonNull private final Drawable dividerDrawable;
   private int decorationOrientation;
 

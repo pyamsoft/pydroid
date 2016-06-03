@@ -37,11 +37,9 @@ import timber.log.Timber;
 @SuppressLint("Registered") public final class CrashLogActivity extends AppCompatActivity {
 
   @NonNull public static final String APP_NAME = "APP_NAME";
-  @NonNull public static final String CRASH_EMAIL = "CRASH_EMAIL";
   @NonNull public static final String CRASH_SUBJECT = "CRASH_SUBJECT";
   @NonNull public static final String CRASH_TEXT = "CRASH_TEXT";
   @NonNull public static final String CRASH_FILE = "CRASH_FILE";
-  @NonNull private static final String[] DEFAULT_EMAIL = { "pyam.soft@gmail.com" };
   @NonNull private static final String DEFAULT_SUBJECT = "pyamsoft Application Crash Log";
   @NonNull private static final String DEFAULT_TEXT = "Crash log attached.";
 
@@ -78,16 +76,7 @@ import timber.log.Timber;
         .setType("message/rfc822");
 
     final Intent passedData = getIntent();
-    String[] emails = passedData.getStringArrayExtra(CRASH_EMAIL);
-    if (emails == null || emails.length == 0) {
-      Timber.w("Setting Default Email");
-      emails = DEFAULT_EMAIL;
-    } else {
-      for (final String e : emails) {
-        Timber.d("Setting emails: %s", e);
-      }
-    }
-    intentBuilder.addEmailTo(emails);
+    intentBuilder.addEmailTo(new String[] { "pyam.soft@gmail.com" });
 
     String subject = passedData.getStringExtra(CRASH_SUBJECT);
     if (subject == null || subject.isEmpty()) {

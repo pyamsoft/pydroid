@@ -140,8 +140,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
       final Intent crashLogIntent =
           new Intent(provider.getApplicationPackageName() + ".crash.SEND_LOG");
       crashLogIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      crashLogIntent.putExtra(CrashLogActivity.CRASH_EMAIL, provider.crashLogEmails())
-          .putExtra(CrashLogActivity.CRASH_SUBJECT, provider.crashLogSubject())
+      crashLogIntent.putExtra(CrashLogActivity.CRASH_SUBJECT, provider.crashLogSubject())
           .putExtra(CrashLogActivity.CRASH_TEXT, provider.crashLogText())
           .putExtra(CrashLogActivity.CRASH_FILE, crashLogPath)
           .putExtra(CrashLogActivity.APP_NAME, provider.appName());
@@ -230,7 +229,5 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     @CheckResult String crashLogText();
 
     @CheckResult String crashLogSubject();
-
-    @CheckResult String[] crashLogEmails();
   }
 }

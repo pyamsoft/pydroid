@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.support.annotation.CheckResult;
@@ -31,30 +30,8 @@ import android.util.TypedValue;
 
 public final class StringUtil {
 
-  private static final int INDEX_ATTR = 0;
-
   private StringUtil() {
 
-  }
-
-  @CheckResult @NonNull public static String xor(final @NonNull String s, final long r) {
-    final char[] chars = s.toCharArray();
-    for (int i = 0; i < chars.length; ++i) {
-      chars[i] = (char) (chars[i] ^ r);
-    }
-    return String.valueOf(chars);
-  }
-
-  @CheckResult @NonNull
-  public static String formatResString(final @NonNull Resources resources, final int stringId,
-      final @NonNull Object... args) {
-    final String format = resources.getString(stringId);
-    return String.format(format, args);
-  }
-
-  @CheckResult @NonNull
-  public static String formatString(final @NonNull String fmt, final @NonNull Object... args) {
-    return String.format(fmt, args);
   }
 
   /**
@@ -122,9 +99,9 @@ public final class StringUtil {
 
   @CheckResult @NonNull
   public static TypedArray getAttributeFromAppearance(final @NonNull Context context,
-      final int textAppearance, final int attr) {
+      final int style, final int attr) {
     final TypedValue typedValue = new TypedValue();
-    context.getTheme().resolveAttribute(textAppearance, typedValue, true);
+    context.getTheme().resolveAttribute(style, typedValue, true);
     return context.obtainStyledAttributes(typedValue.data, new int[] { attr });
   }
 
@@ -132,7 +109,7 @@ public final class StringUtil {
       final int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textSize);
-    final int textSize = a.getDimensionPixelSize(INDEX_ATTR, -1);
+    final int textSize = a.getDimensionPixelSize(0, -1);
     a.recycle();
     return textSize;
   }
@@ -141,7 +118,7 @@ public final class StringUtil {
       final int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textColor);
-    final int textSize = a.getColor(INDEX_ATTR, -1);
+    final int textSize = a.getColor(0, -1);
     a.recycle();
     return textSize;
   }

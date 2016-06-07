@@ -30,7 +30,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.util.IMMLeakUtil;
-import com.pyamsoft.pydroid.util.StringUtil;
 import java.io.File;
 import timber.log.Timber;
 
@@ -66,7 +65,7 @@ import timber.log.Timber;
     }
 
     assert oopsText != null;
-    final String formatted = StringUtil.formatString(oopsText.getText().toString(), appName);
+    final String formatted = String.format(oopsText.getText().toString(), appName);
     oopsText.setText(formatted);
   }
 

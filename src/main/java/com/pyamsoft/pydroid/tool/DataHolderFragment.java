@@ -80,16 +80,15 @@ public final class DataHolderFragment<T> extends Fragment {
    * Remove a fragment based on its TAG
    */
   public static <I> void remove(final @NonNull FragmentActivity fragmentActivity,
-      final @NonNull Class<I> clazz) {
-    remove(fragmentActivity.getSupportFragmentManager(), clazz);
+      final @NonNull String tag) {
+    remove(fragmentActivity.getSupportFragmentManager(), tag);
   }
 
   /**
    * Remove a fragment based on its TAG
    */
   public static <I> void remove(final @NonNull FragmentManager fragmentManager,
-      final @NonNull Class<I> clazz) {
-    final String tag = clazz.getName();
+      final @NonNull String tag) {
     @SuppressWarnings("unchecked") final DataHolderFragment<I> dataHolderFragment =
         (DataHolderFragment<I>) fragmentManager.findFragmentByTag(tag);
     if (dataHolderFragment != null) {

@@ -18,8 +18,11 @@ package com.pyamsoft.pydroid.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import com.pyamsoft.pydroid.BuildConfig;
@@ -103,5 +106,41 @@ public class AppUtilTest {
 
     Assert.assertNotSame(oneDp * 16, zero);
     Assert.assertEquals(oneDp * 16, AppUtil.convertToDP(context, 16));
+  }
+
+  @Test public void test_getApplicationInfoIntent() {
+    // Check that URI points to the same place
+    String packageName = "com.pyamsoft.padlock";
+    Intent intent = AppUtil.getApplicationInfoIntent(packageName);
+    Uri uri = Uri.fromParts("package", packageName, null);
+    Assert.assertEquals(intent.getData().toString(), uri.toString());
+
+    packageName = "com.test.example";
+    intent = AppUtil.getApplicationInfoIntent(packageName);
+    uri = Uri.fromParts("package", packageName, null);
+    Assert.assertEquals(intent.getData().toString(), uri.toString());
+  }
+
+  @Test public void test_guaranteeSingleDialogFragment() throws InterruptedException {
+    final ActivityController<AppCompatActivity> activityController =
+        TestUtils.getAppCompatActivityController();
+    final AppCompatActivity activity = activityController.create().start().resume().visible().get();
+
+    // First make sure adding a fragment works
+    AppUtil.guaranteeSingleDialogFragment(activity, new DialogFragment(), "tag");
+    Assert.assertEquals(1, activity.getSupportFragmentManager().getFragments().size());
+
+    // Adding a fragment with the same tag removes the old one
+    AppUtil.guaranteeSingleDialogFragment(activity, new DialogFragment(), "tag");
+    // There are two fragments
+    Assert.assertEquals(2, activity.getSupportFragmentManager().getFragments().size());
+    // But the first one (old) is NULL
+    Assert.assertNull(activity.getSupportFragmentManager().getFragments().toArray()[0]);
+    // And the second one is not
+    Assert.assertNotNull(activity.getSupportFragmentManager().getFragments().toArray()[1]);
+
+    // Adding a fragment with a new tag adds it
+    AppUtil.guaranteeSingleDialogFragment(activity, new DialogFragment(), "newtag");
+    Assert.assertEquals(2, activity.getSupportFragmentManager().getFragments().size());
   }
 }

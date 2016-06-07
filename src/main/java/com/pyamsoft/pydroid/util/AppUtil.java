@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
@@ -34,10 +33,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import com.pyamsoft.pydroid.base.ApplicationBase;
 import timber.log.Timber;
 
 public final class AppUtil {
@@ -61,24 +57,12 @@ public final class AppUtil {
     }
   }
 
-  @CheckResult @NonNull public static Intent getApplicationInfoIntent(
-      final @NonNull Class<? extends ApplicationBase> cls) {
-    final Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-    i.addCategory(Intent.CATEGORY_DEFAULT);
-    i.setData(Uri.fromParts("package", cls.getPackage().getName(), null));
-    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-    return i;
-  }
-
   @CheckResult @NonNull
-  public static Intent getAppDetailsIntent(final @NonNull Class<? extends ApplicationBase> cls) {
+  public static Intent getApplicationInfoIntent(final @NonNull String packageName) {
     final Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
     i.addCategory(Intent.CATEGORY_DEFAULT);
-    i.setData(Uri.fromParts("package", cls.getPackage().getName(), null));
+    i.setData(Uri.fromParts("package", packageName, null));
     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
     i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return i;
   }
@@ -109,24 +93,6 @@ public final class AppUtil {
 
     Timber.d("Add new fragment with tag: %s", tag);
     dialogFragment.show(ft, tag);
-  }
-
-  public static void nullifyCallback(final @Nullable View view) {
-    if (view == null) {
-      return;
-    }
-    Drawable d = view.getBackground();
-    if (d != null) {
-      d.setCallback(null);
-    }
-
-    if (view instanceof ImageView) {
-      final ImageView image = (ImageView) view;
-      d = image.getDrawable();
-      if (d != null) {
-        d.setCallback(null);
-      }
-    }
   }
 
   @CheckResult public static float convertToDP(final @NonNull Context c, final float px) {

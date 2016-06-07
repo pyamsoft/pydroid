@@ -149,6 +149,7 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
 
   @Override protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
     if (isDonationSupported()) {
+      assert billingProcessor != null;
       if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
         super.onActivityResult(requestCode, resultCode, data);
       }
@@ -286,6 +287,7 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
 
   public final void purchase(final @NonNull String sku) {
     if (isDonationSupported()) {
+      assert billingProcessor != null;
       billingProcessor.purchase(this, sku);
     } else {
       Timber.e("Cannot call purchases in a non-donation supported Application");

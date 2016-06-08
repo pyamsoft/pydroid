@@ -28,7 +28,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.behavior.HideScrollFABBehavior;
 import com.pyamsoft.pydroid.behavior.IgnoreAppBarLayoutFABBehavior;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -87,25 +87,25 @@ public class AppUtilTest {
 
     // Zero test
     final float zero = 0F;
-    Assert.assertEquals(zero, AppUtil.convertToDP(context, 0));
+    Assert.assertEquals(zero, AppUtil.convertToDP(context, 0), 0);
 
     // Reproducibility test
     final float oneDp = AppUtil.convertToDP(context, 1);
     Assert.assertNotSame(oneDp, zero);
-    Assert.assertEquals(oneDp, AppUtil.convertToDP(context, 1));
+    Assert.assertEquals(oneDp, AppUtil.convertToDP(context, 1), 0);
 
     // Correct logic
     Assert.assertNotSame(oneDp * 2, zero);
-    Assert.assertEquals(oneDp * 2, AppUtil.convertToDP(context, 2));
+    Assert.assertEquals(oneDp * 2, AppUtil.convertToDP(context, 2), 0);
 
     Assert.assertNotSame(oneDp * 4, zero);
-    Assert.assertEquals(oneDp * 4, AppUtil.convertToDP(context, 4));
+    Assert.assertEquals(oneDp * 4, AppUtil.convertToDP(context, 4), 0);
 
     Assert.assertNotSame(oneDp * 8, zero);
-    Assert.assertEquals(oneDp * 8, AppUtil.convertToDP(context, 8));
+    Assert.assertEquals(oneDp * 8, AppUtil.convertToDP(context, 8), 0);
 
     Assert.assertNotSame(oneDp * 16, zero);
-    Assert.assertEquals(oneDp * 16, AppUtil.convertToDP(context, 16));
+    Assert.assertEquals(oneDp * 16, AppUtil.convertToDP(context, 16), 0);
   }
 
   @Test public void test_getApplicationInfoIntent() {

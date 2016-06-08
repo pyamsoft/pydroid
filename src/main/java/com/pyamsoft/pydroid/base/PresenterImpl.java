@@ -19,26 +19,33 @@ package com.pyamsoft.pydroid.base;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import java.lang.ref.WeakReference;
 
 public abstract class PresenterImpl<I> implements Presenter<I> {
 
-  @NonNull private WeakReference<I> weakView;
+  @Nullable private I view;
 
   protected PresenterImpl() {
-    this.weakView = new WeakReference<>(null);
   }
 
-  @CheckResult @Nullable protected final I getView() {
-    return weakView.get();
+  @CheckResult @NonNull protected final I getView() {
+    if (view == null) {
+      throw new IllegalStateException("Cannot call getView() on a null View");
+    }
+    return view;
   }
 
   @Override public void onCreateView(@NonNull I view) {
-    this.weakView = new WeakReference<>(view);
+    if (this.view != null) {
+      throw new IllegalStateException("Must call onDestroyView before calling onCreateView again");
+    }
+    this.view = view;
   }
 
   @Override public void onDestroyView() {
-    weakView.clear();
+    if (this.view == null) {
+      throw new IllegalStateException("Must call onCreateView before calling onDestroyView again.");
+    }
+    this.view = null;
   }
 
   @Override public void onResume() {

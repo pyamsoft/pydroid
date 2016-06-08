@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.util;
 
 import android.text.Spannable;
 import com.pyamsoft.pydroid.BuildConfig;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;

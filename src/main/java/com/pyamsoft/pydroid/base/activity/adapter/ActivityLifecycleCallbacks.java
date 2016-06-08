@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base;
+package com.pyamsoft.pydroid.base.activity.adapter;
 
-import android.support.annotation.NonNull;
+public interface ActivityLifecycleCallbacks {
 
-public abstract class NoDonationActivityBase extends ActivityBase {
+  void onCreate();
 
-  @Override protected final boolean isDonationSupported() {
-    return false;
-  }
+  void onDestroy();
 
-  @NonNull @Override protected final String getPlayStoreAppPackage() {
-    return "";
-  }
+  void onStart();
+
+  void onStop();
 }

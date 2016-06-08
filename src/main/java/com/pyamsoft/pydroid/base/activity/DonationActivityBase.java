@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base;
+package com.pyamsoft.pydroid.base.activity;
 
 public abstract class DonationActivityBase extends ActivityBase {
 

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base;
+package com.pyamsoft.pydroid.base.activity.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import com.pyamsoft.pydroid.tool.ActivityLifecycleCallbacks;
 
 public abstract class ActivityRecyclerAdapter<T extends RecyclerView.ViewHolder>
     extends RecyclerView.Adapter<T> implements ActivityLifecycleCallbacks {

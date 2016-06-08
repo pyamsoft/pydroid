@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base;
+package com.pyamsoft.pydroid.base.activity;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -50,11 +50,10 @@ import timber.log.Timber;
 abstract class ActivityBase extends AppCompatActivity implements BillingProcessor.IBillingHandler {
 
   private static final long BACK_PRESSED_DELAY = 1600L;
-  @NonNull private static final String BUG_REPORT_TAG = "bug_report";
   @NonNull private static final String SUPPORT_TAG = "support";
   @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
 
-  private boolean backBeenPressed;
+  boolean backBeenPressed;
   @Nullable private Handler handler;
   @Nullable private Toast backBeenPressedToast;
   @Nullable private Runnable backBeenPressedRunnable;

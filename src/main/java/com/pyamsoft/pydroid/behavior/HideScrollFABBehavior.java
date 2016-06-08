@@ -21,8 +21,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 
-@SuppressWarnings({ "WeakerAccess", "unused" }) public class HideScrollFABBehavior
-    extends FloatingActionButton.Behavior {
+public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
 
   private final int distanceNeeded;
   private boolean animating = false;

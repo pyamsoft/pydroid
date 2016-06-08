@@ -32,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.base.DonationActivityBase;
+import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.social.SocialMediaPresenterImpl;
 import com.pyamsoft.pydroid.util.NetworkUtil;

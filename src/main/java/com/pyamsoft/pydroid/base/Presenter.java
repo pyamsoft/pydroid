@@ -25,15 +25,30 @@ public interface Presenter<I> {
    *
    * Usually called during the onCreate/onCreateView calls
    */
-  void onCreateView(@NonNull I view);
+  void bindView(@NonNull I view);
+
+  /**
+   * Bind the View to this presenter
+   *
+   * Usually called during the onCreate/onCreateView calls
+   * Also calls the bind() hook when set to true
+   */
+  void bindView(@NonNull I view, boolean runHook);
 
   /**
    * Unbind the View to this presenter
-   * Discard any data associated
    *
-   * Usually called during the onDestroy/onDestroyView calls
+   * Usually called during the onDestroy/unbindView calls
    */
-  void onDestroyView();
+  void unbindView();
+
+  /**
+   * Unbind the View to this presenter
+   * Discard any data associated if hook is set to true
+   *
+   * Usually called during the onDestroy/unbindView calls
+   */
+  void unbindView(boolean runHook);
 
   /**
    * Used for registering the presenter to various bus subscriptions

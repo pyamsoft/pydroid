@@ -24,41 +24,31 @@ public final class SocialMediaPresenterImpl
 
   @Override public void clickAppPage(@NonNull String link) {
     final SocialMediaView mediaView = getView();
-    if (mediaView != null) {
-      final String fullLink = "market://details?id=" + link;
-      mediaView.onAppPageClicked(fullLink);
-    }
+    final String fullLink = "market://details?id=" + link;
+    mediaView.onAppPageClicked(fullLink);
   }
 
   @Override public void clickGooglePlay() {
     final SocialMediaView mediaView = getView();
-    if (mediaView != null) {
-      final String link = "https://play.google.com/store/apps/dev?id=5257476342110165153";
-      mediaView.onGooglePlayClicked(link);
-    }
+    final String link = "https://play.google.com/store/apps/dev?id=5257476342110165153";
+    mediaView.onGooglePlayClicked(link);
   }
 
   @Override public void clickGooglePlus() {
     final SocialMediaView mediaView = getView();
-    if (mediaView != null) {
-      final String link = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts";
-      mediaView.onGooglePlusClicked(link);
-    }
+    final String link = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts";
+    mediaView.onGooglePlusClicked(link);
   }
 
   @Override public void clickBlogger() {
     final SocialMediaView mediaView = getView();
-    if (mediaView != null) {
-      final String link = "http://pyamsoft.blogspot.com/";
-      mediaView.onBloggerClicked(link);
-    }
+    final String link = "http://pyamsoft.blogspot.com/";
+    mediaView.onBloggerClicked(link);
   }
 
   @Override public void clickFacebook() {
     final SocialMediaView mediaView = getView();
-    if (mediaView != null) {
-      final String link = "https://www.facebook.com/pyamsoftware";
-      mediaView.onFacebookClicked(link);
-    }
+    final String link = "https://www.facebook.com/pyamsoftware";
+    mediaView.onFacebookClicked(link);
   }
 }

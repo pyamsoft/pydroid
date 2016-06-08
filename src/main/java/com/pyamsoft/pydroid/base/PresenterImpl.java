@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.base;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import timber.log.Timber;
 
 public abstract class PresenterImpl<I> implements Presenter<I> {
 
@@ -34,18 +35,36 @@ public abstract class PresenterImpl<I> implements Presenter<I> {
     return view;
   }
 
-  @Override public void onCreateView(@NonNull I view) {
-    if (this.view != null) {
-      throw new IllegalStateException("Must call onDestroyView before calling onCreateView again");
-    }
-    this.view = view;
+  @Override public final void bindView(@NonNull I view) {
+    bindView(view, true);
   }
 
-  @Override public void onDestroyView() {
+  @Override public final void bindView(@NonNull I view, boolean runHook) {
+    if (this.view != null) {
+      throw new IllegalStateException("Must call unbindView before calling bindView again");
+    }
+    this.view = view;
+
+    if (runHook) {
+      Timber.d("Run onBind hook");
+      onBind();
+    }
+  }
+
+  @Override public final void unbindView() {
+    unbindView(true);
+  }
+
+  @Override public final void unbindView(boolean runHook) {
     if (this.view == null) {
-      throw new IllegalStateException("Must call onCreateView before calling onDestroyView again.");
+      throw new IllegalStateException("Must call bindView before calling unbindView again.");
     }
     this.view = null;
+
+    if (runHook) {
+      Timber.d("Run onUnbind hook");
+      onUnbind();
+    }
   }
 
   @Override public void onResume() {
@@ -53,6 +72,14 @@ public abstract class PresenterImpl<I> implements Presenter<I> {
   }
 
   @Override public void onPause() {
+
+  }
+
+  protected void onBind() {
+
+  }
+
+  protected void onUnbind() {
 
   }
 }

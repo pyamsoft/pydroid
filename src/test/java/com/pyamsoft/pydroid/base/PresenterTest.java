@@ -41,12 +41,12 @@ public class PresenterTest {
 
     // By default, constructed with a null view
     final String hold = "String";
-    presenter.onCreateView(hold);
+    presenter.bindView(hold);
     Assert.assertNotNull(presenter.getView());
 
     // Expect an error when create is called again without destroy
     doubleUseException.expect(IllegalStateException.class);
-    presenter.onCreateView(hold);
+    presenter.bindView(hold);
   }
 
   @Test public void test_onDestroyView() {
@@ -55,13 +55,13 @@ public class PresenterTest {
 
     // By default, constructed with a null view
     final String hold = "String";
-    presenter.onCreateView(hold);
+    presenter.bindView(hold);
     Assert.assertNotNull(presenter.getView());
 
     // Expect proper clean up
-    presenter.onDestroyView();
+    presenter.unbindView();
 
     doubleUseException.expect(IllegalStateException.class);
-    presenter.onDestroyView();
+    presenter.unbindView();
   }
 }

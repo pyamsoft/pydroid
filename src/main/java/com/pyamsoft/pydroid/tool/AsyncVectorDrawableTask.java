@@ -77,6 +77,8 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     final int icon = asyncDrawable.icon();
     Timber.d("Load vector drawable compat for resource: %d", icon);
     Drawable drawable = VectorDrawableCompat.create(resources, icon, theme);
+
+    assert drawable != null;
     if (color != 0) {
       drawable = DrawableUtil.tintDrawableFromRes(context, drawable, color);
     }

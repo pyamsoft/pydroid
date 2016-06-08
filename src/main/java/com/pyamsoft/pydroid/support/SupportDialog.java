@@ -85,7 +85,7 @@ public class SupportDialog extends DialogFragment
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    presenter.onCreateView(this);
+    presenter.bindView(this);
 
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
@@ -129,8 +129,8 @@ public class SupportDialog extends DialogFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    Timber.d("onDestroyView");
-    presenter.onDestroyView();
+    Timber.d("unbindView");
+    presenter.unbindView();
   }
 
   private void setDonationText(final TextView textView, final String title,

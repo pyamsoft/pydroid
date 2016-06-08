@@ -21,29 +21,31 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-public class PresenterImplTest {
+public class PresenterTest {
 
-  @Rule public final ExpectedException doubleOnCreateException = ExpectedException.none();
+  @Rule public final ExpectedException doubleUseException = ExpectedException.none();
+  @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
 
   @Test public void test_constructor() {
     final PresenterImpl presenter = new PresenterImpl() {
     };
 
-    // By default, constructed with a null view BUT a valid weak ref
-    Assert.assertNull(presenter.getView());
+    // By default, throw if not created
+    useBeforeCreateException.expect(IllegalStateException.class);
+    Assert.assertNotNull(presenter.getView());
   }
 
   @Test public void test_onCreateView() {
     final PresenterImpl<String> presenter = new PresenterImpl<String>() {
     };
 
-    // By default, constructed with a null view BUT a valid weak ref
+    // By default, constructed with a null view
     final String hold = "String";
     presenter.onCreateView(hold);
     Assert.assertNotNull(presenter.getView());
 
     // Expect an error when create is called again without destroy
-    doubleOnCreateException.expect(IllegalStateException.class);
+    doubleUseException.expect(IllegalStateException.class);
     presenter.onCreateView(hold);
   }
 
@@ -51,13 +53,15 @@ public class PresenterImplTest {
     final PresenterImpl<String> presenter = new PresenterImpl<String>() {
     };
 
-    // By default, constructed with a null view BUT a valid weak ref
+    // By default, constructed with a null view
     final String hold = "String";
     presenter.onCreateView(hold);
     Assert.assertNotNull(presenter.getView());
 
     // Expect proper clean up
     presenter.onDestroyView();
-    Assert.assertNull(presenter.getView());
+
+    doubleUseException.expect(IllegalStateException.class);
+    presenter.onDestroyView();
   }
 }

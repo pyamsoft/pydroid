@@ -30,16 +30,13 @@ buildscript {
     classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
 
     // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.2'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.4'
 
     // Android APT
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
     // Gradle version checked
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
-
-    // Facebook ReDex
-    classpath 'au.com.timmutton:redex:1.1.0'
   }
 }
 
@@ -97,8 +94,8 @@ dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
   // Android support library.
+  apt 'com.android.support:support-annotations:24.0.0'
   compile 'com.android.support:preference-v7:24.0.0'
-  compile 'com.android.support:support-annotations:24.0.0'
   compile 'com.android.support:design:24.0.0'
   compile 'com.android.support:support-vector-drawable:24.0.0'
 
@@ -123,7 +120,5 @@ dependencies {
   testCompile 'junit:junit:4.12'
 
   // Mockito for unit tests
-  testCompile 'org.mockito:mockito-core:2.0.54-beta'
-
-
+  testCompile 'org.mockito:mockito-core:2.0.58-beta'
 }

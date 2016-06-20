@@ -19,9 +19,15 @@ package com.pyamsoft.pydroid.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -31,9 +37,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 import timber.log.Timber;
 
 public final class AppUtil {
@@ -100,5 +108,21 @@ public final class AppUtil {
     final float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m);
     Timber.d("Convert %f px to %f dp", px, dp);
     return dp;
+  }
+
+  public static void setVectorIconForNotification(@NonNull Context context,
+      @NonNull RemoteViews remoteViews, @IdRes int id, @DrawableRes int icon) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      remoteViews.setImageViewResource(id, icon);
+    } else {
+      final Context appContext = context.getApplicationContext();
+      final Drawable d = AppCompatDrawableManager.get().getDrawable(appContext, icon);
+      final Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(),
+          Bitmap.Config.ARGB_8888);
+      final Canvas c = new Canvas(b);
+      d.setBounds(0, 0, c.getWidth(), c.getHeight());
+      d.draw(c);
+      remoteViews.setImageViewBitmap(id, b);
+    }
   }
 }

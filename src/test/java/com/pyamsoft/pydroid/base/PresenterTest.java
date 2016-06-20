@@ -27,7 +27,7 @@ public class PresenterTest {
   @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
 
   @Test public void test_constructor() {
-    final PresenterImpl presenter = new PresenterImpl() {
+    final Presenter presenter = new Presenter() {
     };
 
     // By default, throw if not created
@@ -36,7 +36,7 @@ public class PresenterTest {
   }
 
   @Test public void test_onCreateView() {
-    final PresenterImpl<String> presenter = new PresenterImpl<String>() {
+    final Presenter<String> presenter = new Presenter<String>() {
     };
 
     // By default, constructed with a null view
@@ -50,7 +50,7 @@ public class PresenterTest {
   }
 
   @Test public void test_onDestroyView() {
-    final PresenterImpl<String> presenter = new PresenterImpl<String>() {
+    final Presenter<String> presenter = new Presenter<String>() {
     };
 
     // By default, constructed with a null view

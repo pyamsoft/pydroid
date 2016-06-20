@@ -16,51 +16,70 @@
 
 package com.pyamsoft.pydroid.base;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import timber.log.Timber;
 
-public interface Presenter<I> {
+public abstract class Presenter<I> {
 
-  /**
-   * Bind the View to this presenter
-   *
-   * Usually called during the onCreate/onCreateView calls
-   */
-  void bindView(@NonNull I view);
+  @Nullable private I view;
 
-  /**
-   * Bind the View to this presenter
-   *
-   * Usually called during the onCreate/onCreateView calls
-   * Also calls the bind() hook when set to true
-   */
-  void bindView(@NonNull I view, boolean runHook);
+  protected Presenter() {
+  }
 
-  /**
-   * Unbind the View to this presenter
-   *
-   * Usually called during the onDestroy/unbindView calls
-   */
-  void unbindView();
+  @CheckResult @NonNull protected final I getView() {
+    if (view == null) {
+      throw new IllegalStateException("Cannot call getView() on a null View");
+    }
+    return view;
+  }
 
-  /**
-   * Unbind the View to this presenter
-   * Discard any data associated if hook is set to true
-   *
-   * Usually called during the onDestroy/unbindView calls
-   */
-  void unbindView(boolean runHook);
+  public final void bindView(@NonNull I view) {
+    bindView(view, true);
+  }
 
-  /**
-   * Used for registering the presenter to various bus subscriptions
-   *
-   * Generally called during onResume
-   */
-  void onResume();
+  public final void bindView(@NonNull I view, boolean runHook) {
+    if (this.view != null) {
+      throw new IllegalStateException("Must call unbindView before calling bindView again");
+    }
+    this.view = view;
 
-  /**
-   * Used for unregistering the presenter from various bus subscriptions
-   *
-   * Generally called during onPause
-   */
-  void onPause();
+    if (runHook) {
+      Timber.d("Run onBind hook");
+      onBind();
+    }
+  }
+
+  public final void unbindView() {
+    unbindView(true);
+  }
+
+  public final void unbindView(boolean runHook) {
+    if (this.view == null) {
+      throw new IllegalStateException("Must call bindView before calling unbindView again.");
+    }
+    this.view = null;
+
+    if (runHook) {
+      Timber.d("Run onUnbind hook");
+      onUnbind();
+    }
+  }
+
+  public void onResume() {
+
+  }
+
+  public void onPause() {
+
+  }
+
+  protected void onBind() {
+
+  }
+
+  protected void onUnbind() {
+
+  }
 }

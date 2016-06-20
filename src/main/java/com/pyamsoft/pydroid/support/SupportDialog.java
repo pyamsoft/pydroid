@@ -34,7 +34,6 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.social.SocialMediaPresenterImpl;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import timber.log.Timber;
@@ -56,7 +55,7 @@ public class SupportDialog extends DialogFragment
 
   public SupportDialog() {
     super();
-    presenter = new SocialMediaPresenterImpl();
+    presenter = new SocialMediaPresenter();
   }
 
   public static SupportDialog newInstance(final @NonNull String packageName) {

@@ -54,10 +54,10 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
   @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
 
   boolean backBeenPressed;
-  @Nullable private Handler handler;
-  @Nullable private Toast backBeenPressedToast;
-  @Nullable private Runnable backBeenPressedRunnable;
-  @Nullable private BillingProcessor billingProcessor;
+  private Handler handler;
+  private Toast backBeenPressedToast;
+  private Runnable backBeenPressedRunnable;
+  private BillingProcessor billingProcessor;
 
   /**
    * Override if you do not want to handle IMM leaks
@@ -148,7 +148,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
 
   @Override protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
     if (isDonationSupported()) {
-      assert billingProcessor != null;
       if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
         super.onActivityResult(requestCode, resultCode, data);
       }
@@ -160,7 +159,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
   @Override protected void onDestroy() {
     super.onDestroy();
     if (isDonationSupported()) {
-      assert billingProcessor != null;
       billingProcessor.release();
     }
   }
@@ -171,7 +169,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     Timber.d("Details: %s", details);
     if (isDonationSupported()) {
       Timber.d("Consume item: %s with token %s", details.productId, details.purchaseToken);
-      assert billingProcessor != null;
       billingProcessor.consumePurchase(productId);
     } else {
       throw new NullPointerException("Tried to consume purchase with NULL BillingProcessor");
@@ -286,7 +283,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
 
   public final void purchase(final @NonNull String sku) {
     if (isDonationSupported()) {
-      assert billingProcessor != null;
       billingProcessor.purchase(this, sku);
     } else {
       Timber.e("Cannot call purchases in a non-donation supported Application");

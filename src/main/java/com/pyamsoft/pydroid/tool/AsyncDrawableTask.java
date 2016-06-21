@@ -32,8 +32,8 @@ import timber.log.Timber;
 
 public final class AsyncDrawableTask extends AsyncTask<AsyncDrawable, Void, Drawable> {
 
-  @Nullable private final WeakReference<ImageView> weakImage;
-  @Nullable private final WeakReference<TabLayout.Tab> weakTab;
+  private final WeakReference<ImageView> weakImage;
+  private final WeakReference<TabLayout.Tab> weakTab;
   private final int color;
 
   public AsyncDrawableTask(final @NonNull ImageView source) {

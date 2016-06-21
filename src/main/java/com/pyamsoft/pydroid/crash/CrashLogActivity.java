@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -43,9 +42,9 @@ import timber.log.Timber;
   @NonNull private static final String DEFAULT_TEXT = "Crash log attached.";
 
   // Can't use butterknife in libraries
-  @Nullable private Button sendLog;
-  @Nullable private TextView oopsText;
-  @Nullable private Intent intent;
+  private Button sendLog;
+  private TextView oopsText;
+  private Intent intent;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     IMMLeakUtil.fixFocusedViewLeak(getApplication());
@@ -64,7 +63,6 @@ import timber.log.Timber;
       appName = "this pyamsoft Application";
     }
 
-    assert oopsText != null;
     final String formatted = String.format(oopsText.getText().toString(), appName);
     oopsText.setText(formatted);
   }
@@ -115,7 +113,6 @@ import timber.log.Timber;
   }
 
   private void setupSendLogButton() {
-    assert sendLog != null;
     if (intent == null) {
       // No crash log available, no button
       sendLog.setVisibility(View.GONE);

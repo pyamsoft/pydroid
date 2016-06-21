@@ -24,11 +24,10 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 public abstract class AutoRestartService extends Service {
 
-  @Nullable private AlarmManager alarmManager;
+  private AlarmManager alarmManager;
 
   @Override public void onCreate() {
     super.onCreate();
@@ -39,14 +38,11 @@ public abstract class AutoRestartService extends Service {
   // otherwise prevents this from working. Ugly hack workaround should fix most cases.
   @Override public void onTaskRemoved(final @NonNull Intent rootIntent) {
     super.onTaskRemoved(rootIntent);
-    if (alarmManager != null) {
-      final PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1,
-          new Intent(getApplicationContext(), getServiceClass()),
-          PendingIntent.FLAG_UPDATE_CURRENT);
-      alarmManager.cancel(pendingIntent);
-      alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 4000,
-          pendingIntent);
-    }
+    final PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1,
+        new Intent(getApplicationContext(), getServiceClass()), PendingIntent.FLAG_UPDATE_CURRENT);
+    alarmManager.cancel(pendingIntent);
+    alarmManager.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 4000,
+        pendingIntent);
   }
 
   @NonNull @CheckResult protected abstract Class<? extends AutoRestartService> getServiceClass();

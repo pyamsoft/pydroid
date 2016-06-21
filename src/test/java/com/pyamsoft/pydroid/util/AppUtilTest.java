@@ -36,7 +36,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
-@RunWith(RobolectricGradleTestRunner.class) @Config(constants = BuildConfig.class)
+@RunWith(RobolectricGradleTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class AppUtilTest {
 
   @Test public void test_setupFABBehavior() {

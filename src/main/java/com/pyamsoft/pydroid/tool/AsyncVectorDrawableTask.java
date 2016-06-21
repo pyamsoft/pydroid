@@ -33,8 +33,8 @@ import timber.log.Timber;
 
 public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void, Drawable> {
 
-  @Nullable private final WeakReference<ImageView> weakImage;
-  @Nullable private final WeakReference<TabLayout.Tab> weakTab;
+  private final WeakReference<ImageView> weakImage;
+  private final WeakReference<TabLayout.Tab> weakTab;
   private final int color;
 
   public AsyncVectorDrawableTask(final @NonNull ImageView source) {
@@ -78,7 +78,6 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     Timber.d("Load vector drawable compat for resource: %d", icon);
     Drawable drawable = VectorDrawableCompat.create(resources, icon, theme);
 
-    assert drawable != null;
     if (color != 0) {
       drawable = DrawableUtil.tintDrawableFromRes(context, drawable, color);
     }

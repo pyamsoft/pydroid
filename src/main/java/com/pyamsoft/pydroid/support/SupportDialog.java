@@ -47,11 +47,11 @@ public class SupportDialog extends DialogFragment
   @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
   @NonNull private static final String ARG_PACKAGE = "package";
   @NonNull private final SocialMediaPresenter presenter;
-  @Nullable private String APP_SKU_DONATE_ONE;
-  @Nullable private String APP_SKU_DONATE_TWO;
-  @Nullable private String APP_SKU_DONATE_FIVE;
-  @Nullable private String APP_SKU_DONATE_TEN;
-  @Nullable private String packageName;
+  private String APP_SKU_DONATE_ONE;
+  private String APP_SKU_DONATE_TWO;
+  private String APP_SKU_DONATE_FIVE;
+  private String APP_SKU_DONATE_TEN;
+  private String packageName;
 
   public SupportDialog() {
     super();
@@ -91,7 +91,6 @@ public class SupportDialog extends DialogFragment
 
     final Button aboutApp = (Button) rootView.findViewById(R.id.support_about_app);
     aboutApp.setOnClickListener(view -> {
-      assert packageName != null;
       presenter.clickAppPage(packageName);
     });
 

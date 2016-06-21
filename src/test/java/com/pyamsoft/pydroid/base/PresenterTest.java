@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.base;
 
+import android.support.annotation.CheckResult;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,18 +27,40 @@ public class PresenterTest {
   @Rule public final ExpectedException doubleUseException = ExpectedException.none();
   @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
 
+  static final class TestPresenter extends Presenter<String> {
+
+    private boolean bound = false;
+    private boolean unbound = false;
+
+    @CheckResult public final boolean isBound() {
+      return bound;
+    }
+
+    @CheckResult public final boolean isUnbound() {
+      return unbound;
+    }
+
+    @Override protected void onBind() {
+      super.onBind();
+      bound = true;
+    }
+
+    @Override protected void onUnbind() {
+      super.onUnbind();
+      unbound = true;
+    }
+  }
+
   @Test public void test_constructor() {
-    final Presenter presenter = new Presenter() {
-    };
+    final Presenter<String> presenter = new TestPresenter();
 
     // By default, throw if not created
     useBeforeCreateException.expect(IllegalStateException.class);
     Assert.assertNotNull(presenter.getView());
   }
 
-  @Test public void test_onCreateView() {
-    final Presenter<String> presenter = new Presenter<String>() {
-    };
+  @Test public void test_bindView() {
+    final Presenter<String> presenter = new TestPresenter();
 
     // By default, constructed with a null view
     final String hold = "String";
@@ -49,9 +72,8 @@ public class PresenterTest {
     presenter.bindView(hold);
   }
 
-  @Test public void test_onDestroyView() {
-    final Presenter<String> presenter = new Presenter<String>() {
-    };
+  @Test public void test_unbindView() {
+    final Presenter<String> presenter = new TestPresenter();
 
     // By default, constructed with a null view
     final String hold = "String";
@@ -63,5 +85,57 @@ public class PresenterTest {
 
     doubleUseException.expect(IllegalStateException.class);
     presenter.unbindView();
+  }
+
+  @Test public void test_onBindNoHook() {
+    final TestPresenter presenter = new TestPresenter();
+
+    // By default, constructed with a null view
+    final String hold = "String";
+    presenter.bindView(hold, false);
+    Assert.assertNotNull(presenter.getView());
+
+    // When bind is called, no custom hook
+    Assert.assertFalse(presenter.isBound());
+
+    presenter.unbindView();
+  }
+
+  @Test public void test_onBindHook() {
+    final TestPresenter presenter = new TestPresenter();
+
+    // By default, constructed with a null view
+    final String hold = "String";
+    presenter.bindView(hold);
+    Assert.assertNotNull(presenter.getView());
+
+    // When bind is called, no custom hook
+    Assert.assertTrue(presenter.isBound());
+
+    presenter.unbindView();
+  }
+
+  @Test public void test_onUnbindNoHook() {
+    final TestPresenter presenter = new TestPresenter();
+
+    // By default, constructed with a null view
+    final String hold = "String";
+    presenter.bindView(hold);
+    Assert.assertNotNull(presenter.getView());
+
+    presenter.unbindView(false);
+    Assert.assertFalse(presenter.isUnbound());
+  }
+
+  @Test public void test_onUnbindHook() {
+    final TestPresenter presenter = new TestPresenter();
+
+    // By default, constructed with a null view
+    final String hold = "String";
+    presenter.bindView(hold);
+    Assert.assertNotNull(presenter.getView());
+
+    presenter.unbindView();
+    Assert.assertTrue(presenter.isUnbound());
   }
 }

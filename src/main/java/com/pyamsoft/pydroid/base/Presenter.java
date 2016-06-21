@@ -56,15 +56,15 @@ public abstract class Presenter<I> {
   }
 
   public final void unbindView(boolean runHook) {
-    if (this.view == null) {
-      throw new IllegalStateException("Must call bindView before calling unbindView again.");
-    }
-    this.view = null;
-
     if (runHook) {
       Timber.d("Run onUnbind hook");
       onUnbind();
     }
+
+    if (this.view == null) {
+      throw new IllegalStateException("Must call bindView before calling unbindView again.");
+    }
+    this.view = null;
   }
 
   public void onResume() {

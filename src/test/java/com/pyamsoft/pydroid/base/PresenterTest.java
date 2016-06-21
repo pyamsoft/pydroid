@@ -43,10 +43,14 @@ public class PresenterTest {
     @Override protected void onBind() {
       super.onBind();
       bound = true;
+      //noinspection ResultOfMethodCallIgnored
+      getView().length();
     }
 
     @Override protected void onUnbind() {
       super.onUnbind();
+      //noinspection ResultOfMethodCallIgnored
+      getView().length();
       unbound = true;
     }
   }

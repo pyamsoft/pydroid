@@ -18,14 +18,15 @@ package com.pyamsoft.pydroid.model;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 
 public final class AsyncDrawable {
 
   @NonNull private final Context context;
-  private final int icon;
+  @DrawableRes private final int icon;
 
-  public AsyncDrawable(@NonNull Context context, int icon) {
+  public AsyncDrawable(@NonNull Context context, @DrawableRes int icon) {
     this.context = context.getApplicationContext();
     this.icon = icon;
   }

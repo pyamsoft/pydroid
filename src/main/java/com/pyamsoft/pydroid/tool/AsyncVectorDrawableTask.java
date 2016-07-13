@@ -21,10 +21,12 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.util.DrawableUtil;
@@ -35,13 +37,13 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
 
   private final WeakReference<ImageView> weakImage;
   private final WeakReference<TabLayout.Tab> weakTab;
-  private final int color;
+  @DrawableRes private final int color;
 
   public AsyncVectorDrawableTask(final @NonNull ImageView source) {
     this(source, 0);
   }
 
-  public AsyncVectorDrawableTask(final @NonNull ImageView source, final int c) {
+  public AsyncVectorDrawableTask(final @NonNull ImageView source, @DrawableRes final int c) {
     weakImage = new WeakReference<>(source);
     weakTab = null;
     color = c;
@@ -51,7 +53,7 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     this(source, 0);
   }
 
-  public AsyncVectorDrawableTask(final @NonNull TabLayout.Tab source, final int c) {
+  public AsyncVectorDrawableTask(final @NonNull TabLayout.Tab source, @DrawableRes final int c) {
     weakTab = new WeakReference<>(source);
     weakImage = null;
     color = c;
@@ -78,8 +80,13 @@ public final class AsyncVectorDrawableTask extends AsyncTask<AsyncDrawable, Void
     Timber.d("Load vector drawable compat for resource: %d", icon);
     Drawable drawable = VectorDrawableCompat.create(resources, icon, theme);
 
+    if (drawable == null) {
+      throw new NullPointerException("Could not load vector drawable for resource: " + icon);
+    }
+
     if (color != 0) {
-      drawable = DrawableUtil.tintDrawableFromRes(context, drawable, color);
+      drawable =
+          DrawableUtil.tintDrawableFromColor(drawable, ContextCompat.getColor(context, color));
     }
     return drawable;
   }

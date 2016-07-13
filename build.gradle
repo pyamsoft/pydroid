@@ -30,13 +30,13 @@ buildscript {
     classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
 
     // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.4'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
 
     // Android APT
     classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 
     // Gradle version checked
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
   }
 }
 
@@ -112,7 +112,7 @@ dependencies {
   androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 
   // Roboelectric for Android on JVM
-  testCompile "org.robolectric:robolectric:3.1"
+  testCompile "org.robolectric:robolectric:3.1.1"
   // Some resources (FAB) need GL
   testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
 
@@ -120,5 +120,5 @@ dependencies {
   testCompile 'junit:junit:4.12'
 
   // Mockito for unit tests
-  testCompile 'org.mockito:mockito-core:2.0.62-beta'
+  testCompile 'org.mockito:mockito-core:2.0.86-beta'
 }

@@ -200,6 +200,11 @@ public final class IMMLeakUtil {
       try {
         Timber.d("Attempt to clear IMM leak");
         final Object lock = lockField.get(inputMethodManager);
+        if (lock == null) {
+          Timber.e("Null referenced used for lock");
+          return;
+        }
+
         // This is highly dependent on the InputMethodManager implementation.
         synchronized (lock) {
           final View servedView = (View) servedViewField.get(inputMethodManager);

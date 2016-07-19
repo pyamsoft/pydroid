@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.base;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,34 +27,6 @@ public class PresenterTest {
 
   @Rule public final ExpectedException doubleUseException = ExpectedException.none();
   @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
-
-  static final class TestPresenter extends Presenter<String> {
-
-    private boolean bound = false;
-    private boolean unbound = false;
-
-    @CheckResult public final boolean isBound() {
-      return bound;
-    }
-
-    @CheckResult public final boolean isUnbound() {
-      return unbound;
-    }
-
-    @Override protected void onBind() {
-      super.onBind();
-      bound = true;
-      //noinspection ResultOfMethodCallIgnored
-      getView().length();
-    }
-
-    @Override protected void onUnbind() {
-      super.onUnbind();
-      //noinspection ResultOfMethodCallIgnored
-      getView().length();
-      unbound = true;
-    }
-  }
 
   @Test public void test_constructor() {
     final Presenter<String> presenter = new TestPresenter();
@@ -141,5 +114,33 @@ public class PresenterTest {
 
     presenter.unbindView();
     Assert.assertTrue(presenter.isUnbound());
+  }
+
+  static final class TestPresenter extends Presenter<String> {
+
+    private boolean bound = false;
+    private boolean unbound = false;
+
+    @CheckResult public final boolean isBound() {
+      return bound;
+    }
+
+    @CheckResult public final boolean isUnbound() {
+      return unbound;
+    }
+
+    @Override protected void onBind(@NonNull String view) {
+      super.onBind(view);
+      bound = true;
+      //noinspection ResultOfMethodCallIgnored
+      view.length();
+    }
+
+    @Override protected void onUnbind(@NonNull String view) {
+      super.onUnbind(view);
+      //noinspection ResultOfMethodCallIgnored
+      view.length();
+      bound = false;
+    }
   }
 }

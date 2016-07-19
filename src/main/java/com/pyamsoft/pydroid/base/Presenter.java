@@ -25,18 +25,20 @@ public abstract class Presenter<I> {
 
   @Nullable private I view;
 
-  protected Presenter() {
-  }
-
   @CheckResult @NonNull protected final I getView() {
-    if (view == null) {
-      throw new IllegalStateException("Cannot call getView() on a null View");
+    if (this.view == null) {
+      throw new IllegalStateException("No view is bound to this presenter");
     }
+
     return view;
   }
 
   public final void bindView(@NonNull I view) {
     bindView(view, true);
+  }
+
+  public final void unbindView() {
+    unbindView(true);
   }
 
   public final void bindView(@NonNull I view, boolean runHook) {
@@ -47,39 +49,76 @@ public abstract class Presenter<I> {
 
     if (runHook) {
       Timber.d("Run onBind hook");
-      onBind();
+      onBind(this.view);
     }
-  }
-
-  public final void unbindView() {
-    unbindView(true);
   }
 
   public final void unbindView(boolean runHook) {
-    if (runHook) {
-      Timber.d("Run onUnbind hook");
-      onUnbind();
-    }
-
     if (this.view == null) {
       throw new IllegalStateException("Must call bindView before calling unbindView again.");
     }
+
+    if (runHook) {
+      Timber.d("Run onUnbind hook");
+      onUnbind(this.view);
+    }
+
     this.view = null;
   }
 
-  public void onResume() {
+  public final void start() {
+    if (this.view == null) {
+      throw new IllegalStateException("Cannot start without a bound View");
+    }
+
+    onStart(this.view);
+  }
+
+  public final void stop() {
+    if (this.view == null) {
+      throw new IllegalStateException("Cannot stop without a bound View");
+    }
+
+    onStop(this.view);
+  }
+
+  public final void resume() {
+    if (this.view == null) {
+      throw new IllegalStateException("Cannot resume without a bound View");
+    }
+
+    onResume(this.view);
+  }
+
+  public final void pause() {
+    if (this.view == null) {
+      throw new IllegalStateException("Cannot pause without a bound View");
+    }
+
+    onPause(this.view);
+  }
+
+  protected void onBind(@NonNull I view) {
 
   }
 
-  public void onPause() {
+  protected void onUnbind(@NonNull I view) {
 
   }
 
-  protected void onBind() {
+  protected void onStart(@NonNull I view) {
 
   }
 
-  protected void onUnbind() {
+  protected void onStop(@NonNull I view) {
+
+  }
+
+  protected void onResume(@NonNull I view) {
+
+  }
+
+  protected void onPause(@NonNull I view) {
 
   }
 }

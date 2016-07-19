@@ -23,13 +23,9 @@ import timber.log.Timber;
 
 public abstract class Presenter<I> {
 
-  private boolean canGet;
   @Nullable private I view;
 
   @CheckResult @NonNull protected final I getView() {
-    if (!canGet) {
-      throw new IllegalStateException("Cannot call getView() at this point");
-    }
     if (this.view == null) {
       throw new IllegalStateException("No view is bound to this presenter");
     }
@@ -53,9 +49,7 @@ public abstract class Presenter<I> {
 
     if (runHook) {
       Timber.d("Run onBind hook");
-      canGet = false;
       onBind(this.view);
-      canGet = true;
     }
   }
 
@@ -66,9 +60,7 @@ public abstract class Presenter<I> {
 
     if (runHook) {
       Timber.d("Run onUnbind hook");
-      canGet = false;
       onUnbind(this.view);
-      canGet = true;
     }
 
     this.view = null;
@@ -79,9 +71,7 @@ public abstract class Presenter<I> {
       throw new IllegalStateException("Cannot start without a bound View");
     }
 
-    canGet = false;
     onStart(this.view);
-    canGet = true;
   }
 
   public final void stop() {
@@ -89,9 +79,7 @@ public abstract class Presenter<I> {
       throw new IllegalStateException("Cannot stop without a bound View");
     }
 
-    canGet = false;
     onStop(this.view);
-    canGet = true;
   }
 
   public final void resume() {
@@ -99,9 +87,7 @@ public abstract class Presenter<I> {
       throw new IllegalStateException("Cannot resume without a bound View");
     }
 
-    canGet = false;
     onResume(this.view);
-    canGet = true;
   }
 
   public final void pause() {
@@ -109,9 +95,7 @@ public abstract class Presenter<I> {
       throw new IllegalStateException("Cannot pause without a bound View");
     }
 
-    canGet = false;
     onPause(this.view);
-    canGet = true;
   }
 
   protected void onBind(@NonNull I view) {

@@ -94,10 +94,10 @@ dependencies {
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
   // Android support library.
-  compile 'com.android.support:support-annotations:24.1.0'
-  compile 'com.android.support:preference-v14:24.1.0'
-  compile 'com.android.support:design:24.1.0'
-  compile 'com.android.support:support-vector-drawable:24.1.0'
+  compile 'com.android.support:support-annotations:24.1.1'
+  compile 'com.android.support:preference-v14:24.1.1'
+  compile 'com.android.support:design:24.1.1'
+  compile 'com.android.support:support-vector-drawable:24.1.1'
 
   // Google Billing
   compile 'com.anjlab.android.iab.v3:library:1.0.32'
@@ -106,7 +106,7 @@ dependencies {
   compile 'com.jakewharton.timber:timber:4.1.2'
 
   // Android Framework Testing
-  androidTestCompile 'com.android.support:support-annotations:24.1.0'
+  androidTestCompile 'com.android.support:support-annotations:24.1.1'
   androidTestCompile 'com.android.support.test:runner:0.5'
   androidTestCompile 'com.android.support.test:rules:0.5'
   androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'

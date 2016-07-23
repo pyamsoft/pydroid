@@ -289,7 +289,16 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     }
   }
 
+  @Override protected void onStart() {
+    super.onStart();
+    showAd();
+  }
+
   @CheckResult @NonNull protected abstract String getPlayStoreAppPackage();
+
+  public abstract void showAd();
+
+  public abstract void hideAd();
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP) static class Lollipop {
 

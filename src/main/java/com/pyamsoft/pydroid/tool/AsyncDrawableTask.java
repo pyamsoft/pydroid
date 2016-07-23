@@ -20,7 +20,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -35,13 +35,13 @@ public final class AsyncDrawableTask extends AsyncTask<AsyncDrawable, Void, Draw
 
   private final WeakReference<ImageView> weakImage;
   private final WeakReference<TabLayout.Tab> weakTab;
-  @ColorInt private final int color;
+  @ColorRes private final int color;
 
   public AsyncDrawableTask(final @NonNull ImageView source) {
     this(source, 0);
   }
 
-  public AsyncDrawableTask(final @NonNull ImageView source, @ColorInt final int c) {
+  public AsyncDrawableTask(final @NonNull ImageView source, @ColorRes final int c) {
     weakImage = new WeakReference<>(source);
     weakTab = null;
     color = c;
@@ -51,7 +51,7 @@ public final class AsyncDrawableTask extends AsyncTask<AsyncDrawable, Void, Draw
     this(source, 0);
   }
 
-  public AsyncDrawableTask(final @NonNull TabLayout.Tab source, @ColorInt final int c) {
+  public AsyncDrawableTask(final @NonNull TabLayout.Tab source, @ColorRes final int c) {
     weakTab = new WeakReference<>(source);
     weakImage = null;
     color = c;

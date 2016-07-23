@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.base.activity;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import android.os.Handler;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ActionMenuView;
@@ -39,6 +37,7 @@ import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.support.AdvertisementView;
 import com.pyamsoft.pydroid.support.DonationUnavailableDialog;
 import com.pyamsoft.pydroid.support.SupportDialog;
 import com.pyamsoft.pydroid.util.AnimUtil;
@@ -58,6 +57,7 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
   private Toast backBeenPressedToast;
   private Runnable backBeenPressedRunnable;
   private BillingProcessor billingProcessor;
+  @Nullable private AdvertisementView adView;
 
   /**
    * Override if you do not want to handle IMM leaks
@@ -104,6 +104,15 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     if (isDonationSupported()) {
       billingProcessor =
           new BillingProcessor(getApplicationContext(), getPlayStoreAppPackage(), this);
+    }
+
+    final int adViewResId = bindActivityToView();
+    if (adViewResId != 0) {
+      adView = (AdvertisementView) findViewById(adViewResId);
+    }
+
+    if (adView != null) {
+      adView.create();
     }
   }
 
@@ -160,6 +169,9 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     super.onDestroy();
     if (isDonationSupported()) {
       billingProcessor.release();
+    }
+    if (adView != null) {
+      adView.destroy();
     }
   }
 
@@ -240,22 +252,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
         new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
   }
 
-  protected final void enableShadows(final @NonNull View bar, final @NonNull View shadow) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Lollipop.enableShadows(bar, shadow);
-    } else {
-      OldAndroid.enableShadows(shadow);
-    }
-  }
-
-  protected final void disableShadows(final @NonNull View bar, final @NonNull View shadow) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Lollipop.disableShadows(bar, shadow);
-    } else {
-      OldAndroid.disableShadows(shadow);
-    }
-  }
-
   protected final void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
     final View t = toolbar.getChildAt(0);
     if (t != null && t instanceof TextView &&
@@ -294,35 +290,23 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     showAd();
   }
 
+  public final void showAd() {
+    if (adView != null) {
+      adView.show(false);
+    }
+  }
+
+  public final void hideAd() {
+    if (adView != null) {
+      adView.hide();
+    }
+  }
+
+  /**
+   * Call setContentView here and return the id of the advertisement view, 0 if none
+   */
+  @CheckResult protected abstract int bindActivityToView();
+
   @CheckResult @NonNull protected abstract String getPlayStoreAppPackage();
-
-  public abstract void showAd();
-
-  public abstract void hideAd();
-
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP) static class Lollipop {
-
-    static void enableShadows(final @NonNull View t, final @NonNull View shadow) {
-      final float elevation = AppUtil.convertToDP(t.getContext(), 8);
-      ViewCompat.setElevation(t, elevation);
-      shadow.setVisibility(View.GONE);
-    }
-
-    static void disableShadows(final @NonNull View t, final @NonNull View shadow) {
-      t.setElevation(0);
-      shadow.setVisibility(View.GONE);
-    }
-  }
-
-  static class OldAndroid {
-
-    static void enableShadows(final @NonNull View shadow) {
-      shadow.setVisibility(View.VISIBLE);
-    }
-
-    static void disableShadows(final @NonNull View shadow) {
-      shadow.setVisibility(View.GONE);
-    }
-  }
 }
 

@@ -63,6 +63,7 @@ public class RatingDialog extends DialogFragment {
     showRatingDialog(activity, provider, false);
   }
 
+  // KLUDGE direct preference access
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider, final boolean force) {
     final SharedPreferences preferences =

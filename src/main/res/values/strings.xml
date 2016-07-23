@@ -27,4 +27,10 @@
   <string name="no_thanks">No Thanks</string>
   <string name="liking_the_app">Liking the App?</string>
 
+  <bool name="adview_default">true</bool>
+  <string name="adview_key">adview_pyamsoft</string>
+  <string name="adview_title">Related Applications</string>
+  <string name="adview_summary_checked">Will show related and relevant pyamsoft applications</string>
+  <string name="adview_summary_unchecked">Will not show other related pyamsoft applications</string>
+
 </resources>

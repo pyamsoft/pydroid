@@ -27,7 +27,7 @@ import timber.log.Timber;
  * A map that holds Async Task objects and has helper methods to add new ones as well as
  * clear the stored map
  */
-public class AsyncTaskMap {
+public final class AsyncTaskMap {
 
   @NonNull private final HashMap<String, AsyncTask> taskMap;
 

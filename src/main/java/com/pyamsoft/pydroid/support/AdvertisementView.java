@@ -146,7 +146,7 @@ public final class AdvertisementView extends FrameLayout {
         break;
       case PACKAGE_POWERMANAGER:
         Timber.d("Load feature: Power Manager");
-        image = R.drawable.feature_pasterino;
+        image = R.drawable.feature_powermanager;
         break;
       default:
         Timber.e("Invalid feature: %s", currentPackage);

@@ -162,7 +162,7 @@ public final class AdvertisementView extends FrameLayout {
         PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
     final boolean isEnabled = force || preferences.getBoolean(preferenceKey, preferenceDefault);
     final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
-    final boolean isValidCount = shownCount == 4;
+    final boolean isValidCount = shownCount >= 4;
     if (isEnabled && isValidCount) {
       Timber.d("Write shown count back to 0");
       preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();

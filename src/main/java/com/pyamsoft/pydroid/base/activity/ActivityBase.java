@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.base.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,7 +34,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.TransactionDetails;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.support.AdvertisementView;
 import com.pyamsoft.pydroid.support.DonationUnavailableDialog;
@@ -43,10 +41,8 @@ import com.pyamsoft.pydroid.support.SupportDialog;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.IMMLeakUtil;
-import java.util.List;
-import timber.log.Timber;
 
-abstract class ActivityBase extends AppCompatActivity implements BillingProcessor.IBillingHandler {
+abstract class ActivityBase extends AppCompatActivity {
 
   private static final long BACK_PRESSED_DELAY = 1600L;
   @NonNull private static final String SUPPORT_TAG = "support";
@@ -56,7 +52,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
   private Handler handler;
   private Toast backBeenPressedToast;
   private Runnable backBeenPressedRunnable;
-  private BillingProcessor billingProcessor;
   @Nullable private AdvertisementView adView;
 
   /**
@@ -70,13 +65,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
    * Override this if you want normal back button behavior
    */
   @CheckResult protected boolean shouldConfirmBackPress() {
-    return true;
-  }
-
-  /**
-   * Override this if the application does not implement IAB donations
-   */
-  @CheckResult protected boolean isDonationSupported() {
     return true;
   }
 
@@ -99,11 +87,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     super.onCreate(savedInstanceState);
     if (shouldConfirmBackPress()) {
       enableBackBeenPressedConfirmation();
-    }
-
-    if (isDonationSupported()) {
-      billingProcessor =
-          new BillingProcessor(getApplicationContext(), getPlayStoreAppPackage(), this);
     }
 
     final int adViewResId = bindActivityToView();
@@ -155,49 +138,11 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     return handled;
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
-    if (isDonationSupported()) {
-      if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
-        super.onActivityResult(requestCode, resultCode, data);
-      }
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
-    }
-  }
-
   @Override protected void onDestroy() {
     super.onDestroy();
-    if (isDonationSupported()) {
-      billingProcessor.release();
-    }
     if (adView != null) {
       adView.destroy();
     }
-  }
-
-  @Override public final void onProductPurchased(@NonNull String productId,
-      @NonNull TransactionDetails details) {
-    Timber.d("onProductPurchased");
-    Timber.d("Details: %s", details);
-    if (isDonationSupported()) {
-      Timber.d("Consume item: %s with token %s", details.productId, details.purchaseToken);
-      billingProcessor.consumePurchase(productId);
-    } else {
-      throw new NullPointerException("Tried to consume purchase with NULL BillingProcessor");
-    }
-  }
-
-  @Override public final void onPurchaseHistoryRestored() {
-    Timber.d("onPurchaseHistoryRestored");
-  }
-
-  @Override public final void onBillingError(int errorCode, @NonNull Throwable error) {
-    Timber.e(error, "onBillingError: %d", errorCode);
-  }
-
-  @Override public final void onBillingInitialized() {
-    Timber.d("onBillingInitialized");
-    consumeLeftOverPurchases();
   }
 
   public void setActionBarUpEnabled(final boolean enabled) {
@@ -220,26 +165,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
     getWindow().getDecorView()
         .setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-  }
-
-  private void consumeLeftOverPurchases() {
-    if (billingProcessor == null) {
-      Timber.e("Billing processor is NULL");
-      return;
-    }
-
-    final boolean loaded = billingProcessor.loadOwnedPurchasesFromGoogle();
-    if (loaded) {
-      final List<String> ownedProducts = billingProcessor.listOwnedProducts();
-      final int size = ownedProducts.size();
-      for (int i = 0; i < size; ++i) {
-        final String product = ownedProducts.get(i);
-        Timber.d("User owns productId: %s consume it", product);
-        if (!billingProcessor.consumePurchase(product)) {
-          Timber.e("Could not consume purchase: %s", product);
-        }
-      }
-    }
   }
 
   private void showSupportDialog() {
@@ -274,14 +199,6 @@ abstract class ActivityBase extends AppCompatActivity implements BillingProcesso
         AnimUtil.popShow(item, delay, duration).start();
         delay += duration;
       }
-    }
-  }
-
-  public final void purchase(final @NonNull String sku) {
-    if (isDonationSupported()) {
-      billingProcessor.purchase(this, sku);
-    } else {
-      Timber.e("Cannot call purchases in a non-donation supported Application");
     }
   }
 

@@ -51,8 +51,10 @@ public final class AdvertisementView extends FrameLayout {
   @NonNull private static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
   @NonNull private static final String PACKAGE_PADLOCK = "com.pyamsoft.padlock";
   @NonNull private static final String PACKAGE_POWERMANAGER = "com.pyamsoft.powermanager";
+  @NonNull private static final String PACKAGE_HOMEBUTTON = "com.pyamsoft.homebutton";
+  @NonNull private static final String PACKAGE_ZAPTORCH = "com.pyamsoft.zaptorch";
   @NonNull private static final String[] POSSIBLE_PACKAGES = {
-      PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER
+      PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH
   };
   @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
   private Queue<String> imageQueue;
@@ -148,6 +150,14 @@ public final class AdvertisementView extends FrameLayout {
         Timber.d("Load feature: Power Manager");
         image = R.drawable.feature_powermanager;
         break;
+      case PACKAGE_HOMEBUTTON:
+        Timber.d("Load feature: Home Button");
+        image = R.drawable.feature_homebutton;
+        break;
+      case PACKAGE_ZAPTORCH:
+        Timber.d("Load feature: ZapTorch");
+        image = R.drawable.feature_zaptorch;
+        break;
       default:
         Timber.e("Invalid feature: %s", currentPackage);
         throw new IllegalStateException("Invalid feature: " + currentPackage);
@@ -164,8 +174,11 @@ public final class AdvertisementView extends FrameLayout {
     final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
     final boolean isValidCount = shownCount >= 4;
     if (isEnabled && isValidCount) {
-      Timber.d("Write shown count back to 0");
-      preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
+      if (!force) {
+        Timber.d("Write shown count back to 0");
+        preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
+      }
+
       Timber.d("Show ad view");
       setVisibility(View.VISIBLE);
       final AsyncDrawableTask adTask = new AsyncDrawableTask(advertisement);

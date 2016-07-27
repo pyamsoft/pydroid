@@ -123,7 +123,7 @@ public final class AdvertisementView extends FrameLayout {
     });
 
     // Default to gone
-    hide();
+    internalHide();
   }
 
   public final void destroy() {
@@ -131,6 +131,14 @@ public final class AdvertisementView extends FrameLayout {
   }
 
   public final void hide() {
+    final SharedPreferences preferences =
+        PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+    Timber.d("Write shown count back to 0");
+    preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
+    internalHide();
+  }
+
+  private void internalHide() {
     Timber.d("Hide adView");
     setVisibility(View.GONE);
   }
@@ -174,11 +182,6 @@ public final class AdvertisementView extends FrameLayout {
     final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
     final boolean isValidCount = shownCount >= 4;
     if (isEnabled && isValidCount) {
-      if (!force) {
-        Timber.d("Write shown count back to 0");
-        preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
-      }
-
       Timber.d("Show ad view");
       setVisibility(View.VISIBLE);
       final AsyncDrawableTask adTask = new AsyncDrawableTask(advertisement);

@@ -44,6 +44,14 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
     this.animating = false;
   }
 
+  public void onHiddenHook() {
+
+  }
+
+  public void onShownHook() {
+
+  }
+
   @Override
   public void onNestedScroll(CoordinatorLayout coordinatorLayout, FloatingActionButton child,
       View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
@@ -55,6 +63,7 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
         child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
           @Override public void onHidden(FloatingActionButton fab) {
             super.onHidden(fab);
+            onHiddenHook();
             animating = false;
           }
         });
@@ -65,6 +74,7 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
         child.show(new FloatingActionButton.OnVisibilityChangedListener() {
           @Override public void onShown(FloatingActionButton fab) {
             super.onShown(fab);
+            onShownHook();
             animating = false;
           }
         });

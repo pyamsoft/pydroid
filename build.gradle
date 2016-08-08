@@ -112,7 +112,7 @@ dependencies {
   androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 
   // Roboelectric for Android on JVM
-  testCompile "org.robolectric:robolectric:3.1.1"
+  testCompile "org.robolectric:robolectric:3.1.2"
   // Some resources (FAB) need GL
   testCompile 'org.khronos:opengl-api:gl1.1-android-2.1_r1'
 
@@ -120,5 +120,5 @@ dependencies {
   testCompile 'junit:junit:4.12'
 
   // Mockito for unit tests
-  testCompile 'org.mockito:mockito-core:2.0.87-beta'
+  testCompile 'org.mockito:mockito-core:2.0.99-beta'
 }

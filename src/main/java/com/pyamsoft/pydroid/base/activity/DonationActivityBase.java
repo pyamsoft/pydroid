@@ -20,15 +20,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.MenuItem;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.support.DonationUnavailableDialog;
+import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.List;
 import timber.log.Timber;
 
 public abstract class DonationActivityBase extends ActivityBase
     implements BillingProcessor.IBillingHandler {
 
+  @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
   private BillingProcessor billingProcessor;
+
+  public void showDonationUnavailableDialog() {
+    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
+        new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
+  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -86,6 +96,22 @@ public abstract class DonationActivityBase extends ActivityBase
         }
       }
     }
+  }
+
+  @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    final boolean superHandled = super.onOptionsItemSelected(item);
+    final int itemId = item.getItemId();
+    boolean handled;
+    if (itemId == R.id.menu_support) {
+      if (!BillingProcessor.isIabServiceAvailable(this)) {
+        showDonationUnavailableDialog();
+      }
+      handled = true;
+    } else {
+      handled = false;
+    }
+
+    return handled || superHandled;
   }
 
   public final void purchase(final @NonNull String sku) {

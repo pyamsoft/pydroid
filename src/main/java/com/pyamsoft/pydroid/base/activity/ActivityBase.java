@@ -33,10 +33,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.support.AdvertisementView;
-import com.pyamsoft.pydroid.support.DonationUnavailableDialog;
 import com.pyamsoft.pydroid.support.SupportDialog;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -46,7 +44,6 @@ abstract class ActivityBase extends AppCompatActivity {
 
   private static final long BACK_PRESSED_DELAY = 1600L;
   @NonNull private static final String SUPPORT_TAG = "support";
-  @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
 
   boolean backBeenPressed;
   private Handler handler;
@@ -128,9 +125,6 @@ abstract class ActivityBase extends AppCompatActivity {
     boolean handled;
     if (itemId == R.id.menu_support) {
       showSupportDialog();
-      if (!BillingProcessor.isIabServiceAvailable(this)) {
-        showDonationUnavailableDialog();
-      }
       handled = true;
     } else {
       handled = false;
@@ -170,11 +164,6 @@ abstract class ActivityBase extends AppCompatActivity {
   private void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         SupportDialog.newInstance(getPlayStoreAppPackage()), SUPPORT_TAG);
-  }
-
-  public final void showDonationUnavailableDialog() {
-    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
-        new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
   }
 
   protected final void animateActionBarToolbar(final @NonNull Toolbar toolbar) {

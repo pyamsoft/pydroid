@@ -17,26 +17,20 @@
 package com.pyamsoft.pydroid.base.activity;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ActionMenuView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.support.AdvertisementView;
 import com.pyamsoft.pydroid.support.SupportDialog;
-import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.IMMLeakUtil;
 
@@ -139,14 +133,6 @@ abstract class ActivityBase extends AppCompatActivity {
     }
   }
 
-  public void setActionBarUpEnabled(final boolean enabled) {
-    final ActionBar bar = getSupportActionBar();
-    if (bar != null) {
-      bar.setHomeButtonEnabled(enabled);
-      bar.setDisplayHomeAsUpEnabled(enabled);
-    }
-  }
-
   @SuppressLint("ShowToast") private void enableBackBeenPressedConfirmation() {
     backBeenPressed = false;
     handler = new Handler();
@@ -164,31 +150,6 @@ abstract class ActivityBase extends AppCompatActivity {
   private void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
-  }
-
-  protected final void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
-    final View t = toolbar.getChildAt(0);
-    if (t != null && t instanceof TextView &&
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      final TextView title = (TextView) t;
-      AnimUtil.fadeIn(title).start();
-    }
-
-    final View amv = toolbar.getChildAt(1);
-    if (amv != null && amv instanceof ActionMenuView) {
-      final ActionMenuView actions = (ActionMenuView) amv;
-      final int childCount = actions.getChildCount();
-      final int duration = 200;
-      int delay = 500;
-      for (int i = 0; i < childCount; ++i) {
-        final View item = actions.getChildAt(i);
-        if (item == null) {
-          continue;
-        }
-        AnimUtil.popShow(item, delay, duration).start();
-        delay += duration;
-      }
-    }
   }
 
   @Override protected void onStart() {

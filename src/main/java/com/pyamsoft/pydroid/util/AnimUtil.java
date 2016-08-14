@@ -16,13 +16,17 @@
 
 package com.pyamsoft.pydroid.util;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
+import android.support.v7.widget.ActionMenuView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
+import android.widget.TextView;
 
 public final class AnimUtil {
 
@@ -130,5 +134,30 @@ public final class AnimUtil {
         .setDuration(300)
         .setInterpolator(i)
         .setListener(null);
+  }
+
+  public static void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
+    final View t = toolbar.getChildAt(0);
+    if (t != null && t instanceof TextView &&
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      final TextView title = (TextView) t;
+      AnimUtil.fadeIn(title).start();
+    }
+
+    final View amv = toolbar.getChildAt(1);
+    if (amv != null && amv instanceof ActionMenuView) {
+      final ActionMenuView actions = (ActionMenuView) amv;
+      final int childCount = actions.getChildCount();
+      final int duration = 200;
+      int delay = 500;
+      for (int i = 0; i < childCount; ++i) {
+        final View item = actions.getChildAt(i);
+        if (item == null) {
+          continue;
+        }
+        AnimUtil.popShow(item, delay, duration).start();
+        delay += duration;
+      }
+    }
   }
 }

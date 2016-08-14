@@ -41,6 +41,7 @@ public abstract class ActionBarFragment extends Fragment {
     if (activity instanceof AppCompatActivity) {
       final AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
       appCompatActivity.setSupportActionBar(toolbar);
+      appCompatActivity.supportInvalidateOptionsMenu();
     } else {
       throw new ClassCastException("Activity not instance of AppCompatActivity");
     }

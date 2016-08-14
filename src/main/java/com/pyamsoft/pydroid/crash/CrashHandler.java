@@ -137,8 +137,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
       }
 
       Timber.e("Start Crash Log Intent");
-      final Intent crashLogIntent =
-          new Intent(provider.getApplicationPackageName() + ".crash.SEND_LOG");
+      final Intent crashLogIntent = new Intent(provider.getPackageName() + ".crash.SEND_LOG");
       crashLogIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       crashLogIntent.putExtra(CrashLogActivity.CRASH_SUBJECT, provider.crashLogSubject())
           .putExtra(CrashLogActivity.CRASH_TEXT, provider.crashLogText())
@@ -224,7 +223,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @CheckResult int buildConfigVersionCode();
 
-    @CheckResult @NonNull String getApplicationPackageName();
+    @CheckResult @NonNull String getPackageName();
 
     @CheckResult String crashLogText();
 

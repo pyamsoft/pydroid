@@ -43,7 +43,7 @@ public abstract class DonationActivityBase extends ActivityBase
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     billingProcessor =
-        new BillingProcessor(getApplicationContext(), getPlayStoreAppPackage(), this);
+        new BillingProcessor(getApplicationContext(), getPackageName(), this);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {

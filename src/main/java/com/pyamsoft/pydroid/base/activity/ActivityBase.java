@@ -163,7 +163,7 @@ abstract class ActivityBase extends AppCompatActivity {
 
   private void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
-        SupportDialog.newInstance(getPlayStoreAppPackage()), SUPPORT_TAG);
+        SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
   }
 
   protected final void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
@@ -212,7 +212,5 @@ abstract class ActivityBase extends AppCompatActivity {
    * Call setContentView here and return the id of the advertisement view, 0 if none
    */
   @CheckResult protected abstract int bindActivityToView();
-
-  @CheckResult @NonNull protected abstract String getPlayStoreAppPackage();
 }
 

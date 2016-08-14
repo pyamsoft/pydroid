@@ -16,11 +16,6 @@
 
 package com.pyamsoft.pydroid.base.activity;
 
-import android.support.annotation.NonNull;
-
 public abstract class NoDonationActivityBase extends ActivityBase {
 
-  @NonNull @Override protected final String getPlayStoreAppPackage() {
-    return "";
-  }
 }

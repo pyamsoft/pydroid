@@ -22,7 +22,7 @@
   <string name="pydroid_donate" tools:keep="@string/pydroid_donate">SUPPORT</string>
   <string name="about_this_application">About This Application</string>
   <string name="send_email_report">Send Email Report</string>
-  <string name="crash_prompt">Oops! Looks like %s has crashed! Click the button below to send an email report to the pyamsoft so that I can fix the problem. It really does help when you send these reports, otherwise I won\'t know if there are problems with your experience.</string>
+  <string name="crash_prompt">Oops! Looks like %s has crashed! Click the button below to send an email report to pyamsoft so that I can fix the problem. It really does help when you send these reports, otherwise I won\'t know if there are problems with your experience.</string>
   <string name="rate_app_on_play_store">Rate App on Play Store</string>
   <string name="no_thanks">No Thanks</string>
   <string name="liking_the_app">Liking the App?</string>

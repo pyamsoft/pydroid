@@ -78,12 +78,10 @@ public final class AdvertisementView extends FrameLayout {
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public AdvertisementView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    Timber.d("Init with defStyleRes");
     init();
   }
 
   private void init() {
-    Timber.d("Init advertisement view");
     preferenceKey = getContext().getString(R.string.adview_key);
     preferenceDefault = getContext().getResources().getBoolean(R.bool.adview_default);
 
@@ -105,7 +103,7 @@ public final class AdvertisementView extends FrameLayout {
     final ImageView closeButton = (ImageView) findViewById(R.id.ad_close);
 
     Timber.d("Async load close button");
-    AsyncVectorDrawableTask closeTask;
+    final AsyncVectorDrawableTask closeTask;
     if (color == 0) {
       Timber.d("Default color is black");
       closeTask = new AsyncVectorDrawableTask(closeButton, android.R.color.black);
@@ -122,7 +120,7 @@ public final class AdvertisementView extends FrameLayout {
     });
 
     // Default to gone
-    internalHide();
+    setVisibility(View.GONE);
   }
 
   public final void destroy() {
@@ -134,11 +132,8 @@ public final class AdvertisementView extends FrameLayout {
         PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
     Timber.d("Write shown count back to 0");
     preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
-    internalHide();
-  }
 
-  private void internalHide() {
-    Timber.d("Hide adView");
+    Timber.d("Hide ad view");
     setVisibility(View.GONE);
   }
 
@@ -173,6 +168,27 @@ public final class AdvertisementView extends FrameLayout {
     return image;
   }
 
+  @CheckResult @NonNull private String currentPackageFromQueue() {
+    String currentPackage = imageQueue.poll();
+    while (currentPackage == null || currentPackage.equals(getContext().getPackageName())) {
+      Timber.e("Current package is bad: %s", currentPackage);
+      if (currentPackage != null) {
+        Timber.d("Add non-null package back to queue");
+        imageQueue.add(currentPackage);
+      } else {
+        Timber.d("Remove null package from queue");
+      }
+
+      Timber.d("Get new current package");
+      currentPackage = imageQueue.poll();
+    }
+
+    imageQueue.add(currentPackage);
+    Timber.d("Image queue: %s", Arrays.toString(imageQueue.toArray()));
+
+    return currentPackage;
+  }
+
   public final void show(boolean force) {
     // KLUDGE: Direct preference object access and modify
     final SharedPreferences preferences =
@@ -183,32 +199,17 @@ public final class AdvertisementView extends FrameLayout {
     if (isEnabled && isValidCount) {
       Timber.d("Show ad view");
       setVisibility(View.VISIBLE);
-      final AsyncDrawableTask adTask = new AsyncDrawableTask(advertisement);
-      String currentPackage = imageQueue.poll();
-      while (currentPackage == null || currentPackage.equals(getContext().getPackageName())) {
-        Timber.e("Current package is bad: %s", currentPackage);
-        if (currentPackage != null) {
-          Timber.d("Add non-null package back to queue");
-          imageQueue.add(currentPackage);
-        } else {
-          Timber.d("Remove null package from queue");
-        }
 
-        Timber.d("Get new current package");
-        currentPackage = imageQueue.poll();
-      }
-
-      imageQueue.add(currentPackage);
+      final String currentPackage = currentPackageFromQueue();
       final int image = loadImage(currentPackage);
-
-      final String clickPackage = currentPackage;
       advertisement.setOnClickListener(view -> {
         // KLUDGE: Social Media presenter can do this
         Timber.d("onClick");
-        final String fullLink = "market://details?id=" + clickPackage;
+        final String fullLink = "market://details?id=" + currentPackage;
         NetworkUtil.newLink(view.getContext(), fullLink);
       });
 
+      final AsyncDrawableTask adTask = new AsyncDrawableTask(advertisement);
       adTask.execute(new AsyncDrawable(getContext(), image));
       taskMap.put("ad", adTask);
     } else {

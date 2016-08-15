@@ -21,7 +21,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.CheckResult;
-import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.preference.PreferenceManager;
@@ -61,7 +61,6 @@ public final class AdvertisementView extends FrameLayout {
   private boolean preferenceDefault;
   private String preferenceKey;
   private ImageView advertisement;
-  private ImageView closeButton;
 
   public AdvertisementView(Context context) {
     this(context, null);
@@ -101,9 +100,9 @@ public final class AdvertisementView extends FrameLayout {
     create(0);
   }
 
-  public final void create(@ColorInt int color) {
+  public final void create(@ColorRes int color) {
     advertisement = (ImageView) findViewById(R.id.ad_image);
-    closeButton = (ImageView) findViewById(R.id.ad_close);
+    final ImageView closeButton = (ImageView) findViewById(R.id.ad_close);
 
     Timber.d("Async load close button");
     AsyncVectorDrawableTask closeTask;

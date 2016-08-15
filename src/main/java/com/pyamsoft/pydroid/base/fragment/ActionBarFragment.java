@@ -53,5 +53,7 @@ public abstract class ActionBarFragment extends Fragment {
       bar.setHomeButtonEnabled(up);
       bar.setDisplayHomeAsUpEnabled(up);
     }
+
+    getActivity().supportInvalidateOptionsMenu();
   }
 }

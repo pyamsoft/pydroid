@@ -53,8 +53,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 24
-    versionCode 44
-    versionName "3.0.3"
+    versionCode 45
+    versionName "3.0.4"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
@@ -80,6 +80,10 @@ android {
 
   packagingOptions {
     exclude 'META-INF/services/javax.annotation.processing.Processor'
+  }
+
+  dexOptions {
+    javaMaxHeapSize "1g"
   }
 }
 

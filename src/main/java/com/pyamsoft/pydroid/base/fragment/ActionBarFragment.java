@@ -22,7 +22,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 public abstract class ActionBarFragment extends Fragment {
 
@@ -36,24 +35,11 @@ public abstract class ActionBarFragment extends Fragment {
     }
   }
 
-  protected void setActionBar(@Nullable Toolbar toolbar) {
-    final FragmentActivity activity = getActivity();
-    if (activity instanceof AppCompatActivity) {
-      final AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
-      appCompatActivity.setSupportActionBar(toolbar);
-      appCompatActivity.supportInvalidateOptionsMenu();
-    } else {
-      throw new ClassCastException("Activity not instance of AppCompatActivity");
-    }
-  }
-
   protected void setActionBarUpEnabled(boolean up) {
     final ActionBar bar = getActionBar();
     if (bar != null) {
       bar.setHomeButtonEnabled(up);
       bar.setDisplayHomeAsUpEnabled(up);
     }
-
-    getActivity().supportInvalidateOptionsMenu();
   }
 }

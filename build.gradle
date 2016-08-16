@@ -107,7 +107,7 @@ dependencies {
   compile 'com.anjlab.android.iab.v3:library:1.0.32'
 
   // Timber logging
-  compile 'com.jakewharton.timber:timber:4.1.2'
+  compile 'com.jakewharton.timber:timber:4.2.0'
 
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.1.1'
@@ -124,5 +124,5 @@ dependencies {
   testCompile 'junit:junit:4.12'
 
   // Mockito for unit tests
-  testCompile 'org.mockito:mockito-core:2.0.99-beta'
+  testCompile 'org.mockito:mockito-core:2.0.104-beta'
 }

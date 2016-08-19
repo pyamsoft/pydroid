@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.support.SupportDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.IMMLeakUtil;
 
-abstract class ActivityBase extends AppCompatActivity {
+public abstract class ActivityBase extends AppCompatActivity {
 
   private static final long BACK_PRESSED_DELAY = 1600L;
   @NonNull private static final String SUPPORT_TAG = "support";

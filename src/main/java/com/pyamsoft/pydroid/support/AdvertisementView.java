@@ -30,10 +30,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.model.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncDrawableTask;
-import com.pyamsoft.pydroid.tool.AsyncTaskMap;
-import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.ArrayList;
@@ -43,6 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import rx.Subscription;
 import timber.log.Timber;
 
 public final class AdvertisementView extends FrameLayout {
@@ -56,7 +55,7 @@ public final class AdvertisementView extends FrameLayout {
   @NonNull private static final String[] POSSIBLE_PACKAGES = {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH
   };
-  @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
+  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   private Queue<String> imageQueue;
   private boolean preferenceDefault;
   private String preferenceKey;
@@ -103,16 +102,11 @@ public final class AdvertisementView extends FrameLayout {
     final ImageView closeButton = (ImageView) findViewById(R.id.ad_close);
 
     Timber.d("Async load close button");
-    final AsyncVectorDrawableTask closeTask;
-    if (color == 0) {
-      Timber.d("Default color is black");
-      closeTask = new AsyncVectorDrawableTask(closeButton, android.R.color.black);
-    } else {
-      Timber.d("Override color");
-      closeTask = new AsyncVectorDrawableTask(closeButton, color);
-    }
-    closeTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_close_24dp));
-    taskMap.put("close", closeTask);
+    final Subscription closeSub = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_close_24dp)
+        .tint(color == 0 ? android.R.color.black : color)
+        .into(closeButton);
+    taskMap.put("close", closeSub);
 
     closeButton.setOnClickListener(view -> {
       Timber.d("Close clicked");
@@ -209,8 +203,7 @@ public final class AdvertisementView extends FrameLayout {
         NetworkUtil.newLink(view.getContext(), fullLink);
       });
 
-      final AsyncDrawableTask adTask = new AsyncDrawableTask(advertisement);
-      adTask.execute(new AsyncDrawable(getContext(), image));
+      final Subscription adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
       taskMap.put("ad", adTask);
     } else {
       final int newCount = shownCount + 1;

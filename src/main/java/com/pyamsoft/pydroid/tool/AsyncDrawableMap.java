@@ -16,23 +16,22 @@
 
 package com.pyamsoft.pydroid.tool;
 
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import rx.Subscription;
 import timber.log.Timber;
 
 /**
- * A map that holds Async Task objects and has helper methods to add new ones as well as
- * clear the stored map
+ * A map that makes it convenient to load AsyncDrawables
  */
-public final class AsyncTaskMap {
+public final class AsyncDrawableMap {
 
-  @NonNull private final HashMap<String, AsyncTask> taskMap;
+  @NonNull private final HashMap<String, Subscription> map;
 
-  public AsyncTaskMap() {
-    this.taskMap = new HashMap<>();
+  public AsyncDrawableMap() {
+    this.map = new HashMap<>();
   }
 
   /**
@@ -40,15 +39,14 @@ public final class AsyncTaskMap {
    *
    * If an old element exists, its task is cancelled first before adding the new one
    */
-  public final void put(@NonNull String tag, @NonNull AsyncTask task) {
-    if (taskMap.containsKey(tag)) {
-      final AsyncTask oldTask = taskMap.get(tag);
-      Timber.d("Cancel old task for tag: %s", tag);
-      cancelTask(tag, oldTask);
+  public final void put(@NonNull String tag, @NonNull Subscription subscription) {
+    if (map.containsKey(tag)) {
+      final Subscription old = map.get(tag);
+      cancelSubscription(tag, old);
     }
 
-    Timber.d("Insert new task for tag: %s", tag);
-    taskMap.put(tag, task);
+    Timber.d("Insert new subscription for tag: %s", tag);
+    map.put(tag, subscription);
   }
 
   /**
@@ -57,23 +55,22 @@ public final class AsyncTaskMap {
    * If the elements have not been cancelled yet, cancel them before removing them
    */
   public final void clear() {
-    Timber.d("Cancel task map tasks");
-    for (final Map.Entry<String, AsyncTask> entry : taskMap.entrySet()) {
-      cancelTask(entry.getKey(), entry.getValue());
+    for (final Map.Entry<String, Subscription> entry : map.entrySet()) {
+      cancelSubscription(entry.getKey(), entry.getValue());
     }
 
-    Timber.d("Clear task map");
-    taskMap.clear();
+    Timber.d("Clear AsyncDrawableMap");
+    map.clear();
   }
 
   /**
-   * Cancels an Async task
+   * Cancels a task
    */
-  private void cancelTask(@NonNull String tag, @Nullable AsyncTask task) {
-    if (task != null) {
-      if (!task.isCancelled()) {
-        Timber.d("Cancel AsyncTask with tag: %s", tag);
-        task.cancel(true);
+  private void cancelSubscription(@NonNull String tag, @Nullable Subscription subscription) {
+    if (subscription != null) {
+      if (!subscription.isUnsubscribed()) {
+        Timber.d("Unsubscribe for tag: %s", tag);
+        subscription.unsubscribe();
       }
     }
   }

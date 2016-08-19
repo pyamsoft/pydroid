@@ -37,10 +37,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.model.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncDrawableTask;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
+import rx.Subscription;
 import timber.log.Timber;
 
 public class RatingDialog extends DialogFragment {
@@ -50,7 +51,7 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
-  private AsyncDrawableTask iconTask;
+  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   private SharedPreferences preferences;
   private String rateLink;
   private Spannable changeLogText;
@@ -111,12 +112,7 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    if (iconTask != null) {
-      if (!iconTask.isCancelled()) {
-        iconTask.cancel(true);
-      }
-      iconTask = null;
-    }
+    taskMap.clear();
   }
 
   @SuppressLint("InflateParams") @NonNull @Override
@@ -131,8 +127,10 @@ public class RatingDialog extends DialogFragment {
     final Button cancelButton = (Button) rootView.findViewById(R.id.rating_btn_no_thanks);
 
     ViewCompat.setElevation(icon, AppUtil.convertToDP(getContext(), 8));
-    iconTask = new AsyncDrawableTask(icon);
-    iconTask.execute(new AsyncDrawable(getContext(), changeLogIcon));
+
+    final Subscription iconTask = AsyncDrawable.with(getContext()).load(changeLogIcon).into(icon);
+    taskMap.put("icon", iconTask);
+
     changeLog.setText(changeLogText);
     builder.setView(rootView);
 

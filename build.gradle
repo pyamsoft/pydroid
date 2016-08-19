@@ -14,36 +14,9 @@
  * limitations under the License.
  */
 
-
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
-}
-
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    // Retro lambda
-    classpath 'me.tatarka:gradle-retrolambda:3.3.0-beta4'
-
-    // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.5.5'
-
-    // Android APT
-    classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-
-    // Gradle version checked
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
-  }
-}
-
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.getkeepsafe.dexcount'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
@@ -54,7 +27,7 @@ android {
     minSdkVersion 16
     targetSdkVersion 24
     versionCode 45
-    versionName "3.0.4"
+    versionName "3.1.0"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 

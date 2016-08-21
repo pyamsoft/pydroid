@@ -34,25 +34,59 @@ import java.util.List;
 
 public final class CircularRevealFragmentUtil {
 
+  @ColorRes private static final int DEFAULT_COLOR = 0;
+  private static final long DEFAULT_DURATION = 1000L;
   @NonNull private static final String CENTER_X = "cX";
   @NonNull private static final String CENTER_Y = "cY";
   @NonNull private static final String BG_COLOR = "bg_color";
+  @NonNull private static final String ANIM_DURATION = "duration";
 
   private CircularRevealFragmentUtil() {
     throw new RuntimeException("No instances");
   }
 
+  @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY) {
+    return bundleArguments(cX, cY, DEFAULT_COLOR);
+  }
+
   @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY, @ColorRes int color) {
+    return bundleArguments(cX, cY, color, DEFAULT_DURATION);
+  }
+
+  @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY, long duration) {
+    return bundleArguments(cX, cY, DEFAULT_COLOR, duration);
+  }
+
+  @CheckResult @NonNull
+  public static Bundle bundleArguments(int cX, int cY, @ColorRes int color, long duration) {
     final Bundle args = new Bundle();
     args.putInt(CENTER_X, cX);
     args.putInt(CENTER_Y, cY);
     args.putInt(BG_COLOR, color);
+    args.putLong(ANIM_DURATION, duration);
     return args;
+  }
+
+  @CheckResult @NonNull
+  public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView) {
+    return bundleArguments(fromView, containerView, DEFAULT_COLOR);
   }
 
   @CheckResult @NonNull
   public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView,
       @ColorRes int color) {
+    return bundleArguments(fromView, containerView, color, DEFAULT_DURATION);
+  }
+
+  @CheckResult @NonNull
+  public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView,
+      long duration) {
+    return bundleArguments(fromView, containerView, DEFAULT_COLOR, duration);
+  }
+
+  @CheckResult @NonNull
+  public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView,
+      @ColorRes int color, long duration) {
     final int[] fromLocation = new int[2];
     fromView.getLocationInWindow(fromLocation);
 
@@ -65,7 +99,7 @@ public final class CircularRevealFragmentUtil {
     final int cX = fromView.getWidth() / 2 + relativeLeft;
     final int cY = fromView.getHeight() / 2 + relativeTop;
 
-    return bundleArguments(cX, cY, color);
+    return bundleArguments(cX, cY, color, duration);
   }
 
   public static void runCircularRevealOnViewCreated(@NonNull View view, Bundle arguments) {
@@ -74,8 +108,8 @@ public final class CircularRevealFragmentUtil {
     }
 
     final Context context = view.getContext();
-    @ColorRes final int bgColor = arguments.getInt(BG_COLOR, 0);
-    if (bgColor != 0) {
+    @ColorRes final int bgColor = arguments.getInt(BG_COLOR, DEFAULT_COLOR);
+    if (bgColor != DEFAULT_COLOR) {
       view.setBackgroundColor(ContextCompat.getColor(context, bgColor));
     }
 
@@ -102,9 +136,10 @@ public final class CircularRevealFragmentUtil {
             animatorList.add(reveal);
           }
 
+          final long duration = arguments.getLong(ANIM_DURATION, DEFAULT_DURATION);
           final AnimatorSet set = new AnimatorSet();
           set.setInterpolator(new DecelerateInterpolator(2F));
-          set.setDuration(1000L);
+          set.setDuration(duration);
           set.playTogether(animatorList);
           set.start();
         }

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base;
+package com.pyamsoft.pydroid.base.presenter;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.base.presenter.Presenter;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

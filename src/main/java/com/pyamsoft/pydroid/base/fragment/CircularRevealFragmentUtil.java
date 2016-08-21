@@ -19,12 +19,12 @@ package com.pyamsoft.pydroid.base.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -32,27 +32,17 @@ import android.view.animation.DecelerateInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CircularRevealFragment extends ActionBarFragment {
+public final class CircularRevealFragmentUtil {
 
   @NonNull private static final String CENTER_X = "cX";
   @NonNull private static final String CENTER_Y = "cY";
   @NonNull private static final String BG_COLOR = "bg_color";
 
-  //@CheckResult @NonNull public static Fragment newInstance(int cX, int cY) {
-  //  final Fragment fragment = new CircularRevealFragment();
-  //  fragment.setArguments(bundleArguments(cX, cY));
-  //  return fragment;
-  //}
+  private CircularRevealFragmentUtil() {
+    throw new RuntimeException("No instances");
+  }
 
-  //@CheckResult @NonNull
-  //public static Fragment newInstance(@NonNull View fromView, @NonNull View containerView) {
-  //  final Fragment fragment = new CircularRevealFragment();
-  //  fragment.setArguments(bundleArguments(fromView, containerView));
-  //  return fragment;
-  //}
-
-  @CheckResult @NonNull
-  protected static Bundle bundleArguments(int cX, int cY, @ColorRes int color) {
+  @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY, @ColorRes int color) {
     final Bundle args = new Bundle();
     args.putInt(CENTER_X, cX);
     args.putInt(CENTER_Y, cY);
@@ -61,7 +51,7 @@ public class CircularRevealFragment extends ActionBarFragment {
   }
 
   @CheckResult @NonNull
-  protected static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView,
+  public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView,
       @ColorRes int color) {
     final int[] fromLocation = new int[2];
     fromView.getLocationInWindow(fromLocation);
@@ -78,11 +68,15 @@ public class CircularRevealFragment extends ActionBarFragment {
     return bundleArguments(cX, cY, color);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    @ColorRes final int bgColor = getArguments().getInt(BG_COLOR, 0);
+  public static void runCircularRevealOnViewCreated(@NonNull View view, Bundle arguments) {
+    if (arguments == null) {
+      throw new NullPointerException("Bundle arguments cannot be null");
+    }
+
+    final Context context = view.getContext();
+    @ColorRes final int bgColor = arguments.getInt(BG_COLOR, 0);
     if (bgColor != 0) {
-      view.setBackgroundColor(ContextCompat.getColor(getContext(), bgColor));
+      view.setBackgroundColor(ContextCompat.getColor(context, bgColor));
     }
 
     // To run the animation as soon as the view is layout in the view hierarchy we add this
@@ -94,8 +88,8 @@ public class CircularRevealFragment extends ActionBarFragment {
           int oldTop, int oldRight, int oldBottom) {
         v.removeOnLayoutChangeListener(this);
 
-        final int cx = getArguments().getInt(CENTER_X, 0);
-        final int cy = getArguments().getInt(CENTER_Y, 0);
+        final int cx = arguments.getInt(CENTER_X, 0);
+        final int cy = arguments.getInt(CENTER_Y, 0);
 
         if (cx != 0 || cy != 0) {
           final List<Animator> animatorList = new ArrayList<>();

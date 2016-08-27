@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.base.presenter;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.presenter.Presenter;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +29,7 @@ public class PresenterTest {
   @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
 
   @Test public void test_constructor() {
-    final Presenter<String> presenter = new TestPresenter();
+    final PresenterBase<String> presenter = new TestPresenter();
 
     // By default, throw if not created
     useBeforeCreateException.expect(IllegalStateException.class);
@@ -38,7 +37,7 @@ public class PresenterTest {
   }
 
   @Test public void test_bindView() {
-    final Presenter<String> presenter = new TestPresenter();
+    final PresenterBase<String> presenter = new TestPresenter();
 
     // By default, constructed with a null view
     final String hold = "String";
@@ -51,7 +50,7 @@ public class PresenterTest {
   }
 
   @Test public void test_unbindView() {
-    final Presenter<String> presenter = new TestPresenter();
+    final PresenterBase<String> presenter = new TestPresenter();
 
     // By default, constructed with a null view
     final String hold = "String";
@@ -117,7 +116,7 @@ public class PresenterTest {
     Assert.assertTrue(presenter.isUnbound());
   }
 
-  static final class TestPresenter extends Presenter<String> {
+  static final class TestPresenter extends PresenterBase<String> {
 
     private boolean bound = false;
     private boolean unbound = false;

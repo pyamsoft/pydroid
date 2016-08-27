@@ -18,10 +18,6 @@ package com.pyamsoft.pydroid.base.activity.adapter;
 
 public interface ActivityLifecycleCallbacks {
 
-  void onCreate();
-
-  void onDestroy();
-
   void onStart();
 
   void onStop();

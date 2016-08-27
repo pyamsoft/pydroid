@@ -21,13 +21,13 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
   compileSdkVersion 24
-  buildToolsVersion '24.0.1'
+  buildToolsVersion '24.0.2'
 
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 24
-    versionCode 47
-    versionName "3.2.0"
+    versionCode 48
+    versionName "3.3.0"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 

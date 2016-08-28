@@ -32,8 +32,8 @@ import timber.log.Timber;
 public abstract class DonationActivityBase extends ActivityBase
     implements BillingProcessor.IBillingHandler {
 
-  @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
-  private BillingProcessor billingProcessor;
+  @NonNull static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
+  BillingProcessor billingProcessor;
 
   public void showDonationUnavailableDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
@@ -78,7 +78,7 @@ public abstract class DonationActivityBase extends ActivityBase
     consumeLeftOverPurchases();
   }
 
-  private void consumeLeftOverPurchases() {
+  void consumeLeftOverPurchases() {
     if (billingProcessor == null) {
       Timber.e("Billing processor is NULL");
       return;

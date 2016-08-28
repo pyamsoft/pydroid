@@ -32,14 +32,14 @@ import android.view.animation.DecelerateInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class CircularRevealFragmentUtil {
+public class CircularRevealFragmentUtil {
 
-  @ColorRes private static final int DEFAULT_COLOR = 0;
-  private static final long DEFAULT_DURATION = 1000L;
-  @NonNull private static final String CENTER_X = "cX";
-  @NonNull private static final String CENTER_Y = "cY";
-  @NonNull private static final String BG_COLOR = "bg_color";
-  @NonNull private static final String ANIM_DURATION = "duration";
+  @ColorRes static final int DEFAULT_COLOR = 0;
+  static final long DEFAULT_DURATION = 1000L;
+  @NonNull static final String CENTER_X = "cX";
+  @NonNull static final String CENTER_Y = "cY";
+  @NonNull static final String BG_COLOR = "bg_color";
+  @NonNull static final String ANIM_DURATION = "duration";
 
   private CircularRevealFragmentUtil() {
     throw new RuntimeException("No instances");

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.activity.adapter;
+package com.pyamsoft.pydroid.base.app;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
@@ -28,7 +28,7 @@ public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends Lo
 
   @Nullable private T adapter;
 
-  public ListAdapterLoader(@NonNull Context context) {
+  protected ListAdapterLoader(@NonNull Context context) {
     super(context);
   }
 

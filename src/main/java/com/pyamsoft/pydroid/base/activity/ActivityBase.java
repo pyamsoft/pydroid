@@ -36,14 +36,14 @@ import com.pyamsoft.pydroid.util.IMMLeakUtil;
 
 public abstract class ActivityBase extends AppCompatActivity {
 
-  private static final long BACK_PRESSED_DELAY = 1600L;
-  @NonNull private static final String SUPPORT_TAG = "support";
+  static final long BACK_PRESSED_DELAY = 1600L;
+  @NonNull static final String SUPPORT_TAG = "support";
 
   boolean backBeenPressed;
-  private Handler handler;
-  private Toast backBeenPressedToast;
-  private Runnable backBeenPressedRunnable;
-  @Nullable private AdvertisementView adView;
+  Handler handler;
+  Toast backBeenPressedToast;
+  Runnable backBeenPressedRunnable;
+  @Nullable AdvertisementView adView;
 
   /**
    * Override if you do not want to handle IMM leaks
@@ -133,7 +133,7 @@ public abstract class ActivityBase extends AppCompatActivity {
     }
   }
 
-  @SuppressLint("ShowToast") private void enableBackBeenPressedConfirmation() {
+  @SuppressLint("ShowToast") void enableBackBeenPressedConfirmation() {
     backBeenPressed = false;
     handler = new Handler();
     backBeenPressedToast = Toast.makeText(this, "Press Again to Exit", Toast.LENGTH_SHORT);
@@ -141,13 +141,13 @@ public abstract class ActivityBase extends AppCompatActivity {
     handler.removeCallbacksAndMessages(null);
   }
 
-  private void setupFakeFullscreenWindow() {
+  void setupFakeFullscreenWindow() {
     getWindow().getDecorView()
         .setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
   }
 
-  private void showSupportDialog() {
+  void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
   }

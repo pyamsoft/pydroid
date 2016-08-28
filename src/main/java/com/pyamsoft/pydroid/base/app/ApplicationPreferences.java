@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public abstract class ApplicationPreferences {
 
-  @NonNull private final SharedPreferences p;
+  @NonNull final SharedPreferences p;
 
   protected ApplicationPreferences(final @NonNull Context context) {
     final Context appContext = context.getApplicationContext();
@@ -139,7 +139,7 @@ public abstract class ApplicationPreferences {
   public static abstract class OnSharedPreferenceChangeListener
       implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private boolean isRegistered = false;
+    boolean isRegistered = false;
 
     public final void register(@NonNull final ApplicationPreferences util) {
       if (!isRegistered) {

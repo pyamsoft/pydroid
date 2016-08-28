@@ -19,34 +19,34 @@ package com.pyamsoft.pydroid.social;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.presenter.PresenterBase;
 
-public final class SocialMediaPresenter extends
+public class SocialMediaPresenter extends
     PresenterBase<SocialMediaPresenter.SocialMediaView> {
 
-  public final void clickAppPage(@NonNull String link) {
+  public void clickAppPage(@NonNull String link) {
     final SocialMediaView mediaView = getView();
     final String fullLink = "market://details?id=" + link;
     mediaView.onAppPageClicked(fullLink);
   }
 
-  public final void clickGooglePlay() {
+  public void clickGooglePlay() {
     final SocialMediaView mediaView = getView();
     final String link = "https://play.google.com/store/apps/dev?id=5257476342110165153";
     mediaView.onGooglePlayClicked(link);
   }
 
-  public final void clickGooglePlus() {
+  public void clickGooglePlus() {
     final SocialMediaView mediaView = getView();
     final String link = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts";
     mediaView.onGooglePlusClicked(link);
   }
 
-  public final void clickBlogger() {
+  public void clickBlogger() {
     final SocialMediaView mediaView = getView();
     final String link = "http://pyamsoft.blogspot.com/";
     mediaView.onBloggerClicked(link);
   }
 
-  public final void clickFacebook() {
+  public void clickFacebook() {
     final SocialMediaView mediaView = getView();
     final String link = "https://www.facebook.com/pyamsoftware";
     mediaView.onFacebookClicked(link);

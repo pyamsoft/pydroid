@@ -157,10 +157,10 @@ public final class IMMLeakUtil {
       implements MessageQueue.IdleHandler, View.OnAttachStateChangeListener,
       ViewTreeObserver.OnGlobalFocusChangeListener {
 
-    @NonNull private final InputMethodManager inputMethodManager;
-    @NonNull private final Field lockField;
-    @NonNull private final Field servedViewField;
-    @NonNull private final Method finishInputLockedMethod;
+    @NonNull final InputMethodManager inputMethodManager;
+    @NonNull final Field lockField;
+    @NonNull final Field servedViewField;
+    @NonNull final Method finishInputLockedMethod;
 
     ReferenceCleaner(@NonNull InputMethodManager inputMethodManager, @NonNull Field lockField,
         @NonNull Field servedViewField, @NonNull Method finishInputLockedMethod) {
@@ -196,7 +196,7 @@ public final class IMMLeakUtil {
     }
 
     @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-    private void clearInputMethodManagerLeak() {
+    void clearInputMethodManagerLeak() {
       try {
         Timber.d("Attempt to clear IMM leak");
         final Object lock = lockField.get(inputMethodManager);
@@ -244,7 +244,7 @@ public final class IMMLeakUtil {
       }
     }
 
-    @CheckResult @Nullable private Activity extractActivity(@NonNull Context context) {
+    @CheckResult @Nullable Activity extractActivity(@NonNull Context context) {
       Timber.d("Extract the current activity from context");
       while (true) {
         if (context instanceof Application) {

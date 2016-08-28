@@ -32,19 +32,19 @@ import com.pyamsoft.pydroid.util.IMMLeakUtil;
 import java.io.File;
 import timber.log.Timber;
 
-@SuppressLint("Registered") public final class CrashLogActivity extends AppCompatActivity {
+@SuppressLint("Registered") public class CrashLogActivity extends AppCompatActivity {
 
   @NonNull public static final String APP_NAME = "APP_NAME";
   @NonNull public static final String CRASH_SUBJECT = "CRASH_SUBJECT";
   @NonNull public static final String CRASH_TEXT = "CRASH_TEXT";
   @NonNull public static final String CRASH_FILE = "CRASH_FILE";
-  @NonNull private static final String DEFAULT_SUBJECT = "pyamsoft Application Crash Log";
-  @NonNull private static final String DEFAULT_TEXT = "Crash log attached.";
+  @NonNull static final String DEFAULT_SUBJECT = "pyamsoft Application Crash Log";
+  @NonNull static final String DEFAULT_TEXT = "Crash log attached.";
 
   // Can't use butterknife in libraries
-  private Button sendLog;
-  private TextView oopsText;
-  private Intent intent;
+  Button sendLog;
+  TextView oopsText;
+  Intent intent;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     IMMLeakUtil.fixFocusedViewLeak(getApplication());
@@ -57,7 +57,7 @@ import timber.log.Timber;
     setupSendLogButton();
   }
 
-  private void formatOopsMessage() {
+  void formatOopsMessage() {
     String appName = getIntent().getStringExtra(APP_NAME);
     if (appName == null) {
       appName = "this pyamsoft Application";
@@ -67,7 +67,7 @@ import timber.log.Timber;
     oopsText.setText(formatted);
   }
 
-  private void setupMailIntent() {
+  void setupMailIntent() {
     final ShareCompat.IntentBuilder intentBuilder = ShareCompat.IntentBuilder.from(this)
         .setChooserTitle("Send Email Using:")
         .setType("message/rfc822");
@@ -112,7 +112,7 @@ import timber.log.Timber;
     intent = intentBuilder.createChooserIntent().addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
   }
 
-  private void setupSendLogButton() {
+  void setupSendLogButton() {
     if (intent == null) {
       // No crash log available, no button
       sendLog.setVisibility(View.GONE);
@@ -129,7 +129,7 @@ import timber.log.Timber;
     }
   }
 
-  private void findViews() {
+  void findViews() {
     sendLog = (Button) findViewById(R.id.crashlog_open_email);
     oopsText = (TextView) findViewById(R.id.crashlog_oopsie);
   }

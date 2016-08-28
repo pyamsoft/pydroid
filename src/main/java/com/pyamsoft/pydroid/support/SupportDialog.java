@@ -41,17 +41,17 @@ import timber.log.Timber;
 public class SupportDialog extends DialogFragment
     implements View.OnClickListener, SocialMediaPresenter.SocialMediaView {
 
-  @NonNull private static final String SKU_DONATE_ONE = ".donate.one";
-  @NonNull private static final String SKU_DONATE_TWO = ".donate.two";
-  @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
-  @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
-  @NonNull private static final String ARG_PACKAGE = "package";
-  @NonNull private final SocialMediaPresenter presenter;
-  private String APP_SKU_DONATE_ONE;
-  private String APP_SKU_DONATE_TWO;
-  private String APP_SKU_DONATE_FIVE;
-  private String APP_SKU_DONATE_TEN;
-  private String packageName;
+  @NonNull static final String SKU_DONATE_ONE = ".donate.one";
+  @NonNull static final String SKU_DONATE_TWO = ".donate.two";
+  @NonNull static final String SKU_DONATE_FIVE = ".donate.five";
+  @NonNull static final String SKU_DONATE_TEN = ".donate.ten";
+  @NonNull static final String ARG_PACKAGE = "package";
+  @NonNull final SocialMediaPresenter presenter;
+  String APP_SKU_DONATE_ONE;
+  String APP_SKU_DONATE_TWO;
+  String APP_SKU_DONATE_FIVE;
+  String APP_SKU_DONATE_TEN;
+  String packageName;
 
   public SupportDialog() {
     super();
@@ -131,7 +131,7 @@ public class SupportDialog extends DialogFragment
     presenter.unbindView();
   }
 
-  private void setDonationText(final TextView textView, final String title,
+  void setDonationText(final TextView textView, final String title,
       final String description) {
     final Spannable spannable = StringUtil.createBuilder(title, "\n", description);
     final int largeLength = title.length();
@@ -157,7 +157,7 @@ public class SupportDialog extends DialogFragment
     textView.setText(spannable);
   }
 
-  private void onLinkClicked(final String link) {
+  void onLinkClicked(final String link) {
     NetworkUtil.newLink(getContext(), link);
   }
 

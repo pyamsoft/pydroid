@@ -34,7 +34,7 @@ import timber.log.Timber;
 
 public final class AsyncDrawable {
 
-  @NonNull private final Context appContext;
+  @NonNull final Context appContext;
 
   private AsyncDrawable(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
@@ -50,13 +50,13 @@ public final class AsyncDrawable {
 
   public static final class Loader {
 
-    @NonNull private final Context appContext;
-    @DrawableRes private final int resource;
-    private Scheduler subscribeScheduler;
-    private Scheduler observeScheduler;
-    @ColorRes private int tint;
+    @NonNull final Context appContext;
+    @DrawableRes final int resource;
+    Scheduler subscribeScheduler;
+    Scheduler observeScheduler;
+    @ColorRes int tint;
 
-    private Loader(@NonNull Context context, int resource) {
+    Loader(@NonNull Context context, int resource) {
       this.appContext = context.getApplicationContext();
       this.resource = resource;
       subscribeScheduler = Schedulers.computation();

@@ -27,7 +27,7 @@ public abstract class PresenterLoader<T extends Presenter<?>> extends Loader<T> 
 
   @Nullable private T presenter;
 
-  public PresenterLoader(@NonNull Context context) {
+  protected PresenterLoader(@NonNull Context context) {
     super(context);
   }
 

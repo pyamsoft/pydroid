@@ -23,8 +23,8 @@ import android.view.View;
 
 public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
 
-  private final int distanceNeeded;
-  private boolean animating = false;
+  final int distanceNeeded;
+  boolean animating = false;
 
   public HideScrollFABBehavior() {
     this(0);

@@ -43,7 +43,7 @@ public class VectorTextView extends AppCompatTextView {
     init(attrs);
   }
 
-  private void init(@Nullable AttributeSet attrs) {
+  void init(@Nullable AttributeSet attrs) {
     if (attrs != null) {
       final Context context = getContext();
       final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.VectorTextView);

@@ -44,22 +44,22 @@ import java.util.Random;
 import rx.Subscription;
 import timber.log.Timber;
 
-public final class AdvertisementView extends FrameLayout {
+public class AdvertisementView extends FrameLayout {
 
-  @NonNull private static final String ADVERTISEMENT_SHOWN_COUNT_KEY = "advertisement_shown_count";
-  @NonNull private static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
-  @NonNull private static final String PACKAGE_PADLOCK = "com.pyamsoft.padlock";
-  @NonNull private static final String PACKAGE_POWERMANAGER = "com.pyamsoft.powermanager";
-  @NonNull private static final String PACKAGE_HOMEBUTTON = "com.pyamsoft.homebutton";
-  @NonNull private static final String PACKAGE_ZAPTORCH = "com.pyamsoft.zaptorch";
-  @NonNull private static final String[] POSSIBLE_PACKAGES = {
+  @NonNull static final String ADVERTISEMENT_SHOWN_COUNT_KEY = "advertisement_shown_count";
+  @NonNull static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
+  @NonNull static final String PACKAGE_PADLOCK = "com.pyamsoft.padlock";
+  @NonNull static final String PACKAGE_POWERMANAGER = "com.pyamsoft.powermanager";
+  @NonNull static final String PACKAGE_HOMEBUTTON = "com.pyamsoft.homebutton";
+  @NonNull static final String PACKAGE_ZAPTORCH = "com.pyamsoft.zaptorch";
+  @NonNull static final String[] POSSIBLE_PACKAGES = {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH
   };
-  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
-  private Queue<String> imageQueue;
-  private boolean preferenceDefault;
-  private String preferenceKey;
-  private ImageView advertisement;
+  @NonNull final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+  Queue<String> imageQueue;
+  boolean preferenceDefault;
+  String preferenceKey;
+  ImageView advertisement;
 
   public AdvertisementView(Context context) {
     this(context, null);
@@ -80,7 +80,7 @@ public final class AdvertisementView extends FrameLayout {
     init();
   }
 
-  private void init() {
+  void init() {
     preferenceKey = getContext().getString(R.string.adview_key);
     preferenceDefault = getContext().getResources().getBoolean(R.bool.adview_default);
 
@@ -131,7 +131,7 @@ public final class AdvertisementView extends FrameLayout {
     setVisibility(View.GONE);
   }
 
-  @CheckResult private int loadImage(@NonNull String currentPackage) {
+  @CheckResult int loadImage(@NonNull String currentPackage) {
     int image;
     switch (currentPackage) {
       case PACKAGE_PADLOCK:
@@ -162,7 +162,7 @@ public final class AdvertisementView extends FrameLayout {
     return image;
   }
 
-  @CheckResult @NonNull private String currentPackageFromQueue() {
+  @CheckResult @NonNull String currentPackageFromQueue() {
     String currentPackage = imageQueue.poll();
     while (currentPackage == null || currentPackage.equals(getContext().getPackageName())) {
       Timber.e("Current package is bad: %s", currentPackage);

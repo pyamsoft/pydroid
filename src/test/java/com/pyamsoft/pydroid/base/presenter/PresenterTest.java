@@ -69,7 +69,7 @@ public class PresenterTest {
 
     // By default, constructed with a null view
     final String hold = "String";
-    presenter.bindView(hold, false);
+    presenter.bindView(hold);
     Assert.assertNotNull(presenter.getView());
 
     // When bind is called, no custom hook
@@ -100,7 +100,7 @@ public class PresenterTest {
     presenter.bindView(hold);
     Assert.assertNotNull(presenter.getView());
 
-    presenter.unbindView(false);
+    presenter.unbindView();
     Assert.assertFalse(presenter.isUnbound());
   }
 

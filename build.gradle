@@ -80,6 +80,11 @@ dependencies {
   // Timber logging
   compile 'com.jakewharton.timber:timber:4.2.0'
 
+  // FastAdapter
+  compile('com.mikepenz:fastadapter:1.8.0@aar') {
+    transitive = true
+  }
+
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.2.0'
   androidTestCompile 'com.android.support.test:runner:0.5'

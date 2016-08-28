@@ -9,64 +9,11 @@
 # The addition of !code/allocation/variable is needed to prevent this
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
 
-# https://code.google.com/p/android/issues/detail?id=194513
-# ProGuard include the legacy HTTP jar even if it is not used.
-# This creates an issue where there are 7 duplicate classes and
-# causes the build to fail.
-# Because the duplicate classes are Note and not Warning level,
-# we must ignore the Note classes here.
--dontnote android.net.http.*
--dontnote org.apache.commons.codec.**
--dontnote org.apache.http.**
-
 # RetroLambda
--dontwarn java.lang.invoke.*
+-dontwarn java.lang.invoke.LambdaForm$Hidden
 
-# Some of our libs use Signature based reflection
--keepattributes Signature
-
-# Realm
--keep class io.realm.annotations.RealmModule
--keep @io.realm.annotations.RealmModule class *
--keep class io.realm.internal.Keep
--keep @io.realm.internal.Keep class * { *; }
--dontwarn javax.**
--dontwarn io.realm.**
-
-# RetroLambda
--dontwarn java.lang.invoke.*
-
-# Retrofit
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
-
--keepclasseswithmembers class * {
-    @retrofit2.http.* <methods>;
-}
-
-# Retrofit uses Java 8 features that are not supported on Android
--dontwarn java.lang.invoke.*
--dontwarn java.lang.reflect.Method
-
-# OkHttp
--keepattributes Signature
--keepattributes *Annotation*
--keep class okhttp3.** { *; }
--keep interface okhttp3.** { *; }
--dontwarn okhttp3.**
-
-# Okio
--keep class sun.misc.Unsafe { *; }
--dontwarn java.nio.file.*
+# Silence some okio warnings
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
--dontwarn okio.**
-
-# Picasso
--dontwarn com.squareup.okhttp.**
-
-# Auto value
--dontwarn autovalue.shaded.**
--dontwarn com.google.auto.value.processor.**
-
+-dontwarn java.nio.file.Files
+-dontwarn java.nio.file.Path
+-dontwarn java.nio.file.OpenOption

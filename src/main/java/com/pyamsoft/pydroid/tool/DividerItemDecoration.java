@@ -28,6 +28,8 @@ import android.view.View;
 
 public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
+  public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
+  public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
   @NonNull private static final int[] ATTRS = new int[] { android.R.attr.listDivider };
   @NonNull private final Drawable dividerDrawable;
   private int decorationOrientation;
@@ -42,8 +44,7 @@ public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
   }
 
   @SuppressWarnings("WeakerAccess") public void setOrientation(int orientation) {
-    if (orientation != LinearLayoutManager.HORIZONTAL
-        && orientation != LinearLayoutManager.VERTICAL) {
+    if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
       throw new IllegalArgumentException("invalid orientation");
     }
     decorationOrientation = orientation;
@@ -51,7 +52,7 @@ public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
   @Override public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent,
       @NonNull RecyclerView.State state) {
-    if (decorationOrientation == LinearLayoutManager.VERTICAL) {
+    if (decorationOrientation == VERTICAL_LIST) {
       drawVertical(c, parent);
     } else {
       drawHorizontal(c, parent);
@@ -92,7 +93,7 @@ public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
   @Override public void getItemOffsets(@NonNull Rect outRect, @NonNull View view,
       @NonNull RecyclerView parent, RecyclerView.State state) {
-    if (decorationOrientation == LinearLayoutManager.VERTICAL) {
+    if (decorationOrientation == VERTICAL_LIST) {
       outRect.set(0, 0, 0, dividerDrawable.getIntrinsicHeight());
     } else {
       outRect.set(0, 0, dividerDrawable.getIntrinsicWidth(), 0);

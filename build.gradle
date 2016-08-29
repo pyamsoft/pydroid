@@ -105,10 +105,6 @@ dependencies {
   compile 'com.google.dagger:dagger:2.6.1'
   apt "com.google.dagger:dagger-compiler:2.6.1"
 
-  // Auto value
-  provided 'com.google.auto.value:auto-value:1.3-rc2'
-  apt 'com.google.auto.value:auto-value:1.3-rc2'
-
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.2.0'
   androidTestCompile 'com.android.support.test:runner:0.5'

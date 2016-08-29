@@ -16,6 +16,6 @@
 
 package com.pyamsoft.pydroid.base.activity;
 
-public abstract class NoDonationActivityBase extends ActivityBase {
+public abstract class NoDonationActivity extends AdvertisementActivity {
 
 }

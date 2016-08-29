@@ -25,7 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public abstract class ActionBarFragment extends Fragment implements ActionBarProvider {
 
-  @CheckResult @Nullable public ActionBar getActionBar() {
+  @Override @CheckResult @Nullable public ActionBar getActionBar() {
     final FragmentActivity activity = getActivity();
     if (activity instanceof AppCompatActivity) {
       final AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
@@ -35,7 +35,7 @@ public abstract class ActionBarFragment extends Fragment implements ActionBarPro
     }
   }
 
-  public void setActionBarUpEnabled(boolean up) {
+  @Override public void setActionBarUpEnabled(boolean up) {
     final ActionBar bar = getActionBar();
     if (bar != null) {
       bar.setHomeButtonEnabled(up);

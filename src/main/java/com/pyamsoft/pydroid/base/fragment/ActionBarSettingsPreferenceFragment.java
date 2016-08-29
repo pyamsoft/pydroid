@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.base.fragment;
 
 import android.support.annotation.CheckResult;
 import android.support.v4.app.FragmentActivity;
-import com.pyamsoft.pydroid.base.activity.ActivityBase;
+import com.pyamsoft.pydroid.base.activity.AdvertisementActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import timber.log.Timber;
 
@@ -44,14 +44,20 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   }
 
   @CheckResult protected boolean toggleAdVisibility(boolean b) {
-    final ActivityBase activity = (ActivityBase) getActivity();
-    if (b) {
-      Timber.d("Turn on ads");
-      activity.showAd();
+    final FragmentActivity activity = getActivity();
+    if (activity instanceof AdvertisementActivity) {
+      final AdvertisementActivity advertisementActivity = (AdvertisementActivity) getActivity();
+      if (b) {
+        Timber.d("Turn on ads");
+        advertisementActivity.showAd();
+      } else {
+        Timber.d("Turn off ads");
+        advertisementActivity.hideAd();
+      }
+      return true;
     } else {
-      Timber.d("Turn off ads");
-      activity.hideAd();
+      Timber.e("Activity is not AdvertisementActivity");
+      return false;
     }
-    return true;
   }
 }

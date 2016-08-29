@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.base.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
@@ -29,30 +30,30 @@ import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.List;
 import timber.log.Timber;
 
-public abstract class DonationActivityBase extends ActivityBase
+public abstract class DonationActivity extends AdvertisementActivity
     implements BillingProcessor.IBillingHandler {
 
-  @NonNull static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
-  BillingProcessor billingProcessor;
+  @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
+  private BillingProcessor billingProcessor;
 
   public void showDonationUnavailableDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
   }
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    billingProcessor =
-        new BillingProcessor(getApplicationContext(), getPackageName(), this);
+    billingProcessor = new BillingProcessor(getApplicationContext(), getPackageName(), this);
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
+  @CallSuper @Override
+  protected void onActivityResult(int requestCode, int resultCode, @NonNull Intent data) {
     if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
       super.onActivityResult(requestCode, resultCode, data);
     }
   }
 
-  @Override protected void onDestroy() {
+  @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     billingProcessor.release();
   }
@@ -98,7 +99,7 @@ public abstract class DonationActivityBase extends ActivityBase
     }
   }
 
-  @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+  @CallSuper @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
     final boolean superHandled = super.onOptionsItemSelected(item);
     final int itemId = item.getItemId();
     boolean handled;

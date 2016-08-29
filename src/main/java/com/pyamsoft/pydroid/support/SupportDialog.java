@@ -32,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
+import com.pyamsoft.pydroid.base.activity.DonationActivity;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
@@ -197,8 +197,8 @@ public class SupportDialog extends DialogFragment
     if (sku != null) {
       Timber.d("Attempt purchase of SKU: %s", sku);
       final FragmentActivity activity = getActivity();
-      if (activity instanceof DonationActivityBase) {
-        final DonationActivityBase activityBase = (DonationActivityBase) activity;
+      if (activity instanceof DonationActivity) {
+        final DonationActivity activityBase = (DonationActivity) activity;
         if (BillingProcessor.isIabServiceAvailable(getActivity())) {
           Timber.d("Do purchase %s", sku);
           activityBase.purchase(sku);

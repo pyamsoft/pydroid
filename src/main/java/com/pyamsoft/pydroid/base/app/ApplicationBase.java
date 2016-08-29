@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.base.app;
 import android.app.Application;
 import android.support.annotation.CheckResult;
 import com.pyamsoft.pydroid.crash.CrashHandler;
+import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
 public abstract class ApplicationBase extends Application implements CrashHandler.Provider {
@@ -35,6 +36,7 @@ public abstract class ApplicationBase extends Application implements CrashHandle
 
     if (buildConfigDebug()) {
       Timber.plant(new Timber.DebugTree());
+      LeakCanary.install(this);
     }
   }
 

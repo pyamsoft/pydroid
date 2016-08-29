@@ -45,7 +45,8 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Get an Instance of DataHolderFragment
    */
-  @CheckResult @NonNull public static <I> DataHolderFragment<I> getInstance(
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
+  public static <I> DataHolderFragment<I> getInstance(
       final @NonNull FragmentManager fragmentManager, final @NonNull String tag) {
     @SuppressWarnings("unchecked") DataHolderFragment<I> dataHolderFragment =
         (DataHolderFragment<I>) fragmentManager.findFragmentByTag(tag);
@@ -67,7 +68,8 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Remove all DataHolderFragments from the Fragment Manager
    */
-  public static void removeAll(final @NonNull FragmentManager fragmentManager) {
+  @SuppressWarnings("WeakerAccess") public static void removeAll(
+      final @NonNull FragmentManager fragmentManager) {
     final List<Fragment> fragmentList = fragmentManager.getFragments();
     for (final Fragment fragment : fragmentList) {
       if (fragment instanceof DataHolderFragment) {
@@ -87,8 +89,8 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Remove a fragment based on its TAG
    */
-  public static <I> void remove(final @NonNull FragmentManager fragmentManager,
-      final @NonNull String tag) {
+  @SuppressWarnings("WeakerAccess") public static <I> void remove(
+      final @NonNull FragmentManager fragmentManager, final @NonNull String tag) {
     @SuppressWarnings("unchecked") final DataHolderFragment<I> dataHolderFragment =
         (DataHolderFragment<I>) fragmentManager.findFragmentByTag(tag);
     if (dataHolderFragment != null) {
@@ -113,7 +115,7 @@ public final class DataHolderFragment<T> extends Fragment {
   /**
    * Clear the sparse array
    */
-  public final void clear() {
+  @SuppressWarnings("WeakerAccess") public final void clear() {
     Timber.d("Clear data sparseArray");
     sparseArray.clear();
   }

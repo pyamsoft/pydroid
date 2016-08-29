@@ -23,8 +23,8 @@ import android.view.View;
 
 public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
 
-  final int distanceNeeded;
-  boolean animating = false;
+  private final int distanceNeeded;
+  @SuppressWarnings("WeakerAccess") boolean animating = false;
 
   public HideScrollFABBehavior() {
     this(0);
@@ -44,11 +44,11 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
     this.animating = false;
   }
 
-  public void onHiddenHook() {
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) public void onHiddenHook() {
 
   }
 
-  public void onShownHook() {
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) public void onShownHook() {
 
   }
 

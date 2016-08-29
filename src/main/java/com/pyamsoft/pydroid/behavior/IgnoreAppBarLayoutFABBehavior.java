@@ -24,7 +24,7 @@ import java.util.List;
 
 public class IgnoreAppBarLayoutFABBehavior extends FloatingActionButton.Behavior {
 
-  boolean control;
+  private boolean control;
 
   public IgnoreAppBarLayoutFABBehavior() {
     this(true);

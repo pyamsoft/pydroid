@@ -29,13 +29,11 @@ import com.pyamsoft.pydroid.R;
 public class VectorTextView extends AppCompatTextView {
 
   public VectorTextView(Context context) {
-    super(context);
-    init(null);
+    this(context, null);
   }
 
   public VectorTextView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init(attrs);
+    this(context, attrs, 0);
   }
 
   public VectorTextView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -43,7 +41,7 @@ public class VectorTextView extends AppCompatTextView {
     init(attrs);
   }
 
-  void init(@Nullable AttributeSet attrs) {
+  private void init(@Nullable AttributeSet attrs) {
     if (attrs != null) {
       final Context context = getContext();
       final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.VectorTextView);

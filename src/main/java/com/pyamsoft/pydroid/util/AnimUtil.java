@@ -34,7 +34,7 @@ public final class AnimUtil {
     throw new RuntimeException("No instances");
   }
 
-  @NonNull
+  @SuppressWarnings("WeakerAccess") @NonNull
   public static ViewPropertyAnimatorCompat popShow(final @NonNull View v, final int startDelay,
       final int duration) {
     final Interpolator i =
@@ -95,7 +95,8 @@ public final class AnimUtil {
         });
   }
 
-  @NonNull public static ViewPropertyAnimatorCompat fadeIn(final @NonNull View v) {
+  @SuppressWarnings("WeakerAccess") @NonNull
+  public static ViewPropertyAnimatorCompat fadeIn(final @NonNull View v) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     v.setAlpha(0f);

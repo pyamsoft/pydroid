@@ -34,7 +34,7 @@ import timber.log.Timber;
 
 public final class AsyncDrawable {
 
-  @NonNull final Context appContext;
+  @NonNull private final Context appContext;
 
   private AsyncDrawable(@NonNull Context context) {
     this.appContext = context.getApplicationContext();

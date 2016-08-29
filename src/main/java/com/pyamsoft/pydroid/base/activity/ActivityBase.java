@@ -29,25 +29,19 @@ public abstract class ActivityBase extends AppCompatActivity {
   /**
    * Override if you do not want to handle IMM leaks
    */
-  @CheckResult protected boolean shouldHandleIMMLeaks() {
-    return true;
-  }
-
-  /**
-   * Override this if you want normal back button behavior
-   */
-  @CheckResult protected boolean shouldConfirmBackPress() {
+  @SuppressWarnings({ "WeakerAccess", "SameReturnValue" }) @CheckResult
+  protected boolean shouldHandleIMMLeaks() {
     return true;
   }
 
   /**
    * Override if you do not want the Window to behave like a fullscreen one
    */
-  @CheckResult protected boolean isFakeFullscreen() {
+  @SuppressWarnings({ "SameReturnValue", "WeakerAccess" }) @CheckResult protected boolean isFakeFullscreen() {
     return false;
   }
 
-  void setupFakeFullscreenWindow() {
+  @SuppressWarnings("WeakerAccess") void setupFakeFullscreenWindow() {
     getWindow().getDecorView()
         .setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);

@@ -97,7 +97,7 @@ public final class StringUtil {
     out.setSpan(new AbsoluteSizeSpan(size), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
   }
 
-  @CheckResult @NonNull
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static TypedArray getAttributeFromAppearance(final @NonNull Context context,
       final int style, final int attr) {
     final TypedValue typedValue = new TypedValue();

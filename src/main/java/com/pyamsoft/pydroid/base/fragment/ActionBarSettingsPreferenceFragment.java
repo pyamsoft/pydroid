@@ -24,7 +24,7 @@ import timber.log.Timber;
 
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment {
 
-  @CheckResult protected boolean showChangelog() {
+  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean showChangelog() {
     final FragmentActivity activity = getActivity();
     if (activity instanceof RatingDialog.ChangeLogProvider) {
       final RatingDialog.ChangeLogProvider provider = (RatingDialog.ChangeLogProvider) activity;
@@ -43,7 +43,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return false;
   }
 
-  @CheckResult protected boolean toggleAdVisibility(boolean b) {
+  @SuppressWarnings("WeakerAccess") @CheckResult protected boolean toggleAdVisibility(boolean b) {
     final FragmentActivity activity = getActivity();
     if (activity instanceof AdvertisementActivity) {
       final AdvertisementActivity advertisementActivity = (AdvertisementActivity) getActivity();

@@ -32,14 +32,14 @@ import android.view.animation.DecelerateInterpolator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CircularRevealFragmentUtil {
+public final class CircularRevealFragmentUtil {
 
-  @ColorRes static final int DEFAULT_COLOR = 0;
-  static final long DEFAULT_DURATION = 1000L;
-  @NonNull static final String CENTER_X = "cX";
-  @NonNull static final String CENTER_Y = "cY";
-  @NonNull static final String BG_COLOR = "bg_color";
-  @NonNull static final String ANIM_DURATION = "duration";
+  @SuppressWarnings("WeakerAccess") static final long DEFAULT_DURATION = 1000L;
+  @SuppressWarnings("WeakerAccess") @NonNull static final String CENTER_X = "cX";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String CENTER_Y = "cY";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String ANIM_DURATION = "duration";
+  @ColorRes private static final int DEFAULT_COLOR = 0;
+  @NonNull private static final String BG_COLOR = "bg_color";
 
   private CircularRevealFragmentUtil() {
     throw new RuntimeException("No instances");
@@ -49,7 +49,8 @@ public class CircularRevealFragmentUtil {
     return bundleArguments(cX, cY, DEFAULT_COLOR);
   }
 
-  @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY, @ColorRes int color) {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
+  public static Bundle bundleArguments(int cX, int cY, @ColorRes int color) {
     return bundleArguments(cX, cY, color, DEFAULT_DURATION);
   }
 
@@ -57,7 +58,7 @@ public class CircularRevealFragmentUtil {
     return bundleArguments(cX, cY, DEFAULT_COLOR, duration);
   }
 
-  @CheckResult @NonNull
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static Bundle bundleArguments(int cX, int cY, @ColorRes int color, long duration) {
     final Bundle args = new Bundle();
     args.putInt(CENTER_X, cX);
@@ -84,7 +85,7 @@ public class CircularRevealFragmentUtil {
     return bundleArguments(fromView, containerView, DEFAULT_COLOR, duration);
   }
 
-  @CheckResult @NonNull
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView,
       @ColorRes int color, long duration) {
     final int[] fromLocation = new int[2];

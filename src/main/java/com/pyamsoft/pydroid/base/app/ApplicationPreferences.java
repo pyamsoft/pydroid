@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public abstract class ApplicationPreferences {
 
-  @NonNull final SharedPreferences p;
+  @NonNull private final SharedPreferences p;
 
   protected ApplicationPreferences(final @NonNull Context context) {
     final Context appContext = context.getApplicationContext();
@@ -127,11 +127,12 @@ public abstract class ApplicationPreferences {
     }
   }
 
+  @SuppressWarnings("WeakerAccess")
   public final void register(@NonNull final SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.registerOnSharedPreferenceChangeListener(l);
   }
 
-  public final void unregister(
+  @SuppressWarnings("WeakerAccess") public final void unregister(
       @NonNull final SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.unregisterOnSharedPreferenceChangeListener(l);
   }

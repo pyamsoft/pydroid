@@ -33,16 +33,16 @@ import timber.log.Timber;
 
 public final class CrashHandler implements Thread.UncaughtExceptionHandler {
 
-  @NonNull static final String CRASH_FILE_PREFIX = "CRASH_";
-  @NonNull static final String CRASH_FILE_EXT = ".txt";
+  @NonNull private static final String CRASH_FILE_PREFIX = "CRASH_";
+  @NonNull private static final String CRASH_FILE_EXT = ".txt";
 
-  @NonNull final Context registeredContext;
-  @NonNull final CrashHandler.Provider provider;
-  @NonNull final Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler;
-  @NonNull final Handler mainHandler;
+  @NonNull private final Context registeredContext;
+  @NonNull private final CrashHandler.Provider provider;
+  @NonNull private final Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler;
+  @NonNull private final Handler mainHandler;
 
-  boolean crashing;
-  boolean unregistered;
+  private boolean crashing;
+  private boolean unregistered;
 
   public CrashHandler(final @NonNull Context context,
       final @NonNull CrashHandler.Provider provider) {
@@ -55,7 +55,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     unregistered = true;
   }
 
-  @SuppressLint("NewApi") String createCrashLog(final @NonNull Context context,
+  @SuppressLint("NewApi") private String createCrashLog(final @NonNull Context context,
       final @NonNull Throwable throwable) {
     final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
     final File dir = context.getApplicationContext().getFilesDir();
@@ -89,19 +89,21 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
   }
 
-  void clearOldCrashLogs(@NonNull final File dir) {
+  private void clearOldCrashLogs(@NonNull final File dir) {
     final File[] crashFiles = dir.listFiles();
-    for (final File crash : crashFiles) {
-      if (crash.getName().startsWith(CRASH_FILE_PREFIX)) {
-        Timber.w("Removing old crash file: %s", crash);
-        if (crash.delete()) {
-          Timber.i("Old crash file: %s has been deleted", crash);
+    if (crashFiles != null) {
+      for (final File crash : crashFiles) {
+        if (crash.getName().startsWith(CRASH_FILE_PREFIX)) {
+          Timber.w("Removing old crash file: %s", crash);
+          if (crash.delete()) {
+            Timber.i("Old crash file: %s has been deleted", crash);
+          }
         }
       }
     }
   }
 
-  void populateCrashLog(final @NonNull Context context, @NonNull PrintWriter printWriter,
+  private void populateCrashLog(final @NonNull Context context, @NonNull PrintWriter printWriter,
       final Throwable throwable) {
     printWriter.println("PACKAGE: " + context.getApplicationContext().getPackageName());
     printWriter.println();
@@ -127,7 +129,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     throwable.printStackTrace(printWriter);
   }
 
-  boolean startCrashLogActivity(final @NonNull Context context,
+  private boolean startCrashLogActivity(final @NonNull Context context,
       final @NonNull Throwable throwable) {
     try {
       final String crashLogPath = createCrashLog(context, throwable);
@@ -151,7 +153,8 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
   }
 
-  void invokeCrashLogActivity(final Thread thread, final Throwable throwable) {
+  @SuppressWarnings("WeakerAccess") void invokeCrashLogActivity(final Thread thread,
+      final Throwable throwable) {
     try {
       if (startCrashLogActivity(registeredContext, throwable)) {
         return;
@@ -162,13 +165,13 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
   }
 
-  void terminateProcess() {
+  private void terminateProcess() {
     final int pid = android.os.Process.myPid();
     Timber.w("Terminating Process: %d", pid);
     android.os.Process.killProcess(pid);
   }
 
-  void continueWithOriginalCrash(final @NonNull Thread thread,
+  private void continueWithOriginalCrash(final @NonNull Thread thread,
       final @NonNull Throwable throwable) {
     // Pass through the original exception
     Timber.e("Pass original throwable");
@@ -225,7 +228,7 @@ public final class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @CheckResult @NonNull String getPackageName();
 
-    @CheckResult String crashLogText();
+    @SuppressWarnings("SameReturnValue") @CheckResult String crashLogText();
 
     @CheckResult String crashLogSubject();
   }

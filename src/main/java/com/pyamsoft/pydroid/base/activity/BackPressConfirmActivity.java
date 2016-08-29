@@ -20,16 +20,24 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.CallSuper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 public abstract class BackPressConfirmActivity extends ActivityBase {
 
   private static final long BACK_PRESSED_DELAY = 1600L;
-  boolean backBeenPressed;
+  @SuppressWarnings("WeakerAccess") boolean backBeenPressed;
   private Handler handler;
   private Toast backBeenPressedToast;
   private Runnable backBeenPressedRunnable;
+
+  /**
+   * Override this if you want normal back button behavior
+   */
+  @CheckResult protected boolean shouldConfirmBackPress() {
+    return true;
+  }
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

@@ -119,14 +119,13 @@ public class PresenterTest {
   static final class TestPresenter extends PresenterBase<String> {
 
     private boolean bound = false;
-    private boolean unbound = false;
 
     @CheckResult public final boolean isBound() {
       return bound;
     }
 
     @CheckResult public final boolean isUnbound() {
-      return unbound;
+      return !bound;
     }
 
     @Override protected void onBind(@NonNull String view) {

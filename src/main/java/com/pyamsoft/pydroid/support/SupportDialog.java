@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.support;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -41,24 +42,24 @@ import timber.log.Timber;
 public class SupportDialog extends DialogFragment
     implements View.OnClickListener, SocialMediaPresenter.SocialMediaView {
 
-  @NonNull static final String SKU_DONATE_ONE = ".donate.one";
-  @NonNull static final String SKU_DONATE_TWO = ".donate.two";
-  @NonNull static final String SKU_DONATE_FIVE = ".donate.five";
-  @NonNull static final String SKU_DONATE_TEN = ".donate.ten";
-  @NonNull static final String ARG_PACKAGE = "package";
-  @NonNull final SocialMediaPresenter presenter;
-  String APP_SKU_DONATE_ONE;
-  String APP_SKU_DONATE_TWO;
-  String APP_SKU_DONATE_FIVE;
-  String APP_SKU_DONATE_TEN;
-  String packageName;
+  @NonNull private static final String SKU_DONATE_ONE = ".donate.one";
+  @NonNull private static final String SKU_DONATE_TWO = ".donate.two";
+  @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
+  @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
+  @NonNull private static final String ARG_PACKAGE = "package";
+  @SuppressWarnings("WeakerAccess") @NonNull final SocialMediaPresenter presenter;
+  @SuppressWarnings("WeakerAccess") String packageName;
+  private String APP_SKU_DONATE_ONE;
+  private String APP_SKU_DONATE_TWO;
+  private String APP_SKU_DONATE_FIVE;
+  private String APP_SKU_DONATE_TEN;
 
   public SupportDialog() {
     super();
     presenter = new SocialMediaPresenter();
   }
 
-  public static SupportDialog newInstance(final @NonNull String packageName) {
+  @CheckResult @NonNull public static SupportDialog newInstance(final @NonNull String packageName) {
     final SupportDialog fragment = new SupportDialog();
     final Bundle args = new Bundle();
     args.putSerializable(ARG_PACKAGE, packageName);
@@ -84,15 +85,11 @@ public class SupportDialog extends DialogFragment
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    presenter.bindView(this);
-
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
 
     final Button aboutApp = (Button) rootView.findViewById(R.id.support_about_app);
-    aboutApp.setOnClickListener(view -> {
-      presenter.clickAppPage(packageName);
-    });
+    aboutApp.setOnClickListener(view -> presenter.clickAppPage(packageName));
 
     final TextView oneTitle = (TextView) rootView.findViewById(R.id.support_one_text);
     final TextView twoTitle = (TextView) rootView.findViewById(R.id.support_two_text);
@@ -125,13 +122,22 @@ public class SupportDialog extends DialogFragment
         }).setView(rootView).create();
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    Timber.d("unbindView");
+  @Override public void onResume() {
+    super.onResume();
+    presenter.bindView(this);
+  }
+
+  @Override public void onPause() {
+    super.onPause();
     presenter.unbindView();
   }
 
-  void setDonationText(final TextView textView, final String title,
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    presenter.destroyView();
+  }
+
+  private void setDonationText(final TextView textView, final String title,
       final String description) {
     final Spannable spannable = StringUtil.createBuilder(title, "\n", description);
     final int largeLength = title.length();
@@ -157,7 +163,7 @@ public class SupportDialog extends DialogFragment
     textView.setText(spannable);
   }
 
-  void onLinkClicked(final String link) {
+  private void onLinkClicked(final String link) {
     NetworkUtil.newLink(getContext(), link);
   }
 

@@ -24,7 +24,6 @@ import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import butterknife.BindView;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.support.AdvertisementView;
 import com.pyamsoft.pydroid.support.SupportDialog;
@@ -33,7 +32,7 @@ import com.pyamsoft.pydroid.util.AppUtil;
 public abstract class AdvertisementActivity extends BackPressConfirmActivity {
 
   @NonNull private static final String SUPPORT_TAG = "SupportDialog";
-  @Nullable AdvertisementView adView;
+  @Nullable private AdvertisementView adView;
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -74,7 +73,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
   }
 
-  void showSupportDialog() {
+  private void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
   }

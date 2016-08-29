@@ -36,7 +36,8 @@ public final class DrawableUtil {
     throw new RuntimeException("No instances");
   }
 
-  @NonNull @CheckResult public static ColorFilter colorFilter(final @ColorInt int color) {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
+  public static ColorFilter colorFilter(final @ColorInt int color) {
     return new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN);
   }
 
@@ -52,13 +53,14 @@ public final class DrawableUtil {
     return createOval(i);
   }
 
-  @NonNull @CheckResult public static ShapeDrawable createOval(final @ColorInt int color) {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
+  public static ShapeDrawable createOval(final @ColorInt int color) {
     final ShapeDrawable sd = new ShapeDrawable(new OvalShape());
     sd.getPaint().setColor(color);
     return sd;
   }
 
-  @NonNull @CheckResult
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
   public static Drawable tintDrawableFromColor(@NonNull Drawable d, final @ColorInt int c) {
     d = d.mutate();
     d.setColorFilter(colorFilter(c));

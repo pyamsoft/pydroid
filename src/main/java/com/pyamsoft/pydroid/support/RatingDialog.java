@@ -46,18 +46,18 @@ import timber.log.Timber;
 
 public class RatingDialog extends DialogFragment {
 
-  @NonNull static final String PREFERENCE_TARGET = "rating_dialog_accepted_version";
-  @NonNull static final String CHANGE_LOG_TEXT = "change_log_text";
-  @NonNull static final String CHANGE_LOG_ICON = "change_log_icon";
-  @NonNull static final String VERSION_CODE = "version_code";
-  @NonNull static final String RATE_LINK = "rate_link";
-  @NonNull final AsyncDrawableMap taskMap = new AsyncDrawableMap();
-  SharedPreferences preferences;
-  String rateLink;
-  Spannable changeLogText;
-  int versionCode;
-  @DrawableRes int changeLogIcon;
-  boolean acknowledged;
+  @NonNull private static final String PREFERENCE_TARGET = "rating_dialog_accepted_version";
+  @NonNull private static final String CHANGE_LOG_TEXT = "change_log_text";
+  @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
+  @NonNull private static final String VERSION_CODE = "version_code";
+  @NonNull private static final String RATE_LINK = "rate_link";
+  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+  @SuppressWarnings("WeakerAccess") String rateLink;
+  @SuppressWarnings("WeakerAccess") boolean acknowledged;
+  private SharedPreferences preferences;
+  private Spannable changeLogText;
+  private int versionCode;
+  @DrawableRes private int changeLogIcon;
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider) {
@@ -74,7 +74,8 @@ public class RatingDialog extends DialogFragment {
     }
   }
 
-  static RatingDialog newInstance(final @NonNull ChangeLogProvider provider) {
+  @CheckResult @NonNull
+  private static RatingDialog newInstance(final @NonNull ChangeLogProvider provider) {
     final RatingDialog fragment = new RatingDialog();
     final Bundle args = new Bundle();
     args.putString(RATE_LINK, provider.getChangeLogPackageName());

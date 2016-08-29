@@ -33,7 +33,7 @@
       android:id="@+id/ad_close"
       android:layout_width="24dp"
       android:layout_height="24dp"
-      android:layout_gravity="top|right|end"
+      android:layout_gravity="top|end"
       android:contentDescription="@string/blank"
       />
 

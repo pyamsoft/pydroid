@@ -79,7 +79,7 @@ public abstract class DonationActivity extends AdvertisementActivity
     consumeLeftOverPurchases();
   }
 
-  void consumeLeftOverPurchases() {
+  private void consumeLeftOverPurchases() {
     if (billingProcessor == null) {
       Timber.e("Billing processor is NULL");
       return;

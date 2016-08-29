@@ -23,7 +23,6 @@ tasks.whenTaskAdded { task ->
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.getkeepsafe.dexcount'
-apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
@@ -99,11 +98,9 @@ dependencies {
 
   // Butterknife
   compile 'com.jakewharton:butterknife:8.4.0'
-  apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
-  // Dagger 2 and Compiler
+  // Dagger 2
   compile 'com.google.dagger:dagger:2.6.1'
-  apt "com.google.dagger:dagger-compiler:2.6.1"
 
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.2.0'

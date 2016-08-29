@@ -32,8 +32,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 24
-    versionCode 48
-    versionName "3.3.0"
+    versionCode 49
+    versionName "3.3.1"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
@@ -84,7 +84,7 @@ dependencies {
   compile 'com.anjlab.android.iab.v3:library:1.0.32'
 
   // Timber logging
-  compile 'com.jakewharton.timber:timber:4.2.0'
+  compile 'com.jakewharton.timber:timber:4.3.0'
 
   // FastAdapter
   compile('com.mikepenz:fastadapter:1.8.0@aar') {
@@ -107,5 +107,5 @@ dependencies {
   testCompile 'junit:junit:4.12'
 
   // Mockito for unit tests
-  testCompile 'org.mockito:mockito-core:2.0.104-beta'
+  testCompile 'org.mockito:mockito-core:2.0.111-beta'
 }

@@ -21,13 +21,14 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import timber.log.Timber;
 
 public final class NetworkUtil {
 
   private NetworkUtil() {
-
+    throw new RuntimeException("No instances");
   }
 
   public static void newLink(final @NonNull Context c, final @NonNull String link) {
@@ -39,7 +40,7 @@ public final class NetworkUtil {
     c.getApplicationContext().startActivity(intent);
   }
 
-  public static boolean hasConnection(final @NonNull Context c) {
+  @CheckResult public static boolean hasConnection(final @NonNull Context c) {
     final Context context = c.getApplicationContext();
     final ConnectivityManager connMan =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -47,7 +47,7 @@ import timber.log.Timber;
 public final class AppUtil {
 
   private AppUtil() {
-
+    throw new RuntimeException("No instances");
   }
 
   public static void setupFABBehavior(final @NonNull FloatingActionButton fab,

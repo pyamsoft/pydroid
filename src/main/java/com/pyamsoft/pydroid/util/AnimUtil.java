@@ -31,7 +31,7 @@ import android.widget.TextView;
 public final class AnimUtil {
 
   private AnimUtil() {
-
+    throw new RuntimeException("No instances");
   }
 
   @NonNull

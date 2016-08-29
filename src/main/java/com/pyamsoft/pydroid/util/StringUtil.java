@@ -31,7 +31,7 @@ import android.util.TypedValue;
 public final class StringUtil {
 
   private StringUtil() {
-
+    throw new RuntimeException("No instances");
   }
 
   /**

@@ -33,7 +33,7 @@ import android.support.v4.content.ContextCompat;
 public final class DrawableUtil {
 
   private DrawableUtil() {
-
+    throw new RuntimeException("No instances");
   }
 
   @NonNull @CheckResult public static ColorFilter colorFilter(final @ColorInt int color) {

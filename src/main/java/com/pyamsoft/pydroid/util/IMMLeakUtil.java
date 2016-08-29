@@ -41,7 +41,7 @@ import timber.log.Timber;
 public final class IMMLeakUtil {
 
   private IMMLeakUtil() {
-
+    throw new RuntimeException("No instances");
   }
 
   /**

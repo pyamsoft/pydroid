@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.base.app;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -34,10 +35,16 @@ import java.util.Set;
 public abstract class ApplicationPreferences {
 
   @NonNull private final SharedPreferences p;
+  @NonNull private final Resources resources;
 
   protected ApplicationPreferences(final @NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     this.p = PreferenceManager.getDefaultSharedPreferences(appContext);
+    resources = appContext.getResources();
+  }
+
+  @NonNull @CheckResult protected final Resources getResources() {
+    return resources;
   }
 
   @NonNull protected final ApplicationPreferences put(@NonNull final String s, final long l) {

@@ -78,8 +78,8 @@ public class PresenterTest {
       bound = true;
     }
 
-    @Override protected void onUnbind(@NonNull String view) {
-      super.onUnbind(view);
+    @Override protected void onUnbind() {
+      super.onUnbind();
       bound = false;
     }
   }

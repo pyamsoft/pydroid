@@ -42,7 +42,7 @@ public abstract class PresenterBase<I> implements Presenter<I> {
   }
 
   @Override public final void unbindView() {
-    Timber.d("Run onUnind hook");
+    Timber.d("Run onUnbind hook");
     onUnbind(getView());
     weakView.clear();
   }

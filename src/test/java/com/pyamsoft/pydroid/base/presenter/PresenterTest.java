@@ -25,7 +25,6 @@ import org.junit.rules.ExpectedException;
 
 public class PresenterTest {
 
-  @Rule public final ExpectedException doubleUseException = ExpectedException.none();
   @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
 
   @Test public void test_constructor() {
@@ -37,34 +36,6 @@ public class PresenterTest {
   }
 
   @Test public void test_bindView() {
-    final PresenterBase<String> presenter = new TestPresenter();
-
-    // By default, constructed with a null view
-    final String hold = "String";
-    presenter.bindView(hold);
-    Assert.assertNotNull(presenter.getView());
-
-    // Expect an error when create is called again without destroy
-    doubleUseException.expect(IllegalStateException.class);
-    presenter.bindView(hold);
-  }
-
-  @Test public void test_unbindView() {
-    final PresenterBase<String> presenter = new TestPresenter();
-
-    // By default, constructed with a null view
-    final String hold = "String";
-    presenter.bindView(hold);
-    Assert.assertNotNull(presenter.getView());
-
-    // Expect proper clean up
-    presenter.unbindView();
-
-    doubleUseException.expect(IllegalStateException.class);
-    presenter.unbindView();
-  }
-
-  @Test public void test_onBindNoHook() {
     final TestPresenter presenter = new TestPresenter();
 
     // By default, constructed with a null view
@@ -72,13 +43,11 @@ public class PresenterTest {
     presenter.bindView(hold);
     Assert.assertNotNull(presenter.getView());
 
-    // When bind is called, no custom hook
-    Assert.assertFalse(presenter.isBound());
-
     presenter.unbindView();
+    Assert.assertTrue(presenter.isUnbound());
   }
 
-  @Test public void test_onBindHook() {
+  @Test public void test_unbindView() {
     final TestPresenter presenter = new TestPresenter();
 
     // By default, constructed with a null view
@@ -90,30 +59,6 @@ public class PresenterTest {
     Assert.assertTrue(presenter.isBound());
 
     presenter.unbindView();
-  }
-
-  @Test public void test_onUnbindNoHook() {
-    final TestPresenter presenter = new TestPresenter();
-
-    // By default, constructed with a null view
-    final String hold = "String";
-    presenter.bindView(hold);
-    Assert.assertNotNull(presenter.getView());
-
-    presenter.unbindView();
-    Assert.assertFalse(presenter.isUnbound());
-  }
-
-  @Test public void test_onUnbindHook() {
-    final TestPresenter presenter = new TestPresenter();
-
-    // By default, constructed with a null view
-    final String hold = "String";
-    presenter.bindView(hold);
-    Assert.assertNotNull(presenter.getView());
-
-    presenter.unbindView();
-    Assert.assertTrue(presenter.isUnbound());
   }
 
   static final class TestPresenter extends PresenterBase<String> {
@@ -131,14 +76,10 @@ public class PresenterTest {
     @Override protected void onBind(@NonNull String view) {
       super.onBind(view);
       bound = true;
-      //noinspection ResultOfMethodCallIgnored
-      view.length();
     }
 
     @Override protected void onUnbind(@NonNull String view) {
       super.onUnbind(view);
-      //noinspection ResultOfMethodCallIgnored
-      view.length();
       bound = false;
     }
   }

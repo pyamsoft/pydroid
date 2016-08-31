@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.base.app;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.pyamsoft.pydroid.persist.PersistLoader;
 
 public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
 

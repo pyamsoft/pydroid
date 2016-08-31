@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.persist;
+package com.pyamsoft.pydroid.base.app;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import timber.log.Timber;
 
 public abstract class PersistLoader<T> {
 

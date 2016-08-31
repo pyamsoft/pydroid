@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.persist;
+package com.pyamsoft.pydroid.util;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.base.app.Destroyable;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;

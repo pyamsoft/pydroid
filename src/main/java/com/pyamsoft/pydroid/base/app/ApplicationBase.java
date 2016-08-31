@@ -17,9 +17,9 @@
 package com.pyamsoft.pydroid.base.app;
 
 import android.app.Application;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import com.pyamsoft.pydroid.crash.CrashHandler;
-import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
 public abstract class ApplicationBase extends Application implements CrashHandler.Provider {
@@ -35,9 +35,15 @@ public abstract class ApplicationBase extends Application implements CrashHandle
     }
 
     if (buildConfigDebug()) {
-      Timber.plant(new Timber.DebugTree());
-      LeakCanary.install(this);
+      installInDebugMode();
     }
+  }
+
+  /**
+   * A hook that one can use to setup any special application handling in debug mode
+   */
+  @CallSuper protected void installInDebugMode() {
+    Timber.plant(new Timber.DebugTree());
   }
 
   @CheckResult protected abstract boolean buildConfigDebug();

@@ -36,8 +36,8 @@ public final class PersistentCache {
   /**
    * Get a key for a given instance, either stored in the savedInstanceState or generated
    */
-  @CheckResult private static long generateKey(@Nullable Bundle savedInstanceState,
-      @NonNull String instanceId) {
+  @CheckResult private static long generateKey(@NonNull String instanceId,
+      @Nullable Bundle savedInstanceState) {
     final long key;
     if (savedInstanceState == null) {
       // Generate a new key
@@ -55,7 +55,7 @@ public final class PersistentCache {
   /**
    * Saves the generated key into a bundle which will be restored later in the lifecycle
    */
-  public static void saveKey(@NonNull Bundle outState, long key, @NonNull String instanceId) {
+  public static void saveKey(@NonNull String instanceId, @NonNull Bundle outState, long key) {
     outState.putLong(instanceId, key);
   }
 
@@ -65,11 +65,11 @@ public final class PersistentCache {
    * NOTE: If you always pass in NULL for the savedInstanceState, your state will never be cached.
    * You must pass THE savedInstanceState from the Android lifecycle
    */
-  @CheckResult public static <T> long load(@Nullable Bundle savedInstanceState,
-      @NonNull String instanceId, @NonNull PersistLoader.Callback<T> callback) {
+  @CheckResult public static <T> long load(@NonNull String instanceId, @Nullable Bundle savedInstanceState,
+      @NonNull PersistLoader.Callback<T> callback) {
 
     // Attempt to fetch the persistent object from the cache
-    final long key = generateKey(savedInstanceState, instanceId);
+    final long key = generateKey(instanceId, savedInstanceState);
 
     //noinspection unchecked
     T persist = (T) Persist.INSTANCE.getCachedObject(key);

@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.presenter;
+package com.pyamsoft.pydroid.base.app;
 
-import com.pyamsoft.pydroid.base.app.Destroyable;
+public interface Destroyable {
 
-public interface Presenter<I> extends Destroyable {
-
-  void bindView(I view);
-
-  void unbindView();
+  void destroy();
 }

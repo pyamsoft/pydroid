@@ -24,7 +24,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Size;
-import android.support.annotation.StyleRes;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AbsoluteSizeSpan;
@@ -103,14 +102,14 @@ public final class StringUtil {
 
   @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static TypedArray getAttributeFromAppearance(final @NonNull Context context,
-      @StyleRes int style, @AttrRes int attr) {
+      @AttrRes int style, @AttrRes int attr) {
     final TypedValue typedValue = new TypedValue();
     context.getTheme().resolveAttribute(style, typedValue, true);
     return context.obtainStyledAttributes(typedValue.data, new int[] { attr });
   }
 
   @Size @CheckResult public static int getTextSizeFromAppearance(final @NonNull Context context,
-      @StyleRes int textAppearance) {
+      @AttrRes int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textSize);
     final int textSize = a.getDimensionPixelSize(0, -1);
@@ -120,7 +119,7 @@ public final class StringUtil {
 
   @ColorInt @CheckResult
   public static int getTextColorFromAppearance(final @NonNull Context context,
-      @StyleRes int textAppearance) {
+      @AttrRes int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textColor);
     final int color = a.getColor(0, -1);

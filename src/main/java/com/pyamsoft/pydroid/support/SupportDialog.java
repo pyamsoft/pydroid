@@ -134,7 +134,7 @@ public class SupportDialog extends DialogFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    presenter.destroyView();
+    presenter.destroy();
   }
 
   private void setDonationText(final TextView textView, final String title,

@@ -46,7 +46,7 @@ public abstract class PresenterBase<I> implements Presenter<I> {
     onUnbind();
   }
 
-  @Override final public void destroyView() {
+  @Override final public void destroy() {
     Timber.d("Run onDestroy hook");
     weakView.clear();
     onDestroy();

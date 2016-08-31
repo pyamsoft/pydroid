@@ -17,49 +17,13 @@
 package com.pyamsoft.pydroid.base.app;
 
 import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.Loader;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import timber.log.Timber;
+import com.pyamsoft.pydroid.persist.PersistLoader;
 
-public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends Loader<T> {
-
-  @Nullable private T adapter;
+public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
 
   protected ListAdapterLoader(@NonNull Context context) {
     super(context);
   }
-
-  @Override protected void onStartLoading() {
-    super.onStartLoading();
-    if (adapter == null) {
-      Timber.d("No cached adapter, force load");
-      forceLoad();
-    } else {
-      Timber.d("Deliver cached adapter");
-      deliverResult(adapter);
-    }
-  }
-
-  @Override protected void onReset() {
-    super.onReset();
-    if (adapter != null) {
-      Timber.d("Destroy resetted adapter");
-      adapter.clear();
-      adapter = null;
-    }
-  }
-
-  @Override protected void onForceLoad() {
-    super.onForceLoad();
-    Timber.d("Force load adapter");
-    adapter = loadAdapter();
-
-    Timber.d("Deliver loaded adapter");
-    deliverResult(adapter);
-  }
-
-  @CheckResult @NonNull protected abstract T loadAdapter();
 }

@@ -65,14 +65,13 @@ public final class PersistentCache {
    * NOTE: If you always pass in NULL for the savedInstanceState, your state will never be cached.
    * You must pass THE savedInstanceState from the Android lifecycle
    */
-  @CheckResult public static <T> long load(@NonNull String instanceId, @Nullable Bundle savedInstanceState,
-      @NonNull PersistLoader.Callback<T> callback) {
+  @CheckResult public static <T> long load(@NonNull String instanceId,
+      @Nullable Bundle savedInstanceState, @NonNull PersistLoader.Callback<T> callback) {
 
     // Attempt to fetch the persistent object from the cache
     final long key = generateKey(instanceId, savedInstanceState);
 
-    //noinspection unchecked
-    T persist = (T) Persist.INSTANCE.getCachedObject(key);
+    @SuppressWarnings("unchecked") T persist = (T) Persist.INSTANCE.getCachedObject(key);
 
     // If the persistent object is NULL it did not exist in the cache
     if (persist == null) {

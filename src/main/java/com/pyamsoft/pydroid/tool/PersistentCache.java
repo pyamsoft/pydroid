@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util;
+package com.pyamsoft.pydroid.tool;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.util.LongSparseArray;
 import com.pyamsoft.pydroid.base.app.Destroyable;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import timber.log.Timber;
 
@@ -101,6 +100,13 @@ public final class PersistentCache {
     Persist.getInstance().remove(key);
   }
 
+  /**
+   * Testing function, clears the cache and starts fresh
+   */
+  @VisibleForTesting static void clear() {
+    Persist.getInstance().clear();
+  }
+
   static class Persist {
 
     @NonNull private static final Persist INSTANCE = new Persist();
@@ -108,11 +114,11 @@ public final class PersistentCache {
     /**
      * KLUDGE Use a more efficient data structure that doesn't do all this unboxing
      */
-    @NonNull private final Map<Long, Object> cache;
+    @NonNull private final LongSparseArray<Object> cache;
     @NonNull private final AtomicLong count;
 
     Persist() {
-      cache = new HashMap<>(10);
+      cache = new LongSparseArray<>();
       count = new AtomicLong(0);
     }
 
@@ -128,13 +134,24 @@ public final class PersistentCache {
       return cache.get(key);
     }
 
+    @VisibleForTesting final void clear() {
+      Timber.w("Clearing PersistentCache for TESTING");
+      cache.clear();
+      count.set(0);
+    }
+
     final void persist(long key, @NonNull Object persistable) {
       cache.put(key, persistable);
+      if (cache.size() > 100) {
+        Timber.w(
+            "WARNING: Cache performance will decrease significantly if the size goes over 100 items");
+      }
     }
 
     final void remove(long key) {
-      final Object persist = cache.remove(key);
+      final Object persist = cache.get(key);
       if (persist != null) {
+        cache.remove(key);
         Timber.d("Remove persistable from cache: %s [%d]", persist, key);
         if (persist instanceof Destroyable) {
           final Destroyable destroyable = (Destroyable) persist;

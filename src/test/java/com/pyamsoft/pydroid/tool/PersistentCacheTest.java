@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util;
+package com.pyamsoft.pydroid.tool;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
@@ -40,6 +40,8 @@ public class PersistentCacheTest {
    * Test that we generate two different keys when instances are not saved
    */
   @Test public void test_generateDifferent() {
+    PersistentCache.clear();
+
     // Generate first key
     final String instance1 = "i1";
     final long firstResult = PersistentCache.generateKey(instance1, NULL_STATE);
@@ -55,6 +57,8 @@ public class PersistentCacheTest {
    * Test that we generate the same key when instances are saved
    */
   @Test public void test_generateSame() {
+    PersistentCache.clear();
+
     // Generate first key
     final String instance = "i1";
     final long firstResult = PersistentCache.generateKey(instance, NULL_STATE);
@@ -95,6 +99,8 @@ public class PersistentCacheTest {
    * only created a single time and then cached
    */
   @Test public void test_loadSynchronous() {
+    PersistentCache.clear();
+
     // Keeps track of the number of new creates
     final AtomicInteger createCount = new AtomicInteger(0);
     // Keeps track of the number of total loads
@@ -130,6 +136,8 @@ public class PersistentCacheTest {
    * Test that clean up properly destroys a destroyable object like a presenter
    */
   @Test public void test_cleanup() {
+    PersistentCache.clear();
+
     // First load a presenter
     final TestPresenter[] presenterHack = new TestPresenter[1];
     final long loadedKey =
@@ -163,6 +171,8 @@ public class PersistentCacheTest {
    * interface
    */
   @Test public void test_doNotDestroy() {
+    PersistentCache.clear();
+
     // First load a presenter
     final DoNotDestroy[] hack = new DoNotDestroy[1];
     final long loadedKey =
@@ -189,6 +199,126 @@ public class PersistentCacheTest {
 
     // Check again
     Assert.assertFalse(doNotDestroy.isDestroyed());
+  }
+
+  void doCreationPerformanceTest(int keySize) {
+    PersistentCache.clear();
+
+    final long startTime = System.nanoTime();
+
+    // We will load 1000 keys
+    final long[] keys = new long[keySize];
+    for (int i = 0; i < keySize; ++i) {
+      keys[i] =
+          PersistentCache.load("DOESN'T MATTER", NULL_STATE, new PersistLoader.Callback<Object>() {
+            @NonNull @Override public PersistLoader<Object> createLoader() {
+              return new PersistLoader<Object>(RuntimeEnvironment.application) {
+                @NonNull @Override public Object loadPersistent() {
+                  return new Object();
+                }
+              };
+            }
+
+            @Override public void onPersistentLoaded(@NonNull Object persist) {
+
+            }
+          });
+    }
+
+    final long endTime = System.nanoTime();
+
+    final long difference = endTime - startTime;
+    final long differenceMillis = difference / 1000000;
+    final long differenceSeconds = differenceMillis / 1000;
+    System.out.printf("Loading %s keys took: %d milliseconds (%d seconds)\n", keySize,
+        differenceMillis, differenceSeconds);
+  }
+
+  @Test public void test_creationPerformance1000() {
+    doCreationPerformanceTest(1000);
+  }
+
+  @Test public void test_creationPerformance10000() {
+    doCreationPerformanceTest(10000);
+  }
+
+  @Test public void test_creationPerformance100000() {
+    doCreationPerformanceTest(100000);
+  }
+
+  @Test public void test_creationPerformance1000000() {
+    doCreationPerformanceTest(1000000);
+  }
+
+  void doRetrievePerformanceTest(int keySize) {
+    PersistentCache.clear();
+
+    // We will load 1000 keys
+    final long[] keys = new long[keySize];
+    for (int i = 0; i < keySize; ++i) {
+      keys[i] =
+          PersistentCache.load("DOESN'T MATTER", NULL_STATE, new PersistLoader.Callback<Object>() {
+            @NonNull @Override public PersistLoader<Object> createLoader() {
+              return new PersistLoader<Object>(RuntimeEnvironment.application) {
+                @NonNull @Override public Object loadPersistent() {
+                  return new Object();
+                }
+              };
+            }
+
+            @Override public void onPersistentLoaded(@NonNull Object persist) {
+
+            }
+          });
+    }
+
+    // Save them for later
+    final Bundle[] bundles = new Bundle[keySize];
+    for (int i = 0; i < keySize; ++i) {
+      bundles[i] = new Bundle();
+      PersistentCache.saveKey(String.valueOf(keys[i]), bundles[i], keys[i]);
+    }
+
+    // Load keys again
+    final long startTime = System.nanoTime();
+
+    for (int i = 0; i < keySize; ++i) {
+      //noinspection CheckResult
+      PersistentCache.load(String.valueOf(keys[i]), bundles[i],
+          new PersistLoader.Callback<Object>() {
+            @NonNull @Override public PersistLoader<Object> createLoader() {
+              throw new RuntimeException("Should not be called");
+            }
+
+            @Override public void onPersistentLoaded(@NonNull Object persist) {
+
+            }
+          });
+    }
+
+    final long endTime = System.nanoTime();
+
+    final long difference = endTime - startTime;
+    final long differenceMillis = difference / 1000000;
+    final long differenceSeconds = differenceMillis / 1000;
+    System.out.printf("Retrieving %s keys took: %d milliseconds (%d seconds)\n", keySize,
+        differenceMillis, differenceSeconds);
+  }
+
+  @Test public void test_retrievePerformance1000() {
+    doRetrievePerformanceTest(1000);
+  }
+
+  @Test public void test_retrievePerformance10000() {
+    doRetrievePerformanceTest(10000);
+  }
+
+  @Test public void test_retrievePerformance100000() {
+    doRetrievePerformanceTest(100000);
+  }
+
+  @Test public void test_retrievePerformance1000000() {
+    doRetrievePerformanceTest(1000000);
   }
 
   static class DoNotDestroy {

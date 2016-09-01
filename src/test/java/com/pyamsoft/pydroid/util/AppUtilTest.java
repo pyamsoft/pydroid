@@ -26,6 +26,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.TestApplication;
 import com.pyamsoft.pydroid.behavior.HideScrollFABBehavior;
 import com.pyamsoft.pydroid.behavior.IgnoreAppBarLayoutFABBehavior;
 import org.junit.Assert;
@@ -36,7 +37,8 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 23, application = TestApplication.class)
 public class AppUtilTest {
 
   @Test public void test_setupFABBehavior() {

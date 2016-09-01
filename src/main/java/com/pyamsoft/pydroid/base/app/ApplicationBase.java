@@ -19,23 +19,21 @@ package com.pyamsoft.pydroid.base.app;
 import android.app.Application;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
-import com.pyamsoft.pydroid.crash.CrashHandler;
 import timber.log.Timber;
 
-public abstract class ApplicationBase extends Application implements CrashHandler.Provider {
+public abstract class ApplicationBase extends Application {
 
-  @Override public void onCreate() {
+  @CheckResult protected boolean isTest() {
+    return false;
+  }
+
+  @CallSuper @Override public void onCreate() {
     super.onCreate();
 
-    // Fix for Bug 81083 GPS Bug
-    try {
-      Class.forName("android.os.AsyncTask");
-    } catch (final Throwable ignore) {
-      // ignored
-    }
-
-    if (buildConfigDebug()) {
-      installInDebugMode();
+    if (!isTest()) {
+      if (buildConfigDebug()) {
+        installInDebugMode();
+      }
     }
   }
 
@@ -47,18 +45,4 @@ public abstract class ApplicationBase extends Application implements CrashHandle
   }
 
   @CheckResult protected abstract boolean buildConfigDebug();
-
-  /**
-   * Override for custom crash log text
-   */
-  @Override public String crashLogText() {
-    return null;
-  }
-
-  /**
-   * Override for custom crash log subject
-   */
-  @Override public String crashLogSubject() {
-    return null;
-  }
 }

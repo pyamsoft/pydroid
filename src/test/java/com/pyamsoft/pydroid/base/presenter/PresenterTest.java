@@ -16,8 +16,6 @@
 
 package com.pyamsoft.pydroid.base.presenter;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,60 +25,48 @@ public class PresenterTest {
 
   @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
 
-  @Test public void test_constructor() {
-    final PresenterBase<String> presenter = new TestPresenter();
-
-    // By default, throw if not created
-    useBeforeCreateException.expect(IllegalStateException.class);
-    Assert.assertNotNull(presenter.getView());
-  }
-
-  @Test public void test_bindView() {
+  @Test public void test_presenter_lifecycle() {
     final TestPresenter presenter = new TestPresenter();
 
-    // By default, constructed with a null view
-    final String hold = "String";
-    presenter.bindView(hold);
-    Assert.assertNotNull(presenter.getView());
+    // Before bound, is bound should return false
+    Assert.assertFalse(presenter.isBound());
 
-    presenter.unbindView();
-    Assert.assertTrue(presenter.isUnbound());
-  }
-
-  @Test public void test_unbindView() {
-    final TestPresenter presenter = new TestPresenter();
-
-    // By default, constructed with a null view
-    final String hold = "String";
-    presenter.bindView(hold);
-    Assert.assertNotNull(presenter.getView());
-
-    // When bind is called, no custom hook
+    // When bound, the presenter should state so
+    final String view = "String";
+    presenter.bindView(view);
     Assert.assertTrue(presenter.isBound());
 
+    // Make sure that when a presenter gets the view it has not been modified
+    Assert.assertEquals(view, presenter.getView());
+
+    // Make sure that when unbound, accurately reflect so
     presenter.unbindView();
+    Assert.assertFalse(presenter.isBound());
+
+    // Throw when there is no view
+    useBeforeCreateException.expect(PresenterUnboundException.class);
+    Assert.assertNotNull(presenter.getView());
+
+    // Make sure that the destroyed presenter reflects state
+    presenter.destroy();
+    Assert.assertTrue(presenter.isDestroyed());
   }
 
-  static final class TestPresenter extends PresenterBase<String> {
+  static class TestPresenter extends PresenterBase<String> {
 
-    private boolean bound = false;
+    private boolean destroyed;
 
-    @CheckResult public final boolean isBound() {
-      return bound;
+    public TestPresenter() {
+      this.destroyed = false;
     }
 
-    @CheckResult public final boolean isUnbound() {
-      return !bound;
+    public boolean isDestroyed() {
+      return destroyed;
     }
 
-    @Override protected void onBind(@NonNull String view) {
-      super.onBind(view);
-      bound = true;
-    }
-
-    @Override protected void onUnbind() {
-      super.onUnbind();
-      bound = false;
+    @Override protected void onDestroy() {
+      super.onDestroy();
+      destroyed = true;
     }
   }
 }

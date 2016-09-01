@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.base.app.Destroyable;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
 import java.util.HashMap;
@@ -36,8 +37,8 @@ public final class PersistentCache {
   /**
    * Get a key for a given instance, either stored in the savedInstanceState or generated
    */
-  @CheckResult private static long generateKey(@NonNull String instanceId,
-      @Nullable Bundle savedInstanceState) {
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult static long generateKey(
+      @NonNull String instanceId, @Nullable Bundle savedInstanceState) {
     final long key;
     if (savedInstanceState == null) {
       // Generate a new key

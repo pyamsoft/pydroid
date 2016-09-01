@@ -16,14 +16,11 @@
 
 package com.pyamsoft.pydroid.base.presenter;
 
-import android.support.annotation.CheckResult;
-import com.pyamsoft.pydroid.base.app.Destroyable;
+import android.support.annotation.NonNull;
 
-public interface Presenter<I> extends Destroyable {
+public class PresenterUnboundException extends RuntimeException {
 
-  @CheckResult boolean isBound();
-
-  void bindView(I view);
-
-  void unbindView();
+  PresenterUnboundException(@NonNull Presenter presenter) {
+    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  }
 }

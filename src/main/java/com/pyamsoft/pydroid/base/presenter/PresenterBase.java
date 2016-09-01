@@ -19,36 +19,35 @@ package com.pyamsoft.pydroid.base.presenter;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import java.lang.ref.WeakReference;
-import timber.log.Timber;
 
 public abstract class PresenterBase<I> implements Presenter<I> {
 
   @NonNull private WeakReference<I> weakView = new WeakReference<>(null);
 
   @NonNull @CheckResult protected final I getView() {
-    if (weakView.get() == null) {
-      throw new IllegalStateException("No view is bound to this presenter");
+    if (!isBound()) {
+      throw new PresenterUnboundException(this);
     }
 
     return weakView.get();
   }
 
+  @Override public final boolean isBound() {
+    return weakView.get() != null;
+  }
+
   @Override public final void bindView(@NonNull I view) {
     weakView.clear();
     weakView = new WeakReference<>(view);
-
-    Timber.d("Run onBind hook");
     onBind(getView());
   }
 
   @Override public final void unbindView() {
-    Timber.d("Run onUnbind hook");
+    weakView.clear();
     onUnbind();
   }
 
   @Override final public void destroy() {
-    Timber.d("Run onDestroy hook");
-    weakView.clear();
     onDestroy();
   }
 

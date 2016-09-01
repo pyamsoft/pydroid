@@ -42,7 +42,7 @@ public final class PersistentCache {
     final long key;
     if (savedInstanceState == null) {
       // Generate a new key
-      key = Persist.INSTANCE.generateKey();
+      key = Persist.getInstance().generateKey();
       Timber.d("Generate a new key: %d", key);
     } else {
       // Retrieve the key from the saved instance
@@ -72,7 +72,7 @@ public final class PersistentCache {
     // Attempt to fetch the persistent object from the cache
     final long key = generateKey(instanceId, savedInstanceState);
 
-    @SuppressWarnings("unchecked") T persist = (T) Persist.INSTANCE.getCachedObject(key);
+    @SuppressWarnings("unchecked") T persist = (T) Persist.getInstance().getCachedObject(key);
 
     // If the persistent object is NULL it did not exist in the cache
     if (persist == null) {
@@ -81,7 +81,7 @@ public final class PersistentCache {
       Timber.d("Created new persistable: %s [%d]", persist, key);
 
       // Save the presenter to the cache
-      Persist.INSTANCE.persist(key, persist);
+      Persist.getInstance().persist(key, persist);
     } else {
       Timber.d("Loaded cached persistable: %s [%d]", persist, key);
     }
@@ -98,12 +98,12 @@ public final class PersistentCache {
    * This call is meant to be guarded using checks for Activity.isChangingConfigurations()
    */
   public static void unload(long key) {
-    Persist.INSTANCE.remove(key);
+    Persist.getInstance().remove(key);
   }
 
-  enum Persist {
+  static class Persist {
 
-    INSTANCE;
+    @NonNull private static final Persist INSTANCE = new Persist();
 
     /**
      * KLUDGE Use a more efficient data structure that doesn't do all this unboxing
@@ -114,6 +114,10 @@ public final class PersistentCache {
     Persist() {
       cache = new HashMap<>(10);
       count = new AtomicLong(0);
+    }
+
+    @NonNull @CheckResult static Persist getInstance() {
+      return INSTANCE;
     }
 
     @CheckResult final long generateKey() {

@@ -44,7 +44,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
 
     if (adView != null) {
-      adView.create(provideAdViewResId(), provideAdViewUnitId(), isAdDebugMode());
+      adView.create(provideAdViewUnitId(), isAdDebugMode());
     }
   }
 
@@ -114,8 +114,6 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
    * Call setContentView here and return the id of the advertisement view, 0 if none
    */
   @CheckResult protected abstract int bindActivityToView();
-
-  @CheckResult @LayoutRes protected abstract int provideAdViewResId();
 
   @CheckResult @NonNull protected abstract String provideAdViewUnitId();
 

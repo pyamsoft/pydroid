@@ -22,17 +22,17 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.pyamsoft.pydroid.R;
@@ -102,29 +102,24 @@ public class AdvertisementView extends FrameLayout {
     inflate(getContext(), R.layout.view_advertisement, this);
   }
 
-  public final void create(@LayoutRes final int adViewResId, @NonNull final String adId,
-      boolean debugMode) {
-    create(0, adViewResId, adId, debugMode);
+  public final void create(@NonNull final String adId, boolean debugMode) {
+    create(0, adId, debugMode);
   }
 
   @SuppressWarnings("WeakerAccess")
-  public final void create(@ColorRes int color, @LayoutRes final int adViewResId,
-      @NonNull final String adId, boolean debugMode) {
+  public final void create(@ColorRes int color, @NonNull final String adId, boolean debugMode) {
     Timber.d("Create AdView with debug mode: %s", debugMode);
 
     isDebugMode = debugMode;
 
-    // Init mobile Ads
-    MobileAds.initialize(getContext().getApplicationContext(), adId);
+    // Setup real ad view
+    setupRealAdView(adId);
 
     // Find views
-    resolveViews(adViewResId);
+    resolveViews();
 
     // Setup close button
     setupCloseButton(color);
-
-    // Setup real ad view
-    setupRealAdView(adId);
 
     // Default to gone
     setVisibility(View.GONE);
@@ -151,6 +146,11 @@ public class AdvertisementView extends FrameLayout {
   }
 
   private void setupRealAdView(@NonNull final String adId) {
+    realAdView = new AdView(getContext().getApplicationContext());
+    realAdView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT));
+    realAdView.setAdSize(AdSize.SMART_BANNER);
+    realAdView.setAdUnitId(adId);
     realAdView.setAdListener(new AdListener() {
 
       @Override public void onAdLoaded() {
@@ -164,6 +164,9 @@ public class AdvertisementView extends FrameLayout {
         showAdViewNoNetwork();
       }
     });
+
+    // Init mobile Ads
+    MobileAds.initialize(getContext().getApplicationContext(), adId);
   }
 
   private void setupCloseButton(@ColorRes int color) {
@@ -180,14 +183,11 @@ public class AdvertisementView extends FrameLayout {
     });
   }
 
-  private void resolveViews(@LayoutRes final int adViewResId) {
+  private void resolveViews() {
     advertisement = (ImageView) findViewById(R.id.ad_image);
     closeButton = (ImageView) findViewById(R.id.ad_close);
 
-    final LayoutInflater inflater = LayoutInflater.from(getContext());
-    realAdView = (AdView) inflater.inflate(adViewResId, this, false);
-
-    // Ad the real adview below the close button
+    // Add the real adview below the close button
     addView(realAdView, 0);
   }
 

@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.base.app;
 
 import android.app.Application;
+import android.os.StrictMode;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import timber.log.Timber;
@@ -42,6 +43,18 @@ public abstract class ApplicationBase extends Application {
    */
   @CallSuper protected void installInDebugMode() {
     Timber.plant(new Timber.DebugTree());
+    setStrictMode();
+  }
+
+  private void setStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+        .penaltyLog()
+        .penaltyDeath()
+        .permitDiskReads()
+        .permitDiskWrites()
+        .penaltyFlashScreen()
+        .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
   @CheckResult protected abstract boolean buildConfigDebug();

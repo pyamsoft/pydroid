@@ -54,24 +54,24 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   }
 
   @CallSuper @Override protected void onResume() {
-    super.onResume();
     if (adView != null) {
       adView.resume();
     }
+    super.onResume();
   }
 
   @Override protected void onPause() {
-    super.onPause();
     if (adView != null) {
       adView.pause();
     }
+    super.onPause();
   }
 
   @CallSuper @Override protected void onDestroy() {
-    super.onDestroy();
     if (adView != null) {
       adView.destroy();
     }
+    super.onDestroy();
   }
 
   @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {

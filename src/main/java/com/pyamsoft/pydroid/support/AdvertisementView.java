@@ -144,7 +144,10 @@ public class AdvertisementView extends FrameLayout {
     Timber.d("Destroy AdView");
     taskMap.clear();
     advertisement.setImageDrawable(null);
+    realAdView.removeAllViews();
+    realAdView.setAdListener(null);
     realAdView.destroy();
+    removeView(realAdView);
   }
 
   private void setupRealAdView(@NonNull final String adId) {
@@ -167,7 +170,7 @@ public class AdvertisementView extends FrameLayout {
     Timber.d("Async load close button");
     final Subscription closeSub = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_close_24dp)
-        .tint(color == 0 ? android.R.color.black : color)
+        .tint(color == 0 ? android.R.color.white : color)
         .into(closeButton);
     taskMap.put("close", closeSub);
 

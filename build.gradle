@@ -69,6 +69,13 @@ dependencies {
 
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
 
+  // Firebase Advertsiements :(
+  compile 'com.google.firebase:firebase-ads:9.4.0'
+  compile 'com.google.firebase:firebase-core:9.4.0'
+
+  // Firebase Crash reporting
+  compile 'com.google.firebase:firebase-crash:9.4.0'
+
   // Android support library.
   compile 'com.android.support:support-annotations:24.2.0'
   compile 'com.android.support:preference-v14:24.2.0'

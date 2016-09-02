@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.base.activity;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Menu;
@@ -43,7 +44,33 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
 
     if (adView != null) {
-      adView.create();
+      adView.create(provideAdViewResId(), provideAdViewUnitId(), isAdDebugMode());
+    }
+  }
+
+  @CallSuper @Override protected void onStart() {
+    super.onStart();
+    showAd();
+  }
+
+  @CallSuper @Override protected void onResume() {
+    super.onResume();
+    if (adView != null) {
+      adView.resume();
+    }
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    if (adView != null) {
+      adView.pause();
+    }
+  }
+
+  @CallSuper @Override protected void onDestroy() {
+    super.onDestroy();
+    if (adView != null) {
+      adView.destroy();
     }
   }
 
@@ -66,21 +93,9 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     return handled;
   }
 
-  @CallSuper @Override protected void onDestroy() {
-    super.onDestroy();
-    if (adView != null) {
-      adView.destroy();
-    }
-  }
-
   private void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
-  }
-
-  @CallSuper @Override protected void onStart() {
-    super.onStart();
-    showAd();
   }
 
   public final void showAd() {
@@ -99,5 +114,11 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
    * Call setContentView here and return the id of the advertisement view, 0 if none
    */
   @CheckResult protected abstract int bindActivityToView();
+
+  @CheckResult @LayoutRes protected abstract int provideAdViewResId();
+
+  @CheckResult @NonNull protected abstract String provideAdViewUnitId();
+
+  @CheckResult protected abstract boolean isAdDebugMode();
 }
 

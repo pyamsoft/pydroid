@@ -22,13 +22,19 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
@@ -56,10 +62,13 @@ public class AdvertisementView extends FrameLayout {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH
   };
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
-  private ImageView advertisement;
+  ImageView advertisement;
+  AdView realAdView;
   private Queue<String> imageQueue;
   private boolean preferenceDefault;
   private String preferenceKey;
+  private ImageView closeButton;
+  private boolean isDebugMode;
 
   public AdvertisementView(Context context) {
     this(context, null);
@@ -93,14 +102,68 @@ public class AdvertisementView extends FrameLayout {
     inflate(getContext(), R.layout.view_advertisement, this);
   }
 
-  public final void create() {
-    create(0);
+  public final void create(@LayoutRes final int adViewResId, @NonNull final String adId,
+      boolean debugMode) {
+    create(0, adViewResId, adId, debugMode);
   }
 
-  @SuppressWarnings("WeakerAccess") public final void create(@ColorRes int color) {
-    advertisement = (ImageView) findViewById(R.id.ad_image);
-    final ImageView closeButton = (ImageView) findViewById(R.id.ad_close);
+  @SuppressWarnings("WeakerAccess")
+  public final void create(@ColorRes int color, @LayoutRes final int adViewResId,
+      @NonNull final String adId, boolean debugMode) {
+    Timber.d("Create AdView with debug mode: %s", debugMode);
 
+    isDebugMode = debugMode;
+
+    // Init mobile Ads
+    MobileAds.initialize(getContext().getApplicationContext(), adId);
+
+    // Find views
+    resolveViews(adViewResId);
+
+    // Setup close button
+    setupCloseButton(color);
+
+    // Setup real ad view
+    setupRealAdView(adId);
+
+    // Default to gone
+    setVisibility(View.GONE);
+  }
+
+  public final void resume() {
+    Timber.d("Resume adView");
+    realAdView.resume();
+  }
+
+  public final void pause() {
+    Timber.d("Pause adView");
+    realAdView.pause();
+  }
+
+  public final void destroy() {
+    Timber.d("Destroy AdView");
+    taskMap.clear();
+    advertisement.setImageDrawable(null);
+    realAdView.destroy();
+  }
+
+  private void setupRealAdView(@NonNull final String adId) {
+    realAdView.setAdListener(new AdListener() {
+
+      @Override public void onAdLoaded() {
+        super.onAdLoaded();
+        advertisement.setVisibility(View.GONE);
+        realAdView.setVisibility(View.VISIBLE);
+      }
+
+      @Override public void onAdFailedToLoad(int i) {
+        super.onAdFailedToLoad(i);
+        showAdViewNoNetwork();
+      }
+    });
+  }
+
+  private void setupCloseButton(@ColorRes int color) {
     Timber.d("Async load close button");
     final Subscription closeSub = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_close_24dp)
@@ -112,13 +175,17 @@ public class AdvertisementView extends FrameLayout {
       Timber.d("Close clicked");
       hide();
     });
-
-    // Default to gone
-    setVisibility(View.GONE);
   }
 
-  public final void destroy() {
-    taskMap.clear();
+  private void resolveViews(@LayoutRes final int adViewResId) {
+    advertisement = (ImageView) findViewById(R.id.ad_image);
+    closeButton = (ImageView) findViewById(R.id.ad_close);
+
+    final LayoutInflater inflater = LayoutInflater.from(getContext());
+    realAdView = (AdView) inflater.inflate(adViewResId, this, false);
+
+    // Ad the real adview below the close button
+    addView(realAdView, 0);
   }
 
   public final void hide() {
@@ -193,22 +260,46 @@ public class AdvertisementView extends FrameLayout {
     if (isEnabled && isValidCount) {
       Timber.d("Show ad view");
       setVisibility(View.VISIBLE);
-
-      final String currentPackage = currentPackageFromQueue();
-      final int image = loadImage(currentPackage);
-      advertisement.setOnClickListener(view -> {
-        // KLUDGE: Social Media presenter can do this
-        Timber.d("onClick");
-        final String fullLink = "market://details?id=" + currentPackage;
-        NetworkUtil.newLink(view.getContext(), fullLink);
-      });
-
-      final Subscription adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
-      taskMap.put("ad", adTask);
+      showAdView();
     } else {
       final int newCount = shownCount + 1;
       Timber.d("Increment shown count to %d", newCount);
       preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, newCount).apply();
     }
+  }
+
+  private void showAdView() {
+    showAdViewNoNetwork();
+    if (NetworkUtil.hasConnection(getContext())) {
+      showAdViewNetwork();
+    }
+  }
+
+  private void showAdViewNetwork() {
+    final AdRequest.Builder builder = new AdRequest.Builder();
+    if (isDebugMode) {
+      builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+      builder.addTestDevice(getContext().getString(R.string.test_id_1));
+    }
+
+    final AdRequest adRequest = builder.build();
+    realAdView.loadAd(adRequest);
+  }
+
+  void showAdViewNoNetwork() {
+    realAdView.setVisibility(View.GONE);
+    advertisement.setVisibility(View.VISIBLE);
+
+    final String currentPackage = currentPackageFromQueue();
+    final int image = loadImage(currentPackage);
+    advertisement.setOnClickListener(view -> {
+      // KLUDGE: Social Media presenter can do this
+      Timber.d("onClick");
+      final String fullLink = "market://details?id=" + currentPackage;
+      NetworkUtil.newLink(view.getContext(), fullLink);
+    });
+
+    final Subscription adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
+    taskMap.put("ad", adTask);
   }
 }

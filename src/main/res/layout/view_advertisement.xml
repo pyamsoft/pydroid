@@ -18,13 +18,13 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="match_parent"
     >
 
   <ImageView
       android:id="@+id/ad_image"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="60dp"
       android:contentDescription="@string/blank"
       android:scaleType="fitXY"
       />

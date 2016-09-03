@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.CheckResult;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.preference.PreferenceManager;
@@ -67,7 +66,6 @@ public class AdvertisementView extends FrameLayout {
   private Queue<String> imageQueue;
   private boolean preferenceDefault;
   private String preferenceKey;
-  private ImageView closeButton;
   private boolean isDebugMode;
 
   public AdvertisementView(Context context) {
@@ -102,12 +100,8 @@ public class AdvertisementView extends FrameLayout {
     inflate(getContext(), R.layout.view_advertisement, this);
   }
 
-  public final void create(@NonNull final String adId, boolean debugMode) {
-    create(0, adId, debugMode);
-  }
-
   @SuppressWarnings("WeakerAccess")
-  public final void create(@ColorRes int color, @NonNull final String adId, boolean debugMode) {
+  public final void create(@NonNull final String adId, boolean debugMode) {
     Timber.d("Create AdView with debug mode: %s", debugMode);
 
     isDebugMode = debugMode;
@@ -117,9 +111,6 @@ public class AdvertisementView extends FrameLayout {
 
     // Find views
     resolveViews();
-
-    // Setup close button
-    setupCloseButton(color);
 
     // Default to gone
     setVisibility(View.GONE);
@@ -169,23 +160,8 @@ public class AdvertisementView extends FrameLayout {
     MobileAds.initialize(getContext().getApplicationContext(), adId);
   }
 
-  private void setupCloseButton(@ColorRes int color) {
-    Timber.d("Async load close button");
-    final Subscription closeSub = AsyncDrawable.with(getContext())
-        .load(R.drawable.ic_close_24dp)
-        .tint(color == 0 ? android.R.color.white : color)
-        .into(closeButton);
-    taskMap.put("close", closeSub);
-
-    closeButton.setOnClickListener(view -> {
-      Timber.d("Close clicked");
-      hide();
-    });
-  }
-
   private void resolveViews() {
     advertisement = (ImageView) findViewById(R.id.ad_image);
-    closeButton = (ImageView) findViewById(R.id.ad_close);
 
     // Add the real adview below the close button
     addView(realAdView, 0);

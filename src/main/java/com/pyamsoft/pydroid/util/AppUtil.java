@@ -23,9 +23,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -37,7 +37,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.AppCompatDrawableManager;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -112,17 +112,27 @@ public final class AppUtil {
 
   public static void setVectorIconForNotification(@NonNull Context context,
       @NonNull RemoteViews remoteViews, @IdRes int id, @DrawableRes int icon) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      remoteViews.setImageViewResource(id, icon);
-    } else {
-      final Context appContext = context.getApplicationContext();
-      final Drawable d = AppCompatDrawableManager.get().getDrawable(appContext, icon);
-      final Bitmap b = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(),
-          Bitmap.Config.ARGB_8888);
-      final Canvas c = new Canvas(b);
-      d.setBounds(0, 0, c.getWidth(), c.getHeight());
-      d.draw(c);
-      remoteViews.setImageViewBitmap(id, b);
+    setVectorIconForNotification(context, remoteViews, id, icon, 0);
+  }
+
+  public static void setVectorIconForNotification(@NonNull Context context,
+      @NonNull RemoteViews remoteViews, @IdRes int id, @DrawableRes int icon, @ColorRes int color) {
+    final Context appContext = context.getApplicationContext();
+    Drawable d = AppCompatResources.getDrawable(appContext, icon);
+    if (d == null) {
+      Timber.e("Drawable was null for icon: %d", icon);
+      return;
     }
+
+    if (color != 0) {
+      d = DrawableUtil.tintDrawableFromRes(appContext, d, color);
+    }
+
+    final Bitmap b =
+        Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+    final Canvas c = new Canvas(b);
+    d.setBounds(0, 0, c.getWidth(), c.getHeight());
+    d.draw(c);
+    remoteViews.setImageViewBitmap(id, b);
   }
 }

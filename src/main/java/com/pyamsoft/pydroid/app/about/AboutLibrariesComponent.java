@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bus;
+package com.pyamsoft.pydroid.app.about;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.model.LicenseLoadEvent;
+import com.pyamsoft.pydroid.app.inject.AboutLibrariesPresenterLoader;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
+import dagger.Subcomponent;
 
-public final class AboutItemBus extends RxBus<LicenseLoadEvent> {
+@ActivityScope
+@Subcomponent(modules = AboutLibrariesModule.class)
+public interface AboutLibrariesComponent {
 
-  @NonNull private static final AboutItemBus bus = new AboutItemBus();
-
-  @CheckResult @NonNull public static AboutItemBus get() {
-    return bus;
-  }
+  void inject(AboutLibrariesPresenterLoader loader);
 }

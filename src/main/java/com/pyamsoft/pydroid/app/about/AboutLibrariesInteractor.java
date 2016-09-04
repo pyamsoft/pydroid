@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.support;
+package com.pyamsoft.pydroid.app.about;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.Singleton;
-import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import com.pyamsoft.pydroid.model.Licenses;
+import rx.Observable;
 
-public class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
+interface AboutLibrariesInteractor {
 
-  @Inject Provider<SocialMediaPresenter> presenterProvider;
-
-  SocialMediaPresenterLoader(@NonNull Context context) {
-    super(context);
-  }
-
-  @NonNull @Override public SocialMediaPresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusSocialMediaComponent().inject(this);
-    return presenterProvider.get();
-  }
+  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull Licenses licenses);
 }

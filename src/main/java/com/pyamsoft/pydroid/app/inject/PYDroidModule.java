@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger;
+package com.pyamsoft.pydroid.app.inject;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -26,7 +26,7 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-@Module public class PYDroidModule {
+@Module class PYDroidModule {
 
   @NonNull private final Context appContext;
 

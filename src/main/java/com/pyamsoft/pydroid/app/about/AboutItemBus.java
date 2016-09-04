@@ -16,9 +16,15 @@
 
 package com.pyamsoft.pydroid.app.about;
 
-public enum Licenses {
-  EMPTY,
-  ANDROID,
-  ANDROID_SUPPORT,
-  PYDROID,
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.bus.RxBus;
+
+final class AboutItemBus extends RxBus<LicenseLoadEvent> {
+
+  @NonNull private static final AboutItemBus bus = new AboutItemBus();
+
+  @CheckResult @NonNull public static AboutItemBus get() {
+    return bus;
+  }
 }

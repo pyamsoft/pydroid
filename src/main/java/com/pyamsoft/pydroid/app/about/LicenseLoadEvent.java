@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.about;
+package com.pyamsoft.pydroid.app.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.about.Licenses;
-import rx.Observable;
+import com.google.auto.value.AutoValue;
+import com.pyamsoft.pydroid.model.Licenses;
 
-interface AboutLibrariesInteractor {
+@AutoValue abstract class LicenseLoadEvent {
 
-  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull Licenses licenses);
+  @CheckResult @NonNull
+  public static LicenseLoadEvent create(int position, @NonNull Licenses licenses) {
+    return new AutoValue_LicenseLoadEvent(position, licenses);
+  }
+
+  abstract int position();
+
+  abstract Licenses licenses();
 }

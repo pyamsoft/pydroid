@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.about;
+package com.pyamsoft.pydroid.app.inject;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.Singleton;
 import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.app.about.AboutLibrariesPresenter;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresenter> {
   @Inject Provider<AboutLibrariesPresenter> presenterProvider;
 
-  AboutLibrariesPresenterLoader(@NonNull Context context) {
+  public AboutLibrariesPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

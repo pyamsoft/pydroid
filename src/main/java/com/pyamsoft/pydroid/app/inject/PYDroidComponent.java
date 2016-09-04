@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger;
+package com.pyamsoft.pydroid.app.inject;
 
-import com.pyamsoft.pydroid.dagger.about.AboutLibrariesComponent;
-import com.pyamsoft.pydroid.dagger.support.SocialMediaComponent;
+import com.pyamsoft.pydroid.app.about.AboutLibrariesComponent;
+import com.pyamsoft.pydroid.app.support.SocialMediaComponent;
 import dagger.Component;
 import javax.inject.Singleton;
 
-@Singleton @Component(modules = PYDroidModule.class) public interface PYDroidComponent {
+@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
 
   AboutLibrariesComponent plusAboutLibrariesComponent();
 

@@ -14,16 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.support;
+package com.pyamsoft.pydroid.app.inject;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.support.SocialMediaPresenter;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-@Module public class SocialMediaModule {
+public class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
 
-  @ActivityScope @Provides SocialMediaPresenter provideSocialMediaPresenter() {
-    return new SocialMediaPresenterImpl();
+  @Inject Provider<SocialMediaPresenter> presenterProvider;
+
+  public SocialMediaPresenterLoader(@NonNull Context context) {
+    super(context);
+  }
+
+  @NonNull @Override public SocialMediaPresenter loadPersistent() {
+    Singleton.Dagger.with(getContext()).plusSocialMediaComponent().inject(this);
+    return presenterProvider.get();
   }
 }

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.about;
+package com.pyamsoft.pydroid.app.about;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pydroid.app.about.Licenses;
+import com.pyamsoft.pydroid.model.Licenses;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

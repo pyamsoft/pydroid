@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.about;
+package com.pyamsoft.pydroid.app.about;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.about.AboutLibrariesPresenter;
-import com.pyamsoft.pydroid.app.about.Licenses;
-import com.pyamsoft.pydroid.bus.AboutItemBus;
 import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroid.model.Licenses;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;

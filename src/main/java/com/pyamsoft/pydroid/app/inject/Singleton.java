@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.app.inject;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.dagger.DaggerPYDroidComponent;
-import com.pyamsoft.pydroid.dagger.PYDroidComponent;
-import com.pyamsoft.pydroid.dagger.PYDroidModule;
 
-public class Singleton {
+class Singleton {
 
   private Singleton() {
     throw new RuntimeException("No instances");

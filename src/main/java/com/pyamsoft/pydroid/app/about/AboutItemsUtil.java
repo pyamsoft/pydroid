@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.app.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.model.Licenses;
 
 final class AboutItemsUtil {
 

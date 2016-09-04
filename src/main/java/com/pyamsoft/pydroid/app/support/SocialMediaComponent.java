@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.about;
+package com.pyamsoft.pydroid.app.support;
 
-import com.pyamsoft.pydroid.app.about.AboutLibrariesPresenterLoader;
+import com.pyamsoft.pydroid.app.inject.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope
-@Subcomponent(modules = AboutLibrariesModule.class)
-public interface AboutLibrariesComponent {
+@ActivityScope @Subcomponent(modules = SocialMediaModule.class)
+public interface SocialMediaComponent {
 
-  void inject(AboutLibrariesPresenterLoader loader);
+  void inject(SocialMediaPresenterLoader loader);
 }

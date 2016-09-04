@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.about;
+package com.pyamsoft.pydroid.app.about;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

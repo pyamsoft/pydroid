@@ -28,12 +28,11 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.bus.AboutItemBus;
-import com.pyamsoft.pydroid.model.LicenseLoadEvent;
+import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.List;
 
-public class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
+class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
   @NonNull final String licenseHomepage;
@@ -133,7 +132,7 @@ public class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     }
   }
 
-  public static class ViewHolder extends RecyclerView.ViewHolder {
+  static class ViewHolder extends RecyclerView.ViewHolder {
 
     final TextView licenseName;
     final TextView licenseHomepage;

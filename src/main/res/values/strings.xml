@@ -33,4 +33,7 @@
   <string name="adview_summary_checked" tools:keep="@string/adview_summary_checked">Will show related and relevant pyamsoft applications</string>
   <string name="adview_summary_unchecked" tools:keep="@string/adview_summary_unchecked">Will not show other related pyamsoft applications</string>
 
+  <string name="about_license_key">about_license</string>
+  <string name="about_license_title">Open Source Licenses</string>
+
 </resources>

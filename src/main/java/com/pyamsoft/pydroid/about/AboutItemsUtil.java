@@ -16,8 +16,19 @@
 
 package com.pyamsoft.pydroid.about;
 
-public enum Licenses {
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
-  ANDROID,
-  ANDROID_SUPPORT,
+final class AboutItemsUtil {
+
+  private AboutItemsUtil() {
+    throw new RuntimeException("No instances");
+  }
+
+  @NonNull @CheckResult public static ExpandableAboutItem licenseForAndroid() {
+    ExpandableAboutItem expandableAboutItem =
+        new ExpandableAboutItem("Android", "Apache Version 2.0");
+    expandableAboutItem = expandableAboutItem.addLicense(new AboutLicenseItem(Licenses.ANDROID));
+    return expandableAboutItem;
+  }
 }

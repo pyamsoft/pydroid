@@ -23,6 +23,7 @@
     >
 
   <ImageView
+      xmlns:app="http://schemas.android.com/apk/res-auto"
       android:id="@+id/expand_license_icon"
       android:layout_width="24dp"
       android:layout_height="24dp"
@@ -30,6 +31,7 @@
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       android:contentDescription="@string/blank"
+      app:srcCompat="@drawable/ic_arrow_up_24dp"
       />
 
   <TextView

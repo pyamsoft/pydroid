@@ -17,7 +17,11 @@
 package com.pyamsoft.pydroid.app.fragment;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.app.activity.AdvertisementActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import timber.log.Timber;
@@ -59,5 +63,12 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
       Timber.e("Activity is not AdvertisementActivity");
       return false;
     }
+  }
+
+  @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId,
+      @NonNull AboutLibrariesFragment.Styling styling, @NonNull Licenses... licenses) {
+    Timber.d("Show about licenses fragment");
+    AboutLibrariesFragment.show(getActivity(), containerId, styling, licenses);
+    return true;
   }
 }

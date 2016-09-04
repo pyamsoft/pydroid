@@ -35,7 +35,7 @@ class AboutLibrariesPresenterImpl<VH extends RecyclerView.ViewHolder>
   @NonNull private Subscription licenseSubscription = Subscriptions.empty();
 
   protected AboutLibrariesPresenterImpl(@NonNull Context context) {
-    this(context, Schedulers.io(), AndroidSchedulers.mainThread());
+    this(context, AndroidSchedulers.mainThread(), Schedulers.io());
   }
 
   protected AboutLibrariesPresenterImpl(@NonNull Context context,

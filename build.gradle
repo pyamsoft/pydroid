@@ -108,6 +108,8 @@ dependencies {
   compile 'com.google.dagger:dagger:2.6.1'
   apt "com.google.dagger:dagger-compiler:2.6.1"
 
+  // Retrofit
+
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.2.0'
   androidTestCompile 'com.android.support.test:runner:0.5'

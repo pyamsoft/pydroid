@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.inject.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.model.Licenses;

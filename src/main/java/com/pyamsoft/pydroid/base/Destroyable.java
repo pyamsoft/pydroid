@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app;
+package com.pyamsoft.pydroid.base;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+public interface Destroyable {
 
-public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
-
-  protected ListAdapterLoader(@NonNull Context context) {
-    super(context);
-  }
+  void destroy();
 }

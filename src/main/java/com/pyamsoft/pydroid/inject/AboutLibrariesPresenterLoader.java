@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.inject;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import javax.inject.Inject;
 import javax.inject.Provider;

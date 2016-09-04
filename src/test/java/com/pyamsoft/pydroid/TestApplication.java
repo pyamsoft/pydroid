@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid;
 
-import com.pyamsoft.pydroid.app.ApplicationBase;
+import com.pyamsoft.pydroid.base.ApplicationBase;
 
 public class TestApplication extends ApplicationBase {
 

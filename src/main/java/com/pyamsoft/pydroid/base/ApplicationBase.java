@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app;
+package com.pyamsoft.pydroid.base;
 
 import android.app.Application;
 import android.os.StrictMode;

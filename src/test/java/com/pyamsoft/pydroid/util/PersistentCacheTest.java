@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.TestApplication;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;

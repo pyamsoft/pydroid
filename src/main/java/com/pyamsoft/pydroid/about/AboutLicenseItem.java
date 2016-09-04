@@ -85,6 +85,9 @@ class AboutLicenseItem extends AbstractItem<AboutLicenseItem, AboutLicenseItem.V
       case ANDROID_SUPPORT:
         fileLocation = "licenses/android_support_20160903.txt";
         break;
+      case PYDROID:
+        fileLocation = "licenses/pydroid_20160903.txt";
+        break;
       default:
         throw new RuntimeException("Invalid license type: " + license.name());
     }

@@ -20,4 +20,5 @@ public enum Licenses {
 
   ANDROID,
   ANDROID_SUPPORT,
+  PYDROID,
 }

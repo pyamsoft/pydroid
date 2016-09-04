@@ -31,4 +31,11 @@ final class AboutItemsUtil {
     expandableAboutItem = expandableAboutItem.addLicense(new AboutLicenseItem(Licenses.ANDROID));
     return expandableAboutItem;
   }
+
+  @NonNull @CheckResult public static ExpandableAboutItem licenseForPYDroid() {
+    ExpandableAboutItem expandableAboutItem =
+        new ExpandableAboutItem("PYDroid", "Apache Version 2.0");
+    expandableAboutItem = expandableAboutItem.addLicense(new AboutLicenseItem(Licenses.PYDROID));
+    return expandableAboutItem;
+  }
 }

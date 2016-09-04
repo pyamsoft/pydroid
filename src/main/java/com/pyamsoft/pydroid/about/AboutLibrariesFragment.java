@@ -132,6 +132,9 @@ public class AboutLibrariesFragment extends ActionBarFragment {
         case ANDROID:
           item = AboutItemsUtil.licenseForAndroid();
           break;
+        case PYDROID:
+          item = AboutItemsUtil.licenseForPYDroid();
+          break;
         default:
           throw new RuntimeException("Invalid license: " + license.name());
       }

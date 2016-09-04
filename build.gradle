@@ -40,6 +40,9 @@ android {
 
     // For instrumentation test
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    // Consumer proguard file
+    consumerProguardFiles 'proguard-rules.pro'
   }
 
   compileOptions {
@@ -51,7 +54,7 @@ android {
     release {
       minifyEnabled false
       shrinkResources false
-      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
 

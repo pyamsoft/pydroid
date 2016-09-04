@@ -18,8 +18,8 @@ package com.pyamsoft.pydroid.inject;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.AboutLibrariesComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiModule;
+import com.pyamsoft.pydroid.version.ApiComponent;
+import com.pyamsoft.pydroid.version.ApiModule;
 import com.pyamsoft.pydroid.support.SocialMediaComponent;
 import dagger.Component;
 import javax.inject.Singleton;

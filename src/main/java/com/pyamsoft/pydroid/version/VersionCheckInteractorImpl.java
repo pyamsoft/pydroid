@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.licensecheck;
+package com.pyamsoft.pydroid.version;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import retrofit2.http.GET;
+import javax.inject.Inject;
 import rx.Observable;
 
-interface LicenseCheckInteractor {
+class VersionCheckInteractorImpl implements VersionCheckInteractor {
 
-  @CheckResult @NonNull Observable<LicenseCheckResponse> checkVersion();
+  @NonNull final LicenseCheckService licenseCheckService;
 
-  interface LicenseCheckService {
 
-    @CheckResult @NonNull @GET("CURRENT_VERSION") Observable<LicenseCheckResponse> checkVersion();
+
+  @Inject VersionCheckInteractorImpl(@NonNull LicenseCheckService licenseCheckService) {
+    this.licenseCheckService = licenseCheckService;
+  }
+
+  @NonNull @Override public Observable<VersionCheckResponse> checkVersion() {
+    return licenseCheckService.checkVersion();
   }
 }

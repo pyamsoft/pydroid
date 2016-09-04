@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.licensecheck;
+package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -25,11 +25,11 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import retrofit2.Retrofit;
 
-abstract class LicenseCheckApi {
+abstract class VersionCheckApi {
 
   @NonNull private final Retrofit client;
 
-  LicenseCheckApi(@NonNull Retrofit client) {
+  VersionCheckApi(@NonNull Retrofit client) {
     this.client = client;
   }
 
@@ -44,8 +44,8 @@ abstract class LicenseCheckApi {
       TypeAdapter<T> adapter;
 
       final Class<? super T> rawType = type.getRawType();
-      if (rawType.equals(LicenseCheckResponse.class)) {
-        adapter = (TypeAdapter<T>) LicenseCheckResponse.typeAdapter(gson);
+      if (rawType.equals(VersionCheckResponse.class)) {
+        adapter = (TypeAdapter<T>) VersionCheckResponse.typeAdapter(gson);
       } else {
         adapter = null;
       }

@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.licensecheck;
+package com.pyamsoft.pydroid.version;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import javax.inject.Inject;
-import retrofit2.Retrofit;
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.SerializedName;
 
-class GithubLicenseCheckApi extends LicenseCheckApi {
+@AutoValue abstract class VersionCheckResponse {
 
-  @Inject GithubLicenseCheckApi(@NonNull Retrofit client) {
-    super(client);
+  @CheckResult @NonNull
+  public static TypeAdapter<VersionCheckResponse> typeAdapter(final Gson gson) {
+    return new AutoValue_VersionCheckResponse.GsonTypeAdapter(gson);
   }
+
+  @CheckResult @SerializedName("CURRENT_VERSION") abstract int currentVersion();
 }

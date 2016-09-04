@@ -23,16 +23,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.inject.LicenseCheckPresenterLoader;
-import com.pyamsoft.pydroid.licensecheck.LicenseCheckPresenter;
+import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class LicenseCheckActivity extends AdvertisementActivity
-    implements LicenseCheckPresenter.View {
+    implements VersionCheckPresenter.View {
 
   @NonNull private static final String KEY_PRESENTER = "key_license_check_presenter";
   @NonNull private static final String KEY_HAS_CHECKED_LICENSE = "key_has_already_checked_license";
-  LicenseCheckPresenter presenter;
+  VersionCheckPresenter presenter;
   boolean licenseChecked;
   private long loadedKey;
 
@@ -44,14 +44,14 @@ public abstract class LicenseCheckActivity extends AdvertisementActivity
     }
 
     loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<LicenseCheckPresenter>() {
-          @NonNull @Override public PersistLoader<LicenseCheckPresenter> createLoader() {
+        new PersistLoader.Callback<VersionCheckPresenter>() {
+          @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             licenseChecked = false;
             return new LicenseCheckPresenterLoader(getApplicationContext(), isAdDebugMode(),
                 provideProjectName());
           }
 
-          @Override public void onPersistentLoaded(@NonNull LicenseCheckPresenter persist) {
+          @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
             presenter = persist;
           }
         });

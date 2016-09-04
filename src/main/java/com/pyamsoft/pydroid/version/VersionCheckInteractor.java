@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.licensecheck;
+package com.pyamsoft.pydroid.version;
 
-import com.pyamsoft.pydroid.dagger.presenter.Presenter;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import retrofit2.http.GET;
+import rx.Observable;
 
-public interface LicenseCheckPresenter extends Presenter<LicenseCheckPresenter.View> {
+interface VersionCheckInteractor {
 
-  void checkForUpdates(int currentVersionCode);
+  @CheckResult @NonNull Observable<VersionCheckResponse> checkVersion();
 
-  interface View {
+  interface LicenseCheckService {
 
-    void onLicenseCheckFinished();
-
-    void onUpdatedVersionFound(int updatedVersionCode);
+    @CheckResult @NonNull @GET("CURRENT_VERSION") Observable<VersionCheckResponse> checkVersion();
   }
 }

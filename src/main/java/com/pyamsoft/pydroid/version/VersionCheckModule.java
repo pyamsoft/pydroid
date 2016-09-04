@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.licensecheck;
+package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
@@ -23,17 +23,17 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module public class LicenseCheckModule {
+@Module public class VersionCheckModule {
 
-  @ActivityScope @Provides LicenseCheckPresenter provideLicenseCheckPresenter(
-      @NonNull LicenseCheckInteractor interactor, @Named("main") Scheduler mainScheduler,
+  @ActivityScope @Provides VersionCheckPresenter provideLicenseCheckPresenter(
+      @NonNull VersionCheckInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
-    return new LicenseCheckPresenterImpl(interactor, mainScheduler, ioScheduler);
+    return new VersionCheckPresenterImpl(interactor, mainScheduler, ioScheduler);
   }
 
-  @ActivityScope @Provides LicenseCheckInteractor provideLicenseCheckInteractor(
-      @NonNull LicenseCheckApi licenseCheckApi) {
-    return new LicenseCheckInteractorImpl(
-        licenseCheckApi.create(LicenseCheckInteractor.LicenseCheckService.class));
+  @ActivityScope @Provides VersionCheckInteractor provideLicenseCheckInteractor(
+      @NonNull VersionCheckApi licenseCheckApi) {
+    return new VersionCheckInteractorImpl(
+        licenseCheckApi.create(VersionCheckInteractor.LicenseCheckService.class));
   }
 }

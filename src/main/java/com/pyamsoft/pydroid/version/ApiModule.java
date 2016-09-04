@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.licensecheck;
+package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import com.google.gson.Gson;
@@ -41,7 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
   @ActivityScope @Provides Gson provideGson() {
     final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapterFactory(
-        new LicenseCheckApi.AutoValueTypeAdapterFactory());
+        new VersionCheckApi.AutoValueTypeAdapterFactory());
     return gsonBuilder.create();
   }
 
@@ -67,7 +67,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
         .build();
   }
 
-  @ActivityScope @Provides LicenseCheckApi provideLicenseCheckApi(@NonNull Retrofit retrofit) {
-    return new GithubLicenseCheckApi(retrofit);
+  @ActivityScope @Provides VersionCheckApi provideLicenseCheckApi(@NonNull Retrofit retrofit) {
+    return new GithubVersionCheckApi(retrofit);
   }
 }

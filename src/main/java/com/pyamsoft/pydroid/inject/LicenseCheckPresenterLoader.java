@@ -19,15 +19,15 @@ package com.pyamsoft.pydroid.inject;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.licensecheck.ApiModule;
-import com.pyamsoft.pydroid.licensecheck.LicenseCheckPresenter;
+import com.pyamsoft.pydroid.version.ApiModule;
+import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class LicenseCheckPresenterLoader extends PersistLoader<LicenseCheckPresenter> {
+public class LicenseCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
   private final boolean isDebugMode;
   @NonNull private final String projectName;
-  @Inject Provider<LicenseCheckPresenter> presenterProvider;
+  @Inject Provider<VersionCheckPresenter> presenterProvider;
 
   public LicenseCheckPresenterLoader(@NonNull Context context, boolean isDebugMode,
       @NonNull String projectName) {
@@ -36,10 +36,10 @@ public class LicenseCheckPresenterLoader extends PersistLoader<LicenseCheckPrese
     this.projectName = projectName;
   }
 
-  @NonNull @Override public LicenseCheckPresenter loadPersistent() {
+  @NonNull @Override public VersionCheckPresenter loadPersistent() {
     Singleton.Dagger.with(getContext())
         .plusApiComponent(new ApiModule(isDebugMode, projectName))
-        .plusLicenseCheckComponent()
+        .plusVersionCheckComponent()
         .inject(this);
     return presenterProvider.get();
   }

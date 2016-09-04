@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.licensecheck;
+package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
@@ -24,13 +24,13 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class LicenseCheckPresenterImpl extends SchedulerPresenter<LicenseCheckPresenter.View>
-    implements LicenseCheckPresenter {
+class VersionCheckPresenterImpl extends SchedulerPresenter<VersionCheckPresenter.View>
+    implements VersionCheckPresenter {
 
-  @NonNull private final LicenseCheckInteractor interactor;
+  @NonNull private final VersionCheckInteractor interactor;
   @NonNull private Subscription checkSubscription = Subscriptions.empty();
 
-  @Inject LicenseCheckPresenterImpl(@NonNull LicenseCheckInteractor interactor,
+  @Inject VersionCheckPresenterImpl(@NonNull VersionCheckInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;

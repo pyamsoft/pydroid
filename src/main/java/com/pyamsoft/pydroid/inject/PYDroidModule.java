@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.inject;
+package com.pyamsoft.pydroid.inject;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

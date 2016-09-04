@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.support;
+package com.pyamsoft.pydroid.about;
 
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.google.auto.value.AutoValue;
+import com.pyamsoft.pydroid.model.Licenses;
 
-@Module public class SocialMediaModule {
+@AutoValue abstract class LicenseLoadEvent {
 
-  @ActivityScope @Provides SocialMediaPresenter provideSocialMediaPresenter() {
-    return new SocialMediaPresenterImpl();
+  @CheckResult @NonNull
+  public static LicenseLoadEvent create(int position, @NonNull Licenses licenses) {
+    return new AutoValue_LicenseLoadEvent(position, licenses);
   }
+
+  abstract int position();
+
+  abstract Licenses licenses();
 }

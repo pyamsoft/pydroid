@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.about;
+package com.pyamsoft.pydroid.about;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.dagger.presenter.Presenter;
+import com.pyamsoft.pydroid.bus.RxBus;
 
-public interface AboutLibrariesPresenter extends Presenter<AboutLibrariesPresenter.View> {
+final class AboutItemBus extends RxBus<LicenseLoadEvent> {
 
-  interface View {
+  @NonNull private static final AboutItemBus bus = new AboutItemBus();
 
-    void onLicenseTextLoaded(int position, @NonNull String text);
+  @CheckResult @NonNull public static AboutItemBus get() {
+    return bus;
   }
 }

@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.about;
+package com.pyamsoft.pydroid.inject;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
-import com.pyamsoft.pydroid.model.Licenses;
+import com.pyamsoft.pydroid.about.AboutLibrariesComponent;
+import com.pyamsoft.pydroid.support.SocialMediaComponent;
+import dagger.Component;
+import javax.inject.Singleton;
 
-@AutoValue abstract class LicenseLoadEvent {
+@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
 
-  @CheckResult @NonNull
-  public static LicenseLoadEvent create(int position, @NonNull Licenses licenses) {
-    return new AutoValue_LicenseLoadEvent(position, licenses);
-  }
+  AboutLibrariesComponent plusAboutLibrariesComponent();
 
-  abstract int position();
-
-  abstract Licenses licenses();
+  SocialMediaComponent plusSocialMediaComponent();
 }

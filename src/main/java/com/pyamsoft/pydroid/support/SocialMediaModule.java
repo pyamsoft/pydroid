@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.about;
+package com.pyamsoft.pydroid.support;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.bus.RxBus;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
+import dagger.Module;
+import dagger.Provides;
 
-final class AboutItemBus extends RxBus<LicenseLoadEvent> {
+@Module public class SocialMediaModule {
 
-  @NonNull private static final AboutItemBus bus = new AboutItemBus();
-
-  @CheckResult @NonNull public static AboutItemBus get() {
-    return bus;
+  @ActivityScope @Provides SocialMediaPresenter provideSocialMediaPresenter() {
+    return new SocialMediaPresenterImpl();
   }
 }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.about;
+package com.pyamsoft.pydroid.about;
 
-import com.pyamsoft.pydroid.app.inject.AboutLibrariesPresenterLoader;
+import com.pyamsoft.pydroid.inject.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 

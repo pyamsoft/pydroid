@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.support;
+package com.pyamsoft.pydroid.support;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -37,8 +37,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.app.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.app.tool.AsyncDrawableMap;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import rx.Subscription;

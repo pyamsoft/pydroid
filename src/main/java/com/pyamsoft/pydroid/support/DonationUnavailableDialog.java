@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.support;
+package com.pyamsoft.pydroid.support;
 
 import android.app.Dialog;
 import android.os.Bundle;

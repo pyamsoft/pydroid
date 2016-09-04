@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.about;
+package com.pyamsoft.pydroid.about;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.model.Licenses;
-import rx.Observable;
+import com.pyamsoft.pydroid.dagger.presenter.Presenter;
 
-interface AboutLibrariesInteractor {
+public interface AboutLibrariesPresenter extends Presenter<AboutLibrariesPresenter.View> {
 
-  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull Licenses licenses);
+  interface View {
+
+    void onLicenseTextLoaded(int position, @NonNull String text);
+  }
 }

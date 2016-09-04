@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.tool;
+package com.pyamsoft.pydroid.tool;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

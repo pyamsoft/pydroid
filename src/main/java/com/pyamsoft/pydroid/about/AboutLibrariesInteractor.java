@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.support;
+package com.pyamsoft.pydroid.about;
 
-import com.pyamsoft.pydroid.app.inject.SocialMediaPresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.model.Licenses;
+import rx.Observable;
 
-@ActivityScope @Subcomponent(modules = SocialMediaModule.class)
-public interface SocialMediaComponent {
+interface AboutLibrariesInteractor {
 
-  void inject(SocialMediaPresenterLoader loader);
+  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull Licenses licenses);
 }

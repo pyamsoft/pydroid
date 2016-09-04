@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.about;
+package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

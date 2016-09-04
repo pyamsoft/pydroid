@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.support;
+package com.pyamsoft.pydroid.support;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.support.SocialMediaPresenter;
 import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import javax.inject.Inject;
 

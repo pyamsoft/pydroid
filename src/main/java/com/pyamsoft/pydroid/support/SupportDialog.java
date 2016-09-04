@@ -35,7 +35,7 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.base.activity.DonationActivity;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
-import com.pyamsoft.pydroid.tool.PersistentCache;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import timber.log.Timber;

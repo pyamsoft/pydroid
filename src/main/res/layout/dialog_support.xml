@@ -46,7 +46,7 @@
         android:padding="8dp"
         >
 
-      <com.pyamsoft.pydroid.tool.VectorTextView
+      <com.pyamsoft.pydroid.widget.VectorTextView
           android:id="@+id/support_one_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
           app:drawableStart="@drawable/ic_donate_24dp"
           />
 
-      <com.pyamsoft.pydroid.tool.VectorTextView
+      <com.pyamsoft.pydroid.widget.VectorTextView
           android:id="@+id/support_two_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
           app:drawableStart="@drawable/ic_donate_24dp"
           />
 
-      <com.pyamsoft.pydroid.tool.VectorTextView
+      <com.pyamsoft.pydroid.widget.VectorTextView
           android:id="@+id/support_five_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
           app:drawableStart="@drawable/ic_donate_24dp"
           />
 
-      <com.pyamsoft.pydroid.tool.VectorTextView
+      <com.pyamsoft.pydroid.widget.VectorTextView
           android:id="@+id/support_ten_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

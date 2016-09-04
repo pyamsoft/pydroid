@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -26,7 +26,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public final class DividerItemDecoration extends RecyclerView.ItemDecoration {
+public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
   public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
   public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;

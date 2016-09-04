@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.util;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.TestApplication;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.base.presenter.PresenterBase;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Test;

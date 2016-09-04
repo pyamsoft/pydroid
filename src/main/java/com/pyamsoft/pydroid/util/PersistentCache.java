@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.util;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;

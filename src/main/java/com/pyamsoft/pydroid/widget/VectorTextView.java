@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

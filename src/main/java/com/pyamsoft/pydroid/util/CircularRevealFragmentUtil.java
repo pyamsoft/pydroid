@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.fragment;
+package com.pyamsoft.pydroid.util;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;

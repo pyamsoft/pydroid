@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.activity;
+package com.pyamsoft.pydroid.app.presenter;
 
-public abstract class NoDonationActivity extends AdvertisementActivity {
+import android.support.annotation.NonNull;
 
+public class PresenterUnboundException extends RuntimeException {
+
+  PresenterUnboundException(@NonNull Presenter presenter) {
+    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  }
 }

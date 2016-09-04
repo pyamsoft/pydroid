@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.fragment;
+package com.pyamsoft.pydroid.app.fragment;
 
 import android.support.annotation.CheckResult;
 import android.support.v4.app.FragmentActivity;
-import com.pyamsoft.pydroid.base.activity.AdvertisementActivity;
+import com.pyamsoft.pydroid.app.activity.AdvertisementActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import timber.log.Timber;
 

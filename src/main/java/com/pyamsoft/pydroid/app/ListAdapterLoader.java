@@ -14,27 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.presenter;
+package com.pyamsoft.pydroid.app;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import rx.Scheduler;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
-public abstract class SchedulerPresenter<I> extends PresenterBase<I> {
+public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
 
-  @NonNull private final Scheduler observeScheduler;
-  @NonNull private final Scheduler subscribeScheduler;
-
-  protected SchedulerPresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
-    this.observeScheduler = observeScheduler;
-    this.subscribeScheduler = subscribeScheduler;
-  }
-
-  @NonNull protected final Scheduler getObserveScheduler() {
-    return observeScheduler;
-  }
-
-  @NonNull protected final Scheduler getSubscribeScheduler() {
-    return subscribeScheduler;
+  protected ListAdapterLoader(@NonNull Context context) {
+    super(context);
   }
 }

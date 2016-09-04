@@ -22,8 +22,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
-import com.pyamsoft.pydroid.base.app.Destroyable;
-import com.pyamsoft.pydroid.base.app.PersistLoader;
+import com.pyamsoft.pydroid.app.Destroyable;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import java.util.concurrent.atomic.AtomicLong;
 import timber.log.Timber;
 

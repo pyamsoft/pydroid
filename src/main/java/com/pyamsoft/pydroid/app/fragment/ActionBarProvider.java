@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.presenter;
+package com.pyamsoft.pydroid.app.fragment;
 
 import android.support.annotation.CheckResult;
-import com.pyamsoft.pydroid.base.app.Destroyable;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 
-public interface Presenter<I> extends Destroyable {
+interface ActionBarProvider {
 
-  @CheckResult boolean isBound();
+  @CheckResult @Nullable ActionBar getActionBar();
 
-  void bindView(I view);
-
-  void unbindView();
+  void setActionBarUpEnabled(boolean up);
 }

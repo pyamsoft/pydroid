@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.app;
+package com.pyamsoft.pydroid.app.presenter;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import javax.inject.Scope;
+import android.support.annotation.CheckResult;
+import com.pyamsoft.pydroid.app.Destroyable;
 
-@Scope @Retention(RetentionPolicy.RUNTIME) public @interface ActivityScope {
+public interface Presenter<I> extends Destroyable {
+
+  @CheckResult boolean isBound();
+
+  void bindView(I view);
+
+  void unbindView();
 }

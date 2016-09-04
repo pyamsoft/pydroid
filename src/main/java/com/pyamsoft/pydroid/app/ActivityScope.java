@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.presenter;
+package com.pyamsoft.pydroid.app;
 
-import android.support.annotation.NonNull;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import javax.inject.Scope;
 
-public class PresenterUnboundException extends RuntimeException {
-
-  PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
-  }
+@Scope @Retention(RetentionPolicy.RUNTIME) public @interface ActivityScope {
 }

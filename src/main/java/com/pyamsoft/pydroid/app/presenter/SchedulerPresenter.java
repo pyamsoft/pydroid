@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.app.presenter;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.presenter.Presenter;
+import rx.Scheduler;
 
-interface SocialMediaPresenter extends Presenter<SocialMediaPresenter.View> {
+public abstract class SchedulerPresenter<I> extends PresenterBase<I> {
 
-  void clickAppPage(@NonNull String link);
+  @NonNull private final Scheduler observeScheduler;
+  @NonNull private final Scheduler subscribeScheduler;
 
-  void clickGooglePlay();
+  protected SchedulerPresenter(@NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler) {
+    this.observeScheduler = observeScheduler;
+    this.subscribeScheduler = subscribeScheduler;
+  }
 
-  void clickGooglePlus();
+  @NonNull protected final Scheduler getObserveScheduler() {
+    return observeScheduler;
+  }
 
-  void clickBlogger();
-
-  void clickFacebook();
-
-  interface View {
-
-    void onSocialMediaClicked(@NonNull String link);
+  @NonNull protected final Scheduler getSubscribeScheduler() {
+    return subscribeScheduler;
   }
 }

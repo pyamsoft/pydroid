@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.fragment;
+package com.pyamsoft.pydroid.app.fragment;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;

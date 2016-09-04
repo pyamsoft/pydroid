@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.activity;
+package com.pyamsoft.pydroid.app.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Menu;

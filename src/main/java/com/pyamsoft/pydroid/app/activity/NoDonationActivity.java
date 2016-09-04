@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.app;
+package com.pyamsoft.pydroid.app.activity;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+public abstract class NoDonationActivity extends AdvertisementActivity {
 
-public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
-
-  protected ListAdapterLoader(@NonNull Context context) {
-    super(context);
-  }
 }

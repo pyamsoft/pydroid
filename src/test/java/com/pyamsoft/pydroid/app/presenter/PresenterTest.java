@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.presenter;
+package com.pyamsoft.pydroid.app.presenter;
 
 import org.junit.Assert;
 import org.junit.Rule;

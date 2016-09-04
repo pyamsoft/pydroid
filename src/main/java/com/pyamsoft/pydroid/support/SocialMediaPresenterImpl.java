@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.support;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.presenter.PresenterBase;
+import com.pyamsoft.pydroid.app.presenter.PresenterBase;
 
 class SocialMediaPresenterImpl extends PresenterBase<SocialMediaPresenter.View>
     implements SocialMediaPresenter {

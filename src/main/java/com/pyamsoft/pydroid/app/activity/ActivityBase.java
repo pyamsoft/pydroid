@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.activity;
+package com.pyamsoft.pydroid.app.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;

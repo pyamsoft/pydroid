@@ -35,5 +35,6 @@
 
   <string name="about_license_key">about_license</string>
   <string name="about_license_title">Open Source Licenses</string>
+  <string name="homepage">Homepage</string>
 
 </resources>

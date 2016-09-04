@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.graphics.Color;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -29,6 +30,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +38,8 @@ class ExpandableAboutItem extends AbstractItem<ExpandableAboutItem, ExpandableAb
     implements IExpandable<ExpandableAboutItem, IItem> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-
+  @NonNull final String licenseHomepage;
   @NonNull private final String licenseName;
-  @NonNull private final String licenseType;
-
   private List<IItem> mSubItems;
   private boolean expanded = false;
 
@@ -53,9 +53,9 @@ class ExpandableAboutItem extends AbstractItem<ExpandableAboutItem, ExpandableAb
         return true;
       };
 
-  ExpandableAboutItem(@NonNull String licenseName, @NonNull String licenseType) {
+  ExpandableAboutItem(@NonNull String licenseName, @NonNull String licenseHomepage) {
     this.licenseName = licenseName;
-    this.licenseType = licenseType;
+    this.licenseHomepage = licenseHomepage;
   }
 
   @CheckResult @Override public boolean isExpanded() {
@@ -105,6 +105,7 @@ class ExpandableAboutItem extends AbstractItem<ExpandableAboutItem, ExpandableAb
 
   @Override public void bindView(@NonNull ViewHolder viewHolder, List payloads) {
     super.bindView(viewHolder, payloads);
+    viewHolder.licenseHomepage.setOnClickListener(null);
 
     //make sure all animations are stopped
     viewHolder.arrowIcon.clearAnimation();
@@ -115,7 +116,11 @@ class ExpandableAboutItem extends AbstractItem<ExpandableAboutItem, ExpandableAb
     }
 
     viewHolder.licenseName.setText(licenseName);
-    viewHolder.licenseType.setText(licenseType);
+    viewHolder.licenseHomepage.setText("HomePage");
+    viewHolder.licenseHomepage.setTextColor(Color.BLUE);
+    viewHolder.licenseHomepage.setSingleLine(true);
+    viewHolder.licenseHomepage.setOnClickListener(
+        view -> NetworkUtil.newLink(view.getContext().getApplicationContext(), licenseHomepage));
   }
 
   @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
@@ -132,13 +137,13 @@ class ExpandableAboutItem extends AbstractItem<ExpandableAboutItem, ExpandableAb
   protected static class ViewHolder extends RecyclerView.ViewHolder {
 
     final TextView licenseName;
-    final TextView licenseType;
+    final TextView licenseHomepage;
     final ImageView arrowIcon;
 
     public ViewHolder(View view) {
       super(view);
       licenseName = (TextView) view.findViewById(R.id.expand_license_name);
-      licenseType = (TextView) view.findViewById(R.id.expand_license_type);
+      licenseHomepage = (TextView) view.findViewById(R.id.expand_license_homepage);
       arrowIcon = (ImageView) view.findViewById(R.id.expand_license_icon);
     }
   }

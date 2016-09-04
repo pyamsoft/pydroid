@@ -16,26 +16,22 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
-class AboutLicenseItem extends AbstractItem<AboutLicenseItem, AboutLicenseItem.ViewHolder> {
+class AboutLicenseItem extends AbstractItem<AboutLicenseItem, AboutLicenseItem.ViewHolder>
+    implements AboutLibrariesPresenter.View<AboutLicenseItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
   @NonNull private final Licenses licenseName;
+  @Nullable private AboutLibrariesPresenter<ViewHolder> presenter;
 
   AboutLicenseItem(@NonNull Licenses licenseName) {
     this.licenseName = licenseName;
@@ -53,50 +49,26 @@ class AboutLicenseItem extends AbstractItem<AboutLicenseItem, AboutLicenseItem.V
     return FACTORY;
   }
 
-  @VisibleForTesting @NonNull @CheckResult String loadLicenseText(@NonNull Context context,
-      @NonNull Licenses license) {
-    String licenseText;
-    final Context appContext = context.getApplicationContext();
-    final StringBuilder text = new StringBuilder();
-    final String licenseFileName = getLicenseFileName(license);
-    try (
-        final InputStream fileInputStream = appContext.getAssets().open(licenseFileName);
-        final BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream))) {
-      String line = br.readLine();
-      while (line != null) {
-        text.append(line).append('\n');
-        line = br.readLine();
-      }
-      licenseText = text.toString();
-    } catch (IOException e) {
-      e.printStackTrace();
-      licenseText = "Could not load license text";
-    }
-
-    return licenseText;
-  }
-
-  @NonNull @VisibleForTesting @CheckResult String getLicenseFileName(@NonNull Licenses license) {
-    final String fileLocation;
-    switch (license) {
-      case ANDROID:
-        fileLocation = "licenses/android_20160903.txt";
-        break;
-      case ANDROID_SUPPORT:
-        fileLocation = "licenses/android_support_20160903.txt";
-        break;
-      case PYDROID:
-        fileLocation = "licenses/pydroid_20160903.txt";
-        break;
-      default:
-        throw new RuntimeException("Invalid license type: " + license.name());
-    }
-    return fileLocation;
-  }
-
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
-    holder.licenseText.setText(loadLicenseText(holder.itemView.getContext(), licenseName));
+    if (presenter == null) {
+      presenter =
+          new AboutLibrariesPresenterImpl<>(holder.itemView.getContext().getApplicationContext());
+    }
+
+    if (presenter.isBound()) {
+      presenter.unbindView();
+    }
+
+    presenter.bindView(this);
+    presenter.loadLicenseText(holder, licenseName);
+  }
+
+  @Override public void onLicenseTextLoaded(@NonNull ViewHolder holder, @NonNull String text) {
+    holder.licenseText.setText(text);
+    if (presenter != null) {
+      presenter.unbindView();
+    }
   }
 
   protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {

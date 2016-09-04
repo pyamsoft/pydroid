@@ -27,14 +27,14 @@ final class AboutItemsUtil {
 
   @NonNull @CheckResult public static ExpandableAboutItem licenseForAndroid() {
     ExpandableAboutItem expandableAboutItem =
-        new ExpandableAboutItem("Android", "Apache Version 2.0");
+        new ExpandableAboutItem("Android", "https://source.android.com");
     expandableAboutItem = expandableAboutItem.addLicense(new AboutLicenseItem(Licenses.ANDROID));
     return expandableAboutItem;
   }
 
   @NonNull @CheckResult public static ExpandableAboutItem licenseForPYDroid() {
     ExpandableAboutItem expandableAboutItem =
-        new ExpandableAboutItem("PYDroid", "Apache Version 2.0");
+        new ExpandableAboutItem("PYDroid", "https://pyamsoft.github.io/pydroid");
     expandableAboutItem = expandableAboutItem.addLicense(new AboutLicenseItem(Licenses.PYDROID));
     return expandableAboutItem;
   }

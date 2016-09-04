@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.List;
 import timber.log.Timber;
 
-public abstract class DonationActivity extends LicenseCheckActivity
+public abstract class DonationActivity extends VersionCheckActivity
     implements BillingProcessor.IBillingHandler {
 
   @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";

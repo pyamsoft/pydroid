@@ -16,17 +16,31 @@
 
 package com.pyamsoft.pydroid.app.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.app.activity.AdvertisementActivity;
+import com.pyamsoft.pydroid.base.PersistLoader;
+import com.pyamsoft.pydroid.inject.LicenseCheckPresenterLoader;
+import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.version.VersionCheckPresenter;
+import com.pyamsoft.pydroid.version.VersionUpgradeDialog;
 import timber.log.Timber;
 
-public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment {
+public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
+    implements VersionCheckPresenter.View {
+
+  @NonNull private static final String KEY_PRESENTER = "key_license_check_presenter";
+  VersionCheckPresenter presenter;
+  private long loadedKey;
 
   @SuppressWarnings("SameReturnValue") @CheckResult protected boolean showChangelog() {
     final FragmentActivity activity = getActivity();
@@ -71,4 +85,64 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     AboutLibrariesFragment.show(getActivity(), containerId, styling, licenses);
     return true;
   }
+
+  @CheckResult protected boolean checkForUpdate(int currentVersion) {
+    presenter.checkForUpdates(currentVersion);
+    return true;
+  }
+
+  @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<VersionCheckPresenter>() {
+          @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
+            return new LicenseCheckPresenterLoader(getContext().getApplicationContext(),
+                isDebugMode(), provideProjectName().toLowerCase());
+          }
+
+          @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
+            presenter = persist;
+          }
+        });
+  }
+
+  @CallSuper @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.unload(loadedKey);
+    }
+  }
+
+  @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    super.onSaveInstanceState(outState);
+  }
+
+  @CallSuper @Override public void onStart() {
+    super.onStart();
+    presenter.bindView(this);
+  }
+
+  @CallSuper @Override public void onStop() {
+    super.onStop();
+    presenter.unbindView();
+  }
+
+  @Override public void onLicenseCheckFinished() {
+    Timber.d("License check finished, mark");
+  }
+
+  @Override public void onUpdatedVersionFound(int currentVersionCode, int updatedVersionCode) {
+    Timber.d("Updated version found. %d => %d", currentVersionCode, updatedVersionCode);
+    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+        VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
+            updatedVersionCode), VersionUpgradeDialog.TAG);
+  }
+
+  @CheckResult @NonNull public abstract String provideApplicationName();
+
+  @CheckResult @NonNull public abstract String provideProjectName();
+
+  @CheckResult public abstract boolean isDebugMode();
 }

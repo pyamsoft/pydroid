@@ -26,6 +26,7 @@
   <string name="rate_app_on_play_store">Rate App on Play Store</string>
   <string name="no_thanks">No Thanks</string>
   <string name="liking_the_app">Liking the App?</string>
+  <string name="homepage">Homepage</string>
 
   <bool name="adview_default">true</bool>
   <string name="adview_key">adview_pyamsoft</string>
@@ -35,6 +36,8 @@
 
   <string name="about_license_key">about_license</string>
   <string name="about_license_title">Open Source Licenses</string>
-  <string name="homepage">Homepage</string>
+
+  <string name="check_version_key">check_version</string>
+  <string name="check_version_title">Check for Updates</string>
 
 </resources>

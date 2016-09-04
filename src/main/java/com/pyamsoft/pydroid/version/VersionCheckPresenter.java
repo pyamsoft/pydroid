@@ -26,6 +26,6 @@ public interface VersionCheckPresenter extends Presenter<VersionCheckPresenter.V
 
     void onLicenseCheckFinished();
 
-    void onUpdatedVersionFound(int updatedVersionCode);
+    void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode);
   }
 }

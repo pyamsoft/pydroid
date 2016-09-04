@@ -52,7 +52,8 @@ class VersionCheckPresenterImpl extends SchedulerPresenter<VersionCheckPresenter
           Timber.i("Latest version: %d", licenseCheckResponse.currentVersion());
           getView().onLicenseCheckFinished();
           if (currentVersionCode < licenseCheckResponse.currentVersion()) {
-            getView().onUpdatedVersionFound(licenseCheckResponse.currentVersion());
+            getView().onUpdatedVersionFound(currentVersionCode,
+                licenseCheckResponse.currentVersion());
           }
         }, throwable -> Timber.e(throwable, "onError checkForUpdates"), this::unsubCheck);
   }

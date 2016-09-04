@@ -109,6 +109,9 @@ dependencies {
   apt "com.google.dagger:dagger-compiler:2.6.1"
 
   // Retrofit
+  compile 'com.squareup.retrofit2:retrofit:2.1.0'
+  compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+  compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.2.0'

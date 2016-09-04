@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.inject;
+package com.pyamsoft.pydroid.licensecheck;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.about.AboutLibrariesComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiModule;
-import com.pyamsoft.pydroid.support.SocialMediaComponent;
-import dagger.Component;
-import javax.inject.Singleton;
+import retrofit2.http.GET;
+import rx.Observable;
 
-@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
+interface LicenseCheckInteractor {
 
-  AboutLibrariesComponent plusAboutLibrariesComponent();
+  @CheckResult @NonNull Observable<LicenseCheckResponse> checkVersion();
 
-  SocialMediaComponent plusSocialMediaComponent();
+  interface LicenseCheckService {
 
-  ApiComponent plusApiComponent(@NonNull ApiModule apiModule);
+    @CheckResult @NonNull @GET("CURRENT_VERSION") Observable<LicenseCheckResponse> checkVersion();
+  }
 }

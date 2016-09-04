@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.inject;
+package com.pyamsoft.pydroid.licensecheck;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.about.AboutLibrariesComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiModule;
-import com.pyamsoft.pydroid.support.SocialMediaComponent;
-import dagger.Component;
-import javax.inject.Singleton;
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.SerializedName;
 
-@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
+@AutoValue abstract class LicenseCheckResponse {
 
-  AboutLibrariesComponent plusAboutLibrariesComponent();
+  @CheckResult @NonNull
+  static TypeAdapter<LicenseCheckResponse> typeAdapter(final Gson gson) {
+    return new AutoValue_LicenseCheckResponse.GsonTypeAdapter(gson);
+  }
 
-  SocialMediaComponent plusSocialMediaComponent();
-
-  ApiComponent plusApiComponent(@NonNull ApiModule apiModule);
+  @CheckResult @SerializedName("CURRENT_VERSION") abstract int currentVersion();
 }

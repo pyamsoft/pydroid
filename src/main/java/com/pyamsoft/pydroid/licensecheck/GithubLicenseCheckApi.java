@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.inject;
+package com.pyamsoft.pydroid.licensecheck;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.about.AboutLibrariesComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiComponent;
-import com.pyamsoft.pydroid.licensecheck.ApiModule;
-import com.pyamsoft.pydroid.support.SocialMediaComponent;
-import dagger.Component;
-import javax.inject.Singleton;
+import javax.inject.Inject;
+import retrofit2.Retrofit;
 
-@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
+class GithubLicenseCheckApi extends LicenseCheckApi {
 
-  AboutLibrariesComponent plusAboutLibrariesComponent();
-
-  SocialMediaComponent plusSocialMediaComponent();
-
-  ApiComponent plusApiComponent(@NonNull ApiModule apiModule);
+  @Inject GithubLicenseCheckApi(@NonNull Retrofit client) {
+    super(client);
+  }
 }

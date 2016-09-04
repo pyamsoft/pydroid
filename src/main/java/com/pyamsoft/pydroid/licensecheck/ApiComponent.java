@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.activity;
+package com.pyamsoft.pydroid.licensecheck;
 
-public abstract class NoDonationActivity extends LicenseCheckActivity {
+import com.pyamsoft.pydroid.dagger.ActivityScope;
+import dagger.Subcomponent;
 
+@ActivityScope @Subcomponent(modules = ApiModule.class) public interface ApiComponent {
+
+  LicenseCheckComponent plusLicenseCheckComponent();
 }

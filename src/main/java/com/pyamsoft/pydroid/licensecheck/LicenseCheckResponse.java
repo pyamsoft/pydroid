@@ -26,7 +26,7 @@ import com.google.gson.annotations.SerializedName;
 @AutoValue abstract class LicenseCheckResponse {
 
   @CheckResult @NonNull
-  static TypeAdapter<LicenseCheckResponse> typeAdapter(final Gson gson) {
+  public static TypeAdapter<LicenseCheckResponse> typeAdapter(final Gson gson) {
     return new AutoValue_LicenseCheckResponse.GsonTypeAdapter(gson);
   }
 

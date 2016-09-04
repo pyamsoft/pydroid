@@ -23,7 +23,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class LicenseCheckModule {
+@Module public class LicenseCheckModule {
 
   @ActivityScope @Provides LicenseCheckPresenter provideLicenseCheckPresenter(
       @NonNull LicenseCheckInteractor interactor, @Named("main") Scheduler mainScheduler,

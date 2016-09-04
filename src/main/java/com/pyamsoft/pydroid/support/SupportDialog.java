@@ -34,30 +34,28 @@ import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.base.activity.DonationActivity;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
+import com.pyamsoft.pydroid.tool.PersistentCache;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import timber.log.Timber;
 
 public class SupportDialog extends DialogFragment
-    implements View.OnClickListener, SocialMediaPresenter.SocialMediaView {
+    implements View.OnClickListener, SocialMediaPresenter.View {
 
   @NonNull private static final String SKU_DONATE_ONE = ".donate.one";
   @NonNull private static final String SKU_DONATE_TWO = ".donate.two";
   @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
   @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
   @NonNull private static final String ARG_PACKAGE = "package";
-  @SuppressWarnings("WeakerAccess") @NonNull final SocialMediaPresenter presenter;
+  @NonNull private static final String KEY_MEDIA_PRESENTER = "key_social_media_presenter";
+  @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   @SuppressWarnings("WeakerAccess") String packageName;
   private String APP_SKU_DONATE_ONE;
   private String APP_SKU_DONATE_TWO;
   private String APP_SKU_DONATE_FIVE;
   private String APP_SKU_DONATE_TEN;
-
-  public SupportDialog() {
-    super();
-    presenter = new SocialMediaPresenter();
-  }
+  private long loadedKey;
 
   @CheckResult @NonNull public static SupportDialog newInstance(final @NonNull String packageName) {
     final SupportDialog fragment = new SupportDialog();
@@ -70,6 +68,21 @@ public class SupportDialog extends DialogFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Timber.d("onCreate");
+
+    loadedKey = PersistentCache.load(KEY_MEDIA_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<SocialMediaPresenter>() {
+          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+            return new PersistLoader<SocialMediaPresenter>(getContext()) {
+              @NonNull @Override public SocialMediaPresenter loadPersistent() {
+                return new SocialMediaPresenterImpl();
+              }
+            };
+          }
+
+          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+            presenter = persist;
+          }
+        });
 
     packageName = getArguments().getString(ARG_PACKAGE);
     if (packageName == null) {
@@ -122,21 +135,6 @@ public class SupportDialog extends DialogFragment
         }).setView(rootView).create();
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    presenter.bindView(this);
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    presenter.unbindView();
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    presenter.destroy();
-  }
-
   private void setDonationText(final TextView textView, final String title,
       final String description) {
     final Spannable spannable = StringUtil.createBuilder(title, "\n", description);
@@ -163,28 +161,8 @@ public class SupportDialog extends DialogFragment
     textView.setText(spannable);
   }
 
-  private void onLinkClicked(final String link) {
-    NetworkUtil.newLink(getContext(), link);
-  }
-
-  @Override public void onGooglePlayClicked(@NonNull String link) {
-    onLinkClicked(link);
-  }
-
-  @Override public void onGooglePlusClicked(@NonNull String link) {
-    onLinkClicked(link);
-  }
-
-  @Override public void onBloggerClicked(@NonNull String link) {
-    onLinkClicked(link);
-  }
-
-  @Override public void onFacebookClicked(@NonNull String link) {
-    onLinkClicked(link);
-  }
-
-  @Override public void onAppPageClicked(@NonNull String link) {
-    onLinkClicked(link);
+  @Override public void onSocialMediaClicked(@NonNull String link) {
+    NetworkUtil.newLink(getContext().getApplicationContext(), link);
   }
 
   @Override public void onClick(@NonNull View view) {
@@ -214,6 +192,28 @@ public class SupportDialog extends DialogFragment
       }
     } else {
       Timber.e("SKU is null");
+    }
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    presenter.bindView(this);
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    presenter.unbindView();
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_MEDIA_PRESENTER, outState, loadedKey);
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.unload(loadedKey);
     }
   }
 }

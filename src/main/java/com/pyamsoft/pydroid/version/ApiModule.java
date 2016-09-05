@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
-import java.util.Locale;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -32,10 +31,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module public class ApiModule {
 
-  @NonNull private final String projectName;
+  @NonNull private static final String CURRENT_VERSION_REPO_BASE_URL =
+      "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/";
 
-  public ApiModule(@NonNull String projectName) {
-    this.projectName = projectName;
+  public ApiModule() {
   }
 
   @ActivityScope @Provides Gson provideGson() {
@@ -55,11 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
   }
 
   @ActivityScope @Provides Retrofit provideRetrofit(final Gson gson, final OkHttpClient client) {
-    // TODO change to master
-    final String url =
-        String.format(Locale.getDefault(), "https://raw.githubusercontent.com/pyamsoft/%s/dev/",
-            projectName);
-    return new Retrofit.Builder().baseUrl(url)
+    return new Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL)
         .client(client)
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(gson))

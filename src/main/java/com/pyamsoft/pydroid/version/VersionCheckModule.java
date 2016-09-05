@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.version;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Module;
@@ -32,8 +33,8 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides VersionCheckInteractor provideLicenseCheckInteractor(
-      @NonNull VersionCheckApi licenseCheckApi) {
-    return new VersionCheckInteractorImpl(
+      @NonNull Context context, @NonNull VersionCheckApi licenseCheckApi) {
+    return new VersionCheckInteractorImpl(context,
         licenseCheckApi.create(VersionCheckInteractor.LicenseCheckService.class));
   }
 }

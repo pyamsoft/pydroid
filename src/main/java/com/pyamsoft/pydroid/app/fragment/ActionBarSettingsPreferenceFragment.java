@@ -37,11 +37,12 @@ import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
+import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import com.pyamsoft.pydroid.version.VersionUpgradeDialog;
 import timber.log.Timber;
 
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
-    implements VersionCheckPresenter.View {
+    implements VersionCheckPresenter.View, VersionCheckProvider {
 
   @NonNull private static final String KEY_PRESENTER = "key_license_check_presenter";
   VersionCheckPresenter presenter;
@@ -92,10 +93,10 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return true;
   }
 
-  @CheckResult protected boolean checkForUpdate(int currentVersion) {
+  @CheckResult protected boolean checkForUpdate() {
     toast.cancel();
     toast.show();
-    presenter.checkForUpdates(currentVersion);
+    presenter.checkForUpdates(getCurrentApplicationVersion());
     return true;
   }
 
@@ -105,8 +106,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
-            return new LicenseCheckPresenterLoader(getContext().getApplicationContext(),
-                provideProjectName());
+            return new LicenseCheckPresenterLoader(getContext().getApplicationContext());
           }
 
           @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
@@ -155,7 +155,20 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
             updatedVersionCode), VersionUpgradeDialog.TAG);
   }
 
-  @CheckResult @NonNull public abstract String provideApplicationName();
+  @CheckResult @NonNull VersionCheckProvider getVersionCheckProvider() {
+    final FragmentActivity activity = getActivity();
+    if (activity instanceof VersionCheckProvider) {
+      return (VersionCheckProvider) activity;
+    } else {
+      throw new RuntimeException("No version check provider in activity");
+    }
+  }
 
-  @CheckResult @NonNull public abstract String provideProjectName();
+  @NonNull @Override public String provideApplicationName() {
+    return getVersionCheckProvider().provideApplicationName();
+  }
+
+  @Override public int getCurrentApplicationVersion() {
+    return getVersionCheckProvider().getCurrentApplicationVersion();
+  }
 }

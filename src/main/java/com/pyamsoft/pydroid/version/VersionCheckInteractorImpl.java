@@ -16,21 +16,23 @@
 
 package com.pyamsoft.pydroid.version;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import rx.Observable;
 
 class VersionCheckInteractorImpl implements VersionCheckInteractor {
 
-  @NonNull final LicenseCheckService licenseCheckService;
+  @NonNull private final Context appContext;
+  @NonNull private final LicenseCheckService licenseCheckService;
 
-
-
-  @Inject VersionCheckInteractorImpl(@NonNull LicenseCheckService licenseCheckService) {
+  @Inject VersionCheckInteractorImpl(@NonNull Context context,
+      @NonNull LicenseCheckService licenseCheckService) {
+    this.appContext = context.getApplicationContext();
     this.licenseCheckService = licenseCheckService;
   }
 
   @NonNull @Override public Observable<VersionCheckResponse> checkVersion() {
-    return licenseCheckService.checkVersion();
+    return licenseCheckService.checkVersion(appContext.getPackageName());
   }
 }

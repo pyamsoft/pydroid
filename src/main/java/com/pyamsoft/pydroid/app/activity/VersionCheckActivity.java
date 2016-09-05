@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.app.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.base.PersistLoader;
@@ -26,11 +25,12 @@ import com.pyamsoft.pydroid.inject.LicenseCheckPresenterLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
+import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import com.pyamsoft.pydroid.version.VersionUpgradeDialog;
 import timber.log.Timber;
 
 public abstract class VersionCheckActivity extends AdvertisementActivity
-    implements VersionCheckPresenter.View {
+    implements VersionCheckPresenter.View, VersionCheckProvider {
 
   @NonNull private static final String KEY_PRESENTER = "key_license_check_presenter";
   @NonNull private static final String KEY_HAS_CHECKED_LICENSE = "key_has_already_checked_license";
@@ -49,7 +49,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             licenseChecked = false;
-            return new LicenseCheckPresenterLoader(getApplicationContext(), provideProjectName());
+            return new LicenseCheckPresenterLoader(getApplicationContext());
           }
 
           @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
@@ -95,10 +95,4 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
         VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
             updatedVersionCode), VersionUpgradeDialog.TAG);
   }
-
-  @CheckResult @NonNull public abstract String provideApplicationName();
-
-  @CheckResult @NonNull public abstract String provideProjectName();
-
-  @CheckResult public abstract int getCurrentApplicationVersion();
 }

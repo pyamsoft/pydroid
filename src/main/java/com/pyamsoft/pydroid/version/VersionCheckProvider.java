@@ -18,17 +18,10 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import retrofit2.http.GET;
-import retrofit2.http.Url;
-import rx.Observable;
 
-interface VersionCheckInteractor {
+public interface VersionCheckProvider {
 
-  @CheckResult @NonNull Observable<VersionCheckResponse> checkVersion();
+  @CheckResult @NonNull String provideApplicationName();
 
-  interface LicenseCheckService {
-
-    @CheckResult @NonNull @GET Observable<VersionCheckResponse> checkVersion(
-        @Url String packageName);
-  }
+  @CheckResult int getCurrentApplicationVersion();
 }

@@ -89,8 +89,12 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId,
       @NonNull AboutLibrariesFragment.Styling styling, @NonNull Licenses... licenses) {
     Timber.d("Show about licenses fragment");
-    AboutLibrariesFragment.show(getActivity(), containerId, styling, licenses);
+    AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack(), licenses);
     return true;
+  }
+
+  @CheckResult protected boolean isLastOnBackStack() {
+    return false;
   }
 
   @CheckResult protected boolean checkForUpdate() {

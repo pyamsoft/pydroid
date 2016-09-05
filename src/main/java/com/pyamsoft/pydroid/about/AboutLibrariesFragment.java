@@ -39,6 +39,7 @@ import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
 import java.util.List;
+import timber.log.Timber;
 
 public class AboutLibrariesFragment extends ActionBarFragment
     implements AboutLibrariesPresenter.View {
@@ -46,6 +47,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @NonNull public static final String TAG = "AboutLibrariesFragment";
   @NonNull private static final String KEY_LICENSE_LIST = "key_license_list";
   @NonNull private static final String KEY_STYLING = "key_styling";
+  @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
   @NonNull private static final String KEY_PRESENTER = "key_about_presenter";
   AboutLibrariesPresenter presenter;
   private FastItemAdapter<AboutItem> fastItemAdapter;
@@ -53,20 +55,22 @@ public class AboutLibrariesFragment extends ActionBarFragment
   private RecyclerView recyclerView;
   @ColorInt private int backgroundColor;
   private long loadedKey;
+  private boolean lastOnBackStack;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
-      @NonNull Styling styling, @NonNull Licenses... licenses) {
+      @NonNull Styling styling, boolean lastOnBackStack, @NonNull Licenses... licenses) {
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
-          .replace(containerResId, AboutLibrariesFragment.newInstance(styling, licenses), TAG)
+          .replace(containerResId,
+              AboutLibrariesFragment.newInstance(styling, lastOnBackStack, licenses), TAG)
           .addToBackStack(TAG)
           .commit();
     }
   }
 
   @CheckResult @NonNull private static AboutLibrariesFragment newInstance(@NonNull Styling styling,
-      @NonNull Licenses... licenseList) {
+      boolean lastOnBackStack, @NonNull Licenses... licenseList) {
     final Bundle args = new Bundle();
     final AboutLibrariesFragment fragment = new AboutLibrariesFragment();
     final String[] licenseNames = new String[licenseList.length];
@@ -75,6 +79,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
     }
 
     args.putString(KEY_STYLING, styling.name());
+    args.putBoolean(KEY_BACK_STACK, lastOnBackStack);
     args.putStringArray(KEY_LICENSE_LIST, licenseNames);
     fragment.setArguments(args);
     return fragment;
@@ -111,6 +116,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
       default:
         throw new RuntimeException("Invalid styling: " + stylingName);
     }
+
+    lastOnBackStack = getArguments().getBoolean(KEY_BACK_STACK, false);
 
     loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<AboutLibrariesPresenter>() {
@@ -215,6 +222,14 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    if (lastOnBackStack) {
+      Timber.d("About is last on backstack, set up false");
+      setActionBarUpEnabled(false);
+    }
   }
 
   @Override public void onDestroy() {

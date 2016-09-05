@@ -75,6 +75,13 @@
 
     </RelativeLayout>
 
+    <ProgressBar
+        android:id="@+id/expand_license_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?attr/progressBarStyle"
+        />
+
     <WebView
         android:id="@+id/expand_license_text"
         android:layout_width="match_parent"

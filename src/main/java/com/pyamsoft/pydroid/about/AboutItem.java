@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
@@ -115,13 +116,16 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
 
     if (isExpanded()) {
       if (licenseText.length() == 0) {
+        viewHolder.progressBar.setVisibility(View.VISIBLE);
         AboutItemBus.get()
             .post(LicenseLoadEvent.create(viewHolder.getAdapterPosition(), licenseType));
       } else {
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.licenseText.setVisibility(View.VISIBLE);
         viewHolder.licenseText.loadDataWithBaseURL(null, licenseText, "text/html", "UTF-8", null);
       }
     } else {
+      viewHolder.progressBar.setVisibility(View.GONE);
       viewHolder.licenseText.setVisibility(View.GONE);
       viewHolder.licenseText.loadDataWithBaseURL(null, "", "text/html", "UTF-8", null);
     }
@@ -144,6 +148,7 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     final TextView licenseHomepage;
     final WebView licenseText;
     final ImageView arrowIcon;
+    final ProgressBar progressBar;
 
     public ViewHolder(View view) {
       super(view);
@@ -151,8 +156,10 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
       licenseHomepage = (TextView) view.findViewById(R.id.expand_license_homepage);
       licenseText = (WebView) view.findViewById(R.id.expand_license_text);
       arrowIcon = (ImageView) view.findViewById(R.id.expand_license_icon);
+      progressBar = (ProgressBar) view.findViewById(R.id.expand_license_progress);
 
       licenseText.getSettings().setTextZoom(80);
+      progressBar.setIndeterminate(true);
     }
   }
 }

@@ -126,6 +126,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   }
 
   @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
+    Timber.i("Begin License loading...");
     return loadRawLicenseText(licenses).map(this::toHtml);
   }
 
@@ -137,6 +138,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     } else {
       html = Html.toHtml(spannableString);
     }
+
+    Timber.i("License loading complete");
     return html;
   }
 }

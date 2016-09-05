@@ -1,0 +1,3 @@
+Firebase is licensed under a Custom license.
+
+The terms of service for Firebase can be found here: https://firebase.google.com/terms/

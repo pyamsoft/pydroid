@@ -30,7 +30,56 @@ final class AboutItemsUtil {
     return new AboutItem("Android", "https://source.android.com", Licenses.ANDROID);
   }
 
+  @NonNull @CheckResult public static AboutItem licenseForAndroidSupport() {
+    return new AboutItem("Android Support Libraries", "https://source.android.com",
+        Licenses.ANDROID_SUPPORT);
+  }
+
   @NonNull @CheckResult public static AboutItem licenseForPYDroid() {
     return new AboutItem("PYDroid", "https://pyamsoft.github.io/pydroid", Licenses.PYDROID);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForAutoValue() {
+    return new AboutItem("AutoValue", "https://pyamsoft.github.io/pydroid", Licenses.AUTO_VALUE);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForRetrofit2() {
+    return new AboutItem("Retrofit", "https://square.github.io/retrofit/", Licenses.RETROFIT2);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForFirebase() {
+    return new AboutItem("Firebase", "https://firebase.google.com/", Licenses.FIREBASE);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForDagger2() {
+    return new AboutItem("Dagger", "https://google.github.io/dagger/", Licenses.DAGGER);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForAndroidInAppBilling() {
+    return new AboutItem("Android In-App Billing v3",
+        "https://github.com/anjlab/android-inapp-billing-v3", Licenses.ANDROID_IN_APP_BILLING);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForButterknife() {
+    return new AboutItem("Butterknife", "https://jakewharton.github.io/butterknife/",
+        Licenses.BUTTERKNIFE);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForLeakCanary() {
+    return new AboutItem("Leak Canary", "https://github.com/square/leakcanary",
+        Licenses.LEAK_CANARY);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForRxJava() {
+    return new AboutItem("RxJava", "https://github.com/ReactiveX/RxJava", Licenses.RXJAVA);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForRxAndroid() {
+    return new AboutItem("RxAndroid", "https://github.com/ReactiveX/RxAndroid", Licenses.RXANDROID);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForFastAdapter() {
+    return new AboutItem("FastAdapter", "https://github.com/mikepenz/FastAdapter",
+        Licenses.FAST_ADAPTER);
   }
 }

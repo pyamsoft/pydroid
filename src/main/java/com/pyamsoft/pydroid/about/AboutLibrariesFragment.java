@@ -31,10 +31,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.inject.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -140,7 +139,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
     fastItemAdapter.withSelectable(true);
 
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setItemAnimator(new SlideDownAlphaAnimator());
     recyclerView.setAdapter(fastItemAdapter);
 
     //fill with some sample data
@@ -148,6 +146,39 @@ public class AboutLibrariesFragment extends ActionBarFragment
     for (final Licenses license : licenses) {
       final AboutItem item;
       switch (license) {
+        case FIREBASE:
+          item = AboutItemsUtil.licenseForFirebase();
+          break;
+        case RETROFIT2:
+          item = AboutItemsUtil.licenseForRetrofit2();
+          break;
+        case LEAK_CANARY:
+          item = AboutItemsUtil.licenseForLeakCanary();
+          break;
+        case FAST_ADAPTER:
+          item = AboutItemsUtil.licenseForFastAdapter();
+          break;
+        case DAGGER:
+          item = AboutItemsUtil.licenseForDagger2();
+          break;
+        case BUTTERKNIFE:
+          item = AboutItemsUtil.licenseForButterknife();
+          break;
+        case AUTO_VALUE:
+          item = AboutItemsUtil.licenseForAutoValue();
+          break;
+        case ANDROID_IN_APP_BILLING:
+          item = AboutItemsUtil.licenseForAndroidInAppBilling();
+          break;
+        case ANDROID_SUPPORT:
+          item = AboutItemsUtil.licenseForAndroidSupport();
+          break;
+        case RXJAVA:
+          item = AboutItemsUtil.licenseForRxJava();
+          break;
+        case RXANDROID:
+          item = AboutItemsUtil.licenseForRxAndroid();
+          break;
         case ANDROID:
           item = AboutItemsUtil.licenseForAndroid();
           break;

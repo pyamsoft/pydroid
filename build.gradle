@@ -110,7 +110,6 @@ dependencies {
   compile('com.mikepenz:fastadapter:1.8.1@aar') {
     transitive = true
   }
-  compile 'com.mikepenz:itemanimators:0.5.0@aar'
 
   // Butterknife
   compile 'com.jakewharton:butterknife:8.4.0'

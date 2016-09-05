@@ -39,14 +39,33 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   @NonNull @VisibleForTesting @CheckResult String getLicenseFileName(@NonNull Licenses license) {
     final String fileLocation;
     switch (license) {
+      case FIREBASE:
+        fileLocation = "licenses/firebase.txt";
+        break;
+      case RETROFIT2:
+        // Fall through
+      case LEAK_CANARY:
+        // Fall through
+      case FAST_ADAPTER:
+        // Fall through
+      case DAGGER:
+        // Fall through
+      case BUTTERKNIFE:
+        // Fall through
+      case AUTO_VALUE:
+        // Fall through
+      case ANDROID_IN_APP_BILLING:
+        // Fall through
       case ANDROID:
-        fileLocation = "licenses/android_20160903.txt";
-        break;
+        // Fall through
       case ANDROID_SUPPORT:
-        fileLocation = "licenses/android_support_20160903.txt";
-        break;
+        // Fall through
       case PYDROID:
-        fileLocation = "licenses/pydroid_20160903.txt";
+        // Fall through
+      case RXJAVA:
+        // Fall through
+      case RXANDROID:
+        fileLocation = "licenses/apache2.txt";
         break;
       default:
         throw new RuntimeException("Invalid license type: " + license.name());

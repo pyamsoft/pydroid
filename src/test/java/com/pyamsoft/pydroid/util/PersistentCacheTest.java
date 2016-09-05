@@ -21,7 +21,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfig;
-import com.pyamsoft.pydroid.TestApplication;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,8 +31,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 23, application = TestApplication.class)
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class PersistentCacheTest {
 
   @Nullable private final Bundle NULL_STATE = null;

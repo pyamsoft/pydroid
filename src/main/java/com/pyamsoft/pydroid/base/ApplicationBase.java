@@ -17,50 +17,37 @@
 package com.pyamsoft.pydroid.base;
 
 import android.app.Application;
-import android.os.StrictMode;
-import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import com.pyamsoft.pydroid.BuildConfig;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
 public abstract class ApplicationBase extends Application {
 
-  @CheckResult protected boolean isTest() {
-    return false;
+  private RefWatcher refWatcher;
+
+  @CheckResult @NonNull public static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
+    final ApplicationBase application = (ApplicationBase) fragment.getActivity().getApplication();
+    return application.getRefWatcher();
   }
 
-  @Override public final void onCreate() {
+  @Override public void onCreate() {
     super.onCreate();
-
-    if (!isTest()) {
-      installInNonTestMode();
-      if (BuildConfig.DEBUG) {
-        installInDebugMode();
-      }
+    if (BuildConfig.DEBUG) {
+      Timber.d("Install live leakcanary");
+      refWatcher = LeakCanary.install(this);
+    } else {
+      refWatcher = RefWatcher.DISABLED;
     }
   }
 
-  protected void installInNonTestMode() {
-
-  }
-
-  /**
-   * A hook that one can use to setup any special application handling in debug mode
-   */
-  @CallSuper protected void installInDebugMode() {
-    Timber.uprootAll();
-    Timber.plant(new Timber.DebugTree());
-    setStrictMode();
-  }
-
-  private void setStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
-        .penaltyLog()
-        .penaltyDeath()
-        .permitDiskReads()
-        .permitDiskWrites()
-        .penaltyFlashScreen()
-        .build());
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+  @CheckResult @NonNull final RefWatcher getRefWatcher() {
+    if (refWatcher == null) {
+      throw new RuntimeException("RefWatcher is NULL");
+    }
+    return refWatcher;
   }
 }

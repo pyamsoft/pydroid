@@ -33,8 +33,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 24
-    versionCode 55
-    versionName "3.6.0"
+    versionCode 56
+    versionName "3.7.0"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
@@ -82,6 +82,11 @@ dependencies {
 
   // Firebase Advertsiements :(
   compile 'com.google.firebase:firebase-ads:9.4.0'
+
+  // Leak Canary
+  debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+  releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+  testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
   // Android support library.
   compile 'com.android.support:support-annotations:24.2.0'

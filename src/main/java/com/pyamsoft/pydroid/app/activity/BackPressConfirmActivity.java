@@ -57,7 +57,6 @@ public abstract class BackPressConfirmActivity extends ActivityBase {
     } else {
       backBeenPressed = true;
       if (backBeenPressedToast != null) {
-        backBeenPressedToast.cancel();
         backBeenPressedToast.show();
       }
       if (handler != null && backBeenPressedRunnable != null) {

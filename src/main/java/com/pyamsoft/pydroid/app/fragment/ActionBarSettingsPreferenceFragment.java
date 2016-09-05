@@ -94,7 +94,6 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   }
 
   @CheckResult protected boolean checkForUpdate() {
-    toast.cancel();
     toast.show();
     presenter.checkForUpdates(getCurrentApplicationVersion());
     return true;

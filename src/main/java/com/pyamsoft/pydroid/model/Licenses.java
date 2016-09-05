@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.model;
 
 public enum Licenses {
   EMPTY,
+  GOOGLE_PLAY_SERVICES,
   ANDROID,
   ANDROID_SUPPORT,
   PYDROID,

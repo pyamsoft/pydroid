@@ -82,4 +82,9 @@ final class AboutItemsUtil {
     return new AboutItem("FastAdapter", "https://github.com/mikepenz/FastAdapter",
         Licenses.FAST_ADAPTER);
   }
+
+  @NonNull @CheckResult public static AboutItem licenseForGooglePlayServices() {
+    return new AboutItem("Google Play Services",
+        "https://developers.google.com/android/guides/overview", Licenses.GOOGLE_PLAY_SERVICES);
+  }
 }

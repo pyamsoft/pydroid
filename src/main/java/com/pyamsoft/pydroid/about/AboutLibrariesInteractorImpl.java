@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.pydroid.model.Licenses;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
@@ -77,6 +79,17 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     return Observable.defer(() -> {
       String licenseText;
       final StringBuilder text = new StringBuilder();
+      if (licenses == Licenses.EMPTY) {
+        Timber.w("Empty license passed");
+        return Observable.just("");
+      }
+
+      if (licenses == Licenses.GOOGLE_PLAY_SERVICES) {
+        Timber.d("License is Google Play services");
+        return Observable.just(
+            GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(appContext));
+      }
+
       final String licenseFileName = getLicenseFileName(licenses);
       try (
           final InputStream fileInputStream = appContext.getAssets().open(licenseFileName);

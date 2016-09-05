@@ -48,6 +48,7 @@ public abstract class ApplicationBase extends Application {
    * A hook that one can use to setup any special application handling in debug mode
    */
   @CallSuper protected void installInDebugMode() {
+    Timber.uprootAll();
     Timber.plant(new Timber.DebugTree());
     setStrictMode();
   }

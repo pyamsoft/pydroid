@@ -77,8 +77,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
   @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
     return Observable.defer(() -> {
-      String licenseText;
-      final StringBuilder text = new StringBuilder();
+      Timber.d("Load license for: %s", licenses.name());
       if (licenses == Licenses.EMPTY) {
         Timber.w("Empty license passed");
         return Observable.just("");
@@ -90,6 +89,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
             GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(appContext));
       }
 
+      String licenseText;
+      final StringBuilder text = new StringBuilder();
       final String licenseFileName = getLicenseFileName(licenses);
       try (
           final InputStream fileInputStream = appContext.getAssets().open(licenseFileName);

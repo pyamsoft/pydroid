@@ -185,6 +185,9 @@ public class AboutLibrariesFragment extends ActionBarFragment
         case PYDROID:
           item = AboutItemsUtil.licenseForPYDroid();
           break;
+        case GOOGLE_PLAY_SERVICES:
+          item = AboutItemsUtil.licenseForGooglePlayServices();
+          break;
         default:
           throw new RuntimeException("Invalid license: " + license.name());
       }

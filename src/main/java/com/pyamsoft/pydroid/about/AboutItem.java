@@ -65,15 +65,16 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     this.licenseText = licenseText;
   }
 
-  @CheckResult public boolean isExpanded() {
+  @CheckResult boolean isExpanded() {
     return expanded;
   }
 
-  public void setExpanded(boolean expanded) {
+  void setExpanded(boolean expanded) {
     this.expanded = expanded;
   }
 
-  @Override public FastAdapter.OnClickListener<AboutItem> getOnItemClickListener() {
+  @CheckResult @NonNull @Override
+  public FastAdapter.OnClickListener<AboutItem> getOnItemClickListener() {
     return onClickListener;
   }
 
@@ -81,11 +82,11 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     return true;
   }
 
-  @Override public int getType() {
+  @CheckResult @Override public int getType() {
     return R.id.fastadapter_expandable_about_item;
   }
 
-  @Override public int getLayoutRes() {
+  @CheckResult @Override public int getLayoutRes() {
     return R.layout.adapter_item_about;
   }
 
@@ -118,16 +119,18 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
       } else {
         viewHolder.licenseText.setText(licenseText);
       }
+    } else {
+      viewHolder.licenseText.setText(null);
     }
   }
 
-  @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
+  @CheckResult @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
     return FACTORY;
   }
 
   protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
 
-    @Override public ViewHolder create(@NonNull View v) {
+    @CheckResult @Override public ViewHolder create(@NonNull View v) {
       return new ViewHolder(v);
     }
   }

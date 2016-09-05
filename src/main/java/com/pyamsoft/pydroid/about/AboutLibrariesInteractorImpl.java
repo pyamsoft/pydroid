@@ -48,6 +48,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       case FIREBASE:
         fileLocation = "licenses/firebase.txt";
         break;
+
+      // Apache 2
       case RETROFIT2:
         // Fall through
       case LEAK_CANARY:
@@ -70,8 +72,17 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
         // Fall through
       case RXJAVA:
         // Fall through
+      case SQLBRITE:
+        // Fall through
+      case SQLDELIGHT:
+        // Fall through
       case RXANDROID:
         fileLocation = "licenses/apache2.txt";
+        break;
+
+      // MIT
+      case ANDROID_PRIORITY_JOBQUEUE:
+        fileLocation = "licenses/mit.txt";
         break;
       default:
         throw new RuntimeException("Invalid license type: " + license.name());

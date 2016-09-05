@@ -87,4 +87,16 @@ final class AboutItemsUtil {
     return new AboutItem("Google Play Services",
         "https://developers.google.com/android/guides/overview", Licenses.GOOGLE_PLAY_SERVICES);
   }
+
+  @NonNull @CheckResult public static AboutItem licenseForSQLBrite() {
+    return new AboutItem("SQLBrite", "https://github.com/square/sqlbrite", Licenses.SQLBRITE);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForSQLDelight() {
+    return new AboutItem("SQLDelight", "https://github.com/square/sqldelight", Licenses.SQLDELIGHT);
+  }
+
+  @NonNull @CheckResult public static AboutItem licenseForAndroidPriorityJobQueue() {
+    return new AboutItem("Android Priority JobQueue", "https://github.com/yigit/android-priority-jobqueue", Licenses.ANDROID_PRIORITY_JOBQUEUE);
+  }
 }

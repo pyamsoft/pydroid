@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.inject.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import timber.log.Timber;
 
@@ -91,6 +92,9 @@ public class AboutLibrariesFragment extends ActionBarFragment
     if (licenseNames == null) {
       throw new RuntimeException("No licenses specified");
     }
+
+    // Sort names alphabetically
+    Arrays.sort(licenseNames);
 
     licenses = new Licenses[licenseNames.length];
 
@@ -194,6 +198,15 @@ public class AboutLibrariesFragment extends ActionBarFragment
           break;
         case GOOGLE_PLAY_SERVICES:
           item = AboutItemsUtil.licenseForGooglePlayServices();
+          break;
+        case SQLBRITE:
+          item = AboutItemsUtil.licenseForSQLBrite();
+          break;
+        case SQLDELIGHT:
+          item = AboutItemsUtil.licenseForSQLDelight();
+          break;
+        case ANDROID_PRIORITY_JOBQUEUE:
+          item = AboutItemsUtil.licenseForAndroidPriorityJobQueue();
           break;
         default:
           throw new RuntimeException("Invalid license: " + license.name());

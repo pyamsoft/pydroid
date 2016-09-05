@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mikepenz.fastadapter.FastAdapter;
@@ -113,14 +114,16 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
         view -> NetworkUtil.newLink(view.getContext().getApplicationContext(), licenseHomepage));
 
     if (isExpanded()) {
-      if (licenseText.isEmpty()) {
+      if (licenseText.length() == 0) {
         AboutItemBus.get()
             .post(LicenseLoadEvent.create(viewHolder.getAdapterPosition(), licenseType));
       } else {
-        viewHolder.licenseText.setText(licenseText);
+        viewHolder.licenseText.setVisibility(View.VISIBLE);
+        viewHolder.licenseText.loadDataWithBaseURL(null, licenseText, "text/html", "UTF-8", null);
       }
     } else {
-      viewHolder.licenseText.setText(null);
+      viewHolder.licenseText.setVisibility(View.GONE);
+      viewHolder.licenseText.loadDataWithBaseURL(null, "", "text/html", "UTF-8", null);
     }
   }
 
@@ -139,15 +142,17 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
 
     final TextView licenseName;
     final TextView licenseHomepage;
-    final TextView licenseText;
+    final WebView licenseText;
     final ImageView arrowIcon;
 
     public ViewHolder(View view) {
       super(view);
       licenseName = (TextView) view.findViewById(R.id.expand_license_name);
       licenseHomepage = (TextView) view.findViewById(R.id.expand_license_homepage);
-      licenseText = (TextView) view.findViewById(R.id.expand_license_text);
+      licenseText = (WebView) view.findViewById(R.id.expand_license_text);
       arrowIcon = (ImageView) view.findViewById(R.id.expand_license_icon);
+
+      licenseText.getSettings().setTextZoom(80);
     }
   }
 }

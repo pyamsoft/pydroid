@@ -17,9 +17,13 @@
 package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.pydroid.model.Licenses;
 import java.io.BufferedReader;
@@ -75,7 +79,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     return fileLocation;
   }
 
-  @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
+  @NonNull @CheckResult Observable<String> loadRawLicenseText(@NonNull Licenses licenses) {
     return Observable.defer(() -> {
       Timber.d("Load license for: %s", licenses.name());
       if (licenses == Licenses.EMPTY) {
@@ -108,5 +112,20 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
       return Observable.just(licenseText);
     });
+  }
+
+  @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
+    return loadRawLicenseText(licenses).map(this::toHtml);
+  }
+
+  @SuppressWarnings("deprecation") @NonNull @CheckResult String toHtml(final String text) {
+    final Spanned spannableString = new SpannableString(text);
+    final String html;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      html = Html.toHtml(spannableString, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
+    } else {
+      html = Html.toHtml(spannableString);
+    }
+    return html;
   }
 }

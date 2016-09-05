@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.model.Licenses;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -29,7 +30,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
     implements AboutLibrariesPresenter {
 
   @NonNull private final AboutLibrariesInteractor interactor;
-  @NonNull private Subscription licenseSubscription = Subscriptions.empty();
+  @NonNull private final CompositeSubscription licenseSubscriptions = new CompositeSubscription();
   @NonNull private Subscription loadLicenseBus = Subscriptions.empty();
 
   @Inject AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor,
@@ -69,23 +70,23 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
   }
 
   void loadLicenseText(@NonNull View view, int position, @NonNull Licenses licenses) {
-    unsubLoadLicense();
     if (licenses == Licenses.EMPTY) {
       getView().onLicenseTextLoaded(position, "");
     } else {
-      licenseSubscription = interactor.loadLicenseText(licenses)
+      final Subscription licenseSubscription = interactor.loadLicenseText(licenses)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
           .subscribe(license -> view.onLicenseTextLoaded(position, license), throwable -> {
             Timber.e(throwable, "Failed to load license");
             view.onLicenseTextLoaded(position, "Failed to load license");
           }, this::unsubLoadLicense);
+      licenseSubscriptions.add(licenseSubscription);
     }
   }
 
   void unsubLoadLicense() {
-    if (!licenseSubscription.isUnsubscribed()) {
-      licenseSubscription.unsubscribe();
+    if (licenseSubscriptions.hasSubscriptions()) {
+      licenseSubscriptions.clear();
     }
   }
 }

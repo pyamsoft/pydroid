@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -31,11 +32,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module public class ApiModule {
 
-  private final boolean isDebugMode;
   @NonNull private final String projectName;
 
-  public ApiModule(boolean isDebugMode, @NonNull String projectName) {
-    this.isDebugMode = isDebugMode;
+  public ApiModule(@NonNull String projectName) {
     this.projectName = projectName;
   }
 
@@ -47,7 +46,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
   @ActivityScope @Provides OkHttpClient provideOkHttpClient() {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-    if (isDebugMode) {
+    if (BuildConfig.DEBUG) {
       final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
       logging.setLevel(HttpLoggingInterceptor.Level.BODY);
       builder.addInterceptor(logging);

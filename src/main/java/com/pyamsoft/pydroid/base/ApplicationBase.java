@@ -20,6 +20,7 @@ import android.app.Application;
 import android.os.StrictMode;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
+import com.pyamsoft.pydroid.BuildConfig;
 import timber.log.Timber;
 
 public abstract class ApplicationBase extends Application {
@@ -28,14 +29,19 @@ public abstract class ApplicationBase extends Application {
     return false;
   }
 
-  @CallSuper @Override public void onCreate() {
+  @Override public final void onCreate() {
     super.onCreate();
 
     if (!isTest()) {
-      if (buildConfigDebug()) {
+      installInNonTestMode();
+      if (BuildConfig.DEBUG) {
         installInDebugMode();
       }
     }
+  }
+
+  protected void installInNonTestMode() {
+
   }
 
   /**
@@ -56,6 +62,4 @@ public abstract class ApplicationBase extends Application {
         .build());
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
-
-  @CheckResult protected abstract boolean buildConfigDebug();
 }

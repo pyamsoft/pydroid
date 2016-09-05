@@ -25,20 +25,17 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class LicenseCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
-  private final boolean isDebugMode;
   @NonNull private final String projectName;
   @Inject Provider<VersionCheckPresenter> presenterProvider;
 
-  public LicenseCheckPresenterLoader(@NonNull Context context, boolean isDebugMode,
-      @NonNull String projectName) {
+  public LicenseCheckPresenterLoader(@NonNull Context context, @NonNull String projectName) {
     super(context);
-    this.isDebugMode = isDebugMode;
     this.projectName = projectName;
   }
 
   @NonNull @Override public VersionCheckPresenter loadPersistent() {
     Singleton.Dagger.with(getContext())
-        .plusApiComponent(new ApiModule(isDebugMode, projectName))
+        .plusApiComponent(new ApiModule(projectName))
         .plusVersionCheckComponent()
         .inject(this);
     return presenterProvider.get();

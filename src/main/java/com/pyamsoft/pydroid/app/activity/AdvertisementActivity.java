@@ -43,7 +43,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
 
     if (adView != null) {
-      adView.create(provideAdViewUnitId(), isAdDebugMode());
+      adView.create(provideAdViewUnitId());
     }
   }
 
@@ -115,7 +115,5 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   @CheckResult protected abstract int bindActivityToView();
 
   @CheckResult @NonNull protected abstract String provideAdViewUnitId();
-
-  @CheckResult protected abstract boolean isAdDebugMode();
 }
 

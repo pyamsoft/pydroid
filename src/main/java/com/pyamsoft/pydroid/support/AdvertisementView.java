@@ -34,6 +34,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
@@ -66,7 +67,6 @@ public class AdvertisementView extends FrameLayout {
   private Queue<String> imageQueue;
   private boolean preferenceDefault;
   private String preferenceKey;
-  private boolean isDebugMode;
 
   public AdvertisementView(Context context) {
     this(context, null);
@@ -100,11 +100,8 @@ public class AdvertisementView extends FrameLayout {
     inflate(getContext(), R.layout.view_advertisement, this);
   }
 
-  @SuppressWarnings("WeakerAccess")
-  public final void create(@NonNull final String adId, boolean debugMode) {
-    Timber.d("Create AdView with debug mode: %s", debugMode);
-
-    isDebugMode = debugMode;
+  @SuppressWarnings("WeakerAccess") public final void create(@NonNull final String adId) {
+    Timber.d("Create AdView with debug mode: %s", BuildConfig.DEBUG);
 
     // Setup real ad view
     setupRealAdView(adId);
@@ -256,7 +253,7 @@ public class AdvertisementView extends FrameLayout {
 
   private void showAdViewNetwork() {
     final AdRequest.Builder builder = new AdRequest.Builder();
-    if (isDebugMode) {
+    if (BuildConfig.DEBUG) {
       builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
       builder.addTestDevice(getContext().getString(R.string.test_id_1));
     }

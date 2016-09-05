@@ -23,8 +23,4 @@ public class TestApplication extends ApplicationBase {
   @Override protected boolean isTest() {
     return true;
   }
-
-  @Override protected boolean buildConfigDebug() {
-    return BuildConfig.DEBUG;
-  }
 }

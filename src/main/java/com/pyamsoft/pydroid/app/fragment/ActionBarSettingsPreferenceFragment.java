@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.app.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
@@ -23,6 +24,10 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.activity.AdvertisementActivity;
 import com.pyamsoft.pydroid.base.PersistLoader;
@@ -41,6 +46,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @NonNull private static final String KEY_PRESENTER = "key_license_check_presenter";
   VersionCheckPresenter presenter;
   private long loadedKey;
+  private Toast toast;
 
   @SuppressWarnings("SameReturnValue") @CheckResult protected boolean showChangelog() {
     final FragmentActivity activity = getActivity();
@@ -87,6 +93,8 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   }
 
   @CheckResult protected boolean checkForUpdate(int currentVersion) {
+    toast.cancel();
+    toast.show();
     presenter.checkForUpdates(currentVersion);
     return true;
   }
@@ -98,13 +106,20 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             return new LicenseCheckPresenterLoader(getContext().getApplicationContext(),
-                isDebugMode(), provideProjectName().toLowerCase());
+                provideProjectName());
           }
 
           @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
             presenter = persist;
           }
         });
+  }
+
+  @SuppressLint("ShowToast") @CallSuper @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    toast = Toast.makeText(getContext(), "Checking for updates...", Toast.LENGTH_SHORT);
+    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @CallSuper @Override public void onDestroy() {
@@ -143,6 +158,4 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CheckResult @NonNull public abstract String provideApplicationName();
 
   @CheckResult @NonNull public abstract String provideProjectName();
-
-  @CheckResult public abstract boolean isDebugMode();
 }

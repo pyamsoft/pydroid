@@ -49,8 +49,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             licenseChecked = false;
-            return new LicenseCheckPresenterLoader(getApplicationContext(), isDebugMode(),
-                provideProjectName().toLowerCase());
+            return new LicenseCheckPresenterLoader(getApplicationContext(), provideProjectName());
           }
 
           @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
@@ -102,8 +101,4 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   @CheckResult @NonNull public abstract String provideProjectName();
 
   @CheckResult public abstract int getCurrentApplicationVersion();
-
-  @CheckResult public boolean isDebugMode() {
-    return isAdDebugMode();
-  }
 }

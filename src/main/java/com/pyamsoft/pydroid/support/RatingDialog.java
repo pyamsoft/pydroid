@@ -69,7 +69,8 @@ public class RatingDialog extends DialogFragment {
       final @NonNull ChangeLogProvider provider, final boolean force) {
     final SharedPreferences preferences =
         PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-    if (force || preferences.getInt(PREFERENCE_TARGET, 0) < provider.getChangeLogVersion()) {
+    if (force
+        || preferences.getInt(PREFERENCE_TARGET, 0) < provider.getCurrentApplicationVersion()) {
       AppUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating");
     }
   }
@@ -78,9 +79,9 @@ public class RatingDialog extends DialogFragment {
   private static RatingDialog newInstance(final @NonNull ChangeLogProvider provider) {
     final RatingDialog fragment = new RatingDialog();
     final Bundle args = new Bundle();
-    args.putString(RATE_LINK, provider.getChangeLogPackageName());
+    args.putString(RATE_LINK, provider.getPackageName());
     args.putCharSequence(CHANGE_LOG_TEXT, provider.getChangeLogText());
-    args.putInt(VERSION_CODE, provider.getChangeLogVersion());
+    args.putInt(VERSION_CODE, provider.getCurrentApplicationVersion());
     args.putInt(CHANGE_LOG_ICON, provider.getChangeLogIcon());
     fragment.setArguments(args);
     return fragment;
@@ -164,8 +165,8 @@ public class RatingDialog extends DialogFragment {
 
     @CheckResult int getChangeLogIcon();
 
-    @CheckResult @NonNull String getChangeLogPackageName();
+    @CheckResult @NonNull String getPackageName();
 
-    @CheckResult int getChangeLogVersion();
+    @CheckResult int getCurrentApplicationVersion();
   }
 }

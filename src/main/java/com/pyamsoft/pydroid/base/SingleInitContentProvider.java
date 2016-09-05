@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.base;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.StrictMode;
@@ -51,13 +52,18 @@ public abstract class SingleInitContentProvider extends ContentProvider {
       return false;
     }
 
+    final Context context = getContext();
+    if (context == null) {
+      throw new NullPointerException("SingleInitContentProvider context is NULL");
+    }
+
     if (!isTest()) {
-      installInNonTestMode();
+      installInNonTestMode(context.getApplicationContext());
       if (BuildConfig.DEBUG) {
         Timber.uprootAll();
         Timber.plant(new Timber.DebugTree());
         setStrictMode();
-        installInDebugMode();
+        installInDebugMode(context.getApplicationContext());
       }
     }
 
@@ -77,11 +83,11 @@ public abstract class SingleInitContentProvider extends ContentProvider {
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
-  protected void installInNonTestMode() {
+  protected void installInNonTestMode(@NonNull Context context) {
 
   }
 
-  protected void installInDebugMode() {
+  protected void installInDebugMode(@NonNull Context context) {
 
   }
 

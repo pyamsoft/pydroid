@@ -24,15 +24,15 @@ import rx.Observable;
 class VersionCheckInteractorImpl implements VersionCheckInteractor {
 
   @NonNull private final Context appContext;
-  @NonNull private final LicenseCheckService licenseCheckService;
+  @NonNull private final VersionCheckService versionCheckService;
 
   @Inject VersionCheckInteractorImpl(@NonNull Context context,
-      @NonNull LicenseCheckService licenseCheckService) {
+      @NonNull VersionCheckService versionCheckService) {
     this.appContext = context.getApplicationContext();
-    this.licenseCheckService = licenseCheckService;
+    this.versionCheckService = versionCheckService;
   }
 
   @NonNull @Override public Observable<VersionCheckResponse> checkVersion() {
-    return licenseCheckService.checkVersion(appContext.getPackageName());
+    return versionCheckService.checkVersion(appContext.getPackageName());
   }
 }

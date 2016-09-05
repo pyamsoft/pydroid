@@ -35,6 +35,6 @@ import rx.Scheduler;
   @ActivityScope @Provides VersionCheckInteractor provideLicenseCheckInteractor(
       @NonNull Context context, @NonNull VersionCheckApi licenseCheckApi) {
     return new VersionCheckInteractorImpl(context,
-        licenseCheckApi.create(VersionCheckInteractor.LicenseCheckService.class));
+        licenseCheckApi.create(VersionCheckInteractor.VersionCheckService.class));
   }
 }

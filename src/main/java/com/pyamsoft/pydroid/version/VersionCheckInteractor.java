@@ -26,7 +26,7 @@ interface VersionCheckInteractor {
 
   @CheckResult @NonNull Observable<VersionCheckResponse> checkVersion();
 
-  interface LicenseCheckService {
+  interface VersionCheckService {
 
     @CheckResult @NonNull @GET Observable<VersionCheckResponse> checkVersion(
         @Url String packageName);

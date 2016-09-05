@@ -144,7 +144,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     presenter.unbindView();
   }
 
-  @Override public void onLicenseCheckFinished() {
+  @Override public void onVersionCheckFinished() {
     Timber.d("License check finished, mark");
   }
 

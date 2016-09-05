@@ -46,14 +46,14 @@ class VersionCheckPresenterImpl extends SchedulerPresenter<VersionCheckPresenter
     checkSubscription = interactor.checkVersion()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(licenseCheckResponse -> {
+        .subscribe(versionCheckResponse -> {
           Timber.i("Update check finished");
           Timber.i("Current version: %d", currentVersionCode);
-          Timber.i("Latest version: %d", licenseCheckResponse.currentVersion());
-          getView().onLicenseCheckFinished();
-          if (currentVersionCode < licenseCheckResponse.currentVersion()) {
+          Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
+          getView().onVersionCheckFinished();
+          if (currentVersionCode < versionCheckResponse.currentVersion()) {
             getView().onUpdatedVersionFound(currentVersionCode,
-                licenseCheckResponse.currentVersion());
+                versionCheckResponse.currentVersion());
           }
         }, throwable -> Timber.e(throwable, "onError checkForUpdates"), this::unsubCheck);
   }

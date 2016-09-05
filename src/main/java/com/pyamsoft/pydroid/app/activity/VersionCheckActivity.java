@@ -84,7 +84,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     presenter.unbindView();
   }
 
-  @Override public void onLicenseCheckFinished() {
+  @Override public void onVersionCheckFinished() {
     Timber.d("License check finished, mark");
     licenseChecked = true;
   }

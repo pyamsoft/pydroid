@@ -21,10 +21,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.LongSparseArray;
 import com.pyamsoft.pydroid.base.Destroyable;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.HashMap;
+import java.util.Locale;
 import timber.log.Timber;
 
 public final class PersistentCache {
@@ -36,17 +36,20 @@ public final class PersistentCache {
   /**
    * Get a key for a given instance, either stored in the savedInstanceState or generated
    */
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult static long generateKey(
-      @NonNull String instanceId, @Nullable Bundle savedInstanceState) {
-    final long key;
-    if (savedInstanceState == null) {
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult @NonNull
+  static String generateKey(@Nullable String key, @Nullable Bundle savedInstanceState) {
+    if (savedInstanceState == null || key == null) {
       // Generate a new key
       key = Persist.getInstance().generateKey();
       Timber.d("Generate a new key: %d", key);
     } else {
       // Retrieve the key from the saved instance
-      key = savedInstanceState.getLong(instanceId);
-      Timber.d("Retrieve stored key from %s: %d", instanceId, key);
+      key = savedInstanceState.getString(key, null);
+      Timber.d("Retrieve stored key from %s", key);
+    }
+
+    if (key == null) {
+      throw new NullPointerException("Key is NULL");
     }
 
     return key;
@@ -55,8 +58,8 @@ public final class PersistentCache {
   /**
    * Saves the generated key into a bundle which will be restored later in the lifecycle
    */
-  public static void saveKey(@NonNull String instanceId, @NonNull Bundle outState, long key) {
-    outState.putLong(instanceId, key);
+  public static void saveKey(@NonNull Bundle outState, @NonNull String key) {
+    outState.putString(key, key);
   }
 
   /**
@@ -65,11 +68,11 @@ public final class PersistentCache {
    * NOTE: If you always pass in NULL for the savedInstanceState, your state will never be cached.
    * You must pass THE savedInstanceState from the Android lifecycle
    */
-  @CheckResult public static <T> long load(@NonNull String instanceId,
+  @CheckResult @NonNull public static <T> String load(@Nullable String key,
       @Nullable Bundle savedInstanceState, @NonNull PersistLoader.Callback<T> callback) {
 
     // Attempt to fetch the persistent object from the cache
-    final long key = generateKey(instanceId, savedInstanceState);
+    key = generateKey(key, savedInstanceState);
 
     @SuppressWarnings("unchecked") T persist = (T) Persist.getInstance().getCachedObject(key);
 
@@ -77,12 +80,12 @@ public final class PersistentCache {
     if (persist == null) {
       // Load a fresh object
       persist = callback.createLoader().loadPersistent();
-      Timber.d("Created new persistable: %s [%d]", persist, key);
+      Timber.d("Created new persistable: %s [%s]", persist, key);
 
       // Save the presenter to the cache
       Persist.getInstance().persist(key, persist);
     } else {
-      Timber.d("Loaded cached persistable: %s [%d]", persist, key);
+      Timber.d("Loaded cached persistable: %s [%s]", persist, key);
     }
 
     callback.onPersistentLoaded(persist);
@@ -96,7 +99,7 @@ public final class PersistentCache {
    *
    * This call is meant to be guarded using checks for Activity.isChangingConfigurations()
    */
-  public static void unload(long key) {
+  public static void unload(@NonNull String key) {
     Persist.getInstance().remove(key);
   }
 
@@ -114,33 +117,30 @@ public final class PersistentCache {
     /**
      * KLUDGE Use a more efficient data structure that doesn't do all this unboxing
      */
-    @NonNull private final LongSparseArray<Object> cache;
-    @NonNull private final AtomicLong count;
+    @NonNull private final HashMap<String, Object> cache;
 
     Persist() {
-      cache = new LongSparseArray<>();
-      count = new AtomicLong(0);
+      cache = new HashMap<>();
     }
 
     @NonNull @CheckResult static Persist getInstance() {
       return INSTANCE;
     }
 
-    @CheckResult final long generateKey() {
-      return count.getAndIncrement();
+    @CheckResult @NonNull final String generateKey() {
+      return String.format(Locale.getDefault(), "CACHE: %d", System.nanoTime());
     }
 
-    @Nullable @CheckResult final Object getCachedObject(long key) {
+    @Nullable @CheckResult final Object getCachedObject(@NonNull String key) {
       return cache.get(key);
     }
 
     @VisibleForTesting final void clear() {
       Timber.w("Clearing PersistentCache for TESTING");
       cache.clear();
-      count.set(0);
     }
 
-    final void persist(long key, @NonNull Object persistable) {
+    final void persist(@NonNull String key, @NonNull Object persistable) {
       cache.put(key, persistable);
       if (cache.size() > 100) {
         Timber.w(
@@ -148,7 +148,7 @@ public final class PersistentCache {
       }
     }
 
-    final void remove(long key) {
+    final void remove(@NonNull String key) {
       final Object persist = cache.get(key);
       if (persist != null) {
         cache.remove(key);

@@ -32,11 +32,10 @@ import timber.log.Timber;
 public abstract class VersionCheckActivity extends AdvertisementActivity
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
-  @NonNull private static final String KEY_PRESENTER = "key_license_check_presenter";
   @NonNull private static final String KEY_HAS_CHECKED_LICENSE = "key_has_already_checked_license";
   VersionCheckPresenter presenter;
   boolean licenseChecked;
-  private long loadedKey;
+  private String loadedKey;
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,7 +44,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
       licenseChecked = savedInstanceState.getBoolean(KEY_HAS_CHECKED_LICENSE, false);
     }
 
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             licenseChecked = false;
@@ -66,7 +65,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   }
 
   @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    PersistentCache.saveKey(outState, loadedKey);
     outState.putBoolean(KEY_HAS_CHECKED_LICENSE, licenseChecked);
     super.onSaveInstanceState(outState);
   }

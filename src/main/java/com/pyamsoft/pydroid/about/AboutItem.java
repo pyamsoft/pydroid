@@ -45,11 +45,11 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
 
   @NonNull private final FastAdapter.OnClickListener<AboutItem> onClickListener =
       (v, adapter, item, position) -> {
-        if (item.isExpanded()) {
-          ViewCompat.animate(v.findViewById(R.id.expand_license_icon)).rotation(0).start();
-        } else {
-          ViewCompat.animate(v.findViewById(R.id.expand_license_icon)).rotation(180).start();
-        }
+        //if (item.isExpanded()) {
+        //  ViewCompat.animate(v.findViewById(R.id.expand_license_icon)).rotation(0).start();
+        //} else {
+        //  ViewCompat.animate(v.findViewById(R.id.expand_license_icon)).rotation(180).start();
+        //}
         item.setExpanded(!item.isExpanded());
         adapter.getFastAdapter().notifyItemChanged(position);
         return true;
@@ -98,6 +98,8 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     viewHolder.licenseText.setFocusable(false);
     viewHolder.licenseName.setClickable(false);
     viewHolder.licenseName.setFocusable(false);
+    viewHolder.progressBar.setClickable(false);
+    viewHolder.progressBar.setFocusable(false);
     viewHolder.licenseHomepage.setOnClickListener(null);
 
     //make sure all animations are stopped

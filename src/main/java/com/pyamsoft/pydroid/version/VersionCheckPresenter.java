@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.version;
 
-import com.pyamsoft.pydroid.dagger.presenter.Presenter;
+import com.pyamsoft.pydroid.base.Presenter;
 
 public interface VersionCheckPresenter extends Presenter<VersionCheckPresenter.View> {
 

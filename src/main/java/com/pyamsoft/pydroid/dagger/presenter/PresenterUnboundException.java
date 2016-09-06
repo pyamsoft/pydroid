@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.dagger.presenter;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.base.Presenter;
 
 public class PresenterUnboundException extends RuntimeException {
 

@@ -33,8 +33,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.app.activity.DonationActivity;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.inject.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -49,14 +49,13 @@ public class SupportDialog extends DialogFragment
   @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
   @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
   @NonNull private static final String ARG_PACKAGE = "package";
-  @NonNull private static final String KEY_MEDIA_PRESENTER = "key_social_media_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   @SuppressWarnings("WeakerAccess") String packageName;
   private String APP_SKU_DONATE_ONE;
   private String APP_SKU_DONATE_TWO;
   private String APP_SKU_DONATE_FIVE;
   private String APP_SKU_DONATE_TEN;
-  private long loadedKey;
+  private String loadedKey;
 
   @CheckResult @NonNull public static SupportDialog newInstance(final @NonNull String packageName) {
     final SupportDialog fragment = new SupportDialog();
@@ -70,7 +69,7 @@ public class SupportDialog extends DialogFragment
     super.onCreate(savedInstanceState);
     Timber.d("onCreate");
 
-    loadedKey = PersistentCache.load(KEY_MEDIA_PRESENTER, savedInstanceState,
+    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
         new PersistLoader.Callback<SocialMediaPresenter>() {
           @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
             return new SocialMediaPresenterLoader(getContext());
@@ -203,7 +202,7 @@ public class SupportDialog extends DialogFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(KEY_MEDIA_PRESENTER, outState, loadedKey);
+    PersistentCache.saveKey(outState, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

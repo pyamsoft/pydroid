@@ -35,13 +35,12 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   @NonNull private static final String KEY_NAME = "key_name";
   @NonNull private static final String KEY_LATEST_VERSION = "key_latest_version";
   @NonNull private static final String KEY_CURRENT_VERSION = "key_current_version";
-  @NonNull private static final String KEY_PRESENTER = "key_social_media_update_presenter";
   @NonNull public static final String TAG = "VersionUpgradeDialog";
   SocialMediaPresenter presenter;
   private int latestVersion;
   private int currentVersion;
   private String applicationName;
-  private long loadedKey;
+  private String loadedKey;
 
   @CheckResult @NonNull
   public static VersionUpgradeDialog newInstance(@NonNull String applicationName,
@@ -72,7 +71,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
       throw new RuntimeException("Coult not find application name");
     }
 
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
         new PersistLoader.Callback<SocialMediaPresenter>() {
           @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
             return new SocialMediaPresenterLoader(getContext());
@@ -111,7 +110,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    PersistentCache.saveKey(outState, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

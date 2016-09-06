@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.dagger.presenter.Presenter;
+import com.pyamsoft.pydroid.base.Presenter;
 
 public interface AboutLibrariesPresenter extends Presenter<AboutLibrariesPresenter.View> {
 

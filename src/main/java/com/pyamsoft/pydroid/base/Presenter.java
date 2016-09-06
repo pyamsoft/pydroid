@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.base;
 
 import android.support.annotation.CheckResult;
 import com.pyamsoft.pydroid.base.Destroyable;

@@ -90,9 +90,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     return fileLocation;
   }
 
-  @NonNull @CheckResult Observable<String> loadRawLicenseText(@NonNull Licenses licenses) {
+  @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
     return Observable.defer(() -> {
-      Timber.d("Load license for: %s", licenses.name());
       if (licenses == Licenses.EMPTY) {
         Timber.w("Empty license passed");
         return Observable.just("");
@@ -100,10 +99,13 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
       if (licenses == Licenses.GOOGLE_PLAY_SERVICES) {
         Timber.d("License is Google Play services");
-        return Observable.just(
+        final Observable<String> result = Observable.just(
             GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(appContext));
+        Timber.i("Finished loading Google Play services license");
+        return result;
       }
 
+      Timber.d("Load license for: %s", licenses.name());
       String licenseText;
       final StringBuilder text = new StringBuilder();
       final String licenseFileName = getLicenseFileName(licenses);
@@ -121,25 +123,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
         licenseText = "Could not load license text";
       }
 
+      Timber.i("Finished loading license for: %s", licenses.name());
       return Observable.just(licenseText);
     });
-  }
-
-  @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
-    Timber.i("Begin License loading...");
-    return loadRawLicenseText(licenses).map(this::toHtml);
-  }
-
-  @SuppressWarnings("deprecation") @NonNull @CheckResult String toHtml(final String text) {
-    final Spanned spannableString = new SpannableString(text);
-    final String html;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      html = Html.toHtml(spannableString, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
-    } else {
-      html = Html.toHtml(spannableString);
-    }
-
-    Timber.i("License loading complete");
-    return html;
   }
 }

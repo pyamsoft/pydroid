@@ -80,6 +80,8 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
             Timber.e(throwable, "Failed to load license");
             view.onLicenseTextLoaded(position, "Failed to load license");
           }, this::unsubLoadLicense);
+
+      Timber.d("Add license subscription");
       licenseSubscriptions.add(licenseSubscription);
     }
   }

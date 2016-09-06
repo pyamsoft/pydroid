@@ -122,12 +122,12 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
       } else {
         viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.licenseText.setVisibility(View.VISIBLE);
-        viewHolder.licenseText.loadDataWithBaseURL(null, licenseText, "text/html", "UTF-8", null);
+        viewHolder.licenseText.loadDataWithBaseURL(null, licenseText, "text/plain", "UTF-8", null);
       }
     } else {
       viewHolder.progressBar.setVisibility(View.GONE);
       viewHolder.licenseText.setVisibility(View.GONE);
-      viewHolder.licenseText.loadDataWithBaseURL(null, "", "text/html", "UTF-8", null);
+      viewHolder.licenseText.loadDataWithBaseURL(null, "", "text/plain", "UTF-8", null);
     }
   }
 

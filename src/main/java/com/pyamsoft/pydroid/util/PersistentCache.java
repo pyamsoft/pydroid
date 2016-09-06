@@ -24,7 +24,7 @@ import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.base.Destroyable;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.UUID;
 import timber.log.Timber;
 
 public final class PersistentCache {
@@ -41,7 +41,6 @@ public final class PersistentCache {
     if (savedInstanceState == null || key == null) {
       // Generate a new key
       key = Persist.getInstance().generateKey();
-      Timber.d("Generate a new key: %s", key);
     } else {
       // Retrieve the key from the saved instance
       key = savedInstanceState.getString(key, null);
@@ -59,6 +58,7 @@ public final class PersistentCache {
    * Saves the generated key into a bundle which will be restored later in the lifecycle
    */
   public static void saveKey(@NonNull Bundle outState, @NonNull String key) {
+    Timber.d("Save key: %s", key);
     outState.putString(key, key);
   }
 
@@ -113,10 +113,6 @@ public final class PersistentCache {
   static class Persist {
 
     @NonNull private static final Persist INSTANCE = new Persist();
-
-    /**
-     * KLUDGE Use a more efficient data structure that doesn't do all this unboxing
-     */
     @NonNull private final HashMap<String, Object> cache;
 
     Persist() {
@@ -128,7 +124,9 @@ public final class PersistentCache {
     }
 
     @CheckResult @NonNull final String generateKey() {
-      return String.format(Locale.getDefault(), "CACHE: %d", System.nanoTime());
+      final String key = UUID.randomUUID().toString();
+      Timber.d("Generate new key: %s", key);
+      return key;
     }
 
     @Nullable @CheckResult final Object getCachedObject(@NonNull String key) {
@@ -141,11 +139,8 @@ public final class PersistentCache {
     }
 
     final void persist(@NonNull String key, @NonNull Object persistable) {
+      Timber.d("Persist object: %s [%s]", persistable, key);
       cache.put(key, persistable);
-      if (cache.size() > 100) {
-        Timber.w(
-            "WARNING: Cache performance will decrease significantly if the size goes over 100 items");
-      }
     }
 
     final void remove(@NonNull String key) {

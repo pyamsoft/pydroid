@@ -41,7 +41,7 @@ public final class PersistentCache {
     if (savedInstanceState == null || key == null) {
       // Generate a new key
       key = Persist.getInstance().generateKey();
-      Timber.d("Generate a new key: %d", key);
+      Timber.d("Generate a new key: %s", key);
     } else {
       // Retrieve the key from the saved instance
       key = savedInstanceState.getString(key, null);

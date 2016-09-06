@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
@@ -25,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.inject.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.model.Licenses;
@@ -59,19 +60,20 @@ public class AboutLibrariesFragment extends ActionBarFragment
   private boolean lastOnBackStack;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
-      @NonNull Styling styling, boolean lastOnBackStack, @NonNull Licenses... licenses) {
+      @NonNull Styling styling, @NonNull BackStackState backStackState,
+      @NonNull Licenses... licenses) {
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
           .replace(containerResId,
-              AboutLibrariesFragment.newInstance(styling, lastOnBackStack, licenses), TAG)
+              AboutLibrariesFragment.newInstance(styling, backStackState, licenses), TAG)
           .addToBackStack(TAG)
           .commit();
     }
   }
 
   @CheckResult @NonNull private static AboutLibrariesFragment newInstance(@NonNull Styling styling,
-      boolean lastOnBackStack, @NonNull Licenses... licenseList) {
+      @NonNull BackStackState backStackState, @NonNull Licenses... licenseList) {
     final Bundle args = new Bundle();
     final AboutLibrariesFragment fragment = new AboutLibrariesFragment();
     final String[] licenseNames = new String[licenseList.length];
@@ -80,7 +82,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
     }
 
     args.putString(KEY_STYLING, styling.name());
-    args.putBoolean(KEY_BACK_STACK, lastOnBackStack);
+    args.putString(KEY_BACK_STACK, backStackState.name());
     args.putStringArray(KEY_LICENSE_LIST, licenseNames);
     fragment.setArguments(args);
     return fragment;
@@ -90,7 +92,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
     super.onCreate(savedInstanceState);
     final String[] licenseNames = getArguments().getStringArray(KEY_LICENSE_LIST);
     if (licenseNames == null) {
-      throw new RuntimeException("No licenses specified");
+      throw new NullPointerException("No licenses specified");
     }
 
     // Sort names alphabetically
@@ -105,23 +107,39 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
     final String stylingName = getArguments().getString(KEY_STYLING, null);
     if (stylingName == null) {
-      throw new RuntimeException("Styling is NULL");
+      throw new NullPointerException("Styling is NULL");
     }
 
     final Styling styling = Styling.valueOf(stylingName);
     switch (styling) {
       case LIGHT:
-        backgroundColor = Color.parseColor("#f9f9f9");
+        backgroundColor = ContextCompat.getColor(getContext(),
+            android.support.v7.appcompat.R.color.background_material_light);
         break;
       case DARK:
-        // TODO Figure out material dark default background
-        backgroundColor = Color.parseColor("#1d1d1d");
+        backgroundColor = ContextCompat.getColor(getContext(),
+            android.support.v7.appcompat.R.color.background_material_dark);
         break;
       default:
         throw new RuntimeException("Invalid styling: " + stylingName);
     }
 
-    lastOnBackStack = getArguments().getBoolean(KEY_BACK_STACK, false);
+    final String backStackStateName = getArguments().getString(KEY_BACK_STACK, null);
+    if (backStackStateName == null) {
+      throw new NullPointerException("BackStateState is NULL");
+    }
+
+    final BackStackState backStackState = BackStackState.valueOf(backStackStateName);
+    switch (backStackState) {
+      case LAST:
+        lastOnBackStack = true;
+        break;
+      case NOT_LAST:
+        lastOnBackStack = false;
+        break;
+      default:
+        throw new RuntimeException("Invalid back stack state: " + backStackStateName);
+    }
 
     loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<AboutLibrariesPresenter>() {
@@ -146,6 +164,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     fastItemAdapter = new FastItemAdapter<>();
     fastItemAdapter.withSelectable(true);
 
@@ -260,5 +279,9 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   public enum Styling {
     LIGHT, DARK
+  }
+
+  public enum BackStackState {
+    LAST, NOT_LAST
   }
 }

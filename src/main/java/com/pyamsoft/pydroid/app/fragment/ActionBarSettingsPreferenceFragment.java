@@ -93,8 +93,9 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return true;
   }
 
-  @CheckResult protected boolean isLastOnBackStack() {
-    return false;
+  @NonNull
+  @CheckResult protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
+    return AboutLibrariesFragment.BackStackState.NOT_LAST;
   }
 
   @CheckResult protected boolean checkForUpdate() {

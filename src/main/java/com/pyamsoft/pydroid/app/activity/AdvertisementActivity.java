@@ -106,6 +106,12 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
         SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
   }
 
+  public final void showAd() {
+    if (adView != null) {
+      adView.show();
+    }
+  }
+
   public final void hideAd() {
     if (adView != null) {
       adView.hide();

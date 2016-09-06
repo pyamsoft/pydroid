@@ -244,7 +244,7 @@ public class AdvertisementView extends FrameLayout {
     return currentPackage;
   }
 
-  private void show() {
+  public void show() {
     // KLUDGE: Direct preference object access and modify
     final SharedPreferences preferences =
         PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());

@@ -1,5 +1,4 @@
-# Various proguard rules can be stored here because proguard is
-# not used in libraries
+# Consumer proguard rules
 
 # We are open source, we don't need obfuscation.
 # We will still use optimizations though
@@ -29,6 +28,12 @@
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+# For use with proguard-android-optimize.txt
+# Needed or else requests with crash with a IllegalArgumentException: Missng GET or @Url
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
 
 # Keep GSON serialized class
 -keep class com.pyamsoft.pydroid.version.VersionCheckResponse { *; }

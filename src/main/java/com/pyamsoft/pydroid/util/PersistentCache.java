@@ -21,13 +21,14 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.util.LongSparseArray;
 import com.pyamsoft.pydroid.base.Destroyable;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import java.util.HashMap;
-import java.util.UUID;
 import timber.log.Timber;
 
 public final class PersistentCache {
+
+  @NonNull private static final String DEFAULT_ID = "PersistentCache.KEY_DEFAULT_ID";
 
   private PersistentCache() {
     throw new RuntimeException("No instances");
@@ -36,19 +37,16 @@ public final class PersistentCache {
   /**
    * Get a key for a given instance, either stored in the savedInstanceState or generated
    */
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult @NonNull
-  static String generateKey(@Nullable String key, @Nullable Bundle savedInstanceState) {
-    if (savedInstanceState == null || key == null) {
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult static long generateKey(
+      @NonNull String id, @Nullable Bundle savedInstanceState) {
+    final long key;
+    if (savedInstanceState == null) {
       // Generate a new key
       key = Persist.getInstance().generateKey();
     } else {
       // Retrieve the key from the saved instance
-      key = savedInstanceState.getString(key, null);
-      Timber.d("Retrieve stored key from %s", key);
-    }
-
-    if (key == null) {
-      throw new NullPointerException("Key is NULL");
+      key = savedInstanceState.getLong(id, 0);
+      Timber.d("Retrieve stored key from %d", key);
     }
 
     return key;
@@ -56,10 +54,30 @@ public final class PersistentCache {
 
   /**
    * Saves the generated key into a bundle which will be restored later in the lifecycle
+   * Uses the default id
    */
-  public static void saveKey(@NonNull Bundle outState, @NonNull String key) {
-    Timber.d("Save key: %s", key);
-    outState.putString(key, key);
+  public static void saveKey(@NonNull Bundle outState, long key) {
+    saveKey(outState, DEFAULT_ID, key);
+  }
+
+  /**
+   * Saves the generated key into a bundle which will be restored later in the lifecycle
+   */
+  public static void saveKey(@NonNull Bundle outState, @NonNull String id, long key) {
+    Timber.d("Save key: %s [%d]", id, key);
+    outState.putLong(id, key);
+  }
+
+  /**
+   * Load a piece of data that the user wishes to persist over the lifecycle
+   * Uses the default id
+   *
+   * NOTE: If you always pass in NULL for the savedInstanceState, your state will never be cached.
+   * You must pass THE savedInstanceState from the Android lifecycle
+   */
+  @CheckResult public static <T> long load(@Nullable Bundle savedInstanceState,
+      @NonNull PersistLoader.Callback<T> callback) {
+    return load(DEFAULT_ID, savedInstanceState, callback);
   }
 
   /**
@@ -68,11 +86,11 @@ public final class PersistentCache {
    * NOTE: If you always pass in NULL for the savedInstanceState, your state will never be cached.
    * You must pass THE savedInstanceState from the Android lifecycle
    */
-  @CheckResult @NonNull public static <T> String load(@Nullable String key,
-      @Nullable Bundle savedInstanceState, @NonNull PersistLoader.Callback<T> callback) {
+  @CheckResult public static <T> long load(@NonNull String id, @Nullable Bundle savedInstanceState,
+      @NonNull PersistLoader.Callback<T> callback) {
 
     // Attempt to fetch the persistent object from the cache
-    key = generateKey(key, savedInstanceState);
+    final long key = generateKey(id, savedInstanceState);
 
     @SuppressWarnings("unchecked") T persist = (T) Persist.getInstance().getCachedObject(key);
 
@@ -99,7 +117,7 @@ public final class PersistentCache {
    *
    * This call is meant to be guarded using checks for Activity.isChangingConfigurations()
    */
-  public static void unload(@NonNull String key) {
+  public static void unload(long key) {
     Persist.getInstance().remove(key);
   }
 
@@ -113,23 +131,23 @@ public final class PersistentCache {
   static class Persist {
 
     @NonNull private static final Persist INSTANCE = new Persist();
-    @NonNull private final HashMap<String, Object> cache;
+    @NonNull private final LongSparseArray<Object> cache;
 
     Persist() {
-      cache = new HashMap<>();
+      cache = new LongSparseArray<>();
     }
 
     @NonNull @CheckResult static Persist getInstance() {
       return INSTANCE;
     }
 
-    @CheckResult @NonNull final String generateKey() {
-      final String key = UUID.randomUUID().toString();
-      Timber.d("Generate new key: %s", key);
+    @CheckResult final long generateKey() {
+      final long key = System.nanoTime();
+      Timber.d("Generate new key: %d", key);
       return key;
     }
 
-    @Nullable @CheckResult final Object getCachedObject(@NonNull String key) {
+    @Nullable @CheckResult final Object getCachedObject(long key) {
       return cache.get(key);
     }
 
@@ -138,22 +156,22 @@ public final class PersistentCache {
       cache.clear();
     }
 
-    final void persist(@NonNull String key, @NonNull Object persistable) {
-      Timber.d("Persist object: %s [%s]", persistable, key);
+    final void persist(long key, @NonNull Object persistable) {
+      Timber.d("Persist object: %s [%d]", persistable, key);
       cache.put(key, persistable);
     }
 
-    final void remove(@NonNull String key) {
+    final void remove(long key) {
       final Object persist = cache.get(key);
       if (persist != null) {
         cache.remove(key);
-        Timber.d("Remove persistable from cache: %s [%s]", persist, key);
+        Timber.d("Remove persistable from cache: %s [%d]", persist, key);
         if (persist instanceof Destroyable) {
           final Destroyable destroyable = (Destroyable) persist;
           destroyable.destroy();
         }
       } else {
-        Timber.e("Persisted object was NULL [%s]", key);
+        Timber.e("Persisted object was NULL [%d]", key);
         Timber.e("This is usually indicative of a lifecycle error. Check your Fragments!");
       }
     }

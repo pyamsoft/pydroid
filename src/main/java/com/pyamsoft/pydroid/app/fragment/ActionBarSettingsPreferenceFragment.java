@@ -45,7 +45,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
   VersionCheckPresenter presenter;
-  private String loadedKey;
+  private long loadedKey;
   private Toast toast;
 
   @SuppressWarnings("SameReturnValue") @CheckResult protected boolean showChangelog() {
@@ -106,7 +106,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
+    loadedKey = PersistentCache.load(savedInstanceState,
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             return new LicenseCheckPresenterLoader(getContext().getApplicationContext());

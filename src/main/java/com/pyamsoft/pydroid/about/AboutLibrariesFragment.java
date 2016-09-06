@@ -55,7 +55,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   private Licenses[] licenses;
   private RecyclerView recyclerView;
   @ColorInt private int backgroundColor;
-  private String loadedKey;
+  private long loadedKey;
   private boolean lastOnBackStack;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
@@ -140,7 +140,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
 
-    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
+    loadedKey = PersistentCache.load(savedInstanceState,
         new PersistLoader.Callback<AboutLibrariesPresenter>() {
           @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
             return new AboutLibrariesPresenterLoader(getContext());

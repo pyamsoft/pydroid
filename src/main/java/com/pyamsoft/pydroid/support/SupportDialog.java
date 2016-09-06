@@ -55,7 +55,7 @@ public class SupportDialog extends DialogFragment
   private String APP_SKU_DONATE_TWO;
   private String APP_SKU_DONATE_FIVE;
   private String APP_SKU_DONATE_TEN;
-  private String loadedKey;
+  private long loadedKey;
 
   @CheckResult @NonNull public static SupportDialog newInstance(final @NonNull String packageName) {
     final SupportDialog fragment = new SupportDialog();
@@ -69,7 +69,7 @@ public class SupportDialog extends DialogFragment
     super.onCreate(savedInstanceState);
     Timber.d("onCreate");
 
-    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
+    loadedKey = PersistentCache.load(savedInstanceState,
         new PersistLoader.Callback<SocialMediaPresenter>() {
           @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
             return new SocialMediaPresenterLoader(getContext());

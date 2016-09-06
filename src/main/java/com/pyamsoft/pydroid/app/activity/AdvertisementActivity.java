@@ -48,8 +48,17 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   }
 
   @CallSuper @Override protected void onStart() {
+    if (adView != null) {
+      adView.start();
+    }
     super.onStart();
-    showAd();
+  }
+
+  @Override protected void onStop() {
+    if (adView != null) {
+      adView.stop();
+    }
+    super.onStop();
   }
 
   @CallSuper @Override protected void onResume() {
@@ -95,12 +104,6 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   private void showSupportDialog() {
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
-  }
-
-  public final void showAd() {
-    if (adView != null) {
-      adView.show(false);
-    }
   }
 
   public final void hideAd() {

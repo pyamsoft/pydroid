@@ -20,6 +20,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -61,6 +63,7 @@ public class AdvertisementView extends FrameLayout {
   @NonNull private static final String[] POSSIBLE_PACKAGES = {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH
   };
+  @NonNull final Handler handler;
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   ImageView advertisement;
   AdView realAdView;
@@ -78,12 +81,14 @@ public class AdvertisementView extends FrameLayout {
 
   public AdvertisementView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    handler = new Handler(Looper.getMainLooper());
     init();
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public AdvertisementView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
+    handler = new Handler(Looper.getMainLooper());
     init();
   }
 
@@ -113,6 +118,11 @@ public class AdvertisementView extends FrameLayout {
     setVisibility(View.GONE);
   }
 
+  public final void start() {
+    Timber.d("Start adView");
+    show();
+  }
+
   public final void resume() {
     Timber.d("Resume adView");
     realAdView.resume();
@@ -121,6 +131,11 @@ public class AdvertisementView extends FrameLayout {
   public final void pause() {
     Timber.d("Pause adView");
     realAdView.pause();
+  }
+
+  public final void stop() {
+    Timber.d("Stop adView");
+    handler.removeCallbacksAndMessages(null);
   }
 
   public final void destroy() {
@@ -150,6 +165,9 @@ public class AdvertisementView extends FrameLayout {
       @Override public void onAdFailedToLoad(int i) {
         super.onAdFailedToLoad(i);
         showAdViewNoNetwork();
+
+        Timber.d("Post another load attempt in 60 seconds");
+        handler.postDelayed(AdvertisementView.this::showAdView, 60000);
       }
     });
 
@@ -226,11 +244,11 @@ public class AdvertisementView extends FrameLayout {
     return currentPackage;
   }
 
-  public final void show(boolean force) {
+  private void show() {
     // KLUDGE: Direct preference object access and modify
     final SharedPreferences preferences =
         PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
-    final boolean isEnabled = force || preferences.getBoolean(preferenceKey, preferenceDefault);
+    final boolean isEnabled = preferences.getBoolean(preferenceKey, preferenceDefault);
     final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
     final boolean isValidCount = shownCount >= 4;
     if (isEnabled && isValidCount) {
@@ -244,7 +262,7 @@ public class AdvertisementView extends FrameLayout {
     }
   }
 
-  private void showAdView() {
+  void showAdView() {
     showAdViewNoNetwork();
     if (NetworkUtil.hasConnection(getContext())) {
       showAdViewNetwork();

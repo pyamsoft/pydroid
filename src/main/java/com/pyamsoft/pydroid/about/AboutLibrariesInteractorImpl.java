@@ -49,43 +49,52 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     final String fileLocation;
     switch (license) {
       case FIREBASE:
-        fileLocation = "licenses/firebase.txt";
+        fileLocation = "licenses/firebase";
         break;
-
-      // Apache 2
       case RETROFIT2:
-        // Fall through
-      case LEAK_CANARY:
-        // Fall through
-      case FAST_ADAPTER:
-        // Fall through
-      case DAGGER:
-        // Fall through
-      case BUTTERKNIFE:
-        // Fall through
-      case AUTO_VALUE:
-        // Fall through
-      case ANDROID_IN_APP_BILLING:
-        // Fall through
-      case ANDROID:
-        // Fall through
-      case ANDROID_SUPPORT:
-        // Fall through
-      case PYDROID:
-        // Fall through
-      case RXJAVA:
-        // Fall through
-      case SQLBRITE:
-        // Fall through
-      case SQLDELIGHT:
-        // Fall through
-      case RXANDROID:
-        fileLocation = "licenses/apache2.txt";
+        fileLocation = "licenses/retrofit";
         break;
-
-      // MIT
+      case LEAK_CANARY:
+        fileLocation = "licenses/leakcanary";
+        break;
+      case FAST_ADAPTER:
+        fileLocation = "licenses/fastadapter";
+        break;
+      case DAGGER:
+        fileLocation = "licenses/dagger2";
+        break;
+      case BUTTERKNIFE:
+        fileLocation = "licenses/butterknife";
+        break;
+      case AUTO_VALUE:
+        fileLocation = "licenses/autovalue";
+        break;
+      case ANDROID_IN_APP_BILLING:
+        fileLocation = "licenses/androidinappbillingv3";
+        break;
+      case ANDROID:
+        fileLocation = "licenses/android";
+        break;
+      case ANDROID_SUPPORT:
+        fileLocation = "licenses/androidsupport";
+        break;
+      case PYDROID:
+        fileLocation = "licenses/pydroid";
+        break;
+      case RXJAVA:
+        fileLocation = "licenses/rxjava";
+        break;
+      case SQLBRITE:
+        fileLocation = "licenses/sqlbrite";
+        break;
+      case SQLDELIGHT:
+        fileLocation = "licenses/sqldelight";
+        break;
+      case RXANDROID:
+        fileLocation = "licenses/rxandroid";
+        break;
       case ANDROID_PRIORITY_JOBQUEUE:
-        fileLocation = "licenses/mit.txt";
+        fileLocation = "licenses/androidpriorityjobqueue";
         break;
       default:
         throw new RuntimeException("Invalid license type: " + license.name());

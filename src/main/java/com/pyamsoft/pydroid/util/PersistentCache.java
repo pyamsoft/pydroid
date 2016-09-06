@@ -28,8 +28,6 @@ import timber.log.Timber;
 
 public final class PersistentCache {
 
-  @NonNull private static final String DEFAULT_ID = "PersistentCache.KEY_DEFAULT_ID";
-
   private PersistentCache() {
     throw new RuntimeException("No instances");
   }
@@ -54,30 +52,10 @@ public final class PersistentCache {
 
   /**
    * Saves the generated key into a bundle which will be restored later in the lifecycle
-   * Uses the default id
-   */
-  public static void saveKey(@NonNull Bundle outState, long key) {
-    saveKey(outState, DEFAULT_ID, key);
-  }
-
-  /**
-   * Saves the generated key into a bundle which will be restored later in the lifecycle
    */
   public static void saveKey(@NonNull Bundle outState, @NonNull String id, long key) {
     Timber.d("Save key: %s [%d]", id, key);
     outState.putLong(id, key);
-  }
-
-  /**
-   * Load a piece of data that the user wishes to persist over the lifecycle
-   * Uses the default id
-   *
-   * NOTE: If you always pass in NULL for the savedInstanceState, your state will never be cached.
-   * You must pass THE savedInstanceState from the Android lifecycle
-   */
-  @CheckResult public static <T> long load(@Nullable Bundle savedInstanceState,
-      @NonNull PersistLoader.Callback<T> callback) {
-    return load(DEFAULT_ID, savedInstanceState, callback);
   }
 
   /**

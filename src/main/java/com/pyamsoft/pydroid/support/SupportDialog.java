@@ -49,6 +49,7 @@ public class SupportDialog extends DialogFragment
   @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
   @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
   @NonNull private static final String ARG_PACKAGE = "package";
+  @NonNull private static final String KEY_SUPPORT_PRESENTER = "key_support_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   @SuppressWarnings("WeakerAccess") String packageName;
   private String APP_SKU_DONATE_ONE;
@@ -69,7 +70,7 @@ public class SupportDialog extends DialogFragment
     super.onCreate(savedInstanceState);
     Timber.d("onCreate");
 
-    loadedKey = PersistentCache.load(savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_SUPPORT_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<SocialMediaPresenter>() {
           @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
             return new SocialMediaPresenterLoader(getContext());
@@ -202,7 +203,7 @@ public class SupportDialog extends DialogFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_SUPPORT_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

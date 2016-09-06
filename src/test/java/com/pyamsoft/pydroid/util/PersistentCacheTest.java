@@ -58,38 +58,41 @@ public class PersistentCacheTest {
     PersistentCache.clear();
 
     // Generate first key
-    final long firstResult = PersistentCache.load(null, new PersistLoader.Callback<Object>() {
-      @NonNull @Override public PersistLoader<Object> createLoader() {
-        return new PersistLoader<Object>(RuntimeEnvironment.application) {
-          @NonNull @Override public Object loadPersistent() {
-            return new Object();
+    final String TAG = "1";
+    final long firstResult =
+        PersistentCache.load(TAG, NULL_STATE, new PersistLoader.Callback<Object>() {
+          @NonNull @Override public PersistLoader<Object> createLoader() {
+            return new PersistLoader<Object>(RuntimeEnvironment.application) {
+              @NonNull @Override public Object loadPersistent() {
+                return new Object();
+              }
+            };
           }
-        };
-      }
 
-      @Override public void onPersistentLoaded(@NonNull Object persist) {
+          @Override public void onPersistentLoaded(@NonNull Object persist) {
 
-      }
-    });
+          }
+        });
 
     // Save the key
     final Bundle outState = new Bundle();
-    PersistentCache.saveKey(outState, firstResult);
+    PersistentCache.saveKey(outState, TAG, firstResult);
 
     // Fetch the key again
-    final long secondResult = PersistentCache.load(outState, new PersistLoader.Callback<Object>() {
-      @NonNull @Override public PersistLoader<Object> createLoader() {
-        return new PersistLoader<Object>(RuntimeEnvironment.application) {
-          @NonNull @Override public Object loadPersistent() {
-            throw new RuntimeException("Should not happen");
+    final long secondResult =
+        PersistentCache.load(TAG, outState, new PersistLoader.Callback<Object>() {
+          @NonNull @Override public PersistLoader<Object> createLoader() {
+            return new PersistLoader<Object>(RuntimeEnvironment.application) {
+              @NonNull @Override public Object loadPersistent() {
+                throw new RuntimeException("Should not happen");
+              }
+            };
           }
-        };
-      }
 
-      @Override public void onPersistentLoaded(@NonNull Object persist) {
+          @Override public void onPersistentLoaded(@NonNull Object persist) {
 
-      }
-    });
+          }
+        });
 
     Assert.assertEquals(firstResult, secondResult);
   }
@@ -97,9 +100,9 @@ public class PersistentCacheTest {
   /**
    * To be used with test_loadSynchronous
    */
-  @CheckResult long doLoadSynchronous(@Nullable Bundle instanceState,
+  @CheckResult long doLoadSynchronous(@NonNull String tag, @Nullable Bundle instanceState,
       @NonNull AtomicInteger createCount, @NonNull AtomicInteger loadCount) {
-    return PersistentCache.load(instanceState, new PersistLoader.Callback<Object>() {
+    return PersistentCache.load(tag, instanceState, new PersistLoader.Callback<Object>() {
       @NonNull @Override public PersistLoader<Object> createLoader() {
         return new PersistLoader<Object>(RuntimeEnvironment.application) {
           @NonNull @Override public Object loadPersistent() {
@@ -128,17 +131,18 @@ public class PersistentCacheTest {
     final AtomicInteger loadCount = new AtomicInteger(0);
 
     // First generate will not have a saved state
-    final long loadedKey = doLoadSynchronous(null, createCount, loadCount);
+    final String tag = "TAG";
+    final long loadedKey = doLoadSynchronous(tag, null, createCount, loadCount);
 
     // Synchronous so we can check here
     Assert.assertEquals(createCount.get(), loadCount.get());
 
     // Now save state
     final Bundle outState = new Bundle();
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, tag, loadedKey);
 
     // Reload
-    final long newKey = doLoadSynchronous(outState, createCount, loadCount);
+    final long newKey = doLoadSynchronous(tag, outState, createCount, loadCount);
 
     // Check that keys are the same
     Assert.assertEquals(loadedKey, newKey);
@@ -158,19 +162,21 @@ public class PersistentCacheTest {
 
     // First load a presenter
     final TestPresenter[] presenterHack = new TestPresenter[1];
-    final long loadedKey = PersistentCache.load(null, new PersistLoader.Callback<TestPresenter>() {
-      @NonNull @Override public PersistLoader<TestPresenter> createLoader() {
-        return new PersistLoader<TestPresenter>(RuntimeEnvironment.application) {
-          @NonNull @Override public TestPresenter loadPersistent() {
-            return new TestPresenter();
+    final String tag = "TAG";
+    final long loadedKey =
+        PersistentCache.load(tag, NULL_STATE, new PersistLoader.Callback<TestPresenter>() {
+          @NonNull @Override public PersistLoader<TestPresenter> createLoader() {
+            return new PersistLoader<TestPresenter>(RuntimeEnvironment.application) {
+              @NonNull @Override public TestPresenter loadPersistent() {
+                return new TestPresenter();
+              }
+            };
           }
-        };
-      }
 
-      @Override public void onPersistentLoaded(@NonNull TestPresenter persist) {
-        presenterHack[0] = persist;
-      }
-    });
+          @Override public void onPersistentLoaded(@NonNull TestPresenter persist) {
+            presenterHack[0] = persist;
+          }
+        });
 
     // Make sure it is not destroyed
     final TestPresenter testPresenter = presenterHack[0];
@@ -192,19 +198,21 @@ public class PersistentCacheTest {
 
     // First load a presenter
     final DoNotDestroy[] hack = new DoNotDestroy[1];
-    final long loadedKey = PersistentCache.load(null, new PersistLoader.Callback<DoNotDestroy>() {
-      @NonNull @Override public PersistLoader<DoNotDestroy> createLoader() {
-        return new PersistLoader<DoNotDestroy>(RuntimeEnvironment.application) {
-          @NonNull @Override public DoNotDestroy loadPersistent() {
-            return new DoNotDestroy();
+    final String tag = "TAG";
+    final long loadedKey =
+        PersistentCache.load(tag, NULL_STATE, new PersistLoader.Callback<DoNotDestroy>() {
+          @NonNull @Override public PersistLoader<DoNotDestroy> createLoader() {
+            return new PersistLoader<DoNotDestroy>(RuntimeEnvironment.application) {
+              @NonNull @Override public DoNotDestroy loadPersistent() {
+                return new DoNotDestroy();
+              }
+            };
           }
-        };
-      }
 
-      @Override public void onPersistentLoaded(@NonNull DoNotDestroy persist) {
-        hack[0] = persist;
-      }
-    });
+          @Override public void onPersistentLoaded(@NonNull DoNotDestroy persist) {
+            hack[0] = persist;
+          }
+        });
 
     // Make sure it is not destroyed
     final DoNotDestroy doNotDestroy = hack[0];
@@ -225,19 +233,20 @@ public class PersistentCacheTest {
     // We will load 1000 keys
     final long[] keys = new long[keySize];
     for (int i = 0; i < keySize; ++i) {
-      keys[i] = PersistentCache.load(NULL_STATE, new PersistLoader.Callback<Object>() {
-        @NonNull @Override public PersistLoader<Object> createLoader() {
-          return new PersistLoader<Object>(RuntimeEnvironment.application) {
-            @NonNull @Override public Object loadPersistent() {
-              return new Object();
+      keys[i] =
+          PersistentCache.load(String.valueOf(i), NULL_STATE, new PersistLoader.Callback<Object>() {
+            @NonNull @Override public PersistLoader<Object> createLoader() {
+              return new PersistLoader<Object>(RuntimeEnvironment.application) {
+                @NonNull @Override public Object loadPersistent() {
+                  return new Object();
+                }
+              };
             }
-          };
-        }
 
-        @Override public void onPersistentLoaded(@NonNull Object persist) {
+            @Override public void onPersistentLoaded(@NonNull Object persist) {
 
-        }
-      });
+            }
+          });
     }
 
     final long endTime = System.nanoTime();
@@ -271,26 +280,27 @@ public class PersistentCacheTest {
     // We will load 1000 keys
     final long[] keys = new long[keySize];
     for (int i = 0; i < keySize; ++i) {
-      keys[i] = PersistentCache.load(NULL_STATE, new PersistLoader.Callback<Object>() {
-        @NonNull @Override public PersistLoader<Object> createLoader() {
-          return new PersistLoader<Object>(RuntimeEnvironment.application) {
-            @NonNull @Override public Object loadPersistent() {
-              return new Object();
+      keys[i] =
+          PersistentCache.load(String.valueOf(i), NULL_STATE, new PersistLoader.Callback<Object>() {
+            @NonNull @Override public PersistLoader<Object> createLoader() {
+              return new PersistLoader<Object>(RuntimeEnvironment.application) {
+                @NonNull @Override public Object loadPersistent() {
+                  return new Object();
+                }
+              };
             }
-          };
-        }
 
-        @Override public void onPersistentLoaded(@NonNull Object persist) {
+            @Override public void onPersistentLoaded(@NonNull Object persist) {
 
-        }
-      });
+            }
+          });
     }
 
     // Save them for later
     final Bundle[] bundles = new Bundle[keySize];
     for (int i = 0; i < keySize; ++i) {
       bundles[i] = new Bundle();
-      PersistentCache.saveKey(bundles[i], String.valueOf(keys[i]), keys[i]);
+      PersistentCache.saveKey(bundles[i], String.valueOf(i), keys[i]);
     }
 
     // Load keys again
@@ -298,7 +308,7 @@ public class PersistentCacheTest {
 
     for (int i = 0; i < keySize; ++i) {
       //noinspection CheckResult
-      PersistentCache.load(String.valueOf(keys[i]), bundles[i],
+      PersistentCache.load(String.valueOf(i), bundles[i],
           new PersistLoader.Callback<Object>() {
             @NonNull @Override public PersistLoader<Object> createLoader() {
               throw new RuntimeException("Should not be called");

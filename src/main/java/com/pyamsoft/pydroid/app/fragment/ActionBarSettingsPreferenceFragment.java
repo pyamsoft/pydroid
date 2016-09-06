@@ -44,6 +44,7 @@ import timber.log.Timber;
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
+  @NonNull private static final String KEY_LICENSE_PRESENTER = "key_license_presenter";
   VersionCheckPresenter presenter;
   private long loadedKey;
   private Toast toast;
@@ -106,7 +107,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    loadedKey = PersistentCache.load(savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_LICENSE_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             return new LicenseCheckPresenterLoader(getContext().getApplicationContext());
@@ -133,7 +134,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   }
 
   @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_LICENSE_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

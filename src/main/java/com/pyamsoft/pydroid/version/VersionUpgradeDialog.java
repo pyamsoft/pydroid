@@ -32,10 +32,11 @@ import java.util.Locale;
 
 public class VersionUpgradeDialog extends DialogFragment implements SocialMediaPresenter.View {
 
+  @NonNull public static final String TAG = "VersionUpgradeDialog";
   @NonNull private static final String KEY_NAME = "key_name";
   @NonNull private static final String KEY_LATEST_VERSION = "key_latest_version";
   @NonNull private static final String KEY_CURRENT_VERSION = "key_current_version";
-  @NonNull public static final String TAG = "VersionUpgradeDialog";
+  @NonNull private static final String KEY_VERSION_PRESENTER = "key_version_presenter";
   SocialMediaPresenter presenter;
   private int latestVersion;
   private int currentVersion;
@@ -71,7 +72,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
       throw new RuntimeException("Coult not find application name");
     }
 
-    loadedKey = PersistentCache.load(savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_VERSION_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<SocialMediaPresenter>() {
           @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
             return new SocialMediaPresenterLoader(getContext());
@@ -110,7 +111,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_VERSION_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

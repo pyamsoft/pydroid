@@ -50,6 +50,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @NonNull private static final String KEY_LICENSE_LIST = "key_license_list";
   @NonNull private static final String KEY_STYLING = "key_styling";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
+  @NonNull private static final String KEY_ABOUT_PRESENTER = "key_about_presenter";
   AboutLibrariesPresenter presenter;
   private FastItemAdapter<AboutItem> fastItemAdapter;
   private Licenses[] licenses;
@@ -140,7 +141,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
 
-    loadedKey = PersistentCache.load(savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_ABOUT_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<AboutLibrariesPresenter>() {
           @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
             return new AboutLibrariesPresenterLoader(getContext());
@@ -236,7 +237,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_ABOUT_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

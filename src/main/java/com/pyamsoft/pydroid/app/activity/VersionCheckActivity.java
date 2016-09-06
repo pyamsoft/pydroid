@@ -33,6 +33,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
   @NonNull private static final String KEY_HAS_CHECKED_LICENSE = "key_has_already_checked_license";
+  @NonNull private static final String KEY_VERSION_PRESENTER = "key_version_presenter";
   VersionCheckPresenter presenter;
   boolean licenseChecked;
   private long loadedKey;
@@ -44,7 +45,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
       licenseChecked = savedInstanceState.getBoolean(KEY_HAS_CHECKED_LICENSE, false);
     }
 
-    loadedKey = PersistentCache.load(savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_VERSION_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             licenseChecked = false;
@@ -65,7 +66,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   }
 
   @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_VERSION_PRESENTER, loadedKey);
     outState.putBoolean(KEY_HAS_CHECKED_LICENSE, licenseChecked);
     super.onSaveInstanceState(outState);
   }

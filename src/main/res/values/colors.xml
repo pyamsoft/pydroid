@@ -61,4 +61,7 @@
 
   <color name="shadow_scrim45" tools:keep="@color/shadow_scrim45">#45000000</color>
   <color name="snackbar" tools:keep="@color/snackbar">#323232</color>
+
+  <color name="material_dark_background">#ff303030</color>
+  <color name="material_light_background">#fffafafa</color>
 </resources>

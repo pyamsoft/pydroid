@@ -113,12 +113,10 @@ public class AboutLibrariesFragment extends ActionBarFragment
     final Styling styling = Styling.valueOf(stylingName);
     switch (styling) {
       case LIGHT:
-        backgroundColor = ContextCompat.getColor(getContext(),
-            android.support.v7.appcompat.R.color.background_material_light);
+        backgroundColor = ContextCompat.getColor(getContext(), R.color.material_light_background);
         break;
       case DARK:
-        backgroundColor = ContextCompat.getColor(getContext(),
-            android.support.v7.appcompat.R.color.background_material_dark);
+        backgroundColor = ContextCompat.getColor(getContext(), R.color.material_dark_background);
         break;
       default:
         throw new RuntimeException("Invalid styling: " + stylingName);

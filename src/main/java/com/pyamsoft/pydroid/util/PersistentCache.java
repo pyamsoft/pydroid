@@ -152,13 +152,13 @@ public final class PersistentCache {
       final Object persist = cache.get(key);
       if (persist != null) {
         cache.remove(key);
-        Timber.d("Remove persistable from cache: %s [%d]", persist, key);
+        Timber.d("Remove persistable from cache: %s [%s]", persist, key);
         if (persist instanceof Destroyable) {
           final Destroyable destroyable = (Destroyable) persist;
           destroyable.destroy();
         }
       } else {
-        Timber.e("Persisted object was NULL [%d]", key);
+        Timber.e("Persisted object was NULL [%s]", key);
         Timber.e("This is usually indicative of a lifecycle error. Check your Fragments!");
       }
     }

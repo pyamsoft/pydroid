@@ -17,19 +17,16 @@
 package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.pydroid.model.Licenses;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -37,9 +34,15 @@ import timber.log.Timber;
 class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
   @NonNull final Context appContext;
+  @NonNull final HashMap<Licenses, String> cachedLicenses;
 
   @Inject AboutLibrariesInteractorImpl(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
+    cachedLicenses = new HashMap<>();
+  }
+
+  @Override public void clearCache() {
+    cachedLicenses.clear();
   }
 
   @NonNull @VisibleForTesting @CheckResult String getLicenseFileName(@NonNull Licenses license) {
@@ -90,7 +93,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     return fileLocation;
   }
 
-  @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
+  @VisibleForTesting @NonNull @CheckResult Observable<String> loadNewLicense(
+      @NonNull Licenses licenses) {
     return Observable.defer(() -> {
       if (licenses == Licenses.EMPTY) {
         Timber.w("Empty license passed");
@@ -125,6 +129,22 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
       Timber.i("Finished loading license for: %s", licenses.name());
       return Observable.just(licenseText);
+    });
+  }
+
+  @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
+    return Observable.defer(() -> {
+      if (cachedLicenses.containsKey(licenses)) {
+        return Observable.just(cachedLicenses.get(licenses));
+      } else {
+        return loadNewLicense(licenses);
+      }
+    }).map(s -> {
+      if (!cachedLicenses.containsKey(licenses)) {
+        cachedLicenses.put(licenses, s);
+      }
+
+      return s;
     });
   }
 }

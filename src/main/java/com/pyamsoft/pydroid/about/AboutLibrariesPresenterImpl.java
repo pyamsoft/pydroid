@@ -67,6 +67,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
     super.onUnbind();
     unregisterLicenseBus();
     unsubLoadLicense();
+    interactor.clearCache();
   }
 
   void loadLicenseText(@NonNull View view, int position, @NonNull Licenses licenses) {

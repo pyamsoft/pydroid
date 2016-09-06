@@ -23,5 +23,7 @@ import rx.Observable;
 
 interface AboutLibrariesInteractor {
 
+  void clearCache();
+
   @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull Licenses licenses);
 }

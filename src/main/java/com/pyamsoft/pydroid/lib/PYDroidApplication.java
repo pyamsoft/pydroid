@@ -16,17 +16,49 @@
 
 package com.pyamsoft.pydroid.lib;
 
+import android.app.Application;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import com.pyamsoft.pydroid.BuildConfig;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+import timber.log.Timber;
 
 public class PYDroidApplication extends PYDroidApp {
 
   private PYDroidComponent component;
+  private RefWatcher refWatcher;
+
+  @CheckResult @NonNull public static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
+    final Application application = fragment.getActivity().getApplication();
+    if (application instanceof PYDroidApplication) {
+      final PYDroidApplication pyDroidApplication = (PYDroidApplication) application;
+      return pyDroidApplication.getRefWatcher();
+    } else {
+      throw new ClassCastException("Application is not PYDroidApplication");
+    }
+  }
 
   @Override public void onCreate() {
     super.onCreate();
-    component = DaggerPYDroidComponent.builder()
+    if (BuildConfig.DEBUG) {
+      Timber.d("Install live leakcanary");
+      refWatcher = LeakCanary.install(this);
+    } else {
+      refWatcher = RefWatcher.DISABLED;
+    }
+
+    component = DaggerIPYDroidApp_PYDroidComponent.builder()
         .pYDroidModule(new PYDroidModule(getApplicationContext()))
         .build();
+  }
+
+  @CheckResult @NonNull final RefWatcher getRefWatcher() {
+    if (refWatcher == null) {
+      throw new RuntimeException("RefWatcher is NULL");
+    }
+    return refWatcher;
   }
 
   @SuppressWarnings("unchecked") @NonNull @Override public PYDroidComponent provideComponent() {

@@ -19,20 +19,8 @@ package com.pyamsoft.pydroid.lib;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import com.pyamsoft.pydroid.BuildConfig;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-import timber.log.Timber;
 
 abstract class PYDroidApp extends IPYDroidApp {
-
-  private RefWatcher refWatcher;
-
-  @CheckResult @NonNull static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
-    final PYDroidApp application = (PYDroidApp) fragment.getActivity().getApplication();
-    return application.getRefWatcher();
-  }
 
   @NonNull @CheckResult public static IPYDroidApp get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
@@ -41,22 +29,5 @@ abstract class PYDroidApp extends IPYDroidApp {
     } else {
       throw new ClassCastException("Cannot cast Application Context to PadLockBase");
     }
-  }
-
-  @Override public void onCreate() {
-    super.onCreate();
-    if (BuildConfig.DEBUG) {
-      Timber.d("Install live leakcanary");
-      refWatcher = LeakCanary.install(this);
-    } else {
-      refWatcher = RefWatcher.DISABLED;
-    }
-  }
-
-  @CheckResult @NonNull final RefWatcher getRefWatcher() {
-    if (refWatcher == null) {
-      throw new RuntimeException("RefWatcher is NULL");
-    }
-    return refWatcher;
   }
 }

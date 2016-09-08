@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.lib;
+package com.pyamsoft.pydroid.base;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
+public interface Destroyable {
 
-interface ActionBarProvider {
-
-  @CheckResult @Nullable ActionBar getActionBar();
-
-  void setActionBarUpEnabled(boolean up);
+  void destroy();
 }

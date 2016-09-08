@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.base.Presenter;
 
 interface SocialMediaPresenter extends Presenter<SocialMediaPresenter.View> {
 

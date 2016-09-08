@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.lib;
+package com.pyamsoft.pydroid.base;
 
-public interface Destroyable {
+import android.support.annotation.CheckResult;
 
-  void destroy();
+public interface Presenter<I> extends Destroyable {
+
+  @CheckResult boolean isBound();
+
+  void bindView(I view);
+
+  void unbindView();
 }

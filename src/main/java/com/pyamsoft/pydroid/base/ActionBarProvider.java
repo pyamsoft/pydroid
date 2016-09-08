@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.lib;
+package com.pyamsoft.pydroid.base;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import android.support.annotation.CheckResult;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 
-public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
+interface ActionBarProvider {
 
-  protected ListAdapterLoader(@NonNull Context context) {
-    super(context);
-  }
+  @CheckResult @Nullable ActionBar getActionBar();
+
+  void setActionBarUpEnabled(boolean up);
 }

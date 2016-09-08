@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.lib;
+package com.pyamsoft.pydroid.base;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;

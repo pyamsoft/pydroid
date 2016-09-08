@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.lib;
+package com.pyamsoft.pydroid.base;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import com.pyamsoft.pydroid.lib.PYDroidApplication;
 
 public abstract class ActionBarFragment extends Fragment implements ActionBarProvider {
 

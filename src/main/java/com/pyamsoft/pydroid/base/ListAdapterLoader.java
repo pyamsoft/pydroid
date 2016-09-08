@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.lib;
+package com.pyamsoft.pydroid.base;
 
-import dagger.Component;
-import javax.inject.Singleton;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
-@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
+public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
 
-  AboutLibrariesComponent plusAboutLibrariesComponent();
-
-  SocialMediaComponent plusSocialMediaComponent();
-
-  ApiComponent plusApiComponent(ApiModule apiModule);
+  protected ListAdapterLoader(@NonNull Context context) {
+    super(context);
+  }
 }

@@ -17,10 +17,49 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 abstract class IPYDroidApp extends Application {
 
   @CheckResult @NonNull abstract <T extends PYDroidComponent> T provideComponent();
+
+  @Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
+
+    AboutLibrariesComponent plusAboutLibrariesComponent();
+
+    SocialMediaComponent plusSocialMediaComponent();
+
+    ApiComponent plusApiComponent(ApiModule apiModule);
+  }
+
+  @Module static class PYDroidModule {
+
+    @NonNull private final Context appContext;
+
+    public PYDroidModule(final @NonNull Context context) {
+      appContext = context.getApplicationContext();
+    }
+
+    @Singleton @Provides Context provideContext() {
+      return appContext;
+    }
+
+    @Singleton @Provides @Named("io") Scheduler provideIOScheduler() {
+      return Schedulers.io();
+    }
+
+    @Singleton @Provides @Named("main") Scheduler provideMainThreadScheduler() {
+      return AndroidSchedulers.mainThread();
+    }
+  }
 }

@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.lib;
 
+import com.pyamsoft.pydroid.base.Presenter;
+
 interface VersionCheckPresenter extends Presenter<VersionCheckPresenter.View> {
 
   void checkForUpdates(int currentVersionCode);

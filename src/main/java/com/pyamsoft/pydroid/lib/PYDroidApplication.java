@@ -20,6 +20,7 @@ import android.app.Application;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import com.google.firebase.FirebaseApp;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -42,16 +43,20 @@ public class PYDroidApplication extends PYDroidApp {
 
   @Override public void onCreate() {
     super.onCreate();
-    if (BuildConfig.DEBUG) {
-      Timber.d("Install live leakcanary");
-      refWatcher = LeakCanary.install(this);
-    } else {
-      refWatcher = RefWatcher.DISABLED;
-    }
+    Timber.w("NEW PYDROID APPLICATION");
+    if (!FirebaseApp.getApps(getApplicationContext()).isEmpty()) {
+      Timber.i("INIT NEW FIREBASE INSTANCE");
+      if (BuildConfig.DEBUG) {
+        Timber.d("Install live leakcanary");
+        refWatcher = LeakCanary.install(this);
+      } else {
+        refWatcher = RefWatcher.DISABLED;
+      }
 
-    component = DaggerIPYDroidApp_PYDroidComponent.builder()
-        .pYDroidModule(new PYDroidModule(getApplicationContext()))
-        .build();
+      component = DaggerIPYDroidApp_PYDroidComponent.builder()
+          .pYDroidModule(new PYDroidModule(getApplicationContext()))
+          .build();
+    }
   }
 
   @CheckResult @NonNull final RefWatcher getRefWatcher() {
@@ -62,6 +67,9 @@ public class PYDroidApplication extends PYDroidApp {
   }
 
   @SuppressWarnings("unchecked") @NonNull @Override PYDroidComponent provideComponent() {
+    if (component == null) {
+      throw new NullPointerException("PYDroidComponent is NULL");
+    }
     return component;
   }
 }

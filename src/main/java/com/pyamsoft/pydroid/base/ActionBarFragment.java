@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.fragment;
+package com.pyamsoft.pydroid.base;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
@@ -23,7 +23,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import com.pyamsoft.pydroid.base.ApplicationBase;
 
 public abstract class ActionBarFragment extends Fragment implements ActionBarProvider {
 
@@ -47,6 +46,6 @@ public abstract class ActionBarFragment extends Fragment implements ActionBarPro
 
   @CallSuper @Override public void onDestroy() {
     super.onDestroy();
-    ApplicationBase.getRefWatcher(this).watch(this);
+    PYDroidApplication.getRefWatcher(this).watch(this);
   }
 }

@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.inject;
+package com.pyamsoft.pydroid.base;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.about.AboutLibrariesComponent;
-import com.pyamsoft.pydroid.version.ApiComponent;
-import com.pyamsoft.pydroid.version.ApiModule;
-import com.pyamsoft.pydroid.support.SocialMediaComponent;
-import dagger.Component;
-import javax.inject.Singleton;
+import android.support.annotation.CheckResult;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 
-@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
+interface ActionBarProvider {
 
-  AboutLibrariesComponent plusAboutLibrariesComponent();
+  @CheckResult @Nullable ActionBar getActionBar();
 
-  SocialMediaComponent plusSocialMediaComponent();
-
-  ApiComponent plusApiComponent(@NonNull ApiModule apiModule);
+  void setActionBarUpEnabled(boolean up);
 }

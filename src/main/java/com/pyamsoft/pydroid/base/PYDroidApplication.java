@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.inject;
+package com.pyamsoft.pydroid.base;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.support.SocialMediaPresenter;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
-public class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
+public class PYDroidApplication extends PYDroidApp {
 
-  @Inject Provider<SocialMediaPresenter> presenterProvider;
+  private PYDroidComponent component;
 
-  public SocialMediaPresenterLoader(@NonNull Context context) {
-    super(context);
+  @Override public void onCreate() {
+    super.onCreate();
+    component = DaggerPYDroidComponent.builder()
+        .pYDroidModule(new PYDroidModule(getApplicationContext()))
+        .build();
   }
 
-  @NonNull @Override public SocialMediaPresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusSocialMediaComponent().inject(this);
-    return presenterProvider.get();
+  @SuppressWarnings("unchecked") @NonNull @Override PYDroidComponent provideComponent() {
+    return component;
   }
 }

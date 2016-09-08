@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.version;
 
 import com.pyamsoft.pydroid.dagger.ActivityScope;
-import com.pyamsoft.pydroid.inject.LicenseCheckPresenterLoader;
+import com.pyamsoft.pydroid.base.LicenseCheckPresenterLoader;
 import dagger.Subcomponent;
 
 @ActivityScope

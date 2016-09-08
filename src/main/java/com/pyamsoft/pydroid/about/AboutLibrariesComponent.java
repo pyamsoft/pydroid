@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.about;
 
-import com.pyamsoft.pydroid.inject.AboutLibrariesPresenterLoader;
+import com.pyamsoft.pydroid.base.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 

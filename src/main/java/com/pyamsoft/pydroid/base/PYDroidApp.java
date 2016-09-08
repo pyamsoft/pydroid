@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.base;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -25,13 +26,22 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
-public abstract class ApplicationBase extends Application {
+abstract class PYDroidApp extends Application {
 
   private RefWatcher refWatcher;
 
-  @CheckResult @NonNull public static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
-    final ApplicationBase application = (ApplicationBase) fragment.getActivity().getApplication();
+  @CheckResult @NonNull static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
+    final PYDroidApp application = (PYDroidApp) fragment.getActivity().getApplication();
     return application.getRefWatcher();
+  }
+
+  @NonNull @CheckResult static PYDroidApp get(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    if (appContext instanceof PYDroidApp) {
+      return (PYDroidApp) appContext;
+    } else {
+      throw new ClassCastException("Cannot cast Application Context to PadLockBase");
+    }
   }
 
   @Override public void onCreate() {
@@ -50,4 +60,6 @@ public abstract class ApplicationBase extends Application {
     }
     return refWatcher;
   }
+
+  @CheckResult @NonNull abstract <T extends PYDroidComponent> T provideComponent();
 }

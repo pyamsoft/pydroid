@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.inject;
+package com.pyamsoft.pydroid.base;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.version.ApiModule;
-import com.pyamsoft.pydroid.version.VersionCheckPresenter;
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class LicenseCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
-  @Inject Provider<VersionCheckPresenter> presenterProvider;
+public class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresenter> {
+  @Inject Provider<AboutLibrariesPresenter> presenterProvider;
 
-  public LicenseCheckPresenterLoader(@NonNull Context context) {
+  public AboutLibrariesPresenterLoader(@NonNull Context context) {
     super(context);
   }
 
-  @NonNull @Override public VersionCheckPresenter loadPersistent() {
-    Singleton.Dagger.with(getContext())
-        .plusApiComponent(new ApiModule())
-        .plusVersionCheckComponent()
-        .inject(this);
+  @NonNull @Override public AboutLibrariesPresenter loadPersistent() {
+    PYDroidApp.get(getContext()).provideComponent().plusAboutLibrariesComponent().inject(this);
     return presenterProvider.get();
   }
 }

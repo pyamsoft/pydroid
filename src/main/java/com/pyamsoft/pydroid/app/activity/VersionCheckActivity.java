@@ -21,7 +21,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.inject.LicenseCheckPresenterLoader;
+import com.pyamsoft.pydroid.base.LicenseCheckPresenterLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;

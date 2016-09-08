@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.StrictMode;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,10 +42,6 @@ public abstract class SingleInitContentProvider extends ContentProvider {
     created = false;
   }
 
-  @CheckResult protected boolean isTest() {
-    return false;
-  }
-
   @CheckResult @Override public final boolean onCreate() {
     if (created) {
       // Workaround for https://code.google.com/p/android/issues/detail?id=172655
@@ -57,19 +54,24 @@ public abstract class SingleInitContentProvider extends ContentProvider {
       throw new NullPointerException("SingleInitContentProvider context is NULL");
     }
 
-    if (!isTest()) {
-      installInNonTestMode(context.getApplicationContext());
-      if (BuildConfig.DEBUG) {
-        Timber.uprootAll();
-        Timber.plant(new Timber.DebugTree());
-        setStrictMode();
-        installInDebugMode(context.getApplicationContext());
-      }
-    }
+    install(context.getApplicationContext());
 
     // Return false so that we do not actually initialize this fake provider
     Timber.d("onCreate SingleInitContentProvider");
     return false;
+  }
+
+  @CallSuper protected void install(@NonNull Context context) {
+    if (BuildConfig.DEBUG) {
+      Timber.uprootAll();
+      Timber.plant(new Timber.DebugTree());
+      setStrictMode();
+      installInDebugMode(context.getApplicationContext());
+    }
+  }
+
+  protected void installInDebugMode(@NonNull Context context) {
+
   }
 
   private void setStrictMode() {
@@ -81,14 +83,6 @@ public abstract class SingleInitContentProvider extends ContentProvider {
         .penaltyFlashScreen()
         .build());
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-  }
-
-  protected void installInNonTestMode(@NonNull Context context) {
-
-  }
-
-  protected void installInDebugMode(@NonNull Context context) {
-
   }
 
   @Nullable @Override @CheckResult

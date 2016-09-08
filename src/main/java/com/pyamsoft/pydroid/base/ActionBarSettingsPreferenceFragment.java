@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.fragment;
+package com.pyamsoft.pydroid.base;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -30,8 +30,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.activity.AdvertisementActivity;
-import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.inject.LicenseCheckPresenterLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;

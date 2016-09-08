@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.support;
 
-import com.pyamsoft.pydroid.inject.SocialMediaPresenterLoader;
+import com.pyamsoft.pydroid.base.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 

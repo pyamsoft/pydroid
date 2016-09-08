@@ -24,7 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.inject.SocialMediaPresenterLoader;
+import com.pyamsoft.pydroid.base.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.support.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;

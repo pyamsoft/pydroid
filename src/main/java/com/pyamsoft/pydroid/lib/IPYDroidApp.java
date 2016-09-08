@@ -31,6 +31,7 @@ import rx.schedulers.Schedulers;
 
 abstract class IPYDroidApp extends Application {
 
+  // Not an interface just to hide this provide from subclasses
   @CheckResult @NonNull abstract <T extends PYDroidComponent> T provideComponent();
 
   @Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {

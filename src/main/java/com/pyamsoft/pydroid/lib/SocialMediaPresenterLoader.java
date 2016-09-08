@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-public class PresenterUnboundException extends RuntimeException {
+class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  @Inject Provider<SocialMediaPresenter> presenterProvider;
+
+  public SocialMediaPresenterLoader(@NonNull Context context) {
+    super(context);
+  }
+
+  @NonNull @Override public SocialMediaPresenter loadPersistent() {
+    PYDroidApp.get(getContext()).provideComponent().plusSocialMediaComponent().inject(this);
+    return presenterProvider.get();
   }
 }

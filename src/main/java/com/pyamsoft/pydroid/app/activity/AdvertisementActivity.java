@@ -26,7 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.support.AdvertisementView;
-import com.pyamsoft.pydroid.support.SupportDialog;
+import com.pyamsoft.pydroid.lib.SupportDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 
 public abstract class AdvertisementActivity extends BackPressConfirmActivity {

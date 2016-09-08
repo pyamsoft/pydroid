@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+interface VersionCheckPresenter extends Presenter<VersionCheckPresenter.View> {
 
-public class PresenterUnboundException extends RuntimeException {
+  void checkForUpdates(int currentVersionCode);
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  interface View {
+
+    void onVersionCheckFinished();
+
+    void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode);
   }
 }

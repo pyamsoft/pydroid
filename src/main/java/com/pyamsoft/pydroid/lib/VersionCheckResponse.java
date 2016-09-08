@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.SerializedName;
 
-public class PresenterUnboundException extends RuntimeException {
+@AutoValue abstract class VersionCheckResponse {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  @CheckResult @NonNull
+  public static TypeAdapter<VersionCheckResponse> typeAdapter(final Gson gson) {
+    return new AutoValue_VersionCheckResponse.GsonTypeAdapter(gson);
   }
+
+  @CheckResult @SerializedName("CURRENT_VERSION") abstract int currentVersion();
 }

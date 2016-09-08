@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
 
-public class PresenterUnboundException extends RuntimeException {
+interface SocialMediaPresenter extends Presenter<SocialMediaPresenter.View> {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  void clickAppPage(@NonNull String link);
+
+  void clickGooglePlay();
+
+  void clickGooglePlus();
+
+  void clickBlogger();
+
+  void clickFacebook();
+
+  interface View {
+
+    void onSocialMediaClicked(@NonNull String link);
   }
 }

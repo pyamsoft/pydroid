@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import javax.inject.Inject;
+import retrofit2.Retrofit;
 
-public class PresenterUnboundException extends RuntimeException {
+class GithubVersionCheckApi extends VersionCheckApi {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  @Inject GithubVersionCheckApi(@NonNull Retrofit client) {
+    super(client);
   }
 }

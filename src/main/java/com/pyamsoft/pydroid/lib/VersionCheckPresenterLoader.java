@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-public class PresenterUnboundException extends RuntimeException {
+class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
+  @Inject Provider<VersionCheckPresenter> presenterProvider;
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  public VersionCheckPresenterLoader(@NonNull Context context) {
+    super(context);
+  }
+
+  @NonNull @Override public VersionCheckPresenter loadPersistent() {
+    PYDroidApp.get(getContext())
+        .provideComponent()
+        .plusApiComponent(new ApiModule())
+        .plusVersionCheckComponent()
+        .inject(this);
+    return presenterProvider.get();
   }
 }

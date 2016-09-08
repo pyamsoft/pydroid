@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.lib.VersionCheckActivity;
 import com.pyamsoft.pydroid.support.DonationUnavailableDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.List;

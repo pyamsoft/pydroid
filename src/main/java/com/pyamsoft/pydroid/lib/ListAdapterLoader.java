@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
-public class PresenterUnboundException extends RuntimeException {
+public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  protected ListAdapterLoader(@NonNull Context context) {
+    super(context);
   }
 }

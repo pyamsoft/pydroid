@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import dagger.Component;
+import javax.inject.Singleton;
 
-public class PresenterUnboundException extends RuntimeException {
+@Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
-  }
+  AboutLibrariesComponent plusAboutLibrariesComponent();
+
+  SocialMediaComponent plusSocialMediaComponent();
+
+  ApiComponent plusApiComponent(ApiModule apiModule);
 }

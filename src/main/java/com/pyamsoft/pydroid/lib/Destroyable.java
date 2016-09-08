@@ -14,14 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+public interface Destroyable {
 
-public class PresenterUnboundException extends RuntimeException {
-
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
-  }
+  void destroy();
 }

@@ -23,7 +23,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
-import com.pyamsoft.pydroid.base.ActivityBase;
+import com.pyamsoft.pydroid.lib.ActivityBase;
 
 public abstract class BackPressConfirmActivity extends ActivityBase {
 

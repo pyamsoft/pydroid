@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.dagger.presenter;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.lib.Presenter;
 import java.lang.ref.WeakReference;
 
 public abstract class PresenterBase<I> implements Presenter<I> {

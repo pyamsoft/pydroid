@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.app.activity;
 
+import com.pyamsoft.pydroid.lib.VersionCheckActivity;
+
 public abstract class NoDonationActivity extends VersionCheckActivity {
 
 }

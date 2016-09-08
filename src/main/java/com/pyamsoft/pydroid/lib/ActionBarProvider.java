@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import android.support.annotation.CheckResult;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 
-public class PresenterUnboundException extends RuntimeException {
+interface ActionBarProvider {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
-  }
+  @CheckResult @Nullable ActionBar getActionBar();
+
+  void setActionBarUpEnabled(boolean up);
 }

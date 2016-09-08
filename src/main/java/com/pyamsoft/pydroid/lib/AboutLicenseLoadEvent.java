@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.dagger.presenter;
+package com.pyamsoft.pydroid.lib;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.lib.Presenter;
+import com.google.auto.value.AutoValue;
+import com.pyamsoft.pydroid.model.Licenses;
 
-public class PresenterUnboundException extends RuntimeException {
+@AutoValue abstract class AboutLicenseLoadEvent {
 
-  public PresenterUnboundException(@NonNull Presenter presenter) {
-    super("No view is bound to the presenter: " + presenter.getClass().getName());
+  @CheckResult @NonNull
+  public static AboutLicenseLoadEvent create(int position, @NonNull Licenses licenses) {
+    return new AutoValue_AboutLicenseLoadEvent(position, licenses);
   }
+
+  abstract int position();
+
+  abstract Licenses licenses();
 }

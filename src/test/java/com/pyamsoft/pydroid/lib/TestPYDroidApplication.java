@@ -16,18 +16,21 @@
 
 package com.pyamsoft.pydroid.lib;
 
-import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-abstract class PYDroidApp extends IPYDroidApp {
+public class TestPYDroidApplication extends PYDroidApp {
 
-  @NonNull @CheckResult static IPYDroidApp get(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    if (appContext instanceof IPYDroidApp) {
-      return (IPYDroidApp) appContext;
-    } else {
-      throw new ClassCastException("Cannot cast Application Context to PadLockBase");
-    }
+  private PYDroidComponent component;
+
+  @Override public void onCreate() {
+    super.onCreate();
+
+    component = DaggerIPYDroidApp_PYDroidComponent.builder()
+        .pYDroidModule(new PYDroidModule(getApplicationContext()))
+        .build();
+  }
+
+  @SuppressWarnings("unchecked") @NonNull @Override PYDroidComponent provideComponent() {
+    return component;
   }
 }

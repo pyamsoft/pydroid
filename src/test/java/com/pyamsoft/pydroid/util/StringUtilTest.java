@@ -18,13 +18,15 @@ package com.pyamsoft.pydroid.util;
 
 import android.text.Spannable;
 import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.lib.TestPYDroidApplication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 23, application = TestPYDroidApplication.class)
 public class StringUtilTest {
 
   @Test public void test_createBuilder() {

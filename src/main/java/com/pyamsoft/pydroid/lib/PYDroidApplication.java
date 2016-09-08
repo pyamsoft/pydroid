@@ -61,7 +61,7 @@ public class PYDroidApplication extends PYDroidApp {
     return refWatcher;
   }
 
-  @SuppressWarnings("unchecked") @NonNull @Override public PYDroidComponent provideComponent() {
+  @SuppressWarnings("unchecked") @NonNull @Override PYDroidComponent provideComponent() {
     return component;
   }
 }

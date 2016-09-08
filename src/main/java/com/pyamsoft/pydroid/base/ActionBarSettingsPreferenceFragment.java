@@ -91,8 +91,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return true;
   }
 
-  @NonNull
-  @CheckResult protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
+  @NonNull @CheckResult protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
     return AboutLibrariesFragment.BackStackState.NOT_LAST;
   }
 
@@ -105,16 +104,17 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    loadedKey = PersistentCache.load(KEY_LICENSE_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<VersionCheckPresenter>() {
-          @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
-            return new LicenseCheckPresenterLoader(getContext().getApplicationContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_LICENSE_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<VersionCheckPresenter>() {
+              @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
+                return new LicenseCheckPresenterLoader(getContext().getApplicationContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override
@@ -127,12 +127,12 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CallSuper @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 
   @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_LICENSE_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_LICENSE_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

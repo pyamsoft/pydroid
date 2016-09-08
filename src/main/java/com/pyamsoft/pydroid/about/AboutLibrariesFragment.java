@@ -32,10 +32,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.base.ActionBarFragment;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.base.AboutLibrariesPresenterLoader;
+import com.pyamsoft.pydroid.base.ActionBarFragment;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
@@ -141,16 +141,17 @@ public class AboutLibrariesFragment extends ActionBarFragment
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
 
-    loadedKey = PersistentCache.load(KEY_ABOUT_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<AboutLibrariesPresenter>() {
-          @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
-            return new AboutLibrariesPresenterLoader(getContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_ABOUT_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<AboutLibrariesPresenter>() {
+              @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
+                return new AboutLibrariesPresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull AboutLibrariesPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull AboutLibrariesPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @Nullable @Override
@@ -237,7 +238,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_ABOUT_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_ABOUT_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
@@ -267,7 +268,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
     licenses = null;
   }

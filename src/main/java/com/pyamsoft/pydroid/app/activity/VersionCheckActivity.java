@@ -45,7 +45,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
       licenseChecked = savedInstanceState.getBoolean(KEY_HAS_CHECKED_LICENSE, false);
     }
 
-    loadedKey = PersistentCache.load(KEY_VERSION_PRESENTER, savedInstanceState,
+    loadedKey = PersistentCache.get().load(KEY_VERSION_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<VersionCheckPresenter>() {
           @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
             licenseChecked = false;
@@ -61,12 +61,12 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     if (!isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 
   @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_VERSION_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_VERSION_PRESENTER, loadedKey);
     outState.putBoolean(KEY_HAS_CHECKED_LICENSE, licenseChecked);
     super.onSaveInstanceState(outState);
   }

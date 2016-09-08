@@ -70,7 +70,7 @@ public class SupportDialog extends DialogFragment
     super.onCreate(savedInstanceState);
     Timber.d("onCreate");
 
-    loadedKey = PersistentCache.load(KEY_SUPPORT_PRESENTER, savedInstanceState,
+    loadedKey = PersistentCache.get().load(KEY_SUPPORT_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<SocialMediaPresenter>() {
           @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
             return new SocialMediaPresenterLoader(getContext());
@@ -203,14 +203,14 @@ public class SupportDialog extends DialogFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_SUPPORT_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_SUPPORT_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 }

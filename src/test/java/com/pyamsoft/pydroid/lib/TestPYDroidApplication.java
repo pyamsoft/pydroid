@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.NonNull;
-import com.google.firebase.FirebaseApp;
 
 public class TestPYDroidApplication extends PYDroidApp {
 
@@ -26,11 +25,9 @@ public class TestPYDroidApplication extends PYDroidApp {
   @Override public void onCreate() {
     super.onCreate();
 
-    if (!FirebaseApp.getApps(getApplicationContext()).isEmpty()) {
-      component = DaggerIPYDroidApp_PYDroidComponent.builder()
-          .pYDroidModule(new PYDroidModule(getApplicationContext()))
-          .build();
-    }
+    component = DaggerIPYDroidApp_PYDroidComponent.builder()
+        .pYDroidModule(new PYDroidModule(getApplicationContext()))
+        .build();
   }
 
   @SuppressWarnings("unchecked") @NonNull @Override PYDroidComponent provideComponent() {

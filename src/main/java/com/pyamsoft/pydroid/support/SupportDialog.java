@@ -70,16 +70,17 @@ public class SupportDialog extends DialogFragment
     super.onCreate(savedInstanceState);
     Timber.d("onCreate");
 
-    loadedKey = PersistentCache.get().load(KEY_SUPPORT_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<SocialMediaPresenter>() {
-          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-            return new SocialMediaPresenterLoader(getContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_SUPPORT_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<SocialMediaPresenter>() {
+              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+                return new SocialMediaPresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+                presenter = persist;
+              }
+            });
 
     packageName = getArguments().getString(ARG_PACKAGE);
     if (packageName == null) {

@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.base;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.version.ApiModule;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import javax.inject.Inject;
@@ -32,7 +31,8 @@ public class LicenseCheckPresenterLoader extends PersistLoader<VersionCheckPrese
   }
 
   @NonNull @Override public VersionCheckPresenter loadPersistent() {
-    PYDroidApp.get(getContext()).provideComponent()
+    PYDroidApp.get(getContext())
+        .provideComponent()
         .plusApiComponent(new ApiModule())
         .plusVersionCheckComponent()
         .inject(this);

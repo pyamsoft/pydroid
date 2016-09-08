@@ -72,16 +72,17 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
       throw new RuntimeException("Coult not find application name");
     }
 
-    loadedKey = PersistentCache.get().load(KEY_VERSION_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<SocialMediaPresenter>() {
-          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-            return new SocialMediaPresenterLoader(getContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_VERSION_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<SocialMediaPresenter>() {
+              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+                return new SocialMediaPresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

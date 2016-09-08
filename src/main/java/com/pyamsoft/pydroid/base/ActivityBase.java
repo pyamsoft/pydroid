@@ -37,7 +37,8 @@ public abstract class ActivityBase extends AppCompatActivity {
   /**
    * Override if you do not want the Window to behave like a fullscreen one
    */
-  @SuppressWarnings({ "SameReturnValue", "WeakerAccess" }) @CheckResult protected boolean isFakeFullscreen() {
+  @SuppressWarnings({ "SameReturnValue", "WeakerAccess" }) @CheckResult
+  protected boolean isFakeFullscreen() {
     return false;
   }
 

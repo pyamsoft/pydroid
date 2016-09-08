@@ -16,12 +16,11 @@
 
 package com.pyamsoft.pydroid.version;
 
-import com.pyamsoft.pydroid.dagger.ActivityScope;
 import com.pyamsoft.pydroid.base.LicenseCheckPresenterLoader;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope
-@Subcomponent(modules = VersionCheckModule.class)
+@ActivityScope @Subcomponent(modules = VersionCheckModule.class)
 public interface VersionCheckComponent {
 
   void inject(LicenseCheckPresenterLoader loader);

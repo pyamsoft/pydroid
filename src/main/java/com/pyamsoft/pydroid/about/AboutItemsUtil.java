@@ -97,6 +97,7 @@ final class AboutItemsUtil {
   }
 
   @NonNull @CheckResult public static AboutItem licenseForAndroidPriorityJobQueue() {
-    return new AboutItem("Android Priority JobQueue", "https://github.com/yigit/android-priority-jobqueue", Licenses.ANDROID_PRIORITY_JOBQUEUE);
+    return new AboutItem("Android Priority JobQueue",
+        "https://github.com/yigit/android-priority-jobqueue", Licenses.ANDROID_PRIORITY_JOBQUEUE);
   }
 }

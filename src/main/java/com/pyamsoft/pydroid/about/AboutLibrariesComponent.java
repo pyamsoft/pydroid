@@ -20,8 +20,7 @@ import com.pyamsoft.pydroid.base.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope
-@Subcomponent(modules = AboutLibrariesModule.class)
+@ActivityScope @Subcomponent(modules = AboutLibrariesModule.class)
 public interface AboutLibrariesComponent {
 
   void inject(AboutLibrariesPresenterLoader loader);

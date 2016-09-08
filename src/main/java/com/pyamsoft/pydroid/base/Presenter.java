@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.base;
 
 import android.support.annotation.CheckResult;
-import com.pyamsoft.pydroid.base.Destroyable;
 
 public interface Presenter<I> extends Destroyable {
 

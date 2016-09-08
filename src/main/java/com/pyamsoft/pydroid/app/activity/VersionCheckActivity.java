@@ -20,8 +20,8 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.base.LicenseCheckPresenterLoader;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
@@ -45,17 +45,18 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
       licenseChecked = savedInstanceState.getBoolean(KEY_HAS_CHECKED_LICENSE, false);
     }
 
-    loadedKey = PersistentCache.get().load(KEY_VERSION_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<VersionCheckPresenter>() {
-          @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
-            licenseChecked = false;
-            return new LicenseCheckPresenterLoader(getApplicationContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_VERSION_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<VersionCheckPresenter>() {
+              @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
+                licenseChecked = false;
+                return new LicenseCheckPresenterLoader(getApplicationContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @CallSuper @Override protected void onDestroy() {

@@ -61,7 +61,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
         .build();
   }
 
-  @ActivityScope @Provides VersionCheckApi provideGithubVersionCheckApi(@NonNull Retrofit retrofit) {
+  @ActivityScope @Provides VersionCheckApi provideGithubVersionCheckApi(
+      @NonNull Retrofit retrofit) {
     return new GithubVersionCheckApi(retrofit);
   }
 }

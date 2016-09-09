@@ -26,7 +26,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import com.pyamsoft.pydroid.R;
 
-public class VectorTextView extends AppCompatTextView {
+public class VectorTextView extends NoLeakTextView {
 
   public VectorTextView(Context context) {
     this(context, null);

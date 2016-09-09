@@ -19,8 +19,7 @@ package com.pyamsoft.pydroid.lib;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = VersionCheckModule.class)
-interface VersionCheckComponent {
+@ActivityScope @Subcomponent(modules = VersionCheckModule.class) interface VersionCheckComponent {
 
   void inject(VersionCheckPresenterLoader loader);
 }

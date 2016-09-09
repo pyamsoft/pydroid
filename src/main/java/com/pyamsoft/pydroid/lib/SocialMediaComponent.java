@@ -19,8 +19,7 @@ package com.pyamsoft.pydroid.lib;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = SocialMediaModule.class)
-interface SocialMediaComponent {
+@ActivityScope @Subcomponent(modules = SocialMediaModule.class) interface SocialMediaComponent {
 
   void inject(SocialMediaPresenterLoader loader);
 }

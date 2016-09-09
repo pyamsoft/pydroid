@@ -27,7 +27,7 @@ abstract class PYDroidApp extends IPYDroidApp {
     if (appContext instanceof IPYDroidApp) {
       return (IPYDroidApp) appContext;
     } else {
-      throw new ClassCastException("Cannot cast Application Context to PadLockBase");
+      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
     }
   }
 }

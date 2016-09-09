@@ -67,7 +67,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
           .replace(containerResId,
               AboutLibrariesFragment.newInstance(styling, backStackState, licenses), TAG)
           .addToBackStack(TAG)
-          .commitNow();
+          .commit();
     }
   }
 

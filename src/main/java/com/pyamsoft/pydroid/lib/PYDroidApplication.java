@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.app.Application;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -41,21 +42,12 @@ public class PYDroidApplication extends PYDroidApp {
     }
   }
 
-  @Override public void onCreate() {
+  @Override public final void onCreate() {
     super.onCreate();
     Timber.w("NEW PYDROID APPLICATION");
     if (!FirebaseApp.getApps(getApplicationContext()).isEmpty()) {
       Timber.i("INIT NEW FIREBASE INSTANCE");
-      if (BuildConfig.DEBUG) {
-        Timber.d("Install live leakcanary");
-        refWatcher = LeakCanary.install(this);
-      } else {
-        refWatcher = RefWatcher.DISABLED;
-      }
-
-      component = DaggerIPYDroidApp_PYDroidComponent.builder()
-          .pYDroidModule(new PYDroidModule(getApplicationContext()))
-          .build();
+      onFirstCreate();
     }
   }
 
@@ -71,5 +63,23 @@ public class PYDroidApplication extends PYDroidApp {
       throw new NullPointerException("PYDroidComponent is NULL");
     }
     return component;
+  }
+
+  /**
+   * In a Firebase multi process app, this block of code will be guaranteed to only run on the
+   * first
+   * application creation instance
+   */
+  @CallSuper protected void onFirstCreate() {
+    if (BuildConfig.DEBUG) {
+      Timber.d("Install live leakcanary");
+      refWatcher = LeakCanary.install(this);
+    } else {
+      refWatcher = RefWatcher.DISABLED;
+    }
+
+    component = DaggerIPYDroidApp_PYDroidComponent.builder()
+        .pYDroidModule(new PYDroidModule(getApplicationContext()))
+        .build();
   }
 }

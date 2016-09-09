@@ -29,11 +29,11 @@ import android.util.AttributeSet;
 public class NoLeakTextView extends AppCompatTextView {
 
   public NoLeakTextView(Context context) {
-    this(context, null);
+    super(context);
   }
 
   public NoLeakTextView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
+    super(context, attrs);
   }
 
   public NoLeakTextView(Context context, AttributeSet attrs, int defStyleAttr) {

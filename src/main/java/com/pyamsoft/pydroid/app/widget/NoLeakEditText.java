@@ -28,11 +28,11 @@ import android.util.AttributeSet;
 public class NoLeakEditText extends AppCompatEditText {
 
   public NoLeakEditText(Context context) {
-    this(context, null);
+    super(context);
   }
 
   public NoLeakEditText(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
+    super(context, attrs);
   }
 
   public NoLeakEditText(Context context, AttributeSet attrs, int defStyleAttr) {

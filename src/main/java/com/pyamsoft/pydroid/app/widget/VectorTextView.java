@@ -29,11 +29,13 @@ import com.pyamsoft.pydroid.R;
 public class VectorTextView extends NoLeakTextView {
 
   public VectorTextView(Context context) {
-    this(context, null);
+    super(context);
+    init(null);
   }
 
   public VectorTextView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
+    super(context, attrs);
+    init(attrs);
   }
 
   public VectorTextView(Context context, AttributeSet attrs, int defStyleAttr) {

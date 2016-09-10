@@ -24,6 +24,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'net.ltgt.errorprone'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
@@ -74,11 +75,13 @@ retrolambda {
   jvmArgs '-noverify'
 }
 
-
 dependencies {
   compile fileTree(include: ['*.jar'], dir: 'libs')
 
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+
+  // Error-Prone compiler
+  errorprone 'com.google.errorprone:error_prone_core:2.0.12'
 
   // Firebase Advertsiements :(
   compile 'com.google.firebase:firebase-ads:9.4.0'

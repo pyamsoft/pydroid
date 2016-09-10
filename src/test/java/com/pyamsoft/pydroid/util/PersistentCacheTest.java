@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.dagger.presenter.PresenterBase;
 import com.pyamsoft.pydroid.lib.TestPYDroidApplication;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -37,13 +38,16 @@ import org.robolectric.annotation.Config;
 public class PersistentCacheTest {
 
   @Nullable private final Bundle NULL_STATE = null;
+  private PersistentCache cache;
+
+  @Before public void setup() {
+    cache = new PersistentCache();
+  }
 
   /**
    * Test that we generate two different keys when instances are not saved
    */
-  @Test public void test_generateDifferent() {
-    final PersistentCache cache = new PersistentCache();
-
+  @Test public void testGenerateDifferent() {
     // Generate first key
     final long firstResult = cache.generateKey("key", NULL_STATE);
 
@@ -56,9 +60,7 @@ public class PersistentCacheTest {
   /**
    * Test that we generate the same key when instances are saved
    */
-  @Test public void test_generateSame() {
-    final PersistentCache cache = new PersistentCache();
-
+  @Test public void testGenerateSame() {
     // Generate first key
     final String TAG = "1";
     final long firstResult = cache.load(TAG, NULL_STATE, new PersistLoader.Callback<Object>() {
@@ -100,9 +102,8 @@ public class PersistentCacheTest {
   /**
    * To be used with test_loadSynchronous
    */
-  @CheckResult long doLoadSynchronous(@NonNull PersistentCache cache, @NonNull String tag,
-      @Nullable Bundle instanceState, @NonNull AtomicInteger createCount,
-      @NonNull AtomicInteger loadCount) {
+  @CheckResult long doLoadSynchronous(@NonNull String tag, @Nullable Bundle instanceState,
+      @NonNull AtomicInteger createCount, @NonNull AtomicInteger loadCount) {
     return cache.load(tag, instanceState, new PersistLoader.Callback<Object>() {
       @NonNull @Override public PersistLoader<Object> createLoader() {
         return new PersistLoader<Object>(RuntimeEnvironment.application) {
@@ -123,9 +124,7 @@ public class PersistentCacheTest {
    * Test that the cache loads the same key when passed in the same values, and that objects are
    * only created a single time and then cached
    */
-  @Test public void test_loadSynchronous() {
-    final PersistentCache cache = new PersistentCache();
-
+  @Test public void testLoadSynchronous() {
     // Keeps track of the number of new creates
     final AtomicInteger createCount = new AtomicInteger(0);
     // Keeps track of the number of total loads
@@ -133,7 +132,7 @@ public class PersistentCacheTest {
 
     // First generate will not have a saved state
     final String tag = "TAG";
-    final long loadedKey = doLoadSynchronous(cache, tag, null, createCount, loadCount);
+    final long loadedKey = doLoadSynchronous(tag, null, createCount, loadCount);
 
     // Synchronous so we can check here
     Assert.assertEquals(createCount.get(), loadCount.get());
@@ -143,7 +142,7 @@ public class PersistentCacheTest {
     cache.saveKey(outState, tag, loadedKey);
 
     // Reload
-    final long newKey = doLoadSynchronous(cache, tag, outState, createCount, loadCount);
+    final long newKey = doLoadSynchronous(tag, outState, createCount, loadCount);
 
     // Check that keys are the same
     Assert.assertEquals(loadedKey, newKey);
@@ -158,9 +157,7 @@ public class PersistentCacheTest {
   /**
    * Test that clean up properly destroys a destroyable object like a presenter
    */
-  @Test public void test_cleanup() {
-    final PersistentCache cache = new PersistentCache();
-
+  @Test public void testCleanup() {
     // First load a presenter
     final TestPresenter[] presenterHack = new TestPresenter[1];
     final String tag = "TAG";
@@ -193,9 +190,7 @@ public class PersistentCacheTest {
    * Test that clean up does not destroy an object if it does not implement the Destroyable
    * interface
    */
-  @Test public void test_doNotDestroy() {
-    final PersistentCache cache = new PersistentCache();
-
+  @Test public void testDoNotDestroy() {
     // First load a presenter
     final DoNotDestroy[] hack = new DoNotDestroy[1];
     final String tag = "TAG";
@@ -225,8 +220,6 @@ public class PersistentCacheTest {
   }
 
   void doCreationPerformanceTest(int keySize) {
-    final PersistentCache cache = new PersistentCache();
-
     final long startTime = System.nanoTime();
 
     // We will load 1000 keys
@@ -273,8 +266,6 @@ public class PersistentCacheTest {
   }
 
   void doRetrievePerformanceTest(int keySize) {
-    final PersistentCache cache = new PersistentCache();
-
     // We will load 1000 keys
     final long[] keys = new long[keySize];
     for (int i = 0; i < keySize; ++i) {

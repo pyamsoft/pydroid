@@ -30,7 +30,7 @@ class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
   }
 
   @NonNull @Override public VersionCheckPresenter loadPersistent() {
-    PYDroidApp.get(getContext())
+    PYDroidApplication.get(getContext())
         .provideComponent()
         .plusApiComponent(new ApiModule())
         .plusVersionCheckComponent()

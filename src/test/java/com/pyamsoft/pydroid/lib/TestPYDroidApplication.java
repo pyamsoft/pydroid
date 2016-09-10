@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.NonNull;
 
-public class TestPYDroidApplication extends PYDroidApp {
+public class TestPYDroidApplication extends IPYDroidApp {
 
   private PYDroidComponent component;
 
@@ -30,7 +30,7 @@ public class TestPYDroidApplication extends PYDroidApp {
         .build();
   }
 
-  @SuppressWarnings("unchecked") @NonNull @Override PYDroidComponent provideComponent() {
+  @NonNull @Override PYDroidComponent provideComponent() {
     if (component == null) {
       throw new NullPointerException("TestPYDroidComponent is NULL");
     }

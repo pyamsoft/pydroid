@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -27,10 +28,19 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
-public class PYDroidApplication extends PYDroidApp {
+public class PYDroidApplication extends IPYDroidApp {
 
   private PYDroidComponent component;
   private RefWatcher refWatcher;
+
+  @NonNull @CheckResult static IPYDroidApp get(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    if (appContext instanceof IPYDroidApp) {
+      return (IPYDroidApp) appContext;
+    } else {
+      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
+    }
+  }
 
   @CheckResult @NonNull public static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
     final Application application = fragment.getActivity().getApplication();
@@ -58,11 +68,18 @@ public class PYDroidApplication extends PYDroidApp {
     return refWatcher;
   }
 
-  @SuppressWarnings("unchecked") @NonNull @Override PYDroidComponent provideComponent() {
+  @NonNull @Override PYDroidComponent provideComponent() {
     if (component == null) {
       throw new NullPointerException("PYDroidComponent is NULL");
     }
     return component;
+  }
+
+  @CheckResult @NonNull PYDroidComponent provide(Class<PYDroidComponent> clazz) {
+    if (component == null) {
+      throw new NullPointerException("PYDroidComponent is NULL");
+    }
+    return clazz.cast(component);
   }
 
   /**

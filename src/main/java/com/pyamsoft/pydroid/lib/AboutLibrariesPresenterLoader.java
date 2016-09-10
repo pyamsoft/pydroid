@@ -30,7 +30,7 @@ class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresente
   }
 
   @NonNull @Override public AboutLibrariesPresenter loadPersistent() {
-    PYDroidApp.get(getContext()).provideComponent().plusAboutLibrariesComponent().inject(this);
+    PYDroidApplication.get(getContext()).provideComponent().plusAboutLibrariesComponent().inject(this);
     return presenterProvider.get();
   }
 }

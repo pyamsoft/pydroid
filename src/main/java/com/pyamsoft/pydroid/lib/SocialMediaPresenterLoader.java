@@ -31,7 +31,7 @@ class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
   }
 
   @NonNull @Override public SocialMediaPresenter loadPersistent() {
-    PYDroidApp.get(getContext()).provideComponent().plusSocialMediaComponent().inject(this);
+    PYDroidApplication.get(getContext()).provideComponent().plusSocialMediaComponent().inject(this);
     return presenterProvider.get();
   }
 }

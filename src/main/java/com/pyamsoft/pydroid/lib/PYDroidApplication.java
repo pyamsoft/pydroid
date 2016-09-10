@@ -28,15 +28,15 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
-public class PYDroidApplication extends IPYDroidApp {
+public class PYDroidApplication extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
 
   private PYDroidComponent component;
   private RefWatcher refWatcher;
 
-  @NonNull @CheckResult static IPYDroidApp get(@NonNull Context context) {
+  @NonNull @CheckResult static IPYDroidApp<PYDroidComponent> get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     if (appContext instanceof IPYDroidApp) {
-      return (IPYDroidApp) appContext;
+      return PYDroidApplication.class.cast(appContext);
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
     }
@@ -73,13 +73,6 @@ public class PYDroidApplication extends IPYDroidApp {
       throw new NullPointerException("PYDroidComponent is NULL");
     }
     return component;
-  }
-
-  @CheckResult @NonNull PYDroidComponent provide(Class<PYDroidComponent> clazz) {
-    if (component == null) {
-      throw new NullPointerException("PYDroidComponent is NULL");
-    }
-    return clazz.cast(component);
   }
 
   /**

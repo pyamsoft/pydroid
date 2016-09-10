@@ -29,10 +29,10 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-abstract class IPYDroidApp extends Application {
+abstract class IPYDroidApp<T extends IPYDroidApp.PYDroidComponent> extends Application {
 
   // Not an interface just to hide this provide from subclasses
-  @CheckResult @NonNull abstract PYDroidComponent provideComponent();
+  @CheckResult @NonNull abstract T provideComponent();
 
   @Singleton @Component(modules = PYDroidModule.class) interface PYDroidComponent {
 

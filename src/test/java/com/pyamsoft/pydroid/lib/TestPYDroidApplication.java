@@ -16,11 +16,22 @@
 
 package com.pyamsoft.pydroid.lib;
 
+import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-public class TestPYDroidApplication extends IPYDroidApp {
+public class TestPYDroidApplication extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
 
   private PYDroidComponent component;
+
+  @NonNull @CheckResult static IPYDroidApp<PYDroidComponent> get(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    if (appContext instanceof IPYDroidApp) {
+      return TestPYDroidApplication.class.cast(appContext);
+    } else {
+      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
+    }
+  }
 
   @Override public void onCreate() {
     super.onCreate();

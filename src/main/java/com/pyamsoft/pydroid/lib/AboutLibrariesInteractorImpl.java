@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import javax.inject.Inject;
 import rx.Observable;
@@ -124,7 +125,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       final String licenseFileName = getLicenseFileName(licenses);
       try (
           final InputStream fileInputStream = appContext.getAssets().open(licenseFileName);
-          final BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream))) {
+          final BufferedReader br = new BufferedReader(
+              new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
         String line = br.readLine();
         while (line != null) {
           text.append(line).append('\n');

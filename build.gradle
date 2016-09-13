@@ -136,8 +136,8 @@ dependencies {
   apt 'com.ryanharter.auto.value:auto-value-gson:0.4.2'
 
   // Dagger
-  compile 'com.google.dagger:dagger:2.6.1'
-  apt "com.google.dagger:dagger-compiler:2.6.1"
+  compile 'com.google.dagger:dagger:2.7'
+  apt "com.google.dagger:dagger-compiler:2.7"
 
   // Retrofit
   compile 'com.squareup.retrofit2:retrofit:2.1.0'

@@ -36,4 +36,4 @@
 }
 
 # Keep GSON serialized class
--keep class com.pyamsoft.pydroid.version.VersionCheckResponse { *; }
+-keep class com.pyamsoft.pydroid.lib.VersionCheckResponse { *; }

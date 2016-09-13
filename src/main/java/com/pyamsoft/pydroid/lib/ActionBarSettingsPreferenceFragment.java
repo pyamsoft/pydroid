@@ -41,7 +41,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
   @NonNull private static final String KEY_LICENSE_PRESENTER = "key_license_presenter";
-  VersionCheckPresenter presenter;
+  @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   private long loadedKey;
   private Toast toast;
 

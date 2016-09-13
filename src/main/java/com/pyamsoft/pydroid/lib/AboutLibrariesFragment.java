@@ -30,8 +30,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
@@ -50,13 +54,14 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @NonNull private static final String KEY_STYLING = "key_styling";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
   @NonNull private static final String KEY_ABOUT_PRESENTER = "key_about_presenter";
-  AboutLibrariesPresenter presenter;
+  @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
+  @BindView(R2.id.recycler_about_libraries) RecyclerView recyclerView;
+  @ColorInt private int backgroundColor;
   private FastItemAdapter<AboutItem> fastItemAdapter;
   private Licenses[] licenses;
-  private RecyclerView recyclerView;
-  @ColorInt private int backgroundColor;
   private long loadedKey;
   private boolean lastOnBackStack;
+  private Unbinder unbinder;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
       @NonNull Styling styling, @NonNull BackStackState backStackState,
@@ -157,7 +162,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_about_libraries, container, false);
-    recyclerView = (RecyclerView) view.findViewById(R.id.recycler_about_libraries);
+    unbinder = ButterKnife.bind(this, view);
     view.setBackgroundColor(backgroundColor);
     return view;
   }
@@ -258,6 +263,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    unbinder.unbind();
     if (lastOnBackStack) {
       Timber.d("About is last on backstack, set up false");
       setActionBarUpEnabled(false);

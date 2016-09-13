@@ -31,7 +31,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @NonNull private static final String KEY_HAS_CHECKED_LICENSE = "key_has_already_checked_license";
   @NonNull private static final String KEY_VERSION_PRESENTER = "key_version_presenter";
-  VersionCheckPresenter presenter;
+  @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   boolean licenseChecked;
   private long loadedKey;
 

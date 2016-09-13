@@ -26,10 +26,14 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.List;
@@ -146,19 +150,16 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    final TextView licenseName;
-    final TextView licenseHomepage;
-    final WebView licenseText;
-    final ImageView arrowIcon;
-    final ProgressBar progressBar;
+    @NonNull final Unbinder unbinder;
+    @BindView(R2.id.expand_license_name) TextView licenseName;
+    @BindView(R2.id.expand_license_homepage) TextView licenseHomepage;
+    @BindView(R2.id.expand_license_text) WebView licenseText;
+    @BindView(R2.id.expand_license_icon) ImageView arrowIcon;
+    @BindView(R2.id.expand_license_progress) ProgressBar progressBar;
 
     public ViewHolder(View view) {
       super(view);
-      licenseName = (TextView) view.findViewById(R.id.expand_license_name);
-      licenseHomepage = (TextView) view.findViewById(R.id.expand_license_homepage);
-      licenseText = (WebView) view.findViewById(R.id.expand_license_text);
-      arrowIcon = (ImageView) view.findViewById(R.id.expand_license_icon);
-      progressBar = (ProgressBar) view.findViewById(R.id.expand_license_progress);
+      unbinder = ButterKnife.bind(this, view);
 
       licenseText.getSettings().setTextZoom(80);
       progressBar.setIndeterminate(true);

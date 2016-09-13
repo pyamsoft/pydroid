@@ -36,7 +36,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -54,10 +58,15 @@ public class RatingDialog extends DialogFragment {
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @SuppressWarnings("WeakerAccess") String rateLink;
   @SuppressWarnings("WeakerAccess") boolean acknowledged;
+  @BindView(R2.id.rating_btn_no_thanks) Button cancelButton;
+  @BindView(R2.id.rating_icon) ImageView icon;
+  @BindView(R2.id.rating_text_change) TextView changeLog;
+  @BindView(R2.id.rating_btn_go_rate) Button rateButton;
   private SharedPreferences preferences;
   private Spannable changeLogText;
   private int versionCode;
   @DrawableRes private int changeLogIcon;
+  private Unbinder unbinder;
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider) {
@@ -115,26 +124,27 @@ public class RatingDialog extends DialogFragment {
   @Override public void onDestroyView() {
     super.onDestroyView();
     taskMap.clear();
+    unbinder.unbind();
   }
 
-  @SuppressLint("InflateParams") @NonNull @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState) {
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-    final View rootView =
+    @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_rating, null, false);
-    final ImageView icon = (ImageView) rootView.findViewById(R.id.rating_icon);
-    final TextView changeLog = (TextView) rootView.findViewById(R.id.rating_text_change);
-    final Button rateButton = (Button) rootView.findViewById(R.id.rating_btn_go_rate);
-    final Button cancelButton = (Button) rootView.findViewById(R.id.rating_btn_no_thanks);
+    unbinder = ButterKnife.bind(this, rootView);
+    initDialog();
+    builder.setView(rootView);
+    return builder.create();
+  }
 
+  private void initDialog() {
     ViewCompat.setElevation(icon, AppUtil.convertToDP(getContext(), 8));
 
     final Subscription iconTask = AsyncDrawable.with(getContext()).load(changeLogIcon).into(icon);
     taskMap.put("icon", iconTask);
 
     changeLog.setText(changeLogText);
-    builder.setView(rootView);
 
     cancelButton.setOnClickListener(v -> {
       acknowledged = true;
@@ -147,8 +157,6 @@ public class RatingDialog extends DialogFragment {
       NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
       dismiss();
     });
-
-    return builder.create();
   }
 
   @Override public void onDismiss(DialogInterface dialog) {

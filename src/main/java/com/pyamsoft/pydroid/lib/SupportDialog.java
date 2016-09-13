@@ -31,8 +31,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.app.activity.DonationActivity;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -51,11 +55,21 @@ public class SupportDialog extends DialogFragment
   @NonNull private static final String KEY_SUPPORT_PRESENTER = "key_support_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   @SuppressWarnings("WeakerAccess") String packageName;
+  @BindView(R2.id.support_about_app) Button aboutApp;
+  @BindView(R2.id.support_one_text) TextView oneTitle;
+  @BindView(R2.id.support_two_text) TextView twoTitle;
+  @BindView(R2.id.support_five_text) TextView fiveTitle;
+  @BindView(R2.id.support_ten_text) TextView tenTitle;
+  @BindView(R2.id.google_play) ImageView googlePlay;
+  @BindView(R2.id.google_plus) ImageView googlePlus;
+  @BindView(R2.id.blogger) ImageView blogger;
+  @BindView(R2.id.facebook) ImageView facebook;
   private String APP_SKU_DONATE_ONE;
   private String APP_SKU_DONATE_TWO;
   private String APP_SKU_DONATE_FIVE;
   private String APP_SKU_DONATE_TEN;
   private long loadedKey;
+  private Unbinder unbinder;
 
   @CheckResult @NonNull public static SupportDialog newInstance(final @NonNull String packageName) {
     final SupportDialog fragment = new SupportDialog();
@@ -97,25 +111,20 @@ public class SupportDialog extends DialogFragment
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     @SuppressLint("InflateParams") final View rootView =
         LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
+    unbinder = ButterKnife.bind(this, rootView);
+    initDialog();
+    return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
+        (dialogInterface, i) -> {
+          dialogInterface.dismiss();
+        }).setView(rootView).create();
+  }
 
-    final Button aboutApp = (Button) rootView.findViewById(R.id.support_about_app);
-    aboutApp.setOnClickListener(view -> presenter.clickAppPage(packageName));
-
-    final TextView oneTitle = (TextView) rootView.findViewById(R.id.support_one_text);
-    final TextView twoTitle = (TextView) rootView.findViewById(R.id.support_two_text);
-    final TextView fiveTitle = (TextView) rootView.findViewById(R.id.support_five_text);
-    final TextView tenTitle = (TextView) rootView.findViewById(R.id.support_ten_text);
-
+  private void initDialog() {
+    aboutApp.setOnClickListener(view1 -> presenter.clickAppPage(packageName));
     oneTitle.setOnClickListener(this);
     twoTitle.setOnClickListener(this);
     fiveTitle.setOnClickListener(this);
     tenTitle.setOnClickListener(this);
-
-    final ImageView googlePlay = (ImageView) rootView.findViewById(R.id.google_play);
-    final ImageView googlePlus = (ImageView) rootView.findViewById(R.id.google_plus);
-    final ImageView blogger = (ImageView) rootView.findViewById(R.id.blogger);
-    final ImageView facebook = (ImageView) rootView.findViewById(R.id.facebook);
-
     googlePlay.setOnClickListener(view1 -> presenter.clickGooglePlay());
     googlePlus.setOnClickListener(view1 -> presenter.clickGooglePlus());
     blogger.setOnClickListener(view1 -> presenter.clickBlogger());
@@ -125,11 +134,6 @@ public class SupportDialog extends DialogFragment
     setDonationText(twoTitle, "Generous Donation", "This will help me out a lot.");
     setDonationText(fiveTitle, "Large Donation", "Be awesome today.");
     setDonationText(tenTitle, "Gigantic Donation", "Maximum awesomeness achieved.");
-
-    return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
-        (dialogInterface, i) -> {
-          dialogInterface.dismiss();
-        }).setView(rootView).create();
   }
 
   private void setDonationText(final TextView textView, final String title,
@@ -205,6 +209,11 @@ public class SupportDialog extends DialogFragment
   @Override public void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_SUPPORT_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    unbinder.unbind();
   }
 
   @Override public void onDestroy() {

@@ -31,6 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -38,6 +41,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -65,18 +69,23 @@ public class AdvertisementView extends FrameLayout {
   };
   @NonNull final Handler handler;
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
-  ImageView advertisement;
+  @BindView(R2.id.ad_image) ImageView advertisement;
   AdView realAdView;
+  private Unbinder unbinder;
   private Queue<String> imageQueue;
   private boolean preferenceDefault;
   private String preferenceKey;
 
   public AdvertisementView(Context context) {
-    this(context, null);
+    super(context);
+    handler = new Handler(Looper.getMainLooper());
+    init();
   }
 
   public AdvertisementView(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
+    super(context, attrs);
+    handler = new Handler(Looper.getMainLooper());
+    init();
   }
 
   public AdvertisementView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -108,11 +117,10 @@ public class AdvertisementView extends FrameLayout {
   @SuppressWarnings("WeakerAccess") public final void create(@NonNull final String adId) {
     Timber.d("Create AdView with debug mode: %s", BuildConfig.DEBUG);
 
+    unbinder = ButterKnife.bind(this, this);
+
     // Setup real ad view
     setupRealAdView(adId);
-
-    // Find views
-    resolveViews();
 
     // Default to gone
     setVisibility(View.GONE);
@@ -146,6 +154,7 @@ public class AdvertisementView extends FrameLayout {
     realAdView.setAdListener(null);
     realAdView.destroy();
     removeView(realAdView);
+    unbinder.unbind();
   }
 
   private void setupRealAdView(@NonNull final String adId) {
@@ -173,12 +182,6 @@ public class AdvertisementView extends FrameLayout {
 
     // Init mobile Ads
     MobileAds.initialize(getContext().getApplicationContext(), adId);
-  }
-
-  private void resolveViews() {
-    advertisement = (ImageView) findViewById(R.id.ad_image);
-
-    // Add the real adview below the close button
     addView(realAdView, 0);
   }
 

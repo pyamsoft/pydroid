@@ -95,7 +95,7 @@ dependencies {
   // Error-Prone compiler
   errorprone 'com.google.errorprone:error_prone_core:2.0.12'
 
-  // Firebase Advertsiements :(
+  // Firebase Advertisements :(
   compile 'com.google.firebase:firebase-ads:9.4.0'
 
   // Leak Canary
@@ -128,6 +128,7 @@ dependencies {
 
   // Butterknife
   compile 'com.jakewharton:butterknife:8.4.0'
+  apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
   // Auto value
   provided 'com.google.auto.value:auto-value:1.3'

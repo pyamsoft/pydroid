@@ -70,7 +70,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
     interactor.clearCache();
   }
 
-  void loadLicenseText(@NonNull View view, int position, @NonNull Licenses licenses) {
+  @SuppressWarnings("WeakerAccess") void loadLicenseText(@NonNull View view, int position, @NonNull Licenses licenses) {
     if (licenses == Licenses.EMPTY) {
       getView().onLicenseTextLoaded(position, "");
     } else {
@@ -87,7 +87,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
     }
   }
 
-  void unsubLoadLicense() {
+  @SuppressWarnings("WeakerAccess") void unsubLoadLicense() {
     if (licenseSubscriptions.hasSubscriptions()) {
       licenseSubscriptions.clear();
     }

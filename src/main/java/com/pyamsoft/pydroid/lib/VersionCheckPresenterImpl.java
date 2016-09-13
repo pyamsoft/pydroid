@@ -58,7 +58,7 @@ class VersionCheckPresenterImpl extends SchedulerPresenter<VersionCheckPresenter
         }, throwable -> Timber.e(throwable, "onError checkForUpdates"), this::unsubCheck);
   }
 
-  void unsubCheck() {
+  @SuppressWarnings("WeakerAccess") void unsubCheck() {
     if (!checkSubscription.isUnsubscribed()) {
       checkSubscription.unsubscribe();
     }

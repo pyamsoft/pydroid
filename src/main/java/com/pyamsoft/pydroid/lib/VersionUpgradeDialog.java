@@ -35,7 +35,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   @NonNull private static final String KEY_LATEST_VERSION = "key_latest_version";
   @NonNull private static final String KEY_CURRENT_VERSION = "key_current_version";
   @NonNull private static final String KEY_VERSION_PRESENTER = "key_version_presenter";
-  SocialMediaPresenter presenter;
+  @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private int latestVersion;
   private int currentVersion;
   private String applicationName;

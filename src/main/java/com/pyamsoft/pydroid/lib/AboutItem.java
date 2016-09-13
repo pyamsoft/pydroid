@@ -41,7 +41,7 @@ import java.util.List;
 class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-  @NonNull final String licenseHomepage;
+  @SuppressWarnings("WeakerAccess") @NonNull final String licenseHomepage;
   @NonNull private final String licenseName;
   @NonNull private final Licenses licenseType;
   @NonNull private String licenseText;
@@ -71,11 +71,11 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     this.licenseText = licenseText;
   }
 
-  @CheckResult boolean isExpanded() {
+  @CheckResult @SuppressWarnings("WeakerAccess") boolean isExpanded() {
     return expanded;
   }
 
-  void setExpanded(boolean expanded) {
+  @SuppressWarnings("WeakerAccess") void setExpanded(boolean expanded) {
     this.expanded = expanded;
   }
 
@@ -141,7 +141,7 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     return FACTORY;
   }
 
-  protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
+  @SuppressWarnings("WeakerAccess") protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
 
     @CheckResult @Override public ViewHolder create(@NonNull View v) {
       return new ViewHolder(v);

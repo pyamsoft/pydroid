@@ -82,7 +82,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     }
   }
 
-  @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId,
+  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId,
       @NonNull AboutLibrariesFragment.Styling styling, @NonNull Licenses... licenses) {
     Timber.d("Show about licenses fragment");
     AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack(), licenses);
@@ -93,7 +93,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return AboutLibrariesFragment.BackStackState.NOT_LAST;
   }
 
-  @CheckResult protected boolean checkForUpdate() {
+  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean checkForUpdate() {
     toast.show();
     presenter.checkForUpdates(getCurrentApplicationVersion());
     return true;
@@ -155,7 +155,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
             updatedVersionCode), VersionUpgradeDialog.TAG);
   }
 
-  @CheckResult @NonNull VersionCheckProvider getVersionCheckProvider() {
+  @CheckResult @NonNull private VersionCheckProvider getVersionCheckProvider() {
     final FragmentActivity activity = getActivity();
     if (activity instanceof VersionCheckProvider) {
       return (VersionCheckProvider) activity;

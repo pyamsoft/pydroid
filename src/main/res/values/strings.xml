@@ -21,8 +21,6 @@
   <string name="blank"/>
   <string name="pydroid_donate" tools:keep="@string/pydroid_donate">SUPPORT</string>
   <string name="about_this_application">About This Application</string>
-  <string name="send_email_report">Send Email Report</string>
-  <string name="crash_prompt">Oops! Looks like %s has crashed! Click the button below to send an email report to pyamsoft so that I can fix the problem. It really does help when you send these reports, otherwise I won\'t know if there are problems with your experience.</string>
   <string name="rate_app_on_play_store">Rate App on Play Store</string>
   <string name="no_thanks">No Thanks</string>
   <string name="liking_the_app">Liking the App?</string>
@@ -34,10 +32,10 @@
   <string name="adview_summary_checked" tools:keep="@string/adview_summary_checked">Will show related and relevant pyamsoft applications</string>
   <string name="adview_summary_unchecked" tools:keep="@string/adview_summary_unchecked">Will not show other related pyamsoft applications</string>
 
-  <string name="about_license_key">about_license</string>
-  <string name="about_license_title">Open Source Licenses</string>
+  <string name="about_license_key" tools:keep="@string/about_license_key">about_license</string>
+  <string name="about_license_title" tools:keep="@string/about_license_title">Open Source Licenses</string>
 
-  <string name="check_version_key">check_version</string>
-  <string name="check_version_title">Check for Updates</string>
+  <string name="check_version_key" tools:keep="@string/check_version_key">check_version</string>
+  <string name="check_version_title" tools:keep="@string/check_version_title">Check for Updates</string>
 
 </resources>

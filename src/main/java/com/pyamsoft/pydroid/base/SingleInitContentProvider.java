@@ -49,6 +49,7 @@ public abstract class SingleInitContentProvider extends ContentProvider {
       return false;
     }
 
+    created = true;
     final Context context = getContext();
     if (context == null) {
       throw new NullPointerException("SingleInitContentProvider context is NULL");
@@ -70,6 +71,7 @@ public abstract class SingleInitContentProvider extends ContentProvider {
     }
   }
 
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
   protected void installInDebugMode(@NonNull Context context) {
 
   }

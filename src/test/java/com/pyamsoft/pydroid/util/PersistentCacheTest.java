@@ -102,7 +102,7 @@ public class PersistentCacheTest {
   /**
    * To be used with test_loadSynchronous
    */
-  @CheckResult long doLoadSynchronous(@NonNull String tag, @Nullable Bundle instanceState,
+  @CheckResult private long doLoadSynchronous(@NonNull String tag, @Nullable Bundle instanceState,
       @NonNull AtomicInteger createCount, @NonNull AtomicInteger loadCount) {
     return cache.load(tag, instanceState, new PersistLoader.Callback<Object>() {
       @NonNull @Override public PersistLoader<Object> createLoader() {
@@ -219,11 +219,11 @@ public class PersistentCacheTest {
     Assert.assertFalse(doNotDestroy.isDestroyed());
   }
 
-  void doCreationPerformanceTest(int keySize) {
+  private void doCreationPerformanceTest(int keySize) {
     final long startTime = System.nanoTime();
 
     // We will load 1000 keys
-    final long[] keys = new long[keySize];
+    @SuppressWarnings("MismatchedReadAndWriteOfArray") final long[] keys = new long[keySize];
     for (int i = 0; i < keySize; ++i) {
       keys[i] = cache.load(String.valueOf(i), NULL_STATE, new PersistLoader.Callback<Object>() {
         @NonNull @Override public PersistLoader<Object> createLoader() {
@@ -265,7 +265,7 @@ public class PersistentCacheTest {
     doCreationPerformanceTest(1000000);
   }
 
-  void doRetrievePerformanceTest(int keySize) {
+  private void doRetrievePerformanceTest(int keySize) {
     // We will load 1000 keys
     final long[] keys = new long[keySize];
     for (int i = 0; i < keySize; ++i) {
@@ -334,7 +334,7 @@ public class PersistentCacheTest {
 
   static class DoNotDestroy {
 
-    private boolean destroyed = false;
+    private final boolean destroyed = false;
 
     public boolean isDestroyed() {
       return destroyed;

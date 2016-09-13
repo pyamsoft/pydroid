@@ -67,10 +67,10 @@ public class AdvertisementView extends FrameLayout {
   @NonNull private static final String[] POSSIBLE_PACKAGES = {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH
   };
-  @NonNull final Handler handler;
+  @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @BindView(R2.id.ad_image) ImageView advertisement;
-  AdView realAdView;
+  @SuppressWarnings("WeakerAccess") AdView realAdView;
   private Unbinder unbinder;
   private Queue<String> imageQueue;
   private boolean preferenceDefault;
@@ -265,7 +265,7 @@ public class AdvertisementView extends FrameLayout {
     }
   }
 
-  void showAdView() {
+  @SuppressWarnings("WeakerAccess") void showAdView() {
     showAdViewNoNetwork();
     if (NetworkUtil.hasConnection(getContext())) {
       showAdViewNetwork();
@@ -283,7 +283,7 @@ public class AdvertisementView extends FrameLayout {
     realAdView.loadAd(adRequest);
   }
 
-  void showAdViewNoNetwork() {
+  @SuppressWarnings("WeakerAccess") void showAdViewNoNetwork() {
     realAdView.setVisibility(View.GONE);
     advertisement.setVisibility(View.VISIBLE);
 

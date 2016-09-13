@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.dagger.presenter;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.Presenter;
 
-public class PresenterUnboundException extends RuntimeException {
+@SuppressWarnings("WeakerAccess") public class PresenterUnboundException extends RuntimeException {
 
   public PresenterUnboundException(@NonNull Presenter presenter) {
     super("No view is bound to the presenter: " + presenter.getClass().getName());

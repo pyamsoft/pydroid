@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.lib;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.CallSuper;
@@ -28,7 +29,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
-public class PYDroidApplication extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
+@SuppressLint("Registered") public class PYDroidApplication extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
 
   private PYDroidComponent component;
   private RefWatcher refWatcher;
@@ -61,7 +62,7 @@ public class PYDroidApplication extends IPYDroidApp<IPYDroidApp.PYDroidComponent
     }
   }
 
-  @CheckResult @NonNull final RefWatcher getRefWatcher() {
+  @CheckResult @NonNull private RefWatcher getRefWatcher() {
     if (refWatcher == null) {
       throw new RuntimeException("RefWatcher is NULL");
     }

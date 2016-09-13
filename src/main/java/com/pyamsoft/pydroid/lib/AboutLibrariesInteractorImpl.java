@@ -34,8 +34,8 @@ import timber.log.Timber;
 
 class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
-  @NonNull final Context appContext;
-  @NonNull final HashMap<Licenses, String> cachedLicenses;
+  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final HashMap<Licenses, String> cachedLicenses;
 
   @Inject AboutLibrariesInteractorImpl(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
@@ -46,7 +46,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @NonNull @VisibleForTesting @CheckResult String getLicenseFileName(@NonNull Licenses license) {
+  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting @CheckResult String getLicenseFileName(@NonNull Licenses license) {
     final String fileLocation;
     switch (license) {
       case FIREBASE:
@@ -103,7 +103,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     return fileLocation;
   }
 
-  @VisibleForTesting @NonNull @CheckResult Observable<String> loadNewLicense(
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult Observable<String> loadNewLicense(
       @NonNull Licenses licenses) {
     return Observable.defer(() -> {
       if (licenses == Licenses.EMPTY) {

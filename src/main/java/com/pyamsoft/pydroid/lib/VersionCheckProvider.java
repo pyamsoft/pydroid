@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.lib;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-public interface VersionCheckProvider {
+interface VersionCheckProvider {
 
   @CheckResult @NonNull String provideApplicationName();
 

@@ -29,7 +29,8 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
-@SuppressLint("Registered") public class PYDroidApplication extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
+@SuppressLint("Registered") public class PYDroidApplication
+    extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
 
   private PYDroidComponent component;
   private RefWatcher refWatcher;
@@ -53,10 +54,19 @@ import timber.log.Timber;
     }
   }
 
+  /**
+   * Override to false to initialize if application does not use firebase
+   */
+  @CheckResult protected boolean hasFirebase() {
+    return true;
+  }
+
   @Override public final void onCreate() {
     super.onCreate();
     Timber.w("NEW PYDROID APPLICATION");
-    if (!FirebaseApp.getApps(getApplicationContext()).isEmpty()) {
+    if (!hasFirebase()) {
+      onFirstCreate();
+    } else if (!FirebaseApp.getApps(getApplicationContext()).isEmpty()) {
       Timber.i("INIT NEW FIREBASE INSTANCE");
       onFirstCreate();
     }

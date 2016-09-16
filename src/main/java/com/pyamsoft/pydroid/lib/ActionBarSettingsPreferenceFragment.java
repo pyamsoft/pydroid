@@ -63,33 +63,25 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return false;
   }
 
-  /**
-   * If the going gets tough, enable this flag to make it so that a user
-   * must purchase IAP to disable ads
-   */
-  @CheckResult private boolean enforceAdRestrictions() {
-    return false;
-  }
-
   @SuppressWarnings("WeakerAccess") @CheckResult protected boolean toggleAdVisibility(boolean b) {
     final FragmentActivity activity = getActivity();
     if (activity instanceof DonationActivity) {
       final DonationActivity donationActivity = (DonationActivity) getActivity();
 
-      //noinspection ConstantConditions
-      if (donationActivity.canDisableAds() && enforceAdRestrictions()) {
-        if (b) {
-          Timber.d("Turn on ads");
-          donationActivity.showAd();
-        } else {
+      if (b) {
+        Timber.d("Turn on ads");
+        donationActivity.showAd();
+      } else {
+        if (donationActivity.canDisableAds()) {
           Timber.d("Turn off ads");
           donationActivity.hideAd();
+        } else {
+          Timber.e("Cannot disable Ads");
+          AppUtil.guaranteeSingleDialogFragment(getActivity(), new SupportDialog(), "support");
+          return false;
         }
-        return true;
-      } else {
-        Timber.e("NOT ALLOWED TO DISABLE ADS");
-        return false;
       }
+      return true;
     } else {
       Timber.e("Activity is not AdvertisementActivity");
       return false;

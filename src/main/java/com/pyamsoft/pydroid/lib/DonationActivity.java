@@ -35,6 +35,7 @@ import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Products;
 import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.Sku;
+import timber.log.Timber;
 
 public abstract class DonationActivity extends VersionCheckActivity {
 
@@ -73,6 +74,7 @@ public abstract class DonationActivity extends VersionCheckActivity {
     final String appSpecificSkuDonateFive = packageName + SKU_DONATE_FIVE;
     final String appSpecificSkuDonateTen = packageName + SKU_DONATE_TEN;
 
+    Timber.d("Set up IAP checkout");
     checkout = Checkout.forActivity(this,
         new Billing(getApplicationContext(), new Billing.DefaultConfiguration() {
           @NonNull @Override public String getPublicKey() {

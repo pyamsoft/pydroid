@@ -226,6 +226,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
   }
 
   void loadUnsupportedIAPView() {
+    Timber.e("Load UNSUPPORTED");
     loadingLayout.setVisibility(View.GONE);
     recyclerView.setVisibility(View.GONE);
     emptyIAP.setVisibility(View.VISIBLE);
@@ -233,6 +234,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
   }
 
   void loadEmptyIAPView() {
+    Timber.w("Load EMPTY");
     loadingLayout.setVisibility(View.GONE);
     recyclerView.setVisibility(View.GONE);
     emptyIAP.setVisibility(View.VISIBLE);
@@ -240,6 +242,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
   }
 
   void loadIAPView() {
+    Timber.i("Load IAP");
     loadingLayout.setVisibility(View.GONE);
     emptyIAP.setVisibility(View.GONE);
     emptyIAPText.setText(null);
@@ -256,6 +259,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
       fastItemAdapter.clear();
       final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
       if (product.supported) {
+        Timber.i("IAP Billing is supported");
         final List<SkuItem> skuItemList = new ArrayList<>();
 
         // KLUDGE Ugly
@@ -263,6 +267,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         // First loop to find a purchased item
         boolean hasPurchasedItem = false;
         for (Sku sku : product.getSkus()) {
+          Timber.d("Has SKU %s been purchase?", sku.id);
           final boolean purchased = product.hasPurchaseInState(sku.id, Purchase.State.PURCHASED);
           if (purchased) {
             hasPurchasedItem = true;
@@ -272,6 +277,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
         // Display items based on purchase state
         if (hasPurchasedItem) {
+          Timber.d("SKU has been purchased, allow user to disable Ads");
 
           setDisableAds(true);
           // Only reveal consumable items
@@ -282,6 +288,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
             }
           }
         } else {
+          Timber.d("SKU has not been purchased, user cannot disable Ads");
 
           setDisableAds(false);
           // Only reveal non-consumable items
@@ -308,6 +315,8 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         for (final SkuItem skuItem : skuItemList) {
           fastItemAdapter.add(new SkuUIItem(skuItem));
         }
+      } else {
+        Timber.e("Products are not supported: %s", product.id);
       }
 
       if (product.supported) {

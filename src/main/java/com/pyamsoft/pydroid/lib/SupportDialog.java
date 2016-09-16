@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,6 +70,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
   @BindView(R2.id.support_iap_empty) FrameLayout emptyIAP;
   @BindView(R2.id.support_loading) FrameLayout loadingLayout;
   @BindView(R2.id.support_loading_progress) ProgressBar loadingProgress;
+  @BindView(R2.id.support_iap_empty_text) TextView emptyIAPText;
   FastItemAdapter<SkuUIItem> fastItemAdapter;
   Inventory inAppPurchaseInventory;
   ActivityCheckout activityCheckout;
@@ -223,6 +225,28 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     }
   }
 
+  void loadUnsupportedIAPView() {
+    loadingLayout.setVisibility(View.GONE);
+    recyclerView.setVisibility(View.GONE);
+    emptyIAP.setVisibility(View.VISIBLE);
+    emptyIAPText.setText(getString(R.string.iap_unsupported));
+  }
+
+  void loadEmptyIAPView() {
+    loadingLayout.setVisibility(View.GONE);
+    recyclerView.setVisibility(View.GONE);
+    emptyIAP.setVisibility(View.VISIBLE);
+    emptyIAPText.setText(getString(R.string.iap_empty));
+  }
+
+  void loadIAPView() {
+    loadingLayout.setVisibility(View.GONE);
+    emptyIAP.setVisibility(View.GONE);
+    emptyIAPText.setText(null);
+    recyclerView.setVisibility(View.VISIBLE);
+    fastItemAdapter.notifyDataSetChanged();
+  }
+
   class InventoryLoadedListener implements Inventory.Listener {
 
     @Override public void onLoaded(@NonNull Inventory.Products products) {
@@ -284,15 +308,16 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         for (final SkuItem skuItem : skuItemList) {
           fastItemAdapter.add(new SkuUIItem(skuItem));
         }
+      }
 
-        fastItemAdapter.notifyDataSetChanged();
-        loadingLayout.setVisibility(View.GONE);
-        emptyIAP.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
+      if (product.supported) {
+        if (fastItemAdapter.getAdapterItems().isEmpty()) {
+          loadEmptyIAPView();
+        } else {
+          loadIAPView();
+        }
       } else {
-        loadingLayout.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
-        emptyIAP.setVisibility(View.VISIBLE);
+        loadUnsupportedIAPView();
       }
     }
   }
@@ -322,7 +347,6 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
       if (response == ResponseCodes.ITEM_ALREADY_OWNED) {
         processResult();
       } else {
-        // TODO dialog maybe?
         Toast.makeText(getContext(),
             "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
             .show();
@@ -344,7 +368,6 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         Timber.w("CONSUME");
         processResult();
       } else {
-        // TODO dialog maybe?
         Toast.makeText(getContext(),
             "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
             .show();

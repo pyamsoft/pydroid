@@ -26,6 +26,9 @@
   <string name="liking_the_app">Liking the App?</string>
   <string name="homepage">Homepage</string>
 
+  <string name="iap_unsupported">Unable to connect to Play Store for In-App Purchases, or they are unsupported on this device.</string>
+  <string name="iap_empty">Unable to load In-App Purchase products. Please try again later.</string>
+
   <bool name="adview_default">true</bool>
   <string name="adview_key">adview_pyamsoft</string>
   <string name="adview_title" tools:keep="@string/adview_title">Related Applications</string>

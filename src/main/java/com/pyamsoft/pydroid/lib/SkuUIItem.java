@@ -58,12 +58,17 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
+    holder.title.setText(skuItem.sku().title);
+    holder.description.setText(skuItem.sku().description);
+    holder.price.setText(skuItem.sku().price);
   }
 
   protected static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final Unbinder unbinder;
     @BindView(R2.id.purchase_iap_title) TextView title;
+    @BindView(R2.id.purchase_iap_description) TextView description;
+    @BindView(R2.id.purchase_iap_price) TextView price;
 
     public ViewHolder(View itemView) {
       super(itemView);

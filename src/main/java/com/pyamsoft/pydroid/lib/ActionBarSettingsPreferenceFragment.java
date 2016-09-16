@@ -28,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.pyamsoft.pydroid.app.activity.AdvertisementActivity;
 import com.pyamsoft.pydroid.base.ActionBarPreferenceFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.model.Licenses;
@@ -64,25 +63,41 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return false;
   }
 
+  /**
+   * If the going gets tough, enable this flag to make it so that a user
+   * must purchase IAP to disable ads
+   */
+  @CheckResult private boolean enforceAdRestrictions() {
+    return false;
+  }
+
   @SuppressWarnings("WeakerAccess") @CheckResult protected boolean toggleAdVisibility(boolean b) {
     final FragmentActivity activity = getActivity();
-    if (activity instanceof AdvertisementActivity) {
-      final AdvertisementActivity advertisementActivity = (AdvertisementActivity) getActivity();
-      if (b) {
-        Timber.d("Turn on ads");
-        advertisementActivity.showAd();
+    if (activity instanceof DonationActivity) {
+      final DonationActivity donationActivity = (DonationActivity) getActivity();
+
+      //noinspection ConstantConditions
+      if (donationActivity.canDisableAds() && enforceAdRestrictions()) {
+        if (b) {
+          Timber.d("Turn on ads");
+          donationActivity.showAd();
+        } else {
+          Timber.d("Turn off ads");
+          donationActivity.hideAd();
+        }
+        return true;
       } else {
-        Timber.d("Turn off ads");
-        advertisementActivity.hideAd();
+        Timber.e("NOT ALLOWED TO DISABLE ADS");
+        return false;
       }
-      return true;
     } else {
       Timber.e("Activity is not AdvertisementActivity");
       return false;
     }
   }
 
-  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId,
+  @SuppressWarnings("SameReturnValue") @CheckResult
+  protected boolean showAboutLicensesFragment(@IdRes int containerId,
       @NonNull AboutLibrariesFragment.Styling styling, @NonNull Licenses... licenses) {
     Timber.d("Show about licenses fragment");
     AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack(), licenses);

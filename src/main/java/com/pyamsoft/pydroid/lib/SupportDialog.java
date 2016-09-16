@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -50,6 +52,7 @@ import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.RequestListener;
 import org.solovyev.android.checkout.ResponseCodes;
 import org.solovyev.android.checkout.Sku;
+import timber.log.Timber;
 
 public class SupportDialog extends DialogFragment implements SocialMediaPresenter.View {
 
@@ -151,9 +154,15 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
   @Override public void onDestroy() {
     super.onDestroy();
+    activityCheckout.destroyPurchaseFlow();
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
+  }
+
+  @Override public void onDetach() {
+    super.onDetach();
+    activityCheckout = null;
   }
 
   void attemptPurchase(@NonNull SkuItem sku) {
@@ -162,6 +171,10 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
       if (token == null) {
         throw new IllegalStateException(
             "Sku " + sku.sku().title + " has been purchased but token is NULL");
+      }
+
+      if (!sku.isConsumable()) {
+        throw new IllegalStateException("Cannot re-purchase a non-consumable IAP");
       }
 
       consumeInAppPurchaseItem(token, new ConsumeListener());
@@ -178,7 +191,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     });
   }
 
-  private void consumeInAppPurchaseItem(@NonNull String token,
+  void consumeInAppPurchaseItem(@NonNull String token,
       @NonNull RequestListener<Object> consumeListener) {
     activityCheckout.whenReady(new Checkout.ListenerAdapter() {
       @Override public void onReady(@NonNull BillingRequests requests) {
@@ -187,17 +200,61 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     });
   }
 
+  void setDisableAds(boolean state) {
+    final Activity activity = getActivity();
+    if (activity instanceof DonationActivity) {
+      final DonationActivity donationActivity = (DonationActivity) activity;
+      donationActivity.setCanDisableAds(state);
+    } else {
+      throw new ClassCastException("Activity is not instance of DonationActivity");
+    }
+  }
+
   class InventoryLoadedListener implements Inventory.Listener {
 
     @Override public void onLoaded(@NonNull Inventory.Products products) {
-      final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
+
       // TODO show loading
+
+      recyclerView.setVisibility(View.GONE);
       fastItemAdapter.clear();
+      final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
       if (product.supported) {
         final List<SkuItem> skuItemList = new ArrayList<>();
+
+        // KLUDGE Ugly
+
+        // First loop to find a purchased item
+        boolean hasPurchasedItem = false;
         for (Sku sku : product.getSkus()) {
-          final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
-          skuItemList.add(SkuItem.create(sku, purchase == null ? null : purchase.token));
+          final boolean purchased = product.hasPurchaseInState(sku.id, Purchase.State.PURCHASED);
+          if (purchased) {
+            hasPurchasedItem = true;
+            break;
+          }
+        }
+
+        // Display items based on purchase state
+        if (hasPurchasedItem) {
+
+          setDisableAds(true);
+          // Only reveal consumable items
+          for (Sku sku : product.getSkus()) {
+            if (SkuItem.isConsumable(sku.id)) {
+              final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
+              skuItemList.add(SkuItem.create(sku, purchase == null ? null : purchase.token));
+            }
+          }
+        } else {
+
+          setDisableAds(false);
+          // Only reveal non-consumable items
+          for (Sku sku : product.getSkus()) {
+            if (!SkuItem.isConsumable(sku.id)) {
+              final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
+              skuItemList.add(SkuItem.create(sku, purchase == null ? null : purchase.token));
+            }
+          }
         }
 
         Collections.sort(skuItemList, (o1, o2) -> {
@@ -218,8 +275,11 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
         fastItemAdapter.notifyDataSetChanged();
         // TODO finish loading
+        recyclerView.setVisibility(View.VISIBLE);
       } else {
         // TODO finish loading
+        recyclerView.setVisibility(View.GONE);
+
         // TODO show an empty view with error message
       }
     }
@@ -227,48 +287,54 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
   abstract class BaseRequestListener<T> implements RequestListener<T> {
 
-    void processResult() {
+    final void processResult() {
       inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
     }
   }
 
   class DonationPurchaseListener extends BaseRequestListener<Purchase> {
 
-    @Override void processResult() {
-      super.processResult();
-      // TODO any additional stuff
-    }
-
     @Override public void onSuccess(@NonNull Purchase result) {
-      processResult();
+      if (SkuItem.isConsumable(result.sku)) {
+        consumeInAppPurchaseItem(result.token, new ConsumeListener());
+      } else {
+        processResult();
+        Timber.w("PURCHASE");
+        Toast.makeText(getContext(), "Thank you for your purchase!", Toast.LENGTH_SHORT).show();
+        setDisableAds(true);
+      }
     }
 
     @Override public void onError(int response, @NonNull Exception e) {
       if (response == ResponseCodes.ITEM_ALREADY_OWNED) {
         processResult();
       } else {
-        // TODO show error or something
+        // TODO dialog maybe?
+        Toast.makeText(getContext(),
+            "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
+            .show();
       }
     }
   }
 
   class ConsumeListener extends BaseRequestListener<Object> {
 
-    @Override void processResult() {
-      super.processResult();
-      // TODO any additional stuff
-    }
-
     @Override public void onSuccess(@NonNull Object result) {
       processResult();
+      Toast.makeText(getContext(), "Thank you for your purchase!", Toast.LENGTH_SHORT).show();
+      setDisableAds(true);
     }
 
     @Override public void onError(int response, @NonNull Exception e) {
       // it is possible that our data is not synchronized with data on Google Play => need to handle some errors
       if (response == ResponseCodes.ITEM_NOT_OWNED) {
+        Timber.w("CONSUME");
         processResult();
       } else {
-        // TODO error when consuming
+        // TODO dialog maybe?
+        Toast.makeText(getContext(),
+            "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
+            .show();
       }
     }
   }

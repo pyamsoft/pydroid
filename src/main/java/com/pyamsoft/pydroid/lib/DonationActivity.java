@@ -26,43 +26,50 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.support.DonationUnavailableDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.Arrays;
 import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.Checkout;
+import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Products;
+import org.solovyev.android.checkout.Purchase;
+import org.solovyev.android.checkout.Sku;
 
 public abstract class DonationActivity extends VersionCheckActivity {
 
   @NonNull public static final String IN_APP_PRODUCT_ID = "IN_APP";
-  @NonNull private static final String SKU_DONATE_ONE = ".donate.one";
-  @NonNull private static final String SKU_DONATE_TWO = ".donate.two";
-  @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
-  @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
-  @NonNull private static final String DONATION_UNAVAILABLE_TAG = "donation_unavailable";
+
+  @NonNull private static final String SKU_UNLOCK = ".unlock";
+  @NonNull private static final String SKU_UNLOCK_ONE = SKU_UNLOCK + ".one";
+  @NonNull private static final String SKU_UNLOCK_TWO = SKU_UNLOCK + ".two";
+  @NonNull private static final String SKU_UNLOCK_FIVE = SKU_UNLOCK + ".five";
+  @NonNull private static final String SKU_UNLOCK_TEN = SKU_UNLOCK + ".ten";
+
+  @NonNull private static final String SKU_DONATE = ".donate";
+  @NonNull private static final String SKU_DONATE_ONE = SKU_DONATE + ".one";
+  @NonNull private static final String SKU_DONATE_TWO = SKU_DONATE + ".two";
+  @NonNull private static final String SKU_DONATE_FIVE = SKU_DONATE + ".five";
+  @NonNull private static final String SKU_DONATE_TEN = SKU_DONATE + ".ten";
+
   @NonNull private static final String SUPPORT_TAG = "SupportDialog";
 
-  private String APP_SKU_DONATE_ONE;
-  private String APP_SKU_DONATE_TWO;
-  private String APP_SKU_DONATE_FIVE;
-  private String APP_SKU_DONATE_TEN;
+  boolean canDisableAds;
   private ActivityCheckout checkout;
-
-  private void showDonationUnavailableDialog() {
-    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
-        new DonationUnavailableDialog(), DONATION_UNAVAILABLE_TAG);
-  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    canDisableAds = false;
 
     final String packageName = getPackageName();
-    APP_SKU_DONATE_ONE = packageName + SKU_DONATE_ONE;
-    APP_SKU_DONATE_TWO = packageName + SKU_DONATE_TWO;
-    APP_SKU_DONATE_FIVE = packageName + SKU_DONATE_FIVE;
-    APP_SKU_DONATE_TEN = packageName + SKU_DONATE_TEN;
+    final String appSpecificSkuUnlockOne = packageName + SKU_UNLOCK_ONE;
+    final String appSpecificSkuUnlockTwo = packageName + SKU_UNLOCK_TWO;
+    final String appSpecificSkuUnlockFive = packageName + SKU_UNLOCK_FIVE;
+    final String appSpecificSkuUnlockTen = packageName + SKU_UNLOCK_TEN;
+    final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;
+    final String appSpecificSkuDonateTwo = packageName + SKU_DONATE_TWO;
+    final String appSpecificSkuDonateFive = packageName + SKU_DONATE_FIVE;
+    final String appSpecificSkuDonateTen = packageName + SKU_DONATE_TEN;
 
     checkout = Checkout.forActivity(this,
         new Billing(getApplicationContext(), new Billing.DefaultConfiguration() {
@@ -70,11 +77,12 @@ public abstract class DonationActivity extends VersionCheckActivity {
             return getApplication().getPackageName();
           }
         }), Products.create()
-            .add(IN_APP_PRODUCT_ID,
-                Arrays.asList(APP_SKU_DONATE_ONE, APP_SKU_DONATE_TWO, APP_SKU_DONATE_FIVE,
-                    APP_SKU_DONATE_TEN)));
+            .add(IN_APP_PRODUCT_ID, Arrays.asList(appSpecificSkuUnlockOne, appSpecificSkuUnlockTwo,
+                appSpecificSkuUnlockFive, appSpecificSkuUnlockTen, appSpecificSkuDonateOne,
+                appSpecificSkuDonateTwo, appSpecificSkuDonateFive, appSpecificSkuDonateTen)));
 
     checkout.start();
+    checkout.loadInventory().load().whenLoaded(new InventoryLoadedListener());
   }
 
   @Override protected void onDestroy() {
@@ -116,5 +124,35 @@ public abstract class DonationActivity extends VersionCheckActivity {
       throw new NullPointerException("ActivityCheckout is NULL");
     }
     return checkout;
+  }
+
+  @CheckResult public boolean canDisableAds() {
+    return canDisableAds;
+  }
+
+  void setCanDisableAds(boolean canDisableAds) {
+    this.canDisableAds = canDisableAds;
+  }
+
+  class InventoryLoadedListener implements Inventory.Listener {
+
+    @Override public void onLoaded(@NonNull Inventory.Products products) {
+      final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
+      if (product.supported) {
+        for (Sku sku : product.getSkus()) {
+
+          // Consumable items don't count for disabling ads
+          if (!SkuItem.isConsumable(sku.id)) {
+            final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
+            if (purchase != null) {
+              canDisableAds = true;
+              break;
+            }
+          }
+        }
+      } else {
+        canDisableAds = false;
+      }
+    }
   }
 }

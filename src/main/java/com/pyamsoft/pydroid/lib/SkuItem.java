@@ -28,11 +28,19 @@ import org.solovyev.android.checkout.Sku;
     return new AutoValue_SkuItem(sku, token);
   }
 
+  @CheckResult public static boolean isConsumable(@NonNull String sku) {
+    return sku.contains("donate");
+  }
+
   abstract Sku sku();
 
   @Nullable abstract String token();
 
   @CheckResult boolean isPurchased() {
     return token() != null;
+  }
+
+  @CheckResult boolean isConsumable() {
+    return isConsumable(sku().id);
   }
 }

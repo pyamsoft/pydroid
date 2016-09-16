@@ -116,7 +116,7 @@ dependencies {
   compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
 
   // Google Billing
-  compile "com.anjlab.android.iab.v3:library:$googleBilling"
+  compile "org.solovyev.android:checkout:$inAppBilling@aar"
 
   // Timber logging
   compile "com.jakewharton.timber:timber:$timber"

@@ -21,17 +21,10 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.lib.SupportDialog;
 import com.pyamsoft.pydroid.support.AdvertisementView;
-import com.pyamsoft.pydroid.util.AppUtil;
 
 public abstract class AdvertisementActivity extends BackPressConfirmActivity {
 
-  @NonNull private static final String SUPPORT_TAG = "SupportDialog";
   @Nullable private AdvertisementView adView;
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,30 +73,6 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
       adView.destroy();
     }
     super.onDestroy();
-  }
-
-  @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-    super.onCreateOptionsMenu(menu);
-    final MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.main_support, menu);
-    return true;
-  }
-
-  @CallSuper @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-    final int itemId = item.getItemId();
-    boolean handled;
-    if (itemId == R.id.menu_support) {
-      showSupportDialog();
-      handled = true;
-    } else {
-      handled = false;
-    }
-    return handled;
-  }
-
-  private void showSupportDialog() {
-    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
-        SupportDialog.newInstance(getPackageName()), SUPPORT_TAG);
   }
 
   public final void showAd() {

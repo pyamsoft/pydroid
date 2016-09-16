@@ -17,7 +17,6 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -32,78 +31,12 @@
       android:textAppearance="?android:textAppearanceMedium"
       />
 
-  <ScrollView
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/support_recycler"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
-      >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
-        android:padding="8dp"
-        >
-
-      <com.pyamsoft.pydroid.app.widget.VectorTextView
-          android:id="@+id/support_one_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="4dp"
-          android:layout_marginEnd="8dp"
-          android:layout_marginLeft="8dp"
-          android:layout_marginRight="8dp"
-          android:layout_marginStart="8dp"
-          android:drawablePadding="16dp"
-          android:gravity="center_vertical"
-          app:drawableStart="@drawable/ic_donate_24dp"
-          />
-
-      <com.pyamsoft.pydroid.app.widget.VectorTextView
-          android:id="@+id/support_two_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="4dp"
-          android:layout_marginEnd="8dp"
-          android:layout_marginLeft="8dp"
-          android:layout_marginRight="8dp"
-          android:layout_marginStart="8dp"
-          android:layout_marginTop="4dp"
-          android:drawablePadding="16dp"
-          app:drawableStart="@drawable/ic_donate_24dp"
-          />
-
-      <com.pyamsoft.pydroid.app.widget.VectorTextView
-          android:id="@+id/support_five_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="4dp"
-          android:layout_marginEnd="8dp"
-          android:layout_marginLeft="8dp"
-          android:layout_marginRight="8dp"
-          android:layout_marginStart="8dp"
-          android:layout_marginTop="4dp"
-          android:drawablePadding="16dp"
-          app:drawableStart="@drawable/ic_donate_24dp"
-          />
-
-      <com.pyamsoft.pydroid.app.widget.VectorTextView
-          android:id="@+id/support_ten_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="8dp"
-          android:layout_marginLeft="8dp"
-          android:layout_marginRight="8dp"
-          android:layout_marginStart="8dp"
-          android:layout_marginTop="4dp"
-          android:drawablePadding="16dp"
-          app:drawableStart="@drawable/ic_donate_24dp"
-          />
-
-    </LinearLayout>
-
-  </ScrollView>
+      />
 
   <LinearLayout
       android:layout_width="match_parent"

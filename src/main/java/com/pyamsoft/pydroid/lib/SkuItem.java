@@ -14,10 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.activity;
+package com.pyamsoft.pydroid.lib;
 
-import com.pyamsoft.pydroid.lib.VersionCheckActivity;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.google.auto.value.AutoValue;
+import org.solovyev.android.checkout.Sku;
 
-public abstract class NoDonationActivity extends VersionCheckActivity {
+@AutoValue abstract class SkuItem {
 
+  @CheckResult @NonNull public static SkuItem create(@NonNull Sku sku, @Nullable String token) {
+    return new AutoValue_SkuItem(sku, token);
+  }
+
+  abstract Sku sku();
+
+  @Nullable abstract String token();
+
+  @CheckResult boolean isPurchased() {
+    return token() != null;
+  }
 }

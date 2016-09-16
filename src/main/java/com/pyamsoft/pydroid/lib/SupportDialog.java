@@ -18,70 +18,69 @@ package com.pyamsoft.pydroid.lib;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.text.Spannable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.anjlab.android.iab.v3.BillingProcessor;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
-import com.pyamsoft.pydroid.app.activity.DonationActivity;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.util.StringUtil;
-import timber.log.Timber;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.solovyev.android.checkout.ActivityCheckout;
+import org.solovyev.android.checkout.BillingRequests;
+import org.solovyev.android.checkout.Checkout;
+import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.Purchase;
+import org.solovyev.android.checkout.RequestListener;
+import org.solovyev.android.checkout.ResponseCodes;
+import org.solovyev.android.checkout.Sku;
 
-public class SupportDialog extends DialogFragment
-    implements View.OnClickListener, SocialMediaPresenter.View {
+public class SupportDialog extends DialogFragment implements SocialMediaPresenter.View {
 
-  @NonNull private static final String SKU_DONATE_ONE = ".donate.one";
-  @NonNull private static final String SKU_DONATE_TWO = ".donate.two";
-  @NonNull private static final String SKU_DONATE_FIVE = ".donate.five";
-  @NonNull private static final String SKU_DONATE_TEN = ".donate.ten";
-  @NonNull private static final String ARG_PACKAGE = "package";
   @NonNull private static final String KEY_SUPPORT_PRESENTER = "key_support_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
-  @SuppressWarnings("WeakerAccess") String packageName;
   @BindView(R2.id.support_about_app) Button aboutApp;
-  @BindView(R2.id.support_one_text) TextView oneTitle;
-  @BindView(R2.id.support_two_text) TextView twoTitle;
-  @BindView(R2.id.support_five_text) TextView fiveTitle;
-  @BindView(R2.id.support_ten_text) TextView tenTitle;
   @BindView(R2.id.google_play) ImageView googlePlay;
   @BindView(R2.id.google_plus) ImageView googlePlus;
   @BindView(R2.id.blogger) ImageView blogger;
   @BindView(R2.id.facebook) ImageView facebook;
-  private String APP_SKU_DONATE_ONE;
-  private String APP_SKU_DONATE_TWO;
-  private String APP_SKU_DONATE_FIVE;
-  private String APP_SKU_DONATE_TEN;
+  @BindView(R2.id.support_recycler) RecyclerView recyclerView;
+  FastItemAdapter<SkuUIItem> fastItemAdapter;
+  Inventory inAppPurchaseInventory;
+  ActivityCheckout activityCheckout;
   private long loadedKey;
   private Unbinder unbinder;
 
-  @CheckResult @NonNull public static SupportDialog newInstance(final @NonNull String packageName) {
-    final SupportDialog fragment = new SupportDialog();
-    final Bundle args = new Bundle();
-    args.putSerializable(ARG_PACKAGE, packageName);
-    fragment.setArguments(args);
-    return fragment;
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof DonationActivity) {
+      final DonationActivity donationActivity = (DonationActivity) context;
+      activityCheckout = donationActivity.getCheckout();
+    } else {
+      throw new ClassCastException("Attached context is not instance of DonationActivity");
+    }
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Timber.d("onCreate");
+    inAppPurchaseInventory = activityCheckout.loadInventory();
+    activityCheckout.createPurchaseFlow(new DonationPurchaseListener());
 
     loadedKey = PersistentCache.get()
         .load(KEY_SUPPORT_PRESENTER, savedInstanceState,
@@ -94,17 +93,6 @@ public class SupportDialog extends DialogFragment
                 presenter = persist;
               }
             });
-
-    packageName = getArguments().getString(ARG_PACKAGE);
-    if (packageName == null) {
-      throw new NullPointerException("Package Name cannot be NULL");
-    }
-
-    APP_SKU_DONATE_ONE = packageName + SKU_DONATE_ONE;
-    APP_SKU_DONATE_TWO = packageName + SKU_DONATE_TWO;
-    APP_SKU_DONATE_FIVE = packageName + SKU_DONATE_FIVE;
-    APP_SKU_DONATE_TEN = packageName + SKU_DONATE_TEN;
-
     setCancelable(true);
   }
 
@@ -120,80 +108,25 @@ public class SupportDialog extends DialogFragment
   }
 
   private void initDialog() {
-    aboutApp.setOnClickListener(view1 -> presenter.clickAppPage(packageName));
-    oneTitle.setOnClickListener(this);
-    twoTitle.setOnClickListener(this);
-    fiveTitle.setOnClickListener(this);
-    tenTitle.setOnClickListener(this);
+    aboutApp.setOnClickListener(view1 -> presenter.clickAppPage(getActivity().getPackageName()));
     googlePlay.setOnClickListener(view1 -> presenter.clickGooglePlay());
     googlePlus.setOnClickListener(view1 -> presenter.clickGooglePlus());
     blogger.setOnClickListener(view1 -> presenter.clickBlogger());
     facebook.setOnClickListener(view1 -> presenter.clickFacebook());
 
-    setDonationText(oneTitle, "Normal Donation", "Any little bit helps.");
-    setDonationText(twoTitle, "Generous Donation", "This will help me out a lot.");
-    setDonationText(fiveTitle, "Large Donation", "Be awesome today.");
-    setDonationText(tenTitle, "Gigantic Donation", "Maximum awesomeness achieved.");
-  }
+    fastItemAdapter = new FastItemAdapter<>();
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    recyclerView.setAdapter(fastItemAdapter);
+    inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
 
-  private void setDonationText(final TextView textView, final String title,
-      final String description) {
-    final Spannable spannable = StringUtil.createBuilder(title, "\n", description);
-    final int largeLength = title.length();
-    final int fullLength = largeLength + description.length();
-    final int largeSize =
-        StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceLarge);
-    final int largeColor =
-        StringUtil.getTextColorFromAppearance(getContext(), android.R.attr.textAppearanceLarge);
-    final int smallSize =
-        StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceSmall);
-    final int smallColor =
-        StringUtil.getTextColorFromAppearance(getContext(), android.R.attr.textAppearanceSmall);
-
-    if (largeSize != 0 && largeColor != 0) {
-      StringUtil.sizeSpan(spannable, 0, largeLength, largeSize);
-      StringUtil.colorSpan(spannable, 0, largeLength, largeColor);
-    }
-
-    if (smallSize != 0 && smallColor != 0) {
-      StringUtil.sizeSpan(spannable, largeLength + 1, fullLength, smallSize);
-      StringUtil.colorSpan(spannable, largeLength + 1, fullLength, smallColor);
-    }
-    textView.setText(spannable);
+    fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {
+      attemptPurchase(item.sku());
+      return true;
+    });
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {
     NetworkUtil.newLink(getContext().getApplicationContext(), link);
-  }
-
-  @Override public void onClick(@NonNull View view) {
-    final int id = view.getId();
-    String sku = null;
-    if (id == R.id.support_one_text) {
-      sku = APP_SKU_DONATE_ONE;
-    } else if (id == R.id.support_two_text) {
-      sku = APP_SKU_DONATE_TWO;
-    } else if (id == R.id.support_five_text) {
-      sku = APP_SKU_DONATE_FIVE;
-    } else if (id == R.id.support_ten_text) {
-      sku = APP_SKU_DONATE_TEN;
-    }
-
-    if (sku != null) {
-      Timber.d("Attempt purchase of SKU: %s", sku);
-      final FragmentActivity activity = getActivity();
-      if (activity instanceof DonationActivity) {
-        final DonationActivity activityBase = (DonationActivity) activity;
-        if (BillingProcessor.isIabServiceAvailable(getActivity())) {
-          Timber.d("Do purchase %s", sku);
-          activityBase.purchase(sku);
-        } else {
-          activityBase.showDonationUnavailableDialog();
-        }
-      }
-    } else {
-      Timber.e("SKU is null");
-    }
   }
 
   @Override public void onStart() {
@@ -220,6 +153,123 @@ public class SupportDialog extends DialogFragment
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
+    }
+  }
+
+  void attemptPurchase(@NonNull SkuItem sku) {
+    if (sku.isPurchased()) {
+      final String token = sku.token();
+      if (token == null) {
+        throw new IllegalStateException(
+            "Sku " + sku.sku().title + " has been purchased but token is NULL");
+      }
+
+      consumeInAppPurchaseItem(token, new ConsumeListener());
+    } else {
+      checkoutInAppPurchaseItem(sku.sku());
+    }
+  }
+
+  private void checkoutInAppPurchaseItem(@NonNull Sku sku) {
+    activityCheckout.whenReady(new Checkout.ListenerAdapter() {
+      @Override public void onReady(@NonNull BillingRequests requests) {
+        requests.purchase(sku, null, activityCheckout.getPurchaseFlow());
+      }
+    });
+  }
+
+  private void consumeInAppPurchaseItem(@NonNull String token,
+      @NonNull RequestListener<Object> consumeListener) {
+    activityCheckout.whenReady(new Checkout.ListenerAdapter() {
+      @Override public void onReady(@NonNull BillingRequests requests) {
+        requests.consume(token, consumeListener);
+      }
+    });
+  }
+
+  class InventoryLoadedListener implements Inventory.Listener {
+
+    @Override public void onLoaded(@NonNull Inventory.Products products) {
+      final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
+      // TODO show loading
+      fastItemAdapter.clear();
+      if (product.supported) {
+        final List<SkuItem> skuItemList = new ArrayList<>();
+        for (Sku sku : product.getSkus()) {
+          final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
+          skuItemList.add(SkuItem.create(sku, purchase == null ? null : purchase.token));
+        }
+
+        Collections.sort(skuItemList, (o1, o2) -> {
+          final long o1Price = o1.sku().detailedPrice.amount;
+          final long o2Price = o2.sku().detailedPrice.amount;
+          if (o1Price > o2Price) {
+            return 1;
+          } else if (o1Price < o2Price) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+
+        for (final SkuItem skuItem : skuItemList) {
+          fastItemAdapter.add(new SkuUIItem(skuItem));
+        }
+
+        fastItemAdapter.notifyDataSetChanged();
+        // TODO finish loading
+      } else {
+        // TODO finish loading
+        // TODO show an empty view with error message
+      }
+    }
+  }
+
+  abstract class BaseRequestListener<T> implements RequestListener<T> {
+
+    void processResult() {
+      inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
+    }
+  }
+
+  class DonationPurchaseListener extends BaseRequestListener<Purchase> {
+
+    @Override void processResult() {
+      super.processResult();
+      // TODO any additional stuff
+    }
+
+    @Override public void onSuccess(@NonNull Purchase result) {
+      processResult();
+    }
+
+    @Override public void onError(int response, @NonNull Exception e) {
+      if (response == ResponseCodes.ITEM_ALREADY_OWNED) {
+        processResult();
+      } else {
+        // TODO show error or something
+      }
+    }
+  }
+
+  class ConsumeListener extends BaseRequestListener<Object> {
+
+    @Override void processResult() {
+      super.processResult();
+      // TODO any additional stuff
+    }
+
+    @Override public void onSuccess(@NonNull Object result) {
+      processResult();
+    }
+
+    @Override public void onError(int response, @NonNull Exception e) {
+      // it is possible that our data is not synchronized with data on Google Play => need to handle some errors
+      if (response == ResponseCodes.ITEM_NOT_OWNED) {
+        processResult();
+      } else {
+        // TODO error when consuming
+      }
     }
   }
 }

@@ -62,10 +62,12 @@ public abstract class DonationActivity extends VersionCheckActivity {
     canDisableAds = false;
 
     final String packageName = getPackageName();
+
     final String appSpecificSkuUnlockOne = packageName + SKU_UNLOCK_ONE;
     final String appSpecificSkuUnlockTwo = packageName + SKU_UNLOCK_TWO;
     final String appSpecificSkuUnlockFive = packageName + SKU_UNLOCK_FIVE;
     final String appSpecificSkuUnlockTen = packageName + SKU_UNLOCK_TEN;
+
     final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;
     final String appSpecificSkuDonateTwo = packageName + SKU_DONATE_TWO;
     final String appSpecificSkuDonateFive = packageName + SKU_DONATE_FIVE;

@@ -31,12 +31,53 @@
       android:textAppearance="?android:textAppearanceMedium"
       />
 
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/support_recycler"
+  <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"
-      />
+      >
+
+    <FrameLayout
+        android:id="@+id/support_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        >
+
+      <ProgressBar
+          android:id="@+id/support_loading_progress"
+          android:layout_width="64dp"
+          android:layout_height="64dp"
+          android:layout_gravity="center"
+          style="@style/Widget.AppCompat.ProgressBar"
+          />
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/support_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <FrameLayout
+        android:id="@+id/support_iap_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        >
+
+      <com.pyamsoft.pydroid.app.widget.NoLeakTextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:text="In App Purchases are not supported on this device"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          />
+
+    </FrameLayout>
+
+  </FrameLayout>
 
   <LinearLayout
       android:layout_width="match_parent"

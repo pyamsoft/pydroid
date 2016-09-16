@@ -30,7 +30,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,6 +66,9 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
   @BindView(R2.id.blogger) ImageView blogger;
   @BindView(R2.id.facebook) ImageView facebook;
   @BindView(R2.id.support_recycler) RecyclerView recyclerView;
+  @BindView(R2.id.support_iap_empty) FrameLayout emptyIAP;
+  @BindView(R2.id.support_loading) FrameLayout loadingLayout;
+  @BindView(R2.id.support_loading_progress) ProgressBar loadingProgress;
   FastItemAdapter<SkuUIItem> fastItemAdapter;
   Inventory inAppPurchaseInventory;
   ActivityCheckout activityCheckout;
@@ -116,6 +121,11 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     googlePlus.setOnClickListener(view1 -> presenter.clickGooglePlus());
     blogger.setOnClickListener(view1 -> presenter.clickBlogger());
     facebook.setOnClickListener(view1 -> presenter.clickFacebook());
+
+    loadingProgress.setIndeterminate(true);
+    emptyIAP.setVisibility(View.GONE);
+    recyclerView.setVisibility(View.GONE);
+    loadingLayout.setVisibility(View.VISIBLE);
 
     fastItemAdapter = new FastItemAdapter<>();
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -200,6 +210,9 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     });
   }
 
+  /**
+   * Modifies the main activity to set the flag allowing a user to diable ads
+   */
   void setDisableAds(boolean state) {
     final Activity activity = getActivity();
     if (activity instanceof DonationActivity) {
@@ -213,10 +226,9 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
   class InventoryLoadedListener implements Inventory.Listener {
 
     @Override public void onLoaded(@NonNull Inventory.Products products) {
-
-      // TODO show loading
-
+      loadingLayout.setVisibility(View.VISIBLE);
       recyclerView.setVisibility(View.GONE);
+
       fastItemAdapter.clear();
       final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
       if (product.supported) {
@@ -274,13 +286,13 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         }
 
         fastItemAdapter.notifyDataSetChanged();
-        // TODO finish loading
+        loadingLayout.setVisibility(View.GONE);
+        emptyIAP.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
       } else {
-        // TODO finish loading
+        loadingLayout.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
-
-        // TODO show an empty view with error message
+        emptyIAP.setVisibility(View.VISIBLE);
       }
     }
   }
@@ -296,6 +308,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
     @Override public void onSuccess(@NonNull Purchase result) {
       if (SkuItem.isConsumable(result.sku)) {
+        Timber.d("Consume the consumable purchase");
         consumeInAppPurchaseItem(result.token, new ConsumeListener());
       } else {
         processResult();

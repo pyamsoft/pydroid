@@ -76,11 +76,8 @@ public abstract class DonationActivity extends VersionCheckActivity {
 
     Timber.d("Set up IAP checkout");
     checkout = Checkout.forActivity(this,
-        new Billing(getApplicationContext(), new Billing.DefaultConfiguration() {
-          @NonNull @Override public String getPublicKey() {
-            return getApplication().getPackageName();
-          }
-        }), Products.create()
+        new Billing(getApplicationContext(), new DonationBillingConfiguration(getPackageName())),
+        Products.create()
             .add(IN_APP_PRODUCT_ID, Arrays.asList(appSpecificSkuUnlockOne, appSpecificSkuUnlockTwo,
                 appSpecificSkuUnlockFive, appSpecificSkuUnlockTen, appSpecificSkuDonateOne,
                 appSpecificSkuDonateTwo, appSpecificSkuDonateFive, appSpecificSkuDonateTen)));
@@ -136,6 +133,19 @@ public abstract class DonationActivity extends VersionCheckActivity {
 
   void setCanDisableAds(boolean canDisableAds) {
     this.canDisableAds = canDisableAds;
+  }
+
+  static class DonationBillingConfiguration extends Billing.DefaultConfiguration {
+
+    @NonNull private final String publicKey;
+
+    DonationBillingConfiguration(@NonNull String publicKey) {
+      this.publicKey = publicKey;
+    }
+
+    @NonNull @Override public String getPublicKey() {
+      return publicKey;
+    }
   }
 
   class InventoryLoadedListener implements Inventory.Listener {

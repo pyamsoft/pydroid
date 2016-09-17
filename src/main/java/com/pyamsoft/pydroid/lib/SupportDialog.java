@@ -51,6 +51,7 @@ import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.BillingRequests;
 import org.solovyev.android.checkout.Checkout;
 import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.RequestListener;
 import org.solovyev.android.checkout.ResponseCodes;
@@ -257,7 +258,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
       recyclerView.setVisibility(View.GONE);
 
       fastItemAdapter.clear();
-      final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
+      final Inventory.Product product = products.get(ProductTypes.IN_APP);
       if (product.supported) {
         Timber.i("IAP Billing is supported");
         final List<SkuItem> skuItemList = new ArrayList<>();

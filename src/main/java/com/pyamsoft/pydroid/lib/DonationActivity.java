@@ -32,14 +32,13 @@ import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.Checkout;
 import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Products;
 import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
 public abstract class DonationActivity extends VersionCheckActivity {
-
-  @NonNull public static final String IN_APP_PRODUCT_ID = "IN_APP";
 
   @NonNull private static final String SKU_UNLOCK = ".unlock";
   @NonNull private static final String SKU_UNLOCK_ONE = SKU_UNLOCK + ".one";
@@ -78,9 +77,10 @@ public abstract class DonationActivity extends VersionCheckActivity {
     checkout = Checkout.forActivity(this,
         new Billing(getApplicationContext(), new DonationBillingConfiguration(getPackageName())),
         Products.create()
-            .add(IN_APP_PRODUCT_ID, Arrays.asList(appSpecificSkuUnlockOne, appSpecificSkuUnlockTwo,
-                appSpecificSkuUnlockFive, appSpecificSkuUnlockTen, appSpecificSkuDonateOne,
-                appSpecificSkuDonateTwo, appSpecificSkuDonateFive, appSpecificSkuDonateTen)));
+            .add(ProductTypes.IN_APP,
+                Arrays.asList(appSpecificSkuUnlockOne, appSpecificSkuUnlockTwo,
+                    appSpecificSkuUnlockFive, appSpecificSkuUnlockTen, appSpecificSkuDonateOne,
+                    appSpecificSkuDonateTwo, appSpecificSkuDonateFive, appSpecificSkuDonateTen)));
 
     checkout.start();
     checkout.loadInventory().load().whenLoaded(new InventoryLoadedListener());
@@ -151,7 +151,7 @@ public abstract class DonationActivity extends VersionCheckActivity {
   class InventoryLoadedListener implements Inventory.Listener {
 
     @Override public void onLoaded(@NonNull Inventory.Products products) {
-      final Inventory.Product product = products.get(DonationActivity.IN_APP_PRODUCT_ID);
+      final Inventory.Product product = products.get(ProductTypes.IN_APP);
       if (product.supported) {
         for (Sku sku : product.getSkus()) {
 

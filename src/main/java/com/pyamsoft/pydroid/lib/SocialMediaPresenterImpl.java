@@ -23,35 +23,35 @@ import javax.inject.Inject;
 class SocialMediaPresenterImpl extends PresenterBase<SocialMediaPresenter.View>
     implements SocialMediaPresenter {
 
-  @NonNull private static final String BASE_MARKET = "market://details?id=";
-  @NonNull private static final String FACEBOOK = "https://www.facebook.com/pyamsoftware";
-  @NonNull private static final String GOOGLE_PLAY_DEVELOPER_PAGE =
+  @NonNull static final String BASE_MARKET = "market://details?id=";
+  @NonNull static final String FACEBOOK = "https://www.facebook.com/pyamsoftware";
+  @NonNull static final String GOOGLE_PLAY_DEVELOPER_PAGE =
       "https://play.google.com/store/apps/dev?id=5257476342110165153";
-  @NonNull private static final String GOOGLE_PLUS =
+  @NonNull static final String GOOGLE_PLUS =
       "https://plus.google.com/+Pyamsoft-officialBlogspot/posts";
-  @NonNull private static final String OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/";
+  @NonNull static final String OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/";
 
   @Inject SocialMediaPresenterImpl() {
   }
 
   @Override public void clickAppPage(@NonNull String link) {
     final String fullLink = BASE_MARKET + link;
-    getView().onSocialMediaClicked(fullLink);
+    getView(view -> view.onSocialMediaClicked(fullLink));
   }
 
   @Override public void clickGooglePlay() {
-    getView().onSocialMediaClicked(GOOGLE_PLAY_DEVELOPER_PAGE);
+    getView(view -> view.onSocialMediaClicked(GOOGLE_PLAY_DEVELOPER_PAGE));
   }
 
   @Override public void clickGooglePlus() {
-    getView().onSocialMediaClicked(GOOGLE_PLUS);
+    getView(view -> view.onSocialMediaClicked(GOOGLE_PLUS));
   }
 
   @Override public void clickBlogger() {
-    getView().onSocialMediaClicked(OFFICIAL_BLOG);
+    getView(view -> view.onSocialMediaClicked(OFFICIAL_BLOG));
   }
 
   @Override public void clickFacebook() {
-    getView().onSocialMediaClicked(FACEBOOK);
+    getView(view -> view.onSocialMediaClicked(FACEBOOK));
   }
 }

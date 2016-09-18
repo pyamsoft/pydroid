@@ -16,21 +16,24 @@
 
 package com.pyamsoft.pydroid.dagger.presenter;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.Presenter;
 import java.lang.ref.WeakReference;
+import rx.functions.Action1;
 
 public abstract class PresenterBase<I> implements Presenter<I> {
 
   @NonNull private WeakReference<I> weakView = new WeakReference<>(null);
 
-  @NonNull @CheckResult protected final I getView() {
-    if (!isBound()) {
-      throw new PresenterUnboundException(this);
+  /**
+   * If the view is non null (bound) then it will be passed into the wrapper function and executed.
+   * If the view is null, then this is a no-op
+   */
+  protected final void getView(@NonNull Action1<I> func) {
+    final I view = weakView.get();
+    if (view != null) {
+      func.call(view);
     }
-
-    return weakView.get();
   }
 
   @Override public final boolean isBound() {
@@ -40,7 +43,7 @@ public abstract class PresenterBase<I> implements Presenter<I> {
   @Override public final void bindView(@NonNull I view) {
     weakView.clear();
     weakView = new WeakReference<>(view);
-    onBind(getView());
+    onBind();
   }
 
   @Override public final void unbindView() {
@@ -52,7 +55,7 @@ public abstract class PresenterBase<I> implements Presenter<I> {
     onDestroy();
   }
 
-  protected void onBind(@NonNull I view) {
+  protected void onBind() {
 
   }
 

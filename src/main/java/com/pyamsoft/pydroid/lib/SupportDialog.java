@@ -48,6 +48,7 @@ import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pyprolib.Pro;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -201,6 +202,13 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         requests.purchase(sku, null, activityCheckout.getPurchaseFlow());
       }
     });
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    if (Pro.isPro(getContext())) {
+      upgradeApplication.setVisibility(View.GONE);
+    }
   }
 
   void loadUnsupportedIAPView() {

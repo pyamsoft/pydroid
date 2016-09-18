@@ -39,19 +39,19 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
     this.interactor = interactor;
   }
 
-  @Override protected void onBind(@NonNull View view) {
-    super.onBind(view);
-    registerOnLicenseBus(view);
+  @Override protected void onBind() {
+    super.onBind();
+    registerOnLicenseBus();
   }
 
-  private void registerOnLicenseBus(@NonNull View view) {
+  private void registerOnLicenseBus() {
     unregisterLicenseBus();
     loadLicenseBus = AboutItemBus.get()
         .register()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(licenseLoadEvent -> {
-          loadLicenseText(view, licenseLoadEvent.position(), licenseLoadEvent.licenses());
+          loadLicenseText(licenseLoadEvent.position(), licenseLoadEvent.licenses());
         }, throwable -> {
           Timber.e(throwable, "onError registerOnLicenseBus");
         });
@@ -70,17 +70,18 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
     interactor.clearCache();
   }
 
-  @SuppressWarnings("WeakerAccess") void loadLicenseText(@NonNull View view, int position, @NonNull Licenses licenses) {
+  @SuppressWarnings("WeakerAccess") void loadLicenseText(int position, @NonNull Licenses licenses) {
     if (licenses == Licenses.EMPTY) {
-      getView().onLicenseTextLoaded(position, "");
+      getView(view -> view.onLicenseTextLoaded(position, ""));
     } else {
       final Subscription licenseSubscription = interactor.loadLicenseText(licenses)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
-          .subscribe(license -> view.onLicenseTextLoaded(position, license), throwable -> {
-            Timber.e(throwable, "Failed to load license");
-            view.onLicenseTextLoaded(position, "Failed to load license");
-          }, this::unsubLoadLicense);
+          .subscribe(license -> getView(view -> view.onLicenseTextLoaded(position, license)),
+              throwable -> {
+                Timber.e(throwable, "Failed to load license");
+                getView(view -> view.onLicenseTextLoaded(position, "Failed to load license"));
+              }, this::unsubLoadLicense);
 
       Timber.d("Add license subscription");
       licenseSubscriptions.add(licenseSubscription);

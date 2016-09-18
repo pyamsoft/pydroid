@@ -16,40 +16,45 @@
 
 package com.pyamsoft.pydroid.dagger.presenter;
 
-import org.junit.Assert;
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PresenterTest {
 
-  @Rule public final ExpectedException useBeforeCreateException = ExpectedException.none();
+  TestPresenter presenter;
 
-  @Test public void test_presenter_lifecycle() {
-    final TestPresenter presenter = new TestPresenter();
+  @Before public void setup() {
+    presenter = new TestPresenter();
+  }
 
+  @Test public void testPresenterLifecycle() {
     // Before bound, is bound should return false
-    Assert.assertFalse(presenter.isBound());
+    assertFalse(presenter.isBound());
 
     // When bound, the presenter should state so
     final String view = "String";
     presenter.bindView(view);
-    Assert.assertTrue(presenter.isBound());
+    assertTrue(presenter.isBound());
 
     // Make sure that when a presenter gets the view it has not been modified
-    Assert.assertEquals(view, presenter.getView());
+    presenter.getView(s -> assertEquals(view, s));
 
     // Make sure that when unbound, accurately reflect so
     presenter.unbindView();
-    Assert.assertFalse(presenter.isBound());
+    assertFalse(presenter.isBound());
 
     // Throw when there is no view
-    useBeforeCreateException.expect(PresenterUnboundException.class);
-    Assert.assertNotNull(presenter.getView());
+    presenter.getView(s -> {
+      throw new AssertionError("Should not be called");
+    });
 
     // Make sure that the destroyed presenter reflects state
     presenter.destroy();
-    Assert.assertTrue(presenter.isDestroyed());
+    assertTrue(presenter.isDestroyed());
   }
 
   static class TestPresenter extends PresenterBase<String> {

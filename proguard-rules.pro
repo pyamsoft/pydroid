@@ -42,4 +42,6 @@
 -dontwarn javax.annotation.Nonnull
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.concurrent.GuardedBy
+-dontwarn javax.annotation.concurrent.Immutable
+-dontwarn javax.annotation.concurrent.ThreadSafe
 

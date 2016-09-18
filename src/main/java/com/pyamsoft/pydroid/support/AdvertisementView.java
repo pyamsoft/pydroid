@@ -64,8 +64,9 @@ public class AdvertisementView extends FrameLayout {
   @NonNull private static final String PACKAGE_POWERMANAGER = "com.pyamsoft.powermanager";
   @NonNull private static final String PACKAGE_HOMEBUTTON = "com.pyamsoft.homebutton";
   @NonNull private static final String PACKAGE_ZAPTORCH = "com.pyamsoft.zaptorch";
+  @NonNull private static final String PACKAGE_WORDWIZ = "com.pyamsoft.wordwiz";
   @NonNull private static final String[] POSSIBLE_PACKAGES = {
-      PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH
+      PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
   @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
@@ -217,6 +218,10 @@ public class AdvertisementView extends FrameLayout {
       case PACKAGE_ZAPTORCH:
         Timber.d("Load feature: ZapTorch");
         image = R.drawable.feature_zaptorch;
+        break;
+      case PACKAGE_WORDWIZ:
+        Timber.d("Load feature: WordWiz");
+        image = R.drawable.feature_wordwiz;
         break;
       default:
         Timber.e("Invalid feature: %s", currentPackage);

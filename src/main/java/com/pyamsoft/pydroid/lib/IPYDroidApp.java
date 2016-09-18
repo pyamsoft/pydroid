@@ -40,6 +40,8 @@ abstract class IPYDroidApp<T extends IPYDroidApp.PYDroidComponent> extends Appli
 
     SocialMediaComponent plusSocialMediaComponent();
 
+    SupportComponent plusSupportComponent();
+
     ApiComponent plusApiComponent(ApiModule apiModule);
   }
 

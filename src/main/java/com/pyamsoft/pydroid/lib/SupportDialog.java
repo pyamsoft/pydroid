@@ -19,7 +19,11 @@ package com.pyamsoft.pydroid.lib;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,6 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.app.widget.VectorTextView;
@@ -53,21 +58,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.solovyev.android.checkout.ActivityCheckout;
+import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.BillingRequests;
 import org.solovyev.android.checkout.Checkout;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
+import org.solovyev.android.checkout.Products;
 import org.solovyev.android.checkout.Purchase;
+import org.solovyev.android.checkout.PurchaseVerifier;
 import org.solovyev.android.checkout.RequestListener;
 import org.solovyev.android.checkout.ResponseCodes;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
-public class SupportDialog extends DialogFragment implements SocialMediaPresenter.View {
+public class SupportDialog extends DialogFragment
+    implements SocialMediaPresenter.View, SupportPresenter.View {
 
+  @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_social_presenter";
   @NonNull private static final String KEY_SUPPORT_PRESENTER = "key_support_presenter";
   @NonNull private static final String KEY_APP_ICON = "key_app_icon";
-  @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
+  @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialMediaPresenter;
+  @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
   @BindView(R2.id.support_about_app) Button aboutApp;
   @BindView(R2.id.google_play) ImageView googlePlay;
   @BindView(R2.id.google_plus) ImageView googlePlus;
@@ -83,8 +94,9 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
   @BindView(R2.id.purchase_iap_description) TextView upgradeDescription;
   FastItemAdapter<SkuUIItem> fastItemAdapter;
   Inventory inAppPurchaseInventory;
-  ActivityCheckout activityCheckout;
-  private long loadedKey;
+  @SuppressWarnings("WeakerAccess") ActivityCheckout checkout;
+  private long socialMediaKey;
+  private long supportKey;
   private Unbinder unbinder;
   @DrawableRes private int appIcon;
 
@@ -98,19 +110,37 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setCancelable(true);
+    checkout = CheckoutFactory.create(getActivity());
+    checkout.start();
+    checkout.createPurchaseFlow(new DonationPurchaseListener());
+    inAppPurchaseInventory = checkout.loadInventory();
+
     appIcon = getArguments().getInt(KEY_APP_ICON, 0);
-    loadedKey = PersistentCache.get()
-        .load(KEY_SUPPORT_PRESENTER, savedInstanceState,
+
+    socialMediaKey = PersistentCache.get()
+        .load(KEY_SOCIAL_PRESENTER, savedInstanceState,
             new PersistLoader.Callback<SocialMediaPresenter>() {
               @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
                 return new SocialMediaPresenterLoader(getContext());
               }
 
               @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-                presenter = persist;
+                socialMediaPresenter = persist;
               }
             });
-    setCancelable(true);
+
+    supportKey = PersistentCache.get()
+        .load(KEY_SUPPORT_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<SupportPresenter>() {
+              @NonNull @Override public PersistLoader<SupportPresenter> createLoader() {
+                return new SupportPresenterLoader(getContext());
+              }
+
+              @Override public void onPersistentLoaded(@NonNull SupportPresenter persist) {
+                supportPresenter = persist;
+              }
+            });
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -132,12 +162,13 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     upgradeDescription.setText(R.string.upgrade_to_pro_desc);
 
     upgradeApplication.setOnClickListener(
-        v -> presenter.clickAppPage(getActivity().getPackageName() + "pro"));
-    aboutApp.setOnClickListener(view1 -> presenter.clickAppPage(getActivity().getPackageName()));
-    googlePlay.setOnClickListener(view1 -> presenter.clickGooglePlay());
-    googlePlus.setOnClickListener(view1 -> presenter.clickGooglePlus());
-    blogger.setOnClickListener(view1 -> presenter.clickBlogger());
-    facebook.setOnClickListener(view1 -> presenter.clickFacebook());
+        v -> socialMediaPresenter.clickAppPage(getActivity().getPackageName() + "pro"));
+    aboutApp.setOnClickListener(
+        view1 -> socialMediaPresenter.clickAppPage(getActivity().getPackageName()));
+    googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
+    googlePlus.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlus());
+    blogger.setOnClickListener(view1 -> socialMediaPresenter.clickBlogger());
+    facebook.setOnClickListener(view1 -> socialMediaPresenter.clickFacebook());
 
     loadingProgress.setIndeterminate(true);
     emptyIAP.setVisibility(View.GONE);
@@ -151,6 +182,8 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
       checkoutInAppPurchaseItem(item.getSku());
       return true;
     });
+
+    inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {
@@ -159,28 +192,19 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
-
-    final Activity activity = getActivity();
-    if (activity instanceof DonationActivity) {
-      final DonationActivity donationActivity = (DonationActivity) activity;
-      activityCheckout = donationActivity.getCheckout();
-    } else {
-      throw new ClassCastException("Attached context is not instance of DonationActivity");
-    }
-    inAppPurchaseInventory = activityCheckout.loadInventory();
-    activityCheckout.createPurchaseFlow(new DonationPurchaseListener());
-    inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
+    socialMediaPresenter.bindView(this);
+    supportPresenter.bindView(this);
   }
 
   @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
-    activityCheckout.destroyPurchaseFlow();
+    socialMediaPresenter.unbindView();
+    supportPresenter.unbindView();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_SUPPORT_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_SUPPORT_PRESENTER, supportKey);
+    PersistentCache.get().saveKey(outState, KEY_SOCIAL_PRESENTER, socialMediaKey);
     super.onSaveInstanceState(outState);
   }
 
@@ -191,15 +215,17 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
 
   @Override public void onDestroy() {
     super.onDestroy();
+    checkout.stop();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.get().unload(socialMediaKey);
+      PersistentCache.get().unload(supportKey);
     }
   }
 
   void checkoutInAppPurchaseItem(@NonNull Sku sku) {
-    activityCheckout.whenReady(new Checkout.ListenerAdapter() {
+    checkout.whenReady(new Checkout.ListenerAdapter() {
       @Override public void onReady(@NonNull BillingRequests requests) {
-        requests.purchase(sku, null, activityCheckout.getPurchaseFlow());
+        requests.purchase(sku, null, checkout.getPurchaseFlow());
       }
     });
   }
@@ -236,6 +262,86 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     fastItemAdapter.notifyDataSetChanged();
   }
 
+  @Override public void onDonationResult(int requestCode, int resultCode, @NonNull Intent data) {
+    checkout.onActivityResult(requestCode, resultCode, data);
+  }
+
+  static final class CheckoutFactory {
+    @NonNull private static final String SKU_DONATE = ".donate";
+    @NonNull private static final String SKU_DONATE_ONE = SKU_DONATE + ".one";
+    @NonNull private static final String SKU_DONATE_TWO = SKU_DONATE + ".two";
+    @NonNull private static final String SKU_DONATE_FIVE = SKU_DONATE + ".five";
+    @NonNull private static final String SKU_DONATE_TEN = SKU_DONATE + ".ten";
+
+    private CheckoutFactory() {
+      throw new RuntimeException("No instances");
+    }
+
+    @CheckResult @NonNull static ActivityCheckout create(@NonNull Activity activity) {
+      final Context appContext = activity.getApplicationContext();
+      final String packageName = appContext.getPackageName();
+      final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;
+      final String appSpecificSkuDonateTwo = packageName + SKU_DONATE_TWO;
+      final String appSpecificSkuDonateFive = packageName + SKU_DONATE_FIVE;
+      final String appSpecificSkuDonateTen = packageName + SKU_DONATE_TEN;
+
+      final List<String> skuList = new ArrayList<>();
+      skuList.add(appSpecificSkuDonateOne);
+      skuList.add(appSpecificSkuDonateTwo);
+      skuList.add(appSpecificSkuDonateFive);
+      skuList.add(appSpecificSkuDonateTen);
+
+      if (BuildConfig.DEBUG) {
+        skuList.add("android.test.purchased");
+        skuList.add("android.test.canceled");
+        skuList.add("android.test.refunded");
+        skuList.add("android.test.item_unavailable");
+      }
+
+      return Checkout.forActivity(activity,
+          new Billing(appContext, new DonationBillingConfiguration(packageName)),
+          Products.create().add(ProductTypes.IN_APP, skuList));
+    }
+
+    static class DonationBillingConfiguration extends Billing.DefaultConfiguration {
+
+      @NonNull private final String publicKey;
+
+      DonationBillingConfiguration(@NonNull String publicKey) {
+        this.publicKey = publicKey;
+      }
+
+      @NonNull @Override public String getPublicKey() {
+        return publicKey;
+      }
+
+      /**
+       * We do not really need any purchase verification as they are all just donations anyway.
+       * Our public key is not used, so the default verifier fails anyway.
+       *
+       * Pass a verifier which always passes
+       */
+      @NonNull @Override public PurchaseVerifier getPurchaseVerifier() {
+        return new AlwaysPurchaseVerifier();
+      }
+
+      static class AlwaysPurchaseVerifier implements PurchaseVerifier {
+
+        /**
+         * Verify all purchases as 'valid'
+         */
+        @Override public void verify(@NonNull List<Purchase> purchases,
+            @NonNull RequestListener<List<Purchase>> listener) {
+          final List<Purchase> verifiedPurchases = new ArrayList<>(purchases.size());
+          for (Purchase purchase : purchases) {
+            verifiedPurchases.add(purchase);
+          }
+          listener.onSuccess(verifiedPurchases);
+        }
+      }
+    }
+  }
+
   class InventoryLoadedListener implements Inventory.Listener {
 
     @Override public void onLoaded(@NonNull Inventory.Products products) {
@@ -249,6 +355,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         final List<SkuUIItem> skuList = new ArrayList<>();
         // Only reveal non-consumable items
         for (Sku sku : product.getSkus()) {
+          Timber.d("Add sku: %s", sku.id);
           skuList.add(new SkuUIItem(sku));
         }
 
@@ -276,11 +383,23 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     }
   }
 
-  class DonationPurchaseListener implements RequestListener<Purchase> {
+  abstract class BaseRequestListener<T> implements RequestListener<T> {
+
+    void processResult() {
+      inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
+    }
+
+    @CallSuper @Override public void onError(int response, @NonNull Exception e) {
+      Timber.e(e, "Billing Error");
+      processResult();
+    }
+  }
+
+  class DonationPurchaseListener extends BaseRequestListener<Purchase> {
 
     @Override public void onSuccess(@NonNull Purchase result) {
       Timber.d("Consume the consumable purchase");
-      activityCheckout.whenReady(new Checkout.ListenerAdapter() {
+      checkout.whenReady(new Checkout.ListenerAdapter() {
         @Override public void onReady(@NonNull BillingRequests requests) {
           requests.consume(result.token, new ConsumeListener());
         }
@@ -292,15 +411,13 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
         Toast.makeText(getContext(),
             "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
             .show();
+      } else {
+        super.onError(response, e);
       }
     }
   }
 
-  class ConsumeListener implements RequestListener<Object> {
-
-    private void processResult() {
-      inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
-    }
+  class ConsumeListener extends BaseRequestListener<Object> {
 
     @Override public void onSuccess(@NonNull Object result) {
       processResult();
@@ -308,10 +425,10 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     }
 
     @Override public void onError(int response, @NonNull Exception e) {
+      super.onError(response, e);
       // it is possible that our data is not synchronized with data on Google Play => need to handle some errors
       if (response == ResponseCodes.ITEM_NOT_OWNED) {
         Timber.w("CONSUME");
-        processResult();
       } else {
         Toast.makeText(getContext(),
             "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)

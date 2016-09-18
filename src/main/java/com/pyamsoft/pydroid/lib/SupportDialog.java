@@ -276,14 +276,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     }
   }
 
-  abstract class BaseRequestListener<T> implements RequestListener<T> {
-
-    final void processResult() {
-      inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
-    }
-  }
-
-  class DonationPurchaseListener extends BaseRequestListener<Purchase> {
+  class DonationPurchaseListener implements RequestListener<Purchase> {
 
     @Override public void onSuccess(@NonNull Purchase result) {
       Timber.d("Consume the consumable purchase");
@@ -295,9 +288,7 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     }
 
     @Override public void onError(int response, @NonNull Exception e) {
-      if (response == ResponseCodes.ITEM_ALREADY_OWNED) {
-        processResult();
-      } else {
+      if (response != ResponseCodes.USER_CANCELED) {
         Toast.makeText(getContext(),
             "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
             .show();
@@ -305,7 +296,11 @@ public class SupportDialog extends DialogFragment implements SocialMediaPresente
     }
   }
 
-  class ConsumeListener extends BaseRequestListener<Object> {
+  class ConsumeListener implements RequestListener<Object> {
+
+    private void processResult() {
+      inAppPurchaseInventory.load().whenLoaded(new InventoryLoadedListener());
+    }
 
     @Override public void onSuccess(@NonNull Object result) {
       processResult();

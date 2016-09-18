@@ -91,7 +91,7 @@ public class RatingDialog extends DialogFragment {
     args.putString(RATE_LINK, provider.getPackageName());
     args.putCharSequence(CHANGE_LOG_TEXT, provider.getChangeLogText());
     args.putInt(VERSION_CODE, provider.getCurrentApplicationVersion());
-    args.putInt(CHANGE_LOG_ICON, provider.getChangeLogIcon());
+    args.putInt(CHANGE_LOG_ICON, provider.getApplicationIcon());
     fragment.setArguments(args);
     return fragment;
   }
@@ -171,7 +171,7 @@ public class RatingDialog extends DialogFragment {
 
     @CheckResult @NonNull Spannable getChangeLogText();
 
-    @CheckResult int getChangeLogIcon();
+    @DrawableRes @CheckResult int getApplicationIcon();
 
     @CheckResult @NonNull String getPackageName();
 

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.app.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.content.res.AppCompatResources;
@@ -47,36 +48,41 @@ public class VectorTextView extends NoLeakTextView {
       final Context context = getContext();
       final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.VectorTextView);
 
-      // Obtain DrawableManager used to pull Drawables safely, and check if we're in RTL
-      final boolean rtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL;
-
       // Grab the compat drawable resources from the XML
       final int startDrawableRes = a.getResourceId(R.styleable.VectorTextView_drawableStart, 0);
       final int topDrawableRes = a.getResourceId(R.styleable.VectorTextView_drawableTop, 0);
       final int endDrawableRes = a.getResourceId(R.styleable.VectorTextView_drawableEnd, 0);
       final int bottomDrawableRes = a.getResourceId(R.styleable.VectorTextView_drawableBottom, 0);
-
-      // Load the used drawables, falling back to whatever may be set in an "android:" namespace attribute
-      final Drawable[] currentDrawables = getCompoundDrawables();
-      final Drawable left =
-          startDrawableRes != 0 ? AppCompatResources.getDrawable(context, startDrawableRes)
-              : currentDrawables[0];
-      final Drawable right =
-          endDrawableRes != 0 ? AppCompatResources.getDrawable(context, endDrawableRes)
-              : currentDrawables[1];
-      final Drawable top =
-          topDrawableRes != 0 ? AppCompatResources.getDrawable(context, topDrawableRes)
-              : currentDrawables[2];
-      final Drawable bottom =
-          bottomDrawableRes != 0 ? AppCompatResources.getDrawable(context, bottomDrawableRes)
-              : currentDrawables[3];
-
-      // Account for RTL and apply the compound Drawables
-      final Drawable start = rtl ? right : left;
-      final Drawable end = rtl ? left : right;
-      setCompoundDrawablesWithIntrinsicBounds(start, top, end, bottom);
-
       a.recycle();
+
+      setCompoundDrawableResWithIntrinsicBounds(startDrawableRes, topDrawableRes, endDrawableRes,
+          bottomDrawableRes);
     }
+  }
+
+  public void setCompoundDrawableResWithIntrinsicBounds(@DrawableRes int startDrawableRes,
+      @DrawableRes int topDrawableRes, @DrawableRes int endDrawableRes,
+      @DrawableRes int bottomDrawableRes) {
+    final Context context = getContext();
+    // Load the used drawables, falling back to whatever may be set in an "android:" namespace attribute
+    final Drawable[] currentDrawables = getCompoundDrawables();
+    final Drawable left =
+        startDrawableRes != 0 ? AppCompatResources.getDrawable(context, startDrawableRes)
+            : currentDrawables[0];
+    final Drawable right =
+        endDrawableRes != 0 ? AppCompatResources.getDrawable(context, endDrawableRes)
+            : currentDrawables[1];
+    final Drawable top =
+        topDrawableRes != 0 ? AppCompatResources.getDrawable(context, topDrawableRes)
+            : currentDrawables[2];
+    final Drawable bottom =
+        bottomDrawableRes != 0 ? AppCompatResources.getDrawable(context, bottomDrawableRes)
+            : currentDrawables[3];
+
+    // Account for RTL and apply the compound Drawables
+    final boolean rtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL;
+    final Drawable start = rtl ? right : left;
+    final Drawable end = rtl ? left : right;
+    setCompoundDrawablesWithIntrinsicBounds(start, top, end, bottom);
   }
 }

@@ -20,31 +20,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.util.AppUtil;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.Checkout;
-import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Products;
 import org.solovyev.android.checkout.Purchase;
-import org.solovyev.android.checkout.Sku;
+import org.solovyev.android.checkout.PurchaseVerifier;
+import org.solovyev.android.checkout.RequestListener;
 import timber.log.Timber;
 
 public abstract class DonationActivity extends VersionCheckActivity {
-
-  @NonNull private static final String SKU_UNLOCK = ".unlock";
-  @NonNull private static final String SKU_UNLOCK_ONE = SKU_UNLOCK + ".one";
-  @NonNull private static final String SKU_UNLOCK_TWO = SKU_UNLOCK + ".two";
-  @NonNull private static final String SKU_UNLOCK_FIVE = SKU_UNLOCK + ".five";
-  @NonNull private static final String SKU_UNLOCK_TEN = SKU_UNLOCK + ".ten";
 
   @NonNull private static final String SKU_DONATE = ".donate";
   @NonNull private static final String SKU_DONATE_ONE = SKU_DONATE + ".one";
@@ -52,22 +48,12 @@ public abstract class DonationActivity extends VersionCheckActivity {
   @NonNull private static final String SKU_DONATE_FIVE = SKU_DONATE + ".five";
   @NonNull private static final String SKU_DONATE_TEN = SKU_DONATE + ".ten";
 
-  @NonNull private static final String SUPPORT_TAG = "SupportDialog";
-
-  boolean canDisableAds;
   private ActivityCheckout checkout;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    canDisableAds = false;
 
     final String packageName = getPackageName();
-
-    final String appSpecificSkuUnlockOne = packageName + SKU_UNLOCK_ONE;
-    final String appSpecificSkuUnlockTwo = packageName + SKU_UNLOCK_TWO;
-    final String appSpecificSkuUnlockFive = packageName + SKU_UNLOCK_FIVE;
-    final String appSpecificSkuUnlockTen = packageName + SKU_UNLOCK_TEN;
-
     final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;
     final String appSpecificSkuDonateTwo = packageName + SKU_DONATE_TWO;
     final String appSpecificSkuDonateFive = packageName + SKU_DONATE_FIVE;
@@ -78,12 +64,10 @@ public abstract class DonationActivity extends VersionCheckActivity {
         new Billing(getApplicationContext(), new DonationBillingConfiguration(getPackageName())),
         Products.create()
             .add(ProductTypes.IN_APP,
-                Arrays.asList(appSpecificSkuUnlockOne, appSpecificSkuUnlockTwo,
-                    appSpecificSkuUnlockFive, appSpecificSkuUnlockTen, appSpecificSkuDonateOne,
-                    appSpecificSkuDonateTwo, appSpecificSkuDonateFive, appSpecificSkuDonateTen)));
+                Arrays.asList(appSpecificSkuDonateOne, appSpecificSkuDonateTwo,
+                    appSpecificSkuDonateFive, appSpecificSkuDonateTen)));
 
     checkout.start();
-    checkout.loadInventory().load().whenLoaded(new InventoryLoadedListener());
   }
 
   @Override protected void onDestroy() {
@@ -107,17 +91,12 @@ public abstract class DonationActivity extends VersionCheckActivity {
     final int itemId = item.getItemId();
     boolean handled;
     if (itemId == R.id.menu_support) {
-      showSupportDialog();
+      SupportDialog.show(getSupportFragmentManager(), getApplicationIcon());
       handled = true;
     } else {
       handled = false;
     }
     return handled;
-  }
-
-  private void showSupportDialog() {
-    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new SupportDialog(),
-        SUPPORT_TAG);
   }
 
   @NonNull @CheckResult final ActivityCheckout getCheckout() {
@@ -127,13 +106,7 @@ public abstract class DonationActivity extends VersionCheckActivity {
     return checkout;
   }
 
-  @CheckResult public boolean canDisableAds() {
-    return canDisableAds;
-  }
-
-  void setCanDisableAds(boolean canDisableAds) {
-    this.canDisableAds = canDisableAds;
-  }
+  @DrawableRes @CheckResult protected abstract int getApplicationIcon();
 
   static class DonationBillingConfiguration extends Billing.DefaultConfiguration {
 
@@ -146,26 +119,29 @@ public abstract class DonationActivity extends VersionCheckActivity {
     @NonNull @Override public String getPublicKey() {
       return publicKey;
     }
-  }
 
-  class InventoryLoadedListener implements Inventory.Listener {
+    /**
+     * We do not really need any purchase verification as they are all just donations anyway.
+     * Our public key is not used, so the default verifier fails anyway.
+     *
+     * Pass a verifier which always passes
+     */
+    @NonNull @Override public PurchaseVerifier getPurchaseVerifier() {
+      return new AlwaysPurchaseVerifier();
+    }
 
-    @Override public void onLoaded(@NonNull Inventory.Products products) {
-      final Inventory.Product product = products.get(ProductTypes.IN_APP);
-      if (product.supported) {
-        for (Sku sku : product.getSkus()) {
+    static class AlwaysPurchaseVerifier implements PurchaseVerifier {
 
-          // Consumable items don't count for disabling ads
-          if (!SkuItem.isConsumable(sku.id)) {
-            final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
-            if (purchase != null) {
-              canDisableAds = true;
-              break;
-            }
-          }
+      /**
+       * Verify all purchases as 'valid'
+       */
+      @Override public void verify(@NonNull List<Purchase> purchases,
+          @NonNull RequestListener<List<Purchase>> listener) {
+        final List<Purchase> verifiedPurchases = new ArrayList<>(purchases.size());
+        for (Purchase purchase : purchases) {
+          verifiedPurchases.add(purchase);
         }
-      } else {
-        canDisableAds = false;
+        listener.onSuccess(verifiedPurchases);
       }
     }
   }

@@ -23,8 +23,7 @@
 
   <item
       android:id="@+id/menu_support"
-      android:icon="@drawable/ic_thumb_up_24dp"
-      android:title="@string/pydroid_donate"
+      android:title="@string/upgrade"
       app:showAsAction="ifRoom"/>
 
 </menu>

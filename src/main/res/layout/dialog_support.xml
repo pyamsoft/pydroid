@@ -27,8 +27,16 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="8dp"
-      android:text="@string/about_this_application"
+      android:text="@string/rate_application"
       android:textAppearance="?android:textAppearanceMedium"
+      />
+
+  <include
+      layout="@layout/adapter_item_iap"
+      android:id="@+id/support_upgrade"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="16dp"
       />
 
   <FrameLayout
@@ -69,11 +77,11 @@
 
       <com.pyamsoft.pydroid.app.widget.NoLeakTextView
           android:id="@+id/support_iap_empty_text"
-          android:textColor="@color/red500"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@color/red500"
           />
 
     </FrameLayout>

@@ -16,9 +16,12 @@
 
 package com.pyamsoft.pydroid.lib;
 
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -29,23 +32,54 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
 import java.util.List;
+import org.solovyev.android.checkout.Sku;
 
 class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @NonNull private final SkuItem skuItem;
+  @NonNull private final Sku sku;
 
-  SkuUIItem(@NonNull SkuItem skuItem) {
-    this.skuItem = skuItem;
+  SkuUIItem(@NonNull Sku sku) {
+    this.sku = sku;
   }
 
-  @CheckResult @NonNull final SkuItem sku() {
-    return skuItem;
+  @SuppressWarnings("deprecation") @CheckResult @NonNull
+  private static Spanned fromHtml(@NonNull String description) {
+    final Spanned html;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      html = Html.fromHtml(description, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
+    } else {
+      html = Html.fromHtml(description);
+    }
+    return html;
+  }
+
+  /**
+   * Titles will sometimes contain the app name in (), strip them
+   */
+  @NonNull @CheckResult private static String formatTitle(@NonNull String title) {
+    final String formatted;
+    final int i = title.indexOf("(");
+    if (i > 0) {
+      if (title.charAt(i - 1) == ' ') {
+        formatted = title.substring(0, i - 1);
+      } else {
+        formatted = title.substring(0, i);
+      }
+    } else {
+      formatted = title;
+    }
+
+    return formatted;
+  }
+
+  @NonNull @CheckResult Sku getSku() {
+    return sku;
   }
 
   @Override public int getType() {
-    return 0;
+    return R.id.fastadapter_iap;
   }
 
   @Override public int getLayoutRes() {
@@ -58,9 +92,9 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
-    holder.title.setText(skuItem.sku().title);
-    holder.description.setText(skuItem.sku().description);
-    holder.price.setText(skuItem.sku().price);
+    holder.title.setText(formatTitle(sku.title));
+    holder.description.setText(fromHtml(sku.description));
+    holder.price.setText(sku.price);
   }
 
   protected static class ViewHolder extends RecyclerView.ViewHolder {

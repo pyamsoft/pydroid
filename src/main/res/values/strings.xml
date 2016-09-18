@@ -19,9 +19,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <string name="blank"/>
-  <string name="pydroid_donate" tools:keep="@string/pydroid_donate">SUPPORT</string>
-  <string name="about_this_application">About This Application</string>
-  <string name="rate_app_on_play_store">Rate App on Play Store</string>
+  <string name="upgrade">UPGRADE</string>
+  <string name="upgrade_to_pro_title">Upgrade to Pro Version</string>
+  <string name="upgrade_to_pro_desc">Pro version allows you to disable ads</string>
+  <string name="rate_application">Rate Application</string>
   <string name="no_thanks">No Thanks</string>
   <string name="liking_the_app">Liking the App?</string>
   <string name="homepage">Homepage</string>
@@ -30,7 +31,7 @@
   <string name="iap_empty">Unable to load In-App Purchase products. Please try again later.</string>
 
   <bool name="adview_default">true</bool>
-  <string name="adview_key">adview_pyamsoft</string>
+  <string name="adview_key">pyamsoft_adview</string>
   <string name="adview_title" tools:keep="@string/adview_title">Related Applications</string>
   <string name="adview_summary_checked" tools:keep="@string/adview_summary_checked">Will show related and relevant pyamsoft applications</string>
   <string name="adview_summary_unchecked" tools:keep="@string/adview_summary_unchecked">Will not show other related pyamsoft applications</string>

@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pyprolib.Pro;
 import timber.log.Timber;
 
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
@@ -72,7 +73,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
         Timber.d("Turn on ads");
         donationActivity.showAd();
       } else {
-        if (donationActivity.canDisableAds()) {
+        if (Pro.isPro(getContext())) {
           Timber.d("Turn off ads");
           donationActivity.hideAd();
         } else {

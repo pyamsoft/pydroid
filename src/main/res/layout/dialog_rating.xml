@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/rating_btn_no_thanks"
-        android:text="@string/rate_app_on_play_store"
+        android:text="@string/rate_application"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/white"
         style="@style/Widget.AppCompat.Button.Colored"

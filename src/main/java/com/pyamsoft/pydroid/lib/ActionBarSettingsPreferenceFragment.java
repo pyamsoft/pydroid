@@ -17,13 +17,17 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +82,9 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
           donationActivity.hideAd();
         } else {
           Timber.e("Cannot disable Ads");
-          AppUtil.guaranteeSingleDialogFragment(getActivity(), new SupportDialog(), "support");
+          AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+              CannotDisableAdsDialog.newInstance(getDonationActivity().getApplicationIcon()),
+              "disable_ads");
           return false;
         }
       }
@@ -163,20 +169,45 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
             updatedVersionCode), VersionUpgradeDialog.TAG);
   }
 
-  @CheckResult @NonNull private VersionCheckProvider getVersionCheckProvider() {
+  @CheckResult @NonNull private DonationActivity getDonationActivity() {
     final FragmentActivity activity = getActivity();
-    if (activity instanceof VersionCheckProvider) {
-      return (VersionCheckProvider) activity;
+    if (activity instanceof DonationActivity) {
+      return (DonationActivity) activity;
     } else {
-      throw new RuntimeException("No version check provider in activity");
+      throw new ClassCastException("Cannot cast to Donation activity");
     }
   }
 
   @NonNull @Override public String provideApplicationName() {
-    return getVersionCheckProvider().provideApplicationName();
+    return getDonationActivity().provideApplicationName();
   }
 
   @Override public int getCurrentApplicationVersion() {
-    return getVersionCheckProvider().getCurrentApplicationVersion();
+    return getDonationActivity().getCurrentApplicationVersion();
+  }
+
+  public static class CannotDisableAdsDialog extends DialogFragment {
+
+    @CheckResult @NonNull public static CannotDisableAdsDialog newInstance(@DrawableRes int icon) {
+      Bundle args = new Bundle();
+      CannotDisableAdsDialog fragment = new CannotDisableAdsDialog();
+      args.putInt("ICON", icon);
+      fragment.setArguments(args);
+      return fragment;
+    }
+
+    @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+      final int icon = getArguments().getInt("ICON", 0);
+      return new AlertDialog.Builder(getActivity()).setMessage(
+          "Cannot disable Ads unless you are upgraded to Pro version")
+          .setPositiveButton("Upgrade", (dialog, which) -> {
+            dialog.dismiss();
+            SupportDialog.show(getFragmentManager(), icon);
+          })
+          .setNegativeButton("Cancel", (dialog, which) -> {
+            dialog.dismiss();
+          })
+          .create();
+    }
   }
 }

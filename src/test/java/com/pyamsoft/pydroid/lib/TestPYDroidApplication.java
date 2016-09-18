@@ -21,7 +21,8 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-@SuppressLint("Registered") public class TestPYDroidApplication extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
+@SuppressLint("Registered") public class TestPYDroidApplication
+    extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
 
   private PYDroidComponent component;
 

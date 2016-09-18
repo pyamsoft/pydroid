@@ -101,9 +101,6 @@ public final class AppUtil {
 
     Timber.d("Add new fragment with tag: %s", tag);
     dialogFragment.show(ft, tag);
-
-    // Fixes issues where clicking very fast can show multiple dialogs
-    fragmentManager.executePendingTransactions();
   }
 
   @CheckResult public static float convertToDP(final @NonNull Context c, final float px) {

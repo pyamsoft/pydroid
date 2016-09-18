@@ -66,8 +66,11 @@ public class AdvertisementView extends FrameLayout {
   @NonNull private static final String PACKAGE_ZAPTORCH = "com.pyamsoft.zaptorch";
   @NonNull private static final String PACKAGE_WORDWIZ = "com.pyamsoft.wordwiz";
   @NonNull private static final String[] POSSIBLE_PACKAGES = {
-      PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON, PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
+      PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON,
+      PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
+
+  private static final int MAX_SHOW_COUNT = 4;
   @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @BindView(R2.id.ad_image) ImageView advertisement;
@@ -149,6 +152,13 @@ public class AdvertisementView extends FrameLayout {
 
   public final void destroy() {
     Timber.d("Destroy AdView");
+    final SharedPreferences preferences =
+        PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+    if (preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0) >= MAX_SHOW_COUNT) {
+      Timber.d("Write shown count back to 0");
+      preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
+    }
+
     taskMap.clear();
     advertisement.setImageDrawable(null);
     realAdView.removeAllViews();
@@ -258,7 +268,7 @@ public class AdvertisementView extends FrameLayout {
         PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
     final boolean isEnabled = preferences.getBoolean(preferenceKey, preferenceDefault);
     final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
-    final boolean isValidCount = shownCount >= 4;
+    final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
     if (isEnabled && isValidCount) {
       Timber.d("Show ad view");
       setVisibility(View.VISIBLE);

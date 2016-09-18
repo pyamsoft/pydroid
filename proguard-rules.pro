@@ -37,3 +37,9 @@
 
 # Keep GSON serialized class
 -keep class com.pyamsoft.pydroid.lib.VersionCheckResponse { *; }
+
+# Android Checkout uses weird annotations
+-dontwarn javax.annotation.Nonnull
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.concurrent.GuardedBy
+

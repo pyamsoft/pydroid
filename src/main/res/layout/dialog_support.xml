@@ -31,14 +31,6 @@
       android:textAppearance="?android:textAppearanceMedium"
       />
 
-  <include
-      layout="@layout/adapter_item_iap"
-      android:id="@+id/support_upgrade"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="16dp"
-      />
-
   <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="0dp"

@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.model.Licenses;
 
 final class AboutItemsUtil {
 
@@ -27,77 +26,81 @@ final class AboutItemsUtil {
   }
 
   @NonNull @CheckResult static AboutItem licenseForAndroid() {
-    return new AboutItem("Android", "https://source.android.com", Licenses.ANDROID);
+    return new AboutItem("Android", "https://source.android.com", Licenses.androidItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForAndroidSupport() {
     return new AboutItem("Android Support Libraries", "https://source.android.com",
-        Licenses.ANDROID_SUPPORT);
+        Licenses.androidSupportItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForPYDroid() {
-    return new AboutItem("PYDroid", "https://pyamsoft.github.io/pydroid", Licenses.PYDROID);
+    return new AboutItem("PYDroid", "https://pyamsoft.github.io/pydroid", Licenses.pydroidItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForAutoValue() {
-    return new AboutItem("AutoValue", "https://pyamsoft.github.io/pydroid", Licenses.AUTO_VALUE);
+    return new AboutItem("AutoValue", "https://pyamsoft.github.io/pydroid",
+        Licenses.autovalueItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForRetrofit2() {
-    return new AboutItem("Retrofit", "https://square.github.io/retrofit/", Licenses.RETROFIT2);
+    return new AboutItem("Retrofit", "https://square.github.io/retrofit/", Licenses.retrofitItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForFirebase() {
-    return new AboutItem("Firebase", "https://firebase.google.com/", Licenses.FIREBASE);
+    return new AboutItem("Firebase", "https://firebase.google.com/", Licenses.firebaseItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForDagger2() {
-    return new AboutItem("Dagger", "https://google.github.io/dagger/", Licenses.DAGGER);
+    return new AboutItem("Dagger", "https://google.github.io/dagger/", Licenses.daggerItem());
   }
 
-  @NonNull @CheckResult static AboutItem licenseForAndroidInAppBilling() {
-    return new AboutItem("Android Checkout",
-        "https://github.com/serso/android-checkout", Licenses.ANDROID_CHECKOUT);
+  @NonNull @CheckResult static AboutItem licenseForAndroidCheckout() {
+    return new AboutItem("Android Checkout", "https://github.com/serso/android-checkout",
+        Licenses.androidCheckoutItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForButterknife() {
     return new AboutItem("Butterknife", "https://jakewharton.github.io/butterknife/",
-        Licenses.BUTTERKNIFE);
+        Licenses.butterknifeItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForLeakCanary() {
     return new AboutItem("Leak Canary", "https://github.com/square/leakcanary",
-        Licenses.LEAK_CANARY);
+        Licenses.leakcanaryItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForRxJava() {
-    return new AboutItem("RxJava", "https://github.com/ReactiveX/RxJava", Licenses.RXJAVA);
+    return new AboutItem("RxJava", "https://github.com/ReactiveX/RxJava", Licenses.rxjavaItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForRxAndroid() {
-    return new AboutItem("RxAndroid", "https://github.com/ReactiveX/RxAndroid", Licenses.RXANDROID);
+    return new AboutItem("RxAndroid", "https://github.com/ReactiveX/RxAndroid",
+        Licenses.rxandroidItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForFastAdapter() {
     return new AboutItem("FastAdapter", "https://github.com/mikepenz/FastAdapter",
-        Licenses.FAST_ADAPTER);
+        Licenses.fastAdapterItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForGooglePlayServices() {
     return new AboutItem("Google Play Services",
-        "https://developers.google.com/android/guides/overview", Licenses.GOOGLE_PLAY_SERVICES);
+        "https://developers.google.com/android/guides/overview", Licenses.googlePlayItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForSQLBrite() {
-    return new AboutItem("SQLBrite", "https://github.com/square/sqlbrite", Licenses.SQLBRITE);
+    return new AboutItem("SQLBrite", "https://github.com/square/sqlbrite", Licenses.sqlbriteItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForSQLDelight() {
-    return new AboutItem("SQLDelight", "https://github.com/square/sqldelight", Licenses.SQLDELIGHT);
+    return new AboutItem("SQLDelight", "https://github.com/square/sqldelight",
+        Licenses.sqldelightItem());
   }
 
   @NonNull @CheckResult static AboutItem licenseForAndroidPriorityJobQueue() {
     return new AboutItem("Android Priority JobQueue",
-        "https://github.com/yigit/android-priority-jobqueue", Licenses.ANDROID_PRIORITY_JOBQUEUE);
+        "https://github.com/yigit/android-priority-jobqueue",
+        Licenses.androidPriorityJobQueueItem());
   }
 }

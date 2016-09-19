@@ -39,13 +39,29 @@ import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import dagger.Lazy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import timber.log.Timber;
+
+import static com.pyamsoft.pydroid.lib.Licenses.ANDROID;
+import static com.pyamsoft.pydroid.lib.Licenses.ANDROID_CHECKOUT;
+import static com.pyamsoft.pydroid.lib.Licenses.ANDROID_PRIORITY_JOBQUEUE;
+import static com.pyamsoft.pydroid.lib.Licenses.ANDROID_SUPPORT;
+import static com.pyamsoft.pydroid.lib.Licenses.AUTO_VALUE;
+import static com.pyamsoft.pydroid.lib.Licenses.BUTTERKNIFE;
+import static com.pyamsoft.pydroid.lib.Licenses.DAGGER;
+import static com.pyamsoft.pydroid.lib.Licenses.FAST_ADAPTER;
+import static com.pyamsoft.pydroid.lib.Licenses.FIREBASE;
+import static com.pyamsoft.pydroid.lib.Licenses.GOOGLE_PLAY_SERVICES;
+import static com.pyamsoft.pydroid.lib.Licenses.LEAK_CANARY;
+import static com.pyamsoft.pydroid.lib.Licenses.PYDROID;
+import static com.pyamsoft.pydroid.lib.Licenses.RETROFIT2;
+import static com.pyamsoft.pydroid.lib.Licenses.RXANDROID;
+import static com.pyamsoft.pydroid.lib.Licenses.RXJAVA;
+import static com.pyamsoft.pydroid.lib.Licenses.SQLBRITE;
+import static com.pyamsoft.pydroid.lib.Licenses.SQLDELIGHT;
 
 public class AboutLibrariesFragment extends ActionBarFragment
     implements AboutLibrariesPresenter.View {
@@ -59,14 +75,13 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @BindView(R2.id.recycler_about_libraries) RecyclerView recyclerView;
   @ColorInt private int backgroundColor;
   private FastItemAdapter<AboutItem> fastItemAdapter;
-  private Licenses[] licenses;
+  private int[] licenses;
   private long loadedKey;
   private boolean lastOnBackStack;
   private Unbinder unbinder;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
-      @NonNull Styling styling, @NonNull BackStackState backStackState,
-      @NonNull Licenses... licenses) {
+      @NonNull Styling styling, @NonNull BackStackState backStackState, @NonNull int... licenses) {
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
@@ -78,37 +93,23 @@ public class AboutLibrariesFragment extends ActionBarFragment
   }
 
   @CheckResult @NonNull private static AboutLibrariesFragment newInstance(@NonNull Styling styling,
-      @NonNull BackStackState backStackState, @NonNull Licenses... licenseList) {
+      @NonNull BackStackState backStackState, @NonNull int... licenses) {
     final Bundle args = new Bundle();
     final AboutLibrariesFragment fragment = new AboutLibrariesFragment();
-    final String[] licenseNames = new String[licenseList.length];
-    for (int i = 0; i < licenseNames.length; ++i) {
-      licenseNames[i] = licenseList[i].name();
-    }
-
     args.putString(KEY_STYLING, styling.name());
     args.putString(KEY_BACK_STACK, backStackState.name());
-    args.putStringArray(KEY_LICENSE_LIST, licenseNames);
+    args.putIntArray(KEY_LICENSE_LIST, licenses);
     fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final String[] licenseNames = getArguments().getStringArray(KEY_LICENSE_LIST);
-    if (licenseNames == null) {
-      throw new NullPointerException("No licenses specified");
+    licenses = getArguments().getIntArray(KEY_LICENSE_LIST);
+    if (licenses == null) {
+      throw new NullPointerException("Licenses is NULL");
     }
-
-    // Sort names alphabetically
-    Arrays.sort(licenseNames);
-
-    licenses = new Licenses[licenseNames.length];
-
-    final int size = licenses.length;
-    for (int i = 0; i < size; ++i) {
-      licenses[i] = Licenses.valueOf(licenseNames[i]);
-    }
+    Arrays.sort(licenses);
 
     final String stylingName = getArguments().getString(KEY_STYLING, null);
     if (stylingName == null) {
@@ -179,7 +180,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
     //fill with some sample data
     final List<AboutItem> items = new ArrayList<>();
-    for (final Licenses license : licenses) {
+    for (final int license : licenses) {
       final AboutItem item;
       switch (license) {
         case FIREBASE:
@@ -204,7 +205,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
           item = AboutItemsUtil.licenseForAutoValue();
           break;
         case ANDROID_CHECKOUT:
-          item = AboutItemsUtil.licenseForAndroidInAppBilling();
+          item = AboutItemsUtil.licenseForAndroidCheckout();
           break;
         case ANDROID_SUPPORT:
           item = AboutItemsUtil.licenseForAndroidSupport();
@@ -234,7 +235,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
           item = AboutItemsUtil.licenseForAndroidPriorityJobQueue();
           break;
         default:
-          throw new RuntimeException("Invalid license: " + license.name());
+          throw new RuntimeException("Invalid license: " + license);
       }
 
       items.add(item);

@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.model.Licenses;
 import rx.Observable;
 
 interface AboutLibrariesInteractor {

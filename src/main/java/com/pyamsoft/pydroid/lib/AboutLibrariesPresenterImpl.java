@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.lib;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
-import com.pyamsoft.pydroid.model.Licenses;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -71,7 +70,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
   }
 
   @SuppressWarnings("WeakerAccess") void loadLicenseText(int position, @NonNull Licenses licenses) {
-    if (licenses == Licenses.EMPTY) {
+    if (licenses.id() == Licenses.EMPTY) {
       getView(view -> view.onLicenseTextLoaded(position, ""));
     } else {
       final Subscription licenseSubscription = interactor.loadLicenseText(licenses)

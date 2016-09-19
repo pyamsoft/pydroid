@@ -30,8 +30,8 @@ import com.squareup.leakcanary.RefWatcher;
 import java.util.List;
 import timber.log.Timber;
 
-@SuppressLint("Registered") public class PYDroidApplication
-    extends IPYDroidApp<IPYDroidApp.PYDroidComponent> {
+@SuppressLint("Registered") public abstract class PYDroidApplication
+    extends IPYDroidApp<IPYDroidApp.PYDroidComponent> implements LicenseProvider {
 
   private PYDroidComponent component;
   private RefWatcher refWatcher;
@@ -39,6 +39,15 @@ import timber.log.Timber;
   @NonNull @CheckResult static IPYDroidApp<PYDroidComponent> get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     if (appContext instanceof IPYDroidApp) {
+      return PYDroidApplication.class.cast(appContext);
+    } else {
+      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
+    }
+  }
+
+  @NonNull @CheckResult static LicenseProvider licenses(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    if (appContext instanceof LicenseProvider) {
       return PYDroidApplication.class.cast(appContext);
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");

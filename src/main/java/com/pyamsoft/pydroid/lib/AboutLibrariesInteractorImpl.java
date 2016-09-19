@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pydroid.model.Licenses;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,86 +44,29 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting @CheckResult
-  String getLicenseFileName(@NonNull Licenses license) {
-    final String fileLocation;
-    switch (license) {
-      case FIREBASE:
-        fileLocation = "licenses/firebase";
-        break;
-      case RETROFIT2:
-        fileLocation = "licenses/retrofit";
-        break;
-      case LEAK_CANARY:
-        fileLocation = "licenses/leakcanary";
-        break;
-      case FAST_ADAPTER:
-        fileLocation = "licenses/fastadapter";
-        break;
-      case DAGGER:
-        fileLocation = "licenses/dagger2";
-        break;
-      case BUTTERKNIFE:
-        fileLocation = "licenses/butterknife";
-        break;
-      case AUTO_VALUE:
-        fileLocation = "licenses/autovalue";
-        break;
-      case ANDROID_CHECKOUT:
-        fileLocation = "licenses/androidcheckout";
-        break;
-      case ANDROID:
-        fileLocation = "licenses/android";
-        break;
-      case ANDROID_SUPPORT:
-        fileLocation = "licenses/androidsupport";
-        break;
-      case PYDROID:
-        fileLocation = "licenses/pydroid";
-        break;
-      case RXJAVA:
-        fileLocation = "licenses/rxjava";
-        break;
-      case SQLBRITE:
-        fileLocation = "licenses/sqlbrite";
-        break;
-      case SQLDELIGHT:
-        fileLocation = "licenses/sqldelight";
-        break;
-      case RXANDROID:
-        fileLocation = "licenses/rxandroid";
-        break;
-      case ANDROID_PRIORITY_JOBQUEUE:
-        fileLocation = "licenses/androidpriorityjobqueue";
-        break;
-      default:
-        throw new RuntimeException("Invalid license type: " + license.name());
-    }
-    return fileLocation;
-  }
-
   @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
   Observable<String> loadNewLicense(@NonNull Licenses licenses) {
     return Observable.defer(() -> {
-      if (licenses == Licenses.EMPTY) {
+      if (licenses.id() == Licenses.EMPTY) {
         Timber.w("Empty license passed");
         return Observable.just("");
       }
 
-      if (licenses == Licenses.GOOGLE_PLAY_SERVICES) {
+      if (licenses.id() == Licenses.GOOGLE_PLAY_SERVICES) {
         Timber.d("License is Google Play services");
-        final String googleOpenSourceLicenses = "";
-        final Observable<String> result = Observable.just(googleOpenSourceLicenses);
+        final String googleOpenSourceLicenses =
+            PYDroidApplication.licenses(appContext).provideGoogleOpenSourceLicenses();
+        final Observable<String> result = Observable.just(
+            googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
+                : googleOpenSourceLicenses);
         Timber.i("Finished loading Google Play services license");
         return result;
       }
 
-      Timber.d("Load license for: %s", licenses.name());
       String licenseText;
       final StringBuilder text = new StringBuilder();
-      final String licenseFileName = getLicenseFileName(licenses);
       try (
-          final InputStream fileInputStream = appContext.getAssets().open(licenseFileName);
+          final InputStream fileInputStream = appContext.getAssets().open(licenses.location());
           final BufferedReader br = new BufferedReader(
               new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
         String line = br.readLine();
@@ -138,7 +80,6 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
         licenseText = "Could not load license text";
       }
 
-      Timber.i("Finished loading license for: %s", licenses.name());
       return Observable.just(licenseText);
     });
   }

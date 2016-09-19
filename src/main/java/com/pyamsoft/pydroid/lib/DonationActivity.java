@@ -18,8 +18,6 @@ package com.pyamsoft.pydroid.lib;
 
 import android.content.Intent;
 import android.support.annotation.CallSuper;
-import android.support.annotation.CheckResult;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,13 +43,11 @@ public abstract class DonationActivity extends VersionCheckActivity {
     final int itemId = item.getItemId();
     boolean handled;
     if (itemId == R.id.menu_support) {
-      SupportDialog.show(getSupportFragmentManager(), getApplicationIcon());
+      SupportDialog.show(getSupportFragmentManager());
       handled = true;
     } else {
       handled = false;
     }
     return handled;
   }
-
-  @DrawableRes @CheckResult protected abstract int getApplicationIcon();
 }

@@ -14,25 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.model;
+package com.pyamsoft.pydroid.lib;
 
-public enum Licenses {
-  EMPTY,
-  GOOGLE_PLAY_SERVICES,
-  ANDROID,
-  ANDROID_SUPPORT,
-  PYDROID,
-  RXJAVA,
-  RXANDROID,
-  LEAK_CANARY,
-  FIREBASE,
-  ANDROID_CHECKOUT,
-  FAST_ADAPTER,
-  BUTTERKNIFE,
-  AUTO_VALUE,
-  DAGGER,
-  RETROFIT2,
-  SQLBRITE,
-  SQLDELIGHT,
-  ANDROID_PRIORITY_JOBQUEUE,
+import android.support.annotation.Nullable;
+
+interface LicenseProvider {
+
+  @Nullable String provideGoogleOpenSourceLicenses();
 }

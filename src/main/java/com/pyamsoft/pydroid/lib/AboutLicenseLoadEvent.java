@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.lib;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
-import com.pyamsoft.pydroid.model.Licenses;
 
 @AutoValue abstract class AboutLicenseLoadEvent {
 

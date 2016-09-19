@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -37,7 +36,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,12 +46,10 @@ import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
-import com.pyamsoft.pydroid.app.widget.VectorTextView;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pyprolib.Pro;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +72,6 @@ public class SupportDialog extends DialogFragment
 
   @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_social_presenter";
   @NonNull private static final String KEY_SUPPORT_PRESENTER = "key_support_presenter";
-  @NonNull private static final String KEY_APP_ICON = "key_app_icon";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialMediaPresenter;
   @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
   @BindView(R2.id.support_about_app) Button aboutApp;
@@ -89,21 +84,16 @@ public class SupportDialog extends DialogFragment
   @BindView(R2.id.support_loading) FrameLayout loadingLayout;
   @BindView(R2.id.support_loading_progress) ProgressBar loadingProgress;
   @BindView(R2.id.support_iap_empty_text) TextView emptyIAPText;
-  @BindView(R2.id.support_upgrade) LinearLayout upgradeApplication;
-  @BindView(R2.id.purchase_iap_title) VectorTextView upgradeTitle;
-  @BindView(R2.id.purchase_iap_description) TextView upgradeDescription;
   FastItemAdapter<SkuUIItem> fastItemAdapter;
   Inventory inAppPurchaseInventory;
   @SuppressWarnings("WeakerAccess") ActivityCheckout checkout;
   private long socialMediaKey;
   private long supportKey;
   private Unbinder unbinder;
-  @DrawableRes private int appIcon;
 
-  static void show(@NonNull FragmentManager fragmentManager, @DrawableRes int appIcon) {
+  static void show(@NonNull FragmentManager fragmentManager) {
     final Bundle args = new Bundle();
     final SupportDialog fragment = new SupportDialog();
-    args.putInt(KEY_APP_ICON, appIcon);
     fragment.setArguments(args);
     AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, "SupportDialog");
   }
@@ -115,8 +105,6 @@ public class SupportDialog extends DialogFragment
     checkout.start();
     checkout.createPurchaseFlow(new DonationPurchaseListener());
     inAppPurchaseInventory = checkout.loadInventory();
-
-    appIcon = getArguments().getInt(KEY_APP_ICON, 0);
 
     socialMediaKey = PersistentCache.get()
         .load(KEY_SOCIAL_PRESENTER, savedInstanceState,
@@ -149,20 +137,10 @@ public class SupportDialog extends DialogFragment
     unbinder = ButterKnife.bind(this, rootView);
     initDialog();
     return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
-        (dialogInterface, i) -> {
-          dialogInterface.dismiss();
-        }).setView(rootView).create();
+        (dialogInterface, i) -> dialogInterface.dismiss()).setView(rootView).create();
   }
 
   private void initDialog() {
-    if (appIcon != 0) {
-      upgradeTitle.setCompoundDrawableResWithIntrinsicBounds(appIcon, 0, 0, 0);
-    }
-    upgradeTitle.setText(R.string.upgrade_to_pro_title);
-    upgradeDescription.setText(R.string.upgrade_to_pro_desc);
-
-    upgradeApplication.setOnClickListener(
-        v -> socialMediaPresenter.clickAppPage(getActivity().getPackageName() + "pro"));
     aboutApp.setOnClickListener(
         view1 -> socialMediaPresenter.clickAppPage(getActivity().getPackageName()));
     googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
@@ -228,13 +206,6 @@ public class SupportDialog extends DialogFragment
         requests.purchase(sku, null, checkout.getPurchaseFlow());
       }
     });
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    if (Pro.isPro(getContext())) {
-      upgradeApplication.setVisibility(View.GONE);
-    }
   }
 
   void loadUnsupportedIAPView() {

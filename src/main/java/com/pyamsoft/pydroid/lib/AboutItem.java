@@ -34,7 +34,6 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
-import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.List;
 

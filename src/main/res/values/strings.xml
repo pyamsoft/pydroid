@@ -19,9 +19,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <string name="blank"/>
-  <string name="upgrade">UPGRADE</string>
-  <string name="upgrade_to_pro_title">Upgrade to Pro Version</string>
-  <string name="upgrade_to_pro_desc">Pro version allows you to disable ads</string>
+  <string name="support">SUPPORT</string>
+  <string name="donate">Make a Donation</string>
   <string name="rate_application">Rate Application</string>
   <string name="no_thanks">No Thanks</string>
   <string name="liking_the_app">Liking the App?</string>

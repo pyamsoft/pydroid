@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.os.StrictMode;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -107,6 +108,17 @@ import timber.log.Timber;
     return component;
   }
 
+  private void setStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+        .penaltyLog()
+        .penaltyDeath()
+        .permitDiskReads()
+        .permitDiskWrites()
+        .penaltyFlashScreen()
+        .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+  }
+
   /**
    * In a Firebase multi process app, this block of code will be guaranteed to only run on the
    * first
@@ -116,6 +128,9 @@ import timber.log.Timber;
     if (BuildConfig.DEBUG) {
       Timber.d("Install live leakcanary");
       refWatcher = LeakCanary.install(this);
+      Timber.plant(new Timber.DebugTree());
+      setStrictMode();
+      onFirstCreateInDebugMode();
     } else {
       refWatcher = RefWatcher.DISABLED;
     }
@@ -123,5 +138,9 @@ import timber.log.Timber;
     component = DaggerIPYDroidApp_PYDroidComponent.builder()
         .pYDroidModule(new PYDroidModule(getApplicationContext()))
         .build();
+  }
+
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onFirstCreateInDebugMode() {
+
   }
 }

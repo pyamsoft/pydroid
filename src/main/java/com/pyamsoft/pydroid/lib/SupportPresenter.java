@@ -18,12 +18,13 @@ package com.pyamsoft.pydroid.lib;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.base.Presenter;
 
 interface SupportPresenter extends Presenter<SupportPresenter.View> {
 
   interface View {
 
-    void onDonationResult(int requestCode, int resultCode, @NonNull Intent data);
+    void onDonationResult(int requestCode, int resultCode, @Nullable Intent data);
   }
 }

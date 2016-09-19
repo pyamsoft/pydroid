@@ -262,7 +262,7 @@ public class SupportDialog extends DialogFragment
     fastItemAdapter.notifyDataSetChanged();
   }
 
-  @Override public void onDonationResult(int requestCode, int resultCode, @NonNull Intent data) {
+  @Override public void onDonationResult(int requestCode, int resultCode, @Nullable Intent data) {
     checkout.onActivityResult(requestCode, resultCode, data);
   }
 

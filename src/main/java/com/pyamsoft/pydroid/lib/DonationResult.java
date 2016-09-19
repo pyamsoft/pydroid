@@ -19,12 +19,13 @@ package com.pyamsoft.pydroid.lib;
 import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 
 @AutoValue abstract class DonationResult {
 
   @NonNull @CheckResult
-  public static DonationResult create(int requestCode, int resultCode, @NonNull Intent data) {
+  public static DonationResult create(int requestCode, int resultCode, @Nullable Intent data) {
     return new AutoValue_DonationResult(requestCode, resultCode, data);
   }
 
@@ -32,5 +33,5 @@ import com.google.auto.value.AutoValue;
 
   abstract int resultCode();
 
-  abstract Intent data();
+  @Nullable abstract Intent data();
 }

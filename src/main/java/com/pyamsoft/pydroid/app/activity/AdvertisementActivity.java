@@ -19,9 +19,8 @@ package com.pyamsoft.pydroid.app.activity;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.support.AdvertisementView;
+import com.pyamsoft.pydroid.lib.AdvertisementView;
 
 public abstract class AdvertisementActivity extends BackPressConfirmActivity {
 
@@ -36,7 +35,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
 
     if (adView != null) {
-      adView.create(provideAdViewUnitId());
+      adView.create();
     }
   }
 
@@ -52,20 +51,6 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
       adView.stop();
     }
     super.onStop();
-  }
-
-  @CallSuper @Override protected void onResume() {
-    if (adView != null) {
-      adView.resume();
-    }
-    super.onResume();
-  }
-
-  @Override protected void onPause() {
-    if (adView != null) {
-      adView.pause();
-    }
-    super.onPause();
   }
 
   @CallSuper @Override protected void onDestroy() {
@@ -91,7 +76,5 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
    * Call setContentView here and return the id of the advertisement view, 0 if none
    */
   @CheckResult protected abstract int bindActivityToView();
-
-  @CheckResult @NonNull protected abstract String provideAdViewUnitId();
 }
 

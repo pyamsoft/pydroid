@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.lib;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -28,18 +28,11 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
@@ -53,10 +46,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import javax.inject.Inject;
 import rx.Subscription;
 import timber.log.Timber;
 
-public class AdvertisementView extends FrameLayout {
+public class AdvertisementView extends FrameLayout implements SocialMediaPresenter.View {
 
   @NonNull private static final String ADVERTISEMENT_SHOWN_COUNT_KEY = "advertisement_shown_count";
   @NonNull private static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
@@ -74,7 +68,7 @@ public class AdvertisementView extends FrameLayout {
   @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @BindView(R2.id.ad_image) ImageView advertisement;
-  @SuppressWarnings("WeakerAccess") AdView realAdView;
+  @Inject SocialMediaPresenter presenter;
   private Unbinder unbinder;
   private Queue<String> imageQueue;
   private boolean preferenceDefault;
@@ -118,13 +112,10 @@ public class AdvertisementView extends FrameLayout {
     inflate(getContext(), R.layout.view_advertisement, this);
   }
 
-  @SuppressWarnings("WeakerAccess") public final void create(@NonNull final String adId) {
-    Timber.d("Create AdView with debug mode: %s", BuildConfig.DEBUG);
-
+  @SuppressWarnings("WeakerAccess") public final void create() {
     unbinder = ButterKnife.bind(this, this);
 
-    // Setup real ad view
-    setupRealAdView(adId);
+    PYDroidApplication.get(getContext()).provideComponent().plusSocialMediaComponent().inject(this);
 
     // Default to gone
     setVisibility(View.GONE);
@@ -132,21 +123,13 @@ public class AdvertisementView extends FrameLayout {
 
   public final void start() {
     Timber.d("Start adView");
+    presenter.bindView(this);
     show();
-  }
-
-  public final void resume() {
-    Timber.d("Resume adView");
-    realAdView.resume();
-  }
-
-  public final void pause() {
-    Timber.d("Pause adView");
-    realAdView.pause();
   }
 
   public final void stop() {
     Timber.d("Stop adView");
+    presenter.unbindView();
     handler.removeCallbacksAndMessages(null);
   }
 
@@ -161,39 +144,8 @@ public class AdvertisementView extends FrameLayout {
 
     taskMap.clear();
     advertisement.setImageDrawable(null);
-    realAdView.removeAllViews();
-    realAdView.setAdListener(null);
-    realAdView.destroy();
-    removeView(realAdView);
+    presenter.destroy();
     unbinder.unbind();
-  }
-
-  private void setupRealAdView(@NonNull final String adId) {
-    realAdView = new AdView(getContext().getApplicationContext());
-    realAdView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT));
-    realAdView.setAdSize(AdSize.SMART_BANNER);
-    realAdView.setAdUnitId(adId);
-    realAdView.setAdListener(new AdListener() {
-
-      @Override public void onAdLoaded() {
-        super.onAdLoaded();
-        advertisement.setVisibility(View.GONE);
-        realAdView.setVisibility(View.VISIBLE);
-      }
-
-      @Override public void onAdFailedToLoad(int i) {
-        super.onAdFailedToLoad(i);
-        showAdViewNoNetwork();
-
-        Timber.d("Post another load attempt in 60 seconds");
-        handler.postDelayed(AdvertisementView.this::showAdView, 60000);
-      }
-    });
-
-    // Init mobile Ads
-    MobileAds.initialize(getContext().getApplicationContext(), adId);
-    addView(realAdView, 0);
   }
 
   public final void hide() {
@@ -281,37 +233,20 @@ public class AdvertisementView extends FrameLayout {
   }
 
   @SuppressWarnings("WeakerAccess") void showAdView() {
-    showAdViewNoNetwork();
-    if (NetworkUtil.hasConnection(getContext())) {
-      showAdViewNetwork();
-    }
-  }
-
-  private void showAdViewNetwork() {
-    final AdRequest.Builder builder = new AdRequest.Builder();
-    if (BuildConfig.DEBUG) {
-      builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-      builder.addTestDevice(getContext().getString(R.string.test_id_1));
-    }
-
-    final AdRequest adRequest = builder.build();
-    realAdView.loadAd(adRequest);
-  }
-
-  @SuppressWarnings("WeakerAccess") void showAdViewNoNetwork() {
-    realAdView.setVisibility(View.GONE);
     advertisement.setVisibility(View.VISIBLE);
 
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
-    advertisement.setOnClickListener(view -> {
-      // KLUDGE: Social Media presenter can do this
-      Timber.d("onClick");
-      final String fullLink = "market://details?id=" + currentPackage;
-      NetworkUtil.newLink(view.getContext(), fullLink);
-    });
+    advertisement.setOnClickListener(view -> presenter.clickAppPage(currentPackage));
 
     final Subscription adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
     taskMap.put("ad", adTask);
+
+    Timber.d("Post new ad in 60 seconds");
+    handler.postDelayed(this::showAdView, 60 * 1000L);
+  }
+
+  @Override public void onSocialMediaClicked(@NonNull String link) {
+    NetworkUtil.newLink(getContext(), link);
   }
 }

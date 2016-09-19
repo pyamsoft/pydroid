@@ -95,9 +95,6 @@ dependencies {
   // Error-Prone compiler
   errorprone "com.google.errorprone:error_prone_core:$errorProne"
 
-  // Firebase Advertisements :(
-  compile "com.google.firebase:firebase-ads:$firebase"
-
   // Leak Canary
   debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
@@ -166,6 +163,4 @@ dependencies {
 
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
-
-  compile project(path: ":pyprolib")
 }

@@ -17,17 +17,13 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +34,6 @@ import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pyprolib.Pro;
 import timber.log.Timber;
 
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
@@ -72,21 +67,12 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     final FragmentActivity activity = getActivity();
     if (activity instanceof DonationActivity) {
       final DonationActivity donationActivity = (DonationActivity) getActivity();
-
       if (b) {
         Timber.d("Turn on ads");
         donationActivity.showAd();
       } else {
-        if (Pro.isPro(getContext())) {
-          Timber.d("Turn off ads");
-          donationActivity.hideAd();
-        } else {
-          Timber.e("Cannot disable Ads");
-          AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-              CannotDisableAdsDialog.newInstance(getDonationActivity().getApplicationIcon()),
-              "disable_ads");
-          return false;
-        }
+        Timber.d("Turn off ads");
+        donationActivity.hideAd();
       }
       return true;
     } else {
@@ -184,30 +170,5 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @Override public int getCurrentApplicationVersion() {
     return getDonationActivity().getCurrentApplicationVersion();
-  }
-
-  public static class CannotDisableAdsDialog extends DialogFragment {
-
-    @CheckResult @NonNull public static CannotDisableAdsDialog newInstance(@DrawableRes int icon) {
-      Bundle args = new Bundle();
-      CannotDisableAdsDialog fragment = new CannotDisableAdsDialog();
-      args.putInt("ICON", icon);
-      fragment.setArguments(args);
-      return fragment;
-    }
-
-    @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-      final int icon = getArguments().getInt("ICON", 0);
-      return new AlertDialog.Builder(getActivity()).setMessage(
-          "Cannot disable Ads unless you are upgraded to Pro version")
-          .setPositiveButton("Upgrade", (dialog, which) -> {
-            dialog.dismiss();
-            SupportDialog.show(getFragmentManager(), icon);
-          })
-          .setNegativeButton("Cancel", (dialog, which) -> {
-            dialog.dismiss();
-          })
-          .create();
-    }
   }
 }

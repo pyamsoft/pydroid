@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.pydroid.model.Licenses;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,7 +45,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting @CheckResult String getLicenseFileName(@NonNull Licenses license) {
+  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting @CheckResult
+  String getLicenseFileName(@NonNull Licenses license) {
     final String fileLocation;
     switch (license) {
       case FIREBASE:
@@ -70,8 +70,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       case AUTO_VALUE:
         fileLocation = "licenses/autovalue";
         break;
-      case ANDROID_IN_APP_BILLING:
-        fileLocation = "licenses/androidinappbillingv3";
+      case ANDROID_CHECKOUT:
+        fileLocation = "licenses/androidcheckout";
         break;
       case ANDROID:
         fileLocation = "licenses/android";
@@ -103,8 +103,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     return fileLocation;
   }
 
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult Observable<String> loadNewLicense(
-      @NonNull Licenses licenses) {
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
+  Observable<String> loadNewLicense(@NonNull Licenses licenses) {
     return Observable.defer(() -> {
       if (licenses == Licenses.EMPTY) {
         Timber.w("Empty license passed");
@@ -113,8 +113,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
       if (licenses == Licenses.GOOGLE_PLAY_SERVICES) {
         Timber.d("License is Google Play services");
-        final Observable<String> result = Observable.just(
-            GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(appContext));
+        final String googleOpenSourceLicenses = "";
+        final Observable<String> result = Observable.just(googleOpenSourceLicenses);
         Timber.i("Finished loading Google Play services license");
         return result;
       }

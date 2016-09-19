@@ -22,4 +22,6 @@ import dagger.Subcomponent;
 @ActivityScope @Subcomponent(modules = SocialMediaModule.class) interface SocialMediaComponent {
 
   void inject(SocialMediaPresenterLoader loader);
+
+  void inject(AdvertisementView view);
 }

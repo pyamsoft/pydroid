@@ -41,6 +41,7 @@ import com.pyamsoft.pydroid.base.ActionBarFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import dagger.Lazy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -202,7 +203,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
         case AUTO_VALUE:
           item = AboutItemsUtil.licenseForAutoValue();
           break;
-        case ANDROID_IN_APP_BILLING:
+        case ANDROID_CHECKOUT:
           item = AboutItemsUtil.licenseForAndroidInAppBilling();
           break;
         case ANDROID_SUPPORT:

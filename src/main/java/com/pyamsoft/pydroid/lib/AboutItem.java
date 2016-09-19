@@ -49,11 +49,6 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
 
   @NonNull private final FastAdapter.OnClickListener<AboutItem> onClickListener =
       (v, adapter, item, position) -> {
-        //if (item.isExpanded()) {
-        //  ViewCompat.animate(v.findViewById(R.id.expand_license_icon)).rotation(0).start();
-        //} else {
-        //  ViewCompat.animate(v.findViewById(R.id.expand_license_icon)).rotation(180).start();
-        //}
         item.setExpanded(!item.isExpanded());
         adapter.getFastAdapter().notifyItemChanged(position);
         return true;
@@ -67,7 +62,7 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     licenseText = "";
   }
 
-  public void setLicenseText(@NonNull String licenseText) {
+  void setLicenseText(@NonNull String licenseText) {
     this.licenseText = licenseText;
   }
 
@@ -141,7 +136,8 @@ class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
     return FACTORY;
   }
 
-  @SuppressWarnings("WeakerAccess") protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
+  @SuppressWarnings("WeakerAccess") protected static class ItemFactory
+      implements ViewHolderFactory<ViewHolder> {
 
     @CheckResult @Override public ViewHolder create(@NonNull View v) {
       return new ViewHolder(v);

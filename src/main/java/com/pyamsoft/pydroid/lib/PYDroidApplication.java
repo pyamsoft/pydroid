@@ -17,16 +17,17 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import com.google.firebase.FirebaseApp;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import java.util.List;
 import timber.log.Timber;
 
 @SuppressLint("Registered") public class PYDroidApplication
@@ -54,22 +55,33 @@ import timber.log.Timber;
     }
   }
 
-  /**
-   * Override to false to initialize if application does not use firebase
-   */
-  @CheckResult protected boolean hasFirebase() {
-    return true;
-  }
-
   @Override public final void onCreate() {
     super.onCreate();
-    Timber.w("NEW PYDROID APPLICATION");
-    if (!hasFirebase()) {
+    Timber.i("NEW PYDROID APPLICATION");
+    if (isMainProcess()) {
+      Timber.d("APPLICATION LAUNCHES ON MAIN THREAD");
       onFirstCreate();
-    } else if (!FirebaseApp.getApps(getApplicationContext()).isEmpty()) {
-      Timber.i("INIT NEW FIREBASE INSTANCE");
-      onFirstCreate();
+    } else {
+      Timber.w("APPLICATION LAUNCHES OFF MAIN THREAD");
     }
+  }
+
+  /**
+   * Checks if we are on the main process and does first time initialization
+   */
+  @CheckResult private boolean isMainProcess() {
+    final int mypid = android.os.Process.myPid();
+    final ActivityManager manager =
+        (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+    final List<ActivityManager.RunningAppProcessInfo> infos = manager.getRunningAppProcesses();
+    for (ActivityManager.RunningAppProcessInfo info : infos) {
+      if (info.pid == mypid) {
+        return getPackageName().equals(info.processName);
+      }
+    }
+
+    // Should never happen
+    throw new AssertionError("Process name not found in running process list");
   }
 
   @CheckResult @NonNull private RefWatcher getRefWatcher() {

@@ -20,7 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.app.activity.AdvertisementActivity;
+import com.pyamsoft.pydroid.base.AdvertisementActivity;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.widget;
+package com.pyamsoft.pydroid.widget;
 
 import android.content.Context;
-import android.support.design.widget.TextInputEditText;
+import android.support.annotation.CallSuper;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 /**
@@ -25,21 +26,21 @@ import android.util.AttributeSet;
  *
  * https://github.com/square/leakcanary/issues/180
  */
-public class NoLeakTextInputEditText extends TextInputEditText {
+public class NoLeakTextView extends AppCompatTextView {
 
-  public NoLeakTextInputEditText(Context context) {
+  public NoLeakTextView(Context context) {
     super(context);
   }
 
-  public NoLeakTextInputEditText(Context context, AttributeSet attrs) {
+  public NoLeakTextView(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public NoLeakTextInputEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+  public NoLeakTextView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  @Override protected void onDetachedFromWindow() {
+  @CallSuper @Override protected void onDetachedFromWindow() {
     getViewTreeObserver().removeOnPreDrawListener(this);
     super.onDetachedFromWindow();
   }

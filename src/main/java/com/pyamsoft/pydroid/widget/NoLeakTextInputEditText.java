@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.widget;
+package com.pyamsoft.pydroid.widget;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatEditText;
+import android.support.design.widget.TextInputEditText;
 import android.util.AttributeSet;
 
 /**
@@ -25,17 +25,17 @@ import android.util.AttributeSet;
  *
  * https://github.com/square/leakcanary/issues/180
  */
-public class NoLeakEditText extends AppCompatEditText {
+public class NoLeakTextInputEditText extends TextInputEditText {
 
-  public NoLeakEditText(Context context) {
+  public NoLeakTextInputEditText(Context context) {
     super(context);
   }
 
-  public NoLeakEditText(Context context, AttributeSet attrs) {
+  public NoLeakTextInputEditText(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public NoLeakEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+  public NoLeakTextInputEditText(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 

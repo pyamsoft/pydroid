@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.app.activity;
+package com.pyamsoft.pydroid.base;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

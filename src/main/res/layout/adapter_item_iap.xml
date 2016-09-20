@@ -24,7 +24,7 @@
     android:padding="8dp"
     >
 
-  <com.pyamsoft.pydroid.app.widget.VectorTextView
+  <com.pyamsoft.pydroid.widget.VectorTextView
       android:id="@+id/purchase_iap_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
       android:orientation="horizontal"
       >
 
-    <com.pyamsoft.pydroid.app.widget.NoLeakTextView
+    <com.pyamsoft.pydroid.widget.NoLeakTextView
         android:id="@+id/purchase_iap_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
-    <com.pyamsoft.pydroid.app.widget.NoLeakTextView
+    <com.pyamsoft.pydroid.widget.NoLeakTextView
         android:id="@+id/purchase_iap_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -17,17 +17,15 @@
 package com.pyamsoft.pydroid.lib;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
-import android.os.StrictMode;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-import java.util.List;
 import timber.log.Timber;
 
 @SuppressLint("Registered") public abstract class PYDroidApplication
@@ -64,7 +62,7 @@ import timber.log.Timber;
     }
   }
 
-  @Override public final void onCreate() {
+  @CallSuper @Override public void onCreate() {
     super.onCreate();
     Timber.i("NEW PYDROID APPLICATION");
     if (BuildConfig.DEBUG) {
@@ -92,5 +90,4 @@ import timber.log.Timber;
     }
     return component;
   }
-
 }

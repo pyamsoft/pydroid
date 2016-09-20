@@ -36,6 +36,7 @@
 }
 
 # Retrofit RxJava adapter
+-dontwarn rx.Completable
 -dontwarn rx.Completable$CompletableSubscriber
 -dontwarn rx.Completable$CompletableOnSubscribe
 

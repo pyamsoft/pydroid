@@ -35,6 +35,10 @@
     @retrofit2.http.* <methods>;
 }
 
+# Retrofit RxJava adapter
+-dontwarn rx.Completable$CompletableSubscriber
+-dontwarn rx.Completable$CompletableOnSubscribe
+
 # Keep GSON serialized class
 -keep class com.pyamsoft.pydroid.lib.VersionCheckResponse { *; }
 

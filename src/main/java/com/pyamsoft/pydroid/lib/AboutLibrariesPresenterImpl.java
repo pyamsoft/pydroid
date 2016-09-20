@@ -70,7 +70,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
   }
 
   @SuppressWarnings("WeakerAccess") void loadLicenseText(int position, @NonNull Licenses licenses) {
-    if (licenses.id() == Licenses.EMPTY) {
+    if (licenses.id() == Licenses.Id.EMPTY) {
       getView(view -> view.onLicenseTextLoaded(position, ""));
     } else {
       final Subscription licenseSubscription = interactor.loadLicenseText(licenses)

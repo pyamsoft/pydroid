@@ -45,24 +45,6 @@ import java.util.Arrays;
 import java.util.List;
 import timber.log.Timber;
 
-import static com.pyamsoft.pydroid.lib.Licenses.ANDROID;
-import static com.pyamsoft.pydroid.lib.Licenses.ANDROID_CHECKOUT;
-import static com.pyamsoft.pydroid.lib.Licenses.ANDROID_PRIORITY_JOBQUEUE;
-import static com.pyamsoft.pydroid.lib.Licenses.ANDROID_SUPPORT;
-import static com.pyamsoft.pydroid.lib.Licenses.AUTO_VALUE;
-import static com.pyamsoft.pydroid.lib.Licenses.BUTTERKNIFE;
-import static com.pyamsoft.pydroid.lib.Licenses.DAGGER;
-import static com.pyamsoft.pydroid.lib.Licenses.FAST_ADAPTER;
-import static com.pyamsoft.pydroid.lib.Licenses.FIREBASE;
-import static com.pyamsoft.pydroid.lib.Licenses.GOOGLE_PLAY_SERVICES;
-import static com.pyamsoft.pydroid.lib.Licenses.LEAK_CANARY;
-import static com.pyamsoft.pydroid.lib.Licenses.PYDROID;
-import static com.pyamsoft.pydroid.lib.Licenses.RETROFIT2;
-import static com.pyamsoft.pydroid.lib.Licenses.RXANDROID;
-import static com.pyamsoft.pydroid.lib.Licenses.RXJAVA;
-import static com.pyamsoft.pydroid.lib.Licenses.SQLBRITE;
-import static com.pyamsoft.pydroid.lib.Licenses.SQLDELIGHT;
-
 public class AboutLibrariesFragment extends ActionBarFragment
     implements AboutLibrariesPresenter.View {
 
@@ -75,13 +57,14 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @BindView(R2.id.recycler_about_libraries) RecyclerView recyclerView;
   @ColorInt private int backgroundColor;
   private FastItemAdapter<AboutItem> fastItemAdapter;
-  private int[] licenses;
+  private Licenses.Id[] licenses;
   private long loadedKey;
   private boolean lastOnBackStack;
   private Unbinder unbinder;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
-      @NonNull Styling styling, @NonNull BackStackState backStackState, @NonNull int... licenses) {
+      @NonNull Styling styling, @NonNull BackStackState backStackState,
+      @NonNull Licenses.Id... licenses) {
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
@@ -93,23 +76,34 @@ public class AboutLibrariesFragment extends ActionBarFragment
   }
 
   @CheckResult @NonNull private static AboutLibrariesFragment newInstance(@NonNull Styling styling,
-      @NonNull BackStackState backStackState, @NonNull int... licenses) {
+      @NonNull BackStackState backStackState, @NonNull Licenses.Id... licenses) {
     final Bundle args = new Bundle();
     final AboutLibrariesFragment fragment = new AboutLibrariesFragment();
+
+    final String[] licenseNames = new String[licenses.length];
+    for (int i = 0; i < licenseNames.length; ++i) {
+      licenseNames[i] = licenses[i].name();
+    }
+
     args.putString(KEY_STYLING, styling.name());
     args.putString(KEY_BACK_STACK, backStackState.name());
-    args.putIntArray(KEY_LICENSE_LIST, licenses);
+    args.putStringArray(KEY_LICENSE_LIST, licenseNames);
     fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    licenses = getArguments().getIntArray(KEY_LICENSE_LIST);
-    if (licenses == null) {
+    final String[] licenseNames = getArguments().getStringArray(KEY_LICENSE_LIST);
+    if (licenseNames == null) {
       throw new NullPointerException("Licenses is NULL");
     }
-    Arrays.sort(licenses);
+    Arrays.sort(licenseNames);
+
+    licenses = new Licenses.Id[licenseNames.length];
+    for (int i = 0; i < licenses.length; ++i) {
+      licenses[i] = Licenses.Id.valueOf(licenseNames[i]);
+    }
 
     final String stylingName = getArguments().getString(KEY_STYLING, null);
     if (stylingName == null) {
@@ -180,7 +174,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
     //fill with some sample data
     final List<AboutItem> items = new ArrayList<>();
-    for (final int license : licenses) {
+    for (final Licenses.Id license : licenses) {
       final AboutItem item;
       switch (license) {
         case FIREBASE:

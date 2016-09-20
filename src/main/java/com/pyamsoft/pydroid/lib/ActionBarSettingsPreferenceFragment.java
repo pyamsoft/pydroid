@@ -81,7 +81,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @SuppressWarnings("SameReturnValue") @CheckResult
   protected boolean showAboutLicensesFragment(@IdRes int containerId,
-      @NonNull AboutLibrariesFragment.Styling styling, @NonNull int... licenses) {
+      @NonNull AboutLibrariesFragment.Styling styling, @NonNull Licenses.Id... licenses) {
     Timber.d("Show about licenses fragment");
     AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack(), licenses);
     return true;

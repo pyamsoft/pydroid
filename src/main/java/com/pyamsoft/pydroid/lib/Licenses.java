@@ -20,26 +20,46 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
 
+import static com.pyamsoft.pydroid.lib.Licenses.Id.ANDROID;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.ANDROID_CHECKOUT;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.ANDROID_PRIORITY_JOBQUEUE;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.ANDROID_SUPPORT;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.AUTO_VALUE;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.BUTTERKNIFE;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.DAGGER;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.FAST_ADAPTER;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.FIREBASE;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.GOOGLE_PLAY_SERVICES;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.LEAK_CANARY;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.PYDROID;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.RETROFIT2;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.RXANDROID;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.RXJAVA;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.SQLBRITE;
+import static com.pyamsoft.pydroid.lib.Licenses.Id.SQLDELIGHT;
+
 @AutoValue public abstract class Licenses {
 
-  public static final int EMPTY = 0;
-  public static final int GOOGLE_PLAY_SERVICES = 1;
-  public static final int ANDROID = 2;
-  public static final int ANDROID_SUPPORT = 3;
-  public static final int PYDROID = 4;
-  public static final int RXJAVA = 5;
-  public static final int RXANDROID = 6;
-  public static final int LEAK_CANARY = 7;
-  public static final int FIREBASE = 8;
-  public static final int ANDROID_CHECKOUT = 9;
-  public static final int FAST_ADAPTER = 10;
-  public static final int BUTTERKNIFE = 11;
-  public static final int AUTO_VALUE = 12;
-  public static final int DAGGER = 13;
-  public static final int RETROFIT2 = 14;
-  public static final int SQLBRITE = 15;
-  public static final int SQLDELIGHT = 16;
-  public static final int ANDROID_PRIORITY_JOBQUEUE = 17;
+  public enum Id {
+    EMPTY,
+    GOOGLE_PLAY_SERVICES,
+    ANDROID,
+    ANDROID_SUPPORT,
+    PYDROID,
+    RXJAVA,
+    RXANDROID,
+    LEAK_CANARY,
+    FIREBASE,
+    ANDROID_CHECKOUT,
+    FAST_ADAPTER,
+    BUTTERKNIFE,
+    AUTO_VALUE,
+    DAGGER,
+    RETROFIT2,
+    SQLBRITE,
+    SQLDELIGHT,
+    ANDROID_PRIORITY_JOBQUEUE,
+  }
 
   @NonNull static Licenses googlePlayItem() {
     return create(GOOGLE_PLAY_SERVICES, "");
@@ -108,11 +128,11 @@ import com.google.auto.value.AutoValue;
     return create(FAST_ADAPTER, "licenses/fastadapter");
   }
 
-  @NonNull @CheckResult public static Licenses create(int id, @NonNull String location) {
+  @NonNull @CheckResult public static Licenses create(@NonNull Id id, @NonNull String location) {
     return new AutoValue_Licenses(id, location);
   }
 
-  public abstract int id();
+  public abstract Id id();
 
   public abstract String location();
 }

@@ -47,12 +47,12 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
   Observable<String> loadNewLicense(@NonNull Licenses licenses) {
     return Observable.defer(() -> {
-      if (licenses.id() == Licenses.EMPTY) {
+      if (licenses.id() == Licenses.Id.EMPTY) {
         Timber.w("Empty license passed");
         return Observable.just("");
       }
 
-      if (licenses.id() == Licenses.GOOGLE_PLAY_SERVICES) {
+      if (licenses.id() == Licenses.Id.GOOGLE_PLAY_SERVICES) {
         Timber.d("License is Google Play services");
         final String googleOpenSourceLicenses =
             PYDroidApplication.licenses(appContext).provideGoogleOpenSourceLicenses();

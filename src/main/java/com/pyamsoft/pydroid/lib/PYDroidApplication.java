@@ -62,7 +62,7 @@ import timber.log.Timber;
     }
   }
 
-  @CallSuper @Override public void onCreate() {
+  @Override public final void onCreate() {
     super.onCreate();
     Timber.i("NEW PYDROID APPLICATION");
     if (BuildConfig.DEBUG) {
@@ -72,6 +72,10 @@ import timber.log.Timber;
       refWatcher = RefWatcher.DISABLED;
     }
 
+    createApplicationComponents();
+  }
+
+  @CallSuper protected void createApplicationComponents() {
     component = DaggerIPYDroidApp_PYDroidComponent.builder()
         .pYDroidModule(new PYDroidModule(getApplicationContext()))
         .build();

@@ -21,7 +21,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
-import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -68,30 +67,16 @@ import timber.log.Timber;
   @Override public final void onCreate() {
     super.onCreate();
     Timber.i("NEW PYDROID APPLICATION");
-    if (isMainProcess()) {
-      Timber.d("APPLICATION LAUNCHES ON MAIN THREAD");
-      onFirstCreate();
+    if (BuildConfig.DEBUG) {
+      Timber.d("Install live leakcanary");
+      refWatcher = LeakCanary.install(this);
     } else {
-      Timber.w("APPLICATION LAUNCHES OFF MAIN THREAD");
-    }
-  }
-
-  /**
-   * Checks if we are on the main process and does first time initialization
-   */
-  @CheckResult private boolean isMainProcess() {
-    final int mypid = android.os.Process.myPid();
-    final ActivityManager manager =
-        (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-    final List<ActivityManager.RunningAppProcessInfo> infos = manager.getRunningAppProcesses();
-    for (ActivityManager.RunningAppProcessInfo info : infos) {
-      if (info.pid == mypid) {
-        return getPackageName().equals(info.processName);
-      }
+      refWatcher = RefWatcher.DISABLED;
     }
 
-    // Should never happen
-    throw new AssertionError("Process name not found in running process list");
+    component = DaggerIPYDroidApp_PYDroidComponent.builder()
+        .pYDroidModule(new PYDroidModule(getApplicationContext()))
+        .build();
   }
 
   @CheckResult @NonNull private RefWatcher getRefWatcher() {
@@ -108,39 +93,4 @@ import timber.log.Timber;
     return component;
   }
 
-  private void setStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
-        .penaltyLog()
-        .penaltyDeath()
-        .permitDiskReads()
-        .permitDiskWrites()
-        .penaltyFlashScreen()
-        .build());
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-  }
-
-  /**
-   * In a Firebase multi process app, this block of code will be guaranteed to only run on the
-   * first
-   * application creation instance
-   */
-  @CallSuper protected void onFirstCreate() {
-    if (BuildConfig.DEBUG) {
-      Timber.d("Install live leakcanary");
-      refWatcher = LeakCanary.install(this);
-      Timber.plant(new Timber.DebugTree());
-      setStrictMode();
-      onFirstCreateInDebugMode();
-    } else {
-      refWatcher = RefWatcher.DISABLED;
-    }
-
-    component = DaggerIPYDroidApp_PYDroidComponent.builder()
-        .pYDroidModule(new PYDroidModule(getApplicationContext()))
-        .build();
-  }
-
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onFirstCreateInDebugMode() {
-
-  }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.util;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -22,9 +22,11 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
-import com.pyamsoft.pydroid.util.DrawableUtil;
+import java.util.HashMap;
+import java.util.Map;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
@@ -96,6 +98,59 @@ public final class AsyncDrawable {
           .subscribe(imageView::setImageDrawable, throwable -> {
             Timber.e(throwable, "Error loading Drawable into ImageView");
           });
+    }
+  }
+
+  /**
+   * A map that makes it convenient to load AsyncDrawables
+   */
+  public static final class Mapper {
+
+    @NonNull private final HashMap<String, Subscription> map;
+
+    public Mapper() {
+      this.map = new HashMap<>();
+    }
+
+    /**
+     * Puts a new element into the map
+     *
+     * If an old element exists, its task is cancelled first before adding the new one
+     */
+    public final void put(@NonNull String tag, @NonNull Subscription subscription) {
+      if (map.containsKey(tag)) {
+        final Subscription old = map.get(tag);
+        cancelSubscription(tag, old);
+      }
+
+      Timber.d("Insert new subscription for tag: %s", tag);
+      map.put(tag, subscription);
+    }
+
+    /**
+     * Clear all elements in the map
+     *
+     * If the elements have not been cancelled yet, cancel them before removing them
+     */
+    public final void clear() {
+      for (final Map.Entry<String, Subscription> entry : map.entrySet()) {
+        cancelSubscription(entry.getKey(), entry.getValue());
+      }
+
+      Timber.d("Clear AsyncDrawableMap");
+      map.clear();
+    }
+
+    /**
+     * Cancels a task
+     */
+    private void cancelSubscription(@NonNull String tag, @Nullable Subscription subscription) {
+      if (subscription != null) {
+        if (!subscription.isUnsubscribed()) {
+          Timber.d("Unsubscribe for tag: %s", tag);
+          subscription.unsubscribe();
+        }
+      }
     }
   }
 }

@@ -35,8 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.ArrayList;
@@ -66,7 +65,8 @@ public class AdvertisementView extends FrameLayout implements SocialMediaPresent
 
   private static final int MAX_SHOW_COUNT = 4;
   @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
-  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+  @NonNull private final AsyncDrawable.Mapper
+      taskMap = new AsyncDrawable.Mapper();
   @BindView(R2.id.ad_image) ImageView advertisement;
   @Inject SocialMediaPresenter presenter;
   private Unbinder unbinder;

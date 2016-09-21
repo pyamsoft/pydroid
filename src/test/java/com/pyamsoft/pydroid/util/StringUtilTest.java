@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.util;
 
 import android.text.Spannable;
 import com.pyamsoft.pydroid.BuildConfig;
-import com.pyamsoft.pydroid.lib.TestPYDroidApplication;
+import com.pyamsoft.pydroid.TestPYDroidApplication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

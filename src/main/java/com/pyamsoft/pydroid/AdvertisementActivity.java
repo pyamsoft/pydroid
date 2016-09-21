@@ -55,7 +55,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     if (adView != null) {
-      adView.destroy(!isChangingConfigurations());
+      adView.destroy(isChangingConfigurations());
     }
   }
 

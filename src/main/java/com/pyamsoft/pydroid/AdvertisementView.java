@@ -124,11 +124,14 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     handler.removeCallbacksAndMessages(null);
   }
 
-  final void destroy() {
+  final void destroy(boolean isChangingConfigurations) {
     taskMap.clear();
     advertisement.setImageDrawable(null);
     unbinder.unbind();
-    presenter.destroy();
+
+    if (!isChangingConfigurations) {
+      presenter.destroy();
+    }
   }
 
   public final void showAd() {

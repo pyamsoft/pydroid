@@ -39,24 +39,24 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   }
 
   @CallSuper @Override protected void onStart() {
+    super.onStart();
     if (adView != null) {
       adView.start();
     }
-    super.onStart();
   }
 
   @Override protected void onStop() {
+    super.onStop();
     if (adView != null) {
       adView.stop();
     }
-    super.onStop();
   }
 
   @CallSuper @Override protected void onDestroy() {
-    if (adView != null) {
-      adView.destroy();
-    }
     super.onDestroy();
+    if (adView != null) {
+      adView.destroy(!isChangingConfigurations());
+    }
   }
 
   public final void showAd() {

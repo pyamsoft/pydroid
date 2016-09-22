@@ -70,6 +70,13 @@ public final class Licenses {
     createItem(Names.TAP_TARGET_VIEW, HomepageUrls.TAP_TARGET_VIEW,
         LicenseLocations.TAP_TARGET_VIEW);
     createItem(Names.TIMBER, HomepageUrls.TIMBER, LicenseLocations.TIMBER);
+    createItem(Names.RETROLAMBDA, HomepageUrls.RETROLAMBDA, LicenseLocations.RETROLAMBDA);
+    createItem(Names.GRADLE_RETROLAMBDA, HomepageUrls.GRADLE_RETROLAMBDA,
+        LicenseLocations.GRADLE_RETROLAMBDA);
+    createItem(Names.GRADLE_VERSIONS_PLUGIN, HomepageUrls.GRADLE_VERSIONS_PLUGIN,
+        LicenseLocations.GRADLE_VERSIONS_PLUGIN);
+    createItem(Names.DEXCOUNT_GRADLE_PLUGIN, HomepageUrls.DEXCOUNT_GRADLE_PLUGIN,
+        LicenseLocations.DEXCOUNT_GRADLE_PLUGIN);
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,
@@ -107,6 +114,10 @@ public final class Licenses {
     @NonNull static final String ERROR_PRONE = "Error Prone";
     @NonNull static final String TAP_TARGET_VIEW = "TapTargetView";
     @NonNull static final String TIMBER = "Timber";
+    @NonNull static final String RETROLAMBDA = "Retrolambda";
+    @NonNull static final String GRADLE_RETROLAMBDA = "Gradle Retrolambda";
+    @NonNull static final String DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin";
+    @NonNull static final String GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin";
 
     private Names() {
       throw new RuntimeException("No instances");
@@ -132,6 +143,12 @@ public final class Licenses {
     @NonNull static final String ERROR_PRONE = "https://github.com/google/error-prone";
     @NonNull static final String TAP_TARGET_VIEW = "https://github.com/KeepSafe/TapTargetView";
     @NonNull static final String TIMBER = "https://github.com/JakeWharton/timber";
+    @NonNull static final String RETROLAMBDA = "https://github.com/orfjackal/retrolambda";
+    @NonNull static final String GRADLE_RETROLAMBDA = "https://github.com/evant/gradle-retrolambda";
+    @NonNull static final String DEXCOUNT_GRADLE_PLUGIN =
+        "https://github.com/KeepSafe/dexcount-gradle-plugin";
+    @NonNull static final String GRADLE_VERSIONS_PLUGIN =
+        "https://github.com/ben-manes/gradle-versions-plugin";
 
     private HomepageUrls() {
       throw new RuntimeException("No instances");
@@ -158,6 +175,10 @@ public final class Licenses {
     @NonNull static final String ERROR_PRONE = _BASE + "errorprone";
     @NonNull static final String TAP_TARGET_VIEW = _BASE + "taptargetview";
     @NonNull static final String TIMBER = _BASE + "timber";
+    @NonNull static final String RETROLAMBDA = _BASE + "retrolambda";
+    @NonNull static final String GRADLE_RETROLAMBDA = _BASE + "gradle-retrolambda";
+    @NonNull static final String DEXCOUNT_GRADLE_PLUGIN = _BASE + "dexcount-gradle-plugin";
+    @NonNull static final String GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin";
 
     private LicenseLocations() {
       throw new RuntimeException("No instances");

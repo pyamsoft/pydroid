@@ -35,7 +35,6 @@ apply plugin: "com.android.library"
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "com.jakewharton.butterknife"
-apply plugin: "com.neenbedankt.android-apt"
 apply plugin: "net.ltgt.errorprone"
 apply plugin: "me.tatarka.retrolambda"
 
@@ -46,8 +45,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 24
-    versionCode 74
-    versionName "4.4.0"
+    versionCode 75
+    versionName "4.4.1"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
@@ -128,16 +127,16 @@ dependencies {
 
   // Butterknife
   compile "com.jakewharton:butterknife:$butterknife"
-  apt "com.jakewharton:butterknife-compiler:$butterknife"
+  annotationProcessor"com.jakewharton:butterknife-compiler:$butterknife"
 
   // Auto value
   provided "com.google.auto.value:auto-value:$autoValue"
-  apt "com.google.auto.value:auto-value:$autoValue"
-  apt "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
+  annotationProcessor"com.google.auto.value:auto-value:$autoValue"
+  annotationProcessor"com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 
   // Dagger
   compile "com.google.dagger:dagger:$dagger"
-  apt "com.google.dagger:dagger-compiler:$dagger"
+  annotationProcessor"com.google.dagger:dagger-compiler:$dagger"
 
   // Retrofit
   compile "com.squareup.retrofit2:retrofit:$retrofit"

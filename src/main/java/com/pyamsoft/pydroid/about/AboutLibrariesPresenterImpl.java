@@ -50,7 +50,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(licenseLoadEvent -> {
-          loadLicenseText(licenseLoadEvent.position(), licenseLoadEvent.licenseLocation());
+          loadLicenseText(licenseLoadEvent.position(), licenseLoadEvent.license());
         }, throwable -> {
           Timber.e(throwable, "onError registerOnLicenseBus");
         });
@@ -70,22 +70,18 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
   }
 
   @SuppressWarnings("WeakerAccess") void loadLicenseText(int position,
-      @NonNull String licenseLocation) {
-    if (licenseLocation.isEmpty()) {
-      getView(view -> view.onLicenseTextLoaded(position, ""));
-    } else {
-      final Subscription licenseSubscription = interactor.loadLicenseText(licenseLocation)
-          .subscribeOn(getSubscribeScheduler())
-          .observeOn(getObserveScheduler())
-          .subscribe(license -> getView(view -> view.onLicenseTextLoaded(position, license)),
-              throwable -> {
-                Timber.e(throwable, "Failed to load license");
-                getView(view -> view.onLicenseTextLoaded(position, "Failed to load license"));
-              }, this::unsubLoadLicense);
+      @NonNull AboutLicenseItem license) {
+    final Subscription licenseSubscription = interactor.loadLicenseText(license)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(licenseText -> getView(view -> view.onLicenseTextLoaded(position, licenseText)),
+            throwable -> {
+              Timber.e(throwable, "Failed to load license");
+              getView(view -> view.onLicenseTextLoaded(position, "Failed to load license"));
+            }, this::unsubLoadLicense);
 
-      Timber.d("Add license subscription");
-      licenseSubscriptions.add(licenseSubscription);
-    }
+    Timber.d("Add license subscription");
+    licenseSubscriptions.add(licenseSubscription);
   }
 
   @SuppressWarnings("WeakerAccess") void unsubLoadLicense() {

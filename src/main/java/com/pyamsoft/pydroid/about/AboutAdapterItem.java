@@ -114,8 +114,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
       if (licenseText.length() == 0) {
         viewHolder.progressBar.setVisibility(View.VISIBLE);
         AboutItemBus.get()
-            .post(AboutLicenseLoadEvent.create(viewHolder.getAdapterPosition(),
-                item.getLicenseLocation()));
+            .post(AboutLicenseLoadEvent.create(viewHolder.getAdapterPosition(), item));
       } else {
         viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.licenseText.setVisibility(View.VISIBLE);

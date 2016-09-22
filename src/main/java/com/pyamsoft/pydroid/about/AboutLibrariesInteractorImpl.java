@@ -55,14 +55,14 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   }
 
   @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
-  Observable<String> loadNewLicense(@NonNull String licenseLocation) {
+  Observable<String> loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
     return Observable.defer(() -> {
       if (licenseLocation.isEmpty()) {
         Timber.w("Empty license passed");
         return Observable.just("");
       }
 
-      if (licenseLocation.equals(Licenses.Names.GOOGLE_PLAY)) {
+      if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
         Timber.d("License is Google Play services");
         final String googleOpenSourceLicenses =
             licenses(appContext).provideGoogleOpenSourceLicenses();
@@ -94,19 +94,19 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     });
   }
 
-  @NonNull @Override public Observable<String> loadLicenseText(@NonNull String licenseLocation) {
+  @NonNull @Override public Observable<String> loadLicenseText(@NonNull AboutLicenseItem license) {
     return Observable.defer(() -> {
-      if (cachedLicenses.containsKey(licenseLocation)) {
+      if (cachedLicenses.containsKey(license.getName())) {
         Timber.d("Fetch from cache");
-        return Observable.just(cachedLicenses.get(licenseLocation));
+        return Observable.just(cachedLicenses.get(license.getName()));
       } else {
         Timber.d("Load from asset location");
-        return loadNewLicense(licenseLocation);
+        return loadNewLicense(license.getName(), license.getLicenseLocation());
       }
     }).map(licenseText -> {
-      if (!cachedLicenses.containsKey(licenseLocation)) {
+      if (!cachedLicenses.containsKey(license.getName())) {
         Timber.d("Put into cache");
-        cachedLicenses.put(licenseLocation, licenseText);
+        cachedLicenses.put(license.getName(), licenseText);
       }
 
       return licenseText;

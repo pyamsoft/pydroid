@@ -23,11 +23,11 @@ import com.google.auto.value.AutoValue;
 @AutoValue abstract class AboutLicenseLoadEvent {
 
   @CheckResult @NonNull
-  public static AboutLicenseLoadEvent create(int position, @NonNull String licenseLocation) {
-    return new AutoValue_AboutLicenseLoadEvent(position, licenseLocation);
+  public static AboutLicenseLoadEvent create(int position, @NonNull AboutLicenseItem license) {
+    return new AutoValue_AboutLicenseLoadEvent(position, license);
   }
 
   abstract int position();
 
-  abstract String licenseLocation();
+  abstract AboutLicenseItem license();
 }

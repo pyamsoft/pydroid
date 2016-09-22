@@ -24,5 +24,5 @@ interface AboutLibrariesInteractor {
 
   void clearCache();
 
-  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull String licenseLocation);
+  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull AboutLicenseItem license);
 }

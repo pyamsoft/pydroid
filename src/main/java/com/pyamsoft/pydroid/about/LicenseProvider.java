@@ -17,10 +17,11 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 public interface LicenseProvider {
 
-  @Nullable String provideGoogleOpenSourceLicenses();
+  @WorkerThread @Nullable String provideGoogleOpenSourceLicenses();
 
   void insertCustomLicensesIntoMap();
 }

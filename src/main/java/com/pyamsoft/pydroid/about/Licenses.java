@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,25 +27,35 @@ import rx.functions.Action1;
 
 public final class Licenses {
 
-  @NonNull private static final Map<String, AboutLicenseItem> aboutItemMap;
+  @NonNull private static final Licenses INSTANCE = new Licenses();
 
-  static {
-    aboutItemMap = new HashMap<>();
-    create(Names.ANDROID, HomepageUrls.ANDROID, LicenseLocations.ANDROID);
-    create(Names.ANDROID_SUPPORT, HomepageUrls.ANDROID_SUPPORT, LicenseLocations.ANDROID_SUPPORT);
-  }
+  @NonNull private final Map<String, AboutLicenseItem> aboutItemMap;
 
   private Licenses() {
-    throw new RuntimeException("No instances");
+    aboutItemMap = new HashMap<>();
+    createItem(Names.ANDROID, HomepageUrls.ANDROID, LicenseLocations.ANDROID);
+    createItem(Names.ANDROID_SUPPORT, HomepageUrls.ANDROID_SUPPORT,
+        LicenseLocations.ANDROID_SUPPORT);
+    createItem(Names.GOOGLE_PLAY, HomepageUrls.GOOGLE_PLAY, LicenseLocations.GOOGLE_PLAY);
   }
 
   public static void create(@NonNull String name, @NonNull String homepageUrl,
       @NonNull String licenseLocation) {
+    INSTANCE.createItem(name, homepageUrl, licenseLocation);
+  }
+
+  static void forEach(@NonNull Action1<AboutLicenseItem> action) {
+    INSTANCE.forEachItem(action);
+  }
+
+  @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,
+      @NonNull String homepageUrl, @NonNull String licenseLocation) {
     final AboutLicenseItem item = new AboutLicenseItem(name, homepageUrl, licenseLocation);
     aboutItemMap.put(name, item);
   }
 
-  static void forEach(@NonNull Action1<AboutLicenseItem> action) {
+  @VisibleForTesting @SuppressWarnings("WeakerAccess") void forEachItem(
+      @NonNull Action1<AboutLicenseItem> action) {
     final List<AboutLicenseItem> sortedValues = new ArrayList<>(aboutItemMap.values());
     Collections.sort(sortedValues, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
     for (final AboutLicenseItem item : sortedValues) {
@@ -67,6 +78,8 @@ public final class Licenses {
   @SuppressWarnings("WeakerAccess") static final class HomepageUrls {
     @NonNull static final String ANDROID = "https://source.android.com";
     @NonNull static final String ANDROID_SUPPORT = "https://source.android.com";
+    @NonNull static final String GOOGLE_PLAY =
+        "https://developers.google.com/android/guides/overview";
 
     private HomepageUrls() {
       throw new RuntimeException("No instances");
@@ -74,9 +87,11 @@ public final class Licenses {
   }
 
   @SuppressWarnings("WeakerAccess") static final class LicenseLocations {
+    // Add an underscore to keep this name on top
     @NonNull private static final String _BASE = "licenses/";
     @NonNull static final String ANDROID_SUPPORT = _BASE + "androidsupport";
     @NonNull static final String ANDROID = _BASE + "android";
+    @NonNull static final String GOOGLE_PLAY = _BASE + "";
 
     private LicenseLocations() {
       throw new RuntimeException("No instances");

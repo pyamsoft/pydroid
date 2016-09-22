@@ -147,7 +147,20 @@ public class AboutLibrariesFragment extends ActionBarFragment
     recyclerView.setAdapter(fastItemAdapter);
 
     final List<AboutAdapterItem> items = new ArrayList<>();
-    Licenses.forEach(aboutLicenseItem -> items.add(new AboutAdapterItem(aboutLicenseItem)));
+    Licenses.forEach(aboutLicenseItem -> {
+      final boolean add;
+      if (aboutLicenseItem.getName().equals(Licenses.Names.GOOGLE_PLAY)) {
+        final String googlePlayLicense =
+            Licenses.licenses(getContext()).provideGoogleOpenSourceLicenses();
+        add = (googlePlayLicense != null);
+      } else {
+        add = true;
+      }
+
+      if (add) {
+        items.add(new AboutAdapterItem(aboutLicenseItem));
+      }
+    });
     fastItemAdapter.add(items);
   }
 

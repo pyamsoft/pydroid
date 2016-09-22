@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pydroid.PYDroidApplication;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,15 +40,6 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     cachedLicenses = new HashMap<>();
   }
 
-  @NonNull @CheckResult static LicenseProvider licenses(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    if (appContext instanceof LicenseProvider) {
-      return PYDroidApplication.class.cast(appContext);
-    } else {
-      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
-    }
-  }
-
   @Override public void clearCache() {
     cachedLicenses.clear();
   }
@@ -65,7 +55,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
         Timber.d("License is Google Play services");
         final String googleOpenSourceLicenses =
-            licenses(appContext).provideGoogleOpenSourceLicenses();
+            Licenses.licenses(appContext).provideGoogleOpenSourceLicenses();
         final Observable<String> result = Observable.just(
             googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
                 : googleOpenSourceLicenses);

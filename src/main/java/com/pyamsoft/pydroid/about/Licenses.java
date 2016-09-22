@@ -16,8 +16,11 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import com.pyamsoft.pydroid.PYDroidApplication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,6 +48,15 @@ public final class Licenses {
     INSTANCE.forEachItem(action);
   }
 
+  @NonNull @CheckResult static LicenseProvider licenses(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    if (appContext instanceof LicenseProvider) {
+      return PYDroidApplication.class.cast(appContext);
+    } else {
+      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
+    }
+  }
+
   /**
    * These libraries are directly used by PYDroid, and are thus in every application that uses
    * pydroid
@@ -53,7 +65,6 @@ public final class Licenses {
     createItem(Names.ANDROID, HomepageUrls.ANDROID, LicenseLocations.ANDROID);
     createItem(Names.ANDROID_SUPPORT, HomepageUrls.ANDROID_SUPPORT,
         LicenseLocations.ANDROID_SUPPORT);
-    createItem(Names.GOOGLE_PLAY, HomepageUrls.GOOGLE_PLAY, LicenseLocations.GOOGLE_PLAY);
     createItem(Names.PYDROID, HomepageUrls.PYDROID, LicenseLocations.PYDROID);
     createItem(Names.AUTO_VALUE, HomepageUrls.AUTO_VALUE, LicenseLocations.AUTO_VALUE);
     createItem(Names.RETROFIT, HomepageUrls.RETROFIT, LicenseLocations.RETROFIT);
@@ -77,6 +88,8 @@ public final class Licenses {
         LicenseLocations.GRADLE_VERSIONS_PLUGIN);
     createItem(Names.DEXCOUNT_GRADLE_PLUGIN, HomepageUrls.DEXCOUNT_GRADLE_PLUGIN,
         LicenseLocations.DEXCOUNT_GRADLE_PLUGIN);
+
+    createItem(Names.GOOGLE_PLAY, HomepageUrls.GOOGLE_PLAY, LicenseLocations.GOOGLE_PLAY);
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,

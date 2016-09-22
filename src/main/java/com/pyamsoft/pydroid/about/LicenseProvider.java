@@ -21,4 +21,6 @@ import android.support.annotation.Nullable;
 public interface LicenseProvider {
 
   @Nullable String provideGoogleOpenSourceLicenses();
+
+  void insertCustomLicensesIntoMap();
 }

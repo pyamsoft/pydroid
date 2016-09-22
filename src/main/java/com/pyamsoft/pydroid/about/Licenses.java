@@ -16,128 +16,70 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import rx.functions.Action1;
 
-import static com.pyamsoft.pydroid.about.Licenses.Id.ANDROID;
-import static com.pyamsoft.pydroid.about.Licenses.Id.ANDROID_CHECKOUT;
-import static com.pyamsoft.pydroid.about.Licenses.Id.ANDROID_PRIORITY_JOBQUEUE;
-import static com.pyamsoft.pydroid.about.Licenses.Id.ANDROID_SUPPORT;
-import static com.pyamsoft.pydroid.about.Licenses.Id.AUTO_VALUE;
-import static com.pyamsoft.pydroid.about.Licenses.Id.BUTTERKNIFE;
-import static com.pyamsoft.pydroid.about.Licenses.Id.DAGGER;
-import static com.pyamsoft.pydroid.about.Licenses.Id.FAST_ADAPTER;
-import static com.pyamsoft.pydroid.about.Licenses.Id.FIREBASE;
-import static com.pyamsoft.pydroid.about.Licenses.Id.GOOGLE_PLAY_SERVICES;
-import static com.pyamsoft.pydroid.about.Licenses.Id.LEAK_CANARY;
-import static com.pyamsoft.pydroid.about.Licenses.Id.PYDROID;
-import static com.pyamsoft.pydroid.about.Licenses.Id.RETROFIT2;
-import static com.pyamsoft.pydroid.about.Licenses.Id.RXANDROID;
-import static com.pyamsoft.pydroid.about.Licenses.Id.RXJAVA;
-import static com.pyamsoft.pydroid.about.Licenses.Id.SQLBRITE;
-import static com.pyamsoft.pydroid.about.Licenses.Id.SQLDELIGHT;
+public final class Licenses {
 
-@AutoValue public abstract class Licenses {
+  @NonNull private static final Map<String, AboutLicenseItem> aboutItemMap;
 
-  @NonNull static Licenses googlePlayItem() {
-    return create(GOOGLE_PLAY_SERVICES, "");
+  static {
+    aboutItemMap = new HashMap<>();
+    create(Names.ANDROID, HomepageUrls.ANDROID, LicenseLocations.ANDROID);
+    create(Names.ANDROID_SUPPORT, HomepageUrls.ANDROID_SUPPORT, LicenseLocations.ANDROID_SUPPORT);
   }
 
-  @NonNull static Licenses androidItem() {
-    return create(ANDROID, "licenses/android");
+  private Licenses() {
+    throw new RuntimeException("No instances");
   }
 
-  @NonNull static Licenses androidSupportItem() {
-    return create(ANDROID_SUPPORT, "licenses/androidsupport");
+  public static void create(@NonNull String name, @NonNull String homepageUrl,
+      @NonNull String licenseLocation) {
+    final AboutLicenseItem item = new AboutLicenseItem(name, homepageUrl, licenseLocation);
+    aboutItemMap.put(name, item);
   }
 
-  @NonNull static Licenses pydroidItem() {
-    return create(PYDROID, "licenses/pydroid");
+  static void forEach(@NonNull Action1<AboutLicenseItem> action) {
+    final List<AboutLicenseItem> sortedValues = new ArrayList<>(aboutItemMap.values());
+    Collections.sort(sortedValues, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+    for (final AboutLicenseItem item : sortedValues) {
+      if (item != null) {
+        action.call(item);
+      }
+    }
   }
 
-  @NonNull static Licenses rxjavaItem() {
-    return create(RXJAVA, "licenses/rxjava");
+  static final class Names {
+    @NonNull static final String ANDROID = "Android";
+    @NonNull static final String ANDROID_SUPPORT = "Android Support Libraries";
+    @NonNull static final String GOOGLE_PLAY = "Google Play Services";
+
+    private Names() {
+      throw new RuntimeException("No instances");
+    }
   }
 
-  @NonNull static Licenses rxandroidItem() {
-    return create(RXANDROID, "licenses/rxandroid");
+  @SuppressWarnings("WeakerAccess") static final class HomepageUrls {
+    @NonNull static final String ANDROID = "https://source.android.com";
+    @NonNull static final String ANDROID_SUPPORT = "https://source.android.com";
+
+    private HomepageUrls() {
+      throw new RuntimeException("No instances");
+    }
   }
 
-  @NonNull static Licenses leakcanaryItem() {
-    return create(LEAK_CANARY, "licenses/leakcanary");
-  }
+  @SuppressWarnings("WeakerAccess") static final class LicenseLocations {
+    @NonNull private static final String _BASE = "licenses/";
+    @NonNull static final String ANDROID_SUPPORT = _BASE + "androidsupport";
+    @NonNull static final String ANDROID = _BASE + "android";
 
-  @NonNull static Licenses firebaseItem() {
-    return create(FIREBASE, "licenses/firebase");
-  }
-
-  @NonNull static Licenses androidCheckoutItem() {
-    return create(ANDROID_CHECKOUT, "licenses/androidcheckout");
-  }
-
-  @NonNull static Licenses butterknifeItem() {
-    return create(BUTTERKNIFE, "licenses/butterknife");
-  }
-
-  @NonNull static Licenses autovalueItem() {
-    return create(AUTO_VALUE, "licenses/autovalue");
-  }
-
-  @NonNull static Licenses daggerItem() {
-    return create(DAGGER, "licenses/dagger2");
-  }
-
-  @NonNull static Licenses retrofitItem() {
-    return create(RETROFIT2, "licenses/retrofit");
-  }
-
-  @NonNull static Licenses sqlbriteItem() {
-    return create(SQLBRITE, "licenses/sqlbrite");
-  }
-
-  @NonNull static Licenses sqldelightItem() {
-    return create(SQLDELIGHT, "licenses/sqldelight");
-  }
-
-  @NonNull static Licenses androidPriorityJobQueueItem() {
-    return create(ANDROID_PRIORITY_JOBQUEUE, "licenses/androidpriorityjobqueue");
-  }
-
-  @NonNull static Licenses fastAdapterItem() {
-    return create(FAST_ADAPTER, "licenses/fastadapter");
-  }
-
-  @NonNull @CheckResult public static Licenses create(@NonNull Id id, @NonNull String location) {
-    return new AutoValue_Licenses(id, location);
-  }
-
-  public abstract Id id();
-
-  public abstract String location();
-
-  public enum Id {
-    EMPTY,
-    GOOGLE_PLAY_SERVICES,
-    ANDROID,
-    ANDROID_SUPPORT,
-    PYDROID,
-    RXJAVA,
-    RXANDROID,
-    LEAK_CANARY,
-    FIREBASE,
-    ANDROID_CHECKOUT,
-    FAST_ADAPTER,
-    BUTTERKNIFE,
-    AUTO_VALUE,
-    DAGGER,
-    RETROFIT2,
-    SQLBRITE,
-    SQLDELIGHT,
-    ANDROID_PRIORITY_JOBQUEUE,
+    private LicenseLocations() {
+      throw new RuntimeException("No instances");
+    }
   }
 }
-
-
-
-

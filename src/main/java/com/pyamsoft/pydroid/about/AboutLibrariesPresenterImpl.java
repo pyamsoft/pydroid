@@ -50,7 +50,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(licenseLoadEvent -> {
-          loadLicenseText(licenseLoadEvent.position(), licenseLoadEvent.licenses());
+          loadLicenseText(licenseLoadEvent.position(), licenseLoadEvent.licenseLocation());
         }, throwable -> {
           Timber.e(throwable, "onError registerOnLicenseBus");
         });
@@ -69,11 +69,12 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
     interactor.clearCache();
   }
 
-  @SuppressWarnings("WeakerAccess") void loadLicenseText(int position, @NonNull Licenses licenses) {
-    if (licenses.id() == Licenses.Id.EMPTY) {
+  @SuppressWarnings("WeakerAccess") void loadLicenseText(int position,
+      @NonNull String licenseLocation) {
+    if (licenseLocation.isEmpty()) {
       getView(view -> view.onLicenseTextLoaded(position, ""));
     } else {
-      final Subscription licenseSubscription = interactor.loadLicenseText(licenses)
+      final Subscription licenseSubscription = interactor.loadLicenseText(licenseLocation)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
           .subscribe(license -> getView(view -> view.onLicenseTextLoaded(position, license)),

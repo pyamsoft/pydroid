@@ -51,6 +51,7 @@ import timber.log.Timber;
       refWatcher = RefWatcher.DISABLED;
     }
 
+    insertCustomLicensesIntoMap();
     createApplicationComponents();
   }
 

@@ -37,31 +37,26 @@ import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.List;
 
-public class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
+class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-  @SuppressWarnings("WeakerAccess") @NonNull final String licenseHomepage;
-  @NonNull private final String licenseName;
-  @NonNull private final Licenses licenseType;
+  @NonNull private final AboutLicenseItem item;
   @NonNull private String licenseText;
   private boolean expanded;
 
-  @NonNull private final FastAdapter.OnClickListener<AboutItem> onClickListener =
+  @NonNull private final FastAdapter.OnClickListener<AboutAdapterItem> onClickListener =
       (v, adapter, item, position) -> {
         item.setExpanded(!item.isExpanded());
         adapter.getFastAdapter().notifyItemChanged(position);
         return true;
       };
 
-  AboutItem(@NonNull String licenseName, @NonNull String licenseHomepage,
-      @NonNull Licenses licenseType) {
-    this.licenseName = licenseName;
-    this.licenseHomepage = licenseHomepage;
-    this.licenseType = licenseType;
+  AboutAdapterItem(@NonNull AboutLicenseItem item) {
+    this.item = item;
     licenseText = "";
   }
 
-  public void setLicenseText(@NonNull String licenseText) {
+  void setLicenseText(@NonNull String licenseText) {
     this.licenseText = licenseText;
   }
 
@@ -74,7 +69,7 @@ public class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
   }
 
   @CheckResult @NonNull @Override
-  public FastAdapter.OnClickListener<AboutItem> getOnItemClickListener() {
+  public FastAdapter.OnClickListener<AboutAdapterItem> getOnItemClickListener() {
     return onClickListener;
   }
 
@@ -108,17 +103,19 @@ public class AboutItem extends AbstractItem<AboutItem, AboutItem.ViewHolder> {
       ViewCompat.setRotation(viewHolder.arrowIcon, 180);
     }
 
-    viewHolder.licenseName.setText(licenseName);
+    viewHolder.licenseName.setText(item.getName());
     viewHolder.licenseHomepage.setTextColor(Color.BLUE);
     viewHolder.licenseHomepage.setSingleLine(true);
     viewHolder.licenseHomepage.setOnClickListener(
-        view -> NetworkUtil.newLink(view.getContext().getApplicationContext(), licenseHomepage));
+        view -> NetworkUtil.newLink(view.getContext().getApplicationContext(),
+            item.getHomepageUrl()));
 
     if (isExpanded()) {
       if (licenseText.length() == 0) {
         viewHolder.progressBar.setVisibility(View.VISIBLE);
         AboutItemBus.get()
-            .post(AboutLicenseLoadEvent.create(viewHolder.getAdapterPosition(), licenseType));
+            .post(AboutLicenseLoadEvent.create(viewHolder.getAdapterPosition(),
+                item.getLicenseLocation()));
       } else {
         viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.licenseText.setVisibility(View.VISIBLE);

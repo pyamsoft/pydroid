@@ -35,13 +35,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.AboutLibrariesLoaderCallback;
-import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
+import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import timber.log.Timber;
 
@@ -49,62 +48,41 @@ public class AboutLibrariesFragment extends ActionBarFragment
     implements AboutLibrariesPresenter.View {
 
   @NonNull public static final String TAG = "AboutLibrariesFragment";
-  @NonNull private static final String KEY_LICENSE_LIST = "key_license_list";
   @NonNull private static final String KEY_STYLING = "key_styling";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
   @NonNull private static final String KEY_ABOUT_PRESENTER = "key_about_presenter";
   @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
   @BindView(R2.id.recycler_about_libraries) RecyclerView recyclerView;
   @ColorInt private int backgroundColor;
-  private FastItemAdapter<AboutItem> fastItemAdapter;
-  private Licenses.Id[] licenses;
+  private FastItemAdapter<AboutAdapterItem> fastItemAdapter;
   private long loadedKey;
   private boolean lastOnBackStack;
   private Unbinder unbinder;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
-      @NonNull Styling styling, @NonNull BackStackState backStackState,
-      @NonNull Licenses.Id... licenses) {
+      @NonNull Styling styling, @NonNull BackStackState backStackState) {
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
-          .replace(containerResId,
-              AboutLibrariesFragment.newInstance(styling, backStackState, licenses), TAG)
+          .replace(containerResId, AboutLibrariesFragment.newInstance(styling, backStackState), TAG)
           .addToBackStack(TAG)
           .commit();
     }
   }
 
   @CheckResult @NonNull private static AboutLibrariesFragment newInstance(@NonNull Styling styling,
-      @NonNull BackStackState backStackState, @NonNull Licenses.Id... licenses) {
+      @NonNull BackStackState backStackState) {
     final Bundle args = new Bundle();
     final AboutLibrariesFragment fragment = new AboutLibrariesFragment();
 
-    final String[] licenseNames = new String[licenses.length];
-    for (int i = 0; i < licenseNames.length; ++i) {
-      licenseNames[i] = licenses[i].name();
-    }
-
     args.putString(KEY_STYLING, styling.name());
     args.putString(KEY_BACK_STACK, backStackState.name());
-    args.putStringArray(KEY_LICENSE_LIST, licenseNames);
     fragment.setArguments(args);
     return fragment;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final String[] licenseNames = getArguments().getStringArray(KEY_LICENSE_LIST);
-    if (licenseNames == null) {
-      throw new NullPointerException("Licenses is NULL");
-    }
-    Arrays.sort(licenseNames);
-
-    licenses = new Licenses.Id[licenseNames.length];
-    for (int i = 0; i < licenses.length; ++i) {
-      licenses[i] = Licenses.Id.valueOf(licenseNames[i]);
-    }
-
     final String stylingName = getArguments().getString(KEY_STYLING, null);
     if (stylingName == null) {
       throw new NullPointerException("Styling is NULL");
@@ -168,68 +146,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.setAdapter(fastItemAdapter);
 
-    //fill with some sample data
-    final List<AboutItem> items = new ArrayList<>();
-    for (final Licenses.Id license : licenses) {
-      final AboutItem item;
-      switch (license) {
-        case FIREBASE:
-          item = AboutItemsUtil.licenseForFirebase();
-          break;
-        case RETROFIT2:
-          item = AboutItemsUtil.licenseForRetrofit2();
-          break;
-        case LEAK_CANARY:
-          item = AboutItemsUtil.licenseForLeakCanary();
-          break;
-        case FAST_ADAPTER:
-          item = AboutItemsUtil.licenseForFastAdapter();
-          break;
-        case DAGGER:
-          item = AboutItemsUtil.licenseForDagger2();
-          break;
-        case BUTTERKNIFE:
-          item = AboutItemsUtil.licenseForButterknife();
-          break;
-        case AUTO_VALUE:
-          item = AboutItemsUtil.licenseForAutoValue();
-          break;
-        case ANDROID_CHECKOUT:
-          item = AboutItemsUtil.licenseForAndroidCheckout();
-          break;
-        case ANDROID_SUPPORT:
-          item = AboutItemsUtil.licenseForAndroidSupport();
-          break;
-        case RXJAVA:
-          item = AboutItemsUtil.licenseForRxJava();
-          break;
-        case RXANDROID:
-          item = AboutItemsUtil.licenseForRxAndroid();
-          break;
-        case ANDROID:
-          item = AboutItemsUtil.licenseForAndroid();
-          break;
-        case PYDROID:
-          item = AboutItemsUtil.licenseForPYDroid();
-          break;
-        case GOOGLE_PLAY_SERVICES:
-          item = AboutItemsUtil.licenseForGooglePlayServices();
-          break;
-        case SQLBRITE:
-          item = AboutItemsUtil.licenseForSQLBrite();
-          break;
-        case SQLDELIGHT:
-          item = AboutItemsUtil.licenseForSQLDelight();
-          break;
-        case ANDROID_PRIORITY_JOBQUEUE:
-          item = AboutItemsUtil.licenseForAndroidPriorityJobQueue();
-          break;
-        default:
-          throw new RuntimeException("Invalid license: " + license);
-      }
-
-      items.add(item);
-    }
+    final List<AboutAdapterItem> items = new ArrayList<>();
+    Licenses.forEach(aboutLicenseItem -> items.add(new AboutAdapterItem(aboutLicenseItem)));
     fastItemAdapter.add(items);
   }
 
@@ -267,7 +185,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
-    licenses = null;
   }
 
   @Override public void onLicenseTextLoaded(int position, @NonNull String text) {

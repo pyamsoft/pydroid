@@ -34,7 +34,7 @@ import timber.log.Timber;
 class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
-  @SuppressWarnings("WeakerAccess") @NonNull final HashMap<Licenses, String> cachedLicenses;
+  @SuppressWarnings("WeakerAccess") @NonNull final HashMap<String, String> cachedLicenses;
 
   @Inject AboutLibrariesInteractorImpl(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
@@ -55,14 +55,14 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   }
 
   @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
-  Observable<String> loadNewLicense(@NonNull Licenses licenses) {
+  Observable<String> loadNewLicense(@NonNull String licenseLocation) {
     return Observable.defer(() -> {
-      if (licenses.id() == Licenses.Id.EMPTY) {
+      if (licenseLocation.isEmpty()) {
         Timber.w("Empty license passed");
         return Observable.just("");
       }
 
-      if (licenses.id() == Licenses.Id.GOOGLE_PLAY_SERVICES) {
+      if (licenseLocation.equals(Licenses.Names.GOOGLE_PLAY)) {
         Timber.d("License is Google Play services");
         final String googleOpenSourceLicenses =
             licenses(appContext).provideGoogleOpenSourceLicenses();
@@ -76,7 +76,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       String licenseText;
       final StringBuilder text = new StringBuilder();
       try (
-          final InputStream fileInputStream = appContext.getAssets().open(licenses.location());
+          final InputStream fileInputStream = appContext.getAssets().open(licenseLocation);
           final BufferedReader br = new BufferedReader(
               new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
         String line = br.readLine();
@@ -94,19 +94,22 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     });
   }
 
-  @NonNull @Override public Observable<String> loadLicenseText(@NonNull Licenses licenses) {
+  @NonNull @Override public Observable<String> loadLicenseText(@NonNull String licenseLocation) {
     return Observable.defer(() -> {
-      if (cachedLicenses.containsKey(licenses)) {
-        return Observable.just(cachedLicenses.get(licenses));
+      if (cachedLicenses.containsKey(licenseLocation)) {
+        Timber.d("Fetch from cache");
+        return Observable.just(cachedLicenses.get(licenseLocation));
       } else {
-        return loadNewLicense(licenses);
+        Timber.d("Load from asset location");
+        return loadNewLicense(licenseLocation);
       }
-    }).map(s -> {
-      if (!cachedLicenses.containsKey(licenses)) {
-        cachedLicenses.put(licenses, s);
+    }).map(licenseText -> {
+      if (!cachedLicenses.containsKey(licenseLocation)) {
+        Timber.d("Put into cache");
+        cachedLicenses.put(licenseLocation, licenseText);
       }
 
-      return s;
+      return licenseText;
     });
   }
 }

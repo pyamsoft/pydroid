@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.support.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -87,9 +86,9 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @SuppressWarnings("SameReturnValue") @CheckResult
   protected boolean showAboutLicensesFragment(@IdRes int containerId,
-      @NonNull AboutLibrariesFragment.Styling styling, @NonNull Licenses.Id... licenses) {
+      @NonNull AboutLibrariesFragment.Styling styling) {
     Timber.d("Show about licenses fragment");
-    AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack(), licenses);
+    AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack());
     return true;
   }
 

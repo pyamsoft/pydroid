@@ -163,20 +163,4 @@ public final class Licenses {
       throw new RuntimeException("No instances");
     }
   }
-
-  //@NonNull @CheckResult public static AboutAdapterItem licenseForSQLBrite() {
-  //  return new AboutAdapterItem("SQLBrite", "https://github.com/square/sqlbrite",
-  //      Licenses.sqlbriteItem());
-  //}
-  //
-  //@NonNull @CheckResult public static AboutAdapterItem licenseForSQLDelight() {
-  //  return new AboutAdapterItem("SQLDelight", "https://github.com/square/sqldelight",
-  //      Licenses.sqldelightItem());
-  //}
-  //
-  //@NonNull @CheckResult public static AboutAdapterItem licenseForAndroidPriorityJobQueue() {
-  //  return new AboutAdapterItem("Android Priority JobQueue",
-  //      "https://github.com/yigit/android-priority-jobqueue",
-  //      Licenses.androidPriorityJobQueueItem());
-  //}
 }

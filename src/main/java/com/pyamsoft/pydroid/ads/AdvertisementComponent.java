@@ -17,12 +17,12 @@
 package com.pyamsoft.pydroid.ads;
 
 import com.pyamsoft.pydroid.ActivityScope;
-import com.pyamsoft.pydroid.AdvertisementView;
+import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
 import com.pyamsoft.pydroid.social.SocialMediaModule;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = { SocialMediaModule.class, AdvertisementModule.class })
 public interface AdvertisementComponent {
 
-  void inject(AdvertisementView adView);
+  void inject(AdvertisementViewLoaderCallback callback);
 }

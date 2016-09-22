@@ -23,8 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.VersionCheckActivity;
-import com.pyamsoft.pydroid.SupportDialog;
+import com.pyamsoft.pydroid.version.VersionCheckActivity;
 
 public abstract class DonationActivity extends VersionCheckActivity {
 

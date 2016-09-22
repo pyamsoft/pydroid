@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.support;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -43,16 +43,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
+import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
+import com.pyamsoft.pydroid.SupportLoaderCallback;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.support.SupportPresenter;
-import com.pyamsoft.pydroid.support.SupportPresenterLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.inject.Inject;
 import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.BillingRequests;
@@ -302,25 +304,6 @@ public class SupportDialog extends DialogFragment
           listener.onSuccess(verifiedPurchases);
         }
       }
-    }
-  }
-
-  public static abstract class SupportLoaderCallback
-      implements PersistLoader.Callback<SupportPresenter> {
-
-    @NonNull private final Context context;
-    @Inject SupportPresenterLoader loader;
-
-    SupportLoaderCallback(@NonNull Context context) {
-      this.context = context.getApplicationContext();
-    }
-
-    @NonNull @Override public PersistLoader<SupportPresenter> createLoader() {
-      PYDroidApplication.get(context.getApplicationContext())
-          .provideComponent()
-          .plusSupportComponent()
-          .inject(this);
-      return loader;
     }
   }
 

@@ -17,11 +17,11 @@
 package com.pyamsoft.pydroid.version;
 
 import com.pyamsoft.pydroid.ActivityScope;
-import com.pyamsoft.pydroid.VersionCheckActivity;
+import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = VersionCheckModule.class)
 public interface VersionCheckComponent {
 
-  void inject(VersionCheckActivity.VersionCheckLoaderCallback versionCheckLoaderCallback);
+  void inject(VersionCheckLoaderCallback versionCheckLoaderCallback);
 }

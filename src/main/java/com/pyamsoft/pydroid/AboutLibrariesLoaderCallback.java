@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.version;
+package com.pyamsoft.pydroid;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
-import javax.inject.Provider;
 
-public class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
-  @NonNull private final Provider<VersionCheckPresenter> presenterProvider;
+public abstract class AboutLibrariesLoaderCallback
+    implements PersistLoader.Callback<AboutLibrariesPresenter> {
 
-  @Inject VersionCheckPresenterLoader(@NonNull Context context,
-      @NonNull Provider<VersionCheckPresenter> presenterProvider) {
-    super(context);
-    this.presenterProvider = presenterProvider;
+  @NonNull private final Context context;
+  @Inject AboutLibrariesPresenterLoader loader;
+
+  protected AboutLibrariesLoaderCallback(@NonNull Context context) {
+    this.context = context.getApplicationContext();
   }
 
-  @NonNull @Override public VersionCheckPresenter loadPersistent() {
-    return presenterProvider.get();
+  @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
+    PYDroidApplication.get(context).provideComponent().plusAboutLibrariesComponent().inject(this);
+    return loader;
   }
 }

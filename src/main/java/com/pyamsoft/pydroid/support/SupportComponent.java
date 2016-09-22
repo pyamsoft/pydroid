@@ -17,10 +17,10 @@
 package com.pyamsoft.pydroid.support;
 
 import com.pyamsoft.pydroid.ActivityScope;
-import com.pyamsoft.pydroid.SupportDialog;
+import com.pyamsoft.pydroid.SupportLoaderCallback;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = SupportModule.class) public interface SupportComponent {
 
-  void inject(SupportDialog.SupportLoaderCallback supportLoaderCallback);
+  void inject(SupportLoaderCallback supportLoaderCallback);
 }

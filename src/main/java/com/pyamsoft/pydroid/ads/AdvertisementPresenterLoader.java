@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.ads;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.pyamsoft.pydroid.app.PersistLoader;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
+public class AdvertisementPresenterLoader extends PersistLoader<AdvertisementPresenter> {
 
-  protected ListAdapterLoader(@NonNull Context context) {
+  @NonNull private final Provider<AdvertisementPresenter> presenterProvider;
+
+  @Inject AdvertisementPresenterLoader(@NonNull Context context,
+      @NonNull Provider<AdvertisementPresenter> presenterProvider) {
     super(context);
+    this.presenterProvider = presenterProvider;
+  }
+
+  @NonNull @Override public AdvertisementPresenter loadPersistent() {
+    return presenterProvider.get();
   }
 }

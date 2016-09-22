@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.about;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
@@ -35,17 +34,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.pyamsoft.pydroid.about.AboutItem;
-import com.pyamsoft.pydroid.about.AboutItemsUtil;
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenterLoader;
-import com.pyamsoft.pydroid.about.Licenses;
+import com.pyamsoft.pydroid.AboutLibrariesLoaderCallback;
+import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.inject.Inject;
 import timber.log.Timber;
 
 public class AboutLibrariesFragment extends ActionBarFragment
@@ -284,21 +281,5 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   public enum BackStackState {
     LAST, NOT_LAST
-  }
-
-  public static abstract class AboutLibrariesLoaderCallback
-      implements PersistLoader.Callback<AboutLibrariesPresenter> {
-
-    @NonNull private final Context context;
-    @Inject AboutLibrariesPresenterLoader loader;
-
-    AboutLibrariesLoaderCallback(@NonNull Context context) {
-      this.context = context.getApplicationContext();
-    }
-
-    @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
-      PYDroidApplication.get(context).provideComponent().plusAboutLibrariesComponent().inject(this);
-      return loader;
-    }
   }
 }

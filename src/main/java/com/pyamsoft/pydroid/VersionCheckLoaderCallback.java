@@ -17,27 +17,40 @@
 package com.pyamsoft.pydroid;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.social.SocialMediaPresenterLoader;
+import com.pyamsoft.pydroid.version.VersionCheckPresenter;
+import com.pyamsoft.pydroid.version.VersionCheckPresenterLoader;
 import javax.inject.Inject;
 
-public abstract class SocialMediaLoaderCallback
-    implements PersistLoader.Callback<SocialMediaPresenter> {
+public abstract class VersionCheckLoaderCallback
+    implements PersistLoader.Callback<VersionCheckPresenter> {
 
   @NonNull private final Context context;
-  @Inject SocialMediaPresenterLoader loader;
+  @SuppressWarnings("WeakerAccess") @Inject VersionCheckPresenterLoader loader;
+  private boolean licenseChecked;
 
-  protected SocialMediaLoaderCallback(@NonNull Context context) {
+  protected VersionCheckLoaderCallback(@NonNull Context context) {
     this.context = context.getApplicationContext();
+    licenseChecked = false;
   }
 
-  @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+  @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
+    setLicenseChecked(false);
     PYDroidApplication.get(context.getApplicationContext())
         .provideComponent()
-        .plusSocialMediaComponent()
+        .plusApiComponent()
+        .plusVersionCheckComponent()
         .inject(this);
     return loader;
+  }
+
+  @CheckResult public boolean isLicenseChecked() {
+    return licenseChecked;
+  }
+
+  public void setLicenseChecked(boolean licenseChecked) {
+    this.licenseChecked = licenseChecked;
   }
 }

@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.version;
+package com.pyamsoft.pydroid.app;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
-public class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
-  @NonNull private final Provider<VersionCheckPresenter> presenterProvider;
+public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
 
-  @Inject VersionCheckPresenterLoader(@NonNull Context context,
-      @NonNull Provider<VersionCheckPresenter> presenterProvider) {
+  protected ListAdapterLoader(@NonNull Context context) {
     super(context);
-    this.presenterProvider = presenterProvider;
-  }
-
-  @NonNull @Override public VersionCheckPresenter loadPersistent() {
-    return presenterProvider.get();
   }
 }

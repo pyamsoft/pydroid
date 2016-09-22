@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.app.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

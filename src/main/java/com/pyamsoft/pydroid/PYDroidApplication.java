@@ -17,12 +17,10 @@
 package com.pyamsoft.pydroid;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -40,16 +38,6 @@ import timber.log.Timber;
       return PYDroidApplication.class.cast(appContext);
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
-    }
-  }
-
-  @CheckResult @NonNull public static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
-    final Application application = fragment.getActivity().getApplication();
-    if (application instanceof PYDroidApplication) {
-      final PYDroidApplication pyDroidApplication = (PYDroidApplication) application;
-      return pyDroidApplication.getRefWatcher();
-    } else {
-      throw new ClassCastException("Application is not PYDroidApplication");
     }
   }
 
@@ -72,7 +60,7 @@ import timber.log.Timber;
         .build();
   }
 
-  @CheckResult @NonNull private RefWatcher getRefWatcher() {
+  @CheckResult @NonNull public RefWatcher getRefWatcher() {
     if (refWatcher == null) {
       throw new RuntimeException("RefWatcher is NULL");
     }

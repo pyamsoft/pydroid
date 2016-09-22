@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.app.activity;
 
 import android.app.Activity;
 import android.app.Application;
@@ -86,7 +86,8 @@ public abstract class ActivityBase extends AppCompatActivity {
      * Fix for https://code.google.com/p/android/issues/detail?id=171190 .
      *
      * When a view that has focus gets detached, we wait for the main thread to be idle and then
-     * check if the InputMethodManager is leaking a view. If yes, we tell it that the decor view got
+     * check if the InputMethodManager is leaking a view. If yes, we tell it that the decor view
+     * got
      * focus, which is what happens if you press home and come back from recent apps. This replaces
      * the reference to the detached view with a reference to the decor view.
      *
@@ -156,12 +157,13 @@ public abstract class ActivityBase extends AppCompatActivity {
     }
 
     /**
-     * Simple class which allows us to not have to override every single callback, every single time.
+     * Simple class which allows us to not have to override every single callback, every single
+     * time.
      */
     static class LifecycleCallbacksAdapter implements Application.ActivityLifecycleCallbacks {
 
-      @Override
-      public void onActivityCreated(@NonNull Activity activity, @NonNull Bundle savedInstanceState) {
+      @Override public void onActivityCreated(@NonNull Activity activity,
+          @NonNull Bundle savedInstanceState) {
 
       }
 
@@ -181,8 +183,8 @@ public abstract class ActivityBase extends AppCompatActivity {
 
       }
 
-      @Override
-      public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+      @Override public void onActivitySaveInstanceState(@NonNull Activity activity,
+          @NonNull Bundle outState) {
 
       }
 

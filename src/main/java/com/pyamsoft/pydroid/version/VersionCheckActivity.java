@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.version;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
+import com.pyamsoft.pydroid.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.version.VersionCheckPresenter;
-import com.pyamsoft.pydroid.version.VersionCheckPresenterLoader;
-import com.pyamsoft.pydroid.version.VersionCheckProvider;
-import javax.inject.Inject;
 import timber.log.Timber;
 
 public abstract class VersionCheckActivity extends AdvertisementActivity
@@ -93,36 +90,5 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
         VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
             updatedVersionCode), VersionUpgradeDialog.TAG);
-  }
-
-  public static abstract class VersionCheckLoaderCallback
-      implements PersistLoader.Callback<VersionCheckPresenter> {
-
-    @NonNull private final Context context;
-    @Inject VersionCheckPresenterLoader loader;
-    private boolean licenseChecked;
-
-    VersionCheckLoaderCallback(@NonNull Context context) {
-      this.context = context.getApplicationContext();
-      licenseChecked = false;
-    }
-
-    @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
-      setLicenseChecked(false);
-      PYDroidApplication.get(context.getApplicationContext())
-          .provideComponent()
-          .plusApiComponent()
-          .plusVersionCheckComponent()
-          .inject(this);
-      return loader;
-    }
-
-    boolean isLicenseChecked() {
-      return licenseChecked;
-    }
-
-    void setLicenseChecked(boolean licenseChecked) {
-      this.licenseChecked = licenseChecked;
-    }
   }
 }

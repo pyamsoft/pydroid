@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.app.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -28,6 +28,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
+import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.support.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
@@ -35,6 +37,7 @@ import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
+import com.pyamsoft.pydroid.version.VersionUpgradeDialog;
 import timber.log.Timber;
 
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
@@ -105,7 +108,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
     loadedKey = PersistentCache.get()
         .load(KEY_LICENSE_PRESENTER, savedInstanceState,
-            new VersionCheckActivity.VersionCheckLoaderCallback(getContext()) {
+            new VersionCheckLoaderCallback(getContext()) {
 
               @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
                 presenter = persist;

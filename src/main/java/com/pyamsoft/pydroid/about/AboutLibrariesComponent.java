@@ -16,12 +16,12 @@
 
 package com.pyamsoft.pydroid.about;
 
-import com.pyamsoft.pydroid.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.AboutLibrariesLoaderCallback;
 import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = AboutLibrariesModule.class)
 public interface AboutLibrariesComponent {
 
-  void inject(AboutLibrariesFragment.AboutLibrariesLoaderCallback aboutLibrariesLoaderCallback);
+  void inject(AboutLibrariesLoaderCallback aboutLibrariesLoaderCallback);
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.support;
 
 import android.os.Build;
 import android.support.annotation.CheckResult;
@@ -29,6 +29,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
+import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import java.util.List;
 import org.solovyev.android.checkout.Sku;
 

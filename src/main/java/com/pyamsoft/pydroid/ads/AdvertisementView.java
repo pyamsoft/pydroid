@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.ads;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -31,10 +31,14 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
+import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.NetworkUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,7 +46,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import javax.inject.Inject;
 import rx.Subscription;
 import timber.log.Timber;
 
@@ -58,13 +61,15 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON,
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
+  @NonNull private static final String KEY_ADVERTISEMENT = "key_advertisement_presenter";
 
   @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @BindView(R2.id.ad_image) ImageView advertisement;
-  @Inject AdvertisementPresenter presenter;
+  AdvertisementPresenter presenter;
   private Unbinder unbinder;
   private Queue<String> imageQueue;
+  private long loadedKey;
 
   public AdvertisementView(Context context) {
     super(context);
@@ -104,10 +109,13 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   @SuppressWarnings("WeakerAccess") public final void create() {
     unbinder = ButterKnife.bind(this, this);
 
-    PYDroidApplication.get(getContext())
-        .provideComponent()
-        .plusAdvertisementComponent()
-        .inject(this);
+    loadedKey = PersistentCache.get()
+        .load(KEY_ADVERTISEMENT, null, new AdvertisementViewLoaderCallback(getContext()) {
+
+          @Override public void onPersistentLoaded(@NonNull AdvertisementPresenter persist) {
+            presenter = persist;
+          }
+        });
 
     // Default to gone
     setVisibility(View.GONE);
@@ -130,7 +138,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     unbinder.unbind();
 
     if (!isChangingConfigurations) {
-      presenter.destroy();
+      PersistentCache.get().unload(loadedKey);
     }
   }
 

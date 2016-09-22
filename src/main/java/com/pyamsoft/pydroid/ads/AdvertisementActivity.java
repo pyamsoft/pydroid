@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.ads;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.app.activity.BackPressConfirmActivity;
 
 public abstract class AdvertisementActivity extends BackPressConfirmActivity {
 

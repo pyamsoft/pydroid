@@ -17,31 +17,26 @@
 package com.pyamsoft.pydroid;
 
 import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.support.SupportPresenter;
+import com.pyamsoft.pydroid.support.SupportPresenterLoader;
+import javax.inject.Inject;
 
-public abstract class PersistLoader<T> {
+public abstract class SupportLoaderCallback implements PersistLoader.Callback<SupportPresenter> {
 
-  /**
-   * Even though we do not directly use this context, it is convenient to hold onto for
-   * classes which rely on Injection via Dagger (which usually requires a context
-   */
-  @NonNull private final Context appContext;
+  @NonNull private final Context context;
+  @Inject SupportPresenterLoader loader;
 
-  protected PersistLoader(@NonNull Context context) {
-    appContext = context.getApplicationContext();
+  protected SupportLoaderCallback(@NonNull Context context) {
+    this.context = context.getApplicationContext();
   }
 
-  @NonNull @CheckResult protected final Context getContext() {
-    return appContext;
-  }
-
-  @CheckResult @NonNull public abstract T loadPersistent();
-
-  public interface Callback<T> {
-
-    @CheckResult @NonNull PersistLoader<T> createLoader();
-
-    void onPersistentLoaded(@NonNull T persist);
+  @NonNull @Override public PersistLoader<SupportPresenter> createLoader() {
+    PYDroidApplication.get(context.getApplicationContext())
+        .provideComponent()
+        .plusSupportComponent()
+        .inject(this);
+    return loader;
   }
 }

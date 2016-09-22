@@ -151,8 +151,7 @@ dependencies {
   androidTestCompile "com.android.support.test.espresso:espresso-core:$espresso"
 
   // Dagger
-  testCompile "com.google.dagger:dagger:$dagger"
-  testCompile "com.google.dagger:dagger-compiler:$dagger"
+  testAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   // Roboelectric for Android on JVM
   testCompile "org.robolectric:robolectric:$robolectric"

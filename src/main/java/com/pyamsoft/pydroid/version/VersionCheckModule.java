@@ -29,7 +29,7 @@ import rx.Scheduler;
 
   @ActivityScope @Provides VersionCheckPresenter provideLicenseCheckPresenter(
       @NonNull VersionCheckInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new VersionCheckPresenterImpl(interactor, mainScheduler, ioScheduler);
   }
 

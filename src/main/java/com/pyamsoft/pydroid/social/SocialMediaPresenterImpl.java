@@ -23,13 +23,16 @@ import javax.inject.Inject;
 class SocialMediaPresenterImpl extends PresenterBase<SocialMediaPresenter.View>
     implements SocialMediaPresenter {
 
-  @NonNull static final String BASE_MARKET = "market://details?id=";
-  @NonNull static final String FACEBOOK = "https://www.facebook.com/pyamsoftware";
-  @NonNull static final String GOOGLE_PLAY_DEVELOPER_PAGE =
+  @SuppressWarnings("WeakerAccess") @NonNull static final String BASE_MARKET =
+      "market://details?id=";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String FACEBOOK =
+      "https://www.facebook.com/pyamsoftware";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String GOOGLE_PLAY_DEVELOPER_PAGE =
       "https://play.google.com/store/apps/dev?id=5257476342110165153";
-  @NonNull static final String GOOGLE_PLUS =
+  @SuppressWarnings("WeakerAccess") @NonNull static final String GOOGLE_PLUS =
       "https://plus.google.com/+Pyamsoft-officialBlogspot/posts";
-  @NonNull static final String OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String OFFICIAL_BLOG =
+      "https://pyamsoft.blogspot.com/";
 
   @Inject SocialMediaPresenterImpl() {
   }

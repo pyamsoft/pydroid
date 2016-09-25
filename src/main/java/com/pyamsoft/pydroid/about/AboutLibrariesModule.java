@@ -29,7 +29,7 @@ import rx.Scheduler;
 
   @ActivityScope @Provides AboutLibrariesPresenter provideAboutLibrariesPresenter(
       @NonNull AboutLibrariesInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new AboutLibrariesPresenterImpl(interactor, mainScheduler, ioScheduler);
   }
 

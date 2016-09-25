@@ -35,11 +35,11 @@ import rx.schedulers.Schedulers;
   }
 
   @Singleton @Provides Context provideContext() {
-    return appContext;
+    return appContext.getApplicationContext();
   }
 
-  @Singleton @Provides @Named("io") Scheduler provideIOScheduler() {
-    return Schedulers.io();
+  @Singleton @Provides @Named("computation") Scheduler provideIOScheduler() {
+    return Schedulers.computation();
   }
 
   @Singleton @Provides @Named("main") Scheduler provideMainThreadScheduler() {

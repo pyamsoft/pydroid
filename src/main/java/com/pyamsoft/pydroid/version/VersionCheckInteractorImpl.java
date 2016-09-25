@@ -23,16 +23,16 @@ import rx.Observable;
 
 class VersionCheckInteractorImpl implements VersionCheckInteractor {
 
-  @NonNull private final Context appContext;
+  @NonNull private final String packageName;
   @NonNull private final VersionCheckService versionCheckService;
 
   @Inject VersionCheckInteractorImpl(@NonNull Context context,
       @NonNull VersionCheckService versionCheckService) {
-    this.appContext = context.getApplicationContext();
+    this.packageName = context.getPackageName();
     this.versionCheckService = versionCheckService;
   }
 
   @NonNull @Override public Observable<VersionCheckResponse> checkVersion() {
-    return versionCheckService.checkVersion(appContext.getPackageName());
+    return versionCheckService.checkVersion(packageName);
   }
 }

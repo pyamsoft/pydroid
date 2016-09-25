@@ -29,7 +29,7 @@ import rx.Scheduler;
 
   @ActivityScope @Provides AdvertisementPresenter provideAdvertisementPresenter(
       @NonNull AdvertisementInteractor interactor, @NonNull SocialMediaPresenter presenter,
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler) {
     return new AdvertisementPresenterImpl(interactor, presenter, mainScheduler, ioScheduler);
   }
 

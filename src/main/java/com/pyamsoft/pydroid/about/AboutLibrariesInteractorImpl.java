@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -32,11 +33,13 @@ import timber.log.Timber;
 
 class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final HashMap<String, String> cachedLicenses;
+  @SuppressWarnings("WeakerAccess") @NonNull private final LicenseProvider licenseProvider;
+  @SuppressWarnings("WeakerAccess") @NonNull private final AssetManager assetManager;
 
   @Inject AboutLibrariesInteractorImpl(@NonNull Context context) {
-    this.appContext = context.getApplicationContext();
+    assetManager = context.getAssets();
+    licenseProvider = Licenses.licenses(context);
     cachedLicenses = new HashMap<>();
   }
 
@@ -54,8 +57,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
       if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
         Timber.d("License is Google Play services");
-        final String googleOpenSourceLicenses =
-            Licenses.licenses(appContext).provideGoogleOpenSourceLicenses();
+        final String googleOpenSourceLicenses = licenseProvider.provideGoogleOpenSourceLicenses();
         final Observable<String> result = Observable.just(
             googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
                 : googleOpenSourceLicenses);
@@ -66,7 +68,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       String licenseText;
       final StringBuilder text = new StringBuilder();
       try (
-          final InputStream fileInputStream = appContext.getAssets().open(licenseLocation);
+          final InputStream fileInputStream = assetManager.open(licenseLocation);
           final BufferedReader br = new BufferedReader(
               new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
         String line = br.readLine();

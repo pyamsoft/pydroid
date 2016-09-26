@@ -28,9 +28,9 @@ import rx.Scheduler;
 @Module public class VersionCheckModule {
 
   @ActivityScope @Provides VersionCheckPresenter provideLicenseCheckPresenter(
-      @NonNull VersionCheckInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler ioScheduler) {
-    return new VersionCheckPresenterImpl(interactor, mainScheduler, ioScheduler);
+      @NonNull VersionCheckInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new VersionCheckPresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides VersionCheckInteractor provideLicenseCheckInteractor(

@@ -25,7 +25,7 @@ import rx.Scheduler;
 @Module public class SupportModule {
 
   @ActivityScope @Provides SupportPresenter provideSupportPresenter(
-      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler) {
-    return new SupportPresenterImpl(mainScheduler, ioScheduler);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new SupportPresenterImpl(obsScheduler, subScheduler);
   }
 }

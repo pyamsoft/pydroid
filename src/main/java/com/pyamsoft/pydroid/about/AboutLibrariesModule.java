@@ -28,9 +28,9 @@ import rx.Scheduler;
 @Module public class AboutLibrariesModule {
 
   @ActivityScope @Provides AboutLibrariesPresenter provideAboutLibrariesPresenter(
-      @NonNull AboutLibrariesInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler ioScheduler) {
-    return new AboutLibrariesPresenterImpl(interactor, mainScheduler, ioScheduler);
+      @NonNull AboutLibrariesInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new AboutLibrariesPresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides AboutLibrariesInteractor provideAboutLibrariesInteractor(

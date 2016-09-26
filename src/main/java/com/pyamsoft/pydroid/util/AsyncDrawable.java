@@ -54,14 +54,14 @@ public final class AsyncDrawable {
 
     @NonNull final Context appContext;
     @DrawableRes final int resource;
-    Scheduler subscribeScheduler;
-    Scheduler observeScheduler;
+    @NonNull Scheduler subscribeScheduler;
+    @NonNull Scheduler observeScheduler;
     @ColorRes int tint;
 
     Loader(@NonNull Context context, int resource) {
       this.appContext = context.getApplicationContext();
       this.resource = resource;
-      subscribeScheduler = Schedulers.computation();
+      subscribeScheduler = Schedulers.io();
       observeScheduler = AndroidSchedulers.mainThread();
       tint = 0;
     }

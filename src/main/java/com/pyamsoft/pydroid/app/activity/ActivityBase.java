@@ -85,7 +85,7 @@ public abstract class ActivityBase extends AppCompatActivity {
     /**
      * Fix for https://code.google.com/p/android/issues/detail?id=171190 .
      *
-     * When a view that has focus gets detached, we wait for the main thread to be idle and then
+     * When a view that has focus gets detached, we wait for the obs thread to be idle and then
      * check if the InputMethodManager is leaking a view. If yes, we tell it that the decor view
      * got
      * focus, which is what happens if you press home and come back from recent apps. This replaces

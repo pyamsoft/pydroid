@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.presenter;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import java.lang.ref.WeakReference;
 import rx.functions.Action1;
 

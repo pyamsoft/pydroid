@@ -41,8 +41,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
-import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import rx.Subscription;
 import timber.log.Timber;
@@ -54,8 +54,7 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
-  @NonNull private final AsyncDrawable.Mapper
-      taskMap = new AsyncDrawable.Mapper();
+  @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") String rateLink;
   @SuppressWarnings("WeakerAccess") boolean acknowledged;
   @BindView(R2.id.rating_btn_no_thanks) Button cancelButton;

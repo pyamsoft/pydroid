@@ -28,7 +28,8 @@ import android.view.View;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-  @SuppressWarnings("WeakerAccess") public static final int HORIZONTAL_LIST = LinearLayoutManager.HORIZONTAL;
+  @SuppressWarnings("WeakerAccess") public static final int HORIZONTAL_LIST =
+      LinearLayoutManager.HORIZONTAL;
   public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
   @NonNull private static final int[] ATTRS = new int[] { android.R.attr.listDivider };
   @NonNull private final Drawable dividerDrawable;

@@ -47,5 +47,4 @@ interface ActionBarProvider {
       }
     }
   }
-
 }

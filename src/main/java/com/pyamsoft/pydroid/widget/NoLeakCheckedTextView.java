@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.widget;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.v7.widget.AppCompatCheckedTextView;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 /**

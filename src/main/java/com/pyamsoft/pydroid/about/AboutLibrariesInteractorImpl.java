@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -66,17 +67,25 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       }
 
       String licenseText;
-      final StringBuilder text = new StringBuilder();
-      try (
-          final InputStream fileInputStream = assetManager.open(licenseLocation);
-          final BufferedReader br = new BufferedReader(
-              new InputStreamReader(fileInputStream, StandardCharsets.UTF_8))) {
-        String line = br.readLine();
-        while (line != null) {
-          text.append(line).append('\n');
-          line = br.readLine();
+      try (InputStream fileInputStream = assetManager.open(licenseLocation)) {
+
+        // Standard Charsets is only KitKat, add this extra check to support Home Button
+        final InputStreamReader inputStreamReader;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+          inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+        } else {
+          inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
         }
-        licenseText = text.toString();
+
+        try (BufferedReader br = new BufferedReader(inputStreamReader)) {
+          final StringBuilder text = new StringBuilder();
+          String line = br.readLine();
+          while (line != null) {
+            text.append(line).append('\n');
+            line = br.readLine();
+          }
+          licenseText = text.toString();
+        }
       } catch (IOException e) {
         e.printStackTrace();
         licenseText = "Could not load license text";

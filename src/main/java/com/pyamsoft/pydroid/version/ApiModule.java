@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.BuildConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiModule {
@@ -62,7 +61,6 @@ public class ApiModule {
   @CheckResult @NonNull private Retrofit provideRetrofit() {
     return new Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL)
         .client(okHttpClient)
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build();
   }

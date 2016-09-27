@@ -25,7 +25,7 @@ public class SocialMediaModule {
   @NonNull private final SocialMediaPresenter presenter;
   @NonNull private final SocialMediaPresenterLoader loader;
 
-  public SocialMediaModule(@NonNull PYDroidModule pyDroidModule) {
+  public SocialMediaModule(@NonNull PYDroidModule.Provider pyDroidModule) {
     presenter = new SocialMediaPresenterImpl();
     loader = new SocialMediaPresenterLoader(pyDroidModule.provideContext(), presenter);
   }

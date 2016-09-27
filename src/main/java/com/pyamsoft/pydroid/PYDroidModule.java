@@ -31,52 +31,61 @@ import rx.schedulers.Schedulers;
 
 public class PYDroidModule {
 
-  // Singleton
-  @NonNull private final Context appContext;
+  @NonNull private final Provider provider;
 
-  PYDroidModule(final @NonNull Context context) {
-    appContext = context.getApplicationContext();
-  }
-
-  // Singleton
-  @CheckResult @NonNull public final Context provideContext() {
-    return appContext;
-  }
-
-  // Singleton
-  @CheckResult @NonNull public final Scheduler provideSubScheduler() {
-    return Schedulers.io();
-  }
-
-  // Singleton
-  @CheckResult @NonNull public final Scheduler provideObsScheduler() {
-    return AndroidSchedulers.mainThread();
+  public PYDroidModule(@NonNull Context context) {
+    provider = new Provider(context);
   }
 
   // Create a new one every time
   @CheckResult @NonNull final AboutLibrariesModule provideAboutLibrariesModule() {
-    return new AboutLibrariesModule(this);
+    return new AboutLibrariesModule(provider);
   }
 
   // Create a new one every time
   @CheckResult @NonNull final SupportModule provideSupportModule() {
-    return new SupportModule(this);
+    return new SupportModule(provider);
   }
 
   // Create a new one every time
   @CheckResult @NonNull final SocialMediaModule provideSocialMediaModule() {
-    return new SocialMediaModule(this);
+    return new SocialMediaModule(provider);
   }
 
   // Create a new one every time
   @CheckResult @NonNull final VersionCheckModule provideVersionCheckModule() {
-    return new VersionCheckModule(this, new ApiModule());
+    return new VersionCheckModule(provider, new ApiModule());
   }
 
   // Create a new one every time
   //
   // KLUDGE: Makes a new SocialMediaModule
   @CheckResult @NonNull final AdvertisementModule provideAdvertisementModule() {
-    return new AdvertisementModule(this, provideSocialMediaModule());
+    return new AdvertisementModule(provider, provideSocialMediaModule());
+  }
+
+  public static class Provider {
+
+    // Singleton
+    @NonNull private final Context appContext;
+
+    Provider(final @NonNull Context context) {
+      appContext = context.getApplicationContext();
+    }
+
+    // Singleton
+    @CheckResult @NonNull public final Context provideContext() {
+      return appContext;
+    }
+
+    // Singleton
+    @CheckResult @NonNull public final Scheduler provideSubScheduler() {
+      return Schedulers.io();
+    }
+
+    // Singleton
+    @CheckResult @NonNull public final Scheduler provideObsScheduler() {
+      return AndroidSchedulers.mainThread();
+    }
   }
 }

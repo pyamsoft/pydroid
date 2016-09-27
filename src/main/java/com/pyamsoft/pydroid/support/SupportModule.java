@@ -25,7 +25,7 @@ public class SupportModule {
   @NonNull private final SupportPresenter presenter;
   @NonNull private final SupportPresenterLoader loader;
 
-  public SupportModule(@NonNull PYDroidModule pyDroidModule) {
+  public SupportModule(@NonNull PYDroidModule.Provider pyDroidModule) {
     presenter = new SupportPresenterImpl(pyDroidModule.provideObsScheduler(),
         pyDroidModule.provideSubScheduler());
     loader = new SupportPresenterLoader(pyDroidModule.provideContext(), presenter);

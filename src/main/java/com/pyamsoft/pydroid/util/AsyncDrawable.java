@@ -18,17 +18,15 @@ package com.pyamsoft.pydroid.util;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
-import java.util.HashMap;
-import java.util.Map;
+import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.tool.AsyncTaskMap;
 import timber.log.Timber;
 
 public final class AsyncDrawable {
@@ -44,19 +42,68 @@ public final class AsyncDrawable {
   }
 
   @CheckResult @NonNull public final Loader load(@DrawableRes int drawableRes) {
-    return new Loader(appContext, drawableRes);
+    return load(drawableRes, new DefaultLoader());
   }
 
-  public static final class Loader {
+  @CheckResult @NonNull
+  public final Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
+    loader.setContext(appContext);
+    loader.setResource(drawableRes);
+    return loader;
+  }
 
-    @NonNull final Context appContext;
-    @DrawableRes final int resource;
-    @ColorRes int tint;
+  @SuppressWarnings("WeakerAccess") public static final class DefaultLoader
+      extends Loader<AsyncTaskMap.TaskEntry> {
 
-    Loader(@NonNull Context context, int resource) {
-      this.appContext = context.getApplicationContext();
-      this.resource = resource;
+    @NonNull @Override
+    public AsyncTaskMap.TaskEntry load(@NonNull Context context, @NonNull ImageView imageView,
+        @DrawableRes int resource, @ColorRes int tint) {
+      final AsyncTaskMap.TaskEntry taskEntry =
+          new AsyncTaskMap.TaskEntry<Void, Drawable>(imageView::setImageDrawable) {
+            @Override protected Drawable doInBackground(Void... params) {
+              Drawable loaded = AppCompatResources.getDrawable(context, resource);
+              if (loaded == null) {
+                Timber.e("Could not load drawable for resource: %d", resource);
+                return null;
+              }
+
+              if (tint != 0) {
+                loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
+              }
+
+              return loaded;
+            }
+          };
+
+      // Execute it
+      AsyncTaskCompat.executeParallel(taskEntry);
+      return taskEntry;
+    }
+  }
+
+  /**
+   * A map that makes it convenient to load AsyncDrawables
+   */
+  public static final class Mapper extends AsyncMap<AsyncMap.Entry> {
+
+  }
+
+  public static abstract class Loader<T extends AsyncMap.Entry> {
+
+    private Context appContext;
+    @DrawableRes private int resource;
+    @ColorRes private int tint;
+
+    Loader() {
       tint = 0;
+    }
+
+    void setContext(@NonNull Context context) {
+      this.appContext = context.getApplicationContext();
+    }
+
+    void setResource(@DrawableRes int resource) {
+      this.resource = resource;
     }
 
     @CheckResult @NonNull public final Loader tint(@ColorRes int color) {
@@ -64,82 +111,12 @@ public final class AsyncDrawable {
       return this;
     }
 
-    @CheckResult @NonNull public final AsyncTask into(@NonNull ImageView imageView) {
-      return AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Drawable>() {
-        @Override protected Drawable doInBackground(Void... params) {
-          Drawable loaded = AppCompatResources.getDrawable(appContext, resource);
-          if (loaded == null) {
-            Timber.e("Could not load drawable for resource: %d", resource);
-            return null;
-          }
-
-          if (tint != 0) {
-            loaded = DrawableUtil.tintDrawableFromRes(appContext, loaded, tint);
-          }
-
-          return loaded;
-        }
-
-        @Override protected void onPostExecute(Drawable drawable) {
-          super.onPostExecute(drawable);
-          if (drawable != null) {
-            imageView.setImageDrawable(drawable);
-          }
-        }
-      });
-    }
-  }
-
-  /**
-   * A map that makes it convenient to load AsyncDrawables
-   */
-  public static final class Mapper {
-
-    @NonNull private final HashMap<String, AsyncTask> map;
-
-    public Mapper() {
-      this.map = new HashMap<>();
+    @CheckResult @NonNull public T into(@NonNull ImageView imageView) {
+      return load(appContext, imageView, resource, tint);
     }
 
-    /**
-     * Puts a new element into the map
-     *
-     * If an old element exists, its task is cancelled first before adding the new one
-     */
-    public final void put(@NonNull String tag, @NonNull AsyncTask subscription) {
-      if (map.containsKey(tag)) {
-        final AsyncTask old = map.get(tag);
-        cancelSubscription(tag, old);
-      }
-
-      Timber.d("Insert new subscription for tag: %s", tag);
-      map.put(tag, subscription);
-    }
-
-    /**
-     * Clear all elements in the map
-     *
-     * If the elements have not been cancelled yet, cancel them before removing them
-     */
-    public final void clear() {
-      for (final Map.Entry<String, AsyncTask> entry : map.entrySet()) {
-        cancelSubscription(entry.getKey(), entry.getValue());
-      }
-
-      Timber.d("Clear AsyncDrawableMap");
-      map.clear();
-    }
-
-    /**
-     * Cancels a task
-     */
-    private void cancelSubscription(@NonNull String tag, @Nullable AsyncTask subscription) {
-      if (subscription != null) {
-        if (!subscription.isCancelled()) {
-          Timber.d("Cancel for tag: %s", tag);
-          subscription.cancel(true);
-        }
-      }
-    }
+    @CheckResult @NonNull
+    public abstract T load(@NonNull Context context, @NonNull ImageView imageView,
+        @DrawableRes int resource, @ColorRes int tint);
   }
 }

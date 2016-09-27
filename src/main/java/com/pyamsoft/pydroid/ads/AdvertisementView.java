@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ads;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,6 +36,7 @@ import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
@@ -227,7 +227,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     final int image = loadImage(currentPackage);
     advertisement.setOnClickListener(view -> presenter.clickAd(currentPackage));
 
-    final AsyncTask adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
+    final AsyncMap.Entry adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
     taskMap.put("ad", adTask);
 
     Timber.d("Post new ad in 60 seconds");

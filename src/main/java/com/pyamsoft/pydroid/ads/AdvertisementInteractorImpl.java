@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.tool.AsyncCallbackTask;
 import timber.log.Timber;
 
 class AdvertisementInteractorImpl implements AdvertisementInteractor {
@@ -43,7 +44,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
 
   @NonNull @Override
   public AsyncTask<Void, Void, Boolean> showAdView(@NonNull ActionSingle<Boolean> onLoaded) {
-    return new AsyncTask<Void, Void, Boolean>() {
+    return new AsyncCallbackTask<Void, Boolean>(onLoaded) {
       @Override protected Boolean doInBackground(Void... params) {
         final boolean isEnabled = preferences.getBoolean(preferenceKey, preferenceDefault);
         final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
@@ -65,19 +66,12 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
           }
         }
       }
-
-      @Override protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
-        if (result != null) {
-          onLoaded.call(result);
-        }
-      }
     };
   }
 
   @NonNull @Override
   public AsyncTask<Void, Void, Boolean> hideAdView(@NonNull ActionSingle<Boolean> onLoaded) {
-    return new AsyncTask<Void, Void, Boolean>() {
+    return new AsyncCallbackTask<Void, Boolean>(onLoaded) {
       @Override protected Boolean doInBackground(Void... params) {
         Timber.d("Hide AdView");
         if (isCancelled()) {
@@ -91,13 +85,6 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
           } else {
             return false;
           }
-        }
-      }
-
-      @Override protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
-        if (result != null) {
-          onLoaded.call(result);
         }
       }
     };

@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,9 +29,11 @@ import timber.log.Timber;
 public abstract class Bus<T> {
 
   @NonNull private final Set<Pair<Event<T>, Error>> observers;
+  @NonNull private final Handler handler;
 
   protected Bus() {
     observers = new HashSet<>();
+    handler = new Handler(Looper.getMainLooper());
   }
 
   public void post(@NonNull T event) {
@@ -38,21 +42,23 @@ public abstract class Bus<T> {
         if (pair != null) {
           final Event<T> first = pair.first;
           final Error second = pair.second;
-          if (first != null) {
-            try {
-              Timber.d("Post event to observer");
-              first.call(event);
-            } catch (Throwable t) {
-              Timber.w("Unregister onError");
-              unregister(first);
+          handler.post(() -> {
+            if (first != null) {
+              try {
+                Timber.d("Post event to observer");
+                first.call(event);
+              } catch (Throwable t) {
+                Timber.w("Unregister onError");
+                unregister(first);
 
-              if (second == null) {
-                throw t;
-              } else {
-                second.call(t);
+                if (second == null) {
+                  throw t;
+                } else {
+                  second.call(t);
+                }
               }
             }
-          }
+          });
         }
       }
     }

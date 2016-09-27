@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.tool.AsyncCallbackTask;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,22 +57,21 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   }
 
   @SuppressWarnings("WeakerAccess") static class LicenseLoadTask
-      extends AsyncTask<AboutLicenseItem, Void, String> {
+      extends AsyncCallbackTask<AboutLicenseItem, String> {
 
     @NonNull private final Map<String, String> cachedLicenses;
     @NonNull private final AboutLicenseItem license;
     @NonNull private final LicenseProvider licenseProvider;
     @NonNull private final AssetManager assetManager;
-    @NonNull private final ActionSingle<String> onLoaded;
 
     LicenseLoadTask(@NonNull Map<String, String> cachedLicenses, @NonNull AboutLicenseItem license,
         @NonNull LicenseProvider licenseProvider, @NonNull AssetManager assetManager,
         @NonNull ActionSingle<String> onLoaded) {
+      super(onLoaded);
       this.cachedLicenses = cachedLicenses;
       this.license = license;
       this.licenseProvider = licenseProvider;
       this.assetManager = assetManager;
-      this.onLoaded = onLoaded;
     }
 
     @Override protected String doInBackground(AboutLicenseItem... params) {
@@ -84,13 +84,6 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
         Timber.d("Put into cache");
         cachedLicenses.put(license.getName(), licenseText);
         return licenseText;
-      }
-    }
-
-    @Override protected void onPostExecute(String s) {
-      super.onPostExecute(s);
-      if (s != null) {
-        onLoaded.call(s);
       }
     }
 

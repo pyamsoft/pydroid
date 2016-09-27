@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.bus.RxBus;
+import com.pyamsoft.pydroid.Bus;
 
-final class AboutItemBus extends RxBus<AboutLicenseLoadEvent> {
+final class AboutItemBus extends Bus<AboutLicenseLoadEvent> {
 
   @NonNull private static final AboutItemBus bus = new AboutItemBus();
 

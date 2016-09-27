@@ -17,11 +17,12 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.Bus;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPresenter.View>
@@ -29,7 +30,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
 
   @NonNull private final AboutLibrariesInteractor interactor;
   @NonNull private final CompositeSubscription licenseSubscriptions = new CompositeSubscription();
-  @NonNull private Subscription loadLicenseBus = Subscriptions.empty();
+  @Nullable private Bus.Event<AboutLicenseLoadEvent> loadLicenseBus;
 
   AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -45,20 +46,13 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
   private void registerOnLicenseBus() {
     unregisterLicenseBus();
     loadLicenseBus = AboutItemBus.get()
-        .register()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(licenseLoadEvent -> {
-          loadLicenseText(licenseLoadEvent.position(), licenseLoadEvent.license());
-        }, throwable -> {
-          Timber.e(throwable, "onError registerOnLicenseBus");
-        });
+        .register(aboutLicenseLoadEvent -> loadLicenseText(aboutLicenseLoadEvent.position(),
+            aboutLicenseLoadEvent.license()),
+            throwable -> Timber.e(throwable, "onError registerOnLicenseBus"));
   }
 
   private void unregisterLicenseBus() {
-    if (!loadLicenseBus.isUnsubscribed()) {
-      loadLicenseBus.unsubscribe();
-    }
+    AboutItemBus.get().unregister(loadLicenseBus);
   }
 
   @Override protected void onUnbind() {

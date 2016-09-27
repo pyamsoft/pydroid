@@ -17,16 +17,16 @@
 package com.pyamsoft.pydroid.support;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.Bus;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class SupportPresenterImpl extends SchedulerPresenter<SupportPresenter.View>
     implements SupportPresenter {
 
-  @NonNull private Subscription busSubscription = Subscriptions.empty();
+  @Nullable private Bus.Event<DonationResult> busRegistration;
 
   SupportPresenterImpl(@NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
@@ -39,16 +39,11 @@ class SupportPresenterImpl extends SchedulerPresenter<SupportPresenter.View>
 
   private void registerOnDonationResultBus() {
     unregisterDonationResultBus();
-    busSubscription = SupportBus.get()
-        .register()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(donationResult -> {
-          getView(view -> view.onDonationResult(donationResult.requestCode(),
-              donationResult.resultCode(), donationResult.data()));
-        }, throwable -> {
-          Timber.e(throwable, "onError registerOnDonationResultBus");
-        });
+    busRegistration = SupportBus.get()
+        .register(donationResult -> getView(
+            view -> view.onDonationResult(donationResult.requestCode(), donationResult.resultCode(),
+                donationResult.data())),
+            throwable -> Timber.e(throwable, "onError registerOnDonationResultBus"));
   }
 
   @Override protected void onUnbind() {
@@ -57,8 +52,6 @@ class SupportPresenterImpl extends SchedulerPresenter<SupportPresenter.View>
   }
 
   private void unregisterDonationResultBus() {
-    if (!busSubscription.isUnsubscribed()) {
-      busSubscription.unsubscribe();
-    }
+    SupportBus.get().unregister(busRegistration);
   }
 }

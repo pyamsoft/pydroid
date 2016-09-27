@@ -18,11 +18,15 @@ package com.pyamsoft.pydroid.support;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.bus.RxBus;
+import com.pyamsoft.pydroid.Bus;
 
-final class SupportBus extends RxBus<DonationResult> {
+final class SupportBus extends Bus<DonationResult> {
 
   @NonNull private static final SupportBus bus = new SupportBus();
+
+  private SupportBus() {
+    super();
+  }
 
   @CheckResult @NonNull public static SupportBus get() {
     return bus;

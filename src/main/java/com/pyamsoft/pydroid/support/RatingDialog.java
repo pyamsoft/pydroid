@@ -41,9 +41,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.R2;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 

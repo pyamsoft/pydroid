@@ -25,9 +25,6 @@ import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.support.SupportModule;
 import com.pyamsoft.pydroid.version.ApiModule;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class PYDroidModule {
 
@@ -76,16 +73,6 @@ public class PYDroidModule {
     // Singleton
     @CheckResult @NonNull public final Context provideContext() {
       return appContext;
-    }
-
-    // Singleton
-    @CheckResult @NonNull public final Scheduler provideSubScheduler() {
-      return Schedulers.io();
-    }
-
-    // Singleton
-    @CheckResult @NonNull public final Scheduler provideObsScheduler() {
-      return AndroidSchedulers.mainThread();
     }
   }
 }

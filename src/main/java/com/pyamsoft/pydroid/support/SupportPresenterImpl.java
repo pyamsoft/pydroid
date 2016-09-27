@@ -16,20 +16,17 @@
 
 package com.pyamsoft.pydroid.support;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.Bus;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import rx.Scheduler;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
 import timber.log.Timber;
 
-class SupportPresenterImpl extends SchedulerPresenter<SupportPresenter.View>
+class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
     implements SupportPresenter {
 
   @Nullable private Bus.Event<DonationResult> busRegistration;
 
-  SupportPresenterImpl(@NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(observeScheduler, subscribeScheduler);
+  SupportPresenterImpl() {
   }
 
   @Override protected void onBind() {
@@ -40,9 +37,8 @@ class SupportPresenterImpl extends SchedulerPresenter<SupportPresenter.View>
   private void registerOnDonationResultBus() {
     unregisterDonationResultBus();
     busRegistration = SupportBus.get()
-        .register(donationResult -> getView(
-            view -> view.onDonationResult(donationResult.requestCode(), donationResult.resultCode(),
-                donationResult.data())),
+        .register(event -> getView(
+            view -> view.onDonationResult(event.requestCode(), event.resultCode(), event.data())),
             throwable -> Timber.e(throwable, "onError registerOnDonationResultBus"));
   }
 

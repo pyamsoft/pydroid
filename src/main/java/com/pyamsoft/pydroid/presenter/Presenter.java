@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.presenter;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.Destroyable;
 
 public interface Presenter<I> extends Destroyable {
@@ -26,4 +28,9 @@ public interface Presenter<I> extends Destroyable {
   void bindView(I view);
 
   void unbindView();
+
+  interface BoundView<I> extends ActionSingle<I> {
+
+    @Override void call(@NonNull I view);
+  }
 }

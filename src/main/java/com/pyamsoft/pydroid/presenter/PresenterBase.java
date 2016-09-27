@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.presenter;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.ActionSingle;
 import java.lang.ref.WeakReference;
-import rx.functions.Action1;
 
 public abstract class PresenterBase<I> implements Presenter<I> {
 
@@ -28,7 +28,7 @@ public abstract class PresenterBase<I> implements Presenter<I> {
    * If the view is non null (bound) then it will be passed into the wrapper function and executed.
    * If the view is null, then this is a no-op
    */
-  protected final void getView(@NonNull Action1<I> func) {
+  protected final void getView(@NonNull ActionSingle<I> func) {
     final I view = weakView.get();
     if (view != null) {
       func.call(view);

@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.CheckResult;
@@ -44,7 +45,6 @@ import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import rx.Subscription;
 import timber.log.Timber;
 
 public class RatingDialog extends DialogFragment {
@@ -140,7 +140,7 @@ public class RatingDialog extends DialogFragment {
   private void initDialog() {
     ViewCompat.setElevation(icon, AppUtil.convertToDP(getContext(), 8));
 
-    final Subscription iconTask = AsyncDrawable.with(getContext()).load(changeLogIcon).into(icon);
+    final AsyncTask iconTask = AsyncDrawable.with(getContext()).load(changeLogIcon).into(icon);
     taskMap.put("icon", iconTask);
 
     changeLog.setText(changeLogText);

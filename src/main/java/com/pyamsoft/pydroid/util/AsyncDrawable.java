@@ -18,20 +18,17 @@ package com.pyamsoft.pydroid.util;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
 import java.util.HashMap;
 import java.util.Map;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public final class AsyncDrawable {
@@ -54,15 +51,11 @@ public final class AsyncDrawable {
 
     @NonNull final Context appContext;
     @DrawableRes final int resource;
-    @NonNull Scheduler subscribeScheduler;
-    @NonNull Scheduler observeScheduler;
     @ColorRes int tint;
 
     Loader(@NonNull Context context, int resource) {
       this.appContext = context.getApplicationContext();
       this.resource = resource;
-      subscribeScheduler = Schedulers.io();
-      observeScheduler = AndroidSchedulers.mainThread();
       tint = 0;
     }
 
@@ -71,33 +64,29 @@ public final class AsyncDrawable {
       return this;
     }
 
-    @CheckResult @NonNull public final Loader subscribeOn(@NonNull Scheduler scheduler) {
-      this.subscribeScheduler = scheduler;
-      return this;
-    }
+    @CheckResult @NonNull public final AsyncTask into(@NonNull ImageView imageView) {
+      return AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, Drawable>() {
+        @Override protected Drawable doInBackground(Void... params) {
+          Drawable loaded = AppCompatResources.getDrawable(appContext, resource);
+          if (loaded == null) {
+            Timber.e("Could not load drawable for resource: %d", resource);
+            return null;
+          }
 
-    @CheckResult @NonNull public final Loader observeOn(@NonNull Scheduler scheduler) {
-      this.observeScheduler = scheduler;
-      return this;
-    }
+          if (tint != 0) {
+            loaded = DrawableUtil.tintDrawableFromRes(appContext, loaded, tint);
+          }
 
-    @CheckResult @NonNull public final Subscription into(@NonNull ImageView imageView) {
-      return Observable.defer(() -> {
-        Drawable loaded = AppCompatResources.getDrawable(appContext, resource);
-        if (loaded == null) {
-          throw new NullPointerException("Could not load drawable for resource: " + resource);
+          return loaded;
         }
 
-        if (tint != 0) {
-          loaded = DrawableUtil.tintDrawableFromRes(appContext, loaded, tint);
+        @Override protected void onPostExecute(Drawable drawable) {
+          super.onPostExecute(drawable);
+          if (drawable != null) {
+            imageView.setImageDrawable(drawable);
+          }
         }
-        return Observable.just(loaded);
-      })
-          .subscribeOn(subscribeScheduler)
-          .observeOn(observeScheduler)
-          .subscribe(imageView::setImageDrawable, throwable -> {
-            Timber.e(throwable, "Error loading Drawable into ImageView");
-          });
+      });
     }
   }
 
@@ -106,7 +95,7 @@ public final class AsyncDrawable {
    */
   public static final class Mapper {
 
-    @NonNull private final HashMap<String, Subscription> map;
+    @NonNull private final HashMap<String, AsyncTask> map;
 
     public Mapper() {
       this.map = new HashMap<>();
@@ -117,9 +106,9 @@ public final class AsyncDrawable {
      *
      * If an old element exists, its task is cancelled first before adding the new one
      */
-    public final void put(@NonNull String tag, @NonNull Subscription subscription) {
+    public final void put(@NonNull String tag, @NonNull AsyncTask subscription) {
       if (map.containsKey(tag)) {
-        final Subscription old = map.get(tag);
+        final AsyncTask old = map.get(tag);
         cancelSubscription(tag, old);
       }
 
@@ -133,7 +122,7 @@ public final class AsyncDrawable {
      * If the elements have not been cancelled yet, cancel them before removing them
      */
     public final void clear() {
-      for (final Map.Entry<String, Subscription> entry : map.entrySet()) {
+      for (final Map.Entry<String, AsyncTask> entry : map.entrySet()) {
         cancelSubscription(entry.getKey(), entry.getValue());
       }
 
@@ -144,11 +133,11 @@ public final class AsyncDrawable {
     /**
      * Cancels a task
      */
-    private void cancelSubscription(@NonNull String tag, @Nullable Subscription subscription) {
+    private void cancelSubscription(@NonNull String tag, @Nullable AsyncTask subscription) {
       if (subscription != null) {
-        if (!subscription.isUnsubscribed()) {
-          Timber.d("Unsubscribe for tag: %s", tag);
-          subscription.unsubscribe();
+        if (!subscription.isCancelled()) {
+          Timber.d("Cancel for tag: %s", tag);
+          subscription.cancel(true);
         }
       }
     }

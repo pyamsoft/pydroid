@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ads;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,7 +46,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import rx.Subscription;
 import timber.log.Timber;
 
 public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
@@ -227,7 +227,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     final int image = loadImage(currentPackage);
     advertisement.setOnClickListener(view -> presenter.clickAd(currentPackage));
 
-    final Subscription adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
+    final AsyncTask adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
     taskMap.put("ad", adTask);
 
     Timber.d("Post new ad in 60 seconds");

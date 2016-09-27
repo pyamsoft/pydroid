@@ -20,13 +20,13 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.PYDroidApplication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import rx.functions.Action1;
 
 public final class Licenses {
 
@@ -44,7 +44,7 @@ public final class Licenses {
     INSTANCE.createItem(name, homepageUrl, licenseLocation);
   }
 
-  static void forEach(@NonNull Action1<AboutLicenseItem> action) {
+  static void forEach(@NonNull ActionSingle<AboutLicenseItem> action) {
     INSTANCE.forEachItem(action);
   }
 
@@ -99,7 +99,7 @@ public final class Licenses {
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void forEachItem(
-      @NonNull Action1<AboutLicenseItem> action) {
+      @NonNull ActionSingle<AboutLicenseItem> action) {
     final List<AboutLicenseItem> sortedValues = new ArrayList<>(aboutItemMap.values());
     Collections.sort(sortedValues, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
     for (final AboutLicenseItem item : sortedValues) {

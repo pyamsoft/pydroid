@@ -30,8 +30,7 @@ public class AdvertisementModule {
   public AdvertisementModule(@NonNull PYDroidModule.Provider pyDroidModule,
       @NonNull SocialMediaModule socialMediaModule) {
     interactor = new AdvertisementInteractorImpl(pyDroidModule.provideContext());
-    presenter = new AdvertisementPresenterImpl(interactor, socialMediaModule.getPresenter(),
-        pyDroidModule.provideObsScheduler(), pyDroidModule.provideSubScheduler());
+    presenter = new AdvertisementPresenterImpl(interactor, socialMediaModule.getPresenter());
     loader = new AdvertisementPresenterLoader(pyDroidModule.provideContext(), presenter);
   }
 

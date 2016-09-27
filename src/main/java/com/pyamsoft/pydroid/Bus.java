@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import java.util.HashSet;
 import java.util.Set;
-import rx.functions.Action1;
 import timber.log.Timber;
 
 public abstract class Bus<T> {
@@ -59,7 +58,7 @@ public abstract class Bus<T> {
     }
   }
 
-  private void remove(@NonNull Action1<T> onCall) {
+  private void remove(@NonNull ActionSingle<T> onCall) {
     for (final Pair<Event<T>, Error> pair : observers) {
       if (onCall.equals(pair.first)) {
         observers.remove(pair);
@@ -85,11 +84,11 @@ public abstract class Bus<T> {
     }
   }
 
-  public interface Event<T> extends Action1<T> {
+  public interface Event<T> extends ActionSingle<T> {
 
   }
 
-  public interface Error extends Action1<Throwable> {
+  public interface Error extends ActionSingle<Throwable> {
 
   }
 }

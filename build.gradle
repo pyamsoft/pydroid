@@ -106,11 +106,6 @@ dependencies {
   compile "com.android.support:support-vector-drawable:$supportLib"
   compile "com.android.support:cardview-v7:$supportLib"
 
-  // RxJava
-  compile "io.reactivex:rxjava:$rxjava"
-  compile "io.reactivex:rxandroid:$rxandroid"
-  compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
-
   // Tap Target View
   compile "com.getkeepsafe.taptargetview:taptargetview:$tapTargetView"
 

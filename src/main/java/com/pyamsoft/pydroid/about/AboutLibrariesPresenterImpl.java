@@ -16,26 +16,26 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.os.AsyncTaskCompat;
 import com.pyamsoft.pydroid.Bus;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
+import java.util.HashSet;
+import java.util.Set;
 import timber.log.Timber;
 
-class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPresenter.View>
+class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.View>
     implements AboutLibrariesPresenter {
 
   @NonNull private final AboutLibrariesInteractor interactor;
-  @NonNull private final CompositeSubscription licenseSubscriptions = new CompositeSubscription();
+  @NonNull private final Set<AsyncTask> licenseSubscriptions;
   @Nullable private Bus.Event<AboutLicenseLoadEvent> loadLicenseBus;
 
-  AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(observeScheduler, subscribeScheduler);
+  AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor) {
     this.interactor = interactor;
+    licenseSubscriptions = new HashSet<>();
   }
 
   @Override protected void onBind() {
@@ -64,22 +64,21 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
 
   @SuppressWarnings("WeakerAccess") void loadLicenseText(int position,
       @NonNull AboutLicenseItem license) {
-    final Subscription licenseSubscription = interactor.loadLicenseText(license)
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(licenseText -> getView(view -> view.onLicenseTextLoaded(position, licenseText)),
-            throwable -> {
-              Timber.e(throwable, "Failed to load license");
-              getView(view -> view.onLicenseTextLoaded(position, "Failed to load license"));
-            }, this::unsubLoadLicense);
+    final AsyncTask licenseSubscription = AsyncTaskCompat.executeParallel(
+        interactor.loadLicenseText(license,
+            item -> getView(view -> view.onLicenseTextLoaded(position, item))));
 
     Timber.d("Add license subscription");
     licenseSubscriptions.add(licenseSubscription);
   }
 
   @SuppressWarnings("WeakerAccess") void unsubLoadLicense() {
-    if (licenseSubscriptions.hasSubscriptions()) {
-      licenseSubscriptions.clear();
+    for (final AsyncTask task : licenseSubscriptions) {
+      if (task != null) {
+        if (!task.isCancelled()) {
+          task.cancel(true);
+        }
+      }
     }
   }
 }

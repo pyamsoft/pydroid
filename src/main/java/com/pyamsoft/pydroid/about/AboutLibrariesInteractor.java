@@ -16,13 +16,15 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.pydroid.ActionSingle;
 
 interface AboutLibrariesInteractor {
 
   void clearCache();
 
-  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull AboutLicenseItem license);
+  @CheckResult @NonNull AsyncTask<AboutLicenseItem, Void, String> loadLicenseText(
+      @NonNull AboutLicenseItem license, @NonNull ActionSingle<String> onLoaded);
 }

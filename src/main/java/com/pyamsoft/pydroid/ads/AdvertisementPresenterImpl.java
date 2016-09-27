@@ -16,25 +16,22 @@
 
 package com.pyamsoft.pydroid.ads;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import android.support.annotation.Nullable;
+import android.support.v4.os.AsyncTaskCompat;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
 
-class AdvertisementPresenterImpl extends SchedulerPresenter<AdvertisementPresenter.AdView>
+class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.AdView>
     implements AdvertisementPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final SocialMediaPresenter socialMediaPresenter;
   @NonNull private final AdvertisementInteractor interactor;
-  @NonNull private Subscription adSubscription = Subscriptions.empty();
+  @Nullable private AsyncTask adSubscription;
 
   AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor,
-      @NonNull SocialMediaPresenter socialMediaPresenter, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
-    super(observeScheduler, subscribeScheduler);
+      @NonNull SocialMediaPresenter socialMediaPresenter) {
     this.socialMediaPresenter = socialMediaPresenter;
     this.interactor = interactor;
   }
@@ -42,13 +39,14 @@ class AdvertisementPresenterImpl extends SchedulerPresenter<AdvertisementPresent
   @Override protected void onBind() {
     super.onBind();
     getView(socialMediaPresenter::bindView);
-
     showAd();
   }
 
   @SuppressWarnings("WeakerAccess") void unsubAdSubscription() {
-    if (!adSubscription.isUnsubscribed()) {
-      adSubscription.unsubscribe();
+    if (adSubscription != null) {
+      if (!adSubscription.isCancelled()) {
+        adSubscription.cancel(true);
+      }
     }
   }
 
@@ -66,26 +64,20 @@ class AdvertisementPresenterImpl extends SchedulerPresenter<AdvertisementPresent
 
   @Override public void showAd() {
     unsubAdSubscription();
-    adSubscription = interactor.showAdView()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(show -> getView(adView -> {
-          if (show) {
-            adView.onShown();
-          }
-        }), throwable -> Timber.e(throwable, "onError showAdView"), this::unsubAdSubscription);
+    adSubscription = AsyncTaskCompat.executeParallel(interactor.showAdView(show -> getView(view -> {
+      if (show) {
+        view.onShown();
+      }
+    })));
   }
 
   @Override public void hideAd() {
     unsubAdSubscription();
-    adSubscription = interactor.hideAdView()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(hide -> getView(adView -> {
-          if (hide) {
-            adView.onHidden();
-          }
-        }), throwable -> Timber.e(throwable, "onError hideAdView"), this::unsubAdSubscription);
+    adSubscription = AsyncTaskCompat.executeParallel(interactor.hideAdView(hide -> getView(view -> {
+      if (hide) {
+        view.onHidden();
+      }
+    })));
   }
 
   @Override public void clickAd(@NonNull String packageName) {

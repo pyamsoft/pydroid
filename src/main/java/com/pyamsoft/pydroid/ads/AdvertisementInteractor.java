@@ -16,13 +16,16 @@
 
 package com.pyamsoft.pydroid.ads;
 
+import android.os.AsyncTask;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.pydroid.ActionSingle;
 
 interface AdvertisementInteractor {
 
-  @CheckResult @NonNull Observable<Boolean> showAdView();
+  @CheckResult @NonNull AsyncTask<Void, Void, Boolean> showAdView(
+      @NonNull ActionSingle<Boolean> onLoaded);
 
-  @CheckResult @NonNull Observable<Boolean> hideAdView();
+  @CheckResult @NonNull AsyncTask<Void, Void, Boolean> hideAdView(
+      @NonNull ActionSingle<Boolean> onLoaded);
 }

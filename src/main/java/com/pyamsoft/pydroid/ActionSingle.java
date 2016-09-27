@@ -14,27 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.presenter;
+package com.pyamsoft.pydroid;
 
 import android.support.annotation.NonNull;
-import rx.Scheduler;
 
-public abstract class SchedulerPresenter<I> extends PresenterBase<I> {
+public interface ActionSingle<I> {
 
-  @NonNull private final Scheduler observeScheduler;
-  @NonNull private final Scheduler subscribeScheduler;
-
-  protected SchedulerPresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
-    this.observeScheduler = observeScheduler;
-    this.subscribeScheduler = subscribeScheduler;
-  }
-
-  @NonNull protected final Scheduler getObserveScheduler() {
-    return observeScheduler;
-  }
-
-  @NonNull protected final Scheduler getSubscribeScheduler() {
-    return subscribeScheduler;
-  }
+  void call(@NonNull I item);
 }

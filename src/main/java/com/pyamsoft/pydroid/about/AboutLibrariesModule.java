@@ -29,8 +29,7 @@ public class AboutLibrariesModule {
   // Created once per "scope"
   public AboutLibrariesModule(@NonNull PYDroidModule.Provider pyDroidModule) {
     interactor = new AboutLibrariesInteractorImpl(pyDroidModule.provideContext());
-    presenter = new AboutLibrariesPresenterImpl(interactor, pyDroidModule.provideObsScheduler(),
-        pyDroidModule.provideSubScheduler());
+    presenter = new AboutLibrariesPresenterImpl(interactor);
     loader = new AboutLibrariesPresenterLoader(pyDroidModule.provideContext(), presenter);
   }
 

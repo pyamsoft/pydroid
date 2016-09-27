@@ -18,22 +18,25 @@ package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.annotation.WorkerThread;
+import com.pyamsoft.pydroid.ActionSingle;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import rx.Observable;
+import java.util.Map;
 import timber.log.Timber;
 
 class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final HashMap<String, String> cachedLicenses;
+  @SuppressWarnings("WeakerAccess") @NonNull final Map<String, String> cachedLicenses;
   @SuppressWarnings("WeakerAccess") @NonNull private final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull private final AssetManager assetManager;
 
@@ -47,20 +50,63 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
-  Observable<String> loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
-    return Observable.defer(() -> {
+  @NonNull @Override public AsyncTask<AboutLicenseItem, Void, String> loadLicenseText(
+      @NonNull AboutLicenseItem license, @NonNull ActionSingle<String> onLoaded) {
+    return new LicenseLoadTask(cachedLicenses, license, licenseProvider, assetManager, onLoaded);
+  }
+
+  @SuppressWarnings("WeakerAccess") static class LicenseLoadTask
+      extends AsyncTask<AboutLicenseItem, Void, String> {
+
+    @NonNull private final Map<String, String> cachedLicenses;
+    @NonNull private final AboutLicenseItem license;
+    @NonNull private final LicenseProvider licenseProvider;
+    @NonNull private final AssetManager assetManager;
+    @NonNull private final ActionSingle<String> onLoaded;
+
+    LicenseLoadTask(@NonNull Map<String, String> cachedLicenses, @NonNull AboutLicenseItem license,
+        @NonNull LicenseProvider licenseProvider, @NonNull AssetManager assetManager,
+        @NonNull ActionSingle<String> onLoaded) {
+      this.cachedLicenses = cachedLicenses;
+      this.license = license;
+      this.licenseProvider = licenseProvider;
+      this.assetManager = assetManager;
+      this.onLoaded = onLoaded;
+    }
+
+    @Override protected String doInBackground(AboutLicenseItem... params) {
+      if (cachedLicenses.containsKey(license.getName())) {
+        Timber.d("Fetch from cache");
+        return cachedLicenses.get(license.getName());
+      } else {
+        Timber.d("Load from asset location");
+        final String licenseText = loadNewLicense(license.getName(), license.getLicenseLocation());
+        Timber.d("Put into cache");
+        cachedLicenses.put(license.getName(), licenseText);
+        return licenseText;
+      }
+    }
+
+    @Override protected void onPostExecute(String s) {
+      super.onPostExecute(s);
+      if (s != null) {
+        onLoaded.call(s);
+      }
+    }
+
+    @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult @WorkerThread
+    String loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
       if (licenseLocation.isEmpty()) {
         Timber.w("Empty license passed");
-        return Observable.just("");
+        return "";
       }
 
       if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
         Timber.d("License is Google Play services");
         final String googleOpenSourceLicenses = licenseProvider.provideGoogleOpenSourceLicenses();
-        final Observable<String> result = Observable.just(
+        final String result =
             googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
-                : googleOpenSourceLicenses);
+                : googleOpenSourceLicenses;
         Timber.i("Finished loading Google Play services license");
         return result;
       }
@@ -90,26 +136,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
         licenseText = "Could not load license text";
       }
 
-      return Observable.just(licenseText);
-    });
-  }
-
-  @NonNull @Override public Observable<String> loadLicenseText(@NonNull AboutLicenseItem license) {
-    return Observable.defer(() -> {
-      if (cachedLicenses.containsKey(license.getName())) {
-        Timber.d("Fetch from cache");
-        return Observable.just(cachedLicenses.get(license.getName()));
-      } else {
-        Timber.d("Load from asset location");
-        return loadNewLicense(license.getName(), license.getLicenseLocation());
-      }
-    }).map(licenseText -> {
-      if (!cachedLicenses.containsKey(license.getName())) {
-        Timber.d("Put into cache");
-        cachedLicenses.put(license.getName(), licenseText);
-      }
-
       return licenseText;
-    });
+    }
   }
 }

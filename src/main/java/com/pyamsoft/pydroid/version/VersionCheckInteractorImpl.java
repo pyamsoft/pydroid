@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.version;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import retrofit2.Call;
-import rx.Observable;
 
 class VersionCheckInteractorImpl implements VersionCheckInteractor {
 

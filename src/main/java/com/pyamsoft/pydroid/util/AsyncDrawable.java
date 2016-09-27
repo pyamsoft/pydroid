@@ -58,7 +58,7 @@ public final class AsyncDrawable {
     @NonNull @Override
     public AsyncTaskMap.TaskEntry load(@NonNull Context context, @NonNull ImageView imageView,
         @DrawableRes int resource, @ColorRes int tint) {
-      final AsyncTaskMap.TaskEntry taskEntry =
+      final AsyncTaskMap.TaskEntry<Void, Drawable> taskEntry =
           new AsyncTaskMap.TaskEntry<Void, Drawable>(imageView::setImageDrawable) {
             @Override protected Drawable doInBackground(Void... params) {
               Drawable loaded = AppCompatResources.getDrawable(context, resource);

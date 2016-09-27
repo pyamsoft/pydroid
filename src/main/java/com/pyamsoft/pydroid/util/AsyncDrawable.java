@@ -116,7 +116,7 @@ public final class AsyncDrawable {
     }
 
     @CheckResult @NonNull
-    public abstract T load(@NonNull Context context, @NonNull ImageView imageView,
+    protected abstract T load(@NonNull Context context, @NonNull ImageView imageView,
         @DrawableRes int resource, @ColorRes int tint);
   }
 }

@@ -122,12 +122,12 @@ dependencies {
 
   // Butterknife
   compile "com.jakewharton:butterknife:$butterknife"
-  annotationProcessor"com.jakewharton:butterknife-compiler:$butterknife"
+  annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
   // Auto value
   provided "com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor"com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor"com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
+  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
+  annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 
   // Retrofit
   compile "com.squareup.retrofit2:retrofit:$retrofit"

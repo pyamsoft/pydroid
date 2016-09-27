@@ -17,49 +17,56 @@
 package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
-class VersionCheckPresenterImpl extends SchedulerPresenter<VersionCheckPresenter.View>
+class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View>
     implements VersionCheckPresenter {
 
   @NonNull private final VersionCheckInteractor interactor;
-  @NonNull private Subscription checkSubscription = Subscriptions.empty();
+  @Nullable private Call<VersionCheckResponse> call;
 
-  VersionCheckPresenterImpl(@NonNull VersionCheckInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(observeScheduler, subscribeScheduler);
+  VersionCheckPresenterImpl(@NonNull VersionCheckInteractor interactor) {
     this.interactor = interactor;
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubCheck();
+    cancelCall();
   }
 
   @Override public void checkForUpdates(int currentVersionCode) {
-    unsubCheck();
-    checkSubscription = interactor.checkVersion()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(versionCheckResponse -> {
-          Timber.i("Update check finished");
-          Timber.i("Current version: %d", currentVersionCode);
-          Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
-          getView(View::onVersionCheckFinished);
-          if (currentVersionCode < versionCheckResponse.currentVersion()) {
-            getView(view -> view.onUpdatedVersionFound(currentVersionCode,
-                versionCheckResponse.currentVersion()));
-          }
-        }, throwable -> Timber.e(throwable, "onError checkForUpdates"), this::unsubCheck);
+    cancelCall();
+    call = interactor.checkVersion();
+    call.enqueue(new Callback<VersionCheckResponse>() {
+      @Override public void onResponse(Call<VersionCheckResponse> call,
+          Response<VersionCheckResponse> response) {
+        final VersionCheckResponse versionCheckResponse = response.body();
+        Timber.i("Update check finished");
+        Timber.i("Current version: %d", currentVersionCode);
+        Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
+        getView(View::onVersionCheckFinished);
+        if (currentVersionCode < versionCheckResponse.currentVersion()) {
+          getView(view -> view.onUpdatedVersionFound(currentVersionCode,
+              versionCheckResponse.currentVersion()));
+          cancelCall();
+        }
+      }
+
+      @Override public void onFailure(Call<VersionCheckResponse> call, Throwable t) {
+        Timber.e(t, "onError checkForUpdates");
+        cancelCall();
+      }
+    });
   }
 
-  @SuppressWarnings("WeakerAccess") void unsubCheck() {
-    if (!checkSubscription.isUnsubscribed()) {
-      checkSubscription.unsubscribe();
+  @SuppressWarnings("WeakerAccess") void cancelCall() {
+    if (call != null && !call.isCanceled()) {
+      call.cancel();
     }
   }
 }

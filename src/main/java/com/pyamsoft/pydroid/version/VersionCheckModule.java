@@ -26,11 +26,11 @@ public class VersionCheckModule {
   @NonNull private final VersionCheckPresenter presenter;
   @NonNull private final VersionCheckPresenterLoader loader;
 
-  public VersionCheckModule(@NonNull PYDroidModule.Provider pyDroidModule, @NonNull ApiModule apiModule) {
+  public VersionCheckModule(@NonNull PYDroidModule.Provider pyDroidModule,
+      @NonNull ApiModule apiModule) {
     interactor = new VersionCheckInteractorImpl(pyDroidModule.provideContext(),
         apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class));
-    presenter = new VersionCheckPresenterImpl(interactor, pyDroidModule.provideObsScheduler(),
-        pyDroidModule.provideSubScheduler());
+    presenter = new VersionCheckPresenterImpl(interactor);
     loader = new VersionCheckPresenterLoader(pyDroidModule.provideContext(), presenter);
   }
 

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.version;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import retrofit2.Call;
 import rx.Observable;
 
 class VersionCheckInteractorImpl implements VersionCheckInteractor {
@@ -31,7 +32,7 @@ class VersionCheckInteractorImpl implements VersionCheckInteractor {
     this.versionCheckService = versionCheckService;
   }
 
-  @NonNull @Override public Observable<VersionCheckResponse> checkVersion() {
+  @NonNull @Override public Call<VersionCheckResponse> checkVersion() {
     return versionCheckService.checkVersion(packageName);
   }
 }

@@ -35,13 +35,8 @@
     @retrofit2.http.* <methods>;
 }
 
-# Retrofit RxJava adapter
--dontwarn rx.Completable
--dontwarn rx.Completable$CompletableSubscriber
--dontwarn rx.Completable$CompletableOnSubscribe
-
 # Keep GSON serialized class
--keep class com.pyamsoft.pydroid.lib.VersionCheckResponse { *; }
+-keep class com.pyamsoft.pydroid.version.VersionCheckResponse { *; }
 
 # Android Checkout uses weird annotations
 -dontwarn javax.annotation.Nonnull

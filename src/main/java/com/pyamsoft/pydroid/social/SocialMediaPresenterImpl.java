@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.social;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import javax.inject.Inject;
 
 class SocialMediaPresenterImpl extends PresenterBase<SocialMediaPresenter.View>
     implements SocialMediaPresenter {
@@ -34,7 +33,7 @@ class SocialMediaPresenterImpl extends PresenterBase<SocialMediaPresenter.View>
   @SuppressWarnings("WeakerAccess") @NonNull static final String OFFICIAL_BLOG =
       "https://pyamsoft.blogspot.com/";
 
-  @Inject SocialMediaPresenterImpl() {
+  SocialMediaPresenterImpl() {
   }
 
   @Override public void clickAppPage(@NonNull String link) {

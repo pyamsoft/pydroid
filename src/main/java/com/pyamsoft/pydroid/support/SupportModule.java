@@ -16,16 +16,22 @@
 
 package com.pyamsoft.pydroid.support;
 
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import rx.Scheduler;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.PYDroidModule;
 
-@Module public class SupportModule {
+public class SupportModule {
 
-  @ActivityScope @Provides SupportPresenter provideSupportPresenter(
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new SupportPresenterImpl(obsScheduler, subScheduler);
+  @NonNull private final SupportPresenter presenter;
+  @NonNull private final SupportPresenterLoader loader;
+
+  public SupportModule(@NonNull PYDroidModule pyDroidModule) {
+    presenter = new SupportPresenterImpl(pyDroidModule.provideObsScheduler(),
+        pyDroidModule.provideSubScheduler());
+    loader = new SupportPresenterLoader(pyDroidModule.provideContext(), presenter);
+  }
+
+  @NonNull @CheckResult public SupportPresenterLoader getLoader() {
+    return loader;
   }
 }

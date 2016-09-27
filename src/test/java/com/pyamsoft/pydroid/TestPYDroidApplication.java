@@ -17,36 +17,8 @@
 package com.pyamsoft.pydroid;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+import android.app.Application;
 
-@SuppressLint("Registered") public class TestPYDroidApplication
-    extends IPYDroidApp<PYDroidComponent> {
+@SuppressLint("Registered") public class TestPYDroidApplication extends Application {
 
-  private PYDroidComponent component;
-
-  @NonNull @CheckResult static IPYDroidApp<PYDroidComponent> get(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    if (appContext instanceof IPYDroidApp) {
-      return TestPYDroidApplication.class.cast(appContext);
-    } else {
-      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
-    }
-  }
-
-  @Override public void onCreate() {
-    super.onCreate();
-
-    component = DaggerPYDroidComponent.builder()
-        .pYDroidModule(new PYDroidModule(getApplicationContext()))
-        .build();
-  }
-
-  @NonNull @Override PYDroidComponent provideComponent() {
-    if (component == null) {
-      throw new NullPointerException("TestPYDroidComponent is NULL");
-    }
-    return component;
-  }
 }

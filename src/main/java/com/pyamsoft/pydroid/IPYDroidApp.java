@@ -16,12 +16,10 @@
 
 package com.pyamsoft.pydroid;
 
-import android.app.Application;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-abstract class IPYDroidApp<T extends PYDroidComponent> extends Application {
+public interface IPYDroidApp<T> {
 
-  // Not an interface just to hide this provide from subclasses
-  @CheckResult @NonNull abstract T provideComponent();
+  @CheckResult @NonNull T provideComponent();
 }

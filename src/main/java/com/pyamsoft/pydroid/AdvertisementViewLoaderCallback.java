@@ -19,22 +19,18 @@ package com.pyamsoft.pydroid;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
-import com.pyamsoft.pydroid.ads.AdvertisementPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
 
 public abstract class AdvertisementViewLoaderCallback
     implements PersistLoader.Callback<AdvertisementPresenter> {
 
   @NonNull private final Context context;
-  @SuppressWarnings("WeakerAccess") @Inject AdvertisementPresenterLoader loader;
 
   protected AdvertisementViewLoaderCallback(@NonNull Context context) {
     this.context = context.getApplicationContext();
   }
 
   @NonNull @Override public PersistLoader<AdvertisementPresenter> createLoader() {
-    PYDroidApplication.get(context).provideComponent().plusAdvertisementComponent().inject(this);
-    return loader;
+    return PYDroidApplication.get(context).provideAdvertisementModule().getLoader();
   }
 }

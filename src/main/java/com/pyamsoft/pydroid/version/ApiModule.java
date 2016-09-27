@@ -16,31 +16,40 @@
 
 package com.pyamsoft.pydroid.version;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pyamsoft.pydroid.ActivityScope;
 import com.pyamsoft.pydroid.BuildConfig;
-import dagger.Module;
-import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-@Module public class ApiModule {
+public class ApiModule {
 
   @NonNull private static final String CURRENT_VERSION_REPO_BASE_URL =
       "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/";
+  @NonNull private final Gson gson;
+  @NonNull private final OkHttpClient okHttpClient;
+  @NonNull private final Retrofit retrofit;
+  @NonNull private final VersionCheckApi versionCheckApi;
 
-  @ActivityScope @Provides Gson provideGson() {
+  public ApiModule() {
+    gson = provideGson();
+    okHttpClient = provideOkHttpClient();
+    retrofit = provideRetrofit();
+    versionCheckApi = new GithubVersionCheckApi(retrofit);
+  }
+
+  @CheckResult @NonNull private Gson provideGson() {
     final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapterFactory(
         new VersionCheckApi.AutoValueTypeAdapterFactory());
     return gsonBuilder.create();
   }
 
-  @ActivityScope @Provides OkHttpClient provideOkHttpClient() {
+  @CheckResult @NonNull private OkHttpClient provideOkHttpClient() {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
     if (BuildConfig.DEBUG) {
       final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -50,16 +59,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
     return builder.build();
   }
 
-  @ActivityScope @Provides Retrofit provideRetrofit(final Gson gson, final OkHttpClient client) {
+  @CheckResult @NonNull private Retrofit provideRetrofit() {
     return new Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-        .client(client)
+        .client(okHttpClient)
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build();
   }
 
-  @ActivityScope @Provides VersionCheckApi provideGithubVersionCheckApi(
-      @NonNull Retrofit retrofit) {
-    return new GithubVersionCheckApi(retrofit);
+  @NonNull @CheckResult VersionCheckApi getVersionCheckApi() {
+    return versionCheckApi;
   }
 }

@@ -17,12 +17,11 @@
 package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
-import javax.inject.Inject;
 import retrofit2.Retrofit;
 
 class GithubVersionCheckApi extends VersionCheckApi {
 
-  @Inject GithubVersionCheckApi(@NonNull Retrofit client) {
+  GithubVersionCheckApi(@NonNull Retrofit client) {
     super(client);
   }
 }

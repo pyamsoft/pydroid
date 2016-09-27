@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -32,7 +31,7 @@ class AboutLibrariesPresenterImpl extends SchedulerPresenter<AboutLibrariesPrese
   @NonNull private final CompositeSubscription licenseSubscriptions = new CompositeSubscription();
   @NonNull private Subscription loadLicenseBus = Subscriptions.empty();
 
-  @Inject AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor,
+  AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;

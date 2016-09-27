@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.version;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import javax.inject.Inject;
 import rx.Observable;
 
 class VersionCheckInteractorImpl implements VersionCheckInteractor {
@@ -26,7 +25,7 @@ class VersionCheckInteractorImpl implements VersionCheckInteractor {
   @NonNull private final String packageName;
   @NonNull private final VersionCheckService versionCheckService;
 
-  @Inject VersionCheckInteractorImpl(@NonNull Context context,
+  VersionCheckInteractorImpl(@NonNull Context context,
       @NonNull VersionCheckService versionCheckService) {
     this.packageName = context.getPackageName();
     this.versionCheckService = versionCheckService;

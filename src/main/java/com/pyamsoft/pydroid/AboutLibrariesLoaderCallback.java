@@ -19,22 +19,18 @@ package com.pyamsoft.pydroid;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
 
 public abstract class AboutLibrariesLoaderCallback
     implements PersistLoader.Callback<AboutLibrariesPresenter> {
 
   @NonNull private final Context context;
-  @Inject AboutLibrariesPresenterLoader loader;
 
   protected AboutLibrariesLoaderCallback(@NonNull Context context) {
     this.context = context.getApplicationContext();
   }
 
   @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
-    PYDroidApplication.get(context).provideComponent().plusAboutLibrariesComponent().inject(this);
-    return loader;
+    return PYDroidApplication.get(context).provideAboutLibrariesModule().getLoader();
   }
 }

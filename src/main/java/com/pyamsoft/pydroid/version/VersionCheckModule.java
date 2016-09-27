@@ -16,31 +16,25 @@
 
 package com.pyamsoft.pydroid.version;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import javax.inject.Provider;
-import rx.Scheduler;
+import com.pyamsoft.pydroid.PYDroidModule;
 
-@Module public class VersionCheckModule {
+public class VersionCheckModule {
 
-  @ActivityScope @Provides VersionCheckPresenter provideLicenseCheckPresenter(
-      @NonNull VersionCheckInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler subScheduler) {
-    return new VersionCheckPresenterImpl(interactor, obsScheduler, subScheduler);
+  @NonNull private final VersionCheckInteractor interactor;
+  @NonNull private final VersionCheckPresenter presenter;
+  @NonNull private final VersionCheckPresenterLoader loader;
+
+  public VersionCheckModule(@NonNull PYDroidModule pyDroidModule, @NonNull ApiModule apiModule) {
+    interactor = new VersionCheckInteractorImpl(pyDroidModule.provideContext(),
+        apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class));
+    presenter = new VersionCheckPresenterImpl(interactor, pyDroidModule.provideObsScheduler(),
+        pyDroidModule.provideSubScheduler());
+    loader = new VersionCheckPresenterLoader(pyDroidModule.provideContext(), presenter);
   }
 
-  @ActivityScope @Provides VersionCheckInteractor provideLicenseCheckInteractor(
-      @NonNull Context context, @NonNull VersionCheckApi licenseCheckApi) {
-    return new VersionCheckInteractorImpl(context,
-        licenseCheckApi.create(VersionCheckInteractor.VersionCheckService.class));
-  }
-
-  @ActivityScope @Provides VersionCheckPresenterLoader provideLicenseCheckPresenterLoader(
-      @NonNull Context context, @NonNull Provider<VersionCheckPresenter> presenterProvider) {
-    return new VersionCheckPresenterLoader(context, presenterProvider);
+  @NonNull @CheckResult public VersionCheckPresenterLoader getLoader() {
+    return loader;
   }
 }

@@ -21,14 +21,11 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
-import com.pyamsoft.pydroid.version.VersionCheckPresenterLoader;
-import javax.inject.Inject;
 
 public abstract class VersionCheckLoaderCallback
     implements PersistLoader.Callback<VersionCheckPresenter> {
 
   @NonNull private final Context context;
-  @SuppressWarnings("WeakerAccess") @Inject VersionCheckPresenterLoader loader;
   private boolean licenseChecked;
 
   protected VersionCheckLoaderCallback(@NonNull Context context) {
@@ -38,12 +35,9 @@ public abstract class VersionCheckLoaderCallback
 
   @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
     setLicenseChecked(false);
-    PYDroidApplication.get(context.getApplicationContext())
-        .provideComponent()
-        .plusApiComponent()
-        .plusVersionCheckComponent()
-        .inject(this);
-    return loader;
+    return PYDroidApplication.get(context.getApplicationContext())
+        .provideVersionCheckModule()
+        .getLoader();
   }
 
   @CheckResult public boolean isLicenseChecked() {

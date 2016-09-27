@@ -19,19 +19,17 @@ package com.pyamsoft.pydroid.version;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
-  @NonNull private final Provider<VersionCheckPresenter> presenterProvider;
 
-  @Inject VersionCheckPresenterLoader(@NonNull Context context,
-      @NonNull Provider<VersionCheckPresenter> presenterProvider) {
+  @NonNull private final VersionCheckPresenter presenter;
+
+  VersionCheckPresenterLoader(@NonNull Context context, @NonNull VersionCheckPresenter presenter) {
     super(context);
-    this.presenterProvider = presenterProvider;
+    this.presenter = presenter;
   }
 
   @NonNull @Override public VersionCheckPresenter loadPersistent() {
-    return presenterProvider.get();
+    return presenter;
   }
 }

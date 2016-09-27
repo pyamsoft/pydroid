@@ -16,21 +16,25 @@
 
 package com.pyamsoft.pydroid.social;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Provider;
+import com.pyamsoft.pydroid.PYDroidModule;
 
-@Module public class SocialMediaModule {
+public class SocialMediaModule {
 
-  @ActivityScope @Provides SocialMediaPresenter provideSocialMediaPresenter() {
-    return new SocialMediaPresenterImpl();
+  @NonNull private final SocialMediaPresenter presenter;
+  @NonNull private final SocialMediaPresenterLoader loader;
+
+  public SocialMediaModule(@NonNull PYDroidModule pyDroidModule) {
+    presenter = new SocialMediaPresenterImpl();
+    loader = new SocialMediaPresenterLoader(pyDroidModule.provideContext(), presenter);
   }
 
-  @ActivityScope @Provides SocialMediaPresenterLoader provideSocialMediaPresenterLoader(
-      @NonNull Context context, @NonNull Provider<SocialMediaPresenter> presenterProvider) {
-    return new SocialMediaPresenterLoader(context, presenterProvider);
+  @NonNull @CheckResult public final SocialMediaPresenterLoader getLoader() {
+    return loader;
+  }
+
+  @NonNull @CheckResult public final SocialMediaPresenter getPresenter() {
+    return presenter;
   }
 }

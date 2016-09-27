@@ -20,23 +20,18 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.support.SupportPresenter;
-import com.pyamsoft.pydroid.support.SupportPresenterLoader;
-import javax.inject.Inject;
 
 public abstract class SupportLoaderCallback implements PersistLoader.Callback<SupportPresenter> {
 
   @NonNull private final Context context;
-  @Inject SupportPresenterLoader loader;
 
   protected SupportLoaderCallback(@NonNull Context context) {
     this.context = context.getApplicationContext();
   }
 
   @NonNull @Override public PersistLoader<SupportPresenter> createLoader() {
-    PYDroidApplication.get(context.getApplicationContext())
-        .provideComponent()
-        .plusSupportComponent()
-        .inject(this);
-    return loader;
+    return PYDroidApplication.get(context.getApplicationContext())
+        .provideSupportModule()
+        .getLoader();
   }
 }

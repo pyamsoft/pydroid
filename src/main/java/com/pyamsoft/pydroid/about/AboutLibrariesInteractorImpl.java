@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -38,7 +37,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull private final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull private final AssetManager assetManager;
 
-  @Inject AboutLibrariesInteractorImpl(@NonNull Context context) {
+  AboutLibrariesInteractorImpl(@NonNull Context context) {
     assetManager = context.getAssets();
     licenseProvider = Licenses.licenses(context);
     cachedLicenses = new HashMap<>();

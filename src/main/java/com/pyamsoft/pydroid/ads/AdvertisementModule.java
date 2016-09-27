@@ -16,25 +16,26 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.ActivityScope;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import rx.Scheduler;
+import com.pyamsoft.pydroid.PYDroidModule;
+import com.pyamsoft.pydroid.social.SocialMediaModule;
 
-@Module public class AdvertisementModule {
+public class AdvertisementModule {
 
-  @ActivityScope @Provides AdvertisementPresenter provideAdvertisementPresenter(
-      @NonNull AdvertisementInteractor interactor, @NonNull SocialMediaPresenter presenter,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new AdvertisementPresenterImpl(interactor, presenter, obsScheduler, subScheduler);
+  @NonNull private final AdvertisementInteractor interactor;
+  @NonNull private final AdvertisementPresenter presenter;
+  @NonNull private final AdvertisementPresenterLoader loader;
+
+  public AdvertisementModule(@NonNull PYDroidModule pyDroidModule,
+      @NonNull SocialMediaModule socialMediaModule) {
+    interactor = new AdvertisementInteractorImpl(pyDroidModule.provideContext());
+    presenter = new AdvertisementPresenterImpl(interactor, socialMediaModule.getPresenter(),
+        pyDroidModule.provideObsScheduler(), pyDroidModule.provideSubScheduler());
+    loader = new AdvertisementPresenterLoader(pyDroidModule.provideContext(), presenter);
   }
 
-  @ActivityScope @Provides AdvertisementInteractor provideAdvertisementInteractor(
-      @NonNull Context context) {
-    return new AdvertisementInteractorImpl(context);
+  @NonNull @CheckResult public final AdvertisementPresenterLoader getLoader() {
+    return loader;
   }
 }

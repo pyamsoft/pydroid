@@ -19,20 +19,18 @@ package com.pyamsoft.pydroid.about;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
-public class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresenter> {
+class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresenter> {
 
-  @NonNull private final Provider<AboutLibrariesPresenter> presenterProvider;
+  @NonNull private final AboutLibrariesPresenter presenter;
 
-  @Inject AboutLibrariesPresenterLoader(@NonNull Context context,
-      @NonNull Provider<AboutLibrariesPresenter> presenterProvider) {
+  AboutLibrariesPresenterLoader(@NonNull Context context,
+      @NonNull AboutLibrariesPresenter presenter) {
     super(context);
-    this.presenterProvider = presenterProvider;
+    this.presenter = presenter;
   }
 
   @NonNull @Override public AboutLibrariesPresenter loadPersistent() {
-    return presenterProvider.get();
+    return presenter;
   }
 }

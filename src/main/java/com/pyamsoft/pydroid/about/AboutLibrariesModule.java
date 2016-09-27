@@ -16,30 +16,25 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import javax.inject.Provider;
-import rx.Scheduler;
+import com.pyamsoft.pydroid.PYDroidModule;
 
-@Module public class AboutLibrariesModule {
+public class AboutLibrariesModule {
 
-  @ActivityScope @Provides AboutLibrariesPresenter provideAboutLibrariesPresenter(
-      @NonNull AboutLibrariesInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler subScheduler) {
-    return new AboutLibrariesPresenterImpl(interactor, obsScheduler, subScheduler);
+  @NonNull private final AboutLibrariesInteractor interactor;
+  @NonNull private final AboutLibrariesPresenter presenter;
+  @NonNull private final AboutLibrariesPresenterLoader loader;
+
+  // Created once per "scope"
+  public AboutLibrariesModule(@NonNull PYDroidModule pyDroidModule) {
+    interactor = new AboutLibrariesInteractorImpl(pyDroidModule.provideContext());
+    presenter = new AboutLibrariesPresenterImpl(interactor, pyDroidModule.provideObsScheduler(),
+        pyDroidModule.provideSubScheduler());
+    loader = new AboutLibrariesPresenterLoader(pyDroidModule.provideContext(), presenter);
   }
 
-  @ActivityScope @Provides AboutLibrariesInteractor provideAboutLibrariesInteractor(
-      @NonNull Context context) {
-    return new AboutLibrariesInteractorImpl(context);
-  }
-
-  @ActivityScope @Provides AboutLibrariesPresenterLoader provideAboutLibrariesPresenterLoader(
-      @NonNull Context context, @NonNull Provider<AboutLibrariesPresenter> presenterProvider) {
-    return new AboutLibrariesPresenterLoader(context, presenterProvider);
+  @NonNull @CheckResult public AboutLibrariesPresenterLoader getLoader() {
+    return loader;
   }
 }

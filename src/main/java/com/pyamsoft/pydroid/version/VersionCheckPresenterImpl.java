@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -30,7 +29,7 @@ class VersionCheckPresenterImpl extends SchedulerPresenter<VersionCheckPresenter
   @NonNull private final VersionCheckInteractor interactor;
   @NonNull private Subscription checkSubscription = Subscriptions.empty();
 
-  @Inject VersionCheckPresenterImpl(@NonNull VersionCheckInteractor interactor,
+  VersionCheckPresenterImpl(@NonNull VersionCheckInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;

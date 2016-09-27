@@ -17,32 +17,66 @@
 package com.pyamsoft.pydroid;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import com.pyamsoft.pydroid.about.AboutLibrariesModule;
+import com.pyamsoft.pydroid.ads.AdvertisementModule;
+import com.pyamsoft.pydroid.social.SocialMediaModule;
+import com.pyamsoft.pydroid.support.SupportModule;
+import com.pyamsoft.pydroid.version.ApiModule;
+import com.pyamsoft.pydroid.version.VersionCheckModule;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-@Module class PYDroidModule {
+public class PYDroidModule {
 
+  // Singleton
   @NonNull private final Context appContext;
 
-  public PYDroidModule(final @NonNull Context context) {
+  PYDroidModule(final @NonNull Context context) {
     appContext = context.getApplicationContext();
   }
 
-  @Singleton @Provides Context provideContext() {
-    return appContext.getApplicationContext();
+  // Singleton
+  @CheckResult @NonNull public final Context provideContext() {
+    return appContext;
   }
 
-  @Singleton @Provides @Named("sub") Scheduler provideIOScheduler() {
+  // Singleton
+  @CheckResult @NonNull public final Scheduler provideSubScheduler() {
     return Schedulers.io();
   }
 
-  @Singleton @Provides @Named("obs") Scheduler provideMainThreadScheduler() {
+  // Singleton
+  @CheckResult @NonNull public final Scheduler provideObsScheduler() {
     return AndroidSchedulers.mainThread();
+  }
+
+  // Create a new one every time
+  @CheckResult @NonNull final AboutLibrariesModule provideAboutLibrariesModule() {
+    return new AboutLibrariesModule(this);
+  }
+
+  // Create a new one every time
+  @CheckResult @NonNull final SupportModule provideSupportModule() {
+    return new SupportModule(this);
+  }
+
+  // Create a new one every time
+  @CheckResult @NonNull final SocialMediaModule provideSocialMediaModule() {
+    return new SocialMediaModule(this);
+  }
+
+  // Create a new one every time
+  @CheckResult @NonNull final VersionCheckModule provideVersionCheckModule() {
+    return new VersionCheckModule(this, new ApiModule());
+  }
+
+  // Create a new one every time
+  //
+  // KLUDGE: Makes a new SocialMediaModule
+  @CheckResult @NonNull final AdvertisementModule provideAdvertisementModule() {
+    return new AdvertisementModule(this, provideSocialMediaModule());
   }
 }

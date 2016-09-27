@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.support;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -29,8 +28,7 @@ class SupportPresenterImpl extends SchedulerPresenter<SupportPresenter.View>
 
   @NonNull private Subscription busSubscription = Subscriptions.empty();
 
-  @Inject SupportPresenterImpl(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+  SupportPresenterImpl(@NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
   }
 

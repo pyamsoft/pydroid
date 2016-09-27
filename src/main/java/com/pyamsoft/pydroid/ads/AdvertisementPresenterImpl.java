@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ads;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -32,7 +31,7 @@ class AdvertisementPresenterImpl extends SchedulerPresenter<AdvertisementPresent
   @NonNull private final AdvertisementInteractor interactor;
   @NonNull private Subscription adSubscription = Subscriptions.empty();
 
-  @Inject AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor,
+  AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor,
       @NonNull SocialMediaPresenter socialMediaPresenter, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);

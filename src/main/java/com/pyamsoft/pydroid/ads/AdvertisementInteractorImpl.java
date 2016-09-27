@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.R;
-import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -34,7 +33,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
   @SuppressWarnings("WeakerAccess") final boolean preferenceDefault;
   @SuppressWarnings("WeakerAccess") @NonNull final SharedPreferences preferences;
 
-  @Inject AdvertisementInteractorImpl(@NonNull Context context) {
+  AdvertisementInteractorImpl(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
     preferenceKey = appContext.getString(R.string.adview_key);

@@ -19,20 +19,17 @@ package com.pyamsoft.pydroid.support;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class SupportPresenterLoader extends PersistLoader<SupportPresenter> {
 
-  @NonNull private final Provider<SupportPresenter> presenterProvider;
+  @NonNull private final SupportPresenter presenter;
 
-  @Inject SupportPresenterLoader(@NonNull Context context,
-      @NonNull Provider<SupportPresenter> presenterProvider) {
+  SupportPresenterLoader(@NonNull Context context, @NonNull SupportPresenter presenter) {
     super(context);
-    this.presenterProvider = presenterProvider;
+    this.presenter = presenter;
   }
 
   @NonNull @Override public SupportPresenter loadPersistent() {
-    return presenterProvider.get();
+    return presenter;
   }
 }

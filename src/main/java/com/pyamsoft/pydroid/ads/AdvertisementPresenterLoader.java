@@ -19,20 +19,18 @@ package com.pyamsoft.pydroid.ads;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class AdvertisementPresenterLoader extends PersistLoader<AdvertisementPresenter> {
 
-  @NonNull private final Provider<AdvertisementPresenter> presenterProvider;
+  @NonNull private final AdvertisementPresenter presenter;
 
-  @Inject AdvertisementPresenterLoader(@NonNull Context context,
-      @NonNull Provider<AdvertisementPresenter> presenterProvider) {
+  AdvertisementPresenterLoader(@NonNull Context context,
+      @NonNull AdvertisementPresenter presenter) {
     super(context);
-    this.presenterProvider = presenterProvider;
+    this.presenter = presenter;
   }
 
   @NonNull @Override public AdvertisementPresenter loadPersistent() {
-    return presenterProvider.get();
+    return presenter;
   }
 }

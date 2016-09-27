@@ -19,20 +19,17 @@ package com.pyamsoft.pydroid.social;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
 
 public class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
 
-  @NonNull private final Provider<SocialMediaPresenter> presenterProvider;
+  @NonNull private final SocialMediaPresenter presenter;
 
-  @Inject SocialMediaPresenterLoader(@NonNull Context context,
-      @NonNull Provider<SocialMediaPresenter> presenterProvider) {
+  SocialMediaPresenterLoader(@NonNull Context context, @NonNull SocialMediaPresenter presenter) {
     super(context);
-    this.presenterProvider = presenterProvider;
+    this.presenter = presenter;
   }
 
   @NonNull @Override public SocialMediaPresenter loadPersistent() {
-    return presenterProvider.get();
+    return presenter;
   }
 }

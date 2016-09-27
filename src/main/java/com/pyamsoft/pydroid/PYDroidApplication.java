@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
@@ -26,19 +27,23 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
-@SuppressLint("Registered") public abstract class PYDroidApplication
-    extends IPYDroidApp<PYDroidComponent> implements LicenseProvider {
+@SuppressLint("Registered") public abstract class PYDroidApplication extends Application
+    implements LicenseProvider {
 
-  private PYDroidComponent component;
   private RefWatcher refWatcher;
+  private PYDroidModule module;
 
-  @NonNull @CheckResult static IPYDroidApp<PYDroidComponent> get(@NonNull Context context) {
+  @NonNull @CheckResult static PYDroidModule get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
-    if (appContext instanceof IPYDroidApp) {
-      return PYDroidApplication.class.cast(appContext);
+    if (appContext instanceof PYDroidApplication) {
+      return PYDroidApplication.class.cast(appContext).getModule();
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
     }
+  }
+
+  @CheckResult @NonNull final PYDroidModule getModule() {
+    return module;
   }
 
   @Override public final void onCreate() {
@@ -51,14 +56,13 @@ import timber.log.Timber;
       refWatcher = RefWatcher.DISABLED;
     }
 
-    insertCustomLicensesIntoMap();
+    module = new PYDroidModule(this);
+
     createApplicationComponents();
+    insertCustomLicensesIntoMap();
   }
 
   @CallSuper protected void createApplicationComponents() {
-    component = DaggerPYDroidComponent.builder()
-        .pYDroidModule(new PYDroidModule(getApplicationContext()))
-        .build();
   }
 
   @CheckResult @NonNull public RefWatcher getRefWatcher() {
@@ -66,12 +70,5 @@ import timber.log.Timber;
       throw new RuntimeException("RefWatcher is NULL");
     }
     return refWatcher;
-  }
-
-  @NonNull @Override PYDroidComponent provideComponent() {
-    if (component == null) {
-      throw new NullPointerException("PYDroidComponent is NULL");
-    }
-    return component;
   }
 }

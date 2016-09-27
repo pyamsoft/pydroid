@@ -25,7 +25,7 @@ import com.google.gson.annotations.SerializedName;
 
 @AutoValue abstract class VersionCheckResponse {
 
-  @CheckResult @NonNull
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static TypeAdapter<VersionCheckResponse> typeAdapter(final Gson gson) {
     return new AutoValue_VersionCheckResponse.GsonTypeAdapter(gson);
   }

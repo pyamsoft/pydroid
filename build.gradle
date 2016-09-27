@@ -134,10 +134,6 @@ dependencies {
   annotationProcessor"com.google.auto.value:auto-value:$autoValue"
   annotationProcessor"com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 
-  // Dagger
-  compile "com.google.dagger:dagger:$dagger"
-  annotationProcessor"com.google.dagger:dagger-compiler:$dagger"
-
   // Retrofit
   compile "com.squareup.retrofit2:retrofit:$retrofit"
   compile "com.squareup.retrofit2:adapter-rxjava:$retrofit"
@@ -149,9 +145,6 @@ dependencies {
   androidTestCompile "com.android.support.test:runner:$androidTestRunner"
   androidTestCompile "com.android.support.test:rules:$androidTestRules"
   androidTestCompile "com.android.support.test.espresso:espresso-core:$espresso"
-
-  // Dagger
-  testAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   // Roboelectric for Android on JVM
   testCompile "org.robolectric:robolectric:$robolectric"

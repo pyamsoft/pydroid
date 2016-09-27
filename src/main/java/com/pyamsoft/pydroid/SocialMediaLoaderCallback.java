@@ -20,24 +20,19 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.social.SocialMediaPresenterLoader;
-import javax.inject.Inject;
 
 public abstract class SocialMediaLoaderCallback
     implements PersistLoader.Callback<SocialMediaPresenter> {
 
   @NonNull private final Context context;
-  @Inject SocialMediaPresenterLoader loader;
 
   protected SocialMediaLoaderCallback(@NonNull Context context) {
     this.context = context.getApplicationContext();
   }
 
   @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-    PYDroidApplication.get(context.getApplicationContext())
-        .provideComponent()
-        .plusSocialMediaComponent()
-        .inject(this);
-    return loader;
+    return PYDroidApplication.get(context.getApplicationContext())
+        .provideSocialMediaModule()
+        .getLoader();
   }
 }

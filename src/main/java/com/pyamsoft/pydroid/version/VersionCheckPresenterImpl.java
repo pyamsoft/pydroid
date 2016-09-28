@@ -45,14 +45,19 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
     call.enqueue(new Callback<VersionCheckResponse>() {
       @Override public void onResponse(Call<VersionCheckResponse> call,
           Response<VersionCheckResponse> response) {
-        final VersionCheckResponse versionCheckResponse = response.body();
-        Timber.i("Update check finished");
-        Timber.i("Current version: %d", currentVersionCode);
-        Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
-        getView(View::onVersionCheckFinished);
-        if (currentVersionCode < versionCheckResponse.currentVersion()) {
-          getView(view -> view.onUpdatedVersionFound(currentVersionCode,
-              versionCheckResponse.currentVersion()));
+        if (response.isSuccessful()) {
+          final VersionCheckResponse versionCheckResponse = response.body();
+          Timber.i("Update check finished");
+          Timber.i("Current version: %d", currentVersionCode);
+          Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
+          getView(View::onVersionCheckFinished);
+          if (currentVersionCode < versionCheckResponse.currentVersion()) {
+            getView(view -> view.onUpdatedVersionFound(currentVersionCode,
+                versionCheckResponse.currentVersion()));
+            cancelCall();
+          }
+        } else {
+          Timber.w("onResponse: Not successful CODE: %d", response.code());
           cancelCall();
         }
       }

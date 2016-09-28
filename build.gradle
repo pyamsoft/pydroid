@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-buildscript {
-
-  repositories {
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath "com.jakewharton:butterknife-gradle-plugin:$butterknife"
-  }
-}
-
 tasks.whenTaskAdded { task ->
   if (task.name.startsWith("lint")) {
     task.enabled = false
@@ -34,7 +23,6 @@ tasks.whenTaskAdded { task ->
 apply plugin: "com.android.library"
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
-apply plugin: "com.jakewharton.butterknife"
 apply plugin: "net.ltgt.errorprone"
 apply plugin: "me.tatarka.retrolambda"
 
@@ -45,8 +33,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 24
-    versionCode 77
-    versionName "4.5.0"
+    versionCode 78
+    versionName "4.6.0"
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
@@ -62,6 +50,10 @@ android {
     // Include the library in modules with the following
     //    debugCompile project(path: ":PYDroid", configuration: "debug")
     //    releaseCompile project(path: ":PYDroid", configuration: "release")
+  }
+
+  dataBinding {
+    enabled true
   }
 
   compileOptions {
@@ -119,10 +111,6 @@ dependencies {
   compile("com.mikepenz:fastadapter:$fastAdapter@aar") {
     transitive = true
   }
-
-  // Butterknife
-  compile "com.jakewharton:butterknife:$butterknife"
-  annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
   // Auto value
   provided "com.google.auto.value:auto-value:$autoValue"

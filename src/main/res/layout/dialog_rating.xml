@@ -15,77 +15,82 @@
   ~ limitations under the License.
   -->
 
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rating_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     >
 
-  <RelativeLayout
-      android:id="@+id/rating_view"
+  <FrameLayout
+      android:id="@+id/rating_root"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginTop="28dp"
-      android:padding="8dp"
       >
 
-    <Button
-        android:id="@+id/rating_btn_no_thanks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:text="@string/no_thanks"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        style="?attr/buttonBarNegativeButtonStyle"
-        />
-
-    <Button
-        android:id="@+id/rating_btn_go_rate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/rating_btn_no_thanks"
-        android:text="@string/rate_application"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white"
-        style="@style/Widget.AppCompat.Button.Colored"
-        />
-
-    <TextView
-        android:id="@+id/rating_liking_the_app"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/rating_btn_go_rate"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="@string/liking_the_app"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        />
-
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/rating_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/rating_liking_the_app"
-        android:layout_alignParentTop="true"
-        android:layout_margin="16dp"
+        android:layout_marginTop="28dp"
+        android:padding="8dp"
         >
 
-      <TextView
-          android:id="@+id/rating_text_change"
+      <Button
+          android:id="@+id/rating_btn_no_thanks"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_alignParentBottom="true"
+          android:text="@string/no_thanks"
+          android:textAppearance="?android:attr/textAppearanceLarge"
+          style="?attr/buttonBarNegativeButtonStyle"
           />
 
-    </ScrollView>
+      <Button
+          android:id="@+id/rating_btn_go_rate"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_above="@id/rating_btn_no_thanks"
+          android:text="@string/rate_application"
+          android:textAppearance="?android:attr/textAppearanceLarge"
+          android:textColor="@android:color/white"
+          style="@style/Widget.AppCompat.Button.Colored"
+          />
 
-  </RelativeLayout>
+      <TextView
+          android:id="@+id/rating_liking_the_app"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_above="@id/rating_btn_go_rate"
+          android:gravity="center"
+          android:padding="8dp"
+          android:text="@string/liking_the_app"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          />
 
-  <ImageView
-      android:id="@+id/rating_icon"
-      android:layout_width="56dp"
-      android:layout_height="56dp"
-      android:layout_gravity="center_horizontal|top"
-      android:contentDescription="@string/blank"
-      />
+      <ScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_above="@id/rating_liking_the_app"
+          android:layout_alignParentTop="true"
+          android:layout_margin="16dp"
+          >
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/rating_text_change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+      </ScrollView>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/rating_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal|top"
+        android:contentDescription="@string/blank"
+        />
+
+  </FrameLayout>
+
+</layout>

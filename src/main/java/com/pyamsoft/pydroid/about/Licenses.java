@@ -72,7 +72,6 @@ public final class Licenses {
     createItem(Names.DAGGER2, HomepageUrls.DAGGER2, LicenseLocations.DAGGER2);
     createItem(Names.ANDROID_CHECKOUT, HomepageUrls.ANDROID_CHECKOUT,
         LicenseLocations.ANDROID_CHECKOUT);
-    createItem(Names.BUTTERKNIFE, HomepageUrls.BUTTERKNIFE, LicenseLocations.BUTTERKNIFE);
     createItem(Names.LEAK_CANARY, HomepageUrls.LEAK_CANARY, LicenseLocations.LEAK_CANARY);
     createItem(Names.RXJAVA, HomepageUrls.RXJAVA, LicenseLocations.RXJAVA);
     createItem(Names.RXANDROID, HomepageUrls.RXANDROID, LicenseLocations.RXANDROID);
@@ -119,7 +118,6 @@ public final class Licenses {
     @NonNull static final String FIREBASE = "Firebase";
     @NonNull static final String DAGGER2 = "Dagger2";
     @NonNull static final String ANDROID_CHECKOUT = "Android Checkout";
-    @NonNull static final String BUTTERKNIFE = "Butterknife";
     @NonNull static final String LEAK_CANARY = "Leak Canary";
     @NonNull static final String RXJAVA = "RxJava";
     @NonNull static final String RXANDROID = "RxAndroid";
@@ -148,7 +146,6 @@ public final class Licenses {
     @NonNull static final String FIREBASE = "https://firebase.google.com/";
     @NonNull static final String DAGGER2 = "https://google.github.io/dagger/";
     @NonNull static final String ANDROID_CHECKOUT = "https://github.com/serso/android-checkout";
-    @NonNull static final String BUTTERKNIFE = "https://jakewharton.github.io/butterknife/";
     @NonNull static final String LEAK_CANARY = "https://github.com/square/leakcanary";
     @NonNull static final String RXJAVA = "https://github.com/ReactiveX/RxJava";
     @NonNull static final String RXANDROID = "https://github.com/ReactiveX/RxAndroid";
@@ -180,7 +177,6 @@ public final class Licenses {
     @NonNull static final String FIREBASE = _BASE + "firebase";
     @NonNull static final String DAGGER2 = _BASE + "dagger2";
     @NonNull static final String ANDROID_CHECKOUT = _BASE + "androidcheckout";
-    @NonNull static final String BUTTERKNIFE = _BASE + "butterknife";
     @NonNull static final String LEAK_CANARY = _BASE + "leakcanary";
     @NonNull static final String RXJAVA = _BASE + "rxjava";
     @NonNull static final String RXANDROID = _BASE + "rxandroid";

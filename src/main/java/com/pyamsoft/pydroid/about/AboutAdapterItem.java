@@ -16,24 +16,18 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.R2;
+import com.pyamsoft.pydroid.databinding.AdapterItemAboutBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.List;
 
@@ -87,43 +81,45 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   @Override public void bindView(@NonNull ViewHolder viewHolder, List payloads) {
     super.bindView(viewHolder, payloads);
-    viewHolder.licenseText.setClickable(false);
-    viewHolder.licenseText.setFocusable(false);
-    viewHolder.licenseName.setClickable(false);
-    viewHolder.licenseName.setFocusable(false);
-    viewHolder.progressBar.setClickable(false);
-    viewHolder.progressBar.setFocusable(false);
-    viewHolder.licenseHomepage.setOnClickListener(null);
+    viewHolder.binding.expandLicenseText.setClickable(false);
+    viewHolder.binding.expandLicenseText.setFocusable(false);
+    viewHolder.binding.expandLicenseName.setClickable(false);
+    viewHolder.binding.expandLicenseName.setFocusable(false);
+    viewHolder.binding.expandLicenseProgress.setClickable(false);
+    viewHolder.binding.expandLicenseHomepage.setFocusable(false);
+    viewHolder.binding.expandLicenseHomepage.setOnClickListener(null);
 
     //make sure all animations are stopped
-    viewHolder.arrowIcon.clearAnimation();
+    viewHolder.binding.expandLicenseIcon.clearAnimation();
     if (isExpanded()) {
-      ViewCompat.setRotation(viewHolder.arrowIcon, 0);
+      ViewCompat.setRotation(viewHolder.binding.expandLicenseIcon, 0);
     } else {
-      ViewCompat.setRotation(viewHolder.arrowIcon, 180);
+      ViewCompat.setRotation(viewHolder.binding.expandLicenseIcon, 180);
     }
 
-    viewHolder.licenseName.setText(item.getName());
-    viewHolder.licenseHomepage.setTextColor(Color.BLUE);
-    viewHolder.licenseHomepage.setSingleLine(true);
-    viewHolder.licenseHomepage.setOnClickListener(
+    viewHolder.binding.expandLicenseName.setText(item.getName());
+    viewHolder.binding.expandLicenseHomepage.setTextColor(Color.BLUE);
+    viewHolder.binding.expandLicenseHomepage.setSingleLine(true);
+    viewHolder.binding.expandLicenseHomepage.setOnClickListener(
         view -> NetworkUtil.newLink(view.getContext().getApplicationContext(),
             item.getHomepageUrl()));
 
     if (isExpanded()) {
       if (licenseText.length() == 0) {
-        viewHolder.progressBar.setVisibility(View.VISIBLE);
+        viewHolder.binding.expandLicenseProgress.setVisibility(View.VISIBLE);
         AboutItemBus.get()
             .post(AboutLicenseLoadEvent.create(viewHolder.getAdapterPosition(), item));
       } else {
-        viewHolder.progressBar.setVisibility(View.GONE);
-        viewHolder.licenseText.setVisibility(View.VISIBLE);
-        viewHolder.licenseText.loadDataWithBaseURL(null, licenseText, "text/plain", "UTF-8", null);
+        viewHolder.binding.expandLicenseProgress.setVisibility(View.GONE);
+        viewHolder.binding.expandLicenseText.setVisibility(View.VISIBLE);
+        viewHolder.binding.expandLicenseText.loadDataWithBaseURL(null, licenseText, "text/plain",
+            "UTF-8", null);
       }
     } else {
-      viewHolder.progressBar.setVisibility(View.GONE);
-      viewHolder.licenseText.setVisibility(View.GONE);
-      viewHolder.licenseText.loadDataWithBaseURL(null, "", "text/plain", "UTF-8", null);
+      viewHolder.binding.expandLicenseProgress.setVisibility(View.GONE);
+      viewHolder.binding.expandLicenseText.setVisibility(View.GONE);
+      viewHolder.binding.expandLicenseText.loadDataWithBaseURL(null, "", "text/plain", "UTF-8",
+          null);
     }
   }
 
@@ -141,19 +137,13 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final Unbinder unbinder;
-    @BindView(R2.id.expand_license_name) TextView licenseName;
-    @BindView(R2.id.expand_license_homepage) TextView licenseHomepage;
-    @BindView(R2.id.expand_license_text) WebView licenseText;
-    @BindView(R2.id.expand_license_icon) ImageView arrowIcon;
-    @BindView(R2.id.expand_license_progress) ProgressBar progressBar;
+    @NonNull final AdapterItemAboutBinding binding;
 
     public ViewHolder(View view) {
       super(view);
-      unbinder = ButterKnife.bind(this, view);
-
-      licenseText.getSettings().setTextZoom(80);
-      progressBar.setIndeterminate(true);
+      binding = DataBindingUtil.bind(view);
+      binding.expandLicenseText.getSettings().setTextZoom(80);
+      binding.expandLicenseProgress.setIndeterminate(true);
     }
   }
 }

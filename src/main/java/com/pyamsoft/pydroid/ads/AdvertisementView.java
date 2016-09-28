@@ -28,12 +28,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
@@ -64,11 +60,10 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
-  @BindView(R2.id.ad_image) ImageView advertisement;
   AdvertisementPresenter presenter;
-  private Unbinder unbinder;
   private Queue<String> imageQueue;
   private long loadedKey;
+  private ImageView adImage;
 
   public AdvertisementView(Context context) {
     super(context);
@@ -106,7 +101,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {
-    unbinder = ButterKnife.bind(this, this);
+    // Data binding doesnt seem to like out Advertisement View
+    adImage = (ImageView) findViewById(R.id.ad_image);
 
     loadedKey = PersistentCache.get()
         .load(KEY_ADVERTISEMENT, null, new AdvertisementViewLoaderCallback(getContext()) {
@@ -133,8 +129,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   final void destroy(boolean isChangingConfigurations) {
     taskMap.clear();
-    advertisement.setImageDrawable(null);
-    unbinder.unbind();
+    adImage.setImageDrawable(null);
 
     if (!isChangingConfigurations) {
       PersistentCache.get().unload(loadedKey);
@@ -221,13 +216,13 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   @SuppressWarnings("WeakerAccess") void showAdView() {
-    advertisement.setVisibility(View.VISIBLE);
+    adImage.setVisibility(View.VISIBLE);
 
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
-    advertisement.setOnClickListener(view -> presenter.clickAd(currentPackage));
+    adImage.setOnClickListener(view -> presenter.clickAd(currentPackage));
 
-    final AsyncMap.Entry adTask = AsyncDrawable.with(getContext()).load(image).into(advertisement);
+    final AsyncMap.Entry adTask = AsyncDrawable.with(getContext()).load(image).into(adImage);
     taskMap.put("ad", adTask);
 
     Timber.d("Post new ad in 60 seconds");

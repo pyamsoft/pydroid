@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.support;
 
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -23,14 +24,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
-import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.R2;
+import com.pyamsoft.pydroid.databinding.AdapterItemIapBinding;
 import java.util.List;
 import org.solovyev.android.checkout.Sku;
 
@@ -92,21 +89,18 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
-    holder.title.setText(formatTitle(sku.title));
-    holder.description.setText(fromHtml(sku.description));
-    holder.price.setText(sku.price);
+    holder.binding.purchaseIapTitle.setText(formatTitle(sku.title));
+    holder.binding.purchaseIapDescription.setText(fromHtml(sku.description));
+    holder.binding.purchaseIapPrice.setText(sku.price);
   }
 
   protected static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final Unbinder unbinder;
-    @BindView(R2.id.purchase_iap_title) TextView title;
-    @BindView(R2.id.purchase_iap_description) TextView description;
-    @BindView(R2.id.purchase_iap_price) TextView price;
+    @NonNull final AdapterItemIapBinding binding;
 
     public ViewHolder(View itemView) {
       super(itemView);
-      unbinder = ButterKnife.bind(this, itemView);
+      binding = DataBindingUtil.bind(itemView);
     }
   }
 

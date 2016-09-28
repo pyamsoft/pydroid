@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
@@ -26,18 +27,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.AboutLibrariesLoaderCallback;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.databinding.FragmentAboutLibrariesBinding;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
@@ -52,12 +49,11 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
   @NonNull private static final String KEY_ABOUT_PRESENTER = "key_about_presenter";
   @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
-  @BindView(R2.id.recycler_about_libraries) RecyclerView recyclerView;
   @ColorInt private int backgroundColor;
   private FastItemAdapter<AboutAdapterItem> fastItemAdapter;
   private long loadedKey;
   private boolean lastOnBackStack;
-  private Unbinder unbinder;
+  private FragmentAboutLibrariesBinding binding;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
       @NonNull Styling styling, @NonNull BackStackState backStackState) {
@@ -131,8 +127,9 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_about_libraries, container, false);
-    unbinder = ButterKnife.bind(this, view);
+    binding =
+        DataBindingUtil.inflate(inflater, R.layout.fragment_about_libraries, container, false);
+    final View view = binding.getRoot();
     view.setBackgroundColor(backgroundColor);
     return view;
   }
@@ -143,8 +140,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
     fastItemAdapter = new FastItemAdapter<>();
     fastItemAdapter.withSelectable(true);
 
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setAdapter(fastItemAdapter);
+    binding.recyclerAboutLibraries.setLayoutManager(new LinearLayoutManager(getContext()));
+    binding.recyclerAboutLibraries.setAdapter(fastItemAdapter);
 
     final List<AboutAdapterItem> items = new ArrayList<>();
     Licenses.forEach(aboutLicenseItem -> {
@@ -186,7 +183,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    unbinder.unbind();
+    binding.unbind();
     if (lastOnBackStack) {
       Timber.d("About is last on backstack, set up false");
       setActionBarUpEnabled(false);

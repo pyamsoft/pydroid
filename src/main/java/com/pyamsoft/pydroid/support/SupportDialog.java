@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pydroid.support;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
@@ -30,24 +30,15 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.R2;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.SupportLoaderCallback;
+import com.pyamsoft.pydroid.databinding.DialogSupportBinding;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -76,22 +67,12 @@ public class SupportDialog extends DialogFragment
   @NonNull private static final String KEY_SUPPORT_PRESENTER = "key_support_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialMediaPresenter;
   @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
-  @BindView(R2.id.support_about_app) Button aboutApp;
-  @BindView(R2.id.google_play) ImageView googlePlay;
-  @BindView(R2.id.google_plus) ImageView googlePlus;
-  @BindView(R2.id.blogger) ImageView blogger;
-  @BindView(R2.id.facebook) ImageView facebook;
-  @BindView(R2.id.support_recycler) RecyclerView recyclerView;
-  @BindView(R2.id.support_iap_empty) FrameLayout emptyIAP;
-  @BindView(R2.id.support_loading) FrameLayout loadingLayout;
-  @BindView(R2.id.support_loading_progress) ProgressBar loadingProgress;
-  @BindView(R2.id.support_iap_empty_text) TextView emptyIAPText;
   FastItemAdapter<SkuUIItem> fastItemAdapter;
   Inventory inAppPurchaseInventory;
   @SuppressWarnings("WeakerAccess") ActivityCheckout checkout;
+  @SuppressWarnings("WeakerAccess") DialogSupportBinding binding;
   private long socialMediaKey;
   private long supportKey;
-  private Unbinder unbinder;
 
   public static void show(@NonNull FragmentManager fragmentManager) {
     final Bundle args = new Bundle();
@@ -126,30 +107,31 @@ public class SupportDialog extends DialogFragment
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    @SuppressLint("InflateParams") final View rootView =
-        LayoutInflater.from(getActivity()).inflate(R.layout.dialog_support, null, false);
-    unbinder = ButterKnife.bind(this, rootView);
+    binding =
+        DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_support, null,
+            false);
+    final View rootView = binding.getRoot();
     initDialog();
     return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
         (dialogInterface, i) -> dialogInterface.dismiss()).setView(rootView).create();
   }
 
   private void initDialog() {
-    aboutApp.setOnClickListener(
+    binding.supportAboutApp.setOnClickListener(
         view1 -> socialMediaPresenter.clickAppPage(getActivity().getPackageName()));
-    googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
-    googlePlus.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlus());
-    blogger.setOnClickListener(view1 -> socialMediaPresenter.clickBlogger());
-    facebook.setOnClickListener(view1 -> socialMediaPresenter.clickFacebook());
+    binding.googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
+    binding.googlePlus.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlus());
+    binding.blogger.setOnClickListener(view1 -> socialMediaPresenter.clickBlogger());
+    binding.facebook.setOnClickListener(view1 -> socialMediaPresenter.clickFacebook());
 
-    loadingProgress.setIndeterminate(true);
-    emptyIAP.setVisibility(View.GONE);
-    recyclerView.setVisibility(View.GONE);
-    loadingLayout.setVisibility(View.VISIBLE);
+    binding.supportLoadingProgress.setIndeterminate(true);
+    binding.supportIapEmpty.setVisibility(View.GONE);
+    binding.supportRecycler.setVisibility(View.GONE);
+    binding.supportLoading.setVisibility(View.VISIBLE);
 
     fastItemAdapter = new FastItemAdapter<>();
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setAdapter(fastItemAdapter);
+    binding.supportRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+    binding.supportRecycler.setAdapter(fastItemAdapter);
     fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {
       checkoutInAppPurchaseItem(item.getSku());
       return true;
@@ -182,7 +164,7 @@ public class SupportDialog extends DialogFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @Override public void onDestroy() {
@@ -204,26 +186,26 @@ public class SupportDialog extends DialogFragment
 
   void loadUnsupportedIAPView() {
     Timber.e("Load UNSUPPORTED");
-    loadingLayout.setVisibility(View.GONE);
-    recyclerView.setVisibility(View.GONE);
-    emptyIAP.setVisibility(View.VISIBLE);
-    emptyIAPText.setText(getString(R.string.iap_unsupported));
+    binding.supportLoading.setVisibility(View.GONE);
+    binding.supportRecycler.setVisibility(View.GONE);
+    binding.supportIapEmpty.setVisibility(View.VISIBLE);
+    binding.supportIapEmptyText.setText(getString(R.string.iap_unsupported));
   }
 
   void loadEmptyIAPView() {
     Timber.w("Load EMPTY");
-    loadingLayout.setVisibility(View.GONE);
-    recyclerView.setVisibility(View.GONE);
-    emptyIAP.setVisibility(View.VISIBLE);
-    emptyIAPText.setText(getString(R.string.iap_empty));
+    binding.supportLoading.setVisibility(View.GONE);
+    binding.supportRecycler.setVisibility(View.GONE);
+    binding.supportIapEmpty.setVisibility(View.VISIBLE);
+    binding.supportIapEmptyText.setText(getString(R.string.iap_empty));
   }
 
   void loadIAPView() {
     Timber.i("Load IAP");
-    loadingLayout.setVisibility(View.GONE);
-    emptyIAP.setVisibility(View.GONE);
-    emptyIAPText.setText(null);
-    recyclerView.setVisibility(View.VISIBLE);
+    binding.supportLoading.setVisibility(View.GONE);
+    binding.supportIapEmpty.setVisibility(View.GONE);
+    binding.supportIapEmptyText.setText(null);
+    binding.supportRecycler.setVisibility(View.VISIBLE);
     fastItemAdapter.notifyDataSetChanged();
   }
 
@@ -310,8 +292,8 @@ public class SupportDialog extends DialogFragment
   class InventoryLoadedListener implements Inventory.Listener {
 
     @Override public void onLoaded(@NonNull Inventory.Products products) {
-      loadingLayout.setVisibility(View.VISIBLE);
-      recyclerView.setVisibility(View.GONE);
+      binding.supportLoading.setVisibility(View.VISIBLE);
+      binding.supportRecycler.setVisibility(View.GONE);
 
       fastItemAdapter.clear();
       final Inventory.Product product = products.get(ProductTypes.IN_APP);

@@ -15,18 +15,23 @@
   ~ limitations under the License.
   -->
 
-<FrameLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     >
 
-  <ImageView
-      android:id="@+id/ad_image"
+  <FrameLayout
       android:layout_width="match_parent"
-      android:layout_height="50dp"
-      android:contentDescription="@string/blank"
-      android:scaleType="fitXY"
-      />
+      android:layout_height="match_parent"
+      >
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/ad_image"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:contentDescription="@string/blank"
+        android:scaleType="fitXY"
+        />
+
+  </FrameLayout>
+
+</layout>

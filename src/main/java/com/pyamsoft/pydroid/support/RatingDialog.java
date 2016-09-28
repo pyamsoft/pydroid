@@ -16,10 +16,10 @@
 
 package com.pyamsoft.pydroid.support;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.CheckResult;
@@ -32,15 +32,8 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.R2;
+import com.pyamsoft.pydroid.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
@@ -57,15 +50,11 @@ public class RatingDialog extends DialogFragment {
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") String rateLink;
   @SuppressWarnings("WeakerAccess") boolean acknowledged;
-  @BindView(R2.id.rating_btn_no_thanks) Button cancelButton;
-  @BindView(R2.id.rating_icon) ImageView icon;
-  @BindView(R2.id.rating_text_change) TextView changeLog;
-  @BindView(R2.id.rating_btn_go_rate) Button rateButton;
   private SharedPreferences preferences;
   private Spannable changeLogText;
   private int versionCode;
   @DrawableRes private int changeLogIcon;
-  private Unbinder unbinder;
+  private DialogRatingBinding binding;
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider) {
@@ -123,34 +112,35 @@ public class RatingDialog extends DialogFragment {
   @Override public void onDestroyView() {
     super.onDestroyView();
     taskMap.clear();
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-    @SuppressLint("InflateParams") final View rootView =
-        LayoutInflater.from(getActivity()).inflate(R.layout.dialog_rating, null, false);
-    unbinder = ButterKnife.bind(this, rootView);
+    binding =
+        DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_rating, null,
+            false);
     initDialog();
-    builder.setView(rootView);
+    builder.setView(binding.getRoot());
     return builder.create();
   }
 
   private void initDialog() {
-    ViewCompat.setElevation(icon, AppUtil.convertToDP(getContext(), 8));
+    ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
-    final AsyncMap.Entry iconTask = AsyncDrawable.with(getContext()).load(changeLogIcon).into(icon);
+    final AsyncMap.Entry iconTask =
+        AsyncDrawable.with(getContext()).load(changeLogIcon).into(binding.ratingIcon);
     taskMap.put("icon", iconTask);
 
-    changeLog.setText(changeLogText);
+    binding.ratingTextChange.setText(changeLogText);
 
-    cancelButton.setOnClickListener(v -> {
+    binding.ratingBtnNoThanks.setOnClickListener(v -> {
       acknowledged = true;
       dismiss();
     });
 
-    rateButton.setOnClickListener(v -> {
+    binding.ratingBtnGoRate.setOnClickListener(v -> {
       acknowledged = true;
       final String fullLink = "market://details?id=" + rateLink;
       NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);

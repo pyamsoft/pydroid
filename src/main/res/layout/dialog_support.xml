@@ -15,123 +15,128 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
     >
-
-  <Button
-      android:id="@+id/support_about_app"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="8dp"
-      android:text="@string/rate_application"
-      android:textAppearance="?android:textAppearanceMedium"
-      />
-
-  <com.pyamsoft.pydroid.widget.NoLeakTextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="8dp"
-      android:text="@string/donate"
-      android:textAppearance="?android:textAppearanceMedium"
-      />
-
-  <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      >
-
-    <FrameLayout
-        android:id="@+id/support_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        >
-
-      <ProgressBar
-          android:id="@+id/support_loading_progress"
-          android:layout_width="64dp"
-          android:layout_height="64dp"
-          android:layout_gravity="center"
-          style="@style/Widget.AppCompat.ProgressBar"
-          />
-
-    </FrameLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/support_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
-    <FrameLayout
-        android:id="@+id/support_iap_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        >
-
-      <com.pyamsoft.pydroid.widget.NoLeakTextView
-          android:id="@+id/support_iap_empty_text"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textColor="@color/red500"
-          />
-
-    </FrameLayout>
-
-  </FrameLayout>
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="40dp"
-      android:layout_marginTop="8dp"
-      android:paddingLeft="32dp"
-      android:paddingRight="32dp"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
       >
 
-    <ImageView
-        android:id="@+id/google_play"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:contentDescription="@string/blank"
-        android:src="@drawable/google_play"
+    <Button
+        android:id="@+id/support_about_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/rate_application"
+        android:textAppearance="?android:textAppearanceMedium"
         />
 
-    <ImageView
-        android:id="@+id/blogger"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:contentDescription="@string/blank"
-        android:src="@drawable/blogger_icon"
+    <com.pyamsoft.pydroid.widget.NoLeakTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/donate"
+        android:textAppearance="?android:textAppearanceMedium"
         />
 
-    <ImageView
-        android:id="@+id/google_plus"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:contentDescription="@string/blank"
-        android:src="@drawable/google_plus"
-        />
+        >
 
-    <ImageView
-        android:id="@+id/facebook"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:contentDescription="@string/blank"
-        android:src="@drawable/facebook_icon"
-        />
+      <FrameLayout
+          android:id="@+id/support_loading"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:padding="8dp"
+          >
+
+        <ProgressBar
+            android:id="@+id/support_loading_progress"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            style="@style/Widget.AppCompat.ProgressBar"
+            />
+
+      </FrameLayout>
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/support_recycler"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
+
+      <FrameLayout
+          android:id="@+id/support_iap_empty"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:padding="8dp"
+          >
+
+        <com.pyamsoft.pydroid.widget.NoLeakTextView
+            android:id="@+id/support_iap_empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/red500"
+            />
+
+      </FrameLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        >
+
+      <ImageView
+          android:id="@+id/google_play"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:contentDescription="@string/blank"
+          android:src="@drawable/google_play"
+          />
+
+      <ImageView
+          android:id="@+id/blogger"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:contentDescription="@string/blank"
+          android:src="@drawable/blogger_icon"
+          />
+
+      <ImageView
+          android:id="@+id/google_plus"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:contentDescription="@string/blank"
+          android:src="@drawable/google_plus"
+          />
+
+      <ImageView
+          android:id="@+id/facebook"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:contentDescription="@string/blank"
+          android:src="@drawable/facebook_icon"
+          />
+
+    </LinearLayout>
 
   </LinearLayout>
 
-</LinearLayout>
+</layout>

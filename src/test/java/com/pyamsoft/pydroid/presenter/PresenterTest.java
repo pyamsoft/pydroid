@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 public class PresenterTest {
 
-  TestPresenter presenter;
+  private TestPresenter presenter;
 
   @Before public void setup() {
     presenter = new TestPresenter();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util;
+package com.pyamsoft.pydroid;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.CheckResult;
@@ -23,7 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
 
-final class TestUtils {
+public final class TestUtils {
 
   private TestUtils() {
     throw new RuntimeException("No instances");

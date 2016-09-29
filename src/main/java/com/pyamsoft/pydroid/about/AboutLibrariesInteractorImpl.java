@@ -18,14 +18,13 @@ package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
-import com.pyamsoft.pydroid.ActionSingle;
-import com.pyamsoft.pydroid.tool.AsyncCallbackTask;
+import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.OffloaderAsyncTask;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,30 +50,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @NonNull @Override public AsyncTask<AboutLicenseItem, Void, String> loadLicenseText(
-      @NonNull AboutLicenseItem license, @NonNull ActionSingle<String> onLoaded) {
-    return new LicenseLoadTask(cachedLicenses, license, licenseProvider, assetManager, onLoaded);
-  }
-
-  @SuppressWarnings("WeakerAccess") static class LicenseLoadTask
-      extends AsyncCallbackTask<AboutLicenseItem, String> {
-
-    @NonNull private final Map<String, String> cachedLicenses;
-    @NonNull private final AboutLicenseItem license;
-    @NonNull private final LicenseProvider licenseProvider;
-    @NonNull private final AssetManager assetManager;
-
-    LicenseLoadTask(@NonNull Map<String, String> cachedLicenses, @NonNull AboutLicenseItem license,
-        @NonNull LicenseProvider licenseProvider, @NonNull AssetManager assetManager,
-        @NonNull ActionSingle<String> onLoaded) {
-      super(onLoaded);
-      this.cachedLicenses = cachedLicenses;
-      this.license = license;
-      this.licenseProvider = licenseProvider;
-      this.assetManager = assetManager;
-    }
-
-    @Override protected String doInBackground(AboutLicenseItem... params) {
+  @NonNull @Override public Offloader<String> loadLicenseText(@NonNull AboutLicenseItem license) {
+    return new OffloaderAsyncTask<String>().background(() -> {
       if (cachedLicenses.containsKey(license.getName())) {
         Timber.d("Fetch from cache");
         return cachedLicenses.get(license.getName());
@@ -85,51 +62,51 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
         cachedLicenses.put(license.getName(), licenseText);
         return licenseText;
       }
+    });
+  }
+
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult @WorkerThread
+  String loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
+    if (licenseLocation.isEmpty()) {
+      Timber.w("Empty license passed");
+      return "";
     }
 
-    @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult @WorkerThread
-    String loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
-      if (licenseLocation.isEmpty()) {
-        Timber.w("Empty license passed");
-        return "";
-      }
-
-      if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
-        Timber.d("License is Google Play services");
-        final String googleOpenSourceLicenses = licenseProvider.provideGoogleOpenSourceLicenses();
-        final String result =
-            googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
-                : googleOpenSourceLicenses;
-        Timber.i("Finished loading Google Play services license");
-        return result;
-      }
-
-      String licenseText;
-      try (InputStream fileInputStream = assetManager.open(licenseLocation)) {
-
-        // Standard Charsets is only KitKat, add this extra check to support Home Button
-        final InputStreamReader inputStreamReader;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-          inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
-        } else {
-          inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
-        }
-
-        try (BufferedReader br = new BufferedReader(inputStreamReader)) {
-          final StringBuilder text = new StringBuilder();
-          String line = br.readLine();
-          while (line != null) {
-            text.append(line).append('\n');
-            line = br.readLine();
-          }
-          licenseText = text.toString();
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-        licenseText = "Could not load license text";
-      }
-
-      return licenseText;
+    if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
+      Timber.d("License is Google Play services");
+      final String googleOpenSourceLicenses = licenseProvider.provideGoogleOpenSourceLicenses();
+      final String result =
+          googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
+              : googleOpenSourceLicenses;
+      Timber.i("Finished loading Google Play services license");
+      return result;
     }
+
+    String licenseText;
+    try (InputStream fileInputStream = assetManager.open(licenseLocation)) {
+
+      // Standard Charsets is only KitKat, add this extra check to support Home Button
+      final InputStreamReader inputStreamReader;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+      } else {
+        inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+      }
+
+      try (BufferedReader br = new BufferedReader(inputStreamReader)) {
+        final StringBuilder text = new StringBuilder();
+        String line = br.readLine();
+        while (line != null) {
+          text.append(line).append('\n');
+          line = br.readLine();
+        }
+        licenseText = text.toString();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      licenseText = "Could not load license text";
+    }
+
+    return licenseText;
   }
 }

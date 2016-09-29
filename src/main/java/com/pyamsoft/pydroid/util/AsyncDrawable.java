@@ -58,22 +58,21 @@ public final class AsyncDrawable {
     @NonNull @Override
     public AsyncTaskMap.TaskEntry load(@NonNull Context context, @NonNull ImageView imageView,
         @DrawableRes int resource, @ColorRes int tint) {
-      final AsyncTaskMap.TaskEntry<Void, Drawable> taskEntry =
-          new AsyncTaskMap.TaskEntry<Void, Drawable>(imageView::setImageDrawable) {
-            @Override protected Drawable doInBackground(Void... params) {
-              Drawable loaded = AppCompatResources.getDrawable(context, resource);
-              if (loaded == null) {
-                Timber.e("Could not load drawable for resource: %d", resource);
-                return null;
-              }
+      final AsyncTaskMap.TaskEntry<Drawable> taskEntry = new AsyncTaskMap.TaskEntry<Drawable>() {
+        @Override protected Drawable doInBackground(Void... params) {
+          Drawable loaded = AppCompatResources.getDrawable(context, resource);
+          if (loaded == null) {
+            Timber.e("Could not load drawable for resource: %d", resource);
+            return null;
+          }
 
-              if (tint != 0) {
-                loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
-              }
+          if (tint != 0) {
+            loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
+          }
 
-              return loaded;
-            }
-          };
+          return loaded;
+        }
+      };
 
       // Execute it
       AsyncTaskCompat.executeParallel(taskEntry);

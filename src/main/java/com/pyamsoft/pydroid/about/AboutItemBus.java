@@ -18,13 +18,48 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.Bus;
+import android.support.annotation.Nullable;
+import com.android.annotations.VisibleForTesting;
+import com.pyamsoft.pydroid.tool.Bus;
+import com.pyamsoft.pydroid.tool.BusImpl;
 
-final class AboutItemBus extends Bus<AboutLicenseLoadEvent> {
+final class AboutItemBus implements Bus<AboutLicenseLoadEvent> {
 
   @NonNull private static final AboutItemBus bus = new AboutItemBus();
+  @NonNull private Bus<AboutLicenseLoadEvent> delegate;
+
+  private AboutItemBus() {
+    delegate = new BusImpl<>();
+  }
 
   @CheckResult @NonNull public static AboutItemBus get() {
     return bus;
+  }
+
+  @VisibleForTesting static void setBus(@NonNull Bus<AboutLicenseLoadEvent> delegate) {
+    bus.setDelegate(delegate);
+  }
+
+  @VisibleForTesting void setDelegate(@NonNull Bus<AboutLicenseLoadEvent> delegate) {
+    this.delegate = delegate;
+  }
+
+  @Override public void post(@NonNull AboutLicenseLoadEvent event) {
+    delegate.post(event);
+  }
+
+  @NonNull @Override
+  public Event<AboutLicenseLoadEvent> register(@NonNull Event<AboutLicenseLoadEvent> onCall) {
+    return delegate.register(onCall);
+  }
+
+  @NonNull @Override
+  public Event<AboutLicenseLoadEvent> register(@NonNull Event<AboutLicenseLoadEvent> onCall,
+      @Nullable Error onError) {
+    return delegate.register(onCall, onError);
+  }
+
+  @Override public void unregister(@Nullable Event<AboutLicenseLoadEvent> onCall) {
+    delegate.unregister(onCall);
   }
 }

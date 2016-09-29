@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.tool;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.Pair;
+import com.pyamsoft.pydroid.ActionSingle;
 import java.util.HashSet;
 import java.util.Set;
 import timber.log.Timber;
 
-public abstract class Bus<T> {
+public class BusImpl<T> implements Bus<T> {
 
   @NonNull private final Set<Pair<Event<T>, Error>> observers;
   @NonNull private final Handler handler;
 
-  protected Bus() {
+  @VisibleForTesting public BusImpl() {
     observers = new HashSet<>();
     handler = new Handler(Looper.getMainLooper());
   }
 
-  public void post(@NonNull T event) {
+  @Override public void post(@NonNull T event) {
     if (!observers.isEmpty()) {
       for (final Pair<Event<T>, Error> pair : observers) {
         if (pair != null) {
@@ -73,28 +75,20 @@ public abstract class Bus<T> {
     }
   }
 
-  @CheckResult @NonNull public Event<T> register(@NonNull Event<T> onCall) {
+  @Override @CheckResult @NonNull public Event<T> register(@NonNull Event<T> onCall) {
     return register(onCall, null);
   }
 
-  @CheckResult @NonNull
+  @Override @CheckResult @NonNull
   public Event<T> register(@NonNull Event<T> onCall, @Nullable Error onError) {
     remove(onCall);
     observers.add(new Pair<>(onCall, onError));
     return onCall;
   }
 
-  public void unregister(@Nullable Event<T> onCall) {
+  @Override public void unregister(@Nullable Event<T> onCall) {
     if (onCall != null) {
       remove(onCall);
     }
-  }
-
-  public interface Event<T> extends ActionSingle<T> {
-
-  }
-
-  public interface Error extends ActionSingle<Throwable> {
-
   }
 }

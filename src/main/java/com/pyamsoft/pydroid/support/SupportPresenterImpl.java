@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.support;
 
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.Bus;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
+import com.pyamsoft.pydroid.tool.Bus;
 import timber.log.Timber;
 
 class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>

@@ -16,22 +16,26 @@
 
 package com.pyamsoft.pydroid.tool;
 
-import android.os.AsyncTask;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.ActionSingle;
 
-public abstract class AsyncCallbackTask<Param, Result> extends AsyncTask<Param, Void, Result> {
+public interface Bus<T> {
 
-  @NonNull private final ActionSingle<Result> onLoaded;
+  void post(@NonNull T event);
 
-  public AsyncCallbackTask(@NonNull ActionSingle<Result> onLoaded) {
-    this.onLoaded = onLoaded;
+  @CheckResult @NonNull Event<T> register(@NonNull Event<T> onCall);
+
+  @CheckResult @NonNull Event<T> register(@NonNull Event<T> onCall, @Nullable Error onError);
+
+  void unregister(@Nullable Event<T> onCall);
+
+  interface Event<T> extends ActionSingle<T> {
+
   }
 
-  @Override protected void onPostExecute(Result result) {
-    super.onPostExecute(result);
-    if (result != null) {
-      onLoaded.call(result);
-    }
+  interface Error extends ActionSingle<Throwable> {
+
   }
 }

@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.about;
+package com.pyamsoft.pydroid;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.tool.Offloader;
 
-interface AboutLibrariesInteractor {
+public interface FuncNone<T> {
 
-  void clearCache();
-
-  @CheckResult @NonNull Offloader<String> loadLicenseText(@NonNull AboutLicenseItem license);
+  @NonNull @CheckResult T call();
 }

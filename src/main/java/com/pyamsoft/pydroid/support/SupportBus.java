@@ -18,17 +18,46 @@ package com.pyamsoft.pydroid.support;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.Bus;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import com.pyamsoft.pydroid.tool.Bus;
+import com.pyamsoft.pydroid.tool.BusImpl;
 
-final class SupportBus extends Bus<DonationResult> {
+final class SupportBus implements Bus<DonationResult> {
 
   @NonNull private static final SupportBus bus = new SupportBus();
+  @NonNull private Bus<DonationResult> delegate;
 
   private SupportBus() {
-    super();
+    delegate = new BusImpl<>();
+  }
+
+  @VisibleForTesting static void set(@NonNull BusImpl<DonationResult> delegate) {
+    bus.setDelegate(delegate);
   }
 
   @CheckResult @NonNull public static SupportBus get() {
     return bus;
+  }
+
+  @VisibleForTesting void setDelegate(@NonNull Bus<DonationResult> delegate) {
+    this.delegate = delegate;
+  }
+
+  @Override public void post(@NonNull DonationResult event) {
+    delegate.post(event);
+  }
+
+  @NonNull @Override public Event<DonationResult> register(@NonNull Event<DonationResult> onCall) {
+    return delegate.register(onCall);
+  }
+
+  @NonNull @Override public Event<DonationResult> register(@NonNull Event<DonationResult> onCall,
+      @Nullable Error onError) {
+    return delegate.register(onCall, onError);
+  }
+
+  @Override public void unregister(@Nullable Event<DonationResult> onCall) {
+    delegate.unregister(onCall);
   }
 }

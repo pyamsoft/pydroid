@@ -16,18 +16,13 @@
 
 package com.pyamsoft.pydroid.tool;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.ActionSingle;
+import android.os.AsyncTask;
 
 @SuppressWarnings("WeakerAccess") public class AsyncTaskMap
     extends AsyncMap<AsyncTaskMap.TaskEntry> {
 
-  public static abstract class TaskEntry<Params, Result> extends AsyncCallbackTask<Params, Result>
+  public abstract static class TaskEntry<T> extends AsyncTask<Void, Void, T>
       implements AsyncMap.Entry {
-
-    public TaskEntry(@NonNull ActionSingle<Result> onLoaded) {
-      super(onLoaded);
-    }
 
     @Override public void unload() {
       cancel(true);

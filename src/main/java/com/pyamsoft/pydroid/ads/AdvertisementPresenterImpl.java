@@ -16,19 +16,18 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.os.AsyncTaskCompat;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.tool.Offloader;
+import timber.log.Timber;
 
 class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.AdView>
     implements AdvertisementPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final SocialMediaPresenter socialMediaPresenter;
   @NonNull private final AdvertisementInteractor interactor;
-  @Nullable private AsyncTask adSubscription;
+  @NonNull private Offloader<Boolean> offloader = new Offloader.Empty<>();
 
   AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor,
       @NonNull SocialMediaPresenter socialMediaPresenter) {
@@ -43,10 +42,8 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
   }
 
   @SuppressWarnings("WeakerAccess") void unsubAdSubscription() {
-    if (adSubscription != null) {
-      if (!adSubscription.isCancelled()) {
-        adSubscription.cancel(true);
-      }
+    if (!offloader.isCancelled()) {
+      offloader.cancel();
     }
   }
 
@@ -64,20 +61,20 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
 
   @Override public void showAd() {
     unsubAdSubscription();
-    adSubscription = AsyncTaskCompat.executeParallel(interactor.showAdView(show -> getView(view -> {
+    offloader = interactor.showAdView().result(show -> {
       if (show) {
-        view.onShown();
+        getView(AdView::onShown);
       }
-    })));
+    }).error(item -> Timber.e(item, "onError showAd")).execute();
   }
 
   @Override public void hideAd() {
     unsubAdSubscription();
-    adSubscription = AsyncTaskCompat.executeParallel(interactor.hideAdView(hide -> getView(view -> {
+    offloader = interactor.hideAdView().result(hide -> {
       if (hide) {
-        view.onHidden();
+        getView(AdView::onHidden);
       }
-    })));
+    }).error(item -> Timber.e(item, "onError hideAd")).execute();
   }
 
   @Override public void clickAd(@NonNull String packageName) {

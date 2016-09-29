@@ -18,12 +18,11 @@ package com.pyamsoft.pydroid.ads;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
-import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.tool.AsyncCallbackTask;
+import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.OffloaderAsyncTask;
 import timber.log.Timber;
 
 class AdvertisementInteractorImpl implements AdvertisementInteractor {
@@ -42,51 +41,35 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
     preferenceDefault = appContext.getResources().getBoolean(R.bool.adview_default);
   }
 
-  @NonNull @Override
-  public AsyncTask<Void, Void, Boolean> showAdView(@NonNull ActionSingle<Boolean> onLoaded) {
-    return new AsyncCallbackTask<Void, Boolean>(onLoaded) {
-      @Override protected Boolean doInBackground(Void... params) {
-        final boolean isEnabled = preferences.getBoolean(preferenceKey, preferenceDefault);
-        final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
-        final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
+  @NonNull @Override public Offloader<Boolean> showAdView() {
+    return new OffloaderAsyncTask<Boolean>().background(() -> {
+      final boolean isEnabled = preferences.getBoolean(preferenceKey, preferenceDefault);
+      final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
+      final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
 
-        if (isCancelled()) {
-          Timber.w("Task cancelled");
-          return null;
-        } else {
-          if (isEnabled && isValidCount) {
-            Timber.d("Show ad view");
-            return true;
-          } else {
-            Timber.w("Do not show ad view");
-            final int newCount = shownCount + 1;
-            Timber.d("Increment shown count to %d", newCount);
-            preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, newCount).apply();
-            return false;
-          }
-        }
+      if (isEnabled && isValidCount) {
+        Timber.d("Show ad view");
+        return true;
+      } else {
+        Timber.w("Do not show ad view");
+        final int newCount = shownCount + 1;
+        Timber.d("Increment shown count to %d", newCount);
+        preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, newCount).apply();
+        return false;
       }
-    };
+    });
   }
 
-  @NonNull @Override
-  public AsyncTask<Void, Void, Boolean> hideAdView(@NonNull ActionSingle<Boolean> onLoaded) {
-    return new AsyncCallbackTask<Void, Boolean>(onLoaded) {
-      @Override protected Boolean doInBackground(Void... params) {
-        Timber.d("Hide AdView");
-        if (isCancelled()) {
-          Timber.w("Task cancelled");
-          return null;
-        } else {
-          if (preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0) >= MAX_SHOW_COUNT) {
-            Timber.d("Write shown count back to 0");
-            preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
-            return true;
-          } else {
-            return false;
-          }
-        }
+  @NonNull @Override public Offloader<Boolean> hideAdView() {
+    return new OffloaderAsyncTask<Boolean>().background(() -> {
+      Timber.d("Hide AdView");
+      if (preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0) >= MAX_SHOW_COUNT) {
+        Timber.d("Write shown count back to 0");
+        preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
+        return true;
+      } else {
+        return false;
       }
-    };
+    });
   }
 }

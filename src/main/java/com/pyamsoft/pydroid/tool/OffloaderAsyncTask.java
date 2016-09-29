@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.tool;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.os.AsyncTaskCompat;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.FuncNone;
 
@@ -76,7 +77,7 @@ public class OffloaderAsyncTask<T> implements Offloader<T> {
       throw new NullPointerException("Cannot execute Offloader with NULL background task");
     } else {
       cancel();
-      asnycTask = new AsyncTask<Void, Void, T>() {
+      asnycTask = AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, T>() {
         @Override protected T doInBackground(Void... params) {
           try {
             return background.call();
@@ -104,7 +105,7 @@ public class OffloaderAsyncTask<T> implements Offloader<T> {
             }
           }
         }
-      };
+      });
 
       return this;
     }

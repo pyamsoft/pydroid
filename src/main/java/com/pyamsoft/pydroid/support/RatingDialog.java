@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 

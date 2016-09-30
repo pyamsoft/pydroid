@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util;
+package com.pyamsoft.pydroid.tool;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -25,8 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
-import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.tool.AsyncTaskMap;
+import com.pyamsoft.pydroid.util.DrawableUtil;
 import timber.log.Timber;
 
 public final class AsyncDrawable {
@@ -71,6 +70,13 @@ public final class AsyncDrawable {
           }
 
           return loaded;
+        }
+
+        @Override protected void onPostExecute(Drawable drawable) {
+          super.onPostExecute(drawable);
+          if (drawable != null) {
+            imageView.setImageDrawable(drawable);
+          }
         }
       };
 

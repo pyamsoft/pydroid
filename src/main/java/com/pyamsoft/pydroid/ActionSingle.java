@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid;
 
-import android.support.annotation.NonNull;
-
 public interface ActionSingle<I> {
 
-  void call(@NonNull I item);
+  void call(I item);
 }

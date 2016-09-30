@@ -17,9 +17,8 @@
 package com.pyamsoft.pydroid;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
 
 public interface FuncNone<T> {
 
-  @NonNull @CheckResult T call();
+  @CheckResult T call();
 }

@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;

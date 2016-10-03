@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import java.util.Locale;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
 
@@ -36,5 +37,13 @@ public final class TestUtils {
         Robolectric.buildActivity(AppCompatActivity.class);
     activityController.get().setTheme(android.support.design.R.style.Theme_AppCompat);
     return activityController;
+  }
+
+  public static void log(String fmt, Object... args) {
+    System.out.printf(Locale.getDefault(), fmt + "\n", args);
+  }
+
+  public static void expected(String fmt, Object... args) {
+    System.err.printf(Locale.getDefault(), "EXPECTED: " + fmt + "\n", args);
   }
 }

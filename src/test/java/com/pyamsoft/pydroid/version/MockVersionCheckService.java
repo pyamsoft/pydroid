@@ -18,19 +18,24 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import retrofit2.Call;
+import retrofit2.http.Url;
+import retrofit2.mock.BehaviorDelegate;
 
-class VersionCheckInteractorImpl implements VersionCheckInteractor {
+class MockVersionCheckService implements VersionCheckInteractor.VersionCheckService {
 
-  @NonNull private final String packageName;
-  @NonNull private final VersionCheckService versionCheckService;
+  public static final int CURRENT_VERSION = 10;
+  @NonNull private final BehaviorDelegate<VersionCheckInteractor.VersionCheckService> delegate;
 
-  VersionCheckInteractorImpl(@NonNull VersionCheckService versionCheckService,
-      @NonNull String packageName) {
-    this.versionCheckService = versionCheckService;
-    this.packageName = packageName;
+  MockVersionCheckService(
+      @NonNull BehaviorDelegate<VersionCheckInteractor.VersionCheckService> delegate) {
+    this.delegate = delegate;
   }
 
-  @NonNull @Override public Call<VersionCheckResponse> checkVersion() {
-    return versionCheckService.checkVersion(packageName);
+  @NonNull @Override public Call<VersionCheckResponse> checkVersion(@Url String packageName) {
+    return delegate.returningResponse(new VersionCheckResponse() {
+      @Override int currentVersion() {
+        return CURRENT_VERSION;
+      }
+    }).checkVersion(packageName);
   }
 }

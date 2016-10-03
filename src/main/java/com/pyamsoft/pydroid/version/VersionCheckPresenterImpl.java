@@ -70,8 +70,10 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
   }
 
   @SuppressWarnings("WeakerAccess") void cancelCall() {
-    if (call != null && !call.isCanceled()) {
-      call.cancel();
+    if (call != null) {
+      if (!call.isCanceled()) {
+        call.cancel();
+      }
     }
   }
 }

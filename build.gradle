@@ -115,6 +115,7 @@ dependencies {
 
   // Retrofit
   compile "com.squareup.retrofit2:retrofit:$retrofit"
+  compile "com.squareup.retrofit2:retrofit-mock:$retrofit"
   compile "com.squareup.retrofit2:converter-gson:$retrofit"
   compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 

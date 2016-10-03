@@ -57,15 +57,15 @@ public class PresenterTest {
     assertTrue(presenter.isDestroyed());
   }
 
-  static class TestPresenter extends PresenterBase<String> {
+  private static class TestPresenter extends PresenterBase<String> {
 
     private boolean destroyed;
 
-    public TestPresenter() {
+    TestPresenter() {
       this.destroyed = false;
     }
 
-    public boolean isDestroyed() {
+    boolean isDestroyed() {
       return destroyed;
     }
 

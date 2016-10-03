@@ -28,8 +28,9 @@ public class VersionCheckModule {
 
   public VersionCheckModule(@NonNull PYDroidModule.Provider pyDroidModule,
       @NonNull ApiModule apiModule) {
-    interactor = new VersionCheckInteractorImpl(pyDroidModule.provideContext(),
-        apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class));
+    interactor = new VersionCheckInteractorImpl(
+        apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class),
+        pyDroidModule.provideContext().getPackageName());
     presenter = new VersionCheckPresenterImpl(interactor);
     loader = new VersionCheckPresenterLoader(pyDroidModule.provideContext(), presenter);
   }

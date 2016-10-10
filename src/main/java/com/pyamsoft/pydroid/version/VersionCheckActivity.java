@@ -18,8 +18,10 @@ package com.pyamsoft.pydroid.version;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
 import com.pyamsoft.pydroid.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -34,6 +36,15 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   private long loadedKey;
   private VersionCheckLoaderCallback loaderCallback;
+
+  @CheckResult private boolean isVersionCheckEnabled() {
+    // Always enabled for release builds
+    return !BuildConfig.DEBUG || shouldCheckVersion();
+  }
+
+  @CheckResult protected boolean shouldCheckVersion() {
+    return true;
+  }
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -70,8 +81,11 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   @CallSuper @Override protected void onStart() {
     super.onStart();
     presenter.bindView(this);
-    if (!loaderCallback.isLicenseChecked()) {
-      presenter.checkForUpdates(getCurrentApplicationVersion());
+
+    if (isVersionCheckEnabled()) {
+      if (!loaderCallback.isLicenseChecked()) {
+        presenter.checkForUpdates(getCurrentApplicationVersion());
+      }
     }
   }
 

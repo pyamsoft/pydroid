@@ -46,8 +46,8 @@ public abstract class PresenterBase<I> implements Presenter<I> {
   }
 
   @Override public final void unbindView() {
-    weakView.clear();
     onUnbind();
+    weakView.clear();
   }
 
   @Override final public void destroy() {

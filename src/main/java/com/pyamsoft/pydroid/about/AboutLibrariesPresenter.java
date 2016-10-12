@@ -21,6 +21,8 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface AboutLibrariesPresenter extends Presenter<AboutLibrariesPresenter.View> {
 
+  void loadLicenseText(int position, @NonNull AboutLicenseItem license);
+
   interface View {
 
     void onLicenseTextLoaded(int position, @NonNull String text);

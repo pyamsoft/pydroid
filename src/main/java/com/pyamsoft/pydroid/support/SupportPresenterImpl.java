@@ -16,38 +16,18 @@
 
 package com.pyamsoft.pydroid.support;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.tool.Bus;
-import timber.log.Timber;
 
 class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
     implements SupportPresenter {
 
-  @Nullable private Bus.Event<DonationResult> busRegistration;
-
   SupportPresenterImpl() {
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    registerOnDonationResultBus();
-  }
-
-  private void registerOnDonationResultBus() {
-    unregisterDonationResultBus();
-    busRegistration = SupportBus.get()
-        .register(event -> getView(
-            view -> view.onDonationResult(event.requestCode(), event.resultCode(), event.data())),
-            throwable -> Timber.e(throwable, "onError registerOnDonationResultBus"));
-  }
-
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    unregisterDonationResultBus();
-  }
-
-  private void unregisterDonationResultBus() {
-    SupportBus.get().unregister(busRegistration);
+  @Override
+  public void processDonationResult(int requestCode, int resultCode, @Nullable Intent data) {
+    getView(view -> view.onDonationResult(requestCode, resultCode, data));
   }
 }

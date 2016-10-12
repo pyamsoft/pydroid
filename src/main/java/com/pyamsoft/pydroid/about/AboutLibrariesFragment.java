@@ -155,7 +155,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
       }
 
       if (add) {
-        items.add(new AboutAdapterItem(aboutLicenseItem));
+        items.add(new AboutAdapterItem(aboutLicenseItem,
+            (position, item) -> presenter.loadLicenseText(position, item)));
       }
     });
     fastItemAdapter.add(items);

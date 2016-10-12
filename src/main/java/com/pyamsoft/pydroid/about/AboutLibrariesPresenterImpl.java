@@ -17,9 +17,7 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.tool.Bus;
 import com.pyamsoft.pydroid.tool.Offloader;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,39 +28,19 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
 
   @NonNull private final AboutLibrariesInteractor interactor;
   @NonNull private final Set<Offloader> licenseSubscriptions;
-  @Nullable private Bus.Event<AboutLicenseLoadEvent> loadLicenseBus;
 
   AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor) {
     this.interactor = interactor;
     licenseSubscriptions = new HashSet<>();
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    registerOnLicenseBus();
-  }
-
-  private void registerOnLicenseBus() {
-    unregisterLicenseBus();
-    loadLicenseBus = AboutItemBus.get()
-        .register(aboutLicenseLoadEvent -> loadLicenseText(aboutLicenseLoadEvent.position(),
-            aboutLicenseLoadEvent.license()),
-            throwable -> Timber.e(throwable, "onError registerOnLicenseBus"));
-  }
-
-  private void unregisterLicenseBus() {
-    AboutItemBus.get().unregister(loadLicenseBus);
-  }
-
   @Override protected void onUnbind() {
     super.onUnbind();
-    unregisterLicenseBus();
     unsubLoadLicense();
     interactor.clearCache();
   }
 
-  @SuppressWarnings("WeakerAccess") void loadLicenseText(int position,
-      @NonNull AboutLicenseItem license) {
+  @Override public void loadLicenseText(int position, @NonNull AboutLicenseItem license) {
     final Offloader licenseSubscription = interactor.loadLicenseText(license)
         .result(item -> getView(view -> view.onLicenseTextLoaded(position, item)))
         .error(throwable -> Timber.e(throwable, "onError loadLicenseText"))

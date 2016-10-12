@@ -35,6 +35,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
   @NonNull private final AboutLicenseItem item;
+  @NonNull private final OnLoadLicenseRequestListener listener;
   @NonNull private String licenseText;
   private boolean expanded;
 
@@ -45,8 +46,9 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
         return true;
       };
 
-  AboutAdapterItem(@NonNull AboutLicenseItem item) {
+  AboutAdapterItem(@NonNull AboutLicenseItem item, @NonNull OnLoadLicenseRequestListener listener) {
     this.item = item;
+    this.listener = listener;
     licenseText = "";
   }
 
@@ -107,8 +109,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
     if (isExpanded()) {
       if (licenseText.length() == 0) {
         viewHolder.binding.expandLicenseProgress.setVisibility(View.VISIBLE);
-        AboutItemBus.get()
-            .post(AboutLicenseLoadEvent.create(viewHolder.getAdapterPosition(), item));
+        listener.onLoadLicense(viewHolder.getAdapterPosition(), item);
       } else {
         viewHolder.binding.expandLicenseProgress.setVisibility(View.GONE);
         viewHolder.binding.expandLicenseText.setVisibility(View.VISIBLE);
@@ -125,6 +126,11 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   @CheckResult @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
     return FACTORY;
+  }
+
+  interface OnLoadLicenseRequestListener {
+
+    void onLoadLicense(int position, @NonNull AboutLicenseItem item);
   }
 
   @SuppressWarnings("WeakerAccess") protected static class ItemFactory

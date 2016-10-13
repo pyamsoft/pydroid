@@ -22,6 +22,8 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface SupportPresenter extends Presenter<SupportPresenter.View> {
 
+  void processDonationResult(int requestCode, int resultCode, @Nullable Intent data);
+
   interface View {
 
     void onDonationResult(int requestCode, int resultCode, @Nullable Intent data);

@@ -63,6 +63,7 @@ import timber.log.Timber;
 public class SupportDialog extends DialogFragment
     implements SocialMediaPresenter.View, SupportPresenter.View {
 
+  @NonNull public static final String TAG = "SupportDialog";
   @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_social_presenter";
   @NonNull private static final String KEY_SUPPORT_PRESENTER = "key_support_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialMediaPresenter;
@@ -74,11 +75,19 @@ public class SupportDialog extends DialogFragment
   private long socialMediaKey;
   private long supportKey;
 
+  @CheckResult @NonNull SupportPresenter getPresenter() {
+    if (supportPresenter == null) {
+      throw new NullPointerException("Presenter is NULL");
+    }
+
+    return supportPresenter;
+  }
+
   public static void show(@NonNull FragmentManager fragmentManager) {
     final Bundle args = new Bundle();
     final SupportDialog fragment = new SupportDialog();
     fragment.setArguments(args);
-    AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, "SupportDialog");
+    AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, TAG);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {

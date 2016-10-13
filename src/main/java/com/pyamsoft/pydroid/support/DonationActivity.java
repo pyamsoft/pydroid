@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.support;
 import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,7 +32,7 @@ public abstract class DonationActivity extends VersionCheckActivity {
   @CallSuper @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    SupportBus.get().post(DonationResult.create(requestCode, resultCode, data));
+    forwardDonationResultToDialog(requestCode, resultCode, data);
   }
 
   @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {
@@ -50,5 +52,16 @@ public abstract class DonationActivity extends VersionCheckActivity {
       handled = false;
     }
     return handled;
+  }
+
+  private void forwardDonationResultToDialog(int requestCode, int resultCode, Intent data) {
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    final Fragment supportDialog = fragmentManager.findFragmentByTag(SupportDialog.TAG);
+    if (supportDialog instanceof SupportDialog) {
+      ((SupportDialog) supportDialog).getPresenter()
+          .processDonationResult(requestCode, resultCode, data);
+    } else {
+      throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
+    }
   }
 }

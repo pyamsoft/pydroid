@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.FuncNone;
 /**
  * An offloader which is backed by an AsyncTask
  */
-public class OffloaderAsyncTask<T> implements Offloader<T> {
+public class AsyncOffloader<T> implements Offloader<T> {
 
   @SuppressWarnings("WeakerAccess") @Nullable FuncNone<T> background;
   @SuppressWarnings("WeakerAccess") @Nullable ActionSingle<T> result;

@@ -16,22 +16,22 @@
 
 package com.pyamsoft.pydroid;
 
-import android.content.Context;
+import android.app.Activity;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.support.SupportPresenter;
 
-public abstract class SupportLoaderCallback implements PersistLoader.Callback<SupportPresenter> {
+public abstract class SupportPresenterProvider {
 
-  @NonNull private final Context context;
-
-  protected SupportLoaderCallback(@NonNull Context context) {
-    this.context = context.getApplicationContext();
+  protected SupportPresenterProvider() {
   }
 
-  @NonNull @Override public PersistLoader<SupportPresenter> createLoader() {
-    return PYDroidApplication.get(context.getApplicationContext())
-        .provideSupportModule()
-        .getLoader();
+  @NonNull @CheckResult public SupportPresenter providePresenter() {
+    final Activity activity = provideActivity();
+    return PYDroidApplication.get(activity.getApplication())
+        .provideSupportModule(activity)
+        .getPresenter();
   }
+
+  @NonNull @CheckResult protected abstract Activity provideActivity();
 }

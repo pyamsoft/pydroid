@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -30,7 +31,7 @@ public class PYDroidModule {
 
   @NonNull private final Provider provider;
 
-  public PYDroidModule(@NonNull Context context) {
+  PYDroidModule(@NonNull Context context) {
     provider = new Provider(context);
   }
 
@@ -40,8 +41,8 @@ public class PYDroidModule {
   }
 
   // Create a new one every time
-  @CheckResult @NonNull final SupportModule provideSupportModule() {
-    return new SupportModule(provider);
+  @CheckResult @NonNull final SupportModule provideSupportModule(@NonNull Activity activity) {
+    return new SupportModule(provider, activity);
   }
 
   // Create a new one every time

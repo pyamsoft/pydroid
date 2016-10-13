@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.pydroid.tool.Offloader;
-import com.pyamsoft.pydroid.tool.OffloaderAsyncTask;
+import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +51,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   }
 
   @NonNull @Override public Offloader<String> loadLicenseText(@NonNull AboutLicenseItem license) {
-    return new OffloaderAsyncTask<String>().background(() -> {
+    return new AsyncOffloader<String>().background(() -> {
       if (cachedLicenses.containsKey(license.getName())) {
         Timber.d("Fetch from cache");
         return cachedLicenses.get(license.getName());

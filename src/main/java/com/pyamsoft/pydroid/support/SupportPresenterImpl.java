@@ -17,17 +17,75 @@
 package com.pyamsoft.pydroid.support;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
+import com.pyamsoft.pydroid.tool.Offloader;
+import org.solovyev.android.checkout.Inventory;
+import timber.log.Timber;
 
 class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
-    implements SupportPresenter {
+    implements SupportPresenter, Inventory.Listener {
 
-  SupportPresenterImpl() {
+  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
+  final SupportInteractor.OnBillingSuccessListener successListener;
+  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
+  final SupportInteractor.OnBillingErrorListener errorListener;
+  @NonNull private final SupportInteractor interactor;
+  @NonNull private Offloader billingResult = new Offloader.Empty();
+
+  SupportPresenterImpl(@NonNull SupportInteractor interactor) {
+    this.interactor = interactor;
+    successListener = () -> getView(View::onBillingSuccess);
+    errorListener = () -> getView(View::onBillingError);
   }
 
-  @Override
-  public void processDonationResult(int requestCode, int resultCode, @Nullable Intent data) {
-    getView(view -> view.onDonationResult(requestCode, resultCode, data));
+  @Override protected void onBind() {
+    super.onBind();
+    interactor.create(this, successListener, errorListener);
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    interactor.destroy();
+    unsubBillingResult();
+  }
+
+  @Override public void loadInventory() {
+    interactor.loadInventory();
+  }
+
+  @Override public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
+    unsubBillingResult();
+    billingResult =
+        interactor.processBillingResult(requestCode, resultCode, data).error(throwable -> {
+          Timber.e(throwable, "Error processing Billing result");
+          getView(View::onProcessResultError);
+        }).result(result -> getView(view -> {
+          if (result) {
+            view.onProcessResultSuccess();
+          } else {
+            view.onProcessResultFailed();
+          }
+        }));
+  }
+
+  private void unsubBillingResult() {
+    if (!billingResult.isCancelled()) {
+      billingResult.cancel();
+    }
+  }
+
+  @Override public void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem) {
+    if (skuUIItem.isPurchased()) {
+      interactor.consume(skuUIItem.getToken());
+    } else {
+      interactor.purchase(skuUIItem.getSku());
+    }
+  }
+
+  @Override public void onLoaded(@NonNull Inventory.Products products) {
+    getView(view -> view.onInventoryLoaded(products));
   }
 }

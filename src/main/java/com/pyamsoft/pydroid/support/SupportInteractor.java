@@ -17,31 +17,36 @@
 package com.pyamsoft.pydroid.support;
 
 import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.tool.Offloader;
 import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.Sku;
 
-public interface SupportPresenter extends Presenter<SupportPresenter.View> {
+interface SupportInteractor {
+
+  void create(@NonNull Inventory.Listener listener, @NonNull OnBillingSuccessListener success,
+      @NonNull OnBillingErrorListener error);
+
+  void destroy();
 
   void loadInventory();
 
-  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data);
+  void purchase(@NonNull Sku sku);
 
-  void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem);
+  void consume(@NonNull String token);
 
-  interface View {
+  @CheckResult @NonNull Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
+      @Nullable Intent data);
 
-    void onBillingSuccess();
+  interface OnBillingErrorListener {
 
     void onBillingError();
+  }
 
-    void onProcessResultSuccess();
+  interface OnBillingSuccessListener {
 
-    void onProcessResultError();
-
-    void onProcessResultFailed();
-
-    void onInventoryLoaded(@NonNull Inventory.Products products);
+    void onBillingSuccess();
   }
 }

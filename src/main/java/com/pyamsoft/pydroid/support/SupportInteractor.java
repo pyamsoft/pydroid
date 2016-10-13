@@ -17,8 +17,10 @@
 package com.pyamsoft.pydroid.support;
 
 import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.tool.Offloader;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
 
@@ -35,7 +37,8 @@ interface SupportInteractor {
 
   void consume(@NonNull String token);
 
-  void processBillingResult(int requestCode, int resultCode, @Nullable Intent data);
+  @CheckResult @NonNull Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
+      @Nullable Intent data);
 
   interface OnBillingErrorListener {
 

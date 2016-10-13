@@ -76,6 +76,20 @@ public class SupportDialog extends DialogFragment
         .show();
   }
 
+  @Override public void onProcessResultSuccess() {
+    Timber.i("Process Billing result was a success!");
+  }
+
+  @Override public void onProcessResultError() {
+    Timber.e("Process result error");
+    onBillingError();
+  }
+
+  @Override public void onProcessResultFailed() {
+    Timber.e("Process result failed");
+    onBillingError();
+  }
+
   @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
     binding.supportLoading.setVisibility(View.VISIBLE);
     binding.supportRecycler.setVisibility(View.GONE);
@@ -241,7 +255,7 @@ public class SupportDialog extends DialogFragment
     binding.supportRecycler.setVisibility(View.VISIBLE);
     fastItemAdapter.notifyDataSetChanged();
 
-    final List<SkuUIItem> items  =  fastItemAdapter.getAdapterItems();
+    final List<SkuUIItem> items = fastItemAdapter.getAdapterItems();
     for (final SkuUIItem item : items) {
       if (item.isPurchased()) {
         Timber.i("Item is purchased already, attempt to auto-consume it.");
@@ -250,7 +264,7 @@ public class SupportDialog extends DialogFragment
     }
   }
 
-  void onDonationResult(int requestCode, int resultCode, @Nullable Intent data) {
-    supportPresenter.onDonationResult(requestCode, resultCode, data);
+  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
+    supportPresenter.onBillingResult(requestCode, resultCode, data);
   }
 }

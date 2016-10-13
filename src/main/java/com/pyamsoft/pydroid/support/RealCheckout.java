@@ -63,9 +63,6 @@ class RealCheckout implements ICheckout {
 
   @Override public void start() {
     checkout.start();
-  }
-
-  @Override public void createPurchaseFlow() {
     checkout.createPurchaseFlow(new DonationPurchaseListener());
   }
 
@@ -81,9 +78,6 @@ class RealCheckout implements ICheckout {
 
   @Override public void stop() {
     checkout.stop();
-    successListener = null;
-    errorListener = null;
-    inventoryListener = null;
     inventory = null;
   }
 
@@ -104,8 +98,8 @@ class RealCheckout implements ICheckout {
   }
 
   @Override
-  public void processBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
-    checkout.onActivityResult(requestCode, resultCode, data);
+  public boolean processBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
+    return checkout.onActivityResult(requestCode, resultCode, data);
   }
 
   abstract class BaseRequestListener<T> implements RequestListener<T> {

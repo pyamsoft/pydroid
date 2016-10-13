@@ -26,7 +26,7 @@ public interface SupportPresenter extends Presenter<SupportPresenter.View> {
 
   void loadInventory();
 
-  void onDonationResult(int requestCode, int resultCode, @Nullable Intent data);
+  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data);
 
   void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem);
 
@@ -35,6 +35,12 @@ public interface SupportPresenter extends Presenter<SupportPresenter.View> {
     void onBillingSuccess();
 
     void onBillingError();
+
+    void onProcessResultSuccess();
+
+    void onProcessResultError();
+
+    void onProcessResultFailed();
 
     void onInventoryLoaded(@NonNull Inventory.Products products);
   }

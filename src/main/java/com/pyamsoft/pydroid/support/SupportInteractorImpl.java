@@ -19,6 +19,8 @@ package com.pyamsoft.pydroid.support;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.SerialOffloader;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
@@ -29,7 +31,6 @@ class SupportInteractorImpl implements SupportInteractor {
 
   SupportInteractorImpl(@NonNull ICheckout checkout) {
     this.checkout = checkout;
-    checkout.start();
   }
 
   @Override public void create(@NonNull Inventory.Listener listener,
@@ -39,12 +40,15 @@ class SupportInteractorImpl implements SupportInteractor {
     checkout.setSuccessListener(success);
     checkout.setErrorListener(error);
     checkout.setInventoryListener(listener);
-    checkout.createPurchaseFlow();
+    checkout.start();
   }
 
   @Override public void destroy() {
     Timber.d("Stop checkout purchase flow");
     checkout.stop();
+    checkout.setSuccessListener(null);
+    checkout.setErrorListener(null);
+    checkout.setInventoryListener(null);
   }
 
   @Override public void loadInventory() {
@@ -61,9 +65,10 @@ class SupportInteractorImpl implements SupportInteractor {
     checkout.consume(token);
   }
 
-  @Override
-  public void processBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
+  @NonNull @Override public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
+      @Nullable Intent data) {
     Timber.i("Process billing result");
-    checkout.processBillingResult(requestCode, resultCode, data);
+    return new SerialOffloader<Boolean>().background(
+        () -> checkout.processBillingResult(requestCode, resultCode, data));
   }
 }

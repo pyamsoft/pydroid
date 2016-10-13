@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.support;
 
 import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import org.solovyev.android.checkout.Inventory;
@@ -30,8 +31,6 @@ interface ICheckout {
 
   void setErrorListener(@Nullable SupportInteractor.OnBillingErrorListener errorListener);
 
-  void createPurchaseFlow();
-
   void loadInventory();
 
   void start();
@@ -42,5 +41,5 @@ interface ICheckout {
 
   void consume(@NonNull String token);
 
-  void processBillingResult(int requestCode, int resultCode, @Nullable Intent data);
+  @CheckResult boolean processBillingResult(int requestCode, int resultCode, @Nullable Intent data);
 }

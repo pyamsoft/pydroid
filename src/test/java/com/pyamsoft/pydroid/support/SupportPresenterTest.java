@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.support;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.tool.Offloader;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,6 +63,18 @@ public class SupportPresenterTest {
 
       }
 
+      @Override public void onProcessResultSuccess() {
+
+      }
+
+      @Override public void onProcessResultError() {
+
+      }
+
+      @Override public void onProcessResultFailed() {
+
+      }
+
       @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
 
       }
@@ -87,6 +100,18 @@ public class SupportPresenterTest {
       }
 
       @Override public void onBillingError() {
+
+      }
+
+      @Override public void onProcessResultSuccess() {
+
+      }
+
+      @Override public void onProcessResultError() {
+
+      }
+
+      @Override public void onProcessResultFailed() {
 
       }
 
@@ -126,6 +151,18 @@ public class SupportPresenterTest {
 
       }
 
+      @Override public void onProcessResultSuccess() {
+
+      }
+
+      @Override public void onProcessResultError() {
+
+      }
+
+      @Override public void onProcessResultFailed() {
+
+      }
+
       @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
         count.incrementAndGet();
       }
@@ -144,29 +181,30 @@ public class SupportPresenterTest {
   @Test public void testProcessResult() {
     final AtomicInteger count1 = new AtomicInteger(0);
     final AtomicInteger count2 = new AtomicInteger(0);
+    //noinspection CheckResult
     Mockito.doAnswer(invocation -> {
       count1.incrementAndGet();
-      return null;
+      return new Offloader.Empty<Boolean>();
     }).when(mockInteractor).processBillingResult(0, 0, null);
 
     final Intent intent = new Intent();
+    //noinspection CheckResult
     Mockito.doAnswer(invocation -> {
       count2.incrementAndGet();
-      return null;
+      return new Offloader.Empty<Boolean>();
     }).when(mockInteractor).processBillingResult(0, 0, intent);
 
     // Donation result with NULL is handled correctly
     assertEquals(0, count1.get());
     assertEquals(0, count2.get());
-    presenter.onDonationResult(0, 0, null);
+    presenter.onBillingResult(0, 0, null);
     assertEquals(1, count1.get());
     assertEquals(0, count2.get());
-
 
     // Donation result is handled correctly
     assertEquals(1, count1.get());
     assertEquals(0, count2.get());
-    presenter.onDonationResult(0, 0, intent);
+    presenter.onBillingResult(0, 0, intent);
     assertEquals(1, count1.get());
     assertEquals(1, count2.get());
   }

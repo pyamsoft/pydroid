@@ -240,6 +240,14 @@ public class SupportDialog extends DialogFragment
     binding.supportIapEmptyText.setText(null);
     binding.supportRecycler.setVisibility(View.VISIBLE);
     fastItemAdapter.notifyDataSetChanged();
+
+    final List<SkuUIItem> items  =  fastItemAdapter.getAdapterItems();
+    for (final SkuUIItem item : items) {
+      if (item.isPurchased()) {
+        Timber.i("Item is purchased already, attempt to auto-consume it.");
+        supportPresenter.checkoutInAppPurchaseItem(item);
+      }
+    }
   }
 
   void onDonationResult(int requestCode, int resultCode, @Nullable Intent data) {

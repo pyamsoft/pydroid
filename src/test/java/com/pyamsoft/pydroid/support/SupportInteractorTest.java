@@ -16,26 +16,22 @@
 
 package com.pyamsoft.pydroid.support;
 
-import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.pydroid.BuildConfig;
-import com.pyamsoft.pydroid.TestUtils;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.ActivityController;
 
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class SupportInteractorTest {
 
+  @Mock ICheckout mockCheckout;
   private SupportInteractorImpl interactor;
 
   @Before public void setup() {
-    final ActivityController<AppCompatActivity> activityController =
-        TestUtils.getAppCompatActivityController();
-    // Create the activity because that is the earliest point of possible Interactor entry
-    final Activity activity = activityController.create().get();
+    mockCheckout = Mockito.mock(ICheckout.class);
+    interactor = new SupportInteractorImpl(mockCheckout);
   }
-
 }

@@ -19,15 +19,18 @@ package com.pyamsoft.pydroid.support;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import org.solovyev.android.checkout.Inventory;
 
 class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
     implements SupportPresenter, Inventory.Listener {
 
+  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
+  final SupportInteractor.OnBillingSuccessListener successListener;
+  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
+  final SupportInteractor.OnBillingErrorListener errorListener;
   @NonNull private final SupportInteractor interactor;
-  @NonNull private final SupportInteractor.OnBillingSuccessListener successListener;
-  @NonNull private final SupportInteractor.OnBillingErrorListener errorListener;
 
   SupportPresenterImpl(@NonNull SupportInteractor interactor) {
     this.interactor = interactor;

@@ -81,7 +81,7 @@ class SupportInteractorImpl implements SupportInteractor {
 
   @Override public void loadInventory() {
     if (inventoryListener != null) {
-      checkout.loadInventory().load().whenLoaded(inventoryListener);
+      getInAppPurchaseInventory().load().whenLoaded(inventoryListener);
     }
   }
 

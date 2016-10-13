@@ -68,7 +68,7 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
           } else {
             view.onProcessResultFailed();
           }
-        }));
+        })).execute();
   }
 
   private void unsubBillingResult() {

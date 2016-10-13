@@ -58,8 +58,7 @@ public abstract class DonationActivity extends VersionCheckActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     final Fragment supportDialog = fragmentManager.findFragmentByTag(SupportDialog.TAG);
     if (supportDialog instanceof SupportDialog) {
-      ((SupportDialog) supportDialog).getPresenter()
-          .processDonationResult(requestCode, resultCode, data);
+      ((SupportDialog) supportDialog).onDonationResult(requestCode, resultCode, data);
     } else {
       throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
     }

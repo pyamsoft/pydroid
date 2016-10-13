@@ -16,20 +16,34 @@
 
 package com.pyamsoft.pydroid.support;
 
-import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import android.support.annotation.Nullable;
+import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.Sku;
 
-public class SupportPresenterLoader extends PersistLoader<SupportPresenter> {
+interface SupportInteractor {
 
-  @NonNull private final SupportPresenter presenter;
+  void create(@NonNull Inventory.Listener listener, @NonNull OnBillingSuccessListener success,
+      @NonNull OnBillingErrorListener error);
 
-  SupportPresenterLoader(@NonNull Context context, @NonNull SupportPresenter presenter) {
-    super(context);
-    this.presenter = presenter;
+  void destroy();
+
+  void loadInventory();
+
+  void purchase(@NonNull Sku sku);
+
+  void consume(@NonNull String token);
+
+  void processBillingResult(int requestCode, int resultCode, @Nullable Intent data);
+
+  interface OnBillingErrorListener {
+
+    void onBillingError();
   }
 
-  @NonNull @Override public SupportPresenter loadPersistent() {
-    return presenter;
+  interface OnBillingSuccessListener {
+
+    void onBillingSuccess();
   }
 }

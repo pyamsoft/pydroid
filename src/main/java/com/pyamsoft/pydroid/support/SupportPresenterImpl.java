@@ -17,17 +17,51 @@
 package com.pyamsoft.pydroid.support;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
+import org.solovyev.android.checkout.Inventory;
 
 class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
-    implements SupportPresenter {
+    implements SupportPresenter, Inventory.Listener {
 
-  SupportPresenterImpl() {
+  @NonNull private final SupportInteractor interactor;
+  @NonNull private final SupportInteractor.OnBillingSuccessListener successListener;
+  @NonNull private final SupportInteractor.OnBillingErrorListener errorListener;
+
+  SupportPresenterImpl(@NonNull SupportInteractor interactor) {
+    this.interactor = interactor;
+    successListener = () -> getView(View::onBillingSuccess);
+    errorListener = () -> getView(View::onBillingError);
   }
 
-  @Override
-  public void processDonationResult(int requestCode, int resultCode, @Nullable Intent data) {
-    getView(view -> view.onDonationResult(requestCode, resultCode, data));
+  @Override protected void onBind() {
+    super.onBind();
+    interactor.create(this, successListener, errorListener);
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    interactor.destroy();
+  }
+
+  @Override public void loadInventory() {
+    interactor.loadInventory();
+  }
+
+  @Override public void onDonationResult(int requestCode, int resultCode, @Nullable Intent data) {
+    interactor.processBillingResult(requestCode, resultCode, data);
+  }
+
+  @Override public void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem) {
+    if (skuUIItem.isPurchased()) {
+      interactor.consume(skuUIItem.getToken());
+    } else {
+      interactor.purchase(skuUIItem.getSku());
+    }
+  }
+
+  @Override public void onLoaded(@NonNull Inventory.Products products) {
+    getView(view -> view.onInventoryLoaded(products));
   }
 }

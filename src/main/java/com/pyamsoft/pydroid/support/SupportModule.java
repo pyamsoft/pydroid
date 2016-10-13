@@ -16,21 +16,22 @@
 
 package com.pyamsoft.pydroid.support;
 
+import android.app.Activity;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.PYDroidModule;
 
 public class SupportModule {
 
+  @NonNull private final SupportInteractor interactor;
   @NonNull private final SupportPresenter presenter;
-  @NonNull private final SupportPresenterLoader loader;
 
-  public SupportModule(@NonNull PYDroidModule.Provider pyDroidModule) {
-    presenter = new SupportPresenterImpl();
-    loader = new SupportPresenterLoader(pyDroidModule.provideContext(), presenter);
+  public SupportModule(@NonNull PYDroidModule.Provider pyDroidModule, @NonNull Activity activity) {
+    interactor = new SupportInteractorImpl(activity);
+    presenter = new SupportPresenterImpl(interactor);
   }
 
-  @NonNull @CheckResult public SupportPresenterLoader getLoader() {
-    return loader;
+  @NonNull @CheckResult public SupportPresenter getPresenter() {
+    return presenter;
   }
 }

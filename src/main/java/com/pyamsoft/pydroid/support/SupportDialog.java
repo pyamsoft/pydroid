@@ -75,19 +75,19 @@ public class SupportDialog extends DialogFragment
   private long socialMediaKey;
   private long supportKey;
 
+  public static void show(@NonNull FragmentManager fragmentManager) {
+    final Bundle args = new Bundle();
+    final SupportDialog fragment = new SupportDialog();
+    fragment.setArguments(args);
+    AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, TAG);
+  }
+
   @CheckResult @NonNull SupportPresenter getPresenter() {
     if (supportPresenter == null) {
       throw new NullPointerException("Presenter is NULL");
     }
 
     return supportPresenter;
-  }
-
-  public static void show(@NonNull FragmentManager fragmentManager) {
-    final Bundle args = new Bundle();
-    final SupportDialog fragment = new SupportDialog();
-    fragment.setArguments(args);
-    AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, TAG);
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -142,7 +142,7 @@ public class SupportDialog extends DialogFragment
     binding.supportRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
     binding.supportRecycler.setAdapter(fastItemAdapter);
     fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {
-      checkoutInAppPurchaseItem(item.getSku());
+      checkoutInAppPurchaseItem(item);
       return true;
     });
 
@@ -185,12 +185,23 @@ public class SupportDialog extends DialogFragment
     }
   }
 
-  void checkoutInAppPurchaseItem(@NonNull Sku sku) {
-    checkout.whenReady(new Checkout.ListenerAdapter() {
-      @Override public void onReady(@NonNull BillingRequests requests) {
-        requests.purchase(sku, null, checkout.getPurchaseFlow());
-      }
-    });
+  void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem) {
+    if (skuUIItem.isPurchased()) {
+      Timber.w("Item %s is already purchased, attempt consume", skuUIItem.getSku().id);
+      checkout.whenReady(new Checkout.ListenerAdapter() {
+
+        @Override public void onReady(@NonNull BillingRequests requests) {
+          requests.consume(skuUIItem.getToken(), new ConsumeListener());
+        }
+      });
+    } else {
+      Timber.i("Purchase item: %s", skuUIItem.getSku().id);
+      checkout.whenReady(new Checkout.ListenerAdapter() {
+        @Override public void onReady(@NonNull BillingRequests requests) {
+          requests.purchase(skuUIItem.getSku(), null, checkout.getPurchaseFlow());
+        }
+      });
+    }
   }
 
   void loadUnsupportedIAPView() {
@@ -312,7 +323,14 @@ public class SupportDialog extends DialogFragment
         // Only reveal non-consumable items
         for (Sku sku : product.getSkus()) {
           Timber.d("Add sku: %s", sku.id);
-          skuList.add(new SkuUIItem(sku));
+          final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
+          final String token;
+          if (purchase == null) {
+            token = null;
+          } else {
+            token = purchase.token;
+          }
+          skuList.add(new SkuUIItem(sku, token));
         }
 
         Collections.sort(skuList, (o1, o2) -> {

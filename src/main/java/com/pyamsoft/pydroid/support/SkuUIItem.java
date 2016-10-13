@@ -20,6 +20,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
@@ -36,9 +37,11 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
   @NonNull private final Sku sku;
+  @Nullable private final String token;
 
-  SkuUIItem(@NonNull Sku sku) {
+  SkuUIItem(@NonNull Sku sku, @Nullable String token) {
     this.sku = sku;
+    this.token = token;
   }
 
   @SuppressWarnings("deprecation") @CheckResult @NonNull
@@ -73,6 +76,18 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
   @NonNull @CheckResult Sku getSku() {
     return sku;
+  }
+
+  @CheckResult boolean isPurchased() {
+    return token != null;
+  }
+
+  @CheckResult @NonNull String getToken() {
+    if (token == null) {
+      throw new NullPointerException("Token is NULL");
+    }
+
+    return token;
   }
 
   @Override public int getType() {

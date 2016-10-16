@@ -17,32 +17,23 @@
 package com.pyamsoft.pydroid.app.fragment;
 
 import android.support.annotation.CallSuper;
-import android.support.annotation.CheckResult;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 public abstract class ActionBarPreferenceFragment extends PreferenceFragmentCompat
     implements ActionBarProvider {
 
-  @Override @CheckResult @Nullable public ActionBar getActionBar() {
-    final FragmentActivity activity = getActivity();
-    if (activity instanceof AppCompatActivity) {
-      final AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
-      return appCompatActivity.getSupportActionBar();
-    } else {
-      throw new ClassCastException("Activity not instance of AppCompatActivity");
-    }
+  @Override public void setActionBarUpEnabled(boolean up) {
+    ActionBarFragmentUtil.setActionBarUpEnabled(getActivity(), up);
   }
 
-  @Override public void setActionBarUpEnabled(boolean up) {
-    final ActionBar bar = getActionBar();
-    if (bar != null) {
-      bar.setHomeButtonEnabled(up);
-      bar.setDisplayHomeAsUpEnabled(up);
-    }
+  @Override public void setActionBarTitle(@NonNull CharSequence title) {
+    ActionBarFragmentUtil.setActionBarTitle(getActivity(), title);
+  }
+
+  @Override public void setActionBarTitle(@StringRes int title) {
+    ActionBarFragmentUtil.setActionBarTitle(getActivity(), title);
   }
 
   @CallSuper @Override public void onDestroy() {

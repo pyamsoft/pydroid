@@ -20,6 +20,7 @@ import android.app.Application;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import com.pyamsoft.pydroid.PYDroidApplication;
@@ -30,6 +31,10 @@ interface ActionBarProvider {
   @CheckResult @Nullable ActionBar getActionBar();
 
   void setActionBarUpEnabled(boolean up);
+
+  void setActionBarTitle(@NonNull CharSequence title);
+
+  void setActionBarTitle(@StringRes int title);
 
   final class Util {
 

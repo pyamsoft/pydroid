@@ -17,10 +17,13 @@
 package com.pyamsoft.pydroid.app.fragment;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -40,10 +43,27 @@ final class ActionBarFragmentUtil {
   }
 
   static void setActionBarUpEnabled(@NonNull Activity activity, boolean up) {
+    setActionBarUpEnabled(activity, up, null);
+  }
+
+  static void setActionBarUpEnabled(@NonNull Activity activity, boolean up, @DrawableRes int icon) {
+    final Drawable d;
+    if (icon != 0) {
+      d = ContextCompat.getDrawable(activity, icon);
+    } else {
+      d = null;
+    }
+
+    setActionBarUpEnabled(activity, up, d);
+  }
+
+  static void setActionBarUpEnabled(@NonNull Activity activity, boolean up,
+      @Nullable Drawable icon) {
     final ActionBar bar = getActionBar(activity);
     if (bar != null) {
       bar.setHomeButtonEnabled(up);
       bar.setDisplayHomeAsUpEnabled(up);
+      bar.setHomeAsUpIndicator(icon);
     }
   }
 

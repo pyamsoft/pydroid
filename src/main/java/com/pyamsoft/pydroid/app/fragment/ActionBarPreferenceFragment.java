@@ -16,8 +16,11 @@
 
 package com.pyamsoft.pydroid.app.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.CallSuper;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
@@ -26,6 +29,14 @@ public abstract class ActionBarPreferenceFragment extends PreferenceFragmentComp
 
   @Override public void setActionBarUpEnabled(boolean up) {
     ActionBarFragmentUtil.setActionBarUpEnabled(getActivity(), up);
+  }
+
+  @Override public void setActionBarUpEnabled(boolean up, @DrawableRes int icon) {
+    ActionBarFragmentUtil.setActionBarUpEnabled(getActivity(), up, icon);
+  }
+
+  @Override public void setActionBarUpEnabled(boolean up, @Nullable Drawable icon) {
+    ActionBarFragmentUtil.setActionBarUpEnabled(getActivity(), up, icon);
   }
 
   @Override public void setActionBarTitle(@NonNull CharSequence title) {

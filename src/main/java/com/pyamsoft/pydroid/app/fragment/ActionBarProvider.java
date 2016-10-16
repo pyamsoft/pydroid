@@ -17,20 +17,23 @@
 package com.pyamsoft.pydroid.app.fragment;
 
 import android.app.Application;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import com.pyamsoft.pydroid.PYDroidApplication;
 import com.squareup.leakcanary.RefWatcher;
 
 interface ActionBarProvider {
 
-  @CheckResult @Nullable ActionBar getActionBar();
-
   void setActionBarUpEnabled(boolean up);
+
+  void setActionBarUpEnabled(boolean up, @DrawableRes int icon);
+
+  void setActionBarUpEnabled(boolean up, @Nullable Drawable icon);
 
   void setActionBarTitle(@NonNull CharSequence title);
 

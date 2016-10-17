@@ -43,7 +43,7 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
   @Override public void loadLicenseText(int position, @NonNull AboutLicenseItem license) {
     final ExecutedOffloader licenseSubscription = interactor.loadLicenseText(license)
         .onError(throwable -> Timber.e(throwable, "onError loadLicenseText"))
-        .onResult(item -> Timber.d("Load license result: %s", item))
+        .onResult(item -> getView(view -> view.onLicenseTextLoaded(position, item)))
         .execute();
 
     Timber.d("Add license subscription");

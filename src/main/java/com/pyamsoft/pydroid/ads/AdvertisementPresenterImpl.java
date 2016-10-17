@@ -63,7 +63,7 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
     unsubAdSubscription();
     offloader = interactor.showAdView()
         .onError(item -> Timber.e(item, "onError showAd"))
-        .onResult(item -> Timber.d("Ad shown: %s", item))
+        .onResult(item -> getView(AdView::onShown))
         .execute();
   }
 
@@ -71,7 +71,7 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
     unsubAdSubscription();
     offloader = interactor.hideAdView()
         .onError(item -> Timber.e(item, "onError hideAd"))
-        .onResult(item -> Timber.d("Ad shown: %s", item))
+        .onResult(item -> getView(AdView::onHidden))
         .execute();
   }
 

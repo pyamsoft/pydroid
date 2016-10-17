@@ -62,7 +62,13 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
         interactor.processBillingResult(requestCode, resultCode, data).onError(throwable -> {
           Timber.e(throwable, "Error processing Billing onFinish");
           getView(View::onProcessResultError);
-        }).onResult(item -> Timber.d("Billing process result: %s", item)).execute();
+        }).onResult(result -> getView(view -> {
+          if (result) {
+            view.onProcessResultSuccess();
+          } else {
+            view.onProcessResultFailed();
+          }
+        })).execute();
   }
 
   private void unsubBillingResult() {

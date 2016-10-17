@@ -32,6 +32,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import static com.pyamsoft.pydroid.TestUtils.log;
+
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class PersistentCacheTest {
 
@@ -221,9 +223,9 @@ public class PersistentCacheTest {
     final long startTime = System.nanoTime();
 
     // We will load 1000 keys
-    @SuppressWarnings("MismatchedReadAndWriteOfArray") final long[] keys = new long[keySize];
     for (int i = 0; i < keySize; ++i) {
-      keys[i] = cache.load(String.valueOf(i), NULL_STATE, new PersistLoader.Callback<Object>() {
+      //noinspection CheckResult
+      cache.load(String.valueOf(i), NULL_STATE, new PersistLoader.Callback<Object>() {
         @NonNull @Override public PersistLoader<Object> createLoader() {
           return new PersistLoader<Object>(RuntimeEnvironment.application) {
             @NonNull @Override public Object loadPersistent() {
@@ -243,8 +245,8 @@ public class PersistentCacheTest {
     final long difference = endTime - startTime;
     final long differenceMillis = difference / 1000000;
     final long differenceSeconds = differenceMillis / 1000;
-    System.out.printf("Loading %s keys took: %d milliseconds (%d seconds)\n", keySize,
-        differenceMillis, differenceSeconds);
+    log("Loading %s keys took: %d milliseconds (%d seconds)", keySize, differenceMillis,
+        differenceSeconds);
   }
 
   @Test public void test_creationPerformance1000() {
@@ -310,8 +312,8 @@ public class PersistentCacheTest {
     final long difference = endTime - startTime;
     final long differenceMillis = difference / 1000000;
     final long differenceSeconds = differenceMillis / 1000;
-    System.out.printf("Retrieving %s keys took: %d milliseconds (%d seconds)\n", keySize,
-        differenceMillis, differenceSeconds);
+    log("Retrieving %s keys took: %d milliseconds (%d seconds)", keySize, differenceMillis,
+        differenceSeconds);
   }
 
   @Test public void test_retrievePerformance1000() {
@@ -332,10 +334,8 @@ public class PersistentCacheTest {
 
   static class DoNotDestroy {
 
-    private final boolean destroyed = false;
-
-    public boolean isDestroyed() {
-      return destroyed;
+    boolean isDestroyed() {
+      return false;
     }
   }
 
@@ -343,7 +343,7 @@ public class PersistentCacheTest {
 
     private boolean destroyed = false;
 
-    public boolean isDestroyed() {
+    boolean isDestroyed() {
       return destroyed;
     }
 

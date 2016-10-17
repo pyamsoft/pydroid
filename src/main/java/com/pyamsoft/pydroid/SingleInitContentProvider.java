@@ -35,12 +35,16 @@ public abstract class SingleInitContentProvider extends ContentProvider {
     created = false;
   }
 
+  private static void setCreated(boolean created) {
+    SingleInitContentProvider.created = created;
+  }
+
   @Override public boolean onCreate() {
     if (created) {
       return false;
     }
 
-    created = true;
+    setCreated(true);
     final Context context = getContext();
     if (context == null) {
       throw new NullPointerException("Context is NULL");

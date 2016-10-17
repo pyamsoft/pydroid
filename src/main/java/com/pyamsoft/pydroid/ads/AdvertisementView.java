@@ -30,18 +30,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
 import timber.log.Timber;
 
 public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
@@ -93,7 +93,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   private void init() {
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));
-    Collections.shuffle(randomList, new Random(System.nanoTime()));
+    Collections.shuffle(randomList, new SecureRandom());
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));

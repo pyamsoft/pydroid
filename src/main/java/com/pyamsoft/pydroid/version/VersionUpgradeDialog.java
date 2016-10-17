@@ -83,7 +83,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final String message = String.format(Locale.getDefault(),
-        "A new version of %s is available!\nCurrent version: %d\nLatest verson: %d",
+        "A new version of %s is available!%nCurrent version: %d%nLatest verson: %d",
         applicationName, currentVersion, latestVersion);
     return new AlertDialog.Builder(getActivity()).setTitle("New version available")
         .setMessage(message)

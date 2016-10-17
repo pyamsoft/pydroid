@@ -40,10 +40,10 @@ public final class TestUtils {
   }
 
   public static void log(String fmt, Object... args) {
-    System.out.printf(Locale.getDefault(), fmt + "\n", args);
+    System.out.printf(Locale.getDefault(), fmt + "%n", args);
   }
 
   public static void expected(String fmt, Object... args) {
-    System.err.printf(Locale.getDefault(), "EXPECTED: " + fmt + "\n", args);
+    System.err.printf(Locale.getDefault(), "EXPECTED: " + fmt + "%n", args);
   }
 }

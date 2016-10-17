@@ -93,16 +93,8 @@ public class AsyncOffloader<T> implements Offloader<T> {
 
         @Override protected void onPostExecute(T o) {
           super.onPostExecute(o);
-          try {
-            if (result != null && o != null) {
-              result.call(o);
-            }
-          } catch (Throwable throwable) {
-            if (error == null) {
-              throw throwable;
-            } else {
-              error.call(throwable);
-            }
+          if (result != null) {
+            result.call(o);
           }
         }
       });

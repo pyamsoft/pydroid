@@ -84,16 +84,8 @@ public class SerialOffloader<T> implements Offloader<T> {
         o = null;
       }
 
-      try {
-        if (result != null && o != null) {
-          result.call(o);
-        }
-      } catch (Throwable throwable) {
-        if (error == null) {
-          throw throwable;
-        } else {
-          error.call(throwable);
-        }
+      if (result != null) {
+        result.call(o);
       }
       return this;
     }

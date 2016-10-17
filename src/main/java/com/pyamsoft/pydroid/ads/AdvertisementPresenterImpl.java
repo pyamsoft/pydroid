@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ads;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import timber.log.Timber;
 
 class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.AdView>
@@ -27,7 +27,7 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
 
   @SuppressWarnings("WeakerAccess") @NonNull final SocialMediaPresenter socialMediaPresenter;
   @NonNull private final AdvertisementInteractor interactor;
-  @NonNull private Offloader<Boolean> offloader = new Offloader.Empty<>();
+  @NonNull private ExecutedOffloader offloader = new ExecutedOffloader.Empty();
 
   AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor,
       @NonNull SocialMediaPresenter socialMediaPresenter) {
@@ -61,20 +61,18 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
 
   @Override public void showAd() {
     unsubAdSubscription();
-    offloader = interactor.showAdView().result(show -> {
-      if (show) {
-        getView(AdView::onShown);
-      }
-    }).error(item -> Timber.e(item, "onError showAd")).execute();
+    offloader = interactor.showAdView()
+        .onError(item -> Timber.e(item, "onError showAd"))
+        .onResult(item -> Timber.d("Ad shown: %s", item))
+        .execute();
   }
 
   @Override public void hideAd() {
     unsubAdSubscription();
-    offloader = interactor.hideAdView().result(hide -> {
-      if (hide) {
-        getView(AdView::onHidden);
-      }
-    }).error(item -> Timber.e(item, "onError hideAd")).execute();
+    offloader = interactor.hideAdView()
+        .onError(item -> Timber.e(item, "onError hideAd"))
+        .onResult(item -> Timber.d("Ad shown: %s", item))
+        .execute();
   }
 
   @Override public void clickAd(@NonNull String packageName) {

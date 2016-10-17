@@ -72,21 +72,21 @@ public class SupportDialog extends DialogFragment
 
   @Override public void onBillingError() {
     Toast.makeText(getContext(),
-        "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
+        "An onError occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
         .show();
   }
 
   @Override public void onProcessResultSuccess() {
-    Timber.i("Process Billing result was a success!");
+    Timber.i("Process Billing onFinish was a success!");
   }
 
   @Override public void onProcessResultError() {
-    Timber.e("Process result error");
+    Timber.e("Process onFinish onError");
     onBillingError();
   }
 
   @Override public void onProcessResultFailed() {
-    Timber.e("Process result failed");
+    Timber.e("Process onFinish failed");
     onBillingError();
   }
 

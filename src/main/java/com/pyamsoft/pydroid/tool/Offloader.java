@@ -18,55 +18,50 @@ package com.pyamsoft.pydroid.tool;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.FuncNone;
 
 /**
- * A class which can help with offloading work to the background
+ * A class which can help with offloading work to the onProcess
  *
  * Cancel does not guarantee immediate cancelling, do not rely too heavily on this class, think of
  * it more as a way to abstract hard dependency on AsyncTask out of code base
  *
- * Requires a background function, but result and error handling are optional
+ * Requires a onProcess function, but onFinish and onError handling are optional
  */
 public interface Offloader<T> {
 
-  @CheckResult boolean isCancelled();
+  @CheckResult @NonNull Offloader<T> onProcess(@NonNull FuncNone<T> background);
 
-  void cancel();
+  @CheckResult @NonNull Offloader<T> onError(@NonNull ActionSingle<Throwable> error);
 
-  @CheckResult @NonNull Offloader<T> background(@NonNull FuncNone<T> background);
+  @CheckResult @NonNull Offloader<T> onResult(@NonNull ActionSingle<T> result);
 
-  @CheckResult @NonNull Offloader<T> result(@NonNull ActionSingle<T> result);
+  @CheckResult @NonNull Offloader<T> onFinish(@NonNull ActionNone finisher);
 
-  @CheckResult @NonNull Offloader<T> error(@NonNull ActionSingle<Throwable> error);
-
-  @CheckResult @NonNull Offloader<T> execute();
+  @CheckResult @NonNull ExecutedOffloader execute();
 
   class Empty<T> implements Offloader<T> {
 
-    @Override public boolean isCancelled() {
-      return false;
-    }
-
-    @Override public void cancel() {
-
-    }
-
-    @NonNull @Override public Offloader<T> background(@NonNull FuncNone<T> background) {
+    @NonNull @Override public Offloader<T> onProcess(@NonNull FuncNone<T> background) {
       return this;
     }
 
-    @NonNull @Override public Offloader<T> result(@NonNull ActionSingle<T> result) {
+    @NonNull @Override public Offloader<T> onError(@NonNull ActionSingle<Throwable> error) {
       return this;
     }
 
-    @NonNull @Override public Offloader<T> error(@NonNull ActionSingle<Throwable> error) {
+    @NonNull @Override public Offloader<T> onResult(@NonNull ActionSingle<T> background) {
       return this;
     }
 
-    @NonNull @Override public Offloader<T> execute() {
+    @NonNull @Override public Offloader<T> onFinish(@NonNull ActionNone finisher) {
       return this;
+    }
+
+    @NonNull @Override public ExecutedOffloader execute() {
+      return new ExecutedOffloader.Empty();
     }
   }
 }

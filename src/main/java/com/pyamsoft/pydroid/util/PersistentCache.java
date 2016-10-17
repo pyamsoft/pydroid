@@ -99,7 +99,7 @@ public final class PersistentCache {
       }
     } else {
       Timber.e("Persisted object was NULL [%d]", key);
-      Timber.e("This is usually indicative of a lifecycle error. Check your Fragments!");
+      Timber.e("This is usually indicative of a lifecycle onError. Check your Fragments!");
     }
   }
 }

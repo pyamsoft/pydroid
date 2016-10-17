@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import java.util.HashSet;
 import java.util.Set;
 import timber.log.Timber;
@@ -27,7 +27,7 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
     implements AboutLibrariesPresenter {
 
   @NonNull private final AboutLibrariesInteractor interactor;
-  @NonNull private final Set<Offloader> licenseSubscriptions;
+  @NonNull private final Set<ExecutedOffloader> licenseSubscriptions;
 
   AboutLibrariesPresenterImpl(@NonNull AboutLibrariesInteractor interactor) {
     this.interactor = interactor;
@@ -41,9 +41,9 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
   }
 
   @Override public void loadLicenseText(int position, @NonNull AboutLicenseItem license) {
-    final Offloader licenseSubscription = interactor.loadLicenseText(license)
-        .result(item -> getView(view -> view.onLicenseTextLoaded(position, item)))
-        .error(throwable -> Timber.e(throwable, "onError loadLicenseText"))
+    final ExecutedOffloader licenseSubscription = interactor.loadLicenseText(license)
+        .onError(throwable -> Timber.e(throwable, "onError loadLicenseText"))
+        .onResult(item -> Timber.d("Load license result: %s", item))
         .execute();
 
     Timber.d("Add license subscription");
@@ -51,7 +51,7 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
   }
 
   @SuppressWarnings("WeakerAccess") void unsubLoadLicense() {
-    for (final Offloader task : licenseSubscriptions) {
+    for (final ExecutedOffloader task : licenseSubscriptions) {
       if (task != null) {
         if (!task.isCancelled()) {
           task.cancel();

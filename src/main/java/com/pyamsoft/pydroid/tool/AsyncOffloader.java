@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.os.AsyncTaskCompat;
+import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.FuncNone;
 
@@ -28,59 +29,56 @@ import com.pyamsoft.pydroid.FuncNone;
  */
 public class AsyncOffloader<T> implements Offloader<T> {
 
-  @SuppressWarnings("WeakerAccess") @Nullable FuncNone<T> background;
-  @SuppressWarnings("WeakerAccess") @Nullable ActionSingle<T> result;
+  @SuppressWarnings("WeakerAccess") @Nullable FuncNone<T> process;
   @SuppressWarnings("WeakerAccess") @Nullable ActionSingle<Throwable> error;
+  @SuppressWarnings("WeakerAccess") @Nullable ActionSingle<T> result;
+  @SuppressWarnings("WeakerAccess") @Nullable ActionNone finisher;
   @Nullable private AsyncTask asnycTask;
 
-  @Override @NonNull public Offloader<T> background(@NonNull FuncNone<T> background) {
-    if (this.background != null) {
-      throw new IllegalStateException("Cannot redefine background action");
+  @Override @NonNull public Offloader<T> onProcess(@NonNull FuncNone<T> background) {
+    if (this.process != null) {
+      throw new IllegalStateException("Cannot redefine onProcess action");
     }
 
-    this.background = background;
+    this.process = background;
     return this;
   }
 
-  @Override @NonNull public Offloader<T> result(@NonNull ActionSingle<T> result) {
-    if (this.result != null) {
-      throw new IllegalStateException("Cannot redefine result action");
+  @Override @NonNull public Offloader<T> onFinish(@NonNull ActionNone finisher) {
+    if (this.finisher != null) {
+      throw new IllegalStateException("Cannot redefine onFinish action");
     }
 
-    this.result = result;
+    this.finisher = finisher;
     return this;
   }
 
-  @Override @NonNull public Offloader<T> error(@NonNull ActionSingle<Throwable> error) {
+  @Override @NonNull public Offloader<T> onError(@NonNull ActionSingle<Throwable> error) {
     if (this.error != null) {
-      throw new IllegalStateException("Cannot redefine error action");
+      throw new IllegalStateException("Cannot redefine onError action");
     }
 
     this.error = error;
     return this;
   }
 
-  @Override public boolean isCancelled() {
-    return asnycTask == null || asnycTask.isCancelled();
-  }
-
-  @Override public void cancel() {
-    if (asnycTask != null) {
-      if (!asnycTask.isCancelled()) {
-        asnycTask.cancel(true);
-      }
+  @NonNull @Override public Offloader<T> onResult(@NonNull ActionSingle<T> result) {
+    if (this.result != null) {
+      throw new IllegalStateException("Cannot redefine onFinish action");
     }
+
+    this.result = result;
+    return this;
   }
 
-  @NonNull @Override public Offloader<T> execute() {
-    if (background == null) {
-      throw new NullPointerException("Cannot execute Offloader with NULL background task");
+  @NonNull @Override public ExecutedOffloader execute() {
+    if (process == null) {
+      throw new NullPointerException("Cannot execute Offloader with NULL onProcess task");
     } else {
-      cancel();
       asnycTask = AsyncTaskCompat.executeParallel(new AsyncTask<Void, Void, T>() {
         @Override protected T doInBackground(Void... params) {
           try {
-            return background.call();
+            return process.call();
           } catch (Throwable throwable) {
             if (error == null) {
               throw throwable;
@@ -93,13 +91,44 @@ public class AsyncOffloader<T> implements Offloader<T> {
 
         @Override protected void onPostExecute(T o) {
           super.onPostExecute(o);
-          if (result != null) {
-            result.call(o);
+          try {
+            if (result != null && o != null) {
+              result.call(o);
+            }
+          } catch (Throwable throwable) {
+            if (error == null) {
+              throw throwable;
+            } else {
+              error.call(throwable);
+            }
+          }
+
+          if (finisher != null) {
+            finisher.call();
           }
         }
       });
 
-      return this;
+      return new Executed(asnycTask);
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess") static class Executed implements ExecutedOffloader {
+
+    @NonNull private final AsyncTask task;
+
+    Executed(@NonNull AsyncTask asyncTask) {
+      this.task = asyncTask;
+    }
+
+    @Override public boolean isCancelled() {
+      return task.isCancelled();
+    }
+
+    @Override public void cancel() {
+      if (!task.isCancelled()) {
+        task.cancel(true);
+      }
     }
   }
 }

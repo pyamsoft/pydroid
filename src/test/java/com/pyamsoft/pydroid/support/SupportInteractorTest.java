@@ -30,6 +30,7 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.solovyev.android.checkout.Inventory;
+import timber.log.Timber;
 
 import static com.pyamsoft.pydroid.TestUtils.expected;
 import static com.pyamsoft.pydroid.TestUtils.log;
@@ -128,7 +129,7 @@ public class SupportInteractorTest {
       loaded.set(true);
     };
 
-    // Calling load before started should result in an error
+    // Calling load before started should onFinish in an onError
     Mockito.doAnswer(invocation -> {
       if (!started.get()) {
         throw new IllegalStateException("Cannot call loadInventory() before start()");
@@ -137,7 +138,7 @@ public class SupportInteractorTest {
       return null;
     }).when(mockCheckout).loadInventory();
 
-    // Check for expected error
+    // Check for expected onError
     assertFalse(started.get());
     try {
       interactor.loadInventory();
@@ -188,14 +189,8 @@ public class SupportInteractorTest {
     assertFalse(started.get());
     assertFalse(billingSuccess.get());
     final Offloader<Boolean> billing = interactor.processBillingResult(0, 0, null)
-        .error(item -> expected("Billing exception: %s", item))
-        .result(item -> {
-          if (item) {
-            billingSuccess.set(true);
-          } else {
-            billingSuccess.set(false);
-          }
-        });
+        .onError(item -> expected("Billing exception: %s", item))
+        .onResult(item -> Timber.d("onBillingResult: %s", item));
 
     //noinspection CheckResult
     billing.execute();

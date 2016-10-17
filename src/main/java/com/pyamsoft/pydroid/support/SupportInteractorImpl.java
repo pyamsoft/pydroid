@@ -67,8 +67,8 @@ class SupportInteractorImpl implements SupportInteractor {
 
   @NonNull @Override public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
       @Nullable Intent data) {
-    Timber.i("Process billing result");
-    return new SerialOffloader<Boolean>().background(
+    Timber.i("Process billing onFinish");
+    return new SerialOffloader<Boolean>().onProcess(
         () -> checkout.processBillingResult(requestCode, resultCode, data));
   }
 }

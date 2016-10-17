@@ -150,7 +150,7 @@ public final class Licenses {
     @NonNull static final String RXJAVA = "https://github.com/ReactiveX/RxJava";
     @NonNull static final String RXANDROID = "https://github.com/ReactiveX/RxAndroid";
     @NonNull static final String FAST_ADAPTER = "https://github.com/mikepenz/FastAdapter";
-    @NonNull static final String ERROR_PRONE = "https://github.com/google/error-prone";
+    @NonNull static final String ERROR_PRONE = "https://github.com/google/onError-prone";
     @NonNull static final String TAP_TARGET_VIEW = "https://github.com/KeepSafe/TapTargetView";
     @NonNull static final String TIMBER = "https://github.com/JakeWharton/timber";
     @NonNull static final String RETROLAMBDA = "https://github.com/orfjackal/retrolambda";

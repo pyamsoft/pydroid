@@ -84,7 +84,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
       throw new NullPointerException("Styling is NULL");
     }
 
-    // We have to do this because fragments will not set their own background color, this allows us
+    // We have to do this because fragments will not set their own onProcess color, this allows us
     // to safely draw over contents
     final Styling styling = Styling.valueOf(stylingName);
     switch (styling) {

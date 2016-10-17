@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import org.solovyev.android.checkout.Inventory;
 import timber.log.Timber;
 
@@ -33,7 +33,7 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
   final SupportInteractor.OnBillingErrorListener errorListener;
   @NonNull private final SupportInteractor interactor;
-  @NonNull private Offloader billingResult = new Offloader.Empty();
+  @NonNull private ExecutedOffloader billingResult = new ExecutedOffloader.Empty();
 
   SupportPresenterImpl(@NonNull SupportInteractor interactor) {
     this.interactor = interactor;
@@ -59,16 +59,10 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   @Override public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
     unsubBillingResult();
     billingResult =
-        interactor.processBillingResult(requestCode, resultCode, data).error(throwable -> {
-          Timber.e(throwable, "Error processing Billing result");
+        interactor.processBillingResult(requestCode, resultCode, data).onError(throwable -> {
+          Timber.e(throwable, "Error processing Billing onFinish");
           getView(View::onProcessResultError);
-        }).result(result -> getView(view -> {
-          if (result) {
-            view.onProcessResultSuccess();
-          } else {
-            view.onProcessResultFailed();
-          }
-        })).execute();
+        }).onResult(item -> Timber.d("Billing process result: %s", item)).execute();
   }
 
   private void unsubBillingResult() {

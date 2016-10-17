@@ -194,14 +194,14 @@ public class SupportPresenterTest {
       return new Offloader.Empty<Boolean>();
     }).when(mockInteractor).processBillingResult(0, 0, intent);
 
-    // Donation result with NULL is handled correctly
+    // Donation onFinish with NULL is handled correctly
     assertEquals(0, count1.get());
     assertEquals(0, count2.get());
     presenter.onBillingResult(0, 0, null);
     assertEquals(1, count1.get());
     assertEquals(0, count2.get());
 
-    // Donation result is handled correctly
+    // Donation onFinish is handled correctly
     assertEquals(1, count1.get());
     assertEquals(0, count2.get());
     presenter.onBillingResult(0, 0, intent);

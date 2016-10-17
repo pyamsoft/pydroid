@@ -42,7 +42,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
   }
 
   @NonNull @Override public Offloader<Boolean> showAdView() {
-    return new AsyncOffloader<Boolean>().background(() -> {
+    return new AsyncOffloader<Boolean>().onProcess(() -> {
       final boolean isEnabled = preferences.getBoolean(preferenceKey, preferenceDefault);
       final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
       final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
@@ -61,7 +61,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
   }
 
   @NonNull @Override public Offloader<Boolean> hideAdView() {
-    return new AsyncOffloader<Boolean>().background(() -> {
+    return new AsyncOffloader<Boolean>().onProcess(() -> {
       Timber.d("Hide AdView");
       if (preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0) >= MAX_SHOW_COUNT) {
         Timber.d("Write shown count back to 0");

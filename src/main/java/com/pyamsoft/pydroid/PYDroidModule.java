@@ -57,7 +57,7 @@ public class PYDroidModule {
 
   // Create a new one every time
   //
-  // KLUDGE: Makes a new SocialMediaModule
+  // NOTE: Makes a new SocialMediaModule
   @CheckResult @NonNull final AdvertisementModule provideAdvertisementModule() {
     return new AdvertisementModule(provider, provideSocialMediaModule());
   }

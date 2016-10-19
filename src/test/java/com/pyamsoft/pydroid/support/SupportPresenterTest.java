@@ -136,7 +136,8 @@ public class SupportPresenterTest {
     final AtomicInteger count = new AtomicInteger(0);
     Mockito.doAnswer(invocation -> {
       count.incrementAndGet();
-      presenter.onLoaded(new Inventory.Products());
+      //noinspection ConstantConditions
+      presenter.onLoaded(null);
       return null;
     }).when(mockInteractor).loadInventory();
 

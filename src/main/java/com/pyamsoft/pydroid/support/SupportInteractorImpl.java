@@ -33,13 +33,13 @@ class SupportInteractorImpl implements SupportInteractor {
     this.checkout = checkout;
   }
 
-  @Override public void create(@NonNull Inventory.Listener listener,
+  @Override public void create(@NonNull Inventory.Callback callback,
       @NonNull OnBillingSuccessListener success, @NonNull OnBillingErrorListener error) {
 
     Timber.d("Create checkout purchase flow");
     checkout.setSuccessListener(success);
     checkout.setErrorListener(error);
-    checkout.setInventoryListener(listener);
+    checkout.setInventoryCallback(callback);
     checkout.start();
   }
 
@@ -48,7 +48,7 @@ class SupportInteractorImpl implements SupportInteractor {
     checkout.stop();
     checkout.setSuccessListener(null);
     checkout.setErrorListener(null);
-    checkout.setInventoryListener(null);
+    checkout.setInventoryCallback(null);
   }
 
   @Override public void loadInventory() {

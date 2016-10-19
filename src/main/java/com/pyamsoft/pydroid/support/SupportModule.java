@@ -27,8 +27,6 @@ import java.util.List;
 import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.Checkout;
-import org.solovyev.android.checkout.ProductTypes;
-import org.solovyev.android.checkout.Products;
 import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.PurchaseVerifier;
 import org.solovyev.android.checkout.RequestListener;
@@ -80,9 +78,8 @@ public class SupportModule {
       }
 
       final ActivityCheckout checkout = Checkout.forActivity(activity,
-          new Billing(appContext, new DonationBillingConfiguration(packageName)),
-          Products.create().add(ProductTypes.IN_APP, skuList));
-      return new RealCheckout(checkout);
+          new Billing(appContext, new DonationBillingConfiguration(packageName)));
+      return new RealCheckout(checkout, skuList);
     }
   }
 

@@ -20,10 +20,13 @@ import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.BillingRequests;
 import org.solovyev.android.checkout.Checkout;
 import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.RequestListener;
 import org.solovyev.android.checkout.ResponseCodes;
@@ -36,19 +39,21 @@ import timber.log.Timber;
 class RealCheckout implements ICheckout {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ActivityCheckout checkout;
-  @SuppressWarnings("WeakerAccess") @Nullable Inventory.Listener inventoryListener;
+  @NonNull private final List<String> inAppSkuList;
+  @SuppressWarnings("WeakerAccess") @Nullable Inventory.Callback inventoryCallback;
   @SuppressWarnings("WeakerAccess") @Nullable SupportInteractor.OnBillingSuccessListener
       successListener;
   @SuppressWarnings("WeakerAccess") @Nullable SupportInteractor.OnBillingErrorListener
       errorListener;
   @Nullable private Inventory inventory;
 
-  RealCheckout(@NonNull ActivityCheckout checkout) {
+  RealCheckout(@NonNull ActivityCheckout checkout, @NonNull List<String> inAppSkuList) {
     this.checkout = checkout;
+    this.inAppSkuList = Collections.unmodifiableList(inAppSkuList);
   }
 
-  @Override public void setInventoryListener(@Nullable Inventory.Listener inventoryListener) {
-    this.inventoryListener = inventoryListener;
+  @Override public void setInventoryCallback(@Nullable Inventory.Callback callback) {
+    this.inventoryCallback = callback;
   }
 
   @Override public void setSuccessListener(
@@ -68,11 +73,13 @@ class RealCheckout implements ICheckout {
 
   @Override public void loadInventory() {
     if (inventory == null) {
-      inventory = checkout.loadInventory();
+      inventory = checkout.makeInventory();
     }
 
-    if (inventoryListener != null) {
-      inventory.load().whenLoaded(inventoryListener);
+    if (inventoryCallback != null) {
+      inventory.load(
+          Inventory.Request.create().loadAllPurchases().loadSkus(ProductTypes.IN_APP, inAppSkuList),
+          inventoryCallback);
     }
   }
 
@@ -82,16 +89,18 @@ class RealCheckout implements ICheckout {
   }
 
   @Override public void purchase(@NonNull Sku sku) {
-    checkout.whenReady(new Checkout.ListenerAdapter() {
+    checkout.whenReady(new Checkout.EmptyListener() {
       @Override public void onReady(@NonNull BillingRequests requests) {
+        super.onReady(requests);
         requests.purchase(sku, null, checkout.getPurchaseFlow());
       }
     });
   }
 
   @Override public void consume(@NonNull String token) {
-    checkout.whenReady(new Checkout.ListenerAdapter() {
+    checkout.whenReady(new Checkout.EmptyListener() {
       @Override public void onReady(@NonNull BillingRequests requests) {
+        super.onReady(requests);
         requests.consume(token, new ConsumeListener());
       }
     });

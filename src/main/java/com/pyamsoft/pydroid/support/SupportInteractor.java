@@ -26,7 +26,7 @@ import org.solovyev.android.checkout.Sku;
 
 interface SupportInteractor {
 
-  void create(@NonNull Inventory.Listener listener, @NonNull OnBillingSuccessListener success,
+  void create(@NonNull Inventory.Callback listener, @NonNull OnBillingSuccessListener success,
       @NonNull OnBillingErrorListener error);
 
   void destroy();

@@ -30,7 +30,6 @@ import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.solovyev.android.checkout.Inventory;
-import timber.log.Timber;
 
 import static com.pyamsoft.pydroid.TestUtils.expected;
 import static com.pyamsoft.pydroid.TestUtils.log;
@@ -50,7 +49,7 @@ public class SupportInteractorTest {
   }
 
   @Test public void testCreateSetsListeners() {
-    final Inventory.Listener listener = products -> {
+    final Inventory.Callback listener = products -> {
     };
 
     final SupportInteractor.OnBillingSuccessListener successListener = () -> {
@@ -64,7 +63,7 @@ public class SupportInteractorTest {
     Mockito.doAnswer(invocation -> {
       count.incrementAndGet();
       return null;
-    }).when(mockCheckout).setInventoryListener(listener);
+    }).when(mockCheckout).setInventoryCallback(listener);
     Mockito.doAnswer(invocation -> {
       count.incrementAndGet();
       return null;
@@ -90,7 +89,7 @@ public class SupportInteractorTest {
     Mockito.doAnswer(invocation -> {
       count.incrementAndGet();
       return null;
-    }).when(mockCheckout).setInventoryListener(null);
+    }).when(mockCheckout).setInventoryCallback(null);
     Mockito.doAnswer(invocation -> {
       count.incrementAndGet();
       return null;
@@ -124,7 +123,7 @@ public class SupportInteractorTest {
 
     // Create a load listener
     final AtomicBoolean loaded = new AtomicBoolean(false);
-    final Inventory.Listener listener = products -> {
+    final Inventory.Callback listener = products -> {
       log("Loaded products!");
       loaded.set(true);
     };
@@ -134,7 +133,8 @@ public class SupportInteractorTest {
       if (!started.get()) {
         throw new IllegalStateException("Cannot call loadInventory() before start()");
       }
-      listener.onLoaded(new Inventory.Products());
+      //noinspection ConstantConditions
+      listener.onLoaded(null);
       return null;
     }).when(mockCheckout).loadInventory();
 
@@ -172,6 +172,7 @@ public class SupportInteractorTest {
       return null;
     }).when(mockCheckout).stop();
 
+    final AtomicBoolean billingSuccess = new AtomicBoolean(false);
     final AtomicBoolean shouldThrow = new AtomicBoolean(false);
     Mockito.when(mockCheckout.processBillingResult(0, 0, null)).thenAnswer(new Answer<Boolean>() {
       @Override public Boolean answer(InvocationOnMock invocation) throws Throwable {
@@ -179,18 +180,20 @@ public class SupportInteractorTest {
           throw new RuntimeException("Random Billing exception!");
         }
 
+        if (started.get()) {
+          billingSuccess.set(true);
+        }
+
         return started.get();
       }
     });
-
-    final AtomicBoolean billingSuccess = new AtomicBoolean(false);
 
     // Make sure that before being created, billing does not process
     assertFalse(started.get());
     assertFalse(billingSuccess.get());
     final Offloader<Boolean> billing = interactor.processBillingResult(0, 0, null)
         .onError(item -> expected("Billing exception: %s", item))
-        .onResult(item -> Timber.d("onBillingResult: %s", item));
+        .onResult(item -> log("onBillingResult: %s", item));
 
     //noinspection CheckResult
     billing.execute();

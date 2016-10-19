@@ -25,7 +25,7 @@ import org.solovyev.android.checkout.Sku;
 
 interface ICheckout {
 
-  void setInventoryListener(@Nullable Inventory.Listener inventoryListener);
+  void setInventoryCallback(@Nullable Inventory.Callback callback);
 
   void setSuccessListener(@Nullable SupportInteractor.OnBillingSuccessListener successListener);
 

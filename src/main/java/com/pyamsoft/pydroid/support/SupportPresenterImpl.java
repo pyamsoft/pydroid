@@ -26,7 +26,7 @@ import org.solovyev.android.checkout.Inventory;
 import timber.log.Timber;
 
 class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
-    implements SupportPresenter, Inventory.Listener {
+    implements SupportPresenter, Inventory.Callback {
 
   @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
   final SupportInteractor.OnBillingSuccessListener successListener;

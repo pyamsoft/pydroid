@@ -35,7 +35,7 @@ public final class TestUtils {
     // Hacky way to get around the Theme.AppCompat crash
     final ActivityController<AppCompatActivity> activityController =
         Robolectric.buildActivity(AppCompatActivity.class);
-    activityController.get().setTheme(android.support.design.R.style.Theme_AppCompat);
+    activityController.get().setTheme(android.support.v7.appcompat.R.style.Theme_AppCompat);
     return activityController;
   }
 

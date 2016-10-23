@@ -16,19 +16,13 @@
 
 package com.pyamsoft.pydroid.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ViewGroup;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.TestUtils;
-import com.pyamsoft.pydroid.behavior.HideScrollFABBehavior;
-import com.pyamsoft.pydroid.behavior.IgnoreAppBarLayoutFABBehavior;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,49 +33,6 @@ import org.robolectric.util.ActivityController;
 
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class AppUtilTest {
-
-  @Test public void test_setupFABBehavior() {
-    final ActivityController<AppCompatActivity> activityController =
-        TestUtils.getAppCompatActivityController();
-    // Create the activity so that we have a floating action button
-    final Activity activity = activityController.create().get();
-    final FloatingActionButton fab = new FloatingActionButton(activity);
-
-    Assert.assertNotNull(fab);
-
-    // Test behaviors
-    // Call should not create layout params
-    AppUtil.setupFABBehavior(fab, null);
-    Assert.assertNull(fab.getLayoutParams());
-
-    // Call should modify existing params
-    fab.setLayoutParams(new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT));
-    AppUtil.setupFABBehavior(fab, null);
-    Assert.assertNotNull(((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-
-    // Call should assign custom behavior, and should not create duplicates
-    FloatingActionButton.Behavior behavior = new HideScrollFABBehavior();
-    AppUtil.setupFABBehavior(fab, behavior);
-    Assert.assertNotNull(((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-    Assert.assertEquals(behavior,
-        ((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-
-    // The same with a different custom behavior
-    behavior = new IgnoreAppBarLayoutFABBehavior();
-    AppUtil.setupFABBehavior(fab, behavior);
-    Assert.assertNotNull(((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-    Assert.assertEquals(behavior,
-        ((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-
-    // Two behaviors are not the same
-    AppUtil.setupFABBehavior(fab, null);
-    Assert.assertNotNull(((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-    Assert.assertNotSame(behavior,
-        ((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-    Assert.assertNotSame(new FloatingActionButton.Behavior(),
-        ((CoordinatorLayout.LayoutParams) fab.getLayoutParams()).getBehavior());
-  }
 
   @Test public void test_convertToDp() {
     final Context context = RuntimeEnvironment.application.getApplicationContext();

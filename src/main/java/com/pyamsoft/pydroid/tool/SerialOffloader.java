@@ -100,16 +100,8 @@ public class SerialOffloader<T> implements Offloader<T> {
   }
 
   private ExecutedOffloader serialResult(@Nullable T o) {
-    try {
-      if (result != null && o != null) {
-        result.call(o);
-      }
-    } catch (Throwable throwable) {
-      if (error == null) {
-        throw throwable;
-      } else {
-        error.call(throwable);
-      }
+    if (result != null && o != null) {
+      result.call(o);
     }
 
     if (finisher != null) {

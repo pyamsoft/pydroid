@@ -27,6 +27,10 @@ public abstract class SocialMediaLoaderCallback
   @NonNull private final Context context;
 
   protected SocialMediaLoaderCallback(@NonNull Context context) {
+    //noinspection ConstantConditions
+    if (context == null) {
+      throw new NullPointerException("Context cannot be NULL");
+    }
     this.context = context.getApplicationContext();
   }
 

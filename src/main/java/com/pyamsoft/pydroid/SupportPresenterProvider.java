@@ -28,6 +28,11 @@ public abstract class SupportPresenterProvider {
 
   @NonNull @CheckResult public SupportPresenter providePresenter() {
     final Activity activity = provideActivity();
+    //noinspection ConstantConditions
+    if (activity == null) {
+      throw new NullPointerException("Activity cannot be NULL");
+    }
+
     return PYDroidApplication.get(activity.getApplication())
         .provideSupportModule(activity)
         .getPresenter();

@@ -34,6 +34,11 @@ import timber.log.Timber;
   private PYDroidModule module;
 
   @NonNull @CheckResult static PYDroidModule get(@NonNull Context context) {
+    //noinspection ConstantConditions
+    if (context == null) {
+      throw new NullPointerException("Context cannot be NULL");
+    }
+
     final Context appContext = context.getApplicationContext();
     if (appContext instanceof PYDroidApplication) {
       return PYDroidApplication.class.cast(appContext).getModule();

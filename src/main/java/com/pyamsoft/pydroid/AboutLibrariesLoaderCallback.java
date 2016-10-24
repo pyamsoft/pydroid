@@ -27,6 +27,10 @@ public abstract class AboutLibrariesLoaderCallback
   @NonNull private final Context context;
 
   protected AboutLibrariesLoaderCallback(@NonNull Context context) {
+    //noinspection ConstantConditions
+    if (context == null) {
+      throw new NullPointerException("Context cannot be NULL");
+    }
     this.context = context.getApplicationContext();
   }
 

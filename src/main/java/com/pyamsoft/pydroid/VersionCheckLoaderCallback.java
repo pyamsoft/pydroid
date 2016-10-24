@@ -29,6 +29,10 @@ public abstract class VersionCheckLoaderCallback
   private boolean licenseChecked;
 
   protected VersionCheckLoaderCallback(@NonNull Context context) {
+    //noinspection ConstantConditions
+    if (context == null) {
+      throw new NullPointerException("Context cannot be NULL");
+    }
     this.context = context.getApplicationContext();
     licenseChecked = false;
   }

@@ -84,6 +84,11 @@ public class PYDroidModule {
     @NonNull private final List<String> inAppPurchaseList;
 
     Provider(final @NonNull Application application) {
+      //noinspection ConstantConditions
+      if (application == null) {
+        throw new NullPointerException("Application cannot be NULL");
+      }
+
       appContext = application.getApplicationContext();
       inAppPurchaseList = createInAppPurchaseList(application);
       billing =
@@ -135,6 +140,10 @@ public class PYDroidModule {
       @NonNull private final String publicKey;
 
       DonationBillingConfiguration(@NonNull String publicKey) {
+        //noinspection ConstantConditions
+        if (publicKey == null) {
+          throw new NullPointerException("Public Key cannot be NULL");
+        }
         this.publicKey = publicKey;
       }
 
@@ -161,6 +170,16 @@ public class PYDroidModule {
        */
       @Override public void verify(@NonNull List<Purchase> purchases,
           @NonNull RequestListener<List<Purchase>> listener) {
+        //noinspection ConstantConditions
+        if (purchases == null) {
+          throw new NullPointerException("Purchases cannot be NULL");
+        }
+
+        //noinspection ConstantConditions
+        if (listener == null) {
+          throw new NullPointerException("Listener cannot be NULL");
+        }
+
         final List<Purchase> verifiedPurchases = new ArrayList<>(purchases.size());
         for (Purchase purchase : purchases) {
           verifiedPurchases.add(purchase);

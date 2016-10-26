@@ -89,11 +89,11 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     onFirstCreateProtected(context);
     onFirstCreate(context);
     setInstance(this);
-    onInstanceCreated();
+    onInstanceCreated(context);
     return false;
   }
 
-  protected abstract void onInstanceCreated();
+  protected abstract void onInstanceCreated(@NonNull Context context);
 
   private void onFirstCreateProtected(@NonNull Context context) {
     if (BuildConfig.DEBUG) {

@@ -110,7 +110,7 @@ public final class StringUtil {
   }
 
   @Size @CheckResult public static int getTextSizeFromAppearance(final @NonNull Context context,
-      @StyleRes int textAppearance) {
+      @AttrRes int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textSize);
     final int textSize = a.getDimensionPixelSize(0, -1);
@@ -120,7 +120,7 @@ public final class StringUtil {
 
   @ColorInt @CheckResult
   public static int getTextColorFromAppearance(final @NonNull Context context,
-      @StyleRes int textAppearance) {
+      @AttrRes int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textColor);
     final int color = a.getColor(0, -1);

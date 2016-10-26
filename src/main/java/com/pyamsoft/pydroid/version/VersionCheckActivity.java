@@ -49,7 +49,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    loaderCallback = new VersionCheckLoaderCallback(this) {
+    loaderCallback = new VersionCheckLoaderCallback() {
 
       @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
         presenter = persist;

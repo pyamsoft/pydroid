@@ -16,24 +16,12 @@
 
 package com.pyamsoft.pydroid.app;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
 public abstract class PersistLoader<T> {
 
-  /**
-   * Even though we do not directly use this context, it is convenient to hold onto for
-   * classes which rely on Injection via Dagger (which usually requires a context
-   */
-  @NonNull private final Context appContext;
-
-  protected PersistLoader(@NonNull Context context) {
-    appContext = context.getApplicationContext();
-  }
-
-  @NonNull @CheckResult protected final Context getContext() {
-    return appContext;
+  protected PersistLoader() {
   }
 
   @CheckResult @NonNull public abstract T loadPersistent();

@@ -29,7 +29,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import static com.pyamsoft.pydroid.TestUtils.log;
@@ -65,7 +64,7 @@ public class PersistentCacheTest {
     final String TAG = "1";
     final long firstResult = cache.load(TAG, NULL_STATE, new PersistLoader.Callback<Object>() {
       @NonNull @Override public PersistLoader<Object> createLoader() {
-        return new PersistLoader<Object>(RuntimeEnvironment.application) {
+        return new PersistLoader<Object>() {
           @NonNull @Override public Object loadPersistent() {
             return new Object();
           }
@@ -84,7 +83,7 @@ public class PersistentCacheTest {
     // Fetch the key again
     final long secondResult = cache.load(TAG, outState, new PersistLoader.Callback<Object>() {
       @NonNull @Override public PersistLoader<Object> createLoader() {
-        return new PersistLoader<Object>(RuntimeEnvironment.application) {
+        return new PersistLoader<Object>() {
           @NonNull @Override public Object loadPersistent() {
             throw new RuntimeException("Should not happen");
           }
@@ -106,7 +105,7 @@ public class PersistentCacheTest {
       @NonNull AtomicInteger createCount, @NonNull AtomicInteger loadCount) {
     return cache.load(tag, instanceState, new PersistLoader.Callback<Object>() {
       @NonNull @Override public PersistLoader<Object> createLoader() {
-        return new PersistLoader<Object>(RuntimeEnvironment.application) {
+        return new PersistLoader<Object>() {
           @NonNull @Override public Object loadPersistent() {
             createCount.getAndIncrement();
             return createCount;
@@ -163,7 +162,7 @@ public class PersistentCacheTest {
     final String tag = "TAG";
     final long loadedKey = cache.load(tag, NULL_STATE, new PersistLoader.Callback<TestPresenter>() {
       @NonNull @Override public PersistLoader<TestPresenter> createLoader() {
-        return new PersistLoader<TestPresenter>(RuntimeEnvironment.application) {
+        return new PersistLoader<TestPresenter>() {
           @NonNull @Override public TestPresenter loadPersistent() {
             return new TestPresenter();
           }
@@ -196,7 +195,7 @@ public class PersistentCacheTest {
     final String tag = "TAG";
     final long loadedKey = cache.load(tag, NULL_STATE, new PersistLoader.Callback<DoNotDestroy>() {
       @NonNull @Override public PersistLoader<DoNotDestroy> createLoader() {
-        return new PersistLoader<DoNotDestroy>(RuntimeEnvironment.application) {
+        return new PersistLoader<DoNotDestroy>() {
           @NonNull @Override public DoNotDestroy loadPersistent() {
             return new DoNotDestroy();
           }
@@ -227,7 +226,7 @@ public class PersistentCacheTest {
       //noinspection CheckResult
       cache.load(String.valueOf(i), NULL_STATE, new PersistLoader.Callback<Object>() {
         @NonNull @Override public PersistLoader<Object> createLoader() {
-          return new PersistLoader<Object>(RuntimeEnvironment.application) {
+          return new PersistLoader<Object>() {
             @NonNull @Override public Object loadPersistent() {
               return new Object();
             }
@@ -271,7 +270,7 @@ public class PersistentCacheTest {
     for (int i = 0; i < keySize; ++i) {
       keys[i] = cache.load(String.valueOf(i), NULL_STATE, new PersistLoader.Callback<Object>() {
         @NonNull @Override public PersistLoader<Object> createLoader() {
-          return new PersistLoader<Object>(RuntimeEnvironment.application) {
+          return new PersistLoader<Object>() {
             @NonNull @Override public Object loadPersistent() {
               return new Object();
             }

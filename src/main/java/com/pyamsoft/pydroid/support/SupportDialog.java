@@ -140,12 +140,11 @@ public class SupportDialog extends DialogFragment
     setCancelable(true);
 
     socialMediaKey = PersistentCache.get()
-        .load(KEY_SOCIAL_PRESENTER, savedInstanceState,
-            new SocialMediaLoaderCallback(getContext()) {
-              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-                socialMediaPresenter = persist;
-              }
-            });
+        .load(KEY_SOCIAL_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
+          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+            socialMediaPresenter = persist;
+          }
+        });
 
     // Create presenter here, do not persist
     supportPresenter = new SupportPresenterProvider() {

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
@@ -24,17 +23,13 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 public abstract class AdvertisementViewLoaderCallback
     implements PersistLoader.Callback<AdvertisementPresenter> {
 
-  @NonNull private final Context context;
-
-  protected AdvertisementViewLoaderCallback(@NonNull Context context) {
-    //noinspection ConstantConditions
-    if (context == null) {
-      throw new NullPointerException("Context cannot be NULL");
-    }
-    this.context = context.getApplicationContext();
+  protected AdvertisementViewLoaderCallback() {
   }
 
   @NonNull @Override public PersistLoader<AdvertisementPresenter> createLoader() {
-    return PYDroidApplication.get(context).provideAdvertisementModule().getLoader();
+    return SingleInitContentProvider.getInstance()
+        .getModule()
+        .provideAdvertisementModule()
+        .getLoader();
   }
 }

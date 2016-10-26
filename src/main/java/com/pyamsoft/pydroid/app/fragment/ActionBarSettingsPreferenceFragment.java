@@ -106,13 +106,12 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     super.onCreate(savedInstanceState);
 
     loadedKey = PersistentCache.get()
-        .load(KEY_LICENSE_PRESENTER, savedInstanceState,
-            new VersionCheckLoaderCallback(getContext()) {
+        .load(KEY_LICENSE_PRESENTER, savedInstanceState, new VersionCheckLoaderCallback() {
 
-              @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
-                presenter = persist;
-              }
-            });
+          @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
+            presenter = persist;
+          }
+        });
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override

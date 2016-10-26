@@ -72,13 +72,12 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
     }
 
     loadedKey = PersistentCache.get()
-        .load(KEY_VERSION_PRESENTER, savedInstanceState,
-            new SocialMediaLoaderCallback(getContext()) {
+        .load(KEY_VERSION_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
 
-              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-                presenter = persist;
-              }
-            });
+          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+            presenter = persist;
+          }
+        });
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

@@ -116,12 +116,11 @@ public class AboutLibrariesFragment extends ActionBarFragment
     }
 
     loadedKey = PersistentCache.get()
-        .load(KEY_ABOUT_PRESENTER, savedInstanceState,
-            new AboutLibrariesLoaderCallback(getContext()) {
-              @Override public void onPersistentLoaded(@NonNull AboutLibrariesPresenter persist) {
-                presenter = persist;
-              }
-            });
+        .load(KEY_ABOUT_PRESENTER, savedInstanceState, new AboutLibrariesLoaderCallback() {
+          @Override public void onPersistentLoaded(@NonNull AboutLibrariesPresenter persist) {
+            presenter = persist;
+          }
+        });
   }
 
   @Nullable @Override
@@ -146,13 +145,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
     final List<AboutAdapterItem> items = new ArrayList<>();
     Licenses.forEach(aboutLicenseItem -> {
       final boolean add;
-      if (aboutLicenseItem.getName().equals(Licenses.Names.GOOGLE_PLAY)) {
-        final String googlePlayLicense =
-            Licenses.licenses(getContext()).provideGoogleOpenSourceLicenses();
-        add = (googlePlayLicense != null);
-      } else {
-        add = true;
-      }
+      add = !aboutLicenseItem.getName().equals(Licenses.Names.GOOGLE_PLAY)
+          || AboutLibrariesLoaderCallback.hasGooglePlayServices(getContext());
 
       if (add) {
         items.add(new AboutAdapterItem(aboutLicenseItem,

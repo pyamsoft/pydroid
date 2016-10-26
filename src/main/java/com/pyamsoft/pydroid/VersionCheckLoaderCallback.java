@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
@@ -25,21 +24,16 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 public abstract class VersionCheckLoaderCallback
     implements PersistLoader.Callback<VersionCheckPresenter> {
 
-  @NonNull private final Context context;
   private boolean licenseChecked;
 
-  protected VersionCheckLoaderCallback(@NonNull Context context) {
-    //noinspection ConstantConditions
-    if (context == null) {
-      throw new NullPointerException("Context cannot be NULL");
-    }
-    this.context = context.getApplicationContext();
+  protected VersionCheckLoaderCallback() {
     licenseChecked = false;
   }
 
   @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
     setLicenseChecked(false);
-    return PYDroidApplication.get(context.getApplicationContext())
+    return SingleInitContentProvider.getInstance()
+        .getModule()
         .provideVersionCheckModule()
         .getLoader();
   }

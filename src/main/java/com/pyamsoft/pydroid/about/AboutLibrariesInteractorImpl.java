@@ -23,8 +23,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
-import com.pyamsoft.pydroid.tool.Offloader;
 import com.pyamsoft.pydroid.tool.AsyncOffloader;
+import com.pyamsoft.pydroid.tool.Offloader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,10 +39,12 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, String> cachedLicenses;
   @SuppressWarnings("WeakerAccess") @NonNull private final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull private final AssetManager assetManager;
+  @NonNull private final Context appContext;
 
-  AboutLibrariesInteractorImpl(@NonNull Context context) {
+  AboutLibrariesInteractorImpl(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
+    appContext = context.getApplicationContext();
     assetManager = context.getAssets();
-    licenseProvider = Licenses.licenses(context);
+    this.licenseProvider = licenseProvider;
     cachedLicenses = new HashMap<>();
   }
 
@@ -74,7 +76,8 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
     if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
       Timber.d("License is Google Play services");
-      final String googleOpenSourceLicenses = licenseProvider.provideGoogleOpenSourceLicenses();
+      final String googleOpenSourceLicenses =
+          licenseProvider.provideGoogleOpenSourceLicenses(appContext);
       final String result =
           googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
               : googleOpenSourceLicenses;

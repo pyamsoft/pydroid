@@ -30,7 +30,7 @@ import timber.log.Timber;
 
 public abstract class SingleInitContentProvider extends ContentProvider implements LicenseProvider {
 
-  @Nullable private static SingleInitContentProvider instance;
+  @Nullable private static volatile SingleInitContentProvider instance;
   private static boolean created;
 
   static {
@@ -48,6 +48,8 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     if (instance == null) {
       throw new NullPointerException("Instance is NULL. Was this CP never created?");
     }
+
+    //noinspection ConstantConditions
     return instance;
   }
 
@@ -55,6 +57,8 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     if (instance == null) {
       throw new NullPointerException("Instance is NULL. Was this CP never created?");
     }
+
+    //noinspection ConstantConditions
     return instance.getDelegate();
   }
 
@@ -85,8 +89,11 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     onFirstCreateProtected(context);
     onFirstCreate(context);
     setInstance(this);
+    onInstanceCreated();
     return false;
   }
+
+  protected abstract void onInstanceCreated();
 
   private void onFirstCreateProtected(@NonNull Context context) {
     if (BuildConfig.DEBUG) {

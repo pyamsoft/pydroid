@@ -16,13 +16,11 @@
 
 package com.pyamsoft.pydroid.app;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
 public abstract class ListAdapterLoader<T extends FastItemAdapter<?>> extends PersistLoader<T> {
 
-  protected ListAdapterLoader(@NonNull Context context) {
-    super(context);
+  protected ListAdapterLoader() {
+    super();
   }
 }

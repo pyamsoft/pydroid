@@ -32,7 +32,7 @@ public class VersionCheckModule {
         apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class),
         pyDroidModule.provideContext().getPackageName());
     presenter = new VersionCheckPresenterImpl(interactor);
-    loader = new VersionCheckPresenterLoader(pyDroidModule.provideContext(), presenter);
+    loader = new VersionCheckPresenterLoader(presenter);
   }
 
   @NonNull @CheckResult public VersionCheckPresenterLoader getLoader() {

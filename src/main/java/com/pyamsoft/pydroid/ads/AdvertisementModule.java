@@ -31,7 +31,7 @@ public class AdvertisementModule {
       @NonNull SocialMediaModule socialMediaModule) {
     interactor = new AdvertisementInteractorImpl(pyDroidModule.provideContext());
     presenter = new AdvertisementPresenterImpl(interactor, socialMediaModule.getPresenter());
-    loader = new AdvertisementPresenterLoader(pyDroidModule.provideContext(), presenter);
+    loader = new AdvertisementPresenterLoader(presenter);
   }
 
   @NonNull @CheckResult public final AdvertisementPresenterLoader getLoader() {

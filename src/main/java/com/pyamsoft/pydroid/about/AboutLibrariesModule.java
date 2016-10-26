@@ -31,7 +31,7 @@ public class AboutLibrariesModule {
     interactor = new AboutLibrariesInteractorImpl(pyDroidModule.provideContext(),
         pyDroidModule.provideLicenseProvider());
     presenter = new AboutLibrariesPresenterImpl(interactor);
-    loader = new AboutLibrariesPresenterLoader(pyDroidModule.provideContext(), presenter);
+    loader = new AboutLibrariesPresenterLoader(presenter);
   }
 
   @NonNull @CheckResult public AboutLibrariesPresenterLoader getLoader() {

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.social;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
@@ -24,8 +23,7 @@ class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
 
   @NonNull private final SocialMediaPresenter presenter;
 
-  SocialMediaPresenterLoader(@NonNull Context context, @NonNull SocialMediaPresenter presenter) {
-    super(context);
+  SocialMediaPresenterLoader(@NonNull SocialMediaPresenter presenter) {
     this.presenter = presenter;
   }
 

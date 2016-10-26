@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
@@ -24,9 +23,7 @@ class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresente
 
   @NonNull private final AboutLibrariesPresenter presenter;
 
-  AboutLibrariesPresenterLoader(@NonNull Context context,
-      @NonNull AboutLibrariesPresenter presenter) {
-    super(context);
+  AboutLibrariesPresenterLoader(@NonNull AboutLibrariesPresenter presenter) {
     this.presenter = presenter;
   }
 

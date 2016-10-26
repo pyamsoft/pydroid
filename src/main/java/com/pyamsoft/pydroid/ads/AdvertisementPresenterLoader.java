@@ -16,17 +16,14 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class AdvertisementPresenterLoader extends PersistLoader<AdvertisementPresenter> {
+class AdvertisementPresenterLoader extends PersistLoader<AdvertisementPresenter> {
 
   @NonNull private final AdvertisementPresenter presenter;
 
-  AdvertisementPresenterLoader(@NonNull Context context,
-      @NonNull AdvertisementPresenter presenter) {
-    super(context);
+  AdvertisementPresenterLoader(@NonNull AdvertisementPresenter presenter) {
     this.presenter = presenter;
   }
 

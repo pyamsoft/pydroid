@@ -55,7 +55,7 @@ public class PYDroidModule {
 
   // Create a new one every time
   @CheckResult @NonNull final SocialMediaModule provideSocialMediaModule() {
-    return new SocialMediaModule(provider);
+    return new SocialMediaModule();
   }
 
   // Create a new one every time

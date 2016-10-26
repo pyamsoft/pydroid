@@ -86,10 +86,15 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
       throw new NullPointerException("Context is NULL");
     }
 
-    onFirstCreateProtected(context);
-    onFirstCreate(context);
+    final Context appContext = context.getApplicationContext();
+    if (appContext == null) {
+      throw new NullPointerException("Application Context is NULL");
+    }
+
+    onFirstCreateProtected(appContext);
+    onFirstCreate(appContext);
     setInstance(this);
-    onInstanceCreated(context);
+    onInstanceCreated(appContext);
     return false;
   }
 

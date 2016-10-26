@@ -33,7 +33,8 @@ public abstract class SupportPresenterProvider {
       throw new NullPointerException("Activity cannot be NULL");
     }
 
-    return PYDroidApplication.get(activity.getApplication())
+    return SingleInitContentProvider.getInstance()
+        .getModule()
         .provideSupportModule(activity)
         .getPresenter();
   }

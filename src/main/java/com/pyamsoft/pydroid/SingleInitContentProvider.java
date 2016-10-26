@@ -22,50 +22,89 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.StrictMode;
-import android.support.annotation.CallSuper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.about.LicenseProvider;
 import timber.log.Timber;
 
-public abstract class SingleInitContentProvider extends ContentProvider {
+public abstract class SingleInitContentProvider extends ContentProvider implements LicenseProvider {
 
+  @Nullable private static SingleInitContentProvider instance;
   private static boolean created;
 
   static {
     created = false;
+    instance = null;
   }
+
+  @Nullable private ModuleDelegate delegate;
 
   private static void setCreated(boolean created) {
     SingleInitContentProvider.created = created;
   }
 
-  @Override public boolean onCreate() {
+  @NonNull @CheckResult static LicenseProvider getLicenseProvider() {
+    if (instance == null) {
+      throw new NullPointerException("Instance is NULL. Was this CP never created?");
+    }
+    return instance;
+  }
+
+  @NonNull @CheckResult static ModuleDelegate getInstance() {
+    if (instance == null) {
+      throw new NullPointerException("Instance is NULL. Was this CP never created?");
+    }
+    return instance.getDelegate();
+  }
+
+  private static void setInstance(@NonNull SingleInitContentProvider instance) {
+    SingleInitContentProvider.instance = instance;
+  }
+
+  @NonNull @CheckResult ModuleDelegate getDelegate() {
+    if (delegate == null) {
+      throw new NullPointerException("ModuleDelegate is NULL. Was this CP never created?");
+    }
+    return delegate;
+  }
+
+  @Override public final boolean onCreate() {
     if (created) {
+      Timber.e("Already created, do nothing");
       return false;
     }
 
+    Timber.i("Create pyamsoft application");
     setCreated(true);
     final Context context = getContext();
     if (context == null) {
       throw new NullPointerException("Context is NULL");
     }
 
-    final Context appContext = context.getApplicationContext();
-    onFirstCreate(appContext);
+    onFirstCreateProtected(context);
+    onFirstCreate(context);
+    setInstance(this);
     return false;
   }
 
-  /**
-   * In a Firebase multi process app, this block of code will be guaranteed to only run on the
-   * first
-   * application creation instance
-   */
-  @CallSuper protected void onFirstCreate(@NonNull Context context) {
+  private void onFirstCreateProtected(@NonNull Context context) {
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree());
       setStrictMode();
       onFirstCreateInDebugMode(context);
     }
+
+    delegate = new ModuleDelegate(new PYDroidModule(context, this));
+    onFirstCreate(context);
+  }
+
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
+  protected void onFirstCreate(@NonNull Context context) {
+  }
+
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
+  protected void onFirstCreateInDebugMode(@NonNull Context context) {
   }
 
   private void setStrictMode() {
@@ -77,11 +116,6 @@ public abstract class SingleInitContentProvider extends ContentProvider {
         .penaltyFlashScreen()
         .build());
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-  }
-
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
-  protected void onFirstCreateInDebugMode(@NonNull Context context) {
-
   }
 
   @Nullable @Override
@@ -105,5 +139,22 @@ public abstract class SingleInitContentProvider extends ContentProvider {
   @Override public final int update(@NonNull Uri uri, ContentValues values, String selection,
       String[] selectionArgs) {
     throw new RuntimeException("This is not actually a content provider");
+  }
+
+  static class ModuleDelegate {
+
+    @NonNull private final PYDroidModule module;
+
+    ModuleDelegate(@NonNull PYDroidModule module) {
+      //noinspection ConstantConditions
+      if (module == null) {
+        throw new NullPointerException("Module is NULL");
+      }
+      this.module = module;
+    }
+
+    @CheckResult @NonNull PYDroidModule getModule() {
+      return module;
+    }
   }
 }

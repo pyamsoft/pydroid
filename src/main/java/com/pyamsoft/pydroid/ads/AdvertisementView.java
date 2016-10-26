@@ -104,8 +104,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     // Data binding doesnt seem to like out Advertisement View
     adImage = (ImageView) findViewById(R.id.ad_image);
 
-    loadedKey = PersistentCache.get()
-        .load(KEY_ADVERTISEMENT, null, new AdvertisementViewLoaderCallback(getContext()) {
+    loadedKey =
+        PersistentCache.get().load(KEY_ADVERTISEMENT, null, new AdvertisementViewLoaderCallback() {
 
           @Override public void onPersistentLoaded(@NonNull AdvertisementPresenter persist) {
             presenter = persist;

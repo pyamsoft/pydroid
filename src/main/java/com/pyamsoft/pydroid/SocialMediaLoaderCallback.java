@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
@@ -24,18 +23,12 @@ import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 public abstract class SocialMediaLoaderCallback
     implements PersistLoader.Callback<SocialMediaPresenter> {
 
-  @NonNull private final Context context;
-
-  protected SocialMediaLoaderCallback(@NonNull Context context) {
-    //noinspection ConstantConditions
-    if (context == null) {
-      throw new NullPointerException("Context cannot be NULL");
-    }
-    this.context = context.getApplicationContext();
+  protected SocialMediaLoaderCallback() {
   }
 
   @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-    return PYDroidApplication.get(context.getApplicationContext())
+    return SingleInitContentProvider.getInstance()
+        .getModule()
         .provideSocialMediaModule()
         .getLoader();
   }

@@ -17,11 +17,11 @@
 package com.pyamsoft.pydroid;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.AboutLibrariesModule;
+import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.pyamsoft.pydroid.ads.AdvertisementModule;
 import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.support.SupportModule;
@@ -39,8 +39,8 @@ public class PYDroidModule {
 
   @NonNull private final Provider provider;
 
-  PYDroidModule(@NonNull Application application) {
-    provider = new Provider(application);
+  PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
+    provider = new Provider(context, licenseProvider);
   }
 
   // Create a new one every time
@@ -80,17 +80,19 @@ public class PYDroidModule {
 
     // Singleton
     @NonNull private final Context appContext;
+    @NonNull private final LicenseProvider licenseProvider;
     @NonNull private final Billing billing;
     @NonNull private final List<String> inAppPurchaseList;
 
-    Provider(final @NonNull Application application) {
+    Provider(final @NonNull Context context, @NonNull LicenseProvider licenseProvider) {
       //noinspection ConstantConditions
-      if (application == null) {
+      if (context == null) {
         throw new NullPointerException("Application cannot be NULL");
       }
 
-      appContext = application.getApplicationContext();
-      inAppPurchaseList = createInAppPurchaseList(application);
+      appContext = context.getApplicationContext();
+      this.licenseProvider = licenseProvider;
+      inAppPurchaseList = createInAppPurchaseList(context);
       billing =
           new Billing(appContext, new DonationBillingConfiguration(appContext.getPackageName()));
     }
@@ -127,6 +129,11 @@ public class PYDroidModule {
     // Singleton
     @CheckResult @NonNull public final Billing provideBilling() {
       return billing;
+    }
+
+    // Singleton
+    @CheckResult @NonNull public final LicenseProvider provideLicenseProvider() {
+      return licenseProvider;
     }
 
     // Singleton

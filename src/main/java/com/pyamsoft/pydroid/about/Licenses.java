@@ -16,12 +16,9 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.ActionSingle;
-import com.pyamsoft.pydroid.PYDroidApplication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,15 +43,6 @@ public final class Licenses {
 
   static void forEach(@NonNull ActionSingle<AboutLicenseItem> action) {
     INSTANCE.forEachItem(action);
-  }
-
-  @NonNull @CheckResult static LicenseProvider licenses(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    if (appContext instanceof LicenseProvider) {
-      return PYDroidApplication.class.cast(appContext);
-    } else {
-      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
-    }
   }
 
   /**

@@ -19,55 +19,40 @@ package com.pyamsoft.pydroid;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
-@SuppressLint("Registered") public abstract class PYDroidApplication extends Application
-    implements LicenseProvider {
+@SuppressLint("Registered") public abstract class PYDroidApplication extends Application {
 
   private RefWatcher refWatcher;
-  private PYDroidModule module;
 
-  @NonNull @CheckResult static PYDroidModule get(@NonNull Context context) {
-    //noinspection ConstantConditions
-    if (context == null) {
-      throw new NullPointerException("Context cannot be NULL");
-    }
-
-    final Context appContext = context.getApplicationContext();
-    if (appContext instanceof PYDroidApplication) {
-      return PYDroidApplication.class.cast(appContext).getModule();
-    } else {
-      throw new ClassCastException("Cannot cast Application Context to IPYDroidApp");
-    }
-  }
-
-  @CheckResult @NonNull final PYDroidModule getModule() {
-    return module;
+  @CheckResult public static boolean hasGooglePlayServices(@NonNull Context context) {
+    return SingleInitContentProvider.getLicenseProvider().provideGoogleOpenSourceLicenses(context)
+        != null;
   }
 
   @Override public final void onCreate() {
     super.onCreate();
-    Timber.i("NEW PYDROID APPLICATION");
     if (BuildConfig.DEBUG) {
       Timber.d("Install live leakcanary");
       refWatcher = LeakCanary.install(this);
+      onCreateInDebugMode();
     } else {
       refWatcher = RefWatcher.DISABLED;
     }
 
-    module = new PYDroidModule(this);
-
-    createApplicationComponents();
-    insertCustomLicensesIntoMap();
+    onCreateInNormalMode();
   }
 
-  @CallSuper protected void createApplicationComponents() {
+  protected void onCreateInDebugMode() {
+
+  }
+
+  protected void onCreateInNormalMode() {
+
   }
 
   @CheckResult @NonNull public RefWatcher getRefWatcher() {

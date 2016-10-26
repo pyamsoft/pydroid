@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
@@ -24,17 +23,13 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 public abstract class AboutLibrariesLoaderCallback
     implements PersistLoader.Callback<AboutLibrariesPresenter> {
 
-  @NonNull private final Context context;
-
-  protected AboutLibrariesLoaderCallback(@NonNull Context context) {
-    //noinspection ConstantConditions
-    if (context == null) {
-      throw new NullPointerException("Context cannot be NULL");
-    }
-    this.context = context.getApplicationContext();
+  protected AboutLibrariesLoaderCallback() {
   }
 
   @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
-    return PYDroidApplication.get(context).provideAboutLibrariesModule().getLoader();
+    return SingleInitContentProvider.getInstance()
+        .getModule()
+        .provideAboutLibrariesModule()
+        .getLoader();
   }
 }

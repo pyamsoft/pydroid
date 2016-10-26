@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
+class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
 
   @NonNull private final VersionCheckPresenter presenter;
 

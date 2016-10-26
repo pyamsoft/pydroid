@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.squareup.leakcanary.LeakCanary;
@@ -28,11 +27,6 @@ import timber.log.Timber;
 @SuppressLint("Registered") public abstract class PYDroidApplication extends Application {
 
   private RefWatcher refWatcher;
-
-  @CheckResult public static boolean hasGooglePlayServices(@NonNull Context context) {
-    return SingleInitContentProvider.getLicenseProvider().provideGoogleOpenSourceLicenses(context)
-        != null;
-  }
 
   @Override public final void onCreate() {
     super.onCreate();

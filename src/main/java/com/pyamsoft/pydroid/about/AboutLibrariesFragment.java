@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.AboutLibrariesLoaderCallback;
-import com.pyamsoft.pydroid.PYDroidApplication;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.databinding.FragmentAboutLibrariesBinding;
@@ -147,7 +146,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
     Licenses.forEach(aboutLicenseItem -> {
       final boolean add;
       add = !aboutLicenseItem.getName().equals(Licenses.Names.GOOGLE_PLAY)
-          || PYDroidApplication.hasGooglePlayServices(getContext());
+          || AboutLibrariesLoaderCallback.hasGooglePlayServices(getContext());
 
       if (add) {
         items.add(new AboutAdapterItem(aboutLicenseItem,

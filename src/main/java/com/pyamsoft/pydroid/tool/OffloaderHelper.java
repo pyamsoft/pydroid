@@ -35,4 +35,15 @@ public final class OffloaderHelper {
       offloader.cancel();
     }
   }
+
+  public static void cancel(@Nullable ExecutedOffloader... offloaders) {
+    if (offloaders == null) {
+      Timber.w("Offloaders are NULL");
+      return;
+    }
+
+    for (final ExecutedOffloader offloader : offloaders) {
+      cancel(offloader);
+    }
+  }
 }

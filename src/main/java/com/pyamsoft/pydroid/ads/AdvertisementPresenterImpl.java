@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
 class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.AdView>
@@ -41,15 +42,10 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
     showAd();
   }
 
-  @SuppressWarnings("WeakerAccess") void unsubAdSubscription() {
-    if (!offloader.isCancelled()) {
-      offloader.cancel();
-    }
-  }
-
   @Override protected void onUnbind() {
     super.onUnbind();
     socialMediaPresenter.unbindView();
+    OffloaderHelper.cancel(offloader);
   }
 
   @Override protected void onDestroy() {
@@ -60,7 +56,7 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
   }
 
   @Override public void showAd() {
-    unsubAdSubscription();
+    OffloaderHelper.cancel(offloader);
     offloader = interactor.showAdView()
         .onError(item -> Timber.e(item, "onError showAd"))
         .onResult(shown -> getView(view -> {
@@ -72,7 +68,7 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
   }
 
   @Override public void hideAd() {
-    unsubAdSubscription();
+    OffloaderHelper.cancel(offloader);
     offloader = interactor.hideAdView()
         .onError(item -> Timber.e(item, "onError hideAd"))
         .onResult(hide -> getView(view -> {

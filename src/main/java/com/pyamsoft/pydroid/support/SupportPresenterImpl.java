@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import org.solovyev.android.checkout.Inventory;
 import timber.log.Timber;
 
@@ -49,7 +50,7 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   @Override protected void onUnbind() {
     super.onUnbind();
     interactor.destroy();
-    unsubBillingResult();
+    OffloaderHelper.cancel(billingResult);
   }
 
   @Override public void loadInventory() {
@@ -57,7 +58,7 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   }
 
   @Override public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
-    unsubBillingResult();
+    OffloaderHelper.cancel(billingResult);
     billingResult =
         interactor.processBillingResult(requestCode, resultCode, data).onError(throwable -> {
           Timber.e(throwable, "Error processing Billing onFinish");
@@ -69,12 +70,6 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
             view.onProcessResultFailed();
           }
         })).execute();
-  }
-
-  private void unsubBillingResult() {
-    if (!billingResult.isCancelled()) {
-      billingResult.cancel();
-    }
   }
 
   @Override public void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem) {

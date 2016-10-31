@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.about;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import java.util.HashSet;
 import java.util.Set;
 import timber.log.Timber;
@@ -52,11 +53,7 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
 
   @SuppressWarnings("WeakerAccess") void unsubLoadLicense() {
     for (final ExecutedOffloader task : licenseSubscriptions) {
-      if (task != null) {
-        if (!task.isCancelled()) {
-          task.cancel();
-        }
-      }
+      OffloaderHelper.cancel(task);
     }
   }
 }

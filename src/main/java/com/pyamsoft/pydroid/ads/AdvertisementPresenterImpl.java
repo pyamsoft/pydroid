@@ -28,7 +28,8 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
 
   @SuppressWarnings("WeakerAccess") @NonNull final SocialMediaPresenter socialMediaPresenter;
   @NonNull private final AdvertisementInteractor interactor;
-  @NonNull private ExecutedOffloader offloader = new ExecutedOffloader.Empty();
+  @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader offloader =
+      new ExecutedOffloader.Empty();
 
   AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor,
       @NonNull SocialMediaPresenter socialMediaPresenter) {
@@ -64,6 +65,7 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
             view.onShown();
           }
         }))
+        .onFinish(() -> OffloaderHelper.cancel(offloader))
         .execute();
   }
 
@@ -76,6 +78,7 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
             view.onHidden();
           }
         }))
+        .onFinish(() -> OffloaderHelper.cancel(offloader))
         .execute();
   }
 

@@ -34,7 +34,8 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
   final SupportInteractor.OnBillingErrorListener errorListener;
   @NonNull private final SupportInteractor interactor;
-  @NonNull private ExecutedOffloader billingResult = new ExecutedOffloader.Empty();
+  @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader billingResult =
+      new ExecutedOffloader.Empty();
 
   SupportPresenterImpl(@NonNull SupportInteractor interactor) {
     this.interactor = interactor;
@@ -69,7 +70,7 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
           } else {
             view.onProcessResultFailed();
           }
-        })).execute();
+        })).onFinish(() -> OffloaderHelper.cancel(billingResult)).execute();
   }
 
   @Override public void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem) {

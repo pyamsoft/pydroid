@@ -93,6 +93,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
 
     onFirstCreateProtected(appContext);
     onFirstCreate(appContext);
+    insertCustomLicensesIntoMap();
     setInstance(this);
     onInstanceCreated(appContext);
     return false;

@@ -66,13 +66,11 @@ public class SupportDialog extends DialogFragment
   }
 
   @Override public void onBillingSuccess() {
-    Toast.makeText(getContext(), "Thank you for your purchase!", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getContext(), R.string.purchase_success_msg, Toast.LENGTH_SHORT).show();
   }
 
   @Override public void onBillingError() {
-    Toast.makeText(getContext(),
-        "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
-        .show();
+    Toast.makeText(getContext(), R.string.purchase_error_msg, Toast.LENGTH_SHORT).show();
   }
 
   @Override public void onProcessResultSuccess() {

@@ -112,14 +112,14 @@ public abstract class DonationActivity extends VersionCheckActivity
 
   @Override public void onBillingSuccess() {
     passToSupportDialog(SupportDialog::onBillingSuccess,
-        () -> Toast.makeText(getApplicationContext(), "Thank you for your purchase!",
+        () -> Toast.makeText(getApplicationContext(), R.string.purchase_success_msg,
             Toast.LENGTH_SHORT).show());
   }
 
   @Override public void onBillingError() {
-    passToSupportDialog(SupportDialog::onBillingError, () -> Toast.makeText(getApplicationContext(),
-        "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
-        .show());
+    passToSupportDialog(SupportDialog::onBillingError,
+        () -> Toast.makeText(getApplicationContext(), R.string.purchase_error_msg,
+            Toast.LENGTH_SHORT).show());
   }
 
   @Override public void onProcessResultSuccess() {

@@ -40,5 +40,7 @@
 
   <string name="check_version_key" tools:keep="@string/check_version_key">check_version</string>
   <string name="check_version_title" tools:keep="@string/check_version_title">Check for Updates</string>
+  <string name="purchase_success_msg">Thank you for your purchase!</string>
+  <string name="purchase_error_msg">An error occurred during purchase attempt, please try again later</string>
 
 </resources>

@@ -197,8 +197,6 @@ public class SupportDialog extends DialogFragment
       getSupportPresenter().checkoutInAppPurchaseItem(item);
       return true;
     });
-
-    getSupportPresenter().loadInventory();
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {

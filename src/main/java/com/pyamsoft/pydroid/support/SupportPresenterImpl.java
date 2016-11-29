@@ -46,16 +46,13 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   @Override protected void onBind() {
     super.onBind();
     interactor.create(this, successListener, errorListener);
+    interactor.loadInventory();
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
     interactor.destroy();
     OffloaderHelper.cancel(billingResult);
-  }
-
-  @Override public void loadInventory() {
-    interactor.loadInventory();
   }
 
   @Override public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {

@@ -24,8 +24,6 @@ import org.solovyev.android.checkout.Inventory;
 
 public interface SupportPresenter extends Presenter<SupportPresenter.View> {
 
-  void loadInventory();
-
   void onBillingResult(int requestCode, int resultCode, @Nullable Intent data);
 
   void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem);

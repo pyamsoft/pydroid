@@ -23,14 +23,18 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SupportPresenterProvider;
 import com.pyamsoft.pydroid.version.VersionCheckActivity;
+import org.solovyev.android.checkout.Inventory;
 
-public abstract class DonationActivity extends VersionCheckActivity {
+public abstract class DonationActivity extends VersionCheckActivity
+    implements SupportPresenter.View {
 
   @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
 
@@ -44,6 +48,16 @@ public abstract class DonationActivity extends VersionCheckActivity {
   @Override protected void onDestroy() {
     super.onDestroy();
     supportPresenter.destroy();
+  }
+
+  @Override protected void onStart() {
+    super.onStart();
+    supportPresenter.bindView(this);
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    supportPresenter.unbindView();
   }
 
   @CallSuper @Override
@@ -76,6 +90,37 @@ public abstract class DonationActivity extends VersionCheckActivity {
       throw new IllegalStateException("SupportPresenter is NULL");
     }
     return supportPresenter;
+  }
+
+  private void passToSupportDialog(@NonNull ActionSingle<SupportDialog> action) {
+    final Fragment fragment = getSupportFragmentManager().findFragmentByTag(SupportDialog.TAG);
+    if (fragment instanceof SupportDialog) {
+      action.call((SupportDialog) fragment);
+    }
+  }
+
+  @Override public void onBillingSuccess() {
+    passToSupportDialog(SupportDialog::onBillingSuccess);
+  }
+
+  @Override public void onBillingError() {
+    passToSupportDialog(SupportDialog::onBillingError);
+  }
+
+  @Override public void onProcessResultSuccess() {
+    passToSupportDialog(SupportDialog::onProcessResultSuccess);
+  }
+
+  @Override public void onProcessResultError() {
+    passToSupportDialog(SupportDialog::onProcessResultError);
+  }
+
+  @Override public void onProcessResultFailed() {
+    passToSupportDialog(SupportDialog::onProcessResultFailed);
+  }
+
+  @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+    passToSupportDialog(view -> view.onInventoryLoaded(products));
   }
 
   static class DonationSupportPresenterProvider extends SupportPresenterProvider {

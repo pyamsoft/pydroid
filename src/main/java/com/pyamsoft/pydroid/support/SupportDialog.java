@@ -198,7 +198,6 @@ public class SupportDialog extends DialogFragment
       return true;
     });
 
-    Timber.d("Load inventory");
     getSupportPresenter().loadInventory();
   }
 
@@ -209,11 +208,13 @@ public class SupportDialog extends DialogFragment
   @Override public void onStart() {
     super.onStart();
     socialMediaPresenter.bindView(this);
+    getSupportPresenter().bindView(this);
   }
 
   @Override public void onStop() {
     super.onStop();
     socialMediaPresenter.unbindView();
+    getSupportPresenter().unbindView();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

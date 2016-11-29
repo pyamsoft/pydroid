@@ -52,6 +52,7 @@ class SupportInteractorImpl implements SupportInteractor {
   }
 
   @Override public void loadInventory() {
+    Timber.d("Load inventory from checkout");
     checkout.loadInventory();
   }
 

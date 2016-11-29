@@ -16,23 +16,40 @@
 
 package com.pyamsoft.pydroid.support;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.SupportPresenterProvider;
 import com.pyamsoft.pydroid.version.VersionCheckActivity;
 
 public abstract class DonationActivity extends VersionCheckActivity {
 
+  @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    // Create presenter here, do not persist
+    supportPresenter = new DonationSupportPresenterProvider(this).providePresenter();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    supportPresenter.destroy();
+  }
+
   @CallSuper @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    forwardDonationResultToDialog(requestCode, resultCode, data);
+    supportPresenter.onBillingResult(requestCode, resultCode, data);
   }
 
   @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {
@@ -54,13 +71,23 @@ public abstract class DonationActivity extends VersionCheckActivity {
     return handled;
   }
 
-  private void forwardDonationResultToDialog(int requestCode, int resultCode, Intent data) {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    final Fragment supportDialog = fragmentManager.findFragmentByTag(SupportDialog.TAG);
-    if (supportDialog instanceof SupportDialog) {
-      ((SupportDialog) supportDialog).onBillingResult(requestCode, resultCode, data);
-    } else {
-      throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
+  @CheckResult @NonNull SupportPresenter getSupportPresenter() {
+    if (supportPresenter == null) {
+      throw new IllegalStateException("SupportPresenter is NULL");
+    }
+    return supportPresenter;
+  }
+
+  static class DonationSupportPresenterProvider extends SupportPresenterProvider {
+
+    @NonNull private final Activity activity;
+
+    DonationSupportPresenterProvider(@NonNull Activity activity) {
+      this.activity = activity;
+    }
+
+    @NonNull @Override protected Activity provideActivity() {
+      return activity;
     }
   }
 }

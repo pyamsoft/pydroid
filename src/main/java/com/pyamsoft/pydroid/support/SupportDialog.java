@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.support;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
-import com.pyamsoft.pydroid.SupportPresenterProvider;
 import com.pyamsoft.pydroid.databinding.DialogSupportBinding;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -54,7 +53,6 @@ public class SupportDialog extends DialogFragment
   @NonNull public static final String TAG = "SupportDialog";
   @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_social_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialMediaPresenter;
-  @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
   private FastItemAdapter<SkuUIItem> fastItemAdapter;
   private DialogSupportBinding binding;
   private long socialMediaKey;
@@ -88,6 +86,15 @@ public class SupportDialog extends DialogFragment
   @Override public void onProcessResultFailed() {
     Timber.e("Process result failed");
     onBillingError();
+  }
+
+  @CheckResult @NonNull SupportPresenter getSupportPresenter() {
+    final Activity activity = getActivity();
+    if (activity instanceof DonationActivity) {
+      return ((DonationActivity) activity).getSupportPresenter();
+    } else {
+      throw new IllegalStateException("SupportDialog activity is not DonationActivity");
+    }
   }
 
   @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
@@ -145,14 +152,6 @@ public class SupportDialog extends DialogFragment
             socialMediaPresenter = persist;
           }
         });
-
-    // Create presenter here, do not persist
-    supportPresenter = new SupportPresenterProvider() {
-
-      @NonNull @Override protected Activity provideActivity() {
-        return getActivity();
-      }
-    }.providePresenter();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -161,7 +160,7 @@ public class SupportDialog extends DialogFragment
             false);
     final View rootView = binding.getRoot();
 
-    supportPresenter.bindView(this);
+    getSupportPresenter().bindView(this);
     initDialog();
     return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
         (dialogInterface, i) -> dialogInterface.dismiss()).setView(rootView).create();
@@ -191,11 +190,11 @@ public class SupportDialog extends DialogFragment
     binding.supportRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
     binding.supportRecycler.setAdapter(fastItemAdapter);
     fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {
-      supportPresenter.checkoutInAppPurchaseItem(item);
+      getSupportPresenter().checkoutInAppPurchaseItem(item);
       return true;
     });
 
-    supportPresenter.loadInventory();
+    getSupportPresenter().loadInventory();
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {
@@ -219,7 +218,7 @@ public class SupportDialog extends DialogFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    supportPresenter.unbindView();
+    getSupportPresenter().unbindView();
     binding.unbind();
   }
 
@@ -258,12 +257,8 @@ public class SupportDialog extends DialogFragment
     for (final SkuUIItem item : items) {
       if (item.isPurchased()) {
         Timber.i("Item is purchased already, attempt to auto-consume it.");
-        supportPresenter.checkoutInAppPurchaseItem(item);
+        getSupportPresenter().checkoutInAppPurchaseItem(item);
       }
     }
-  }
-
-  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
-    supportPresenter.onBillingResult(requestCode, resultCode, data);
   }
 }

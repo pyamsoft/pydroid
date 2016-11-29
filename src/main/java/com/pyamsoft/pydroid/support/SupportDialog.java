@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.support;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
@@ -25,10 +24,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
@@ -154,19 +153,17 @@ public class SupportDialog extends DialogFragment
         });
   }
 
-  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
     binding =
         DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_support, null,
             false);
-    final View rootView = binding.getRoot();
-
-    getSupportPresenter().bindView(this);
-    initDialog();
-    return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
-        (dialogInterface, i) -> dialogInterface.dismiss()).setView(rootView).create();
+    return binding.getRoot();
   }
 
-  private void initDialog() {
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     initializeSocialMedia();
     initializeDonations();
   }

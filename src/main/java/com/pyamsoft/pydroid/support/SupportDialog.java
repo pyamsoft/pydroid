@@ -221,7 +221,6 @@ public class SupportDialog extends DialogFragment
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    getSupportPresenter().unbindView();
     binding.unbind();
   }
 

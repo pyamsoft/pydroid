@@ -27,6 +27,8 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
+import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SupportPresenterProvider;
@@ -96,31 +98,40 @@ public abstract class DonationActivity extends VersionCheckActivity
     return supportPresenter;
   }
 
-  private void passToSupportDialog(@NonNull ActionSingle<SupportDialog> action) {
+  private void passToSupportDialog(@NonNull ActionSingle<SupportDialog> actionWithDialog,
+      @Nullable ActionNone actionWithoutDialog) {
     final Fragment fragment = getSupportFragmentManager().findFragmentByTag(SupportDialog.TAG);
     if (fragment instanceof SupportDialog) {
-      action.call((SupportDialog) fragment);
+      actionWithDialog.call((SupportDialog) fragment);
+    } else {
+      if (actionWithoutDialog != null) {
+        actionWithoutDialog.call();
+      }
     }
   }
 
   @Override public void onBillingSuccess() {
-    passToSupportDialog(SupportDialog::onBillingSuccess);
+    passToSupportDialog(SupportDialog::onBillingSuccess,
+        () -> Toast.makeText(getApplicationContext(), "Thank you for your purchase!",
+            Toast.LENGTH_SHORT).show());
   }
 
   @Override public void onBillingError() {
-    passToSupportDialog(SupportDialog::onBillingError);
+    passToSupportDialog(SupportDialog::onBillingError, () -> Toast.makeText(getApplicationContext(),
+        "An error occurred during purchase attempt, please try again later", Toast.LENGTH_SHORT)
+        .show());
   }
 
   @Override public void onProcessResultSuccess() {
-    passToSupportDialog(SupportDialog::onProcessResultSuccess);
+    passToSupportDialog(SupportDialog::onProcessResultSuccess, null);
   }
 
   @Override public void onProcessResultError() {
-    passToSupportDialog(SupportDialog::onProcessResultError);
+    passToSupportDialog(SupportDialog::onProcessResultError, this::onBillingError);
   }
 
   @Override public void onProcessResultFailed() {
-    passToSupportDialog(SupportDialog::onProcessResultFailed);
+    passToSupportDialog(SupportDialog::onProcessResultFailed, this::onBillingError);
   }
 
   @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
@@ -141,7 +152,7 @@ public abstract class DonationActivity extends VersionCheckActivity
       }
     }
 
-    passToSupportDialog(view -> view.onInventoryLoaded(products));
+    passToSupportDialog(view -> view.onInventoryLoaded(products), null);
   }
 
   static class DonationSupportPresenterProvider extends SupportPresenterProvider {

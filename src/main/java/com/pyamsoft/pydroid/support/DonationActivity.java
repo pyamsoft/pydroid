@@ -44,7 +44,7 @@ public abstract class DonationActivity extends VersionCheckActivity
 
   @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     // Create presenter here, do not persist
@@ -52,7 +52,7 @@ public abstract class DonationActivity extends VersionCheckActivity
     supportPresenter.bindView(this);
   }
 
-  @Override protected void onDestroy() {
+  @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     supportPresenter.unbindView();
     supportPresenter.destroy();

@@ -82,6 +82,7 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   }
 
   @Override public void onLoaded(@NonNull Inventory.Products products) {
+    Timber.d("Products are loaded");
     getView(view -> view.onInventoryLoaded(products));
   }
 }

@@ -25,11 +25,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
@@ -156,23 +156,16 @@ public class SupportDialog extends DialogFragment
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final Dialog dialog = super.onCreateDialog(savedInstanceState);
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-    final Window window = dialog.getWindow();
-    if (window != null) {
-      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    }
-
-    return dialog;
+    binding =
+        DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_support, null,
+            false);
+    return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
+        (dialogInterface, i) -> dismiss()).setView(binding.getRoot()).create();
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    binding =
-        DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_support, null,
-            false);
     return binding.getRoot();
   }
 
@@ -205,6 +198,7 @@ public class SupportDialog extends DialogFragment
       return true;
     });
 
+    Timber.d("Load inventory");
     getSupportPresenter().loadInventory();
   }
 

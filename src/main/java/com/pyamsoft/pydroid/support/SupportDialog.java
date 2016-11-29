@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.support;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
@@ -28,6 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
@@ -151,6 +153,18 @@ public class SupportDialog extends DialogFragment
             socialMediaPresenter = persist;
           }
         });
+  }
+
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    final Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+    final Window window = dialog.getWindow();
+    if (window != null) {
+      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
+    return dialog;
   }
 
   @Nullable @Override

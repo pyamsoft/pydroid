@@ -32,6 +32,10 @@ import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SupportPresenterProvider;
 import com.pyamsoft.pydroid.version.VersionCheckActivity;
 import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.ProductTypes;
+import org.solovyev.android.checkout.Purchase;
+import org.solovyev.android.checkout.Sku;
+import timber.log.Timber;
 
 public abstract class DonationActivity extends VersionCheckActivity
     implements SupportPresenter.View {
@@ -120,6 +124,28 @@ public abstract class DonationActivity extends VersionCheckActivity
   }
 
   @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+    final Inventory.Product product = products.get(ProductTypes.IN_APP);
+    if (product.supported) {
+      Timber.i("IAP Billing is supported");
+      // Only reveal non-consumable items
+      for (Sku sku : product.getSkus()) {
+        Timber.d("Add sku: %s", sku.id);
+        final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
+        final String token;
+        if (purchase == null) {
+          token = null;
+        } else {
+          token = purchase.token;
+        }
+
+        final SkuUIItem item = new SkuUIItem(sku, token);
+        if (item.isPurchased()) {
+          Timber.i("Item is purchased already, attempt to auto-consume it.");
+          getSupportPresenter().checkoutInAppPurchaseItem(item);
+        }
+      }
+    }
+
     passToSupportDialog(view -> view.onInventoryLoaded(products));
   }
 

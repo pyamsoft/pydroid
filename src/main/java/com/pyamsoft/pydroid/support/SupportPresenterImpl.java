@@ -46,6 +46,10 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
   @Override protected void onBind() {
     super.onBind();
     interactor.create(this, successListener, errorListener);
+    loadInventory();
+  }
+
+  @Override public void loadInventory() {
     interactor.loadInventory();
   }
 

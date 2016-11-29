@@ -206,6 +206,7 @@ public class SupportDialog extends DialogFragment
   @Override public void onStart() {
     super.onStart();
     socialMediaPresenter.bindView(this);
+    getSupportPresenter().loadInventory();
   }
 
   @Override public void onStop() {
@@ -255,12 +256,14 @@ public class SupportDialog extends DialogFragment
     binding.supportRecycler.setVisibility(View.VISIBLE);
     fastItemAdapter.notifyDataSetChanged();
 
-    final List<SkuUIItem> items = fastItemAdapter.getAdapterItems();
-    for (final SkuUIItem item : items) {
-      if (item.isPurchased()) {
-        Timber.i("Item is purchased already, attempt to auto-consume it.");
-        getSupportPresenter().checkoutInAppPurchaseItem(item);
-      }
-    }
+    // Do consumption in the Donation Activity
+    //
+    //final List<SkuUIItem> items = fastItemAdapter.getAdapterItems();
+    //for (final SkuUIItem item : items) {
+    //  if (item.isPurchased()) {
+    //    Timber.i("Item is purchased already, attempt to auto-consume it.");
+    //    getSupportPresenter().checkoutInAppPurchaseItem(item);
+    //  }
+    //}
   }
 }

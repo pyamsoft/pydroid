@@ -49,21 +49,13 @@ public abstract class DonationActivity extends VersionCheckActivity
 
     // Create presenter here, do not persist
     supportPresenter = new DonationSupportPresenterProvider(this).providePresenter();
+    supportPresenter.bindView(this);
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    supportPresenter.destroy();
-  }
-
-  @Override protected void onStart() {
-    super.onStart();
-    supportPresenter.bindView(this);
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
     supportPresenter.unbindView();
+    supportPresenter.destroy();
   }
 
   @CallSuper @Override

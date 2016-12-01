@@ -204,6 +204,10 @@ public class SupportDialog extends DialogFragment
   @Override public void onStart() {
     super.onStart();
     socialMediaPresenter.bindView(this);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
     getSupportPresenter().loadInventory();
   }
 

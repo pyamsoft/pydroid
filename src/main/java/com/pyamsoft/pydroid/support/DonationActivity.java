@@ -46,15 +46,11 @@ public abstract class DonationActivity extends VersionCheckActivity
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    // Create presenter here, do not persist
     supportPresenter = new DonationSupportPresenterProvider(this).providePresenter();
-    supportPresenter.bindView(this);
   }
 
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
-    supportPresenter.unbindView();
     supportPresenter.destroy();
   }
 
@@ -62,6 +58,16 @@ public abstract class DonationActivity extends VersionCheckActivity
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     supportPresenter.onBillingResult(requestCode, resultCode, data);
+  }
+
+  @Override protected void onStart() {
+    super.onStart();
+    supportPresenter.bindView(this);
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    supportPresenter.unbindView();
   }
 
   @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {

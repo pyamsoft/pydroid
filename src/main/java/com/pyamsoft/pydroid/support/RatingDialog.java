@@ -16,10 +16,8 @@
 
 package com.pyamsoft.pydroid.support;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.CheckResult;
@@ -29,14 +27,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AlertDialog;
 import android.text.Spannable;
 import android.view.LayoutInflater;
-import com.pyamsoft.pydroid.R;
+import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.pydroid.databinding.DialogRatingBinding;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 
@@ -115,15 +113,16 @@ public class RatingDialog extends DialogFragment {
     binding.unbind();
   }
 
-  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    binding = DialogRatingBinding.inflate(inflater, container, false);
+    return binding.getRoot();
+  }
 
-    binding =
-        DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_rating, null,
-            false);
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     initDialog();
-    builder.setView(binding.getRoot());
-    return builder.create();
   }
 
   private void initDialog() {

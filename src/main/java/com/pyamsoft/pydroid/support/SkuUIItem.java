@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.support;
 
-import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -122,7 +121,7 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
     public ViewHolder(View itemView) {
       super(itemView);
-      binding = DataBindingUtil.bind(itemView);
+      binding = AdapterItemIapBinding.bind(itemView);
     }
   }
 

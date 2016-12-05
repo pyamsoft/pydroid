@@ -17,15 +17,13 @@
 package com.pyamsoft.pydroid.support;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -153,24 +151,24 @@ public class SupportDialog extends DialogFragment
         });
   }
 
-  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    binding =
-        DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_support, null,
-            false);
-    return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
-        (dialogInterface, i) -> dismiss()).create();
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    binding = DialogSupportBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    initializeDialog();
     initializeSocialMedia();
     initializeDonations();
+  }
+
+  private void initializeDialog() {
+    binding.supportToolbar.setTitle("Support pyamsoft");
+    binding.supportToolbar.setNavigationOnClickListener(view -> dismiss());
+    ViewCompat.setElevation(binding.supportToolbar, AppUtil.convertToDP(getContext(), 4));
   }
 
   private void initializeSocialMedia() {

@@ -31,7 +31,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.databinding.DialogSupportBinding;
@@ -158,7 +158,7 @@ public class SupportDialog extends DialogFragment
         DataBindingUtil.inflate(LayoutInflater.from(getActivity()), R.layout.dialog_support, null,
             false);
     return new AlertDialog.Builder(getActivity()).setNegativeButton("Later",
-        (dialogInterface, i) -> dismiss()).setView(binding.getRoot()).create();
+        (dialogInterface, i) -> dismiss()).create();
   }
 
   @Nullable @Override
@@ -189,12 +189,15 @@ public class SupportDialog extends DialogFragment
     binding.supportLoading.setVisibility(View.VISIBLE);
 
     fastItemAdapter = new FastItemAdapter<>();
-    binding.supportRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-    binding.supportRecycler.setAdapter(fastItemAdapter);
+
+    fastItemAdapter.withSelectable(true);
     fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {
       getSupportPresenter().checkoutInAppPurchaseItem(item);
       return true;
     });
+
+    binding.supportRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+    binding.supportRecycler.setAdapter(fastItemAdapter);
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {
@@ -256,15 +259,5 @@ public class SupportDialog extends DialogFragment
     binding.supportIapEmptyText.setText(null);
     binding.supportRecycler.setVisibility(View.VISIBLE);
     fastItemAdapter.notifyDataSetChanged();
-
-    // Do consumption in the Donation Activity
-    //
-    //final List<SkuUIItem> items = fastItemAdapter.getAdapterItems();
-    //for (final SkuUIItem item : items) {
-    //  if (item.isPurchased()) {
-    //    Timber.i("Item is purchased already, attempt to auto-consume it.");
-    //    getSupportPresenter().checkoutInAppPurchaseItem(item);
-    //  }
-    //}
   }
 }

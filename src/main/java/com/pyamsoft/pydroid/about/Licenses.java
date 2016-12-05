@@ -81,14 +81,14 @@ public final class Licenses {
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,
       @NonNull String homepageUrl, @NonNull String licenseLocation) {
-    final AboutLicenseItem item = new AboutLicenseItem(name, homepageUrl, licenseLocation);
+    final AboutLicenseItem item = AboutLicenseItem.create(name, homepageUrl, licenseLocation);
     aboutItemMap.put(name, item);
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void forEachItem(
       @NonNull ActionSingle<AboutLicenseItem> action) {
     final List<AboutLicenseItem> sortedValues = new ArrayList<>(aboutItemMap.values());
-    Collections.sort(sortedValues, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+    Collections.sort(sortedValues, (o1, o2) -> o1.name().compareToIgnoreCase(o2.name()));
     for (final AboutLicenseItem item : sortedValues) {
       if (item != null) {
         action.call(item);

@@ -105,6 +105,7 @@ dependencies {
   compile "com.jakewharton.timber:timber:$timber"
 
   // FastAdapter
+  compile "com.mikepenz:fastadapter-commons:$fastAdapterCommons@aar"
   compile("com.mikepenz:fastadapter:$fastAdapter@aar") {
     transitive = true
   }

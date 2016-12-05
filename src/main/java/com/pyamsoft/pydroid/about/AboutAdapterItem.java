@@ -35,7 +35,6 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
   @NonNull private final AboutLicenseItem item;
-  @NonNull private final OnLoadLicenseRequestListener listener;
   @NonNull private String licenseText;
   private boolean expanded;
 
@@ -46,14 +45,21 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
         return true;
       };
 
-  AboutAdapterItem(@NonNull AboutLicenseItem item, @NonNull OnLoadLicenseRequestListener listener) {
+  AboutAdapterItem(@NonNull AboutLicenseItem item) {
     this.item = item;
-    this.listener = listener;
     licenseText = "";
+  }
+
+  @NonNull @CheckResult AboutLicenseItem getItem() {
+    return item;
   }
 
   void setLicenseText(@NonNull String licenseText) {
     this.licenseText = licenseText;
+  }
+
+  @CheckResult boolean isLicenseLoaded() {
+    return licenseText.length() != 0;
   }
 
   @CheckResult @SuppressWarnings("WeakerAccess") boolean isExpanded() {
@@ -81,15 +87,8 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
     return R.layout.adapter_item_about;
   }
 
-  @Override public void bindView(@NonNull ViewHolder viewHolder, List payloads) {
+  @Override public void bindView(@NonNull ViewHolder viewHolder, List<Object> payloads) {
     super.bindView(viewHolder, payloads);
-    viewHolder.binding.expandLicenseText.setClickable(false);
-    viewHolder.binding.expandLicenseText.setFocusable(false);
-    viewHolder.binding.expandLicenseName.setClickable(false);
-    viewHolder.binding.expandLicenseName.setFocusable(false);
-    viewHolder.binding.expandLicenseProgress.setClickable(false);
-    viewHolder.binding.expandLicenseHomepage.setFocusable(false);
-    viewHolder.binding.expandLicenseHomepage.setOnClickListener(null);
 
     //make sure all animations are stopped
     viewHolder.binding.expandLicenseIcon.clearAnimation();
@@ -99,17 +98,13 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
       ViewCompat.setRotation(viewHolder.binding.expandLicenseIcon, 180);
     }
 
-    viewHolder.binding.expandLicenseName.setText(item.getName());
-    viewHolder.binding.expandLicenseHomepage.setTextColor(Color.BLUE);
-    viewHolder.binding.expandLicenseHomepage.setSingleLine(true);
+    viewHolder.binding.expandLicenseName.setText(item.name());
     viewHolder.binding.expandLicenseHomepage.setOnClickListener(
-        view -> NetworkUtil.newLink(view.getContext().getApplicationContext(),
-            item.getHomepageUrl()));
+        view -> NetworkUtil.newLink(view.getContext().getApplicationContext(), item.homepage()));
 
     if (isExpanded()) {
       if (licenseText.length() == 0) {
         viewHolder.binding.expandLicenseProgress.setVisibility(View.VISIBLE);
-        listener.onLoadLicense(viewHolder.getAdapterPosition(), item);
       } else {
         viewHolder.binding.expandLicenseProgress.setVisibility(View.GONE);
         viewHolder.binding.expandLicenseText.setVisibility(View.VISIBLE);
@@ -124,13 +119,13 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
     }
   }
 
-  @CheckResult @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
-    return FACTORY;
+  @Override public void unbindView(ViewHolder holder) {
+    super.unbindView(holder);
+    holder.binding.expandLicenseHomepage.setOnClickListener(null);
   }
 
-  interface OnLoadLicenseRequestListener {
-
-    void onLoadLicense(int position, @NonNull AboutLicenseItem item);
+  @CheckResult @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
+    return FACTORY;
   }
 
   @SuppressWarnings("WeakerAccess") protected static class ItemFactory
@@ -150,6 +145,8 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
       binding = DataBindingUtil.bind(view);
       binding.expandLicenseText.getSettings().setTextZoom(80);
       binding.expandLicenseProgress.setIndeterminate(true);
+      binding.expandLicenseHomepage.setTextColor(Color.BLUE);
+      binding.expandLicenseHomepage.setSingleLine(true);
     }
   }
 }

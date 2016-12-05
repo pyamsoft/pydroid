@@ -18,29 +18,19 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.google.auto.value.AutoValue;
 
-class AboutLicenseItem {
+@AutoValue abstract class AboutLicenseItem {
 
-  @NonNull private final String name;
-  @NonNull private final String homepageUrl;
-  @NonNull private final String licenseLocation;
-
-  AboutLicenseItem(@NonNull String name, @NonNull String homepageUrl,
-      @NonNull String licenseLocation) {
-    this.name = name;
-    this.homepageUrl = homepageUrl;
-    this.licenseLocation = licenseLocation;
+  @CheckResult @NonNull
+  static AboutLicenseItem create(@NonNull String name, @NonNull String homepage,
+      @NonNull String license) {
+    return new AutoValue_AboutLicenseItem(name, homepage, license);
   }
 
-  @NonNull @CheckResult String getName() {
-    return name;
-  }
+  abstract String name();
 
-  @NonNull @CheckResult String getHomepageUrl() {
-    return homepageUrl;
-  }
+  abstract String homepage();
 
-  @NonNull @CheckResult String getLicenseLocation() {
-    return licenseLocation;
-  }
+  abstract String license();
 }

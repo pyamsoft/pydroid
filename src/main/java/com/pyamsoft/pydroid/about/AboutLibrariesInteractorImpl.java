@@ -54,14 +54,14 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
 
   @NonNull @Override public Offloader<String> loadLicenseText(@NonNull AboutLicenseItem license) {
     return new AsyncOffloader<String>().onProcess(() -> {
-      if (cachedLicenses.containsKey(license.getName())) {
+      if (cachedLicenses.containsKey(license.name())) {
         Timber.d("Fetch from cache");
-        return cachedLicenses.get(license.getName());
+        return cachedLicenses.get(license.name());
       } else {
         Timber.d("Load from asset location");
-        final String licenseText = loadNewLicense(license.getName(), license.getLicenseLocation());
+        final String licenseText = loadNewLicense(license.name(), license.license());
         Timber.d("Put into cache");
-        cachedLicenses.put(license.getName(), licenseText);
+        cachedLicenses.put(license.name(), licenseText);
         return licenseText;
       }
     });

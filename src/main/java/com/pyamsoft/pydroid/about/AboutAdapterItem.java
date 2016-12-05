@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -142,7 +141,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
     public ViewHolder(View view) {
       super(view);
-      binding = DataBindingUtil.bind(view);
+      binding = AdapterItemAboutBinding.bind(view);
       binding.expandLicenseText.getSettings().setTextZoom(80);
       binding.expandLicenseProgress.setIndeterminate(true);
       binding.expandLicenseHomepage.setTextColor(Color.BLUE);

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
@@ -128,8 +127,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    binding =
-        DataBindingUtil.inflate(inflater, R.layout.fragment_about_libraries, container, false);
+    binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false);
     final View view = binding.getRoot();
     view.setBackgroundColor(backgroundColor);
     return view;

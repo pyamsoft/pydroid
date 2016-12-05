@@ -94,8 +94,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
-    binding =
-        ViewAdvertisementBinding.bind(inflate(getContext(), R.layout.view_advertisement, this));
+    binding = ViewAdvertisementBinding.bind(this);
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {

@@ -97,8 +97,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
-    inflate(getContext(), R.layout.view_advertisement, this);
-    binding = ViewAdvertisementBinding.bind(this);
+    binding = ViewAdvertisementBinding.bind(inflate(getContext(), R.layout.view_advertisement, this));
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {
@@ -126,9 +125,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   final void destroy(boolean isChangingConfigurations) {
-    taskMap.clear();
-    binding.adImage.setImageDrawable(null);
-    binding.adImage.setOnClickListener(null);
+    onHidden();
 
     if (!isChangingConfigurations) {
       PersistentCache.get().unload(loadedKey);
@@ -212,6 +209,10 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   @Override public void onHidden() {
     Timber.d("Hide ad view");
     setVisibility(View.GONE);
+
+    taskMap.clear();
+    binding.adImage.setImageDrawable(null);
+    binding.adImage.setOnClickListener(null);
   }
 
   @SuppressWarnings("WeakerAccess") void showAdView() {

@@ -60,6 +60,7 @@ public class VectorTextView extends NoLeakTextView {
     }
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void setCompoundDrawableResWithIntrinsicBounds(@DrawableRes int startDrawableRes,
       @DrawableRes int topDrawableRes, @DrawableRes int endDrawableRes,
       @DrawableRes int bottomDrawableRes) {

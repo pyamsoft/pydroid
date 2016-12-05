@@ -31,9 +31,9 @@ interface ActionBarProvider {
 
   void setActionBarUpEnabled(boolean up);
 
-  void setActionBarUpEnabled(boolean up, @DrawableRes int icon);
+  @SuppressWarnings("unused") void setActionBarUpEnabled(boolean up, @DrawableRes int icon);
 
-  void setActionBarUpEnabled(boolean up, @Nullable Drawable icon);
+  @SuppressWarnings("unused") void setActionBarUpEnabled(boolean up, @Nullable Drawable icon);
 
   void setActionBarTitle(@NonNull CharSequence title);
 

@@ -40,8 +40,8 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
 
   @Nullable private ModuleDelegate delegate;
 
-  private static void setCreated(boolean created) {
-    SingleInitContentProvider.created = created;
+  private static void setCreated() {
+    SingleInitContentProvider.created = true;
   }
 
   @NonNull @CheckResult static LicenseProvider getLicenseProvider() {
@@ -66,7 +66,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     SingleInitContentProvider.instance = instance;
   }
 
-  @NonNull @CheckResult ModuleDelegate getDelegate() {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult ModuleDelegate getDelegate() {
     if (delegate == null) {
       throw new NullPointerException("ModuleDelegate is NULL. Was this CP never created?");
     }
@@ -80,7 +80,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     }
 
     Timber.i("Create pyamsoft application");
-    setCreated(true);
+    setCreated();
     final Context context = getContext();
     if (context == null) {
       throw new NullPointerException("Context is NULL");
@@ -113,11 +113,11 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
   }
 
   @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
-  protected void onFirstCreate(@NonNull Context context) {
+  protected void onFirstCreate(@SuppressWarnings("UnusedParameters") @NonNull Context context) {
   }
 
   @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
-  protected void onFirstCreateInDebugMode(@NonNull Context context) {
+  protected void onFirstCreateInDebugMode(@SuppressWarnings("UnusedParameters") @NonNull Context context) {
   }
 
   private void setStrictMode() {

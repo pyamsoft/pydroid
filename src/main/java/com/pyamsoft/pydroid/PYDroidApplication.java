@@ -41,11 +41,11 @@ import timber.log.Timber;
     onCreateInNormalMode();
   }
 
-  protected void onCreateInDebugMode() {
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInDebugMode() {
 
   }
 
-  protected void onCreateInNormalMode() {
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInNormalMode() {
 
   }
 

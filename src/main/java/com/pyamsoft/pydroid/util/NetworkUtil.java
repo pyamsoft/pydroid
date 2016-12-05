@@ -40,7 +40,7 @@ public final class NetworkUtil {
     c.getApplicationContext().startActivity(intent);
   }
 
-  @CheckResult public static boolean hasConnection(final @NonNull Context c) {
+  @SuppressWarnings("unused") @CheckResult public static boolean hasConnection(final @NonNull Context c) {
     final Context context = c.getApplicationContext();
     final ConnectivityManager connMan =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

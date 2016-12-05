@@ -29,7 +29,7 @@ public interface Presenter<I> extends Destroyable {
 
   void unbindView();
 
-  interface BoundView<I> extends ActionSingle<I> {
+  @SuppressWarnings("unused") interface BoundView<I> extends ActionSingle<I> {
 
     @Override void call(@NonNull I view);
   }

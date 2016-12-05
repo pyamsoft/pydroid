@@ -89,6 +89,7 @@ public final class Licenses {
       @NonNull ActionSingle<AboutLicenseItem> action) {
     final List<AboutLicenseItem> sortedValues = new ArrayList<>(aboutItemMap.values());
     Collections.sort(sortedValues, (o1, o2) -> o1.name().compareToIgnoreCase(o2.name()));
+    //noinspection Convert2streamapi
     for (final AboutLicenseItem item : sortedValues) {
       if (item != null) {
         action.call(item);

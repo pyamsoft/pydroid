@@ -85,7 +85,7 @@ public class SupportDialog extends DialogFragment
     onBillingError();
   }
 
-  @CheckResult @NonNull SupportPresenter getSupportPresenter() {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull SupportPresenter getSupportPresenter() {
     final Activity activity = getActivity();
     if (activity instanceof DonationActivity) {
       return ((DonationActivity) activity).getSupportPresenter();
@@ -234,7 +234,7 @@ public class SupportDialog extends DialogFragment
     }
   }
 
-  void loadUnsupportedIAPView() {
+  private void loadUnsupportedIAPView() {
     Timber.e("Load UNSUPPORTED");
     binding.supportLoading.setVisibility(View.GONE);
     binding.supportRecycler.setVisibility(View.GONE);
@@ -242,7 +242,7 @@ public class SupportDialog extends DialogFragment
     binding.supportIapEmptyText.setText(getString(R.string.iap_unsupported));
   }
 
-  void loadEmptyIAPView() {
+  private void loadEmptyIAPView() {
     Timber.w("Load EMPTY");
     binding.supportLoading.setVisibility(View.GONE);
     binding.supportRecycler.setVisibility(View.GONE);
@@ -250,7 +250,7 @@ public class SupportDialog extends DialogFragment
     binding.supportIapEmptyText.setText(getString(R.string.iap_empty));
   }
 
-  void loadIAPView() {
+  private void loadIAPView() {
     Timber.i("Load IAP");
     binding.supportLoading.setVisibility(View.GONE);
     binding.supportIapEmpty.setVisibility(View.GONE);

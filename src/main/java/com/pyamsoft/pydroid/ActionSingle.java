@@ -18,5 +18,5 @@ package com.pyamsoft.pydroid;
 
 public interface ActionSingle<I> {
 
-  void call(I item);
+  @SuppressWarnings("EmptyMethod") void call(@SuppressWarnings("UnusedParameters") I item);
 }

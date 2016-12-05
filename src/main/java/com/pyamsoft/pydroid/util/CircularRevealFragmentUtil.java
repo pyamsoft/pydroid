@@ -45,7 +45,7 @@ public final class CircularRevealFragmentUtil {
     throw new RuntimeException("No instances");
   }
 
-  @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY) {
+  @SuppressWarnings("unused") @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY) {
     return bundleArguments(cX, cY, DEFAULT_COLOR);
   }
 
@@ -54,7 +54,7 @@ public final class CircularRevealFragmentUtil {
     return bundleArguments(cX, cY, color, DEFAULT_DURATION);
   }
 
-  @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY, long duration) {
+  @SuppressWarnings("unused") @CheckResult @NonNull public static Bundle bundleArguments(int cX, int cY, long duration) {
     return bundleArguments(cX, cY, DEFAULT_COLOR, duration);
   }
 
@@ -68,7 +68,7 @@ public final class CircularRevealFragmentUtil {
     return args;
   }
 
-  @CheckResult @NonNull
+  @SuppressWarnings("unused") @CheckResult @NonNull
   public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView) {
     return bundleArguments(fromView, containerView, DEFAULT_COLOR);
   }

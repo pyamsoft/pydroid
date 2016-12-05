@@ -77,16 +77,6 @@ public final class StringUtil {
     }
   }
 
-  /**
-   * Applies multiple Spans to a Spannable string Use passed in builder as the out parameter
-   */
-  public static void multiSpannable(final @NonNull Spannable out, final int start, final int stop,
-      final @NonNull Object... spans) {
-    for (final Object span : spans) {
-      out.setSpan(span, start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-    }
-  }
-
   public static void colorSpan(final @NonNull Spannable out, final int start, final int stop,
       @ColorInt int color) {
     out.setSpan(new ForegroundColorSpan(color), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
@@ -110,7 +100,7 @@ public final class StringUtil {
   }
 
   @Size @CheckResult public static int getTextSizeFromAppearance(final @NonNull Context context,
-      @AttrRes int textAppearance) {
+      @StyleRes int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textSize);
     final int textSize = a.getDimensionPixelSize(0, -1);
@@ -120,7 +110,7 @@ public final class StringUtil {
 
   @ColorInt @CheckResult
   public static int getTextColorFromAppearance(final @NonNull Context context,
-      @AttrRes int textAppearance) {
+      @StyleRes int textAppearance) {
     final TypedArray a =
         getAttributeFromAppearance(context, textAppearance, android.R.attr.textColor);
     final int color = a.getColor(0, -1);

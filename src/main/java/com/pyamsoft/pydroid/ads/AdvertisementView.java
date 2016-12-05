@@ -59,7 +59,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   @NonNull private static final String KEY_ADVERTISEMENT = "key_advertisement_presenter";
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") Handler handler;
-  AdvertisementPresenter presenter;
+  @SuppressWarnings("WeakerAccess") AdvertisementPresenter presenter;
   private Queue<String> imageQueue;
   private long loadedKey;
   private ImageView adImage;

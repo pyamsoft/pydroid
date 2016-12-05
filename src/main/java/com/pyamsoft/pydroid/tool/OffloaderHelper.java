@@ -36,7 +36,7 @@ public final class OffloaderHelper {
     }
   }
 
-  public static void cancel(@Nullable ExecutedOffloader... offloaders) {
+  @SuppressWarnings("unused") public static void cancel(@Nullable ExecutedOffloader... offloaders) {
     if (offloaders == null) {
       Timber.w("Offloaders are NULL");
       return;

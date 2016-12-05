@@ -188,6 +188,7 @@ public class PYDroidModule {
         }
 
         final List<Purchase> verifiedPurchases = new ArrayList<>(purchases.size());
+        //noinspection Convert2streamapi
         for (Purchase purchase : purchases) {
           verifiedPurchases.add(purchase);
         }

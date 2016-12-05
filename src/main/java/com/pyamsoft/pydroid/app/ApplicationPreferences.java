@@ -32,7 +32,7 @@ import java.util.Set;
  * If you are needing to work with multiple preferences at the same time, stick with the usual
  * Android SharedPreferences implementation
  */
-public abstract class ApplicationPreferences {
+@SuppressWarnings("unused") public abstract class ApplicationPreferences {
 
   @NonNull private final SharedPreferences p;
   @NonNull private final Resources resources;
@@ -47,7 +47,7 @@ public abstract class ApplicationPreferences {
     return resources;
   }
 
-  @NonNull protected final ApplicationPreferences put(@NonNull final String s, final long l) {
+  @SuppressWarnings("unused") @NonNull protected final ApplicationPreferences put(@NonNull final String s, final long l) {
     p.edit().putLong(s, l).apply();
     return this;
   }
@@ -63,12 +63,12 @@ public abstract class ApplicationPreferences {
     return this;
   }
 
-  @NonNull protected final ApplicationPreferences put(@NonNull final String s, final float f) {
+  @SuppressWarnings("unused") @NonNull protected final ApplicationPreferences put(@NonNull final String s, final float f) {
     p.edit().putFloat(s, f).apply();
     return this;
   }
 
-  @NonNull protected final ApplicationPreferences putSet(@NonNull final String s,
+  @SuppressWarnings("unused") @NonNull protected final ApplicationPreferences putSet(@NonNull final String s,
       @NonNull final Set<String> st) {
     p.edit().putStringSet(s, st).apply();
     return this;
@@ -79,7 +79,7 @@ public abstract class ApplicationPreferences {
     return this;
   }
 
-  @CheckResult protected final long get(@NonNull final String s, final long l) {
+  @SuppressWarnings("unused") @CheckResult protected final long get(@NonNull final String s, final long l) {
     return p.getLong(s, l);
   }
 
@@ -95,7 +95,7 @@ public abstract class ApplicationPreferences {
     return p.getFloat(s, f);
   }
 
-  @CheckResult @Nullable
+  @SuppressWarnings("unused") @CheckResult @Nullable
   protected final Set<String> getSet(@NonNull final String s, final @Nullable Set<String> st) {
     return p.getStringSet(s, st);
   }
@@ -104,20 +104,20 @@ public abstract class ApplicationPreferences {
     return p.getBoolean(s, b);
   }
 
-  @CheckResult @NonNull protected final Map<String, ?> getAll() {
+  @SuppressWarnings("unused") @CheckResult @NonNull protected final Map<String, ?> getAll() {
     return p.getAll();
   }
 
-  @CheckResult protected final boolean contains(@NonNull final String s) {
+  @SuppressWarnings("unused") @CheckResult protected final boolean contains(@NonNull final String s) {
     return p.contains(s);
   }
 
-  @CheckResult protected final ApplicationPreferences remove(@NonNull final String s) {
+  @SuppressWarnings("unused") @CheckResult protected final ApplicationPreferences remove(@NonNull final String s) {
     p.edit().remove(s).apply();
     return this;
   }
 
-  public void clear() {
+  @SuppressWarnings("unused") public void clear() {
     clear(false);
   }
 
@@ -149,14 +149,14 @@ public abstract class ApplicationPreferences {
 
     boolean isRegistered = false;
 
-    public final void register(@NonNull final ApplicationPreferences util) {
+    @SuppressWarnings("unused") public final void register(@NonNull final ApplicationPreferences util) {
       if (!isRegistered) {
         util.register(this);
         isRegistered = true;
       }
     }
 
-    public final void unregister(@NonNull final ApplicationPreferences util) {
+    @SuppressWarnings("unused") public final void unregister(@NonNull final ApplicationPreferences util) {
       if (isRegistered) {
         util.unregister(this);
         isRegistered = false;

@@ -21,12 +21,9 @@ import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
@@ -41,25 +38,6 @@ public final class DrawableUtil {
     return new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN);
   }
 
-  @NonNull @CheckResult
-  public static ColorFilter colorFilter(final @NonNull Context cn, final @ColorRes int c) {
-    final int color = ContextCompat.getColor(cn, c);
-    return colorFilter(color);
-  }
-
-  @NonNull @CheckResult
-  public static Drawable createOval(final @NonNull Context cn, final @ColorRes int c) {
-    final @ColorInt int i = ContextCompat.getColor(cn, c);
-    return createOval(i);
-  }
-
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
-  public static ShapeDrawable createOval(final @ColorInt int color) {
-    final ShapeDrawable sd = new ShapeDrawable(new OvalShape());
-    sd.getPaint().setColor(color);
-    return sd;
-  }
-
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
   public static Drawable tintDrawableFromColor(@NonNull Drawable d, final @ColorInt int c) {
     d = d.mutate();
@@ -68,23 +46,9 @@ public final class DrawableUtil {
   }
 
   @NonNull @CheckResult
-  public static Drawable tintDrawableFromColor(final @NonNull Context c, final @DrawableRes int dr,
-      final @ColorInt int cl) {
-    final Drawable d = ContextCompat.getDrawable(c, dr);
-    return tintDrawableFromColor(d, cl);
-  }
-
-  @NonNull @CheckResult
   public static Drawable tintDrawableFromRes(final @NonNull Context c, final @NonNull Drawable d,
       final @ColorRes int cl) {
     final @ColorInt int i = ContextCompat.getColor(c, cl);
     return tintDrawableFromColor(d, i);
-  }
-
-  @NonNull @CheckResult
-  public static Drawable tintDrawableFromRes(final @NonNull Context c, final @DrawableRes int dr,
-      final @ColorRes int cl) {
-    final Drawable d = ContextCompat.getDrawable(c, dr);
-    return tintDrawableFromRes(c, d, cl);
   }
 }

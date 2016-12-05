@@ -50,7 +50,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
   @NonNull private static final String KEY_ABOUT_PRESENTER = "key_about_presenter";
   @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
-  FastItemAdapter<AboutAdapterItem> fastItemAdapter;
+  @SuppressWarnings("WeakerAccess") FastItemAdapter<AboutAdapterItem> fastItemAdapter;
   @ColorInt private int backgroundColor;
   private long loadedKey;
   private boolean lastOnBackStack;

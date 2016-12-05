@@ -52,6 +52,7 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
   }
 
   @SuppressWarnings("WeakerAccess") void unsubLoadLicense() {
+    //noinspection Convert2streamapi
     for (final ExecutedOffloader task : licenseSubscriptions) {
       OffloaderHelper.cancel(task);
     }

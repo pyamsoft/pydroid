@@ -59,6 +59,7 @@ public final class AsyncDrawable {
         @DrawableRes int resource, @ColorRes int tint) {
       final AsyncTaskMap.TaskEntry<Drawable> taskEntry = new AsyncTaskMap.TaskEntry<Drawable>() {
         @Override protected Drawable doInBackground(Void... params) {
+          Timber.d("Load drawable in background");
           Drawable loaded = AppCompatResources.getDrawable(context, resource);
           if (loaded == null) {
             Timber.e("Could not load drawable for resource: %d", resource);
@@ -75,6 +76,7 @@ public final class AsyncDrawable {
         @Override protected void onPostExecute(Drawable drawable) {
           super.onPostExecute(drawable);
           if (drawable != null) {
+            Timber.d("Load drawable into image");
             imageView.setImageDrawable(drawable);
           }
         }

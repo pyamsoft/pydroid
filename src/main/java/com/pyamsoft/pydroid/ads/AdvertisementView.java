@@ -128,6 +128,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   final void destroy(boolean isChangingConfigurations) {
     taskMap.clear();
     binding.adImage.setImageDrawable(null);
+    binding.adImage.setOnClickListener(null);
 
     if (!isChangingConfigurations) {
       PersistentCache.get().unload(loadedKey);
@@ -214,8 +215,6 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   @SuppressWarnings("WeakerAccess") void showAdView() {
-    binding.adImage.setVisibility(View.VISIBLE);
-
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
     binding.adImage.setOnClickListener(view -> presenter.clickAd(currentPackage));

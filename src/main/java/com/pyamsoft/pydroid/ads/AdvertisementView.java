@@ -25,7 +25,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
@@ -98,7 +97,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
-    binding = ViewAdvertisementBinding.inflate(LayoutInflater.from(getContext()));
+    inflate(getContext(), R.layout.view_advertisement, this);
+    binding = ViewAdvertisementBinding.bind(this);
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {

@@ -25,11 +25,12 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.databinding.ViewAdvertisementBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -63,7 +64,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   AdvertisementPresenter presenter;
   private Queue<String> imageQueue;
   private long loadedKey;
-  private ImageView adImage;
+  private ViewAdvertisementBinding binding;
 
   public AdvertisementView(Context context) {
     super(context);
@@ -97,13 +98,10 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
-    inflate(getContext(), R.layout.view_advertisement, this);
+    binding = ViewAdvertisementBinding.inflate(LayoutInflater.from(getContext()));
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {
-    // Data binding doesnt seem to like out Advertisement View
-    adImage = (ImageView) findViewById(R.id.ad_image);
-
     loadedKey =
         PersistentCache.get().load(KEY_ADVERTISEMENT, null, new AdvertisementViewLoaderCallback() {
 
@@ -129,7 +127,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   final void destroy(boolean isChangingConfigurations) {
     taskMap.clear();
-    adImage.setImageDrawable(null);
+    binding.adImage.setImageDrawable(null);
 
     if (!isChangingConfigurations) {
       PersistentCache.get().unload(loadedKey);
@@ -216,13 +214,14 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   @SuppressWarnings("WeakerAccess") void showAdView() {
-    adImage.setVisibility(View.VISIBLE);
+    binding.adImage.setVisibility(View.VISIBLE);
 
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
-    adImage.setOnClickListener(view -> presenter.clickAd(currentPackage));
+    binding.adImage.setOnClickListener(view -> presenter.clickAd(currentPackage));
 
-    final AsyncMap.Entry adTask = AsyncDrawable.with(getContext()).load(image).into(adImage);
+    final AsyncMap.Entry adTask =
+        AsyncDrawable.with(getContext()).load(image).into(binding.adImage);
     taskMap.put("ad", adTask);
 
     Timber.d("Post new ad in 60 seconds");

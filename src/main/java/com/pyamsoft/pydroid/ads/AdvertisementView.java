@@ -57,9 +57,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
   @NonNull private static final String KEY_ADVERTISEMENT = "key_advertisement_presenter";
-
-  @SuppressWarnings("WeakerAccess") @NonNull final Handler handler;
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
+  @SuppressWarnings("WeakerAccess") Handler handler;
   AdvertisementPresenter presenter;
   private Queue<String> imageQueue;
   private long loadedKey;
@@ -67,37 +66,36 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   public AdvertisementView(Context context) {
     super(context);
-    handler = new Handler(Looper.getMainLooper());
     init();
   }
 
   public AdvertisementView(Context context, AttributeSet attrs) {
     super(context, attrs);
-    handler = new Handler(Looper.getMainLooper());
     init();
   }
 
   public AdvertisementView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    handler = new Handler(Looper.getMainLooper());
     init();
   }
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public AdvertisementView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    handler = new Handler(Looper.getMainLooper());
     init();
   }
 
   private void init() {
+    handler = new Handler(Looper.getMainLooper());
+
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));
     Collections.shuffle(randomList, new SecureRandom());
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
-    binding = ViewAdvertisementBinding.bind(inflate(getContext(), R.layout.view_advertisement, this));
+    binding =
+        ViewAdvertisementBinding.bind(inflate(getContext(), R.layout.view_advertisement, this));
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {

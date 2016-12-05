@@ -27,9 +27,9 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.databinding.ViewAdvertisementBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -62,7 +62,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   AdvertisementPresenter presenter;
   private Queue<String> imageQueue;
   private long loadedKey;
-  private ViewAdvertisementBinding binding;
+  private ImageView adImage;
 
   public AdvertisementView(Context context) {
     super(context);
@@ -94,7 +94,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
-    binding = ViewAdvertisementBinding.bind(this);
+    inflate(getContext(), R.layout.view_advertisement, this);
+    adImage = (ImageView) findViewById(R.id.ad_image);
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {
@@ -208,17 +209,16 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     setVisibility(View.GONE);
 
     taskMap.clear();
-    binding.adImage.setImageDrawable(null);
-    binding.adImage.setOnClickListener(null);
+    adImage.setImageDrawable(null);
+    adImage.setOnClickListener(null);
   }
 
   @SuppressWarnings("WeakerAccess") void showAdView() {
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
-    binding.adImage.setOnClickListener(view -> presenter.clickAd(currentPackage));
+    adImage.setOnClickListener(view -> presenter.clickAd(currentPackage));
 
-    final AsyncMap.Entry adTask =
-        AsyncDrawable.with(getContext()).load(image).into(binding.adImage);
+    final AsyncMap.Entry adTask = AsyncDrawable.with(getContext()).load(image).into(adImage);
     taskMap.put("ad", adTask);
 
     Timber.d("Post new ad in 60 seconds");

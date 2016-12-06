@@ -43,36 +43,6 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
     this.token = token;
   }
 
-  @SuppressWarnings("deprecation") @CheckResult @NonNull
-  private static Spanned fromHtml(@NonNull String description) {
-    final Spanned html;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      html = Html.fromHtml(description, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
-    } else {
-      html = Html.fromHtml(description);
-    }
-    return html;
-  }
-
-  /**
-   * Titles will sometimes contain the app name in (), strip them
-   */
-  @NonNull @CheckResult private static String formatTitle(@NonNull String title) {
-    final String formatted;
-    final int i = title.indexOf("(");
-    if (i > 0) {
-      if (title.charAt(i - 1) == ' ') {
-        formatted = title.substring(0, i - 1);
-      } else {
-        formatted = title.substring(0, i);
-      }
-    } else {
-      formatted = title;
-    }
-
-    return formatted;
-  }
-
   @NonNull @CheckResult Sku getSku() {
     return sku;
   }
@@ -103,25 +73,63 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.binding.purchaseIapTitle.setText(formatTitle(sku.title));
-    holder.binding.purchaseIapDescription.setText(fromHtml(sku.description));
-    holder.binding.purchaseIapPrice.setText(sku.price);
+    holder.bind(sku);
   }
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    holder.binding.purchaseIapTitle.setText(null);
-    holder.binding.purchaseIapDescription.setText(null);
-    holder.binding.purchaseIapPrice.setText(null);
+    holder.unbind();
   }
 
   protected static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final AdapterItemIapBinding binding;
+    @NonNull private final AdapterItemIapBinding binding;
 
     public ViewHolder(View itemView) {
       super(itemView);
       binding = AdapterItemIapBinding.bind(itemView);
+    }
+
+    @SuppressWarnings("deprecation") @CheckResult @NonNull
+    private static Spanned fromHtml(@NonNull String description) {
+      final Spanned html;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        html = Html.fromHtml(description, Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE);
+      } else {
+        html = Html.fromHtml(description);
+      }
+      return html;
+    }
+
+    /**
+     * Titles will sometimes contain the app name in (), strip them
+     */
+    @NonNull @CheckResult private static String formatTitle(@NonNull String title) {
+      final String formatted;
+      final int i = title.indexOf("(");
+      if (i > 0) {
+        if (title.charAt(i - 1) == ' ') {
+          formatted = title.substring(0, i - 1);
+        } else {
+          formatted = title.substring(0, i);
+        }
+      } else {
+        formatted = title;
+      }
+
+      return formatted;
+    }
+
+    void bind(@NonNull Sku sku) {
+      binding.purchaseIapTitle.setText(formatTitle(sku.title));
+      binding.purchaseIapDescription.setText(fromHtml(sku.description));
+      binding.purchaseIapPrice.setText(sku.price);
+    }
+
+    void unbind() {
+      binding.purchaseIapTitle.setText(null);
+      binding.purchaseIapDescription.setText(null);
+      binding.purchaseIapPrice.setText(null);
     }
   }
 

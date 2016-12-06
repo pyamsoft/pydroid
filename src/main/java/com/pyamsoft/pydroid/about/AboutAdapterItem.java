@@ -25,9 +25,11 @@ import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
+import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.databinding.AdapterItemAboutBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.ViewHolder> {
@@ -39,7 +41,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   @NonNull private final FastAdapter.OnClickListener<AboutAdapterItem> onClickListener =
       (v, adapter, item, position) -> {
-        item.setExpanded(!item.isExpanded());
+        item.switchExpanded();
         adapter.getFastAdapter().notifyItemChanged(position);
         return true;
       };
@@ -49,24 +51,12 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
     licenseText = "";
   }
 
-  @NonNull @CheckResult AboutLicenseItem getItem() {
-    return item;
-  }
-
   void setLicenseText(@NonNull String licenseText) {
     this.licenseText = licenseText;
   }
 
-  @CheckResult boolean isLicenseLoaded() {
-    return licenseText.length() != 0;
-  }
-
-  @CheckResult @SuppressWarnings("WeakerAccess") boolean isExpanded() {
-    return expanded;
-  }
-
-  @SuppressWarnings("WeakerAccess") void setExpanded(boolean expanded) {
-    this.expanded = expanded;
+  @SuppressWarnings("WeakerAccess") void switchExpanded() {
+    this.expanded = !expanded;
   }
 
   @CheckResult @NonNull @Override
@@ -88,39 +78,12 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   @Override public void bindView(@NonNull ViewHolder viewHolder, List<Object> payloads) {
     super.bindView(viewHolder, payloads);
-
-    //make sure all animations are stopped
-    viewHolder.binding.expandLicenseIcon.clearAnimation();
-    if (isExpanded()) {
-      ViewCompat.setRotation(viewHolder.binding.expandLicenseIcon, 0);
-    } else {
-      ViewCompat.setRotation(viewHolder.binding.expandLicenseIcon, 180);
-    }
-
-    viewHolder.binding.expandLicenseName.setText(item.name());
-    viewHolder.binding.expandLicenseHomepage.setOnClickListener(
-        view -> NetworkUtil.newLink(view.getContext().getApplicationContext(), item.homepage()));
-
-    if (isExpanded()) {
-      if (licenseText.length() == 0) {
-        viewHolder.binding.expandLicenseProgress.setVisibility(View.VISIBLE);
-      } else {
-        viewHolder.binding.expandLicenseProgress.setVisibility(View.GONE);
-        viewHolder.binding.expandLicenseText.setVisibility(View.VISIBLE);
-        viewHolder.binding.expandLicenseText.loadDataWithBaseURL(null, licenseText, "text/plain",
-            "UTF-8", null);
-      }
-    } else {
-      viewHolder.binding.expandLicenseProgress.setVisibility(View.GONE);
-      viewHolder.binding.expandLicenseText.setVisibility(View.GONE);
-      viewHolder.binding.expandLicenseText.loadDataWithBaseURL(null, "", "text/plain", "UTF-8",
-          null);
-    }
+    viewHolder.bind(expanded, licenseText, item);
   }
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    holder.binding.expandLicenseHomepage.setOnClickListener(null);
+    holder.unbind();
   }
 
   @CheckResult @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
@@ -137,7 +100,10 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final AdapterItemAboutBinding binding;
+    @NonNull private final AdapterItemAboutBinding binding;
+    private boolean expanded;
+    @NonNull private String license;
+    @NonNull private WeakReference<AboutLicenseItem> weakItem;
 
     public ViewHolder(View view) {
       super(view);
@@ -146,6 +112,59 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
       binding.expandLicenseProgress.setIndeterminate(true);
       binding.expandLicenseHomepage.setTextColor(Color.BLUE);
       binding.expandLicenseHomepage.setSingleLine(true);
+      expanded = false;
+      license = "";
+      weakItem = new WeakReference<>(null);
+    }
+
+    void bind(boolean isExpanded, @NonNull String licenseText, @NonNull AboutLicenseItem item) {
+      //make sure all animations are stopped
+      binding.expandLicenseIcon.clearAnimation();
+      if (isExpanded) {
+        ViewCompat.setRotation(binding.expandLicenseIcon, 0);
+      } else {
+        ViewCompat.setRotation(binding.expandLicenseIcon, 180);
+      }
+
+      binding.expandLicenseName.setText(item.name());
+      binding.expandLicenseHomepage.setOnClickListener(
+          view -> NetworkUtil.newLink(view.getContext().getApplicationContext(), item.homepage()));
+
+      if (isExpanded) {
+        if (licenseText.length() == 0) {
+          binding.expandLicenseProgress.setVisibility(View.VISIBLE);
+        } else {
+          binding.expandLicenseProgress.setVisibility(View.GONE);
+          binding.expandLicenseText.setVisibility(View.VISIBLE);
+          binding.expandLicenseText.loadDataWithBaseURL(null, licenseText, "text/plain", "UTF-8",
+              null);
+        }
+      } else {
+        binding.expandLicenseProgress.setVisibility(View.GONE);
+        binding.expandLicenseText.setVisibility(View.GONE);
+        binding.expandLicenseText.loadDataWithBaseURL(null, "", "text/plain", "UTF-8", null);
+      }
+
+      weakItem.clear();
+      weakItem = new WeakReference<>(item);
+      expanded = isExpanded;
+      license = licenseText;
+    }
+
+    void bind(@NonNull ActionSingle<AboutLicenseItem> loader) {
+      if (expanded) {
+        if (license.length() == 0) {
+          final AboutLicenseItem item = weakItem.get();
+          if (item != null) {
+            loader.call(item);
+          }
+        }
+      }
+    }
+
+    void unbind() {
+      binding.expandLicenseHomepage.setOnClickListener(null);
+      binding.expandLicenseName.setText(null);
     }
   }
 }

@@ -164,11 +164,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
         final AboutAdapterItem aboutItem =
             fastItemAdapter.getAdapterItem(holder.getAdapterPosition());
         aboutItem.bindView(holder, payloads);
-        if (aboutItem.isExpanded()) {
-          if (!aboutItem.isLicenseLoaded()) {
-            presenter.loadLicenseText(holder.getAdapterPosition(), aboutItem.getItem());
-          }
-        }
+        holder.bind(item -> presenter.loadLicenseText(holder.getAdapterPosition(), item));
       }
 
       @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {

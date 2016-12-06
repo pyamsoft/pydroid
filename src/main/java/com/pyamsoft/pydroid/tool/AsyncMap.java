@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.tool;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
@@ -38,8 +37,7 @@ public class AsyncMap<T extends AsyncMap.Entry> {
    */
   public final void put(@NonNull String tag, @NonNull T subscription) {
     if (map.containsKey(tag)) {
-      final T old = map.get(tag);
-      cancelSubscription(tag, old);
+      AsyncMapHelper.unsubscribe(map.get(tag));
     }
 
     Timber.d("Insert new subscription for tag: %s", tag);
@@ -53,23 +51,11 @@ public class AsyncMap<T extends AsyncMap.Entry> {
    */
   public final void clear() {
     for (final Map.Entry<String, T> entry : map.entrySet()) {
-      cancelSubscription(entry.getKey(), entry.getValue());
+      AsyncMapHelper.unsubscribe(entry.getValue());
     }
 
     Timber.d("Clear AsyncDrawableMap");
     map.clear();
-  }
-
-  /**
-   * Cancels a task
-   */
-  private void cancelSubscription(@NonNull String tag, @Nullable T async) {
-    if (async != null) {
-      if (!async.isUnloaded()) {
-        Timber.d("Cancel for tag: %s", tag);
-        async.unload();
-      }
-    }
   }
 
   public interface Entry {

@@ -34,4 +34,15 @@ public final class AsyncMapHelper {
       }
     }
   }
+
+  public static void unsubscribe(@Nullable AsyncMap.Entry... entries) {
+    if (entries == null) {
+      Timber.w("AsyncMap Entries are NULL");
+      return;
+    }
+
+    for (final AsyncMap.Entry entry : entries) {
+      unsubscribe(entry);
+    }
+  }
 }

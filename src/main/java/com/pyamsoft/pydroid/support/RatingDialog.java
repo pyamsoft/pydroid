@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.pydroid.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
@@ -45,7 +46,6 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
-  @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") String rateLink;
   @SuppressWarnings("WeakerAccess") boolean acknowledged;
   private SharedPreferences preferences;
@@ -53,6 +53,7 @@ public class RatingDialog extends DialogFragment {
   private int versionCode;
   @DrawableRes private int changeLogIcon;
   private DialogRatingBinding binding;
+  @Nullable private AsyncMap.Entry iconTask;
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider) {
@@ -109,7 +110,7 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    taskMap.clear();
+    AsyncMapHelper.unsubscribe(iconTask);
     binding.unbind();
   }
 
@@ -128,9 +129,8 @@ public class RatingDialog extends DialogFragment {
   private void initDialog() {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
-    final AsyncMap.Entry iconTask =
-        AsyncDrawable.with(getContext()).load(changeLogIcon).into(binding.ratingIcon);
-    taskMap.put("icon", iconTask);
+    AsyncMapHelper.unsubscribe(iconTask);
+    iconTask = AsyncDrawable.load(changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
 

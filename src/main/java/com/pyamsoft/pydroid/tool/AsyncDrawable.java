@@ -30,35 +30,38 @@ import timber.log.Timber;
 
 public final class AsyncDrawable {
 
-  @NonNull private final Context appContext;
-
-  private AsyncDrawable(@NonNull Context context) {
-    this.appContext = context.getApplicationContext();
+  private AsyncDrawable() {
   }
 
-  @CheckResult @NonNull public static AsyncDrawable with(@NonNull Context context) {
-    return new AsyncDrawable(context.getApplicationContext());
-  }
-
-  @CheckResult @NonNull public final Loader load(@DrawableRes int drawableRes) {
-    return load(drawableRes, new DefaultLoader());
+  @CheckResult @NonNull public static Loader load(@DrawableRes int drawableRes) {
+    return new AsyncDrawable().load(drawableRes, new DefaultLoader());
   }
 
   @CheckResult @NonNull
   public final Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
-    loader.setContext(appContext);
     loader.setResource(drawableRes);
     return loader;
   }
 
   @SuppressWarnings("WeakerAccess") public static final class DefaultLoader
-      extends Loader<AsyncTaskMap.TaskEntry> {
+      extends Loader<AsyncDrawableTaskEntry> {
 
     @NonNull @Override
-    public AsyncTaskMap.TaskEntry load(@NonNull Context context, @NonNull ImageView imageView,
-        @DrawableRes int resource, @ColorRes int tint) {
-      final AsyncTaskMap.TaskEntry<Drawable> taskEntry = new AsyncTaskMap.TaskEntry<Drawable>() {
-        @Override protected Drawable doInBackground(Void... params) {
+    public AsyncDrawableTaskEntry load(@NonNull ImageView imageView, @DrawableRes int resource,
+        @ColorRes int tint) {
+      final AsyncDrawableTaskEntry<Drawable> taskEntry = new AsyncDrawableTaskEntry<Drawable>() {
+        @Override protected Drawable doInBackground(Context... params) {
+          if (params == null) {
+            Timber.e("No context passed to AsyncDrawable loader");
+            return null;
+          }
+
+          final Context context = params[0];
+          if (context == null) {
+            Timber.e("ImageView context is NULL");
+            return null;
+          }
+
           Timber.d("Load drawable in background");
           Drawable loaded = AppCompatResources.getDrawable(context, resource);
           if (loaded == null) {
@@ -83,7 +86,7 @@ public final class AsyncDrawable {
       };
 
       // Execute it
-      AsyncTaskCompat.executeParallel(taskEntry);
+      AsyncTaskCompat.executeParallel(taskEntry, imageView.getContext());
       return taskEntry;
     }
   }
@@ -97,16 +100,11 @@ public final class AsyncDrawable {
 
   public static abstract class Loader<T extends AsyncMap.Entry> {
 
-    private Context appContext;
     @DrawableRes private int resource;
     @ColorRes private int tint;
 
     protected Loader() {
       tint = 0;
-    }
-
-    void setContext(@NonNull Context context) {
-      this.appContext = context.getApplicationContext();
     }
 
     void setResource(@DrawableRes int resource) {
@@ -119,11 +117,11 @@ public final class AsyncDrawable {
     }
 
     @CheckResult @NonNull public T into(@NonNull ImageView imageView) {
-      return load(appContext, imageView, resource, tint);
+      return load(imageView, resource, tint);
     }
 
     @CheckResult @NonNull
-    protected abstract T load(@NonNull Context context, @NonNull ImageView imageView,
-        @DrawableRes int resource, @ColorRes int tint);
+    protected abstract T load(@NonNull ImageView imageView, @DrawableRes int resource,
+        @ColorRes int tint);
   }
 }

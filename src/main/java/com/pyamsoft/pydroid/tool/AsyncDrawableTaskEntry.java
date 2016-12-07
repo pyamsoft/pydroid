@@ -16,20 +16,17 @@
 
 package com.pyamsoft.pydroid.tool;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
-@SuppressWarnings("WeakerAccess") public class AsyncTaskMap
-    extends AsyncMap<AsyncTaskMap.TaskEntry> {
+abstract class AsyncDrawableTaskEntry<T> extends AsyncTask<Context, Void, T>
+    implements AsyncMap.Entry {
 
-  public abstract static class TaskEntry<T> extends AsyncTask<Void, Void, T>
-      implements AsyncMap.Entry {
+  @Override public void unload() {
+    cancel(true);
+  }
 
-    @Override public void unload() {
-      cancel(true);
-    }
-
-    @Override public boolean isUnloaded() {
-      return isCancelled();
-    }
+  @Override public boolean isUnloaded() {
+    return isCancelled();
   }
 }

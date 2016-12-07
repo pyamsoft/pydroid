@@ -218,7 +218,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     final int image = loadImage(currentPackage);
     adImage.setOnClickListener(view -> presenter.clickAd(currentPackage));
 
-    final AsyncMap.Entry adTask = AsyncDrawable.with(getContext()).load(image).into(adImage);
+    final AsyncMap.Entry adTask = AsyncDrawable.load(image).into(adImage);
     taskMap.put("ad", adTask);
 
     Timber.d("Post new ad in 60 seconds");

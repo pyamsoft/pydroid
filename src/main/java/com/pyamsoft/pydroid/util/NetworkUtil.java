@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.util;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -23,6 +24,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 import timber.log.Timber;
 
 public final class NetworkUtil {
@@ -37,10 +39,17 @@ public final class NetworkUtil {
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.setData(uri);
     Timber.d("Start intent for URI: %s", uri);
-    c.getApplicationContext().startActivity(intent);
+    try {
+      c.getApplicationContext().startActivity(intent);
+    } catch (ActivityNotFoundException e) {
+      Timber.e(e, "Error");
+      Toast.makeText(c.getApplicationContext(), "No activity available to handle link: " + link,
+          Toast.LENGTH_SHORT).show();
+    }
   }
 
-  @SuppressWarnings("unused") @CheckResult public static boolean hasConnection(final @NonNull Context c) {
+  @SuppressWarnings("unused") @CheckResult
+  public static boolean hasConnection(final @NonNull Context c) {
     final Context context = c.getApplicationContext();
     final ConnectivityManager connMan =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

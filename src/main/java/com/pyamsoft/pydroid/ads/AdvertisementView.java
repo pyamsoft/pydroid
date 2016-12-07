@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
@@ -94,8 +95,13 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     imageQueue = new LinkedList<>(randomList);
 
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
-    inflate(getContext(), R.layout.view_advertisement, this);
-    adImage = (ImageView) findViewById(R.id.ad_image);
+
+    // Create Ad image in java to avoid inflation cost
+    adImage = new ImageView(getContext());
+    adImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        (int) AppUtil.convertToDP(getContext(), 50)));
+    adImage.setScaleType(ImageView.ScaleType.FIT_XY);
+    addView(adImage);
   }
 
   @SuppressWarnings("WeakerAccess") public final void create() {

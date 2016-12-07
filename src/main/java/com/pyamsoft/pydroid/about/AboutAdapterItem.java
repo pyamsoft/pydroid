@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.about;
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,7 +30,6 @@ import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.databinding.AdapterItemAboutBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.ViewHolder> {
@@ -103,7 +103,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
     @NonNull private final AdapterItemAboutBinding binding;
     private boolean expanded;
     @NonNull private String license;
-    @NonNull private WeakReference<AboutLicenseItem> weakItem;
+    @Nullable private AboutLicenseItem item;
 
     public ViewHolder(View view) {
       super(view);
@@ -114,7 +114,6 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
       binding.expandLicenseHomepage.setSingleLine(true);
       expanded = false;
       license = "";
-      weakItem = new WeakReference<>(null);
     }
 
     void bind(boolean isExpanded, @NonNull String licenseText, @NonNull AboutLicenseItem item) {
@@ -145,8 +144,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
         binding.expandLicenseText.loadDataWithBaseURL(null, "", "text/plain", "UTF-8", null);
       }
 
-      weakItem.clear();
-      weakItem = new WeakReference<>(item);
+      this.item = item;
       expanded = isExpanded;
       license = licenseText;
     }
@@ -154,7 +152,6 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
     void bind(@NonNull ActionSingle<AboutLicenseItem> loader) {
       if (expanded) {
         if (license.length() == 0) {
-          final AboutLicenseItem item = weakItem.get();
           if (item != null) {
             loader.call(item);
           }
@@ -165,6 +162,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
     void unbind() {
       binding.expandLicenseHomepage.setOnClickListener(null);
       binding.expandLicenseName.setText(null);
+      item = null;
     }
   }
 }

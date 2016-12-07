@@ -155,11 +155,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
       @Override public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position,
           List<Object> payloads) {
-        if (position < 0) {
-          Timber.e("Invalid position passed to onBindViewHolder");
-          return;
-        }
-
         final AboutAdapterItem.ViewHolder holder = toViewHolder(viewHolder);
         final AboutAdapterItem aboutItem =
             fastItemAdapter.getAdapterItem(holder.getAdapterPosition());
@@ -168,7 +163,11 @@ public class AboutLibrariesFragment extends ActionBarFragment
       }
 
       @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        toViewHolder(viewHolder).unbind();
+        final AboutAdapterItem.ViewHolder holder = toViewHolder(viewHolder);
+        final AboutAdapterItem item = (AboutAdapterItem) holder.itemView.getTag();
+        if (item != null) {
+          item.unbindView(holder);
+        }
       }
     });
 

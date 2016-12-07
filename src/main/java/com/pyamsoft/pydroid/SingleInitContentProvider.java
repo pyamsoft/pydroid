@@ -116,8 +116,8 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
   protected void onFirstCreate(@SuppressWarnings("UnusedParameters") @NonNull Context context) {
   }
 
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
-  protected void onFirstCreateInDebugMode(@SuppressWarnings("UnusedParameters") @NonNull Context context) {
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onFirstCreateInDebugMode(
+      @SuppressWarnings("UnusedParameters") @NonNull Context context) {
   }
 
   private void setStrictMode() {

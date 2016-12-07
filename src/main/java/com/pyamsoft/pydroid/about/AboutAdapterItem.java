@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.databinding.AdapterItemAboutBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.List;
+import timber.log.Timber;
 
 class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.ViewHolder> {
 
@@ -154,6 +155,8 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
         if (license.length() == 0) {
           if (item != null) {
             loader.call(item);
+          } else {
+            Timber.e("AboutLicenseItem is NULL");
           }
         }
       }

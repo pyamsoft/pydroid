@@ -34,11 +34,11 @@ public final class AsyncDrawable {
   }
 
   @CheckResult @NonNull public static Loader load(@DrawableRes int drawableRes) {
-    return new AsyncDrawable().load(drawableRes, new DefaultLoader());
+    return load(drawableRes, new DefaultLoader());
   }
 
   @CheckResult @NonNull
-  public final Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
+  public static Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
     loader.setResource(drawableRes);
     return loader;
   }

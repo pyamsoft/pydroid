@@ -25,51 +25,18 @@
       android:layout_height="match_parent"
       >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rating_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="28dp"
+        android:orientation="vertical"
         android:padding="8dp"
         >
-
-      <Button
-          android:id="@+id/rating_btn_no_thanks"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_alignParentBottom="true"
-          android:text="@string/no_thanks"
-          android:textAppearance="?android:attr/textAppearanceLarge"
-          style="?attr/buttonBarNegativeButtonStyle"
-          />
-
-      <Button
-          android:id="@+id/rating_btn_go_rate"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_above="@id/rating_btn_no_thanks"
-          android:text="@string/rate_application"
-          android:textAppearance="?android:attr/textAppearanceLarge"
-          android:textColor="@android:color/white"
-          style="@style/Widget.AppCompat.Button.Colored"
-          />
-
-      <TextView
-          android:id="@+id/rating_liking_the_app"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_above="@id/rating_btn_go_rate"
-          android:gravity="center"
-          android:padding="8dp"
-          android:text="@string/liking_the_app"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          />
 
       <ScrollView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_above="@id/rating_liking_the_app"
-          android:layout_alignParentTop="true"
           android:layout_margin="16dp"
           >
 
@@ -81,7 +48,26 @@
 
       </ScrollView>
 
-    </RelativeLayout>
+      <Button
+          android:id="@+id/rating_btn_go_rate"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/rate_application"
+          android:textAppearance="?android:attr/textAppearanceLarge"
+          android:textColor="@android:color/white"
+          style="@style/Widget.AppCompat.Button.Colored"
+          />
+
+      <Button
+          android:id="@+id/rating_btn_no_thanks"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/no_thanks"
+          android:textAppearance="?android:attr/textAppearanceLarge"
+          style="?attr/buttonBarNegativeButtonStyle"
+          />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/rating_icon"

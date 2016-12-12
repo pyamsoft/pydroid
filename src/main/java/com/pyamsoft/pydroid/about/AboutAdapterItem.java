@@ -23,7 +23,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.R;
@@ -33,10 +33,10 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import timber.log.Timber;
 
-class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.ViewHolder> {
+class AboutAdapterItem
+    extends GenericAbstractItem<AboutLicenseItem, AboutAdapterItem, AboutAdapterItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-  @NonNull private final AboutLicenseItem item;
   @NonNull private String licenseText;
   private boolean expanded;
 
@@ -48,7 +48,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
       };
 
   AboutAdapterItem(@NonNull AboutLicenseItem item) {
-    this.item = item;
+    super(item);
     licenseText = "";
   }
 
@@ -79,7 +79,7 @@ class AboutAdapterItem extends AbstractItem<AboutAdapterItem, AboutAdapterItem.V
 
   @Override public void bindView(@NonNull ViewHolder viewHolder, List<Object> payloads) {
     super.bindView(viewHolder, payloads);
-    viewHolder.bind(expanded, licenseText, item);
+    viewHolder.bind(expanded, licenseText, getModel());
   }
 
   @Override public void unbindView(ViewHolder holder) {

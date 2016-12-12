@@ -141,11 +141,9 @@ public abstract class DonationActivity extends VersionCheckActivity
         Timber.d("Add sku: %s", sku.id);
         final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
         if (purchase != null) {
+          Timber.i("Item is purchased already, attempt to auto-consume it.");
           final SkuUIItem item = new SkuUIItem(sku, purchase.token);
-          if (item.isPurchased()) {
-            Timber.i("Item is purchased already, attempt to auto-consume it.");
-            getSupportPresenter().checkoutInAppPurchaseItem(item);
-          }
+          getSupportPresenter().checkoutInAppPurchaseItem(item.getModel());
         }
       }
     }

@@ -192,7 +192,7 @@ public class SupportDialog extends DialogFragment
 
     fastItemAdapter.withSelectable(true);
     fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {
-      getSupportPresenter().checkoutInAppPurchaseItem(item);
+      getSupportPresenter().checkoutInAppPurchaseItem(item.getModel());
       return true;
     });
 

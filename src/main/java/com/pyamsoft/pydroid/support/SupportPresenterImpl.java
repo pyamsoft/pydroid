@@ -74,11 +74,12 @@ class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
         })).onFinish(() -> OffloaderHelper.cancel(billingResult)).execute();
   }
 
-  @Override public void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem) {
-    if (skuUIItem.isPurchased()) {
-      interactor.consume(skuUIItem.getToken());
+  @Override public void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel) {
+    final String token = skuModel.token();
+    if (token != null) {
+      interactor.consume(token);
     } else {
-      interactor.purchase(skuUIItem.getSku());
+      interactor.purchase(skuModel.sku());
     }
   }
 

@@ -28,7 +28,7 @@ public interface SupportPresenter extends Presenter<SupportPresenter.View> {
 
   void onBillingResult(int requestCode, int resultCode, @Nullable Intent data);
 
-  void checkoutInAppPurchaseItem(@NonNull SkuUIItem skuUIItem);
+  void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel);
 
   interface View {
 

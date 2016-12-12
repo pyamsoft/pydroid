@@ -43,19 +43,6 @@ class SkuUIItem extends GenericAbstractItem<SkuModel, SkuUIItem, SkuUIItem.ViewH
     return getModel().sku();
   }
 
-  @CheckResult boolean isPurchased() {
-    return getModel().token() != null;
-  }
-
-  @CheckResult @NonNull String getToken() {
-    final String token = getModel().token();
-    if (token == null) {
-      throw new NullPointerException("Token is NULL");
-    }
-
-    return token;
-  }
-
   @Override public int getType() {
     return R.id.fastadapter_iap;
   }

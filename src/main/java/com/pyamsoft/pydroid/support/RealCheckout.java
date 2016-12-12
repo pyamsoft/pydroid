@@ -67,6 +67,7 @@ class RealCheckout implements ICheckout {
   }
 
   @Override public void start() {
+    checkout.destroyPurchaseFlow();
     checkout.start();
     checkout.createPurchaseFlow(new DonationPurchaseListener());
   }

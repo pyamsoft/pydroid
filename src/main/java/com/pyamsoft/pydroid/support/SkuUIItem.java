@@ -24,34 +24,31 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.databinding.AdapterItemIapBinding;
 import java.util.List;
 import org.solovyev.android.checkout.Sku;
 
-class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
+class SkuUIItem extends GenericAbstractItem<SkuModel, SkuUIItem, SkuUIItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @NonNull private final Sku sku;
-  @Nullable private final String token;
-
   SkuUIItem(@NonNull Sku sku, @Nullable String token) {
-    this.sku = sku;
-    this.token = token;
+    super(SkuModel.create(sku, token));
   }
 
   @NonNull @CheckResult Sku getSku() {
-    return sku;
+    return getModel().sku();
   }
 
   @CheckResult boolean isPurchased() {
-    return token != null;
+    return getModel().token() != null;
   }
 
   @CheckResult @NonNull String getToken() {
+    final String token = getModel().token();
     if (token == null) {
       throw new NullPointerException("Token is NULL");
     }
@@ -73,7 +70,7 @@ class SkuUIItem extends AbstractItem<SkuUIItem, SkuUIItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.bind(sku);
+    holder.bind(getModel().sku());
   }
 
   @Override public void unbindView(ViewHolder holder) {

@@ -44,14 +44,6 @@
         android:textAppearance="?android:textAppearanceMedium"
         />
 
-    <com.pyamsoft.pydroid.widget.NoLeakTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/donate"
-        android:textAppearance="?android:textAppearanceMedium"
-        />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

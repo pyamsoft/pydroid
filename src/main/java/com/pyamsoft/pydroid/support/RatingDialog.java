@@ -31,6 +31,8 @@ import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import com.pyamsoft.pydroid.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -152,6 +154,16 @@ public class RatingDialog extends DialogFragment {
     if (preferences != null && acknowledged) {
       Timber.d("Rating dialog has been addressed by user. Commit to memory");
       preferences.edit().putInt(PREFERENCE_TARGET, versionCode).apply();
+    }
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    // The dialog is super small for some reason. We have to set the size manually, in onResume
+    final Window window = getDialog().getWindow();
+    if (window != null) {
+      window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+          WindowManager.LayoutParams.WRAP_CONTENT);
     }
   }
 

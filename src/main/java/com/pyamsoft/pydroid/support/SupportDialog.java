@@ -28,6 +28,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
@@ -209,6 +211,13 @@ public class SupportDialog extends DialogFragment
 
   @Override public void onResume() {
     super.onResume();
+    // The dialog is super small for some reason. We have to set the size manually, in onResume
+    final Window window = getDialog().getWindow();
+    if (window != null) {
+      window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+          WindowManager.LayoutParams.WRAP_CONTENT);
+    }
+
     getSupportPresenter().loadInventory();
   }
 

@@ -16,10 +16,11 @@
 
 package com.pyamsoft.pydroid.tool;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
-abstract class AsyncDrawableTaskEntry<T> extends AsyncTask<Context, Void, T>
+abstract class AsyncDrawableTaskEntry<T> extends AsyncTask<Activity, Void, T>
     implements AsyncMap.Entry {
 
   @Override public void unload() {

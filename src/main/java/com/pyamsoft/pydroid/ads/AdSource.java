@@ -16,18 +16,19 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import com.pyamsoft.pydroid.presenter.Presenter;
+import android.support.annotation.NonNull;
 
-public interface AdvertisementPresenter extends Presenter<AdvertisementPresenter.AdView> {
+public interface AdSource {
+
+  void create(@NonNull AdvertisementView advertisementView);
+
+  void destroy(@NonNull AdvertisementView advertisementView, boolean isChagingConfigurations);
+
+  void start();
+
+  void stop();
 
   void showAd();
 
   void hideAd();
-
-  interface AdView {
-
-    void onShown();
-
-    void onHidden();
-  }
 }

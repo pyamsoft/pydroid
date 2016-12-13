@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
@@ -26,33 +25,26 @@ import timber.log.Timber;
 class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.AdView>
     implements AdvertisementPresenter {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final SocialMediaPresenter socialMediaPresenter;
   @NonNull private final AdvertisementInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader offloader =
       new ExecutedOffloader.Empty();
 
-  AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor,
-      @NonNull SocialMediaPresenter socialMediaPresenter) {
-    this.socialMediaPresenter = socialMediaPresenter;
+  AdvertisementPresenterImpl(@NonNull AdvertisementInteractor interactor) {
     this.interactor = interactor;
   }
 
   @Override protected void onBind() {
     super.onBind();
-    getView(socialMediaPresenter::bindView);
     showAd();
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    socialMediaPresenter.unbindView();
     OffloaderHelper.cancel(offloader);
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    socialMediaPresenter.destroy();
-
     hideAd();
   }
 
@@ -80,9 +72,5 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
         }))
         .onFinish(() -> OffloaderHelper.cancel(offloader))
         .execute();
-  }
-
-  @Override public void clickAd(@NonNull String packageName) {
-    socialMediaPresenter.clickAppPage(packageName);
   }
 }

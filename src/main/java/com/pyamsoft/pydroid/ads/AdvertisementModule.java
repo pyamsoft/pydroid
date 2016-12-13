@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ads;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.PYDroidModule;
-import com.pyamsoft.pydroid.social.SocialMediaModule;
 
 public class AdvertisementModule {
 
@@ -27,10 +26,9 @@ public class AdvertisementModule {
   @NonNull private final AdvertisementPresenter presenter;
   @NonNull private final AdvertisementPresenterLoader loader;
 
-  public AdvertisementModule(@NonNull PYDroidModule.Provider pyDroidModule,
-      @NonNull SocialMediaModule socialMediaModule) {
+  public AdvertisementModule(@NonNull PYDroidModule.Provider pyDroidModule) {
     interactor = new AdvertisementInteractorImpl(pyDroidModule.provideContext());
-    presenter = new AdvertisementPresenterImpl(interactor, socialMediaModule.getPresenter());
+    presenter = new AdvertisementPresenterImpl(interactor);
     loader = new AdvertisementPresenterLoader(presenter);
   }
 

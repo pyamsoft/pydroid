@@ -52,7 +52,10 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
         .setMessage(R.string.tamper_msg)
         .setCancelable(false)
         .setPositiveButton("Take Me", (dialogInterface, i) -> presenter.clickGooglePlay())
-        .setNegativeButton("Close", (dialogInterface, i) -> dismiss())
+        .setNegativeButton("Close", (dialogInterface, i) -> {
+          dismiss();
+          getActivity().finish();
+        })
         .create();
   }
 
@@ -80,5 +83,6 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
 
   @Override public void onSocialMediaClicked(@NonNull String link) {
     NetworkUtil.newLink(getContext(), link);
+    getActivity().finish();
   }
 }

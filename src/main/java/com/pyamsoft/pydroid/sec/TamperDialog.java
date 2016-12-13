@@ -16,7 +16,9 @@
 
 package com.pyamsoft.pydroid.sec;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,10 +55,21 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
         .setCancelable(false)
         .setPositiveButton("Take Me", (dialogInterface, i) -> presenter.clickGooglePlay())
         .setNegativeButton("Close", (dialogInterface, i) -> {
-          dismiss();
-          getActivity().finish();
+          killApp();
         })
         .create();
+  }
+
+  /**
+   * Kills the app and clears the data to prevent any malicious services or code from possibly
+   * running in the background
+   */
+  void killApp() {
+    dismiss();
+    getActivity().finish();
+    final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
+        .getSystemService(Context.ACTIVITY_SERVICE);
+    activityManager.clearApplicationUserData();
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -83,6 +96,6 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
 
   @Override public void onSocialMediaClicked(@NonNull String link) {
     NetworkUtil.newLink(getContext(), link);
-    getActivity().finish();
+    killApp();
   }
 }

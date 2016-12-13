@@ -174,7 +174,10 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   @SuppressWarnings("WeakerAccess") void queueAdRefresh() {
     if (handler == null) {
-      throw new IllegalStateException("NULL presenter");
+      throw new IllegalStateException("NULL handler");
+    }
+    if (activity == null) {
+      throw new IllegalStateException("NULL Activity");
     }
 
     if (onlineAdSource != null && NetworkUtil.hasConnection(getContext())) {

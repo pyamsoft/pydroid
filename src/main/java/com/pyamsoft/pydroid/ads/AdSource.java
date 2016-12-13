@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ads;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -31,7 +32,7 @@ public interface AdSource {
 
   void stop();
 
-  void showAd();
+  void showAd(@NonNull Activity activity);
 
   void hideAd();
 }

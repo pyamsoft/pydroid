@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -41,6 +42,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   private long loadedKey;
   @NonNull private AdSource offlineAdSource = new OfflineAdSource();
   @Nullable private AdSource onlineAdSource;
+  @Nullable private Activity activity;
 
   public AdvertisementView(Context context) {
     super(context);
@@ -68,7 +70,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
   }
 
-  @SuppressWarnings("WeakerAccess") public final void create(@Nullable AdSource adSource) {
+  @SuppressWarnings("WeakerAccess")
+  public final void create(@NonNull Activity activity, @Nullable AdSource adSource) {
     loadedKey =
         PersistentCache.get().load(KEY_ADVERTISEMENT, null, new AdvertisementViewLoaderCallback() {
 
@@ -86,6 +89,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     if (onlineAdSource != null) {
       addView(onlineAdSource.create(getContext()));
     }
+
+    this.activity = activity;
   }
 
   final void start() {
@@ -129,6 +134,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     if (onlineAdSource != null) {
       removeView(onlineAdSource.destroy(getContext(), isChangingConfigurations));
     }
+
+    activity = null;
   }
 
   public final void showAd() {
@@ -171,9 +178,9 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     }
 
     if (onlineAdSource != null && NetworkUtil.hasConnection(getContext())) {
-      onlineAdSource.showAd();
+      onlineAdSource.showAd(activity);
     } else {
-      offlineAdSource.showAd();
+      offlineAdSource.showAd(activity);
     }
 
     Timber.d("Post new ad in 60 seconds");

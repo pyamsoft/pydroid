@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.support;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -108,6 +109,12 @@ public class RatingDialog extends DialogFragment {
     if (changeLogIcon == 0) {
       throw new RuntimeException("Change Log Icon Id cannot be 0");
     }
+  }
+
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    final Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    return dialog;
   }
 
   @Override public void onDestroyView() {

@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.support;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -63,6 +64,12 @@ public class SupportDialog extends DialogFragment
     final SupportDialog fragment = new SupportDialog();
     fragment.setArguments(args);
     AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, TAG);
+  }
+
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    final Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    return dialog;
   }
 
   @Override public void onBillingSuccess() {

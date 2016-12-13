@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.util;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -41,7 +40,7 @@ public final class NetworkUtil {
     Timber.d("Start intent for URI: %s", uri);
     try {
       c.getApplicationContext().startActivity(intent);
-    } catch (ActivityNotFoundException e) {
+    } catch (Exception e) {
       Timber.e(e, "Error");
       Toast.makeText(c.getApplicationContext(), "No activity available to handle link: " + link,
           Toast.LENGTH_SHORT).show();

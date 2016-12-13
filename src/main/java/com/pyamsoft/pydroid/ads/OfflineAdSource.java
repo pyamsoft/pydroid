@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.R;
@@ -122,7 +123,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     return currentPackage;
   }
 
-  @Override public void create(@NonNull AdvertisementView advertisementView) {
+  @NonNull @Override public View create(@NonNull Context context) {
     loadedKey = PersistentCache.get().load(KEY_PRESENTER, null, new SocialMediaLoaderCallback() {
       @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
         presenter = persist;
@@ -135,27 +136,27 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     imageQueue = new LinkedList<>(randomList);
 
     // Create Ad image in java to avoid inflation cost
-    adImage = new ImageView(advertisementView.getContext());
+    adImage = new ImageView(context);
     adImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        (int) AppUtil.convertToDP(advertisementView.getContext(), 50)));
+        (int) AppUtil.convertToDP(context, 50)));
     adImage.setScaleType(ImageView.ScaleType.FIT_XY);
-    advertisementView.addView(adImage);
+    return adImage;
   }
 
-  @Override public void destroy(@NonNull AdvertisementView advertisementView,
-      boolean isChagingConfigurations) {
-    if (adImage == null) {
-      Timber.e("Cannot remove non-existent AdImage");
-    } else {
-      advertisementView.removeView(adImage);
-    }
-
+  @NonNull @Override
+  public View destroy(@NonNull Context context, boolean isChagingConfigurations) {
     taskMap.clear();
     if (!isChagingConfigurations) {
       PersistentCache.get().unload(loadedKey);
       if (imageQueue != null) {
         imageQueue.clear();
       }
+    }
+
+    if (adImage == null) {
+      throw new IllegalStateException("Cannot remove non-existent AdImage");
+    } else {
+      return adImage;
     }
   }
 
@@ -182,7 +183,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     final int image = loadImage(currentPackage);
     adImage.setOnClickListener(view -> {
       if (presenter == null) {
-        Timber.e("Cannot click ad with non-existent presenter");
+        throw new IllegalStateException("Cannot click ad with non-existent presenter");
       } else {
         presenter.clickAppPage(currentPackage);
       }
@@ -194,7 +195,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
 
   @Override public void hideAd() {
     if (adImage == null) {
-      Timber.e("Cannot hide non-existant AdImage");
+      throw new IllegalStateException("Cannot hide non-existant AdImage");
     } else {
       adImage.setImageDrawable(null);
       adImage.setOnClickListener(null);

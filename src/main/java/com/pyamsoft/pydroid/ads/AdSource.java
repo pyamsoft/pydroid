@@ -16,13 +16,16 @@
 
 package com.pyamsoft.pydroid.ads;
 
+import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 public interface AdSource {
 
-  void create(@NonNull AdvertisementView advertisementView);
+  @CheckResult @NonNull View create(@NonNull Context context);
 
-  void destroy(@NonNull AdvertisementView advertisementView, boolean isChagingConfigurations);
+  @CheckResult @NonNull View destroy(@NonNull Context context, boolean isChagingConfigurations);
 
   void start();
 

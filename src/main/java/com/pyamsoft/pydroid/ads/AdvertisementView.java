@@ -80,11 +80,11 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     // Default to gone
     setVisibility(View.GONE);
 
-    onlineAdSource = adSource;
-    offlineAdSource.create(this);
+    addView(offlineAdSource.create(getContext()));
 
+    onlineAdSource = adSource;
     if (onlineAdSource != null) {
-      onlineAdSource.create(this);
+      addView(onlineAdSource.create(getContext()));
     }
   }
 
@@ -125,9 +125,9 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
       PersistentCache.get().unload(loadedKey);
     }
 
-    offlineAdSource.destroy(this, isChangingConfigurations);
+    removeView(offlineAdSource.destroy(getContext(), isChangingConfigurations));
     if (onlineAdSource != null) {
-      onlineAdSource.destroy(this, isChangingConfigurations);
+      removeView(onlineAdSource.destroy(getContext(), isChangingConfigurations));
     }
   }
 

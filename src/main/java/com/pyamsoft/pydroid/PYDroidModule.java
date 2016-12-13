@@ -59,6 +59,8 @@ public class PYDroidModule {
   }
 
   // Create a new one every time
+  //
+  // NOTE: Makes a new ApiModule
   @CheckResult @NonNull final VersionCheckModule provideVersionCheckModule() {
     return new VersionCheckModule(provider, new ApiModule());
   }
@@ -67,7 +69,7 @@ public class PYDroidModule {
   //
   // NOTE: Makes a new SocialMediaModule
   @CheckResult @NonNull final AdvertisementModule provideAdvertisementModule() {
-    return new AdvertisementModule(provider, provideSocialMediaModule());
+    return new AdvertisementModule(provider);
   }
 
   public static class Provider {

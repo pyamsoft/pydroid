@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 
 public interface AdvertisementPresenter extends Presenter<AdvertisementPresenter.AdView> {
 
@@ -26,9 +24,7 @@ public interface AdvertisementPresenter extends Presenter<AdvertisementPresenter
 
   void hideAd();
 
-  void clickAd(@NonNull String packageName);
-
-  interface AdView extends SocialMediaPresenter.View {
+  interface AdView {
 
     void onShown();
 

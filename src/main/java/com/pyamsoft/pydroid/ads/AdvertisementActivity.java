@@ -35,8 +35,12 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
 
     if (adView != null) {
-      adView.create();
+      adView.create(provideOnlineAdSource());
     }
+  }
+
+  @CheckResult @Nullable protected AdSource provideOnlineAdSource() {
+    return null;
   }
 
   @CallSuper @Override protected void onStart() {

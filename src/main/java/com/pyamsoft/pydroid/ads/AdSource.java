@@ -16,23 +16,22 @@
 
 package com.pyamsoft.pydroid.ads;
 
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.PYDroidModule;
+import android.view.View;
 
-public class AdvertisementModule {
+public interface AdSource {
 
-  @NonNull private final AdvertisementInteractor interactor;
-  @NonNull private final AdvertisementPresenter presenter;
-  @NonNull private final AdvertisementPresenterLoader loader;
+  @CheckResult @NonNull View create(@NonNull Context context);
 
-  public AdvertisementModule(@NonNull PYDroidModule.Provider pyDroidModule) {
-    interactor = new AdvertisementInteractorImpl(pyDroidModule.provideContext());
-    presenter = new AdvertisementPresenterImpl(interactor);
-    loader = new AdvertisementPresenterLoader(presenter);
-  }
+  @CheckResult @NonNull View destroy(@NonNull Context context, boolean isChagingConfigurations);
 
-  @NonNull @CheckResult public final AdvertisementPresenterLoader getLoader() {
-    return loader;
-  }
+  void start();
+
+  void stop();
+
+  void showAd();
+
+  void hideAd();
 }

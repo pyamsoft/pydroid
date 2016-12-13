@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pyamsoft.pydroid.BuildConfig;
+import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -28,8 +29,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiModule {
 
+  @NonNull private static final String GITHUB_URL = "raw.githubusercontent.com";
   @NonNull private static final String CURRENT_VERSION_REPO_BASE_URL =
-      "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/";
+      "https://" + GITHUB_URL + "/pyamsoft/android-project-versions/master/";
   @NonNull private final Gson gson;
   @NonNull private final OkHttpClient okHttpClient;
   @NonNull private final Retrofit retrofit;
@@ -39,7 +41,7 @@ public class ApiModule {
     gson = provideGson();
     okHttpClient = provideOkHttpClient();
     retrofit = provideRetrofit();
-    versionCheckApi = new GithubVersionCheckApi(retrofit);
+    versionCheckApi = new VersionCheckApi(retrofit);
   }
 
   @CheckResult @NonNull private Gson provideGson() {
@@ -55,6 +57,14 @@ public class ApiModule {
       logging.setLevel(HttpLoggingInterceptor.Level.BODY);
       builder.addInterceptor(logging);
     }
+
+    final CertificatePinner pinner = new CertificatePinner.Builder().add(GITHUB_URL,
+        "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw=")
+        .add(GITHUB_URL, "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=")
+        .add(GITHUB_URL, "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=")
+        .build();
+    builder.certificatePinner(pinner);
+
     return builder.build();
   }
 

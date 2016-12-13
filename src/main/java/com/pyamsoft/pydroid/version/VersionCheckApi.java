@@ -25,7 +25,7 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import retrofit2.Retrofit;
 
-abstract class VersionCheckApi {
+class VersionCheckApi {
 
   @NonNull private final Retrofit client;
 

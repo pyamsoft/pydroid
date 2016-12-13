@@ -132,7 +132,7 @@ public class RatingDialog extends DialogFragment {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
     AsyncMapHelper.unsubscribe(iconTask);
-    iconTask = AsyncDrawable.with(getActivity()).load(changeLogIcon).into(binding.ratingIcon);
+    iconTask = AsyncDrawable.load(changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
 

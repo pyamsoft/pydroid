@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -175,7 +174,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     presenter.unbindView();
   }
 
-  @Override public void showAd(@NonNull Activity activity) {
+  @Override public void showAd() {
     if (adImage == null) {
       throw new IllegalStateException("Cannot show ad with non-existent AdImage");
     }
@@ -190,7 +189,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       }
     });
 
-    final AsyncMap.Entry adTask = AsyncDrawable.with(activity).load(image).into(adImage);
+    final AsyncMap.Entry adTask = AsyncDrawable.load(image).into(adImage);
     taskMap.put("ad", adTask);
   }
 

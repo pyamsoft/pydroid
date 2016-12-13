@@ -16,13 +16,12 @@
 
 package com.pyamsoft.pydroid.tool;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
@@ -31,22 +30,15 @@ import timber.log.Timber;
 
 public final class AsyncDrawable {
 
-  @NonNull private final Activity activity;
-
-  private AsyncDrawable(@NonNull Activity activity) {
-    this.activity = activity;
+  private AsyncDrawable() {
   }
 
-  @CheckResult @NonNull public static AsyncDrawable with(@NonNull Activity activity) {
-    return new AsyncDrawable(activity);
-  }
-
-  @CheckResult @NonNull public Loader load(@DrawableRes int drawableRes) {
+  @CheckResult @NonNull public static Loader load(@DrawableRes int drawableRes) {
     return load(drawableRes, new DefaultLoader());
   }
 
-  @CheckResult @NonNull public Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
-    loader.setActivity(activity);
+  @CheckResult @NonNull
+  public static Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
     loader.setResource(drawableRes);
     return loader;
   }
@@ -55,30 +47,43 @@ public final class AsyncDrawable {
       extends Loader<AsyncDrawableTaskEntry> {
 
     @NonNull @Override
-    public AsyncDrawableTaskEntry load(@NonNull Activity activity, @NonNull ImageView imageView,
-        @DrawableRes int resource, @ColorRes int tint) {
+    public AsyncDrawableTaskEntry load(@NonNull ImageView imageView, @DrawableRes int resource,
+        @ColorRes int tint) {
       final AsyncDrawableTaskEntry<Drawable> taskEntry = new AsyncDrawableTaskEntry<Drawable>() {
-        @Override protected Drawable doInBackground(Activity... params) {
+        @Override protected Drawable doInBackground(Context... params) {
           if (params == null) {
             Timber.e("No Activity passed to AsyncDrawable loader");
             return null;
           }
 
-          final Activity activity1 = params[0];
-          if (activity1 == null) {
-            Timber.e("Activity is NULL");
+          final Context context = params[0];
+          if (context == null) {
+            Timber.e("Context is NULL");
             return null;
           }
 
-          Timber.d("Load drawable in background");
-          Drawable loaded = AppCompatResources.getDrawable(activity1, resource);
+          // For some devices on API 19, even passing an explicit activity can cause
+          // vector drawable loading errors.
+          //
+          // But in most cases it works fine as advertised
+          //
+          // We guard against this and simply fail on loading if it should happen
+          Drawable loaded;
+          try {
+            Timber.d("Load drawable in background");
+            loaded = AppCompatResources.getDrawable(context, resource);
+          } catch (Exception e) {
+            Timber.e(e, "Error while loading");
+            loaded = null;
+          }
+
           if (loaded == null) {
             Timber.e("Could not load drawable for resource: %d", resource);
             return null;
           }
 
           if (tint != 0) {
-            loaded = DrawableUtil.tintDrawableFromRes(activity1, loaded, tint);
+            loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
           }
 
           return loaded;
@@ -94,7 +99,7 @@ public final class AsyncDrawable {
       };
 
       // Execute it
-      AsyncTaskCompat.executeParallel(taskEntry, activity);
+      AsyncTaskCompat.executeParallel(taskEntry, imageView.getContext());
       return taskEntry;
     }
   }
@@ -108,16 +113,11 @@ public final class AsyncDrawable {
 
   public static abstract class Loader<T extends AsyncMap.Entry> {
 
-    @Nullable private Activity activity;
     @DrawableRes private int resource;
     @ColorRes private int tint;
 
     protected Loader() {
       tint = 0;
-    }
-
-    void setActivity(@NonNull Activity activity) {
-      this.activity = activity;
     }
 
     void setResource(@DrawableRes int resource) {
@@ -130,18 +130,15 @@ public final class AsyncDrawable {
     }
 
     @CheckResult @NonNull public T into(@NonNull ImageView imageView) {
-      if (activity == null) {
-        throw new IllegalStateException("Activity is NULL");
-      }
       if (resource == 0) {
         throw new IllegalStateException("No resource to load");
       }
 
-      return load(activity, imageView, resource, tint);
+      return load(imageView, resource, tint);
     }
 
     @CheckResult @NonNull
-    protected abstract T load(@NonNull Activity activity, @NonNull ImageView imageView,
-        @DrawableRes int resource, @ColorRes int tint);
+    protected abstract T load(@NonNull ImageView imageView, @DrawableRes int resource,
+        @ColorRes int tint);
   }
 }

@@ -122,6 +122,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
             presenter = persist;
           }
         });
+
+    fastItemAdapter = new FastItemAdapter<>();
   }
 
   @Nullable @Override
@@ -136,7 +138,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
-    fastItemAdapter = new FastItemAdapter<>();
     fastItemAdapter.withSelectable(true);
 
     binding.recyclerAboutLibraries.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -182,6 +183,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
       }
     });
 
+    // Clear the items before adding back items
+    fastItemAdapter.clear();
     fastItemAdapter.add(items);
   }
 

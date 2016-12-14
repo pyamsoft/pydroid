@@ -39,7 +39,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
   }
 
-  @CheckResult @Nullable protected AdSource provideOnlineAdSource() {
+  @SuppressWarnings({ "WeakerAccess", "SameReturnValue" }) @CheckResult @Nullable protected AdSource provideOnlineAdSource() {
     return null;
   }
 

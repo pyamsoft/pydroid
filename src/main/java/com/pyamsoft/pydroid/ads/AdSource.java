@@ -25,7 +25,7 @@ public interface AdSource {
 
   @CheckResult @NonNull View create(@NonNull Context context);
 
-  @CheckResult @NonNull View destroy(@NonNull Context context, boolean isChagingConfigurations);
+  @CheckResult @NonNull View destroy(boolean isChagingConfigurations);
 
   void start();
 

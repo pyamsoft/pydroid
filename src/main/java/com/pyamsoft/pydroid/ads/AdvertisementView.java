@@ -36,10 +36,10 @@ import timber.log.Timber;
 public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
 
   @NonNull private static final String KEY_ADVERTISEMENT = "key_advertisement_presenter";
+  @NonNull private final AdSource offlineAdSource = new OfflineAdSource();
   @SuppressWarnings("WeakerAccess") @Nullable Handler handler;
   @SuppressWarnings("WeakerAccess") @Nullable AdvertisementPresenter presenter;
   private long loadedKey;
-  @NonNull private AdSource offlineAdSource = new OfflineAdSource();
   @Nullable private AdSource onlineAdSource;
 
   public AdvertisementView(Context context) {
@@ -125,9 +125,9 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
       PersistentCache.get().unload(loadedKey);
     }
 
-    removeView(offlineAdSource.destroy(getContext(), isChangingConfigurations));
+    removeView(offlineAdSource.destroy(isChangingConfigurations));
     if (onlineAdSource != null) {
-      removeView(onlineAdSource.destroy(getContext(), isChangingConfigurations));
+      removeView(onlineAdSource.destroy(isChangingConfigurations));
     }
   }
 

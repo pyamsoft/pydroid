@@ -37,7 +37,7 @@ public final class AsyncDrawable {
     return load(drawableRes, new DefaultLoader());
   }
 
-  @CheckResult @NonNull
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
     loader.setResource(drawableRes);
     return loader;

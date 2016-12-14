@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.sec;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +34,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 public class TamperDialog extends DialogFragment implements SocialMediaPresenter.View {
 
   @NonNull private static final String KEY_SOCIAL_MEDIA = "key_social_media_tamper";
-  SocialMediaPresenter presenter;
+  @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private long loadedKey;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,9 +55,7 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
         .setMessage(R.string.tamper_msg)
         .setCancelable(false)
         .setPositiveButton("Take Me", (dialogInterface, i) -> presenter.clickGooglePlay())
-        .setNegativeButton("Close", (dialogInterface, i) -> {
-          killApp();
-        })
+        .setNegativeButton("Close", (dialogInterface, i) -> killApp())
         .create();
   }
 
@@ -64,12 +63,14 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
    * Kills the app and clears the data to prevent any malicious services or code from possibly
    * running in the background
    */
-  void killApp() {
+  @SuppressWarnings("WeakerAccess") void killApp() {
     dismiss();
     getActivity().finish();
-    final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
-        .getSystemService(Context.ACTIVITY_SERVICE);
-    activityManager.clearApplicationUserData();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
+          .getSystemService(Context.ACTIVITY_SERVICE);
+      activityManager.clearApplicationUserData();
+    }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

@@ -144,7 +144,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @NonNull @Override
-  public View destroy(@NonNull Context context, boolean isChagingConfigurations) {
+  public View destroy(boolean isChagingConfigurations) {
     taskMap.clear();
     if (!isChagingConfigurations) {
       PersistentCache.get().unload(loadedKey);

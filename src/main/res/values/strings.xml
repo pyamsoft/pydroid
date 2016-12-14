@@ -20,10 +20,8 @@
 
   <string name="blank"/>
   <string name="support">SUPPORT</string>
-  <string name="donate">Make a Donation</string>
   <string name="rate_application">Rate Application</string>
   <string name="no_thanks">No Thanks</string>
-  <string name="liking_the_app">Liking the App?</string>
   <string name="homepage">Homepage</string>
 
   <string name="iap_unsupported">Unable to connect to Play Store for In-App Purchases, or they are unsupported on this device.</string>

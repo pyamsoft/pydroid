@@ -62,7 +62,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
           .replace(containerResId, AboutLibrariesFragment.newInstance(styling, backStackState), TAG)
-          .addToBackStack(TAG)
+          .addToBackStack(null)
           .commit();
     }
   }

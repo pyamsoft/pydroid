@@ -163,6 +163,7 @@ public class SupportDialog extends DialogFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    fastItemAdapter = new FastItemAdapter<>();
     binding = DialogSupportBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
@@ -194,8 +195,6 @@ public class SupportDialog extends DialogFragment
     binding.supportIapEmpty.setVisibility(View.GONE);
     binding.supportRecycler.setVisibility(View.GONE);
     binding.supportLoading.setVisibility(View.VISIBLE);
-
-    fastItemAdapter = new FastItemAdapter<>();
 
     fastItemAdapter.withSelectable(true);
     fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {

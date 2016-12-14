@@ -122,13 +122,12 @@ public class AboutLibrariesFragment extends ActionBarFragment
             presenter = persist;
           }
         });
-
-    fastItemAdapter = new FastItemAdapter<>();
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    fastItemAdapter = new FastItemAdapter<>();
     binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false);
     final View view = binding.getRoot();
     view.setBackgroundColor(backgroundColor);
@@ -183,8 +182,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
       }
     });
 
-    // Clear the items before adding back items
-    fastItemAdapter.clear();
     fastItemAdapter.add(items);
   }
 

@@ -47,6 +47,8 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
             presenter = persist;
           }
         });
+
+    setCancelable(false);
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

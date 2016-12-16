@@ -116,7 +116,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
+          android:scaleType="fitCenter"
           android:src="@drawable/google_play"
           />
 
@@ -126,7 +126,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
+          android:scaleType="fitCenter"
           android:src="@drawable/blogger_icon"
           />
 
@@ -136,7 +136,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
+          android:scaleType="fitCenter"
           android:src="@drawable/google_plus"
           />
 
@@ -146,7 +146,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
+          android:scaleType="fitCenter"
           android:src="@drawable/facebook_icon"
           />
 

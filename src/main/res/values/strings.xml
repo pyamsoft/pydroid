@@ -42,5 +42,6 @@
   <string name="tamper_msg">This application may have been installed from an unofficial source or shows signs of being tampered with. It is recommended you uninstall it immediately. You can find the official pyamsoft applications by clicing the button below.</string>
   <string name="support_plea">All pyamsoft applications are developed by a single, independent developer. I rely on your support to continue developing applications that help people. Your support is always appreciated.</string>
   <string name="rate_application">Rate Application</string>
+  <string name="support_pyamsoft">Support pyamsoft</string>
 
 </resources>

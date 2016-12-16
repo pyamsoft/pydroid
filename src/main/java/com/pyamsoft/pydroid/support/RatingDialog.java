@@ -154,6 +154,8 @@ public class RatingDialog extends DialogFragment {
       NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
       dismiss();
     });
+
+    binding.ratingBtnSupport.setOnClickListener(v -> SupportDialog.show(getFragmentManager()));
   }
 
   @Override public void onDismiss(DialogInterface dialog) {

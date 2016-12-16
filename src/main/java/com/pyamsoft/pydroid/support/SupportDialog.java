@@ -182,7 +182,7 @@ public class SupportDialog extends DialogFragment
   }
 
   private void initializeSocialMedia() {
-    binding.supportAboutApp.setOnClickListener(
+    binding.supportIapRate.setOnClickListener(
         view1 -> socialMediaPresenter.clickAppPage(getActivity().getPackageName()));
     binding.googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
     binding.googlePlus.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlus());

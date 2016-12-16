@@ -35,13 +35,22 @@
         app:navigationIcon="?attr/homeAsUpIndicator"
         />
 
+    <com.pyamsoft.pydroid.widget.NoLeakTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/support_plea"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+
     <Button
-        android:id="@+id/support_about_app"
+        android:id="@+id/support_iap_rate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:text="@string/rate_application"
-        android:textAppearance="?android:textAppearanceMedium"
+        android:textAllCaps="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
     <FrameLayout
@@ -95,8 +104,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_margin="8dp"
+        android:layout_height="48dp"
+        android:padding="8dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         >
@@ -107,6 +116,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
           android:src="@drawable/google_play"
           />
 
@@ -116,6 +126,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
           android:src="@drawable/blogger_icon"
           />
 
@@ -125,6 +136,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
           android:src="@drawable/google_plus"
           />
 
@@ -134,6 +146,7 @@
           android:layout_height="match_parent"
           android:layout_weight="1"
           android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
           android:src="@drawable/facebook_icon"
           />
 

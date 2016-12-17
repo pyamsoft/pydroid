@@ -34,7 +34,6 @@
         android:clickable="false"
         android:focusable="false"
         android:gravity="center_vertical"
-        android:textColor="?android:attr/textAppearanceLarge"
         android:longClickable="false"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />

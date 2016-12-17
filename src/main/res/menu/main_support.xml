@@ -24,6 +24,6 @@
   <item
       android:id="@+id/menu_support"
       android:title="@string/support"
-      app:showAsAction="ifRoom"/>
+      app:showAsAction="never"/>
 
 </menu>

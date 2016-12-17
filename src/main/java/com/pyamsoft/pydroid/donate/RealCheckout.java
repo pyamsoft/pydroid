@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.content.Intent;
 import android.support.annotation.CallSuper;
@@ -41,9 +41,9 @@ class RealCheckout implements ICheckout {
   @SuppressWarnings("WeakerAccess") @NonNull final ActivityCheckout checkout;
   @NonNull private final List<String> inAppSkuList;
   @SuppressWarnings("WeakerAccess") @Nullable Inventory.Callback inventoryCallback;
-  @SuppressWarnings("WeakerAccess") @Nullable SupportInteractor.OnBillingSuccessListener
+  @SuppressWarnings("WeakerAccess") @Nullable DonateInteractor.OnBillingSuccessListener
       successListener;
-  @SuppressWarnings("WeakerAccess") @Nullable SupportInteractor.OnBillingErrorListener
+  @SuppressWarnings("WeakerAccess") @Nullable DonateInteractor.OnBillingErrorListener
       errorListener;
   @Nullable private Inventory inventory;
 
@@ -57,12 +57,12 @@ class RealCheckout implements ICheckout {
   }
 
   @Override public void setSuccessListener(
-      @Nullable SupportInteractor.OnBillingSuccessListener successListener) {
+      @Nullable DonateInteractor.OnBillingSuccessListener successListener) {
     this.successListener = successListener;
   }
 
   @Override
-  public void setErrorListener(@Nullable SupportInteractor.OnBillingErrorListener errorListener) {
+  public void setErrorListener(@Nullable DonateInteractor.OnBillingErrorListener errorListener) {
     this.errorListener = errorListener;
   }
 

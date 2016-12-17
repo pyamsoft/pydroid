@@ -34,31 +34,19 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.databinding.DialogDonateBinding;
-import com.pyamsoft.pydroid.databinding.DialogSupportBinding;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
-public class DonateDialog extends DialogFragment
-    implements SocialMediaPresenter.View, DonatePresenter.View {
+public class DonateDialog extends DialogFragment implements DonatePresenter.View {
 
   @NonNull public static final String TAG = "SupportDialog";
-  @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_social_presenter";
-  @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialMediaPresenter;
   private FastItemAdapter<SkuUIItem> fastItemAdapter;
   private DialogDonateBinding binding;
-  private long socialMediaKey;
 
   public static void show(@NonNull FragmentManager fragmentManager) {
     final Bundle args = new Bundle();
@@ -111,11 +99,8 @@ public class DonateDialog extends DialogFragment
     fastItemAdapter.clear();
     final Inventory.Product product = products.get(ProductTypes.IN_APP);
     if (product.supported) {
-      Timber.i("IAP Billing is supported");
-      final List<SkuUIItem> skuList = new ArrayList<>();
       // Only reveal non-consumable items
       for (Sku sku : product.getSkus()) {
-        Timber.d("Add sku: %s", sku.id);
         final Purchase purchase = product.getPurchaseInState(sku, Purchase.State.PURCHASED);
         final String token;
         if (purchase == null) {
@@ -123,22 +108,9 @@ public class DonateDialog extends DialogFragment
         } else {
           token = purchase.token;
         }
-        skuList.add(new SkuUIItem(sku, token));
+        fastItemAdapter.add(new SkuUIItem(sku, token));
       }
 
-      Collections.sort(skuList, (o1, o2) -> {
-        final long o1Price = o1.getSku().detailedPrice.amount;
-        final long o2Price = o2.getSku().detailedPrice.amount;
-        if (o1Price > o2Price) {
-          return 1;
-        } else if (o1Price < o2Price) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
-
-      fastItemAdapter.add(skuList);
       if (fastItemAdapter.getAdapterItems().isEmpty()) {
         loadEmptyIAPView();
       } else {
@@ -152,13 +124,6 @@ public class DonateDialog extends DialogFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setCancelable(true);
-
-    socialMediaKey = PersistentCache.get()
-        .load(KEY_SOCIAL_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
-          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-            socialMediaPresenter = persist;
-          }
-        });
   }
 
   @Nullable @Override
@@ -172,7 +137,6 @@ public class DonateDialog extends DialogFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     initializeDialog();
-    initializeSocialMedia();
     initializeDonations();
   }
 
@@ -182,14 +146,14 @@ public class DonateDialog extends DialogFragment
     ViewCompat.setElevation(binding.supportToolbar, AppUtil.convertToDP(getContext(), 4));
   }
 
-  private void initializeSocialMedia() {
-    binding.supportIapRate.setOnClickListener(
-        view1 -> socialMediaPresenter.clickAppPage(getActivity().getPackageName()));
-    binding.googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
-    binding.googlePlus.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlus());
-    binding.blogger.setOnClickListener(view1 -> socialMediaPresenter.clickBlogger());
-    binding.facebook.setOnClickListener(view1 -> socialMediaPresenter.clickFacebook());
-  }
+  //private void initializeSocialMedia() {
+  //  binding.supportIapRate.setOnClickListener(
+  //      view1 -> socialMediaPresenter.clickAppPage(getActivity().getPackageName()));
+  //  binding.googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
+  //  binding.googlePlus.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlus());
+  //  binding.blogger.setOnClickListener(view1 -> socialMediaPresenter.clickBlogger());
+  //  binding.facebook.setOnClickListener(view1 -> socialMediaPresenter.clickFacebook());
+  //}
 
   private void initializeDonations() {
     binding.supportLoadingProgress.setIndeterminate(true);
@@ -203,17 +167,20 @@ public class DonateDialog extends DialogFragment
       return true;
     });
 
+    fastItemAdapter.getItemAdapter().withComparator((o1, o2) -> {
+      final long o1Price = o1.getSku().detailedPrice.amount;
+      final long o2Price = o2.getSku().detailedPrice.amount;
+      if (o1Price > o2Price) {
+        return 1;
+      } else if (o1Price < o2Price) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
     binding.supportRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
     binding.supportRecycler.setAdapter(fastItemAdapter);
-  }
-
-  @Override public void onSocialMediaClicked(@NonNull String link) {
-    NetworkUtil.newLink(getContext().getApplicationContext(), link);
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    socialMediaPresenter.bindView(this);
   }
 
   @Override public void onResume() {
@@ -228,26 +195,9 @@ public class DonateDialog extends DialogFragment
     getSupportPresenter().loadInventory();
   }
 
-  @Override public void onStop() {
-    super.onStop();
-    socialMediaPresenter.unbindView();
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_SOCIAL_PRESENTER, socialMediaKey);
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public void onDestroyView() {
     super.onDestroyView();
     binding.unbind();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(socialMediaKey);
-    }
   }
 
   private void loadUnsupportedIAPView() {

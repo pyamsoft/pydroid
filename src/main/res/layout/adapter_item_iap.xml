@@ -17,7 +17,6 @@
 
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
   <LinearLayout
@@ -27,18 +26,17 @@
       android:padding="8dp"
       >
 
-    <com.pyamsoft.pydroid.widget.VectorTextView
+    <com.pyamsoft.pydroid.widget.NoLeakTextView
         android:id="@+id/purchase_iap_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:clickable="false"
-        android:drawablePadding="16dp"
         android:focusable="false"
         android:gravity="center_vertical"
+        android:textColor="?android:attr/textAppearanceLarge"
         android:longClickable="false"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        app:drawableStart="@drawable/ic_donate_24dp"
         />
 
     <LinearLayout

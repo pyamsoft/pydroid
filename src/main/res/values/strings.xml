@@ -19,7 +19,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
   <string name="blank"/>
-  <string name="support">SUPPORT</string>
+  <string name="support">Donate</string>
   <string name="no_thanks">No Thanks</string>
   <string name="homepage">Homepage</string>
 

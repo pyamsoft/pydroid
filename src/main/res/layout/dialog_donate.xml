@@ -32,7 +32,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIcon="@drawable/ic_close_24dp"
         />
 
     <com.pyamsoft.pydroid.widget.NoLeakTextView
@@ -43,15 +43,15 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
-    <Button
-        android:id="@+id/support_iap_rate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/rate_application"
-        android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+    <!--<Button-->
+        <!--android:id="@+id/support_iap_rate"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="8dp"-->
+        <!--android:text="@string/rate_application"-->
+        <!--android:textAllCaps="true"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--/>-->
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -102,55 +102,55 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:padding="8dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        >
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="48dp"-->
+        <!--android:padding="8dp"-->
+        <!--android:paddingLeft="32dp"-->
+        <!--android:paddingRight="32dp"-->
+        <!--&gt;-->
 
-      <ImageView
-          android:id="@+id/google_play"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:contentDescription="@string/blank"
-          android:scaleType="fitCenter"
-          android:src="@drawable/google_play"
-          />
+      <!--<ImageView-->
+          <!--android:id="@+id/google_play"-->
+          <!--android:layout_width="0dp"-->
+          <!--android:layout_height="match_parent"-->
+          <!--android:layout_weight="1"-->
+          <!--android:contentDescription="@string/blank"-->
+          <!--android:scaleType="fitCenter"-->
+          <!--android:src="@drawable/google_play"-->
+          <!--/>-->
 
-      <ImageView
-          android:id="@+id/blogger"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:contentDescription="@string/blank"
-          android:scaleType="fitCenter"
-          android:src="@drawable/blogger_icon"
-          />
+      <!--<ImageView-->
+          <!--android:id="@+id/blogger"-->
+          <!--android:layout_width="0dp"-->
+          <!--android:layout_height="match_parent"-->
+          <!--android:layout_weight="1"-->
+          <!--android:contentDescription="@string/blank"-->
+          <!--android:scaleType="fitCenter"-->
+          <!--android:src="@drawable/blogger_icon"-->
+          <!--/>-->
 
-      <ImageView
-          android:id="@+id/google_plus"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:contentDescription="@string/blank"
-          android:scaleType="fitCenter"
-          android:src="@drawable/google_plus"
-          />
+      <!--<ImageView-->
+          <!--android:id="@+id/google_plus"-->
+          <!--android:layout_width="0dp"-->
+          <!--android:layout_height="match_parent"-->
+          <!--android:layout_weight="1"-->
+          <!--android:contentDescription="@string/blank"-->
+          <!--android:scaleType="fitCenter"-->
+          <!--android:src="@drawable/google_plus"-->
+          <!--/>-->
 
-      <ImageView
-          android:id="@+id/facebook"
-          android:layout_width="0dp"
-          android:layout_height="match_parent"
-          android:layout_weight="1"
-          android:contentDescription="@string/blank"
-          android:scaleType="fitCenter"
-          android:src="@drawable/facebook_icon"
-          />
+      <!--<ImageView-->
+          <!--android:id="@+id/facebook"-->
+          <!--android:layout_width="0dp"-->
+          <!--android:layout_height="match_parent"-->
+          <!--android:layout_weight="1"-->
+          <!--android:contentDescription="@string/blank"-->
+          <!--android:scaleType="fitCenter"-->
+          <!--android:src="@drawable/facebook_icon"-->
+          <!--/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
   </LinearLayout>
 

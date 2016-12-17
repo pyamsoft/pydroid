@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -26,18 +26,18 @@ import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import org.solovyev.android.checkout.Inventory;
 import timber.log.Timber;
 
-class SupportPresenterImpl extends PresenterBase<SupportPresenter.View>
-    implements SupportPresenter, Inventory.Callback {
+class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
+    implements DonatePresenter, Inventory.Callback {
 
   @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
-  final SupportInteractor.OnBillingSuccessListener successListener;
+  final DonateInteractor.OnBillingSuccessListener successListener;
   @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
-  final SupportInteractor.OnBillingErrorListener errorListener;
-  @NonNull private final SupportInteractor interactor;
+  final DonateInteractor.OnBillingErrorListener errorListener;
+  @NonNull private final DonateInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader billingResult =
       new ExecutedOffloader.Empty();
 
-  SupportPresenterImpl(@NonNull SupportInteractor interactor) {
+  DonatePresenterImpl(@NonNull DonateInteractor interactor) {
     this.interactor = interactor;
     successListener = () -> getView(View::onBillingSuccess);
     errorListener = () -> getView(View::onBillingError);

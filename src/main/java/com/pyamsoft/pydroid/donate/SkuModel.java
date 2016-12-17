@@ -14,39 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
-import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.tool.Offloader;
-import org.solovyev.android.checkout.Inventory;
+import com.google.auto.value.AutoValue;
 import org.solovyev.android.checkout.Sku;
 
-interface SupportInteractor {
+@AutoValue abstract class SkuModel {
 
-  void create(@NonNull Inventory.Callback listener, @NonNull OnBillingSuccessListener success,
-      @NonNull OnBillingErrorListener error);
-
-  void destroy();
-
-  void loadInventory();
-
-  void purchase(@NonNull Sku sku);
-
-  void consume(@NonNull String token);
-
-  @CheckResult @NonNull Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
-      @Nullable Intent data);
-
-  interface OnBillingErrorListener {
-
-    void onBillingError();
+  @CheckResult @NonNull static SkuModel create(@NonNull Sku sku, @Nullable String token) {
+    return new AutoValue_SkuModel(sku, token);
   }
 
-  interface OnBillingSuccessListener {
+  abstract Sku sku();
 
-    void onBillingSuccess();
-  }
+  @Nullable abstract String token();
 }

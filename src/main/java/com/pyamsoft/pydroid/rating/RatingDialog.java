@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.rating;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import com.pyamsoft.pydroid.databinding.DialogRatingBinding;
+import com.pyamsoft.pydroid.donate.DonateDialog;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
@@ -155,7 +156,7 @@ public class RatingDialog extends DialogFragment {
       dismiss();
     });
 
-    binding.ratingBtnSupport.setOnClickListener(v -> SupportDialog.show(getFragmentManager()));
+    binding.ratingBtnSupport.setOnClickListener(v -> DonateDialog.show(getFragmentManager()));
   }
 
   @Override public void onDismiss(DialogInterface dialog) {

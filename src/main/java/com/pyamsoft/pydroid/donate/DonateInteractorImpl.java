@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -25,11 +25,11 @@ import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
-class SupportInteractorImpl implements SupportInteractor {
+class DonateInteractorImpl implements DonateInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ICheckout checkout;
 
-  SupportInteractorImpl(@NonNull ICheckout checkout) {
+  DonateInteractorImpl(@NonNull ICheckout checkout) {
     this.checkout = checkout;
   }
 

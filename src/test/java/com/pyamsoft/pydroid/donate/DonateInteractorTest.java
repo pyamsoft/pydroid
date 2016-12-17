@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.tool.Offloader;
@@ -38,24 +38,24 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
-public class SupportInteractorTest {
+public class DonateInteractorTest {
 
   @Mock ICheckout mockCheckout;
-  private SupportInteractorImpl interactor;
+  private DonateInteractorImpl interactor;
 
   @Before public void setup() {
     mockCheckout = Mockito.mock(ICheckout.class);
-    interactor = new SupportInteractorImpl(mockCheckout);
+    interactor = new DonateInteractorImpl(mockCheckout);
   }
 
   @Test public void testCreateSetsListeners() {
     final Inventory.Callback listener = products -> {
     };
 
-    final SupportInteractor.OnBillingSuccessListener successListener = () -> {
+    final DonateInteractor.OnBillingSuccessListener successListener = () -> {
     };
 
-    final SupportInteractor.OnBillingErrorListener errorListener = () -> {
+    final DonateInteractor.OnBillingErrorListener errorListener = () -> {
     };
 
     final AtomicInteger count = new AtomicInteger(0);

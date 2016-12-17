@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
+import com.pyamsoft.pydroid.databinding.DialogDonateBinding;
 import com.pyamsoft.pydroid.databinding.DialogSupportBinding;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -49,19 +50,19 @@ import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
-public class SupportDialog extends DialogFragment
-    implements SocialMediaPresenter.View, SupportPresenter.View {
+public class DonateDialog extends DialogFragment
+    implements SocialMediaPresenter.View, DonatePresenter.View {
 
   @NonNull public static final String TAG = "SupportDialog";
   @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_social_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialMediaPresenter;
   private FastItemAdapter<SkuUIItem> fastItemAdapter;
-  private DialogSupportBinding binding;
+  private DialogDonateBinding binding;
   private long socialMediaKey;
 
   public static void show(@NonNull FragmentManager fragmentManager) {
     final Bundle args = new Bundle();
-    final SupportDialog fragment = new SupportDialog();
+    final DonateDialog fragment = new DonateDialog();
     fragment.setArguments(args);
     AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, TAG);
   }
@@ -94,7 +95,7 @@ public class SupportDialog extends DialogFragment
     onBillingError();
   }
 
-  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull SupportPresenter getSupportPresenter() {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull DonatePresenter getSupportPresenter() {
     final Activity activity = getActivity();
     if (activity instanceof DonationActivity) {
       return ((DonationActivity) activity).getSupportPresenter();
@@ -164,7 +165,7 @@ public class SupportDialog extends DialogFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     fastItemAdapter = new FastItemAdapter<>();
-    binding = DialogSupportBinding.inflate(inflater, container, false);
+    binding = DialogDonateBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 

@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.about.AboutLibrariesModule;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.pyamsoft.pydroid.ads.AdvertisementModule;
 import com.pyamsoft.pydroid.social.SocialMediaModule;
-import com.pyamsoft.pydroid.support.SupportModule;
+import com.pyamsoft.pydroid.donate.DonateModule;
 import com.pyamsoft.pydroid.version.ApiModule;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 import java.util.ArrayList;
@@ -49,8 +49,8 @@ public class PYDroidModule {
   }
 
   // Create a new one every time
-  @CheckResult @NonNull final SupportModule provideSupportModule(@NonNull Activity activity) {
-    return new SupportModule(provider, activity);
+  @CheckResult @NonNull final DonateModule provideSupportModule(@NonNull Activity activity) {
+    return new DonateModule(provider, activity);
   }
 
   // Create a new one every time

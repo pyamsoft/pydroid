@@ -19,14 +19,14 @@ package com.pyamsoft.pydroid;
 import android.app.Activity;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.support.SupportPresenter;
+import com.pyamsoft.pydroid.donate.DonatePresenter;
 
 public abstract class SupportPresenterProvider {
 
   protected SupportPresenterProvider() {
   }
 
-  @NonNull @CheckResult public SupportPresenter providePresenter() {
+  @NonNull @CheckResult public DonatePresenter providePresenter() {
     final Activity activity = provideActivity();
     //noinspection ConstantConditions
     if (activity == null) {

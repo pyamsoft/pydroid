@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -33,14 +33,14 @@ import org.solovyev.android.checkout.Inventory;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
-public class SupportPresenterTest {
+public class DonatePresenterTest {
 
-  @Mock SupportInteractor mockInteractor;
-  private SupportPresenterImpl presenter;
+  @Mock DonateInteractor mockInteractor;
+  private DonatePresenterImpl presenter;
 
   @Before public void setup() {
-    mockInteractor = Mockito.mock(SupportInteractor.class);
-    presenter = new SupportPresenterImpl(mockInteractor);
+    mockInteractor = Mockito.mock(DonateInteractor.class);
+    presenter = new DonatePresenterImpl(mockInteractor);
   }
 
   /**
@@ -54,7 +54,7 @@ public class SupportPresenterTest {
     }).when(mockInteractor).create(presenter, presenter.successListener, presenter.errorListener);
 
     assertEquals(0, count.get());
-    presenter.bindView(new SupportPresenter.View() {
+    presenter.bindView(new DonatePresenter.View() {
       @Override public void onBillingSuccess() {
 
       }
@@ -94,7 +94,7 @@ public class SupportPresenterTest {
     }).when(mockInteractor).destroy();
 
     assertEquals(0, count.get());
-    presenter.bindView(new SupportPresenter.View() {
+    presenter.bindView(new DonatePresenter.View() {
       @Override public void onBillingSuccess() {
 
       }
@@ -143,7 +143,7 @@ public class SupportPresenterTest {
 
     // When created and then inventory load is called, it does the thing
     assertEquals(0, count.get());
-    presenter.bindView(new SupportPresenter.View() {
+    presenter.bindView(new DonatePresenter.View() {
       @Override public void onBillingSuccess() {
 
       }

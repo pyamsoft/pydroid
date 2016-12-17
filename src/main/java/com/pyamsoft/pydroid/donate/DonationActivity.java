@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -40,9 +40,9 @@ import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
 public abstract class DonationActivity extends VersionCheckActivity
-    implements SupportPresenter.View {
+    implements DonatePresenter.View {
 
-  @SuppressWarnings("WeakerAccess") SupportPresenter supportPresenter;
+  @SuppressWarnings("WeakerAccess") DonatePresenter supportPresenter;
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,7 +81,7 @@ public abstract class DonationActivity extends VersionCheckActivity
     final int itemId = item.getItemId();
     boolean handled;
     if (itemId == R.id.menu_support) {
-      SupportDialog.show(getSupportFragmentManager());
+      DonateDialog.show(getSupportFragmentManager());
       handled = true;
     } else {
       handled = false;
@@ -89,18 +89,18 @@ public abstract class DonationActivity extends VersionCheckActivity
     return handled;
   }
 
-  @CheckResult @NonNull SupportPresenter getSupportPresenter() {
+  @CheckResult @NonNull DonatePresenter getSupportPresenter() {
     if (supportPresenter == null) {
       throw new IllegalStateException("SupportPresenter is NULL");
     }
     return supportPresenter;
   }
 
-  private void passToSupportDialog(@NonNull ActionSingle<SupportDialog> actionWithDialog,
+  private void passToSupportDialog(@NonNull ActionSingle<DonateDialog> actionWithDialog,
       @Nullable ActionNone actionWithoutDialog) {
-    final Fragment fragment = getSupportFragmentManager().findFragmentByTag(SupportDialog.TAG);
-    if (fragment instanceof SupportDialog) {
-      actionWithDialog.call((SupportDialog) fragment);
+    final Fragment fragment = getSupportFragmentManager().findFragmentByTag(DonateDialog.TAG);
+    if (fragment instanceof DonateDialog) {
+      actionWithDialog.call((DonateDialog) fragment);
     } else {
       if (actionWithoutDialog != null) {
         actionWithoutDialog.call();
@@ -109,27 +109,27 @@ public abstract class DonationActivity extends VersionCheckActivity
   }
 
   @Override public void onBillingSuccess() {
-    passToSupportDialog(SupportDialog::onBillingSuccess,
+    passToSupportDialog(DonateDialog::onBillingSuccess,
         () -> Toast.makeText(getApplicationContext(), R.string.purchase_success_msg,
             Toast.LENGTH_SHORT).show());
   }
 
   @Override public void onBillingError() {
-    passToSupportDialog(SupportDialog::onBillingError,
+    passToSupportDialog(DonateDialog::onBillingError,
         () -> Toast.makeText(getApplicationContext(), R.string.purchase_error_msg,
             Toast.LENGTH_SHORT).show());
   }
 
   @Override public void onProcessResultSuccess() {
-    passToSupportDialog(SupportDialog::onProcessResultSuccess, null);
+    passToSupportDialog(DonateDialog::onProcessResultSuccess, null);
   }
 
   @Override public void onProcessResultError() {
-    passToSupportDialog(SupportDialog::onProcessResultError, this::onBillingError);
+    passToSupportDialog(DonateDialog::onProcessResultError, this::onBillingError);
   }
 
   @Override public void onProcessResultFailed() {
-    passToSupportDialog(SupportDialog::onProcessResultFailed, this::onBillingError);
+    passToSupportDialog(DonateDialog::onProcessResultFailed, this::onBillingError);
   }
 
   @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {

@@ -14,34 +14,32 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.Sku;
 
-public interface SupportPresenter extends Presenter<SupportPresenter.View> {
+interface ICheckout {
+
+  void setInventoryCallback(@Nullable Inventory.Callback callback);
+
+  void setSuccessListener(@Nullable DonateInteractor.OnBillingSuccessListener successListener);
+
+  void setErrorListener(@Nullable DonateInteractor.OnBillingErrorListener errorListener);
 
   void loadInventory();
 
-  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data);
+  void start();
 
-  void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel);
+  void stop();
 
-  interface View {
+  void purchase(@NonNull Sku sku);
 
-    void onBillingSuccess();
+  void consume(@NonNull String token);
 
-    void onBillingError();
-
-    void onProcessResultSuccess();
-
-    void onProcessResultError();
-
-    void onProcessResultFailed();
-
-    void onInventoryLoaded(@NonNull Inventory.Products products);
-  }
+  @CheckResult boolean processBillingResult(int requestCode, int resultCode, @Nullable Intent data);
 }

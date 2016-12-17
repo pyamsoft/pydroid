@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.rating;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
+import com.pyamsoft.pydroid.donate.DonationActivity;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public abstract class RatingActivity extends DonationActivity

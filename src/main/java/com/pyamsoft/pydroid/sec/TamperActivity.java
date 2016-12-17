@@ -22,7 +22,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfig;
-import com.pyamsoft.pydroid.support.RatingActivity;
+import com.pyamsoft.pydroid.rating.RatingActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 

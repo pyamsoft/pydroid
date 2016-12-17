@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.support;
+package com.pyamsoft.pydroid.donate;
 
 import android.app.Activity;
 import android.support.annotation.CheckResult;
@@ -25,19 +25,19 @@ import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.Checkout;
 
-public class SupportModule {
+public class DonateModule {
 
-  @NonNull private final SupportInteractor interactor;
-  @NonNull private final SupportPresenter presenter;
+  @NonNull private final DonateInteractor interactor;
+  @NonNull private final DonatePresenter presenter;
 
-  public SupportModule(@NonNull PYDroidModule.Provider pyDroidModule, @NonNull Activity activity) {
-    interactor = new SupportInteractorImpl(
+  public DonateModule(@NonNull PYDroidModule.Provider pyDroidModule, @NonNull Activity activity) {
+    interactor = new DonateInteractorImpl(
         CheckoutFactory.create(activity, pyDroidModule.provideBilling(),
             pyDroidModule.provideInAppPurchaseList()));
-    presenter = new SupportPresenterImpl(interactor);
+    presenter = new DonatePresenterImpl(interactor);
   }
 
-  @NonNull @CheckResult public SupportPresenter getPresenter() {
+  @NonNull @CheckResult public DonatePresenter getPresenter() {
     return presenter;
   }
 

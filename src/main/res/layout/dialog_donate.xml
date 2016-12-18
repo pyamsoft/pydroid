@@ -38,7 +38,7 @@
     <com.pyamsoft.pydroid.widget.NoLeakTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="16dp"
         android:text="@string/support_plea"
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
@@ -53,7 +53,7 @@
           android:id="@+id/support_loading"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:padding="8dp"
+          android:padding="16dp"
           >
 
         <ProgressBar
@@ -76,7 +76,7 @@
           android:id="@+id/support_iap_empty"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:padding="8dp"
+          android:padding="16dp"
           >
 
         <com.pyamsoft.pydroid.widget.NoLeakTextView

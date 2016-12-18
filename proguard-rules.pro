@@ -6,7 +6,9 @@
 
 # Don't obfuscate causes the gradle build to fail after the optimization step
 # The addition of !code/allocation/variable is needed to prevent this
--optimizations !code/allocation/variable
+# The addition of !method/inlining/* is needed to fix an onClick binding issue
+#   in PreferenceFragments
+-optimizations !code/allocation/variable,!method/inlining/*
 
 # RetroLambda
 -dontwarn java.lang.invoke.LambdaForm$Hidden
@@ -37,10 +39,6 @@
 
 # Keep GSON serialized class
 -keep class com.pyamsoft.pydroid.version.VersionCheckResponse { *; }
-
-# Keep preference fragments
-# Work around a bug where proguard binds the wrong onClicks
--keep class * extends android.support.v7.preference.PreferenceFragmentCompat { *; }
 
 # Android Checkout uses weird annotations
 -dontwarn javax.annotation.Nonnull

@@ -125,7 +125,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
       if (hideClearAll()) {
         clearAll.setVisible(false);
       } else {
-        clearAll.setOnPreferenceClickListener(preference -> onClearAll());
+        clearAll.setOnPreferenceClickListener(preference -> onClearAllPreferenceClicked());
       }
     }
   }
@@ -218,7 +218,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return getDonationActivity().getCurrentApplicationVersion();
   }
 
-  @CheckResult protected boolean onClearAll() {
+  @CheckResult protected boolean onClearAllPreferenceClicked() {
     return true;
   }
 

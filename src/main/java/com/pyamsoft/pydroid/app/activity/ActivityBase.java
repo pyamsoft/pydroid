@@ -30,10 +30,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import com.pyamsoft.pydroid.R;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import timber.log.Timber;
@@ -77,6 +79,7 @@ public abstract class ActivityBase extends AppCompatActivity {
     }
 
     super.onCreate(savedInstanceState);
+    PreferenceManager.setDefaultValues(this, R.xml.pydroid, false);
   }
 
   /**

@@ -5,8 +5,10 @@
 -dontobfuscate
 
 # Don't obfuscate causes the gradle build to fail after the optimization step
+# We target above Android 2.0, we can use arthmatic optimizations
 # The addition of !code/allocation/variable is needed to prevent this
--optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable
+# Don't do code merging because it sometimes messes with onClick listeners
+-optimizations !code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable,!code/merging
 
 # RetroLambda
 -dontwarn java.lang.invoke.LambdaForm$Hidden
@@ -44,4 +46,3 @@
 -dontwarn javax.annotation.concurrent.GuardedBy
 -dontwarn javax.annotation.concurrent.Immutable
 -dontwarn javax.annotation.concurrent.ThreadSafe
-

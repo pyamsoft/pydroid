@@ -32,8 +32,8 @@
 
       <com.pyamsoft.pydroid.widget.SquareImageView
           android:id="@+id/google_play"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"
@@ -50,8 +50,8 @@
 
       <com.pyamsoft.pydroid.widget.SquareImageView
           android:id="@+id/blogger"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"
@@ -68,8 +68,8 @@
 
       <com.pyamsoft.pydroid.widget.SquareImageView
           android:id="@+id/google_plus"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"
@@ -86,8 +86,8 @@
 
       <com.pyamsoft.pydroid.widget.SquareImageView
           android:id="@+id/facebook"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"

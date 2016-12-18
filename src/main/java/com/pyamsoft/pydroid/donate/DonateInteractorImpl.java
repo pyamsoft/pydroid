@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.donate;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,13 +34,17 @@ class DonateInteractorImpl implements DonateInteractor {
     this.checkout = checkout;
   }
 
-  @Override public void create(@NonNull Inventory.Callback callback,
-      @NonNull OnBillingSuccessListener success, @NonNull OnBillingErrorListener error) {
-
+  @Override
+  public void init(@NonNull Inventory.Callback callback, @NonNull OnBillingSuccessListener success,
+      @NonNull OnBillingErrorListener error) {
     Timber.d("Create checkout purchase flow");
     checkout.setSuccessListener(success);
     checkout.setErrorListener(error);
     checkout.setInventoryCallback(callback);
+  }
+
+  @Override public void create(@NonNull Activity activity) {
+    checkout.createForActivity(activity);
     checkout.start();
   }
 

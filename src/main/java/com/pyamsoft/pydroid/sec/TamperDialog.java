@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 
 public class TamperDialog extends DialogFragment implements SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_SOCIAL_MEDIA = "key_social_media_tamper";
+  @NonNull private static final String KEY_SOCIAL_MEDIA = "__key_social_media_tamper";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private long loadedKey;
 

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.donate;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -24,6 +25,8 @@ import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
 
 interface ICheckout {
+
+  void createForActivity(@NonNull Activity activity);
 
   void setInventoryCallback(@Nullable Inventory.Callback callback);
 

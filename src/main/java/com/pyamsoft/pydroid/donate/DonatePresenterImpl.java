@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.donate;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,7 +46,11 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
 
   @Override protected void onBind() {
     super.onBind();
-    interactor.create(this, successListener, errorListener);
+    interactor.init(this, successListener, errorListener);
+  }
+
+  @Override public void create(@NonNull Activity activity) {
+    interactor.create(activity);
     loadInventory();
   }
 

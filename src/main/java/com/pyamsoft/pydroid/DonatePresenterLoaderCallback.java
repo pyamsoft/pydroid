@@ -16,28 +16,17 @@
 
 package com.pyamsoft.pydroid;
 
-import android.app.Activity;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 
-public abstract class SupportPresenterProvider {
+public abstract class DonatePresenterLoaderCallback
+    implements PersistLoader.Callback<DonatePresenter> {
 
-  protected SupportPresenterProvider() {
+  protected DonatePresenterLoaderCallback() {
   }
 
-  @NonNull @CheckResult public DonatePresenter providePresenter() {
-    final Activity activity = provideActivity();
-    //noinspection ConstantConditions
-    if (activity == null) {
-      throw new NullPointerException("Activity cannot be NULL");
-    }
-
-    return SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideSupportModule(activity)
-        .getPresenter();
+  @NonNull @Override public PersistLoader<DonatePresenter> createLoader() {
+    return SingleInitContentProvider.getInstance().getModule().provideDonateModule().getLoader();
   }
-
-  @NonNull @CheckResult protected abstract Activity provideActivity();
 }

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.donate;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import android.support.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import org.solovyev.android.checkout.ActivityCheckout;
+import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.BillingRequests;
 import org.solovyev.android.checkout.Checkout;
 import org.solovyev.android.checkout.Inventory;
@@ -38,18 +40,32 @@ import timber.log.Timber;
  */
 class RealCheckout implements ICheckout {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final ActivityCheckout checkout;
   @NonNull private final List<String> inAppSkuList;
+  @NonNull private final Billing billing;
+  @SuppressWarnings("WeakerAccess") @Nullable ActivityCheckout checkout;
   @SuppressWarnings("WeakerAccess") @Nullable Inventory.Callback inventoryCallback;
   @SuppressWarnings("WeakerAccess") @Nullable DonateInteractor.OnBillingSuccessListener
       successListener;
-  @SuppressWarnings("WeakerAccess") @Nullable DonateInteractor.OnBillingErrorListener
-      errorListener;
+  @SuppressWarnings("WeakerAccess") @Nullable DonateInteractor.OnBillingErrorListener errorListener;
   @Nullable private Inventory inventory;
 
-  RealCheckout(@NonNull ActivityCheckout checkout, @NonNull List<String> inAppSkuList) {
-    this.checkout = checkout;
+  RealCheckout(@NonNull Billing billing, @NonNull List<String> inAppSkuList) {
+    this.billing = billing;
     this.inAppSkuList = Collections.unmodifiableList(inAppSkuList);
+  }
+
+  private void checkCheckoutNonNull() {
+    if (checkout == null) {
+      throw new IllegalStateException("Checkout is NULL, must create it first");
+    }
+  }
+
+  @Override public void createForActivity(@NonNull Activity activity) {
+    if (checkout != null) {
+      throw new IllegalStateException("Checkout is already created for a different Activity");
+    }
+
+    checkout = Checkout.forActivity(activity, billing);
   }
 
   @Override public void setInventoryCallback(@Nullable Inventory.Callback callback) {
@@ -67,13 +83,19 @@ class RealCheckout implements ICheckout {
   }
 
   @Override public void start() {
+    checkCheckoutNonNull();
+
+    //noinspection ConstantConditions
     checkout.destroyPurchaseFlow();
     checkout.start();
     checkout.createPurchaseFlow(new DonationPurchaseListener());
   }
 
   @Override public void loadInventory() {
+    checkCheckoutNonNull();
+
     if (inventory == null) {
+      //noinspection ConstantConditions
       inventory = checkout.makeInventory();
     }
 
@@ -85,20 +107,36 @@ class RealCheckout implements ICheckout {
   }
 
   @Override public void stop() {
+    checkCheckoutNonNull();
+
+    //noinspection ConstantConditions
     checkout.stop();
     inventory = null;
+    setInventoryCallback(null);
+    setErrorListener(null);
+    setSuccessListener(null);
+    checkout = null;
   }
 
   @Override public void purchase(@NonNull Sku sku) {
+    checkCheckoutNonNull();
+
+    //noinspection ConstantConditions
     checkout.whenReady(new Checkout.EmptyListener() {
       @Override public void onReady(@NonNull BillingRequests requests) {
         super.onReady(requests);
+        checkCheckoutNonNull();
+
+        //noinspection ConstantConditions
         requests.purchase(sku, null, checkout.getPurchaseFlow());
       }
     });
   }
 
   @Override public void consume(@NonNull String token) {
+    checkCheckoutNonNull();
+
+    //noinspection ConstantConditions
     checkout.whenReady(new Checkout.EmptyListener() {
       @Override public void onReady(@NonNull BillingRequests requests) {
         super.onReady(requests);
@@ -109,6 +147,9 @@ class RealCheckout implements ICheckout {
 
   @Override
   public boolean processBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
+    checkCheckoutNonNull();
+
+    //noinspection ConstantConditions
     return checkout.onActivityResult(requestCode, resultCode, data);
   }
 

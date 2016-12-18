@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.donate;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -30,8 +29,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.DonatePresenterLoaderCallback;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.SupportPresenterProvider;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckActivity;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
@@ -42,32 +42,49 @@ import timber.log.Timber;
 public abstract class DonationActivity extends VersionCheckActivity
     implements DonatePresenter.View {
 
-  @SuppressWarnings("WeakerAccess") DonatePresenter supportPresenter;
+  @NonNull private static final String KEY_DONATE_PRESENTER = "__key_support_presenter";
+  @SuppressWarnings("WeakerAccess") DonatePresenter donatePresenter;
+  private long loadedKey;
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    supportPresenter = new DonationSupportPresenterProvider(this).providePresenter();
+
+    loadedKey = PersistentCache.get()
+        .load(KEY_DONATE_PRESENTER, savedInstanceState, new DonatePresenterLoaderCallback() {
+
+          @Override public void onPersistentLoaded(@NonNull DonatePresenter persist) {
+            donatePresenter = persist;
+          }
+        });
   }
 
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
-    supportPresenter.destroy();
+    if (!isChangingConfigurations()) {
+      PersistentCache.get().unload(loadedKey);
+    }
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    PersistentCache.get().saveKey(outState, KEY_DONATE_PRESENTER, loadedKey);
+    super.onSaveInstanceState(outState);
   }
 
   @CallSuper @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    supportPresenter.onBillingResult(requestCode, resultCode, data);
+    donatePresenter.onBillingResult(requestCode, resultCode, data);
   }
 
   @Override protected void onStart() {
     super.onStart();
-    supportPresenter.bindView(this);
+    donatePresenter.bindView(this);
+    donatePresenter.create(this);
   }
 
   @Override protected void onStop() {
     super.onStop();
-    supportPresenter.unbindView();
+    donatePresenter.unbindView();
   }
 
   @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {
@@ -89,11 +106,11 @@ public abstract class DonationActivity extends VersionCheckActivity
     return handled;
   }
 
-  @CheckResult @NonNull DonatePresenter getSupportPresenter() {
-    if (supportPresenter == null) {
+  @CheckResult @NonNull DonatePresenter getDonatePresenter() {
+    if (donatePresenter == null) {
       throw new IllegalStateException("SupportPresenter is NULL");
     }
-    return supportPresenter;
+    return donatePresenter;
   }
 
   private void passToSupportDialog(@NonNull ActionSingle<DonateDialog> actionWithDialog,
@@ -143,24 +160,11 @@ public abstract class DonationActivity extends VersionCheckActivity
         if (purchase != null) {
           Timber.i("Item is purchased already, attempt to auto-consume it.");
           final SkuUIItem item = new SkuUIItem(sku, purchase.token);
-          getSupportPresenter().checkoutInAppPurchaseItem(item.getModel());
+          getDonatePresenter().checkoutInAppPurchaseItem(item.getModel());
         }
       }
     }
 
     passToSupportDialog(view -> view.onInventoryLoaded(products), null);
-  }
-
-  static class DonationSupportPresenterProvider extends SupportPresenterProvider {
-
-    @NonNull private final Activity activity;
-
-    DonationSupportPresenterProvider(@NonNull Activity activity) {
-      this.activity = activity;
-    }
-
-    @NonNull @Override protected Activity provideActivity() {
-      return activity;
-    }
   }
 }

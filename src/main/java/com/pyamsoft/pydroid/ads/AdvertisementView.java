@@ -35,7 +35,7 @@ import timber.log.Timber;
 
 public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
 
-  @NonNull private static final String KEY_ADVERTISEMENT = "key_advertisement_presenter";
+  @NonNull private static final String KEY_ADVERTISEMENT = "__key_advertisement_presenter";
   @NonNull private final AdSource offlineAdSource = new OfflineAdSource();
   @SuppressWarnings("WeakerAccess") @Nullable Handler handler;
   @SuppressWarnings("WeakerAccess") @Nullable AdvertisementPresenter presenter;

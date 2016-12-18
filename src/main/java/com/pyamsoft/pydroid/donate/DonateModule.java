@@ -16,29 +16,27 @@
 
 package com.pyamsoft.pydroid.donate;
 
-import android.app.Activity;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.PYDroidModule;
 import java.util.List;
-import org.solovyev.android.checkout.ActivityCheckout;
 import org.solovyev.android.checkout.Billing;
-import org.solovyev.android.checkout.Checkout;
 
 public class DonateModule {
 
   @NonNull private final DonateInteractor interactor;
   @NonNull private final DonatePresenter presenter;
+  @NonNull private final DonatePresenterLoader loader;
 
-  public DonateModule(@NonNull PYDroidModule.Provider pyDroidModule, @NonNull Activity activity) {
-    interactor = new DonateInteractorImpl(
-        CheckoutFactory.create(activity, pyDroidModule.provideBilling(),
-            pyDroidModule.provideInAppPurchaseList()));
+  public DonateModule(@NonNull PYDroidModule.Provider pyDroidModule) {
+    interactor = new DonateInteractorImpl(CheckoutFactory.create(pyDroidModule.provideBilling(),
+        pyDroidModule.provideInAppPurchaseList()));
     presenter = new DonatePresenterImpl(interactor);
+    loader = new DonatePresenterLoader(presenter);
   }
 
-  @NonNull @CheckResult public DonatePresenter getPresenter() {
-    return presenter;
+  @NonNull @CheckResult public DonatePresenterLoader getLoader() {
+    return loader;
   }
 
   @SuppressWarnings("WeakerAccess") static final class CheckoutFactory {
@@ -47,10 +45,8 @@ public class DonateModule {
     }
 
     @CheckResult @NonNull
-    static ICheckout create(@NonNull Activity activity, @NonNull Billing billing,
-        @NonNull List<String> inAppPurchaseList) {
-      final ActivityCheckout checkout = Checkout.forActivity(activity, billing);
-      return new RealCheckout(checkout, inAppPurchaseList);
+    static ICheckout create(@NonNull Billing billing, @NonNull List<String> inAppPurchaseList) {
+      return new RealCheckout(billing, inAppPurchaseList);
     }
   }
 }

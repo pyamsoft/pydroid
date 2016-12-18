@@ -48,7 +48,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @NonNull public static final String TAG = "AboutLibrariesFragment";
   @NonNull private static final String KEY_STYLING = "key_styling";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
-  @NonNull private static final String KEY_ABOUT_PRESENTER = "key_about_presenter";
+  @NonNull private static final String KEY_ABOUT_PRESENTER = "__key_about_presenter";
   @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
   @SuppressWarnings("WeakerAccess") FastItemAdapter<AboutAdapterItem> fastItemAdapter;
   @ColorInt private int backgroundColor;

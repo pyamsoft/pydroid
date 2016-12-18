@@ -32,7 +32,7 @@ import timber.log.Timber;
 public class SocialMediaPreference extends BaseBoundPreference
     implements SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_PRESENTER = "key_social_preference_presenter";
+  @NonNull private static final String KEY_PRESENTER = "__key_social_preference_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private ViewSocialMediaBinding binding;
   private long loadedKey;

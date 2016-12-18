@@ -51,8 +51,8 @@ import timber.log.Timber;
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
     implements VersionCheckPresenter.View, VersionCheckProvider, SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_LICENSE_PRESENTER = "key_license_presenter";
-  @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_rate_media_presenter";
+  @NonNull private static final String KEY_LICENSE_PRESENTER = "__key_license_presenter";
+  @NonNull private static final String KEY_SOCIAL_PRESENTER = "__key_rate_media_presenter";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialPresenter;
   private long loadedKey;

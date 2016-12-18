@@ -83,10 +83,10 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
     onBillingError();
   }
 
-  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull DonatePresenter getSupportPresenter() {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull DonatePresenter getDonatePresenter() {
     final Activity activity = getActivity();
     if (activity instanceof DonationActivity) {
-      return ((DonationActivity) activity).getSupportPresenter();
+      return ((DonationActivity) activity).getDonatePresenter();
     } else {
       throw new IllegalStateException("SupportDialog activity is not DonationActivity");
     }
@@ -146,15 +146,6 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
     ViewCompat.setElevation(binding.supportToolbar, AppUtil.convertToDP(getContext(), 4));
   }
 
-  //private void initializeSocialMedia() {
-  //  binding.supportIapRate.setOnClickListener(
-  //      view1 -> socialMediaPresenter.clickAppPage(getActivity().getPackageName()));
-  //  binding.googlePlay.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlay());
-  //  binding.googlePlus.setOnClickListener(view1 -> socialMediaPresenter.clickGooglePlus());
-  //  binding.blogger.setOnClickListener(view1 -> socialMediaPresenter.clickBlogger());
-  //  binding.facebook.setOnClickListener(view1 -> socialMediaPresenter.clickFacebook());
-  //}
-
   private void initializeDonations() {
     binding.supportLoadingProgress.setIndeterminate(true);
     binding.supportIapEmpty.setVisibility(View.GONE);
@@ -163,7 +154,7 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
 
     fastItemAdapter.withSelectable(true);
     fastItemAdapter.withOnClickListener((v, adapter, item, position) -> {
-      getSupportPresenter().checkoutInAppPurchaseItem(item.getModel());
+      getDonatePresenter().checkoutInAppPurchaseItem(item.getModel());
       return true;
     });
 
@@ -192,7 +183,7 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
           WindowManager.LayoutParams.WRAP_CONTENT);
     }
 
-    getSupportPresenter().loadInventory();
+    getDonatePresenter().loadInventory();
   }
 
   @Override public void onDestroyView() {

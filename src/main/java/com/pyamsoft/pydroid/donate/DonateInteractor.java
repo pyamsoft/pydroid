@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.donate;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -26,8 +27,10 @@ import org.solovyev.android.checkout.Sku;
 
 interface DonateInteractor {
 
-  void create(@NonNull Inventory.Callback listener, @NonNull OnBillingSuccessListener success,
+  void init(@NonNull Inventory.Callback listener, @NonNull OnBillingSuccessListener success,
       @NonNull OnBillingErrorListener error);
+
+  void create(@NonNull Activity activity);
 
   void destroy();
 

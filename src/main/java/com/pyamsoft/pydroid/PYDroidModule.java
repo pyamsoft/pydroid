@@ -49,8 +49,8 @@ public class PYDroidModule {
   }
 
   // Create a new one every time
-  @CheckResult @NonNull final DonateModule provideSupportModule(@NonNull Activity activity) {
-    return new DonateModule(provider, activity);
+  @CheckResult @NonNull final DonateModule provideDonateModule() {
+    return new DonateModule(provider);
   }
 
   // Create a new one every time

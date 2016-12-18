@@ -5,10 +5,8 @@
 -dontobfuscate
 
 # Don't obfuscate causes the gradle build to fail after the optimization step
-# We target above Android 2.0, we can use arthmatic optimizations
 # The addition of !code/allocation/variable is needed to prevent this
-# Don't do code merging because it sometimes messes with onClick listeners
--optimizations !code/simplification/cast,!field/*,!class/merging/*,!code/allocation/variable,!code/merging
+-optimizations !code/allocation/variable
 
 # RetroLambda
 -dontwarn java.lang.invoke.LambdaForm$Hidden
@@ -39,6 +37,10 @@
 
 # Keep GSON serialized class
 -keep class com.pyamsoft.pydroid.version.VersionCheckResponse { *; }
+
+# Keep preference fragments
+# Work around a bug where proguard binds the wrong onClicks
+-keep class * extends android.support.v7.preference.PreferenceFragmentCompat { *; }
 
 # Android Checkout uses weird annotations
 -dontwarn javax.annotation.Nonnull

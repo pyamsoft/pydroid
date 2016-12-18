@@ -53,6 +53,11 @@
       android:title="@string/support_pyamsoft">
 
     <Preference
+        android:key="@string/donation_key"
+        android:summary="@string/donation_summary"
+        android:title="@string/donation_title"/>
+
+    <Preference
         android:key="@string/rating_key"
         android:summary="@string/rating_summary"
         android:title="@string/rating_title"/>

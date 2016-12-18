@@ -41,4 +41,8 @@
   <string name="rating_title">Rate Application</string>
   <string name="rating_summary">Leave a review on the Google Play Store</string>
 
+  <string name="donation_key">donate_pyamsoft</string>
+  <string name="donation_title">Donate to pyamsoft</string>
+  <string name="donation_summary">Support pyamsoft with a small donation</string>
+
 </resources>

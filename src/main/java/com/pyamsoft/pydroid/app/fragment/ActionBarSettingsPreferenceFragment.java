@@ -23,11 +23,15 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.XmlRes;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.donate.DonationActivity;
@@ -37,6 +41,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import com.pyamsoft.pydroid.version.VersionUpgradeDialog;
+import java.util.Locale;
 import timber.log.Timber;
 
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
@@ -46,61 +51,6 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   private long loadedKey;
   private Toast toast;
-
-  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean showChangelog() {
-    final FragmentActivity activity = getActivity();
-    if (activity instanceof RatingDialog.ChangeLogProvider) {
-      final RatingDialog.ChangeLogProvider provider = (RatingDialog.ChangeLogProvider) activity;
-      RatingDialog.showRatingDialog(activity, provider, true);
-    } else {
-      throw new ClassCastException("Activity is not a change log provider");
-    }
-    return true;
-  }
-
-  @CheckResult protected boolean toggleAdVisibility(Object object) {
-    if (object instanceof Boolean) {
-      final boolean b = (boolean) object;
-      return toggleAdVisibility(b);
-    }
-    return false;
-  }
-
-  @SuppressWarnings("WeakerAccess") @CheckResult protected boolean toggleAdVisibility(boolean b) {
-    final FragmentActivity activity = getActivity();
-    if (activity instanceof DonationActivity) {
-      final DonationActivity donationActivity = (DonationActivity) getActivity();
-      if (b) {
-        Timber.d("Turn on ads");
-        donationActivity.showAd();
-      } else {
-        Timber.d("Turn off ads");
-        donationActivity.hideAd();
-      }
-      return true;
-    } else {
-      Timber.e("Activity is not AdvertisementActivity");
-      return false;
-    }
-  }
-
-  @SuppressWarnings("SameReturnValue") @CheckResult
-  protected boolean showAboutLicensesFragment(@IdRes int containerId,
-      @NonNull AboutLibrariesFragment.Styling styling) {
-    Timber.d("Show about licenses fragment");
-    AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack());
-    return true;
-  }
-
-  @NonNull @CheckResult protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
-    return AboutLibrariesFragment.BackStackState.NOT_LAST;
-  }
-
-  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean checkForUpdate() {
-    toast.show();
-    presenter.checkForUpdates(getCurrentApplicationVersion());
-    return true;
-  }
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -133,6 +83,53 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     super.onSaveInstanceState(outState);
   }
 
+  @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    @XmlRes final int xmlResId = getPreferenceXmlResId();
+    if (xmlResId != 0) {
+      addPreferencesFromResource(xmlResId);
+    }
+    addPreferencesFromResource(R.xml.pydroid);
+
+    final Preference applicationSettings = findPreference("application_settings");
+    if (applicationSettings != null) {
+      applicationSettings.setTitle(
+          String.format(Locale.getDefault(), "%s Settings", getApplicationName()));
+    }
+  }
+
+  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    final Preference upgradeInfo = findPreference(getString(R.string.upgrade_info_key));
+    if (upgradeInfo != null) {
+      if (hideUpgradeInformation()) {
+        upgradeInfo.setVisible(false);
+      } else {
+        upgradeInfo.setOnPreferenceClickListener(preference -> showChangelog());
+      }
+    }
+
+    final SwitchPreferenceCompat showAds =
+        (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
+    showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
+
+    final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
+    showAboutLicenses.setOnPreferenceClickListener(
+        preference -> showAboutLicensesFragment(getRootViewContainer(), getAboutFragmentStyling()));
+
+    final Preference checkVersion = findPreference(getString(R.string.check_version_key));
+    checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
+
+    final Preference clearAll = findPreference(getString(R.string.clear_all_key));
+    if (clearAll != null) {
+      if (hideClearAll()) {
+        clearAll.setVisible(false);
+      } else {
+        clearAll.setOnPreferenceClickListener(preference -> onClearAll());
+      }
+    }
+  }
+
   @CallSuper @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
@@ -141,6 +138,56 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CallSuper @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
+  }
+
+  @CheckResult protected boolean showChangelog() {
+    final FragmentActivity activity = getActivity();
+    if (activity instanceof RatingDialog.ChangeLogProvider) {
+      final RatingDialog.ChangeLogProvider provider = (RatingDialog.ChangeLogProvider) activity;
+      RatingDialog.showRatingDialog(activity, provider, true);
+    } else {
+      throw new ClassCastException("Activity is not a change log provider");
+    }
+    return true;
+  }
+
+  @CheckResult protected boolean toggleAdVisibility(Object object) {
+    if (object instanceof Boolean) {
+      final boolean b = (boolean) object;
+      final FragmentActivity activity = getActivity();
+      if (activity instanceof DonationActivity) {
+        final DonationActivity donationActivity = (DonationActivity) getActivity();
+        if (b) {
+          Timber.d("Turn on ads");
+          donationActivity.showAd();
+        } else {
+          Timber.d("Turn off ads");
+          donationActivity.hideAd();
+        }
+        return true;
+      } else {
+        Timber.e("Activity is not AdvertisementActivity");
+        return false;
+      }
+    }
+    return false;
+  }
+
+  @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId,
+      @NonNull AboutLibrariesFragment.Styling styling) {
+    Timber.d("Show about licenses fragment");
+    AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack());
+    return true;
+  }
+
+  @NonNull @CheckResult protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
+    return AboutLibrariesFragment.BackStackState.NOT_LAST;
+  }
+
+  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean checkForUpdate() {
+    toast.show();
+    presenter.checkForUpdates(getCurrentApplicationVersion());
+    return true;
   }
 
   @Override public void onVersionCheckFinished() {
@@ -170,4 +217,28 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @Override public int getCurrentApplicationVersion() {
     return getDonationActivity().getCurrentApplicationVersion();
   }
+
+  @CheckResult protected boolean onClearAll() {
+    return true;
+  }
+
+  @CheckResult @XmlRes protected int getPreferenceXmlResId() {
+    return 0;
+  }
+
+  @CheckResult @NonNull protected AboutLibrariesFragment.Styling getAboutFragmentStyling() {
+    return AboutLibrariesFragment.Styling.LIGHT;
+  }
+
+  @CheckResult protected boolean hideUpgradeInformation() {
+    return false;
+  }
+
+  @CheckResult protected boolean hideClearAll() {
+    return false;
+  }
+
+  @CheckResult @IdRes protected abstract int getRootViewContainer();
+
+  @CheckResult @NonNull protected abstract String getApplicationName();
 }

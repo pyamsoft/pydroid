@@ -16,7 +16,7 @@
   ~ limitations under the License.
   -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
   <string name="blank"/>
   <string name="support">Donate</string>
@@ -26,17 +26,6 @@
   <string name="iap_unsupported">Unable to connect to Play Store for In-App Purchases, or they are unsupported on this device.</string>
   <string name="iap_empty">Unable to load In-App Purchase products. Please try again later.</string>
 
-  <bool name="adview_default">true</bool>
-  <string name="adview_key">pyamsoft_adview</string>
-  <string name="adview_title" tools:keep="@string/adview_title">Related Applications</string>
-  <string name="adview_summary_checked" tools:keep="@string/adview_summary_checked">Will show related and relevant pyamsoft applications</string>
-  <string name="adview_summary_unchecked" tools:keep="@string/adview_summary_unchecked">Will not show other related pyamsoft applications</string>
-
-  <string name="about_license_key" tools:keep="@string/about_license_key">about_license</string>
-  <string name="about_license_title" tools:keep="@string/about_license_title">Open Source Licenses</string>
-
-  <string name="check_version_key" tools:keep="@string/check_version_key">check_version</string>
-  <string name="check_version_title" tools:keep="@string/check_version_title">Check for Updates</string>
   <string name="purchase_success_msg">Thank you for your purchase!</string>
   <string name="purchase_error_msg">An error occurred during purchase attempt, please try again later</string>
   <string name="tamper_msg">This application may have been installed from an unofficial source or shows signs of being tampered with. It is recommended you uninstall it immediately. You can find the official pyamsoft applications by clicing the button below.</string>

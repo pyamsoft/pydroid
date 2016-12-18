@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid.social;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
+import com.pyamsoft.pydroid.BaseBoundPreference;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.databinding.ViewSocialMediaBinding;
@@ -29,7 +29,8 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
-public class SocialMediaPreference extends Preference implements SocialMediaPresenter.View {
+public class SocialMediaPreference extends BaseBoundPreference
+    implements SocialMediaPresenter.View {
 
   @NonNull private static final String KEY_PRESENTER = "key_social_preference_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
@@ -71,7 +72,6 @@ public class SocialMediaPreference extends Preference implements SocialMediaPres
   @Override public void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
     Timber.d("onBindViewHolder");
-    unbind();
     binding = DataBindingUtil.bind(holder.itemView);
 
     binding.googlePlay.setOnClickListener(v -> presenter.clickGooglePlay());
@@ -80,7 +80,8 @@ public class SocialMediaPreference extends Preference implements SocialMediaPres
     binding.facebook.setOnClickListener(v -> presenter.clickFacebook());
   }
 
-  private void unbind() {
+  @Override protected void onUnbindViewHolder() {
+    super.onUnbindViewHolder();
     if (binding != null) {
       binding.googlePlay.setOnClickListener(null);
       binding.googlePlus.setOnClickListener(null);
@@ -97,7 +98,6 @@ public class SocialMediaPreference extends Preference implements SocialMediaPres
 
   @Override public void onDetached() {
     super.onDetached();
-    unbind();
     presenter.unbindView();
     PersistentCache.get().unload(loadedKey);
   }

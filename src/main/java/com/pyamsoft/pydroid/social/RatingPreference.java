@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid.social;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
+import com.pyamsoft.pydroid.BaseBoundPreference;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.databinding.ViewRatingButtonBinding;
@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
-public class RatingPreference extends Preference implements SocialMediaPresenter.View {
+public class RatingPreference extends BaseBoundPreference implements SocialMediaPresenter.View {
 
   @NonNull private static final String KEY_PRESENTER = "key_rate_preference_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
@@ -70,14 +70,14 @@ public class RatingPreference extends Preference implements SocialMediaPresenter
   @Override public void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
     Timber.d("onBindViewHolder");
-    unbind();
     binding = DataBindingUtil.bind(holder.itemView);
 
     binding.ratingButton.setOnClickListener(
         v -> presenter.clickAppPage(v.getContext().getPackageName()));
   }
 
-  private void unbind() {
+  @Override protected void onUnbindViewHolder() {
+    super.onUnbindViewHolder();
     if (binding != null) {
       binding.ratingButton.setOnClickListener(null);
       binding.unbind();
@@ -91,7 +91,6 @@ public class RatingPreference extends Preference implements SocialMediaPresenter
 
   @Override public void onDetached() {
     super.onDetached();
-    unbind();
     presenter.unbindView();
     PersistentCache.get().unload(loadedKey);
   }

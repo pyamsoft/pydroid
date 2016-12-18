@@ -47,8 +47,15 @@
         android:summary="@string/clear_all_summary"
         android:title="@string/clear_all_title"/>
 
-    <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.pydroid.social.RatingPreference/>
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:title="@string/support_pyamsoft">
+
+    <Preference
+        android:key="@string/rating_key"
+        android:summary="@string/rating_summary"
+        android:title="@string/rating_title"/>
 
     <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.pydroid.social.SocialMediaPreference/>

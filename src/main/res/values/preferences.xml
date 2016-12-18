@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
   <string name="clear_all_key">clear_all</string>
   <string name="clear_all_title">Reset All Settings</string>
@@ -27,14 +27,18 @@
 
   <bool name="adview_default">true</bool>
   <string name="adview_key">pyamsoft_adview</string>
-  <string name="adview_title" tools:keep="@string/adview_title">Related Applications</string>
-  <string name="adview_summary_checked" tools:keep="@string/adview_summary_checked">Will show related and relevant pyamsoft applications</string>
-  <string name="adview_summary_unchecked" tools:keep="@string/adview_summary_unchecked">Will not show other related pyamsoft applications</string>
+  <string name="adview_title">Related Applications</string>
+  <string name="adview_summary_checked">Will show related and relevant pyamsoft applications</string>
+  <string name="adview_summary_unchecked">Will not show other related pyamsoft applications</string>
 
-  <string name="about_license_key" tools:keep="@string/about_license_key">about_license</string>
-  <string name="about_license_title" tools:keep="@string/about_license_title">Open Source Licenses</string>
+  <string name="about_license_key">about_license</string>
+  <string name="about_license_title">Open Source Licenses</string>
 
-  <string name="check_version_key" tools:keep="@string/check_version_key">check_version</string>
-  <string name="check_version_title" tools:keep="@string/check_version_title">Check for Updates</string>
+  <string name="check_version_key">check_version</string>
+  <string name="check_version_title">Check for Updates</string>
+
+  <string name="rating_key">rate_application</string>
+  <string name="rating_title">Rate Application</string>
+  <string name="rating_summary">Leave a review on the Google Play Store</string>
 
 </resources>

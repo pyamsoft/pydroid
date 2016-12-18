@@ -32,11 +32,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.R;
+import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.donate.DonationActivity;
 import com.pyamsoft.pydroid.rating.RatingDialog;
+import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
@@ -45,12 +48,15 @@ import java.util.Locale;
 import timber.log.Timber;
 
 public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
-    implements VersionCheckPresenter.View, VersionCheckProvider {
+    implements VersionCheckPresenter.View, VersionCheckProvider, SocialMediaPresenter.View {
 
   @NonNull private static final String KEY_LICENSE_PRESENTER = "key_license_presenter";
+  @NonNull private static final String KEY_SOCIAL_PRESENTER = "key_rate_media_presenter";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
+  @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialPresenter;
   private long loadedKey;
   private Toast toast;
+  private long ratingKey;
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -60,6 +66,14 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
           @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
             presenter = persist;
+          }
+        });
+
+    ratingKey = PersistentCache.get()
+        .load(KEY_SOCIAL_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
+
+          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+            socialPresenter = persist;
           }
         });
   }
@@ -75,11 +89,13 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
+      PersistentCache.get().unload(ratingKey);
     }
   }
 
   @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_LICENSE_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_SOCIAL_PRESENTER, ratingKey);
     super.onSaveInstanceState(outState);
   }
 
@@ -127,16 +143,24 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
         clearAll.setOnPreferenceClickListener(preference -> onClearAllPreferenceClicked());
       }
     }
+
+    final Preference rateApplication = findPreference(getString(R.string.rating_key));
+    rateApplication.setOnPreferenceClickListener(preference -> {
+      socialPresenter.clickAppPage(preference.getContext().getPackageName());
+      return true;
+    });
   }
 
   @CallSuper @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
+    socialPresenter.bindView(this);
   }
 
   @CallSuper @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
+    socialPresenter.unbindView();
   }
 
   @CheckResult protected boolean showChangelog() {
@@ -198,6 +222,10 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
         VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
             updatedVersionCode), VersionUpgradeDialog.TAG);
+  }
+
+  @Override public void onSocialMediaClicked(@NonNull String link) {
+    NetworkUtil.newLink(getContext(), link);
   }
 
   @CheckResult @NonNull private DonationActivity getDonationActivity() {

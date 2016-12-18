@@ -17,44 +17,48 @@
 package com.pyamsoft.pydroid.social;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.databinding.ViewSocialMediaBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import timber.log.Timber;
 
-public class SocialMediaView extends FrameLayout implements SocialMediaPresenter.View {
+public class SocialMediaPreference extends Preference implements SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_PRESENTER = "key_social_presenter";
+  @NonNull private static final String KEY_PRESENTER = "key_social_preference_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private ViewSocialMediaBinding binding;
   private long loadedKey;
 
-  public SocialMediaView(Context context) {
-    super(context);
-    init(context);
-  }
-
-  public SocialMediaView(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init(context);
-  }
-
-  public SocialMediaView(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    init(context);
-  }
-
-  public SocialMediaView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public SocialMediaPreference(Context context, AttributeSet attrs, int defStyleAttr,
+      int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    init(context);
+    init();
   }
 
-  private void init(@NonNull Context context) {
-    binding = ViewSocialMediaBinding.bind(inflate(context, R.layout.view_social_media, this));
+  public SocialMediaPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    init();
+  }
+
+  public SocialMediaPreference(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    init();
+  }
+
+  public SocialMediaPreference(Context context) {
+    super(context);
+    init();
+  }
+
+  private void init() {
+    setLayoutResource(R.layout.view_social_media);
 
     loadedKey = PersistentCache.get().load(KEY_PRESENTER, null, new SocialMediaLoaderCallback() {
 
@@ -64,25 +68,38 @@ public class SocialMediaView extends FrameLayout implements SocialMediaPresenter
     });
   }
 
-  @Override protected void onDetachedFromWindow() {
-    super.onDetachedFromWindow();
-    binding.googlePlay.setOnClickListener(null);
-    binding.blogger.setOnClickListener(null);
-    binding.googlePlus.setOnClickListener(null);
-    binding.facebook.setOnClickListener(null);
+  @Override public void onBindViewHolder(PreferenceViewHolder holder) {
+    super.onBindViewHolder(holder);
+    Timber.d("onBindViewHolder");
+    unbind();
+    binding = DataBindingUtil.bind(holder.itemView);
 
-    binding.unbind();
-    presenter.unbindView();
-    PersistentCache.get().unload(loadedKey);
+    binding.googlePlay.setOnClickListener(v -> presenter.clickGooglePlay());
+    binding.googlePlus.setOnClickListener(v -> presenter.clickGooglePlus());
+    binding.blogger.setOnClickListener(v -> presenter.clickBlogger());
+    binding.facebook.setOnClickListener(v -> presenter.clickFacebook());
   }
 
-  @Override protected void onAttachedToWindow() {
-    super.onAttachedToWindow();
-    binding.googlePlay.setOnClickListener(v -> presenter.clickGooglePlay());
-    binding.blogger.setOnClickListener(v -> presenter.clickBlogger());
-    binding.googlePlus.setOnClickListener(v -> presenter.clickGooglePlus());
-    binding.facebook.setOnClickListener(v -> presenter.clickFacebook());
+  private void unbind() {
+    if (binding != null) {
+      binding.googlePlay.setOnClickListener(null);
+      binding.googlePlus.setOnClickListener(null);
+      binding.blogger.setOnClickListener(null);
+      binding.facebook.setOnClickListener(null);
+      binding.unbind();
+    }
+  }
+
+  @Override public void onAttached() {
+    super.onAttached();
     presenter.bindView(this);
+  }
+
+  @Override public void onDetached() {
+    super.onDetached();
+    unbind();
+    presenter.unbindView();
+    PersistentCache.get().unload(loadedKey);
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {

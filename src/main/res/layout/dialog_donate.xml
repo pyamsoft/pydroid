@@ -43,16 +43,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
-    <!--<Button-->
-    <!--android:id="@+id/support_iap_rate"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_margin="8dp"-->
-    <!--android:text="@string/rate_application"-->
-    <!--android:textAllCaps="true"-->
-    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-    <!--/>-->
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

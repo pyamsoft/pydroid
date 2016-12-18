@@ -22,40 +22,39 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
-import com.pyamsoft.pydroid.databinding.ViewSocialMediaBinding;
+import com.pyamsoft.pydroid.databinding.ViewRatingButtonBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 
-public class SocialMediaView extends FrameLayout implements SocialMediaPresenter.View {
+public class RatingView extends FrameLayout implements SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_PRESENTER = "key_social_presenter";
+  @NonNull private static final String KEY_PRESENTER = "key_rate_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
-  private ViewSocialMediaBinding binding;
   private long loadedKey;
+  private ViewRatingButtonBinding binding;
 
-  public SocialMediaView(Context context) {
+  public RatingView(Context context) {
     super(context);
     init(context);
   }
 
-  public SocialMediaView(Context context, AttributeSet attrs) {
+  public RatingView(Context context, AttributeSet attrs) {
     super(context, attrs);
     init(context);
   }
 
-  public SocialMediaView(Context context, AttributeSet attrs, int defStyleAttr) {
+  public RatingView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(context);
   }
 
-  public SocialMediaView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public RatingView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init(context);
   }
 
   private void init(@NonNull Context context) {
-    binding = ViewSocialMediaBinding.bind(inflate(context, R.layout.view_social_media, this));
-
+    binding = ViewRatingButtonBinding.bind(inflate(context, R.layout.view_rating_button, this));
     loadedKey = PersistentCache.get().load(KEY_PRESENTER, null, new SocialMediaLoaderCallback() {
 
       @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
@@ -66,22 +65,15 @@ public class SocialMediaView extends FrameLayout implements SocialMediaPresenter
 
   @Override protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    binding.googlePlay.setOnClickListener(null);
-    binding.blogger.setOnClickListener(null);
-    binding.googlePlus.setOnClickListener(null);
-    binding.facebook.setOnClickListener(null);
-
-    binding.unbind();
+    binding.ratingButton.setOnClickListener(null);
     presenter.unbindView();
     PersistentCache.get().unload(loadedKey);
   }
 
   @Override protected void onAttachedToWindow() {
     super.onAttachedToWindow();
-    binding.googlePlay.setOnClickListener(v -> presenter.clickGooglePlay());
-    binding.blogger.setOnClickListener(v -> presenter.clickBlogger());
-    binding.googlePlus.setOnClickListener(v -> presenter.clickGooglePlus());
-    binding.facebook.setOnClickListener(v -> presenter.clickFacebook());
+    binding.ratingButton.setOnClickListener(
+        v -> presenter.clickAppPage(v.getContext().getPackageName()));
     presenter.bindView(this);
   }
 

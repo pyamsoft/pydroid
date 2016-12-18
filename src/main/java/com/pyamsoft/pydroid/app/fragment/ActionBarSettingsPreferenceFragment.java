@@ -114,8 +114,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
 
     final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
-    showAboutLicenses.setOnPreferenceClickListener(
-        preference -> showAboutLicensesFragment(getRootViewContainer(), getAboutFragmentStyling()));
+    showAboutLicenses.setOnPreferenceClickListener(preference -> onLicenseItemClicked());
 
     final Preference checkVersion = findPreference(getString(R.string.check_version_key));
     checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
@@ -236,6 +235,10 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @CheckResult protected boolean hideClearAll() {
     return false;
+  }
+
+  @CheckResult protected boolean onLicenseItemClicked() {
+    return showAboutLicensesFragment(getRootViewContainer(), getAboutFragmentStyling());
   }
 
   @CheckResult @IdRes protected abstract int getRootViewContainer();

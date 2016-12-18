@@ -51,6 +51,7 @@
         android:numStars="5"
         android:rating="5"
         android:stepSize="1"
+        style="?attr/ratingBarStyleSmall"
         />
 
   </LinearLayout>

@@ -21,8 +21,8 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.tool.Offloader;
 import com.pyamsoft.pydroid.tool.AsyncOffloader;
+import com.pyamsoft.pydroid.tool.Offloader;
 import timber.log.Timber;
 
 class AdvertisementInteractorImpl implements AdvertisementInteractor {
@@ -42,7 +42,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
   }
 
   @NonNull @Override public Offloader<Boolean> showAdView() {
-    return new AsyncOffloader<Boolean>().onProcess(() -> {
+    return AsyncOffloader.newInstance(() -> {
       final boolean isEnabled = preferences.getBoolean(preferenceKey, preferenceDefault);
       final int shownCount = preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
       final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
@@ -61,7 +61,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
   }
 
   @NonNull @Override public Offloader<Boolean> hideAdView() {
-    return new AsyncOffloader<Boolean>().onProcess(() -> {
+    return AsyncOffloader.newInstance(() -> {
       Timber.d("Hide AdView");
       if (preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0) >= MAX_SHOW_COUNT) {
         Timber.d("Write shown count back to 0");

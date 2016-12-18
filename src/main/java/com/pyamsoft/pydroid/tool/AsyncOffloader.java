@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.tool;
 
 import android.os.AsyncTask;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.os.AsyncTaskCompat;
@@ -34,6 +35,14 @@ public class AsyncOffloader<T> implements Offloader<T> {
   @SuppressWarnings("WeakerAccess") @Nullable ActionSingle<T> result;
   @SuppressWarnings("WeakerAccess") @Nullable ActionNone finisher;
   @Nullable private AsyncTask asnycTask;
+
+  private AsyncOffloader() {
+
+  }
+
+  @CheckResult @NonNull public static <T> Offloader<T> newInstance(@NonNull FuncNone<T> process) {
+    return new AsyncOffloader<T>().onProcess(process);
+  }
 
   @Override @NonNull public Offloader<T> onProcess(@NonNull FuncNone<T> background) {
     if (this.process != null) {

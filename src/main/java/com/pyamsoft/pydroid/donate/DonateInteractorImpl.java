@@ -69,7 +69,7 @@ class DonateInteractorImpl implements DonateInteractor {
   @NonNull @Override public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
       @Nullable Intent data) {
     Timber.i("Process billing onFinish");
-    return new SerialOffloader<Boolean>().onProcess(
+    return SerialOffloader.newInstance(
         () -> checkout.processBillingResult(requestCode, resultCode, data));
   }
 }

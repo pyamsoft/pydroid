@@ -33,6 +33,14 @@ public class SerialOffloader<T> implements Offloader<T> {
   @Nullable private ActionSingle<T> result;
   @Nullable private ActionNone finisher;
 
+  private SerialOffloader() {
+
+  }
+
+  @CheckResult @NonNull public static <T> Offloader<T> newInstance(@NonNull FuncNone<T> process) {
+    return new SerialOffloader<T>().onProcess(process);
+  }
+
   @Override @NonNull public Offloader<T> onProcess(@NonNull FuncNone<T> background) {
     if (this.process != null) {
       throw new IllegalStateException("Cannot redefine onProcess action");

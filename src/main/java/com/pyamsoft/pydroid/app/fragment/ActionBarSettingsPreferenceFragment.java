@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.R;
 import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.donate.DonateDialog;
 import com.pyamsoft.pydroid.donate.DonationActivity;
 import com.pyamsoft.pydroid.rating.RatingDialog;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
@@ -147,6 +148,12 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     final Preference rateApplication = findPreference(getString(R.string.rating_key));
     rateApplication.setOnPreferenceClickListener(preference -> {
       socialPresenter.clickAppPage(preference.getContext().getPackageName());
+      return true;
+    });
+
+    final Preference donation = findPreference(getString(R.string.donation_key));
+    donation.setOnPreferenceClickListener(preference -> {
+      DonateDialog.show(getFragmentManager());
       return true;
     });
   }

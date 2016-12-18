@@ -153,7 +153,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
     final Preference donation = findPreference(getString(R.string.donation_key));
     donation.setOnPreferenceClickListener(preference -> {
-      DonateDialog.show(getFragmentManager());
+      DonateDialog.show(getActivity().getSupportFragmentManager());
       return true;
     });
   }

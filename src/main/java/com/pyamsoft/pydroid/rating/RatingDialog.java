@@ -156,7 +156,7 @@ public class RatingDialog extends DialogFragment {
       dismiss();
     });
 
-    binding.ratingBtnSupport.setOnClickListener(v -> DonateDialog.show(getFragmentManager()));
+    binding.ratingBtnSupport.setOnClickListener(v -> DonateDialog.show(getActivity().getSupportFragmentManager()));
   }
 
   @Override public void onDismiss(DialogInterface dialog) {

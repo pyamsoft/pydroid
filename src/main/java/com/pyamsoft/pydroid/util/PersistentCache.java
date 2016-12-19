@@ -24,7 +24,9 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
 import com.pyamsoft.pydroid.Destroyable;
 import com.pyamsoft.pydroid.app.PersistLoader;
+import java.security.SecureRandom;
 import java.util.Locale;
+import java.util.Random;
 import timber.log.Timber;
 
 public final class PersistentCache {
@@ -32,9 +34,11 @@ public final class PersistentCache {
   @NonNull private static final PersistentCache INSTANCE = new PersistentCache();
   private static final long INVALID_KEY = 0;
   @NonNull private final LongSparseArray<Object> itemCache;
+  @NonNull private final Random random;
 
   @VisibleForTesting PersistentCache() {
     itemCache = new LongSparseArray<>();
+    random = new SecureRandom();
   }
 
   @CheckResult @NonNull public static PersistentCache get() {
@@ -51,7 +55,7 @@ public final class PersistentCache {
     final long key;
     if (savedInstanceState == null) {
       // Generate a new key
-      key = System.nanoTime();
+      key = random.nextLong(;
       Timber.d("Generate new key: %d", key);
     } else {
       // Retrieve the key from the saved instance

@@ -55,7 +55,7 @@ public final class PersistentCache {
     final long key;
     if (savedInstanceState == null) {
       // Generate a new key
-      key = random.nextLong(;
+      key = random.nextLong();
       Timber.d("Generate new key: %d", key);
     } else {
       // Retrieve the key from the saved instance

@@ -130,9 +130,11 @@ public final class PersistentCache {
       throw new IllegalStateException("ClassType cannot be NULL");
     }
 
-    final long oldKey = outState.getLong(id, INVALID_KEY);
-    if (oldKey != INVALID_KEY) {
-      final Object oldItem = itemCache.get(oldKey);
+    if (key == INVALID_KEY) {
+      throw new IllegalStateException(
+          String.format(Locale.getDefault(), "Key is invalid for id: %s type %s", id, classType));
+    } else {
+      final Object oldItem = itemCache.get(key);
       if (!classType.isInstance(oldItem)) {
         throw new IllegalStateException(String.format(Locale.getDefault(),
             "Attempting to save item of type: %s to ID %s [%d] but it already stores an item of type: %s",

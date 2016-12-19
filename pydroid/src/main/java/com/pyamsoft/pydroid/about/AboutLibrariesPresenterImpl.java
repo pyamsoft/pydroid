@@ -42,7 +42,7 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
     interactor.clearCache();
   }
 
-  @Override public void loadLicenseText(int position, @NonNull AboutLicenseItem license) {
+  @Override public void loadLicenseText(int position, @NonNull AboutLicenseModel license) {
     final ExecutedOffloader licenseSubscription = interactor.loadLicenseText(license)
         .onError(throwable -> Timber.e(throwable, "onError loadLicenseText"))
         .onResult(item -> getView(view -> view.onLicenseTextLoaded(position, item)))

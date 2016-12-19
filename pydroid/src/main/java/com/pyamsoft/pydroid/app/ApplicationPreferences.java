@@ -48,7 +48,8 @@ import java.util.Set;
     return resources;
   }
 
-  @SuppressWarnings("unused") @NonNull protected final ApplicationPreferences put(@NonNull final String s, final long l) {
+  @SuppressWarnings("unused") @NonNull
+  protected final ApplicationPreferences put(@NonNull final String s, final long l) {
     p.edit().putLong(s, l).apply();
     return this;
   }
@@ -64,12 +65,14 @@ import java.util.Set;
     return this;
   }
 
-  @SuppressWarnings("unused") @NonNull protected final ApplicationPreferences put(@NonNull final String s, final float f) {
+  @SuppressWarnings("unused") @NonNull
+  protected final ApplicationPreferences put(@NonNull final String s, final float f) {
     p.edit().putFloat(s, f).apply();
     return this;
   }
 
-  @SuppressWarnings("unused") @NonNull protected final ApplicationPreferences putSet(@NonNull final String s,
+  @SuppressWarnings("unused") @NonNull
+  protected final ApplicationPreferences putSet(@NonNull final String s,
       @NonNull final Set<String> st) {
     p.edit().putStringSet(s, st).apply();
     return this;
@@ -80,7 +83,8 @@ import java.util.Set;
     return this;
   }
 
-  @SuppressWarnings("unused") @CheckResult protected final long get(@NonNull final String s, final long l) {
+  @SuppressWarnings("unused") @CheckResult
+  protected final long get(@NonNull final String s, final long l) {
     return p.getLong(s, l);
   }
 
@@ -109,11 +113,13 @@ import java.util.Set;
     return p.getAll();
   }
 
-  @SuppressWarnings("unused") @CheckResult protected final boolean contains(@NonNull final String s) {
+  @SuppressWarnings("unused") @CheckResult
+  protected final boolean contains(@NonNull final String s) {
     return p.contains(s);
   }
 
-  @SuppressWarnings("unused") @CheckResult protected final ApplicationPreferences remove(@NonNull final String s) {
+  @SuppressWarnings("unused") @CheckResult
+  protected final ApplicationPreferences remove(@NonNull final String s) {
     p.edit().remove(s).apply();
     return this;
   }
@@ -150,14 +156,16 @@ import java.util.Set;
 
     boolean isRegistered = false;
 
-    @SuppressWarnings("unused") public final void register(@NonNull final ApplicationPreferences util) {
+    @SuppressWarnings("unused")
+    public final void register(@NonNull final ApplicationPreferences util) {
       if (!isRegistered) {
         util.register(this);
         isRegistered = true;
       }
     }
 
-    @SuppressWarnings("unused") public final void unregister(@NonNull final ApplicationPreferences util) {
+    @SuppressWarnings("unused")
+    public final void unregister(@NonNull final ApplicationPreferences util) {
       if (isRegistered) {
         util.unregister(this);
         isRegistered = false;

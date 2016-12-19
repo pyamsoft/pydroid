@@ -18,77 +18,77 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    repositories {
-        jcenter()
+  repositories {
+    jcenter()
 
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
+  }
 
-    ext {
-        // Fails to resolve
-        //    retrolambda = "2.3.0"
+  ext {
+    // Fails to resolve
+    //    retrolambda = "2.3.0"
 
-        // https://medium.com/@skaliakoudas/decreasing-build-times-by-decreasing-gradle-memory-requirements-7fcafc6d98ea#.wblqdn1xf
-        // Gradle memory is set in gradle.properties to 2GB
-        heapSize = "1g"
-        buildTools = "25.0.2"
-        supportLib = "25.1.0"
-        errorProne = "2.0.15"
-        inAppBilling = "0.9.1"
-        timber = "4.4.0"
-        fastAdapter = "2.1.5"
-        fastAdapterCommons = "2.1.0"
-        autoValue = "1.3"
-        autoValueGSON = "0.4.5"
-        autoValueParcel = "0.2.5"
-        retrofit = "2.1.0"
-        retrofitLogging = "3.5.0"
-        espresso = "2.2.2"
-        robolectric = "3.1.4"
-        junit = "4.12"
-        openGl = "gl1.1-android-2.1_r1"
-        mockito = "2.3.10"
-        leakCanary = "1.4-beta2"
-        tapTargetView = "1.6.0"
-    }
+    // https://medium.com/@skaliakoudas/decreasing-build-times-by-decreasing-gradle-memory-requirements-7fcafc6d98ea#.wblqdn1xf
+    // Gradle memory is set in gradle.properties to 2GB
+    heapSize = "1g"
+    buildTools = "25.0.2"
+    supportLib = "25.1.0"
+    errorProne = "2.0.15"
+    inAppBilling = "0.9.1"
+    timber = "4.4.0"
+    fastAdapter = "2.1.5"
+    fastAdapterCommons = "2.1.0"
+    autoValue = "1.3"
+    autoValueGSON = "0.4.5"
+    autoValueParcel = "0.2.5"
+    retrofit = "2.1.0"
+    retrofitLogging = "3.5.0"
+    espresso = "2.2.2"
+    robolectric = "3.1.4"
+    junit = "4.12"
+    openGl = "gl1.1-android-2.1_r1"
+    mockito = "2.3.10"
+    leakCanary = "1.4-beta2"
+    tapTargetView = "1.6.0"
+  }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+  dependencies {
+    classpath 'com.android.tools.build:gradle:2.2.3'
 
-        // Retro lambda
-        classpath 'me.tatarka:gradle-retrolambda:3.3.1'
+    // Retro lambda
+    classpath 'me.tatarka:gradle-retrolambda:3.3.1'
 
-        // Dex count
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.0'
+    // Dex count
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.0'
 
-        // Gradle version checker
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+    // Gradle version checker
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
 
-        // Error prone compiler
-        classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.8"
-    }
+    // Error prone compiler
+    classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.8"
+  }
 }
 
 allprojects {
-    repositories {
-        jcenter()
-    }
+  repositories {
+    jcenter()
+  }
 
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << '-XepDisableWarningsInGeneratedCode' << '-Xep:MissingOverride:OFF'
-        }
+  gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+      options.compilerArgs << '-XepDisableWarningsInGeneratedCode' << '-Xep:MissingOverride:OFF'
     }
+  }
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+  delete rootProject.buildDir
 }
 
 tasks.whenTaskAdded { task ->
-    if (task.name.startsWith("lint")) {
-        task.enabled = false
-    }
+  if (task.name.startsWith("lint")) {
+    task.enabled = false
+  }
 }

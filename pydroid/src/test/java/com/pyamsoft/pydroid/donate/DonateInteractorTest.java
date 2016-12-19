@@ -80,7 +80,7 @@ public class DonateInteractorTest {
 
     // Create should set these three listeners, and start the purchase flow
     assertEquals(0, count.get());
-    interactor.create(listener, successListener, errorListener);
+    interactor.init(listener, successListener, errorListener);
     assertEquals(4, count.get());
   }
 
@@ -152,7 +152,7 @@ public class DonateInteractorTest {
     assertFalse(started.get());
     // We can pass null in for listeners, it should not fail, but API normal usage does not accept it
     //noinspection ConstantConditions
-    interactor.create(listener, null, null);
+    interactor.init(listener, null, null);
 
     assertTrue(started.get());
 
@@ -202,7 +202,7 @@ public class DonateInteractorTest {
 
     // Once created, we should be able to process
     //noinspection ConstantConditions
-    interactor.create(null, null, null);
+    interactor.init(null, null, null);
     assertTrue(started.get());
 
     //noinspection CheckResult

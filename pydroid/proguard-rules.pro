@@ -6,9 +6,7 @@
 
 # Don't obfuscate causes the gradle build to fail after the optimization step
 # The addition of !code/allocation/variable is needed to prevent this
-# The addition of !method/inlining/* is needed to fix an onClick binding issue
-#   in PreferenceFragments
--optimizations !code/allocation/variable,!method/inlining/*
+-optimizations !code/allocation/variable
 
 # RetroLambda
 -dontwarn java.lang.invoke.LambdaForm$Hidden

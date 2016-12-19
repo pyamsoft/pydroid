@@ -30,7 +30,7 @@ public final class Licenses {
 
   @NonNull private static final Licenses INSTANCE = new Licenses();
 
-  @NonNull private final Map<String, AboutLicenseItem> aboutItemMap;
+  @NonNull private final Map<String, AboutLicenseModel> aboutItemMap;
 
   private Licenses() {
     aboutItemMap = new HashMap<>();
@@ -42,7 +42,7 @@ public final class Licenses {
     INSTANCE.createItem(name, homepageUrl, licenseLocation);
   }
 
-  static void forEach(@NonNull ActionSingle<AboutLicenseItem> action) {
+  public static void forEach(@NonNull ActionSingle<AboutLicenseModel> action) {
     INSTANCE.forEachItem(action);
   }
 
@@ -82,72 +82,75 @@ public final class Licenses {
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,
       @NonNull String homepageUrl, @NonNull String licenseLocation) {
-    final AboutLicenseItem item = AboutLicenseItem.create(name, homepageUrl, licenseLocation);
+    final AboutLicenseModel item = AboutLicenseModel.create(name, homepageUrl, licenseLocation);
     aboutItemMap.put(name, item);
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void forEachItem(
-      @NonNull ActionSingle<AboutLicenseItem> action) {
-    final List<AboutLicenseItem> sortedValues = new ArrayList<>(aboutItemMap.values());
+      @NonNull ActionSingle<AboutLicenseModel> action) {
+    final List<AboutLicenseModel> sortedValues = new ArrayList<>(aboutItemMap.values());
     Collections.sort(sortedValues, (o1, o2) -> o1.name().compareToIgnoreCase(o2.name()));
     //noinspection Convert2streamapi
-    for (final AboutLicenseItem item : sortedValues) {
+    for (final AboutLicenseModel item : sortedValues) {
       if (item != null) {
         action.call(item);
       }
     }
   }
 
-  static final class Names {
-    @NonNull static final String ANDROID = "Android";
-    @NonNull static final String ANDROID_SUPPORT = "Android Support Libraries";
-    @NonNull static final String GOOGLE_PLAY = "Google Play Services";
-    @NonNull static final String PYDROID = "PYDroid";
-    @NonNull static final String AUTO_VALUE = "AutoValue";
-    @NonNull static final String RETROFIT = "Retrofit";
-    @NonNull static final String FIREBASE = "Firebase";
-    @NonNull static final String DAGGER2 = "Dagger2";
-    @NonNull static final String ANDROID_CHECKOUT = "Android Checkout";
-    @NonNull static final String LEAK_CANARY = "Leak Canary";
-    @NonNull static final String RXJAVA = "RxJava";
-    @NonNull static final String RXANDROID = "RxAndroid";
-    @NonNull static final String FAST_ADAPTER = "Fast Adapter";
-    @NonNull static final String ERROR_PRONE = "Error Prone";
-    @NonNull static final String TAP_TARGET_VIEW = "TapTargetView";
-    @NonNull static final String TIMBER = "Timber";
-    @NonNull static final String RETROLAMBDA = "Retrolambda";
-    @NonNull static final String GRADLE_RETROLAMBDA = "Gradle Retrolambda";
-    @NonNull static final String DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin";
-    @NonNull static final String GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin";
+  public static final class Names {
+    @NonNull public static final String ANDROID = "Android";
+    @NonNull public static final String ANDROID_SUPPORT = "Android Support Libraries";
+    @NonNull public static final String GOOGLE_PLAY = "Google Play Services";
+    @NonNull public static final String PYDROID = "PYDroid";
+    @NonNull public static final String AUTO_VALUE = "AutoValue";
+    @NonNull public static final String RETROFIT = "Retrofit";
+    @NonNull public static final String FIREBASE = "Firebase";
+    @NonNull public static final String DAGGER2 = "Dagger2";
+    @NonNull public static final String ANDROID_CHECKOUT = "Android Checkout";
+    @NonNull public static final String LEAK_CANARY = "Leak Canary";
+    @NonNull public static final String RXJAVA = "RxJava";
+    @NonNull public static final String RXANDROID = "RxAndroid";
+    @NonNull public static final String FAST_ADAPTER = "Fast Adapter";
+    @NonNull public static final String ERROR_PRONE = "Error Prone";
+    @NonNull public static final String TAP_TARGET_VIEW = "TapTargetView";
+    @NonNull public static final String TIMBER = "Timber";
+    @NonNull public static final String RETROLAMBDA = "Retrolambda";
+    @NonNull public static final String GRADLE_RETROLAMBDA = "Gradle Retrolambda";
+    @NonNull public static final String DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin";
+    @NonNull public static final String GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin";
 
     private Names() {
       throw new RuntimeException("No instances");
     }
   }
 
-  @SuppressWarnings("WeakerAccess") static final class HomepageUrls {
-    @NonNull static final String ANDROID = "https://source.android.com";
-    @NonNull static final String ANDROID_SUPPORT = "https://source.android.com";
-    @NonNull static final String GOOGLE_PLAY =
+  public static final class HomepageUrls {
+    @NonNull public static final String ANDROID = "https://source.android.com";
+    @NonNull public static final String ANDROID_SUPPORT = "https://source.android.com";
+    @NonNull public static final String GOOGLE_PLAY =
         "https://developers.google.com/android/guides/overview";
-    @NonNull static final String PYDROID = "https://pyamsoft.github.io/pydroid";
-    @NonNull static final String AUTO_VALUE = "https://github.com/google/auto";
-    @NonNull static final String RETROFIT = "https://square.github.io/retrofit/";
-    @NonNull static final String FIREBASE = "https://firebase.google.com/";
-    @NonNull static final String DAGGER2 = "https://google.github.io/dagger/";
-    @NonNull static final String ANDROID_CHECKOUT = "https://github.com/serso/android-checkout";
-    @NonNull static final String LEAK_CANARY = "https://github.com/square/leakcanary";
-    @NonNull static final String RXJAVA = "https://github.com/ReactiveX/RxJava";
-    @NonNull static final String RXANDROID = "https://github.com/ReactiveX/RxAndroid";
-    @NonNull static final String FAST_ADAPTER = "https://github.com/mikepenz/FastAdapter";
-    @NonNull static final String ERROR_PRONE = "https://github.com/google/onError-prone";
-    @NonNull static final String TAP_TARGET_VIEW = "https://github.com/KeepSafe/TapTargetView";
-    @NonNull static final String TIMBER = "https://github.com/JakeWharton/timber";
-    @NonNull static final String RETROLAMBDA = "https://github.com/orfjackal/retrolambda";
-    @NonNull static final String GRADLE_RETROLAMBDA = "https://github.com/evant/gradle-retrolambda";
-    @NonNull static final String DEXCOUNT_GRADLE_PLUGIN =
+    @NonNull public static final String PYDROID = "https://pyamsoft.github.io/pydroid";
+    @NonNull public static final String AUTO_VALUE = "https://github.com/google/auto";
+    @NonNull public static final String RETROFIT = "https://square.github.io/retrofit/";
+    @NonNull public static final String FIREBASE = "https://firebase.google.com/";
+    @NonNull public static final String DAGGER2 = "https://google.github.io/dagger/";
+    @NonNull public static final String ANDROID_CHECKOUT =
+        "https://github.com/serso/android-checkout";
+    @NonNull public static final String LEAK_CANARY = "https://github.com/square/leakcanary";
+    @NonNull public static final String RXJAVA = "https://github.com/ReactiveX/RxJava";
+    @NonNull public static final String RXANDROID = "https://github.com/ReactiveX/RxAndroid";
+    @NonNull public static final String FAST_ADAPTER = "https://github.com/mikepenz/FastAdapter";
+    @NonNull public static final String ERROR_PRONE = "https://github.com/google/onError-prone";
+    @NonNull public static final String TAP_TARGET_VIEW =
+        "https://github.com/KeepSafe/TapTargetView";
+    @NonNull public static final String TIMBER = "https://github.com/JakeWharton/timber";
+    @NonNull public static final String RETROLAMBDA = "https://github.com/orfjackal/retrolambda";
+    @NonNull public static final String GRADLE_RETROLAMBDA =
+        "https://github.com/evant/gradle-retrolambda";
+    @NonNull public static final String DEXCOUNT_GRADLE_PLUGIN =
         "https://github.com/KeepSafe/dexcount-gradle-plugin";
-    @NonNull static final String GRADLE_VERSIONS_PLUGIN =
+    @NonNull public static final String GRADLE_VERSIONS_PLUGIN =
         "https://github.com/ben-manes/gradle-versions-plugin";
 
     private HomepageUrls() {
@@ -155,29 +158,29 @@ public final class Licenses {
     }
   }
 
-  @SuppressWarnings("WeakerAccess") static final class LicenseLocations {
+  public static final class LicenseLocations {
     // Add an underscore to keep this name on top
     @NonNull private static final String _BASE = "licenses/";
-    @NonNull static final String ANDROID_SUPPORT = _BASE + "androidsupport";
-    @NonNull static final String ANDROID = _BASE + "android";
-    @NonNull static final String GOOGLE_PLAY = _BASE + "";
-    @NonNull static final String PYDROID = _BASE + "pydroid";
-    @NonNull static final String AUTO_VALUE = _BASE + "autovalue";
-    @NonNull static final String RETROFIT = _BASE + "retrofit";
-    @NonNull static final String FIREBASE = _BASE + "firebase";
-    @NonNull static final String DAGGER2 = _BASE + "dagger2";
-    @NonNull static final String ANDROID_CHECKOUT = _BASE + "androidcheckout";
-    @NonNull static final String LEAK_CANARY = _BASE + "leakcanary";
-    @NonNull static final String RXJAVA = _BASE + "rxjava";
-    @NonNull static final String RXANDROID = _BASE + "rxandroid";
-    @NonNull static final String FAST_ADAPTER = _BASE + "fastadapter";
-    @NonNull static final String ERROR_PRONE = _BASE + "errorprone";
-    @NonNull static final String TAP_TARGET_VIEW = _BASE + "taptargetview";
-    @NonNull static final String TIMBER = _BASE + "timber";
-    @NonNull static final String RETROLAMBDA = _BASE + "retrolambda";
-    @NonNull static final String GRADLE_RETROLAMBDA = _BASE + "gradle-retrolambda";
-    @NonNull static final String DEXCOUNT_GRADLE_PLUGIN = _BASE + "dexcount-gradle-plugin";
-    @NonNull static final String GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin";
+    @NonNull public static final String ANDROID_SUPPORT = _BASE + "androidsupport";
+    @NonNull public static final String ANDROID = _BASE + "android";
+    @NonNull public static final String GOOGLE_PLAY = _BASE + "";
+    @NonNull public static final String PYDROID = _BASE + "pydroid";
+    @NonNull public static final String AUTO_VALUE = _BASE + "autovalue";
+    @NonNull public static final String RETROFIT = _BASE + "retrofit";
+    @NonNull public static final String FIREBASE = _BASE + "firebase";
+    @NonNull public static final String DAGGER2 = _BASE + "dagger2";
+    @NonNull public static final String ANDROID_CHECKOUT = _BASE + "androidcheckout";
+    @NonNull public static final String LEAK_CANARY = _BASE + "leakcanary";
+    @NonNull public static final String RXJAVA = _BASE + "rxjava";
+    @NonNull public static final String RXANDROID = _BASE + "rxandroid";
+    @NonNull public static final String FAST_ADAPTER = _BASE + "fastadapter";
+    @NonNull public static final String ERROR_PRONE = _BASE + "errorprone";
+    @NonNull public static final String TAP_TARGET_VIEW = _BASE + "taptargetview";
+    @NonNull public static final String TIMBER = _BASE + "timber";
+    @NonNull public static final String RETROLAMBDA = _BASE + "retrolambda";
+    @NonNull public static final String GRADLE_RETROLAMBDA = _BASE + "gradle-retrolambda";
+    @NonNull public static final String DEXCOUNT_GRADLE_PLUGIN = _BASE + "dexcount-gradle-plugin";
+    @NonNull public static final String GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin";
 
     private LicenseLocations() {
       throw new RuntimeException("No instances");

@@ -23,13 +23,13 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import org.solovyev.android.checkout.Sku;
 
-@AutoValue abstract class SkuModel {
+@AutoValue public abstract class SkuModel {
 
-  @CheckResult @NonNull static SkuModel create(@NonNull Sku sku, @Nullable String token) {
+  @CheckResult @NonNull public static SkuModel create(@NonNull Sku sku, @Nullable String token) {
     return new AutoValue_SkuModel(sku, token);
   }
 
-  abstract Sku sku();
+  public abstract Sku sku();
 
-  @Nullable abstract String token();
+  @Nullable public abstract String token();
 }

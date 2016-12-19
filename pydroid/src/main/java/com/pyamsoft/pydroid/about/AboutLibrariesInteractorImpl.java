@@ -53,7 +53,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @NonNull @Override public Offloader<String> loadLicenseText(@NonNull AboutLicenseItem license) {
+  @NonNull @Override public Offloader<String> loadLicenseText(@NonNull AboutLicenseModel license) {
     return AsyncOffloader.newInstance(() -> {
       if (cachedLicenses.containsKey(license.name())) {
         Timber.d("Fetch from cache");

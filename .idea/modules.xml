@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PYDroid.iml" filepath="$PROJECT_DIR$/PYDroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/pydroid/pydroid.iml" filepath="$PROJECT_DIR$/pydroid/pydroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pydroidui/pydroidui.iml" filepath="$PROJECT_DIR$/pydroidui/pydroidui.iml" />
     </modules>
   </component>
 </project>

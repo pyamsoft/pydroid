@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<resources>
+
+  <string name="clear_all_key">clear_all</string>
+  <string name="clear_all_title">Reset All Settings</string>
+  <string name="clear_all_summary">Reset all application settings to default</string>
+
+  <string name="upgrade_info_key">upgrade_info</string>
+  <string name="upgrade_info_title">Show Upgrade Information</string>
+  <string name="upgrade_info_summary">Show the most recent upgrade change log</string>
+
+  <string name="adview_title">Related Applications</string>
+  <string name="adview_summary_checked">Will show related and relevant pyamsoft applications</string>
+  <string name="adview_summary_unchecked">Will not show other related pyamsoft applications</string>
+
+  <string name="about_license_key">about_license</string>
+  <string name="about_license_title">Open Source Licenses</string>
+
+  <string name="check_version_key">check_version</string>
+  <string name="check_version_title">Check for Updates</string>
+
+  <string name="rating_key">rate_application</string>
+  <string name="rating_title">Rate Application</string>
+  <string name="rating_summary">Leave a review on the Google Play Store</string>
+
+  <string name="donation_key">donate_pyamsoft</string>
+  <string name="donation_title">Donate to pyamsoft</string>
+  <string name="donation_summary">Support pyamsoft with a small donation</string>
+
+</resources>

@@ -25,5 +25,5 @@ interface AboutLibrariesInteractor {
 
   void clearCache();
 
-  @CheckResult @NonNull Offloader<String> loadLicenseText(@NonNull AboutLicenseItem license);
+  @CheckResult @NonNull Offloader<String> loadLicenseText(@NonNull AboutLicenseModel license);
 }

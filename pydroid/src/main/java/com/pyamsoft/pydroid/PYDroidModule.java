@@ -17,15 +17,14 @@
 
 package com.pyamsoft.pydroid;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.AboutLibrariesModule;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.pyamsoft.pydroid.ads.AdvertisementModule;
-import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.donate.DonateModule;
+import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.version.ApiModule;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 import java.util.ArrayList;

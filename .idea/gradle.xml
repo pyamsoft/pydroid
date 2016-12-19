@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/pydroid" />
+            <option value="$PROJECT_DIR$/pydroidui" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

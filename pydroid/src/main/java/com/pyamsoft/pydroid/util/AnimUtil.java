@@ -113,7 +113,8 @@ public final class AnimUtil {
         .setListener(null);
   }
 
-  @SuppressWarnings("unused") @NonNull public static ViewPropertyAnimatorCompat fadeAway(final @NonNull View v) {
+  @SuppressWarnings("unused") @NonNull
+  public static ViewPropertyAnimatorCompat fadeAway(final @NonNull View v) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     v.setAlpha(1f);
@@ -127,7 +128,8 @@ public final class AnimUtil {
         .setListener(null);
   }
 
-  @SuppressWarnings("unused") @NonNull public static ViewPropertyAnimatorCompat flipVertical(final @NonNull View v) {
+  @SuppressWarnings("unused") @NonNull
+  public static ViewPropertyAnimatorCompat flipVertical(final @NonNull View v) {
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     return ViewCompat.animate(v)

@@ -79,7 +79,7 @@ public class PersistentCacheTest {
 
     // Save the key
     final Bundle outState = new Bundle();
-    cache.saveKey(outState, TAG, firstResult);
+    cache.saveKey(outState, TAG, firstResult, Object.class);
 
     // Fetch the key again
     final long secondResult = cache.load(TAG, outState, new PersistLoader.Callback<Object>() {
@@ -139,7 +139,7 @@ public class PersistentCacheTest {
 
     // Now save state
     final Bundle outState = new Bundle();
-    cache.saveKey(outState, tag, loadedKey);
+    cache.saveKey(outState, tag, loadedKey, Object.class);
 
     // Reload
     final long newKey = doLoadSynchronous(tag, outState, createCount, loadCount);
@@ -288,7 +288,7 @@ public class PersistentCacheTest {
     final Bundle[] bundles = new Bundle[keySize];
     for (int i = 0; i < keySize; ++i) {
       bundles[i] = new Bundle();
-      cache.saveKey(bundles[i], String.valueOf(i), keys[i]);
+      cache.saveKey(bundles[i], String.valueOf(i), keys[i], Object.class);
     }
 
     // Load keys again

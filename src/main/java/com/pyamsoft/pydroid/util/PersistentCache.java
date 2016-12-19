@@ -24,15 +24,21 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.LongSparseArray;
 import com.pyamsoft.pydroid.Destroyable;
 import com.pyamsoft.pydroid.app.PersistLoader;
+import java.security.SecureRandom;
+import java.util.Locale;
+import java.util.Random;
 import timber.log.Timber;
 
 public final class PersistentCache {
 
   @NonNull private static final PersistentCache INSTANCE = new PersistentCache();
-  @NonNull private final LongSparseArray<Object> cache;
+  private static final long INVALID_KEY = 0;
+  @NonNull private final LongSparseArray<Object> itemCache;
+  @NonNull private final Random random;
 
   @VisibleForTesting PersistentCache() {
-    cache = new LongSparseArray<>();
+    itemCache = new LongSparseArray<>();
+    random = new SecureRandom();
   }
 
   @CheckResult @NonNull public static PersistentCache get() {
@@ -41,15 +47,20 @@ public final class PersistentCache {
 
   @CheckResult @VisibleForTesting long generateKey(@NonNull String id,
       @Nullable Bundle savedInstanceState) {
+    //noinspection ConstantConditions
+    if (id == null || id.isEmpty()) {
+      throw new IllegalStateException("Id cannot be NULL or empty");
+    }
+
     final long key;
     if (savedInstanceState == null) {
       // Generate a new key
-      key = System.nanoTime();
-      Timber.d("Generate new key: %d", key);
+      key = random.nextLong();
+      Timber.d("Generate new key for %s: %d", id, key);
     } else {
       // Retrieve the key from the saved instance
-      key = savedInstanceState.getLong(id, 0);
-      Timber.d("Retrieve stored key from %d", key);
+      key = savedInstanceState.getLong(id, INVALID_KEY);
+      Timber.d("Retrieve stored key from %s [%d]", id, key);
     }
 
     return key;
@@ -57,20 +68,39 @@ public final class PersistentCache {
 
   @CheckResult public <T> long load(@NonNull String id, @Nullable Bundle savedInstanceState,
       @NonNull PersistLoader.Callback<T> callback) {
-    // Attempt to fetch the persistent object from the cache
-    final long key = generateKey(id, savedInstanceState);
+    //noinspection ConstantConditions
+    if (id == null || id.isEmpty()) {
+      throw new IllegalStateException("Id cannot be NULL or empty");
+    }
 
-    @SuppressWarnings("unchecked") T persist = (T) cache.get(key);
-    // If the persistent object is NULL it did not exist in the cache
-    if (persist == null) {
+    //noinspection ConstantConditions
+    if (callback == null) {
+      throw new IllegalStateException("Callback cannot be NULL");
+    }
+
+    // Attempt to fetch the persistent object from the itemCache
+    final long key = generateKey(id, savedInstanceState);
+    if (key == INVALID_KEY) {
+      throw new IllegalStateException("Key is invalid for: " + id);
+    }
+
+    final T persist;
+    final Object cached = itemCache.get(key);
+    // If the persistent object is NULL it did not exist in the itemCache
+    if (cached == null) {
       // Load a fresh object
       persist = callback.createLoader().loadPersistent();
-      Timber.d("Created new persistable: %s [%s]", persist, key);
 
-      // Save the presenter to the cache
+      // Save the presenter to the itemCache
       Timber.d("Persist object: %s [%d]", persist, key);
-      cache.put(key, persist);
+      itemCache.put(key, persist);
     } else {
+      try {
+        //noinspection unchecked
+        persist = (T) cached;
+      } catch (ClassCastException e) {
+        throw new IllegalStateException("Unable to retrieve cached object", e);
+      }
       Timber.d("Loaded cached persistable: %s [%s]", persist, key);
     }
 
@@ -83,16 +113,44 @@ public final class PersistentCache {
   /**
    * Saves the generated key into a bundle which will be restored later in the lifecycle
    */
-  public void saveKey(@NonNull Bundle outState, @NonNull String id, long key) {
+  public <T> void saveKey(@NonNull Bundle outState, @NonNull String id, long key,
+      @NonNull Class<T> classType) {
+    //noinspection ConstantConditions
+    if (outState == null) {
+      throw new IllegalStateException("Bundle cannot be NULL");
+    }
+
+    //noinspection ConstantConditions
+    if (id == null || id.isEmpty()) {
+      throw new IllegalStateException("Id cannot be NULL or empty");
+    }
+
+    //noinspection ConstantConditions
+    if (classType == null) {
+      throw new IllegalStateException("ClassType cannot be NULL");
+    }
+
+    if (key == INVALID_KEY) {
+      throw new IllegalStateException(
+          String.format(Locale.getDefault(), "Key is invalid for id: %s type %s", id, classType));
+    } else {
+      final Object oldItem = itemCache.get(key);
+      if (!classType.isInstance(oldItem)) {
+        throw new IllegalStateException(String.format(Locale.getDefault(),
+            "Attempting to save item of type: %s to ID %s [%d] but it already stores an item of type: %s",
+            classType, id, key, oldItem.getClass()));
+      }
+    }
+
     Timber.d("Save key: %s [%d]", id, key);
     outState.putLong(id, key);
   }
 
   public void unload(long key) {
-    final Object persist = cache.get(key);
+    final Object persist = itemCache.get(key);
     if (persist != null) {
-      cache.remove(key);
-      Timber.d("Remove persistable from cache: %s [%d]", persist, key);
+      itemCache.remove(key);
+      Timber.d("Remove persistable from itemCache: %s [%d]", persist, key);
       if (persist instanceof Destroyable) {
         final Destroyable destroyable = (Destroyable) persist;
         destroyable.destroy();

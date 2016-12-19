@@ -95,8 +95,8 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   }
 
   @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_LICENSE_PRESENTER, loadedKey);
-    PersistentCache.get().saveKey(outState, KEY_SOCIAL_PRESENTER, ratingKey);
+    PersistentCache.get().saveKey(outState, KEY_LICENSE_PRESENTER, loadedKey, VersionCheckPresenter.class);
+    PersistentCache.get().saveKey(outState, KEY_SOCIAL_PRESENTER, ratingKey, SocialMediaPresenter.class);
     super.onSaveInstanceState(outState);
   }
 

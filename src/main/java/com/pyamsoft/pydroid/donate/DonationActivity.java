@@ -56,10 +56,20 @@ public abstract class DonationActivity extends VersionCheckActivity
             donatePresenter = persist;
           }
         });
+
+    // To match up correctly with the In App Billing lifecycle, we bind onCreate and unbind onDestroy
+    // this is different from how things are usually done with presenters, but oh well.
+    donatePresenter.bindView(this);
+    donatePresenter.create(this);
   }
 
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
+
+    // To match up correctly with the In App Billing lifecycle, we bind onCreate and unbind onDestroy
+    // this is different from how things are usually done with presenters, but oh well.
+    donatePresenter.unbindView();
+
     if (!isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
@@ -74,17 +84,6 @@ public abstract class DonationActivity extends VersionCheckActivity
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     donatePresenter.onBillingResult(requestCode, resultCode, data);
-  }
-
-  @Override protected void onStart() {
-    super.onStart();
-    donatePresenter.bindView(this);
-    donatePresenter.create(this);
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
-    donatePresenter.unbindView();
   }
 
   @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {

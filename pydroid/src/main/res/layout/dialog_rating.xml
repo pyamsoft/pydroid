@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+  <FrameLayout
+      android:id="@+id/rating_root"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <LinearLayout
+        android:id="@+id/rating_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="36dp"
+        android:orientation="vertical"
+        android:padding="8dp"
+        >
+
+      <ScrollView
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_weight="1"
+          android:layout_margin="8dp"
+          >
+
+        <TextView
+            android:id="@+id/rating_text_change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+      </ScrollView>
+
+      <Button
+          android:id="@+id/rating_btn_go_rate"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/rate_application"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@android:color/white"
+          style="@style/Widget.AppCompat.Button.Colored"
+          />
+
+      <Button
+          android:id="@+id/rating_btn_support"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/support_pyamsoft"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@android:color/white"
+          style="@style/Widget.AppCompat.Button.Colored"
+          />
+
+      <com.pyamsoft.pydroid.widget.NoLeakTextView
+          android:id="@+id/rating_btn_no_thanks"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="8dp"
+          android:gravity="center"
+          android:text="@string/no_thanks"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/rating_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal|top"
+        android:contentDescription="@string/blank"
+        />
+
+  </FrameLayout>
+
+</layout>

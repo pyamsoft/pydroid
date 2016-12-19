@@ -51,7 +51,7 @@ public class DonatePresenterTest {
     Mockito.doAnswer(invocation -> {
       count.incrementAndGet();
       return null;
-    }).when(mockInteractor).create(presenter, presenter.successListener, presenter.errorListener);
+    }).when(mockInteractor).init(presenter, presenter.successListener, presenter.errorListener);
 
     assertEquals(0, count.get());
     presenter.bindView(new DonatePresenter.View() {

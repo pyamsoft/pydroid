@@ -85,9 +85,10 @@ public final class PersistentCache {
       throw new IllegalStateException("Key is invalid for: " + id);
     }
 
-    @SuppressWarnings("unchecked") T persist = (T) itemCache.get(key);
+    final T persist;
+    final Object cached = itemCache.get(key);
     // If the persistent object is NULL it did not exist in the itemCache
-    if (persist == null) {
+    if (cached == null) {
       // Load a fresh object
       persist = callback.createLoader().loadPersistent();
 
@@ -95,6 +96,12 @@ public final class PersistentCache {
       Timber.d("Persist object: %s [%d]", persist, key);
       itemCache.put(key, persist);
     } else {
+      try {
+        //noinspection unchecked
+        persist = (T) cached;
+      } catch (ClassCastException e) {
+        throw new IllegalStateException("Unable to retrieve cached object", e);
+      }
       Timber.d("Loaded cached persistable: %s [%s]", persist, key);
     }
 

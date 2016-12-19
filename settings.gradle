@@ -15,4 +15,4 @@
  *
  */
 
-include ':pydroid', ':pydroidui'
+include ':pydroid', ':pydroidui', ':pydroiddesign', ':pydroidrx'

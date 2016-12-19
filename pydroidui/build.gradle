@@ -78,52 +78,30 @@ android {
   }
 }
 
+ext {
+  fastAdapter = "2.1.5"
+  fastAdapterCommons = "2.1.0"
+  robolectric = "3.1.4"
+  junit = "4.12"
+  openGl = "gl1.1-android-2.1_r1"
+  mockito = "2.3.10"
+}
+
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
 
-  // Error-Prone compiler
-  errorprone "com.google.errorprone:error_prone_core:$errorProne"
-
-  // Leak Canary
-  debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
-  releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
-  testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
-
   // Android support library.
-  annotationProcessor "com.android.support:support-annotations:$supportLib"
-  compile "com.android.support:preference-v14:$supportLib"
-  compile "com.android.support:appcompat-v7:$supportLib"
   compile "com.android.support:recyclerview-v7:$supportLib"
   compile "com.android.support:support-vector-drawable:$supportLib"
   compile "com.android.support:cardview-v7:$supportLib"
-
-  // Tap Target View
-  compile "com.getkeepsafe.taptargetview:taptargetview:$tapTargetView"
-
-  // Google Billing
-  compile "org.solovyev.android:checkout:$inAppBilling@aar"
-
-  // Timber logging
-  compile "com.jakewharton.timber:timber:$timber"
 
   // FastAdapter
   compile "com.mikepenz:fastadapter-commons:$fastAdapterCommons@aar"
   compile("com.mikepenz:fastadapter:$fastAdapter@aar") {
     transitive = true
   }
-
-  // Auto value
-  provided "com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
-
-  // Retrofit
-  compile "com.squareup.retrofit2:retrofit:$retrofit"
-  compile "com.squareup.retrofit2:retrofit-mock:$retrofit"
-  compile "com.squareup.retrofit2:converter-gson:$retrofit"
-  compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 
   // Roboelectric for Android on JVM
   testCompile "org.robolectric:robolectric:$robolectric"

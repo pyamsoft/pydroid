@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.tool;
 
 import android.support.annotation.Nullable;
-import timber.log.Timber;
 
 public final class AsyncMapHelper {
 
@@ -27,17 +26,16 @@ public final class AsyncMapHelper {
 
   public static void unsubscribe(@Nullable AsyncMap.Entry entry) {
     if (entry == null) {
-      Timber.w("AsyncMap Entry is NULL");
-    } else {
-      if (!entry.isUnloaded()) {
-        entry.unload();
-      }
+      return;
+    }
+
+    if (!entry.isUnloaded()) {
+      entry.unload();
     }
   }
 
   public static void unsubscribe(@Nullable AsyncMap.Entry... entries) {
     if (entries == null) {
-      Timber.w("AsyncMap Entries are NULL");
       return;
     }
 

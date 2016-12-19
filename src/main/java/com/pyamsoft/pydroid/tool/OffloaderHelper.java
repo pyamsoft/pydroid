@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.tool;
 
 import android.support.annotation.Nullable;
-import timber.log.Timber;
 
 public final class OffloaderHelper {
 
@@ -27,7 +26,6 @@ public final class OffloaderHelper {
 
   public static void cancel(@Nullable ExecutedOffloader offloader) {
     if (offloader == null) {
-      Timber.w("Offloader is NULL");
       return;
     }
 
@@ -38,7 +36,6 @@ public final class OffloaderHelper {
 
   @SuppressWarnings("unused") public static void cancel(@Nullable ExecutedOffloader... offloaders) {
     if (offloaders == null) {
-      Timber.w("Offloaders are NULL");
       return;
     }
 

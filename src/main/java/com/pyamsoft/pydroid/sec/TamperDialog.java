@@ -76,7 +76,7 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_SOCIAL_MEDIA, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_SOCIAL_MEDIA, loadedKey, SocialMediaPresenter.class);
     super.onSaveInstanceState(outState);
   }
 

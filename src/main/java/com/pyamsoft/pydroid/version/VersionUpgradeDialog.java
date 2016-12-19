@@ -35,7 +35,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   @NonNull private static final String KEY_NAME = "key_name";
   @NonNull private static final String KEY_LATEST_VERSION = "key_latest_version";
   @NonNull private static final String KEY_CURRENT_VERSION = "key_current_version";
-  @NonNull private static final String KEY_VERSION_PRESENTER = "key_version_presenter";
+  @NonNull private static final String KEY_SOCIAL_PRESENTER = "__key_version_social_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private int latestVersion;
   private int currentVersion;
@@ -72,7 +72,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
     }
 
     loadedKey = PersistentCache.get()
-        .load(KEY_VERSION_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
+        .load(KEY_SOCIAL_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
 
           @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
             presenter = persist;
@@ -105,7 +105,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_VERSION_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_SOCIAL_PRESENTER, loadedKey, SocialMediaPresenter.class);
     super.onSaveInstanceState(outState);
   }
 

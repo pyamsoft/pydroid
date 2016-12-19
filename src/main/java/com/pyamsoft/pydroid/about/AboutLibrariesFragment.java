@@ -186,7 +186,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_ABOUT_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_ABOUT_PRESENTER, loadedKey, AboutLibrariesPresenter.class);
     super.onSaveInstanceState(outState);
   }
 

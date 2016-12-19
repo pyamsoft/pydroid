@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ads;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -68,9 +69,10 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     ViewCompat.setElevation(this, AppUtil.convertToDP(getContext(), 2));
   }
 
-  @SuppressWarnings("WeakerAccess") public final void create(@Nullable AdSource adSource) {
-    loadedKey =
-        PersistentCache.get().load(KEY_ADVERTISEMENT, null, new AdvertisementViewLoaderCallback() {
+  @SuppressWarnings("WeakerAccess")
+  public final void create(@Nullable AdSource adSource, @Nullable Bundle savedInstanceState) {
+    loadedKey = PersistentCache.get()
+        .load(KEY_ADVERTISEMENT, savedInstanceState, new AdvertisementViewLoaderCallback() {
 
           @Override public void onPersistentLoaded(@NonNull AdvertisementPresenter persist) {
             presenter = persist;
@@ -80,15 +82,15 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     // Default to gone
     setVisibility(View.GONE);
 
-    addView(offlineAdSource.create(getContext()));
+    addView(offlineAdSource.create(getContext(), savedInstanceState));
 
     onlineAdSource = adSource;
     if (onlineAdSource != null) {
-      addView(onlineAdSource.create(getContext()));
+      addView(onlineAdSource.create(getContext(), savedInstanceState));
     }
   }
 
-  final void start() {
+  public final void start() {
     if (presenter == null) {
       throw new IllegalStateException("NULL presenter");
     }
@@ -101,7 +103,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     }
   }
 
-  final void stop() {
+  public final void stop() {
     if (presenter == null) {
       throw new IllegalStateException("NULL presenter");
     }
@@ -146,6 +148,15 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     }
     if (presenter.isBound()) {
       presenter.hideAd();
+    }
+  }
+
+  public final void saveState(@NonNull Bundle outState) {
+    PersistentCache.get()
+        .saveKey(outState, KEY_ADVERTISEMENT, loadedKey, AdvertisementPresenter.class);
+    offlineAdSource.saveState(outState);
+    if (onlineAdSource != null) {
+      onlineAdSource.saveState(outState);
     }
   }
 

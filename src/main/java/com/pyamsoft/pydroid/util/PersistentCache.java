@@ -56,11 +56,11 @@ public final class PersistentCache {
     if (savedInstanceState == null) {
       // Generate a new key
       key = random.nextLong();
-      Timber.d("Generate new key: %d", key);
+      Timber.d("Generate new key for %s: %d", id, key);
     } else {
       // Retrieve the key from the saved instance
       key = savedInstanceState.getLong(id, INVALID_KEY);
-      Timber.d("Retrieve stored key from %d", key);
+      Timber.d("Retrieve stored key from %s [%d]", id, key);
     }
 
     return key;
@@ -68,11 +68,6 @@ public final class PersistentCache {
 
   @CheckResult public <T> long load(@NonNull String id, @Nullable Bundle savedInstanceState,
       @NonNull PersistLoader.Callback<T> callback) {
-    //noinspection ConstantConditions
-    if (savedInstanceState == null) {
-      throw new IllegalStateException("Bundle cannot be NULL");
-    }
-
     //noinspection ConstantConditions
     if (id == null || id.isEmpty()) {
       throw new IllegalStateException("Id cannot be NULL or empty");

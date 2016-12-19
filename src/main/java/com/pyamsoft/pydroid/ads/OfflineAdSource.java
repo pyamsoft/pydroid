@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -52,7 +53,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON,
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
-  @NonNull private static final String KEY_PRESENTER = "key_offline_ad_presenter";
+  @NonNull private static final String KEY_PRESENTER = "__key_offline_ad_presenter";
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @Nullable @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   @Nullable private Queue<String> imageQueue;
@@ -123,12 +124,14 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     return currentPackage;
   }
 
-  @NonNull @Override public View create(@NonNull Context context) {
-    loadedKey = PersistentCache.get().load(KEY_PRESENTER, null, new SocialMediaLoaderCallback() {
-      @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-        presenter = persist;
-      }
-    });
+  @NonNull @Override
+  public View create(@NonNull Context context, @Nullable Bundle savedInstanceState) {
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
+          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+            presenter = persist;
+          }
+        });
 
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));
@@ -143,10 +146,9 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     return adImage;
   }
 
-  @NonNull @Override
-  public View destroy(boolean isChagingConfigurations) {
+  @NonNull @Override public View destroy(boolean isChangingConfigurations) {
     taskMap.clear();
-    if (!isChagingConfigurations) {
+    if (!isChangingConfigurations) {
       PersistentCache.get().unload(loadedKey);
       if (imageQueue != null) {
         imageQueue.clear();
@@ -200,6 +202,10 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       adImage.setImageDrawable(null);
       adImage.setOnClickListener(null);
     }
+  }
+
+  @Override public void saveState(@NonNull Bundle outState) {
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, SocialMediaPresenter.class);
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {

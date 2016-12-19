@@ -32,7 +32,8 @@ import timber.log.Timber;
 public class SocialMediaPreference extends BaseBoundPreference
     implements SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_PRESENTER = "__key_social_preference_presenter";
+  @NonNull private static final String KEY_PRESENTER =
+      "__key_social_preference_presenter__no_bundle";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private ViewSocialMediaBinding binding;
   private long loadedKey;
@@ -60,13 +61,6 @@ public class SocialMediaPreference extends BaseBoundPreference
 
   private void init() {
     setLayoutResource(R.layout.view_social_media);
-
-    loadedKey = PersistentCache.get().load(KEY_PRESENTER, null, new SocialMediaLoaderCallback() {
-
-      @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-        presenter = persist;
-      }
-    });
   }
 
   @Override public void onBindViewHolder(PreferenceViewHolder holder) {
@@ -93,6 +87,14 @@ public class SocialMediaPreference extends BaseBoundPreference
 
   @Override public void onAttached() {
     super.onAttached();
+
+    loadedKey = PersistentCache.get().load(KEY_PRESENTER, null, new SocialMediaLoaderCallback() {
+
+      @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+        presenter = persist;
+      }
+    });
+
     presenter.bindView(this);
   }
 

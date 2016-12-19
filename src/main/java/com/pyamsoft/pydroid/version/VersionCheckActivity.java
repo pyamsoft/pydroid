@@ -32,7 +32,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
   @NonNull private static final String KEY_HAS_CHECKED_LICENSE = "key_has_already_checked_license";
-  @NonNull private static final String KEY_VERSION_PRESENTER = "key_version_presenter";
+  @NonNull private static final String KEY_VERSION_PRESENTER = "__key_version_presenter";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   private long loadedKey;
   private VersionCheckLoaderCallback loaderCallback;
@@ -73,7 +73,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   }
 
   @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_VERSION_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_VERSION_PRESENTER, loadedKey, VersionCheckPresenter.class);
     outState.putBoolean(KEY_HAS_CHECKED_LICENSE, loaderCallback.isLicenseChecked());
     super.onSaveInstanceState(outState);
   }

@@ -35,11 +35,12 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
 
     if (adView != null) {
-      adView.create(provideOnlineAdSource());
+      adView.create(provideOnlineAdSource(), savedInstanceState);
     }
   }
 
-  @SuppressWarnings({ "WeakerAccess", "SameReturnValue" }) @CheckResult @Nullable protected AdSource provideOnlineAdSource() {
+  @SuppressWarnings({ "WeakerAccess", "SameReturnValue" }) @CheckResult @Nullable
+  protected AdSource provideOnlineAdSource() {
     return null;
   }
 
@@ -74,6 +75,13 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     if (adView != null) {
       adView.hideAd();
     }
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    if (adView != null) {
+      adView.saveState(outState);
+    }
+    super.onSaveInstanceState(outState);
   }
 
   /**

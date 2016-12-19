@@ -66,7 +66,7 @@ public abstract class DonationActivity extends VersionCheckActivity
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_DONATE_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_DONATE_PRESENTER, loadedKey, DonatePresenter.class);
     super.onSaveInstanceState(outState);
   }
 

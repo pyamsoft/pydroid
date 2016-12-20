@@ -91,6 +91,8 @@ dependencies {
   // Timber logging
   compile "com.jakewharton.timber:timber:$timber"
 
-  compile project(path: ":pydroid")
+  compile(project(path: ":pydroid")) {
+    transitive = true
+  }
 }
 

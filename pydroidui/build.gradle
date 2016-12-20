@@ -115,5 +115,7 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  compile project(path: ":pydroid")
+  compile(project(path: ":pydroid")) {
+    transitive = true
+  }
 }

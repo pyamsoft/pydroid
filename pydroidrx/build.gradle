@@ -26,6 +26,9 @@ apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
 apply plugin: "me.tatarka.retrolambda"
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.pyamsoft'
 
 android {
   compileSdkVersion 25

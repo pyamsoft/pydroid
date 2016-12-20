@@ -29,6 +29,7 @@ apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.pyamsoft'
+version='5.1.0'
 
 android {
   compileSdkVersion 25
@@ -37,8 +38,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 25
-    versionCode 100
-    versionName "5.0.0"
+    versionCode 110
+    versionName "5.1.0"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true

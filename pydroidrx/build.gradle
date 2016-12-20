@@ -94,8 +94,6 @@ dependencies {
   compile "io.reactivex:rxandroid:$rxandroid"
   compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
 
-  compile(project(path: ":pydroid")) {
-    transitive = true
-  }
+  compile project(path: ":pydroid")
 }
 

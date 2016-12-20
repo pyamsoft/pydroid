@@ -92,6 +92,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
       throw new NullPointerException("Application Context is NULL");
     }
 
+    BuildConfigChecker.setInstance(initializeBuildConfigChecker());
     onFirstCreateProtected(appContext);
     onFirstCreate(appContext);
     insertCustomLicensesIntoMap();
@@ -100,10 +101,12 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     return false;
   }
 
+  @CheckResult @NonNull protected abstract BuildConfigChecker initializeBuildConfigChecker();
+
   protected abstract void onInstanceCreated(@NonNull Context context);
 
   private void onFirstCreateProtected(@NonNull Context context) {
-    if (BuildConfig.DEBUG) {
+    if (BuildConfigChecker.getInstance().isDebugMode()) {
       Timber.plant(new Timber.DebugTree());
       setStrictMode();
       onFirstCreateInDebugMode(context);

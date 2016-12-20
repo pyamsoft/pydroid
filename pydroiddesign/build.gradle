@@ -34,8 +34,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 25
-    versionCode 99
-    versionName "4.99.0"
+    versionCode 100
+    versionName "5.0.0"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -44,7 +44,7 @@ android {
     consumerProguardFiles "proguard-rules.pro"
 
     // Fix a library publish error
-    publishNonDefault true
+    // publishNonDefault true
 
     // Include the library in modules with the following
     //    debugCompile project(path: ":PYDroid", configuration: "debug")
@@ -78,8 +78,7 @@ android {
   }
 }
 
-ext {
-}
+ext {}
 
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
@@ -92,7 +91,6 @@ dependencies {
   // Timber logging
   compile "com.jakewharton.timber:timber:$timber"
 
-  debugCompile project(path: ":pydroid", configuration: "debug")
-  releaseCompile project(path: ":pydroid", configuration: "release")
+  compile project(path: ":pydroid")
 }
 

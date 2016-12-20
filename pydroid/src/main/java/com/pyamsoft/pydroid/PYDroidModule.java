@@ -113,7 +113,7 @@ public class PYDroidModule {
       skuList.add(appSpecificSkuDonateFive);
       skuList.add(appSpecificSkuDonateTen);
 
-      if (BuildConfig.DEBUG) {
+      if (BuildConfigChecker.getInstance().isDebugMode()) {
         skuList.add("android.test.purchased");
         skuList.add("android.test.canceled");
         skuList.add("android.test.refunded");

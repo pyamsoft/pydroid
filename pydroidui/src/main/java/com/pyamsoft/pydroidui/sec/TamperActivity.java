@@ -23,6 +23,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroidui.rating.RatingActivity;
 import timber.log.Timber;
@@ -52,7 +53,7 @@ public abstract class TamperActivity extends RatingActivity {
     // Check that we were installed from the play store.
     final String installer =
         getApplicationContext().getPackageManager().getInstallerPackageName(safePackageName);
-    if (BuildConfig.DEBUG) {
+    if (BuildConfigChecker.getInstance().isDebugMode()) {
       if (installer == null) {
         Timber.i("Application is installed from APK. This is fine in DEBUG mode");
         return false;

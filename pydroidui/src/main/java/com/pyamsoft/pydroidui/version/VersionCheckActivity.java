@@ -22,7 +22,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -42,7 +42,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @CheckResult private boolean isVersionCheckEnabled() {
     // Always enabled for release builds
-    return !BuildConfig.DEBUG || shouldCheckVersion();
+    return !BuildConfigChecker.getInstance().isDebugMode() || shouldCheckVersion();
   }
 
   @CheckResult protected boolean shouldCheckVersion() {

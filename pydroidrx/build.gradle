@@ -34,8 +34,8 @@ android {
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 25
-    versionCode 99
-    versionName "4.99.0"
+    versionCode 100
+    versionName "5.0.0"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -44,7 +44,7 @@ android {
     consumerProguardFiles "proguard-rules.pro"
 
     // Fix a library publish error
-    publishNonDefault true
+    // publishNonDefault true
 
     // Include the library in modules with the following
     //    debugCompile project(path: ":PYDroid", configuration: "debug")
@@ -94,7 +94,6 @@ dependencies {
   compile "io.reactivex:rxandroid:$rxandroid"
   compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
 
-  debugCompile project(path: ":pydroid", configuration: "debug")
-  releaseCompile project(path: ":pydroid", configuration: "release")
+  compile project(path: ":pydroid")
 }
 

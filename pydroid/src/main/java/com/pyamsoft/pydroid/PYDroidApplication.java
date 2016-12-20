@@ -31,7 +31,7 @@ import timber.log.Timber;
 
   @Override public final void onCreate() {
     super.onCreate();
-    if (BuildConfig.DEBUG) {
+    if (BuildConfigChecker.getInstance().isDebugMode()) {
       Timber.d("Install live leakcanary");
       refWatcher = LeakCanary.install(this);
       onCreateInDebugMode();

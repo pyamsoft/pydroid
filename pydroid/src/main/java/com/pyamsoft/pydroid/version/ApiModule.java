@@ -21,7 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.BuildConfigChecker;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -35,14 +35,12 @@ public class ApiModule {
       "https://" + GITHUB_URL + "/pyamsoft/android-project-versions/master/";
   @NonNull private final Gson gson;
   @NonNull private final OkHttpClient okHttpClient;
-  @NonNull private final Retrofit retrofit;
   @NonNull private final VersionCheckApi versionCheckApi;
 
   public ApiModule() {
     gson = provideGson();
     okHttpClient = provideOkHttpClient();
-    retrofit = provideRetrofit();
-    versionCheckApi = new VersionCheckApi(retrofit);
+    versionCheckApi = new VersionCheckApi(provideRetrofit());
   }
 
   @CheckResult @NonNull private Gson provideGson() {
@@ -53,7 +51,7 @@ public class ApiModule {
 
   @CheckResult @NonNull private OkHttpClient provideOkHttpClient() {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-    if (BuildConfig.DEBUG) {
+    if (BuildConfigChecker.getInstance().isDebugMode()) {
       final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
       logging.setLevel(HttpLoggingInterceptor.Level.BODY);
       builder.addInterceptor(logging);

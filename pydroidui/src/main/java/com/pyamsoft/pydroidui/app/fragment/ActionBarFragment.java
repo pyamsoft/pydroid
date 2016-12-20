@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroidui.app.fragment;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,10 +44,5 @@ public abstract class ActionBarFragment extends Fragment implements ActionBarPro
 
   @Override public void setActionBarTitle(@StringRes int title) {
     ActionBarFragmentUtil.setActionBarTitle(getActivity(), title);
-  }
-
-  @CallSuper @Override public void onDestroy() {
-    super.onDestroy();
-    Util.getRefWatcher(this).watch(this);
   }
 }

@@ -19,27 +19,16 @@ package com.pyamsoft.pydroid;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
-import timber.log.Timber;
 
 @SuppressLint("Registered") public abstract class PYDroidApplication extends Application {
-
-  private RefWatcher refWatcher;
 
   @Override public final void onCreate() {
     super.onCreate();
     if (BuildConfigChecker.getInstance().isDebugMode()) {
-      Timber.d("Install live leakcanary");
-      refWatcher = LeakCanary.install(this);
       onCreateInDebugMode();
     } else {
-      refWatcher = RefWatcher.DISABLED;
+      onCreateInNormalMode();
     }
-
-    onCreateInNormalMode();
   }
 
   @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInDebugMode() {
@@ -48,12 +37,5 @@ import timber.log.Timber;
 
   @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInNormalMode() {
 
-  }
-
-  @CheckResult @NonNull public RefWatcher getRefWatcher() {
-    if (refWatcher == null) {
-      throw new RuntimeException("RefWatcher is NULL");
-    }
-    return refWatcher;
   }
 }

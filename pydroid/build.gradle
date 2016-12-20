@@ -91,18 +91,12 @@ ext {
   junit = "4.12"
   openGl = "gl1.1-android-2.1_r1"
   mockito = "2.3.10"
-  leakCanary = "1.4-beta2"
 }
 
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
-
-  // Leak Canary
-  debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
-  releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
-  testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
   // Android support library.
   compile "com.android.support:preference-v14:$supportLib"

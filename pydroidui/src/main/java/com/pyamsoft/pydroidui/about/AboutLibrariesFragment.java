@@ -177,7 +177,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
     final List<AboutAdapterItem> items = new ArrayList<>();
     Licenses.forEach(aboutLicenseItem -> {
       final boolean add;
-      add = !aboutLicenseItem.name().equals(Licenses.Names.GOOGLE_PLAY)
+      add = !Licenses.Names.GOOGLE_PLAY.equals(aboutLicenseItem.name())
           || AboutLibrariesLoaderCallback.hasGooglePlayServices(getContext());
 
       if (add) {

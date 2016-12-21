@@ -75,7 +75,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
       return "";
     }
 
-    if (licenseName.equals(Licenses.Names.GOOGLE_PLAY)) {
+    if (Licenses.Names.GOOGLE_PLAY.equals(licenseName)) {
       Timber.d("License is Google Play services");
       final String googleOpenSourceLicenses =
           licenseProvider.provideGoogleOpenSourceLicenses(appContext);
@@ -107,7 +107,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
         licenseText = text.toString();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      Timber.e(e, "onError");
       licenseText = "Could not load license text";
     }
 

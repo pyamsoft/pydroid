@@ -189,12 +189,7 @@ public class PYDroidModule {
           throw new NullPointerException("Listener cannot be NULL");
         }
 
-        final List<Purchase> verifiedPurchases = new ArrayList<>(purchases.size());
-        //noinspection Convert2streamapi
-        for (Purchase purchase : purchases) {
-          verifiedPurchases.add(purchase);
-        }
-        listener.onSuccess(verifiedPurchases);
+        listener.onSuccess(purchases);
       }
     }
   }

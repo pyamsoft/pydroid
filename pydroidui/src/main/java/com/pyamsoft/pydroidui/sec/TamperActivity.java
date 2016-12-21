@@ -68,7 +68,7 @@ public abstract class TamperActivity extends RatingActivity {
         return true;
       }
 
-      if (installer.compareTo(GOOGLE_PLAY_STORE_INSTALLER) != 0) {
+      if (GOOGLE_PLAY_STORE_INSTALLER.compareTo(installer) != 0) {
         Timber.e("RELEASE Application is not installed from Google Play Store");
         Timber.e("Installer: %s", installer);
         return true;

@@ -50,13 +50,13 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
 
       if (isEnabled && isValidCount) {
         Timber.d("Show ad view");
-        return true;
+        return Boolean.TRUE;
       } else {
         Timber.w("Do not show ad view");
         final int newCount = shownCount + 1;
         Timber.d("Increment shown count to %d", newCount);
         preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, newCount).apply();
-        return false;
+        return Boolean.FALSE;
       }
     });
   }
@@ -67,9 +67,9 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
       if (preferences.getInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0) >= MAX_SHOW_COUNT) {
         Timber.d("Write shown count back to 0");
         preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, 0).apply();
-        return true;
+        return Boolean.TRUE;
       } else {
-        return false;
+        return Boolean.FALSE;
       }
     });
   }

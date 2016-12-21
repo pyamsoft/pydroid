@@ -142,14 +142,14 @@ public final class AnimUtil {
 
   public static void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
     final View t = toolbar.getChildAt(0);
-    if (t != null && t instanceof TextView &&
+    if (t instanceof TextView &&
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       final TextView title = (TextView) t;
       AnimUtil.fadeIn(title).start();
     }
 
     final View amv = toolbar.getChildAt(1);
-    if (amv != null && amv instanceof ActionMenuView) {
+    if (amv instanceof ActionMenuView) {
       final ActionMenuView actions = (ActionMenuView) amv;
       final int childCount = actions.getChildCount();
       final int duration = 200;

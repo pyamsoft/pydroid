@@ -99,7 +99,7 @@ public class PYDroidModule {
           new Billing(appContext, new DonationBillingConfiguration(appContext.getPackageName()));
     }
 
-    @CheckResult @NonNull List<String> createInAppPurchaseList(@NonNull Context context) {
+    @CheckResult @NonNull final List<String> createInAppPurchaseList(@NonNull Context context) {
       final Context appContext = context.getApplicationContext();
       final String packageName = appContext.getPackageName();
       final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;

@@ -92,7 +92,7 @@ class SkuUIItem extends GenericAbstractItem<SkuModel, SkuUIItem, SkuUIItem.ViewH
      */
     @NonNull @CheckResult private static String formatTitle(@NonNull String title) {
       final String formatted;
-      final int i = title.indexOf("(");
+      final int i = title.indexOf('(');
       if (i > 0) {
         if (title.charAt(i - 1) == ' ') {
           formatted = title.substring(0, i - 1);

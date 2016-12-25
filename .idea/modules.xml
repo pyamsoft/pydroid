@@ -4,9 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PYDroid.iml" filepath="$PROJECT_DIR$/PYDroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/pydroid/pydroid.iml" filepath="$PROJECT_DIR$/pydroid/pydroid.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pydroiddesign/pydroiddesign.iml" filepath="$PROJECT_DIR$/pydroiddesign/pydroiddesign.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pydroidrx/pydroidrx.iml" filepath="$PROJECT_DIR$/pydroidrx/pydroidrx.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pydroidui/pydroidui.iml" filepath="$PROJECT_DIR$/pydroidui/pydroidui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pydroid-design/pydroid-design.iml" filepath="$PROJECT_DIR$/pydroid-design/pydroid-design.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pydroid-rx/pydroid-rx.iml" filepath="$PROJECT_DIR$/pydroid-rx/pydroid-rx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pydroid-ui/pydroid-ui.iml" filepath="$PROJECT_DIR$/pydroid-ui/pydroid-ui.iml" />
     </modules>
   </component>
 </project>

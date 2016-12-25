@@ -64,7 +64,7 @@
         android:title="@string/rating_title"/>
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.ui.social.SocialMediaPreference/>
+    <com.pyamsoft.pydroid.ui.social.SocialMediaPreference/>
 
   </PreferenceCategory>
 

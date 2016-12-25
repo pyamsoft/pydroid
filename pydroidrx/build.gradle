@@ -35,11 +35,10 @@ android {
   compileSdkVersion 25
   buildToolsVersion "$buildTools"
 
+  //noinspection GroovyMissingReturnStatement
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 25
-    versionCode 111
-    versionName "5.1.1"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true

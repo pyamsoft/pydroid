@@ -35,11 +35,10 @@ android {
   compileSdkVersion 25
   buildToolsVersion "$buildTools"
 
+  //noinspection GroovyMissingReturnStatement
   defaultConfig {
     minSdkVersion 16
     targetSdkVersion 25
-    versionCode 111
-    versionName "5.1.1"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -85,10 +84,6 @@ android {
 ext {
   fastAdapter = "2.1.5"
   fastAdapterCommons = "2.1.0"
-  robolectric = "3.1.4"
-  junit = "4.12"
-  openGl = "gl1.1-android-2.1_r1"
-  mockito = "2.3.10"
 }
 
 dependencies {

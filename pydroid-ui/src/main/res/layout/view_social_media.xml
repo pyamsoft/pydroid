@@ -36,7 +36,7 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.ui.widget.SquareImageView
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/google_play"
           android:layout_width="40dp"
           android:layout_height="40dp"
@@ -54,7 +54,7 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.ui.widget.SquareImageView
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/blogger"
           android:layout_width="40dp"
           android:layout_height="40dp"
@@ -72,7 +72,7 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.ui.widget.SquareImageView
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/google_plus"
           android:layout_width="40dp"
           android:layout_height="40dp"
@@ -90,7 +90,7 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.ui.widget.SquareImageView
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/facebook"
           android:layout_width="40dp"
           android:layout_height="40dp"

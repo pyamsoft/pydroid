@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.ads;
+package com.pyamsoft.pydroid.ui.ads;
 
 import android.annotation.TargetApi;
 import android.content.Context;

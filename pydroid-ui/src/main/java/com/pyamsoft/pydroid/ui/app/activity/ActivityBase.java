@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.app.activity;
+package com.pyamsoft.pydroid.ui.app.activity;
 
 import android.app.Activity;
 import android.app.Application;
@@ -36,7 +36,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import com.pyamsoft.ui.R;
+import com.pyamsoft.pydroid.ui.R;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import timber.log.Timber;

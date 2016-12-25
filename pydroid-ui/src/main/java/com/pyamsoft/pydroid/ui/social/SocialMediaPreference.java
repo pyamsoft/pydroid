@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.social;
+package com.pyamsoft.pydroid.ui.social;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -26,9 +26,9 @@ import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.ui.R;
-import com.pyamsoft.ui.app.BaseBoundPreference;
-import com.pyamsoft.ui.databinding.ViewSocialMediaBinding;
+import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
+import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding;
 import timber.log.Timber;
 
 public class SocialMediaPreference extends BaseBoundPreference

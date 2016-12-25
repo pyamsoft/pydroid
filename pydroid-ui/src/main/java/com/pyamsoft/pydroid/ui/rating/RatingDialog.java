@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.rating;
+package com.pyamsoft.pydroid.ui.rating;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -40,8 +40,8 @@ import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.ui.databinding.DialogRatingBinding;
-import com.pyamsoft.ui.donate.DonateDialog;
+import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
+import com.pyamsoft.pydroid.ui.donate.DonateDialog;
 import timber.log.Timber;
 
 public class RatingDialog extends DialogFragment {

@@ -61,7 +61,7 @@
             app:srcCompat="@drawable/ic_arrow_up_24dp"
             />
 
-        <com.pyamsoft.ui.widget.NoLeakTextView
+        <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
             android:id="@+id/expand_license_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
             tools:ignore="RelativeOverlap"
             />
 
-        <com.pyamsoft.ui.widget.NoLeakTextView
+        <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
             android:id="@+id/expand_license_homepage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

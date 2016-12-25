@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.sec;
+package com.pyamsoft.pydroid.ui.sec;
 
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.ui.R;
+import com.pyamsoft.pydroid.ui.R;
 
 public class TamperDialog extends DialogFragment implements SocialMediaPresenter.View {
 

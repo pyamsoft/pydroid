@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.donate;
+package com.pyamsoft.pydroid.ui.donate;
 
 import android.os.Build;
 import android.support.annotation.CheckResult;
@@ -28,8 +28,8 @@ import android.view.View;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.donate.SkuModel;
-import com.pyamsoft.ui.R;
-import com.pyamsoft.ui.databinding.AdapterItemIapBinding;
+import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemIapBinding;
 import java.util.List;
 import org.solovyev.android.checkout.Sku;
 

@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.app.fragment;
+package com.pyamsoft.pydroid.ui.app.fragment;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;

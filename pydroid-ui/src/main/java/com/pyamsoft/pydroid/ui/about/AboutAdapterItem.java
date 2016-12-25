@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.about;
+package com.pyamsoft.pydroid.ui.about;
 
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
@@ -29,8 +29,8 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.about.AboutLicenseModel;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.ui.R;
-import com.pyamsoft.ui.databinding.AdapterItemAboutBinding;
+import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import timber.log.Timber;

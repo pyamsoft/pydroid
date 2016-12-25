@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.about;
+package com.pyamsoft.pydroid.ui.about;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
@@ -38,9 +38,9 @@ import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.ui.R;
-import com.pyamsoft.ui.app.fragment.ActionBarFragment;
-import com.pyamsoft.ui.databinding.FragmentAboutLibrariesBinding;
+import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import java.util.ArrayList;
 import java.util.List;
 import timber.log.Timber;

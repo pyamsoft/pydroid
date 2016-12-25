@@ -15,14 +15,14 @@
  *
  */
 
-package com.pyamsoft.ui.ads;
+package com.pyamsoft.pydroid.ui.ads;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.ads.AdSource;
-import com.pyamsoft.ui.app.activity.BackPressConfirmActivity;
+import com.pyamsoft.pydroid.ui.app.activity.BackPressConfirmActivity;
 
 public abstract class AdvertisementActivity extends BackPressConfirmActivity {
 

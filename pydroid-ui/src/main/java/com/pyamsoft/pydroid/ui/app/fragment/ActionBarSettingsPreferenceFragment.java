@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.app.fragment;
+package com.pyamsoft.pydroid.ui.app.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -40,12 +40,12 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
-import com.pyamsoft.ui.R;
-import com.pyamsoft.ui.about.AboutLibrariesFragment;
-import com.pyamsoft.ui.donate.DonateDialog;
-import com.pyamsoft.ui.donate.DonationActivity;
-import com.pyamsoft.ui.rating.RatingDialog;
-import com.pyamsoft.ui.version.VersionUpgradeDialog;
+import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.ui.donate.DonateDialog;
+import com.pyamsoft.pydroid.ui.donate.DonationActivity;
+import com.pyamsoft.pydroid.ui.rating.RatingDialog;
+import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
 import java.util.Locale;
 import timber.log.Timber;
 

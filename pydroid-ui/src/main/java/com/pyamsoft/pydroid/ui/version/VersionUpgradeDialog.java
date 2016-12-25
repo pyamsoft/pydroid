@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.version;
+package com.pyamsoft.pydroid.ui.version;
 
 import android.app.Dialog;
 import android.os.Bundle;

@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.ads;
+package com.pyamsoft.pydroid.ui.ads;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.ui.R;
+import com.pyamsoft.pydroid.ui.R;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;

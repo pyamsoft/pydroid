@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.app.activity;
+package com.pyamsoft.pydroid.ui.app.activity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

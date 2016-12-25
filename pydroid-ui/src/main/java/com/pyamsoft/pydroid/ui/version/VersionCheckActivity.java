@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.version;
+package com.pyamsoft.pydroid.ui.version;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
-import com.pyamsoft.ui.ads.AdvertisementActivity;
+import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
 import timber.log.Timber;
 
 public abstract class VersionCheckActivity extends AdvertisementActivity

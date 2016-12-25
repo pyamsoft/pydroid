@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.app;
+package com.pyamsoft.pydroid.ui.app;
 
 import android.content.Context;
 import android.support.annotation.CallSuper;

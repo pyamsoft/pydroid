@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.donate;
+package com.pyamsoft.pydroid.ui.donate;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,8 +33,8 @@ import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.DonatePresenterLoaderCallback;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.ui.R;
-import com.pyamsoft.ui.version.VersionCheckActivity;
+import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;

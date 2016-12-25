@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.sec;
+package com.pyamsoft.pydroid.ui.sec;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfig;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.ui.rating.RatingActivity;
+import com.pyamsoft.pydroid.ui.rating.RatingActivity;
 import timber.log.Timber;
 
 public abstract class TamperActivity extends RatingActivity {

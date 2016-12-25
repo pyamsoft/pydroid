@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.ui.donate;
+package com.pyamsoft.pydroid.ui.donate;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -34,10 +34,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.pyamsoft.ui.R;
+import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.ui.databinding.DialogDonateBinding;
+import com.pyamsoft.pydroid.ui.databinding.DialogDonateBinding;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;

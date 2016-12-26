@@ -39,9 +39,7 @@ class DonateInteractorImpl implements DonateInteractor {
   public void init(@NonNull Inventory.Callback callback, @NonNull OnBillingSuccessListener success,
       @NonNull OnBillingErrorListener error) {
     Timber.d("Create checkout purchase flow");
-    checkout.setSuccessListener(success);
-    checkout.setErrorListener(error);
-    checkout.setInventoryCallback(callback);
+    checkout.init(callback, success, error);
   }
 
   @Override public void create(@NonNull Activity activity) {
@@ -52,9 +50,6 @@ class DonateInteractorImpl implements DonateInteractor {
   @Override public void destroy() {
     Timber.d("Stop checkout purchase flow");
     checkout.stop();
-    checkout.setSuccessListener(null);
-    checkout.setErrorListener(null);
-    checkout.setInventoryCallback(null);
   }
 
   @Override public void loadInventory() {

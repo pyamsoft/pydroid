@@ -39,7 +39,7 @@ import timber.log.Timber;
 /**
  * The real checkout module, uses android-checkout to talk with Google Play's InAppBilling services
  */
-class RealCheckout implements ICheckout {
+class RealCheckout implements WrappedCheckout {
 
   @NonNull private final List<String> inAppSkuList;
   @NonNull private final Billing billing;
@@ -56,8 +56,14 @@ class RealCheckout implements ICheckout {
   }
 
   private void checkCheckoutNonNull() {
-    if (checkout == null) {
+    if (!hasCheckout()) {
       throw new IllegalStateException("Checkout is NULL, must create it first");
+    }
+  }
+
+  private void checkCheckoutInitialized() {
+    if (!isInitialized()) {
+      throw new IllegalStateException("Checkout is not initialized");
     }
   }
 
@@ -69,22 +75,21 @@ class RealCheckout implements ICheckout {
     checkout = Checkout.forActivity(activity, billing);
   }
 
-  @Override public void setInventoryCallback(@Nullable Inventory.Callback callback) {
-    this.inventoryCallback = callback;
-  }
+  @Override public void init(@NonNull Inventory.Callback inventoryCallback,
+      @NonNull DonateInteractor.OnBillingSuccessListener successListener,
+      @NonNull DonateInteractor.OnBillingErrorListener errorListener) {
+    if (isInitialized()) {
+      throw new IllegalStateException("Cannot re-initialized Checkout");
+    }
 
-  @Override public void setSuccessListener(
-      @Nullable DonateInteractor.OnBillingSuccessListener successListener) {
+    this.inventoryCallback = inventoryCallback;
     this.successListener = successListener;
-  }
-
-  @Override
-  public void setErrorListener(@Nullable DonateInteractor.OnBillingErrorListener errorListener) {
     this.errorListener = errorListener;
   }
 
   @Override public void start() {
     checkCheckoutNonNull();
+    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.destroyPurchaseFlow();
@@ -94,6 +99,7 @@ class RealCheckout implements ICheckout {
 
   @Override public void loadInventory() {
     checkCheckoutNonNull();
+    checkCheckoutInitialized();
 
     if (inventory == null) {
       //noinspection ConstantConditions
@@ -109,18 +115,20 @@ class RealCheckout implements ICheckout {
 
   @Override public void stop() {
     checkCheckoutNonNull();
+    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.stop();
     inventory = null;
-    setInventoryCallback(null);
-    setErrorListener(null);
-    setSuccessListener(null);
+    inventoryCallback = null;
+    successListener = null;
+    errorListener = null;
     checkout = null;
   }
 
   @Override public void purchase(@NonNull Sku sku) {
     checkCheckoutNonNull();
+    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.whenReady(new Checkout.EmptyListener() {
@@ -136,6 +144,7 @@ class RealCheckout implements ICheckout {
 
   @Override public void consume(@NonNull String token) {
     checkCheckoutNonNull();
+    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.whenReady(new Checkout.EmptyListener() {
@@ -149,9 +158,18 @@ class RealCheckout implements ICheckout {
   @Override
   public boolean processBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
     checkCheckoutNonNull();
+    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     return checkout.onActivityResult(requestCode, resultCode, data);
+  }
+
+  @Override public boolean hasCheckout() {
+    return checkout != null;
+  }
+
+  @Override public boolean isInitialized() {
+    return inventoryCallback == null && successListener == null && errorListener == null;
   }
 
   abstract class BaseRequestListener<T> implements RequestListener<T> {

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.ActionSingle;
@@ -33,10 +34,29 @@ import java.util.Set;
 @SuppressWarnings("unused") public class ApplicationPreferences
     implements SimplePreferences, MultiEditPreference<ApplicationPreferences> {
 
+  @Nullable private static volatile ApplicationPreferences instance = null;
   @NonNull private final EditPreferences preferences;
 
-  public ApplicationPreferences(@NonNull Context context) {
+  private ApplicationPreferences(@NonNull Context context) {
     preferences = new EditPreferences(context);
+  }
+
+  @CheckResult @NonNull public static ApplicationPreferences getInstance(@NonNull Context context) {
+    //noinspection ConstantConditions
+    if (context == null) {
+      throw new IllegalArgumentException("Context is NULL");
+    }
+
+    if (instance == null) {
+      synchronized (ApplicationPreferences.class) {
+        if (instance == null) {
+          instance = new ApplicationPreferences(context.getApplicationContext());
+        }
+      }
+    }
+
+    //noinspection ConstantConditions
+    return instance;
   }
 
   @NonNull @Override public ApplicationPreferences put(@NonNull String s, long l) {

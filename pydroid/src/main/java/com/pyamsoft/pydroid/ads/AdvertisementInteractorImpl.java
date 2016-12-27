@@ -36,7 +36,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
 
   AdvertisementInteractorImpl(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
-    preferences = new ApplicationPreferences(appContext);
+    preferences = ApplicationPreferences.getInstance(context);
     preferenceKey = appContext.getString(R.string.adview_key);
     preferenceDefault = appContext.getResources().getBoolean(R.bool.adview_default);
   }

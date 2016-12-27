@@ -19,9 +19,7 @@ package com.pyamsoft.pydroid.ui.rating;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -35,13 +33,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import com.pyamsoft.pydroid.app.ApplicationPreferences;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
-import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.ui.donate.DonateDialog;
+import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 
 public class RatingDialog extends DialogFragment {
@@ -53,7 +52,7 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String RATE_LINK = "rate_link";
   @SuppressWarnings("WeakerAccess") String rateLink;
   @SuppressWarnings("WeakerAccess") boolean acknowledged;
-  private SharedPreferences preferences;
+  private ApplicationPreferences preferences;
   private Spannable changeLogText;
   private int versionCode;
   @DrawableRes private int changeLogIcon;
@@ -68,10 +67,8 @@ public class RatingDialog extends DialogFragment {
   // KLUDGE direct preference access
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider, final boolean force) {
-    final SharedPreferences preferences =
-        PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-    if (force
-        || preferences.getInt(PREFERENCE_TARGET, 0) < provider.getCurrentApplicationVersion()) {
+    final ApplicationPreferences preferences = ApplicationPreferences.getInstance(activity);
+    if (force || preferences.get(PREFERENCE_TARGET, 0) < provider.getCurrentApplicationVersion()) {
       AppUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating");
     }
   }
@@ -92,8 +89,7 @@ public class RatingDialog extends DialogFragment {
     super.onCreate(savedInstanceState);
     setCancelable(false);
     acknowledged = false;
-    preferences =
-        PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+    preferences = ApplicationPreferences.getInstance(getContext());
     final Bundle launchArguments = getArguments();
     rateLink = launchArguments.getString(RATE_LINK, null);
     versionCode = launchArguments.getInt(VERSION_CODE, 0);
@@ -165,7 +161,7 @@ public class RatingDialog extends DialogFragment {
     super.onDismiss(dialog);
     if (preferences != null && acknowledged) {
       Timber.d("Rating dialog has been addressed by user. Commit to memory");
-      preferences.edit().putInt(PREFERENCE_TARGET, versionCode).apply();
+      preferences.put(PREFERENCE_TARGET, versionCode);
     }
   }
 

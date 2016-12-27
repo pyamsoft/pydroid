@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
@@ -25,25 +24,13 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 public abstract class VersionCheckLoaderCallback
     implements PersistLoader.Callback<VersionCheckPresenter> {
 
-  private boolean licenseChecked;
-
   protected VersionCheckLoaderCallback() {
-    licenseChecked = false;
   }
 
   @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
-    setLicenseChecked(false);
     return SingleInitContentProvider.getInstance()
         .getModule()
         .provideVersionCheckModule()
         .getLoader();
-  }
-
-  @CheckResult public boolean isLicenseChecked() {
-    return licenseChecked;
-  }
-
-  public void setLicenseChecked(boolean licenseChecked) {
-    this.licenseChecked = licenseChecked;
   }
 }

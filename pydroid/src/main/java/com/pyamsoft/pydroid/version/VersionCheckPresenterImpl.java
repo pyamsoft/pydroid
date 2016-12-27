@@ -29,10 +29,12 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
     implements VersionCheckPresenter {
 
   @NonNull private final VersionCheckInteractor interactor;
+  @SuppressWarnings("WeakerAccess") boolean versionCheckCompleted;
   @Nullable private Call<VersionCheckResponse> call;
 
   VersionCheckPresenterImpl(@NonNull VersionCheckInteractor interactor) {
     this.interactor = interactor;
+    versionCheckCompleted = false;
   }
 
   @Override protected void onUnbind() {
@@ -53,6 +55,7 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
           Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
           getView(View::onVersionCheckFinished);
           if (currentVersionCode < versionCheckResponse.currentVersion()) {
+            versionCheckCompleted = true;
             getView(view -> view.onUpdatedVersionFound(currentVersionCode,
                 versionCheckResponse.currentVersion()));
             cancelCall();

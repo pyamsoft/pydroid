@@ -25,13 +25,11 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 @SuppressLint("CommitPrefEdits") class EditPreferences implements SimplePreferences {
 
-  @NonNull private static final String EMPTY_STRING = "";
   @NonNull private final SharedPreferences p;
   @NonNull private final Resources resources;
 
@@ -55,7 +53,7 @@ import java.util.Set;
     return this;
   }
 
-  @NonNull @Override public EditPreferences put(@NonNull String s, @Nullable String st) {
+  @NonNull @Override public EditPreferences put(@NonNull String s, @NonNull String st) {
     p.edit().putString(s, st);
     return this;
   }
@@ -84,8 +82,8 @@ import java.util.Set;
     return p.getLong(s, l);
   }
 
-  @NonNull @CheckResult @Override public final String get(@NonNull String s) {
-    return p.getString(s, EMPTY_STRING);
+  @Nullable @CheckResult @Override public final String get(@NonNull String s, @Nullable String st) {
+    return p.getString(s, st);
   }
 
   @CheckResult @Override public final int get(@NonNull String s, int i) {
@@ -96,8 +94,9 @@ import java.util.Set;
     return p.getFloat(s, f);
   }
 
-  @CheckResult @NonNull @Override public final Set<String> getSet(@NonNull String s) {
-    return p.getStringSet(s, Collections.emptySet());
+  @CheckResult @Nullable @Override
+  public final Set<String> getSet(@NonNull String s, @Nullable Set<String> st) {
+    return p.getStringSet(s, st);
   }
 
   @CheckResult @Override public final boolean get(@NonNull String s, boolean b) {

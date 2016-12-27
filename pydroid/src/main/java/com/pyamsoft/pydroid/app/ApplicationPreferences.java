@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.ActionSingle;
@@ -31,12 +30,12 @@ import java.util.Set;
  * If you are needing to work with multiple preferences at the same time, stick with the usual
  * Android SharedPreferences implementation
  */
-@SuppressWarnings("unused") public abstract class ApplicationPreferences
-    implements SimplePreferences {
+@SuppressWarnings("unused") public class ApplicationPreferences
+    implements SimplePreferences, MultiEditPreference<ApplicationPreferences> {
 
   @NonNull private final EditPreferences preferences;
 
-  protected ApplicationPreferences(@NonNull Context context) {
+  public ApplicationPreferences(@NonNull Context context) {
     preferences = new EditPreferences(context);
   }
 
@@ -45,7 +44,7 @@ import java.util.Set;
     return this;
   }
 
-  @NonNull @Override public ApplicationPreferences put(@NonNull String s, @Nullable String st) {
+  @NonNull @Override public ApplicationPreferences put(@NonNull String s, @NonNull String st) {
     preferences.put(s, st).apply();
     return this;
   }
@@ -75,8 +74,8 @@ import java.util.Set;
     return preferences.get(s, l);
   }
 
-  @NonNull @Override public String get(@NonNull String s) {
-    return preferences.get(s);
+  @Nullable @Override public String get(@NonNull String s, @Nullable String st) {
+    return preferences.get(s, st);
   }
 
   @Override public int get(@NonNull String s, int i) {
@@ -87,8 +86,8 @@ import java.util.Set;
     return preferences.get(s, f);
   }
 
-  @NonNull @Override public Set<String> getSet(@NonNull String s) {
-    return preferences.getSet(s);
+  @Nullable @Override public Set<String> getSet(@NonNull String s, @Nullable Set<String> st) {
+    return preferences.getSet(s, st);
   }
 
   @Override public boolean get(@NonNull String s, boolean b) {
@@ -124,7 +123,7 @@ import java.util.Set;
     preferences.unregister(l);
   }
 
-  @NonNull @CheckResult
+  @NonNull @Override
   public ApplicationPreferences multiEdit(@NonNull ActionSingle<SimplePreferences> call) {
     call.call(preferences);
     preferences.apply();

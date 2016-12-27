@@ -28,7 +28,7 @@ interface SimplePreferences {
 
   @CheckResult @NonNull SimplePreferences put(@NonNull String s, long l);
 
-  @CheckResult @NonNull SimplePreferences put(@NonNull String s, @Nullable String st);
+  @CheckResult @NonNull SimplePreferences put(@NonNull String s, @NonNull String st);
 
   @CheckResult @NonNull SimplePreferences put(@NonNull String s, int i);
 
@@ -40,13 +40,13 @@ interface SimplePreferences {
 
   @CheckResult long get(@NonNull String s, long l);
 
-  @NonNull @CheckResult String get(@NonNull String s);
+  @Nullable @CheckResult String get(@NonNull String s, @Nullable String st);
 
   @CheckResult int get(@NonNull String s, int i);
 
   @CheckResult float get(@NonNull String s, float f);
 
-  @CheckResult @NonNull Set<String> getSet(@NonNull String s);
+  @CheckResult @Nullable Set<String> getSet(@NonNull String s, @Nullable Set<String> st);
 
   @CheckResult boolean get(@NonNull String s, boolean b);
 

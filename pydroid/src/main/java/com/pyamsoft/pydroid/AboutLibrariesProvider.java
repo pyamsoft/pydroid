@@ -17,20 +17,19 @@
 
 package com.pyamsoft.pydroid;
 
+import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
 
-public abstract class AboutLibrariesLoaderCallback
-    implements PersistLoader.Callback<AboutLibrariesPresenter> {
+public final class AboutLibrariesProvider {
 
-  protected AboutLibrariesLoaderCallback() {
+  private AboutLibrariesProvider() {
+    throw new RuntimeException("No instances");
   }
 
-  @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
-    return SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideAboutLibrariesModule()
-        .getLoader();
+  // KLUDGE This is public but only needs to be accessed by AboutLibrariesFragment
+  @CheckResult public static boolean hasGooglePlayServices(@NonNull Context context) {
+    return SingleInitContentProvider.getLicenseProvider().provideGoogleOpenSourceLicenses(context)
+        != null;
   }
 }

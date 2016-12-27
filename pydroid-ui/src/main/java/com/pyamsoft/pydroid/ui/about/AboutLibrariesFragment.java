@@ -34,13 +34,14 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.AboutLibrariesLoaderCallback;
+import com.pyamsoft.pydroid.AboutLibrariesProvider;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
-import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
+import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
 import java.util.List;
 import timber.log.Timber;
@@ -178,7 +179,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
     Licenses.forEach(aboutLicenseItem -> {
       final boolean add;
       add = !Licenses.Names.GOOGLE_PLAY.equals(aboutLicenseItem.name())
-          || AboutLibrariesLoaderCallback.hasGooglePlayServices(getContext());
+          || AboutLibrariesProvider.hasGooglePlayServices(getContext());
 
       if (add) {
         items.add(new AboutAdapterItem(aboutLicenseItem));

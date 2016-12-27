@@ -34,6 +34,7 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.solovyev.android.checkout.Inventory;
+import org.solovyev.android.checkout.Sku;
 
 import static org.junit.Assert.assertEquals;
 
@@ -287,5 +288,129 @@ public class DonatePresenterTest {
     if (!singleLatch.await(5, TimeUnit.SECONDS)) {
       throw new RuntimeException("Latch did not count down within 5 seconds");
     }
+  }
+
+  @Test public void testCheckoutPurchaseUnbound() throws InterruptedException {
+    final Sku purchase = new Sku("PRODUCT PURCHASE", "CODE", "", new Sku.Price(0, ""), "", "");
+
+    Mockito.doAnswer(invocation -> {
+      singleLatch.countDown();
+      return null;
+    }).when(mockInteractor).purchase(purchase);
+
+    Mockito.doAnswer(invocation -> {
+      throw new RuntimeException();
+    }).when(mockInteractor).consume("TOKEN");
+
+    presenter.checkoutInAppPurchaseItem(SkuModel.create(purchase, null));
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
+  }
+
+  @Test public void testCheckoutConsumeUnbound() throws InterruptedException {
+    final Sku purchase = new Sku("PRODUCT PURCHASE", "CODE", "", new Sku.Price(0, ""), "", "");
+
+    Mockito.doAnswer(invocation -> {
+      throw new RuntimeException();
+    }).when(mockInteractor).purchase(purchase);
+
+    Mockito.doAnswer(invocation -> {
+      singleLatch.countDown();
+      return null;
+    }).when(mockInteractor).consume("TOKEN");
+
+    presenter.checkoutInAppPurchaseItem(SkuModel.create(purchase, "TOKEN"));
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
+  }
+
+  @Test public void testCheckoutPurchase() throws InterruptedException {
+    final Sku purchase = new Sku("PRODUCT PURCHASE", "CODE", "", new Sku.Price(0, ""), "", "");
+    final AtomicInteger counter = new AtomicInteger(0);
+
+    Mockito.doAnswer(invocation -> {
+      counter.incrementAndGet();
+      presenter.getSuccessListener().onBillingSuccess();
+      return null;
+    }).when(mockInteractor).purchase(purchase);
+
+    Mockito.doAnswer(invocation -> {
+      throw new RuntimeException();
+    }).when(mockInteractor).consume("TOKEN");
+
+    presenter.bindView(new DonatePresenter.View() {
+      @Override public void onBillingSuccess() {
+        counter.incrementAndGet();
+      }
+
+      @Override public void onBillingError() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onProcessResultSuccess() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onProcessResultError() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onProcessResultFailed() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+    });
+
+    presenter.checkoutInAppPurchaseItem(SkuModel.create(purchase, null));
+    assertEquals(2, counter.get());
+  }
+
+  @Test public void testCheckoutConsume() throws InterruptedException {
+    final Sku purchase = new Sku("PRODUCT PURCHASE", "CODE", "", new Sku.Price(0, ""), "", "");
+    final AtomicInteger counter = new AtomicInteger(0);
+
+    Mockito.doAnswer(invocation -> {
+      throw new RuntimeException();
+    }).when(mockInteractor).purchase(purchase);
+
+    Mockito.doAnswer(invocation -> {
+      counter.incrementAndGet();
+      presenter.getSuccessListener().onBillingSuccess();
+      return null;
+    }).when(mockInteractor).consume("TOKEN");
+
+    presenter.bindView(new DonatePresenter.View() {
+      @Override public void onBillingSuccess() {
+        counter.incrementAndGet();
+      }
+
+      @Override public void onBillingError() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onProcessResultSuccess() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onProcessResultError() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onProcessResultFailed() {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+
+      @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+        throw new RuntimeException("Checkout error should not happen");
+      }
+    });
+
+    presenter.checkoutInAppPurchaseItem(SkuModel.create(purchase, "TOKEN"));
+    assertEquals(2, counter.get());
   }
 }

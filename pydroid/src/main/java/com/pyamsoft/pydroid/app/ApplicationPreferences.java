@@ -127,6 +127,7 @@ import java.util.Set;
   @NonNull @CheckResult
   public ApplicationPreferences multiEdit(@NonNull ActionSingle<SimplePreferences> call) {
     call.call(preferences);
+    preferences.apply();
     return this;
   }
 }

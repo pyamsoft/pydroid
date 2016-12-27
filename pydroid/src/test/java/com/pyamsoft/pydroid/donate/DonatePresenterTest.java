@@ -17,10 +17,10 @@
 
 package com.pyamsoft.pydroid.donate;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.BuildConfig;
-import com.pyamsoft.pydroid.tool.Offloader;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,25 +36,27 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class DonatePresenterTest {
 
+  private CountDownLatch latch;
   @Mock DonateInteractor mockInteractor;
   private DonatePresenterImpl presenter;
 
   @Before public void setup() {
     mockInteractor = Mockito.mock(DonateInteractor.class);
     presenter = new DonatePresenterImpl(mockInteractor);
+    latch = new CountDownLatch(1);
   }
 
   /**
-   * Make sure that calling bind will also initialize the interactor
+   * Binding the presenter should also bind callbacks in the interactor
    */
-  @Test public void testBindCreate() {
-    final AtomicInteger count = new AtomicInteger(0);
+  @Test public void testBind() throws InterruptedException {
     Mockito.doAnswer(invocation -> {
-      count.incrementAndGet();
+      latch.countDown();
       return null;
-    }).when(mockInteractor).init(presenter, presenter.successListener, presenter.errorListener);
+    })
+        .when(mockInteractor)
+        .bindCallbacks(presenter, presenter.getSuccessListener(), presenter.getErrorListener());
 
-    assertEquals(0, count.get());
     presenter.bindView(new DonatePresenter.View() {
       @Override public void onBillingSuccess() {
 
@@ -81,133 +83,8 @@ public class DonatePresenterTest {
       }
     });
 
-    assertEquals(1, count.get());
-  }
-
-  /**
-   * Make sure that calling unbind will also destroy the interactor
-   */
-  @Test public void testUnbindDestroy() {
-    final AtomicInteger count = new AtomicInteger(0);
-    Mockito.doAnswer(invocation -> {
-      count.incrementAndGet();
-      return null;
-    }).when(mockInteractor).destroy();
-
-    assertEquals(0, count.get());
-    presenter.bindView(new DonatePresenter.View() {
-      @Override public void onBillingSuccess() {
-
-      }
-
-      @Override public void onBillingError() {
-
-      }
-
-      @Override public void onProcessResultSuccess() {
-
-      }
-
-      @Override public void onProcessResultError() {
-
-      }
-
-      @Override public void onProcessResultFailed() {
-
-      }
-
-      @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
-
-      }
-    });
-
-    // To ensure proper lifecycle, make sure we use the destroy callback in unbind, NOT destroy
-    assertEquals(0, count.get());
-    presenter.destroy();
-
-    assertEquals(0, count.get());
-    presenter.unbindView();
-    assertEquals(1, count.get());
-  }
-
-  /**
-   * Make sure that loading the inventory, when it calls back, will actually load
-   */
-  @Test public void testLoadInventory() {
-    final AtomicInteger count = new AtomicInteger(0);
-    Mockito.doAnswer(invocation -> {
-      count.incrementAndGet();
-      //noinspection ConstantConditions
-      presenter.onLoaded(null);
-      return null;
-    }).when(mockInteractor).loadInventory();
-
-    // When created and then inventory load is called, it does the thing
-    assertEquals(0, count.get());
-    presenter.bindView(new DonatePresenter.View() {
-      @Override public void onBillingSuccess() {
-
-      }
-
-      @Override public void onBillingError() {
-
-      }
-
-      @Override public void onProcessResultSuccess() {
-
-      }
-
-      @Override public void onProcessResultError() {
-
-      }
-
-      @Override public void onProcessResultFailed() {
-
-      }
-
-      @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
-        count.incrementAndGet();
-      }
-    });
-
-    // To ensure proper lifecycle, make sure we use the destroy callback in unbind, NOT destroy
-    assertEquals(0, count.get());
-    presenter.loadInventory();
-
-    assertEquals(2, count.get());
-  }
-
-  /**
-   * Make sure that processing the inventory is sent to the interactor
-   */
-  @Test public void testProcessResult() {
-    final AtomicInteger count1 = new AtomicInteger(0);
-    final AtomicInteger count2 = new AtomicInteger(0);
-    //noinspection CheckResult
-    Mockito.doAnswer(invocation -> {
-      count1.incrementAndGet();
-      return new Offloader.Empty<Boolean>();
-    }).when(mockInteractor).processBillingResult(0, 0, null);
-
-    final Intent intent = new Intent();
-    //noinspection CheckResult
-    Mockito.doAnswer(invocation -> {
-      count2.incrementAndGet();
-      return new Offloader.Empty<Boolean>();
-    }).when(mockInteractor).processBillingResult(0, 0, intent);
-
-    // Donation onFinish with NULL is handled correctly
-    assertEquals(0, count1.get());
-    assertEquals(0, count2.get());
-    presenter.onBillingResult(0, 0, null);
-    assertEquals(1, count1.get());
-    assertEquals(0, count2.get());
-
-    // Donation onFinish is handled correctly
-    assertEquals(1, count1.get());
-    assertEquals(0, count2.get());
-    presenter.onBillingResult(0, 0, intent);
-    assertEquals(1, count1.get());
-    assertEquals(1, count2.get());
+    if (!latch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
   }
 }

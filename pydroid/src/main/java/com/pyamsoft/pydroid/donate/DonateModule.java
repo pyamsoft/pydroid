@@ -47,7 +47,7 @@ public class DonateModule {
 
     @CheckResult @NonNull
     static ICheckout create(@NonNull Billing billing, @NonNull List<String> inAppPurchaseList) {
-      return new GuardedCheckout(new RealCheckout(billing, inAppPurchaseList));
+      return new RealCheckout(billing, inAppPurchaseList);
     }
   }
 }

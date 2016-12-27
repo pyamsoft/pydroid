@@ -35,7 +35,7 @@ import org.robolectric.util.ActivityController;
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class AppUtilTest {
 
-  @Test public void test_convertToDp() {
+  @Test public void testConvertToDp() {
     final Context context = RuntimeEnvironment.application.getApplicationContext();
 
     // Zero test
@@ -61,7 +61,7 @@ public class AppUtilTest {
     Assert.assertEquals(oneDp * 16, AppUtil.convertToDP(context, 16), 0);
   }
 
-  @Test public void test_getApplicationInfoIntent() {
+  @Test public void testGetApplicationInfoIntent() {
     // Check that URI points to the same place
     String packageName = "com.pyamsoft.padlock";
     Intent intent = AppUtil.getApplicationInfoIntent(packageName);
@@ -74,7 +74,7 @@ public class AppUtilTest {
     Assert.assertEquals(intent.getData().toString(), uri.toString());
   }
 
-  @Test public void test_guaranteeSingleDialogFragment() throws InterruptedException {
+  @Test public void testGuaranteeSingleDialogFragment() throws InterruptedException {
     final ActivityController<AppCompatActivity> activityController =
         TestUtils.getAppCompatActivityController();
     final AppCompatActivity activity = activityController.create().start().resume().visible().get();

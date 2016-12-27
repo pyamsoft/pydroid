@@ -39,7 +39,7 @@ import timber.log.Timber;
 /**
  * The real checkout module, uses android-checkout to talk with Google Play's InAppBilling services
  */
-class RealCheckout implements WrappedCheckout {
+class RealCheckout implements ICheckout {
 
   @NonNull private final List<String> inAppSkuList;
   @NonNull private final Billing billing;
@@ -56,14 +56,8 @@ class RealCheckout implements WrappedCheckout {
   }
 
   private void checkCheckoutNonNull() {
-    if (!hasCheckout()) {
+    if (checkout == null) {
       throw new IllegalStateException("Checkout is NULL, must create it first");
-    }
-  }
-
-  private void checkCheckoutInitialized() {
-    if (!isInitialized()) {
-      throw new IllegalStateException("Checkout is not initialized");
     }
   }
 
@@ -78,10 +72,6 @@ class RealCheckout implements WrappedCheckout {
   @Override public void init(@NonNull Inventory.Callback inventoryCallback,
       @NonNull DonateInteractor.OnBillingSuccessListener successListener,
       @NonNull DonateInteractor.OnBillingErrorListener errorListener) {
-    if (isInitialized()) {
-      throw new IllegalStateException("Cannot re-initialized Checkout");
-    }
-
     this.inventoryCallback = inventoryCallback;
     this.successListener = successListener;
     this.errorListener = errorListener;
@@ -89,7 +79,6 @@ class RealCheckout implements WrappedCheckout {
 
   @Override public void start() {
     checkCheckoutNonNull();
-    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.destroyPurchaseFlow();
@@ -99,7 +88,6 @@ class RealCheckout implements WrappedCheckout {
 
   @Override public void loadInventory() {
     checkCheckoutNonNull();
-    checkCheckoutInitialized();
 
     if (inventory == null) {
       //noinspection ConstantConditions
@@ -115,7 +103,6 @@ class RealCheckout implements WrappedCheckout {
 
   @Override public void stop() {
     checkCheckoutNonNull();
-    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.stop();
@@ -128,7 +115,6 @@ class RealCheckout implements WrappedCheckout {
 
   @Override public void purchase(@NonNull Sku sku) {
     checkCheckoutNonNull();
-    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.whenReady(new Checkout.EmptyListener() {
@@ -144,7 +130,6 @@ class RealCheckout implements WrappedCheckout {
 
   @Override public void consume(@NonNull String token) {
     checkCheckoutNonNull();
-    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     checkout.whenReady(new Checkout.EmptyListener() {
@@ -158,18 +143,9 @@ class RealCheckout implements WrappedCheckout {
   @Override
   public boolean processBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
     checkCheckoutNonNull();
-    checkCheckoutInitialized();
 
     //noinspection ConstantConditions
     return checkout.onActivityResult(requestCode, resultCode, data);
-  }
-
-  @Override public boolean hasCheckout() {
-    return checkout != null;
-  }
-
-  @Override public boolean isInitialized() {
-    return inventoryCallback == null && successListener == null && errorListener == null;
   }
 
   abstract class BaseRequestListener<T> implements RequestListener<T> {

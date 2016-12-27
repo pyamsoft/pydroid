@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.donate;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -31,10 +32,8 @@ import timber.log.Timber;
 class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
     implements DonatePresenter, Inventory.Callback {
 
-  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
-  final DonateInteractor.OnBillingSuccessListener successListener;
-  @SuppressWarnings("WeakerAccess") @NonNull @VisibleForTesting
-  final DonateInteractor.OnBillingErrorListener errorListener;
+  @NonNull private final DonateInteractor.OnBillingSuccessListener successListener;
+  @NonNull private final DonateInteractor.OnBillingErrorListener errorListener;
   @NonNull private final DonateInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader billingResult =
       new ExecutedOffloader.Empty();
@@ -45,9 +44,19 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
     errorListener = () -> getView(View::onBillingError);
   }
 
+  @NonNull @CheckResult @VisibleForTesting
+  DonateInteractor.OnBillingSuccessListener getSuccessListener() {
+    return successListener;
+  }
+
+  @NonNull @CheckResult @VisibleForTesting
+  DonateInteractor.OnBillingErrorListener getErrorListener() {
+    return errorListener;
+  }
+
   @Override protected void onBind() {
     super.onBind();
-    interactor.init(this, successListener, errorListener);
+    interactor.bindCallbacks(this, successListener, errorListener);
   }
 
   @Override public void create(@NonNull Activity activity) {

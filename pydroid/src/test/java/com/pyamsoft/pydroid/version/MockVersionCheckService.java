@@ -24,7 +24,7 @@ import retrofit2.mock.BehaviorDelegate;
 
 class MockVersionCheckService implements VersionCheckInteractor.VersionCheckService {
 
-  public static final int CURRENT_VERSION = 10;
+  static final int CURRENT_VERSION = 10;
   @NonNull private final BehaviorDelegate<VersionCheckInteractor.VersionCheckService> delegate;
 
   MockVersionCheckService(

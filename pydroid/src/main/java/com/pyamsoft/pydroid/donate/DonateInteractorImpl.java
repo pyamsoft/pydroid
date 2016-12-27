@@ -36,7 +36,7 @@ class DonateInteractorImpl implements DonateInteractor {
   }
 
   @Override
-  public void init(@NonNull Inventory.Callback callback, @NonNull OnBillingSuccessListener success,
+  public void bindCallbacks(@NonNull Inventory.Callback callback, @NonNull OnBillingSuccessListener success,
       @NonNull OnBillingErrorListener error) {
     Timber.d("Create checkout purchase flow");
     checkout.init(callback, success, error);

@@ -249,20 +249,16 @@ public class PersistentCacheTest {
         differenceSeconds);
   }
 
-  @Test public void test_creationPerformance1000() {
+  @Test public void testCreationPerformance1000() {
     doCreationPerformanceTest(1000);
   }
 
-  @Test public void test_creationPerformance10000() {
+  @Test public void testCreationPerformance10000() {
     doCreationPerformanceTest(10000);
   }
 
-  @Test public void test_creationPerformance100000() {
+  @Test public void testCreationPerformance100000() {
     doCreationPerformanceTest(100000);
-  }
-
-  @Test public void test_creationPerformance1000000() {
-    doCreationPerformanceTest(1000000);
   }
 
   private void doRetrievePerformanceTest(int keySize) {
@@ -316,20 +312,16 @@ public class PersistentCacheTest {
         differenceSeconds);
   }
 
-  @Test public void test_retrievePerformance1000() {
+  @Test public void testRetrievePerformance1000() {
     doRetrievePerformanceTest(1000);
   }
 
-  @Test public void test_retrievePerformance10000() {
+  @Test public void testRetrievePerformance10000() {
     doRetrievePerformanceTest(10000);
   }
 
-  @Test public void test_retrievePerformance100000() {
+  @Test public void testRetrievePerformance100000() {
     doRetrievePerformanceTest(100000);
-  }
-
-  @Test public void test_retrievePerformance1000000() {
-    doRetrievePerformanceTest(1000000);
   }
 
   static class DoNotDestroy {

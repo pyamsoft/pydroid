@@ -27,8 +27,6 @@ import retrofit2.mock.BehaviorDelegate;
 import retrofit2.mock.MockRetrofit;
 import retrofit2.mock.NetworkBehavior;
 
-import static org.junit.Assert.assertEquals;
-
 public class VersionPresenterTest {
 
   private VersionCheckPresenterImpl presenter;
@@ -56,7 +54,7 @@ public class VersionPresenterTest {
    *
    * @throws InterruptedException
    */
-  @Test public void testCheckForUpdates_UpToDate() throws InterruptedException {
+  @Test public void testCheckForUpdatesUpToDate() throws InterruptedException {
     // No failure
     mockRetrofit.networkBehavior().setFailurePercent(0);
 
@@ -82,7 +80,7 @@ public class VersionPresenterTest {
    *
    * @throws InterruptedException
    */
-  @Test public void testCheckForUpdates_OutOfDate() throws InterruptedException {
+  @Test public void testCheckForUpdatesOutOfDate() throws InterruptedException {
     // No failure
     mockRetrofit.networkBehavior().setFailurePercent(0);
 
@@ -102,7 +100,7 @@ public class VersionPresenterTest {
     }
   }
 
-  @Test public void testCheckForUpdates_NetworkFailure() throws InterruptedException {
+  @Test public void testCheckForUpdatesNetworkFailure() throws InterruptedException {
     // Fail
     mockRetrofit.networkBehavior().setFailurePercent(100);
 
@@ -121,7 +119,5 @@ public class VersionPresenterTest {
     if (latch.await(5, TimeUnit.SECONDS)) {
       throw new AssertionError("Latch should not have counted down successfully");
     }
-
-    assertEquals(1L, latch.getCount());
   }
 }

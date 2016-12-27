@@ -28,8 +28,8 @@ import org.solovyev.android.checkout.Sku;
 
 interface DonateInteractor {
 
-  void init(@NonNull Inventory.Callback listener, @NonNull OnBillingSuccessListener success,
-      @NonNull OnBillingErrorListener error);
+  void bindCallbacks(@NonNull Inventory.Callback listener,
+      @NonNull OnBillingSuccessListener success, @NonNull OnBillingErrorListener error);
 
   void create(@NonNull Activity activity);
 

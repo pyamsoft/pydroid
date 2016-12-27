@@ -22,7 +22,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.os.AsyncTaskCompat;
-import com.google.common.util.concurrent.ExecutionError;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.FuncNone;
@@ -36,7 +35,6 @@ public class AsyncOffloader<T> implements Offloader<T> {
   @SuppressWarnings("WeakerAccess") @Nullable ActionSingle<Throwable> error;
   @SuppressWarnings("WeakerAccess") @Nullable ActionSingle<T> result;
   @SuppressWarnings("WeakerAccess") @Nullable ActionNone finisher;
-  @Nullable private AsyncTask asnycTask;
 
   private AsyncOffloader() {
 
@@ -83,6 +81,7 @@ public class AsyncOffloader<T> implements Offloader<T> {
   }
 
   @NonNull @Override public ExecutedOffloader execute() {
+    final AsyncTask<Void, Void, T> asnycTask;
     if (process == null) {
       throw new NullPointerException("Cannot execute Offloader with NULL onProcess task");
     } else {

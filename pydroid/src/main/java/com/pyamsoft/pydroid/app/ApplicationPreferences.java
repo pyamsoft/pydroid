@@ -19,8 +19,10 @@ package com.pyamsoft.pydroid.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.ActionSingle;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,28 +40,35 @@ import java.util.Set;
     preferences = new EditPreferences(context);
   }
 
-  @NonNull @Override public EditPreferences put(@NonNull String s, long l) {
-    return preferences.put(s, l).apply();
+  @NonNull @Override public ApplicationPreferences put(@NonNull String s, long l) {
+    preferences.put(s, l).apply();
+    return this;
   }
 
-  @NonNull @Override public EditPreferences put(@NonNull String s, @Nullable String st) {
-    return preferences.put(s, st).apply();
+  @NonNull @Override public ApplicationPreferences put(@NonNull String s, @Nullable String st) {
+    preferences.put(s, st).apply();
+    return this;
   }
 
-  @NonNull @Override public EditPreferences put(@NonNull String s, int i) {
-    return preferences.put(s, i).apply();
+  @NonNull @Override public ApplicationPreferences put(@NonNull String s, int i) {
+    preferences.put(s, i).apply();
+    return this;
   }
 
-  @NonNull @Override public EditPreferences put(@NonNull String s, float f) {
-    return preferences.put(s, f).apply();
+  @NonNull @Override public ApplicationPreferences put(@NonNull String s, float f) {
+    preferences.put(s, f).apply();
+    return this;
   }
 
-  @NonNull @Override public EditPreferences putSet(@NonNull String s, @NonNull Set<String> st) {
-    return preferences.putSet(s, st).apply();
+  @NonNull @Override
+  public ApplicationPreferences putSet(@NonNull String s, @NonNull Set<String> st) {
+    preferences.putSet(s, st).apply();
+    return this;
   }
 
-  @NonNull @Override public EditPreferences put(@NonNull String s, boolean b) {
-    return preferences.put(s, b).apply();
+  @NonNull @Override public ApplicationPreferences put(@NonNull String s, boolean b) {
+    preferences.put(s, b).apply();
+    return this;
   }
 
   @Override public long get(@NonNull String s, long l) {
@@ -94,8 +103,9 @@ import java.util.Set;
     return preferences.contains(s);
   }
 
-  @NonNull @Override public EditPreferences remove(@NonNull String s) {
-    return preferences.remove(s).apply();
+  @NonNull @Override public ApplicationPreferences remove(@NonNull String s) {
+    preferences.remove(s).apply();
+    return this;
   }
 
   @Override public void clear() {
@@ -112,5 +122,11 @@ import java.util.Set;
 
   @Override public void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
     preferences.unregister(l);
+  }
+
+  @NonNull @CheckResult
+  public ApplicationPreferences multiEdit(@NonNull ActionSingle<SimplePreferences> call) {
+    call.call(preferences);
+    return this;
   }
 }

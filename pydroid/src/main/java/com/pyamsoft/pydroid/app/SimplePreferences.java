@@ -26,17 +26,17 @@ import java.util.Set;
 
 interface SimplePreferences {
 
-  @CheckResult @NonNull EditPreferences put(@NonNull String s, long l);
+  @CheckResult @NonNull SimplePreferences put(@NonNull String s, long l);
 
-  @CheckResult @NonNull EditPreferences put(@NonNull String s, @Nullable String st);
+  @CheckResult @NonNull SimplePreferences put(@NonNull String s, @Nullable String st);
 
-  @CheckResult @NonNull EditPreferences put(@NonNull String s, int i);
+  @CheckResult @NonNull SimplePreferences put(@NonNull String s, int i);
 
-  @CheckResult @NonNull EditPreferences put(@NonNull String s, float f);
+  @CheckResult @NonNull SimplePreferences put(@NonNull String s, float f);
 
-  @CheckResult @NonNull EditPreferences putSet(@NonNull String s, @NonNull Set<String> st);
+  @CheckResult @NonNull SimplePreferences putSet(@NonNull String s, @NonNull Set<String> st);
 
-  @CheckResult @NonNull EditPreferences put(@NonNull String s, boolean b);
+  @CheckResult @NonNull SimplePreferences put(@NonNull String s, boolean b);
 
   @CheckResult long get(@NonNull String s, long l);
 
@@ -54,7 +54,7 @@ interface SimplePreferences {
 
   @CheckResult boolean contains(@NonNull String s);
 
-  @NonNull @CheckResult EditPreferences remove(@NonNull String s);
+  @NonNull @CheckResult SimplePreferences remove(@NonNull String s);
 
   void clear();
 

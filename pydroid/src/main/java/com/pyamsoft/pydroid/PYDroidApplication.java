@@ -27,15 +27,20 @@ import android.app.Application;
     if (BuildConfigChecker.getInstance().isDebugMode()) {
       onCreateInDebugMode();
     } else {
-      onCreateInNormalMode();
+      onCreateInReleaseMode();
     }
+    onCreateNormalMode();
+  }
+
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateNormalMode() {
+
   }
 
   @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInDebugMode() {
 
   }
 
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInNormalMode() {
+  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInReleaseMode() {
 
   }
 }

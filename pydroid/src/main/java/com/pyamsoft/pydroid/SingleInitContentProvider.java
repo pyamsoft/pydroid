@@ -63,7 +63,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     return instance.getDelegate();
   }
 
-  private static void setInstance(@NonNull SingleInitContentProvider instance) {
+  static void setInstance(@NonNull SingleInitContentProvider instance) {
     SingleInitContentProvider.instance = instance;
   }
 

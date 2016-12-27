@@ -31,7 +31,7 @@ import java.util.Set;
  * If you are needing to work with multiple preferences at the same time, stick with the usual
  * Android SharedPreferences implementation
  */
-@SuppressWarnings("unused") public class ApplicationPreferences
+@SuppressWarnings("unused") public final class ApplicationPreferences
     implements SimplePreferences, MultiEditPreference<ApplicationPreferences> {
 
   @Nullable private static volatile ApplicationPreferences instance = null;

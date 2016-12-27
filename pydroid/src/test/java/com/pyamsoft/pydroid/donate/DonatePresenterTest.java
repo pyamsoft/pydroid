@@ -17,8 +17,12 @@
 
 package com.pyamsoft.pydroid.donate;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.BuildConfig;
+import com.pyamsoft.pydroid.TestUtils;
+import com.pyamsoft.pydroid.tool.SerialOffloader;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,14 +40,14 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class, sdk = 23)
 public class DonatePresenterTest {
 
-  private CountDownLatch latch;
   @Mock DonateInteractor mockInteractor;
+  private CountDownLatch singleLatch;
   private DonatePresenterImpl presenter;
 
   @Before public void setup() {
     mockInteractor = Mockito.mock(DonateInteractor.class);
     presenter = new DonatePresenterImpl(mockInteractor);
-    latch = new CountDownLatch(1);
+    singleLatch = new CountDownLatch(1);
   }
 
   /**
@@ -51,12 +55,13 @@ public class DonatePresenterTest {
    */
   @Test public void testBind() throws InterruptedException {
     Mockito.doAnswer(invocation -> {
-      latch.countDown();
+      singleLatch.countDown();
       return null;
     })
         .when(mockInteractor)
         .bindCallbacks(presenter, presenter.getSuccessListener(), presenter.getErrorListener());
 
+    // Test that binding presenter also binds interactor callbacks
     presenter.bindView(new DonatePresenter.View() {
       @Override public void onBillingSuccess() {
 
@@ -83,8 +88,85 @@ public class DonatePresenterTest {
       }
     });
 
-    if (!latch.await(5, TimeUnit.SECONDS)) {
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
       throw new RuntimeException("Latch did not count down within 5 seconds");
     }
+  }
+
+  @Test public void testUnbind() throws InterruptedException {
+    Mockito.doAnswer(invocation -> {
+      singleLatch.countDown();
+      return null;
+    }).when(mockInteractor).destroy();
+
+    // Test that unbinding presenter clears interactor
+    presenter.unbindView();
+
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
+  }
+
+  @Test public void testCreateLoadsInventory() {
+    final Activity activity = TestUtils.getAppCompatActivityController().create().get();
+
+    final AtomicInteger counter = new AtomicInteger(0);
+    Mockito.doAnswer(invocation -> {
+      counter.incrementAndGet();
+      return null;
+    }).when(mockInteractor).create(activity);
+
+    Mockito.doAnswer(invocation -> {
+      counter.incrementAndGet();
+      return null;
+    }).when(mockInteractor).loadInventory();
+
+    assertEquals(0, counter.get());
+    presenter.create(activity);
+    assertEquals(2, counter.get());
+  }
+
+  @Test public void testLoadsInventory() throws InterruptedException {
+    Mockito.doAnswer(invocation -> {
+      singleLatch.countDown();
+      return null;
+    }).when(mockInteractor).loadInventory();
+
+    presenter.loadInventory();
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
+  }
+
+  @Test public void testProcessBillingResultErrorUnbound() {
+    final Intent dataIntent = new Intent();
+
+    // Billing error
+    Mockito.when(mockInteractor.processBillingResult(0, 0, dataIntent))
+        .thenReturn(SerialOffloader.newInstance(() -> Boolean.FALSE));
+
+    presenter.onBillingResult(0, 0, dataIntent);
+  }
+
+  @Test public void testProcessBillingResultSuccessUnbound() {
+    final Intent dataIntent = new Intent();
+
+    // Billing success
+    Mockito.when(mockInteractor.processBillingResult(1, 1, dataIntent))
+        .thenReturn(SerialOffloader.newInstance(() -> Boolean.TRUE));
+
+    presenter.onBillingResult(1, 1, dataIntent);
+  }
+
+  @Test public void testProcessBillingResultThrowsUnbound() {
+    final Intent dataIntent = new Intent();
+
+    // Billing throws error
+    Mockito.when(mockInteractor.processBillingResult(2, 2, dataIntent))
+        .thenReturn(SerialOffloader.newInstance(() -> {
+          throw new RuntimeException();
+        }));
+
+    presenter.onBillingResult(2, 2, dataIntent);
   }
 }

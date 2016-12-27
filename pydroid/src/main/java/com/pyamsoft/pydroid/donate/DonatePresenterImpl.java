@@ -59,6 +59,12 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
     interactor.bindCallbacks(this, successListener, errorListener);
   }
 
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    interactor.destroy();
+    OffloaderHelper.cancel(billingResult);
+  }
+
   @Override public void create(@NonNull Activity activity) {
     interactor.create(activity);
     loadInventory();
@@ -66,12 +72,6 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
 
   @Override public void loadInventory() {
     interactor.loadInventory();
-  }
-
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    interactor.destroy();
-    OffloaderHelper.cancel(billingResult);
   }
 
   @Override public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {

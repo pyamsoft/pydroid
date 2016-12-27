@@ -95,11 +95,11 @@ public class SerialOffloader<T> implements Offloader<T> {
       T o;
       try {
         o = process.call();
-      } catch (Throwable throwable) {
+      } catch (Exception e) {
         if (error == null) {
-          throw throwable;
+          throw new RuntimeException("Captured exception in Offloader", e);
         } else {
-          error.call(throwable);
+          error.call(e);
         }
         o = null;
       }

@@ -22,6 +22,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.os.AsyncTaskCompat;
+import com.google.common.util.concurrent.ExecutionError;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.FuncNone;
@@ -89,11 +90,11 @@ public class AsyncOffloader<T> implements Offloader<T> {
         @Override protected T doInBackground(Void... params) {
           try {
             return process.call();
-          } catch (Throwable throwable) {
+          } catch (Exception e) {
             if (error == null) {
-              throw throwable;
+              throw new RuntimeException("Captured exception in Offloader", e);
             } else {
-              error.call(throwable);
+              error.call(e);
             }
             return null;
           }

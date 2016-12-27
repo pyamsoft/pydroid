@@ -138,7 +138,7 @@ public class DonatePresenterTest {
     }
   }
 
-  @Test public void testProcessBillingResultErrorUnbound() {
+  @Test public void testProcessBillingResultFailureUnbound() {
     final Intent dataIntent = new Intent();
 
     // Billing error
@@ -158,7 +158,7 @@ public class DonatePresenterTest {
     presenter.onBillingResult(1, 1, dataIntent);
   }
 
-  @Test public void testProcessBillingResultThrowsUnbound() {
+  @Test public void testProcessBillingResultErrorUnbound() {
     final Intent dataIntent = new Intent();
 
     // Billing throws error
@@ -168,5 +168,124 @@ public class DonatePresenterTest {
         }));
 
     presenter.onBillingResult(2, 2, dataIntent);
+  }
+
+  @Test public void testProcessBillingResultSuccess() throws InterruptedException {
+    final Intent dataIntent = new Intent();
+
+    // Billing success
+    Mockito.when(mockInteractor.processBillingResult(0, 0, dataIntent))
+        .thenReturn(SerialOffloader.newInstance(() -> Boolean.TRUE));
+
+    presenter.bindView(new DonatePresenter.View() {
+      @Override public void onBillingSuccess() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onBillingError() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onProcessResultSuccess() {
+        singleLatch.countDown();
+      }
+
+      @Override public void onProcessResultError() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onProcessResultFailed() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+        throw new RuntimeException("Error should not occur");
+      }
+    });
+
+    presenter.onBillingResult(0, 0, dataIntent);
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
+  }
+
+  @Test public void testProcessBillingResultFailure() throws InterruptedException {
+    final Intent dataIntent = new Intent();
+
+    // Billing success
+    Mockito.when(mockInteractor.processBillingResult(0, 0, dataIntent))
+        .thenReturn(SerialOffloader.newInstance(() -> Boolean.FALSE));
+
+    presenter.bindView(new DonatePresenter.View() {
+      @Override public void onBillingSuccess() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onBillingError() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onProcessResultSuccess() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onProcessResultError() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onProcessResultFailed() {
+        singleLatch.countDown();
+      }
+
+      @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+        throw new RuntimeException("Error should not occur");
+      }
+    });
+
+    presenter.onBillingResult(0, 0, dataIntent);
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
+  }
+
+  @Test public void testProcessBillingResultError() throws InterruptedException {
+    final Intent dataIntent = new Intent();
+
+    // Billing success
+    Mockito.when(mockInteractor.processBillingResult(0, 0, dataIntent))
+        .thenReturn(SerialOffloader.newInstance(() -> {
+          throw new RuntimeException();
+        }));
+
+    presenter.bindView(new DonatePresenter.View() {
+      @Override public void onBillingSuccess() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onBillingError() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onProcessResultSuccess() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onProcessResultError() {
+        singleLatch.countDown();
+      }
+
+      @Override public void onProcessResultFailed() {
+        throw new RuntimeException("Error should not occur");
+      }
+
+      @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+        throw new RuntimeException("Error should not occur");
+      }
+    });
+
+    presenter.onBillingResult(0, 0, dataIntent);
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
   }
 }

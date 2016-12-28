@@ -24,6 +24,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
+import com.pyamsoft.pydroid.ActionSingle;
 import java.util.Map;
 import java.util.Set;
 
@@ -125,6 +126,12 @@ public final class ApplicationPreferences {
 
   @NonNull @CheckResult public ApplicationPreferences remove(@NonNull String s) {
     p.edit().remove(s).apply();
+    return this;
+  }
+
+  @CheckResult @NonNull public ApplicationPreferences multiEdit(
+      @NonNull ActionSingle<SharedPreferences> preferencesAction) {
+    preferencesAction.call(p);
     return this;
   }
 

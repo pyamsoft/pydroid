@@ -42,27 +42,4 @@ public interface Offloader<T> {
   @CheckResult @NonNull Offloader<T> onFinish(@NonNull ActionNone finisher);
 
   @CheckResult @NonNull ExecutedOffloader execute();
-
-  class Empty<T> implements Offloader<T> {
-
-    @NonNull @Override public Offloader<T> onProcess(@NonNull FuncNone<T> background) {
-      return this;
-    }
-
-    @NonNull @Override public Offloader<T> onError(@NonNull ActionSingle<Throwable> error) {
-      return this;
-    }
-
-    @NonNull @Override public Offloader<T> onResult(@NonNull ActionSingle<T> background) {
-      return this;
-    }
-
-    @NonNull @Override public Offloader<T> onFinish(@NonNull ActionNone finisher) {
-      return this;
-    }
-
-    @NonNull @Override public ExecutedOffloader execute() {
-      return new ExecutedOffloader.Empty();
-    }
-  }
 }

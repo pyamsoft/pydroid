@@ -43,6 +43,11 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
   }
 
   @Override public void checkForUpdates(int currentVersionCode) {
+    if (versionCheckCompleted) {
+      Timber.w("Already completed version check");
+      return;
+    }
+
     cancelCall();
     call = interactor.checkVersion();
     call.enqueue(new Callback<VersionCheckResponse>() {

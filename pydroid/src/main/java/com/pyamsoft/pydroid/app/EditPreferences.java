@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.app;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,16 +30,10 @@ import java.util.Set;
 @SuppressLint("CommitPrefEdits") class EditPreferences implements SimplePreferences {
 
   @NonNull private final SharedPreferences p;
-  @NonNull private final Resources resources;
 
   EditPreferences(@NonNull Context context) {
     Context appContext = context.getApplicationContext();
     this.p = PreferenceManager.getDefaultSharedPreferences(appContext);
-    resources = appContext.getResources();
-  }
-
-  @NonNull @CheckResult protected final Resources getResources() {
-    return resources;
   }
 
   final EditPreferences apply() {

@@ -32,9 +32,9 @@ import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.DonatePresenterLoaderCallback;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;
@@ -44,7 +44,7 @@ import timber.log.Timber;
 public abstract class DonationActivity extends VersionCheckActivity
     implements DonatePresenter.View {
 
-  @NonNull private static final String KEY_DONATE_PRESENTER = "__key_support_presenter";
+  @NonNull private static final String KEY_DONATE_PRESENTER = "__key_donate_presenter";
   @SuppressWarnings("WeakerAccess") DonatePresenter donatePresenter;
   private long loadedKey;
 
@@ -58,23 +58,25 @@ public abstract class DonationActivity extends VersionCheckActivity
             donatePresenter = persist;
           }
         });
-
-    // To match up correctly with the In App Billing lifecycle, we bind onCreate and unbind onDestroy
-    // this is different from how things are usually done with presenters, but oh well.
-    donatePresenter.bindView(this);
-    donatePresenter.create(this);
   }
 
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
 
-    // To match up correctly with the In App Billing lifecycle, we bind onCreate and unbind onDestroy
-    // this is different from how things are usually done with presenters, but oh well.
-    donatePresenter.unbindView();
-
     if (!isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
+  }
+
+  @Override protected void onStart() {
+    super.onStart();
+    donatePresenter.bindView(this);
+    donatePresenter.create(this);
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    donatePresenter.unbindView();
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {

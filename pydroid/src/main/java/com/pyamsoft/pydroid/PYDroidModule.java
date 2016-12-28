@@ -161,6 +161,14 @@ public class PYDroidModule {
       }
 
       /**
+       * Auto connect causes crashes on devices which do not support Billing as it
+       * ends up attempting to register duplicate listeners
+       */
+      @Override public boolean isAutoConnect() {
+        return false;
+      }
+
+      /**
        * We do not really need any purchase verification as they are all just donations anyway.
        * Our public key is not used, so the default verifier fails anyway.
        *

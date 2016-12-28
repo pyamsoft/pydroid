@@ -81,7 +81,6 @@ class RealCheckout implements ICheckout {
     checkCheckoutNonNull();
 
     //noinspection ConstantConditions
-    checkout.destroyPurchaseFlow();
     checkout.start();
     checkout.createPurchaseFlow(new DonationPurchaseListener());
   }

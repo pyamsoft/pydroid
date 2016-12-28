@@ -17,12 +17,13 @@
 
 package com.pyamsoft.pydroid.app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.ActionSingle;
+import android.support.v7.preference.PreferenceManager;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,14 +32,14 @@ import java.util.Set;
  * If you are needing to work with multiple preferences at the same time, stick with the usual
  * Android SharedPreferences implementation
  */
-@SuppressWarnings("unused") public final class ApplicationPreferences
-    implements SimplePreferences, MultiEditPreference<ApplicationPreferences> {
+public final class ApplicationPreferences implements SimplePreferences {
 
   @Nullable private static volatile ApplicationPreferences instance = null;
-  @NonNull private final EditPreferences preferences;
+  @NonNull private final SharedPreferences p;
 
   private ApplicationPreferences(@NonNull Context context) {
-    preferences = new EditPreferences(context);
+    Context appContext = context.getApplicationContext();
+    p = PreferenceManager.getDefaultSharedPreferences(appContext);
   }
 
   @CheckResult @NonNull public static ApplicationPreferences getInstance(@NonNull Context context) {
@@ -60,93 +61,98 @@ import java.util.Set;
   }
 
   @NonNull @Override public ApplicationPreferences put(@NonNull String s, long l) {
-    preferences.put(s, l).apply();
+    p.edit().putLong(s, l).apply();
     return this;
   }
 
   @NonNull @Override public ApplicationPreferences put(@NonNull String s, @NonNull String st) {
-    preferences.put(s, st).apply();
+    p.edit().putString(s, st).apply();
     return this;
   }
 
   @NonNull @Override public ApplicationPreferences put(@NonNull String s, int i) {
-    preferences.put(s, i).apply();
+    p.edit().putInt(s, i).apply();
     return this;
   }
 
   @NonNull @Override public ApplicationPreferences put(@NonNull String s, float f) {
-    preferences.put(s, f).apply();
+    p.edit().putFloat(s, f).apply();
     return this;
   }
 
   @NonNull @Override
   public ApplicationPreferences putSet(@NonNull String s, @NonNull Set<String> st) {
-    preferences.putSet(s, st).apply();
+    p.edit().putStringSet(s, st).apply();
     return this;
   }
 
   @NonNull @Override public ApplicationPreferences put(@NonNull String s, boolean b) {
-    preferences.put(s, b).apply();
+    p.edit().putBoolean(s, b).apply();
     return this;
   }
 
-  @Override public long get(@NonNull String s, long l) {
-    return preferences.get(s, l);
+  @CheckResult @Override public final long get(@NonNull String s, long l) {
+    return p.getLong(s, l);
   }
 
-  @Nullable @Override public String get(@NonNull String s, @Nullable String st) {
-    return preferences.get(s, st);
+  @Nullable @CheckResult @Override public final String get(@NonNull String s, @Nullable String st) {
+    return p.getString(s, st);
   }
 
-  @Override public int get(@NonNull String s, int i) {
-    return preferences.get(s, i);
+  @CheckResult @Override public final int get(@NonNull String s, int i) {
+    return p.getInt(s, i);
   }
 
-  @Override public float get(@NonNull String s, float f) {
-    return preferences.get(s, f);
+  @CheckResult @Override public final float get(@NonNull String s, float f) {
+    return p.getFloat(s, f);
   }
 
-  @Nullable @Override public Set<String> getSet(@NonNull String s, @Nullable Set<String> st) {
-    return preferences.getSet(s, st);
+  @CheckResult @Nullable @Override
+  public final Set<String> getSet(@NonNull String s, @Nullable Set<String> st) {
+    return p.getStringSet(s, st);
   }
 
-  @Override public boolean get(@NonNull String s, boolean b) {
-    return preferences.get(s, b);
+  @CheckResult @Override public final boolean get(@NonNull String s, boolean b) {
+    return p.getBoolean(s, b);
   }
 
-  @NonNull @Override public Map<String, ?> getAll() {
-    return preferences.getAll();
+  @CheckResult @NonNull @Override public final Map<String, ?> getAll() {
+    return p.getAll();
   }
 
-  @Override public boolean contains(@NonNull String s) {
-    return preferences.contains(s);
+  @CheckResult @Override public final boolean contains(@NonNull String s) {
+    return p.contains(s);
   }
 
-  @NonNull @Override public ApplicationPreferences remove(@NonNull String s) {
-    preferences.remove(s).apply();
+  @NonNull @CheckResult @Override public ApplicationPreferences remove(@NonNull String s) {
+    p.edit().remove(s).apply();
     return this;
   }
 
-  @Override public void clear() {
-    preferences.clear();
+  @Override public final void clear() {
+    clear(false);
   }
 
-  @Override public void clear(boolean commit) {
-    preferences.clear(commit);
+  /**
+   * We want to guarantee that the preferences are cleared before continuing, so we block on the
+   * current thread
+   */
+  @SuppressLint("CommitPrefEdits") @Override public final void clear(boolean commit) {
+    final SharedPreferences.Editor editor = p.edit().clear();
+    if (commit) {
+      editor.commit();
+    } else {
+      editor.apply();
+    }
   }
 
-  @Override public void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
-    preferences.register(l);
+  @Override
+  public final void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
+    p.registerOnSharedPreferenceChangeListener(l);
   }
 
-  @Override public void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
-    preferences.unregister(l);
-  }
-
-  @NonNull @Override
-  public ApplicationPreferences multiEdit(@NonNull ActionSingle<SimplePreferences> call) {
-    call.call(preferences);
-    preferences.apply();
-    return this;
+  @Override
+  public final void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
+    p.unregisterOnSharedPreferenceChangeListener(l);
   }
 }

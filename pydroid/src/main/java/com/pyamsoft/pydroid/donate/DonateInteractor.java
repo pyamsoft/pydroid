@@ -41,10 +41,6 @@ interface DonateInteractor {
 
   void consume(@NonNull String token);
 
-  void beginPurchaseFlow();
-
-  void endPurchaseFlow();
-
   @CheckResult @NonNull Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
       @Nullable Intent data);
 

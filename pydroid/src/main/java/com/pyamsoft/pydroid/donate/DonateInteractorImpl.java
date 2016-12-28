@@ -49,14 +49,6 @@ class DonateInteractorImpl implements DonateInteractor {
     checkout.stop();
   }
 
-  @Override public void beginPurchaseFlow() {
-    checkout.beginPurchaseFlow();
-  }
-
-  @Override public void endPurchaseFlow() {
-    checkout.endPurchaseFlow();
-  }
-
   @Override public void loadInventory() {
     checkout.loadInventory();
   }

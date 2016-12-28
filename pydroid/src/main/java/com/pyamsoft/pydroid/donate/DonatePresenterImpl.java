@@ -69,14 +69,6 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
     interactor.create(activity);
   }
 
-  @Override public void beginPurchaseFlow() {
-    interactor.beginPurchaseFlow();
-  }
-
-  @Override public void endPurchaseFlow() {
-    interactor.endPurchaseFlow();
-  }
-
   @Override public void loadInventory() {
     interactor.loadInventory();
   }

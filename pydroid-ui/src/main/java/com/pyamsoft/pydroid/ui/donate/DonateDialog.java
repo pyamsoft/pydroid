@@ -176,16 +176,6 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
     binding.supportRecycler.setAdapter(fastItemAdapter);
   }
 
-  @Override public void onStart() {
-    super.onStart();
-    getDonatePresenter().beginPurchaseFlow();
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-    getDonatePresenter().endPurchaseFlow();
-  }
-
   @Override public void onResume() {
     super.onResume();
     // The dialog is super small for some reason. We have to set the size manually, in onResume

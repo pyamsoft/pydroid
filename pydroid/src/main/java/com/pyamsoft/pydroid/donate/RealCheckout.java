@@ -104,6 +104,7 @@ class RealCheckout implements ICheckout {
     checkCheckoutNonNull();
 
     //noinspection ConstantConditions
+    checkout.destroyPurchaseFlow();
     checkout.stop();
     inventory = null;
     inventoryCallback = null;

@@ -34,10 +34,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.databinding.DialogDonateBinding;
+import com.pyamsoft.pydroid.util.AppUtil;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;
@@ -174,6 +174,16 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
 
     binding.supportRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
     binding.supportRecycler.setAdapter(fastItemAdapter);
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    getDonatePresenter().beginPurchaseFlow();
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    getDonatePresenter().endPurchaseFlow();
   }
 
   @Override public void onResume() {

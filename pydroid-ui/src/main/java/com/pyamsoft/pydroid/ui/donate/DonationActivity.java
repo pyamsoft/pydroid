@@ -68,18 +68,18 @@ public abstract class DonationActivity extends VersionCheckActivity
     }
   }
 
-  @Override protected void onStart() {
+  @CallSuper @Override protected void onStart() {
     super.onStart();
     donatePresenter.bindView(this);
     donatePresenter.create(this);
   }
 
-  @Override protected void onStop() {
+  @CallSuper @Override protected void onStop() {
     super.onStop();
     donatePresenter.unbindView();
   }
 
-  @Override protected void onSaveInstanceState(Bundle outState) {
+  @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_DONATE_PRESENTER, loadedKey, DonatePresenter.class);
     super.onSaveInstanceState(outState);
   }
@@ -128,31 +128,31 @@ public abstract class DonationActivity extends VersionCheckActivity
     }
   }
 
-  @Override public void onBillingSuccess() {
+  @Override public final void onBillingSuccess() {
     passToSupportDialog(DonateDialog::onBillingSuccess,
         () -> Toast.makeText(getApplicationContext(), R.string.purchase_success_msg,
             Toast.LENGTH_SHORT).show());
   }
 
-  @Override public void onBillingError() {
+  @Override public final void onBillingError() {
     passToSupportDialog(DonateDialog::onBillingError,
         () -> Toast.makeText(getApplicationContext(), R.string.purchase_error_msg,
             Toast.LENGTH_SHORT).show());
   }
 
-  @Override public void onProcessResultSuccess() {
+  @Override public final void onProcessResultSuccess() {
     passToSupportDialog(DonateDialog::onProcessResultSuccess, null);
   }
 
-  @Override public void onProcessResultError() {
+  @Override public final void onProcessResultError() {
     passToSupportDialog(DonateDialog::onProcessResultError, this::onBillingError);
   }
 
-  @Override public void onProcessResultFailed() {
+  @Override public final void onProcessResultFailed() {
     passToSupportDialog(DonateDialog::onProcessResultFailed, this::onBillingError);
   }
 
-  @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+  @Override public final void onInventoryLoaded(@NonNull Inventory.Products products) {
     final Inventory.Product product = products.get(ProductTypes.IN_APP);
     if (product.supported) {
       Timber.i("IAP Billing is supported");

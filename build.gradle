@@ -38,7 +38,6 @@ buildscript {
     timber = "4.4.0"
     robolectric = "3.1.4"
     junit = "4.12"
-    openGl = "gl1.1-android-2.1_r1"
     mockito = "2.3.10"
   }
 

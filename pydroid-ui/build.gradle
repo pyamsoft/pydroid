@@ -105,9 +105,6 @@ dependencies {
   // Roboelectric for Android on JVM
   testCompile "org.robolectric:robolectric:$robolectric"
 
-  // Some resources (FAB) need GL
-  testCompile "org.khronos:opengl-api:$openGl"
-
   // JUnit for unit tests
   testCompile "junit:junit:$junit"
 

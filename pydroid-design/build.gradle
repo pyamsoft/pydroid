@@ -81,6 +81,10 @@ android {
   }
 }
 
+ext {
+  openGl = "gl1.1-android-2.1_r1"
+}
+
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
@@ -91,6 +95,9 @@ dependencies {
 
   // Timber logging
   compile "com.jakewharton.timber:timber:$timber"
+
+  // Some resources (FAB) need GL
+  testCompile "org.khronos:opengl-api:$openGl"
 
   compile project(path: ":pydroid")
 }

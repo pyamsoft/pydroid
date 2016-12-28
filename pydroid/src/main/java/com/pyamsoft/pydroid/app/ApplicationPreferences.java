@@ -32,7 +32,7 @@ import java.util.Set;
  * If you are needing to work with multiple preferences at the same time, stick with the usual
  * Android SharedPreferences implementation
  */
-public final class ApplicationPreferences implements SimplePreferences {
+public final class ApplicationPreferences {
 
   @Nullable private static volatile ApplicationPreferences instance = null;
   @NonNull private final SharedPreferences p;
@@ -60,76 +60,75 @@ public final class ApplicationPreferences implements SimplePreferences {
     return instance;
   }
 
-  @NonNull @Override public ApplicationPreferences put(@NonNull String s, long l) {
+  @NonNull public ApplicationPreferences put(@NonNull String s, long l) {
     p.edit().putLong(s, l).apply();
     return this;
   }
 
-  @NonNull @Override public ApplicationPreferences put(@NonNull String s, @NonNull String st) {
+  @NonNull public ApplicationPreferences put(@NonNull String s, @NonNull String st) {
     p.edit().putString(s, st).apply();
     return this;
   }
 
-  @NonNull @Override public ApplicationPreferences put(@NonNull String s, int i) {
+  @NonNull public ApplicationPreferences put(@NonNull String s, int i) {
     p.edit().putInt(s, i).apply();
     return this;
   }
 
-  @NonNull @Override public ApplicationPreferences put(@NonNull String s, float f) {
+  @NonNull public ApplicationPreferences put(@NonNull String s, float f) {
     p.edit().putFloat(s, f).apply();
     return this;
   }
 
-  @NonNull @Override
-  public ApplicationPreferences putSet(@NonNull String s, @NonNull Set<String> st) {
+  @NonNull public ApplicationPreferences putSet(@NonNull String s, @NonNull Set<String> st) {
     p.edit().putStringSet(s, st).apply();
     return this;
   }
 
-  @NonNull @Override public ApplicationPreferences put(@NonNull String s, boolean b) {
+  @NonNull public ApplicationPreferences put(@NonNull String s, boolean b) {
     p.edit().putBoolean(s, b).apply();
     return this;
   }
 
-  @CheckResult @Override public final long get(@NonNull String s, long l) {
+  @CheckResult public final long get(@NonNull String s, long l) {
     return p.getLong(s, l);
   }
 
-  @Nullable @CheckResult @Override public final String get(@NonNull String s, @Nullable String st) {
+  @Nullable @CheckResult public final String get(@NonNull String s, @Nullable String st) {
     return p.getString(s, st);
   }
 
-  @CheckResult @Override public final int get(@NonNull String s, int i) {
+  @CheckResult public final int get(@NonNull String s, int i) {
     return p.getInt(s, i);
   }
 
-  @CheckResult @Override public final float get(@NonNull String s, float f) {
+  @CheckResult public final float get(@NonNull String s, float f) {
     return p.getFloat(s, f);
   }
 
-  @CheckResult @Nullable @Override
+  @CheckResult @Nullable
   public final Set<String> getSet(@NonNull String s, @Nullable Set<String> st) {
     return p.getStringSet(s, st);
   }
 
-  @CheckResult @Override public final boolean get(@NonNull String s, boolean b) {
+  @CheckResult public final boolean get(@NonNull String s, boolean b) {
     return p.getBoolean(s, b);
   }
 
-  @CheckResult @NonNull @Override public final Map<String, ?> getAll() {
+  @CheckResult @NonNull public final Map<String, ?> getAll() {
     return p.getAll();
   }
 
-  @CheckResult @Override public final boolean contains(@NonNull String s) {
+  @CheckResult public final boolean contains(@NonNull String s) {
     return p.contains(s);
   }
 
-  @NonNull @CheckResult @Override public ApplicationPreferences remove(@NonNull String s) {
+  @NonNull @CheckResult public ApplicationPreferences remove(@NonNull String s) {
     p.edit().remove(s).apply();
     return this;
   }
 
-  @Override public final void clear() {
+  public final void clear() {
     clear(false);
   }
 
@@ -137,7 +136,7 @@ public final class ApplicationPreferences implements SimplePreferences {
    * We want to guarantee that the preferences are cleared before continuing, so we block on the
    * current thread
    */
-  @SuppressLint("CommitPrefEdits") @Override public final void clear(boolean commit) {
+  @SuppressLint("CommitPrefEdits") public final void clear(boolean commit) {
     final SharedPreferences.Editor editor = p.edit().clear();
     if (commit) {
       editor.commit();
@@ -146,13 +145,31 @@ public final class ApplicationPreferences implements SimplePreferences {
     }
   }
 
-  @Override
   public final void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.registerOnSharedPreferenceChangeListener(l);
   }
 
-  @Override
   public final void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.unregisterOnSharedPreferenceChangeListener(l);
+  }
+
+  public abstract static class OnSharedPreferenceChangeListener
+      implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    boolean isRegistered = false;
+
+    public void register(@NonNull ApplicationPreferences util) {
+      if (!isRegistered) {
+        util.register(this);
+        isRegistered = true;
+      }
+    }
+
+    @SuppressWarnings("unused") public void unregister(@NonNull ApplicationPreferences util) {
+      if (isRegistered) {
+        util.unregister(this);
+        isRegistered = false;
+      }
+    }
   }
 }

@@ -61,15 +61,6 @@ class RealCheckout implements ICheckout {
     }
   }
 
-  private void makeInventory() {
-    checkCheckoutNonNull();
-
-    if (inventory == null) {
-      //noinspection ConstantConditions
-      inventory = checkout.makeInventory();
-    }
-  }
-
   @Override public void createForActivity(@NonNull Activity activity) {
     if (checkout != null) {
       throw new IllegalStateException("Checkout is already created for a different Activity");
@@ -91,7 +82,7 @@ class RealCheckout implements ICheckout {
 
     //noinspection ConstantConditions
     checkout.start();
-    makeInventory();
+    loadInventory();
   }
 
   @Override public void beginPurchaseFlow() {
@@ -110,7 +101,11 @@ class RealCheckout implements ICheckout {
 
   @Override public void loadInventory() {
     checkCheckoutNonNull();
-    makeInventory();
+
+    if (inventory == null) {
+      //noinspection ConstantConditions
+      inventory = checkout.makeInventory();
+    }
 
     if (inventoryCallback != null) {
       //noinspection ConstantConditions

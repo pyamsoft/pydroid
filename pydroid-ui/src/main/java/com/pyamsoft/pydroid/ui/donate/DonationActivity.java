@@ -58,25 +58,21 @@ public abstract class DonationActivity extends VersionCheckActivity
             donatePresenter = persist;
           }
         });
+
+    // Bind here to work with Checkout lifecycle
+    donatePresenter.bindView(this);
+    donatePresenter.create(this);
   }
 
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
 
+    // Unbind here to work with Checkout lifecycle
+    donatePresenter.unbindView();
+
     if (!isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
-  }
-
-  @CallSuper @Override protected void onStart() {
-    super.onStart();
-    donatePresenter.bindView(this);
-    donatePresenter.create(this);
-  }
-
-  @CallSuper @Override protected void onStop() {
-    super.onStop();
-    donatePresenter.unbindView();
   }
 
   @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {

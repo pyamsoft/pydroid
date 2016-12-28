@@ -36,9 +36,8 @@ import java.util.Set;
     this.p = PreferenceManager.getDefaultSharedPreferences(appContext);
   }
 
-  final EditPreferences apply() {
+  final void apply() {
     p.edit().apply();
-    return this;
   }
 
   @NonNull @Override public EditPreferences put(@NonNull String s, long l) {

@@ -34,6 +34,10 @@ public interface DonatePresenter extends Presenter<DonatePresenter.View> {
 
   void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel);
 
+  void beginPurchaseFlow();
+
+  void endPurchaseFlow();
+
   interface View {
 
     void onBillingSuccess();

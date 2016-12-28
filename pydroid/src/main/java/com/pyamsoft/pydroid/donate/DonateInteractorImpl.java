@@ -35,10 +35,8 @@ class DonateInteractorImpl implements DonateInteractor {
     this.checkout = checkout;
   }
 
-  @Override
-  public void bindCallbacks(@NonNull Inventory.Callback callback, @NonNull OnBillingSuccessListener success,
-      @NonNull OnBillingErrorListener error) {
-    Timber.d("Create checkout purchase flow");
+  @Override public void bindCallbacks(@NonNull Inventory.Callback callback,
+      @NonNull OnBillingSuccessListener success, @NonNull OnBillingErrorListener error) {
     checkout.init(callback, success, error);
   }
 
@@ -48,12 +46,18 @@ class DonateInteractorImpl implements DonateInteractor {
   }
 
   @Override public void destroy() {
-    Timber.d("Stop checkout purchase flow");
     checkout.stop();
   }
 
+  @Override public void beginPurchaseFlow() {
+    checkout.beginPurchaseFlow();
+  }
+
+  @Override public void endPurchaseFlow() {
+    checkout.endPurchaseFlow();
+  }
+
   @Override public void loadInventory() {
-    Timber.d("Load inventory from checkout");
     checkout.loadInventory();
   }
 
@@ -69,7 +73,6 @@ class DonateInteractorImpl implements DonateInteractor {
 
   @NonNull @Override public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
       @Nullable Intent data) {
-    Timber.i("Process billing onFinish");
     return SerialOffloader.newInstance(
         () -> checkout.processBillingResult(requestCode, resultCode, data));
   }

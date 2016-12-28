@@ -43,5 +43,9 @@ interface ICheckout {
 
   void consume(@NonNull String token);
 
+  void beginPurchaseFlow();
+
+  void endPurchaseFlow();
+
   @CheckResult boolean processBillingResult(int requestCode, int resultCode, @Nullable Intent data);
 }

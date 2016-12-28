@@ -61,6 +61,15 @@ class RealCheckout implements ICheckout {
     }
   }
 
+  private void makeInventory() {
+    checkCheckoutNonNull();
+
+    if (inventory == null) {
+      //noinspection ConstantConditions
+      inventory = checkout.makeInventory();
+    }
+  }
+
   @Override public void createForActivity(@NonNull Activity activity) {
     if (checkout != null) {
       throw new IllegalStateException("Checkout is already created for a different Activity");
@@ -82,18 +91,29 @@ class RealCheckout implements ICheckout {
 
     //noinspection ConstantConditions
     checkout.start();
+    makeInventory();
+  }
+
+  @Override public void beginPurchaseFlow() {
+    checkCheckoutNonNull();
+
+    //noinspection ConstantConditions
     checkout.createPurchaseFlow(new DonationPurchaseListener());
+  }
+
+  @Override public void endPurchaseFlow() {
+    checkCheckoutNonNull();
+
+    //noinspection ConstantConditions
+    checkout.destroyPurchaseFlow();
   }
 
   @Override public void loadInventory() {
     checkCheckoutNonNull();
-
-    if (inventory == null) {
-      //noinspection ConstantConditions
-      inventory = checkout.makeInventory();
-    }
+    makeInventory();
 
     if (inventoryCallback != null) {
+      //noinspection ConstantConditions
       inventory.load(
           Inventory.Request.create().loadAllPurchases().loadSkus(ProductTypes.IN_APP, inAppSkuList),
           inventoryCallback);
@@ -104,7 +124,6 @@ class RealCheckout implements ICheckout {
     checkCheckoutNonNull();
 
     //noinspection ConstantConditions
-    checkout.destroyPurchaseFlow();
     checkout.stop();
     inventory = null;
     inventoryCallback = null;

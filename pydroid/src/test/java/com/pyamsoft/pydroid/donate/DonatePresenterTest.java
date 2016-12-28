@@ -108,23 +108,18 @@ public class DonatePresenterTest {
     }
   }
 
-  @Test public void testCreateLoadsInventory() {
+  @Test public void testCreate() throws InterruptedException {
     final Activity activity = TestUtils.getAppCompatActivityController().create().get();
 
-    final AtomicInteger counter = new AtomicInteger(0);
     Mockito.doAnswer(invocation -> {
-      counter.incrementAndGet();
+      singleLatch.countDown();
       return null;
     }).when(mockInteractor).create(activity);
 
-    Mockito.doAnswer(invocation -> {
-      counter.incrementAndGet();
-      return null;
-    }).when(mockInteractor).loadInventory();
-
-    assertEquals(0, counter.get());
     presenter.create(activity);
-    assertEquals(2, counter.get());
+    if (!singleLatch.await(5, TimeUnit.SECONDS)) {
+      throw new RuntimeException("Latch did not count down within 5 seconds");
+    }
   }
 
   @Test public void testLoadsInventory() throws InterruptedException {

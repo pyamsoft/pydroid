@@ -126,6 +126,10 @@ public class PYDroidModule {
       return appContext;
     }
 
+    @CheckResult @NonNull public final PYDroidPreferences providePreferences() {
+      return PYDroidPreferencesImpl.getInstance(provideContext());
+    }
+
     // Singleton
     @CheckResult @NonNull public final Billing provideBilling() {
       return billing;

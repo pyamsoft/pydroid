@@ -15,23 +15,27 @@
  *
  */
 
-package com.pyamsoft.pydroid.ads;
+package com.pyamsoft.pydroid.app;
 
-import android.support.annotation.CheckResult;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.PYDroidModule;
 
-public class AdvertisementModule {
+public abstract class OnRegisteredSharedPreferenceChangeListener
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-  @NonNull private final AdvertisementPresenter presenter;
+  private boolean isRegistered = false;
 
-  public AdvertisementModule(@NonNull PYDroidModule.Provider pyDroidModule) {
-    final AdvertisementInteractor interactor =
-        new AdvertisementInteractorImpl(pyDroidModule.providePreferences());
-    presenter = new AdvertisementPresenterImpl(interactor);
+  public void register(@NonNull SharedPreferences preferences) {
+    if (!isRegistered) {
+      preferences.registerOnSharedPreferenceChangeListener(this);
+      isRegistered = true;
+    }
   }
 
-  @NonNull @CheckResult public AdvertisementPresenter getPresenter() {
-    return presenter;
+  @SuppressWarnings("unused") public void unregister(@NonNull SharedPreferences preferences) {
+    if (isRegistered) {
+      preferences.unregisterOnSharedPreferenceChangeListener(this);
+      isRegistered = false;
+    }
   }
 }

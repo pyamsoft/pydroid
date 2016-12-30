@@ -33,7 +33,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import com.pyamsoft.pydroid.app.ApplicationPreferences;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;

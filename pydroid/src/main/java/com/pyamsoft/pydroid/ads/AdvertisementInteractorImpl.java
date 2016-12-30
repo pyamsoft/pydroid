@@ -17,10 +17,8 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.R;
-import com.pyamsoft.pydroid.app.ApplicationPreferences;
+import com.pyamsoft.pydroid.PYDroidPreferences;
 import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import com.pyamsoft.pydroid.tool.Offloader;
 import timber.log.Timber;
@@ -28,23 +26,16 @@ import timber.log.Timber;
 class AdvertisementInteractorImpl implements AdvertisementInteractor {
 
   @SuppressWarnings("WeakerAccess") static final int MAX_SHOW_COUNT = 4;
-  @SuppressWarnings("WeakerAccess") @NonNull static final String ADVERTISEMENT_SHOWN_COUNT_KEY =
-      "advertisement_shown_count";
-  @SuppressWarnings("WeakerAccess") @NonNull final String preferenceKey;
-  @SuppressWarnings("WeakerAccess") final boolean preferenceDefault;
-  @SuppressWarnings("WeakerAccess") @NonNull final ApplicationPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PYDroidPreferences preferences;
 
-  AdvertisementInteractorImpl(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    preferences = ApplicationPreferences.getInstance(context);
-    preferenceKey = appContext.getString(R.string.adview_key);
-    preferenceDefault = appContext.getResources().getBoolean(R.bool.adview_default);
+  AdvertisementInteractorImpl(@NonNull PYDroidPreferences pyDroidPreferences) {
+    this.preferences = pyDroidPreferences;
   }
 
   @NonNull @Override public Offloader<Boolean> showAdView() {
     return AsyncOffloader.newInstance(() -> {
-      final boolean isEnabled = preferences.get(preferenceKey, preferenceDefault);
-      final int shownCount = preferences.get(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
+      final boolean isEnabled = preferences.isAdviewEnabled();
+      final int shownCount = preferences.getAdViewShownCount();
       final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
 
       if (isEnabled && isValidCount) {
@@ -54,7 +45,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
         Timber.w("Do not show ad view");
         final int newCount = shownCount + 1;
         Timber.d("Increment shown count to %d", newCount);
-        preferences.put(ADVERTISEMENT_SHOWN_COUNT_KEY, newCount);
+        preferences.setAdViewShownCount(newCount);
         return Boolean.FALSE;
       }
     });
@@ -63,9 +54,9 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
   @NonNull @Override public Offloader<Boolean> hideAdView() {
     return AsyncOffloader.newInstance(() -> {
       Timber.d("Hide AdView");
-      if (preferences.get(ADVERTISEMENT_SHOWN_COUNT_KEY, 0) >= MAX_SHOW_COUNT) {
+      if (preferences.getAdViewShownCount() >= MAX_SHOW_COUNT) {
         Timber.d("Write shown count back to 0");
-        preferences.put(ADVERTISEMENT_SHOWN_COUNT_KEY, 0);
+        preferences.setAdViewShownCount(0);
         return Boolean.TRUE;
       } else {
         return Boolean.FALSE;

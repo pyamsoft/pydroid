@@ -15,23 +15,15 @@
  *
  */
 
-package com.pyamsoft.pydroid.ads;
+package com.pyamsoft.pydroid;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.PYDroidModule;
 
-public class AdvertisementModule {
+public interface PYDroidPreferences {
 
-  @NonNull private final AdvertisementPresenter presenter;
+  @CheckResult boolean isAdviewEnabled();
 
-  public AdvertisementModule(@NonNull PYDroidModule.Provider pyDroidModule) {
-    final AdvertisementInteractor interactor =
-        new AdvertisementInteractorImpl(pyDroidModule.providePreferences());
-    presenter = new AdvertisementPresenterImpl(interactor);
-  }
+  @CheckResult int getAdViewShownCount();
 
-  @NonNull @CheckResult public AdvertisementPresenter getPresenter() {
-    return presenter;
-  }
+  void setAdViewShownCount(int count);
 }

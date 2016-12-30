@@ -24,9 +24,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
-import com.pyamsoft.pydroid.ActionSingle;
 import java.util.Map;
 import java.util.Set;
+import timber.log.Timber;
 
 /**
  * This class is intended as a convenient way to interact with single preferences at a time.
@@ -37,12 +37,20 @@ public final class ApplicationPreferences {
 
   @Nullable private static volatile ApplicationPreferences instance = null;
   @NonNull private final SharedPreferences p;
+  private boolean autoCommit;
+  @Nullable private volatile SharedPreferences.Editor editor;
 
   private ApplicationPreferences(@NonNull Context context) {
     Context appContext = context.getApplicationContext();
     p = PreferenceManager.getDefaultSharedPreferences(appContext);
+    autoCommit = true;
   }
 
+  /**
+   * Retrieve the singleton instance of Application Preferences
+   *
+   * Guarantee that the singleton is created and non null using double checking synchronization
+   */
   @CheckResult @NonNull public static ApplicationPreferences getInstance(@NonNull Context context) {
     //noinspection ConstantConditions
     if (context == null) {
@@ -61,33 +69,121 @@ public final class ApplicationPreferences {
     return instance;
   }
 
-  @NonNull public ApplicationPreferences put(@NonNull String s, long l) {
-    p.edit().putLong(s, l).apply();
+  /**
+   * Get the editor as a singleton. Because the same editor object that is edited must also be
+   * committed or applied, we return the same editor object each time this is called
+   */
+  @SuppressLint("CommitPrefEdits") @CheckResult @NonNull
+  private SharedPreferences.Editor getEditor() {
+    if (editor == null) {
+      synchronized (this) {
+        if (editor == null) {
+          editor = p.edit();
+        }
+      }
+    }
+
+    if (editor == null) {
+      throw new IllegalStateException("Editor is NULL");
+    } else {
+      //noinspection ConstantConditions
+      return editor;
+    }
+  }
+
+  /**
+   * Turn on whether or not to auto commit preference changes after any put(), remove(), or clear()
+   * function
+   */
+  public void setAutoCommit(boolean autoCommit) {
+    this.autoCommit = autoCommit;
+    if (!autoCommit) {
+      Timber.w("AutoCommit is NOT enabled, you must call commit manually");
+    }
+  }
+
+  /**
+   * Auto apply the preference changes if autoCommit is set
+   */
+  private void autoApply() {
+    if (autoCommit) {
+      apply();
+    }
+  }
+
+  public void apply() {
+    savePreferences(false);
+  }
+
+  public void commit() {
+    savePreferences(true);
+  }
+
+  /**
+   * Save the currently edited preferences if the editor is non null.
+   * Once committed, we null out the editor so that it can be recreated later.
+   */
+  private void savePreferences(boolean commit) {
+    if (editor == null) {
+      throw new IllegalStateException("Editor is NULL");
+    } else {
+      if (editor != null) {
+        synchronized (this) {
+          if (editor != null) {
+            if (commit) {
+              //noinspection ConstantConditions
+              editor.commit();
+            } else {
+              //noinspection ConstantConditions
+              editor.apply();
+            }
+            editor = null;
+          }
+        }
+      }
+    }
+  }
+
+  @CheckResult @NonNull public ApplicationPreferences put(@NonNull String s, long l) {
+    getEditor().putLong(s, l);
+    autoApply();
     return this;
   }
 
-  @NonNull public ApplicationPreferences put(@NonNull String s, @NonNull String st) {
-    p.edit().putString(s, st).apply();
+  @CheckResult @NonNull public ApplicationPreferences put(@NonNull String s, @NonNull String st) {
+    getEditor().putString(s, st);
+    autoApply();
     return this;
   }
 
-  @NonNull public ApplicationPreferences put(@NonNull String s, int i) {
-    p.edit().putInt(s, i).apply();
+  @CheckResult @NonNull public ApplicationPreferences put(@NonNull String s, int i) {
+    getEditor().putInt(s, i);
+    autoApply();
     return this;
   }
 
-  @NonNull public ApplicationPreferences put(@NonNull String s, float f) {
-    p.edit().putFloat(s, f).apply();
+  @CheckResult @NonNull public ApplicationPreferences put(@NonNull String s, float f) {
+    getEditor().putFloat(s, f);
+    autoApply();
     return this;
   }
 
-  @NonNull public ApplicationPreferences putSet(@NonNull String s, @NonNull Set<String> st) {
-    p.edit().putStringSet(s, st).apply();
+  @CheckResult @NonNull
+  public ApplicationPreferences put(@NonNull String s, @NonNull Set<String> st) {
+    getEditor().putStringSet(s, st);
+    autoApply();
     return this;
   }
 
-  @NonNull public ApplicationPreferences put(@NonNull String s, boolean b) {
-    p.edit().putBoolean(s, b).apply();
+  @CheckResult @NonNull public ApplicationPreferences put(@NonNull String s, boolean b) {
+    getEditor().putBoolean(s, b);
+    autoApply();
+    return this;
+  }
+
+  @NonNull @CheckResult public ApplicationPreferences remove(@NonNull String s) {
+    getEditor().remove(s);
+    autoApply();
     return this;
   }
 
@@ -107,8 +203,7 @@ public final class ApplicationPreferences {
     return p.getFloat(s, f);
   }
 
-  @CheckResult @Nullable
-  public final Set<String> getSet(@NonNull String s, @Nullable Set<String> st) {
+  @CheckResult @Nullable public final Set<String> get(@NonNull String s, @Nullable Set<String> st) {
     return p.getStringSet(s, st);
   }
 
@@ -124,40 +219,33 @@ public final class ApplicationPreferences {
     return p.contains(s);
   }
 
-  @NonNull @CheckResult public ApplicationPreferences remove(@NonNull String s) {
-    p.edit().remove(s).apply();
-    return this;
-  }
-
-  @CheckResult @NonNull public ApplicationPreferences multiEdit(
-      @NonNull ActionSingle<SharedPreferences> preferencesAction) {
-    preferencesAction.call(p);
-    return this;
-  }
-
-  public final void clear() {
+  public ApplicationPreferences clear() {
     clear(false);
+    return this;
   }
 
   /**
    * We want to guarantee that the preferences are cleared before continuing, so we block on the
    * current thread
    */
-  @SuppressLint("CommitPrefEdits") public final void clear(boolean commit) {
-    final SharedPreferences.Editor editor = p.edit().clear();
-    if (commit) {
-      editor.commit();
-    } else {
-      editor.apply();
+  public ApplicationPreferences clear(boolean commit) {
+    getEditor().clear();
+    if (autoCommit) {
+      savePreferences(commit);
     }
+    return this;
   }
 
-  public final void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
+  public ApplicationPreferences register(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.registerOnSharedPreferenceChangeListener(l);
+    return this;
   }
 
-  public final void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
+  public ApplicationPreferences unregister(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener l) {
     p.unregisterOnSharedPreferenceChangeListener(l);
+    return this;
   }
 
   public abstract static class OnSharedPreferenceChangeListener

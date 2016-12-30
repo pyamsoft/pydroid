@@ -83,12 +83,8 @@ public final class ApplicationPreferences {
       }
     }
 
-    if (editor == null) {
-      throw new IllegalStateException("Editor is NULL");
-    } else {
-      //noinspection ConstantConditions
-      return editor;
-    }
+    //noinspection ConstantConditions
+    return editor;
   }
 
   /**
@@ -121,26 +117,19 @@ public final class ApplicationPreferences {
 
   /**
    * Save the currently edited preferences if the editor is non null.
-   * Once committed, we null out the editor so that it can be recreated later.
+   * Once committed, we should be able to safely re-use the existing editor,
+   * as any previous changes should have been committed to memory and then cleared out
    */
   private void savePreferences(boolean commit) {
-    if (editor == null) {
-      throw new IllegalStateException("Editor is NULL");
-    } else {
-      if (editor != null) {
-        synchronized (this) {
-          if (editor != null) {
-            if (commit) {
-              //noinspection ConstantConditions
-              editor.commit();
-            } else {
-              //noinspection ConstantConditions
-              editor.apply();
-            }
-            editor = null;
-          }
-        }
+    if (editor != null) {
+      if (commit) {
+        //noinspection ConstantConditions
+        editor.commit();
+      } else {
+        //noinspection ConstantConditions
+        editor.apply();
       }
+      editor = null;
     }
   }
 

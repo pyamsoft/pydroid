@@ -34,7 +34,7 @@ class AdvertisementInteractorImpl implements AdvertisementInteractor {
 
   @NonNull @Override public Offloader<Boolean> showAdView() {
     return AsyncOffloader.newInstance(() -> {
-      final boolean isEnabled = preferences.isAdviewEnabled();
+      final boolean isEnabled = preferences.isAdViewEnabled();
       final int shownCount = preferences.getAdViewShownCount();
       final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
 

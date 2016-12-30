@@ -22,18 +22,17 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceManager;
 
 final class PYDroidPreferencesImpl implements PYDroidPreferences {
 
+  @NonNull private static final String RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version";
   @NonNull private static final String ADVERTISEMENT_SHOWN_COUNT_KEY = "advertisement_shown_count";
-  @Nullable private static volatile PYDroidPreferencesImpl instance = null;
   @NonNull private final String adViewEnabledKey;
   private final boolean adViewEnabledDefault;
   @NonNull private final SharedPreferences preferences;
 
-  private PYDroidPreferencesImpl(@NonNull Context context) {
+  PYDroidPreferencesImpl(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     final Resources resources = appContext.getResources();
     this.preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
@@ -42,30 +41,7 @@ final class PYDroidPreferencesImpl implements PYDroidPreferences {
     adViewEnabledDefault = resources.getBoolean(R.bool.adview_default);
   }
 
-  /**
-   * Retrieve the singleton instance of PYDroidPreferences
-   *
-   * Guarantee that the singleton is created and non null using double checking synchronization
-   */
-  @CheckResult @NonNull public static PYDroidPreferencesImpl getInstance(@NonNull Context context) {
-    //noinspection ConstantConditions
-    if (context == null) {
-      throw new IllegalArgumentException("Context is NULL");
-    }
-
-    if (instance == null) {
-      synchronized (PYDroidPreferencesImpl.class) {
-        if (instance == null) {
-          instance = new PYDroidPreferencesImpl(context.getApplicationContext());
-        }
-      }
-    }
-
-    //noinspection ConstantConditions
-    return instance;
-  }
-
-  @CheckResult public boolean isAdviewEnabled() {
+  @CheckResult public boolean isAdViewEnabled() {
     return preferences.getBoolean(adViewEnabledKey, adViewEnabledDefault);
   }
 
@@ -75,5 +51,13 @@ final class PYDroidPreferencesImpl implements PYDroidPreferences {
 
   @Override public void setAdViewShownCount(int count) {
     preferences.edit().putInt(ADVERTISEMENT_SHOWN_COUNT_KEY, count).apply();
+  }
+
+  @Override public int getRatingAcceptedVersion() {
+    return preferences.getInt(RATING_ACCEPTED_VERSION, 0);
+  }
+
+  @Override public void setRatingAcceptedVersion(int version) {
+    preferences.edit().putInt(RATING_ACCEPTED_VERSION, version).apply();
   }
 }

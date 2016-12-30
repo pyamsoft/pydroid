@@ -127,7 +127,7 @@ public class PYDroidModule {
     }
 
     @CheckResult @NonNull public final PYDroidPreferences providePreferences() {
-      return PYDroidPreferencesImpl.getInstance(provideContext());
+      return PYDroidPreferencesImpl.Instance.getInstance(provideContext());
     }
 
     // Singleton

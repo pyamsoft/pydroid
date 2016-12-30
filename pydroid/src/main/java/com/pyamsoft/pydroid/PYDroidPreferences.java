@@ -17,13 +17,48 @@
 
 package com.pyamsoft.pydroid;
 
+import android.content.Context;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public interface PYDroidPreferences {
 
-  @CheckResult boolean isAdviewEnabled();
+  @CheckResult boolean isAdViewEnabled();
 
   @CheckResult int getAdViewShownCount();
 
   void setAdViewShownCount(int count);
+
+  @CheckResult int getRatingAcceptedVersion();
+
+  void setRatingAcceptedVersion(int version);
+
+  class Instance {
+
+    @Nullable private static volatile PYDroidPreferences instance = null;
+
+    /**
+     * Retrieve the singleton instance of PYDroidPreferences
+     *
+     * Guarantee that the singleton is created and non null using double checking synchronization
+     */
+    @CheckResult @NonNull public static PYDroidPreferences getInstance(@NonNull Context context) {
+      //noinspection ConstantConditions
+      if (context == null) {
+        throw new IllegalArgumentException("Context is NULL");
+      }
+
+      if (instance == null) {
+        synchronized (Instance.class) {
+          if (instance == null) {
+            instance = new PYDroidPreferencesImpl(context.getApplicationContext());
+          }
+        }
+      }
+
+      //noinspection ConstantConditions
+      return instance;
+    }
+  }
 }

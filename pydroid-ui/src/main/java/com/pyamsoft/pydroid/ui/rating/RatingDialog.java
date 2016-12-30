@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import com.pyamsoft.pydroid.PYDroidPreferences;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
@@ -44,14 +45,12 @@ import timber.log.Timber;
 
 public class RatingDialog extends DialogFragment {
 
-  @NonNull private static final String PREFERENCE_TARGET = "rating_dialog_accepted_version";
   @NonNull private static final String CHANGE_LOG_TEXT = "change_log_text";
   @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
   @SuppressWarnings("WeakerAccess") String rateLink;
   @SuppressWarnings("WeakerAccess") boolean acknowledged;
-  private ApplicationPreferences preferences;
   private Spannable changeLogText;
   private int versionCode;
   @DrawableRes private int changeLogIcon;
@@ -66,8 +65,8 @@ public class RatingDialog extends DialogFragment {
   // KLUDGE direct preference access
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider, final boolean force) {
-    final ApplicationPreferences preferences = ApplicationPreferences.getInstance(activity);
-    if (force || preferences.get(PREFERENCE_TARGET, 0) < provider.getCurrentApplicationVersion()) {
+    final PYDroidPreferences preferences = PYDroidPreferences.Instance.getInstance(activity);
+    if (force || preferences.getRatingAcceptedVersion() < provider.getCurrentApplicationVersion()) {
       AppUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating");
     }
   }
@@ -88,7 +87,6 @@ public class RatingDialog extends DialogFragment {
     super.onCreate(savedInstanceState);
     setCancelable(false);
     acknowledged = false;
-    preferences = ApplicationPreferences.getInstance(getContext());
     final Bundle launchArguments = getArguments();
     rateLink = launchArguments.getString(RATE_LINK, null);
     versionCode = launchArguments.getInt(VERSION_CODE, 0);
@@ -158,9 +156,9 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDismiss(DialogInterface dialog) {
     super.onDismiss(dialog);
-    if (preferences != null && acknowledged) {
+    if (acknowledged) {
       Timber.d("Rating dialog has been addressed by user. Commit to memory");
-      preferences.put(PREFERENCE_TARGET, versionCode);
+      PYDroidPreferences.Instance.getInstance(getContext()).setRatingAcceptedVersion(versionCode);
     }
   }
 

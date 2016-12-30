@@ -23,15 +23,9 @@ import android.support.annotation.NonNull;
 public class SocialMediaModule {
 
   @NonNull private final SocialMediaPresenter presenter;
-  @NonNull private final SocialMediaPresenterLoader loader;
 
   public SocialMediaModule() {
     presenter = new SocialMediaPresenterImpl();
-    loader = new SocialMediaPresenterLoader(presenter);
-  }
-
-  @NonNull @CheckResult public final SocialMediaPresenterLoader getLoader() {
-    return loader;
   }
 
   @NonNull @CheckResult public final SocialMediaPresenter getPresenter() {

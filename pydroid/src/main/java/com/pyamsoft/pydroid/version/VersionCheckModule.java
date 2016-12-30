@@ -23,20 +23,17 @@ import com.pyamsoft.pydroid.PYDroidModule;
 
 public class VersionCheckModule {
 
-  @NonNull private final VersionCheckInteractor interactor;
   @NonNull private final VersionCheckPresenter presenter;
-  @NonNull private final VersionCheckPresenterLoader loader;
 
   public VersionCheckModule(@NonNull PYDroidModule.Provider pyDroidModule,
       @NonNull ApiModule apiModule) {
-    interactor = new VersionCheckInteractorImpl(
+    final VersionCheckInteractor interactor = new VersionCheckInteractorImpl(
         apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class),
         pyDroidModule.provideContext().getPackageName());
     presenter = new VersionCheckPresenterImpl(interactor);
-    loader = new VersionCheckPresenterLoader(presenter);
   }
 
-  @NonNull @CheckResult public VersionCheckPresenterLoader getLoader() {
-    return loader;
+  @NonNull @CheckResult public VersionCheckPresenter getPresenter() {
+    return presenter;
   }
 }

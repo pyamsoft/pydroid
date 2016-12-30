@@ -19,18 +19,11 @@ package com.pyamsoft.pydroid;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.donate.DonatePresenter;
 
-public abstract class SocialMediaLoaderCallback
-    implements PersistLoader.Callback<SocialMediaPresenter> {
+public class DonatePresenterLoader extends PersistLoader<DonatePresenter> {
 
-  protected SocialMediaLoaderCallback() {
-  }
-
-  @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-    return SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideSocialMediaModule()
-        .getLoader();
+  @NonNull @Override public DonatePresenter loadPersistent() {
+    return SingleInitContentProvider.getInstance().getModule().provideDonateModule().getPresenter();
   }
 }

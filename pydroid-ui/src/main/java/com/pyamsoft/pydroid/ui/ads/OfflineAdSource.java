@@ -25,8 +25,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
+import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.ads.AdSource;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -129,7 +130,11 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   @NonNull @Override
   public View create(@NonNull Context context, @Nullable Bundle savedInstanceState) {
     loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
+        .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<SocialMediaPresenter>() {
+          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+            return new SocialMediaPresenterLoader();
+          }
+
           @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
             presenter = persist;
           }

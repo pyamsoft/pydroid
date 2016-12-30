@@ -33,10 +33,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.pyamsoft.pydroid.AboutLibrariesLoaderCallback;
+import com.pyamsoft.pydroid.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.AboutLibrariesProvider;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
@@ -121,11 +122,16 @@ public class AboutLibrariesFragment extends ActionBarFragment
     }
 
     loadedKey = PersistentCache.get()
-        .load(KEY_ABOUT_PRESENTER, savedInstanceState, new AboutLibrariesLoaderCallback() {
-          @Override public void onPersistentLoaded(@NonNull AboutLibrariesPresenter persist) {
-            presenter = persist;
-          }
-        });
+        .load(KEY_ABOUT_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<AboutLibrariesPresenter>() {
+              @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
+                return new AboutLibrariesPresenterLoader();
+              }
+
+              @Override public void onPersistentLoaded(@NonNull AboutLibrariesPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @Nullable @Override

@@ -30,7 +30,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
-import com.pyamsoft.pydroid.DonatePresenterLoaderCallback;
+import com.pyamsoft.pydroid.DonatePresenterLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
@@ -52,12 +53,17 @@ public abstract class DonationActivity extends VersionCheckActivity
     super.onCreate(savedInstanceState);
 
     loadedKey = PersistentCache.get()
-        .load(KEY_DONATE_PRESENTER, savedInstanceState, new DonatePresenterLoaderCallback() {
+        .load(KEY_DONATE_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<DonatePresenter>() {
 
-          @Override public void onPersistentLoaded(@NonNull DonatePresenter persist) {
-            donatePresenter = persist;
-          }
-        });
+              @NonNull @Override public PersistLoader<DonatePresenter> createLoader() {
+                return new DonatePresenterLoader();
+              }
+
+              @Override public void onPersistentLoaded(@NonNull DonatePresenter persist) {
+                donatePresenter = persist;
+              }
+            });
 
     // Bind here to work with Checkout lifecycle
     donatePresenter.bindView(this);

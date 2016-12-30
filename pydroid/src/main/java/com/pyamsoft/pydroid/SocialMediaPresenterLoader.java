@@ -19,18 +19,14 @@ package com.pyamsoft.pydroid;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.version.VersionCheckPresenter;
+import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 
-public abstract class VersionCheckLoaderCallback
-    implements PersistLoader.Callback<VersionCheckPresenter> {
+public class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
 
-  protected VersionCheckLoaderCallback() {
-  }
-
-  @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
+  @NonNull @Override public SocialMediaPresenter loadPersistent() {
     return SingleInitContentProvider.getInstance()
         .getModule()
-        .provideVersionCheckModule()
-        .getLoader();
+        .provideSocialMediaModule()
+        .getPresenter();
   }
 }

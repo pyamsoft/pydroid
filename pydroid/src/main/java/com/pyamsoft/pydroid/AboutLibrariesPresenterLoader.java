@@ -21,16 +21,12 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public abstract class AboutLibrariesLoaderCallback
-    implements PersistLoader.Callback<AboutLibrariesPresenter> {
+public class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresenter> {
 
-  protected AboutLibrariesLoaderCallback() {
-  }
-
-  @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
+  @NonNull @Override public AboutLibrariesPresenter loadPersistent() {
     return SingleInitContentProvider.getInstance()
         .getModule()
         .provideAboutLibrariesModule()
-        .getLoader();
+        .getPresenter();
   }
 }

@@ -24,7 +24,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
+import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -73,7 +74,11 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
     }
 
     loadedKey = PersistentCache.get()
-        .load(KEY_SOCIAL_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
+        .load(KEY_SOCIAL_PRESENTER, savedInstanceState, new PersistLoader.Callback<SocialMediaPresenter>() {
+
+          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+            return new SocialMediaPresenterLoader();
+          }
 
           @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
             presenter = persist;

@@ -22,13 +22,14 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
+import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
 import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding;
+import com.pyamsoft.pydroid.util.NetworkUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public class SocialMediaPreference extends BaseBoundPreference
@@ -90,12 +91,17 @@ public class SocialMediaPreference extends BaseBoundPreference
   @Override public void onAttached() {
     super.onAttached();
 
-    loadedKey = PersistentCache.get().load(KEY_PRESENTER, null, new SocialMediaLoaderCallback() {
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, null, new PersistLoader.Callback<SocialMediaPresenter>() {
 
-      @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-        presenter = persist;
-      }
-    });
+          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+            return new SocialMediaPresenterLoader();
+          }
+
+          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+            presenter = persist;
+          }
+        });
 
     presenter.bindView(this);
   }

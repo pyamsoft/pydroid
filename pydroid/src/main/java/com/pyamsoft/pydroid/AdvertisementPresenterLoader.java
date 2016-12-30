@@ -21,16 +21,12 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public abstract class AdvertisementViewLoaderCallback
-    implements PersistLoader.Callback<AdvertisementPresenter> {
+public class AdvertisementPresenterLoader extends PersistLoader<AdvertisementPresenter> {
 
-  protected AdvertisementViewLoaderCallback() {
-  }
-
-  @NonNull @Override public PersistLoader<AdvertisementPresenter> createLoader() {
+  @NonNull @Override public AdvertisementPresenter loadPersistent() {
     return SingleInitContentProvider.getInstance()
         .getModule()
         .provideAdvertisementModule()
-        .getLoader();
+        .getPresenter();
   }
 }

@@ -32,20 +32,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.pyamsoft.pydroid.SocialMediaLoaderCallback;
-import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
+import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
+import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.version.VersionCheckPresenter;
-import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.donate.DonateDialog;
 import com.pyamsoft.pydroid.ui.donate.DonationActivity;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
+import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.NetworkUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.version.VersionCheckPresenter;
+import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import java.util.Locale;
 import timber.log.Timber;
 
@@ -64,20 +65,30 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     super.onCreate(savedInstanceState);
 
     loadedKey = PersistentCache.get()
-        .load(KEY_LICENSE_PRESENTER, savedInstanceState, new VersionCheckLoaderCallback() {
+        .load(KEY_LICENSE_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<VersionCheckPresenter>() {
 
-          @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
+                return new VersionCheckPresenterLoader();
+              }
+
+              @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
+                presenter = persist;
+              }
+            });
 
     ratingKey = PersistentCache.get()
-        .load(KEY_SOCIAL_PRESENTER, savedInstanceState, new SocialMediaLoaderCallback() {
+        .load(KEY_SOCIAL_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<SocialMediaPresenter>() {
 
-          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-            socialPresenter = persist;
-          }
-        });
+              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+                return new SocialMediaPresenterLoader();
+              }
+
+              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+                socialPresenter = persist;
+              }
+            });
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override

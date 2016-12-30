@@ -66,8 +66,6 @@ public class PYDroidModule {
   }
 
   // Create a new one every time
-  //
-  // NOTE: Makes a new SocialMediaModule
   @CheckResult @NonNull final AdvertisementModule provideAdvertisementModule() {
     return new AdvertisementModule(provider);
   }
@@ -86,7 +84,7 @@ public class PYDroidModule {
     @NonNull private final Billing billing;
     @NonNull private final List<String> inAppPurchaseList;
 
-    Provider(final @NonNull Context context, @NonNull LicenseProvider licenseProvider) {
+    Provider(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
       //noinspection ConstantConditions
       if (context == null) {
         throw new NullPointerException("Application cannot be NULL");
@@ -99,7 +97,7 @@ public class PYDroidModule {
           new Billing(appContext, new DonationBillingConfiguration(appContext.getPackageName()));
     }
 
-    @CheckResult @NonNull final List<String> createInAppPurchaseList(@NonNull Context context) {
+    @CheckResult @NonNull private List<String> createInAppPurchaseList(@NonNull Context context) {
       final Context appContext = context.getApplicationContext();
       final String packageName = appContext.getPackageName();
       final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;
@@ -143,8 +141,7 @@ public class PYDroidModule {
       return inAppPurchaseList;
     }
 
-    @SuppressWarnings("WeakerAccess") static class DonationBillingConfiguration
-        extends Billing.DefaultConfiguration {
+    static class DonationBillingConfiguration extends Billing.DefaultConfiguration {
 
       @NonNull private final String publicKey;
 
@@ -171,8 +168,7 @@ public class PYDroidModule {
       }
     }
 
-    @SuppressWarnings("WeakerAccess") static class AlwaysPurchaseVerifier
-        implements PurchaseVerifier {
+    static class AlwaysPurchaseVerifier implements PurchaseVerifier {
 
       /**
        * Verify all purchases as 'valid'

@@ -23,7 +23,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfigChecker;
-import com.pyamsoft.pydroid.VersionCheckLoaderCallback;
+import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -52,11 +53,16 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     super.onCreate(savedInstanceState);
 
     loadedKey = PersistentCache.get()
-        .load(KEY_VERSION_PRESENTER, savedInstanceState, new VersionCheckLoaderCallback() {
-          @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
-            presenter = persist;
-          }
-        });
+        .load(KEY_VERSION_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<VersionCheckPresenter>() {
+              @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
+                return new VersionCheckPresenterLoader();
+              }
+
+              @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @CallSuper @Override protected void onDestroy() {

@@ -29,9 +29,10 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.pyamsoft.pydroid.AdvertisementViewLoaderCallback;
+import com.pyamsoft.pydroid.AdvertisementPresenterLoader;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -75,12 +76,17 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   @SuppressWarnings("WeakerAccess")
   public final void create(@Nullable AdSource adSource, @Nullable Bundle savedInstanceState) {
     loadedKey = PersistentCache.get()
-        .load(KEY_ADVERTISEMENT, savedInstanceState, new AdvertisementViewLoaderCallback() {
+        .load(KEY_ADVERTISEMENT, savedInstanceState,
+            new PersistLoader.Callback<AdvertisementPresenter>() {
 
-          @Override public void onPersistentLoaded(@NonNull AdvertisementPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @NonNull @Override public PersistLoader<AdvertisementPresenter> createLoader() {
+                return new AdvertisementPresenterLoader();
+              }
+
+              @Override public void onPersistentLoaded(@NonNull AdvertisementPresenter persist) {
+                presenter = persist;
+              }
+            });
 
     // Default to gone
     setVisibility(View.GONE);

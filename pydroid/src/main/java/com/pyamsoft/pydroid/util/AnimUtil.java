@@ -142,8 +142,7 @@ public final class AnimUtil {
 
   public static void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
     final View t = toolbar.getChildAt(0);
-    if (t instanceof TextView &&
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    if (t instanceof TextView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       final TextView title = (TextView) t;
       AnimUtil.fadeIn(title).start();
     }

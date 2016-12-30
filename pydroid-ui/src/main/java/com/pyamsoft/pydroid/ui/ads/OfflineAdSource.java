@@ -31,10 +31,10 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.ui.R;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -130,15 +130,16 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   @NonNull @Override
   public View create(@NonNull Context context, @Nullable Bundle savedInstanceState) {
     loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<SocialMediaPresenter>() {
-          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-            return new SocialMediaPresenterLoader();
-          }
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<SocialMediaPresenter>() {
+              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+                return new SocialMediaPresenterLoader();
+              }
 
-          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+                presenter = persist;
+              }
+            });
 
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));

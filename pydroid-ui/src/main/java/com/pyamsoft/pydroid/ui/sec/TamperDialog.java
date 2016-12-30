@@ -29,9 +29,9 @@ import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.ui.R;
 
 public class TamperDialog extends DialogFragment implements SocialMediaPresenter.View {
 
@@ -43,16 +43,17 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
     super.onCreate(savedInstanceState);
 
     loadedKey = PersistentCache.get()
-        .load(KEY_SOCIAL_MEDIA, savedInstanceState, new PersistLoader.Callback<SocialMediaPresenter>() {
+        .load(KEY_SOCIAL_MEDIA, savedInstanceState,
+            new PersistLoader.Callback<SocialMediaPresenter>() {
 
-          @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-            return new SocialMediaPresenterLoader();
-          }
+              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
+                return new SocialMediaPresenterLoader();
+              }
 
-          @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
+                presenter = persist;
+              }
+            });
 
     setCancelable(false);
   }

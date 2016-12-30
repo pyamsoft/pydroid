@@ -20,8 +20,8 @@ package com.pyamsoft.pydroid.ui.rating;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
-import com.pyamsoft.pydroid.util.StringUtil;
 import com.pyamsoft.pydroid.ui.donate.DonationActivity;
+import com.pyamsoft.pydroid.util.StringUtil;
 
 public abstract class RatingActivity extends DonationActivity
     implements RatingDialog.ChangeLogProvider {

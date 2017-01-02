@@ -29,7 +29,7 @@ apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.pyamsoft'
-version = '5.4.1'
+version = '5.4.2'
 
 android {
   compileSdkVersion 25

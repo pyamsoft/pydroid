@@ -217,10 +217,9 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return false;
   }
 
-  @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId,
-      @NonNull AboutLibrariesFragment.Styling styling) {
+  @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId) {
     Timber.d("Show about licenses fragment");
-    AboutLibrariesFragment.show(getActivity(), containerId, styling, isLastOnBackStack());
+    AboutLibrariesFragment.show(getActivity(), containerId, isLastOnBackStack());
     return true;
   }
 
@@ -274,10 +273,6 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return 0;
   }
 
-  @CheckResult @NonNull protected AboutLibrariesFragment.Styling getAboutFragmentStyling() {
-    return AboutLibrariesFragment.Styling.LIGHT;
-  }
-
   @CheckResult protected boolean hideUpgradeInformation() {
     return false;
   }
@@ -287,7 +282,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   }
 
   @CheckResult protected boolean onLicenseItemClicked() {
-    return showAboutLicensesFragment(getRootViewContainer(), getAboutFragmentStyling());
+    return showAboutLicensesFragment(getRootViewContainer());
   }
 
   @CheckResult @IdRes protected abstract int getRootViewContainer();

@@ -19,13 +19,11 @@ package com.pyamsoft.pydroid.ui.about;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
-import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +36,6 @@ import com.pyamsoft.pydroid.AboutLibrariesProvider;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
@@ -51,33 +48,30 @@ public class AboutLibrariesFragment extends ActionBarFragment
     implements AboutLibrariesPresenter.View {
 
   @NonNull public static final String TAG = "AboutLibrariesFragment";
-  @NonNull private static final String KEY_STYLING = "key_styling";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
   @NonNull private static final String KEY_ABOUT_PRESENTER = "__key_about_presenter";
   @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
   @SuppressWarnings("WeakerAccess") FastItemAdapter<AboutAdapterItem> fastItemAdapter;
-  @ColorInt private int backgroundColor;
   private long loadedKey;
   private boolean lastOnBackStack;
   private FragmentAboutLibrariesBinding binding;
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
-      @NonNull Styling styling, @NonNull BackStackState backStackState) {
+      @NonNull BackStackState backStackState) {
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
-          .replace(containerResId, AboutLibrariesFragment.newInstance(styling, backStackState), TAG)
+          .replace(containerResId, AboutLibrariesFragment.newInstance(backStackState), TAG)
           .addToBackStack(null)
           .commit();
     }
   }
 
-  @CheckResult @NonNull private static AboutLibrariesFragment newInstance(@NonNull Styling styling,
-      @NonNull BackStackState backStackState) {
+  @CheckResult @NonNull
+  private static AboutLibrariesFragment newInstance(@NonNull BackStackState backStackState) {
     final Bundle args = new Bundle();
     final AboutLibrariesFragment fragment = new AboutLibrariesFragment();
 
-    args.putString(KEY_STYLING, styling.name());
     args.putString(KEY_BACK_STACK, backStackState.name());
     fragment.setArguments(args);
     return fragment;
@@ -85,24 +79,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final String stylingName = getArguments().getString(KEY_STYLING, null);
-    if (stylingName == null) {
-      throw new NullPointerException("Styling is NULL");
-    }
-
-    // We have to do this because fragments will not set their own onProcess color, this allows us
-    // to safely draw over contents
-    final Styling styling = Styling.valueOf(stylingName);
-    switch (styling) {
-      case LIGHT:
-        backgroundColor = ContextCompat.getColor(getContext(), R.color.material_light_background);
-        break;
-      case DARK:
-        backgroundColor = ContextCompat.getColor(getContext(), R.color.material_dark_background);
-        break;
-      default:
-        throw new RuntimeException("Invalid styling: " + stylingName);
-    }
 
     final String backStackStateName = getArguments().getString(KEY_BACK_STACK, null);
     if (backStackStateName == null) {
@@ -139,9 +115,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
       @Nullable Bundle savedInstanceState) {
     fastItemAdapter = new FastItemAdapter<>();
     binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false);
-    final View view = binding.getRoot();
-    view.setBackgroundColor(backgroundColor);
-    return view;
+    return binding.getRoot();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -235,10 +209,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @Override public void onLicenseTextLoaded(int position, @NonNull String text) {
     fastItemAdapter.getAdapterItem(position).setLicenseText(text);
     fastItemAdapter.notifyItemChanged(position);
-  }
-
-  public enum Styling {
-    LIGHT, DARK
   }
 
   public enum BackStackState {

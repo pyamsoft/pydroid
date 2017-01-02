@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Build;
@@ -68,7 +69,7 @@ class AboutLibrariesInteractorImpl implements AboutLibrariesInteractor {
     });
   }
 
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult @WorkerThread
+  @SuppressLint("NewApi") @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult @WorkerThread
   String loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
     if (licenseLocation.isEmpty()) {
       Timber.w("Empty license passed");

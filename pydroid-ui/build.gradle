@@ -28,9 +28,6 @@ apply plugin: "net.ltgt.errorprone"
 apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.github.pyamsoft'
-version = '5.4.4'
-
 android {
   compileSdkVersion 25
   buildToolsVersion "$buildTools"

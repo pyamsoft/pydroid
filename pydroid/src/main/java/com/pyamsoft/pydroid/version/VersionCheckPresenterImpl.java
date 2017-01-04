@@ -59,8 +59,8 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
           Timber.i("Current version: %d", currentVersionCode);
           Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
           getView(View::onVersionCheckFinished);
+          versionCheckCompleted = true;
           if (currentVersionCode < versionCheckResponse.currentVersion()) {
-            versionCheckCompleted = true;
             getView(view -> view.onUpdatedVersionFound(currentVersionCode,
                 versionCheckResponse.currentVersion()));
             cancelCall();

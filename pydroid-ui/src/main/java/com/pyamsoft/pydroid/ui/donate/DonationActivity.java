@@ -64,21 +64,14 @@ public abstract class DonationActivity extends VersionCheckActivity
                 donatePresenter = persist;
               }
             });
-  }
 
-  @CallSuper @Override protected void onStart() {
-    super.onStart();
     donatePresenter.bindView(this);
     donatePresenter.create(this);
   }
 
-  @CallSuper @Override protected void onStop() {
-    super.onStop();
-    donatePresenter.unbindView();
-  }
-
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
+    donatePresenter.unbindView();
 
     if (!isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);

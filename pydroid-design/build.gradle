@@ -78,10 +78,6 @@ android {
   }
 }
 
-ext {
-  openGl = "gl1.1-android-2.1_r1"
-}
-
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
@@ -97,5 +93,6 @@ dependencies {
   testCompile "org.khronos:opengl-api:$openGl"
 
   compile project(path: ":pydroid")
+  testCompile project(path: ":pydroid")
 }
 

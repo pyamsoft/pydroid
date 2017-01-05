@@ -78,11 +78,6 @@ android {
   }
 }
 
-ext {
-  fastAdapter = "2.1.5"
-  fastAdapterCommons = "2.1.0"
-}
-
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
@@ -99,14 +94,6 @@ dependencies {
     transitive = true
   }
 
-  // Roboelectric for Android on JVM
-  testCompile "org.robolectric:robolectric:$robolectric"
-
-  // JUnit for unit tests
-  testCompile "junit:junit:$junit"
-
-  // Mockito for unit tests
-  testCompile "org.mockito:mockito-core:$mockito"
-
   compile project(path: ":pydroid")
+  testCompile project(path: ":pydroid")
 }

@@ -78,12 +78,6 @@ android {
   }
 }
 
-ext {
-  rxjava = "1.2.4"
-  rxandroid = "1.2.1"
-  rxjavaRules = "1.2.4.0"
-}
-
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
@@ -94,6 +88,10 @@ dependencies {
   compile "io.reactivex:rxandroid:$rxandroid"
   compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
 
+  // Inject annotations
+  compile "javax.inject:javax.inject:1"
+
   compile project(path: ":pydroid")
+  testCompile project(path: ":pydroid")
 }
 

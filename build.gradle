@@ -39,6 +39,18 @@ buildscript {
     robolectric = "3.1.4"
     junit = "4.12"
     mockito = "2.5.0"
+    dagger = "2.8"
+    inAppBilling = "0.9.1"
+    autoValue = "1.3"
+    autoValueGSON = "0.4.5"
+    retrofit = "2.1.0"
+    retrofitLogging = "3.5.0"
+    rxjava = "1.2.4"
+    rxandroid = "1.2.1"
+    rxjavaRules = "1.2.4.0"
+    openGl = "gl1.1-android-2.1_r1"
+    fastAdapter = "2.1.5"
+    fastAdapterCommons = "2.1.0"
   }
 
   dependencies {

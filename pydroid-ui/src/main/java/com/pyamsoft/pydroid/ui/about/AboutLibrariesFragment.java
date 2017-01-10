@@ -182,13 +182,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
     }
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(getActivity(), KEY_ABOUT_PRESENTER);
-    }
-  }
-
   @Override public void onLicenseTextLoaded(int position, @NonNull String text) {
     fastItemAdapter.getAdapterItem(position).setLicenseText(text);
     fastItemAdapter.notifyItemChanged(position);

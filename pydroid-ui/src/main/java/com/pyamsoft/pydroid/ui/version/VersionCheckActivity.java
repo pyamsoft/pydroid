@@ -52,13 +52,6 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
         PersistentCache.load(this, KEY_VERSION_PRESENTER, new VersionCheckPresenterLoader());
   }
 
-  @CallSuper @Override protected void onDestroy() {
-    super.onDestroy();
-    if (!isChangingConfigurations()) {
-      PersistentCache.unload(this, KEY_VERSION_PRESENTER);
-    }
-  }
-
   @CallSuper @Override protected void onStart() {
     super.onStart();
     presenter.bindView(this);

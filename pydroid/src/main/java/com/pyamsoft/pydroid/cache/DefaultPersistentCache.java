@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.Destroyable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,21 +43,40 @@ public class DefaultPersistentCache extends Cache {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    map.clear();
+    //noinspection Convert2streamapi
+    for (final String key : map.keySet()) {
+      remove(key);
+    }
     map = null;
   }
 
   @Override void put(@NonNull String key, @NonNull Object item) {
+    if (map == null) {
+      throw new IllegalStateException("Cache must be created first by Activity lifecycle");
+    }
     map.put(key, item);
   }
 
   @Override @CheckResult @Nullable Object get(@NonNull String key) {
+    if (map == null) {
+      throw new IllegalStateException("Cache must be created first by Activity lifecycle");
+    }
+
     return map.get(key);
   }
 
   @Override void remove(@NonNull String key) {
-    if (map.remove(key) == null) {
+    if (map == null) {
+      throw new IllegalStateException("Cache must be created first by Activity lifecycle");
+    }
+
+    final Object removed = map.remove(key);
+    if (removed == null) {
       throw new IllegalStateException("Could not remove, no mapping exists for key: " + key);
+    }
+
+    if (removed instanceof Destroyable) {
+      ((Destroyable) removed).destroy();
     }
   }
 }

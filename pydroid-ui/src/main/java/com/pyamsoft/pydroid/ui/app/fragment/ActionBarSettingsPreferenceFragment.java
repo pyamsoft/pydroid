@@ -73,14 +73,6 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @CallSuper @Override public void onDestroy() {
-    super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(getActivity(), KEY_LICENSE_PRESENTER);
-      PersistentCache.unload(getActivity(), KEY_SOCIAL_PRESENTER);
-    }
-  }
-
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     @XmlRes final int xmlResId = getPreferenceXmlResId();
     if (xmlResId != 0) {

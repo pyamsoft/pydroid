@@ -58,10 +58,6 @@ public abstract class DonationActivity extends VersionCheckActivity
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     donatePresenter.unbindView();
-
-    if (!isChangingConfigurations()) {
-      PersistentCache.unload(this, KEY_DONATE_PRESENTER);
-    }
   }
 
   /**

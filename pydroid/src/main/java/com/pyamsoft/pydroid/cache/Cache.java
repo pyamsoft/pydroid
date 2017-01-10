@@ -15,22 +15,18 @@
  *
  */
 
-package com.pyamsoft.pydroid.app;
+package com.pyamsoft.pydroid.cache;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
-public abstract class PersistLoader<T> {
+abstract class Cache extends Fragment {
 
-  protected PersistLoader() {
-  }
+  abstract void put(@NonNull String key, @NonNull Object item);
 
-  @CheckResult @NonNull public abstract T loadPersistent();
+  @CheckResult @Nullable abstract Object get(@NonNull String key);
 
-  public interface Callback<T> {
-
-    @CheckResult @NonNull PersistLoader<T> createLoader();
-
-    void onPersistentLoaded(@NonNull T persist);
-  }
+  abstract void remove(@NonNull String key);
 }

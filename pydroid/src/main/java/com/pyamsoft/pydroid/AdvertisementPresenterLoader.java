@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid;
 
-import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class AdvertisementPresenterLoader extends PersistLoader<AdvertisementPresenter> {
+public class AdvertisementPresenterLoader implements FuncNone<AdvertisementPresenter> {
 
-  @NonNull @Override public AdvertisementPresenter loadPersistent() {
+  @Override public AdvertisementPresenter call() {
     return SingleInitContentProvider.getInstance()
         .getModule()
         .provideAdvertisementModule()

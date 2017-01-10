@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 
-public class SocialMediaPresenterLoader extends PersistLoader<SocialMediaPresenter> {
+public class SocialMediaPresenterLoader implements FuncNone<SocialMediaPresenter> {
 
-  @NonNull @Override public SocialMediaPresenter loadPersistent() {
+  @Override public SocialMediaPresenter call() {
     return SingleInitContentProvider.getInstance()
         .getModule()
         .provideSocialMediaModule()

@@ -17,18 +17,17 @@
 
 package com.pyamsoft.pydroid.ads;
 
-import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
 public interface AdSource {
 
-  @CheckResult @NonNull View create(@NonNull Context context, @Nullable Bundle savedInstanceState);
+  @CheckResult @NonNull View create(@NonNull FragmentActivity activity);
 
-  @CheckResult @NonNull View destroy(boolean isChagingConfigurations);
+  @CheckResult @NonNull View destroy(@NonNull FragmentActivity activity,
+      boolean isChangingConfigurations);
 
   void start();
 
@@ -37,6 +36,4 @@ public interface AdSource {
   void showAd();
 
   void hideAd();
-
-  void saveState(@NonNull Bundle outState);
 }

@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 
-public class DonatePresenterLoader extends PersistLoader<DonatePresenter> {
+public class DonatePresenterLoader implements FuncNone<DonatePresenter> {
 
-  @NonNull @Override public DonatePresenter loadPersistent() {
+  @Override public DonatePresenter call() {
     return SingleInitContentProvider.getInstance().getModule().provideDonateModule().getPresenter();
   }
 }

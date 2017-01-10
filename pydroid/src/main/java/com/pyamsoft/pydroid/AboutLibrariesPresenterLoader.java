@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid;
 
-import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class AboutLibrariesPresenterLoader extends PersistLoader<AboutLibrariesPresenter> {
+public class AboutLibrariesPresenterLoader implements FuncNone<AboutLibrariesPresenter> {
 
-  @NonNull @Override public AboutLibrariesPresenter loadPersistent() {
+  @Override public AboutLibrariesPresenter call() {
     return SingleInitContentProvider.getInstance()
         .getModule()
         .provideAboutLibrariesModule()

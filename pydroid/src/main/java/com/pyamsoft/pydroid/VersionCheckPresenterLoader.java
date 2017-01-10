@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 
-public class VersionCheckPresenterLoader extends PersistLoader<VersionCheckPresenter> {
+public class VersionCheckPresenterLoader implements FuncNone<VersionCheckPresenter> {
 
-  @NonNull @Override public VersionCheckPresenter loadPersistent() {
+  @Override public VersionCheckPresenter call() {
     return SingleInitContentProvider.getInstance()
         .getModule()
         .provideVersionCheckModule()

@@ -20,11 +20,11 @@ package com.pyamsoft.pydroid.ui.ads;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -32,10 +32,9 @@ import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.AdvertisementPresenterLoader;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
@@ -44,7 +43,6 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   @NonNull private final AdSource offlineAdSource = new OfflineAdSource();
   @SuppressWarnings("WeakerAccess") @Nullable Handler handler;
   @SuppressWarnings("WeakerAccess") @Nullable AdvertisementPresenter presenter;
-  private long loadedKey;
   @Nullable private AdSource onlineAdSource;
 
   public AdvertisementView(Context context) {
@@ -74,28 +72,18 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   @SuppressWarnings("WeakerAccess")
-  public final void create(@Nullable AdSource adSource, @Nullable Bundle savedInstanceState) {
-    loadedKey = PersistentCache.get()
-        .load(KEY_ADVERTISEMENT, savedInstanceState,
-            new PersistLoader.Callback<AdvertisementPresenter>() {
-
-              @NonNull @Override public PersistLoader<AdvertisementPresenter> createLoader() {
-                return new AdvertisementPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull AdvertisementPresenter persist) {
-                presenter = persist;
-              }
-            });
+  public final void create(@NonNull FragmentActivity activity, @Nullable AdSource adSource) {
+    presenter =
+        PersistentCache.load(activity, KEY_ADVERTISEMENT, new AdvertisementPresenterLoader());
 
     // Default to gone
     setVisibility(View.GONE);
 
-    addView(offlineAdSource.create(getContext(), savedInstanceState));
+    addView(offlineAdSource.create(activity));
 
     onlineAdSource = adSource;
     if (onlineAdSource != null) {
-      addView(onlineAdSource.create(getContext(), savedInstanceState));
+      addView(onlineAdSource.create(activity));
     }
   }
 
@@ -129,16 +117,16 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     }
   }
 
-  public final void destroy(boolean isChangingConfigurations) {
+  public final void destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
     onHidden();
 
     if (!isChangingConfigurations) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.unload(activity, KEY_ADVERTISEMENT);
     }
 
-    removeView(offlineAdSource.destroy(isChangingConfigurations));
+    removeView(offlineAdSource.destroy(activity, isChangingConfigurations));
     if (onlineAdSource != null) {
-      removeView(onlineAdSource.destroy(isChangingConfigurations));
+      removeView(onlineAdSource.destroy(activity, isChangingConfigurations));
     }
   }
 
@@ -157,15 +145,6 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
     }
     if (presenter.isBound()) {
       presenter.hideAd();
-    }
-  }
-
-  public final void saveState(@NonNull Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_ADVERTISEMENT, loadedKey, AdvertisementPresenter.class);
-    offlineAdSource.saveState(outState);
-    if (onlineAdSource != null) {
-      onlineAdSource.saveState(outState);
     }
   }
 

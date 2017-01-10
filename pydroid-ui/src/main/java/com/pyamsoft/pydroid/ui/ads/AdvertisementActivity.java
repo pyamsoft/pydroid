@@ -37,7 +37,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
 
     if (adView != null) {
-      adView.create(provideOnlineAdSource(), savedInstanceState);
+      adView.create(this, provideOnlineAdSource());
     }
   }
 
@@ -63,7 +63,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     if (adView != null) {
-      adView.destroy(isChangingConfigurations());
+      adView.destroy(this, isChangingConfigurations());
     }
   }
 
@@ -77,13 +77,6 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     if (adView != null) {
       adView.hideAd();
     }
-  }
-
-  @Override protected void onSaveInstanceState(Bundle outState) {
-    if (adView != null) {
-      adView.saveState(outState);
-    }
-    super.onSaveInstanceState(outState);
   }
 
   /**

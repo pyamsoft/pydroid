@@ -18,23 +18,22 @@
 package com.pyamsoft.pydroid.ui.ads;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.ads.AdSource;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +43,7 @@ import java.util.List;
 import java.util.Queue;
 import timber.log.Timber;
 
-public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
+class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
 
   @NonNull private static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
   @NonNull private static final String PACKAGE_PADLOCK = "com.pyamsoft.padlock";
@@ -61,7 +60,6 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   @Nullable @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   @Nullable private Queue<String> imageQueue;
   @Nullable private ImageView adImage;
-  private long loadedKey;
 
   @CheckResult private int loadImage(@NonNull String currentPackage) {
     int image;
@@ -127,19 +125,8 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     return currentPackage;
   }
 
-  @NonNull @Override
-  public View create(@NonNull Context context, @Nullable Bundle savedInstanceState) {
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<SocialMediaPresenter>() {
-              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-                return new SocialMediaPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-                presenter = persist;
-              }
-            });
+  @NonNull @Override public View create(@NonNull FragmentActivity activity) {
+    presenter = PersistentCache.load(activity, KEY_PRESENTER, new SocialMediaPresenterLoader());
 
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));
@@ -147,17 +134,18 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     imageQueue = new LinkedList<>(randomList);
 
     // Create Ad image in java to avoid inflation cost
-    adImage = new ImageView(context);
+    adImage = new ImageView(activity);
     adImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        (int) AppUtil.convertToDP(context, 50)));
+        (int) AppUtil.convertToDP(activity, 50)));
     adImage.setScaleType(ImageView.ScaleType.FIT_XY);
     return adImage;
   }
 
-  @NonNull @Override public View destroy(boolean isChangingConfigurations) {
+  @NonNull @Override
+  public View destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
     taskMap.clear();
     if (!isChangingConfigurations) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.unload(activity, KEY_PRESENTER);
       if (imageQueue != null) {
         imageQueue.clear();
       }
@@ -210,10 +198,6 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       adImage.setImageDrawable(null);
       adImage.setOnClickListener(null);
     }
-  }
-
-  @Override public void saveState(@NonNull Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, SocialMediaPresenter.class);
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {

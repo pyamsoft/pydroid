@@ -27,35 +27,22 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 
 public class TamperDialog extends DialogFragment implements SocialMediaPresenter.View {
 
   @NonNull private static final String KEY_SOCIAL_MEDIA = "__key_social_media_tamper";
-  @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
-  private long loadedKey;
+  SocialMediaPresenter presenter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    loadedKey = PersistentCache.get()
-        .load(KEY_SOCIAL_MEDIA, savedInstanceState,
-            new PersistLoader.Callback<SocialMediaPresenter>() {
-
-              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-                return new SocialMediaPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-                presenter = persist;
-              }
-            });
-
     setCancelable(false);
+
+    presenter =
+        PersistentCache.load(getActivity(), KEY_SOCIAL_MEDIA, new SocialMediaPresenterLoader());
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -82,16 +69,10 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
     }
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_SOCIAL_MEDIA, loadedKey, SocialMediaPresenter.class);
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.unload(getActivity(), KEY_SOCIAL_MEDIA);
     }
   }
 

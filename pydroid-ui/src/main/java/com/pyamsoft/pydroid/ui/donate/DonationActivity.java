@@ -31,11 +31,10 @@ import android.widget.Toast;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.DonatePresenterLoader;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.ProductTypes;
 import org.solovyev.android.checkout.Purchase;
@@ -47,24 +46,11 @@ public abstract class DonationActivity extends VersionCheckActivity
 
   @NonNull private static final String KEY_DONATE_PRESENTER = "__key_donate_presenter";
   @SuppressWarnings("WeakerAccess") DonatePresenter donatePresenter;
-  private long loadedKey;
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    loadedKey = PersistentCache.get()
-        .load(KEY_DONATE_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<DonatePresenter>() {
-
-              @NonNull @Override public PersistLoader<DonatePresenter> createLoader() {
-                return new DonatePresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull DonatePresenter persist) {
-                donatePresenter = persist;
-              }
-            });
-
+    donatePresenter = PersistentCache.load(this, KEY_DONATE_PRESENTER, new DonatePresenterLoader());
     donatePresenter.bindView(this);
     donatePresenter.create(this);
   }
@@ -74,13 +60,8 @@ public abstract class DonationActivity extends VersionCheckActivity
     donatePresenter.unbindView();
 
     if (!isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.unload(this, KEY_DONATE_PRESENTER);
     }
-  }
-
-  @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_DONATE_PRESENTER, loadedKey, DonatePresenter.class);
-    super.onSaveInstanceState(outState);
   }
 
   /**

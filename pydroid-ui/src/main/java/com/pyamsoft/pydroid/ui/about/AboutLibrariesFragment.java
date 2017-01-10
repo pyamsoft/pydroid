@@ -35,11 +35,10 @@ import com.pyamsoft.pydroid.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.AboutLibrariesProvider;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.ArrayList;
 import java.util.List;
 import timber.log.Timber;
@@ -52,7 +51,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @NonNull private static final String KEY_ABOUT_PRESENTER = "__key_about_presenter";
   @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
   @SuppressWarnings("WeakerAccess") FastItemAdapter<AboutAdapterItem> fastItemAdapter;
-  private long loadedKey;
   private boolean lastOnBackStack;
   private FragmentAboutLibrariesBinding binding;
 
@@ -97,17 +95,8 @@ public class AboutLibrariesFragment extends ActionBarFragment
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
 
-    loadedKey = PersistentCache.get()
-        .load(KEY_ABOUT_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<AboutLibrariesPresenter>() {
-              @NonNull @Override public PersistLoader<AboutLibrariesPresenter> createLoader() {
-                return new AboutLibrariesPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull AboutLibrariesPresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter = PersistentCache.load(getActivity(), KEY_ABOUT_PRESENTER,
+        new AboutLibrariesPresenterLoader());
   }
 
   @Nullable @Override
@@ -169,12 +158,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
     fastItemAdapter.add(items);
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_ABOUT_PRESENTER, loadedKey, AboutLibrariesPresenter.class);
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public void onResume() {
     super.onResume();
     setActionBarUpEnabled(true);
@@ -202,7 +185,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.unload(getActivity(), KEY_ABOUT_PRESENTER);
     }
   }
 

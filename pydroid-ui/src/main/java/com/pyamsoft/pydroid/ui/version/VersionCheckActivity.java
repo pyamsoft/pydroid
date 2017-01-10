@@ -24,10 +24,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import timber.log.Timber;
@@ -35,10 +34,8 @@ import timber.log.Timber;
 public abstract class VersionCheckActivity extends AdvertisementActivity
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
-  @NonNull private static final String KEY_HAS_CHECKED_LICENSE = "key_has_already_checked_license";
   @NonNull private static final String KEY_VERSION_PRESENTER = "__key_version_presenter";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
-  private long loadedKey;
 
   @CheckResult private boolean isVersionCheckEnabled() {
     // Always enabled for release builds
@@ -51,31 +48,15 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    loadedKey = PersistentCache.get()
-        .load(KEY_VERSION_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<VersionCheckPresenter>() {
-              @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
-                return new VersionCheckPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter =
+        PersistentCache.load(this, KEY_VERSION_PRESENTER, new VersionCheckPresenterLoader());
   }
 
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     if (!isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.unload(this, KEY_VERSION_PRESENTER);
     }
-  }
-
-  @CallSuper @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_VERSION_PRESENTER, loadedKey, VersionCheckPresenter.class);
-    super.onSaveInstanceState(outState);
   }
 
   @CallSuper @Override protected void onStart() {

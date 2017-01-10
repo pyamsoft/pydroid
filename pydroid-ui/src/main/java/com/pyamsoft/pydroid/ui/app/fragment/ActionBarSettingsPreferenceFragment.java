@@ -34,7 +34,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
@@ -44,7 +44,6 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import java.util.Locale;
@@ -57,38 +56,14 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @NonNull private static final String KEY_SOCIAL_PRESENTER = "__key_rate_media_presenter";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialPresenter;
-  private long loadedKey;
   private Toast toast;
-  private long ratingKey;
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    loadedKey = PersistentCache.get()
-        .load(KEY_LICENSE_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<VersionCheckPresenter>() {
-
-              @NonNull @Override public PersistLoader<VersionCheckPresenter> createLoader() {
-                return new VersionCheckPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull VersionCheckPresenter persist) {
-                presenter = persist;
-              }
-            });
-
-    ratingKey = PersistentCache.get()
-        .load(KEY_SOCIAL_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<SocialMediaPresenter>() {
-
-              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-                return new SocialMediaPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-                socialPresenter = persist;
-              }
-            });
+    presenter = PersistentCache.load(getActivity(), KEY_LICENSE_PRESENTER,
+        new VersionCheckPresenterLoader());
+    socialPresenter =
+        PersistentCache.load(getActivity(), KEY_SOCIAL_PRESENTER, new SocialMediaPresenterLoader());
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override
@@ -101,17 +76,9 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
   @CallSuper @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-      PersistentCache.get().unload(ratingKey);
+      PersistentCache.unload(getActivity(), KEY_LICENSE_PRESENTER);
+      PersistentCache.unload(getActivity(), KEY_SOCIAL_PRESENTER);
     }
-  }
-
-  @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_LICENSE_PRESENTER, loadedKey, VersionCheckPresenter.class);
-    PersistentCache.get()
-        .saveKey(outState, KEY_SOCIAL_PRESENTER, ratingKey, SocialMediaPresenter.class);
-    super.onSaveInstanceState(outState);
   }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

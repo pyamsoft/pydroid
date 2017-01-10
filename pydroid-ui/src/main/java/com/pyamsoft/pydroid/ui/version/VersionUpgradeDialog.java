@@ -25,10 +25,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.Locale;
 
 public class VersionUpgradeDialog extends DialogFragment implements SocialMediaPresenter.View {
@@ -42,7 +41,6 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   private int latestVersion;
   private int currentVersion;
   private String applicationName;
-  private long loadedKey;
 
   @CheckResult @NonNull
   public static VersionUpgradeDialog newInstance(@NonNull String applicationName,
@@ -73,18 +71,8 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
       throw new RuntimeException("Coult not find application name");
     }
 
-    loadedKey = PersistentCache.get()
-        .load(KEY_SOCIAL_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<SocialMediaPresenter>() {
-
-              @NonNull @Override public PersistLoader<SocialMediaPresenter> createLoader() {
-                return new SocialMediaPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull SocialMediaPresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter =
+        PersistentCache.load(getActivity(), KEY_SOCIAL_PRESENTER, new SocialMediaPresenterLoader());
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -111,16 +99,10 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
     presenter.unbindView();
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_SOCIAL_PRESENTER, loadedKey, SocialMediaPresenter.class);
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
+      PersistentCache.unload(getActivity(), KEY_SOCIAL_PRESENTER);
     }
   }
 

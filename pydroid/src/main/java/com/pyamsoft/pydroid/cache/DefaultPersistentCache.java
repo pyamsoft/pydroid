@@ -24,7 +24,6 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.Destroyable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class DefaultPersistentCache extends Cache {
 
@@ -44,13 +43,17 @@ public class DefaultPersistentCache extends Cache {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    final Set<String> keySet = map.keySet();
+
+    // Just call onDestroy first, remove the entries later by clearing
 
     //noinspection Convert2streamapi
-    for (final String key : keySet) {
-      remove(key);
+    for (final Object value : map.values()) {
+      if (value instanceof Destroyable) {
+        ((Destroyable) value).destroy();
+      }
     }
 
+    // Now clear the actual map
     map.clear();
     map = null;
   }

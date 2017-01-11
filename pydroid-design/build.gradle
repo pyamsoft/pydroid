@@ -29,26 +29,19 @@ apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-  compileSdkVersion 25
+  compileSdkVersion rootProject.ext.maxSdk
   buildToolsVersion "$buildTools"
 
   //noinspection GroovyMissingReturnStatement
   defaultConfig {
-    minSdkVersion 16
-    targetSdkVersion 25
+    minSdkVersion rootProject.ext.minSdk
+    targetSdkVersion rootProject.ext.maxSdk
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
 
     // Consumer proguard file
     consumerProguardFiles "proguard-rules.pro"
-
-    // Fix a library publish error
-    // publishNonDefault true
-
-    // Include the library in modules with the following
-    //    debugCompile project(path: ":PYDroid", configuration: "debug")
-    //    releaseCompile project(path: ":PYDroid", configuration: "release")
   }
 
   dataBinding {
@@ -81,7 +74,7 @@ android {
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
+  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:$retrolambda"
 
   // Design support lib
   compile "com.android.support:design:$supportLib"

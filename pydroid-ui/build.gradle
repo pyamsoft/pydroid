@@ -29,13 +29,13 @@ apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-  compileSdkVersion 25
+  compileSdkVersion rootProject.ext.maxSdk
   buildToolsVersion "$buildTools"
 
   //noinspection GroovyMissingReturnStatement
   defaultConfig {
-    minSdkVersion 16
-    targetSdkVersion 25
+    minSdkVersion rootProject.ext.minSdk
+    targetSdkVersion rootProject.ext.maxSdk
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -81,7 +81,7 @@ android {
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
+  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:$retrolambda"
 
   // Android support library.
   compile "com.android.support:recyclerview-v7:$supportLib"

@@ -30,13 +30,13 @@ buildscript {
 
     minSdk = 16
     maxSdk = 25
+    buildTools = "25.0.2"
 
     // https://medium.com/@skaliakoudas/decreasing-build-times-by-decreasing-gradle-memory-requirements-7fcafc6d98ea#.wblqdn1xf
     // Gradle memory is set in gradle.properties to 2GB
     heapSize = "1g"
 
     retrolambda = "2.4.0"
-    buildTools = "25.0.2"
     supportLib = "25.1.0"
     timber = "4.5.0"
     robolectric = "3.2.1"
@@ -100,4 +100,4 @@ tasks.whenTaskAdded { task ->
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '5.6.4'
+version = '5.7.0'

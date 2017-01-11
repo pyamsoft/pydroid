@@ -74,7 +74,7 @@ android {
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:$retrolambda"
+  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
   // RxJava
   compile "io.reactivex:rxjava:$rxjava"

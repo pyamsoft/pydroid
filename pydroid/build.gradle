@@ -74,7 +74,7 @@ android {
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
 
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:$retrolambda"
+  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
   // Android support library.
   compile "com.android.support:preference-v14:$supportLib"

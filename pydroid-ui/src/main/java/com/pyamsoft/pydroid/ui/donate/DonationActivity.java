@@ -80,7 +80,7 @@ public abstract class DonationActivity extends VersionCheckActivity
     final int itemId = item.getItemId();
     boolean handled;
     if (itemId == R.id.menu_support) {
-      DonateDialog.show(getSupportFragmentManager());
+      DonateDialog.show(this);
       handled = true;
     } else {
       handled = false;

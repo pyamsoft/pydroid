@@ -126,7 +126,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
     final Preference donation = findPreference(getString(R.string.donation_key));
     donation.setOnPreferenceClickListener(preference -> {
-      DonateDialog.show(getActivity().getSupportFragmentManager());
+      DonateDialog.show(getActivity());
       return true;
     });
   }
@@ -198,7 +198,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @Override public void onUpdatedVersionFound(int currentVersionCode, int updatedVersionCode) {
     Timber.d("Updated version found. %d => %d", currentVersionCode, updatedVersionCode);
-    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+    AppUtil.guaranteeSingleDialogFragment(getActivity(),
         VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
             updatedVersionCode), VersionUpgradeDialog.TAG);
   }

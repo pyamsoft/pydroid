@@ -58,16 +58,10 @@ public class RatingDialog extends DialogFragment {
   @Nullable private AsyncMap.Entry iconTask;
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
-      final @NonNull ChangeLogProvider provider) {
-    showRatingDialog(activity, provider, false);
-  }
-
-  // KLUDGE direct preference access
-  public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider, final boolean force) {
     final PYDroidPreferences preferences = PYDroidPreferences.Instance.getInstance(activity);
     if (force || preferences.getRatingAcceptedVersion() < provider.getCurrentApplicationVersion()) {
-      AppUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating");
+      AppUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
     }
   }
 
@@ -150,8 +144,7 @@ public class RatingDialog extends DialogFragment {
       dismiss();
     });
 
-    binding.ratingBtnSupport.setOnClickListener(
-        v -> DonateDialog.show(getActivity().getSupportFragmentManager()));
+    binding.ratingBtnSupport.setOnClickListener(v -> DonateDialog.show(getActivity()));
   }
 
   @Override public void onDismiss(DialogInterface dialog) {

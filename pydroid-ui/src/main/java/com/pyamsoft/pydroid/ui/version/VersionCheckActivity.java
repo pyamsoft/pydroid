@@ -72,7 +72,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @Override public void onUpdatedVersionFound(int currentVersionCode, int updatedVersionCode) {
     Timber.d("Updated version found. %d => %d", currentVersionCode, updatedVersionCode);
-    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(),
+    AppUtil.guaranteeSingleDialogFragment(this,
         VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
             updatedVersionCode), VersionUpgradeDialog.TAG);
   }

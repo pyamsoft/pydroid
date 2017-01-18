@@ -24,7 +24,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -50,11 +50,8 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
   private FastItemAdapter<SkuUIItem> fastItemAdapter;
   private DialogDonateBinding binding;
 
-  public static void show(@NonNull FragmentManager fragmentManager) {
-    final Bundle args = new Bundle();
-    final DonateDialog fragment = new DonateDialog();
-    fragment.setArguments(args);
-    AppUtil.guaranteeSingleDialogFragment(fragmentManager, fragment, TAG);
+  public static void show(@NonNull FragmentActivity activity) {
+    AppUtil.onlyLoadOnceDialogFragment(activity, new DonateDialog(), TAG);
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

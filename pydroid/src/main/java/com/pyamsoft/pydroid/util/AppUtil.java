@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -53,19 +52,13 @@ public final class AppUtil {
    * Using the fragment manager to handle transactions, this guarantees that any old
    * versions of the dialog fragment are removed before a new one is added.
    */
-  public static void guaranteeSingleDialogFragment(final @NonNull FragmentActivity fragmentActivity,
-      final @NonNull DialogFragment dialogFragment, final @NonNull String tag) {
-    guaranteeSingleDialogFragment(fragmentActivity.getSupportFragmentManager(), dialogFragment,
-        tag);
-  }
+  public static void guaranteeSingleDialogFragment(@NonNull FragmentActivity fragmentActivity,
+      @NonNull DialogFragment dialogFragment, @NonNull String tag) {
+    if (tag.isEmpty()) {
+      throw new IllegalArgumentException("Cannot use EMPTY tag");
+    }
 
-  /**
-   * Using the fragment manager to handle transactions, this guarantees that any old
-   * versions of the dialog fragment are removed before a new one is added.
-   */
-  @SuppressLint("CommitTransaction") public static void guaranteeSingleDialogFragment(
-      final @NonNull FragmentManager fragmentManager, final @NonNull DialogFragment dialogFragment,
-      final @NonNull String tag) {
+    final FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
     final FragmentTransaction ft = fragmentManager.beginTransaction();
     final Fragment prev = fragmentManager.findFragmentByTag(tag);
     if (prev != null) {
@@ -77,7 +70,23 @@ public final class AppUtil {
     dialogFragment.show(ft, tag);
   }
 
-  @CheckResult public static float convertToDP(final @NonNull Context c, final float px) {
+  /**
+   * Guarantees that a fragment with the given tag is only added to the view once
+   */
+  public static void onlyLoadOnceDialogFragment(@NonNull FragmentActivity fragmentActivity,
+      @NonNull DialogFragment dialogFragment, @NonNull String tag) {
+    if (tag.isEmpty()) {
+      throw new IllegalArgumentException("Cannot use EMPTY tag");
+    }
+
+    final FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
+    final Fragment prev = fragmentManager.findFragmentByTag(tag);
+    if (prev == null) {
+      dialogFragment.show(fragmentManager, tag);
+    }
+  }
+
+  @CheckResult public static float convertToDP(@NonNull Context c, float px) {
     final DisplayMetrics m = c.getResources().getDisplayMetrics();
     final float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m);
     Timber.d("Convert %f px to %f dp", px, dp);

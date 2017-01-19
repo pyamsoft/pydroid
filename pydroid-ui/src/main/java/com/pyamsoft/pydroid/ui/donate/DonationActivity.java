@@ -98,7 +98,7 @@ public abstract class DonationActivity extends VersionCheckActivity
   private void passToSupportDialog(@NonNull ActionSingle<DonateDialog> actionWithDialog,
       @Nullable ActionNone actionWithoutDialog) {
     final Fragment fragment = getSupportFragmentManager().findFragmentByTag(DonateDialog.TAG);
-    if (fragment instanceof DonateDialog) {
+    if (fragment instanceof DonateDialog && fragment.isVisible()) {
       actionWithDialog.call((DonateDialog) fragment);
     } else {
       if (actionWithoutDialog != null) {

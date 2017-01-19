@@ -92,6 +92,17 @@ public class DonateDialog extends DialogFragment implements DonatePresenter.View
   }
 
   @Override public void onInventoryLoaded(@NonNull Inventory.Products products) {
+    if (binding == null) {
+      Timber.e("Binding is NULL, cannot refresh inventory");
+      return;
+    }
+
+    // If one thing is bound ,we should all be bound. Its an all or nothing approach.
+    if (binding.supportLoading == null) {
+      Timber.e("Loading dialog is NULL, cannot refresh inventory");
+      return;
+    }
+
     binding.supportLoading.setVisibility(View.VISIBLE);
     binding.supportRecycler.setVisibility(View.GONE);
 

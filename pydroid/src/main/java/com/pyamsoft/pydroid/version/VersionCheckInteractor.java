@@ -25,7 +25,7 @@ import retrofit2.http.Url;
 
 interface VersionCheckInteractor {
 
-  @CheckResult @NonNull Call<VersionCheckResponse> checkVersion();
+  @CheckResult @NonNull Call<VersionCheckResponse> checkVersion(@NonNull String packageName);
 
   interface VersionCheckService {
 

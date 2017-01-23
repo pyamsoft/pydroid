@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-abstract class Cache extends Fragment {
+@Deprecated abstract class Cache extends Fragment {
 
   abstract void put(@NonNull String key, @NonNull Object item);
 

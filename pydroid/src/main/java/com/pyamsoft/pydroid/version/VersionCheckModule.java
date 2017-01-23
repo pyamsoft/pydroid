@@ -19,17 +19,14 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.PYDroidModule;
 
 public class VersionCheckModule {
 
   @NonNull private final VersionCheckPresenter presenter;
 
-  public VersionCheckModule(@NonNull PYDroidModule.Provider pyDroidModule,
-      @NonNull ApiModule apiModule) {
+  public VersionCheckModule(@NonNull ApiModule apiModule) {
     final VersionCheckInteractor interactor = new VersionCheckInteractorImpl(
-        apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class),
-        pyDroidModule.provideContext().getPackageName());
+        apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class));
     presenter = new VersionCheckPresenterImpl(interactor);
   }
 

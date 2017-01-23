@@ -22,16 +22,13 @@ import retrofit2.Call;
 
 class VersionCheckInteractorImpl implements VersionCheckInteractor {
 
-  @NonNull private final String packageName;
   @NonNull private final VersionCheckService versionCheckService;
 
-  VersionCheckInteractorImpl(@NonNull VersionCheckService versionCheckService,
-      @NonNull String packageName) {
+  VersionCheckInteractorImpl(@NonNull VersionCheckService versionCheckService) {
     this.versionCheckService = versionCheckService;
-    this.packageName = packageName;
   }
 
-  @NonNull @Override public Call<VersionCheckResponse> checkVersion() {
+  @NonNull @Override public Call<VersionCheckResponse> checkVersion(@NonNull String packageName) {
     return versionCheckService.checkVersion(packageName);
   }
 }

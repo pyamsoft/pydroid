@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.Destroyable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultPersistentCache extends Cache {
+@Deprecated public class DefaultPersistentCache extends Cache {
 
   private Map<String, Object> map;
 

@@ -24,7 +24,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import com.pyamsoft.pydroid.FuncNone;
 
-public class PersistentCache {
+@Deprecated public class PersistentCache {
 
   @NonNull private static final String CACHE_TAG = "PersistentCacheTag";
   @NonNull private static final PersistentCache INSTANCE = new PersistentCache();

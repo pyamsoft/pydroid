@@ -17,11 +17,12 @@
 
 package com.pyamsoft.pydroid.version;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface VersionCheckPresenter extends Presenter<VersionCheckPresenter.View> {
 
-  void checkForUpdates(int currentVersionCode);
+  void checkForUpdates(@NonNull String packageName, int currentVersionCode);
 
   interface View {
 

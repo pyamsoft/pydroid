@@ -62,7 +62,7 @@ public class PYDroidModule {
   //
   // NOTE: Makes a new ApiModule
   @CheckResult @NonNull final VersionCheckModule provideVersionCheckModule() {
-    return new VersionCheckModule(provider, new ApiModule());
+    return new VersionCheckModule(new ApiModule());
   }
 
   // Create a new one every time

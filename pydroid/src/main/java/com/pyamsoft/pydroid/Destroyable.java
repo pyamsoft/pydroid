@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid;
 
-public interface Destroyable {
+@Deprecated public interface Destroyable {
 
   void destroy();
 }

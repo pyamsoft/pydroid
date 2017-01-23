@@ -20,7 +20,8 @@ package com.pyamsoft.pydroid;
 import android.annotation.SuppressLint;
 import android.app.Application;
 
-@SuppressLint("Registered") public abstract class PYDroidApplication extends Application {
+@SuppressWarnings("unused") @SuppressLint("Registered") public abstract class PYDroidApplication
+    extends Application {
 
   @Override public final void onCreate() {
     super.onCreate();

@@ -39,6 +39,34 @@ public class PYDroidModule {
 
   @NonNull private final Provider provider;
 
+  //@NonNull private final Map<String, Object> cachedSingletons = new HashMap<>();
+  //@CheckResult @NonNull
+  //final <T> T getCachedSingleton(@NonNull String tag, @NonNull FuncNone<T> creator) {
+  //  final Object cachedPlainObject = cachedSingletons.get(tag);
+  //  T cachedObject;
+  //  boolean objectCreated;
+  //  if (cachedPlainObject == null) {
+  //    cachedObject = creator.call();
+  //    objectCreated = true;
+  //  } else {
+  //    try {
+  //      //noinspection unchecked
+  //      cachedObject = (T) cachedPlainObject;
+  //      objectCreated = false;
+  //    } catch (ClassCastException e) {
+  //      Timber.e(e, "Cast error in singleton cache!");
+  //      cachedObject = creator.call();
+  //      objectCreated = true;
+  //    }
+  //  }
+  //
+  //  if (objectCreated) {
+  //    // Put new entry into map
+  //    cachedSingletons.put(tag, cachedObject);
+  //  }
+  //  return cachedObject;
+  //}
+
   PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
     provider = new Provider(context, licenseProvider);
   }

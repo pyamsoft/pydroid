@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
@@ -34,8 +33,9 @@ import timber.log.Timber;
 public abstract class VersionCheckActivity extends AdvertisementActivity
     implements VersionCheckPresenter.View, VersionCheckProvider {
 
-  @NonNull private static final String KEY_VERSION_PRESENTER = "__key_version_presenter";
+  @NonNull private static final String VERSION_CHECKED = "version_check_completed";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
+  private boolean versionChecked;
 
   @CheckResult private boolean isVersionCheckEnabled() {
     // Always enabled for release builds
@@ -48,22 +48,28 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter =
-        PersistentCache.load(this, KEY_VERSION_PRESENTER, new VersionCheckPresenterLoader());
+    versionChecked =
+        savedInstanceState != null && savedInstanceState.getBoolean(VERSION_CHECKED, false);
+    presenter = new VersionCheckPresenterLoader().call();
   }
 
   @CallSuper @Override protected void onStart() {
     super.onStart();
     presenter.bindView(this);
 
-    if (isVersionCheckEnabled()) {
-      presenter.checkForUpdates(getCurrentApplicationVersion());
+    if (isVersionCheckEnabled() && !versionChecked) {
+      presenter.checkForUpdates(getPackageName(), getCurrentApplicationVersion());
     }
   }
 
   @CallSuper @Override protected void onStop() {
     super.onStop();
     presenter.unbindView();
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    outState.putBoolean(VERSION_CHECKED, versionChecked);
+    super.onSaveInstanceState(outState);
   }
 
   @Override public void onVersionCheckFinished() {

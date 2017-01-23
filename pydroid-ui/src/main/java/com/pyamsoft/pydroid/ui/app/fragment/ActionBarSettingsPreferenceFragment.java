@@ -188,7 +188,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @SuppressWarnings("SameReturnValue") @CheckResult protected boolean checkForUpdate() {
     toast.show();
-    presenter.checkForUpdates(getCurrentApplicationVersion());
+    presenter.checkForUpdates(getContext().getPackageName(), getCurrentApplicationVersion());
     return true;
   }
 

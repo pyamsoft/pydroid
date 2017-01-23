@@ -34,7 +34,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
@@ -49,21 +48,18 @@ import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import java.util.Locale;
 import timber.log.Timber;
 
-public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment
+@SuppressWarnings("unused") public abstract class ActionBarSettingsPreferenceFragment
+    extends ActionBarPreferenceFragment
     implements VersionCheckPresenter.View, VersionCheckProvider, SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_LICENSE_PRESENTER = "__key_license_presenter";
-  @NonNull private static final String KEY_SOCIAL_PRESENTER = "__key_rate_media_presenter";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialPresenter;
   private Toast toast;
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), KEY_LICENSE_PRESENTER,
-        new VersionCheckPresenterLoader());
-    socialPresenter =
-        PersistentCache.load(getActivity(), KEY_SOCIAL_PRESENTER, new SocialMediaPresenterLoader());
+    presenter = new VersionCheckPresenterLoader().call();
+    socialPresenter = new SocialMediaPresenterLoader().call();
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override

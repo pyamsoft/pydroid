@@ -35,7 +35,6 @@ import com.pyamsoft.pydroid.AboutLibrariesPresenterLoader;
 import com.pyamsoft.pydroid.AboutLibrariesProvider;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
@@ -48,7 +47,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   @NonNull public static final String TAG = "AboutLibrariesFragment";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
-  @NonNull private static final String KEY_ABOUT_PRESENTER = "__key_about_presenter";
   @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
   @SuppressWarnings("WeakerAccess") FastItemAdapter<AboutAdapterItem> fastItemAdapter;
   private boolean lastOnBackStack;
@@ -95,8 +93,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
 
-    presenter = PersistentCache.load(getActivity(), KEY_ABOUT_PRESENTER,
-        new AboutLibrariesPresenterLoader());
+    presenter = new AboutLibrariesPresenterLoader().call();
   }
 
   @Nullable @Override

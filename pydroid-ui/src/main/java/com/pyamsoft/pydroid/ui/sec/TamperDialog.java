@@ -27,22 +27,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public class TamperDialog extends DialogFragment implements SocialMediaPresenter.View {
 
-  @NonNull private static final String KEY_SOCIAL_MEDIA = "__key_social_media_tamper";
   SocialMediaPresenter presenter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setCancelable(false);
-
-    presenter =
-        PersistentCache.load(getActivity(), KEY_SOCIAL_MEDIA, new SocialMediaPresenterLoader());
+    presenter = new SocialMediaPresenterLoader().call();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -66,13 +62,6 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
       final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
           .getSystemService(Context.ACTIVITY_SERVICE);
       activityManager.clearApplicationUserData();
-    }
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(getActivity(), KEY_SOCIAL_MEDIA);
     }
   }
 

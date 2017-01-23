@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.Locale;
@@ -36,7 +35,6 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   @NonNull private static final String KEY_NAME = "key_name";
   @NonNull private static final String KEY_LATEST_VERSION = "key_latest_version";
   @NonNull private static final String KEY_CURRENT_VERSION = "key_current_version";
-  @NonNull private static final String KEY_SOCIAL_PRESENTER = "__key_version_social_presenter";
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   private int latestVersion;
   private int currentVersion;
@@ -71,8 +69,7 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
       throw new RuntimeException("Coult not find application name");
     }
 
-    presenter =
-        PersistentCache.load(getActivity(), KEY_SOCIAL_PRESENTER, new SocialMediaPresenterLoader());
+    presenter = new SocialMediaPresenterLoader().call();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -97,13 +94,6 @@ public class VersionUpgradeDialog extends DialogFragment implements SocialMediaP
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(getActivity(), KEY_SOCIAL_PRESENTER);
-    }
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {

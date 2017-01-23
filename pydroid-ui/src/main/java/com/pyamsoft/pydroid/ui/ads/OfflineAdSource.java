@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
 import com.pyamsoft.pydroid.ads.AdSource;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -55,7 +54,6 @@ class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON,
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
-  @NonNull private static final String KEY_PRESENTER = "__key_offline_ad_presenter";
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @Nullable @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
   @Nullable private Queue<String> imageQueue;
@@ -126,7 +124,7 @@ class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @NonNull @Override public View create(@NonNull FragmentActivity activity) {
-    presenter = PersistentCache.load(activity, KEY_PRESENTER, new SocialMediaPresenterLoader());
+    presenter = new SocialMediaPresenterLoader().call();
 
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));
@@ -145,7 +143,6 @@ class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   public View destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
     taskMap.clear();
     if (!isChangingConfigurations) {
-      PersistentCache.unload(activity, KEY_PRESENTER);
       if (imageQueue != null) {
         imageQueue.clear();
       }

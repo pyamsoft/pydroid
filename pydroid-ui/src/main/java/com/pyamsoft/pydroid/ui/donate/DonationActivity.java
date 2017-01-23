@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.DonatePresenterLoader;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
@@ -44,13 +43,11 @@ import timber.log.Timber;
 public abstract class DonationActivity extends VersionCheckActivity
     implements DonatePresenter.View {
 
-  @NonNull private static final String KEY_DONATE_PRESENTER = "__key_donate_presenter";
   @SuppressWarnings("WeakerAccess") DonatePresenter donatePresenter;
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    donatePresenter = PersistentCache.load(this, KEY_DONATE_PRESENTER, new DonatePresenterLoader());
+    donatePresenter = new DonatePresenterLoader().call();
     donatePresenter.bindView(this);
     donatePresenter.create(this);
   }

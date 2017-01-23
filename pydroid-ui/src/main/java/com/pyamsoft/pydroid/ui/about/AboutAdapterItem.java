@@ -108,7 +108,7 @@ class AboutAdapterItem
     @NonNull private String license;
     @NonNull private WeakReference<AboutLicenseModel> weakItem;
 
-    public ViewHolder(View view) {
+    ViewHolder(View view) {
       super(view);
       binding = AdapterItemAboutBinding.bind(view);
       binding.expandLicenseText.getSettings().setTextZoom(80);

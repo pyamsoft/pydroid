@@ -32,14 +32,12 @@ import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.AdvertisementPresenterLoader;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 
 public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
 
-  @NonNull private static final String KEY_ADVERTISEMENT = "__key_advertisement_presenter";
   @NonNull private final AdSource offlineAdSource = new OfflineAdSource();
   @SuppressWarnings("WeakerAccess") @Nullable Handler handler;
   @SuppressWarnings("WeakerAccess") @Nullable AdvertisementPresenter presenter;
@@ -73,8 +71,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   @SuppressWarnings("WeakerAccess")
   public final void create(@NonNull FragmentActivity activity, @Nullable AdSource adSource) {
-    presenter =
-        PersistentCache.load(activity, KEY_ADVERTISEMENT, new AdvertisementPresenterLoader());
+    presenter = new AdvertisementPresenterLoader().call();
 
     // Default to gone
     setVisibility(View.GONE);
@@ -119,10 +116,6 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   public final void destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
     onHidden();
-
-    if (!isChangingConfigurations) {
-      PersistentCache.unload(activity, KEY_ADVERTISEMENT);
-    }
 
     removeView(offlineAdSource.destroy(activity, isChangingConfigurations));
     if (onlineAdSource != null) {

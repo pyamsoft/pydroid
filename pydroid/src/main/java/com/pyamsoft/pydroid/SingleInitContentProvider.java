@@ -93,9 +93,9 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     }
 
     BuildConfigChecker.setInstance(initializeBuildConfigChecker());
-    onFirstCreateProtected(appContext);
-    onFirstCreate(appContext);
     insertCustomLicensesIntoMap();
+
+    onFirstCreate(appContext);
     setInstance(this);
     onInstanceCreated(appContext);
     return false;
@@ -105,23 +105,13 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
 
   protected abstract void onInstanceCreated(@NonNull Context context);
 
-  private void onFirstCreateProtected(@NonNull Context context) {
+  private void onFirstCreate(@NonNull Context context) {
+    delegate = new ModuleDelegate(new PYDroidModule(context, this));
+
     if (BuildConfigChecker.getInstance().isDebugMode()) {
       Timber.plant(new Timber.DebugTree());
       setStrictMode();
-      onFirstCreateInDebugMode(context);
     }
-
-    delegate = new ModuleDelegate(new PYDroidModule(context, this));
-    onFirstCreate(context);
-  }
-
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" })
-  protected void onFirstCreate(@SuppressWarnings("UnusedParameters") @NonNull Context context) {
-  }
-
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onFirstCreateInDebugMode(
-      @SuppressWarnings("UnusedParameters") @NonNull Context context) {
   }
 
   private void setStrictMode() {

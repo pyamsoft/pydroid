@@ -23,15 +23,13 @@ import com.pyamsoft.pydroid.PYDroidModule;
 
 public class AdvertisementModule {
 
-  @NonNull private final AdvertisementPresenter presenter;
+  @NonNull private final AdvertisementInteractorImpl interactor;
 
   public AdvertisementModule(@NonNull PYDroidModule.Provider pyDroidModule) {
-    final AdvertisementInteractor interactor =
-        new AdvertisementInteractorImpl(pyDroidModule.providePreferences());
-    presenter = new AdvertisementPresenterImpl(interactor);
+    interactor = new AdvertisementInteractorImpl(pyDroidModule.providePreferences());
   }
 
   @NonNull @CheckResult public AdvertisementPresenter getPresenter() {
-    return presenter;
+    return new AdvertisementPresenterImpl(interactor);
   }
 }

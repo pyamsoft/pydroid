@@ -44,8 +44,7 @@ public class VersionPresenterTest {
         mockRetrofit.create(VersionCheckInteractor.VersionCheckService.class);
     final MockVersionCheckService service = new MockVersionCheckService(delegate);
 
-    final VersionCheckInteractorImpl fakeInteractor =
-        new VersionCheckInteractorImpl(service, "com.example.example");
+    final VersionCheckInteractorImpl fakeInteractor = new VersionCheckInteractorImpl(service);
     presenter = new VersionCheckPresenterImpl(fakeInteractor);
   }
 
@@ -69,7 +68,7 @@ public class VersionPresenterTest {
       }
     });
 
-    presenter.checkForUpdates(MockVersionCheckService.CURRENT_VERSION);
+    presenter.checkForUpdates("com.pyamsoft.example", MockVersionCheckService.CURRENT_VERSION);
     if (!latch.await(10, TimeUnit.SECONDS)) {
       throw new RuntimeException("Latch did not count down within ten seconds");
     }
@@ -94,7 +93,7 @@ public class VersionPresenterTest {
       }
     });
 
-    presenter.checkForUpdates(MockVersionCheckService.CURRENT_VERSION - 2);
+    presenter.checkForUpdates("com.pyamsoft.example", MockVersionCheckService.CURRENT_VERSION - 2);
     if (!latch.await(10, TimeUnit.SECONDS)) {
       throw new RuntimeException("Latch did not count down within ten seconds");
     }
@@ -115,7 +114,7 @@ public class VersionPresenterTest {
       }
     });
 
-    presenter.checkForUpdates(MockVersionCheckService.CURRENT_VERSION - 2);
+    presenter.checkForUpdates("com.pyamsoft.example", MockVersionCheckService.CURRENT_VERSION - 2);
     if (latch.await(5, TimeUnit.SECONDS)) {
       throw new AssertionError("Latch should not have counted down successfully");
     }

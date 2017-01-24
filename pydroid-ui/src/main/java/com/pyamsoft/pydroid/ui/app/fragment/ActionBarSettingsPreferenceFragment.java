@@ -32,8 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
-import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
@@ -58,8 +57,14 @@ import timber.log.Timber;
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = new VersionCheckPresenterLoader().call();
-    socialPresenter = new SocialMediaPresenterLoader().call();
+    presenter = SingleInitContentProvider.getInstance()
+        .getModule()
+        .provideVersionCheckModule()
+        .getPresenter();
+    socialPresenter = SingleInitContentProvider.getInstance()
+        .getModule()
+        .provideSocialMediaModule()
+        .getPresenter();
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override

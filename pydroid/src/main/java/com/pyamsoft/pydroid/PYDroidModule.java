@@ -37,7 +37,11 @@ import org.solovyev.android.checkout.RequestListener;
 
 public class PYDroidModule {
 
-  @NonNull private final Provider provider;
+  @NonNull private final AboutLibrariesModule aboutLibrariesModule;
+  @NonNull private final DonateModule donateModule;
+  @NonNull private final SocialMediaModule socialMediaModule;
+  @NonNull private final VersionCheckModule versionCheckModule;
+  @NonNull private final AdvertisementModule advertisementModule;
 
   //@NonNull private final Map<String, Object> cachedSingletons = new HashMap<>();
   //@CheckResult @NonNull
@@ -68,34 +72,37 @@ public class PYDroidModule {
   //}
 
   PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
-    provider = new Provider(context, licenseProvider);
+    final Provider provider = new Provider(context, licenseProvider);
+    aboutLibrariesModule = new AboutLibrariesModule(provider);
+    donateModule = new DonateModule(provider);
+    socialMediaModule = new SocialMediaModule();
+    versionCheckModule = new VersionCheckModule(new ApiModule());
+    advertisementModule = new AdvertisementModule(provider);
   }
 
   // Create a new one every time
-  @CheckResult @NonNull final AboutLibrariesModule provideAboutLibrariesModule() {
-    return new AboutLibrariesModule(provider);
+  @CheckResult @NonNull public final AboutLibrariesModule provideAboutLibrariesModule() {
+    return aboutLibrariesModule;
   }
 
   // Create a new one every time
-  @CheckResult @NonNull final DonateModule provideDonateModule() {
-    return new DonateModule(provider);
+  @CheckResult @NonNull public final DonateModule provideDonateModule() {
+    return donateModule;
   }
 
   // Create a new one every time
-  @CheckResult @NonNull final SocialMediaModule provideSocialMediaModule() {
-    return new SocialMediaModule();
+  @CheckResult @NonNull public final SocialMediaModule provideSocialMediaModule() {
+    return socialMediaModule;
   }
 
   // Create a new one every time
-  //
-  // NOTE: Makes a new ApiModule
-  @CheckResult @NonNull final VersionCheckModule provideVersionCheckModule() {
-    return new VersionCheckModule(new ApiModule());
+  @CheckResult @NonNull public final VersionCheckModule provideVersionCheckModule() {
+    return versionCheckModule;
   }
 
   // Create a new one every time
-  @CheckResult @NonNull final AdvertisementModule provideAdvertisementModule() {
-    return new AdvertisementModule(provider);
+  @CheckResult @NonNull public final AdvertisementModule provideAdvertisementModule() {
+    return advertisementModule;
   }
 
   public static class Provider {

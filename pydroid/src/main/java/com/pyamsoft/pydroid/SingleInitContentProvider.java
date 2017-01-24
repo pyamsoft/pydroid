@@ -45,7 +45,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     SingleInitContentProvider.created = true;
   }
 
-  @NonNull @CheckResult static LicenseProvider getLicenseProvider() {
+  @NonNull @CheckResult public static LicenseProvider getLicenseProvider() {
     if (instance == null) {
       throw new NullPointerException("Instance is NULL. Was this CP never created?");
     }
@@ -54,7 +54,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     return instance;
   }
 
-  @NonNull @CheckResult static ModuleDelegate getInstance() {
+  @NonNull @CheckResult public static ModuleDelegate getInstance() {
     if (instance == null) {
       throw new NullPointerException("Instance is NULL. Was this CP never created?");
     }
@@ -158,7 +158,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     throw new RuntimeException("This is not actually a content provider");
   }
 
-  static class ModuleDelegate {
+  public static class ModuleDelegate {
 
     @NonNull private final PYDroidModule module;
 
@@ -170,7 +170,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
       this.module = module;
     }
 
-    @CheckResult @NonNull PYDroidModule getModule() {
+    @CheckResult @NonNull public PYDroidModule getModule() {
       return module;
     }
   }

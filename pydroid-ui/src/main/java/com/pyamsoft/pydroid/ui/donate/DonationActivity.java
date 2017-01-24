@@ -30,7 +30,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
-import com.pyamsoft.pydroid.DonatePresenterLoader;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
@@ -47,7 +47,8 @@ public abstract class DonationActivity extends VersionCheckActivity
 
   @CallSuper @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    donatePresenter = new DonatePresenterLoader().call();
+    donatePresenter =
+        SingleInitContentProvider.getInstance().getModule().provideDonateModule().getPresenter();
     donatePresenter.bindView(this);
     donatePresenter.create(this);
   }

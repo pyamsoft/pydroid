@@ -36,33 +36,53 @@ public abstract class PresenterBase<I> implements Presenter<I> {
     }
   }
 
-  @Override public final boolean isBound() {
-    return weakView.get() != null;
-  }
-
+  /**
+   * Called when the presenter attaches to the view
+   */
   @Override public final void bindView(@NonNull I view) {
     weakView.clear();
     weakView = new WeakReference<>(view);
     onBind();
   }
 
+  /**
+   * Called when the presenter detaches from the view
+   */
   @Override public final void unbindView() {
     onUnbind();
     weakView.clear();
   }
 
-  @Override final public void destroy() {
+  /**
+   * Called when the presenter is destroyed and all memory released
+   */
+  @Override public final void destroyView() {
     onDestroy();
   }
 
+  /**
+   * Called once the view has been bound
+   *
+   * Calls to the view can by asynchronous, but make no guarantees about a view being available.
+   */
   protected void onBind() {
 
   }
 
+  /**
+   * Called once the view will be unbound
+   *
+   * Calls to the view must be synchronous, but make no guarantees about a view being available
+   */
   protected void onUnbind() {
 
   }
 
+  /**
+   * Called when the presenter is to be destroyed
+   *
+   * View is not accessible.
+   */
   protected void onDestroy() {
 
   }

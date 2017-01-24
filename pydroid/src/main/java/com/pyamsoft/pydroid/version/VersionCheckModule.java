@@ -22,15 +22,14 @@ import android.support.annotation.NonNull;
 
 public class VersionCheckModule {
 
-  @NonNull private final VersionCheckPresenter presenter;
+  @NonNull private final VersionCheckInteractorImpl interactor;
 
   public VersionCheckModule(@NonNull ApiModule apiModule) {
-    final VersionCheckInteractor interactor = new VersionCheckInteractorImpl(
+    interactor = new VersionCheckInteractorImpl(
         apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class));
-    presenter = new VersionCheckPresenterImpl(interactor);
   }
 
   @NonNull @CheckResult public VersionCheckPresenter getPresenter() {
-    return presenter;
+    return new VersionCheckPresenterImpl(interactor);
   }
 }

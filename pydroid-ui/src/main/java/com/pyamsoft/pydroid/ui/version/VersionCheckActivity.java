@@ -23,7 +23,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfigChecker;
-import com.pyamsoft.pydroid.VersionCheckPresenterLoader;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
@@ -50,7 +50,11 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     super.onCreate(savedInstanceState);
     versionChecked =
         savedInstanceState != null && savedInstanceState.getBoolean(VERSION_CHECKED, false);
-    presenter = new VersionCheckPresenterLoader().call();
+
+    presenter = SingleInitContentProvider.getInstance()
+        .getModule()
+        .provideVersionCheckModule()
+        .getPresenter();
   }
 
   @CallSuper @Override protected void onStart() {

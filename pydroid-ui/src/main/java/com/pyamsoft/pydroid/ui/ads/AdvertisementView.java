@@ -29,7 +29,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.pyamsoft.pydroid.AdvertisementPresenterLoader;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -39,8 +39,8 @@ import timber.log.Timber;
 public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
 
   @NonNull private final AdSource offlineAdSource = new OfflineAdSource();
-  @SuppressWarnings("WeakerAccess") @Nullable Handler handler;
-  @SuppressWarnings("WeakerAccess") @Nullable AdvertisementPresenter presenter;
+  @SuppressWarnings("WeakerAccess") Handler handler;
+  @SuppressWarnings("WeakerAccess") AdvertisementPresenter presenter;
   @Nullable private AdSource onlineAdSource;
 
   public AdvertisementView(Context context) {
@@ -71,7 +71,10 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   @SuppressWarnings("WeakerAccess")
   public final void create(@NonNull FragmentActivity activity, @Nullable AdSource adSource) {
-    presenter = new AdvertisementPresenterLoader().call();
+    presenter = SingleInitContentProvider.getInstance()
+        .getModule()
+        .provideAdvertisementModule()
+        .getPresenter();
 
     // Default to gone
     setVisibility(View.GONE);
@@ -85,9 +88,6 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   public final void start() {
-    if (presenter == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
     Timber.d("Start adView");
     presenter.bindView(this);
 
@@ -98,12 +98,6 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   public final void stop() {
-    if (presenter == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
-    if (handler == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
     Timber.d("Stop adView");
     presenter.unbindView();
     handler.removeCallbacksAndMessages(null);
@@ -124,21 +118,11 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   public final void showAd() {
-    if (presenter == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
-    if (presenter.isBound()) {
-      presenter.showAd();
-    }
+    presenter.showAd();
   }
 
   public final void hideAd() {
-    if (presenter == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
-    if (presenter.isBound()) {
-      presenter.hideAd();
-    }
+    presenter.hideAd();
   }
 
   @Override public void onShown() {
@@ -158,9 +142,6 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   @SuppressWarnings("WeakerAccess") void queueAdRefresh() {
-    if (handler == null) {
-      throw new IllegalStateException("NULL handler");
-    }
     if (onlineAdSource != null && NetworkUtil.hasConnection(getContext())) {
       onlineAdSource.showAd();
     } else {

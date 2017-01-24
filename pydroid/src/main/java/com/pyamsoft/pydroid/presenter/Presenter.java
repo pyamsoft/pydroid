@@ -17,18 +17,25 @@
 
 package com.pyamsoft.pydroid.presenter;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.ActionSingle;
-import com.pyamsoft.pydroid.Destroyable;
 
-public interface Presenter<I> extends Destroyable {
+public interface Presenter<I> {
 
-  @CheckResult boolean isBound();
+  /**
+   * Called when the presenter attaches to the view
+   */
+  void bindView(@NonNull I view);
 
-  void bindView(I view);
-
+  /**
+   * Called when the presenter detaches from the view
+   */
   void unbindView();
+
+  /**
+   * Called when the presenter is destroyed and all memory released
+   */
+  void destroyView();
 
   @SuppressWarnings("unused") interface BoundView<I> extends ActionSingle<I> {
 

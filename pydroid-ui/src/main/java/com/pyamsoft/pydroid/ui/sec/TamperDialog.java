@@ -26,7 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pydroid.SocialMediaPresenterLoader;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -38,7 +38,10 @@ public class TamperDialog extends DialogFragment implements SocialMediaPresenter
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setCancelable(false);
-    presenter = new SocialMediaPresenterLoader().call();
+    presenter = SingleInitContentProvider.getInstance()
+        .getModule()
+        .provideSocialMediaModule()
+        .getPresenter();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

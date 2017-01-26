@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import timber.log.Timber;
 
 public abstract class VersionCheckActivity extends AdvertisementActivity
-    implements VersionCheckPresenter.View, VersionCheckProvider {
+    implements VersionCheckProvider {
 
   @NonNull private static final String VERSION_CHECKED = "version_check_completed";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
@@ -59,10 +59,23 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @CallSuper @Override protected void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
 
     if (isVersionCheckEnabled() && !versionChecked) {
-      presenter.checkForUpdates(getPackageName(), getCurrentApplicationVersion());
+      presenter.checkForUpdates(getPackageName(), getCurrentApplicationVersion(),
+          new VersionCheckPresenter.UpdateCheckCallback() {
+            @Override public void onVersionCheckFinished() {
+              Timber.d("License check finished, mark");
+            }
+
+            @Override
+            public void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode) {
+              Timber.d("Updated version found. %d => %d", oldVersionCode, updatedVersionCode);
+              AppUtil.guaranteeSingleDialogFragment(VersionCheckActivity.this,
+                  VersionUpgradeDialog.newInstance(provideApplicationName(), oldVersionCode,
+                      updatedVersionCode), VersionUpgradeDialog.TAG);
+            }
+          });
     }
   }
 
@@ -74,16 +87,5 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
   @Override protected void onSaveInstanceState(Bundle outState) {
     outState.putBoolean(VERSION_CHECKED, versionChecked);
     super.onSaveInstanceState(outState);
-  }
-
-  @Override public void onVersionCheckFinished() {
-    Timber.d("License check finished, mark");
-  }
-
-  @Override public void onUpdatedVersionFound(int currentVersionCode, int updatedVersionCode) {
-    Timber.d("Updated version found. %d => %d", currentVersionCode, updatedVersionCode);
-    AppUtil.guaranteeSingleDialogFragment(this,
-        VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
-            updatedVersionCode), VersionUpgradeDialog.TAG);
   }
 }

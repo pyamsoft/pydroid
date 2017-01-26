@@ -40,8 +40,8 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
 
   DonatePresenterImpl(@NonNull DonateInteractor interactor) {
     this.interactor = interactor;
-    successListener = () -> getView(View::onBillingSuccess);
-    errorListener = () -> getView(View::onBillingError);
+    successListener = () -> ifViewExists(View::onBillingSuccess);
+    errorListener = () -> ifViewExists(View::onBillingError);
   }
 
   @NonNull @CheckResult @VisibleForTesting
@@ -54,8 +54,8 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
     return errorListener;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
+  @Override protected void onBind(@Nullable View view) {
+    super.onBind(view);
     interactor.bindCallbacks(this, successListener, errorListener);
   }
 
@@ -73,19 +73,20 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
     interactor.loadInventory();
   }
 
-  @Override public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data) {
+  @Override public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data,
+      @NonNull BillingResultCallback callback) {
     OffloaderHelper.cancel(billingResult);
     billingResult =
         interactor.processBillingResult(requestCode, resultCode, data).onError(throwable -> {
           Timber.e(throwable, "Error processing Billing onFinish");
-          getView(View::onProcessResultError);
-        }).onResult(result -> getView(view -> {
-          if (result) {
-            view.onProcessResultSuccess();
+          callback.onProcessResultError();
+        }).onResult(success -> {
+          if (success) {
+            callback.onProcessResultSuccess();
           } else {
-            view.onProcessResultFailed();
+            callback.onProcessResultFailed();
           }
-        })).onFinish(() -> OffloaderHelper.cancel(billingResult)).execute();
+        }).onFinish(() -> OffloaderHelper.cancel(billingResult)).execute();
   }
 
   @Override public void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel) {
@@ -99,6 +100,6 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
 
   @Override public void onLoaded(@NonNull Inventory.Products products) {
     Timber.d("Products are loaded");
-    getView(view -> view.onInventoryLoaded(products));
+    ifViewExists(view -> view.onInventoryLoaded(products));
   }
 }

@@ -18,72 +18,34 @@
 package com.pyamsoft.pydroid.presenter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.ActionSingle;
-import java.lang.ref.WeakReference;
 
 public abstract class PresenterBase<I> implements Presenter<I> {
 
-  @NonNull private WeakReference<I> weakView = new WeakReference<>(null);
+  @Nullable private I view;
 
-  /**
-   * If the view is non null (bound) then it will be passed into the wrapper function and executed.
-   * If the view is null, then this is a no-op
-   */
-  protected final void getView(@NonNull ActionSingle<I> func) {
-    final I view = weakView.get();
+  protected void ifViewExists(@NonNull ActionSingle<I> func) {
     if (view != null) {
       func.call(view);
     }
   }
 
-  /**
-   * Called when the presenter attaches to the view
-   */
-  @Override public final void bindView(@NonNull I view) {
-    weakView.clear();
-    weakView = new WeakReference<>(view);
-    onBind();
+  @Override public final void bindView(@Nullable I view) {
+    this.view = view;
+    onBind(view);
   }
 
-  /**
-   * Called when the presenter detaches from the view
-   */
+  protected void onBind(@Nullable I view) {
+
+  }
+
   @Override public final void unbindView() {
     onUnbind();
-    weakView.clear();
+    this.view = null;
   }
 
-  /**
-   * Called when the presenter is destroyed and all memory released
-   */
-  @Override public final void destroyView() {
-    onDestroy();
-  }
-
-  /**
-   * Called once the view has been bound
-   *
-   * Calls to the view can by asynchronous, but make no guarantees about a view being available.
-   */
-  protected void onBind() {
-
-  }
-
-  /**
-   * Called once the view will be unbound
-   *
-   * Calls to the view must be synchronous, but make no guarantees about a view being available
-   */
   protected void onUnbind() {
-
-  }
-
-  /**
-   * Called when the presenter is to be destroyed
-   *
-   * View is not accessible.
-   */
-  protected void onDestroy() {
 
   }
 }

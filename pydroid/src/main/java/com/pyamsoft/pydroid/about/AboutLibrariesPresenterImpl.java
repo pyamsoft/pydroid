@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
@@ -25,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 import timber.log.Timber;
 
-class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.View>
+class AboutLibrariesPresenterImpl extends PresenterBase<Presenter.Empty>
     implements AboutLibrariesPresenter {
 
   @NonNull private final AboutLibrariesInteractor interactor;
@@ -42,20 +43,22 @@ class AboutLibrariesPresenterImpl extends PresenterBase<AboutLibrariesPresenter.
     interactor.clearCache();
   }
 
-  @Override public void loadLicenseText(int position, @NonNull AboutLicenseModel license) {
-    final ExecutedOffloader licenseSubscription = interactor.loadLicenseText(license)
-        .onError(throwable -> Timber.e(throwable, "onError loadLicenseText"))
-        .onResult(item -> getView(view -> view.onLicenseTextLoaded(position, item)))
-        .execute();
-
-    Timber.d("Add license subscription");
-    licenseSubscriptions.add(licenseSubscription);
-  }
-
   @SuppressWarnings("WeakerAccess") void unsubLoadLicense() {
     //noinspection Convert2streamapi
     for (final ExecutedOffloader task : licenseSubscriptions) {
       OffloaderHelper.cancel(task);
     }
+  }
+
+  @Override public void loadLicenseText(int position, @NonNull AboutLicenseModel license,
+      @NonNull LicenseTextLoadCallback callback) {
+    final ExecutedOffloader licenseSubscription =
+        interactor.loadLicenseText(license).onError(throwable -> {
+          Timber.e(throwable, "onError loadLicenseText");
+          callback.onLicenseTextLoadError(position);
+        }).onResult(license1 -> callback.onLicenseTextLoadComplete(position, license1)).execute();
+
+    Timber.d("Add license subscription");
+    licenseSubscriptions.add(licenseSubscription);
   }
 }

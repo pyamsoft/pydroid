@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 
-public class AdvertisementView extends FrameLayout implements AdvertisementPresenter.AdView {
+public class AdvertisementView extends FrameLayout {
 
   @NonNull private final AdSource offlineAdSource = new OfflineAdSource();
   @SuppressWarnings("WeakerAccess") Handler handler;
@@ -89,7 +89,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
 
   public final void start() {
     Timber.d("Start adView");
-    presenter.bindView(this);
+    presenter.bindView(null);
+    showAd();
 
     offlineAdSource.start();
     if (onlineAdSource != null) {
@@ -100,6 +101,8 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   public final void stop() {
     Timber.d("Stop adView");
     presenter.unbindView();
+    hideAd();
+
     handler.removeCallbacksAndMessages(null);
 
     offlineAdSource.stop();
@@ -109,7 +112,7 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   public final void destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
-    onHidden();
+    runOnAdHidden();
 
     removeView(offlineAdSource.destroy(activity, isChangingConfigurations));
     if (onlineAdSource != null) {
@@ -118,20 +121,18 @@ public class AdvertisementView extends FrameLayout implements AdvertisementPrese
   }
 
   public final void showAd() {
-    presenter.showAd();
+    presenter.showAd(() -> {
+      Timber.d("Show ad view");
+      setVisibility(View.VISIBLE);
+      queueAdRefresh();
+    });
   }
 
   public final void hideAd() {
-    presenter.hideAd();
+    presenter.hideAd(this::runOnAdHidden);
   }
 
-  @Override public void onShown() {
-    Timber.d("Show ad view");
-    setVisibility(View.VISIBLE);
-    queueAdRefresh();
-  }
-
-  @Override public void onHidden() {
+  void runOnAdHidden() {
     Timber.d("Hide ad view");
     setVisibility(View.GONE);
 

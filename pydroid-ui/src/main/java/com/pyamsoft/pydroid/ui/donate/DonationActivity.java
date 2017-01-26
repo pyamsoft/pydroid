@@ -64,7 +64,22 @@ public abstract class DonationActivity extends VersionCheckActivity
   @CallSuper @Override protected void onActivityResult(int requestCode, int resultCode,
       Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    donatePresenter.onBillingResult(requestCode, resultCode, data);
+    donatePresenter.onBillingResult(requestCode, resultCode, data,
+        new DonatePresenter.BillingResultCallback() {
+          @Override public void onProcessResultSuccess() {
+            passToSupportDialog(DonateDialog::onProcessResultSuccess, null);
+          }
+
+          @Override public void onProcessResultError() {
+            passToSupportDialog(DonateDialog::onProcessResultError,
+                DonationActivity.this::onBillingError);
+          }
+
+          @Override public void onProcessResultFailed() {
+            passToSupportDialog(DonateDialog::onProcessResultFailed,
+                DonationActivity.this::onBillingError);
+          }
+        });
   }
 
   @CallSuper @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {
@@ -117,17 +132,14 @@ public abstract class DonationActivity extends VersionCheckActivity
             Toast.LENGTH_SHORT).show());
   }
 
-  @Override public final void onProcessResultSuccess() {
-    passToSupportDialog(DonateDialog::onProcessResultSuccess, null);
-  }
-
-  @Override public final void onProcessResultError() {
-    passToSupportDialog(DonateDialog::onProcessResultError, this::onBillingError);
-  }
-
-  @Override public final void onProcessResultFailed() {
-    passToSupportDialog(DonateDialog::onProcessResultFailed, this::onBillingError);
-  }
+  //@Override public final void onProcessResultSuccess() {
+  //}
+  //
+  //@Override public final void onProcessResultError() {
+  //}
+  //
+  //@Override public final void onProcessResultFailed() {
+  //}
 
   @Override public final void onInventoryLoaded(@NonNull Inventory.Products products) {
     final Inventory.Product product = products.get(ProductTypes.IN_APP);

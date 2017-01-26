@@ -19,13 +19,14 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View>
+class VersionCheckPresenterImpl extends PresenterBase<Presenter.Empty>
     implements VersionCheckPresenter {
 
   @NonNull private final VersionCheckInteractor interactor;
@@ -40,7 +41,8 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
     cancelCall();
   }
 
-  @Override public void checkForUpdates(@NonNull String packageName, int currentVersionCode) {
+  @Override public void checkForUpdates(@NonNull String packageName, int currentVersionCode,
+      @NonNull UpdateCheckCallback callback) {
     cancelCall();
     call = interactor.checkVersion(packageName);
     call.enqueue(new Callback<VersionCheckResponse>() {
@@ -51,10 +53,10 @@ class VersionCheckPresenterImpl extends PresenterBase<VersionCheckPresenter.View
           Timber.i("Update check finished");
           Timber.i("Current version: %d", currentVersionCode);
           Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
-          getView(View::onVersionCheckFinished);
+          callback.onVersionCheckFinished();
           if (currentVersionCode < versionCheckResponse.currentVersion()) {
-            getView(view -> view.onUpdatedVersionFound(currentVersionCode,
-                versionCheckResponse.currentVersion()));
+            callback.onUpdatedVersionFound(currentVersionCode,
+                versionCheckResponse.currentVersion());
             cancelCall();
           }
         } else {

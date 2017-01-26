@@ -18,12 +18,13 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
-class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.AdView>
+class AdvertisementPresenterImpl extends PresenterBase<Presenter.Empty>
     implements AdvertisementPresenter {
 
   @NonNull private final AdvertisementInteractor interactor;
@@ -34,44 +35,31 @@ class AdvertisementPresenterImpl extends PresenterBase<AdvertisementPresenter.Ad
     this.interactor = interactor;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    showAd();
-  }
-
   @Override protected void onUnbind() {
     super.onUnbind();
     OffloaderHelper.cancel(offloader);
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    hideAd();
-  }
-
-  @Override public void showAd() {
+  @Override public void showAd(@NonNull ShowAdCallback callback) {
     OffloaderHelper.cancel(offloader);
     offloader = interactor.showAdView()
         .onError(item -> Timber.e(item, "onError showAd"))
-        .onResult(shown -> getView(view -> {
+        .onResult(shown -> {
           if (shown) {
-            view.onShown();
+            callback.onShown();
           }
-        }))
+        })
         .onFinish(() -> OffloaderHelper.cancel(offloader))
         .execute();
   }
 
-  @Override public void hideAd() {
+  @Override public void hideAd(@NonNull HideAdCallback callback) {
     OffloaderHelper.cancel(offloader);
-    offloader = interactor.hideAdView()
-        .onError(item -> Timber.e(item, "onError hideAd"))
-        .onResult(hide -> getView(view -> {
+    offloader =
+        interactor.hideAdView().onError(item -> Timber.e(item, "onError hideAd")).onResult(hide -> {
           if (hide) {
-            view.onHidden();
+            callback.onHidden();
           }
-        }))
-        .onFinish(() -> OffloaderHelper.cancel(offloader))
-        .execute();
+        }).onFinish(() -> OffloaderHelper.cancel(offloader)).execute();
   }
 }

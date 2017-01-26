@@ -39,22 +39,22 @@ class SocialMediaPresenterImpl extends PresenterBase<SocialMediaPresenter.View>
 
   @Override public void clickAppPage(@NonNull String link) {
     final String fullLink = BASE_MARKET + link;
-    getView(view -> view.onSocialMediaClicked(fullLink));
+    ifViewExists(view -> view.onSocialMediaClicked(fullLink));
   }
 
   @Override public void clickGooglePlay() {
-    getView(view -> view.onSocialMediaClicked(GOOGLE_PLAY_DEVELOPER_PAGE));
+    ifViewExists(view -> view.onSocialMediaClicked(GOOGLE_PLAY_DEVELOPER_PAGE));
   }
 
   @Override public void clickGooglePlus() {
-    getView(view -> view.onSocialMediaClicked(GOOGLE_PLUS));
+    ifViewExists(view -> view.onSocialMediaClicked(GOOGLE_PLUS));
   }
 
   @Override public void clickBlogger() {
-    getView(view -> view.onSocialMediaClicked(OFFICIAL_BLOG));
+    ifViewExists(view -> view.onSocialMediaClicked(OFFICIAL_BLOG));
   }
 
   @Override public void clickFacebook() {
-    getView(view -> view.onSocialMediaClicked(FACEBOOK));
+    ifViewExists(view -> view.onSocialMediaClicked(FACEBOOK));
   }
 }

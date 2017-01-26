@@ -42,8 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import timber.log.Timber;
 
-public class AboutLibrariesFragment extends ActionBarFragment
-    implements AboutLibrariesPresenter.View {
+public class AboutLibrariesFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "AboutLibrariesFragment";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
@@ -132,7 +131,17 @@ public class AboutLibrariesFragment extends ActionBarFragment
         final AboutAdapterItem aboutItem =
             fastItemAdapter.getAdapterItem(holder.getAdapterPosition());
         aboutItem.bindView(holder, payloads);
-        holder.bind(item -> presenter.loadLicenseText(holder.getAdapterPosition(), item));
+        holder.bind(item -> presenter.loadLicenseText(holder.getAdapterPosition(), item,
+            new AboutLibrariesPresenter.LicenseTextLoadCallback() {
+              @Override public void onLicenseTextLoadComplete(int position, @NonNull String text) {
+                fastItemAdapter.getAdapterItem(position).setLicenseText(text);
+                fastItemAdapter.notifyItemChanged(position);
+              }
+
+              @Override public void onLicenseTextLoadError(int position) {
+                // TODO handle error
+              }
+            }));
       }
 
       @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
@@ -165,7 +174,7 @@ public class AboutLibrariesFragment extends ActionBarFragment
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
   }
 
   @Override public void onStop() {
@@ -180,11 +189,6 @@ public class AboutLibrariesFragment extends ActionBarFragment
       Timber.d("About is last on backstack, set up false");
       setActionBarUpEnabled(false);
     }
-  }
-
-  @Override public void onLicenseTextLoaded(int position, @NonNull String text) {
-    fastItemAdapter.getAdapterItem(position).setLicenseText(text);
-    fastItemAdapter.notifyItemChanged(position);
   }
 
   public enum BackStackState {

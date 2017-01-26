@@ -48,8 +48,7 @@ import java.util.Locale;
 import timber.log.Timber;
 
 @SuppressWarnings("unused") public abstract class ActionBarSettingsPreferenceFragment
-    extends ActionBarPreferenceFragment
-    implements VersionCheckPresenter.View, VersionCheckProvider, SocialMediaPresenter.View {
+    extends ActionBarPreferenceFragment implements VersionCheckProvider, SocialMediaPresenter.View {
 
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
   @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialPresenter;
@@ -134,7 +133,7 @@ import timber.log.Timber;
 
   @CallSuper @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
     socialPresenter.bindView(this);
   }
 
@@ -189,19 +188,20 @@ import timber.log.Timber;
 
   @SuppressWarnings("SameReturnValue") @CheckResult protected boolean checkForUpdate() {
     toast.show();
-    presenter.checkForUpdates(getContext().getPackageName(), getCurrentApplicationVersion());
+    presenter.checkForUpdates(getContext().getPackageName(), getCurrentApplicationVersion(),
+        new VersionCheckPresenter.UpdateCheckCallback() {
+          @Override public void onVersionCheckFinished() {
+            Timber.d("License check finished, mark");
+          }
+
+          @Override public void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode) {
+            Timber.d("Updated version found. %d => %d", oldVersionCode, updatedVersionCode);
+            AppUtil.guaranteeSingleDialogFragment(getActivity(),
+                VersionUpgradeDialog.newInstance(provideApplicationName(), oldVersionCode,
+                    updatedVersionCode), VersionUpgradeDialog.TAG);
+          }
+        });
     return true;
-  }
-
-  @Override public void onVersionCheckFinished() {
-    Timber.d("License check finished, mark");
-  }
-
-  @Override public void onUpdatedVersionFound(int currentVersionCode, int updatedVersionCode) {
-    Timber.d("Updated version found. %d => %d", currentVersionCode, updatedVersionCode);
-    AppUtil.guaranteeSingleDialogFragment(getActivity(),
-        VersionUpgradeDialog.newInstance(provideApplicationName(), currentVersionCode,
-            updatedVersionCode), VersionUpgradeDialog.TAG);
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {

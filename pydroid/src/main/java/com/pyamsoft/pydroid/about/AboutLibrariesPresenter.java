@@ -20,12 +20,15 @@ package com.pyamsoft.pydroid.about;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface AboutLibrariesPresenter extends Presenter<AboutLibrariesPresenter.View> {
+public interface AboutLibrariesPresenter extends Presenter<Presenter.Empty> {
 
-  void loadLicenseText(int position, @NonNull AboutLicenseModel license);
+  void loadLicenseText(int position, @NonNull AboutLicenseModel license,
+      @NonNull LicenseTextLoadCallback callback);
 
-  interface View {
+  interface LicenseTextLoadCallback {
 
-    void onLicenseTextLoaded(int position, @NonNull String text);
+    void onLicenseTextLoadComplete(int position, @NonNull String text);
+
+    void onLicenseTextLoadError(int position);
   }
 }

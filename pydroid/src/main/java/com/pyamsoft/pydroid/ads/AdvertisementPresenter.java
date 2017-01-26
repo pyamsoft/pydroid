@@ -17,17 +17,21 @@
 
 package com.pyamsoft.pydroid.ads;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface AdvertisementPresenter extends Presenter<AdvertisementPresenter.AdView> {
+public interface AdvertisementPresenter extends Presenter<Presenter.Empty> {
 
-  void showAd();
+  void showAd(@NonNull ShowAdCallback callback);
 
-  void hideAd();
+  void hideAd(@NonNull HideAdCallback callback);
 
-  interface AdView {
+  interface ShowAdCallback {
 
     void onShown();
+  }
+
+  interface HideAdCallback {
 
     void onHidden();
   }

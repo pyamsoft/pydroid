@@ -17,28 +17,21 @@
 
 package com.pyamsoft.pydroid.presenter;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.ActionSingle;
+import android.support.annotation.Nullable;
 
 public interface Presenter<I> {
 
   /**
    * Called when the presenter attaches to the view
    */
-  void bindView(@NonNull I view);
+  void bindView(@Nullable I view);
 
   /**
    * Called when the presenter detaches from the view
    */
   void unbindView();
 
-  /**
-   * Called when the presenter is destroyed and all memory released
-   */
-  void destroyView();
+  interface Empty {
 
-  @SuppressWarnings("unused") interface BoundView<I> extends ActionSingle<I> {
-
-    @Override void call(@NonNull I view);
   }
 }

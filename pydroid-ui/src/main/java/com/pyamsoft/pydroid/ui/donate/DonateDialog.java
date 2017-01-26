@@ -44,7 +44,8 @@ import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
-public class DonateDialog extends DialogFragment implements DonatePresenter.View {
+public class DonateDialog extends DialogFragment
+    implements DonatePresenter.View, DonatePresenter.BillingResultCallback {
 
   @NonNull public static final String TAG = "SupportDialog";
   private FastItemAdapter<SkuUIItem> fastItemAdapter;

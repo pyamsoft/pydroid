@@ -30,21 +30,25 @@ public interface DonatePresenter extends Presenter<DonatePresenter.View> {
 
   void loadInventory();
 
-  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data);
+  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data,
+      @NonNull BillingResultCallback callback);
 
   void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel);
 
-  interface View {
-
-    void onBillingSuccess();
-
-    void onBillingError();
+  interface BillingResultCallback {
 
     void onProcessResultSuccess();
 
     void onProcessResultError();
 
     void onProcessResultFailed();
+  }
+
+  interface View {
+
+    void onBillingSuccess();
+
+    void onBillingError();
 
     void onInventoryLoaded(@NonNull Inventory.Products products);
   }

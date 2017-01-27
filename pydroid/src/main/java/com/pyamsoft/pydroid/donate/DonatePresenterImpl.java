@@ -19,44 +19,28 @@ package com.pyamsoft.pydroid.donate;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
-import org.solovyev.android.checkout.Inventory;
 import timber.log.Timber;
 
-class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
-    implements DonatePresenter, Inventory.Callback {
+class DonatePresenterImpl extends PresenterBase<DonatePresenter.View> implements DonatePresenter {
 
-  @NonNull private final DonateInteractor.OnBillingSuccessListener successListener;
-  @NonNull private final DonateInteractor.OnBillingErrorListener errorListener;
   @NonNull private final DonateInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader billingResult =
-      new ExecutedOffloader.Empty();
+  @SuppressWarnings("WeakerAccess") @Nullable ExecutedOffloader billingResult;
 
   DonatePresenterImpl(@NonNull DonateInteractor interactor) {
     this.interactor = interactor;
-    successListener = () -> ifViewExists(View::onBillingSuccess);
-    errorListener = () -> ifViewExists(View::onBillingError);
-  }
-
-  @NonNull @CheckResult @VisibleForTesting
-  DonateInteractor.OnBillingSuccessListener getSuccessListener() {
-    return successListener;
-  }
-
-  @NonNull @CheckResult @VisibleForTesting
-  DonateInteractor.OnBillingErrorListener getErrorListener() {
-    return errorListener;
   }
 
   @Override protected void onBind(@Nullable View view) {
     super.onBind(view);
-    interactor.bindCallbacks(this, successListener, errorListener);
+    interactor.bindCallbacks(products -> {
+      Timber.d("Products are loaded");
+      ifViewExists(view1 -> view1.onInventoryLoaded(products));
+    }, () -> ifViewExists(View::onBillingSuccess), () -> ifViewExists(View::onBillingError));
   }
 
   @Override protected void onUnbind() {
@@ -96,10 +80,5 @@ class DonatePresenterImpl extends PresenterBase<DonatePresenter.View>
     } else {
       interactor.purchase(skuModel.sku());
     }
-  }
-
-  @Override public void onLoaded(@NonNull Inventory.Products products) {
-    Timber.d("Products are loaded");
-    ifViewExists(view -> view.onInventoryLoaded(products));
   }
 }

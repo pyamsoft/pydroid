@@ -132,15 +132,6 @@ public abstract class DonationActivity extends VersionCheckActivity
             Toast.LENGTH_SHORT).show());
   }
 
-  //@Override public final void onProcessResultSuccess() {
-  //}
-  //
-  //@Override public final void onProcessResultError() {
-  //}
-  //
-  //@Override public final void onProcessResultFailed() {
-  //}
-
   @Override public final void onInventoryLoaded(@NonNull Inventory.Products products) {
     final Inventory.Product product = products.get(ProductTypes.IN_APP);
     if (product.supported) {

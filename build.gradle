@@ -34,7 +34,7 @@ buildscript {
 
     // https://medium.com/@skaliakoudas/decreasing-build-times-by-decreasing-gradle-memory-requirements-7fcafc6d98ea#.wblqdn1xf
     // Gradle memory is set in gradle.properties to 2GB
-    heapSize = "1g"
+    heapSize = "4g"
 
     retrolambda = "2.5.0"
     supportLib = "25.1.0"
@@ -63,7 +63,7 @@ buildscript {
     classpath 'me.tatarka:gradle-retrolambda:3.5.0'
 
     // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.0'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
 
     // Gradle version checker
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'

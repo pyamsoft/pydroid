@@ -19,18 +19,34 @@ package com.pyamsoft.pydroid;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.support.annotation.CheckResult;
+import timber.log.Timber;
 
 @SuppressWarnings("unused") @SuppressLint("Registered") public abstract class PYDroidApplication
     extends Application {
 
   @Override public final void onCreate() {
     super.onCreate();
+    if (exitBeforeInitialization()) {
+      Timber.w("Exiting out before PYDroidApplication initialization");
+      return;
+    }
+
     if (BuildConfigChecker.getInstance().isDebugMode()) {
       onCreateInDebugMode();
     } else {
       onCreateInReleaseMode();
     }
     onCreateNormalMode();
+  }
+
+  /**
+   * Because the Application class can exist multiple times in a Multi process application,
+   * we do not always want to initialize it. This allows us to early bail out
+   * of a multi process initialization.
+   */
+  @CheckResult protected boolean exitBeforeInitialization() {
+    return false;
   }
 
   @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateNormalMode() {

@@ -141,8 +141,7 @@ import timber.log.Timber;
     return adImage;
   }
 
-  @NonNull @Override
-  public View destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
+  @NonNull @Override public View destroy(boolean isChangingConfigurations) {
     taskMap.clear();
     if (!isChangingConfigurations) {
       if (imageQueue != null) {

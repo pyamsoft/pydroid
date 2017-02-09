@@ -107,11 +107,11 @@ public class AdvertisementView extends FrameLayout {
     }
   }
 
-  public final void destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
+  public final void destroy(boolean isChangingConfigurations) {
     hideAd();
-    removeView(offlineAdSource.destroy(activity, isChangingConfigurations));
+    removeView(offlineAdSource.destroy(isChangingConfigurations));
     if (onlineAdSource != null) {
-      removeView(onlineAdSource.destroy(activity, isChangingConfigurations));
+      removeView(onlineAdSource.destroy(isChangingConfigurations));
     }
   }
 

@@ -19,11 +19,9 @@ package com.pyamsoft.pydroid.ui.ads;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.ads.AdvertisementModule;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY)
-public class AdvertisementComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class AdvertisementComponent {
 
   @NonNull private final AdvertisementModule advertisementModule;
 

@@ -53,7 +53,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
   }
 
-  @Override protected void onStop() {
+  @CallSuper @Override protected void onStop() {
     super.onStop();
     if (adView != null) {
       adView.stop();
@@ -63,7 +63,7 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
   @CallSuper @Override protected void onDestroy() {
     super.onDestroy();
     if (adView != null) {
-      adView.destroy(this, isChangingConfigurations());
+      adView.destroy(isChangingConfigurations());
     }
   }
 

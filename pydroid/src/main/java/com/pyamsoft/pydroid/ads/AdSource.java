@@ -26,8 +26,7 @@ public interface AdSource {
 
   @CheckResult @NonNull View create(@NonNull FragmentActivity activity);
 
-  @CheckResult @NonNull View destroy(@NonNull FragmentActivity activity,
-      boolean isChangingConfigurations);
+  @CheckResult @NonNull View destroy(boolean isChangingConfigurations);
 
   void start();
 

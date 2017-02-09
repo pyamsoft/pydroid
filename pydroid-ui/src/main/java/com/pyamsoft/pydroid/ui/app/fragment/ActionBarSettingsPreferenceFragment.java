@@ -34,7 +34,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.donate.DonateDialog;

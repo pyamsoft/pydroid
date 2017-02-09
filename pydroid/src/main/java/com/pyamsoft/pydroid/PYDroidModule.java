@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +30,7 @@ import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.PurchaseVerifier;
 import org.solovyev.android.checkout.RequestListener;
 
-public class PYDroidModule {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidModule {
 
   @NonNull private static final String SKU_DONATE = ".donate";
   @NonNull private static final String SKU_DONATE_ONE = SKU_DONATE + ".one";

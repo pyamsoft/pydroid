@@ -21,13 +21,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import org.solovyev.android.checkout.Inventory;
 import timber.log.Timber;
 
-public class DonatePresenter extends Presenter<DonatePresenter.View> {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class DonatePresenter
+    extends Presenter<DonatePresenter.View> {
 
   @NonNull private final DonateInteractor interactor;
   @SuppressWarnings("WeakerAccess") @Nullable ExecutedOffloader billingResult;

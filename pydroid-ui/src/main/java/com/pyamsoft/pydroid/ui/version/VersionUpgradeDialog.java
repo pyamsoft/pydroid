@@ -22,15 +22,16 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.Locale;
 
-public class VersionUpgradeDialog extends DialogFragment implements SocialMediaPresenter.View {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionUpgradeDialog extends DialogFragment
+    implements SocialMediaPresenter.View {
 
   @NonNull public static final String TAG = "VersionUpgradeDialog";
   @NonNull private static final String KEY_NAME = "key_name";

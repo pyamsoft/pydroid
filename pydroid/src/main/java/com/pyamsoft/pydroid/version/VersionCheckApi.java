@@ -20,13 +20,14 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import retrofit2.Retrofit;
 
-class VersionCheckApi {
+@RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckApi {
 
   @NonNull private final Retrofit client;
 

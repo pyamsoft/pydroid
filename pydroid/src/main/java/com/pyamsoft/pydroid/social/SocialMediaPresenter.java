@@ -18,9 +18,11 @@
 package com.pyamsoft.pydroid.social;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public class SocialMediaPresenter extends Presenter<SocialMediaPresenter.View> {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class SocialMediaPresenter
+    extends Presenter<SocialMediaPresenter.View> {
 
   @SuppressWarnings("WeakerAccess") @NonNull static final String BASE_MARKET =
       "market://details?id=";

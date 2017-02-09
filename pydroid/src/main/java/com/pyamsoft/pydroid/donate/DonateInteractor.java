@@ -22,13 +22,14 @@ import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.tool.Offloader;
 import com.pyamsoft.pydroid.tool.SerialOffloader;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
-public class DonateInteractor {
+@RestrictTo(RestrictTo.Scope.LIBRARY) class DonateInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ICheckout checkout;
 
@@ -36,47 +37,46 @@ public class DonateInteractor {
     this.checkout = checkout;
   }
 
-  public void bindCallbacks(@NonNull Inventory.Callback callback,
+  void bindCallbacks(@NonNull Inventory.Callback callback,
       @NonNull OnBillingSuccessListener success, @NonNull OnBillingErrorListener error) {
     checkout.init(callback, success, error);
   }
 
-  public void create(@NonNull Activity activity) {
+  void create(@NonNull Activity activity) {
     checkout.createForActivity(activity);
     checkout.start();
   }
 
-  public void destroy() {
+  void destroy() {
     checkout.stop();
   }
 
-  public void loadInventory() {
+  void loadInventory() {
     checkout.loadInventory();
   }
 
-  public void purchase(@NonNull Sku sku) {
+  void purchase(@NonNull Sku sku) {
     Timber.i("Purchase item: %s", sku.id);
     checkout.purchase(sku);
   }
 
-  public void consume(@NonNull String token) {
+  void consume(@NonNull String token) {
     Timber.d("Attempt consume token: %s", token);
     checkout.consume(token);
   }
 
-  @CheckResult @NonNull
-  public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
+  @CheckResult @NonNull Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
       @Nullable Intent data) {
     return SerialOffloader.newInstance(
         () -> checkout.processBillingResult(requestCode, resultCode, data));
   }
 
-  public interface OnBillingErrorListener {
+  interface OnBillingErrorListener {
 
     void onBillingError();
   }
 
-  public interface OnBillingSuccessListener {
+  interface OnBillingSuccessListener {
 
     void onBillingSuccess();
   }

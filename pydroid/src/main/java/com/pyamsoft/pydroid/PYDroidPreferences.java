@@ -23,9 +23,10 @@ import android.content.res.Resources;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import android.support.v7.preference.PreferenceManager;
 
-public abstract class PYDroidPreferences {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public abstract class PYDroidPreferences {
 
   @CheckResult public abstract boolean isAdViewEnabled();
 
@@ -37,7 +38,7 @@ public abstract class PYDroidPreferences {
 
   public abstract void setRatingAcceptedVersion(int version);
 
-  static class Instance {
+  public static class Instance {
 
     @Nullable private static volatile PYDroidPreferences instance = null;
 

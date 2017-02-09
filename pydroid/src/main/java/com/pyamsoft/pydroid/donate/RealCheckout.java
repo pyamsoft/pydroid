@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import java.util.Collections;
 import java.util.List;
 import org.solovyev.android.checkout.ActivityCheckout;
@@ -39,7 +40,7 @@ import timber.log.Timber;
 /**
  * The real checkout module, uses android-checkout to talk with Google Play's InAppBilling services
  */
-class RealCheckout implements ICheckout {
+@RestrictTo(RestrictTo.Scope.LIBRARY) class RealCheckout implements ICheckout {
 
   @NonNull private final List<String> inAppSkuList;
   @NonNull private final Billing billing;

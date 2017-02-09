@@ -26,7 +26,8 @@ import java.util.HashSet;
 import java.util.Set;
 import timber.log.Timber;
 
-public class AboutLibrariesPresenter extends Presenter<Presenter.Empty> {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesPresenter
+    extends Presenter<Presenter.Empty> {
 
   @NonNull private final AboutLibrariesInteractor interactor;
   @NonNull private final Set<ExecutedOffloader> licenseSubscriptions;

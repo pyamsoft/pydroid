@@ -19,9 +19,10 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
 
-public class AboutLibrariesModule {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesModule {
 
   @NonNull private final AboutLibrariesInteractor interactor;
 

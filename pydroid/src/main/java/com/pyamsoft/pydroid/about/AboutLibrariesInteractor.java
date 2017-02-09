@@ -51,12 +51,11 @@ class AboutLibrariesInteractor {
     cachedLicenses = new HashMap<>();
   }
 
-  public void clearCache() {
+  void clearCache() {
     cachedLicenses.clear();
   }
 
-  @CheckResult @NonNull
-  public Offloader<String> loadLicenseText(@NonNull AboutLicenseModel license) {
+  @CheckResult @NonNull Offloader<String> loadLicenseText(@NonNull AboutLicenseModel license) {
     return AsyncOffloader.newInstance(() -> {
       if (cachedLicenses.containsKey(license.name())) {
         Timber.d("Fetch from cache");

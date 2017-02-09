@@ -18,12 +18,14 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
-public class AdvertisementPresenter extends Presenter<Presenter.Empty> {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class AdvertisementPresenter
+    extends Presenter<Presenter.Empty> {
 
   @NonNull private final AdvertisementInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader offloader =

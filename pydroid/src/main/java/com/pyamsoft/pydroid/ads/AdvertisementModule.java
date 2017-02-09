@@ -19,8 +19,10 @@ package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
 
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 public class AdvertisementModule {
 
   @NonNull private final AdvertisementInteractor interactor;

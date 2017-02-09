@@ -19,12 +19,13 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
-@AutoValue abstract class VersionCheckResponse {
+@RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue abstract class VersionCheckResponse {
 
   @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static TypeAdapter<VersionCheckResponse> typeAdapter(final Gson gson) {

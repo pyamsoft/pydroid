@@ -19,12 +19,13 @@ package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidPreferences;
 import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import com.pyamsoft.pydroid.tool.Offloader;
 import timber.log.Timber;
 
-public class AdvertisementInteractor {
+@RestrictTo(RestrictTo.Scope.LIBRARY) class AdvertisementInteractor {
 
   @SuppressWarnings("WeakerAccess") static final int MAX_SHOW_COUNT = 4;
   @SuppressWarnings("WeakerAccess") @NonNull final PYDroidPreferences preferences;
@@ -33,7 +34,7 @@ public class AdvertisementInteractor {
     this.preferences = pyDroidPreferences;
   }
 
-  @NonNull @CheckResult public Offloader<Boolean> showAdView() {
+  @NonNull @CheckResult Offloader<Boolean> showAdView() {
     return AsyncOffloader.newInstance(() -> {
       final boolean isEnabled = preferences.isAdViewEnabled();
       final int shownCount = preferences.getAdViewShownCount();
@@ -52,7 +53,7 @@ public class AdvertisementInteractor {
     });
   }
 
-  @NonNull @CheckResult public Offloader<Boolean> hideAdView() {
+  @NonNull @CheckResult Offloader<Boolean> hideAdView() {
     return AsyncOffloader.newInstance(() -> {
       Timber.d("Hide AdView");
       if (preferences.getAdViewShownCount() >= MAX_SHOW_COUNT) {

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
@@ -44,7 +45,7 @@ import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;
 
-public class DonateDialog extends DialogFragment
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class DonateDialog extends DialogFragment
     implements DonatePresenter.View, DonatePresenter.BillingResultCallback {
 
   @NonNull public static final String TAG = "SupportDialog";

@@ -19,8 +19,9 @@ package com.pyamsoft.pydroid.social;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 
-public class SocialMediaModule {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class SocialMediaModule {
 
   @NonNull @CheckResult public final SocialMediaPresenter getPresenter() {
     return new SocialMediaPresenter();

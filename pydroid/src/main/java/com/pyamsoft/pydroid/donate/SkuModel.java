@@ -20,10 +20,11 @@ package com.pyamsoft.pydroid.donate;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import com.google.auto.value.AutoValue;
 import org.solovyev.android.checkout.Sku;
 
-@AutoValue public abstract class SkuModel {
+@RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue public abstract class SkuModel {
 
   @CheckResult @NonNull public static SkuModel create(@NonNull Sku sku, @Nullable String token) {
     return new AutoValue_SkuModel(sku, token);

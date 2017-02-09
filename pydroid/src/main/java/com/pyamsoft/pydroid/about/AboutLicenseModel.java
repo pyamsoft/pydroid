@@ -19,9 +19,10 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.google.auto.value.AutoValue;
 
-@AutoValue public abstract class AboutLicenseModel {
+@RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue public abstract class AboutLicenseModel {
 
   @CheckResult @NonNull
   public static AboutLicenseModel create(@NonNull String name, @NonNull String homepage,

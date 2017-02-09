@@ -17,11 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment;
 
+import android.support.annotation.RestrictTo;
 import com.android.annotations.NonNull;
 import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 
-public class AppComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class AppComponent {
 
   @NonNull private final SocialMediaModule socialMediaModule;
   @NonNull private final VersionCheckModule versionCheckModule;

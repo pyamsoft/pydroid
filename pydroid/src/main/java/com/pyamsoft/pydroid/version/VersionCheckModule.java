@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pyamsoft.pydroid.BuildConfigChecker;
@@ -28,7 +29,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class VersionCheckModule {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckModule {
 
   @NonNull private static final String GITHUB_URL = "raw.githubusercontent.com";
   @NonNull private static final String CURRENT_VERSION_REPO_BASE_URL =

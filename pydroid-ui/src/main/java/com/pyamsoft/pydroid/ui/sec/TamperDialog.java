@@ -26,21 +26,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
+import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public class TamperDialog extends DialogFragment implements SocialMediaPresenter.View {
 
-  SocialMediaPresenter presenter;
+  public SocialMediaPresenter presenter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setCancelable(false);
-    presenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideSocialMediaModule()
-        .getPresenter();
+
+    PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

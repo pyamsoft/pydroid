@@ -32,6 +32,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
@@ -41,6 +43,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
+import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import java.util.Locale;
 import timber.log.Timber;
@@ -48,20 +51,13 @@ import timber.log.Timber;
 @SuppressWarnings("unused") public abstract class ActionBarSettingsPreferenceFragment
     extends ActionBarPreferenceFragment implements VersionCheckProvider, SocialMediaPresenter.View {
 
-  @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
-  @SuppressWarnings("WeakerAccess") SocialMediaPresenter socialPresenter;
+  public VersionCheckPresenter presenter;
+  public SocialMediaPresenter socialPresenter;
   private Toast toast;
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideVersionCheckModule()
-        .getPresenter();
-    socialPresenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideSocialMediaModule()
-        .getPresenter();
+    PYDroidInjector.get().provideComponent().provideAppComponent().inject(this);
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override

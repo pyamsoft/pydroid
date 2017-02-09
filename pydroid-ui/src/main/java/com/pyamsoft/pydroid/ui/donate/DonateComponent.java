@@ -19,16 +19,14 @@ package com.pyamsoft.pydroid.ui.donate;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.donate.DonateModule;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY)
-public class DonateComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class DonateComponent {
 
   @NonNull private final DonateModule donateModule;
 
-  public DonateComponent(@NonNull PYDroidModule pyDroidModule) {
-    this.donateModule = new DonateModule(pyDroidModule);
+  public DonateComponent(@NonNull DonateModule donateModule) {
+    this.donateModule = donateModule;
   }
 
   void inject(@NonNull DonationActivity activity) {

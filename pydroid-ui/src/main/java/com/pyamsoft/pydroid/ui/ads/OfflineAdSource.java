@@ -25,6 +25,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
@@ -41,7 +43,7 @@ import java.util.List;
 import java.util.Queue;
 import timber.log.Timber;
 
-class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
+public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
 
   @NonNull private static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
   @NonNull private static final String PACKAGE_PADLOCK = "com.pyamsoft.padlock";
@@ -54,7 +56,7 @@ class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
-  @Nullable @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
+  public SocialMediaPresenter presenter;
   @Nullable private Queue<String> imageQueue;
   @Nullable private ImageView adImage;
 
@@ -123,10 +125,7 @@ class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @NonNull @Override public View create(@NonNull FragmentActivity activity) {
-    presenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideSocialMediaModule()
-        .getPresenter();
+    PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
 
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));

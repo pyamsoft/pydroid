@@ -22,7 +22,8 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
+import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
 import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding;
@@ -32,7 +33,7 @@ import timber.log.Timber;
 public class SocialMediaPreference extends BaseBoundPreference
     implements SocialMediaPresenter.View {
 
-  @SuppressWarnings("WeakerAccess") SocialMediaPresenter presenter;
+  public SocialMediaPresenter presenter;
   private ViewSocialMediaBinding binding;
 
   public SocialMediaPreference(Context context, AttributeSet attrs, int defStyleAttr,
@@ -58,6 +59,7 @@ public class SocialMediaPreference extends BaseBoundPreference
 
   private void init() {
     setLayoutResource(R.layout.view_social_media);
+    PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
   }
 
   @Override public void onBindViewHolder(PreferenceViewHolder holder) {
@@ -84,10 +86,6 @@ public class SocialMediaPreference extends BaseBoundPreference
 
   @Override public void onAttached() {
     super.onAttached();
-    presenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideSocialMediaModule()
-        .getPresenter();
     presenter.bindView(this);
   }
 

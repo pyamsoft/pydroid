@@ -15,23 +15,21 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.ads;
+package com.pyamsoft.pydroid.ui.about;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.PYDroidModule;
-import com.pyamsoft.pydroid.ads.AdvertisementModule;
+import com.pyamsoft.pydroid.about.AboutLibrariesModule;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY)
-public class AdvertisementComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesComponent {
 
-  @NonNull private final AdvertisementModule advertisementModule;
+  @NonNull private final AboutLibrariesModule aboutLibrariesModule;
 
-  public AdvertisementComponent(@NonNull AdvertisementModule advertisementModule) {
-    this.advertisementModule = advertisementModule;
+  public AboutLibrariesComponent(@NonNull AboutLibrariesModule aboutLibrariesModule) {
+    this.aboutLibrariesModule = aboutLibrariesModule;
   }
 
-  void inject(@NonNull AdvertisementView view) {
-    view.presenter = advertisementModule.getPresenter();
+  void inject(@NonNull AboutLibrariesFragment fragment) {
+    fragment.presenter = aboutLibrariesModule.getPresenter();
   }
 }

@@ -31,8 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
@@ -90,10 +91,7 @@ public class AboutLibrariesFragment extends ActionBarFragment {
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
 
-    presenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideAboutLibrariesModule()
-        .getPresenter();
+    PYDroidInjector.get().provideComponent().provideAboutLibrariesComponent().inject(this);
   }
 
   @Nullable @Override

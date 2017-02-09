@@ -21,20 +21,39 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
+import com.pyamsoft.pydroid.about.AboutLibrariesModule;
+import com.pyamsoft.pydroid.ads.AdvertisementModule;
+import com.pyamsoft.pydroid.donate.DonateModule;
+import com.pyamsoft.pydroid.social.SocialMediaModule;
+import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementComponent;
+import com.pyamsoft.pydroid.ui.app.fragment.AppComponent;
 import com.pyamsoft.pydroid.ui.donate.DonateComponent;
+import com.pyamsoft.pydroid.ui.social.SocialMediaComponent;
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
+import com.pyamsoft.pydroid.version.VersionCheckModule;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidComponent {
 
   @NonNull private final DonateComponent donateComponent;
   @NonNull private final VersionCheckComponent versionCheckComponent;
   @NonNull private final AdvertisementComponent advertisementComponent;
+  @NonNull private final AboutLibrariesComponent aboutLibrariesComponent;
+  @NonNull private final SocialMediaComponent socialMediaComponent;
+  @NonNull private final AppComponent appComponent;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
-    donateComponent = new DonateComponent(module);
-    versionCheckComponent = new VersionCheckComponent();
-    advertisementComponent = new AdvertisementComponent(module);
+    DonateModule donateModule = new DonateModule(module);
+    VersionCheckModule versionCheckModule = new VersionCheckModule();
+    AdvertisementModule advertisementModule = new AdvertisementModule(module);
+    AboutLibrariesModule aboutLibrariesModule = new AboutLibrariesModule(module);
+    SocialMediaModule socialMediaModule = new SocialMediaModule();
+    donateComponent = new DonateComponent(donateModule);
+    versionCheckComponent = new VersionCheckComponent(versionCheckModule);
+    advertisementComponent = new AdvertisementComponent(advertisementModule);
+    aboutLibrariesComponent = new AboutLibrariesComponent(aboutLibrariesModule);
+    socialMediaComponent = new SocialMediaComponent(socialMediaModule);
+    appComponent = new AppComponent(socialMediaModule, versionCheckModule);
   }
 
   @CheckResult @NonNull static PYDroidComponent withModule(@NonNull PYDroidModule module) {
@@ -51,5 +70,17 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
 
   @CheckResult @NonNull public AdvertisementComponent provideAdvertisementComponent() {
     return advertisementComponent;
+  }
+
+  @CheckResult @NonNull public AboutLibrariesComponent provideAboutLibrariesComponent() {
+    return aboutLibrariesComponent;
+  }
+
+  @CheckResult @NonNull public SocialMediaComponent provideSocialMediaComponent() {
+    return socialMediaComponent;
+  }
+
+  @CheckResult @NonNull public AppComponent provideAppComponent() {
+    return appComponent;
   }
 }

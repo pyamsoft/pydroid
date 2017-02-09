@@ -31,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.pyamsoft.pydroid.AboutLibrariesProvider;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;

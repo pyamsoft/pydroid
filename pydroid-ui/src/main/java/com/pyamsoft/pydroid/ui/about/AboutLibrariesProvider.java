@@ -15,20 +15,20 @@
  *
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.ui.about;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 
-public final class AboutLibrariesProvider {
+final class AboutLibrariesProvider {
 
   private AboutLibrariesProvider() {
     throw new RuntimeException("No instances");
   }
 
-  // KLUDGE This is public but only needs to be accessed by AboutLibrariesFragment
-  @CheckResult public static boolean hasGooglePlayServices(@NonNull Context context) {
+  @CheckResult static boolean hasGooglePlayServices(@NonNull Context context) {
     return SingleInitContentProvider.getLicenseProvider().provideGoogleOpenSourceLicenses(context)
         != null;
   }

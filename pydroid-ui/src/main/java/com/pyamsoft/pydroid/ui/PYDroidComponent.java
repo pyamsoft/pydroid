@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
+import com.pyamsoft.pydroid.ui.ads.AdvertisementComponent;
 import com.pyamsoft.pydroid.ui.donate.DonateComponent;
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
 
@@ -28,10 +29,12 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
 
   @NonNull private final DonateComponent donateComponent;
   @NonNull private final VersionCheckComponent versionCheckComponent;
+  @NonNull private final AdvertisementComponent advertisementComponent;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
     donateComponent = new DonateComponent(module);
     versionCheckComponent = new VersionCheckComponent();
+    advertisementComponent = new AdvertisementComponent(module);
   }
 
   @CheckResult @NonNull static PYDroidComponent withModule(@NonNull PYDroidModule module) {
@@ -44,5 +47,9 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
 
   @CheckResult @NonNull public VersionCheckComponent provideVersionCheckComponent() {
     return versionCheckComponent;
+  }
+
+  @CheckResult @NonNull public AdvertisementComponent provideAdvertisementComponent() {
+    return advertisementComponent;
   }
 }

@@ -29,9 +29,9 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ads.AdSource;
+import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
@@ -71,7 +71,8 @@ public class AdvertisementView extends FrameLayout {
 
   @SuppressWarnings("WeakerAccess")
   public final void create(@NonNull FragmentActivity activity, @Nullable AdSource adSource) {
- // TODO
+    PYDroidInjector.get().provideComponent().provideAdvertisementComponent().inject(this);
+
     // Default to gone
     setVisibility(View.GONE);
 

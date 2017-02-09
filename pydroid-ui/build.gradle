@@ -42,13 +42,6 @@ android {
 
     // Consumer proguard file
     consumerProguardFiles "proguard-rules.pro"
-
-    // Fix a library publish error
-    // publishNonDefault true
-
-    // Include the library in modules with the following
-    //    debugCompile project(path: ":PYDroid", configuration: "debug")
-    //    releaseCompile project(path: ":PYDroid", configuration: "release")
   }
 
   dataBinding {
@@ -95,5 +88,4 @@ dependencies {
   }
 
   compile project(path: ":pydroid")
-  testCompile project(path: ":pydroid")
 }

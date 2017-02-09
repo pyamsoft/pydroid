@@ -79,13 +79,6 @@ dependencies {
   // Design support lib
   compile "com.android.support:design:$supportLib"
 
-  // Timber logging
-  compile "com.jakewharton.timber:timber:$timber"
-
-  // Some resources (FAB) need GL
-  testCompile "org.khronos:opengl-api:$openGl"
-
   compile project(path: ":pydroid")
-  testCompile project(path: ":pydroid")
 }
 

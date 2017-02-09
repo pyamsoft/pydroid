@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.StrictMode;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -105,6 +106,10 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
         .penaltyFlashScreen()
         .build());
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+  }
+
+  @CallSuper @Override public void insertCustomLicensesIntoMap() {
+    UiLicenses.addLicenses();
   }
 
   @Nullable @Override

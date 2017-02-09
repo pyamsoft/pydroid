@@ -22,13 +22,13 @@ import com.pyamsoft.pydroid.about.Licenses;
 
 import static com.pyamsoft.pydroid.about.Licenses.LicenseLocations._BASE;
 
-public final class UiLicenses {
+final class UiLicenses {
 
   private UiLicenses() {
     throw new RuntimeException("No instances");
   }
 
-  public static void addLicenses() {
+  static void addLicenses() {
     Licenses.create(Names.LEAK_CANARY, HomepageUrls.LEAK_CANARY, LicenseLocations.LEAK_CANARY);
     Licenses.create(Names.FAST_ADAPTER, HomepageUrls.FAST_ADAPTER, LicenseLocations.FAST_ADAPTER);
   }

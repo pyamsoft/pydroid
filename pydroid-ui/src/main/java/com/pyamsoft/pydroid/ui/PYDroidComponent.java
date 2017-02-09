@@ -19,15 +19,19 @@ package com.pyamsoft.pydroid.ui;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.ui.donate.DonateComponent;
+import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
 
-public class PYDroidComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidComponent {
 
   @NonNull private final DonateComponent donateComponent;
+  @NonNull private final VersionCheckComponent versionCheckComponent;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
     donateComponent = new DonateComponent(module);
+    versionCheckComponent = new VersionCheckComponent();
   }
 
   @CheckResult @NonNull static PYDroidComponent withModule(@NonNull PYDroidModule module) {
@@ -36,5 +40,9 @@ public class PYDroidComponent {
 
   @CheckResult @NonNull public DonateComponent provideDonateComponent() {
     return donateComponent;
+  }
+
+  @CheckResult @NonNull public VersionCheckComponent provideVersionCheckComponent() {
+    return versionCheckComponent;
   }
 }

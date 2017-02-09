@@ -34,6 +34,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.databinding.DialogDonateBinding;
 import com.pyamsoft.pydroid.util.AppUtil;

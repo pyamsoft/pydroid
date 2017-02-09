@@ -15,23 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.donate;
+package com.pyamsoft.pydroid.ui.version;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.PYDroidModule;
-import com.pyamsoft.pydroid.donate.DonateModule;
+import com.pyamsoft.pydroid.version.VersionCheckModule;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
-public class DonateComponent {
+public class VersionCheckComponent {
 
-  @NonNull private final DonateModule donateModule;
+  @NonNull private final VersionCheckModule versionCheckModule;
 
-  public DonateComponent(@NonNull PYDroidModule pyDroidModule) {
-    this.donateModule = new DonateModule(pyDroidModule);
+  public VersionCheckComponent() {
+    this.versionCheckModule = new VersionCheckModule();
   }
 
-  void inject(@NonNull DonationActivity activity) {
-    activity.donatePresenter = donateModule.getPresenter();
+  void inject(@NonNull VersionCheckActivity activity) {
+    activity.presenter = versionCheckModule.getPresenter();
   }
 }

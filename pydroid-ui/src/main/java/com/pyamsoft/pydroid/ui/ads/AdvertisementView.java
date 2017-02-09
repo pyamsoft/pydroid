@@ -29,6 +29,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -70,11 +71,7 @@ public class AdvertisementView extends FrameLayout {
 
   @SuppressWarnings("WeakerAccess")
   public final void create(@NonNull FragmentActivity activity, @Nullable AdSource adSource) {
-    presenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideAdvertisementModule()
-        .getPresenter();
-
+ // TODO
     // Default to gone
     setVisibility(View.GONE);
 

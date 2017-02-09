@@ -23,9 +23,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfigChecker;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import timber.log.Timber;
 
@@ -50,10 +51,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     versionChecked =
         savedInstanceState != null && savedInstanceState.getBoolean(VERSION_CHECKED, false);
 
-    presenter = SingleInitContentProvider.getInstance()
-        .getModule()
-        .provideVersionCheckModule()
-        .getPresenter();
+    PYDroidInjector.get().provideComponent().provideVersionCheckComponent().inject(this);
   }
 
   @CallSuper @Override protected void onStart() {

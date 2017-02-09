@@ -20,8 +20,10 @@ package com.pyamsoft.pydroid.ui;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 
-public class PYDroidInjector implements IPYDroidApp<PYDroidComponent> {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidInjector
+    implements IPYDroidApp<PYDroidComponent> {
 
   @Nullable private static volatile PYDroidInjector instance = null;
   @NonNull private final PYDroidComponent component;

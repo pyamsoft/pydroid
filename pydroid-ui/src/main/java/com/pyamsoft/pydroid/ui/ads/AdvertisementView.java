@@ -31,7 +31,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ads.AdSource;
-import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;

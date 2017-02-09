@@ -19,11 +19,49 @@ package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.PYDroidPreferences;
+import com.pyamsoft.pydroid.tool.AsyncOffloader;
 import com.pyamsoft.pydroid.tool.Offloader;
+import timber.log.Timber;
 
-interface AdvertisementInteractor {
+public class AdvertisementInteractor {
 
-  @CheckResult @NonNull Offloader<Boolean> showAdView();
+  @SuppressWarnings("WeakerAccess") static final int MAX_SHOW_COUNT = 4;
+  @SuppressWarnings("WeakerAccess") @NonNull final PYDroidPreferences preferences;
 
-  @CheckResult @NonNull Offloader<Boolean> hideAdView();
+  AdvertisementInteractor(@NonNull PYDroidPreferences pyDroidPreferences) {
+    this.preferences = pyDroidPreferences;
+  }
+
+  @NonNull @CheckResult public Offloader<Boolean> showAdView() {
+    return AsyncOffloader.newInstance(() -> {
+      final boolean isEnabled = preferences.isAdViewEnabled();
+      final int shownCount = preferences.getAdViewShownCount();
+      final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
+
+      if (isEnabled && isValidCount) {
+        Timber.d("Show ad view");
+        return Boolean.TRUE;
+      } else {
+        Timber.w("Do not show ad view");
+        final int newCount = shownCount + 1;
+        Timber.d("Increment shown count to %d", newCount);
+        preferences.setAdViewShownCount(newCount);
+        return Boolean.FALSE;
+      }
+    });
+  }
+
+  @NonNull @CheckResult public Offloader<Boolean> hideAdView() {
+    return AsyncOffloader.newInstance(() -> {
+      Timber.d("Hide AdView");
+      if (preferences.getAdViewShownCount() >= MAX_SHOW_COUNT) {
+        Timber.d("Write shown count back to 0");
+        preferences.setAdViewShownCount(0);
+        return Boolean.TRUE;
+      } else {
+        return Boolean.FALSE;
+      }
+    });
+  }
 }

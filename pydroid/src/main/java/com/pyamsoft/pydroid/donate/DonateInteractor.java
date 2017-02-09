@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.donate;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.tool.Offloader;
@@ -63,7 +64,8 @@ public class DonateInteractor {
     checkout.consume(token);
   }
 
-  @NonNull public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
+  @CheckResult @NonNull
+  public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
       @Nullable Intent data) {
     return SerialOffloader.newInstance(
         () -> checkout.processBillingResult(requestCode, resultCode, data));

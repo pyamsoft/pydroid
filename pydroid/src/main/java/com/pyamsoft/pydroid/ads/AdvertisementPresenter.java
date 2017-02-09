@@ -18,19 +18,55 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
+import timber.log.Timber;
 
-public interface AdvertisementPresenter extends Presenter<Presenter.Empty> {
+public class AdvertisementPresenter extends Presenter<Presenter.Empty> {
 
-  void showAd(@NonNull ShowAdCallback callback);
+  @NonNull private final AdvertisementInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader offloader =
+      new ExecutedOffloader.Empty();
 
-  void hideAd(@NonNull HideAdCallback callback);
+  AdvertisementPresenter(@NonNull AdvertisementInteractor interactor) {
+    this.interactor = interactor;
+  }
 
-  interface ShowAdCallback {
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    OffloaderHelper.cancel(offloader);
+  }
+
+  public void showAd(@NonNull ShowAdCallback callback) {
+    OffloaderHelper.cancel(offloader);
+    offloader = interactor.showAdView()
+        .onError(item -> Timber.e(item, "onError showAd"))
+        .onResult(shown -> {
+          if (shown) {
+            callback.onShown();
+          }
+        })
+        .onFinish(() -> OffloaderHelper.cancel(offloader))
+        .execute();
+  }
+
+  public void hideAd(@NonNull HideAdCallback callback) {
+    OffloaderHelper.cancel(offloader);
+    offloader =
+        interactor.hideAdView().onError(item -> Timber.e(item, "onError hideAd")).onResult(hide -> {
+          if (hide) {
+            callback.onHidden();
+          }
+        }).onFinish(() -> OffloaderHelper.cancel(offloader)).execute();
+  }
+
+  public interface ShowAdCallback {
 
     void onShown();
   }
 
-  interface HideAdCallback {
+  public interface HideAdCallback {
 
     void onHidden();
   }

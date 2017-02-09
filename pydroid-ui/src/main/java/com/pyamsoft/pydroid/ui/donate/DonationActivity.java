@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.pyamsoft.pydroid.ActionNone;
 import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
-import com.pyamsoft.pydroid.donate.DonatePresenter;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
 import org.solovyev.android.checkout.Inventory;

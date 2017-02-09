@@ -19,37 +19,62 @@ package com.pyamsoft.pydroid.donate;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.tool.Offloader;
+import com.pyamsoft.pydroid.tool.SerialOffloader;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
+import timber.log.Timber;
 
-interface DonateInteractor {
+public class DonateInteractor {
 
-  void bindCallbacks(@NonNull Inventory.Callback listener,
-      @NonNull OnBillingSuccessListener success, @NonNull OnBillingErrorListener error);
+  @SuppressWarnings("WeakerAccess") @NonNull final ICheckout checkout;
 
-  void create(@NonNull Activity activity);
+  DonateInteractor(@NonNull ICheckout checkout) {
+    this.checkout = checkout;
+  }
 
-  void destroy();
+  public void bindCallbacks(@NonNull Inventory.Callback callback,
+      @NonNull OnBillingSuccessListener success, @NonNull OnBillingErrorListener error) {
+    checkout.init(callback, success, error);
+  }
 
-  void loadInventory();
+  public void create(@NonNull Activity activity) {
+    checkout.createForActivity(activity);
+    checkout.start();
+  }
 
-  void purchase(@NonNull Sku sku);
+  public void destroy() {
+    checkout.stop();
+  }
 
-  void consume(@NonNull String token);
+  public void loadInventory() {
+    checkout.loadInventory();
+  }
 
-  @CheckResult @NonNull Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
-      @Nullable Intent data);
+  public void purchase(@NonNull Sku sku) {
+    Timber.i("Purchase item: %s", sku.id);
+    checkout.purchase(sku);
+  }
 
-  interface OnBillingErrorListener {
+  public void consume(@NonNull String token) {
+    Timber.d("Attempt consume token: %s", token);
+    checkout.consume(token);
+  }
+
+  @NonNull public Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
+      @Nullable Intent data) {
+    return SerialOffloader.newInstance(
+        () -> checkout.processBillingResult(requestCode, resultCode, data));
+  }
+
+  public interface OnBillingErrorListener {
 
     void onBillingError();
   }
 
-  interface OnBillingSuccessListener {
+  public interface OnBillingSuccessListener {
 
     void onBillingSuccess();
   }

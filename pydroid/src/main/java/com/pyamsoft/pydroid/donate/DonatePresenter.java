@@ -21,20 +21,69 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.tool.ExecutedOffloader;
+import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import org.solovyev.android.checkout.Inventory;
+import timber.log.Timber;
 
-public interface DonatePresenter extends Presenter<DonatePresenter.View> {
+public class DonatePresenter extends Presenter<DonatePresenter.View> {
 
-  void create(@NonNull Activity activity);
+  @NonNull private final DonateInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @Nullable ExecutedOffloader billingResult;
 
-  void loadInventory();
+  DonatePresenter(@NonNull DonateInteractor interactor) {
+    this.interactor = interactor;
+  }
 
-  void onBillingResult(int requestCode, int resultCode, @Nullable Intent data,
-      @NonNull BillingResultCallback callback);
+  @Override protected void onBind(@Nullable View view) {
+    super.onBind(view);
+    interactor.bindCallbacks(products -> {
+      Timber.d("Products are loaded");
+      ifViewExists(view1 -> view1.onInventoryLoaded(products));
+    }, () -> ifViewExists(View::onBillingSuccess), () -> ifViewExists(View::onBillingError));
+  }
 
-  void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel);
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    interactor.destroy();
+    OffloaderHelper.cancel(billingResult);
+  }
 
-  interface BillingResultCallback {
+  public void create(@NonNull Activity activity) {
+    interactor.create(activity);
+  }
+
+  public void loadInventory() {
+    interactor.loadInventory();
+  }
+
+  public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data,
+      @NonNull BillingResultCallback callback) {
+    OffloaderHelper.cancel(billingResult);
+    billingResult =
+        interactor.processBillingResult(requestCode, resultCode, data).onError(throwable -> {
+          Timber.e(throwable, "Error processing Billing onFinish");
+          callback.onProcessResultError();
+        }).onResult(success -> {
+          if (success) {
+            callback.onProcessResultSuccess();
+          } else {
+            callback.onProcessResultFailed();
+          }
+        }).onFinish(() -> OffloaderHelper.cancel(billingResult)).execute();
+  }
+
+  public void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel) {
+    final String token = skuModel.token();
+    if (token != null) {
+      interactor.consume(token);
+    } else {
+      interactor.purchase(skuModel.sku());
+    }
+  }
+
+  public interface BillingResultCallback {
 
     void onProcessResultSuccess();
 
@@ -43,7 +92,7 @@ public interface DonatePresenter extends Presenter<DonatePresenter.View> {
     void onProcessResultFailed();
   }
 
-  interface View {
+  public interface View {
 
     void onBillingSuccess();
 

@@ -25,15 +25,15 @@ import org.solovyev.android.checkout.Billing;
 
 public class DonateModule {
 
-  @NonNull private final DonateInteractorImpl interactor;
+  @NonNull private final DonateInteractor interactor;
 
-  public DonateModule(@NonNull PYDroidModule.Provider provider) {
-    interactor = new DonateInteractorImpl(
+  public DonateModule(@NonNull PYDroidModule provider) {
+    interactor = new DonateInteractor(
         CheckoutFactory.create(provider.provideBilling(), provider.provideInAppPurchaseList()));
   }
 
   @NonNull @CheckResult public DonatePresenter getPresenter() {
-    return new DonatePresenterImpl(interactor);
+    return new DonatePresenter(interactor);
   }
 
   @SuppressWarnings("WeakerAccess") static final class CheckoutFactory {

@@ -33,7 +33,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.AboutLibrariesProvider;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;

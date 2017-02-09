@@ -32,6 +32,6 @@ public class AboutLibrariesModule {
   }
 
   @NonNull @CheckResult public AboutLibrariesPresenter getPresenter() {
-    return new AboutLibrariesPresenterImpl(interactor);
+    return new AboutLibrariesPresenter(interactor);
   }
 }

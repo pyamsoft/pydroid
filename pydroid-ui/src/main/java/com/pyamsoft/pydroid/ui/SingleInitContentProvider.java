@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.ui;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -26,52 +26,37 @@ import android.os.StrictMode;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import timber.log.Timber;
 
 public abstract class SingleInitContentProvider extends ContentProvider implements LicenseProvider {
 
-  @Nullable private static volatile SingleInitContentProvider instance;
+  @Nullable private static volatile LicenseProvider licenseProvider;
   private static boolean created;
 
   static {
     created = false;
-    instance = null;
+    licenseProvider = null;
   }
-
-  @Nullable private ModuleDelegate delegate;
 
   private static void setCreated() {
     SingleInitContentProvider.created = true;
   }
 
   @NonNull @CheckResult public static LicenseProvider getLicenseProvider() {
-    if (instance == null) {
+    if (licenseProvider == null) {
       throw new NullPointerException("Instance is NULL. Was this CP never created?");
     }
 
     //noinspection ConstantConditions
-    return instance;
+    return licenseProvider;
   }
 
-  @NonNull @CheckResult public static PYDroidComponent getInstance() {
-    if (instance == null) {
-      throw new NullPointerException("Instance is NULL. Was this CP never created?");
+  private static void setLicenseProvider(@NonNull LicenseProvider licenseProvider) {
+    synchronized (SingleInitContentProvider.class) {
+      SingleInitContentProvider.licenseProvider = licenseProvider;
     }
-
-    //noinspection ConstantConditions
-    return instance.getDelegate().provideComponent();
-  }
-
-  static void setInstance(@NonNull SingleInitContentProvider instance) {
-    SingleInitContentProvider.instance = instance;
-  }
-
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult ModuleDelegate getDelegate() {
-    if (delegate == null) {
-      throw new NullPointerException("ModuleDelegate is NULL. Was this CP never created?");
-    }
-    return delegate;
   }
 
   @Override public final boolean onCreate() {
@@ -95,19 +80,13 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     BuildConfigChecker.setInstance(initializeBuildConfigChecker());
     insertCustomLicensesIntoMap();
 
-    onFirstCreate(appContext);
-    setInstance(this);
+    onFirstCreate();
+    setLicenseProvider(this);
     onInstanceCreated(appContext);
     return false;
   }
 
-  @CheckResult @NonNull protected abstract BuildConfigChecker initializeBuildConfigChecker();
-
-  protected abstract void onInstanceCreated(@NonNull Context context);
-
-  private void onFirstCreate(@NonNull Context context) {
-    delegate = new ModuleDelegate(PYDroidComponent.buildWith(new PYDroidModule(context, this)));
-
+  private void onFirstCreate() {
     if (BuildConfigChecker.getInstance().isDebugMode()) {
       Timber.plant(new Timber.DebugTree());
       setStrictMode();
@@ -148,20 +127,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     throw new RuntimeException("This is not actually a content provider");
   }
 
-  private static class ModuleDelegate {
+  @CheckResult @NonNull protected abstract BuildConfigChecker initializeBuildConfigChecker();
 
-    @NonNull private final PYDroidComponent component;
-
-    ModuleDelegate(@NonNull PYDroidComponent component) {
-      //noinspection ConstantConditions
-      if (component == null) {
-        throw new NullPointerException("PYDroidComponent is NULL");
-      }
-      this.component = component;
-    }
-
-    @CheckResult @NonNull public PYDroidComponent provideComponent() {
-      return component;
-    }
-  }
+  protected abstract void onInstanceCreated(@NonNull Context context);
 }

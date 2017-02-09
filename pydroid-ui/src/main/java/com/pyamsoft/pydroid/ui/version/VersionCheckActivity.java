@@ -58,7 +58,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     super.onStart();
     presenter.bindView(null);
 
-    if (isVersionCheckEnabled() && !versionChecked) {
+    if (!versionChecked && isVersionCheckEnabled()) {
       presenter.checkForUpdates(getPackageName(), getCurrentApplicationVersion(),
           new VersionCheckPresenter.UpdateCheckCallback() {
             @Override public void onVersionCheckFinished() {

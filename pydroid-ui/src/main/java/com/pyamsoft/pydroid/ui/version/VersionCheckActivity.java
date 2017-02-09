@@ -35,7 +35,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @NonNull private static final String VERSION_CHECKED = "version_check_completed";
   @SuppressWarnings("WeakerAccess") VersionCheckPresenter presenter;
-  private boolean versionChecked;
+  boolean versionChecked;
 
   @CheckResult private boolean isVersionCheckEnabled() {
     // Always enabled for release builds
@@ -63,6 +63,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
           new VersionCheckPresenter.UpdateCheckCallback() {
             @Override public void onVersionCheckFinished() {
               Timber.d("License check finished, mark");
+              versionChecked = true;
             }
 
             @Override

@@ -98,7 +98,6 @@ public class AdvertisementView extends FrameLayout {
   public final void stop() {
     Timber.d("Stop adView");
     presenter.unbindView();
-    hideAd();
 
     handler.removeCallbacksAndMessages(null);
 
@@ -109,8 +108,7 @@ public class AdvertisementView extends FrameLayout {
   }
 
   public final void destroy(@NonNull FragmentActivity activity, boolean isChangingConfigurations) {
-    runOnAdHidden();
-
+    hideAd();
     removeView(offlineAdSource.destroy(activity, isChangingConfigurations));
     if (onlineAdSource != null) {
       removeView(onlineAdSource.destroy(activity, isChangingConfigurations));

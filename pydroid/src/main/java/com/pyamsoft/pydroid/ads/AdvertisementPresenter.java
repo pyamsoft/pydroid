@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface AdvertisementPresenter extends Presenter<Presenter.Empty> {
 

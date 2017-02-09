@@ -20,13 +20,12 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.presenter.PresenterBase;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class VersionCheckPresenter extends PresenterBase<Presenter.Empty> {
+public class VersionCheckPresenter extends Presenter<Presenter.Empty> {
 
   @NonNull private final VersionCheckInteractor interactor;
   @Nullable private Call<VersionCheckResponse> call;

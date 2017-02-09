@@ -23,6 +23,6 @@ import android.support.annotation.NonNull;
 public class SocialMediaModule {
 
   @NonNull @CheckResult public final SocialMediaPresenter getPresenter() {
-    return new SocialMediaPresenterImpl();
+    return new SocialMediaPresenter();
   }
 }

@@ -20,14 +20,13 @@ package com.pyamsoft.pydroid.about;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import java.util.HashSet;
 import java.util.Set;
 import timber.log.Timber;
 
-public class AboutLibrariesPresenter extends PresenterBase<Presenter.Empty> {
+public class AboutLibrariesPresenter extends Presenter<Presenter.Empty> {
 
   @NonNull private final AboutLibrariesInteractor interactor;
   @NonNull private final Set<ExecutedOffloader> licenseSubscriptions;

@@ -21,12 +21,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.presenter.PresenterBase;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
-class DonatePresenterImpl extends PresenterBase<DonatePresenter.View> implements DonatePresenter {
+class DonatePresenterImpl extends Presenter<DonatePresenter.View> implements DonatePresenter {
 
   @NonNull private final DonateInteractor interactor;
   @SuppressWarnings("WeakerAccess") @Nullable ExecutedOffloader billingResult;

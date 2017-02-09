@@ -19,10 +19,10 @@ package com.pyamsoft.pydroid.rx;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.presenter.PresenterBase;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import rx.Scheduler;
 
-public abstract class SchedulerPresenter<I> extends PresenterBase<I> {
+public abstract class SchedulerPresenter<I> extends Presenter<I> {
 
   @NonNull private final Scheduler observeScheduler;
   @NonNull private final Scheduler subscribeScheduler;

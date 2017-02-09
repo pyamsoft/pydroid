@@ -15,37 +15,12 @@
  *
  */
 
-package com.pyamsoft.pydroid.presenter;
+package com.pyamsoft.pydroid.ui;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.ActionSingle;
 
-public abstract class PresenterBase<I> implements Presenter<I> {
+public interface IPYDroidApp<T> {
 
-  @Nullable private I view;
-
-  protected void ifViewExists(@NonNull ActionSingle<I> func) {
-    if (view != null) {
-      func.call(view);
-    }
-  }
-
-  @Override public final void bindView(@Nullable I view) {
-    this.view = view;
-    onBind(view);
-  }
-
-  protected void onBind(@Nullable I view) {
-
-  }
-
-  @Override public final void unbindView() {
-    onUnbind();
-    this.view = null;
-  }
-
-  protected void onUnbind() {
-
-  }
+  @CheckResult @NonNull T provideComponent();
 }

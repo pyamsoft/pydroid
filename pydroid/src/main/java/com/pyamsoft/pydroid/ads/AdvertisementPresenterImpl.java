@@ -19,12 +19,11 @@ package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.presenter.PresenterBase;
 import com.pyamsoft.pydroid.tool.ExecutedOffloader;
 import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
-class AdvertisementPresenterImpl extends PresenterBase<Presenter.Empty>
+class AdvertisementPresenterImpl extends Presenter<Presenter.Empty>
     implements AdvertisementPresenter {
 
   @NonNull private final AdvertisementInteractor interactor;

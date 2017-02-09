@@ -20,19 +20,44 @@ package com.pyamsoft.pydroid.social;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface SocialMediaPresenter extends Presenter<SocialMediaPresenter.View> {
+public class SocialMediaPresenter extends Presenter<SocialMediaPresenter.View> {
 
-  void clickAppPage(@NonNull String link);
+  @SuppressWarnings("WeakerAccess") @NonNull static final String BASE_MARKET =
+      "market://details?id=";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String FACEBOOK =
+      "https://www.facebook.com/pyamsoftware";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String GOOGLE_PLAY_DEVELOPER_PAGE =
+      "https://play.google.com/store/apps/dev?id=5257476342110165153";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String GOOGLE_PLUS =
+      "https://plus.google.com/+Pyamsoft-officialBlogspot/posts";
+  @SuppressWarnings("WeakerAccess") @NonNull static final String OFFICIAL_BLOG =
+      "https://pyamsoft.blogspot.com/";
 
-  void clickGooglePlay();
+  SocialMediaPresenter() {
+  }
 
-  void clickGooglePlus();
+  public void clickAppPage(@NonNull String link) {
+    final String fullLink = BASE_MARKET + link;
+    ifViewExists(view -> view.onSocialMediaClicked(fullLink));
+  }
 
-  void clickBlogger();
+  public void clickGooglePlay() {
+    ifViewExists(view -> view.onSocialMediaClicked(GOOGLE_PLAY_DEVELOPER_PAGE));
+  }
 
-  void clickFacebook();
+  public void clickGooglePlus() {
+    ifViewExists(view -> view.onSocialMediaClicked(GOOGLE_PLUS));
+  }
 
-  interface View {
+  public void clickBlogger() {
+    ifViewExists(view -> view.onSocialMediaClicked(OFFICIAL_BLOG));
+  }
+
+  public void clickFacebook() {
+    ifViewExists(view -> view.onSocialMediaClicked(FACEBOOK));
+  }
+
+  public interface View {
 
     void onSocialMediaClicked(@NonNull String link);
   }

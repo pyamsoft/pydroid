@@ -17,21 +17,39 @@
 
 package com.pyamsoft.pydroid.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.ActionSingle;
 
-public interface Presenter<I> {
+public abstract class Presenter<I> {
 
-  /**
-   * Called when the presenter attaches to the view
-   */
-  void bindView(@Nullable I view);
+  @Nullable private I view;
 
-  /**
-   * Called when the presenter detaches from the view
-   */
-  void unbindView();
+  protected void ifViewExists(@NonNull ActionSingle<I> func) {
+    if (view != null) {
+      func.call(view);
+    }
+  }
 
-  interface Empty {
+  public final void bindView(@Nullable I view) {
+    this.view = view;
+    onBind(view);
+  }
+
+  protected void onBind(@Nullable I view) {
+
+  }
+
+  public final void unbindView() {
+    onUnbind();
+    this.view = null;
+  }
+
+  protected void onUnbind() {
+
+  }
+
+  public interface Empty {
 
   }
 }

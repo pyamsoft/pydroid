@@ -27,6 +27,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.BuildConfigChecker;
+import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import timber.log.Timber;
 
@@ -80,13 +81,15 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     BuildConfigChecker.setInstance(initializeBuildConfigChecker());
     insertCustomLicensesIntoMap();
 
-    onFirstCreate();
+    onFirstCreate(appContext);
     setLicenseProvider(this);
     onInstanceCreated(appContext);
     return false;
   }
 
-  private void onFirstCreate() {
+  private void onFirstCreate(@NonNull Context context) {
+    PYDroidInjector.set(
+        PYDroidComponent.withModule(new PYDroidModule(context.getApplicationContext(), this)));
     if (BuildConfigChecker.getInstance().isDebugMode()) {
       Timber.plant(new Timber.DebugTree());
       setStrictMode();

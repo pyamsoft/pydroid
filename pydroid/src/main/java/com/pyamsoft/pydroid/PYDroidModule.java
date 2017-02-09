@@ -43,7 +43,7 @@ public class PYDroidModule {
   @NonNull private final Billing billing;
   @NonNull private final List<String> inAppPurchaseList;
 
-  PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
+  public PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
     //noinspection ConstantConditions
     if (context == null) {
       throw new NullPointerException("Application cannot be NULL");

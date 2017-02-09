@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import timber.log.Timber;
 

@@ -20,13 +20,7 @@ package com.pyamsoft.pydroid;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.about.AboutLibrariesModule;
 import com.pyamsoft.pydroid.about.LicenseProvider;
-import com.pyamsoft.pydroid.ads.AdvertisementModule;
-import com.pyamsoft.pydroid.donate.DonateModule;
-import com.pyamsoft.pydroid.social.SocialMediaModule;
-import com.pyamsoft.pydroid.version.ApiModule;
-import com.pyamsoft.pydroid.version.VersionCheckModule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,177 +31,106 @@ import org.solovyev.android.checkout.RequestListener;
 
 public class PYDroidModule {
 
-  @NonNull private final AboutLibrariesModule aboutLibrariesModule;
-  @NonNull private final DonateModule donateModule;
-  @NonNull private final SocialMediaModule socialMediaModule;
-  @NonNull private final VersionCheckModule versionCheckModule;
-  @NonNull private final AdvertisementModule advertisementModule;
+  @NonNull private static final String SKU_DONATE = ".donate";
+  @NonNull private static final String SKU_DONATE_ONE = SKU_DONATE + ".one";
+  @NonNull private static final String SKU_DONATE_TWO = SKU_DONATE + ".two";
+  @NonNull private static final String SKU_DONATE_FIVE = SKU_DONATE + ".five";
+  @NonNull private static final String SKU_DONATE_TEN = SKU_DONATE + ".ten";
 
-  //@NonNull private final Map<String, Object> cachedSingletons = new HashMap<>();
-  //@CheckResult @NonNull
-  //final <T> T getCachedSingleton(@NonNull String tag, @NonNull FuncNone<T> creator) {
-  //  final Object cachedPlainObject = cachedSingletons.get(tag);
-  //  T cachedObject;
-  //  boolean objectCreated;
-  //  if (cachedPlainObject == null) {
-  //    cachedObject = creator.call();
-  //    objectCreated = true;
-  //  } else {
-  //    try {
-  //      //noinspection unchecked
-  //      cachedObject = (T) cachedPlainObject;
-  //      objectCreated = false;
-  //    } catch (ClassCastException e) {
-  //      Timber.e(e, "Cast error in singleton cache!");
-  //      cachedObject = creator.call();
-  //      objectCreated = true;
-  //    }
-  //  }
-  //
-  //  if (objectCreated) {
-  //    // Put new entry into map
-  //    cachedSingletons.put(tag, cachedObject);
-  //  }
-  //  return cachedObject;
-  //}
+  // Singleton
+  @NonNull private final Context appContext;
+  @NonNull private final LicenseProvider licenseProvider;
+  @NonNull private final Billing billing;
+  @NonNull private final List<String> inAppPurchaseList;
 
   PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
-    final Provider provider = new Provider(context, licenseProvider);
-    aboutLibrariesModule = new AboutLibrariesModule(provider);
-    donateModule = new DonateModule(provider);
-    socialMediaModule = new SocialMediaModule();
-    versionCheckModule = new VersionCheckModule(new ApiModule());
-    advertisementModule = new AdvertisementModule(provider);
+    //noinspection ConstantConditions
+    if (context == null) {
+      throw new NullPointerException("Application cannot be NULL");
+    }
+
+    appContext = context.getApplicationContext();
+    this.licenseProvider = licenseProvider;
+    inAppPurchaseList = createInAppPurchaseList(context);
+    billing =
+        new Billing(appContext, new DonationBillingConfiguration(appContext.getPackageName()));
   }
 
-  // Create a new one every time
-  @CheckResult @NonNull public final AboutLibrariesModule provideAboutLibrariesModule() {
-    return aboutLibrariesModule;
+  @CheckResult @NonNull private List<String> createInAppPurchaseList(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    final String packageName = appContext.getPackageName();
+    final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;
+    final String appSpecificSkuDonateTwo = packageName + SKU_DONATE_TWO;
+    final String appSpecificSkuDonateFive = packageName + SKU_DONATE_FIVE;
+    final String appSpecificSkuDonateTen = packageName + SKU_DONATE_TEN;
+
+    final List<String> skuList = new ArrayList<>();
+    skuList.add(appSpecificSkuDonateOne);
+    skuList.add(appSpecificSkuDonateTwo);
+    skuList.add(appSpecificSkuDonateFive);
+    skuList.add(appSpecificSkuDonateTen);
+
+    if (BuildConfigChecker.getInstance().isDebugMode()) {
+      skuList.add("android.test.purchased");
+      skuList.add("android.test.canceled");
+      skuList.add("android.test.refunded");
+      skuList.add("android.test.item_unavailable");
+    }
+
+    return Collections.unmodifiableList(skuList);
   }
 
-  // Create a new one every time
-  @CheckResult @NonNull public final DonateModule provideDonateModule() {
-    return donateModule;
+  // Singleton
+  @CheckResult @NonNull public final Context provideContext() {
+    return appContext;
   }
 
-  // Create a new one every time
-  @CheckResult @NonNull public final SocialMediaModule provideSocialMediaModule() {
-    return socialMediaModule;
+  @CheckResult @NonNull public final PYDroidPreferences providePreferences() {
+    return PYDroidPreferences.Instance.getInstance(provideContext());
   }
 
-  // Create a new one every time
-  @CheckResult @NonNull public final VersionCheckModule provideVersionCheckModule() {
-    return versionCheckModule;
+  // Singleton
+  @CheckResult @NonNull public final Billing provideBilling() {
+    return billing;
   }
 
-  // Create a new one every time
-  @CheckResult @NonNull public final AdvertisementModule provideAdvertisementModule() {
-    return advertisementModule;
+  // Singleton
+  @CheckResult @NonNull public final LicenseProvider provideLicenseProvider() {
+    return licenseProvider;
   }
 
-  public static class Provider {
+  // Singleton
+  @CheckResult @NonNull public final List<String> provideInAppPurchaseList() {
+    return inAppPurchaseList;
+  }
 
-    @NonNull private static final String SKU_DONATE = ".donate";
-    @NonNull private static final String SKU_DONATE_ONE = SKU_DONATE + ".one";
-    @NonNull private static final String SKU_DONATE_TWO = SKU_DONATE + ".two";
-    @NonNull private static final String SKU_DONATE_FIVE = SKU_DONATE + ".five";
-    @NonNull private static final String SKU_DONATE_TEN = SKU_DONATE + ".ten";
+  private static class DonationBillingConfiguration extends Billing.DefaultConfiguration {
 
-    // Singleton
-    @NonNull private final Context appContext;
-    @NonNull private final LicenseProvider licenseProvider;
-    @NonNull private final Billing billing;
-    @NonNull private final List<String> inAppPurchaseList;
+    @NonNull private final String publicKey;
 
-    Provider(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
+    DonationBillingConfiguration(@NonNull String publicKey) {
       //noinspection ConstantConditions
-      if (context == null) {
-        throw new NullPointerException("Application cannot be NULL");
+      if (publicKey == null) {
+        throw new NullPointerException("Public Key cannot be NULL");
       }
-
-      appContext = context.getApplicationContext();
-      this.licenseProvider = licenseProvider;
-      inAppPurchaseList = createInAppPurchaseList(context);
-      billing =
-          new Billing(appContext, new DonationBillingConfiguration(appContext.getPackageName()));
+      this.publicKey = publicKey;
     }
 
-    @CheckResult @NonNull private List<String> createInAppPurchaseList(@NonNull Context context) {
-      final Context appContext = context.getApplicationContext();
-      final String packageName = appContext.getPackageName();
-      final String appSpecificSkuDonateOne = packageName + SKU_DONATE_ONE;
-      final String appSpecificSkuDonateTwo = packageName + SKU_DONATE_TWO;
-      final String appSpecificSkuDonateFive = packageName + SKU_DONATE_FIVE;
-      final String appSpecificSkuDonateTen = packageName + SKU_DONATE_TEN;
-
-      final List<String> skuList = new ArrayList<>();
-      skuList.add(appSpecificSkuDonateOne);
-      skuList.add(appSpecificSkuDonateTwo);
-      skuList.add(appSpecificSkuDonateFive);
-      skuList.add(appSpecificSkuDonateTen);
-
-      if (BuildConfigChecker.getInstance().isDebugMode()) {
-        skuList.add("android.test.purchased");
-        skuList.add("android.test.canceled");
-        skuList.add("android.test.refunded");
-        skuList.add("android.test.item_unavailable");
-      }
-
-      return Collections.unmodifiableList(skuList);
+    @NonNull @Override public String getPublicKey() {
+      return publicKey;
     }
 
-    // Singleton
-    @CheckResult @NonNull public final Context provideContext() {
-      return appContext;
+    /**
+     * We do not really need any purchase verification as they are all just donations anyway.
+     * Our public key is not used, so the default verifier fails anyway.
+     *
+     * Pass a verifier which always passes
+     */
+    @NonNull @Override public PurchaseVerifier getPurchaseVerifier() {
+      return new AlwaysPurchaseVerifier();
     }
 
-    @CheckResult @NonNull public final PYDroidPreferences providePreferences() {
-      return PYDroidPreferencesImpl.Instance.getInstance(provideContext());
-    }
-
-    // Singleton
-    @CheckResult @NonNull public final Billing provideBilling() {
-      return billing;
-    }
-
-    // Singleton
-    @CheckResult @NonNull public final LicenseProvider provideLicenseProvider() {
-      return licenseProvider;
-    }
-
-    // Singleton
-    @CheckResult @NonNull public final List<String> provideInAppPurchaseList() {
-      return inAppPurchaseList;
-    }
-
-    static class DonationBillingConfiguration extends Billing.DefaultConfiguration {
-
-      @NonNull private final String publicKey;
-
-      DonationBillingConfiguration(@NonNull String publicKey) {
-        //noinspection ConstantConditions
-        if (publicKey == null) {
-          throw new NullPointerException("Public Key cannot be NULL");
-        }
-        this.publicKey = publicKey;
-      }
-
-      @NonNull @Override public String getPublicKey() {
-        return publicKey;
-      }
-
-      /**
-       * We do not really need any purchase verification as they are all just donations anyway.
-       * Our public key is not used, so the default verifier fails anyway.
-       *
-       * Pass a verifier which always passes
-       */
-      @NonNull @Override public PurchaseVerifier getPurchaseVerifier() {
-        return new AlwaysPurchaseVerifier();
-      }
-    }
-
-    static class AlwaysPurchaseVerifier implements PurchaseVerifier {
+    private static class AlwaysPurchaseVerifier implements PurchaseVerifier {
 
       /**
        * Verify all purchases as 'valid'

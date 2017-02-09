@@ -19,17 +19,61 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.pyamsoft.pydroid.BuildConfigChecker;
+import okhttp3.CertificatePinner;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VersionCheckModule {
 
-  @NonNull private final VersionCheckInteractorImpl interactor;
+  @NonNull private static final String GITHUB_URL = "raw.githubusercontent.com";
+  @NonNull private static final String CURRENT_VERSION_REPO_BASE_URL =
+      "https://" + GITHUB_URL + "/pyamsoft/android-project-versions/master/";
+  @NonNull private final VersionCheckInteractor interactor;
 
-  public VersionCheckModule(@NonNull ApiModule apiModule) {
-    interactor = new VersionCheckInteractorImpl(
-        apiModule.getVersionCheckApi().create(VersionCheckInteractor.VersionCheckService.class));
+  public VersionCheckModule() {
+    interactor = new VersionCheckInteractor(
+        new VersionCheckApi(provideRetrofit(provideOkHttpClient(), provideGson())).create(
+            VersionCheckService.class));
+  }
+
+  @CheckResult @NonNull private Gson provideGson() {
+    final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapterFactory(
+        new VersionCheckApi.AutoValueTypeAdapterFactory());
+    return gsonBuilder.create();
+  }
+
+  @CheckResult @NonNull private OkHttpClient provideOkHttpClient() {
+    final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+    if (BuildConfigChecker.getInstance().isDebugMode()) {
+      final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+      logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+      builder.addInterceptor(logging);
+    }
+
+    final CertificatePinner pinner = new CertificatePinner.Builder().add(GITHUB_URL,
+        "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw=")
+        .add(GITHUB_URL, "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=")
+        .add(GITHUB_URL, "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=")
+        .build();
+    builder.certificatePinner(pinner);
+
+    return builder.build();
+  }
+
+  @CheckResult @NonNull
+  private Retrofit provideRetrofit(@NonNull OkHttpClient okHttpClient, @NonNull Gson gson) {
+    return new Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .build();
   }
 
   @NonNull @CheckResult public VersionCheckPresenter getPresenter() {
-    return new VersionCheckPresenterImpl(interactor);
+    return new VersionCheckPresenter(interactor);
   }
 }

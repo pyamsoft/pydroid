@@ -54,13 +54,13 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     return instance;
   }
 
-  @NonNull @CheckResult public static ModuleDelegate getInstance() {
+  @NonNull @CheckResult public static PYDroidComponent getInstance() {
     if (instance == null) {
       throw new NullPointerException("Instance is NULL. Was this CP never created?");
     }
 
     //noinspection ConstantConditions
-    return instance.getDelegate();
+    return instance.getDelegate().provideComponent();
   }
 
   static void setInstance(@NonNull SingleInitContentProvider instance) {
@@ -106,7 +106,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
   protected abstract void onInstanceCreated(@NonNull Context context);
 
   private void onFirstCreate(@NonNull Context context) {
-    delegate = new ModuleDelegate(new PYDroidModule(context, this));
+    delegate = new ModuleDelegate(PYDroidComponent.buildWith(new PYDroidModule(context, this)));
 
     if (BuildConfigChecker.getInstance().isDebugMode()) {
       Timber.plant(new Timber.DebugTree());
@@ -148,20 +148,20 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     throw new RuntimeException("This is not actually a content provider");
   }
 
-  public static class ModuleDelegate {
+  private static class ModuleDelegate {
 
-    @NonNull private final PYDroidModule module;
+    @NonNull private final PYDroidComponent component;
 
-    ModuleDelegate(@NonNull PYDroidModule module) {
+    ModuleDelegate(@NonNull PYDroidComponent component) {
       //noinspection ConstantConditions
-      if (module == null) {
-        throw new NullPointerException("Module is NULL");
+      if (component == null) {
+        throw new NullPointerException("PYDroidComponent is NULL");
       }
-      this.module = module;
+      this.component = component;
     }
 
-    @CheckResult @NonNull public PYDroidModule getModule() {
-      return module;
+    @CheckResult @NonNull public PYDroidComponent provideComponent() {
+      return component;
     }
   }
 }

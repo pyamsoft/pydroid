@@ -18,14 +18,71 @@
 package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.PresenterBase;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
-public interface VersionCheckPresenter extends Presenter<Presenter.Empty> {
+public class VersionCheckPresenter extends PresenterBase<Presenter.Empty> {
 
-  void checkForUpdates(@NonNull String packageName, int currentVersionCode,
-      @NonNull UpdateCheckCallback callback);
+  @NonNull private final VersionCheckInteractor interactor;
+  @Nullable private Call<VersionCheckResponse> call;
 
-  interface UpdateCheckCallback {
+  VersionCheckPresenter(@NonNull VersionCheckInteractor interactor) {
+    this.interactor = interactor;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    cancelCall();
+  }
+
+  public void checkForUpdates(@NonNull String packageName, int currentVersionCode,
+      @NonNull UpdateCheckCallback callback) {
+    cancelCall();
+    call = interactor.checkVersion(packageName);
+    call.enqueue(new Callback<VersionCheckResponse>() {
+      @Override public void onResponse(Call<VersionCheckResponse> call,
+          Response<VersionCheckResponse> response) {
+        if (response.isSuccessful()) {
+          final VersionCheckResponse versionCheckResponse = response.body();
+          Timber.i("Update check finished");
+          Timber.i("Current version: %d", currentVersionCode);
+          Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
+          callback.onVersionCheckFinished();
+          if (currentVersionCode < versionCheckResponse.currentVersion()) {
+            callback.onUpdatedVersionFound(currentVersionCode,
+                versionCheckResponse.currentVersion());
+            cancelCall();
+          }
+        } else {
+          Timber.w("onResponse: Not successful CODE: %d", response.code());
+          cancelCall();
+        }
+      }
+
+      @Override public void onFailure(Call<VersionCheckResponse> call, Throwable t) {
+        Timber.e(t, "onError checkForUpdates");
+        cancelCall();
+      }
+    });
+  }
+
+  @SuppressWarnings("WeakerAccess") void cancelCall() {
+    if (call == null) {
+      Timber.w("Call is NULL");
+      return;
+    }
+
+    if (!call.isCanceled()) {
+      call.cancel();
+    }
+  }
+
+  public interface UpdateCheckCallback {
 
     void onVersionCheckFinished();
 

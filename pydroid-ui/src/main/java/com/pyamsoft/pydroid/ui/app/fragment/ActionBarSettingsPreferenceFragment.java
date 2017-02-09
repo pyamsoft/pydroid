@@ -42,7 +42,6 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import java.util.Locale;
 import timber.log.Timber;

@@ -20,15 +20,17 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Url;
 
-interface VersionCheckInteractor {
+class VersionCheckInteractor {
 
-  @CheckResult @NonNull Call<VersionCheckResponse> checkVersion(@NonNull String packageName);
+  @NonNull private final VersionCheckService versionCheckService;
 
-  interface VersionCheckService {
+  VersionCheckInteractor(@NonNull VersionCheckService versionCheckService) {
+    this.versionCheckService = versionCheckService;
+  }
 
-    @CheckResult @NonNull @GET Call<VersionCheckResponse> checkVersion(@Url String packageName);
+  @NonNull @CheckResult
+  public Call<VersionCheckResponse> checkVersion(@NonNull String packageName) {
+    return versionCheckService.checkVersion(packageName);
   }
 }

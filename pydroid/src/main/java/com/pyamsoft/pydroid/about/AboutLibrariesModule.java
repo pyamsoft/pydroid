@@ -23,11 +23,11 @@ import com.pyamsoft.pydroid.PYDroidModule;
 
 public class AboutLibrariesModule {
 
-  @NonNull private final AboutLibrariesInteractorImpl interactor;
+  @NonNull private final AboutLibrariesInteractor interactor;
 
   // Created once per "scope"
-  public AboutLibrariesModule(@NonNull PYDroidModule.Provider pyDroidModule) {
-    interactor = new AboutLibrariesInteractorImpl(pyDroidModule.provideContext(),
+  public AboutLibrariesModule(@NonNull PYDroidModule pyDroidModule) {
+    interactor = new AboutLibrariesInteractor(pyDroidModule.provideContext(),
         pyDroidModule.provideLicenseProvider());
   }
 

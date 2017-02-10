@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
+import rx.Observable;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class DonateInteractor {
@@ -63,9 +64,9 @@ import timber.log.Timber;
     checkout.consume(token);
   }
 
-  @CheckResult @NonNull Offloader<Boolean> processBillingResult(int requestCode, int resultCode,
+  @CheckResult @NonNull Observable<Boolean> processBillingResult(int requestCode, int resultCode,
       @Nullable Intent data) {
-    return SerialOffloader.newInstance(
+    return Observable.fromCallable(
         () -> checkout.processBillingResult(requestCode, resultCode, data));
   }
 

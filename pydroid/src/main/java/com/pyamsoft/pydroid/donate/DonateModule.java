@@ -36,7 +36,7 @@ public class DonateModule {
     return new DonatePresenter(interactor);
   }
 
-  @SuppressWarnings("WeakerAccess") static final class CheckoutFactory {
+  private static final class CheckoutFactory {
     private CheckoutFactory() {
       throw new RuntimeException("No instances");
     }

@@ -22,15 +22,19 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import org.solovyev.android.checkout.Inventory;
+import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class DonatePresenter
     extends Presenter<DonatePresenter.View> {
 
   @NonNull private final DonateInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @Nullable ExecutedOffloader billingResult;
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription billingResult;
 
   DonatePresenter(@NonNull DonateInteractor interactor) {
     this.interactor = interactor;
@@ -46,8 +50,8 @@ import timber.log.Timber;
 
   @Override protected void onUnbind() {
     super.onUnbind();
+    SubscriptionHelper.unsubscribe(billingResult);
     interactor.destroy();
-    OffloaderHelper.cancel(billingResult);
   }
 
   public void create(@NonNull Activity activity) {
@@ -58,20 +62,23 @@ import timber.log.Timber;
     interactor.loadInventory();
   }
 
+  /**
+   * Subscribes and Observes on the calling thread
+   */
   public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data,
       @NonNull BillingResultCallback callback) {
-    OffloaderHelper.cancel(billingResult);
-    billingResult =
-        interactor.processBillingResult(requestCode, resultCode, data).onError(throwable -> {
-          Timber.e(throwable, "Error processing Billing onFinish");
-          callback.onProcessResultError();
-        }).onResult(success -> {
+    SubscriptionHelper.unsubscribe(billingResult);
+    billingResult = interactor.processBillingResult(requestCode, resultCode, data)
+        .subscribe(success -> {
           if (success) {
             callback.onProcessResultSuccess();
           } else {
             callback.onProcessResultFailed();
           }
-        }).onFinish(() -> OffloaderHelper.cancel(billingResult)).execute();
+        }, throwable -> {
+          Timber.e(throwable, "Error processing Billing onFinish");
+          callback.onProcessResultError();
+        }, () -> SubscriptionHelper.unsubscribe(billingResult));
   }
 
   public void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel) {

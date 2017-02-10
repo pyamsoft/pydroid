@@ -91,6 +91,11 @@ dependencies {
   annotationProcessor "com.google.auto.value:auto-value:$autoValue"
   annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 
+  // RxJava
+  compile "io.reactivex:rxjava:$rxjava"
+  compile "io.reactivex:rxandroid:$rxandroid"
+  compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
+
   // Retrofit
   compile "com.squareup.retrofit2:retrofit:$retrofit"
   compile "com.squareup.retrofit2:retrofit-mock:$retrofit"

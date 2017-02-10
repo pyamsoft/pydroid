@@ -110,6 +110,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
 
   @CallSuper @Override public void insertCustomLicensesIntoMap() {
     UiLicenses.addLicenses();
+    RxLicenses.addLicenses();
   }
 
   @Nullable @Override

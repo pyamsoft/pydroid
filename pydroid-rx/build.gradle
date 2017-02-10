@@ -76,11 +76,6 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
-  // RxJava
-  compile "io.reactivex:rxjava:$rxjava"
-  compile "io.reactivex:rxandroid:$rxandroid"
-  compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
-
   compile project(path: ":pydroid")
 }
 

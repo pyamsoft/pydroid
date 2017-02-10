@@ -15,33 +15,34 @@
  *
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.helper;
 
 import android.support.annotation.Nullable;
+import rx.Subscription;
 
-public final class OffloaderHelper {
+public final class SubscriptionHelper {
 
-  private OffloaderHelper() {
+  private SubscriptionHelper() {
     throw new RuntimeException("No instances");
   }
 
-  public static void cancel(@Nullable ExecutedOffloader offloader) {
-    if (offloader == null) {
+  public static void unsubscribe(@Nullable Subscription subscription) {
+    if (subscription == null) {
       return;
     }
 
-    if (!offloader.isCancelled()) {
-      offloader.cancel();
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
     }
   }
 
-  @SuppressWarnings("unused") public static void cancel(@Nullable ExecutedOffloader... offloaders) {
-    if (offloaders == null) {
+  public static void unsubscribe(@Nullable Subscription... subscriptions) {
+    if (subscriptions == null) {
       return;
     }
 
-    for (final ExecutedOffloader offloader : offloaders) {
-      cancel(offloader);
+    for (final Subscription subscription : subscriptions) {
+      unsubscribe(subscription);
     }
   }
 }

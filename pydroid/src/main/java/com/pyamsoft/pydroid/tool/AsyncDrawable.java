@@ -17,16 +17,18 @@
 
 package com.pyamsoft.pydroid.tool;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.util.DrawableUtil;
+import rx.Observable;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public final class AsyncDrawable {
@@ -35,74 +37,13 @@ public final class AsyncDrawable {
   }
 
   @CheckResult @NonNull public static Loader load(@DrawableRes int drawableRes) {
-    return load(drawableRes, new DefaultLoader());
+    return load(drawableRes, new RXLoader());
   }
 
   @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
     loader.setResource(drawableRes);
     return loader;
-  }
-
-  @SuppressWarnings("WeakerAccess") public static final class DefaultLoader
-      extends Loader<AsyncDrawableTaskEntry> {
-
-    @NonNull @Override
-    public AsyncDrawableTaskEntry load(@NonNull ImageView imageView, @DrawableRes int resource,
-        @ColorRes int tint) {
-      final AsyncDrawableTaskEntry<Drawable> taskEntry = new AsyncDrawableTaskEntry<Drawable>() {
-        @Override protected Drawable doInBackground(Context... params) {
-          if (params == null) {
-            Timber.e("No Activity passed to AsyncDrawable loader");
-            return null;
-          }
-
-          final Context context = params[0];
-          if (context == null) {
-            Timber.e("Context is NULL");
-            return null;
-          }
-
-          // For some devices on API 19, even passing an explicit activity can cause
-          // vector drawable loading errors.
-          //
-          // But in most cases it works fine as advertised
-          //
-          // We guard against this and simply fail on loading if it should happen
-          Drawable loaded;
-          try {
-            Timber.d("Load drawable in background");
-            loaded = AppCompatResources.getDrawable(context, resource);
-          } catch (Exception e) {
-            Timber.e(e, "Error while loading");
-            loaded = null;
-          }
-
-          if (loaded == null) {
-            Timber.e("Could not load drawable for resource: %d", resource);
-            return null;
-          }
-
-          if (tint != 0) {
-            loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
-          }
-
-          return loaded;
-        }
-
-        @Override protected void onPostExecute(Drawable drawable) {
-          super.onPostExecute(drawable);
-          if (drawable != null) {
-            Timber.d("Load drawable into image");
-            imageView.setImageDrawable(drawable);
-          }
-        }
-      };
-
-      // Execute it
-      AsyncTaskCompat.executeParallel(taskEntry, imageView.getContext());
-      return taskEntry;
-    }
   }
 
   /**
@@ -141,5 +82,61 @@ public final class AsyncDrawable {
     @CheckResult @NonNull
     protected abstract T load(@NonNull ImageView imageView, @DrawableRes int resource,
         @ColorRes int tint);
+  }
+
+  @SuppressWarnings("WeakerAccess") public static class RXLoader
+      extends Loader<AsyncDrawableSubscriptionEntry> {
+
+    @NonNull Scheduler subscribeScheduler;
+    @NonNull Scheduler observeScheduler;
+
+    public RXLoader() {
+      super();
+      subscribeScheduler = Schedulers.io();
+      observeScheduler = AndroidSchedulers.mainThread();
+    }
+
+    @NonNull @Override protected AsyncDrawableSubscriptionEntry load(@NonNull ImageView imageView,
+        @DrawableRes int resource, @ColorRes int tint) {
+      //noinspection ConstantConditions
+      if (imageView == null) {
+        throw new NullPointerException("ImageView cannot be NULL");
+      }
+
+      if (resource == 0) {
+        throw new RuntimeException("Drawable resource cannot be 0");
+      }
+      return new AsyncDrawableSubscriptionEntry(
+          Observable.fromCallable(imageView::getContext)
+              .map(context -> {
+                Drawable loaded = AppCompatResources.getDrawable(context, resource);
+                if (loaded == null) {
+                  throw new NullPointerException(
+                      "Could not load drawable for resource: " + resource);
+                }
+
+                if (tint != 0) {
+                  loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
+                }
+                return loaded;
+              })
+              .subscribeOn(subscribeScheduler)
+              .observeOn(observeScheduler)
+              .subscribe(imageView::setImageDrawable, throwable -> {
+                Timber.e(throwable, "Error loading Drawable into ImageView");
+              }));
+    }
+
+    @SuppressWarnings("unused") @CheckResult @NonNull
+    public final RXLoader subscribeOn(@NonNull Scheduler scheduler) {
+      this.subscribeScheduler = scheduler;
+      return this;
+    }
+
+    @SuppressWarnings("unused") @CheckResult @NonNull
+    public final RXLoader observeOn(@NonNull Scheduler scheduler) {
+      this.observeScheduler = scheduler;
+      return this;
+    }
   }
 }

@@ -36,7 +36,7 @@ import android.view.WindowManager;
 import com.pyamsoft.pydroid.PYDroidPreferences;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.tool.AsyncMapHelper;
+import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.ui.donate.DonateDialog;
 import com.pyamsoft.pydroid.util.AppUtil;

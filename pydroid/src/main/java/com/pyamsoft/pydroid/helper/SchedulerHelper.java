@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.rx;
+package com.pyamsoft.pydroid.helper;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;

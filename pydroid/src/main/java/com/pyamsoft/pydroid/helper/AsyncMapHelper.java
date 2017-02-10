@@ -15,31 +15,34 @@
  *
  */
 
-package com.pyamsoft.pydroid.rx;
+package com.pyamsoft.pydroid.helper;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import rx.Subscription;
 
-class AsyncDrawableSubscriptionEntry implements AsyncMap.Entry {
+public final class AsyncMapHelper {
 
-  @NonNull private final Subscription subscription;
-
-  AsyncDrawableSubscriptionEntry(@NonNull Subscription subscription) {
-    //noinspection ConstantConditions
-    if (subscription == null) {
-      throw new NullPointerException("Subscription cannot be NULL");
-    }
-    this.subscription = subscription;
+  private AsyncMapHelper() {
+    throw new RuntimeException("No instances");
   }
 
-  @Override public void unload() {
-    if (!isUnloaded()) {
-      subscription.unsubscribe();
+  public static void unsubscribe(@Nullable AsyncMap.Entry entry) {
+    if (entry == null) {
+      return;
+    }
+
+    if (!entry.isUnloaded()) {
+      entry.unload();
     }
   }
 
-  @Override public boolean isUnloaded() {
-    return subscription.isUnsubscribed();
+  public static void unsubscribe(@Nullable AsyncMap.Entry... entries) {
+    if (entries == null) {
+      return;
+    }
+
+    for (final AsyncMap.Entry entry : entries) {
+      unsubscribe(entry);
+    }
   }
 }

@@ -23,8 +23,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.tool.Offloader;
-import com.pyamsoft.pydroid.tool.SerialOffloader;
 import org.solovyev.android.checkout.Inventory;
 import org.solovyev.android.checkout.Sku;
 import timber.log.Timber;

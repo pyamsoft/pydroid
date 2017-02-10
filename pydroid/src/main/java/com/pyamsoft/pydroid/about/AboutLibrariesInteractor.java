@@ -26,8 +26,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
-import com.pyamsoft.pydroid.tool.AsyncOffloader;
-import com.pyamsoft.pydroid.tool.Offloader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

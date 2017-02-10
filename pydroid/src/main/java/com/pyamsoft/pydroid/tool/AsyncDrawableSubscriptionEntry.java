@@ -17,17 +17,29 @@
 
 package com.pyamsoft.pydroid.tool;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.tool.AsyncMap;
+import rx.Subscription;
 
-abstract class AsyncDrawableTaskEntry<T> extends AsyncTask<Context, Void, T>
-    implements AsyncMap.Entry {
+class AsyncDrawableSubscriptionEntry implements AsyncMap.Entry {
+
+  @NonNull private final Subscription subscription;
+
+  AsyncDrawableSubscriptionEntry(@NonNull Subscription subscription) {
+    //noinspection ConstantConditions
+    if (subscription == null) {
+      throw new NullPointerException("Subscription cannot be NULL");
+    }
+    this.subscription = subscription;
+  }
 
   @Override public void unload() {
-    cancel(true);
+    if (!isUnloaded()) {
+      subscription.unsubscribe();
+    }
   }
 
   @Override public boolean isUnloaded() {
-    return isCancelled();
+    return subscription.isUnsubscribed();
   }
 }

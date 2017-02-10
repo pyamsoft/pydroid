@@ -21,8 +21,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidPreferences;
-import com.pyamsoft.pydroid.tool.AsyncOffloader;
-import com.pyamsoft.pydroid.tool.Offloader;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class AdvertisementInteractor {

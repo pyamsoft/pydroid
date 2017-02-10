@@ -20,8 +20,6 @@ package com.pyamsoft.pydroid.ads;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.tool.ExecutedOffloader;
-import com.pyamsoft.pydroid.tool.OffloaderHelper;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AdvertisementPresenter

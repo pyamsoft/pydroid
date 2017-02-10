@@ -44,7 +44,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
     DonateModule donateModule = new DonateModule(module);
-    VersionCheckModule versionCheckModule = new VersionCheckModule();
+    VersionCheckModule versionCheckModule = new VersionCheckModule(module);
     AdvertisementModule advertisementModule = new AdvertisementModule(module);
     AboutLibrariesModule aboutLibrariesModule = new AboutLibrariesModule(module);
     SocialMediaModule socialMediaModule = new SocialMediaModule();

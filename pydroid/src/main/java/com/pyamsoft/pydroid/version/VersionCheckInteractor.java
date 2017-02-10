@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import retrofit2.Call;
+import rx.Observable;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckInteractor {
 
@@ -30,7 +30,7 @@ import retrofit2.Call;
     this.versionCheckService = versionCheckService;
   }
 
-  @NonNull @CheckResult Call<VersionCheckResponse> checkVersion(@NonNull String packageName) {
+  @NonNull @CheckResult Observable<VersionCheckResponse> checkVersion(@NonNull String packageName) {
     return versionCheckService.checkVersion(packageName);
   }
 }

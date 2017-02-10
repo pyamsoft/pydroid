@@ -23,11 +23,15 @@ import android.support.annotation.RestrictTo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pyamsoft.pydroid.BuildConfigChecker;
+import com.pyamsoft.pydroid.PYDroidModule;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckModule {
 
@@ -35,11 +39,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
   @NonNull private static final String CURRENT_VERSION_REPO_BASE_URL =
       "https://" + GITHUB_URL + "/pyamsoft/android-project-versions/master/";
   @NonNull private final VersionCheckInteractor interactor;
+  @NonNull private final Scheduler obsScheduler;
+  @NonNull private final Scheduler subScheduler;
 
-  public VersionCheckModule() {
+  public VersionCheckModule(@NonNull PYDroidModule pyDroidModule) {
     interactor = new VersionCheckInteractor(
         new VersionCheckApi(provideRetrofit(provideOkHttpClient(), provideGson())).create(
             VersionCheckService.class));
+    obsScheduler = pyDroidModule.provideObsScheduler();
+    subScheduler = pyDroidModule.provideSubScheduler();
   }
 
   @CheckResult @NonNull private Gson provideGson() {
@@ -71,10 +79,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
     return new Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
         .build();
   }
 
   @NonNull @CheckResult public VersionCheckPresenter getPresenter() {
-    return new VersionCheckPresenter(interactor);
+    return new VersionCheckPresenter(interactor, obsScheduler, subScheduler);
   }
 }

@@ -20,36 +20,38 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckPresenter
-    extends Presenter<Presenter.Empty> {
+    extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final VersionCheckInteractor interactor;
-  @Nullable private Call<VersionCheckResponse> call;
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription versionCheckSubscription;
 
-  VersionCheckPresenter(@NonNull VersionCheckInteractor interactor) {
+  VersionCheckPresenter(@NonNull VersionCheckInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    cancelCall();
+    SubscriptionHelper.unsubscribe(versionCheckSubscription);
   }
 
   public void checkForUpdates(@NonNull String packageName, int currentVersionCode,
       @NonNull UpdateCheckCallback callback) {
-    cancelCall();
-    call = interactor.checkVersion(packageName);
-    call.enqueue(new Callback<VersionCheckResponse>() {
-      @Override public void onResponse(Call<VersionCheckResponse> call,
-          Response<VersionCheckResponse> response) {
-        if (response.isSuccessful()) {
-          final VersionCheckResponse versionCheckResponse = response.body();
+    SubscriptionHelper.unsubscribe(versionCheckSubscription);
+    interactor.checkVersion(packageName)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(versionCheckResponse -> {
           Timber.i("Update check finished");
           Timber.i("Current version: %d", currentVersionCode);
           Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
@@ -57,30 +59,15 @@ import timber.log.Timber;
           if (currentVersionCode < versionCheckResponse.currentVersion()) {
             callback.onUpdatedVersionFound(currentVersionCode,
                 versionCheckResponse.currentVersion());
-            cancelCall();
           }
-        } else {
-          Timber.w("onResponse: Not successful CODE: %d", response.code());
-          cancelCall();
-        }
-      }
-
-      @Override public void onFailure(Call<VersionCheckResponse> call, Throwable t) {
-        Timber.e(t, "onError checkForUpdates");
-        cancelCall();
-      }
-    });
-  }
-
-  @SuppressWarnings("WeakerAccess") void cancelCall() {
-    if (call == null) {
-      Timber.w("Call is NULL");
-      return;
-    }
-
-    if (!call.isCanceled()) {
-      call.cancel();
-    }
+        }, throwable -> {
+          if (throwable instanceof HttpException) {
+            Timber.w(throwable, "onError: Not successful CODE: %d",
+                ((HttpException) throwable).code());
+          } else {
+            Timber.e(throwable, "onError");
+          }
+        }, () -> SubscriptionHelper.unsubscribe(versionCheckSubscription));
   }
 
   public interface UpdateCheckCallback {

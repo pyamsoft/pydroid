@@ -18,47 +18,56 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AdvertisementPresenter
-    extends Presenter<Presenter.Empty> {
+    extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final AdvertisementInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull ExecutedOffloader offloader =
-      new ExecutedOffloader.Empty();
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription adSubscription;
 
-  AdvertisementPresenter(@NonNull AdvertisementInteractor interactor) {
+  AdvertisementPresenter(@NonNull AdvertisementInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    OffloaderHelper.cancel(offloader);
+    SubscriptionHelper.unsubscribe(adSubscription);
   }
 
   public void showAd(@NonNull ShowAdCallback callback) {
-    OffloaderHelper.cancel(offloader);
-    offloader = interactor.showAdView()
-        .onError(item -> Timber.e(item, "onError showAd"))
-        .onResult(shown -> {
-          if (shown) {
-            callback.onShown();
-          }
-        })
-        .onFinish(() -> OffloaderHelper.cancel(offloader))
-        .execute();
+    SubscriptionHelper.unsubscribe(adSubscription);
+    adSubscription = interactor.showAdView()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(show -> {
+              if (show) {
+                callback.onShown();
+              }
+            }, throwable -> Timber.e(throwable, "onError showAd"),
+            () -> SubscriptionHelper.unsubscribe(adSubscription));
   }
 
   public void hideAd(@NonNull HideAdCallback callback) {
-    OffloaderHelper.cancel(offloader);
-    offloader =
-        interactor.hideAdView().onError(item -> Timber.e(item, "onError hideAd")).onResult(hide -> {
-          if (hide) {
-            callback.onHidden();
-          }
-        }).onFinish(() -> OffloaderHelper.cancel(offloader)).execute();
+    SubscriptionHelper.unsubscribe(adSubscription);
+    adSubscription = interactor.hideAdView()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hide -> {
+              if (hide) {
+                callback.onHidden();
+              }
+            }, throwable -> Timber.e(throwable, "onError hideAd"),
+            () -> SubscriptionHelper.unsubscribe(adSubscription));
   }
 
   public interface ShowAdCallback {

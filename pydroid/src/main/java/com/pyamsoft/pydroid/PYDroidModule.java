@@ -29,6 +29,9 @@ import org.solovyev.android.checkout.Billing;
 import org.solovyev.android.checkout.Purchase;
 import org.solovyev.android.checkout.PurchaseVerifier;
 import org.solovyev.android.checkout.RequestListener;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidModule {
 
@@ -103,6 +106,16 @@ import org.solovyev.android.checkout.RequestListener;
   // Singleton
   @CheckResult @NonNull public final List<String> provideInAppPurchaseList() {
     return inAppPurchaseList;
+  }
+
+  // Singleton
+  @CheckResult @NonNull public final Scheduler provideSubScheduler() {
+    return Schedulers.io();
+  }
+
+  // Singleton
+  @CheckResult @NonNull public final Scheduler provideObsScheduler() {
+    return AndroidSchedulers.mainThread();
   }
 
   private static class DonationBillingConfiguration extends Billing.DefaultConfiguration {

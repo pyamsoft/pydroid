@@ -21,18 +21,23 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
+import rx.Scheduler;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesModule {
 
   @NonNull private final AboutLibrariesInteractor interactor;
+  @NonNull private final Scheduler obsScheduler;
+  @NonNull private final Scheduler subScheduler;
 
   // Created once per "scope"
   public AboutLibrariesModule(@NonNull PYDroidModule pyDroidModule) {
     interactor = new AboutLibrariesInteractor(pyDroidModule.provideContext(),
         pyDroidModule.provideLicenseProvider());
+    obsScheduler = pyDroidModule.provideObsScheduler();
+    subScheduler = pyDroidModule.provideSubScheduler();
   }
 
   @NonNull @CheckResult public AboutLibrariesPresenter getPresenter() {
-    return new AboutLibrariesPresenter(interactor);
+    return new AboutLibrariesPresenter(interactor, obsScheduler, subScheduler);
   }
 }

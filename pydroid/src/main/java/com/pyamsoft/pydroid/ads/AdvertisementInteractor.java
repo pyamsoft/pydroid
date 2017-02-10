@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidPreferences;
+import rx.Observable;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class AdvertisementInteractor {
@@ -32,8 +33,8 @@ import timber.log.Timber;
     this.preferences = pyDroidPreferences;
   }
 
-  @NonNull @CheckResult Offloader<Boolean> showAdView() {
-    return AsyncOffloader.newInstance(() -> {
+  @NonNull @CheckResult Observable<Boolean> showAdView() {
+    return Observable.fromCallable(() -> {
       final boolean isEnabled = preferences.isAdViewEnabled();
       final int shownCount = preferences.getAdViewShownCount();
       final boolean isValidCount = shownCount >= MAX_SHOW_COUNT;
@@ -51,8 +52,8 @@ import timber.log.Timber;
     });
   }
 
-  @NonNull @CheckResult Offloader<Boolean> hideAdView() {
-    return AsyncOffloader.newInstance(() -> {
+  @NonNull @CheckResult Observable<Boolean> hideAdView() {
+    return Observable.fromCallable(() -> {
       Timber.d("Hide AdView");
       if (preferences.getAdViewShownCount() >= MAX_SHOW_COUNT) {
         Timber.d("Write shown count back to 0");

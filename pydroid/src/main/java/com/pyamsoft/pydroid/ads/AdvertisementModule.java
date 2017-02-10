@@ -21,17 +21,21 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
+import rx.Scheduler;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY)
-public class AdvertisementModule {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class AdvertisementModule {
 
   @NonNull private final AdvertisementInteractor interactor;
+  @NonNull private final Scheduler obsScheduler;
+  @NonNull private final Scheduler subScheduler;
 
   public AdvertisementModule(@NonNull PYDroidModule pyDroidModule) {
     interactor = new AdvertisementInteractor(pyDroidModule.providePreferences());
+    obsScheduler = pyDroidModule.provideObsScheduler();
+    subScheduler = pyDroidModule.provideSubScheduler();
   }
 
   @NonNull @CheckResult public AdvertisementPresenter getPresenter() {
-    return new AdvertisementPresenter(interactor);
+    return new AdvertisementPresenter(interactor, obsScheduler, subScheduler);
   }
 }

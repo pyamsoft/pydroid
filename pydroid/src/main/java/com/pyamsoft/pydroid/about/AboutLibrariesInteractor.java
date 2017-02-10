@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import rx.Observable;
 import timber.log.Timber;
 
 class AboutLibrariesInteractor {
@@ -53,8 +54,8 @@ class AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @CheckResult @NonNull Offloader<String> loadLicenseText(@NonNull AboutLicenseModel license) {
-    return AsyncOffloader.newInstance(() -> {
+  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull AboutLicenseModel license) {
+    return Observable.fromCallable(() -> {
       if (cachedLicenses.containsKey(license.name())) {
         Timber.d("Fetch from cache");
         return cachedLicenses.get(license.name());

@@ -20,19 +20,23 @@ package com.pyamsoft.pydroid.about;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import java.util.HashSet;
-import java.util.Set;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesPresenter
-    extends Presenter<Presenter.Empty> {
+    extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final AboutLibrariesInteractor interactor;
-  @NonNull private final Set<ExecutedOffloader> licenseSubscriptions;
+  @NonNull private final CompositeSubscription licenseSubscriptions;
 
-  AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor) {
+  AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
-    licenseSubscriptions = new HashSet<>();
+    licenseSubscriptions = new CompositeSubscription();
   }
 
   @Override protected void onUnbind() {
@@ -43,21 +47,20 @@ import timber.log.Timber;
 
   @RestrictTo(RestrictTo.Scope.SUBCLASSES) @SuppressWarnings("WeakerAccess")
   void unsubLoadLicense() {
-    //noinspection Convert2streamapi
-    for (final ExecutedOffloader task : licenseSubscriptions) {
-      OffloaderHelper.cancel(task);
-    }
+    licenseSubscriptions.clear();
   }
 
   public void loadLicenseText(int position, @NonNull AboutLicenseModel license,
       @NonNull LicenseTextLoadCallback callback) {
-    final ExecutedOffloader licenseSubscription =
-        interactor.loadLicenseText(license).onError(throwable -> {
+    Subscription licenseSubscription = interactor.loadLicenseText(license)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(licenseText -> {
+          callback.onLicenseTextLoadComplete(position, licenseText);
+        }, throwable -> {
           Timber.e(throwable, "onError loadLicenseText");
           callback.onLicenseTextLoadError(position);
-        }).onResult(license1 -> callback.onLicenseTextLoadComplete(position, license1)).execute();
-
-    Timber.d("Add license subscription");
+        });
     licenseSubscriptions.add(licenseSubscription);
   }
 

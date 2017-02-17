@@ -42,6 +42,9 @@ android {
 
     // Consumer proguard file
     consumerProguardFiles "proguard-rules.pro"
+
+    // Only English, I don't have any translations
+    resConfigs "en"
   }
 
   dataBinding {

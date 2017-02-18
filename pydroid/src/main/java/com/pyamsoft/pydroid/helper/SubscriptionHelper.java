@@ -17,8 +17,11 @@
 
 package com.pyamsoft.pydroid.helper;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
 public final class SubscriptionHelper {
 
@@ -26,23 +29,15 @@ public final class SubscriptionHelper {
     throw new RuntimeException("No instances");
   }
 
-  public static void unsubscribe(@Nullable Subscription subscription) {
+  @NonNull @CheckResult
+  public static Subscription unsubscribe(@Nullable Subscription subscription) {
     if (subscription == null) {
-      return;
+      return Subscriptions.empty();
     }
 
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
-  }
-
-  public static void unsubscribe(@Nullable Subscription... subscriptions) {
-    if (subscriptions == null) {
-      return;
-    }
-
-    for (final Subscription subscription : subscriptions) {
-      unsubscribe(subscription);
-    }
+    return Subscriptions.empty();
   }
 }

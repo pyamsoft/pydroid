@@ -61,6 +61,22 @@ public class AsyncMap<T extends AsyncMap.Entry> {
   }
 
   public interface Entry {
+
+    @NonNull @CheckResult static Entry empty() {
+      return new Entry() {
+
+        private boolean unloaded = false;
+
+        @Override public void unload() {
+          unloaded = true;
+        }
+
+        @Override public boolean isUnloaded() {
+          return unloaded;
+        }
+      };
+    }
+
     void unload();
 
     @CheckResult boolean isUnloaded();

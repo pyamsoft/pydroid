@@ -18,20 +18,20 @@
 package com.pyamsoft.pydroid.ads;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AdvertisementPresenter
     extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final AdvertisementInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription adSubscription;
+  @NonNull private Subscription adSubscription = Subscriptions.empty();
 
   AdvertisementPresenter(@NonNull AdvertisementInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -41,33 +41,31 @@ import timber.log.Timber;
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(adSubscription);
+    adSubscription = SubscriptionHelper.unsubscribe(adSubscription);
   }
 
   public void showAd(@NonNull ShowAdCallback callback) {
-    SubscriptionHelper.unsubscribe(adSubscription);
+    adSubscription = SubscriptionHelper.unsubscribe(adSubscription);
     adSubscription = interactor.showAdView()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(show -> {
-              if (show) {
-                callback.onShown();
-              }
-            }, throwable -> Timber.e(throwable, "onError showAd"),
-            () -> SubscriptionHelper.unsubscribe(adSubscription));
+          if (show) {
+            callback.onShown();
+          }
+        }, throwable -> Timber.e(throwable, "onError showAd"));
   }
 
   public void hideAd(@NonNull HideAdCallback callback) {
-    SubscriptionHelper.unsubscribe(adSubscription);
+    adSubscription = SubscriptionHelper.unsubscribe(adSubscription);
     adSubscription = interactor.hideAdView()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(hide -> {
-              if (hide) {
-                callback.onHidden();
-              }
-            }, throwable -> Timber.e(throwable, "onError hideAd"),
-            () -> SubscriptionHelper.unsubscribe(adSubscription));
+          if (hide) {
+            callback.onHidden();
+          }
+        }, throwable -> Timber.e(throwable, "onError hideAd"));
   }
 
   public interface ShowAdCallback {

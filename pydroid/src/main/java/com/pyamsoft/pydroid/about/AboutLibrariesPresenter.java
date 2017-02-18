@@ -41,13 +41,8 @@ import timber.log.Timber;
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubLoadLicense();
-    interactor.clearCache();
-  }
-
-  @RestrictTo(RestrictTo.Scope.SUBCLASSES) @SuppressWarnings("WeakerAccess")
-  void unsubLoadLicense() {
     licenseSubscriptions.clear();
+    interactor.clearCache();
   }
 
   public void loadLicenseText(int position, @NonNull AboutLicenseModel license,

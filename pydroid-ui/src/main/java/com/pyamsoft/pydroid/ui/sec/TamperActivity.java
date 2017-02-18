@@ -22,7 +22,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.BuildConfigChecker;
+import com.pyamsoft.pydroid.ui.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.rating.RatingActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;

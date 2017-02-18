@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.ui;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -28,7 +28,7 @@ public abstract class BuildConfigChecker {
   protected BuildConfigChecker() {
   }
 
-  @CheckResult @NonNull public static BuildConfigChecker getInstance() {
+  @CheckResult @NonNull static BuildConfigChecker getInstance() {
     if (instance == null) {
       throw new IllegalStateException("BuildConfigChecker instance is NULL");
     } else {
@@ -37,7 +37,7 @@ public abstract class BuildConfigChecker {
     }
   }
 
-  public static void setInstance(@NonNull BuildConfigChecker checker) {
+  static void setInstance(@NonNull BuildConfigChecker checker) {
     instance = checker;
   }
 

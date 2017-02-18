@@ -17,6 +17,8 @@
 
 package com.pyamsoft.pydroid.helper;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 
@@ -26,23 +28,14 @@ public final class AsyncMapHelper {
     throw new RuntimeException("No instances");
   }
 
-  public static void unsubscribe(@Nullable AsyncMap.Entry entry) {
+  @CheckResult @NonNull public static AsyncMap.Entry unsubscribe(@Nullable AsyncMap.Entry entry) {
     if (entry == null) {
-      return;
+      return AsyncMap.Entry.empty();
     }
 
     if (!entry.isUnloaded()) {
       entry.unload();
     }
-  }
-
-  public static void unsubscribe(@Nullable AsyncMap.Entry... entries) {
-    if (entries == null) {
-      return;
-    }
-
-    for (final AsyncMap.Entry entry : entries) {
-      unsubscribe(entry);
-    }
+    return AsyncMap.Entry.empty();
   }
 }

@@ -24,17 +24,16 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import org.solovyev.android.checkout.Inventory;
-import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class DonatePresenter
     extends Presenter<DonatePresenter.View> {
 
   @NonNull private final DonateInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription billingResult;
+  @NonNull private Subscription billingResult = Subscriptions.empty();
 
   DonatePresenter(@NonNull DonateInteractor interactor) {
     this.interactor = interactor;
@@ -50,7 +49,7 @@ import timber.log.Timber;
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(billingResult);
+    billingResult = SubscriptionHelper.unsubscribe(billingResult);
     interactor.destroy();
   }
 
@@ -67,9 +66,9 @@ import timber.log.Timber;
    */
   public void onBillingResult(int requestCode, int resultCode, @Nullable Intent data,
       @NonNull BillingResultCallback callback) {
-    SubscriptionHelper.unsubscribe(billingResult);
-    billingResult = interactor.processBillingResult(requestCode, resultCode, data)
-        .subscribe(success -> {
+    billingResult = SubscriptionHelper.unsubscribe(billingResult);
+    billingResult =
+        interactor.processBillingResult(requestCode, resultCode, data).subscribe(success -> {
           if (success) {
             callback.onProcessResultSuccess();
           } else {
@@ -78,7 +77,7 @@ import timber.log.Timber;
         }, throwable -> {
           Timber.e(throwable, "Error processing Billing onFinish");
           callback.onProcessResultError();
-        }, () -> SubscriptionHelper.unsubscribe(billingResult));
+        });
   }
 
   public void checkoutInAppPurchaseItem(@NonNull SkuModel skuModel) {

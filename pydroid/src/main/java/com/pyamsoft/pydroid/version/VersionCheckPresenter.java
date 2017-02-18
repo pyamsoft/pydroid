@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
@@ -26,13 +25,14 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckPresenter
     extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final VersionCheckInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription versionCheckSubscription;
+  @NonNull private Subscription versionCheckSubscription = Subscriptions.empty();
 
   VersionCheckPresenter(@NonNull VersionCheckInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -42,12 +42,12 @@ import timber.log.Timber;
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(versionCheckSubscription);
+    versionCheckSubscription = SubscriptionHelper.unsubscribe(versionCheckSubscription);
   }
 
   public void checkForUpdates(@NonNull String packageName, int currentVersionCode,
       @NonNull UpdateCheckCallback callback) {
-    SubscriptionHelper.unsubscribe(versionCheckSubscription);
+    versionCheckSubscription = SubscriptionHelper.unsubscribe(versionCheckSubscription);
     interactor.checkVersion(packageName)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -67,7 +67,7 @@ import timber.log.Timber;
           } else {
             Timber.e(throwable, "onError");
           }
-        }, () -> SubscriptionHelper.unsubscribe(versionCheckSubscription));
+        });
   }
 
   public interface UpdateCheckCallback {

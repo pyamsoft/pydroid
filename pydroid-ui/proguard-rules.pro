@@ -16,8 +16,4 @@
 #   public *;
 #}
 
-# The addition of !method/inlining/* is needed to fix an onClick binding issue
-#   in PreferenceFragments
-
-# This may actually be a bug with Retrolambda
--optimizations !method/inlining/*
+-dontwarn com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment$1$1

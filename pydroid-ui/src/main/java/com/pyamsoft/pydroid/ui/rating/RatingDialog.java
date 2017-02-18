@@ -34,8 +34,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import com.pyamsoft.pydroid.PYDroidPreferences;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
+import com.pyamsoft.pydroid.drawable.AsyncDrawable;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.ui.donate.DonateDialog;
@@ -55,7 +55,7 @@ public class RatingDialog extends DialogFragment {
   private int versionCode;
   @DrawableRes private int changeLogIcon;
   private DialogRatingBinding binding;
-  @Nullable private AsyncMap.Entry iconTask;
+  @Nullable private AsyncMapEntry iconTask;
 
   public static void showRatingDialog(final @NonNull FragmentActivity activity,
       final @NonNull ChangeLogProvider provider, final boolean force) {

@@ -27,9 +27,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.ads.AdSource;
+import com.pyamsoft.pydroid.drawable.AsyncDrawable;
+import com.pyamsoft.pydroid.drawable.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -56,7 +57,7 @@ import timber.log.Timber;
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON,
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
-  @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
+  @NonNull private final AsyncMap taskMap = new AsyncMap();
   public SocialMediaPresenter presenter;
   @Nullable private Queue<String> imageQueue;
   @Nullable private ImageView adImage;
@@ -185,7 +186,7 @@ import timber.log.Timber;
       }
     });
 
-    final AsyncMap.Entry adTask = AsyncDrawable.load(image).into(adImage);
+    final AsyncMapEntry adTask = AsyncDrawable.load(image).into(adImage);
     taskMap.put("ad", adTask);
   }
 

@@ -15,27 +15,32 @@
  *
  */
 
-package com.pyamsoft.pydroid.helper;
+package com.pyamsoft.pydroid.drawable;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 
-public final class AsyncMapHelper {
+/**
+ * Created by pyamsoft on 2/18/17.
+ */
+public interface AsyncMapEntry {
 
-  private AsyncMapHelper() {
-    throw new RuntimeException("No instances");
+  @NonNull @CheckResult static AsyncMapEntry empty() {
+    return new AsyncMapEntry() {
+
+      private boolean unloaded = false;
+
+      @Override public void unload() {
+        unloaded = true;
+      }
+
+      @Override public boolean isUnloaded() {
+        return unloaded;
+      }
+    };
   }
 
-  @CheckResult @NonNull public static AsyncMapEntry unsubscribe(@Nullable AsyncMapEntry entry) {
-    if (entry == null) {
-      return AsyncMapEntry.empty();
-    }
+  void unload();
 
-    if (!entry.isUnloaded()) {
-      entry.unload();
-    }
-    return AsyncMapEntry.empty();
-  }
+  @CheckResult boolean isUnloaded();
 }

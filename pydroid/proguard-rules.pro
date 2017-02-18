@@ -8,6 +8,10 @@
 # The addition of !code/allocation/variable is needed to prevent this
 -optimizations !code/allocation/variable
 
+# Keep all of pydroid
+-keep class com.pyamsoft.pydroid.* { *; }
+-dontwarn class com.pyamsoft.pydroid.*
+
 # RetroLambda
 -dontwarn java.lang.invoke.LambdaForm$Hidden
 
@@ -35,8 +39,8 @@
     @retrofit2.http.* <methods>;
 }
 
-# Keep GSON serialized class
--keep class com.pyamsoft.pydroid.version.VersionCheckResponse { *; }
+# Newer versions of retrofit have this issue
+-dontwarn rx.Completable$CompletableSubscriber
 
 # Android Checkout uses weird annotations
 -dontwarn javax.annotation.Nonnull

@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.drawable;
 
 import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
@@ -46,14 +46,7 @@ public final class AsyncDrawable {
     return loader;
   }
 
-  /**
-   * A map that makes it convenient to load AsyncDrawables
-   */
-  public static final class Mapper extends AsyncMap<AsyncMap.Entry> {
-
-  }
-
-  public static abstract class Loader<T extends AsyncMap.Entry> {
+  public static abstract class Loader<T extends AsyncMapEntry> {
 
     @DrawableRes private int resource;
     @ColorRes private int tint;

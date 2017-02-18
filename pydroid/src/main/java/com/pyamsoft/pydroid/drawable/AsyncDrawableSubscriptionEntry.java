@@ -15,13 +15,12 @@
  *
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.drawable;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.tool.AsyncMap;
 import rx.Subscription;
 
-class AsyncDrawableSubscriptionEntry implements AsyncMap.Entry {
+class AsyncDrawableSubscriptionEntry implements AsyncMapEntry {
 
   @NonNull private final Subscription subscription;
 

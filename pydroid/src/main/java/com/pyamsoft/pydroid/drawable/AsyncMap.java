@@ -15,18 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.tool;
+package com.pyamsoft.pydroid.drawable;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class AsyncMap<T extends AsyncMap.Entry> {
+public class AsyncMap {
 
-  @NonNull private final HashMap<String, T> map;
+  @NonNull private final HashMap<String, AsyncMapEntry> map;
 
   public AsyncMap() {
     this.map = new HashMap<>();
@@ -37,9 +36,9 @@ public class AsyncMap<T extends AsyncMap.Entry> {
    *
    * If an old element exists, its task is cancelled first before adding the new one
    */
-  public final void put(@NonNull String tag, @NonNull T subscription) {
+  public final void put(@NonNull String tag, @NonNull AsyncMapEntry subscription) {
     if (map.containsKey(tag)) {
-      AsyncMapHelper.unsubscribe(map.get(tag));
+      map.put(tag, AsyncMapHelper.unsubscribe(map.get(tag)));
     }
 
     Timber.d("Insert new subscription for tag: %s", tag);
@@ -52,33 +51,11 @@ public class AsyncMap<T extends AsyncMap.Entry> {
    * If the elements have not been cancelled yet, cancel them before removing them
    */
   public final void clear() {
-    for (final Map.Entry<String, T> entry : map.entrySet()) {
-      AsyncMapHelper.unsubscribe(entry.getValue());
+    for (final Map.Entry<String, AsyncMapEntry> entry : map.entrySet()) {
+      entry.setValue(AsyncMapHelper.unsubscribe(entry.getValue()));
     }
 
     Timber.d("Clear AsyncDrawableMap");
     map.clear();
-  }
-
-  public interface Entry {
-
-    @NonNull @CheckResult static Entry empty() {
-      return new Entry() {
-
-        private boolean unloaded = false;
-
-        @Override public void unload() {
-          unloaded = true;
-        }
-
-        @Override public boolean isUnloaded() {
-          return unloaded;
-        }
-      };
-    }
-
-    void unload();
-
-    @CheckResult boolean isUnloaded();
   }
 }

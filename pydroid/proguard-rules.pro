@@ -10,7 +10,6 @@
 
 # Keep all of pydroid
 -keep class com.pyamsoft.pydroid.* { *; }
--dontwarn class com.pyamsoft.pydroid.*
 
 # RetroLambda
 -dontwarn java.lang.invoke.LambdaForm$Hidden

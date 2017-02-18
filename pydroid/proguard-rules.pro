@@ -44,6 +44,7 @@
 }
 
 # Some other retrofit related warnings
+-dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe$1
 -dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallAdapter
 -dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallAdapter
 -dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe

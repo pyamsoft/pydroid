@@ -11,6 +11,11 @@
 # Keep all of pydroid
 -keep class com.pyamsoft.pydroid.* { *; }
 
+# Silence some pydroid warnings
+-dontwarn com.pyamsoft.pydroid.drawable.AsyncMapEntry$1
+-dontwarn com.pyamsoft.pydroid.helper.AsyncMapHelper
+-dontwarn com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment$1$1
+
 # RetroLambda
 -dontwarn java.lang.invoke.LambdaForm$Hidden
 
@@ -38,8 +43,10 @@
     @retrofit2.http.* <methods>;
 }
 
-# Newer versions of retrofit have this issue
--dontwarn rx.Completable$CompletableSubscriber
+# Some other retrofit related warnings
+-dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallAdapter
+-dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallAdapter
+-dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe
 
 # Android Checkout uses weird annotations
 -dontwarn javax.annotation.Nonnull

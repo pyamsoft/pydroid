@@ -21,11 +21,13 @@
 -dontwarn java.nio.file.OpenOption
 
 # Retrofit2
--dontwarn retrofit2.adapter.rxjava.CompletableHelper
--dontwarn retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8
+-dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallAdapter
+-dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe
 -dontnote retrofit2.Platform
 -keepattributes Signature
 -keepattributes Exceptions
+
 
 # For use with proguard-android-optimize.txt
 # Needed or else requests with crash with a IllegalArgumentException: Missng GET or @Url

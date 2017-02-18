@@ -8,9 +8,6 @@
 # The addition of !code/allocation/variable is needed to prevent this
 -optimizations !code/allocation/variable
 
-# Keep all of pydroid
--keep class com.pyamsoft.pydroid.* { *; }
-
 # Silence some pydroid warnings
 -dontwarn com.pyamsoft.pydroid.drawable.AsyncMapEntry$1
 -dontwarn com.pyamsoft.pydroid.helper.AsyncMapHelper

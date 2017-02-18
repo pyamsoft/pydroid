@@ -24,6 +24,7 @@
 -dontwarn retrofit2.Platform$Java8
 -dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallAdapter
 -dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe
+-dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe$1
 -dontnote retrofit2.Platform
 -keepattributes Signature
 -keepattributes Exceptions

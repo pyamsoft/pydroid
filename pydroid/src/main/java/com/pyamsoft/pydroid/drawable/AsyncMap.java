@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.drawable;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import java.util.HashMap;
@@ -29,6 +30,21 @@ public class AsyncMap {
 
   public AsyncMap() {
     this.map = new HashMap<>();
+  }
+
+  @NonNull @CheckResult public static AsyncMapEntry emptyEntry() {
+    return new AsyncMapEntry() {
+
+      private boolean unloaded = false;
+
+      @Override public void unload() {
+        unloaded = true;
+      }
+
+      @Override public boolean isUnloaded() {
+        return unloaded;
+      }
+    };
   }
 
   /**

@@ -9,8 +9,6 @@
 -optimizations !code/allocation/variable
 
 # Silence some pydroid warnings
--dontwarn com.pyamsoft.pydroid.drawable.AsyncMapEntry$1
--dontwarn com.pyamsoft.pydroid.helper.AsyncMapHelper
 -dontwarn com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment$1$1
 
 # RetroLambda

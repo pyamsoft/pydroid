@@ -18,27 +18,8 @@
 package com.pyamsoft.pydroid.drawable;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
 
-/**
- * Created by pyamsoft on 2/18/17.
- */
 public interface AsyncMapEntry {
-
-  @NonNull @CheckResult static AsyncMapEntry empty() {
-    return new AsyncMapEntry() {
-
-      private boolean unloaded = false;
-
-      @Override public void unload() {
-        unloaded = true;
-      }
-
-      @Override public boolean isUnloaded() {
-        return unloaded;
-      }
-    };
-  }
 
   void unload();
 

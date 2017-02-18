@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.helper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 
 public final class AsyncMapHelper {
@@ -30,12 +31,12 @@ public final class AsyncMapHelper {
 
   @CheckResult @NonNull public static AsyncMapEntry unsubscribe(@Nullable AsyncMapEntry entry) {
     if (entry == null) {
-      return AsyncMapEntry.empty();
+      return AsyncMap.emptyEntry();
     }
 
     if (!entry.isUnloaded()) {
       entry.unload();
     }
-    return AsyncMapEntry.empty();
+    return AsyncMap.emptyEntry();
   }
 }

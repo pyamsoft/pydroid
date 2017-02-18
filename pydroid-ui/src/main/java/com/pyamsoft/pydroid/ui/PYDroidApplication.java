@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.CheckResult;
+import com.pyamsoft.pydroid.BuildConfigChecker;
 import timber.log.Timber;
 
 @SuppressWarnings("unused") @SuppressLint("Registered") public abstract class PYDroidApplication

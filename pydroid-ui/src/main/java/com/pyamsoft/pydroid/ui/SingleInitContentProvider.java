@@ -27,6 +27,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import timber.log.Timber;

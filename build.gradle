@@ -34,7 +34,7 @@ buildscript {
     heapSize = "2g"
 
     retrolambda = "2.5.0"
-    supportLib = "25.1.1"
+    supportLib = "25.2.0"
     timber = "4.5.1"
     inAppBilling = "0.9.4"
     autoValue = "1.3"

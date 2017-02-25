@@ -27,12 +27,16 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.pyamsoft.pydroid.ads.AdSource;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import timber.log.Timber;
 
 public class OnlineAdSource implements AdSource {
 
   @Nullable private final String adId;
   @StringRes private final int resAdId;
+  @NonNull private final Set<String> testAdIds;
   private AdView adView;
   private AdRequest adRequest;
 
@@ -47,6 +51,11 @@ public class OnlineAdSource implements AdSource {
   private OnlineAdSource(@Nullable String adId, @StringRes int resAdId) {
     this.adId = adId;
     this.resAdId = resAdId;
+    testAdIds = new HashSet<>();
+  }
+
+  public void addTestAdIds(@NonNull String... testIds) {
+    testAdIds.addAll(Arrays.asList(testIds));
   }
 
   @NonNull @Override public View create(@NonNull FragmentActivity activity) {
@@ -62,7 +71,13 @@ public class OnlineAdSource implements AdSource {
     adView.setAdUnitId(realAdId);
     adView.setAdListener(null);
 
-    adRequest = new AdRequest.Builder().build();
+    AdRequest.Builder builder = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+
+    //noinspection Convert2streamapi
+    for (String testId : testAdIds) {
+      builder.addTestDevice(testId);
+    }
+    adRequest = builder.build();
     return adView;
   }
 

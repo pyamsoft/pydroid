@@ -38,7 +38,7 @@ public class OnlineAdSource implements AdSource {
   @Nullable private final String adId;
   @StringRes private final int resAdId;
   @NonNull private final Set<String> testAdIds;
-  private AdView adView;
+  AdView adView;
   private AdRequest adRequest;
 
   public OnlineAdSource(@NonNull String adId) {
@@ -64,6 +64,7 @@ public class OnlineAdSource implements AdSource {
     adView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.MATCH_PARENT));
     adView.setAdSize(AdSize.SMART_BANNER);
+    adView.setVisibility(View.GONE);
 
     final String realAdId;
     if (adId == null) {
@@ -102,17 +103,20 @@ public class OnlineAdSource implements AdSource {
       adView.setAdListener(new AdListener() {
         @Override public void onAdLoaded() {
           super.onAdLoaded();
+          adView.setVisibility(View.VISIBLE);
           callback.onAdRefreshed();
         }
 
         @Override public void onAdFailedToLoad(int i) {
           super.onAdFailedToLoad(i);
           Timber.e("Online Ad failed to load");
+          adView.setVisibility(View.GONE);
           callback.onAdFailedLoad();
         }
       });
     }
 
+    adView.setVisibility(View.GONE);
     adView.loadAd(adRequest);
   }
 }

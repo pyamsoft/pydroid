@@ -20,8 +20,6 @@ package com.pyamsoft.pydroid.ui.ads;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,8 +43,7 @@ import java.util.List;
 import java.util.Queue;
 import timber.log.Timber;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class OfflineAdSource
-    implements AdSource, SocialMediaPresenter.View {
+public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
 
   @NonNull private static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
   @NonNull private static final String PACKAGE_PADLOCK = "com.pyamsoft.padlock";
@@ -59,8 +56,8 @@ import timber.log.Timber;
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
   public SocialMediaPresenter presenter;
-  @Nullable private Queue<String> imageQueue;
-  @Nullable private ImageView adImage;
+  private Queue<String> imageQueue;
+  private ImageView adImage;
   @NonNull private AsyncMapEntry adTask = AsyncMap.emptyEntry();
 
   @CheckResult private int loadImage(@NonNull String currentPackage) {
@@ -146,31 +143,16 @@ import timber.log.Timber;
   @NonNull @Override public View destroy(boolean isChangingConfigurations) {
     adTask = AsyncMapHelper.unsubscribe(adTask);
     if (!isChangingConfigurations) {
-      if (imageQueue != null) {
-        imageQueue.clear();
-      }
+      imageQueue.clear();
     }
-
-    if (adImage == null) {
-      throw new IllegalStateException("Cannot remove non-existent AdImage");
-    } else {
-      return adImage;
-    }
+    return adImage;
   }
 
   @Override public void start() {
-    if (presenter == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
     presenter.bindView(this);
   }
 
   @Override public void refreshAd(@NonNull AdRefreshedCallback callback) {
-    // Show the ad
-    if (adImage == null) {
-      throw new IllegalStateException("Cannot show ad with non-existent AdImage");
-    }
-
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
     adImage.setOnClickListener(view -> {
@@ -182,21 +164,19 @@ import timber.log.Timber;
     });
 
     adTask = AsyncMapHelper.unsubscribe(adTask);
-    adTask =
-        AsyncDrawable.load(image).setCompleteAction(item -> callback.onAdRefreshed()).into(adImage);
+    adTask = AsyncDrawable.load(image)
+        .setErrorAction(item -> callback.onAdFailedLoad())
+        .setCompleteAction(item -> callback.onAdRefreshed())
+        .into(adImage);
   }
 
   @Override public void stop() {
-    if (presenter == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
     presenter.unbindView();
+    adImage.setOnClickListener(null);
+    adImage.setImageDrawable(null);
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {
-    if (adImage == null) {
-      throw new IllegalStateException("Canot load ad page with non-existent AdImage");
-    }
     NetworkUtil.newLink(adImage.getContext(), link);
   }
 }

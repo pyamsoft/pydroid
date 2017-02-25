@@ -35,6 +35,9 @@ public interface AdSource {
   void refreshAd(@NonNull AdRefreshedCallback callback);
 
   interface AdRefreshedCallback {
+
+    void onAdFailedLoad();
+
     void onAdRefreshed();
   }
 }

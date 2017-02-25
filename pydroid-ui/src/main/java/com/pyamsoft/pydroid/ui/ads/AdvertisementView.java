@@ -27,7 +27,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -55,7 +54,7 @@ public class AdvertisementView extends FrameLayout {
     init();
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  @SuppressWarnings("unused") @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public AdvertisementView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init();
@@ -87,7 +86,6 @@ public class AdvertisementView extends FrameLayout {
   }
 
   public final void stop() {
-    setVisibility(View.GONE);
     Timber.d("Stop adView");
     handler.removeCallbacksAndMessages(null);
 
@@ -106,12 +104,30 @@ public class AdvertisementView extends FrameLayout {
 
   void queueAdRefresh() {
     if (onlineAdSource != null && NetworkUtil.hasConnection(getContext())) {
-      onlineAdSource.refreshAd(() -> setVisibility(View.VISIBLE));
-    } else {
-      offlineAdSource.refreshAd(() -> setVisibility(View.VISIBLE));
+      onlineAdSource.refreshAd(new AdSource.AdRefreshedCallback() {
+        @Override public void onAdFailedLoad() {
+          // Show offline ad if we fail
+          refreshOfflineAd();
+        }
+
+        @Override public void onAdRefreshed() {
+        }
+      });
     }
+    refreshOfflineAd();
 
     Timber.d("Post new ad in 60 seconds");
+    handler.removeCallbacksAndMessages(null);
     handler.postDelayed(this::queueAdRefresh, 60 * 1000L);
+  }
+
+  void refreshOfflineAd() {
+    offlineAdSource.refreshAd(new AdSource.AdRefreshedCallback() {
+      @Override public void onAdFailedLoad() {
+      }
+
+      @Override public void onAdRefreshed() {
+      }
+    });
   }
 }

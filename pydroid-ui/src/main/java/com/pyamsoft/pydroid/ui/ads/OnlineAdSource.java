@@ -1,0 +1,100 @@
+/*
+ * Copyright 2016 Peter Kenji Yamanaka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package com.pyamsoft.pydroid.ui.ads;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.pyamsoft.pydroid.ads.AdSource;
+import timber.log.Timber;
+
+public class OnlineAdSource implements AdSource {
+
+  @Nullable private final String adId;
+  @StringRes private final int resAdId;
+  private AdView adView;
+  private AdRequest adRequest;
+
+  public OnlineAdSource(@NonNull String adId) {
+    this(adId, 0);
+  }
+
+  public OnlineAdSource(@StringRes int resAdId) {
+    this(null, resAdId);
+  }
+
+  private OnlineAdSource(@Nullable String adId, @StringRes int resAdId) {
+    this.adId = adId;
+    this.resAdId = resAdId;
+  }
+
+  @NonNull @Override public View create(@NonNull FragmentActivity activity) {
+    adView = new AdView(activity.getApplication());
+    adView.setAdSize(AdSize.SMART_BANNER);
+
+    final String realAdId;
+    if (adId == null) {
+      realAdId = activity.getApplicationContext().getString(resAdId);
+    } else {
+      realAdId = adId;
+    }
+    adView.setAdUnitId(realAdId);
+    adView.setAdListener(null);
+
+    adRequest = new AdRequest.Builder().build();
+    return adView;
+  }
+
+  @NonNull @Override public View destroy(boolean isChangingConfigurations) {
+    adView.destroy();
+    return adView;
+  }
+
+  @Override public void start() {
+    adView.resume();
+  }
+
+  @Override public void stop() {
+    adView.pause();
+  }
+
+  @Override public void refreshAd(@NonNull AdRefreshedCallback callback) {
+    if (adView.getAdListener() == null) {
+      adView.setAdListener(new AdListener() {
+        @Override public void onAdLoaded() {
+          super.onAdLoaded();
+          callback.onAdRefreshed();
+        }
+
+        @Override public void onAdFailedToLoad(int i) {
+          super.onAdFailedToLoad(i);
+          Timber.e("Online Ad failed to load");
+          callback.onAdFailedLoad();
+        }
+      });
+    }
+
+    adView.loadAd(adRequest);
+  }
+}

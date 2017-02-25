@@ -32,7 +32,9 @@ public interface AdSource {
 
   void stop();
 
-  void showAd();
+  void refreshAd(@NonNull AdRefreshedCallback callback);
 
-  void hideAd();
+  interface AdRefreshedCallback {
+    void onAdRefreshed();
+  }
 }

@@ -22,8 +22,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
+import com.pyamsoft.pydroid.ActionSingle;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import rx.Observable;
 import rx.Scheduler;
@@ -50,6 +52,9 @@ public final class AsyncDrawable {
 
     @DrawableRes private int resource;
     @ColorRes private int tint;
+    @Nullable private ActionSingle<ImageView> startAction;
+    @Nullable private ActionSingle<ImageView> errorAction;
+    @Nullable private ActionSingle<ImageView> completeAction;
 
     protected Loader() {
       tint = 0;
@@ -64,17 +69,37 @@ public final class AsyncDrawable {
       return this;
     }
 
+    @CheckResult @NonNull
+    public final Loader setStartAction(@NonNull ActionSingle<ImageView> startAction) {
+      this.startAction = startAction;
+      return this;
+    }
+
+    @CheckResult @NonNull
+    public final Loader setErrorAction(@NonNull ActionSingle<ImageView> errorAction) {
+      this.errorAction = errorAction;
+      return this;
+    }
+
+    @CheckResult @NonNull
+    public final Loader setCompleteAction(@NonNull ActionSingle<ImageView> completeAction) {
+      this.completeAction = completeAction;
+      return this;
+    }
+
     @CheckResult @NonNull public T into(@NonNull ImageView imageView) {
       if (resource == 0) {
         throw new IllegalStateException("No resource to load");
       }
 
-      return load(imageView, resource, tint);
+      return load(imageView, resource, tint, startAction, errorAction, completeAction);
     }
 
     @CheckResult @NonNull
     protected abstract T load(@NonNull ImageView imageView, @DrawableRes int resource,
-        @ColorRes int tint);
+        @ColorRes int tint, @Nullable ActionSingle<ImageView> startAction,
+        @Nullable ActionSingle<ImageView> errorAction,
+        @Nullable ActionSingle<ImageView> completeAction);
   }
 
   @SuppressWarnings("WeakerAccess") public static class RXLoader
@@ -90,7 +115,10 @@ public final class AsyncDrawable {
     }
 
     @NonNull @Override protected AsyncDrawableSubscriptionEntry load(@NonNull ImageView imageView,
-        @DrawableRes int resource, @ColorRes int tint) {
+        @DrawableRes int resource, @ColorRes int tint,
+        @Nullable ActionSingle<ImageView> startAction,
+        @Nullable ActionSingle<ImageView> errorAction,
+        @Nullable ActionSingle<ImageView> completeAction) {
       //noinspection ConstantConditions
       if (imageView == null) {
         throw new NullPointerException("ImageView cannot be NULL");
@@ -100,24 +128,32 @@ public final class AsyncDrawable {
         throw new RuntimeException("Drawable resource cannot be 0");
       }
       return new AsyncDrawableSubscriptionEntry(
-          Observable.fromCallable(imageView::getContext)
-              .map(context -> {
-                Drawable loaded = AppCompatResources.getDrawable(context, resource);
-                if (loaded == null) {
-                  throw new NullPointerException(
-                      "Could not load drawable for resource: " + resource);
-                }
+          Observable.fromCallable(imageView::getContext).map(context -> {
+            Drawable loaded = AppCompatResources.getDrawable(context, resource);
+            if (loaded == null) {
+              throw new NullPointerException("Could not load drawable for resource: " + resource);
+            }
 
-                if (tint != 0) {
-                  loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
-                }
-                return loaded;
-              })
-              .subscribeOn(subscribeScheduler)
-              .observeOn(observeScheduler)
-              .subscribe(imageView::setImageDrawable, throwable -> {
-                Timber.e(throwable, "Error loading Drawable into ImageView");
-              }));
+            if (tint != 0) {
+              loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
+            }
+            return loaded;
+          }).subscribeOn(subscribeScheduler).observeOn(observeScheduler).doOnSubscribe(() -> {
+            if (startAction != null) {
+              startAction.call(imageView);
+            }
+          }).doOnError(throwable -> {
+            Timber.e(throwable, "Error loading AsyncDrawable");
+            if (errorAction != null) {
+              errorAction.call(imageView);
+            }
+          }).doOnCompleted(() -> {
+            if (completeAction != null) {
+              completeAction.call(imageView);
+            }
+          }).subscribe(imageView::setImageDrawable, throwable -> {
+            Timber.e(throwable, "Error loading Drawable into ImageView");
+          }));
     }
 
     @SuppressWarnings("unused") @CheckResult @NonNull

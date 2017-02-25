@@ -30,8 +30,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.pyamsoft.pydroid.ads.AdSource;
-import com.pyamsoft.pydroid.ads.AdvertisementPresenter;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
@@ -40,7 +38,6 @@ public class AdvertisementView extends FrameLayout {
 
   @NonNull private final AdSource offlineAdSource = new OfflineAdSource();
   @SuppressWarnings("WeakerAccess") Handler handler;
-  @SuppressWarnings("WeakerAccess") AdvertisementPresenter presenter;
   @Nullable private AdSource onlineAdSource;
 
   public AdvertisementView(Context context) {
@@ -71,11 +68,6 @@ public class AdvertisementView extends FrameLayout {
 
   @SuppressWarnings("WeakerAccess")
   public final void create(@NonNull FragmentActivity activity, @Nullable AdSource adSource) {
-    PYDroidInjector.get().provideComponent().provideAdvertisementComponent().inject(this);
-
-    // Default to gone
-    setVisibility(View.GONE);
-
     addView(offlineAdSource.create(activity));
 
     onlineAdSource = adSource;
@@ -86,19 +78,17 @@ public class AdvertisementView extends FrameLayout {
 
   public final void start() {
     Timber.d("Start adView");
-    presenter.bindView(null);
-    showAd();
-
     offlineAdSource.start();
     if (onlineAdSource != null) {
       onlineAdSource.start();
     }
+
+    queueAdRefresh();
   }
 
   public final void stop() {
+    setVisibility(View.GONE);
     Timber.d("Stop adView");
-    presenter.unbindView();
-
     handler.removeCallbacksAndMessages(null);
 
     offlineAdSource.stop();
@@ -108,40 +98,17 @@ public class AdvertisementView extends FrameLayout {
   }
 
   public final void destroy(boolean isChangingConfigurations) {
-    hideAd();
     removeView(offlineAdSource.destroy(isChangingConfigurations));
     if (onlineAdSource != null) {
       removeView(onlineAdSource.destroy(isChangingConfigurations));
     }
   }
 
-  public final void showAd() {
-    presenter.showAd(() -> {
-      Timber.d("Show ad view");
-      setVisibility(View.VISIBLE);
-      queueAdRefresh();
-    });
-  }
-
-  public final void hideAd() {
-    presenter.hideAd(this::runOnAdHidden);
-  }
-
-  void runOnAdHidden() {
-    Timber.d("Hide ad view");
-    setVisibility(View.GONE);
-
-    offlineAdSource.hideAd();
-    if (onlineAdSource != null) {
-      onlineAdSource.hideAd();
-    }
-  }
-
-  @SuppressWarnings("WeakerAccess") void queueAdRefresh() {
+  void queueAdRefresh() {
     if (onlineAdSource != null && NetworkUtil.hasConnection(getContext())) {
-      onlineAdSource.showAd();
+      onlineAdSource.refreshAd(() -> setVisibility(View.VISIBLE));
     } else {
-      offlineAdSource.showAd();
+      offlineAdSource.refreshAd(() -> setVisibility(View.VISIBLE));
     }
 
     Timber.d("Post new ad in 60 seconds");

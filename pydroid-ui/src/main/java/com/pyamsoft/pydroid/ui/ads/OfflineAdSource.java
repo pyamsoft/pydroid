@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.drawable.AsyncDrawable;
 import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
+import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
@@ -57,10 +58,10 @@ import timber.log.Timber;
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON,
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
-  @NonNull private final AsyncMap taskMap = new AsyncMap();
   public SocialMediaPresenter presenter;
   @Nullable private Queue<String> imageQueue;
   @Nullable private ImageView adImage;
+  @NonNull private AsyncMapEntry adTask = AsyncMap.emptyEntry();
 
   @CheckResult private int loadImage(@NonNull String currentPackage) {
     int image;
@@ -143,7 +144,7 @@ import timber.log.Timber;
   }
 
   @NonNull @Override public View destroy(boolean isChangingConfigurations) {
-    taskMap.clear();
+    adTask = AsyncMapHelper.unsubscribe(adTask);
     if (!isChangingConfigurations) {
       if (imageQueue != null) {
         imageQueue.clear();
@@ -164,14 +165,8 @@ import timber.log.Timber;
     presenter.bindView(this);
   }
 
-  @Override public void stop() {
-    if (presenter == null) {
-      throw new IllegalStateException("NULL presenter");
-    }
-    presenter.unbindView();
-  }
-
-  @Override public void showAd() {
+  @Override public void refreshAd(@NonNull AdRefreshedCallback callback) {
+    // Show the ad
     if (adImage == null) {
       throw new IllegalStateException("Cannot show ad with non-existent AdImage");
     }
@@ -186,17 +181,16 @@ import timber.log.Timber;
       }
     });
 
-    final AsyncMapEntry adTask = AsyncDrawable.load(image).into(adImage);
-    taskMap.put("ad", adTask);
+    adTask = AsyncMapHelper.unsubscribe(adTask);
+    adTask =
+        AsyncDrawable.load(image).setCompleteAction(item -> callback.onAdRefreshed()).into(adImage);
   }
 
-  @Override public void hideAd() {
-    if (adImage == null) {
-      throw new IllegalStateException("Cannot hide non-existant AdImage");
-    } else {
-      adImage.setImageDrawable(null);
-      adImage.setOnClickListener(null);
+  @Override public void stop() {
+    if (presenter == null) {
+      throw new IllegalStateException("NULL presenter");
     }
+    presenter.unbindView();
   }
 
   @Override public void onSocialMediaClicked(@NonNull String link) {

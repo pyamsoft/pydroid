@@ -21,15 +21,6 @@
   <PreferenceCategory
       android:key="application_settings">
 
-    <!--suppress AndroidElementNotAllowed -->
-    <SwitchPreferenceCompat
-        android:defaultValue="@bool/adview_default"
-        android:key="@string/adview_key"
-        android:summaryOff="@string/adview_summary_unchecked"
-        android:summaryOn="@string/adview_summary_checked"
-        android:title="@string/adview_title"
-        />
-
     <Preference
         android:key="@string/about_license_key"
         android:title="@string/about_license_title"/>
@@ -52,11 +43,6 @@
 
   <PreferenceCategory
       android:title="@string/support_pyamsoft">
-
-    <Preference
-        android:key="@string/donation_key"
-        android:summary="@string/donation_summary"
-        android:title="@string/donation_title"/>
 
     <Preference
         android:key="@string/rating_key"

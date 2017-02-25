@@ -67,18 +67,6 @@ public abstract class AdvertisementActivity extends BackPressConfirmActivity {
     }
   }
 
-  public final void showAd() {
-    if (adView != null) {
-      adView.showAd();
-    }
-  }
-
-  public final void hideAd() {
-    if (adView != null) {
-      adView.hideAd();
-    }
-  }
-
   /**
    * Call setContentView here and return the id of the advertisement view, 0 if none
    */

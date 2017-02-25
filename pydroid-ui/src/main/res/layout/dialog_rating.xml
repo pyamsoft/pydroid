@@ -60,16 +60,6 @@
           style="@style/Widget.AppCompat.Button.Colored"
           />
 
-      <Button
-          android:id="@+id/rating_btn_support"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="@string/support_pyamsoft"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textColor="@android:color/white"
-          style="@style/Widget.AppCompat.Button.Colored"
-          />
-
       <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
           android:id="@+id/rating_btn_no_thanks"
           android:layout_width="match_parent"

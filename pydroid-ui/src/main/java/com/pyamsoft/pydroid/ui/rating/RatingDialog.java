@@ -34,11 +34,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import com.pyamsoft.pydroid.PYDroidPreferences;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.drawable.AsyncDrawable;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
-import com.pyamsoft.pydroid.ui.donate.DonateDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
@@ -108,7 +107,7 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    AsyncMapHelper.unsubscribe(iconTask);
+    iconTask = AsyncMapHelper.unsubscribe(iconTask);
     binding.unbind();
   }
 
@@ -127,7 +126,7 @@ public class RatingDialog extends DialogFragment {
   private void initDialog() {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
-    AsyncMapHelper.unsubscribe(iconTask);
+    iconTask = AsyncMapHelper.unsubscribe(iconTask);
     iconTask = AsyncDrawable.load(changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
@@ -143,8 +142,6 @@ public class RatingDialog extends DialogFragment {
       NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
       dismiss();
     });
-
-    binding.ratingBtnSupport.setOnClickListener(v -> DonateDialog.show(getActivity()));
   }
 
   @Override public void onDismiss(DialogInterface dialog) {

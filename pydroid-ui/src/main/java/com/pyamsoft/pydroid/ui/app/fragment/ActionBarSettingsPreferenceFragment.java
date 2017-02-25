@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.app.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
@@ -27,7 +28,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.XmlRes;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +36,8 @@ import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.ui.donate.DonateDialog;
-import com.pyamsoft.pydroid.ui.donate.DonationActivity;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -50,8 +49,8 @@ import timber.log.Timber;
 @SuppressWarnings("unused") public abstract class ActionBarSettingsPreferenceFragment
     extends ActionBarPreferenceFragment implements VersionCheckProvider, SocialMediaPresenter.View {
 
-  public VersionCheckPresenter presenter;
-  public SocialMediaPresenter socialPresenter;
+  VersionCheckPresenter presenter;
+  SocialMediaPresenter socialPresenter;
   private Toast toast;
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,10 +91,6 @@ import timber.log.Timber;
       }
     }
 
-    final SwitchPreferenceCompat showAds =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
-    showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
-
     final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
     showAboutLicenses.setOnPreferenceClickListener(preference -> onLicenseItemClicked());
 
@@ -114,12 +109,6 @@ import timber.log.Timber;
     final Preference rateApplication = findPreference(getString(R.string.rating_key));
     rateApplication.setOnPreferenceClickListener(preference -> {
       socialPresenter.clickAppPage(preference.getContext().getPackageName());
-      return true;
-    });
-
-    final Preference donation = findPreference(getString(R.string.donation_key));
-    donation.setOnPreferenceClickListener(preference -> {
-      DonateDialog.show(getActivity());
       return true;
     });
   }
@@ -145,28 +134,6 @@ import timber.log.Timber;
       throw new ClassCastException("Activity is not a change log provider");
     }
     return true;
-  }
-
-  @CheckResult protected boolean toggleAdVisibility(Object object) {
-    if (object instanceof Boolean) {
-      final boolean b = (boolean) object;
-      final FragmentActivity activity = getActivity();
-      if (activity instanceof DonationActivity) {
-        final DonationActivity donationActivity = (DonationActivity) getActivity();
-        if (b) {
-          Timber.d("Turn on ads");
-          donationActivity.showAd();
-        } else {
-          Timber.d("Turn off ads");
-          donationActivity.hideAd();
-        }
-        return true;
-      } else {
-        Timber.e("Activity is not AdvertisementActivity");
-        return false;
-      }
-    }
-    return false;
   }
 
   @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId) {
@@ -201,21 +168,21 @@ import timber.log.Timber;
     NetworkUtil.newLink(getContext(), link);
   }
 
-  @CheckResult @NonNull private DonationActivity getDonationActivity() {
-    final FragmentActivity activity = getActivity();
-    if (activity instanceof DonationActivity) {
-      return (DonationActivity) activity;
-    } else {
-      throw new ClassCastException("Cannot cast to Donation activity");
-    }
-  }
-
   @NonNull @Override public String provideApplicationName() {
-    return getDonationActivity().provideApplicationName();
+    return getVersionedActivity().provideApplicationName();
   }
 
   @Override public int getCurrentApplicationVersion() {
-    return getDonationActivity().getCurrentApplicationVersion();
+    return getVersionedActivity().getCurrentApplicationVersion();
+  }
+
+  @CheckResult @NonNull private VersionCheckProvider getVersionedActivity() {
+    Activity activity = getActivity();
+    if (activity instanceof VersionCheckActivity) {
+      return (VersionCheckProvider) activity;
+    } else {
+      throw new IllegalStateException("Activity is not VersionCheckActivity");
+    }
   }
 
   @CheckResult protected boolean onClearAllPreferenceClicked() {

@@ -32,7 +32,6 @@ import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -135,7 +134,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     // Create Ad image in java to avoid inflation cost
     adImage = new ImageView(activity);
     adImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        (int) AppUtil.convertToDP(activity, 50)));
+        ViewGroup.LayoutParams.MATCH_PARENT));
     adImage.setScaleType(ImageView.ScaleType.FIT_XY);
     return adImage;
   }

@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
@@ -60,6 +61,8 @@ public class OnlineAdSource implements AdSource {
 
   @NonNull @Override public View create(@NonNull FragmentActivity activity) {
     adView = new AdView(activity.getApplication());
+    adView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT));
     adView.setAdSize(AdSize.SMART_BANNER);
 
     final String realAdId;

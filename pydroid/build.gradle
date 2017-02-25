@@ -83,9 +83,6 @@ dependencies {
   compile "com.android.support:preference-v14:$supportLib"
   compile "com.android.support:appcompat-v7:$supportLib"
 
-  // Google Billing
-  compile "org.solovyev.android:checkout:$inAppBilling@aar"
-
   // Timber logging
   compile "com.jakewharton.timber:timber:$timber"
 
@@ -100,10 +97,10 @@ dependencies {
   compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
 
   // Retrofit
-  compile "com.squareup.retrofit2:retrofit:$retrofit"
-  compile "com.squareup.retrofit2:retrofit-mock:$retrofit"
-  compile "com.squareup.retrofit2:converter-gson:$retrofit"
-  compile "com.squareup.retrofit2:adapter-rxjava:$retrofit"
-  compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
+  provided "com.squareup.retrofit2:retrofit:$retrofit"
+  provided "com.squareup.retrofit2:retrofit-mock:$retrofit"
+  provided "com.squareup.retrofit2:converter-gson:$retrofit"
+  provided "com.squareup.retrofit2:adapter-rxjava:$retrofit"
+  provided "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 }
 

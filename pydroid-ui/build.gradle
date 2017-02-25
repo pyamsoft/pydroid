@@ -85,7 +85,7 @@ dependencies {
   compile "com.android.support:cardview-v7:$supportLib"
 
   // Admob ads
-  provided "com.google.android.gms:play-services-ads:$firebase"
+  compile "com.google.android.gms:play-services-ads:$firebase"
 
   // FastAdapter
   compile "com.mikepenz:fastadapter-commons:$fastAdapterCommons@aar"

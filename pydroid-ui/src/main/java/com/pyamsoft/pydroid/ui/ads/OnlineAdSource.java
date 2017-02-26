@@ -123,7 +123,6 @@ public class OnlineAdSource implements AdSource {
       });
     }
 
-    adView.setVisibility(View.GONE);
     adView.loadAd(adRequest);
   }
 }

@@ -28,6 +28,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.pyamsoft.pydroid.ads.AdSource;
+import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -92,10 +93,16 @@ public class OnlineAdSource implements AdSource {
 
   @Override public void start() {
     adView.resume();
+    if (!NetworkUtil.hasConnection(adView.getContext())) {
+      adView.setVisibility(View.GONE);
+    }
   }
 
   @Override public void stop() {
     adView.pause();
+    if (!NetworkUtil.hasConnection(adView.getContext())) {
+      adView.setVisibility(View.GONE);
+    }
   }
 
   @Override public void refreshAd(@NonNull AdRefreshedCallback callback) {

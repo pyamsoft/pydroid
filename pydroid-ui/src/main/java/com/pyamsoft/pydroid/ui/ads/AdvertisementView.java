@@ -113,8 +113,9 @@ public class AdvertisementView extends FrameLayout {
         @Override public void onAdRefreshed() {
         }
       });
+    } else {
+      refreshOfflineAd();
     }
-    refreshOfflineAd();
 
     Timber.d("Post new ad in 60 seconds");
     handler.removeCallbacksAndMessages(null);

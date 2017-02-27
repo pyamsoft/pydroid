@@ -27,6 +27,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.Arrays;
@@ -76,11 +77,14 @@ public class OnlineAdSource implements AdSource {
     adView.setAdUnitId(realAdId);
     adView.setAdListener(null);
 
-    AdRequest.Builder builder = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+    AdRequest.Builder builder = new AdRequest.Builder();
 
-    //noinspection Convert2streamapi
-    for (String testId : testAdIds) {
-      builder.addTestDevice(testId);
+    if (BuildConfigChecker.getInstance().isDebugMode()) {
+      builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
+      //noinspection Convert2streamapi
+      for (String testId : testAdIds) {
+        builder.addTestDevice(testId);
+      }
     }
     adRequest = builder.build();
     return adView;

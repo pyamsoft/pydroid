@@ -29,16 +29,8 @@
 -keepattributes Signature
 -keepattributes Exceptions
 
-
 # For use with proguard-android-optimize.txt
 # Needed or else requests with crash with a IllegalArgumentException: Missng GET or @Url
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
-
-# Android Checkout uses weird annotations
--dontwarn javax.annotation.Nonnull
--dontwarn javax.annotation.Nullable
--dontwarn javax.annotation.concurrent.GuardedBy
--dontwarn javax.annotation.concurrent.Immutable
--dontwarn javax.annotation.concurrent.ThreadSafe

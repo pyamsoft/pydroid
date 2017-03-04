@@ -17,8 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import com.android.annotations.NonNull;
 import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 
@@ -27,7 +27,8 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final SocialMediaModule socialMediaModule;
   @NonNull private final VersionCheckModule versionCheckModule;
 
-  public AppComponent(SocialMediaModule socialMediaModule, VersionCheckModule versionCheckModule) {
+  public AppComponent(@NonNull SocialMediaModule socialMediaModule,
+      @NonNull VersionCheckModule versionCheckModule) {
     this.socialMediaModule = socialMediaModule;
     this.versionCheckModule = versionCheckModule;
   }

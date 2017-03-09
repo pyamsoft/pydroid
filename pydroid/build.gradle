@@ -92,14 +92,13 @@ dependencies {
   annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 
   // RxJava
-  compile "io.reactivex:rxjava:$rxjava"
-  compile "io.reactivex:rxandroid:$rxandroid"
-  compile "com.artemzin.rxjava:proguard-rules:$rxjavaRules"
+  compile "io.reactivex.rxjava2:rxjava:$rxjava"
+  compile "io.reactivex.rxjava2:rxandroid:$rxandroid"
 
   // Retrofit
   compile "com.squareup.retrofit2:retrofit:$retrofit"
   compile "com.squareup.retrofit2:converter-gson:$retrofit"
-  compile "com.squareup.retrofit2:adapter-rxjava:$retrofit"
+  compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
   compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 }
 

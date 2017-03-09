@@ -9,10 +9,7 @@
 -optimizations !code/allocation/variable
 
 # Silence some pydroid warnings
--dontwarn com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-
-# RetroLambda
--dontwarn java.lang.invoke.LambdaForm
+-dontwarn com.pyamsoft.pydroid.** { *; }
 
 # Silence some okio warnings
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
@@ -22,9 +19,6 @@
 
 # Retrofit2
 -dontwarn retrofit2.Platform$Java8
--dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallAdapter
--dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe
--dontwarn retrofit2.adapter.rxjava.CompletableHelper$CompletableCallOnSubscribe$1
 -dontnote retrofit2.Platform
 -keepattributes Signature
 -keepattributes Exceptions

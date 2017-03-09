@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.helper;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 
 public final class SchedulerHelper {
 
@@ -48,7 +48,7 @@ public final class SchedulerHelper {
    * OR on Immediate, for Testing
    */
   public static void enforceSubscribeScheduler(@NonNull Scheduler scheduler) {
-    if (!isBackgroundScheduler(scheduler) && scheduler != Schedulers.immediate()) {
+    if (!isBackgroundScheduler(scheduler) && scheduler != Schedulers.trampoline()) {
       throw new RuntimeException("Cannot subscribe on a foreground scheduler");
     }
   }

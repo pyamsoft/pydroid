@@ -22,9 +22,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.about.LicenseProvider;
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidModule {
 

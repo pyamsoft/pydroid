@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.presenter;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.SchedulerHelper;
-import rx.Scheduler;
+import io.reactivex.Scheduler;
 
 public abstract class SchedulerPresenter<I> extends Presenter<I> {
 

@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.ads;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -123,7 +122,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     return currentPackage;
   }
 
-  @NonNull @Override public View create(@NonNull FragmentActivity activity) {
+  @NonNull @Override public View create(@NonNull Context context) {
     PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
 
     // Randomize the order of items
@@ -132,7 +131,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     imageQueue = new LinkedList<>(randomList);
 
     // Create Ad image in java to avoid inflation cost
-    adImage = new ImageView(activity);
+    adImage = new ImageView(context.getApplicationContext());
     adImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.MATCH_PARENT));
     adImage.setScaleType(ImageView.ScaleType.FIT_XY);

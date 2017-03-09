@@ -19,20 +19,20 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckPresenter
     extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final VersionCheckInteractor interactor;
-  @NonNull private Subscription versionCheckSubscription = Subscriptions.empty();
+  @NonNull private Disposable disposable = Disposables.empty();
 
   VersionCheckPresenter(@NonNull VersionCheckInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -42,13 +42,13 @@ import timber.log.Timber;
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    versionCheckSubscription = SubscriptionHelper.unsubscribe(versionCheckSubscription);
+    disposable = DisposableHelper.unsubscribe(disposable);
   }
 
   public void checkForUpdates(@NonNull String packageName, int currentVersionCode,
       @NonNull UpdateCheckCallback callback) {
-    versionCheckSubscription = SubscriptionHelper.unsubscribe(versionCheckSubscription);
-    interactor.checkVersion(packageName)
+    disposable = DisposableHelper.unsubscribe(disposable);
+    disposable = interactor.checkVersion(packageName)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(versionCheckResponse -> {

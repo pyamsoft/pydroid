@@ -24,14 +24,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.PYDroidModule;
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckModule {
 
@@ -79,7 +79,7 @@ import rx.schedulers.Schedulers;
     return new Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
         .build();
   }
 

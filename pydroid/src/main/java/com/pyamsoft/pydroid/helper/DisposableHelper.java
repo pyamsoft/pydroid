@@ -20,24 +20,23 @@ package com.pyamsoft.pydroid.helper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 
-public final class SubscriptionHelper {
+public final class DisposableHelper {
 
-  private SubscriptionHelper() {
+  private DisposableHelper() {
     throw new RuntimeException("No instances");
   }
 
-  @NonNull @CheckResult
-  public static Subscription unsubscribe(@Nullable Subscription subscription) {
-    if (subscription == null) {
-      return Subscriptions.empty();
+  @NonNull @CheckResult public static Disposable unsubscribe(@Nullable Disposable disposable) {
+    if (disposable == null) {
+      return Disposables.empty();
     }
 
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
+    if (!disposable.isDisposed()) {
+      disposable.dispose();
     }
-    return Subscriptions.empty();
+    return Disposables.empty();
   }
 }

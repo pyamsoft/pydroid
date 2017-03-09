@@ -20,9 +20,9 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
-import rx.Observable;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) interface VersionCheckService {
 

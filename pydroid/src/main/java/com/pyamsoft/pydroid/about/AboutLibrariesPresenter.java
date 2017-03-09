@@ -21,33 +21,33 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesPresenter
     extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final AboutLibrariesInteractor interactor;
-  @NonNull private final CompositeSubscription licenseSubscriptions;
+  @NonNull private final CompositeDisposable licenseDisposables;
 
   AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
-    licenseSubscriptions = new CompositeSubscription();
+    licenseDisposables = new CompositeDisposable();
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    licenseSubscriptions.clear();
+    licenseDisposables.clear();
     interactor.clearCache();
   }
 
   public void loadLicenseText(int position, @NonNull AboutLicenseModel license,
       @NonNull LicenseTextLoadCallback callback) {
-    Subscription licenseSubscription = interactor.loadLicenseText(license)
+    Disposable licenseSubscription = interactor.loadLicenseText(license)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(licenseText -> {
@@ -56,7 +56,7 @@ import timber.log.Timber;
           Timber.e(throwable, "onError loadLicenseText");
           callback.onLicenseTextLoadError(position);
         });
-    licenseSubscriptions.add(licenseSubscription);
+    licenseDisposables.add(licenseSubscription);
   }
 
   public interface LicenseTextLoadCallback {

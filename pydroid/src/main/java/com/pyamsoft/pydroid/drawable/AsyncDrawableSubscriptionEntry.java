@@ -18,27 +18,27 @@
 package com.pyamsoft.pydroid.drawable;
 
 import android.support.annotation.NonNull;
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 
 class AsyncDrawableSubscriptionEntry implements AsyncMapEntry {
 
-  @NonNull private final Subscription subscription;
+  @NonNull private final Disposable disposable;
 
-  AsyncDrawableSubscriptionEntry(@NonNull Subscription subscription) {
+  AsyncDrawableSubscriptionEntry(@NonNull Disposable disposable) {
     //noinspection ConstantConditions
-    if (subscription == null) {
+    if (disposable == null) {
       throw new NullPointerException("Subscription cannot be NULL");
     }
-    this.subscription = subscription;
+    this.disposable = disposable;
   }
 
   @Override public void unload() {
     if (!isUnloaded()) {
-      subscription.unsubscribe();
+      disposable.dispose();
     }
   }
 
   @Override public boolean isUnloaded() {
-    return subscription.isUnsubscribed();
+    return disposable.isDisposed();
   }
 }

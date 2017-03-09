@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.version;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import rx.Observable;
+import io.reactivex.Observable;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckInteractor {
 

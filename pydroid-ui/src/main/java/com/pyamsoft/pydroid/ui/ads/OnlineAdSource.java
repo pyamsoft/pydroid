@@ -17,10 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.ads;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import com.google.android.gms.ads.AdListener;
@@ -40,7 +40,7 @@ public class OnlineAdSource implements AdSource {
   @Nullable private final String adId;
   @StringRes private final int resAdId;
   @NonNull private final Set<String> testAdIds;
-  AdView adView;
+  @SuppressWarnings("WeakerAccess") AdView adView;
   private AdRequest adRequest;
 
   public OnlineAdSource(@NonNull String adId) {
@@ -61,8 +61,8 @@ public class OnlineAdSource implements AdSource {
     testAdIds.addAll(Arrays.asList(testIds));
   }
 
-  @NonNull @Override public View create(@NonNull FragmentActivity activity) {
-    adView = new AdView(activity.getApplication());
+  @NonNull @Override public View create(@NonNull Context context) {
+    adView = new AdView(context.getApplicationContext());
     adView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.MATCH_PARENT));
     adView.setAdSize(AdSize.SMART_BANNER);
@@ -70,7 +70,7 @@ public class OnlineAdSource implements AdSource {
 
     final String realAdId;
     if (adId == null) {
-      realAdId = activity.getApplicationContext().getString(resAdId);
+      realAdId = context.getApplicationContext().getString(resAdId);
     } else {
       realAdId = adId;
     }

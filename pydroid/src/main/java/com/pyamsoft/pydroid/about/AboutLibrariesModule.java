@@ -21,7 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
-import rx.Scheduler;
+import io.reactivex.Scheduler;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesModule {
 

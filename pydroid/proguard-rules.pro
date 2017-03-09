@@ -9,7 +9,7 @@
 -optimizations !code/allocation/variable
 
 # Silence some pydroid warnings
--dontwarn com.pyamsoft.pydroid.** { *; }
+-dontwarn com.pyamsoft.pydroid.**
 
 # Silence some okio warnings
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement

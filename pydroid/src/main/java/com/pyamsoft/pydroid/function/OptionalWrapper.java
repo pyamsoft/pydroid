@@ -17,7 +17,20 @@
 
 package com.pyamsoft.pydroid.function;
 
-public interface ActionSingle<I> {
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.google.auto.value.AutoValue;
 
-  void call(I item);
+@AutoValue public abstract class OptionalWrapper<T> {
+
+  @CheckResult @NonNull public static <T> OptionalWrapper<T> ofNullable(@Nullable T source) {
+    return new AutoValue_OptionalWrapper<>(source);
+  }
+
+  @CheckResult @Nullable public abstract T item();
+
+  @CheckResult public final boolean isPresent() {
+    return item() != null;
+  }
 }

@@ -95,6 +95,7 @@ public class AdvertisementView extends FrameLayout {
   }
 
   public final void destroy(boolean isChangingConfigurations) {
+    handler.removeCallbacksAndMessages(null);
     removeView(offlineAdSource.destroy(isChangingConfigurations));
     if (onlineAdSource != null) {
       removeView(onlineAdSource.destroy(isChangingConfigurations));
@@ -102,6 +103,7 @@ public class AdvertisementView extends FrameLayout {
   }
 
   void queueAdRefresh() {
+    refreshOfflineAd();
     if (onlineAdSource != null && NetworkUtil.hasConnection(getContext())) {
       onlineAdSource.refreshAd(new AdSource.AdRefreshedCallback() {
         @Override public void onAdFailedLoad() {
@@ -112,8 +114,6 @@ public class AdvertisementView extends FrameLayout {
         @Override public void onAdRefreshed() {
         }
       });
-    } else {
-      refreshOfflineAd();
     }
 
     Timber.d("Post new ad in 60 seconds");

@@ -41,6 +41,7 @@ public class OnlineAdSource implements AdSource {
   @StringRes private final int resAdId;
   @NonNull private final Set<String> testAdIds;
   @SuppressWarnings("WeakerAccess") AdView adView;
+  boolean adHasLoaded;
   private AdRequest adRequest;
 
   public OnlineAdSource(@NonNull String adId) {
@@ -62,6 +63,7 @@ public class OnlineAdSource implements AdSource {
   }
 
   @NonNull @Override public View create(@NonNull Context context) {
+    adHasLoaded = false;
     adView = new AdView(context.getApplicationContext());
     adView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.MATCH_PARENT));
@@ -116,6 +118,7 @@ public class OnlineAdSource implements AdSource {
           super.onAdLoaded();
           adView.setVisibility(View.VISIBLE);
           callback.onAdRefreshed();
+          adHasLoaded = true;
         }
 
         @Override public void onAdFailedToLoad(int i) {
@@ -123,10 +126,15 @@ public class OnlineAdSource implements AdSource {
           Timber.e("Online Ad failed to load");
           adView.setVisibility(View.GONE);
           callback.onAdFailedLoad();
+          adHasLoaded = false;
         }
       });
     }
 
+    if (!adHasLoaded) {
+      // Hide AdView until we have loaded
+      adView.setVisibility(View.GONE);
+    }
     adView.loadAd(adRequest);
   }
 }

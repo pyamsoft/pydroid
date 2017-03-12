@@ -15,11 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.function;
 
-import android.support.annotation.CheckResult;
+public interface ActionSingle<I> {
 
-public interface FuncNone<T> {
-
-  @CheckResult T call();
+  @SuppressWarnings("EmptyMethod") void call(@SuppressWarnings("UnusedParameters") I item);
 }

@@ -15,9 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.function;
 
-public interface ActionSingle<I> {
+public interface ActionNone {
 
-  @SuppressWarnings("EmptyMethod") void call(@SuppressWarnings("UnusedParameters") I item);
+  void call();
 }

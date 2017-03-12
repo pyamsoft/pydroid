@@ -15,9 +15,11 @@
  *
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.function;
 
-public interface ActionNone {
+import android.support.annotation.CheckResult;
 
-  void call();
+public interface FuncNone<T> {
+
+  @CheckResult T call();
 }

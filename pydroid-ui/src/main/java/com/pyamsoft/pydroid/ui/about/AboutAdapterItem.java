@@ -26,7 +26,7 @@ import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
-import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.function.ActionSingle;
 import com.pyamsoft.pydroid.about.AboutLicenseModel;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding;

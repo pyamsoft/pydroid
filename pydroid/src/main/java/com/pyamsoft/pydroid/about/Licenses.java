@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.function.ActionSingle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.presenter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.function.ActionSingle;
 
 public abstract class Presenter<I> {
 

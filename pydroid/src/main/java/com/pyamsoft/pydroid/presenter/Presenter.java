@@ -49,6 +49,14 @@ public abstract class Presenter<I> {
 
   }
 
+  public final void destroy() {
+    onDestroy();
+  }
+
+  protected void onDestroy() {
+
+  }
+
   public interface Empty {
 
   }

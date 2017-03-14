@@ -22,25 +22,22 @@ import android.support.annotation.NonNull;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import timber.log.Timber;
 
 /**
  * An EventBus powered by RxJava
+ *
+ * Be aware of the dangers of using an Event bus. Mainly, when you publish a message there is no
+ * easy way to see where it goes. Add a comment or some way to let yourself know
  */
 public class EventBus {
 
   private static volatile EventBus instance = null;
 
-  @NonNull private final Map<Class<? extends Event>, Set<Class<?>>> listenerMap;
-  @NonNull private final Subject<Event> bus;
+  @NonNull private final Subject<Object> bus;
 
   private EventBus() {
     bus = PublishSubject.create();
-    listenerMap = new HashMap<>();
   }
 
   /**
@@ -70,31 +67,10 @@ public class EventBus {
    * At least one class type must be passed in with the publish call. Duplicate class types will be
    * ignored
    */
-  public final <T extends Event> void publish(@NonNull T event,
-      @NonNull Class<?>... receiverClasses) {
+  public final <T> void publish(@NonNull T event) {
     if (!bus.hasObservers()) {
       Timber.w("No observers on bus, ignore publish event: %s", event);
       return;
-    }
-
-    // Add receiver class to the set of allowed receivers for the bus for an event
-    Class<? extends Event> eventClass = event.getClass();
-    Set<Class<?>> classSet = listenerMap.get(eventClass);
-    if (classSet == null) {
-      classSet = new HashSet<>();
-    }
-
-    boolean setChanged = false;
-    for (Class<?> receiverClass : receiverClasses) {
-      if (classSet.add(receiverClass)) {
-        if (!setChanged) {
-          setChanged = true;
-        }
-      }
-    }
-
-    if (setChanged) {
-      listenerMap.put(eventClass, classSet);
     }
 
     bus.onNext(event);
@@ -108,35 +84,7 @@ public class EventBus {
    *
    * Any class which was not registered in a publish event will receive an empty stream
    */
-  @CheckResult @NonNull public final <T extends Event> Observable<T> listen(
-      @NonNull Class<T> eventClass, @NonNull Class<?> receiverClass) {
-    Set<Class<?>> classSet = listenerMap.get(eventClass);
-    if (classSet == null) {
-      Timber.w("There are no registered receivers for: %s", eventClass.getSimpleName());
-      return Observable.empty();
-    }
-
-    boolean allowed = false;
-    for (Class<?> allowedClass : classSet) {
-      if (allowedClass == receiverClass) {
-        allowed = true;
-        break;
-      }
-    }
-
-    if (!allowed) {
-      Timber.w("Receiver: %s is not allowed to register for %s events",
-          receiverClass.getSimpleName(), eventClass.getSimpleName());
-      return Observable.empty();
-    }
-
+  @CheckResult @NonNull public final <T> Observable<T> listen(@NonNull Class<T> eventClass) {
     return bus.filter(event -> eventClass.isAssignableFrom(event.getClass())).map(eventClass::cast);
-  }
-
-  /**
-   * Base implementation for all EventBus events
-   */
-  public interface Event {
-
   }
 }

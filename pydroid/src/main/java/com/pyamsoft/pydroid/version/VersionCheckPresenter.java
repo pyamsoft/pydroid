@@ -42,12 +42,12 @@ import timber.log.Timber;
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    disposable = DisposableHelper.unsubscribe(disposable);
+    disposable = DisposableHelper.dispose(disposable);
   }
 
   public void checkForUpdates(@NonNull String packageName, int currentVersionCode,
       @NonNull UpdateCheckCallback callback) {
-    disposable = DisposableHelper.unsubscribe(disposable);
+    disposable = DisposableHelper.dispose(disposable);
     disposable = interactor.checkVersion(packageName)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

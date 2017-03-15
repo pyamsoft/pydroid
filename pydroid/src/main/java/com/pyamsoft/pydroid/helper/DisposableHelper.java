@@ -29,7 +29,7 @@ public final class DisposableHelper {
     throw new RuntimeException("No instances");
   }
 
-  @NonNull @CheckResult public static Disposable unsubscribe(@Nullable Disposable disposable) {
+  @NonNull @CheckResult public static Disposable dispose(@Nullable Disposable disposable) {
     if (disposable == null) {
       return Disposables.empty();
     }

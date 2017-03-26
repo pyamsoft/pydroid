@@ -15,20 +15,20 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui;
+package com.pyamsoft.pydroid.ui.licenses;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.Licenses;
 
 import static com.pyamsoft.pydroid.about.Licenses.LicenseLocations._BASE;
 
-final class RxLicenses {
+public final class RxLicenses {
 
   private RxLicenses() {
     throw new RuntimeException("No instances");
   }
 
-  static void addLicenses() {
+  public static void addLicenses() {
     Licenses.create(Names.RXJAVA, HomepageUrls.RXJAVA, LicenseLocations.RXJAVA);
     Licenses.create(Names.RXANDROID, HomepageUrls.RXANDROID, LicenseLocations.RXANDROID);
   }

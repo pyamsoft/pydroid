@@ -15,20 +15,20 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui;
+package com.pyamsoft.pydroid.ui.licenses;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.Licenses;
 
 import static com.pyamsoft.pydroid.about.Licenses.LicenseLocations._BASE;
 
-final class UiLicenses {
+public final class UiLicenses {
 
   private UiLicenses() {
     throw new RuntimeException("No instances");
   }
 
-  static void addLicenses() {
+  public static void addLicenses() {
     Licenses.create(Names.LEAK_CANARY, HomepageUrls.LEAK_CANARY, LicenseLocations.LEAK_CANARY);
     Licenses.create(Names.FAST_ADAPTER, HomepageUrls.FAST_ADAPTER, LicenseLocations.FAST_ADAPTER);
   }

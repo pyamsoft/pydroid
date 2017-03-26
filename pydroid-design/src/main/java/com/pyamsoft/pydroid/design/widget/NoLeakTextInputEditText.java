@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.design.widget;
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.util.AttributeSet;
+import android.view.ViewTreeObserver;
 
 /**
  * Attempts to fix TextView memory leak
@@ -41,7 +42,10 @@ public class NoLeakTextInputEditText extends TextInputEditText {
   }
 
   @Override protected void onDetachedFromWindow() {
-    getViewTreeObserver().removeOnPreDrawListener(this);
+    ViewTreeObserver obs = getViewTreeObserver();
+    if (obs != null) {
+      obs.removeOnPreDrawListener(this);
+    }
     super.onDetachedFromWindow();
   }
 }

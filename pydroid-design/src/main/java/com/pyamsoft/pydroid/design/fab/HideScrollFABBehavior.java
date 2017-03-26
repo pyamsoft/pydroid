@@ -21,6 +21,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
+import com.pyamsoft.pydroid.helper.Checker;
 import timber.log.Timber;
 
 /**
@@ -62,12 +63,15 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
       View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
     super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
         dyUnconsumed);
+    child = Checker.checkNonNull(child);
+
     if (dyConsumed > distanceNeeded && child.isShown()) {
       if (!animating) {
         animating = true;
         Timber.w("Hide FAB");
         child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
           @Override public void onHidden(FloatingActionButton fab) {
+            fab = Checker.checkNonNull(fab);
             super.onHidden(fab);
             onHiddenHook();
 
@@ -85,6 +89,7 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
         Timber.w("Show FAB");
         child.show(new FloatingActionButton.OnVisibilityChangedListener() {
           @Override public void onShown(FloatingActionButton fab) {
+            fab = Checker.checkNonNull(fab);
             super.onShown(fab);
             onShownHook();
             fab.setVisibility(View.VISIBLE);

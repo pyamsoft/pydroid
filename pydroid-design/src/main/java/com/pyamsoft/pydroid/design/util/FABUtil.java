@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.view.ViewGroup;
+import com.pyamsoft.pydroid.helper.Checker;
 
 public final class FABUtil {
 
@@ -29,12 +30,10 @@ public final class FABUtil {
     throw new RuntimeException("No instances");
   }
 
-  public static void setupFABBehavior(final @NonNull FloatingActionButton fab,
+  public static void setupFABBehavior(@NonNull FloatingActionButton fab,
       final @Nullable FloatingActionButton.Behavior behavior) {
-    //noinspection ConstantConditions
-    if (fab == null) {
-      throw new NullPointerException("FloatingActionButton cannot be NULL");
-    }
+    fab = Checker.checkNonNull(fab);
+
     final ViewGroup.LayoutParams params = fab.getLayoutParams();
     if (params instanceof CoordinatorLayout.LayoutParams) {
       final CoordinatorLayout.LayoutParams coordParams = (CoordinatorLayout.LayoutParams) params;

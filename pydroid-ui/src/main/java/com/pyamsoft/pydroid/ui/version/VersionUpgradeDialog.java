@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -45,6 +46,8 @@ import java.util.Locale;
   @CheckResult @NonNull
   public static VersionUpgradeDialog newInstance(@NonNull String applicationName,
       int currentVersion, int latestVersion) {
+    applicationName = Checker.checkNonNull(applicationName);
+
     final Bundle args = new Bundle();
     final VersionUpgradeDialog fragment = new VersionUpgradeDialog();
     args.putString(KEY_NAME, applicationName);

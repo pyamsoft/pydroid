@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.Checker;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidInjector
     implements IPYDroidApp<PYDroidComponent> {
@@ -29,23 +30,15 @@ import android.support.annotation.RestrictTo;
   @NonNull private final PYDroidComponent component;
 
   private PYDroidInjector(@NonNull PYDroidComponent component) {
-    this.component = component;
+    this.component = Checker.checkNonNull(component);
   }
 
   static void set(@Nullable PYDroidComponent component) {
-    if (component == null) {
-      throw new NullPointerException("Cannot set a NULL component");
-    }
-    instance = new PYDroidInjector(component);
+    instance = new PYDroidInjector(Checker.checkNonNull(component));
   }
 
   @NonNull @CheckResult public static PYDroidInjector get() {
-    if (instance == null) {
-      throw new NullPointerException("Instance is NULL");
-    }
-
-    //noinspection ConstantConditions
-    return instance;
+    return Checker.checkNonNull(instance);
   }
 
   @NonNull @Override public PYDroidComponent provideComponent() {

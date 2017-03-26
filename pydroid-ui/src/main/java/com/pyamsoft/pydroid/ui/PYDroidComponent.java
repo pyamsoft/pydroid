@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.about.AboutLibrariesModule;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent;
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent;
@@ -37,6 +38,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final AppComponent appComponent;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
+    module = Checker.checkNonNull(module);
     VersionCheckModule versionCheckModule = new VersionCheckModule(module);
     AboutLibrariesModule aboutLibrariesModule = new AboutLibrariesModule(module);
     SocialMediaModule socialMediaModule = new SocialMediaModule();

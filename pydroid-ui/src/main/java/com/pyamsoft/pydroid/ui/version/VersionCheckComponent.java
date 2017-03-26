@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.version;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckComponent {
@@ -26,10 +27,10 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final VersionCheckModule versionCheckModule;
 
   public VersionCheckComponent(@NonNull VersionCheckModule versionCheckModule) {
-    this.versionCheckModule = versionCheckModule;
+    this.versionCheckModule = Checker.checkNonNull(versionCheckModule);
   }
 
   void inject(@NonNull VersionCheckActivity activity) {
-    activity.presenter = versionCheckModule.getPresenter();
+    Checker.checkNonNull(activity).presenter = versionCheckModule.getPresenter();
   }
 }

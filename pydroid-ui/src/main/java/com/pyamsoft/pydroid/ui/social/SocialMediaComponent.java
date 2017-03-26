@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.social;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.ui.ads.OfflineAdSource;
 import com.pyamsoft.pydroid.ui.sec.TamperDialog;
@@ -29,22 +30,22 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
   @NonNull private final SocialMediaModule socialMediaModule;
 
   public SocialMediaComponent(@NonNull SocialMediaModule socialMediaModule) {
-    this.socialMediaModule = socialMediaModule;
+    this.socialMediaModule = Checker.checkNonNull(socialMediaModule);
   }
 
   public void inject(@NonNull TamperDialog dialog) {
-    dialog.presenter = socialMediaModule.getPresenter();
+    Checker.checkNonNull(dialog).presenter = socialMediaModule.getPresenter();
   }
 
   public void inject(@NonNull VersionUpgradeDialog dialog) {
-    dialog.presenter = socialMediaModule.getPresenter();
+    Checker.checkNonNull(dialog).presenter = socialMediaModule.getPresenter();
   }
 
   public void inject(@NonNull SocialMediaPreference preference) {
-    preference.presenter = socialMediaModule.getPresenter();
+    Checker.checkNonNull(preference).presenter = socialMediaModule.getPresenter();
   }
 
   public void inject(@NonNull OfflineAdSource offlineAdSource) {
-    offlineAdSource.presenter = socialMediaModule.getPresenter();
+    Checker.checkNonNull(offlineAdSource).presenter = socialMediaModule.getPresenter();
   }
 }

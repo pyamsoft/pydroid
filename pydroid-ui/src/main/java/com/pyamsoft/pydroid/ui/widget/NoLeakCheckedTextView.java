@@ -21,6 +21,7 @@ import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.util.AttributeSet;
+import android.view.ViewTreeObserver;
 
 /**
  * Attempts to fix TextView memory leak
@@ -42,7 +43,10 @@ public class NoLeakCheckedTextView extends AppCompatCheckedTextView {
   }
 
   @CallSuper @Override protected void onDetachedFromWindow() {
-    getViewTreeObserver().removeOnPreDrawListener(this);
+    ViewTreeObserver obs = getViewTreeObserver();
+    if (obs != null) {
+      obs.removeOnPreDrawListener(this);
+    }
     super.onDetachedFromWindow();
   }
 }

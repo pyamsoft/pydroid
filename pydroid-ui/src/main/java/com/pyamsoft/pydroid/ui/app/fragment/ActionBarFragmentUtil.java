@@ -27,6 +27,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import com.pyamsoft.pydroid.helper.Checker;
 
 final class ActionBarFragmentUtil {
 
@@ -35,6 +36,8 @@ final class ActionBarFragmentUtil {
   }
 
   @CheckResult @Nullable private static ActionBar getActionBar(@NonNull Activity activity) {
+    activity = Checker.checkNonNull(activity);
+
     if (activity instanceof AppCompatActivity) {
       final AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
       return appCompatActivity.getSupportActionBar();
@@ -48,6 +51,8 @@ final class ActionBarFragmentUtil {
   }
 
   static void setActionBarUpEnabled(@NonNull Activity activity, boolean up, @DrawableRes int icon) {
+    activity = Checker.checkNonNull(activity);
+
     final Drawable d;
     if (icon != 0) {
       d = ContextCompat.getDrawable(activity, icon);
@@ -60,6 +65,8 @@ final class ActionBarFragmentUtil {
 
   static void setActionBarUpEnabled(@NonNull Activity activity, boolean up,
       @Nullable Drawable icon) {
+    activity = Checker.checkNonNull(activity);
+
     final ActionBar bar = getActionBar(activity);
     if (bar != null) {
       bar.setHomeButtonEnabled(up);

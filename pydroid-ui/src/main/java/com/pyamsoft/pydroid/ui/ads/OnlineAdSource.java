@@ -27,8 +27,9 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ads.AdSource;
+import com.pyamsoft.pydroid.helper.BuildConfigChecker;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -41,11 +42,11 @@ public class OnlineAdSource implements AdSource {
   @StringRes private final int resAdId;
   @NonNull private final Set<String> testAdIds;
   @SuppressWarnings("WeakerAccess") AdView adView;
-  boolean adHasLoaded;
+  @SuppressWarnings("WeakerAccess") boolean adHasLoaded;
   private AdRequest adRequest;
 
   public OnlineAdSource(@NonNull String adId) {
-    this(adId, 0);
+    this(Checker.checkNonNull(adId), 0);
   }
 
   public OnlineAdSource(@StringRes int resAdId) {
@@ -59,10 +60,12 @@ public class OnlineAdSource implements AdSource {
   }
 
   public void addTestAdIds(@NonNull String... testIds) {
-    testAdIds.addAll(Arrays.asList(testIds));
+    testAdIds.addAll(Arrays.asList(Checker.checkNonNull(testIds)));
   }
 
   @NonNull @Override public View create(@NonNull Context context) {
+    context = Checker.checkNonNull(context);
+
     adHasLoaded = false;
     adView = new AdView(context.getApplicationContext());
     adView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -111,7 +114,9 @@ public class OnlineAdSource implements AdSource {
     }
   }
 
-  @Override public void refreshAd(@NonNull AdRefreshedCallback callback) {
+  @Override public void refreshAd(@NonNull AdRefreshedCallback refreshedCallback) {
+    AdRefreshedCallback callback = Checker.checkNonNull(refreshedCallback);
+
     if (adView.getAdListener() == null) {
       adView.setAdListener(new AdListener() {
         @Override public void onAdLoaded() {
@@ -135,6 +140,7 @@ public class OnlineAdSource implements AdSource {
       // Hide AdView until we have loaded
       adView.setVisibility(View.GONE);
     }
+
     adView.loadAd(adRequest);
   }
 }

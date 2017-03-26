@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.drawable.AsyncDrawable;
 import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.social.SocialMediaPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
@@ -123,6 +124,8 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @NonNull @Override public View create(@NonNull Context context) {
+    context = Checker.checkNonNull(context);
+
     PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
 
     // Randomize the order of items
@@ -150,7 +153,9 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     presenter.bindView(this);
   }
 
-  @Override public void refreshAd(@NonNull AdRefreshedCallback callback) {
+  @Override public void refreshAd(@NonNull AdRefreshedCallback refreshedCallback) {
+    AdRefreshedCallback callback = Checker.checkNonNull(refreshedCallback);
+
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
     adImage.setOnClickListener(view -> {

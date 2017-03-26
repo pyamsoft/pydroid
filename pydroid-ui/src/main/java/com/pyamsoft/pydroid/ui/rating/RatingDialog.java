@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.PYDroidPreferences;
 import com.pyamsoft.pydroid.drawable.AsyncDrawable;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -56,8 +57,11 @@ public class RatingDialog extends DialogFragment {
   private DialogRatingBinding binding;
   @Nullable private AsyncMapEntry iconTask;
 
-  public static void showRatingDialog(final @NonNull FragmentActivity activity,
-      final @NonNull ChangeLogProvider provider, final boolean force) {
+  public static void showRatingDialog(@NonNull FragmentActivity activity,
+      @NonNull ChangeLogProvider provider, final boolean force) {
+    activity = Checker.checkNonNull(activity);
+    provider = Checker.checkNonNull(provider);
+
     final PYDroidPreferences preferences = PYDroidPreferences.Instance.getInstance(activity);
     if (force || preferences.getRatingAcceptedVersion() < provider.getCurrentApplicationVersion()) {
       AppUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
@@ -65,7 +69,9 @@ public class RatingDialog extends DialogFragment {
   }
 
   @CheckResult @NonNull
-  private static RatingDialog newInstance(final @NonNull ChangeLogProvider provider) {
+  private static RatingDialog newInstance(@NonNull ChangeLogProvider provider) {
+    provider = Checker.checkNonNull(provider);
+
     final RatingDialog fragment = new RatingDialog();
     final Bundle args = new Bundle();
     args.putString(RATE_LINK, provider.getPackageName());

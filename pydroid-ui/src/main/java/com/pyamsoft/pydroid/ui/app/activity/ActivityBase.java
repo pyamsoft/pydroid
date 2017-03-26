@@ -30,23 +30,18 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.R;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import timber.log.Timber;
 
 public abstract class ActivityBase extends AppCompatActivity {
-
-  static {
-    // Attempt to fix issues with Vectors on API 19
-    AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-  }
 
   /**
    * Override if you do not want to handle IMM leaks
@@ -86,7 +81,7 @@ public abstract class ActivityBase extends AppCompatActivity {
   /**
    * Hopefully fixes Android's glorious InputMethodManager related context leaks.
    */
-  static final class IMMLeakUtil {
+  private static final class IMMLeakUtil {
 
     private IMMLeakUtil() {
       throw new RuntimeException("No instances");
@@ -104,6 +99,7 @@ public abstract class ActivityBase extends AppCompatActivity {
      * Should be called from {@link Activity#onCreate(Bundle)} )}.
      */
     static void fixFocusedViewLeak(@NonNull Application application) {
+      application = Checker.checkNonNull(application);
 
       // LeakCanary reports this bug within IC_MR1 and M
       final int sdk = Build.VERSION.SDK_INT;
@@ -214,10 +210,10 @@ public abstract class ActivityBase extends AppCompatActivity {
 
       ReferenceCleaner(@NonNull InputMethodManager inputMethodManager, @NonNull Field lockField,
           @NonNull Field servedViewField, @NonNull Method finishInputLockedMethod) {
-        this.inputMethodManager = inputMethodManager;
-        this.lockField = lockField;
-        this.servedViewField = servedViewField;
-        this.finishInputLockedMethod = finishInputLockedMethod;
+        this.inputMethodManager = Checker.checkNonNull(inputMethodManager);
+        this.lockField = Checker.checkNonNull(lockField);
+        this.servedViewField = Checker.checkNonNull(servedViewField);
+        this.finishInputLockedMethod = Checker.checkNonNull(finishInputLockedMethod);
       }
 
       @Override public void onGlobalFocusChanged(@Nullable View oldFocus, @Nullable View newFocus) {
@@ -235,7 +231,7 @@ public abstract class ActivityBase extends AppCompatActivity {
       }
 
       @Override public void onViewDetachedFromWindow(@NonNull View v) {
-        v.removeOnAttachStateChangeListener(this);
+        Checker.checkNonNull(v).removeOnAttachStateChangeListener(this);
         Looper.myQueue().removeIdleHandler(this);
         Looper.myQueue().addIdleHandler(this);
       }
@@ -294,7 +290,7 @@ public abstract class ActivityBase extends AppCompatActivity {
         }
       }
 
-      @CheckResult @Nullable Activity extractActivity(@NonNull Context context) {
+      @CheckResult @Nullable Activity extractActivity(Context context) {
         Timber.d("Extract the current activity from context");
         while (true) {
           if (context instanceof Application) {

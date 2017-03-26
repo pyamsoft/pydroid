@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.helper;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
 public final class Checker {
@@ -26,7 +25,7 @@ public final class Checker {
     throw new RuntimeException("Np instances");
   }
 
-  @CheckResult @NonNull public static <T> T checkNonNull(T source) {
+  @NonNull public static <T> T checkNonNull(T source) {
     if (source == null) {
       throw new IllegalStateException("Object cannot be NULL");
     }

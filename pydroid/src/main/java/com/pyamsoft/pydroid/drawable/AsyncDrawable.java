@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.function.ActionSingle;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -44,6 +45,7 @@ public final class AsyncDrawable {
 
   @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static Loader load(@DrawableRes int drawableRes, @NonNull Loader loader) {
+    loader = Checker.checkNonNull(loader);
     loader.setResource(drawableRes);
     return loader;
   }
@@ -114,16 +116,12 @@ public final class AsyncDrawable {
       observeScheduler = AndroidSchedulers.mainThread();
     }
 
-    @NonNull @Override protected AsyncDrawableSubscriptionEntry load(@NonNull ImageView imageView,
+    @NonNull @Override protected AsyncDrawableSubscriptionEntry load(@NonNull ImageView image,
         @DrawableRes int resource, @ColorRes int tint,
         @Nullable ActionSingle<ImageView> startAction,
         @Nullable ActionSingle<ImageView> errorAction,
         @Nullable ActionSingle<ImageView> completeAction) {
-      //noinspection ConstantConditions
-      if (imageView == null) {
-        throw new NullPointerException("ImageView cannot be NULL");
-      }
-
+      ImageView imageView = Checker.checkNonNull(image);
       if (resource == 0) {
         throw new RuntimeException("Drawable resource cannot be 0");
       }

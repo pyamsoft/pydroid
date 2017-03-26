@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.app;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 
 public abstract class OnRegisteredSharedPreferenceChangeListener
     implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -27,14 +28,14 @@ public abstract class OnRegisteredSharedPreferenceChangeListener
 
   public void register(@NonNull SharedPreferences preferences) {
     if (!isRegistered) {
-      preferences.registerOnSharedPreferenceChangeListener(this);
+      Checker.checkNonNull(preferences).registerOnSharedPreferenceChangeListener(this);
       isRegistered = true;
     }
   }
 
   @SuppressWarnings("unused") public void unregister(@NonNull SharedPreferences preferences) {
     if (isRegistered) {
-      preferences.unregisterOnSharedPreferenceChangeListener(this);
+      Checker.checkNonNull(preferences).unregisterOnSharedPreferenceChangeListener(this);
       isRegistered = false;
     }
   }

@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.drawable;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.helper.Checker;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
@@ -53,6 +54,9 @@ public class AsyncMap {
    * If an old element exists, its task is cancelled first before adding the new one
    */
   public final void put(@NonNull String tag, @NonNull AsyncMapEntry subscription) {
+    tag = Checker.checkNonNull(tag);
+    subscription = Checker.checkNonNull(subscription);
+
     if (map.containsKey(tag)) {
       map.put(tag, AsyncMapHelper.unsubscribe(map.get(tag)));
     }
@@ -68,7 +72,8 @@ public class AsyncMap {
    */
   public final void clear() {
     for (final Map.Entry<String, AsyncMapEntry> entry : map.entrySet()) {
-      entry.setValue(AsyncMapHelper.unsubscribe(entry.getValue()));
+      AsyncMapEntry value = Checker.checkNonNull(entry.getValue());
+      entry.setValue(AsyncMapHelper.unsubscribe(value));
     }
 
     Timber.d("Clear AsyncDrawableMap");

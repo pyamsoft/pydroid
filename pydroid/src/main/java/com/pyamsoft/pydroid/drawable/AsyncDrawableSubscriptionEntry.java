@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.drawable;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.disposables.Disposable;
 
 class AsyncDrawableSubscriptionEntry implements AsyncMapEntry {
@@ -25,10 +26,7 @@ class AsyncDrawableSubscriptionEntry implements AsyncMapEntry {
   @NonNull private final Disposable disposable;
 
   AsyncDrawableSubscriptionEntry(@NonNull Disposable disposable) {
-    //noinspection ConstantConditions
-    if (disposable == null) {
-      throw new NullPointerException("Subscription cannot be NULL");
-    }
+    disposable = Checker.checkNonNull(disposable);
     this.disposable = disposable;
   }
 

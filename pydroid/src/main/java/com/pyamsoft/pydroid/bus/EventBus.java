@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
@@ -73,7 +74,7 @@ public class EventBus {
       return;
     }
 
-    bus.onNext(event);
+    bus.onNext(Checker.checkNonNull(event));
   }
 
   /**
@@ -85,6 +86,8 @@ public class EventBus {
    * Any class which was not registered in a publish event will receive an empty stream
    */
   @CheckResult @NonNull public final <T> Observable<T> listen(@NonNull Class<T> eventClass) {
-    return bus.filter(event -> eventClass.isAssignableFrom(event.getClass())).map(eventClass::cast);
+    final Class<T> listenClass = Checker.checkNonNull(eventClass);
+    return bus.filter(event -> listenClass.isAssignableFrom(event.getClass()))
+        .map(listenClass::cast);
   }
 }

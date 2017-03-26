@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.about;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 
 final class AboutLibrariesProvider {
@@ -29,7 +30,7 @@ final class AboutLibrariesProvider {
   }
 
   @CheckResult static boolean hasGooglePlayServices(@NonNull Context context) {
-    return SingleInitContentProvider.getLicenseProvider().provideGoogleOpenSourceLicenses(context)
-        != null;
+    return SingleInitContentProvider.getLicenseProvider()
+        .provideGoogleOpenSourceLicenses(Checker.checkNonNull(context)) != null;
   }
 }

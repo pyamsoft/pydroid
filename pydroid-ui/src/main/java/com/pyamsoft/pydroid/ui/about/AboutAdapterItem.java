@@ -26,8 +26,9 @@ import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
-import com.pyamsoft.pydroid.function.ActionSingle;
 import com.pyamsoft.pydroid.about.AboutLicenseModel;
+import com.pyamsoft.pydroid.function.ActionSingle;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -44,18 +45,21 @@ class AboutAdapterItem
 
   @NonNull private final FastAdapter.OnClickListener<AboutAdapterItem> onClickListener =
       (v, adapter, item, position) -> {
-        item.switchExpanded();
-        adapter.getFastAdapter().notifyItemChanged(position);
+        Checker.checkNonNull(item).switchExpanded();
+        FastAdapter<AboutAdapterItem> fastAdapter = Checker.checkNonNull(adapter).getFastAdapter();
+        if (fastAdapter != null) {
+          fastAdapter.notifyItemChanged(position);
+        }
         return true;
       };
 
   AboutAdapterItem(@NonNull AboutLicenseModel item) {
-    super(item);
+    super(Checker.checkNonNull(item));
     licenseText = "";
   }
 
   void setLicenseText(@NonNull String licenseText) {
-    this.licenseText = licenseText;
+    this.licenseText = Checker.checkNonNull(licenseText);
   }
 
   @SuppressWarnings("WeakerAccess") void switchExpanded() {
@@ -80,11 +84,13 @@ class AboutAdapterItem
   }
 
   @Override public void bindView(@NonNull ViewHolder viewHolder, List<Object> payloads) {
+    viewHolder = Checker.checkNonNull(viewHolder);
     super.bindView(viewHolder, payloads);
     viewHolder.bind(expanded, licenseText, getModel());
   }
 
   @Override public void unbindView(ViewHolder holder) {
+    holder = Checker.checkNonNull(holder);
     super.unbindView(holder);
     holder.unbind();
   }
@@ -120,7 +126,10 @@ class AboutAdapterItem
       weakItem = new WeakReference<>(null);
     }
 
-    void bind(boolean isExpanded, @NonNull String licenseText, @NonNull AboutLicenseModel item) {
+    void bind(boolean isExpanded, @NonNull String licenseText, @NonNull AboutLicenseModel model) {
+      licenseText = Checker.checkNonNull(licenseText);
+      AboutLicenseModel item = Checker.checkNonNull(model);
+
       //make sure all animations are stopped
       binding.expandLicenseIcon.clearAnimation();
       if (isExpanded) {
@@ -155,6 +164,8 @@ class AboutAdapterItem
     }
 
     void bind(@NonNull ActionSingle<AboutLicenseModel> loader) {
+      loader = Checker.checkNonNull(loader);
+
       if (expanded) {
         if (license.length() == 0) {
           final AboutLicenseModel item = weakItem.get();

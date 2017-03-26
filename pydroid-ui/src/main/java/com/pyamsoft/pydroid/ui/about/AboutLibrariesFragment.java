@@ -33,6 +33,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.about.Licenses;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
@@ -52,6 +53,9 @@ public class AboutLibrariesFragment extends ActionBarFragment {
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
       @NonNull BackStackState backStackState) {
+    activity = Checker.checkNonNull(activity);
+    backStackState = Checker.checkNonNull(backStackState);
+
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()

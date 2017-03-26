@@ -20,16 +20,17 @@ package com.pyamsoft.pydroid.ui.about;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.about.AboutLibrariesModule;
+import com.pyamsoft.pydroid.helper.Checker;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesComponent {
 
   @NonNull private final AboutLibrariesModule aboutLibrariesModule;
 
   public AboutLibrariesComponent(@NonNull AboutLibrariesModule aboutLibrariesModule) {
-    this.aboutLibrariesModule = aboutLibrariesModule;
+    this.aboutLibrariesModule = Checker.checkNonNull(aboutLibrariesModule);
   }
 
   void inject(@NonNull AboutLibrariesFragment fragment) {
-    fragment.presenter = aboutLibrariesModule.getPresenter();
+    Checker.checkNonNull(fragment).presenter = aboutLibrariesModule.getPresenter();
   }
 }

@@ -27,7 +27,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.pyamsoft.pydroid.BuildConfigChecker;
+import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.util.Arrays;

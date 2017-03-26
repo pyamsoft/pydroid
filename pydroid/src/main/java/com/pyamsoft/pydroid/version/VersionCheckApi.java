@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
+import com.pyamsoft.pydroid.helper.Checker;
 import retrofit2.Retrofit;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckApi {
@@ -32,19 +33,21 @@ import retrofit2.Retrofit;
   @NonNull private final Retrofit client;
 
   VersionCheckApi(@NonNull Retrofit client) {
-    this.client = client;
+    this.client = Checker.checkNonNull(client);
   }
 
   @NonNull @CheckResult public <T> T create(final Class<T> serviceClass) {
-    return client.create(serviceClass);
+    return client.create(Checker.checkNonNull(serviceClass));
   }
 
   static final class AutoValueTypeAdapterFactory implements TypeAdapterFactory {
 
     @Nullable @CheckResult @SuppressWarnings("unchecked") @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-      TypeAdapter<T> adapter;
+      gson = Checker.checkNonNull(gson);
+      type = Checker.checkNonNull(type);
 
+      TypeAdapter<T> adapter;
       final Class<? super T> rawType = type.getRawType();
       if (rawType.equals(VersionCheckResponse.class)) {
         adapter = (TypeAdapter<T>) VersionCheckResponse.typeAdapter(gson);

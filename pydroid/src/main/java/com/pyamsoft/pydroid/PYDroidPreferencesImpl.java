@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
+import com.pyamsoft.pydroid.helper.Checker;
 
 class PYDroidPreferencesImpl implements PYDroidPreferences {
 
@@ -28,8 +29,8 @@ class PYDroidPreferencesImpl implements PYDroidPreferences {
   @NonNull private final SharedPreferences preferences;
 
   PYDroidPreferencesImpl(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    this.preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+    this.preferences = Checker.checkNonNull(PreferenceManager.getDefaultSharedPreferences(
+        Checker.checkNonNull(context).getApplicationContext()));
   }
 
   @Override public int getRatingAcceptedVersion() {

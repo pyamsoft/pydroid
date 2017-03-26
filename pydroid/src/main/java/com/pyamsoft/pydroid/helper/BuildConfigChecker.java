@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid.helper;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -38,7 +38,7 @@ public abstract class BuildConfigChecker {
   }
 
   public static void setInstance(@NonNull BuildConfigChecker checker) {
-    instance = checker;
+    instance = Checker.checkNonNull(checker);
   }
 
   @CheckResult public abstract boolean isDebugMode();

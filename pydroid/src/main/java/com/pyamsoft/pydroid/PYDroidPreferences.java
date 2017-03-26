@@ -22,6 +22,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.Checker;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public interface PYDroidPreferences {
 
@@ -39,11 +40,7 @@ import android.support.annotation.RestrictTo;
      * Guarantee that the singleton is created and non null using double checking synchronization
      */
     @CheckResult @NonNull public static PYDroidPreferences getInstance(@NonNull Context context) {
-      //noinspection ConstantConditions
-      if (context == null) {
-        throw new IllegalArgumentException("Context is NULL");
-      }
-
+      context = Checker.checkNonNull(context);
       if (instance == null) {
         synchronized (Instance.class) {
           if (instance == null) {

@@ -22,6 +22,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.about.LicenseProvider;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -33,13 +34,8 @@ import io.reactivex.schedulers.Schedulers;
   @NonNull private final LicenseProvider licenseProvider;
 
   public PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
-    //noinspection ConstantConditions
-    if (context == null) {
-      throw new NullPointerException("Application cannot be NULL");
-    }
-
-    appContext = context.getApplicationContext();
-    this.licenseProvider = licenseProvider;
+    appContext = Checker.checkNonNull(context).getApplicationContext();
+    this.licenseProvider = Checker.checkNonNull(licenseProvider);
   }
 
   // Singleton

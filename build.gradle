@@ -35,7 +35,7 @@ buildscript {
 
     retrolambda = "2.5.1"
     supportLib = "25.3.0"
-    firebase = "10.2.0"
+    firebase = "10.2.1"
     timber = "4.5.1"
     autoValue = "1.4"
     autoValueGSON = "0.4.6"

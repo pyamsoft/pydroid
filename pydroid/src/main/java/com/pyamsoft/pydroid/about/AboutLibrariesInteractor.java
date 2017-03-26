@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
+import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Observable;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -44,9 +45,9 @@ class AboutLibrariesInteractor {
   @NonNull private final Context appContext;
 
   AboutLibrariesInteractor(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
-    appContext = context.getApplicationContext();
+    appContext = Checker.checkNonNull(context).getApplicationContext();
+    this.licenseProvider = Checker.checkNonNull(licenseProvider);
     assetManager = context.getAssets();
-    this.licenseProvider = licenseProvider;
     cachedLicenses = new HashMap<>();
   }
 
@@ -54,8 +55,9 @@ class AboutLibrariesInteractor {
     cachedLicenses.clear();
   }
 
-  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull AboutLicenseModel license) {
+  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull AboutLicenseModel model) {
     return Observable.fromCallable(() -> {
+      AboutLicenseModel license = Checker.checkNonNull(model);
       if (cachedLicenses.containsKey(license.name())) {
         Timber.d("Fetch from cache");
         return cachedLicenses.get(license.name());
@@ -75,6 +77,9 @@ class AboutLibrariesInteractor {
   @RestrictTo(RestrictTo.Scope.SUBCLASSES) @SuppressLint("NewApi") @SuppressWarnings("WeakerAccess")
   @VisibleForTesting @NonNull @CheckResult @WorkerThread String loadNewLicense(
       @NonNull String licenseName, @NonNull String licenseLocation) {
+    licenseName = Checker.checkNonNull(licenseName);
+    licenseLocation = Checker.checkNonNull(licenseLocation);
+
     if (licenseLocation.isEmpty()) {
       Timber.w("Empty license passed");
       return "";

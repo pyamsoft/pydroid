@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
@@ -35,7 +36,7 @@ import timber.log.Timber;
   AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
-    this.interactor = interactor;
+    this.interactor = Checker.checkNonNull(interactor);
     licenseDisposables = new CompositeDisposable();
   }
 

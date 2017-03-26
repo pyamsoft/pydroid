@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
+import com.pyamsoft.pydroid.helper.Checker;
 import timber.log.Timber;
 
 public final class NetworkUtil {
@@ -33,7 +34,10 @@ public final class NetworkUtil {
     throw new RuntimeException("No instances");
   }
 
-  public static void newLink(final @NonNull Context c, final @NonNull String link) {
+  public static void newLink(@NonNull Context c, @NonNull String link) {
+    c = Checker.checkNonNull(c);
+    link = Checker.checkNonNull(link);
+
     final Uri uri = Uri.parse(link);
     final Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -48,11 +52,10 @@ public final class NetworkUtil {
     }
   }
 
-  @SuppressWarnings("unused") @CheckResult
-  public static boolean hasConnection(final @NonNull Context c) {
-    final Context context = c.getApplicationContext();
+  @SuppressWarnings("unused") @CheckResult public static boolean hasConnection(@NonNull Context c) {
+    c = Checker.checkNonNull(c).getApplicationContext();
     final ConnectivityManager connMan =
-        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo activeNetwork = connMan.getActiveNetworkInfo();
     final boolean connected = (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
     Timber.d("Check network availability: %s", connected);

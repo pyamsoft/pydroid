@@ -30,6 +30,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import com.pyamsoft.pydroid.helper.Checker;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,6 +92,9 @@ public final class CircularRevealFragmentUtil {
   @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static Bundle bundleArguments(@NonNull View fromView, @NonNull View containerView,
       @ColorRes int color, long duration) {
+    fromView = Checker.checkNonNull(fromView);
+    containerView = Checker.checkNonNull(containerView);
+
     final int[] fromLocation = new int[2];
     fromView.getLocationInWindow(fromLocation);
 
@@ -106,10 +110,9 @@ public final class CircularRevealFragmentUtil {
     return bundleArguments(cX, cY, color, duration);
   }
 
-  public static void runCircularRevealOnViewCreated(@NonNull View view, Bundle arguments) {
-    if (arguments == null) {
-      throw new NullPointerException("Bundle arguments cannot be null");
-    }
+  public static void runCircularRevealOnViewCreated(@NonNull View view, @NonNull Bundle args) {
+    view = Checker.checkNonNull(view);
+    Bundle arguments = Checker.checkNonNull(args);
 
     final Context context = view.getContext();
     @ColorRes final int bgColor = arguments.getInt(BG_COLOR, DEFAULT_COLOR);

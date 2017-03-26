@@ -32,11 +32,7 @@ public final class SchedulerHelper {
    * Returns whether the given scheduler is one that runs operations in a background thread
    */
   @CheckResult private static boolean isBackgroundScheduler(@NonNull Scheduler scheduler) {
-    //noinspection ConstantConditions
-    if (scheduler == null) {
-      throw new NullPointerException("Scheduler cannot be NULL");
-    }
-
+    scheduler = Checker.checkNonNull(scheduler);
     return scheduler == Schedulers.computation()
         || scheduler == Schedulers.io()
         || scheduler == Schedulers.newThread();

@@ -27,6 +27,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import com.pyamsoft.pydroid.helper.Checker;
 
 public final class DrawableUtil {
 
@@ -41,7 +42,7 @@ public final class DrawableUtil {
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
   public static Drawable tintDrawableFromColor(@NonNull Drawable d, final @ColorInt int c) {
-    d = d.mutate();
+    d = Checker.checkNonNull(d).mutate();
     d.setColorFilter(colorFilter(c));
     return d;
   }

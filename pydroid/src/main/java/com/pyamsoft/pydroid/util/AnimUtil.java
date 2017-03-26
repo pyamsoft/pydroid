@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.TextView;
+import com.pyamsoft.pydroid.helper.Checker;
 
 public final class AnimUtil {
 
@@ -36,8 +37,9 @@ public final class AnimUtil {
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull
-  public static ViewPropertyAnimatorCompat popShow(final @NonNull View v, final int startDelay,
+  public static ViewPropertyAnimatorCompat popShow(@NonNull View v, final int startDelay,
       final int duration) {
+    v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.overshoot);
     v.setAlpha(0f);
@@ -66,8 +68,9 @@ public final class AnimUtil {
   }
 
   @SuppressWarnings("unused") @NonNull
-  public static ViewPropertyAnimatorCompat popHide(final @NonNull View v, final int startDelay,
+  public static ViewPropertyAnimatorCompat popHide(@NonNull View v, final int startDelay,
       final int duration) {
+    v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.overshoot);
     v.setAlpha(1f);
@@ -97,7 +100,8 @@ public final class AnimUtil {
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull
-  public static ViewPropertyAnimatorCompat fadeIn(final @NonNull View v) {
+  public static ViewPropertyAnimatorCompat fadeIn(@NonNull View v) {
+    v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     v.setAlpha(0f);
@@ -114,7 +118,8 @@ public final class AnimUtil {
   }
 
   @SuppressWarnings("unused") @NonNull
-  public static ViewPropertyAnimatorCompat fadeAway(final @NonNull View v) {
+  public static ViewPropertyAnimatorCompat fadeAway(@NonNull View v) {
+    v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     v.setAlpha(1f);
@@ -129,7 +134,8 @@ public final class AnimUtil {
   }
 
   @SuppressWarnings("unused") @NonNull
-  public static ViewPropertyAnimatorCompat flipVertical(final @NonNull View v) {
+  public static ViewPropertyAnimatorCompat flipVertical(@NonNull View v) {
+    v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
     return ViewCompat.animate(v)
@@ -140,7 +146,8 @@ public final class AnimUtil {
         .setListener(null);
   }
 
-  public static void animateActionBarToolbar(final @NonNull Toolbar toolbar) {
+  public static void animateActionBarToolbar(@NonNull Toolbar toolbar) {
+    toolbar = Checker.checkNonNull(toolbar);
     final View t = toolbar.getChildAt(0);
     if (t instanceof TextView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       final TextView title = (TextView) t;

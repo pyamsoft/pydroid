@@ -30,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import com.pyamsoft.pydroid.helper.Checker;
 import timber.log.Timber;
 
 public final class AppUtil {
@@ -38,8 +39,8 @@ public final class AppUtil {
     throw new RuntimeException("No instances");
   }
 
-  @CheckResult @NonNull
-  public static Intent getApplicationInfoIntent(final @NonNull String packageName) {
+  @CheckResult @NonNull public static Intent getApplicationInfoIntent(@NonNull String packageName) {
+    packageName = Checker.checkNonNull(packageName);
     final Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
     i.addCategory(Intent.CATEGORY_DEFAULT);
     i.setData(Uri.fromParts("package", packageName, null));
@@ -54,6 +55,10 @@ public final class AppUtil {
    */
   public static void guaranteeSingleDialogFragment(@NonNull FragmentActivity fragmentActivity,
       @NonNull DialogFragment dialogFragment, @NonNull String tag) {
+    fragmentActivity = Checker.checkNonNull(fragmentActivity);
+    dialogFragment = Checker.checkNonNull(dialogFragment);
+    tag = Checker.checkNonNull(tag);
+
     if (tag.isEmpty()) {
       throw new IllegalArgumentException("Cannot use EMPTY tag");
     }
@@ -75,6 +80,10 @@ public final class AppUtil {
    */
   public static void onlyLoadOnceDialogFragment(@NonNull FragmentActivity fragmentActivity,
       @NonNull DialogFragment dialogFragment, @NonNull String tag) {
+    fragmentActivity = Checker.checkNonNull(fragmentActivity);
+    dialogFragment = Checker.checkNonNull(dialogFragment);
+    tag = Checker.checkNonNull(tag);
+
     if (tag.isEmpty()) {
       throw new IllegalArgumentException("Cannot use EMPTY tag");
     }
@@ -87,6 +96,7 @@ public final class AppUtil {
   }
 
   @CheckResult public static float convertToDP(@NonNull Context c, float px) {
+    c = Checker.checkNonNull(c);
     final DisplayMetrics m = c.getResources().getDisplayMetrics();
     final float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m);
     Timber.d("Convert %f px to %f dp", px, dp);

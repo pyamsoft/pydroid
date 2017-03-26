@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
+import com.pyamsoft.pydroid.helper.Checker;
 
 @AutoValue public abstract class OptionalWrapper<T> {
 
@@ -28,9 +29,13 @@ import com.google.auto.value.AutoValue;
     return new AutoValue_OptionalWrapper<>(source);
   }
 
-  @CheckResult @Nullable public abstract T item();
+  @CheckResult @Nullable abstract T source();
 
   @CheckResult public final boolean isPresent() {
-    return item() != null;
+    return source() != null;
+  }
+
+  @CheckResult @NonNull public final T item() {
+    return Checker.checkNonNull(source());
   }
 }

@@ -35,10 +35,17 @@ public class EventBus {
 
   private static volatile EventBus instance = null;
 
-  @NonNull private final Subject<Object> bus;
+  @NonNull private final Subject<BusEvent<?>> bus;
 
   private EventBus() {
     bus = PublishSubject.create();
+  }
+
+  /**
+   * Create a new local bus instance to use
+   */
+  @CheckResult @NonNull public static EventBus newLocalBus() {
+    return new EventBus();
   }
 
   /**
@@ -48,7 +55,7 @@ public class EventBus {
     if (instance == null) {
       synchronized (EventBus.class) {
         if (instance == null) {
-          instance = new EventBus();
+          instance = newLocalBus();
         }
       }
     }
@@ -74,7 +81,7 @@ public class EventBus {
       return;
     }
 
-    bus.onNext(Checker.checkNonNull(event));
+    bus.onNext(BusEvent.create(Checker.checkNonNull(event)));
   }
 
   /**
@@ -87,7 +94,13 @@ public class EventBus {
    */
   @CheckResult @NonNull public final <T> Observable<T> listen(@NonNull Class<T> eventClass) {
     final Class<T> listenClass = Checker.checkNonNull(eventClass);
-    return bus.filter(event -> listenClass.isAssignableFrom(event.getClass()))
+    return bus.onErrorReturn(throwable -> {
+      Timber.e(throwable, "Error on EventBus. EventBus ignores error, continues with blank");
+      return BusEvent.empty();
+    })
+        .filter(busEvent -> !busEvent.isEmpty())
+        .map(BusEvent::event)
+        .filter(event -> listenClass.isAssignableFrom(event.getClass()))
         .map(listenClass::cast);
   }
 }

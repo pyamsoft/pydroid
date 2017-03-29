@@ -99,7 +99,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       throw new IllegalStateException("No image queue exists, must create ad source first");
     }
     if (adImage == null) {
-      throw new IllegalStateException("Canot get current ad with non-existant AdImage");
+      throw new IllegalStateException("Cannot get current ad with non-existent AdImage");
     }
 
     final Context context = adImage.getContext();
@@ -118,7 +118,6 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     }
 
     imageQueue.add(currentPackage);
-    Timber.d("Image queue: %s", Arrays.toString(imageQueue.toArray()));
 
     return currentPackage;
   }
@@ -142,6 +141,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @NonNull @Override public View destroy(boolean isChangingConfigurations) {
+    presenter.destroy();
     adTask = AsyncMapHelper.unsubscribe(adTask);
     if (!isChangingConfigurations) {
       imageQueue.clear();

@@ -52,7 +52,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
   @CheckResult @NonNull private Gson provideGson() {
     final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapterFactory(
-        new VersionCheckApi.AutoValueTypeAdapterFactory());
+        AutoValueTypeAdapterFactory.create());
     return gsonBuilder.create();
   }
 

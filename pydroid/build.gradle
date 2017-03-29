@@ -88,6 +88,7 @@ dependencies {
 
   // Auto value
   provided "com.google.auto.value:auto-value:$autoValue"
+  provided "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
   annotationProcessor "com.google.auto.value:auto-value:$autoValue"
   annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 

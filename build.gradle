@@ -74,7 +74,8 @@ allprojects {
 
   gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
-      options.compilerArgs << '-XepDisableWarningsInGeneratedCode' << '-Xep:MissingOverride:OFF'
+      options.compilerArgs << '-XepDisableWarningsInGeneratedCode' \
+           << '-Xep:MissingOverride:OFF' << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
   }
 }
@@ -91,4 +92,4 @@ tasks.whenTaskAdded { task ->
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '8.3.1'
+version = '8.3.2'

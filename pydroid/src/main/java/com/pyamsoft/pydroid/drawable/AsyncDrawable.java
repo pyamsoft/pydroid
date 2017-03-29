@@ -50,7 +50,7 @@ public final class AsyncDrawable {
     return loader;
   }
 
-  public static abstract class Loader<T extends AsyncMapEntry> {
+  public static abstract class Loader {
 
     @DrawableRes private int resource;
     @ColorRes private int tint;
@@ -89,7 +89,7 @@ public final class AsyncDrawable {
       return this;
     }
 
-    @CheckResult @NonNull public T into(@NonNull ImageView imageView) {
+    @CheckResult @NonNull public AsyncMapEntry into(@NonNull ImageView imageView) {
       if (resource == 0) {
         throw new IllegalStateException("No resource to load");
       }
@@ -98,14 +98,13 @@ public final class AsyncDrawable {
     }
 
     @CheckResult @NonNull
-    protected abstract T load(@NonNull ImageView imageView, @DrawableRes int resource,
+    protected abstract AsyncMapEntry load(@NonNull ImageView imageView, @DrawableRes int resource,
         @ColorRes int tint, @Nullable ActionSingle<ImageView> startAction,
         @Nullable ActionSingle<ImageView> errorAction,
         @Nullable ActionSingle<ImageView> completeAction);
   }
 
-  @SuppressWarnings("WeakerAccess") public static class RXLoader
-      extends Loader<AsyncDrawableSubscriptionEntry> {
+  @SuppressWarnings("WeakerAccess") public static class RXLoader extends Loader {
 
     @NonNull Scheduler subscribeScheduler;
     @NonNull Scheduler observeScheduler;
@@ -116,9 +115,9 @@ public final class AsyncDrawable {
       observeScheduler = AndroidSchedulers.mainThread();
     }
 
-    @NonNull @Override protected AsyncDrawableSubscriptionEntry load(@NonNull ImageView image,
-        @DrawableRes int resource, @ColorRes int tint,
-        @Nullable ActionSingle<ImageView> startAction,
+    @NonNull @Override
+    protected AsyncMapEntry load(@NonNull ImageView image, @DrawableRes int resource,
+        @ColorRes int tint, @Nullable ActionSingle<ImageView> startAction,
         @Nullable ActionSingle<ImageView> errorAction,
         @Nullable ActionSingle<ImageView> completeAction) {
       ImageView imageView = Checker.checkNonNull(image);

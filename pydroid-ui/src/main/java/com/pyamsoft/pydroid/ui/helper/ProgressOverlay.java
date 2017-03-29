@@ -21,7 +21,6 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -75,15 +74,11 @@ public abstract class ProgressOverlay {
 
     @ColorInt private int backgroundColor;
     private int alphaPercent;
-    @Nullable private ViewGroup rootViewGroup;
-    @IdRes private int rootResId;
     private int elevation;
 
     public Builder() {
       alphaPercent = 50;
       backgroundColor = 0;
-      rootResId = 0;
-      rootViewGroup = null;
       elevation = 16;
     }
 
@@ -103,22 +98,6 @@ public abstract class ProgressOverlay {
     @CheckResult @NonNull public Builder setAlphaPercent(int alphaPercent) {
       this.alphaPercent = alphaPercent;
       return this;
-    }
-
-    @CheckResult @NonNull public Builder setRootResId(@IdRes int rootResId) {
-      this.rootResId = rootResId;
-      return this;
-    }
-
-    @CheckResult @NonNull public Builder setRootViewGroup(@Nullable ViewGroup rootViewGroup) {
-      this.rootViewGroup = Checker.checkNonNull(rootViewGroup);
-      return this;
-    }
-
-    private void checkRootViewValidity() {
-      if (rootResId == 0 && rootViewGroup == null) {
-        throw new IllegalStateException("Must set root view by either ViewGroup or Resource Id");
-      }
     }
 
     @CheckResult @NonNull private ProgressOverlay inflateOverlay(@NonNull Activity activity,
@@ -166,16 +145,11 @@ public abstract class ProgressOverlay {
 
     @CheckResult @NonNull public ProgressOverlay build(@NonNull Activity activity) {
       activity = Checker.checkNonNull(activity);
-      checkRootViewValidity();
-      if (rootViewGroup == null) {
-        View rootView = activity.findViewById(rootResId);
-        if (rootView instanceof ViewGroup) {
-          return inflateOverlay(activity, (ViewGroup) rootView);
-        } else {
-          throw new IllegalStateException("Root view is not a ViewGroup");
-        }
+      View rootView = activity.getWindow().getDecorView();
+      if (rootView instanceof ViewGroup) {
+        return inflateOverlay(activity, (ViewGroup) rootView);
       } else {
-        return inflateOverlay(activity, rootViewGroup);
+        throw new IllegalStateException("Root view is not a ViewGroup");
       }
     }
   }

@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
@@ -89,6 +90,8 @@ public class AboutLibrariesFragment extends ActionBarFragment {
       default:
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
+
+    PYDroidInjector.get().provideComponent().provideAboutLibrariesComponent().inject(this);
   }
 
   @Nullable @Override
@@ -110,7 +113,7 @@ public class AboutLibrariesFragment extends ActionBarFragment {
 
   @Override public void onStart() {
     super.onStart();
-    presenter.loadLicenses(model -> {
+    presenter.loadLicenses(AboutLibrariesProvider.hasGooglePlayServices(getContext()), model -> {
       boolean alreadyHas = false;
       List<AboutLibrariesItem> items = fastItemAdapter.getAdapterItems();
       for (AboutLibrariesItem item : items) {

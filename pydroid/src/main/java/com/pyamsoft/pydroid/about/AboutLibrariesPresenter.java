@@ -41,9 +41,9 @@ public class AboutLibrariesPresenter extends SchedulerPresenter {
     licenseDisposable = DisposableHelper.dispose(licenseDisposable);
   }
 
-  public void loadLicenses(@NonNull LoadCallback callback) {
+  public void loadLicenses(boolean hasGooglePlay, @NonNull LoadCallback callback) {
     licenseDisposable = DisposableHelper.dispose(licenseDisposable);
-    licenseDisposable = interactor.loadLicenses()
+    licenseDisposable = interactor.loadLicenses(hasGooglePlay)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onLicenseLoaded,

@@ -31,8 +31,9 @@ class AboutLibrariesInteractor {
     this.licenses = Collections.unmodifiableList(licenses);
   }
 
-  @NonNull @CheckResult public Observable<AboutLibrariesModel> loadLicenses() {
+  @NonNull @CheckResult public Observable<AboutLibrariesModel> loadLicenses(boolean hasGooglePlay) {
     return Observable.defer(() -> Observable.fromIterable(licenses))
+        .filter(model -> !Licenses.Names.GOOGLE_PLAY.equals(model.name()) || hasGooglePlay)
         .toSortedList((o1, o2) -> o1.name().compareTo(o2.name()))
         .toObservable()
         .concatMap(Observable::fromIterable);

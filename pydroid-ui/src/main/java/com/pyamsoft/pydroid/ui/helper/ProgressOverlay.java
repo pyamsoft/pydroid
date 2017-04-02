@@ -18,7 +18,9 @@
 package com.pyamsoft.pydroid.ui.helper;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -30,7 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.databinding.ViewProgressOverlayBinding;
 import com.pyamsoft.pydroid.util.AppUtil;
 
 /**
@@ -73,6 +75,7 @@ public abstract class ProgressOverlay {
   public static final class Builder {
 
     @ColorInt private int backgroundColor;
+    @ColorInt private int spinnerColor;
     private int alphaPercent;
     private int elevation;
 
@@ -80,6 +83,7 @@ public abstract class ProgressOverlay {
       alphaPercent = 50;
       backgroundColor = 0;
       elevation = 16;
+      spinnerColor = 0;
     }
 
     @CheckResult @NonNull public Builder setElevation(int elevation) {
@@ -100,21 +104,26 @@ public abstract class ProgressOverlay {
       return this;
     }
 
+    @CheckResult @NonNull public Builder setSpinnerColor(int spinnerColor) {
+      this.spinnerColor = spinnerColor;
+      return this;
+    }
+
     @CheckResult @NonNull private ProgressOverlay inflateOverlay(@NonNull Activity activity,
         @NonNull ViewGroup rootView) {
       activity = Checker.checkNonNull(activity);
       rootView = Checker.checkNonNull(rootView);
 
-      View overlay =
-          LayoutInflater.from(activity).inflate(R.layout.view_progress_overlay, rootView, false);
+      ViewProgressOverlayBinding binding =
+          ViewProgressOverlayBinding.inflate(LayoutInflater.from(activity), rootView, false);
 
       // Set elevation to above basically everything
       // Make sure elevation cannot be negative
       elevation = Math.max(0, elevation);
-      ViewCompat.setElevation(overlay, AppUtil.convertToDP(overlay.getContext(), elevation));
+      ViewCompat.setElevation(binding.getRoot(), AppUtil.convertToDP(activity, elevation));
 
       // Set alpha
-      overlay.getRootView().setAlpha(((float) alphaPercent / 100.0F));
+      binding.getRoot().setAlpha(((float) alphaPercent / 100.0F));
 
       if (backgroundColor == 0) {
         // Get color from theme
@@ -123,24 +132,30 @@ public abstract class ProgressOverlay {
         if (themeValue.type >= TypedValue.TYPE_FIRST_COLOR_INT
             && themeValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
           // windowBackground is a color
-          overlay.getRootView().setBackgroundColor(themeValue.data);
+          binding.getRoot().setBackgroundColor(themeValue.data);
         } else {
           Drawable drawable = ContextCompat.getDrawable(activity, themeValue.resourceId);
           if (drawable != null) {
             // windowBackground is not a color, probably a drawable
-            overlay.getRootView().setBackground(drawable);
+            binding.getRoot().setBackground(drawable);
           } else {
             // Default to white
-            overlay.getRootView()
+            binding.getRoot()
                 .setBackgroundColor(ContextCompat.getColor(activity, android.R.color.white));
           }
         }
       } else {
         // Set custom defined color
-        overlay.getRootView().setBackgroundColor(backgroundColor);
+        binding.getRoot().setBackgroundColor(backgroundColor);
       }
 
-      return new Impl(rootView, overlay);
+      if (spinnerColor != 0) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          binding.progressOverlayBar.setIndeterminateTintList(ColorStateList.valueOf(spinnerColor));
+        }
+      }
+
+      return new Impl(binding, rootView);
     }
 
     @CheckResult @NonNull public ProgressOverlay build(@NonNull Activity activity) {
@@ -174,21 +189,22 @@ public abstract class ProgressOverlay {
 
   private static final class Impl extends ProgressOverlay {
 
+    @NonNull private final ViewProgressOverlayBinding binding;
     @NonNull private final ViewGroup root;
-    @NonNull private final View overlay;
     private boolean disposed;
 
-    Impl(@NonNull ViewGroup root, @NonNull View overlay) {
+    Impl(@NonNull ViewProgressOverlayBinding binding, @NonNull ViewGroup root) {
+      this.binding = Checker.checkNonNull(binding);
       this.root = Checker.checkNonNull(root);
-      this.overlay = Checker.checkNonNull(overlay);
       disposed = false;
 
-      root.addView(overlay);
+      root.addView(binding.getRoot());
     }
 
     @Override public void dispose() {
       if (!disposed) {
-        root.removeView(overlay);
+        root.removeView(binding.getRoot());
+        binding.unbind();
         disposed = true;
       }
     }

@@ -154,8 +154,10 @@ class AboutLibrariesItem extends
     return FACTORY;
   }
 
-  @SuppressWarnings("WeakerAccess") protected static class ItemFactory
-      implements ViewHolderFactory<ViewHolder> {
+  private static class ItemFactory implements ViewHolderFactory<ViewHolder> {
+
+    ItemFactory() {
+    }
 
     @CheckResult @Override public ViewHolder create(@NonNull View v) {
       return new ViewHolder(v);

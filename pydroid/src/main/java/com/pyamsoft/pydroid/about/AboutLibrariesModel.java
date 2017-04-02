@@ -15,15 +15,24 @@
  *
  */
 
-package com.pyamsoft.pydroid.social;
+package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import com.google.auto.value.AutoValue;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class SocialMediaModule {
+@RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue public abstract class AboutLibrariesModel {
 
-  @NonNull @CheckResult public final SocialMediaPresenter getPresenter() {
-    return new SocialMediaPresenter();
+  @CheckResult @NonNull
+  public static AboutLibrariesModel create(@NonNull String name, @NonNull String homepage,
+      @NonNull String license) {
+    return new AutoValue_AboutLibrariesModel(name, homepage, license);
   }
+
+  public abstract String name();
+
+  public abstract String homepage();
+
+  public abstract String license();
 }

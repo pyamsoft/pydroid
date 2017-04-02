@@ -17,23 +17,21 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pydroid.function.ActionSingle;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public final class Licenses {
 
   @NonNull private static final Licenses INSTANCE = new Licenses();
 
-  @NonNull private final Map<String, AboutLicenseModel> aboutItemMap;
+  @NonNull private final List<AboutLibrariesModel> licenses;
 
   private Licenses() {
-    aboutItemMap = new HashMap<>();
+    licenses = new ArrayList<>();
     addCommonLicenses();
   }
 
@@ -42,8 +40,8 @@ public final class Licenses {
     INSTANCE.createItem(name, homepageUrl, licenseLocation);
   }
 
-  public static void forEach(@NonNull ActionSingle<AboutLicenseModel> action) {
-    INSTANCE.forEachItem(action);
+  @CheckResult @NonNull public static List<AboutLibrariesModel> getLicenses() {
+    return Collections.unmodifiableList(INSTANCE.licenses);
   }
 
   /**
@@ -74,20 +72,8 @@ public final class Licenses {
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,
       @NonNull String homepageUrl, @NonNull String licenseLocation) {
-    final AboutLicenseModel item = AboutLicenseModel.create(name, homepageUrl, licenseLocation);
-    aboutItemMap.put(name, item);
-  }
-
-  @VisibleForTesting @SuppressWarnings("WeakerAccess") void forEachItem(
-      @NonNull ActionSingle<AboutLicenseModel> action) {
-    final List<AboutLicenseModel> sortedValues = new ArrayList<>(aboutItemMap.values());
-    Collections.sort(sortedValues, (o1, o2) -> o1.name().compareToIgnoreCase(o2.name()));
-    //noinspection Convert2streamapi
-    for (final AboutLicenseModel item : sortedValues) {
-      if (item != null) {
-        action.call(item);
-      }
-    }
+    final AboutLibrariesModel item = AboutLibrariesModel.create(name, homepageUrl, licenseLocation);
+    licenses.add(item);
   }
 
   public static final class Names {

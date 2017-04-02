@@ -26,19 +26,15 @@ import android.support.annotation.RestrictTo;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
-import com.pyamsoft.pydroid.util.NetworkUtil;
+import com.pyamsoft.pydroid.social.Linker;
 import java.util.Locale;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionUpgradeDialog extends DialogFragment
-    implements SocialMediaPresenter.View {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionUpgradeDialog extends DialogFragment {
 
   @NonNull public static final String TAG = "VersionUpgradeDialog";
   @NonNull private static final String KEY_NAME = "key_name";
   @NonNull private static final String KEY_LATEST_VERSION = "key_latest_version";
   @NonNull private static final String KEY_CURRENT_VERSION = "key_current_version";
-  @SuppressWarnings("WeakerAccess") public SocialMediaPresenter presenter;
   private int latestVersion;
   private int currentVersion;
   private String applicationName;
@@ -73,8 +69,6 @@ import java.util.Locale;
     if (applicationName == null) {
       throw new RuntimeException("Coult not find application name");
     }
-
-    PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -84,24 +78,10 @@ import java.util.Locale;
     return new AlertDialog.Builder(getActivity()).setTitle("New version available")
         .setMessage(message)
         .setPositiveButton("Update", (dialogInterface, i) -> {
-          presenter.clickAppPage(getContext().getPackageName());
+          Linker.with(getContext()).clickAppPage(getContext().getPackageName());
           dismiss();
         })
         .setNegativeButton("Later", (dialogInterface, i) -> dismiss())
         .create();
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    presenter.bindView(this);
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-    presenter.unbindView();
-  }
-
-  @Override public void onSocialMediaClicked(@NonNull String link) {
-    NetworkUtil.newLink(getContext().getApplicationContext(), link);
   }
 }

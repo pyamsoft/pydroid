@@ -23,10 +23,8 @@ import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.about.AboutLibrariesModule;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent;
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent;
-import com.pyamsoft.pydroid.ui.social.SocialMediaComponent;
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 
@@ -34,18 +32,15 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
 
   @NonNull private final VersionCheckComponent versionCheckComponent;
   @NonNull private final AboutLibrariesComponent aboutLibrariesComponent;
-  @NonNull private final SocialMediaComponent socialMediaComponent;
   @NonNull private final AppComponent appComponent;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
     module = Checker.checkNonNull(module);
     VersionCheckModule versionCheckModule = new VersionCheckModule(module);
     AboutLibrariesModule aboutLibrariesModule = new AboutLibrariesModule(module);
-    SocialMediaModule socialMediaModule = new SocialMediaModule();
     versionCheckComponent = new VersionCheckComponent(versionCheckModule);
     aboutLibrariesComponent = new AboutLibrariesComponent(aboutLibrariesModule);
-    socialMediaComponent = new SocialMediaComponent(socialMediaModule);
-    appComponent = new AppComponent(socialMediaModule, versionCheckModule);
+    appComponent = new AppComponent(versionCheckModule);
   }
 
   @CheckResult @NonNull static PYDroidComponent withModule(@NonNull PYDroidModule module) {
@@ -58,10 +53,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
 
   @CheckResult @NonNull public AboutLibrariesComponent provideAboutLibrariesComponent() {
     return aboutLibrariesComponent;
-  }
-
-  @CheckResult @NonNull public SocialMediaComponent provideSocialMediaComponent() {
-    return socialMediaComponent;
   }
 
   @CheckResult @NonNull public AppComponent provideAppComponent() {

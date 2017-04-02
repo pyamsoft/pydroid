@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
@@ -30,7 +29,7 @@ import retrofit2.HttpException;
 import timber.log.Timber;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionCheckPresenter
-    extends SchedulerPresenter<Presenter.Empty> {
+    extends SchedulerPresenter {
 
   @NonNull private final VersionCheckInteractor interactor;
   @NonNull private Disposable disposable = Disposables.empty();
@@ -41,8 +40,7 @@ import timber.log.Timber;
     this.interactor = Checker.checkNonNull(interactor);
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
     disposable = DisposableHelper.dispose(disposable);
   }
 

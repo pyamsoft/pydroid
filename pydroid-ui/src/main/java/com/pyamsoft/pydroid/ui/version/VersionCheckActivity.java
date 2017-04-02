@@ -56,8 +56,6 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @CallSuper @Override protected void onStart() {
     super.onStart();
-    presenter.bindView(null);
-
     if (!versionChecked && isVersionCheckEnabled()) {
       presenter.checkForUpdates(getPackageName(), getCurrentApplicationVersion(),
           new VersionCheckPresenter.UpdateCheckCallback() {
@@ -79,7 +77,12 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
 
   @CallSuper @Override protected void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    presenter.destroy();
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {

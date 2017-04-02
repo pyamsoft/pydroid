@@ -27,21 +27,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
+import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
-import com.pyamsoft.pydroid.util.NetworkUtil;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class TamperDialog extends DialogFragment
-    implements SocialMediaPresenter.View {
-
-  public SocialMediaPresenter presenter;
-
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class TamperDialog extends DialogFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setCancelable(false);
-
-    PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -49,7 +41,10 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
         "WARNING: THIS APPLICATION IS NOT OFFICIAL")
         .setMessage(R.string.tamper_msg)
         .setCancelable(false)
-        .setPositiveButton("Take Me", (dialogInterface, i) -> presenter.clickGooglePlay())
+        .setPositiveButton("Take Me", (dialog, which) -> {
+          Linker.with(getContext()).clickGooglePlay();
+          killApp();
+        })
         .setNegativeButton("Close", (dialogInterface, i) -> killApp())
         .create();
   }
@@ -66,20 +61,5 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
           .getSystemService(Context.ACTIVITY_SERVICE);
       activityManager.clearApplicationUserData();
     }
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    presenter.bindView(this);
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-    presenter.unbindView();
-  }
-
-  @Override public void onSocialMediaClicked(@NonNull String link) {
-    NetworkUtil.newLink(getContext(), link);
-    killApp();
   }
 }

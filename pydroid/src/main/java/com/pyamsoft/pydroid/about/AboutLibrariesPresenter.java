@@ -18,52 +18,40 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesPresenter
-    extends SchedulerPresenter<Presenter.Empty> {
+public class AboutLibrariesPresenter extends SchedulerPresenter {
 
   @NonNull private final AboutLibrariesInteractor interactor;
-  @NonNull private final CompositeDisposable licenseDisposables;
+  @NonNull private Disposable licenseDisposable = Disposables.empty();
 
   AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
-    this.interactor = Checker.checkNonNull(interactor);
-    licenseDisposables = new CompositeDisposable();
+    this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    licenseDisposables.clear();
-    interactor.clearCache();
+  @Override protected void onStop() {
+    super.onStop();
+    licenseDisposable = DisposableHelper.dispose(licenseDisposable);
   }
 
-  public void loadLicenseText(int position, @NonNull AboutLicenseModel license,
-      @NonNull LicenseTextLoadCallback callback) {
-    Disposable licenseSubscription = interactor.loadLicenseText(license)
+  public void loadLicenses(@NonNull LoadCallback callback) {
+    licenseDisposable = DisposableHelper.dispose(licenseDisposable);
+    licenseDisposable = interactor.loadLicenses()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(licenseText -> {
-          callback.onLicenseTextLoadComplete(position, licenseText);
-        }, throwable -> {
-          Timber.e(throwable, "onError loadLicenseText");
-          callback.onLicenseTextLoadError(position);
-        });
-    licenseDisposables.add(licenseSubscription);
+        .subscribe(callback::onLicenseLoaded,
+            throwable -> Timber.e(throwable, "onError loading licenses"));
   }
 
-  public interface LicenseTextLoadCallback {
+  public interface LoadCallback {
 
-    void onLicenseTextLoadComplete(int position, @NonNull String text);
-
-    void onLicenseTextLoadError(int position);
+    void onLicenseLoaded(@NonNull AboutLibrariesModel model);
   }
 }

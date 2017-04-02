@@ -15,24 +15,11 @@
  *
  */
 
-package com.pyamsoft.pydroid.about;
+package com.pyamsoft.pydroid.function;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import com.google.auto.value.AutoValue;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue public abstract class AboutLicenseModel {
+public interface FuncSingle<T, R> {
 
-  @CheckResult @NonNull
-  public static AboutLicenseModel create(@NonNull String name, @NonNull String homepage,
-      @NonNull String license) {
-    return new AutoValue_AboutLicenseModel(name, homepage, license);
-  }
-
-  public abstract String name();
-
-  public abstract String homepage();
-
-  public abstract String license();
+  @CheckResult T call(R item);
 }

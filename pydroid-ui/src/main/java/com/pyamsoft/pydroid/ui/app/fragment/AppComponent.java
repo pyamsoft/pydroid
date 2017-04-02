@@ -20,23 +20,18 @@ package com.pyamsoft.pydroid.ui.app.fragment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.social.SocialMediaModule;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AppComponent {
 
-  @NonNull private final SocialMediaModule socialMediaModule;
   @NonNull private final VersionCheckModule versionCheckModule;
 
-  public AppComponent(@NonNull SocialMediaModule socialMediaModule,
-      @NonNull VersionCheckModule versionCheckModule) {
-    this.socialMediaModule = Checker.checkNonNull(socialMediaModule);
+  public AppComponent(@NonNull VersionCheckModule versionCheckModule) {
     this.versionCheckModule = Checker.checkNonNull(versionCheckModule);
   }
 
   void inject(@NonNull ActionBarSettingsPreferenceFragment fragment) {
     fragment = Checker.checkNonNull(fragment);
     fragment.presenter = versionCheckModule.getPresenter();
-    fragment.socialPresenter = socialMediaModule.getPresenter();
   }
 }

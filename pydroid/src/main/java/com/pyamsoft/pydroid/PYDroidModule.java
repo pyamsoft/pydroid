@@ -21,21 +21,28 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.about.AboutLibrariesModel;
 import com.pyamsoft.pydroid.about.LicenseProvider;
+import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidModule {
 
   // Singleton
   @NonNull private final Context appContext;
   @NonNull private final LicenseProvider licenseProvider;
+  @NonNull private final List<AboutLibrariesModel> licenseMap;
 
   public PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
     appContext = Checker.checkNonNull(context).getApplicationContext();
     this.licenseProvider = Checker.checkNonNull(licenseProvider);
+    licenseMap = Licenses.getLicenses();
   }
 
   // Singleton
@@ -46,6 +53,10 @@ import io.reactivex.schedulers.Schedulers;
   // Singleton
   @CheckResult @NonNull public final LicenseProvider provideLicenseProvider() {
     return licenseProvider;
+  }
+
+  @CheckResult @NonNull public final List<AboutLibrariesModel> provideLicenseMap() {
+    return Collections.unmodifiableList(licenseMap);
   }
 
   // Singleton

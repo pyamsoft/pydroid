@@ -25,20 +25,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter;
-import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
-import java.util.ArrayList;
 import java.util.List;
 import timber.log.Timber;
 
@@ -46,8 +41,8 @@ public class AboutLibrariesFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "AboutLibrariesFragment";
   @NonNull private static final String KEY_BACK_STACK = "key_back_stack";
-  @SuppressWarnings("WeakerAccess") AboutLibrariesPresenter presenter;
-  @SuppressWarnings("WeakerAccess") FastItemAdapter<AboutAdapterItem> fastItemAdapter;
+  @SuppressWarnings("WeakerAccess") FastItemAdapter<AboutLibrariesItem> fastItemAdapter;
+  AboutLibrariesPresenter presenter;
   private boolean lastOnBackStack;
   private FragmentAboutLibrariesBinding binding;
 
@@ -94,8 +89,6 @@ public class AboutLibrariesFragment extends ActionBarFragment {
       default:
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
-
-    PYDroidInjector.get().provideComponent().provideAboutLibrariesComponent().inject(this);
   }
 
   @Nullable @Override
@@ -113,73 +106,39 @@ public class AboutLibrariesFragment extends ActionBarFragment {
 
     binding.recyclerAboutLibraries.setLayoutManager(new LinearLayoutManager(getContext()));
     binding.recyclerAboutLibraries.setAdapter(fastItemAdapter);
+  }
 
-    fastItemAdapter.withOnBindViewHolderListener(new FastAdapter.OnBindViewHolderListener() {
-
-      @CheckResult @NonNull
-      private AboutAdapterItem.ViewHolder toViewHolder(RecyclerView.ViewHolder holder) {
-        if (holder instanceof AboutAdapterItem.ViewHolder) {
-          return (AboutAdapterItem.ViewHolder) holder;
-        } else {
-          throw new IllegalStateException("ViewHolder is not AboutAdapterItem.ViewHolder");
+  @Override public void onStart() {
+    super.onStart();
+    presenter.loadLicenses(model -> {
+      boolean alreadyHas = false;
+      List<AboutLibrariesItem> items = fastItemAdapter.getAdapterItems();
+      for (AboutLibrariesItem item : items) {
+        if (item.getModel() == model) {
+          alreadyHas = true;
+          break;
         }
       }
 
-      @Override public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position,
-          List<Object> payloads) {
-        final AboutAdapterItem.ViewHolder holder = toViewHolder(viewHolder);
-        final AboutAdapterItem aboutItem =
-            fastItemAdapter.getAdapterItem(holder.getAdapterPosition());
-        aboutItem.bindView(holder, payloads);
-        holder.bind(item -> presenter.loadLicenseText(holder.getAdapterPosition(), item,
-            new AboutLibrariesPresenter.LicenseTextLoadCallback() {
-              @Override public void onLicenseTextLoadComplete(int position, @NonNull String text) {
-                fastItemAdapter.getAdapterItem(position).setLicenseText(text);
-                fastItemAdapter.notifyItemChanged(position);
-              }
-
-              @Override public void onLicenseTextLoadError(int position) {
-                // TODO handle error
-              }
-            }));
-      }
-
-      @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        final AboutAdapterItem.ViewHolder holder = toViewHolder(viewHolder);
-        final AboutAdapterItem item = (AboutAdapterItem) holder.itemView.getTag();
-        if (item != null) {
-          item.unbindView(holder);
-        }
+      if (!alreadyHas) {
+        fastItemAdapter.add(new AboutLibrariesItem(model));
       }
     });
+  }
 
-    final List<AboutAdapterItem> items = new ArrayList<>();
-    Licenses.forEach(aboutLicenseItem -> {
-      final boolean add;
-      add = !Licenses.Names.GOOGLE_PLAY.equals(aboutLicenseItem.name())
-          || AboutLibrariesProvider.hasGooglePlayServices(getContext());
+  @Override public void onStop() {
+    super.onStop();
+    presenter.stop();
+  }
 
-      if (add) {
-        items.add(new AboutAdapterItem(aboutLicenseItem));
-      }
-    });
-
-    fastItemAdapter.add(items);
+  @Override public void onDestroy() {
+    super.onDestroy();
+    presenter.destroy();
   }
 
   @Override public void onResume() {
     super.onResume();
     setActionBarUpEnabled(true);
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    presenter.bindView(null);
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-    presenter.unbindView();
   }
 
   @Override public void onDestroyView() {

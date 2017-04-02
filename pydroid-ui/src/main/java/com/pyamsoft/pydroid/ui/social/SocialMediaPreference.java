@@ -19,21 +19,16 @@ package com.pyamsoft.pydroid.ui.social;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
+import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
 import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding;
-import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 
-public class SocialMediaPreference extends BaseBoundPreference
-    implements SocialMediaPresenter.View {
+public class SocialMediaPreference extends BaseBoundPreference {
 
-  public SocialMediaPresenter presenter;
   private ViewSocialMediaBinding binding;
 
   public SocialMediaPreference(Context context, AttributeSet attrs, int defStyleAttr,
@@ -59,7 +54,6 @@ public class SocialMediaPreference extends BaseBoundPreference
 
   private void init() {
     setLayoutResource(R.layout.view_social_media);
-    PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
   }
 
   @Override public void onBindViewHolder(PreferenceViewHolder holder) {
@@ -67,10 +61,10 @@ public class SocialMediaPreference extends BaseBoundPreference
     Timber.d("onBindViewHolder");
     binding = DataBindingUtil.bind(holder.itemView);
 
-    binding.googlePlay.setOnClickListener(v -> presenter.clickGooglePlay());
-    binding.googlePlus.setOnClickListener(v -> presenter.clickGooglePlus());
-    binding.blogger.setOnClickListener(v -> presenter.clickBlogger());
-    binding.facebook.setOnClickListener(v -> presenter.clickFacebook());
+    binding.googlePlay.setOnClickListener(v -> Linker.with(getContext()).clickGooglePlay());
+    binding.googlePlus.setOnClickListener(v -> Linker.with(getContext()).clickGooglePlus());
+    binding.blogger.setOnClickListener(v -> Linker.with(getContext()).clickBlogger());
+    binding.facebook.setOnClickListener(v -> Linker.with(getContext()).clickFacebook());
   }
 
   @Override protected void onUnbindViewHolder() {
@@ -82,19 +76,5 @@ public class SocialMediaPreference extends BaseBoundPreference
       binding.facebook.setOnClickListener(null);
       binding.unbind();
     }
-  }
-
-  @Override public void onAttached() {
-    super.onAttached();
-    presenter.bindView(this);
-  }
-
-  @Override public void onDetached() {
-    super.onDetached();
-    presenter.unbindView();
-  }
-
-  @Override public void onSocialMediaClicked(@NonNull String link) {
-    NetworkUtil.newLink(getContext(), link);
   }
 }

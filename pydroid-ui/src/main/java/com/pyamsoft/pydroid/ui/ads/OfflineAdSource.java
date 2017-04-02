@@ -29,10 +29,8 @@ import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
+import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
-import com.pyamsoft.pydroid.util.NetworkUtil;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +40,7 @@ import java.util.List;
 import java.util.Queue;
 import timber.log.Timber;
 
-public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
+public class OfflineAdSource implements AdSource {
 
   @NonNull private static final String PACKAGE_PASTERINO = "com.pyamsoft.pasterino";
   @NonNull private static final String PACKAGE_PADLOCK = "com.pyamsoft.padlock";
@@ -54,7 +52,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
       PACKAGE_PASTERINO, PACKAGE_PADLOCK, PACKAGE_POWERMANAGER, PACKAGE_HOMEBUTTON,
       PACKAGE_ZAPTORCH, PACKAGE_WORDWIZ
   };
-  public SocialMediaPresenter presenter;
+  @SuppressWarnings("WeakerAccess") Context appContext;
   private Queue<String> imageQueue;
   private ImageView adImage;
   @NonNull private AsyncMapEntry adTask = AsyncMap.emptyEntry();
@@ -123,9 +121,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @NonNull @Override public View create(@NonNull Context context) {
-    context = Checker.checkNonNull(context);
-
-    PYDroidInjector.get().provideComponent().provideSocialMediaComponent().inject(this);
+    appContext = Checker.checkNonNull(context).getApplicationContext();
 
     // Randomize the order of items
     final List<String> randomList = new ArrayList<>(Arrays.asList(POSSIBLE_PACKAGES));
@@ -133,7 +129,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     imageQueue = new LinkedList<>(randomList);
 
     // Create Ad image in java to avoid inflation cost
-    adImage = new ImageView(context.getApplicationContext());
+    adImage = new ImageView(appContext);
     adImage.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.MATCH_PARENT));
     adImage.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -141,7 +137,6 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @NonNull @Override public View destroy(boolean isChangingConfigurations) {
-    presenter.destroy();
     adTask = AsyncMapHelper.unsubscribe(adTask);
     if (!isChangingConfigurations) {
       imageQueue.clear();
@@ -150,7 +145,6 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @Override public void start() {
-    presenter.bindView(this);
   }
 
   @Override public void refreshAd(@NonNull AdRefreshedCallback refreshedCallback) {
@@ -159,11 +153,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
     adImage.setOnClickListener(view -> {
-      if (presenter == null) {
-        throw new IllegalStateException("Cannot click ad with non-existent presenter");
-      } else {
-        presenter.clickAppPage(currentPackage);
-      }
+      Linker.with(appContext).clickAppPage(currentPackage);
     });
 
     adTask = AsyncMapHelper.unsubscribe(adTask);
@@ -174,12 +164,7 @@ public class OfflineAdSource implements AdSource, SocialMediaPresenter.View {
   }
 
   @Override public void stop() {
-    presenter.unbindView();
     adImage.setOnClickListener(null);
     adImage.setImageDrawable(null);
-  }
-
-  @Override public void onSocialMediaClicked(@NonNull String link) {
-    NetworkUtil.newLink(adImage.getContext(), link);
   }
 }

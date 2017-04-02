@@ -32,7 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.pyamsoft.pydroid.social.SocialMediaPresenter;
+import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
@@ -40,17 +40,15 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import java.util.Locale;
 import timber.log.Timber;
 
 @SuppressWarnings("unused") public abstract class ActionBarSettingsPreferenceFragment
-    extends ActionBarPreferenceFragment implements VersionCheckProvider, SocialMediaPresenter.View {
+    extends ActionBarPreferenceFragment {
 
   VersionCheckPresenter presenter;
-  SocialMediaPresenter socialPresenter;
   private Toast toast;
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -108,21 +106,14 @@ import timber.log.Timber;
 
     final Preference rateApplication = findPreference(getString(R.string.rating_key));
     rateApplication.setOnPreferenceClickListener(preference -> {
-      socialPresenter.clickAppPage(preference.getContext().getPackageName());
+      Linker.with(preference.getContext()).clickAppPage(preference.getContext().getPackageName());
       return true;
     });
   }
 
-  @CallSuper @Override public void onStart() {
-    super.onStart();
-    presenter.bindView(null);
-    socialPresenter.bindView(this);
-  }
-
   @CallSuper @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
-    socialPresenter.unbindView();
+    presenter.stop();
   }
 
   @CheckResult protected boolean showChangelog() {
@@ -164,15 +155,11 @@ import timber.log.Timber;
     return true;
   }
 
-  @Override public void onSocialMediaClicked(@NonNull String link) {
-    NetworkUtil.newLink(getContext(), link);
-  }
-
-  @NonNull @Override public String provideApplicationName() {
+  @NonNull @CheckResult String provideApplicationName() {
     return getVersionedActivity().provideApplicationName();
   }
 
-  @Override public int getCurrentApplicationVersion() {
+  @CheckResult int getCurrentApplicationVersion() {
     return getVersionedActivity().getCurrentApplicationVersion();
   }
 

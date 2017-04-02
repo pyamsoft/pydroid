@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.SchedulerHelper;
 import io.reactivex.Scheduler;
 
-public abstract class SchedulerPresenter<I> extends Presenter<I> {
+public abstract class SchedulerPresenter extends Presenter {
 
   @NonNull private final Scheduler observeScheduler;
   @NonNull private final Scheduler subscribeScheduler;

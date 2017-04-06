@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.databinding.ViewProgressOverlayBinding;
 import com.pyamsoft.pydroid.util.AppUtil;
+import timber.log.Timber;
 
 /**
  * Spinner view which takes over the screen and displays indeterminate progress
@@ -76,6 +77,7 @@ public abstract class ProgressOverlay {
 
     @ColorInt private int backgroundColor;
     @ColorInt private int spinnerColor;
+    @Nullable private ViewGroup rootViewGroup;
     private int alphaPercent;
     private int elevation;
 
@@ -84,6 +86,7 @@ public abstract class ProgressOverlay {
       backgroundColor = 0;
       elevation = 16;
       spinnerColor = 0;
+      rootViewGroup = null;
     }
 
     @CheckResult @NonNull public Builder setElevation(int elevation) {
@@ -106,6 +109,11 @@ public abstract class ProgressOverlay {
 
     @CheckResult @NonNull public Builder setSpinnerColor(int spinnerColor) {
       this.spinnerColor = spinnerColor;
+      return this;
+    }
+
+    @CheckResult @NonNull public Builder setRootViewGroup(@NonNull ViewGroup rootViewGroup) {
+      this.rootViewGroup = rootViewGroup;
       return this;
     }
 
@@ -155,12 +163,24 @@ public abstract class ProgressOverlay {
         }
       }
 
+      // Eat any click attempts while the overlay is showing
+      binding.getRoot().setOnClickListener(v -> Timber.w("Eat click attempt with Overlay"));
+
       return new Impl(binding, rootView);
     }
 
     @CheckResult @NonNull public ProgressOverlay build(@NonNull Activity activity) {
       activity = Checker.checkNonNull(activity);
-      View rootView = activity.getWindow().getDecorView();
+      final View rootView;
+      if (rootViewGroup == null) {
+        // Use the default Android content view as Overlay root
+        Timber.d("Using Android content view as root");
+        rootView = activity.getWindow().getDecorView().findViewById(android.R.id.content);
+      } else {
+        // Locate a view in the given activity and use it as the root view
+        Timber.d("Using builder-defined view as root");
+        rootView = rootViewGroup;
+      }
       if (rootView instanceof ViewGroup) {
         return inflateOverlay(activity, (ViewGroup) rootView);
       } else {

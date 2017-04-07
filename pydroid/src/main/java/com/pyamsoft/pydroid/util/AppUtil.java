@@ -23,11 +23,6 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import com.pyamsoft.pydroid.helper.Checker;
@@ -49,52 +44,6 @@ public final class AppUtil {
     return i;
   }
 
-  /**
-   * Using the fragment manager to handle transactions, this guarantees that any old
-   * versions of the dialog fragment are removed before a new one is added.
-   */
-  public static void guaranteeSingleDialogFragment(@NonNull FragmentActivity fragmentActivity,
-      @NonNull DialogFragment dialogFragment, @NonNull String tag) {
-    fragmentActivity = Checker.checkNonNull(fragmentActivity);
-    dialogFragment = Checker.checkNonNull(dialogFragment);
-    tag = Checker.checkNonNull(tag);
-
-    if (tag.isEmpty()) {
-      throw new IllegalArgumentException("Cannot use EMPTY tag");
-    }
-
-    final FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
-    final FragmentTransaction ft = fragmentManager.beginTransaction();
-    final Fragment prev = fragmentManager.findFragmentByTag(tag);
-    if (prev != null) {
-      Timber.d("Remove existing fragment with tag: %s", tag);
-      ft.remove(prev);
-    }
-
-    Timber.d("Add new fragment with tag: %s", tag);
-    dialogFragment.show(ft, tag);
-  }
-
-  /**
-   * Guarantees that a fragment with the given tag is only added to the view once
-   */
-  public static void onlyLoadOnceDialogFragment(@NonNull FragmentActivity fragmentActivity,
-      @NonNull DialogFragment dialogFragment, @NonNull String tag) {
-    fragmentActivity = Checker.checkNonNull(fragmentActivity);
-    dialogFragment = Checker.checkNonNull(dialogFragment);
-    tag = Checker.checkNonNull(tag);
-
-    if (tag.isEmpty()) {
-      throw new IllegalArgumentException("Cannot use EMPTY tag");
-    }
-
-    final FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
-    final Fragment prev = fragmentManager.findFragmentByTag(tag);
-    if (prev == null) {
-      dialogFragment.show(fragmentManager, tag);
-    }
-  }
-
   @CheckResult public static float convertToDP(@NonNull Context c, float px) {
     c = Checker.checkNonNull(c);
     final DisplayMetrics m = c.getResources().getDisplayMetrics();
@@ -102,30 +51,4 @@ public final class AppUtil {
     Timber.d("Convert %f px to %f dp", px, dp);
     return dp;
   }
-
-  //public static void setVectorIconForNotification(@NonNull Context context,
-  //    @NonNull RemoteViews remoteViews, @IdRes int id, @DrawableRes int icon) {
-  //  setVectorIconForNotification(context, remoteViews, id, icon, 0);
-  //}
-  //
-  //public static void setVectorIconForNotification(@NonNull Context context,
-  //    @NonNull RemoteViews remoteViews, @IdRes int id, @DrawableRes int icon, @ColorRes int color) {
-  //  final Context appContext = context.getApplicationContext();
-  //  Drawable d = AppCompatResources.getDrawable(appContext, icon);
-  //  if (d == null) {
-  //    Timber.e("Drawable was null for icon: %d", icon);
-  //    return;
-  //  }
-  //
-  //  if (color != 0) {
-  //    d = DrawableUtil.tintDrawableFromRes(appContext, d, color);
-  //  }
-  //
-  //  final Bitmap b =
-  //      Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-  //  final Canvas c = new Canvas(b);
-  //  d.setBounds(0, 0, c.getWidth(), c.getHeight());
-  //  d.draw(c);
-  //  remoteViews.setImageViewBitmap(id, b);
-  //}
 }

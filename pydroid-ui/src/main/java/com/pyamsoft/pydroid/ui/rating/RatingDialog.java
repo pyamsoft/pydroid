@@ -34,9 +34,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import com.pyamsoft.pydroid.PYDroidPreferences;
-import com.pyamsoft.pydroid.drawable.AsyncDrawable;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
-import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
+import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -113,7 +112,7 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    iconTask = AsyncMapHelper.unsubscribe(iconTask);
+    iconTask = DrawableHelper.unsubscribe(iconTask);
     binding.unbind();
   }
 
@@ -132,8 +131,8 @@ public class RatingDialog extends DialogFragment {
   private void initDialog() {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
-    iconTask = AsyncMapHelper.unsubscribe(iconTask);
-    iconTask = AsyncDrawable.load(changeLogIcon).into(binding.ratingIcon);
+    iconTask = DrawableHelper.unsubscribe(iconTask);
+    iconTask = DrawableLoader.load(changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
 

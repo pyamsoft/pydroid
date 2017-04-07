@@ -24,10 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.ads.AdSource;
-import com.pyamsoft.pydroid.drawable.AsyncDrawable;
-import com.pyamsoft.pydroid.drawable.AsyncMap;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
-import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
+import com.pyamsoft.pydroid.ui.loader.DrawableMap;
+import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
@@ -55,7 +54,7 @@ public class OfflineAdSource implements AdSource {
   @SuppressWarnings("WeakerAccess") Context appContext;
   private Queue<String> imageQueue;
   private ImageView adImage;
-  @NonNull private AsyncMapEntry adTask = AsyncMap.emptyEntry();
+  @NonNull private AsyncMapEntry adTask = DrawableMap.emptyEntry();
 
   @CheckResult private int loadImage(@NonNull String currentPackage) {
     int image;
@@ -137,7 +136,7 @@ public class OfflineAdSource implements AdSource {
   }
 
   @NonNull @Override public View destroy(boolean isChangingConfigurations) {
-    adTask = AsyncMapHelper.unsubscribe(adTask);
+    adTask = DrawableHelper.unsubscribe(adTask);
     if (!isChangingConfigurations) {
       imageQueue.clear();
     }
@@ -156,8 +155,8 @@ public class OfflineAdSource implements AdSource {
       Linker.with(appContext).clickAppPage(currentPackage);
     });
 
-    adTask = AsyncMapHelper.unsubscribe(adTask);
-    adTask = AsyncDrawable.load(image)
+    adTask = DrawableHelper.unsubscribe(adTask);
+    adTask = DrawableLoader.load(image)
         .setErrorAction(item -> callback.onAdFailedLoad())
         .setCompleteAction(item -> callback.onAdRefreshed())
         .into(adImage);

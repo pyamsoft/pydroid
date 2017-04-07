@@ -15,26 +15,25 @@
  *
  */
 
-package com.pyamsoft.pydroid.drawable;
+package com.pyamsoft.pydroid.ui.loader;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.helper.Checker;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class AsyncMap {
+public class DrawableMap {
 
-  @NonNull private final HashMap<String, AsyncMapEntry> map;
+  @NonNull private final HashMap<String, DrawableLoader.Loaded> map;
 
-  public AsyncMap() {
+  public DrawableMap() {
     this.map = new HashMap<>();
   }
 
-  @NonNull @CheckResult public static AsyncMapEntry emptyEntry() {
-    return new AsyncMapEntry() {
+  @NonNull @CheckResult public static DrawableLoader.Loaded emptyEntry() {
+    return new DrawableLoader.Loaded() {
 
       private boolean unloaded = false;
 
@@ -53,12 +52,12 @@ public class AsyncMap {
    *
    * If an old element exists, its task is cancelled first before adding the new one
    */
-  public final void put(@NonNull String tag, @NonNull AsyncMapEntry subscription) {
+  public final void put(@NonNull String tag, @NonNull DrawableLoader.Loaded subscription) {
     tag = Checker.checkNonNull(tag);
     subscription = Checker.checkNonNull(subscription);
 
     if (map.containsKey(tag)) {
-      map.put(tag, AsyncMapHelper.unsubscribe(map.get(tag)));
+      map.put(tag, DrawableHelper.unsubscribe(map.get(tag)));
     }
 
     Timber.d("Insert new subscription for tag: %s", tag);
@@ -71,9 +70,9 @@ public class AsyncMap {
    * If the elements have not been cancelled yet, cancel them before removing them
    */
   public final void clear() {
-    for (final Map.Entry<String, AsyncMapEntry> entry : map.entrySet()) {
-      AsyncMapEntry value = Checker.checkNonNull(entry.getValue());
-      entry.setValue(AsyncMapHelper.unsubscribe(value));
+    for (final Map.Entry<String, DrawableLoader.Loaded> entry : map.entrySet()) {
+      DrawableLoader.Loaded value = Checker.checkNonNull(entry.getValue());
+      entry.setValue(DrawableHelper.unsubscribe(value));
     }
 
     Timber.d("Clear AsyncDrawableMap");

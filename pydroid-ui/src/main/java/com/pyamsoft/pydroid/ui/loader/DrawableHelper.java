@@ -15,28 +15,27 @@
  *
  */
 
-package com.pyamsoft.pydroid.drawable;
+package com.pyamsoft.pydroid.ui.loader;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.disposables.Disposable;
+import android.support.annotation.Nullable;
 
-class AsyncDrawableSubscriptionEntry implements AsyncMapEntry {
+public final class DrawableHelper {
 
-  @NonNull private final Disposable disposable;
-
-  AsyncDrawableSubscriptionEntry(@NonNull Disposable disposable) {
-    disposable = Checker.checkNonNull(disposable);
-    this.disposable = disposable;
+  private DrawableHelper() {
+    throw new RuntimeException("No instances");
   }
 
-  @Override public void unload() {
-    if (!isUnloaded()) {
-      disposable.dispose();
+  @CheckResult @NonNull
+  public static DrawableLoader.Loaded unload(@Nullable DrawableLoader.Loaded entry) {
+    if (entry == null) {
+      return DrawableMap.emptyEntry();
     }
-  }
 
-  @Override public boolean isUnloaded() {
-    return disposable.isDisposed();
+    if (!entry.isUnloaded()) {
+      entry.unload();
+    }
+    return DrawableMap.emptyEntry();
   }
 }

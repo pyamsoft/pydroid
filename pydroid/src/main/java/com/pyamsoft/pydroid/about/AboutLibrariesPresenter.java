@@ -30,7 +30,8 @@ public class AboutLibrariesPresenter extends SchedulerPresenter {
   @NonNull private final AboutLibrariesInteractor interactor;
   @NonNull private Disposable licenseDisposable = Disposables.empty();
 
-  AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor,
+  @SuppressWarnings("WeakerAccess")
+  public AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;

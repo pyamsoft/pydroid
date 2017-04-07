@@ -39,14 +39,13 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import java.util.Locale;
 import timber.log.Timber;
 
-@SuppressWarnings("unused") public abstract class ActionBarSettingsPreferenceFragment
-    extends ActionBarPreferenceFragment {
+public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPreferenceFragment {
 
   VersionCheckPresenter presenter;
   private Toast toast;
@@ -147,7 +146,7 @@ import timber.log.Timber;
 
           @Override public void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode) {
             Timber.d("Updated version found. %d => %d", oldVersionCode, updatedVersionCode);
-            AppUtil.guaranteeSingleDialogFragment(getActivity(),
+            DialogUtil.guaranteeSingleDialogFragment(getActivity(),
                 VersionUpgradeDialog.newInstance(provideApplicationName(), oldVersionCode,
                     updatedVersionCode), VersionUpgradeDialog.TAG);
           }

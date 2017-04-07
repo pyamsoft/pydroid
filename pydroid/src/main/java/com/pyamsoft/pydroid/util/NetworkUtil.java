@@ -38,8 +38,8 @@ public final class NetworkUtil {
     c = Checker.checkNonNull(c);
     link = Checker.checkNonNull(link);
 
-    final Uri uri = Uri.parse(link);
-    final Intent intent = new Intent(Intent.ACTION_VIEW);
+    Uri uri = Uri.parse(link);
+    Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.setData(uri);
     Timber.d("Start intent for URI: %s", uri);
@@ -52,13 +52,11 @@ public final class NetworkUtil {
     }
   }
 
-  @SuppressWarnings("unused") @CheckResult public static boolean hasConnection(@NonNull Context c) {
+  @CheckResult public static boolean hasConnection(@NonNull Context c) {
     c = Checker.checkNonNull(c).getApplicationContext();
-    final ConnectivityManager connMan =
+    ConnectivityManager connMan =
         (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo activeNetwork = connMan.getActiveNetworkInfo();
-    final boolean connected = (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
-    Timber.d("Check network availability: %s", connected);
-    return connected;
+    return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
   }
 }

@@ -52,7 +52,7 @@ public abstract class BaseBoundPreference extends Preference {
     onUnbindViewHolder();
   }
 
-  @SuppressWarnings("WeakerAccess") protected void onUnbindViewHolder() {
+  protected void onUnbindViewHolder() {
 
   }
 }

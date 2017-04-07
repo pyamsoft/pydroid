@@ -19,18 +19,20 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Observable;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckInteractor {
+public class VersionCheckInteractor {
 
   @NonNull private final VersionCheckService versionCheckService;
 
-  VersionCheckInteractor(@NonNull VersionCheckService versionCheckService) {
+  public VersionCheckInteractor(@NonNull VersionCheckService versionCheckService) {
     this.versionCheckService = Checker.checkNonNull(versionCheckService);
   }
 
+  /**
+   * public
+   */
   @NonNull @CheckResult Observable<VersionCheckResponse> checkVersion(@NonNull String packageName) {
     return versionCheckService.checkVersion(Checker.checkNonNull(packageName));
   }

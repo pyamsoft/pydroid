@@ -59,7 +59,7 @@ public abstract class ActivityBase extends AppCompatActivity {
     return false;
   }
 
-  @SuppressWarnings("WeakerAccess") void setupFakeFullscreenWindow() {
+  private void setupFakeFullscreenWindow() {
     getWindow().getDecorView()
         .setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);

@@ -23,9 +23,6 @@ import android.content.res.AssetManager;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import android.support.annotation.VisibleForTesting;
-import android.support.annotation.WorkerThread;
 import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Observable;
 import java.io.BufferedReader;
@@ -37,20 +34,24 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-class AboutLibrariesItemInteractor {
+public class AboutLibrariesItemInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, String> cachedLicenses;
   @SuppressWarnings("WeakerAccess") @NonNull private final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull private final AssetManager assetManager;
   @NonNull private final Context appContext;
 
-  AboutLibrariesItemInteractor(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
+  public AboutLibrariesItemInteractor(@NonNull Context context,
+      @NonNull LicenseProvider licenseProvider) {
     appContext = Checker.checkNonNull(context).getApplicationContext();
     this.licenseProvider = Checker.checkNonNull(licenseProvider);
     assetManager = context.getAssets();
     cachedLicenses = new HashMap<>();
   }
 
+  /**
+   * public
+   */
   @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull AboutLibrariesModel model) {
     return Observable.fromCallable(() -> {
       AboutLibrariesModel license = Checker.checkNonNull(model);
@@ -67,12 +68,8 @@ class AboutLibrariesItemInteractor {
     });
   }
 
-  /**
-   * @hide
-   */
-  @RestrictTo(RestrictTo.Scope.SUBCLASSES) @SuppressLint("NewApi") @SuppressWarnings("WeakerAccess")
-  @VisibleForTesting @NonNull @CheckResult @WorkerThread String loadNewLicense(
-      @NonNull String licenseName, @NonNull String licenseLocation) {
+  @SuppressWarnings("WeakerAccess") @SuppressLint("NewApi") @NonNull @CheckResult
+  String loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
     licenseName = Checker.checkNonNull(licenseName);
     licenseLocation = Checker.checkNonNull(licenseLocation);
 

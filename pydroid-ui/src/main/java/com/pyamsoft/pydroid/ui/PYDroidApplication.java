@@ -17,14 +17,12 @@
 
 package com.pyamsoft.pydroid.ui;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.CheckResult;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import timber.log.Timber;
 
-@SuppressWarnings("unused") @SuppressLint("Registered") public abstract class PYDroidApplication
-    extends Application {
+public abstract class PYDroidApplication extends Application {
 
   @Override public final void onCreate() {
     super.onCreate();
@@ -50,15 +48,15 @@ import timber.log.Timber;
     return false;
   }
 
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateNormalMode() {
+  protected void onCreateNormalMode() {
 
   }
 
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInDebugMode() {
+  protected void onCreateInDebugMode() {
 
   }
 
-  @SuppressWarnings({ "WeakerAccess", "EmptyMethod" }) protected void onCreateInReleaseMode() {
+  protected void onCreateInReleaseMode() {
 
   }
 }

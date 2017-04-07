@@ -37,8 +37,8 @@ import timber.log.Timber;
 
 public class RXLoader extends DrawableLoader.Loader {
 
-  @NonNull Scheduler subscribeScheduler;
-  @NonNull Scheduler observeScheduler;
+  @NonNull private Scheduler subscribeScheduler;
+  @NonNull private Scheduler observeScheduler;
 
   public RXLoader() {
     super();

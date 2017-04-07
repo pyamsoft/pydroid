@@ -76,9 +76,10 @@ public final class Licenses {
     licenses.add(item);
   }
 
-  public static final class Names {
+  static final class Names {
+
     // We explicitly check for this one
-    @NonNull public static final String GOOGLE_PLAY = "Google Play Services";
+    @NonNull static final String GOOGLE_PLAY = "Google Play Services";
 
     @NonNull static final String ANDROID = "Android";
     @NonNull static final String ANDROID_SUPPORT = "Android Support Libraries";

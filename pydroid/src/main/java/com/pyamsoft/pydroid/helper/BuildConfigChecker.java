@@ -32,8 +32,7 @@ public abstract class BuildConfigChecker {
     if (instance == null) {
       throw new IllegalStateException("BuildConfigChecker instance is NULL");
     } else {
-      //noinspection ConstantConditions
-      return instance;
+      return Checker.checkNonNull(instance);
     }
   }
 

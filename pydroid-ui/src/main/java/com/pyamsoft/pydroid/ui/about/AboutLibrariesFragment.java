@@ -34,7 +34,6 @@ import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
-import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import java.util.List;
 import timber.log.Timber;
 
@@ -104,7 +103,6 @@ public class AboutLibrariesFragment extends ActionBarFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     fastItemAdapter.withSelectable(true);
 
     binding.recyclerAboutLibraries.setLayoutManager(new LinearLayoutManager(getContext()));

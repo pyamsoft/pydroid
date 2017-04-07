@@ -15,27 +15,26 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader;
+package com.pyamsoft.pydroid.ui.helper;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public final class DrawableHelper {
+public final class ProgressOverlayHelper {
 
-  private DrawableHelper() {
+  private ProgressOverlayHelper() {
     throw new RuntimeException("No instances");
   }
 
-  @CheckResult @NonNull
-  public static DrawableLoader.Loaded unload(@Nullable DrawableLoader.Loaded entry) {
-    if (entry == null) {
-      return DrawableLoader.empty();
+  @CheckResult @NonNull public static ProgressOverlay dispose(@Nullable ProgressOverlay overlay) {
+    if (overlay == null) {
+      return ProgressOverlay.empty();
     }
 
-    if (!entry.isUnloaded()) {
-      entry.unload();
+    if (!overlay.isDisposed()) {
+      overlay.dispose();
     }
-    return DrawableLoader.empty();
+    return ProgressOverlay.empty();
   }
 }

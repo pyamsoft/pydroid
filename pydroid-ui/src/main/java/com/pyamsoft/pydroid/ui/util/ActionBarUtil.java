@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment;
+package com.pyamsoft.pydroid.ui.util;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -29,28 +29,29 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.pydroid.helper.Checker;
 
-final class ActionBarFragmentUtil {
+public class ActionBarUtil {
 
-  private ActionBarFragmentUtil() {
+  private ActionBarUtil() {
     throw new RuntimeException("No instances");
   }
 
-  @CheckResult @Nullable private static ActionBar getActionBar(@NonNull Activity activity) {
+  @CheckResult @NonNull public static ActionBar getActionBar(@NonNull Activity activity) {
     activity = Checker.checkNonNull(activity);
 
     if (activity instanceof AppCompatActivity) {
-      final AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
-      return appCompatActivity.getSupportActionBar();
+      AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
+      return Checker.checkNonNull(appCompatActivity.getSupportActionBar());
     } else {
       throw new ClassCastException("Activity not instance of AppCompatActivity");
     }
   }
 
-  static void setActionBarUpEnabled(@NonNull Activity activity, boolean up) {
+  public static void setActionBarUpEnabled(@NonNull Activity activity, boolean up) {
     setActionBarUpEnabled(activity, up, null);
   }
 
-  static void setActionBarUpEnabled(@NonNull Activity activity, boolean up, @DrawableRes int icon) {
+  public static void setActionBarUpEnabled(@NonNull Activity activity, boolean up,
+      @DrawableRes int icon) {
     activity = Checker.checkNonNull(activity);
 
     final Drawable d;
@@ -63,29 +64,21 @@ final class ActionBarFragmentUtil {
     setActionBarUpEnabled(activity, up, d);
   }
 
-  static void setActionBarUpEnabled(@NonNull Activity activity, boolean up,
+  public static void setActionBarUpEnabled(@NonNull Activity activity, boolean up,
       @Nullable Drawable icon) {
     activity = Checker.checkNonNull(activity);
 
-    final ActionBar bar = getActionBar(activity);
-    if (bar != null) {
-      bar.setHomeButtonEnabled(up);
-      bar.setDisplayHomeAsUpEnabled(up);
-      bar.setHomeAsUpIndicator(icon);
-    }
+    ActionBar bar = getActionBar(activity);
+    bar.setHomeButtonEnabled(up);
+    bar.setDisplayHomeAsUpEnabled(up);
+    bar.setHomeAsUpIndicator(icon);
   }
 
-  static void setActionBarTitle(@NonNull Activity activity, @NonNull CharSequence title) {
-    final ActionBar bar = getActionBar(activity);
-    if (bar != null) {
-      bar.setTitle(title);
-    }
+  public static void setActionBarTitle(@NonNull Activity activity, @NonNull CharSequence title) {
+    getActionBar(activity).setTitle(title);
   }
 
-  static void setActionBarTitle(@NonNull Activity activity, @StringRes int title) {
-    final ActionBar bar = getActionBar(activity);
-    if (bar != null) {
-      bar.setTitle(title);
-    }
+  public static void setActionBarTitle(@NonNull Activity activity, @StringRes int title) {
+    getActionBar(activity).setTitle(title);
   }
 }

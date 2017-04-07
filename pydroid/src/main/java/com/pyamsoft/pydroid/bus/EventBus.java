@@ -31,7 +31,7 @@ import timber.log.Timber;
  * Be aware of the dangers of using an Event bus. Mainly, when you publish a message there is no
  * easy way to see where it goes. Add a comment or some way to let yourself know
  */
-public class EventBus {
+@SuppressWarnings("WeakerAccess") public final class EventBus {
 
   private static volatile EventBus instance = null;
 

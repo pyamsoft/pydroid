@@ -36,8 +36,7 @@ public final class AnimUtil {
     throw new RuntimeException("No instances");
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull
-  public static ViewPropertyAnimatorCompat popShow(@NonNull View v, final int startDelay,
+  @NonNull public static ViewPropertyAnimatorCompat popShow(@NonNull View v, final int startDelay,
       final int duration) {
     v = Checker.checkNonNull(v);
     final Interpolator i =
@@ -67,8 +66,7 @@ public final class AnimUtil {
         });
   }
 
-  @SuppressWarnings("unused") @NonNull
-  public static ViewPropertyAnimatorCompat popHide(@NonNull View v, final int startDelay,
+  @NonNull public static ViewPropertyAnimatorCompat popHide(@NonNull View v, final int startDelay,
       final int duration) {
     v = Checker.checkNonNull(v);
     final Interpolator i =
@@ -99,8 +97,7 @@ public final class AnimUtil {
         });
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull
-  public static ViewPropertyAnimatorCompat fadeIn(@NonNull View v) {
+  @NonNull public static ViewPropertyAnimatorCompat fadeIn(@NonNull View v) {
     v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);
@@ -117,8 +114,7 @@ public final class AnimUtil {
         .setListener(null);
   }
 
-  @SuppressWarnings("unused") @NonNull
-  public static ViewPropertyAnimatorCompat fadeAway(@NonNull View v) {
+  @NonNull public static ViewPropertyAnimatorCompat fadeAway(@NonNull View v) {
     v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);

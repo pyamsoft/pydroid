@@ -17,12 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-public class SquareImageView extends ImageView {
+public class SquareImageView extends AppCompatImageView {
 
   public SquareImageView(Context context) {
     super(context);
@@ -34,11 +33,6 @@ public class SquareImageView extends ImageView {
 
   public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-  }
-
-  @SuppressLint("NewApi")
-  public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
   }
 
   @SuppressWarnings("SuspiciousNameCombination") @Override

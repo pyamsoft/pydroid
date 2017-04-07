@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
@@ -26,8 +25,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesItemPresenter
-    extends SchedulerPresenter {
+public class AboutLibrariesItemPresenter extends SchedulerPresenter {
 
   @NonNull private final AboutLibrariesItemInteractor interactor;
   @NonNull private final CompositeDisposable licenseDisposables;

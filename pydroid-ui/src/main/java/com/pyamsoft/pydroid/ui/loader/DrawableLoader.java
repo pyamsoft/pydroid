@@ -42,6 +42,21 @@ public final class DrawableLoader {
     return loader;
   }
 
+  @NonNull @CheckResult public static DrawableLoader.Loaded empty() {
+    return new DrawableLoader.Loaded() {
+
+      private boolean unloaded = false;
+
+      @Override public void unload() {
+        unloaded = true;
+      }
+
+      @Override public boolean isUnloaded() {
+        return unloaded;
+      }
+    };
+  }
+
   public interface Loaded {
 
     void unload();

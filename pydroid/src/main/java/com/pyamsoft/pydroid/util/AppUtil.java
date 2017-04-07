@@ -46,7 +46,7 @@ public final class AppUtil {
 
   @CheckResult public static float convertToDP(@NonNull Context c, float px) {
     c = Checker.checkNonNull(c);
-    final DisplayMetrics m = c.getResources().getDisplayMetrics();
+    final DisplayMetrics m = c.getApplicationContext().getResources().getDisplayMetrics();
     final float dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m);
     Timber.d("Convert %f px to %f dp", px, dp);
     return dp;

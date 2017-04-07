@@ -34,11 +34,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import com.pyamsoft.pydroid.PYDroidPreferences;
-import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
-import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
+import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
+import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 
@@ -54,7 +55,7 @@ public class RatingDialog extends DialogFragment {
   private int versionCode;
   @DrawableRes private int changeLogIcon;
   private DialogRatingBinding binding;
-  @Nullable private AsyncMapEntry iconTask;
+  @NonNull private DrawableLoader.Loaded iconTask = DrawableLoader.empty();
 
   public static void showRatingDialog(@NonNull FragmentActivity activity,
       @NonNull ChangeLogProvider provider, final boolean force) {
@@ -63,7 +64,7 @@ public class RatingDialog extends DialogFragment {
 
     final PYDroidPreferences preferences = PYDroidPreferences.Instance.getInstance(activity);
     if (force || preferences.getRatingAcceptedVersion() < provider.getCurrentApplicationVersion()) {
-      AppUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
+      DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
     }
   }
 
@@ -112,7 +113,7 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    iconTask = DrawableHelper.unsubscribe(iconTask);
+    iconTask = DrawableHelper.unload(iconTask);
     binding.unbind();
   }
 
@@ -131,7 +132,7 @@ public class RatingDialog extends DialogFragment {
   private void initDialog() {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
-    iconTask = DrawableHelper.unsubscribe(iconTask);
+    iconTask = DrawableHelper.unload(iconTask);
     iconTask = DrawableLoader.load(changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);

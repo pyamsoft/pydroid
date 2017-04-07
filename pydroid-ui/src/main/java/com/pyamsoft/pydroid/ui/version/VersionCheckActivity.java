@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import timber.log.Timber;
@@ -67,7 +67,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
             @Override
             public void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode) {
               Timber.d("Updated version found. %d => %d", oldVersionCode, updatedVersionCode);
-              AppUtil.guaranteeSingleDialogFragment(VersionCheckActivity.this,
+              DialogUtil.guaranteeSingleDialogFragment(VersionCheckActivity.this,
                   VersionUpgradeDialog.newInstance(provideApplicationName(), oldVersionCode,
                       updatedVersionCode), VersionUpgradeDialog.TAG);
             }

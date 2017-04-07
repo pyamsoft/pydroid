@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.loader;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
 import java.util.HashMap;
@@ -32,21 +31,6 @@ public class DrawableMap {
     this.map = new HashMap<>();
   }
 
-  @NonNull @CheckResult public static DrawableLoader.Loaded emptyEntry() {
-    return new DrawableLoader.Loaded() {
-
-      private boolean unloaded = false;
-
-      @Override public void unload() {
-        unloaded = true;
-      }
-
-      @Override public boolean isUnloaded() {
-        return unloaded;
-      }
-    };
-  }
-
   /**
    * Puts a new element into the map
    *
@@ -57,7 +41,7 @@ public class DrawableMap {
     subscription = Checker.checkNonNull(subscription);
 
     if (map.containsKey(tag)) {
-      map.put(tag, DrawableHelper.unsubscribe(map.get(tag)));
+      map.put(tag, DrawableHelper.unload(map.get(tag)));
     }
 
     Timber.d("Insert new subscription for tag: %s", tag);
@@ -72,7 +56,7 @@ public class DrawableMap {
   public final void clear() {
     for (final Map.Entry<String, DrawableLoader.Loaded> entry : map.entrySet()) {
       DrawableLoader.Loaded value = Checker.checkNonNull(entry.getValue());
-      entry.setValue(DrawableHelper.unsubscribe(value));
+      entry.setValue(DrawableHelper.unload(value));
     }
 
     Timber.d("Clear AsyncDrawableMap");

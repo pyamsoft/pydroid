@@ -30,9 +30,9 @@ import com.google.auto.value.AutoValue;
     return new AutoValue_AboutLibrariesModel(name, homepage, license);
   }
 
-  public abstract String name();
+  @CheckResult public abstract String name();
 
-  public abstract String homepage();
+  @CheckResult public abstract String homepage();
 
-  public abstract String license();
+  @CheckResult public abstract String license();
 }

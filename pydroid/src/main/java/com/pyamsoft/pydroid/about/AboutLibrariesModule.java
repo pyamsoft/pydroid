@@ -36,7 +36,7 @@ import io.reactivex.Scheduler;
     itemInteractor = new AboutLibrariesItemInteractor(pyDroidModule.provideContext(),
         pyDroidModule.provideLicenseProvider());
     obsScheduler = pyDroidModule.provideObsScheduler();
-    subScheduler =pyDroidModule.provideSubScheduler();
+    subScheduler = pyDroidModule.provideSubScheduler();
   }
 
   @NonNull @CheckResult public AboutLibrariesItemPresenter getItemPresenter() {
@@ -46,5 +46,4 @@ import io.reactivex.Scheduler;
   @NonNull @CheckResult public AboutLibrariesPresenter getPresenter() {
     return new AboutLibrariesPresenter(interactor, obsScheduler, subScheduler);
   }
-
 }

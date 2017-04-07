@@ -49,8 +49,7 @@ import com.pyamsoft.pydroid.helper.Checker;
         }
       }
 
-      //noinspection ConstantConditions
-      return instance;
+      return Checker.checkNonNull(instance);
     }
   }
 }

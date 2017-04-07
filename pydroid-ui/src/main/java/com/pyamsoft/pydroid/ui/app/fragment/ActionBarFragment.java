@@ -23,26 +23,27 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import com.pyamsoft.pydroid.ui.util.ActionBarUtil;
 
 public abstract class ActionBarFragment extends Fragment implements ActionBarProvider {
 
   @Override public void setActionBarUpEnabled(boolean up) {
-    ActionBarFragmentUtil.setActionBarUpEnabled(getActivity(), up);
+    ActionBarUtil.setActionBarUpEnabled(getActivity(), up);
   }
 
   @Override public void setActionBarUpEnabled(boolean up, @DrawableRes int icon) {
-    ActionBarFragmentUtil.setActionBarUpEnabled(getActivity(), up, icon);
+    ActionBarUtil.setActionBarUpEnabled(getActivity(), up, icon);
   }
 
   @Override public void setActionBarUpEnabled(boolean up, @Nullable Drawable icon) {
-    ActionBarFragmentUtil.setActionBarUpEnabled(getActivity(), up, icon);
+    ActionBarUtil.setActionBarUpEnabled(getActivity(), up, icon);
   }
 
   @Override public void setActionBarTitle(@NonNull CharSequence title) {
-    ActionBarFragmentUtil.setActionBarTitle(getActivity(), title);
+    ActionBarUtil.setActionBarTitle(getActivity(), title);
   }
 
   @Override public void setActionBarTitle(@StringRes int title) {
-    ActionBarFragmentUtil.setActionBarTitle(getActivity(), title);
+    ActionBarUtil.setActionBarTitle(getActivity(), title);
   }
 }

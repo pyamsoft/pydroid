@@ -18,13 +18,13 @@
 package com.pyamsoft.pydroid.about;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 
 public interface LicenseProvider {
 
-  @WorkerThread @Nullable String provideGoogleOpenSourceLicenses(@NonNull Context context);
+  @CheckResult @Nullable String provideGoogleOpenSourceLicenses(@NonNull Context context);
 
   void insertCustomLicensesIntoMap();
 }

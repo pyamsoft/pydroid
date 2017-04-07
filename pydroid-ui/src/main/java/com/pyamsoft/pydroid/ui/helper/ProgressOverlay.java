@@ -18,16 +18,16 @@
 package com.pyamsoft.pydroid.ui.helper;
 
 import android.app.Activity;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +54,10 @@ public abstract class ProgressOverlay {
     return new Empty();
   }
 
+  @CheckResult @NonNull public static Builder builder() {
+    return new Builder();
+  }
+
   public abstract void dispose();
 
   @CheckResult public abstract boolean isDisposed();
@@ -76,16 +80,16 @@ public abstract class ProgressOverlay {
   public static final class Builder {
 
     @ColorInt private int backgroundColor;
-    @ColorInt private int spinnerColor;
     @Nullable private ViewGroup rootViewGroup;
     private int alphaPercent;
     private int elevation;
+    @StyleRes private int theme;
 
-    public Builder() {
+    Builder() {
       alphaPercent = 50;
+      theme = 0;
       backgroundColor = 0;
       elevation = 16;
-      spinnerColor = 0;
       rootViewGroup = null;
     }
 
@@ -107,13 +111,13 @@ public abstract class ProgressOverlay {
       return this;
     }
 
-    @CheckResult @NonNull public Builder setSpinnerColor(int spinnerColor) {
-      this.spinnerColor = spinnerColor;
+    @CheckResult @NonNull public Builder setRootViewGroup(@NonNull ViewGroup rootViewGroup) {
+      this.rootViewGroup = rootViewGroup;
       return this;
     }
 
-    @CheckResult @NonNull public Builder setRootViewGroup(@NonNull ViewGroup rootViewGroup) {
-      this.rootViewGroup = rootViewGroup;
+    @CheckResult @NonNull public Builder setTheme(@StyleRes int theme) {
+      this.theme = theme;
       return this;
     }
 
@@ -122,8 +126,15 @@ public abstract class ProgressOverlay {
       activity = Checker.checkNonNull(activity);
       rootView = Checker.checkNonNull(rootView);
 
+      final LayoutInflater inflater;
+      if (theme == 0) {
+        inflater = LayoutInflater.from(activity);
+      } else {
+        inflater =
+            LayoutInflater.from(activity).cloneInContext(new ContextThemeWrapper(activity, theme));
+      }
       ViewProgressOverlayBinding binding =
-          ViewProgressOverlayBinding.inflate(LayoutInflater.from(activity), rootView, false);
+          ViewProgressOverlayBinding.inflate(inflater, rootView, false);
 
       // Set elevation to above basically everything
       // Make sure elevation cannot be negative
@@ -157,12 +168,6 @@ public abstract class ProgressOverlay {
         binding.getRoot().setBackgroundColor(backgroundColor);
       }
 
-      if (spinnerColor != 0) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-          binding.progressOverlayBar.setIndeterminateTintList(ColorStateList.valueOf(spinnerColor));
-        }
-      }
-
       // Eat any click attempts while the overlay is showing
       binding.getRoot().setOnClickListener(v -> Timber.w("Eat click attempt with Overlay"));
 
@@ -186,24 +191,6 @@ public abstract class ProgressOverlay {
       } else {
         throw new IllegalStateException("Root view is not a ViewGroup");
       }
-    }
-  }
-
-  public static final class Helper {
-
-    private Helper() {
-      throw new RuntimeException("No instances");
-    }
-
-    @CheckResult @NonNull public static ProgressOverlay dispose(@Nullable ProgressOverlay overlay) {
-      if (overlay == null) {
-        return empty();
-      }
-
-      if (!overlay.isDisposed()) {
-        overlay.dispose();
-      }
-      return empty();
     }
   }
 

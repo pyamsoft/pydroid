@@ -35,12 +35,11 @@ public final class DrawableUtil {
     throw new RuntimeException("No instances");
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
-  public static ColorFilter colorFilter(final @ColorInt int color) {
+  @NonNull @CheckResult public static ColorFilter colorFilter(final @ColorInt int color) {
     return new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN);
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
+  @NonNull @CheckResult
   public static Drawable tintDrawableFromColor(@NonNull Drawable d, final @ColorInt int c) {
     d = Checker.checkNonNull(d).mutate();
     d.setColorFilter(colorFilter(c));

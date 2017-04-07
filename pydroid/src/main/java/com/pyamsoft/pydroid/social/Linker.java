@@ -21,12 +21,11 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class Linker extends Presenter {
+public final class Linker extends Presenter {
 
   @NonNull private static final String BASE_MARKET = "market://details?id=";
   @NonNull private static final String FACEBOOK = "https://www.facebook.com/pyamsoftware";
@@ -48,7 +47,7 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
     if (instance == null) {
       synchronized (Linker.class) {
         if (instance == null) {
-          instance = new Linker(context);
+          instance = new Linker(context.getApplicationContext());
         }
       }
     }

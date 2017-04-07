@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.rating.RatingActivity;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import timber.log.Timber;
 
 public abstract class TamperActivity extends RatingActivity {
@@ -82,7 +82,7 @@ public abstract class TamperActivity extends RatingActivity {
     super.onPostResume();
     if (hasBeenTamperedWith) {
       Timber.e("Application has been tampered with, notify user");
-      AppUtil.guaranteeSingleDialogFragment(this, new TamperDialog(), "tamper");
+      DialogUtil.guaranteeSingleDialogFragment(this, new TamperDialog(), "tamper");
     }
   }
 

@@ -168,6 +168,11 @@ public class RatingDialog extends DialogFragment {
     });
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    Launcher.INSTANCE.cleanup();
+  }
+
   @Override public void onResume() {
     super.onResume();
     // The dialog is super small for some reason. We have to set the size manually, in onResume
@@ -199,6 +204,10 @@ public class RatingDialog extends DialogFragment {
             @Override public void onRatingDialogLoadError(@NonNull Throwable throwable) {
               Timber.e(throwable, "could not load rating dialog");
             }
+
+            @Override public void onLoadComplete() {
+              presenter.destroy();
+            }
           });
     }
 
@@ -216,6 +225,9 @@ public class RatingDialog extends DialogFragment {
       });
     }
 
+    void cleanup() {
+      presenter.destroy();
+    }
   }
 
   public interface ChangeLogProvider {

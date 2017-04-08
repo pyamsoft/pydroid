@@ -37,8 +37,7 @@ public class RatingPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  @Override protected void onStop() {
-    super.onStop();
+  @Override protected void onDestroy() {
     loadDisposable = DisposableHelper.dispose(loadDisposable);
     saveDisposable = DisposableHelper.dispose(saveDisposable);
   }
@@ -49,6 +48,7 @@ public class RatingPresenter extends SchedulerPresenter {
     loadDisposable = interactor.needsToViewRating(currentVersion, force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onLoadComplete)
         .subscribe(show -> {
           if (show) {
             callback.onShowRatingDialog();
@@ -78,6 +78,8 @@ public class RatingPresenter extends SchedulerPresenter {
     void onShowRatingDialog();
 
     void onRatingDialogLoadError(@NonNull Throwable throwable);
+
+    void onLoadComplete();
   }
 
   public interface SaveCallback {

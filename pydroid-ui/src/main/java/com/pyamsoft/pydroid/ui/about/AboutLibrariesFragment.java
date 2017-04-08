@@ -111,7 +111,7 @@ public class AboutLibrariesFragment extends ActionBarFragment {
 
   @Override public void onStart() {
     super.onStart();
-    presenter.loadLicenses(AboutLibrariesProvider.hasGooglePlayServices(getContext()), model -> {
+    presenter.loadLicenses(model -> {
       boolean alreadyHas = false;
       List<AboutLibrariesItem> items = fastItemAdapter.getAdapterItems();
       for (AboutLibrariesItem item : items) {

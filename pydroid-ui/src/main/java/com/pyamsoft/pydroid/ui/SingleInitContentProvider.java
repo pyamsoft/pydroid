@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.StrictMode;
-import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,31 +35,14 @@ import timber.log.Timber;
 
 public abstract class SingleInitContentProvider extends ContentProvider implements LicenseProvider {
 
-  @Nullable private static volatile LicenseProvider licenseProvider;
   private static boolean created;
 
   static {
     created = false;
-    licenseProvider = null;
   }
 
   private static void setCreated() {
     SingleInitContentProvider.created = true;
-  }
-
-  @NonNull @CheckResult public static LicenseProvider getLicenseProvider() {
-    if (licenseProvider == null) {
-      throw new NullPointerException("Instance is NULL. Was this CP never created?");
-    }
-
-    //noinspection ConstantConditions
-    return licenseProvider;
-  }
-
-  private static void setLicenseProvider(@NonNull LicenseProvider licenseProvider) {
-    synchronized (SingleInitContentProvider.class) {
-      SingleInitContentProvider.licenseProvider = licenseProvider;
-    }
   }
 
   @Override public final boolean onCreate() {
@@ -82,10 +64,9 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     }
 
     BuildConfigChecker.setInstance(initializeBuildConfigChecker());
-    insertCustomLicensesIntoMap();
+    insertLicensesIntoMap();
 
     onFirstCreate(appContext);
-    setLicenseProvider(this);
     onInstanceCreated(appContext);
     return false;
   }
@@ -110,9 +91,13 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
-  @CallSuper @Override public void insertCustomLicensesIntoMap() {
+  private void insertLicensesIntoMap() {
     UiLicenses.addLicenses();
     RxLicenses.addLicenses();
+    insertCustomLicensesIntoMap();
+  }
+
+  @Override public void insertCustomLicensesIntoMap() {
   }
 
   @Nullable @Override

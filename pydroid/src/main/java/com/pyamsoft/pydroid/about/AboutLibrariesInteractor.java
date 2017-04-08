@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.about;
 
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import io.reactivex.Observable;
@@ -25,18 +26,24 @@ import java.util.List;
 
 public class AboutLibrariesInteractor {
 
+  @NonNull final Context context;
+  @NonNull final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull final List<AboutLibrariesModel> licenses;
 
-  public AboutLibrariesInteractor(@NonNull List<AboutLibrariesModel> licenses) {
+  public AboutLibrariesInteractor(@NonNull Context context,
+      @NonNull LicenseProvider licenseProvider, @NonNull List<AboutLibrariesModel> licenses) {
     this.licenses = Collections.unmodifiableList(licenses);
+    this.licenseProvider = licenseProvider;
+    this.context = context.getApplicationContext();
   }
 
   /**
    * public
    */
-  @NonNull @CheckResult Observable<AboutLibrariesModel> loadLicenses(boolean hasGooglePlay) {
+  @NonNull @CheckResult Observable<AboutLibrariesModel> loadLicenses() {
     return Observable.defer(() -> Observable.fromIterable(licenses))
-        .filter(model -> !Licenses.Names.GOOGLE_PLAY.equals(model.name()) || hasGooglePlay)
+        .filter(model -> !Licenses.Names.GOOGLE_PLAY.equals(model.name())
+            || licenseProvider.provideGoogleOpenSourceLicenses(context) != null)
         .toSortedList((o1, o2) -> o1.name().compareTo(o2.name()))
         .toObservable()
         .concatMap(Observable::fromIterable);

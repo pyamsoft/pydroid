@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.helper.Checker;
 
-class PYDroidPreferencesImpl implements PYDroidPreferences {
+class PYDroidPreferencesImpl implements RatingPreferences {
 
   @NonNull private static final String RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version";
   @NonNull private final SharedPreferences preferences;

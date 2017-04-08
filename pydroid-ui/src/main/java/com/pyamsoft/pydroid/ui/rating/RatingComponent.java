@@ -15,22 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about;
+package com.pyamsoft.pydroid.ui.rating;
 
-import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
+import com.pyamsoft.pydroid.rating.RatingModule;
 
-final class AboutLibrariesProvider {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class RatingComponent {
 
-  private AboutLibrariesProvider() {
-    throw new RuntimeException("No instances");
+  @NonNull private final RatingModule ratingModule;
+
+  public RatingComponent(@NonNull RatingModule ratingModule) {
+    this.ratingModule = Checker.checkNonNull(ratingModule);
   }
 
-  @CheckResult static boolean hasGooglePlayServices(@NonNull Context context) {
-    return SingleInitContentProvider.getLicenseProvider()
-        .provideGoogleOpenSourceLicenses(Checker.checkNonNull(context)) != null;
+  void inject(@NonNull RatingDialog.Launcher launcher) {
+    Checker.checkNonNull(launcher).presenter = ratingModule.getPresenter();
   }
 }

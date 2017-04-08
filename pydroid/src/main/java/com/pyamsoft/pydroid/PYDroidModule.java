@@ -30,7 +30,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidModule {
 
@@ -38,11 +37,13 @@ import java.util.Map;
   @NonNull private final Context appContext;
   @NonNull private final LicenseProvider licenseProvider;
   @NonNull private final List<AboutLibrariesModel> licenseMap;
+  @NonNull private final PYDroidPreferencesImpl preferences;
 
   public PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
     appContext = Checker.checkNonNull(context).getApplicationContext();
     this.licenseProvider = Checker.checkNonNull(licenseProvider);
     licenseMap = Licenses.getLicenses();
+    preferences = new PYDroidPreferencesImpl(appContext);
   }
 
   // Singleton
@@ -51,10 +52,16 @@ import java.util.Map;
   }
 
   // Singleton
+  @CheckResult @NonNull public final RatingPreferences provideRatingPreferences() {
+    return preferences;
+  }
+
+  // Singleton
   @CheckResult @NonNull public final LicenseProvider provideLicenseProvider() {
     return licenseProvider;
   }
 
+  // Singleton
   @CheckResult @NonNull public final List<AboutLibrariesModel> provideLicenseMap() {
     return Collections.unmodifiableList(licenseMap);
   }

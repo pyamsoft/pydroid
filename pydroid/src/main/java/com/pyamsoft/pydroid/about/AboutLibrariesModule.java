@@ -32,7 +32,8 @@ import io.reactivex.Scheduler;
 
   // Created once per "scope"
   public AboutLibrariesModule(@NonNull PYDroidModule pyDroidModule) {
-    interactor = new AboutLibrariesInteractor(pyDroidModule.provideLicenseMap());
+    interactor = new AboutLibrariesInteractor(pyDroidModule.provideContext(),
+        pyDroidModule.provideLicenseProvider(), pyDroidModule.provideLicenseMap());
     itemInteractor = new AboutLibrariesItemInteractor(pyDroidModule.provideContext(),
         pyDroidModule.provideLicenseProvider());
     obsScheduler = pyDroidModule.provideObsScheduler();

@@ -23,8 +23,10 @@ import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.about.AboutLibrariesModule;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.rating.RatingModule;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent;
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent;
+import com.pyamsoft.pydroid.ui.rating.RatingComponent;
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
 import com.pyamsoft.pydroid.version.VersionCheckModule;
 
@@ -33,6 +35,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final VersionCheckComponent versionCheckComponent;
   @NonNull private final AboutLibrariesComponent aboutLibrariesComponent;
   @NonNull private final AppComponent appComponent;
+  @NonNull private final RatingComponent ratingComponent;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
     module = Checker.checkNonNull(module);
@@ -41,6 +44,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
     versionCheckComponent = new VersionCheckComponent(versionCheckModule);
     aboutLibrariesComponent = new AboutLibrariesComponent(aboutLibrariesModule);
     appComponent = new AppComponent(versionCheckModule);
+    ratingComponent = new RatingComponent(new RatingModule(module));
   }
 
   @CheckResult @NonNull static PYDroidComponent withModule(@NonNull PYDroidModule module) {
@@ -57,5 +61,9 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
 
   @CheckResult @NonNull public AppComponent provideAppComponent() {
     return appComponent;
+  }
+
+  @CheckResult @NonNull public RatingComponent provideRatingComponent() {
+    return ratingComponent;
   }
 }

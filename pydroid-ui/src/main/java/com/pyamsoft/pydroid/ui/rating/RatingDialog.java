@@ -33,8 +33,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import com.pyamsoft.pydroid.PYDroidPreferences;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.rating.RatingPresenter;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
 import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
@@ -58,18 +59,13 @@ public class RatingDialog extends DialogFragment {
   @NonNull private DrawableLoader.Loaded iconTask = DrawableLoader.empty();
 
   public static void showRatingDialog(@NonNull FragmentActivity activity,
-      @NonNull ChangeLogProvider provider, final boolean force) {
+      @NonNull ChangeLogProvider provider, boolean force) {
     activity = Checker.checkNonNull(activity);
     provider = Checker.checkNonNull(provider);
-
-    final PYDroidPreferences preferences = PYDroidPreferences.Instance.getInstance(activity);
-    if (force || preferences.getRatingAcceptedVersion() < provider.getCurrentApplicationVersion()) {
-      DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
-    }
+    Launcher.INSTANCE.loadRatingDialog(activity, provider, force);
   }
 
-  @CheckResult @NonNull
-  private static RatingDialog newInstance(@NonNull ChangeLogProvider provider) {
+  @CheckResult @NonNull static RatingDialog newInstance(@NonNull ChangeLogProvider provider) {
     provider = Checker.checkNonNull(provider);
 
     final RatingDialog fragment = new RatingDialog();
@@ -154,7 +150,7 @@ public class RatingDialog extends DialogFragment {
     super.onDismiss(dialog);
     if (acknowledged) {
       Timber.d("Rating dialog has been addressed by user. Commit to memory");
-      PYDroidPreferences.Instance.getInstance(getContext()).setRatingAcceptedVersion(versionCode);
+      Launcher.INSTANCE.saveVersionCode(versionCode);
     }
   }
 
@@ -166,6 +162,44 @@ public class RatingDialog extends DialogFragment {
       window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
           WindowManager.LayoutParams.WRAP_CONTENT);
     }
+  }
+
+  enum Launcher {
+
+    INSTANCE;
+
+    RatingPresenter presenter;
+
+    Launcher() {
+      PYDroidInjector.get().provideComponent().provideRatingComponent().inject(this);
+    }
+
+    void loadRatingDialog(@NonNull FragmentActivity activity, @NonNull ChangeLogProvider provider,
+        boolean force) {
+      presenter.loadRatingDialog(provider.getCurrentApplicationVersion(), force,
+          new RatingPresenter.RatingCallback() {
+            @Override public void onShowRatingDialog() {
+              DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
+            }
+
+            @Override public void onRatingDialogLoadError(@NonNull Throwable throwable) {
+              Timber.e(throwable, "could not load rating dialog");
+            }
+          });
+    }
+
+    void saveVersionCode(int versionCode) {
+      presenter.saveRating(versionCode, new RatingPresenter.SaveCallback() {
+        @Override public void onRatingSaved() {
+          Timber.d("Saved version code: %d", versionCode);
+        }
+
+        @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
+          Timber.e(throwable, "error saving version code");
+        }
+      });
+    }
+
   }
 
   public interface ChangeLogProvider {

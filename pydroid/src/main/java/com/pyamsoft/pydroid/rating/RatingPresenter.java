@@ -37,7 +37,7 @@ public class RatingPresenter extends SchedulerPresenter {
     interactor.needsToViewRating(currentVersion, force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .blockingSubscribe(show -> {
+        .subscribe(show -> {
           if (show) {
             callback.onShowRatingDialog();
           }
@@ -51,7 +51,7 @@ public class RatingPresenter extends SchedulerPresenter {
     interactor.saveRating(versionCode)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .blockingSubscribe(saved -> {
+        .subscribe(saved -> {
           Timber.d("Saved current version code: %d", versionCode);
           callback.onRatingSaved();
         }, throwable -> {

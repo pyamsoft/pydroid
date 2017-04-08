@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.rating;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
@@ -33,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.rating.RatingPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
@@ -135,23 +135,37 @@ public class RatingDialog extends DialogFragment {
 
     binding.ratingBtnNoThanks.setOnClickListener(v -> {
       acknowledged = true;
-      dismiss();
+      Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
+        @Override public void onRatingSaved() {
+          dismiss();
+        }
+
+        @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
+          Toast.makeText(v.getContext(),
+              "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
+              .show();
+          dismiss();
+        }
+      });
     });
 
     binding.ratingBtnGoRate.setOnClickListener(v -> {
       acknowledged = true;
-      final String fullLink = "market://details?id=" + rateLink;
-      NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
-      dismiss();
-    });
-  }
+      Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
+        @Override public void onRatingSaved() {
+          final String fullLink = "market://details?id=" + rateLink;
+          NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
+          dismiss();
+        }
 
-  @Override public void onDismiss(DialogInterface dialog) {
-    super.onDismiss(dialog);
-    if (acknowledged) {
-      Timber.d("Rating dialog has been addressed by user. Commit to memory");
-      Launcher.INSTANCE.saveVersionCode(versionCode);
-    }
+        @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
+          Toast.makeText(v.getContext(),
+              "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
+              .show();
+          dismiss();
+        }
+      });
+    });
   }
 
   @Override public void onResume() {
@@ -188,14 +202,16 @@ public class RatingDialog extends DialogFragment {
           });
     }
 
-    void saveVersionCode(int versionCode) {
+    void saveVersionCode(int versionCode, @NonNull RatingPresenter.SaveCallback callback) {
       presenter.saveRating(versionCode, new RatingPresenter.SaveCallback() {
         @Override public void onRatingSaved() {
           Timber.d("Saved version code: %d", versionCode);
+          callback.onRatingSaved();
         }
 
         @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
           Timber.e(throwable, "error saving version code");
+          callback.onRatingDialogSaveError(throwable);
         }
       });
     }

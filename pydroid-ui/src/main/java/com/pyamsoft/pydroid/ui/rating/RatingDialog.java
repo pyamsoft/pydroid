@@ -183,9 +183,9 @@ public class RatingDialog extends DialogFragment {
     }
   }
 
-  enum Launcher {
+  static class Launcher {
 
-    INSTANCE;
+    @NonNull private static final Launcher INSTANCE = new Launcher();
 
     RatingPresenter presenter;
 

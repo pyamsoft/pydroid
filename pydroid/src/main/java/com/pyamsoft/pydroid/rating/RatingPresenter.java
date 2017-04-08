@@ -18,13 +18,18 @@
 package com.pyamsoft.pydroid.rating;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 public class RatingPresenter extends SchedulerPresenter {
 
   @NonNull private final RatingInteractor interactor;
+  @NonNull private Disposable loadDisposable = Disposables.empty();
+  @NonNull private Disposable saveDisposable = Disposables.empty();
 
   public RatingPresenter(@NonNull RatingInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
@@ -32,9 +37,16 @@ public class RatingPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
+  @Override protected void onStop() {
+    super.onStop();
+    loadDisposable = DisposableHelper.dispose(loadDisposable);
+    saveDisposable = DisposableHelper.dispose(saveDisposable);
+  }
+
   public void loadRatingDialog(int currentVersion, boolean force,
       @NonNull RatingCallback callback) {
-    interactor.needsToViewRating(currentVersion, force)
+    loadDisposable = DisposableHelper.dispose(loadDisposable);
+    loadDisposable = interactor.needsToViewRating(currentVersion, force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(show -> {
@@ -48,7 +60,8 @@ public class RatingPresenter extends SchedulerPresenter {
   }
 
   public void saveRating(int versionCode, @NonNull SaveCallback callback) {
-    interactor.saveRating(versionCode)
+    saveDisposable = DisposableHelper.dispose(saveDisposable);
+    saveDisposable = interactor.saveRating(versionCode)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(saved -> {

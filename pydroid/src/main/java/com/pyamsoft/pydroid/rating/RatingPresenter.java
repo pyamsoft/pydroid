@@ -64,7 +64,7 @@ public class RatingPresenter extends SchedulerPresenter {
     saveDisposable = interactor.saveRating(versionCode)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(saved -> {
+        .subscribe(() -> {
           Timber.d("Saved current version code: %d", versionCode);
           callback.onRatingSaved();
         }, throwable -> {

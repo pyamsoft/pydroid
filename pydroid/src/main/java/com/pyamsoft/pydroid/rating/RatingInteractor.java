@@ -20,7 +20,8 @@ package com.pyamsoft.pydroid.rating;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.RatingPreferences;
-import io.reactivex.Observable;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 
 public class RatingInteractor {
 
@@ -33,18 +34,14 @@ public class RatingInteractor {
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> needsToViewRating(int versionCode, boolean force) {
-    return Observable.fromCallable(
-        () -> preferences.getRatingAcceptedVersion() < versionCode || force);
+  @CheckResult @NonNull Single<Boolean> needsToViewRating(int versionCode, boolean force) {
+    return Single.fromCallable(() -> preferences.getRatingAcceptedVersion() < versionCode || force);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> saveRating(int versionCode) {
-    return Observable.fromCallable(() -> {
-      preferences.setRatingAcceptedVersion(versionCode);
-      return Boolean.TRUE;
-    });
+  @CheckResult @NonNull Completable saveRating(int versionCode) {
+    return Completable.fromAction(() -> preferences.setRatingAcceptedVersion(versionCode));
   }
 }

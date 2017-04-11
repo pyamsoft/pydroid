@@ -24,7 +24,7 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,19 +52,21 @@ public class AboutLibrariesItemInteractor {
   /**
    * public
    */
-  @CheckResult @NonNull Observable<String> loadLicenseText(@NonNull AboutLibrariesModel model) {
-    return Observable.fromCallable(() -> {
+  @CheckResult @NonNull Single<String> loadLicenseText(@NonNull AboutLibrariesModel model) {
+    return Single.fromCallable(() -> {
       AboutLibrariesModel license = Checker.checkNonNull(model);
-      if (cachedLicenses.containsKey(license.name())) {
-        Timber.d("Fetch from cache");
-        return cachedLicenses.get(license.name());
+      String name = license.name();
+      if (cachedLicenses.containsKey(name)) {
+        Timber.d("Fetch from cache for name: %s", name);
+        return cachedLicenses.get(name);
       } else {
-        Timber.d("Load from asset location");
-        final String licenseText = loadNewLicense(license.name(), license.license());
-        Timber.d("Put into cache");
-        cachedLicenses.put(license.name(), licenseText);
-        return licenseText;
+        Timber.d("Load from asset location: %s (%s)", name, license.license());
+        return loadNewLicense(name, license.license());
       }
+    }).doOnSuccess(license -> {
+      String name = Checker.checkNonNull(model).name();
+      Timber.d("Put license into cache for model: %s", name);
+      cachedLicenses.put(name, license);
     });
   }
 

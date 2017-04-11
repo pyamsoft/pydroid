@@ -26,8 +26,8 @@ import java.util.List;
 
 public class AboutLibrariesInteractor {
 
-  @NonNull final Context context;
-  @NonNull final LicenseProvider licenseProvider;
+  @SuppressWarnings("WeakerAccess") @NonNull final Context context;
+  @SuppressWarnings("WeakerAccess") @NonNull final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull final List<AboutLibrariesModel> licenses;
 
   public AboutLibrariesInteractor(@NonNull Context context,

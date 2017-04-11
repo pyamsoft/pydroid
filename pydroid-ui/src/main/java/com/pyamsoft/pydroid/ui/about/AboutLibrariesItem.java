@@ -25,7 +25,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.pydroid.about.AboutLibrariesItemPresenter;
 import com.pyamsoft.pydroid.about.AboutLibrariesModel;
 import com.pyamsoft.pydroid.helper.Checker;
@@ -38,7 +37,6 @@ import java.util.List;
 class AboutLibrariesItem extends
     GenericAbstractItem<AboutLibrariesModel, AboutLibrariesItem, AboutLibrariesItem.ViewHolder> {
 
-  @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
   AboutLibrariesItemPresenter presenter;
   @NonNull private String licenseText;
   private boolean expanded;
@@ -150,18 +148,8 @@ class AboutLibrariesItem extends
     presenter.stop();
   }
 
-  @CheckResult @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
-    return FACTORY;
-  }
-
-  private static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-
-    ItemFactory() {
-    }
-
-    @CheckResult @Override public ViewHolder create(@NonNull View v) {
-      return new ViewHolder(v);
-    }
+  @Override public ViewHolder getViewHolder(View view) {
+    return new ViewHolder(view);
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {

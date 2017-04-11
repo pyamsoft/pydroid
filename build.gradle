@@ -43,8 +43,8 @@ buildscript {
     retrofitLogging = "3.6.0"
     rxjava = "2.0.8"
     rxandroid = "2.0.1"
-    fastAdapter = "2.2.0"
-    fastAdapterCommons = "2.2.0"
+    fastAdapter = "2.5.1"
+    fastAdapterCommons = "2.5.0"
   }
 
   dependencies {

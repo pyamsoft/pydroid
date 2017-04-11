@@ -29,6 +29,15 @@
         android:id="@+id/recycler_about_libraries"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
+        />
+
+    <ProgressBar
+        android:id="@+id/about_loading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
         />
 
   </FrameLayout>

@@ -122,6 +122,12 @@ public class AboutLibrariesFragment extends ActionBarFragment {
       }
 
       if (!alreadyHas) {
+        if (items.isEmpty()) {
+          Timber.d("Adding first Library item, hide loading spinner");
+          binding.aboutLoading.setVisibility(View.GONE);
+          binding.recyclerAboutLibraries.setVisibility(View.VISIBLE);
+        }
+
         fastItemAdapter.add(new AboutLibrariesItem(model));
       }
     });

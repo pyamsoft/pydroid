@@ -42,11 +42,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
   @NonNull private final Scheduler subScheduler;
 
   public VersionCheckModule(@NonNull PYDroidModule pyDroidModule) {
+    obsScheduler = pyDroidModule.provideObsScheduler();
+    subScheduler = pyDroidModule.provideSubScheduler();
     interactor = new VersionCheckInteractor(
         new VersionCheckApi(provideRetrofit(provideOkHttpClient(), provideGson())).create(
             VersionCheckService.class));
-    obsScheduler = pyDroidModule.provideObsScheduler();
-    subScheduler = pyDroidModule.provideSubScheduler();
   }
 
   @CheckResult @NonNull private Gson provideGson() {

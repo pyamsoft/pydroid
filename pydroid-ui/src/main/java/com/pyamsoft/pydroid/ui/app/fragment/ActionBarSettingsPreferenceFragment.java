@@ -84,22 +84,34 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
       if (hideUpgradeInformation()) {
         upgradeInfo.setVisible(false);
       } else {
-        upgradeInfo.setOnPreferenceClickListener(preference -> showChangelog());
+        upgradeInfo.setOnPreferenceClickListener(preference -> {
+          onShowChangelogClicked();
+          return true;
+        });
       }
     }
 
     final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
-    showAboutLicenses.setOnPreferenceClickListener(preference -> onLicenseItemClicked());
+    showAboutLicenses.setOnPreferenceClickListener(preference -> {
+      onLicenseItemClicked();
+      return true;
+    });
 
     final Preference checkVersion = findPreference(getString(R.string.check_version_key));
-    checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
+    checkVersion.setOnPreferenceClickListener(preference -> {
+      onCheckForUpdatesClicked();
+      return true;
+    });
 
     final Preference clearAll = findPreference(getString(R.string.clear_all_key));
     if (clearAll != null) {
       if (hideClearAll()) {
         clearAll.setVisible(false);
       } else {
-        clearAll.setOnPreferenceClickListener(preference -> onClearAllPreferenceClicked());
+        clearAll.setOnPreferenceClickListener(preference -> {
+          onClearAllClicked();
+          return true;
+        });
       }
     }
 
@@ -115,30 +127,47 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     presenter.stop();
   }
 
-  @CheckResult protected boolean showChangelog() {
+  /**
+   * Logs when the Clear All option is clicked, override to use unique implementation
+   */
+  protected void onClearAllClicked() {
+    Timber.d("Clear all preferences clicked");
+  }
+
+  /**
+   * Shows a page for Open Source licenses, override or extend to use unique implementation
+   */
+  protected void onLicenseItemClicked() {
+    Timber.d("Show about licenses fragment");
+    AboutLibrariesFragment.show(getActivity(), getRootViewContainer(), isLastOnBackStack());
+  }
+
+  final void onShowChangelogClicked() {
     final FragmentActivity activity = getActivity();
     if (activity instanceof RatingDialog.ChangeLogProvider) {
-      final RatingDialog.ChangeLogProvider provider = (RatingDialog.ChangeLogProvider) activity;
-      RatingDialog.showRatingDialog(activity, provider, true);
+      onShowChangelogClicked((RatingDialog.ChangeLogProvider) activity);
     } else {
       throw new ClassCastException("Activity is not a change log provider");
     }
-    return true;
   }
 
-  @CheckResult protected boolean showAboutLicensesFragment(@IdRes int containerId) {
-    Timber.d("Show about licenses fragment");
-    AboutLibrariesFragment.show(getActivity(), containerId, isLastOnBackStack());
-    return true;
+  /**
+   * Shows the changelog, override or extend to use unique implementation
+   */
+  protected void onShowChangelogClicked(@NonNull RatingDialog.ChangeLogProvider provider) {
+    RatingDialog.showRatingDialog(getActivity(), provider, true);
   }
 
-  @NonNull @CheckResult protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
-    return AboutLibrariesFragment.BackStackState.NOT_LAST;
+  final void onCheckForUpdatesClicked() {
+    onCheckForUpdatesClicked(presenter);
   }
 
-  @SuppressWarnings("SameReturnValue") @CheckResult protected boolean checkForUpdate() {
+  /**
+   * Checks the server for updates, override to use a custom behavior
+   */
+  protected void onCheckForUpdatesClicked(@NonNull VersionCheckPresenter presenter) {
     toast.show();
-    presenter.checkForUpdates(getContext().getPackageName(), getCurrentApplicationVersion(),
+    presenter.forceCheckForUpdates(getContext().getPackageName(), getCurrentApplicationVersion(),
         new VersionCheckPresenter.UpdateCheckCallback() {
           @Override public void onVersionCheckFinished() {
             Timber.d("License check finished, mark");
@@ -151,14 +180,17 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
                     updatedVersionCode), VersionUpgradeDialog.TAG);
           }
         });
-    return true;
   }
 
-  @NonNull @CheckResult String provideApplicationName() {
+  @NonNull @CheckResult protected AboutLibrariesFragment.BackStackState isLastOnBackStack() {
+    return AboutLibrariesFragment.BackStackState.NOT_LAST;
+  }
+
+  @NonNull @CheckResult final String provideApplicationName() {
     return getVersionedActivity().provideApplicationName();
   }
 
-  @CheckResult int getCurrentApplicationVersion() {
+  @CheckResult final int getCurrentApplicationVersion() {
     return getVersionedActivity().getCurrentApplicationVersion();
   }
 
@@ -171,10 +203,6 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
     }
   }
 
-  @CheckResult protected boolean onClearAllPreferenceClicked() {
-    return true;
-  }
-
   @CheckResult @XmlRes protected int getPreferenceXmlResId() {
     return 0;
   }
@@ -185,10 +213,6 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @CheckResult protected boolean hideClearAll() {
     return false;
-  }
-
-  @CheckResult protected boolean onLicenseItemClicked() {
-    return showAboutLicensesFragment(getRootViewContainer());
   }
 
   @CheckResult @IdRes protected abstract int getRootViewContainer();

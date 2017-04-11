@@ -22,10 +22,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.PYDroidModule;
+import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import io.reactivex.Scheduler;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -51,8 +50,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
   }
 
   @CheckResult @NonNull private Gson provideGson() {
-    final GsonBuilder gsonBuilder = new GsonBuilder().registerTypeAdapterFactory(
-        AutoValueTypeAdapterFactory.create());
+    final GsonBuilder gsonBuilder =
+        new GsonBuilder().registerTypeAdapterFactory(AutoValueTypeAdapterFactory.create());
     return gsonBuilder.create();
   }
 
@@ -79,7 +78,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
     return new Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(subScheduler))
         .build();
   }
 

@@ -19,12 +19,15 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.Observable;
+import io.reactivex.Single;
+import timber.log.Timber;
 
 public class VersionCheckInteractor {
 
-  @NonNull private final VersionCheckService versionCheckService;
+  @SuppressWarnings("WeakerAccess") @NonNull final VersionCheckService versionCheckService;
+  @SuppressWarnings("WeakerAccess") @Nullable Single<VersionCheckResponse> cachedResponse;
 
   public VersionCheckInteractor(@NonNull VersionCheckService versionCheckService) {
     this.versionCheckService = Checker.checkNonNull(versionCheckService);
@@ -33,7 +36,19 @@ public class VersionCheckInteractor {
   /**
    * public
    */
-  @NonNull @CheckResult Observable<VersionCheckResponse> checkVersion(@NonNull String packageName) {
-    return versionCheckService.checkVersion(Checker.checkNonNull(packageName));
+  @NonNull @CheckResult Single<Integer> checkVersion(@NonNull String packageName, boolean force) {
+    return Single.defer(() -> {
+      Single<VersionCheckResponse> dataSource;
+      if (cachedResponse == null || force) {
+        Timber.d("Fetch from Network. Force: %s", force);
+        dataSource = versionCheckService.checkVersion(Checker.checkNonNull(packageName)).cache();
+        cachedResponse = dataSource;
+      } else {
+        Timber.d("Fetch from cached response");
+        dataSource = cachedResponse;
+      }
+
+      return dataSource;
+    }).map(VersionCheckResponse::currentVersion);
   }
 }

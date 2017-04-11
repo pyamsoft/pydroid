@@ -42,25 +42,33 @@ public class VersionCheckPresenter extends SchedulerPresenter {
     disposable = DisposableHelper.dispose(disposable);
   }
 
+  public void forceCheckForUpdates(@NonNull String packageName, int currentVersionCode,
+      @NonNull UpdateCheckCallback callback) {
+    checkForUpdates(packageName, currentVersionCode, true, callback);
+  }
+
   public void checkForUpdates(@NonNull String packageName, int currentVersionCode,
       @NonNull UpdateCheckCallback callback) {
+    checkForUpdates(packageName, currentVersionCode, false, callback);
+  }
+
+  private void checkForUpdates(@NonNull String packageName, int currentVersionCode, boolean force,
+      @NonNull UpdateCheckCallback callback) {
     disposable = DisposableHelper.dispose(disposable);
-    disposable = interactor.checkVersion(packageName)
+    disposable = interactor.checkVersion(packageName, force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(versionCheckResponse -> {
+        .subscribe(responseVersionCode -> {
           Timber.i("Update check finished");
           Timber.i("Current version: %d", currentVersionCode);
-          Timber.i("Latest version: %d", versionCheckResponse.currentVersion());
+          Timber.i("Latest version: %d", responseVersionCode);
           callback.onVersionCheckFinished();
-          if (currentVersionCode < versionCheckResponse.currentVersion()) {
-            callback.onUpdatedVersionFound(currentVersionCode,
-                versionCheckResponse.currentVersion());
+          if (currentVersionCode < responseVersionCode) {
+            callback.onUpdatedVersionFound(currentVersionCode, responseVersionCode);
           }
         }, throwable -> {
           if (throwable instanceof HttpException) {
-            Timber.w(throwable, "onError: Not successful CODE: %d",
-                ((HttpException) throwable).code());
+            Timber.e(throwable, "Network Failure: %d", ((HttpException) throwable).code());
           } else {
             Timber.e(throwable, "onError");
           }

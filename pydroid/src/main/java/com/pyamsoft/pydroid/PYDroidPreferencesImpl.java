@@ -29,8 +29,8 @@ class PYDroidPreferencesImpl implements RatingPreferences {
   @NonNull private final SharedPreferences preferences;
 
   PYDroidPreferencesImpl(@NonNull Context context) {
-    this.preferences = Checker.checkNonNull(PreferenceManager.getDefaultSharedPreferences(
-        Checker.checkNonNull(context).getApplicationContext()));
+    this.preferences = PreferenceManager.getDefaultSharedPreferences(
+        Checker.checkNonNull(context).getApplicationContext());
   }
 
   @Override public int getRatingAcceptedVersion() {

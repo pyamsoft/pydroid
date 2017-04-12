@@ -15,27 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader;
+package com.pyamsoft.pydroid.ui.loader.targets;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.graphics.Bitmap;
 
-public final class DrawableHelper {
+/**
+ * Target that loads Bitmaps
+ */
+public interface BitmapTarget extends Target<Bitmap> {
 
-  private DrawableHelper() {
-    throw new RuntimeException("No instances");
-  }
-
-  @CheckResult @NonNull
-  public static DrawableLoader.Loaded unload(@Nullable DrawableLoader.Loaded entry) {
-    if (entry == null) {
-      return DrawableLoader.empty();
-    }
-
-    if (!entry.isUnloaded()) {
-      entry.unload();
-    }
-    return DrawableLoader.empty();
-  }
 }

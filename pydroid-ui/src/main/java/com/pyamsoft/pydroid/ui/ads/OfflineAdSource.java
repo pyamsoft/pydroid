@@ -27,8 +27,9 @@ import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
-import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
-import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
+import com.pyamsoft.pydroid.ui.loader.Loaded;
+import com.pyamsoft.pydroid.ui.loader.LoaderHelper;
+import com.pyamsoft.pydroid.ui.loader.ResourceLoader;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class OfflineAdSource implements AdSource {
   @SuppressWarnings("WeakerAccess") Context appContext;
   private Queue<String> imageQueue;
   private ImageView adImage;
-  @NonNull private DrawableLoader.Loaded adTask = DrawableLoader.empty();
+  @NonNull private Loaded adTask = LoaderHelper.empty();
 
   @CheckResult private int loadImage(@NonNull String currentPackage) {
     int image;
@@ -135,7 +136,7 @@ public class OfflineAdSource implements AdSource {
   }
 
   @NonNull @Override public View destroy(boolean isChangingConfigurations) {
-    adTask = DrawableHelper.unload(adTask);
+    adTask = LoaderHelper.unload(adTask);
     if (!isChangingConfigurations) {
       imageQueue.clear();
     }
@@ -150,12 +151,10 @@ public class OfflineAdSource implements AdSource {
 
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
-    adImage.setOnClickListener(view -> {
-      Linker.with(appContext).clickAppPage(currentPackage);
-    });
+    adImage.setOnClickListener(view -> Linker.with(appContext).clickAppPage(currentPackage));
 
-    adTask = DrawableHelper.unload(adTask);
-    adTask = DrawableLoader.load(image)
+    adTask = LoaderHelper.unload(adTask);
+    adTask = ResourceLoader.load(image)
         .setErrorAction(item -> callback.onAdFailedLoad())
         .setCompleteAction(item -> callback.onAdRefreshed())
         .into(adImage);

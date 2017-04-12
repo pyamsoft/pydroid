@@ -37,8 +37,9 @@ import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.rating.RatingPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
-import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
-import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
+import com.pyamsoft.pydroid.ui.loader.LoaderHelper;
+import com.pyamsoft.pydroid.ui.loader.ResourceLoader;
+import com.pyamsoft.pydroid.ui.loader.Loaded;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -56,7 +57,7 @@ public class RatingDialog extends DialogFragment {
   private int versionCode;
   @DrawableRes private int changeLogIcon;
   private DialogRatingBinding binding;
-  @NonNull private DrawableLoader.Loaded iconTask = DrawableLoader.empty();
+  @NonNull private Loaded iconTask = LoaderHelper.empty();
 
   public static void showRatingDialog(@NonNull FragmentActivity activity,
       @NonNull ChangeLogProvider provider, boolean force) {
@@ -109,7 +110,7 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    iconTask = DrawableHelper.unload(iconTask);
+    iconTask = LoaderHelper.unload(iconTask);
     binding.unbind();
   }
 
@@ -128,8 +129,8 @@ public class RatingDialog extends DialogFragment {
   private void initDialog() {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
-    iconTask = DrawableHelper.unload(iconTask);
-    iconTask = DrawableLoader.load(changeLogIcon).into(binding.ratingIcon);
+    iconTask = LoaderHelper.unload(iconTask);
+    iconTask = ResourceLoader.load(changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
 
@@ -185,7 +186,7 @@ public class RatingDialog extends DialogFragment {
 
   static class Launcher {
 
-    @NonNull private static final Launcher INSTANCE = new Launcher();
+    @NonNull static final Launcher INSTANCE = new Launcher();
 
     RatingPresenter presenter;
 

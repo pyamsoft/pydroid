@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class DrawableMap {
+public class LoaderMap {
 
-  @NonNull private final HashMap<String, DrawableLoader.Loaded> map;
+  @NonNull private final HashMap<String, Loaded> map;
 
-  public DrawableMap() {
+  public LoaderMap() {
     this.map = new HashMap<>();
   }
 
@@ -36,12 +36,12 @@ public class DrawableMap {
    *
    * If an old element exists, its task is cancelled first before adding the new one
    */
-  public final void put(@NonNull String tag, @NonNull DrawableLoader.Loaded subscription) {
+  public final void put(@NonNull String tag, @NonNull Loaded subscription) {
     tag = Checker.checkNonNull(tag);
     subscription = Checker.checkNonNull(subscription);
 
     if (map.containsKey(tag)) {
-      map.put(tag, DrawableHelper.unload(map.get(tag)));
+      map.put(tag, LoaderHelper.unload(map.get(tag)));
     }
 
     Timber.d("Insert new subscription for tag: %s", tag);
@@ -54,9 +54,9 @@ public class DrawableMap {
    * If the elements have not been cancelled yet, cancel them before removing them
    */
   public final void clear() {
-    for (final Map.Entry<String, DrawableLoader.Loaded> entry : map.entrySet()) {
-      DrawableLoader.Loaded value = Checker.checkNonNull(entry.getValue());
-      entry.setValue(DrawableHelper.unload(value));
+    for (final Map.Entry<String, Loaded> entry : map.entrySet()) {
+      Loaded value = Checker.checkNonNull(entry.getValue());
+      entry.setValue(LoaderHelper.unload(value));
     }
 
     Timber.d("Clear AsyncDrawableMap");

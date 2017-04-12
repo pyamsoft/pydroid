@@ -25,9 +25,6 @@ import com.pyamsoft.pydroid.function.ActionSingle;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.ui.loader.targets.Target;
 
-/**
- * Created by pyamsoft on 4/11/17.
- */
 public abstract class GenericLoader<T> {
 
   @ColorRes private int tint;
@@ -44,20 +41,17 @@ public abstract class GenericLoader<T> {
     return this;
   }
 
-  @NonNull
-  public GenericLoader setStartAction(@NonNull ActionSingle<Target<T>> startAction) {
+  @NonNull public GenericLoader setStartAction(@NonNull ActionSingle<Target<T>> startAction) {
     this.startAction = Checker.checkNonNull(startAction);
     return this;
   }
 
-  @NonNull
-  public GenericLoader setErrorAction(@NonNull ActionSingle<Target<T>> errorAction) {
+  @NonNull public GenericLoader setErrorAction(@NonNull ActionSingle<Target<T>> errorAction) {
     this.errorAction = Checker.checkNonNull(errorAction);
     return this;
   }
 
-  @NonNull
-  public GenericLoader setCompleteAction(@NonNull ActionSingle<Target<T>> completeAction) {
+  @NonNull public GenericLoader setCompleteAction(@NonNull ActionSingle<Target<T>> completeAction) {
     this.completeAction = Checker.checkNonNull(completeAction);
     return this;
   }

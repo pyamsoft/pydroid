@@ -20,17 +20,10 @@
 <resources>
 
   <string name="blank"/>
-  <string name="support">Donate</string>
   <string name="no_thanks">No Thanks</string>
   <string name="homepage">Homepage</string>
 
-  <string name="iap_unsupported">Unable to connect to Play Store for In-App Purchases, or they are unsupported on this device.</string>
-  <string name="iap_empty">Unable to load In-App Purchase products. Please try again later.</string>
-
-  <string name="purchase_success_msg">Thank you for your purchase!</string>
-  <string name="purchase_error_msg">An error occurred during purchase attempt, please try again later</string>
   <string name="tamper_msg">This application may have been installed from an unofficial source or shows signs of being tampered with. It is recommended you uninstall it immediately. You can find the official pyamsoft applications by clicing the button below.</string>
-  <string name="support_plea">All pyamsoft applications are developed by a single, independent developer. I rely on the support of users like you to continue developing. Your support is always appreciated, but never required.</string>
   <string name="rate_application">Rate Application</string>
   <string name="support_pyamsoft">Support pyamsoft</string>
 

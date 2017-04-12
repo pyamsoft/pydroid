@@ -105,7 +105,13 @@ public class AboutLibrariesFragment extends ActionBarFragment {
     super.onViewCreated(view, savedInstanceState);
     fastItemAdapter.withSelectable(true);
 
-    binding.recyclerAboutLibraries.setLayoutManager(new LinearLayoutManager(getContext()));
+    LinearLayoutManager manager = new LinearLayoutManager(getContext());
+    manager.setItemPrefetchEnabled(true);
+    manager.setInitialPrefetchItemCount(3);
+    binding.recyclerAboutLibraries.setLayoutManager(manager);
+
+    binding.recyclerAboutLibraries.setClipToPadding(false);
+    binding.recyclerAboutLibraries.setHasFixedSize(true);
     binding.recyclerAboutLibraries.setAdapter(fastItemAdapter);
   }
 

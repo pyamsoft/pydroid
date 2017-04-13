@@ -15,13 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.targets;
+package com.pyamsoft.pydroid.ui.social;
 
-import android.graphics.drawable.Drawable;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.helper.Checker;
 
-/**
- * Target that loads Drawables
- */
-public interface DrawableTarget extends Target<Drawable> {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class SocialComponent {
 
+  @NonNull private final Context context;
+
+  public SocialComponent(@NonNull Context context) {
+    this.context = Checker.checkNonNull(context).getApplicationContext();
+  }
+
+  public void inject(@NonNull Linker linker) {
+    linker.appContext = context.getApplicationContext();
+  }
 }

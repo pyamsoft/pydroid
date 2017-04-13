@@ -25,11 +25,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
-import com.pyamsoft.pydroid.ui.loader.Loaded;
+import com.pyamsoft.pydroid.ui.loader.ImageLoader;
 import com.pyamsoft.pydroid.ui.loader.LoaderHelper;
-import com.pyamsoft.pydroid.ui.loader.ResourceLoader;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.ui.social.Linker;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -151,10 +151,10 @@ public class OfflineAdSource implements AdSource {
 
     final String currentPackage = currentPackageFromQueue();
     final int image = loadImage(currentPackage);
-    adImage.setOnClickListener(view -> Linker.with(appContext).clickAppPage(currentPackage));
+    adImage.setOnClickListener(view -> Linker.getInstance().clickAppPage(currentPackage));
 
     adTask = LoaderHelper.unload(adTask);
-    adTask = ResourceLoader.load(image)
+    adTask = ImageLoader.fromResource(image)
         .setErrorAction(item -> callback.onAdFailedLoad())
         .setCompleteAction(item -> callback.onAdRefreshed())
         .into(adImage);

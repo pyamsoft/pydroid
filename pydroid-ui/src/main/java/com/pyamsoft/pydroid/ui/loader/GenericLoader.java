@@ -21,54 +21,22 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.ImageView;
 import com.pyamsoft.pydroid.function.ActionSingle;
-import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.ui.loader.targets.Target;
 
 public abstract class GenericLoader<T> {
 
-  @ColorRes private int tint;
-  @Nullable private ActionSingle<Target<T>> startAction;
-  @Nullable private ActionSingle<Target<T>> errorAction;
-  @Nullable private ActionSingle<Target<T>> completeAction;
+  @Nullable protected ActionSingle<Target<T>> startAction;
+  @Nullable protected ActionSingle<Target<T>> errorAction;
+  @Nullable protected ActionSingle<Target<T>> completeAction;
+  @ColorRes protected int tint;
 
   protected GenericLoader() {
-    tint = 0;
   }
 
-  @NonNull public GenericLoader tint(@ColorRes int color) {
-    this.tint = color;
-    return this;
-  }
+  @CheckResult @NonNull public abstract Loaded into(@NonNull ImageView imageView);
 
-  @NonNull public GenericLoader setStartAction(@NonNull ActionSingle<Target<T>> startAction) {
-    this.startAction = Checker.checkNonNull(startAction);
-    return this;
-  }
-
-  @NonNull public GenericLoader setErrorAction(@NonNull ActionSingle<Target<T>> errorAction) {
-    this.errorAction = Checker.checkNonNull(errorAction);
-    return this;
-  }
-
-  @NonNull public GenericLoader setCompleteAction(@NonNull ActionSingle<Target<T>> completeAction) {
-    this.completeAction = Checker.checkNonNull(completeAction);
-    return this;
-  }
-
-  @CheckResult int tint() {
-    return tint;
-  }
-
-  @CheckResult @Nullable protected ActionSingle<Target<T>> startAction() {
-    return startAction;
-  }
-
-  @CheckResult @Nullable protected ActionSingle<Target<T>> errorAction() {
-    return errorAction;
-  }
-
-  @CheckResult @Nullable protected ActionSingle<Target<T>> completeAction() {
-    return completeAction;
-  }
+  @CheckResult @NonNull public abstract Loaded into(@NonNull Target<T> target);
 }

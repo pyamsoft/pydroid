@@ -27,8 +27,8 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
+import com.pyamsoft.pydroid.ui.social.Linker;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class TamperDialog extends DialogFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ import com.pyamsoft.pydroid.ui.R;
         .setMessage(R.string.tamper_msg)
         .setCancelable(false)
         .setPositiveButton("Take Me", (dialog, which) -> {
-          Linker.with(getContext()).clickGooglePlay();
+          Linker.getInstance().clickGooglePlay();
           killApp();
         })
         .setNegativeButton("Close", (dialogInterface, i) -> killApp())

@@ -90,7 +90,7 @@ public class AboutLibrariesFragment extends ActionBarFragment {
         throw new RuntimeException("Invalid back stack state: " + backStackStateName);
     }
 
-    PYDroidInjector.get().provideComponent().provideAboutLibrariesComponent().inject(this);
+    PYDroidInjector.get().provideComponent().plusAboutLibrariesComponent().inject(this);
   }
 
   @Nullable @Override

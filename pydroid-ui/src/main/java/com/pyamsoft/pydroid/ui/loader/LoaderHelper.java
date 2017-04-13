@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.loader;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 
 public final class LoaderHelper {
 

@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.loader.targets;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -27,7 +26,7 @@ import com.pyamsoft.pydroid.helper.Checker;
 /**
  * Target which loads Drawables into an ImageView
  */
-public class DrawableImageTarget implements DrawableTarget {
+public class DrawableImageTarget implements Target<Drawable> {
 
   @NonNull private final ImageView imageView;
 
@@ -35,13 +34,8 @@ public class DrawableImageTarget implements DrawableTarget {
     this.imageView = Checker.checkNonNull(imageView);
   }
 
-  @CheckResult @NonNull
-  public static Target<Drawable> forImageView(@NonNull ImageView imageView) {
+  @CheckResult @NonNull public static Target<Drawable> forImageView(@NonNull ImageView imageView) {
     return new DrawableImageTarget(imageView);
-  }
-
-  @NonNull @Override public Context getContext() {
-    return imageView.getContext();
   }
 
   @Override public void loadImage(@NonNull Drawable image) {

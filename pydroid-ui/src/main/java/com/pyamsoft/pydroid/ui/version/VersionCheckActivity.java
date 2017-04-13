@@ -51,7 +51,7 @@ public abstract class VersionCheckActivity extends AdvertisementActivity
     versionChecked =
         savedInstanceState != null && savedInstanceState.getBoolean(VERSION_CHECKED, false);
 
-    PYDroidInjector.get().provideComponent().provideVersionCheckComponent().inject(this);
+    PYDroidInjector.get().provideComponent().plusVersionCheckComponent().inject(this);
   }
 
   @CallSuper @Override protected void onStart() {

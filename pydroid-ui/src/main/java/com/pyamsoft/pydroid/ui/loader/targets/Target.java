@@ -17,16 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.loader.targets;
 
-import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
 /**
  * Load an Image of a generic type (Drawable or Bitmap)
  */
 public interface Target<T> {
-
-  @CheckResult @NonNull Context getContext();
 
   void loadImage(@NonNull T image);
 }

@@ -15,13 +15,21 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.targets;
+package com.pyamsoft.pydroid.ui.loader.resource;
 
-import android.graphics.Bitmap;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.helper.Checker;
 
-/**
- * Target that loads Bitmaps
- */
-public interface BitmapTarget extends Target<Bitmap> {
+public class LoaderComponent {
 
+  @NonNull private final Context appContext;
+
+  public LoaderComponent(@NonNull Context context) {
+    this.appContext = Checker.checkNonNull(context).getApplicationContext();
+  }
+
+  void inject(@NonNull ResourceLoader loader) {
+    loader.appContext = appContext.getApplicationContext();
+  }
 }

@@ -53,7 +53,7 @@ class AboutLibrariesItem extends
   AboutLibrariesItem(@NonNull AboutLibrariesModel item) {
     super(Checker.checkNonNull(item));
     licenseText = "";
-    PYDroidInjector.get().provideComponent().provideAboutLibrariesComponent().inject(this);
+    PYDroidInjector.get().provideComponent().plusAboutLibrariesComponent().inject(this);
   }
 
   @SuppressWarnings("WeakerAccess") void setLicenseText(@NonNull String licenseText) {

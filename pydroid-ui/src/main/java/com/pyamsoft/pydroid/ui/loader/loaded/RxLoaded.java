@@ -15,18 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.rx;
+package com.pyamsoft.pydroid.ui.loader.loaded;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.ui.loader.Loaded;
 import io.reactivex.disposables.Disposable;
 
-class RxLoaded implements Loaded {
+public class RxLoaded implements Loaded {
 
   @NonNull private final Disposable disposable;
 
-  RxLoaded(@NonNull Disposable disposable) {
+  public RxLoaded(@NonNull Disposable disposable) {
     disposable = Checker.checkNonNull(disposable);
     this.disposable = disposable;
   }

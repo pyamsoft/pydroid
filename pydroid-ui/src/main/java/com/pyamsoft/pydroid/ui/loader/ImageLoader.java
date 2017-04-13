@@ -15,35 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.targets;
+package com.pyamsoft.pydroid.ui.loader;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.widget.ImageView;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.ui.loader.resource.ResourceLoader;
+import com.pyamsoft.pydroid.ui.loader.resource.RxResourceLoader;
 
-/**
- * Target which loads Bitmaps into an ImageView
- */
-public class BitmapImageTarget implements BitmapTarget {
+public final class ImageLoader {
 
-  @NonNull private final ImageView imageView;
-
-  private BitmapImageTarget(@NonNull ImageView imageView) {
-    this.imageView = Checker.checkNonNull(imageView);
+  @CheckResult @NonNull public static <T extends GenericLoader<?>> T fromLoader(@NonNull T loader) {
+    return Checker.checkNonNull(loader);
   }
 
-  @CheckResult @NonNull public static Target<Bitmap> forImageView(@NonNull ImageView imageView) {
-    return new BitmapImageTarget(imageView);
-  }
-
-  @NonNull @Override public Context getContext() {
-    return imageView.getContext();
-  }
-
-  @Override public void loadImage(@NonNull Bitmap image) {
-    imageView.setImageBitmap(image);
+  @CheckResult @NonNull public static ResourceLoader fromResource(@DrawableRes int resource) {
+    return new RxResourceLoader(resource);
   }
 }

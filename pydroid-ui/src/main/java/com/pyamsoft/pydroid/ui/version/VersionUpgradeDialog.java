@@ -26,7 +26,7 @@ import android.support.annotation.RestrictTo;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.social.Linker;
+import com.pyamsoft.pydroid.ui.social.Linker;
 import java.util.Locale;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionUpgradeDialog extends DialogFragment {
@@ -78,7 +78,7 @@ import java.util.Locale;
     return new AlertDialog.Builder(getActivity()).setTitle("New version available")
         .setMessage(message)
         .setPositiveButton("Update", (dialogInterface, i) -> {
-          Linker.with(getContext()).clickAppPage(getContext().getPackageName());
+          Linker.getInstance().clickAppPage(getContext().getPackageName());
           dismiss();
         })
         .setNegativeButton("Later", (dialogInterface, i) -> dismiss())

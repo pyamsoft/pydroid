@@ -15,76 +15,55 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.rx;
+package com.pyamsoft.pydroid.ui.loader.resource;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.function.ActionSingle;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.helper.SchedulerHelper;
-import com.pyamsoft.pydroid.ui.loader.Loaded;
-import com.pyamsoft.pydroid.ui.loader.ResourceLoader;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.ui.loader.loaded.RxLoaded;
 import com.pyamsoft.pydroid.ui.loader.targets.Target;
-import io.reactivex.Observable;
 import io.reactivex.Scheduler;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class RxResourceLoader extends ResourceLoader.Loader {
+public class RxResourceLoader extends ResourceLoader {
 
-  @NonNull private Scheduler obsScheduler;
-  @NonNull private Scheduler subScheduler;
+  @NonNull private final Scheduler obsScheduler;
+  @NonNull private final Scheduler subScheduler;
 
-  public RxResourceLoader() {
+  public RxResourceLoader(@DrawableRes int resource) {
+    super(resource);
     obsScheduler = AndroidSchedulers.mainThread();
     subScheduler = Schedulers.io();
-
-    SchedulerHelper.enforceObserveScheduler(obsScheduler);
-    SchedulerHelper.enforceSubscribeScheduler(subScheduler);
   }
 
   @NonNull @Override
   protected Loaded load(@NonNull Target<Drawable> target, @DrawableRes int resource) {
     final Target<Drawable> finalTarget = Checker.checkNonNull(target);
-    return new RxLoaded(Observable.fromCallable(finalTarget::getContext)
-        .map(this::loadResource)
+    return new RxLoaded(Single.fromCallable(() -> loadResource(appContext))
         .subscribeOn(subScheduler)
         .observeOn(obsScheduler)
         .doOnSubscribe(disposable -> {
-          ActionSingle<Target<Drawable>> startAction = startAction();
           if (startAction != null) {
             startAction.call(finalTarget);
           }
         })
         .doOnError(throwable -> {
           Timber.e(throwable, "Error loading AsyncDrawable");
-          ActionSingle<Target<Drawable>> errorAction = errorAction();
           if (errorAction != null) {
             errorAction.call(finalTarget);
           }
         })
-        .doOnComplete(() -> {
-          ActionSingle<Target<Drawable>> completeAction = completeAction();
+        .doAfterSuccess(drawable -> {
           if (completeAction != null) {
             completeAction.call(finalTarget);
           }
         })
         .subscribe(finalTarget::loadImage,
-            throwable -> Timber.e(throwable, "Error loading drawable")));
-  }
-
-  @CheckResult @NonNull public final RxResourceLoader subscribeOn(@NonNull Scheduler scheduler) {
-    this.subScheduler = Checker.checkNonNull(scheduler);
-    SchedulerHelper.enforceSubscribeScheduler(subScheduler);
-    return this;
-  }
-
-  @CheckResult @NonNull public final RxResourceLoader observeOn(@NonNull Scheduler scheduler) {
-    this.obsScheduler = Checker.checkNonNull(scheduler);
-    SchedulerHelper.enforceObserveScheduler(obsScheduler);
-    return this;
+            throwable -> Timber.e(throwable, "Error loading Drawable using RxResourceLoader")));
   }
 }

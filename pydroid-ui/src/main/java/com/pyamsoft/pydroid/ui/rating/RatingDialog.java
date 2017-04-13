@@ -37,9 +37,9 @@ import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.rating.RatingPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
+import com.pyamsoft.pydroid.ui.loader.ImageLoader;
 import com.pyamsoft.pydroid.ui.loader.LoaderHelper;
-import com.pyamsoft.pydroid.ui.loader.ResourceLoader;
-import com.pyamsoft.pydroid.ui.loader.Loaded;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -130,7 +130,7 @@ public class RatingDialog extends DialogFragment {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
     iconTask = LoaderHelper.unload(iconTask);
-    iconTask = ResourceLoader.load(changeLogIcon).into(binding.ratingIcon);
+    iconTask = ImageLoader.fromResource(changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
 
@@ -184,6 +184,17 @@ public class RatingDialog extends DialogFragment {
     }
   }
 
+  public interface ChangeLogProvider {
+
+    @CheckResult @NonNull Spannable getChangeLogText();
+
+    @DrawableRes @CheckResult int getApplicationIcon();
+
+    @CheckResult @NonNull String getPackageName();
+
+    @CheckResult int getCurrentApplicationVersion();
+  }
+
   static class Launcher {
 
     @NonNull static final Launcher INSTANCE = new Launcher();
@@ -191,7 +202,7 @@ public class RatingDialog extends DialogFragment {
     RatingPresenter presenter;
 
     Launcher() {
-      PYDroidInjector.get().provideComponent().provideRatingComponent().inject(this);
+      PYDroidInjector.get().provideComponent().plusRatingComponent().inject(this);
     }
 
     void loadRatingDialog(@NonNull FragmentActivity activity, @NonNull ChangeLogProvider provider,
@@ -229,16 +240,5 @@ public class RatingDialog extends DialogFragment {
     void cleanup() {
       presenter.destroy();
     }
-  }
-
-  public interface ChangeLogProvider {
-
-    @CheckResult @NonNull Spannable getChangeLogText();
-
-    @DrawableRes @CheckResult int getApplicationIcon();
-
-    @CheckResult @NonNull String getPackageName();
-
-    @CheckResult int getCurrentApplicationVersion();
   }
 }

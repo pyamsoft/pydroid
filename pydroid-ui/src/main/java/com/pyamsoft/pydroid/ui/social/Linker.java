@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.social;
+package com.pyamsoft.pydroid.ui.social;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;
@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public final class Linker extends Presenter {
@@ -37,17 +38,17 @@ public final class Linker extends Presenter {
 
   @Nullable private static volatile Linker instance;
 
-  @NonNull private final Context context;
+  Context appContext;
 
-  private Linker(@NonNull Context context) {
-    this.context = Checker.checkNonNull(context).getApplicationContext();
+  private Linker() {
+    PYDroidInjector.get().provideComponent().plusSocialComponent().inject(this);
   }
 
-  @CheckResult @NonNull public static Linker with(@NonNull Context context) {
+  @CheckResult @NonNull public static Linker getInstance() {
     if (instance == null) {
       synchronized (Linker.class) {
         if (instance == null) {
-          instance = new Linker(context.getApplicationContext());
+          instance = new Linker();
         }
       }
     }
@@ -56,22 +57,22 @@ public final class Linker extends Presenter {
   }
 
   public void clickAppPage(@NonNull String link) {
-    NetworkUtil.newLink(context, BASE_MARKET + link);
+    NetworkUtil.newLink(appContext, BASE_MARKET + link);
   }
 
   public void clickGooglePlay() {
-    NetworkUtil.newLink(context, GOOGLE_PLAY_DEVELOPER_PAGE);
+    NetworkUtil.newLink(appContext, GOOGLE_PLAY_DEVELOPER_PAGE);
   }
 
   public void clickGooglePlus() {
-    NetworkUtil.newLink(context, GOOGLE_PLUS);
+    NetworkUtil.newLink(appContext, GOOGLE_PLUS);
   }
 
   public void clickBlogger() {
-    NetworkUtil.newLink(context, OFFICIAL_BLOG);
+    NetworkUtil.newLink(appContext, OFFICIAL_BLOG);
   }
 
   public void clickFacebook() {
-    NetworkUtil.newLink(context, FACEBOOK);
+    NetworkUtil.newLink(appContext, FACEBOOK);
   }
 }

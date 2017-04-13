@@ -21,7 +21,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
-import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
 import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding;
@@ -61,10 +60,10 @@ public class SocialMediaPreference extends BaseBoundPreference {
     Timber.d("onBindViewHolder");
     binding = DataBindingUtil.bind(holder.itemView);
 
-    binding.googlePlay.setOnClickListener(v -> Linker.with(getContext()).clickGooglePlay());
-    binding.googlePlus.setOnClickListener(v -> Linker.with(getContext()).clickGooglePlus());
-    binding.blogger.setOnClickListener(v -> Linker.with(getContext()).clickBlogger());
-    binding.facebook.setOnClickListener(v -> Linker.with(getContext()).clickFacebook());
+    binding.googlePlay.setOnClickListener(v -> Linker.getInstance().clickGooglePlay());
+    binding.googlePlus.setOnClickListener(v -> Linker.getInstance().clickGooglePlus());
+    binding.blogger.setOnClickListener(v -> Linker.getInstance().clickBlogger());
+    binding.facebook.setOnClickListener(v -> Linker.getInstance().clickFacebook());
   }
 
   @Override protected void onUnbindViewHolder() {

@@ -32,11 +32,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.pyamsoft.pydroid.social.Linker;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
+import com.pyamsoft.pydroid.ui.social.Linker;
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity;
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog;
 import com.pyamsoft.pydroid.util.DialogUtil;
@@ -52,7 +52,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    PYDroidInjector.get().provideComponent().provideAppComponent().inject(this);
+    PYDroidInjector.get().provideComponent().plusAppComponent().inject(this);
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override
@@ -117,7 +117,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
     final Preference rateApplication = findPreference(getString(R.string.rating_key));
     rateApplication.setOnPreferenceClickListener(preference -> {
-      Linker.with(preference.getContext()).clickAppPage(preference.getContext().getPackageName());
+      Linker.getInstance().clickAppPage(preference.getContext().getPackageName());
       return true;
     });
   }

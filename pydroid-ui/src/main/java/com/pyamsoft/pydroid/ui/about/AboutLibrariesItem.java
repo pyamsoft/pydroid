@@ -164,20 +164,5 @@ class AboutLibrariesItem extends
       binding.expandLicenseHomepage.setTextColor(Color.BLUE);
       binding.expandLicenseHomepage.setSingleLine(true);
     }
-
-    //void bind(@NonNull ActionSingle<AboutLicenseModel> loader) {
-    //  loader = Checker.checkNonNull(loader);
-    //
-    //  if (expanded) {
-    //    if (license.length() == 0) {
-    //      final AboutLicenseModel item = weakItem.get();
-    //      if (item != null) {
-    //        loader.call(item);
-    //      } else {
-    //        Timber.e("AboutLicenseItem is NULL");
-    //      }
-    //    }
-    //  }
-    //}
   }
 }

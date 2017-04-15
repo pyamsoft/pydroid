@@ -18,6 +18,4 @@
 
 <resources>
   <item name="fastadapter_expandable_about_item" type="id"/>
-  <item name="fastadapter_about_license_item" type="id"/>
-  <item name="fastadapter_iap" type="id"/>
 </resources>

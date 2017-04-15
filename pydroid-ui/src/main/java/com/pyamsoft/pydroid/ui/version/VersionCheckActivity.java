@@ -24,13 +24,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
-import com.pyamsoft.pydroid.ui.ads.AdvertisementActivity;
+import com.pyamsoft.pydroid.ui.app.activity.BackPressConfirmActivity;
 import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.version.VersionCheckPresenter;
 import com.pyamsoft.pydroid.version.VersionCheckProvider;
 import timber.log.Timber;
 
-public abstract class VersionCheckActivity extends AdvertisementActivity
+public abstract class VersionCheckActivity extends BackPressConfirmActivity
     implements VersionCheckProvider {
 
   @NonNull private static final String VERSION_CHECKED = "version_check_completed";

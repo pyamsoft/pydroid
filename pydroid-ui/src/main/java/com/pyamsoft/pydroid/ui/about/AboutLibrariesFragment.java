@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding;
 import java.util.List;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
 import timber.log.Timber;
 
 public class AboutLibrariesFragment extends ActionBarFragment {
@@ -109,6 +111,13 @@ public class AboutLibrariesFragment extends ActionBarFragment {
     manager.setItemPrefetchEnabled(true);
     manager.setInitialPrefetchItemCount(3);
     binding.recyclerAboutLibraries.setLayoutManager(manager);
+
+    RecyclerView.ItemAnimator itemAnimator = new SlideInDownAnimator();
+    itemAnimator.setAddDuration(240L);
+    itemAnimator.setRemoveDuration(240L);
+    itemAnimator.setChangeDuration(500L);
+    itemAnimator.setMoveDuration(500L);
+    binding.recyclerAboutLibraries.setItemAnimator(itemAnimator);
 
     binding.recyclerAboutLibraries.setClipToPadding(false);
     binding.recyclerAboutLibraries.setHasFixedSize(true);

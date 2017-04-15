@@ -92,4 +92,4 @@ tasks.whenTaskAdded { task ->
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '9.0.0'
+version = '9.0.1'

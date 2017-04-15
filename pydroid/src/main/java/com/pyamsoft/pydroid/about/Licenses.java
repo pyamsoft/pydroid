@@ -55,9 +55,6 @@ public final class Licenses {
     createItem(Names.PYDROID, HomepageUrls.PYDROID, LicenseLocations.PYDROID);
     createItem(Names.AUTO_VALUE, HomepageUrls.AUTO_VALUE, LicenseLocations.AUTO_VALUE);
     createItem(Names.RETROFIT, HomepageUrls.RETROFIT, LicenseLocations.RETROFIT);
-    createItem(Names.FIREBASE, HomepageUrls.FIREBASE, LicenseLocations.FIREBASE);
-    createItem(Names.ANDROID_CHECKOUT, HomepageUrls.ANDROID_CHECKOUT,
-        LicenseLocations.ANDROID_CHECKOUT);
     createItem(Names.ERROR_PRONE, HomepageUrls.ERROR_PRONE, LicenseLocations.ERROR_PRONE);
     createItem(Names.TIMBER, HomepageUrls.TIMBER, LicenseLocations.TIMBER);
     createItem(Names.RETROLAMBDA, HomepageUrls.RETROLAMBDA, LicenseLocations.RETROLAMBDA);
@@ -68,6 +65,8 @@ public final class Licenses {
     createItem(Names.DEXCOUNT_GRADLE_PLUGIN, HomepageUrls.DEXCOUNT_GRADLE_PLUGIN,
         LicenseLocations.DEXCOUNT_GRADLE_PLUGIN);
     createItem(Names.GOOGLE_PLAY, HomepageUrls.GOOGLE_PLAY, LicenseLocations.GOOGLE_PLAY);
+    createItem(Names.RXJAVA, HomepageUrls.RXJAVA, LicenseLocations.RXJAVA);
+    createItem(Names.RXANDROID, HomepageUrls.RXANDROID, LicenseLocations.RXANDROID);
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,
@@ -81,13 +80,13 @@ public final class Licenses {
     // We explicitly check for this one
     @NonNull static final String GOOGLE_PLAY = "Google Play Services";
 
+    @NonNull static final String RXJAVA = "RxJava";
+    @NonNull static final String RXANDROID = "RxAndroid";
     @NonNull static final String ANDROID = "Android";
     @NonNull static final String ANDROID_SUPPORT = "Android Support Libraries";
     @NonNull static final String PYDROID = "PYDroid";
     @NonNull static final String AUTO_VALUE = "AutoValue";
     @NonNull static final String RETROFIT = "Retrofit";
-    @NonNull static final String FIREBASE = "Firebase";
-    @NonNull static final String ANDROID_CHECKOUT = "Android Checkout";
     @NonNull static final String ERROR_PRONE = "Error Prone";
     @NonNull static final String TIMBER = "Timber";
     @NonNull static final String RETROLAMBDA = "Retrolambda";
@@ -101,6 +100,8 @@ public final class Licenses {
   }
 
   private static final class HomepageUrls {
+    @NonNull static final String RXJAVA = "https://github.com/ReactiveX/RxJava";
+    @NonNull static final String RXANDROID = "https://github.com/ReactiveX/RxAndroid";
     @NonNull static final String ANDROID = "https://source.android.com";
     @NonNull static final String ANDROID_SUPPORT = "https://source.android.com";
     @NonNull static final String GOOGLE_PLAY =
@@ -108,8 +109,6 @@ public final class Licenses {
     @NonNull static final String PYDROID = "https://pyamsoft.github.io/pydroid";
     @NonNull static final String AUTO_VALUE = "https://github.com/google/auto";
     @NonNull static final String RETROFIT = "https://square.github.io/retrofit/";
-    @NonNull static final String FIREBASE = "https://firebase.google.com/";
-    @NonNull static final String ANDROID_CHECKOUT = "https://github.com/serso/android-checkout";
     @NonNull static final String ERROR_PRONE = "https://github.com/google/onError-prone";
     @NonNull static final String TIMBER = "https://github.com/JakeWharton/timber";
     @NonNull static final String RETROLAMBDA = "https://github.com/orfjackal/retrolambda";
@@ -127,14 +126,14 @@ public final class Licenses {
   public static final class LicenseLocations {
     // Add an underscore to keep this name on top
     @NonNull public static final String _BASE = "licenses/";
+    @NonNull static final String RXJAVA = _BASE + "rxjava";
+    @NonNull static final String RXANDROID = _BASE + "rxandroid";
     @NonNull static final String ANDROID_SUPPORT = _BASE + "androidsupport";
     @NonNull static final String ANDROID = _BASE + "android";
     @NonNull static final String GOOGLE_PLAY = _BASE + "";
     @NonNull static final String PYDROID = _BASE + "pydroid";
     @NonNull static final String AUTO_VALUE = _BASE + "autovalue";
     @NonNull static final String RETROFIT = _BASE + "retrofit";
-    @NonNull static final String FIREBASE = _BASE + "firebase";
-    @NonNull static final String ANDROID_CHECKOUT = _BASE + "androidcheckout";
     @NonNull static final String ERROR_PRONE = _BASE + "errorprone";
     @NonNull static final String TIMBER = _BASE + "timber";
     @NonNull static final String RETROLAMBDA = _BASE + "retrolambda";

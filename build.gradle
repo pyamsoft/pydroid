@@ -35,8 +35,8 @@ buildscript {
 
     retrolambda = "2.5.1"
     supportLib = "25.3.1"
-    firebase = "10.2.1"
     timber = "4.5.1"
+    recyclerAnimators = "2.2.6"
     autoValue = "1.4"
     autoValueGSON = "0.4.6"
     retrofit = "2.2.0"

@@ -22,24 +22,21 @@ import com.pyamsoft.pydroid.about.Licenses;
 
 import static com.pyamsoft.pydroid.about.Licenses.LicenseLocations._BASE;
 
-public final class UiLicenses {
+final class UiLicenses {
 
   private UiLicenses() {
     throw new RuntimeException("No instances");
   }
 
-  public static void addLicenses() {
+  static void addLicenses() {
     Licenses.create(Names.LEAK_CANARY, HomepageUrls.LEAK_CANARY, LicenseLocations.LEAK_CANARY);
     Licenses.create(Names.FAST_ADAPTER, HomepageUrls.FAST_ADAPTER, LicenseLocations.FAST_ADAPTER);
-    Licenses.create(Names.RECYCLERVIEW_ANIMATORS, HomepageUrls.RECYCLERVIEW_ANIMATORS,
-        LicenseLocations.RECYCLERVIEW_ANIMATORS);
   }
 
   private static final class Names {
 
     @NonNull static final String LEAK_CANARY = "Leak Canary";
     @NonNull static final String FAST_ADAPTER = "Fast Adapter";
-    @NonNull static final String RECYCLERVIEW_ANIMATORS = "RecyclerView Animators";
 
     private Names() {
       throw new RuntimeException("No instances");
@@ -50,8 +47,6 @@ public final class UiLicenses {
 
     @NonNull static final String LEAK_CANARY = "https://github.com/square/leakcanary";
     @NonNull static final String FAST_ADAPTER = "https://github.com/mikepenz/FastAdapter";
-    @NonNull static final String RECYCLERVIEW_ANIMATORS =
-        "https://github.com/wasabeef/recyclerview-animators";
 
     private HomepageUrls() {
       throw new RuntimeException("No instances");
@@ -62,7 +57,6 @@ public final class UiLicenses {
 
     @NonNull static final String LEAK_CANARY = _BASE + "leakcanary";
     @NonNull static final String FAST_ADAPTER = _BASE + "fastadapter";
-    @NonNull static final String RECYCLERVIEW_ANIMATORS = _BASE + "recyclerview_aninmators";
 
     private LicenseLocations() {
       throw new RuntimeException("No instances");

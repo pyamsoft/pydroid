@@ -89,7 +89,6 @@ dependencies {
   compile("com.mikepenz:fastadapter:$fastAdapter@aar") {
     transitive = true
   }
-  compile "jp.wasabeef:recyclerview-animators:$recyclerAnimators"
 
   compile project(path: ":pydroid")
 }

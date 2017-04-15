@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.licenses;
+package com.pyamsoft.pydroid.ui;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.about.Licenses;

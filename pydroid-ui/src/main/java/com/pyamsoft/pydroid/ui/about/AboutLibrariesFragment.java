@@ -143,7 +143,8 @@ public class AboutLibrariesFragment extends ActionBarFragment {
           binding.recyclerAboutLibraries.setVisibility(View.VISIBLE);
         }
 
-        fastItemAdapter.add(new AboutLibrariesItem(model));
+        binding.recyclerAboutLibraries.post(
+            () -> fastItemAdapter.add(new AboutLibrariesItem(model)));
       }
     });
   }

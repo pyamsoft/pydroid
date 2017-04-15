@@ -29,7 +29,6 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
-import com.pyamsoft.pydroid.ui.licenses.UiLicenses;
 import timber.log.Timber;
 
 public abstract class SingleInitContentProvider extends ContentProvider implements LicenseProvider {

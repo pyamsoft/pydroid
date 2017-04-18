@@ -36,9 +36,13 @@ public final class DialogUtil {
    * Using the fragment manager to handle transactions, this guarantees that any old
    * versions of the dialog fragment are removed before a new one is added.
    */
-  public static void guaranteeSingleDialogFragment(@NonNull FragmentActivity fragmentActivity,
+  public static void guaranteeSingleDialogFragment(FragmentActivity fragmentActivity,
       @NonNull DialogFragment dialogFragment, @NonNull String tag) {
-    fragmentActivity = Checker.checkNonNull(fragmentActivity);
+    if (fragmentActivity == null) {
+      Timber.w("Cannot attach a fragment to a NULL activity. No-op");
+      return;
+    }
+
     dialogFragment = Checker.checkNonNull(dialogFragment);
     tag = Checker.checkNonNull(tag);
 
@@ -61,9 +65,13 @@ public final class DialogUtil {
   /**
    * Guarantees that a fragment with the given tag is only added to the view once
    */
-  public static void onlyLoadOnceDialogFragment(@NonNull FragmentActivity fragmentActivity,
+  public static void onlyLoadOnceDialogFragment(FragmentActivity fragmentActivity,
       @NonNull DialogFragment dialogFragment, @NonNull String tag) {
-    fragmentActivity = Checker.checkNonNull(fragmentActivity);
+    if (fragmentActivity == null) {
+      Timber.w("Cannot attach a fragment to a NULL activity. No-op");
+      return;
+    }
+
     dialogFragment = Checker.checkNonNull(dialogFragment);
     tag = Checker.checkNonNull(tag);
 

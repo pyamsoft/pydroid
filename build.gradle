@@ -36,14 +36,14 @@ buildscript {
     retrolambda = "2.5.1"
     supportLib = "25.3.1"
     timber = "4.5.1"
-    autoValue = "1.4"
+    autoValue = "1.4.1"
     autoValueGSON = "0.4.6"
     retrofit = "2.2.0"
-    retrofitLogging = "3.6.0"
+    retrofitLogging = "3.7.0"
     rxjava = "2.0.8"
     rxandroid = "2.0.1"
-    fastAdapter = "2.5.1"
-    fastAdapterCommons = "2.5.0"
+    fastAdapter = "2.5.2"
+    fastAdapterCommons = "2.5.2"
   }
 
   dependencies {

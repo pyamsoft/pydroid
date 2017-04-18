@@ -21,36 +21,27 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
 
 public class AboutLibrariesItemPresenter extends SchedulerPresenter {
 
   @NonNull private final AboutLibrariesItemInteractor interactor;
-  @NonNull private final CompositeDisposable licenseDisposables;
 
   AboutLibrariesItemPresenter(@NonNull AboutLibrariesItemInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = Checker.checkNonNull(interactor);
-    licenseDisposables = new CompositeDisposable();
-  }
-
-  @Override protected void onStop() {
-    licenseDisposables.clear();
   }
 
   public void loadLicenseText(@NonNull AboutLibrariesModel license,
       @NonNull LicenseTextLoadCallback callback) {
-    Disposable licenseSubscription = interactor.loadLicenseText(license)
+    disposeOnStop(interactor.loadLicenseText(license)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onLicenseTextLoadComplete, throwable -> {
           Timber.e(throwable, "onError loadLicenseText");
           callback.onLicenseTextLoadError();
-        });
-    licenseDisposables.add(licenseSubscription);
+        }));
   }
 
   public interface LicenseTextLoadCallback {

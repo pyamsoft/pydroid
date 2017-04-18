@@ -19,27 +19,19 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import retrofit2.HttpException;
 import timber.log.Timber;
 
 public class VersionCheckPresenter extends SchedulerPresenter {
 
   @NonNull private final VersionCheckInteractor interactor;
-  @NonNull private Disposable disposable = Disposables.empty();
 
   public VersionCheckPresenter(@NonNull VersionCheckInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = Checker.checkNonNull(interactor);
-  }
-
-  @Override protected void onStop() {
-    disposable = DisposableHelper.dispose(disposable);
   }
 
   public void forceCheckForUpdates(@NonNull String packageName, int currentVersionCode,
@@ -54,8 +46,7 @@ public class VersionCheckPresenter extends SchedulerPresenter {
 
   private void checkForUpdates(@NonNull String packageName, int currentVersionCode, boolean force,
       @NonNull UpdateCheckCallback callback) {
-    disposable = DisposableHelper.dispose(disposable);
-    disposable = interactor.checkVersion(packageName, force)
+    disposeOnStop(interactor.checkVersion(packageName, force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(responseVersionCode -> {
@@ -72,7 +63,7 @@ public class VersionCheckPresenter extends SchedulerPresenter {
           } else {
             Timber.e(throwable, "onError");
           }
-        });
+        }));
   }
 
   public interface UpdateCheckCallback {

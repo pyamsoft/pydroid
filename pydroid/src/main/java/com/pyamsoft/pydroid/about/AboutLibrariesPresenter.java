@@ -18,17 +18,13 @@
 package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 public class AboutLibrariesPresenter extends SchedulerPresenter {
 
   @NonNull private final AboutLibrariesInteractor interactor;
-  @NonNull private Disposable licenseDisposable = Disposables.empty();
 
   @SuppressWarnings("WeakerAccess")
   public AboutLibrariesPresenter(@NonNull AboutLibrariesInteractor interactor,
@@ -37,18 +33,12 @@ public class AboutLibrariesPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    licenseDisposable = DisposableHelper.dispose(licenseDisposable);
-  }
-
   public void loadLicenses(@NonNull LoadCallback callback) {
-    licenseDisposable = DisposableHelper.dispose(licenseDisposable);
-    licenseDisposable = interactor.loadLicenses()
+    disposeOnStop(interactor.loadLicenses()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onLicenseLoaded,
-            throwable -> Timber.e(throwable, "onError loading licenses"));
+            throwable -> Timber.e(throwable, "onError loading licenses")));
   }
 
   public interface LoadCallback {

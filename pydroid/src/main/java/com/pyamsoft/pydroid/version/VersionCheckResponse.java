@@ -28,7 +28,8 @@ import com.pyamsoft.pydroid.helper.Checker;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue abstract class VersionCheckResponse {
 
-  @CheckResult @NonNull public static TypeAdapter<VersionCheckResponse> typeAdapter(Gson gson) {
+  @CheckResult @NonNull
+  public static TypeAdapter<VersionCheckResponse> typeAdapter(@NonNull Gson gson) {
     return new AutoValue_VersionCheckResponse.GsonTypeAdapter(Checker.checkNonNull(gson));
   }
 

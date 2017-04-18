@@ -18,18 +18,13 @@
 package com.pyamsoft.pydroid.rating;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 public class RatingPresenter extends SchedulerPresenter {
 
   @NonNull private final RatingInteractor interactor;
-  @NonNull private Disposable loadDisposable = Disposables.empty();
-  @NonNull private Disposable saveDisposable = Disposables.empty();
 
   public RatingPresenter(@NonNull RatingInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
@@ -37,15 +32,9 @@ public class RatingPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  @Override protected void onDestroy() {
-    loadDisposable = DisposableHelper.dispose(loadDisposable);
-    saveDisposable = DisposableHelper.dispose(saveDisposable);
-  }
-
   public void loadRatingDialog(int currentVersion, boolean force,
       @NonNull RatingCallback callback) {
-    loadDisposable = DisposableHelper.dispose(loadDisposable);
-    loadDisposable = interactor.needsToViewRating(currentVersion, force)
+    disposeOnDestroy(interactor.needsToViewRating(currentVersion, force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onLoadComplete)
@@ -56,12 +45,11 @@ public class RatingPresenter extends SchedulerPresenter {
         }, throwable -> {
           Timber.e(throwable, "on error loading rating dialog");
           callback.onRatingDialogLoadError(throwable);
-        });
+        }));
   }
 
   public void saveRating(int versionCode, @NonNull SaveCallback callback) {
-    saveDisposable = DisposableHelper.dispose(saveDisposable);
-    saveDisposable = interactor.saveRating(versionCode)
+    disposeOnDestroy(interactor.saveRating(versionCode)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(() -> {
@@ -70,7 +58,7 @@ public class RatingPresenter extends SchedulerPresenter {
         }, throwable -> {
           Timber.e(throwable, "on error loading rating dialog");
           callback.onRatingDialogSaveError(throwable);
-        });
+        }));
   }
 
   public interface RatingCallback {

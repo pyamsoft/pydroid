@@ -61,8 +61,8 @@ public abstract class SingleInitContentProvider extends ContentProvider {
     }
 
     BuildConfigChecker.setInstance(initializeBuildConfigChecker());
-    insertLicensesIntoMap();
 
+    insertLicensesIntoMap(appContext);
     onFirstCreate(appContext);
     onInstanceCreated(appContext);
     return false;
@@ -88,12 +88,12 @@ public abstract class SingleInitContentProvider extends ContentProvider {
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
-  private void insertLicensesIntoMap() {
+  private void insertLicensesIntoMap(@NonNull Context context) {
     UiLicenses.addLicenses();
-    insertCustomLicensesIntoMap();
+    insertCustomLicensesIntoMap(context);
   }
 
-  protected void insertCustomLicensesIntoMap() {
+  protected void insertCustomLicensesIntoMap(@NonNull Context context) {
   }
 
   @Nullable @Override

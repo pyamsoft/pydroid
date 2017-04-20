@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,6 +37,11 @@ public final class Licenses {
   public static void create(@NonNull String name, @NonNull String homepageUrl,
       @NonNull String licenseLocation) {
     INSTANCE.createItem(name, homepageUrl, licenseLocation);
+  }
+
+  public static void createWithContent(@NonNull String name, @NonNull String homepageUrl,
+      @NonNull String content) {
+    INSTANCE.createItemWithContent(name, homepageUrl, content);
   }
 
   @CheckResult @NonNull public static List<AboutLibrariesModel> getLicenses() {
@@ -64,21 +68,24 @@ public final class Licenses {
         LicenseLocations.GRADLE_VERSIONS_PLUGIN);
     createItem(Names.DEXCOUNT_GRADLE_PLUGIN, HomepageUrls.DEXCOUNT_GRADLE_PLUGIN,
         LicenseLocations.DEXCOUNT_GRADLE_PLUGIN);
-    createItem(Names.GOOGLE_PLAY, HomepageUrls.GOOGLE_PLAY, LicenseLocations.GOOGLE_PLAY);
     createItem(Names.RXJAVA, HomepageUrls.RXJAVA, LicenseLocations.RXJAVA);
     createItem(Names.RXANDROID, HomepageUrls.RXANDROID, LicenseLocations.RXANDROID);
   }
 
-  @VisibleForTesting @SuppressWarnings("WeakerAccess") void createItem(@NonNull String name,
-      @NonNull String homepageUrl, @NonNull String licenseLocation) {
+  private void createItem(@NonNull String name, @NonNull String homepageUrl,
+      @NonNull String licenseLocation) {
     final AboutLibrariesModel item = AboutLibrariesModel.create(name, homepageUrl, licenseLocation);
     licenses.add(item);
   }
 
-  static final class Names {
+  private void createItemWithContent(@NonNull String name, @NonNull String homepageUrl,
+      @NonNull String content) {
+    final AboutLibrariesModel item =
+        AboutLibrariesModel.createWithContent(name, homepageUrl, content);
+    licenses.add(item);
+  }
 
-    // We explicitly check for this one
-    @NonNull static final String GOOGLE_PLAY = "Google Play Services";
+  private static final class Names {
 
     @NonNull static final String RXJAVA = "RxJava";
     @NonNull static final String RXANDROID = "RxAndroid";
@@ -104,8 +111,6 @@ public final class Licenses {
     @NonNull static final String RXANDROID = "https://github.com/ReactiveX/RxAndroid";
     @NonNull static final String ANDROID = "https://source.android.com";
     @NonNull static final String ANDROID_SUPPORT = "https://source.android.com";
-    @NonNull static final String GOOGLE_PLAY =
-        "https://developers.google.com/android/guides/overview";
     @NonNull static final String PYDROID = "https://pyamsoft.github.io/pydroid";
     @NonNull static final String AUTO_VALUE = "https://github.com/google/auto";
     @NonNull static final String RETROFIT = "https://square.github.io/retrofit/";
@@ -130,7 +135,6 @@ public final class Licenses {
     @NonNull static final String RXANDROID = _BASE + "rxandroid";
     @NonNull static final String ANDROID_SUPPORT = _BASE + "androidsupport";
     @NonNull static final String ANDROID = _BASE + "android";
-    @NonNull static final String GOOGLE_PLAY = _BASE + "";
     @NonNull static final String PYDROID = _BASE + "pydroid";
     @NonNull static final String AUTO_VALUE = _BASE + "autovalue";
     @NonNull static final String RETROFIT = _BASE + "retrofit";

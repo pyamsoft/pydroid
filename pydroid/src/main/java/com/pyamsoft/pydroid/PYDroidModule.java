@@ -22,7 +22,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.about.AboutLibrariesModel;
-import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Scheduler;
@@ -35,13 +34,11 @@ import java.util.List;
 
   // Singleton
   @NonNull private final Context appContext;
-  @NonNull private final LicenseProvider licenseProvider;
   @NonNull private final List<AboutLibrariesModel> licenseMap;
   @NonNull private final PYDroidPreferencesImpl preferences;
 
-  public PYDroidModule(@NonNull Context context, @NonNull LicenseProvider licenseProvider) {
+  public PYDroidModule(@NonNull Context context) {
     appContext = Checker.checkNonNull(context).getApplicationContext();
-    this.licenseProvider = Checker.checkNonNull(licenseProvider);
     licenseMap = Licenses.getLicenses();
     preferences = new PYDroidPreferencesImpl(appContext);
   }
@@ -54,11 +51,6 @@ import java.util.List;
   // Singleton
   @CheckResult @NonNull public final RatingPreferences provideRatingPreferences() {
     return preferences;
-  }
-
-  // Singleton
-  @CheckResult @NonNull public final LicenseProvider provideLicenseProvider() {
-    return licenseProvider;
   }
 
   // Singleton

@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.about;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Build;
@@ -37,15 +36,10 @@ import timber.log.Timber;
 public class AboutLibrariesItemInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, String> cachedLicenses;
-  @SuppressWarnings("WeakerAccess") @NonNull private final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull private final AssetManager assetManager;
-  @NonNull private final Context appContext;
 
-  public AboutLibrariesItemInteractor(@NonNull Context context,
-      @NonNull LicenseProvider licenseProvider) {
-    appContext = Checker.checkNonNull(context).getApplicationContext();
-    this.licenseProvider = Checker.checkNonNull(licenseProvider);
-    assetManager = context.getAssets();
+  public AboutLibrariesItemInteractor(@NonNull Context context) {
+    assetManager = context.getApplicationContext().getAssets();
     cachedLicenses = new HashMap<>();
   }
 
@@ -60,19 +54,25 @@ public class AboutLibrariesItemInteractor {
         Timber.d("Fetch from cache for name: %s", name);
         return cachedLicenses.get(name);
       } else {
-        Timber.d("Load from asset location: %s (%s)", name, license.license());
-        return loadNewLicense(name, license.license());
+        if (model.customContent().isEmpty()) {
+          Timber.d("Load from asset location: %s (%s)", name, license.license());
+          return loadNewLicense(license.license());
+        } else {
+          Timber.d("License: %s provides custom content", name);
+          return model.customContent();
+        }
       }
     }).doOnSuccess(license -> {
       String name = Checker.checkNonNull(model).name();
-      Timber.d("Put license into cache for model: %s", name);
-      cachedLicenses.put(name, license);
+      if (!license.isEmpty()) {
+        Timber.d("Put license into cache for model: %s", name);
+        cachedLicenses.put(name, license);
+      }
     });
   }
 
-  @SuppressWarnings("WeakerAccess") @SuppressLint("NewApi") @NonNull @CheckResult
-  String loadNewLicense(@NonNull String licenseName, @NonNull String licenseLocation) {
-    licenseName = Checker.checkNonNull(licenseName);
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult String loadNewLicense(
+      @NonNull String licenseLocation) throws IOException {
     licenseLocation = Checker.checkNonNull(licenseLocation);
 
     if (licenseLocation.isEmpty()) {
@@ -80,20 +80,10 @@ public class AboutLibrariesItemInteractor {
       return "";
     }
 
-    if (Licenses.Names.GOOGLE_PLAY.equals(licenseName)) {
-      Timber.d("License is Google Play services");
-      final String googleOpenSourceLicenses =
-          licenseProvider.provideGoogleOpenSourceLicenses(appContext);
-      final String result =
-          googleOpenSourceLicenses == null ? "Unable to load Google Play Open Source Licenses"
-              : googleOpenSourceLicenses;
-      Timber.i("Finished loading Google Play services license");
-      return result;
-    }
-
     String licenseText;
-    try (InputStream fileInputStream = assetManager.open(licenseLocation)) {
-
+    InputStream fileInputStream = null;
+    try {
+      fileInputStream = assetManager.open(licenseLocation);
       // Standard Charsets is only KitKat, add this extra check to support Home Button
       final InputStreamReader inputStreamReader;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -102,18 +92,20 @@ public class AboutLibrariesItemInteractor {
         inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
       }
 
-      try (BufferedReader br = new BufferedReader(inputStreamReader)) {
-        final StringBuilder text = new StringBuilder();
-        String line = br.readLine();
-        while (line != null) {
-          text.append(line).append('\n');
-          line = br.readLine();
-        }
-        licenseText = text.toString();
+      BufferedReader br = new BufferedReader(inputStreamReader);
+      final StringBuilder text = new StringBuilder();
+      String line = br.readLine();
+      while (line != null) {
+        text.append(line).append('\n');
+        line = br.readLine();
       }
-    } catch (IOException e) {
-      Timber.e(e, "onError");
-      licenseText = "Could not load license text";
+      br.close();
+
+      licenseText = text.toString();
+    } finally {
+      if (fileInputStream != null) {
+        fileInputStream.close();
+      }
     }
 
     return licenseText;

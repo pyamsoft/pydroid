@@ -27,13 +27,11 @@ import java.util.List;
 public class AboutLibrariesInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Context context;
-  @SuppressWarnings("WeakerAccess") @NonNull final LicenseProvider licenseProvider;
   @SuppressWarnings("WeakerAccess") @NonNull final List<AboutLibrariesModel> licenses;
 
   public AboutLibrariesInteractor(@NonNull Context context,
-      @NonNull LicenseProvider licenseProvider, @NonNull List<AboutLibrariesModel> licenses) {
+      @NonNull List<AboutLibrariesModel> licenses) {
     this.licenses = Collections.unmodifiableList(licenses);
-    this.licenseProvider = licenseProvider;
     this.context = context.getApplicationContext();
   }
 
@@ -42,8 +40,6 @@ public class AboutLibrariesInteractor {
    */
   @NonNull @CheckResult Observable<AboutLibrariesModel> loadLicenses() {
     return Observable.defer(() -> Observable.fromIterable(licenses))
-        .filter(model -> !Licenses.Names.GOOGLE_PLAY.equals(model.name())
-            || licenseProvider.provideGoogleOpenSourceLicenses(context) != null)
         .toSortedList((o1, o2) -> o1.name().compareTo(o2.name()))
         .toObservable()
         .concatMap(Observable::fromIterable);

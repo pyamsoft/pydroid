@@ -27,7 +27,13 @@ import com.google.auto.value.AutoValue;
   @CheckResult @NonNull
   public static AboutLibrariesModel create(@NonNull String name, @NonNull String homepage,
       @NonNull String license) {
-    return new AutoValue_AboutLibrariesModel(name, homepage, license);
+    return new AutoValue_AboutLibrariesModel(name, homepage, license, "");
+  }
+
+  @CheckResult @NonNull
+  public static AboutLibrariesModel createWithContent(@NonNull String name, @NonNull String homepage,
+      @NonNull String content) {
+    return new AutoValue_AboutLibrariesModel(name, homepage, "", content);
   }
 
   @CheckResult public abstract String name();
@@ -35,4 +41,6 @@ import com.google.auto.value.AutoValue;
   @CheckResult public abstract String homepage();
 
   @CheckResult public abstract String license();
+
+  @CheckResult public abstract String customContent();
 }

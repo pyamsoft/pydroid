@@ -27,11 +27,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.PYDroidModule;
-import com.pyamsoft.pydroid.about.LicenseProvider;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import timber.log.Timber;
 
-public abstract class SingleInitContentProvider extends ContentProvider implements LicenseProvider {
+public abstract class SingleInitContentProvider extends ContentProvider {
 
   private static boolean created;
 
@@ -71,7 +70,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
 
   private void onFirstCreate(@NonNull Context context) {
     PYDroidInjector.set(
-        PYDroidComponent.withModule(new PYDroidModule(context.getApplicationContext(), this)));
+        PYDroidComponent.withModule(new PYDroidModule(context.getApplicationContext())));
     if (BuildConfigChecker.getInstance().isDebugMode()) {
       Timber.plant(new Timber.DebugTree());
       setStrictMode();
@@ -94,7 +93,7 @@ public abstract class SingleInitContentProvider extends ContentProvider implemen
     insertCustomLicensesIntoMap();
   }
 
-  @Override public void insertCustomLicensesIntoMap() {
+  protected void insertCustomLicensesIntoMap() {
   }
 
   @Nullable @Override

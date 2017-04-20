@@ -114,7 +114,7 @@ class AboutLibrariesItem extends
                 }
 
                 @Override public void onLicenseTextLoadError() {
-                  setLicenseText("");
+                  setLicenseText("Error: Could not load license text");
                   collapseLicense(viewHolder);
                 }
               });

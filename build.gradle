@@ -30,7 +30,7 @@ buildscript {
 
     minSdk = 16
     maxSdk = 25
-    buildTools = "25.0.2"
+    buildTools = "25.0.3"
     heapSize = "2g"
 
     retrolambda = "2.5.1"
@@ -40,7 +40,7 @@ buildscript {
     autoValueGSON = "0.4.6"
     retrofit = "2.2.0"
     retrofitLogging = "3.7.0"
-    rxjava = "2.0.8"
+    rxjava = "2.0.9"
     rxandroid = "2.0.1"
     fastAdapter = "2.5.2"
     fastAdapterCommons = "2.5.2"
@@ -91,4 +91,4 @@ tasks.whenTaskAdded { task ->
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '9.1.2'
+version = '9.1.3'

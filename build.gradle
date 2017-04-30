@@ -40,7 +40,7 @@ buildscript {
     autoValueGSON = "0.4.6"
     retrofit = "2.2.0"
     retrofitLogging = "3.7.0"
-    rxjava = "2.0.9"
+    rxjava = "2.1.0"
     rxandroid = "2.0.1"
     fastAdapter = "2.5.2"
     fastAdapterCommons = "2.5.2"

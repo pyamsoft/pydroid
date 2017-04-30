@@ -52,7 +52,6 @@ public class RatingDialog extends DialogFragment {
   @NonNull private static final String VERSION_CODE = "version_code";
   @NonNull private static final String RATE_LINK = "rate_link";
   @SuppressWarnings("WeakerAccess") String rateLink;
-  @SuppressWarnings("WeakerAccess") boolean acknowledged;
   private Spannable changeLogText;
   private int versionCode;
   @DrawableRes private int changeLogIcon;
@@ -82,7 +81,6 @@ public class RatingDialog extends DialogFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setCancelable(false);
-    acknowledged = false;
     final Bundle launchArguments = getArguments();
     rateLink = launchArguments.getString(RATE_LINK, null);
     versionCode = launchArguments.getInt(VERSION_CODE, 0);
@@ -134,39 +132,35 @@ public class RatingDialog extends DialogFragment {
 
     binding.ratingTextChange.setText(changeLogText);
 
-    binding.ratingBtnNoThanks.setOnClickListener(v -> {
-      acknowledged = true;
-      Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
-        @Override public void onRatingSaved() {
-          dismiss();
-        }
+    binding.ratingBtnNoThanks.setOnClickListener(
+        v -> Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
+          @Override public void onRatingSaved() {
+            dismiss();
+          }
 
-        @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
-          Toast.makeText(v.getContext(),
-              "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
-              .show();
-          dismiss();
-        }
-      });
-    });
+          @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
+            Toast.makeText(v.getContext(),
+                "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
+                .show();
+            dismiss();
+          }
+        }));
 
-    binding.ratingBtnGoRate.setOnClickListener(v -> {
-      acknowledged = true;
-      Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
-        @Override public void onRatingSaved() {
-          final String fullLink = "market://details?id=" + rateLink;
-          NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
-          dismiss();
-        }
+    binding.ratingBtnGoRate.setOnClickListener(
+        v -> Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
+          @Override public void onRatingSaved() {
+            final String fullLink = "market://details?id=" + rateLink;
+            NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
+            dismiss();
+          }
 
-        @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
-          Toast.makeText(v.getContext(),
-              "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
-              .show();
-          dismiss();
-        }
-      });
-    });
+          @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
+            Toast.makeText(v.getContext(),
+                "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
+                .show();
+            dismiss();
+          }
+        }));
   }
 
   @Override public void onDestroy() {

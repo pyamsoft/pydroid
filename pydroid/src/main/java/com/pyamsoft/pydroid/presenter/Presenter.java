@@ -44,14 +44,14 @@ public abstract class Presenter {
   /**
    * Override per implementation
    */
-  protected void onStop() {
+  @SuppressWarnings("WeakerAccess") protected void onStop() {
 
   }
 
   /**
    * Override per implementation
    */
-  protected void onDestroy() {
+  @SuppressWarnings("WeakerAccess") protected void onDestroy() {
 
   }
 

@@ -34,12 +34,12 @@ import java.util.List;
 
   // Singleton
   @NonNull private final Context appContext;
-  @NonNull private final List<AboutLibrariesModel> licenseMap;
+  @NonNull private final List<AboutLibrariesModel> licenses;
   @NonNull private final PYDroidPreferencesImpl preferences;
 
   public PYDroidModule(@NonNull Context context) {
     appContext = Checker.checkNonNull(context).getApplicationContext();
-    licenseMap = Licenses.getLicenses();
+    licenses = Licenses.getLicenses();
     preferences = new PYDroidPreferencesImpl(appContext);
   }
 
@@ -55,7 +55,7 @@ import java.util.List;
 
   // Singleton
   @CheckResult @NonNull public final List<AboutLibrariesModel> provideLicenseMap() {
-    return Collections.unmodifiableList(licenseMap);
+    return Collections.unmodifiableList(licenses);
   }
 
   // Singleton

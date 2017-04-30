@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.social;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -36,7 +37,7 @@ public final class Linker extends Presenter {
       "https://plus.google.com/+Pyamsoft-officialBlogspot/posts";
   @NonNull private static final String OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/";
 
-  @Nullable private static volatile Linker instance;
+  @SuppressLint("StaticFieldLeak") @Nullable private static volatile Linker instance;
 
   Context appContext;
 

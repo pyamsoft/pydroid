@@ -24,12 +24,12 @@ import io.reactivex.Observable;
 import java.util.Collections;
 import java.util.List;
 
-public class AboutLibrariesInteractor {
+@SuppressWarnings("WeakerAccess") public class AboutLibrariesInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Context context;
   @SuppressWarnings("WeakerAccess") @NonNull final List<AboutLibrariesModel> licenses;
 
-  public AboutLibrariesInteractor(@NonNull Context context,
+  @SuppressWarnings("WeakerAccess") public AboutLibrariesInteractor(@NonNull Context context,
       @NonNull List<AboutLibrariesModel> licenses) {
     this.licenses = Collections.unmodifiableList(licenses);
     this.context = context.getApplicationContext();

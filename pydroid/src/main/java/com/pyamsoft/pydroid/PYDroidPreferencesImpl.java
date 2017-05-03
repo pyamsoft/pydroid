@@ -20,10 +20,11 @@ package com.pyamsoft.pydroid;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.helper.Checker;
 
-class PYDroidPreferencesImpl implements RatingPreferences {
+@RestrictTo(RestrictTo.Scope.LIBRARY) class PYDroidPreferencesImpl implements RatingPreferences {
 
   @NonNull private static final String RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version";
   @NonNull private final SharedPreferences preferences;

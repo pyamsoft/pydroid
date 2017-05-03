@@ -30,13 +30,14 @@ import android.view.animation.Interpolator;
 import android.widget.TextView;
 import com.pyamsoft.pydroid.helper.Checker;
 
-public final class AnimUtil {
+@SuppressWarnings("WeakerAccess") public final class AnimUtil {
 
   private AnimUtil() {
     throw new RuntimeException("No instances");
   }
 
-  @NonNull public static ViewPropertyAnimatorCompat popShow(@NonNull View v, final int startDelay,
+  @SuppressWarnings("WeakerAccess") @NonNull
+  public static ViewPropertyAnimatorCompat popShow(@NonNull View v, final int startDelay,
       final int duration) {
     v = Checker.checkNonNull(v);
     final Interpolator i =
@@ -129,8 +130,7 @@ public final class AnimUtil {
         .setListener(null);
   }
 
-  @SuppressWarnings("unused") @NonNull
-  public static ViewPropertyAnimatorCompat flipVertical(@NonNull View v) {
+  @NonNull public static ViewPropertyAnimatorCompat flipVertical(@NonNull View v) {
     v = Checker.checkNonNull(v);
     final Interpolator i =
         AnimationUtils.loadInterpolator(v.getContext(), android.R.interpolator.accelerate_cubic);

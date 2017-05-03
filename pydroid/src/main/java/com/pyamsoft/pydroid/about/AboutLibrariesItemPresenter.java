@@ -27,7 +27,8 @@ public class AboutLibrariesItemPresenter extends SchedulerPresenter {
 
   @NonNull private final AboutLibrariesItemInteractor interactor;
 
-  AboutLibrariesItemPresenter(@NonNull AboutLibrariesItemInteractor interactor,
+  @SuppressWarnings("WeakerAccess")
+  public AboutLibrariesItemPresenter(@NonNull AboutLibrariesItemInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = Checker.checkNonNull(interactor);

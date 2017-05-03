@@ -23,10 +23,11 @@ import com.pyamsoft.pydroid.RatingPreferences;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
-public class RatingInteractor {
+@SuppressWarnings("WeakerAccess") public class RatingInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final RatingPreferences preferences;
 
+  @SuppressWarnings("WeakerAccess")
   public RatingInteractor(@NonNull RatingPreferences preferences) {
     this.preferences = preferences;
   }

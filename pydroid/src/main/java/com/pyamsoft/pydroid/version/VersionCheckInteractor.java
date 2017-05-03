@@ -24,11 +24,12 @@ import com.pyamsoft.pydroid.helper.Checker;
 import io.reactivex.Single;
 import timber.log.Timber;
 
-public class VersionCheckInteractor {
+@SuppressWarnings("WeakerAccess") public class VersionCheckInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final VersionCheckService versionCheckService;
   @SuppressWarnings("WeakerAccess") @Nullable Single<VersionCheckResponse> cachedResponse;
 
+  @SuppressWarnings("WeakerAccess")
   public VersionCheckInteractor(@NonNull VersionCheckService versionCheckService) {
     this.versionCheckService = Checker.checkNonNull(versionCheckService);
   }

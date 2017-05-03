@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.function.ActionSingle;
 import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.ui.loader.targets.Target;
 
-public abstract class GenericLoader<T> {
+public abstract class GenericLoader<R extends GenericLoader<?, ?>, T> {
 
   @Nullable protected ActionSingle<Target<T>> startAction;
   @Nullable protected ActionSingle<Target<T>> errorAction;
@@ -35,6 +35,17 @@ public abstract class GenericLoader<T> {
 
   protected GenericLoader() {
   }
+
+  @CheckResult @NonNull public abstract R tint(@ColorRes int color);
+
+  @CheckResult @NonNull
+  public abstract R setStartAction(@NonNull ActionSingle<Target<T>> startAction);
+
+  @CheckResult @NonNull
+  public abstract R setErrorAction(@NonNull ActionSingle<Target<T>> errorAction);
+
+  @CheckResult @NonNull
+  public abstract R setCompleteAction(@NonNull ActionSingle<Target<T>> completeAction);
 
   @CheckResult @NonNull public abstract Loaded into(@NonNull ImageView imageView);
 

@@ -26,6 +26,7 @@ public class RatingPresenter extends SchedulerPresenter {
 
   @NonNull private final RatingInteractor interactor;
 
+  @SuppressWarnings("WeakerAccess")
   public RatingPresenter(@NonNull RatingInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);

@@ -44,7 +44,7 @@ import timber.log.Timber;
  * The overlay is a full view which will take over the screen and eat input, but will not disrupt
  * the user experience as much as a dialog would
  */
-public abstract class ProgressOverlay {
+@SuppressWarnings("WeakerAccess") public abstract class ProgressOverlay {
 
   private ProgressOverlay() {
 

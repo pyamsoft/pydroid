@@ -28,6 +28,7 @@ public class VersionCheckPresenter extends SchedulerPresenter {
 
   @NonNull private final VersionCheckInteractor interactor;
 
+  @SuppressWarnings("WeakerAccess")
   public VersionCheckPresenter(@NonNull VersionCheckInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);

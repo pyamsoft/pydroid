@@ -43,8 +43,8 @@ public class StringUtil {
    * Takes an array of strings and creates a SpannableStringBuilder out of them If the array is
    * null or empty, returns null
    */
-  @CheckResult @NonNull public static SpannableStringBuilder createBuilder(
-      @NonNull String... strs) {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
+  public static SpannableStringBuilder createBuilder(@NonNull String... strs) {
     strs = Checker.checkNonNull(strs);
 
     int size = strs.length;
@@ -97,7 +97,7 @@ public class StringUtil {
         .setSpan(new AbsoluteSizeSpan(size), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
   }
 
-  @CheckResult @NonNull
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static TypedArray getAttributeFromAppearance(@NonNull Context context, @AttrRes int style,
       @AttrRes int attr) {
     context = Checker.checkNonNull(context);

@@ -36,7 +36,7 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
     this(0);
   }
 
-  public HideScrollFABBehavior(final int distance) {
+  @SuppressWarnings("WeakerAccess") public HideScrollFABBehavior(final int distance) {
     super();
     distanceNeeded = distance;
     animating = false;

@@ -26,7 +26,9 @@ import com.pyamsoft.pydroid.ui.loader.resource.RxResourceLoader;
 
 public final class ImageLoader {
 
-  @CheckResult @NonNull public static <T extends GenericLoader<?>> T fromLoader(@NonNull T loader) {
+  @CheckResult @NonNull
+  public static <T extends GenericLoader<? extends GenericLoader<?, ?>, ?>> T fromLoader(
+      @NonNull T loader) {
     return Checker.checkNonNull(loader);
   }
 

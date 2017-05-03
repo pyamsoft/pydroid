@@ -39,7 +39,7 @@ import com.pyamsoft.pydroid.util.DrawableUtil;
  *
  * Supports Drawable resource types
  */
-public abstract class ResourceLoader extends GenericLoader<Drawable> {
+public abstract class ResourceLoader extends GenericLoader<ResourceLoader, Drawable> {
 
   @DrawableRes private final int resource;
   Context appContext;
@@ -53,25 +53,25 @@ public abstract class ResourceLoader extends GenericLoader<Drawable> {
     }
   }
 
-  @CheckResult @NonNull public final ResourceLoader tint(@ColorRes int color) {
+  @NonNull @Override public ResourceLoader tint(@ColorRes int color) {
     this.tint = color;
     return this;
   }
 
-  @CheckResult @NonNull
-  public final ResourceLoader setStartAction(@NonNull ActionSingle<Target<Drawable>> startAction) {
+  @NonNull @Override
+  public ResourceLoader setStartAction(@NonNull ActionSingle<Target<Drawable>> startAction) {
     this.startAction = Checker.checkNonNull(startAction);
     return this;
   }
 
-  @CheckResult @NonNull
-  public final ResourceLoader setErrorAction(@NonNull ActionSingle<Target<Drawable>> errorAction) {
+  @NonNull @Override
+  public ResourceLoader setErrorAction(@NonNull ActionSingle<Target<Drawable>> errorAction) {
     this.errorAction = Checker.checkNonNull(errorAction);
     return this;
   }
 
-  @CheckResult @NonNull public final ResourceLoader setCompleteAction(
-      @NonNull ActionSingle<Target<Drawable>> completeAction) {
+  @NonNull @Override
+  public ResourceLoader setCompleteAction(@NonNull ActionSingle<Target<Drawable>> completeAction) {
     this.completeAction = Checker.checkNonNull(completeAction);
     return this;
   }

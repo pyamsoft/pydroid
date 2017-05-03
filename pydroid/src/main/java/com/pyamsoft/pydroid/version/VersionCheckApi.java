@@ -31,7 +31,7 @@ import retrofit2.Retrofit;
     this.client = Checker.checkNonNull(client);
   }
 
-  @NonNull @CheckResult public <T> T create(final Class<T> serviceClass) {
+  @NonNull @CheckResult <T> T create(final Class<T> serviceClass) {
     return client.create(Checker.checkNonNull(serviceClass));
   }
 }

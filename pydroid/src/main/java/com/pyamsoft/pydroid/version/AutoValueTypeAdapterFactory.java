@@ -19,10 +19,12 @@ package com.pyamsoft.pydroid.version;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.RestrictTo;
 import com.google.gson.TypeAdapterFactory;
 import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory;
 
-@GsonTypeAdapterFactory abstract class AutoValueTypeAdapterFactory implements TypeAdapterFactory {
+@RestrictTo(RestrictTo.Scope.LIBRARY) @GsonTypeAdapterFactory
+abstract class AutoValueTypeAdapterFactory implements TypeAdapterFactory {
 
   @CheckResult @NonNull public static TypeAdapterFactory create() {
     return new AutoValueGson_AutoValueTypeAdapterFactory();

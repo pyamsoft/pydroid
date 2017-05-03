@@ -19,10 +19,9 @@ package com.pyamsoft.pydroid.about;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
 import com.google.auto.value.AutoValue;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue public abstract class AboutLibrariesModel {
+@AutoValue public abstract class AboutLibrariesModel {
 
   @CheckResult @NonNull
   public static AboutLibrariesModel create(@NonNull String name, @NonNull String homepage,
@@ -30,9 +29,9 @@ import com.google.auto.value.AutoValue;
     return new AutoValue_AboutLibrariesModel(name, homepage, license, "");
   }
 
-  @CheckResult @NonNull
-  public static AboutLibrariesModel createWithContent(@NonNull String name, @NonNull String homepage,
-      @NonNull String content) {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
+  public static AboutLibrariesModel createWithContent(@NonNull String name,
+      @NonNull String homepage, @NonNull String content) {
     return new AutoValue_AboutLibrariesModel(name, homepage, "", content);
   }
 

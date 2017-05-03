@@ -33,12 +33,12 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class AboutLibrariesItemInteractor {
+@SuppressWarnings("WeakerAccess") public class AboutLibrariesItemInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, String> cachedLicenses;
   @SuppressWarnings("WeakerAccess") @NonNull private final AssetManager assetManager;
 
-  public AboutLibrariesItemInteractor(@NonNull Context context) {
+  @SuppressWarnings("WeakerAccess") public AboutLibrariesItemInteractor(@NonNull Context context) {
     assetManager = context.getApplicationContext().getAssets();
     cachedLicenses = new HashMap<>();
   }

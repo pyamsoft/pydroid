@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/PYDroid.iml" filepath="$PROJECT_DIR$/PYDroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/pydroid/pydroid.iml" filepath="$PROJECT_DIR$/pydroid/pydroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/pydroid-design/pydroid-design.iml" filepath="$PROJECT_DIR$/pydroid-design/pydroid-design.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pydroid-loader/pydroid-loader.iml" filepath="$PROJECT_DIR$/pydroid-loader/pydroid-loader.iml" />
       <module fileurl="file://$PROJECT_DIR$/pydroid-ui/pydroid-ui.iml" filepath="$PROJECT_DIR$/pydroid-ui/pydroid-ui.iml" />
     </modules>
   </component>

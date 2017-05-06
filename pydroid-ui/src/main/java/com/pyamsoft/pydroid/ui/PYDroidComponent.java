@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.rating.RatingModule;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent;
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent;
-import com.pyamsoft.pydroid.ui.loader.resource.LoaderComponent;
 import com.pyamsoft.pydroid.ui.rating.RatingComponent;
 import com.pyamsoft.pydroid.ui.social.SocialComponent;
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
@@ -39,7 +38,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final AppComponent appComponent;
   @NonNull private final RatingComponent ratingComponent;
   @NonNull private final SocialComponent socialComponent;
-  @NonNull private final LoaderComponent loaderComponent;
 
   private PYDroidComponent(@NonNull PYDroidModule module) {
     module = Checker.checkNonNull(module);
@@ -50,7 +48,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
     appComponent = new AppComponent(versionCheckModule);
     ratingComponent = new RatingComponent(new RatingModule(module));
     socialComponent = new SocialComponent(module.provideContext());
-    loaderComponent = new LoaderComponent(module.provideContext());
   }
 
   @CheckResult @NonNull static PYDroidComponent withModule(@NonNull PYDroidModule module) {
@@ -75,9 +72,5 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
 
   @CheckResult @NonNull public SocialComponent plusSocialComponent() {
     return socialComponent;
-  }
-
-  @CheckResult @NonNull public LoaderComponent plusLoaderComponent() {
-    return loaderComponent;
   }
 }

@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.loaded;
+package com.pyamsoft.pydroid.loader.loaded;
 
 import android.support.annotation.CheckResult;
 

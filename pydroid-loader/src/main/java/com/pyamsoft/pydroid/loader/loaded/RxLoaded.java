@@ -15,30 +15,28 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.targets;
+package com.pyamsoft.pydroid.loader.loaded;
 
-import android.graphics.drawable.Drawable;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.widget.ImageView;
 import com.pyamsoft.pydroid.helper.Checker;
+import io.reactivex.disposables.Disposable;
 
-/**
- * Target which loads Drawables into an ImageView
- */
-public class DrawableImageTarget implements Target<Drawable> {
+public class RxLoaded implements Loaded {
 
-  @NonNull private final ImageView imageView;
+  @NonNull private final Disposable disposable;
 
-  private DrawableImageTarget(@NonNull ImageView imageView) {
-    this.imageView = Checker.checkNonNull(imageView);
+  public RxLoaded(@NonNull Disposable disposable) {
+    disposable = Checker.checkNonNull(disposable);
+    this.disposable = disposable;
   }
 
-  @CheckResult @NonNull public static Target<Drawable> forImageView(@NonNull ImageView imageView) {
-    return new DrawableImageTarget(imageView);
+  @Override public void unload() {
+    if (!isUnloaded()) {
+      disposable.dispose();
+    }
   }
 
-  @Override public void loadImage(@NonNull Drawable image) {
-    imageView.setImageDrawable(image);
+  @Override public boolean isUnloaded() {
+    return disposable.isDisposed();
   }
 }

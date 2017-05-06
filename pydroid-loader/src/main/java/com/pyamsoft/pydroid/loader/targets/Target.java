@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.targets;
+package com.pyamsoft.pydroid.loader.targets;
 
 import android.support.annotation.NonNull;
 

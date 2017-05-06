@@ -15,21 +15,30 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.resource;
+package com.pyamsoft.pydroid.loader.targets;
 
-import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.widget.ImageView;
 import com.pyamsoft.pydroid.helper.Checker;
 
-public class LoaderComponent {
+/**
+ * Target which loads Drawables into an ImageView
+ */
+public class DrawableImageTarget implements Target<Drawable> {
 
-  @NonNull private final Context appContext;
+  @NonNull private final ImageView imageView;
 
-  public LoaderComponent(@NonNull Context context) {
-    this.appContext = Checker.checkNonNull(context).getApplicationContext();
+  private DrawableImageTarget(@NonNull ImageView imageView) {
+    this.imageView = Checker.checkNonNull(imageView);
   }
 
-  void inject(@NonNull ResourceLoader loader) {
-    loader.appContext = appContext.getApplicationContext();
+  @CheckResult @NonNull public static Target<Drawable> forImageView(@NonNull ImageView imageView) {
+    return new DrawableImageTarget(imageView);
+  }
+
+  @Override public void loadImage(@NonNull Drawable image) {
+    imageView.setImageDrawable(image);
   }
 }

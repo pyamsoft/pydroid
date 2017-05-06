@@ -15,15 +15,16 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.resource;
+package com.pyamsoft.pydroid.loader.resource;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
-import com.pyamsoft.pydroid.ui.loader.loaded.RxLoaded;
-import com.pyamsoft.pydroid.ui.loader.targets.Target;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.loader.loaded.RxLoaded;
+import com.pyamsoft.pydroid.loader.targets.Target;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,8 +36,8 @@ public class RxResourceLoader extends ResourceLoader {
   @NonNull private final Scheduler obsScheduler;
   @NonNull private final Scheduler subScheduler;
 
-  public RxResourceLoader(@DrawableRes int resource) {
-    super(resource);
+  public RxResourceLoader(@NonNull Context context, @DrawableRes int resource) {
+    super(context, resource);
     obsScheduler = AndroidSchedulers.mainThread();
     subScheduler = Schedulers.io();
   }

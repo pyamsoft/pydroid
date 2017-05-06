@@ -34,12 +34,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.loader.ImageLoader;
+import com.pyamsoft.pydroid.loader.LoaderHelper;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.rating.RatingPresenter;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
-import com.pyamsoft.pydroid.ui.loader.ImageLoader;
-import com.pyamsoft.pydroid.ui.loader.LoaderHelper;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -128,7 +128,7 @@ public class RatingDialog extends DialogFragment {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
 
     iconTask = LoaderHelper.unload(iconTask);
-    iconTask = ImageLoader.fromResource(changeLogIcon).into(binding.ratingIcon);
+    iconTask = ImageLoader.fromResource(getContext(), changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
 

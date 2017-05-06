@@ -15,12 +15,12 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader;
+package com.pyamsoft.pydroid.loader;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 
 public final class LoaderHelper {
 

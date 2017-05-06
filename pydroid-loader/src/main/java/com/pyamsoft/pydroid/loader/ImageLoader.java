@@ -15,28 +15,26 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.loaded;
+package com.pyamsoft.pydroid.loader;
 
+import android.content.Context;
+import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.disposables.Disposable;
+import com.pyamsoft.pydroid.loader.resource.ResourceLoader;
+import com.pyamsoft.pydroid.loader.resource.RxResourceLoader;
 
-public class RxLoaded implements Loaded {
+public final class ImageLoader {
 
-  @NonNull private final Disposable disposable;
-
-  public RxLoaded(@NonNull Disposable disposable) {
-    disposable = Checker.checkNonNull(disposable);
-    this.disposable = disposable;
+  @CheckResult @NonNull
+  public static <T extends GenericLoader<? extends GenericLoader<?, ?>, ?>> T fromLoader(
+      @NonNull T loader) {
+    return Checker.checkNonNull(loader);
   }
 
-  @Override public void unload() {
-    if (!isUnloaded()) {
-      disposable.dispose();
-    }
-  }
-
-  @Override public boolean isUnloaded() {
-    return disposable.isDisposed();
+  @CheckResult @NonNull
+  public static ResourceLoader fromResource(@NonNull Context context, @DrawableRes int resource) {
+    return new RxResourceLoader(context, resource);
   }
 }

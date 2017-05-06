@@ -15,11 +15,11 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader;
+package com.pyamsoft.pydroid.loader;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;

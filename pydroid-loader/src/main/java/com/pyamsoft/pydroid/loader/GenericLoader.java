@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader;
+package com.pyamsoft.pydroid.loader;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
@@ -23,8 +23,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.function.ActionSingle;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
-import com.pyamsoft.pydroid.ui.loader.targets.Target;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.loader.targets.Target;
 
 public abstract class GenericLoader<R extends GenericLoader<?, ?>, T> {
 

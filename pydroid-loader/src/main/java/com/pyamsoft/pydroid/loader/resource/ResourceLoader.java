@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.loader.resource;
+package com.pyamsoft.pydroid.loader.resource;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -27,11 +27,10 @@ import android.support.v7.content.res.AppCompatResources;
 import android.widget.ImageView;
 import com.pyamsoft.pydroid.function.ActionSingle;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
-import com.pyamsoft.pydroid.ui.loader.GenericLoader;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
-import com.pyamsoft.pydroid.ui.loader.targets.DrawableImageTarget;
-import com.pyamsoft.pydroid.ui.loader.targets.Target;
+import com.pyamsoft.pydroid.loader.GenericLoader;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget;
+import com.pyamsoft.pydroid.loader.targets.Target;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 
 /**
@@ -42,10 +41,10 @@ import com.pyamsoft.pydroid.util.DrawableUtil;
 public abstract class ResourceLoader extends GenericLoader<ResourceLoader, Drawable> {
 
   @DrawableRes private final int resource;
-  Context appContext;
+  @NonNull final Context appContext;
 
-  ResourceLoader(@DrawableRes int resource) {
-    PYDroidInjector.get().provideComponent().plusLoaderComponent().inject(this);
+  ResourceLoader(@NonNull Context context, @DrawableRes int resource) {
+    appContext = context.getApplicationContext();
     this.resource = resource;
 
     if (this.resource == 0) {

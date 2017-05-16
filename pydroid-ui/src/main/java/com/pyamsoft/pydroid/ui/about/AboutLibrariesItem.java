@@ -171,6 +171,7 @@ class AboutLibrariesItem extends
       binding.expandLicenseProgress.setIndeterminate(true);
       binding.expandLicenseHomepage.setTextColor(Color.BLUE);
       binding.expandLicenseHomepage.setSingleLine(true);
+      binding.expandLicenseText.getSettings().setDefaultFontSize(12);
     }
   }
 }

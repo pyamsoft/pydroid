@@ -20,14 +20,18 @@ package com.pyamsoft.pydroid.ui.about;
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.pyamsoft.pydroid.about.AboutLibrariesItemPresenter;
 import com.pyamsoft.pydroid.about.AboutLibrariesModel;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.loader.ImageLoader;
+import com.pyamsoft.pydroid.loader.LoaderHelper;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding;
@@ -38,17 +42,10 @@ class AboutLibrariesItem extends
     GenericAbstractItem<AboutLibrariesModel, AboutLibrariesItem, AboutLibrariesItem.ViewHolder> {
 
   AboutLibrariesItemPresenter presenter;
+  @SuppressWarnings("WeakerAccess") @NonNull Loaded arrowLoad = LoaderHelper.empty();
+  @SuppressWarnings("WeakerAccess") @Nullable ViewPropertyAnimatorCompat arrowAnimation;
+  @SuppressWarnings("WeakerAccess") boolean expanded;
   @NonNull private String licenseText;
-  private boolean expanded;
-  @NonNull private final FastAdapter.OnClickListener<AboutLibrariesItem> onClickListener =
-      (view, iAdapter, item, i) -> {
-        item.switchExpanded();
-        FastAdapter<AboutLibrariesItem> fastAdapter = iAdapter.getFastAdapter();
-        if (fastAdapter != null) {
-          fastAdapter.notifyAdapterItemChanged(i);
-        }
-        return false;
-      };
 
   AboutLibrariesItem(@NonNull AboutLibrariesModel item) {
     super(Checker.checkNonNull(item));
@@ -60,19 +57,6 @@ class AboutLibrariesItem extends
     this.licenseText = Checker.checkNonNull(licenseText);
   }
 
-  @SuppressWarnings("WeakerAccess") void switchExpanded() {
-    this.expanded = !expanded;
-  }
-
-  @CheckResult @NonNull @Override
-  public FastAdapter.OnClickListener<AboutLibrariesItem> getOnItemClickListener() {
-    return onClickListener;
-  }
-
-  @CheckResult @Override public boolean isSelectable() {
-    return true;
-  }
-
   @CheckResult @Override public int getType() {
     return R.id.fastadapter_expandable_about_item;
   }
@@ -81,21 +65,42 @@ class AboutLibrariesItem extends
     return R.layout.adapter_item_about;
   }
 
-  @Override public void bindView(@NonNull ViewHolder viewHolder, List<Object> payloads) {
-    viewHolder = Checker.checkNonNull(viewHolder);
+  @SuppressWarnings("WeakerAccess") void cancelArrowAnimation() {
+    if (arrowAnimation != null) {
+      arrowAnimation.cancel();
+      arrowAnimation = null;
+    }
+  }
+
+  @Override public void bindView(@NonNull final ViewHolder viewHolder, List<Object> payloads) {
     super.bindView(viewHolder, payloads);
-    //make sure all animations are stopped
-    viewHolder.binding.expandLicenseIcon.clearAnimation();
+
+    arrowLoad = LoaderHelper.unload(arrowLoad);
+    arrowLoad =
+        ImageLoader.fromResource(viewHolder.itemView.getContext(), R.drawable.ic_arrow_up_24dp)
+            .into(viewHolder.binding.expandLicenseIcon);
+
+    cancelArrowAnimation();
     if (expanded) {
       ViewCompat.setRotation(viewHolder.binding.expandLicenseIcon, 0);
+      expandLicense(viewHolder);
     } else {
       ViewCompat.setRotation(viewHolder.binding.expandLicenseIcon, 180);
+      collapseLicense(viewHolder);
     }
 
     viewHolder.binding.expandLicenseName.setText(getModel().name());
     viewHolder.binding.expandLicenseHomepage.setOnClickListener(
         view -> NetworkUtil.newLink(view.getContext().getApplicationContext(),
             getModel().homepage()));
+
+    viewHolder.itemView.setOnClickListener(v -> {
+      expanded = !expanded;
+      cancelArrowAnimation();
+      arrowAnimation =
+          ViewCompat.animate(viewHolder.binding.expandLicenseIcon).rotation(expanded ? 0 : 180);
+      loadLicenseView(viewHolder);
+    });
 
     loadLicenseView(viewHolder);
   }
@@ -145,7 +150,10 @@ class AboutLibrariesItem extends
     super.unbindView(holder);
     holder.binding.expandLicenseHomepage.setOnClickListener(null);
     holder.binding.expandLicenseName.setText(null);
+    holder.binding.expandLicenseIcon.setImageDrawable(null);
+    holder.itemView.setOnClickListener(null);
     presenter.stop();
+    presenter.destroy();
   }
 
   @Override public ViewHolder getViewHolder(View view) {

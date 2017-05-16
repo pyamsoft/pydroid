@@ -38,8 +38,8 @@ buildscript {
     timber = "4.5.1"
     autoValue = "1.4.1"
     autoValueGSON = "0.4.6"
-    retrofit = "2.2.0"
-    retrofitLogging = "3.7.0"
+    retrofit = "2.3.0"
+    retrofitLogging = "3.8.0"
     rxjava = "2.1.0"
     rxandroid = "2.0.1"
     fastAdapter = "2.5.2"
@@ -47,7 +47,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.0'
+    classpath 'com.android.tools.build:gradle:2.3.2'
 
     // Retro lambda
     classpath 'me.tatarka:gradle-retrolambda:3.6.0'

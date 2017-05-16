@@ -92,27 +92,35 @@
 
       </RelativeLayout>
 
-      <ProgressBar
-          android:id="@+id/expand_license_progress"
+      <FrameLayout
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:clickable="false"
-          android:focusable="false"
-          android:longClickable="false"
-          style="?attr/progressBarStyle"
-          />
+          android:layout_height="match_parent"
+          >
 
-      <WebView
-          android:id="@+id/expand_license_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="4dp"
-          android:clickable="false"
-          android:focusable="false"
-          android:longClickable="false"
-          android:padding="16dp"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          />
+        <WebView
+            android:id="@+id/expand_license_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false"
+            android:longClickable="false"
+            android:padding="8dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
+
+        <ProgressBar
+            android:id="@+id/expand_license_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false"
+            android:indeterminate="true"
+            android:longClickable="false"
+            android:padding="8dp"
+            style="?attr/progressBarStyle"
+            />
+
+      </FrameLayout>
 
     </LinearLayout>
 

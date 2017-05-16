@@ -25,7 +25,6 @@ import io.reactivex.Scheduler;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) public class AboutLibrariesModule {
 
-  @NonNull private final AboutLibrariesItemInteractor itemInteractor;
   @NonNull private final AboutLibrariesInteractor interactor;
   @NonNull private final Scheduler obsScheduler;
   @NonNull private final Scheduler subScheduler;
@@ -34,13 +33,8 @@ import io.reactivex.Scheduler;
   public AboutLibrariesModule(@NonNull PYDroidModule pyDroidModule) {
     interactor = new AboutLibrariesInteractor(pyDroidModule.provideContext(),
         pyDroidModule.provideLicenseMap());
-    itemInteractor = new AboutLibrariesItemInteractor(pyDroidModule.provideContext());
     obsScheduler = pyDroidModule.provideObsScheduler();
     subScheduler = pyDroidModule.provideSubScheduler();
-  }
-
-  @NonNull @CheckResult public AboutLibrariesItemPresenter getItemPresenter() {
-    return new AboutLibrariesItemPresenter(itemInteractor, obsScheduler, subScheduler);
   }
 
   @NonNull @CheckResult public AboutLibrariesPresenter getPresenter() {

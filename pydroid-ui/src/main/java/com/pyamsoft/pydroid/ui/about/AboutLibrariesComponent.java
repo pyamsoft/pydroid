@@ -30,10 +30,6 @@ import com.pyamsoft.pydroid.helper.Checker;
     this.aboutLibrariesModule = Checker.checkNonNull(aboutLibrariesModule);
   }
 
-  void inject(@NonNull AboutLibrariesItem item) {
-    Checker.checkNonNull(item).presenter = aboutLibrariesModule.getItemPresenter();
-  }
-
   void inject(@NonNull AboutLibrariesFragment fragment) {
     Checker.checkNonNull(fragment).presenter = aboutLibrariesModule.getPresenter();
   }

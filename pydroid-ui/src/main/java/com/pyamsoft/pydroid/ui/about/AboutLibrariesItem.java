@@ -20,17 +20,12 @@ package com.pyamsoft.pydroid.ui.about;
 import android.graphics.Color;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.webkit.WebView;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.pyamsoft.pydroid.about.AboutLibrariesModel;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.loader.ImageLoader;
-import com.pyamsoft.pydroid.loader.LoaderHelper;
-import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.ui.R;
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding;
 import com.pyamsoft.pydroid.util.NetworkUtil;
@@ -38,10 +33,6 @@ import java.util.List;
 
 class AboutLibrariesItem extends
     GenericAbstractItem<AboutLibrariesModel, AboutLibrariesItem, AboutLibrariesItem.ViewHolder> {
-
-  @SuppressWarnings("WeakerAccess") @NonNull Loaded arrowLoad = LoaderHelper.empty();
-  @SuppressWarnings("WeakerAccess") @Nullable ViewPropertyAnimatorCompat arrowAnimation;
-  @SuppressWarnings("WeakerAccess") boolean expanded;
 
   AboutLibrariesItem(@NonNull AboutLibrariesModel item) {
     super(Checker.checkNonNull(item));
@@ -55,54 +46,19 @@ class AboutLibrariesItem extends
     return R.layout.adapter_item_about;
   }
 
-  @SuppressWarnings("WeakerAccess") void cancelArrowAnimation() {
-    if (arrowAnimation != null) {
-      arrowAnimation.cancel();
-      arrowAnimation = null;
-    }
-  }
-
   @Override public void bindView(@NonNull final ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-
-    arrowLoad = LoaderHelper.unload(arrowLoad);
-    arrowLoad = ImageLoader.fromResource(holder.itemView.getContext(), R.drawable.ic_arrow_up_24dp)
-        .into(holder.binding.expandLicenseIcon);
-
-    cancelArrowAnimation();
-    if (expanded) {
-      holder.binding.expandLicenseText.setVisibility(View.VISIBLE);
-      ViewCompat.setRotation(holder.binding.expandLicenseIcon, 0);
-    } else {
-      holder.binding.expandLicenseText.setVisibility(View.GONE);
-      ViewCompat.setRotation(holder.binding.expandLicenseIcon, 180);
-    }
-
-    holder.binding.expandLicenseText.getSettings().setTextZoom(80);
-    holder.binding.expandLicenseName.setText(getModel().name());
-    holder.binding.expandLicenseHomepage.setOnClickListener(
-        view -> NetworkUtil.newLink(view.getContext().getApplicationContext(),
-            getModel().homepage()));
-    holder.binding.expandLicenseText.loadDataWithBaseURL(null, getModel().license(), "text/plain",
-        "UTF-8", null);
-
-    holder.itemView.setOnClickListener(v -> {
-      expanded = !expanded;
-      cancelArrowAnimation();
-      arrowAnimation =
-          ViewCompat.animate(holder.binding.expandLicenseIcon).rotation(expanded ? 0 : 180);
-      holder.binding.expandLicenseText.setVisibility(expanded ? View.VISIBLE : View.GONE);
-    });
+    holder.binding.aboutExpander.setTitle(getModel().name());
+    holder.binding.aboutExpander.editDescriptionView()
+        .setOnClickListener(v -> NetworkUtil.newLink(v.getContext(), getModel().homepage()));
+    holder.webView.loadDataWithBaseURL(null, getModel().license(), "text/plain", "UTF-8", null);
   }
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    holder.binding.expandLicenseHomepage.setOnClickListener(null);
-    holder.binding.expandLicenseName.setText(null);
-    holder.binding.expandLicenseIcon.setImageDrawable(null);
-    holder.binding.expandLicenseText.loadDataWithBaseURL(null, "", "text/plain", "UTF-8", null);
-    holder.itemView.setOnClickListener(null);
-    cancelArrowAnimation();
+    holder.binding.aboutExpander.clearTitle();
+    holder.binding.aboutExpander.editDescriptionView().setOnClickListener(null);
+    holder.webView.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null);
   }
 
   @Override public ViewHolder getViewHolder(View view) {
@@ -112,13 +68,20 @@ class AboutLibrariesItem extends
   static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final AdapterItemAboutBinding binding;
+    @NonNull final WebView webView;
 
     ViewHolder(View view) {
       super(view);
       binding = AdapterItemAboutBinding.bind(view);
-      binding.expandLicenseHomepage.setTextColor(Color.BLUE);
-      binding.expandLicenseHomepage.setSingleLine(true);
-      binding.expandLicenseText.getSettings().setDefaultFontSize(12);
+      webView = new WebView(view.getContext());
+
+      binding.aboutExpander.setTitleTextSize(16);
+      binding.aboutExpander.setDescription("Homepage");
+      binding.aboutExpander.editDescriptionView().setTextColor(Color.BLUE);
+      binding.aboutExpander.editDescriptionView().setSingleLine(true);
+
+      webView.getSettings().setDefaultFontSize(12);
+      binding.aboutExpander.setExpandingContent(webView);
     }
   }
 }

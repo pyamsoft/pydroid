@@ -18,11 +18,18 @@
 package com.pyamsoft.pydroid.ui;
 
 import android.app.Application;
+import android.os.StrictMode;
 import android.support.annotation.CheckResult;
+import com.pyamsoft.pydroid.PYDroidModule;
 import timber.log.Timber;
 
 public abstract class PYDroidApplication extends Application {
 
+  /**
+   * The onCreate method expects a very strict application flow.
+   *
+   * We mark it as final here and then allow custom injection via hook methods
+   */
   @Override public final void onCreate() {
     super.onCreate();
     if (exitBeforeInitialization()) {
@@ -30,12 +37,53 @@ public abstract class PYDroidApplication extends Application {
       return;
     }
 
-    if (isDebugMode()) {
-      onCreateInDebugMode();
+    insertLicensesIntoMap();
+
+    final boolean debug = isDebugMode();
+    onFirstCreate(debug);
+
+    if (debug) {
+      onDebugApplicationCreated();
     } else {
-      onCreateInReleaseMode();
+      onReleaseApplicationCreated();
     }
-    onCreateNormalMode();
+    onApplicationCreated();
+  }
+
+  /**
+   * Add a list of known licenses used into the License map
+   */
+  private void insertLicensesIntoMap() {
+    UiLicenses.addLicenses();
+    insertCustomLicensesIntoMap();
+  }
+
+  /**
+   * On the initial create, we setup the injector with PYDroid module
+   *
+   * We also run through debug mode setup of things like Timber and Strict mode
+   */
+  private void onFirstCreate(boolean debug) {
+    PYDroidInjector.set(
+        PYDroidComponent.withModule(new PYDroidModule(getApplicationContext(), debug)));
+    if (debug) {
+      Timber.plant(new Timber.DebugTree());
+      setStrictMode();
+    }
+  }
+
+  /**
+   * Sets strict mode flags when running in debug mode
+   */
+  private void setStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+        .penaltyLog()
+        .penaltyDeath()
+        .permitDiskReads()
+        .permitDiskWrites()
+        .penaltyFlashScreen()
+        .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
   /**
@@ -47,17 +95,36 @@ public abstract class PYDroidApplication extends Application {
     return false;
   }
 
-  protected void onCreateNormalMode() {
+  /**
+   * Hook for application events, meant to run in all cases
+   */
+  protected void onApplicationCreated() {
 
   }
 
-  protected void onCreateInDebugMode() {
+  /**
+   * Hook for application events for DEBUG builds
+   */
+  protected void onDebugApplicationCreated() {
 
   }
 
-  protected void onCreateInReleaseMode() {
+  /**
+   * Hook for application events for RELEASE builds
+   */
+  protected void onReleaseApplicationCreated() {
 
   }
 
+  /**
+   * Is the application in DEBUG mode
+   */
   @CheckResult protected abstract boolean isDebugMode();
+
+  /**
+   * Add any custom licenses used by the application
+   */
+  protected void insertCustomLicensesIntoMap() {
+
+  }
 }

@@ -23,7 +23,6 @@ import android.support.annotation.RestrictTo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pyamsoft.pydroid.PYDroidModule;
-import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import io.reactivex.Scheduler;
 import okhttp3.CertificatePinner;
 import okhttp3.OkHttpClient;
@@ -44,9 +43,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
   public VersionCheckModule(@NonNull PYDroidModule pyDroidModule) {
     obsScheduler = pyDroidModule.provideObsScheduler();
     subScheduler = pyDroidModule.provideSubScheduler();
-    interactor = new VersionCheckInteractor(
-        new VersionCheckApi(provideRetrofit(provideOkHttpClient(), provideGson())).create(
-            VersionCheckService.class));
+    interactor = new VersionCheckInteractor(new VersionCheckApi(
+        provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug()), provideGson())).create(
+        VersionCheckService.class));
   }
 
   @CheckResult @NonNull private Gson provideGson() {
@@ -55,9 +54,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
     return gsonBuilder.create();
   }
 
-  @CheckResult @NonNull private OkHttpClient provideOkHttpClient() {
+  @CheckResult @NonNull private OkHttpClient provideOkHttpClient(boolean debug) {
     final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-    if (BuildConfigChecker.getInstance().isDebugMode()) {
+    if (debug) {
       final HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
       logging.setLevel(HttpLoggingInterceptor.Level.BODY);
       builder.addInterceptor(logging);

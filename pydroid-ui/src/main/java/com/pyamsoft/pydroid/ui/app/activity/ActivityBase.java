@@ -78,6 +78,8 @@ public abstract class ActivityBase extends AppCompatActivity {
     PreferenceManager.setDefaultValues(this, R.xml.pydroid, false);
   }
 
+  @CheckResult protected abstract boolean isDebugMode();
+
   /**
    * Hopefully fixes Android's glorious InputMethodManager related context leaks.
    */

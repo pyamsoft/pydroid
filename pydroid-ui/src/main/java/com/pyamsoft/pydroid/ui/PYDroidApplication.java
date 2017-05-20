@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui;
 
 import android.app.Application;
 import android.support.annotation.CheckResult;
-import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import timber.log.Timber;
 
 public abstract class PYDroidApplication extends Application {
@@ -31,7 +30,7 @@ public abstract class PYDroidApplication extends Application {
       return;
     }
 
-    if (BuildConfigChecker.getInstance().isDebugMode()) {
+    if (isDebugMode()) {
       onCreateInDebugMode();
     } else {
       onCreateInReleaseMode();
@@ -59,4 +58,6 @@ public abstract class PYDroidApplication extends Application {
   protected void onCreateInReleaseMode() {
 
   }
+
+  @CheckResult protected abstract boolean isDebugMode();
 }

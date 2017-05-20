@@ -22,7 +22,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.ui.app.activity.BackPressConfirmActivity;
 import com.pyamsoft.pydroid.util.DialogUtil;
@@ -39,7 +38,7 @@ public abstract class VersionCheckActivity extends BackPressConfirmActivity
 
   @CheckResult private boolean isVersionCheckEnabled() {
     // Always enabled for release builds
-    return !BuildConfigChecker.getInstance().isDebugMode() || shouldCheckVersion();
+    return !isDebugMode() || shouldCheckVersion();
   }
 
   @CheckResult protected boolean shouldCheckVersion() {

@@ -27,7 +27,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.PYDroidModule;
-import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import timber.log.Timber;
 
 public abstract class SingleInitContentProvider extends ContentProvider {
@@ -60,8 +59,6 @@ public abstract class SingleInitContentProvider extends ContentProvider {
       throw new NullPointerException("Application Context is NULL");
     }
 
-    BuildConfigChecker.setInstance(initializeBuildConfigChecker());
-
     insertLicensesIntoMap(appContext);
     onFirstCreate(appContext);
     onInstanceCreated(appContext);
@@ -69,9 +66,10 @@ public abstract class SingleInitContentProvider extends ContentProvider {
   }
 
   private void onFirstCreate(@NonNull Context context) {
+    boolean debug = isDebugMode();
     PYDroidInjector.set(
-        PYDroidComponent.withModule(new PYDroidModule(context.getApplicationContext())));
-    if (BuildConfigChecker.getInstance().isDebugMode()) {
+        PYDroidComponent.withModule(new PYDroidModule(context.getApplicationContext(), debug)));
+    if (debug) {
       Timber.plant(new Timber.DebugTree());
       setStrictMode();
     }
@@ -119,7 +117,7 @@ public abstract class SingleInitContentProvider extends ContentProvider {
     throw new RuntimeException("This is not actually a content provider");
   }
 
-  @CheckResult @NonNull protected abstract BuildConfigChecker initializeBuildConfigChecker();
+  @CheckResult protected abstract boolean isDebugMode();
 
   protected abstract void onInstanceCreated(@NonNull Context context);
 }

@@ -51,6 +51,9 @@ android {
 
     // Only English, I don't have any translations
     resConfigs "en"
+
+    // Publish release and debug flavors
+    publishNonDefault true
   }
 
   dataBinding {
@@ -96,6 +99,8 @@ dependencies {
     transitive = true
   }
 
-  compile project(path: ":pydroid")
-  compile project(path: ":pydroid-loader")
+  debugCompile project(path: ":pydroid", configuration: "debug")
+  releaseCompile project(path: ":pydroid", configuration: "release")
+  debugCompile project(path: ":pydroid-loader", configuration: "debug")
+  releaseCompile project(path: ":pydroid-loader", configuration: "release")
 }

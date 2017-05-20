@@ -51,6 +51,9 @@ android {
 
     // Only English, I don't have any translations
     resConfigs "en"
+
+    // Publish release and debug flavors
+    publishNonDefault true
   }
 
   dataBinding {
@@ -85,6 +88,7 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
-  compile project(path: ":pydroid")
+  debugCompile project(path: ":pydroid", configuration: "debug")
+  releaseCompile project(path: ":pydroid", configuration: "release")
 }
 

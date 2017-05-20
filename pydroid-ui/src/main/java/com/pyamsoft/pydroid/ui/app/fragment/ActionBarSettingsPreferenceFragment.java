@@ -52,7 +52,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
   @CallSuper @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    PYDroidInjector.get().provideComponent().plusAppComponent().inject(this);
+    PYDroidInjector.with(getContext()).plusAppComponent().inject(this);
   }
 
   @SuppressLint("ShowToast") @CallSuper @Override
@@ -117,7 +117,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
     final Preference rateApplication = findPreference(getString(R.string.rating_key));
     rateApplication.setOnPreferenceClickListener(preference -> {
-      Linker.getInstance().clickAppPage(preference.getContext().getPackageName());
+      Linker.with(preference.getContext()).clickAppPage(preference.getContext().getPackageName());
       return true;
     });
   }

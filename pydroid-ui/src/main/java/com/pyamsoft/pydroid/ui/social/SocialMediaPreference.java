@@ -59,11 +59,10 @@ public class SocialMediaPreference extends BaseBoundPreference {
     super.onBindViewHolder(holder);
     Timber.d("onBindViewHolder");
     binding = DataBindingUtil.bind(holder.itemView);
-
-    binding.googlePlay.setOnClickListener(v -> Linker.getInstance().clickGooglePlay());
-    binding.googlePlus.setOnClickListener(v -> Linker.getInstance().clickGooglePlus());
-    binding.blogger.setOnClickListener(v -> Linker.getInstance().clickBlogger());
-    binding.facebook.setOnClickListener(v -> Linker.getInstance().clickFacebook());
+    binding.googlePlay.setOnClickListener(v -> Linker.with(v.getContext()).clickGooglePlay());
+    binding.googlePlus.setOnClickListener(v -> Linker.with(v.getContext()).clickGooglePlus());
+    binding.blogger.setOnClickListener(v -> Linker.with(v.getContext()).clickBlogger());
+    binding.facebook.setOnClickListener(v -> Linker.with(v.getContext()).clickFacebook());
   }
 
   @Override protected void onUnbindViewHolder() {
@@ -74,6 +73,7 @@ public class SocialMediaPreference extends BaseBoundPreference {
       binding.blogger.setOnClickListener(null);
       binding.facebook.setOnClickListener(null);
       binding.unbind();
+      binding = null;
     }
   }
 }

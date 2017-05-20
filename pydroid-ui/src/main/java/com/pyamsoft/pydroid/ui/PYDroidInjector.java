@@ -17,31 +17,57 @@
 
 package com.pyamsoft.pydroid.ui;
 
+import android.content.Context;
+import android.os.StrictMode;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.helper.Checker;
+import timber.log.Timber;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidInjector
-    implements IPYDroidApp<PYDroidComponent> {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidInjector {
 
   @Nullable private static volatile PYDroidInjector instance = null;
   @NonNull private final PYDroidComponent component;
 
-  private PYDroidInjector(@NonNull PYDroidComponent component) {
-    this.component = Checker.checkNonNull(component);
+  private PYDroidInjector(@NonNull PYDroidModule module) {
+    module = Checker.checkNonNull(module);
+    this.component = PYDroidComponentImpl.withModule(module);
+
+    UiLicenses.addLicenses();
+    if (module.isDebug()) {
+      Timber.plant(new Timber.DebugTree());
+      setStrictMode();
+    }
+
+    Timber.i("Initialize PYDroid Injector singleton");
   }
 
-  static void set(@Nullable PYDroidComponent component) {
-    instance = new PYDroidInjector(Checker.checkNonNull(component));
+  @NonNull @CheckResult public static PYDroidComponent with(@NonNull Context context) {
+    if (instance == null) {
+      synchronized (PYDroidInjector.class) {
+        if (instance == null) {
+          instance = new PYDroidInjector(new PYDroidModule(context.getApplicationContext()));
+        }
+      }
+    }
+
+    return Checker.checkNonNull(Checker.checkNonNull(instance).component);
   }
 
-  @NonNull @CheckResult public static PYDroidInjector get() {
-    return Checker.checkNonNull(instance);
-  }
-
-  @NonNull @Override public PYDroidComponent provideComponent() {
-    return component;
+  /**
+   * Sets strict mode flags when running in debug mode
+   */
+  private void setStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+        .penaltyLog()
+        .penaltyDeath()
+        .permitDiskReads()
+        .permitDiskWrites()
+        .penaltyFlashScreen()
+        .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 }

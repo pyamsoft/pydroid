@@ -42,7 +42,7 @@ import com.pyamsoft.pydroid.ui.social.Linker;
         .setMessage(R.string.tamper_msg)
         .setCancelable(false)
         .setPositiveButton("Take Me", (dialog, which) -> {
-          Linker.getInstance().clickGooglePlay();
+          Linker.with(getContext()).clickGooglePlay();
           killApp();
         })
         .setNegativeButton("Close", (dialogInterface, i) -> killApp())

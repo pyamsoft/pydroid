@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.rating;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
@@ -62,7 +63,7 @@ public class RatingDialog extends DialogFragment {
       @NonNull ChangeLogProvider provider, boolean force) {
     activity = Checker.checkNonNull(activity);
     provider = Checker.checkNonNull(provider);
-    Launcher.INSTANCE.loadRatingDialog(activity, provider, force);
+    Launcher.with(activity).loadRatingDialog(activity, provider, force);
   }
 
   @CheckResult @NonNull static RatingDialog newInstance(@NonNull ChangeLogProvider provider) {
@@ -133,39 +134,43 @@ public class RatingDialog extends DialogFragment {
     binding.ratingTextChange.setText(changeLogText);
 
     binding.ratingBtnNoThanks.setOnClickListener(
-        v -> Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
-          @Override public void onRatingSaved() {
-            dismiss();
-          }
+        v -> Launcher.with(v.getContext())
+            .saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
+              @Override public void onRatingSaved() {
+                dismiss();
+              }
 
-          @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
-            Toast.makeText(v.getContext(),
-                "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
-                .show();
-            dismiss();
-          }
-        }));
+              @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
+                Toast.makeText(v.getContext(),
+                    "Error occurred while dismissing dialog. May show again later",
+                    Toast.LENGTH_SHORT)
+                    .show();
+                dismiss();
+              }
+            }));
 
     binding.ratingBtnGoRate.setOnClickListener(
-        v -> Launcher.INSTANCE.saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
-          @Override public void onRatingSaved() {
-            final String fullLink = "market://details?id=" + rateLink;
-            NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
-            dismiss();
-          }
+        v -> Launcher.with(v.getContext())
+            .saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
+              @Override public void onRatingSaved() {
+                final String fullLink = "market://details?id=" + rateLink;
+                NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
+                dismiss();
+              }
 
-          @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
-            Toast.makeText(v.getContext(),
-                "Error occurred while dismissing dialog. May show again later", Toast.LENGTH_SHORT)
-                .show();
-            dismiss();
-          }
-        }));
+              @Override public void onRatingDialogSaveError(@NonNull Throwable throwable) {
+                Toast.makeText(v.getContext(),
+                    "Error occurred while dismissing dialog. May show again later",
+                    Toast.LENGTH_SHORT)
+                    .show();
+                dismiss();
+              }
+            }));
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    Launcher.INSTANCE.cleanup();
+    Launcher.with(getContext()).cleanup();
   }
 
   @Override public void onResume() {
@@ -191,12 +196,23 @@ public class RatingDialog extends DialogFragment {
 
   static class Launcher {
 
-    @NonNull static final Launcher INSTANCE = new Launcher();
-
+    @Nullable private static volatile Launcher instance;
     RatingPresenter presenter;
 
-    Launcher() {
-      PYDroidInjector.get().provideComponent().plusRatingComponent().inject(this);
+    private Launcher(@NonNull Context context) {
+      PYDroidInjector.with(context).plusRatingComponent().inject(this);
+    }
+
+    @CheckResult static Launcher with(@NonNull Context context) {
+      if (instance == null) {
+        synchronized (Launcher.class) {
+          if (instance == null) {
+            instance = new Launcher(context.getApplicationContext());
+          }
+        }
+      }
+
+      return Checker.checkNonNull(instance);
     }
 
     void loadRatingDialog(@NonNull FragmentActivity activity, @NonNull ChangeLogProvider provider,

@@ -20,57 +20,18 @@ package com.pyamsoft.pydroid.ui;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.PYDroidModule;
-import com.pyamsoft.pydroid.about.AboutLibrariesModule;
-import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.rating.RatingModule;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent;
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent;
 import com.pyamsoft.pydroid.ui.rating.RatingComponent;
-import com.pyamsoft.pydroid.ui.social.SocialComponent;
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent;
-import com.pyamsoft.pydroid.version.VersionCheckModule;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public interface PYDroidComponent {
 
-  @NonNull private final VersionCheckComponent versionCheckComponent;
-  @NonNull private final AboutLibrariesComponent aboutLibrariesComponent;
-  @NonNull private final AppComponent appComponent;
-  @NonNull private final RatingComponent ratingComponent;
-  @NonNull private final SocialComponent socialComponent;
+  @CheckResult @NonNull VersionCheckComponent plusVersionCheckComponent();
 
-  private PYDroidComponent(@NonNull PYDroidModule module) {
-    module = Checker.checkNonNull(module);
-    VersionCheckModule versionCheckModule = new VersionCheckModule(module);
-    AboutLibrariesModule aboutLibrariesModule = new AboutLibrariesModule(module);
-    versionCheckComponent = new VersionCheckComponent(versionCheckModule);
-    aboutLibrariesComponent = new AboutLibrariesComponent(aboutLibrariesModule);
-    appComponent = new AppComponent(versionCheckModule);
-    ratingComponent = new RatingComponent(new RatingModule(module));
-    socialComponent = new SocialComponent(module.provideContext());
-  }
+  @CheckResult @NonNull AboutLibrariesComponent plusAboutLibrariesComponent();
 
-  @CheckResult @NonNull static PYDroidComponent withModule(@NonNull PYDroidModule module) {
-    return new PYDroidComponent(module);
-  }
+  @CheckResult @NonNull AppComponent plusAppComponent();
 
-  @CheckResult @NonNull public VersionCheckComponent plusVersionCheckComponent() {
-    return versionCheckComponent;
-  }
-
-  @CheckResult @NonNull public AboutLibrariesComponent plusAboutLibrariesComponent() {
-    return aboutLibrariesComponent;
-  }
-
-  @CheckResult @NonNull public AppComponent plusAppComponent() {
-    return appComponent;
-  }
-
-  @CheckResult @NonNull public RatingComponent plusRatingComponent() {
-    return ratingComponent;
-  }
-
-  @CheckResult @NonNull public SocialComponent plusSocialComponent() {
-    return socialComponent;
-  }
+  @CheckResult @NonNull RatingComponent plusRatingComponent();
 }

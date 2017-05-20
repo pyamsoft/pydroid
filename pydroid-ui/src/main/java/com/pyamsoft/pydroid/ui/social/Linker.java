@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.presenter.Presenter;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public final class Linker extends Presenter {
@@ -38,18 +37,17 @@ public final class Linker extends Presenter {
   @NonNull private static final String OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/";
 
   @SuppressLint("StaticFieldLeak") @Nullable private static volatile Linker instance;
+  @NonNull private final Context appContext;
 
-  Context appContext;
-
-  private Linker() {
-    PYDroidInjector.get().provideComponent().plusSocialComponent().inject(this);
+  private Linker(@NonNull Context context) {
+    this.appContext = Checker.checkNonNull(context).getApplicationContext();
   }
 
-  @CheckResult @NonNull public static Linker getInstance() {
+  @CheckResult @NonNull public static Linker with(@NonNull Context context) {
     if (instance == null) {
       synchronized (Linker.class) {
         if (instance == null) {
-          instance = new Linker();
+          instance = new Linker(context.getApplicationContext());
         }
       }
     }

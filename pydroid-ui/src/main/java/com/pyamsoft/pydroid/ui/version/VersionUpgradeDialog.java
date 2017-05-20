@@ -78,7 +78,7 @@ import java.util.Locale;
     return new AlertDialog.Builder(getActivity()).setTitle("New version available")
         .setMessage(message)
         .setPositiveButton("Update", (dialogInterface, i) -> {
-          Linker.getInstance().clickAppPage(getContext().getPackageName());
+          Linker.with(getContext()).clickAppPage(getContext().getPackageName());
           dismiss();
         })
         .setNegativeButton("Later", (dialogInterface, i) -> dismiss())

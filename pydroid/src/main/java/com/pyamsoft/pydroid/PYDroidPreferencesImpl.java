@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.helper.Checker;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class PYDroidPreferencesImpl implements RatingPreferences {

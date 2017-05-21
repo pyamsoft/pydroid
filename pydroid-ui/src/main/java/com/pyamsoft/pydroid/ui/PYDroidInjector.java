@@ -38,7 +38,6 @@ import timber.log.Timber;
 
     UiLicenses.addLicenses();
     if (module.isDebug()) {
-      Timber.plant(new Timber.DebugTree());
       setStrictMode();
     }
 

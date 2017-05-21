@@ -89,7 +89,6 @@ dependencies {
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
   // Android support library.
-  compile "com.android.support:preference-v14:$supportLib"
   compile "com.android.support:appcompat-v7:$supportLib"
 
   // Timber logging

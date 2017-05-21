@@ -23,13 +23,13 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase;
 import com.pyamsoft.pydroid.ui.social.Linker;
 import java.util.Locale;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionUpgradeDialog extends DialogFragment {
+@RestrictTo(RestrictTo.Scope.LIBRARY) public class VersionUpgradeDialog extends DialogFragmentBase {
 
   @NonNull public static final String TAG = "VersionUpgradeDialog";
   @NonNull private static final String KEY_NAME = "key_name";
@@ -72,7 +72,7 @@ import java.util.Locale;
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final String message = String.format(Locale.getDefault(),
+    final String message = String.format(Locale.US,
         "A new version of %s is available!%nCurrent version: %d%nLatest verson: %d",
         applicationName, currentVersion, latestVersion);
     return new AlertDialog.Builder(getActivity()).setTitle("New version available")

@@ -23,37 +23,81 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.pydroid.PYDroidModule;
 import com.pyamsoft.pydroid.helper.Checker;
 import timber.log.Timber;
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public class PYDroidInjector {
+public final class PYDroid {
 
-  @Nullable private static volatile PYDroidInjector instance = null;
+  @Nullable private static volatile PYDroid instance = null;
   @NonNull private final PYDroidComponent component;
+  private final boolean debug;
 
-  private PYDroidInjector(@NonNull PYDroidModule module) {
+  @RestrictTo(RestrictTo.Scope.LIBRARY)
+  @SuppressWarnings("WeakerAccess") PYDroid(@NonNull PYDroidModule module) {
     module = Checker.checkNonNull(module);
-    this.component = PYDroidComponentImpl.withModule(module);
+    component = PYDroidComponentImpl.withModule(module);
+    debug = module.isDebug();
 
     UiLicenses.addLicenses();
     if (module.isDebug()) {
       setStrictMode();
+      Timber.plant(new Timber.DebugTree());
     }
 
     Timber.i("Initialize PYDroid Injector singleton");
   }
 
-  @NonNull @CheckResult public static PYDroidComponent with(@NonNull Context context) {
+  @RestrictTo(RestrictTo.Scope.LIBRARY)
+  @NonNull @CheckResult public static PYDroid getInstance() {
     if (instance == null) {
-      synchronized (PYDroidInjector.class) {
+      synchronized (PYDroid.class) {
         if (instance == null) {
-          instance = new PYDroidInjector(new PYDroidModule(context.getApplicationContext()));
+          throw new IllegalStateException(
+              "PYDroid instance is NULL, create it first using PYDroid.initialize(Context, boolean)");
+        }
+      }
+    }
+    return Checker.checkNonNull(instance);
+  }
+
+  @RestrictTo(RestrictTo.Scope.LIBRARY)
+  @VisibleForTesting
+  public static void setInstance(@NonNull PYDroid pyDroid) {
+    synchronized (PYDroid.class) {
+      Timber.w("Manually settings PYDroid instance");
+      instance = pyDroid;
+    }
+  }
+
+  /**
+   * Initialize the library
+   */
+  public static void initialize(@NonNull Context context, boolean debug) {
+    if (instance == null) {
+      synchronized (PYDroid.class) {
+        if (instance == null) {
+          instance = new PYDroid(new PYDroidModule(context.getApplicationContext(), debug));
         }
       }
     }
 
-    return Checker.checkNonNull(Checker.checkNonNull(instance).component);
+    if (instance == null) {
+      throw new RuntimeException("PYDroid initialization failed!");
+    }
+  }
+
+  @RestrictTo(RestrictTo.Scope.LIBRARY)
+  @CheckResult
+  public boolean isDebugMode() {
+    return debug;
+  }
+
+  @RestrictTo(RestrictTo.Scope.LIBRARY)
+  @CheckResult @NonNull
+  public PYDroidComponent provideComponent() {
+    return Checker.checkNonNull(component);
   }
 
   /**

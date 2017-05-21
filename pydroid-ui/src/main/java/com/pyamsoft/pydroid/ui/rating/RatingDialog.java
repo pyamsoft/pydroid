@@ -17,14 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.rating;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewCompat;
 import android.text.Spannable;
@@ -39,14 +36,15 @@ import com.pyamsoft.pydroid.loader.ImageLoader;
 import com.pyamsoft.pydroid.loader.LoaderHelper;
 import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.rating.RatingPresenter;
-import com.pyamsoft.pydroid.ui.PYDroidInjector;
+import com.pyamsoft.pydroid.ui.PYDroid;
+import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase;
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DialogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import timber.log.Timber;
 
-public class RatingDialog extends DialogFragment {
+public class RatingDialog extends DialogFragmentBase {
 
   @NonNull private static final String CHANGE_LOG_TEXT = "change_log_text";
   @NonNull private static final String CHANGE_LOG_ICON = "change_log_icon";
@@ -63,7 +61,7 @@ public class RatingDialog extends DialogFragment {
       @NonNull ChangeLogProvider provider, boolean force) {
     activity = Checker.checkNonNull(activity);
     provider = Checker.checkNonNull(provider);
-    Launcher.with(activity).loadRatingDialog(activity, provider, force);
+    Launcher.INSTANCE.loadRatingDialog(activity, provider, force);
   }
 
   @CheckResult @NonNull static RatingDialog newInstance(@NonNull ChangeLogProvider provider) {
@@ -101,12 +99,6 @@ public class RatingDialog extends DialogFragment {
     }
   }
 
-  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final Dialog dialog = super.onCreateDialog(savedInstanceState);
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    return dialog;
-  }
-
   @Override public void onDestroyView() {
     super.onDestroyView();
     iconTask = LoaderHelper.unload(iconTask);
@@ -134,7 +126,7 @@ public class RatingDialog extends DialogFragment {
     binding.ratingTextChange.setText(changeLogText);
 
     binding.ratingBtnNoThanks.setOnClickListener(
-        v -> Launcher.with(v.getContext())
+        v -> Launcher.INSTANCE
             .saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
               @Override public void onRatingSaved() {
                 dismiss();
@@ -150,7 +142,7 @@ public class RatingDialog extends DialogFragment {
             }));
 
     binding.ratingBtnGoRate.setOnClickListener(
-        v -> Launcher.with(v.getContext())
+        v -> Launcher.INSTANCE
             .saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
               @Override public void onRatingSaved() {
                 final String fullLink = "market://details?id=" + rateLink;
@@ -170,7 +162,7 @@ public class RatingDialog extends DialogFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    Launcher.with(getContext()).cleanup();
+    Launcher.INSTANCE.cleanup();
   }
 
   @Override public void onResume() {
@@ -196,23 +188,11 @@ public class RatingDialog extends DialogFragment {
 
   static class Launcher {
 
-    @Nullable private static volatile Launcher instance;
+    @NonNull private static final Launcher INSTANCE = new Launcher();
     RatingPresenter presenter;
 
-    private Launcher(@NonNull Context context) {
-      PYDroidInjector.with(context).plusRatingComponent().inject(this);
-    }
-
-    @CheckResult static Launcher with(@NonNull Context context) {
-      if (instance == null) {
-        synchronized (Launcher.class) {
-          if (instance == null) {
-            instance = new Launcher(context.getApplicationContext());
-          }
-        }
-      }
-
-      return Checker.checkNonNull(instance);
+    private Launcher() {
+      PYDroid.getInstance().provideComponent().plusRatingComponent().inject(this);
     }
 
     void loadRatingDialog(@NonNull FragmentActivity activity, @NonNull ChangeLogProvider provider,

@@ -17,12 +17,15 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import com.pyamsoft.pydroid.ui.app.activity.ActivityBase;
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil;
 
 public abstract class ActionBarFragment extends Fragment implements ActionBarProvider {

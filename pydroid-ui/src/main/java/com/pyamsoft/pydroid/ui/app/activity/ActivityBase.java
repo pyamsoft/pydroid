@@ -46,7 +46,7 @@ public abstract class ActivityBase extends AppCompatActivity {
   /**
    * Override if you do not want to handle IMM leaks
    */
-  @SuppressWarnings({ "WeakerAccess", "SameReturnValue" }) @CheckResult
+  @SuppressWarnings({"WeakerAccess", "SameReturnValue"}) @CheckResult
   protected boolean shouldHandleIMMLeaks() {
     return true;
   }

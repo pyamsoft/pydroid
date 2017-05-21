@@ -36,15 +36,17 @@ import java.util.List;
   @NonNull private final Context appContext;
   @NonNull private final List<AboutLibrariesModel> licenses;
   @NonNull private final PYDroidPreferencesImpl preferences;
+  private final boolean debug;
 
-  public PYDroidModule(@NonNull Context context) {
+  public PYDroidModule(@NonNull Context context, boolean debug) {
+    this.debug = debug;
     appContext = Checker.checkNonNull(context).getApplicationContext();
     licenses = Licenses.getLicenses();
     preferences = new PYDroidPreferencesImpl(appContext);
   }
 
   @CheckResult public final boolean isDebug() {
-    return BuildConfig.DEBUG;
+    return debug;
   }
 
   // Singleton

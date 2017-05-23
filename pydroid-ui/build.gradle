@@ -20,7 +20,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
-apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
@@ -40,10 +39,6 @@ android {
 
     // Only English, I don't have any translations
     resConfigs "en"
-  }
-
-  dataBinding {
-    enabled true
   }
 
   compileOptions {
@@ -71,8 +66,6 @@ android {
 
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
-
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
   // Android support library.
   compile "com.android.support:preference-v14:$supportLib"

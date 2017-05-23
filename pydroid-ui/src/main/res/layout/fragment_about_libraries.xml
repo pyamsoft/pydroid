@@ -14,31 +14,25 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<layout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     >
 
-  <FrameLayout
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/recycler_about_libraries"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      >
+      android:visibility="gone"
+      />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_about_libraries"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        />
+  <ProgressBar
+      android:id="@+id/about_loading"
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:layout_gravity="center"
+      android:indeterminate="true"
+      />
 
-    <ProgressBar
-        android:id="@+id/about_loading"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        />
-
-  </FrameLayout>
-
-</layout>
+</FrameLayout>

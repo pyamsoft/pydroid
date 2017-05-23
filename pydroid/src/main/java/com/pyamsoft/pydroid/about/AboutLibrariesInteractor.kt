@@ -24,8 +24,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
 import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.Collections
@@ -79,23 +77,19 @@ class AboutLibrariesInteractor(context: Context, licenses: List<AboutLibrariesMo
     }.blockingGet()
   }
 
-  @CheckResult @Throws(IOException::class) internal fun loadNewLicense(
-      licenseLocation: String): String {
+  @CheckResult internal fun loadNewLicense(licenseLocation: String): String {
     if (licenseLocation.isEmpty()) {
       Timber.w("Empty license passed")
       return ""
     }
 
-    val licenseText: String
-    var fileInputStream: InputStream? = null
-    try {
-      fileInputStream = assetManager.open(licenseLocation)
+    assetManager.open(licenseLocation).use {
       // Standard Charsets is only KitKat, add this extra check to support Home Button
       val inputStreamReader: InputStreamReader
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        inputStreamReader = InputStreamReader(fileInputStream!!, StandardCharsets.UTF_8)
+        inputStreamReader = InputStreamReader(it, StandardCharsets.UTF_8)
       } else {
-        inputStreamReader = InputStreamReader(fileInputStream!!, "UTF-8")
+        inputStreamReader = InputStreamReader(it, "UTF-8")
       }
 
       val br = BufferedReader(inputStreamReader)
@@ -107,11 +101,8 @@ class AboutLibrariesInteractor(context: Context, licenses: List<AboutLibrariesMo
       }
       br.close()
 
-      licenseText = text.toString()
-    } finally {
-      fileInputStream?.close()
+      it.close()
+      return text.toString()
     }
-
-    return licenseText
   }
 }

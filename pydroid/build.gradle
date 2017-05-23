@@ -19,7 +19,6 @@ apply plugin: 'kotlin-android'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
-apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
@@ -42,8 +41,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
   }
 
   buildTypes {
@@ -66,8 +65,6 @@ android {
 
 dependencies {
   compile fileTree(include: ["*.jar"], dir: "libs")
-
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
   // Android support library.
   compile "com.android.support:appcompat-v7:$supportLib"

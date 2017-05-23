@@ -69,7 +69,7 @@ abstract class ActivityBase : AppCompatActivity() {
      */
     internal open class LifecycleCallbacksAdapter : Application.ActivityLifecycleCallbacks {
 
-      override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle) {
+      override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
 
       }
 

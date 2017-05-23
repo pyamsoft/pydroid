@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.loaded;
+package com.pyamsoft.pydroid.loader.targets
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.disposables.Disposable;
+import android.graphics.drawable.Drawable
+import android.support.annotation.CheckResult
+import android.widget.ImageView
 
-public class RxLoaded implements Loaded {
+/**
+ * Target which loads Drawables into an ImageView
+ */
+class DrawableImageTarget private constructor(private val imageView: ImageView) : Target<Drawable> {
 
-  @NonNull private final Disposable disposable;
-
-  public RxLoaded(@NonNull Disposable disposable) {
-    disposable = Checker.Companion.checkNonNull(disposable);
-    this.disposable = disposable;
+  override fun loadImage(image: Drawable) {
+    imageView.setImageDrawable(image)
   }
 
-  @Override public void unload() {
-    if (!isUnloaded()) {
-      disposable.dispose();
+  companion object {
+
+    @JvmStatic @CheckResult fun forImageView(imageView: ImageView): Target<Drawable> {
+      return DrawableImageTarget(imageView)
     }
-  }
-
-  @Override public boolean isUnloaded() {
-    return disposable.isDisposed();
   }
 }

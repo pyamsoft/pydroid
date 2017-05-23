@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.targets;
-
-import android.support.annotation.NonNull;
+package com.pyamsoft.pydroid.loader.targets
 
 /**
  * Load an Image of a generic type (Drawable or Bitmap)
  */
-public interface Target<T> {
+interface Target<in T> {
 
-  void loadImage(@NonNull T image);
+  fun loadImage(image: T)
 }

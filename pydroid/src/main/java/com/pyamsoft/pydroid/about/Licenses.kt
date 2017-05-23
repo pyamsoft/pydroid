@@ -118,7 +118,7 @@ class Licenses private constructor() {
 
     companion object {
       // Add an underscore to keep this name on top
-      val _BASE = "licenses/"
+      @JvmField val _BASE = "licenses/"
       internal val RXJAVA = _BASE + "rxjava"
       internal val RXANDROID = _BASE + "rxandroid"
       internal val ANDROID_SUPPORT = _BASE + "androidsupport"
@@ -139,18 +139,15 @@ class Licenses private constructor() {
 
     private val INSTANCE = Licenses()
 
-    @JvmStatic
-    fun create(name: String, homepageUrl: String, licenseLocation: String) {
+    @JvmStatic fun create(name: String, homepageUrl: String, licenseLocation: String) {
       INSTANCE.createItem(name, homepageUrl, licenseLocation)
     }
 
-    @JvmStatic
-    fun createWithContent(name: String, homepageUrl: String, content: String) {
+    @JvmStatic fun createWithContent(name: String, homepageUrl: String, content: String) {
       INSTANCE.createItemWithContent(name, homepageUrl, content)
     }
 
-    @JvmStatic
-    @CheckResult fun getLicenses(): List<AboutLibrariesModel> {
+    @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> {
       return Collections.unmodifiableList(INSTANCE.licenses)
     }
   }

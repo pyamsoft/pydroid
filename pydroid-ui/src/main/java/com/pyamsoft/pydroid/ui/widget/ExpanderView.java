@@ -50,7 +50,7 @@ public class ExpanderView extends FrameLayout {
 
   ViewExpanderBinding binding;
   boolean expanded;
-  @NonNull Loaded arrowLoad = LoaderHelper.empty();
+  @NonNull Loaded arrowLoad = LoaderHelper.Companion.empty();
   @Nullable ViewPropertyAnimatorCompat arrowAnimation;
   @Nullable ViewPropertyAnimatorCompat containerAnimation;
 
@@ -174,8 +174,8 @@ public class ExpanderView extends FrameLayout {
       return;
     }
 
-    arrowLoad = LoaderHelper.unload(arrowLoad);
-    arrowLoad = ImageLoader.fromResource(getContext(), R.drawable.ic_arrow_up_24dp)
+    arrowLoad = LoaderHelper.Companion.unload(arrowLoad);
+    arrowLoad = ImageLoader.Companion.fromResource(getContext(), R.drawable.ic_arrow_up_24dp)
         .into(binding.expanderArrow);
   }
 
@@ -186,7 +186,7 @@ public class ExpanderView extends FrameLayout {
       return;
     }
 
-    arrowLoad = LoaderHelper.unload(arrowLoad);
+    arrowLoad = LoaderHelper.Companion.unload(arrowLoad);
     cancelArrowAnimation();
     cancelContainerAnimation();
   }

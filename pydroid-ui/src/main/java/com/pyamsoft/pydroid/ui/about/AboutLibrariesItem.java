@@ -47,10 +47,11 @@ class AboutLibrariesItem extends
 
   @Override public void bindView(@NonNull final ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.binding.aboutExpander.setTitle(getModel().name());
+    holder.binding.aboutExpander.setTitle(getModel().getName());
     holder.binding.aboutExpander.editDescriptionView()
-        .setOnClickListener(v -> NetworkUtil.Companion.newLink(v.getContext(), getModel().homepage()));
-    holder.webView.loadDataWithBaseURL(null, getModel().license(), "text/plain", "UTF-8", null);
+        .setOnClickListener(
+            v -> NetworkUtil.Companion.newLink(v.getContext(), getModel().getHomepage()));
+    holder.webView.loadDataWithBaseURL(null, getModel().getLicense(), "text/plain", "UTF-8", null);
   }
 
   @Override public void unbindView(ViewHolder holder) {

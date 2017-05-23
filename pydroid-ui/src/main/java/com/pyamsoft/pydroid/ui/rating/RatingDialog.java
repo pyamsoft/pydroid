@@ -54,7 +54,7 @@ public class RatingDialog extends DialogFragmentBase {
   private int versionCode;
   @DrawableRes private int changeLogIcon;
   private DialogRatingBinding binding;
-  @NonNull private Loaded iconTask = LoaderHelper.empty();
+  @NonNull private Loaded iconTask = LoaderHelper.Companion.empty();
 
   public static void showRatingDialog(@NonNull FragmentActivity activity,
       @NonNull ChangeLogProvider provider, boolean force) {
@@ -100,7 +100,7 @@ public class RatingDialog extends DialogFragmentBase {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    iconTask = LoaderHelper.unload(iconTask);
+    iconTask = LoaderHelper.Companion.unload(iconTask);
     binding.unbind();
   }
 
@@ -119,8 +119,8 @@ public class RatingDialog extends DialogFragmentBase {
   private void initDialog() {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.Companion.convertToDP(getContext(), 8));
 
-    iconTask = LoaderHelper.unload(iconTask);
-    iconTask = ImageLoader.fromResource(getContext(), changeLogIcon).into(binding.ratingIcon);
+    iconTask = LoaderHelper.Companion.unload(iconTask);
+    iconTask = ImageLoader.Companion.fromResource(getContext(), changeLogIcon).into(binding.ratingIcon);
 
     binding.ratingTextChange.setText(changeLogText);
 

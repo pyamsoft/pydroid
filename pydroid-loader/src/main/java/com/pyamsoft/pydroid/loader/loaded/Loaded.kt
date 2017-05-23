@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.loaded;
+package com.pyamsoft.pydroid.loader.loaded
 
-import android.support.annotation.CheckResult;
+import android.support.annotation.CheckResult
 
-public interface Loaded {
+interface Loaded {
 
-  void unload();
+  fun unload()
 
-  @CheckResult boolean isUnloaded();
+  @get:CheckResult val isUnloaded: Boolean
 }

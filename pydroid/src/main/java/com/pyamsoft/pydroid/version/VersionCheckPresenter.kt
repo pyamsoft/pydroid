@@ -21,7 +21,7 @@ import io.reactivex.Scheduler
 import retrofit2.HttpException
 import timber.log.Timber
 
-class VersionCheckPresenter constructor(private val interactor: VersionCheckInteractor,
+class VersionCheckPresenter internal constructor(private val interactor: VersionCheckInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
     observeScheduler, subscribeScheduler) {
 

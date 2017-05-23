@@ -40,7 +40,7 @@ import timber.log.Timber
     Timber.i("Initialize PYDroid Injector singleton")
   }
 
-  @RestrictTo(RestrictTo.Scope.LIBRARY) @CheckResult fun provideComponent(): PYDroidComponent {
+  @RestrictTo(RestrictTo.Scope.LIBRARY) @CheckResult internal fun provideComponent(): PYDroidComponent {
     return component
   }
 

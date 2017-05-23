@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid
 
 import android.content.Context
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.Licenses
 import io.reactivex.Scheduler
@@ -26,8 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.Collections
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidModule(context: Context,
-    val isDebug: Boolean) {
+class PYDroidModule(context: Context, val isDebug: Boolean) {
 
   // Singleton
   private val appContext: Context = context.applicationContext

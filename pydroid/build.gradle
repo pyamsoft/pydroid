@@ -15,19 +15,8 @@
  *
  */
 
-repositories {
-  maven {
-    url 'https://maven.google.com'
-  }
-}
-
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
-}
-
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
@@ -51,10 +40,6 @@ android {
 
     // Only English, I don't have any translations
     resConfigs "en"
-  }
-
-  dataBinding {
-    enabled true
   }
 
   compileOptions {
@@ -94,8 +79,8 @@ dependencies {
   // Auto value
   provided "com.google.auto.value:auto-value:$autoValue"
   provided "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
-  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
+  kapt "com.google.auto.value:auto-value:$autoValue"
+  kapt "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 
   // RxJava
   compile "io.reactivex.rxjava2:rxjava:$rxjava"
@@ -106,5 +91,6 @@ dependencies {
   compile "com.squareup.retrofit2:converter-gson:$retrofit"
   compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
   compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

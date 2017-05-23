@@ -15,19 +15,9 @@
  *
  */
 
-repositories {
-  maven {
-    url 'https://maven.google.com'
-  }
-}
-
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
-}
-
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
@@ -99,4 +89,5 @@ dependencies {
 
   compile project(":pydroid")
   compile project(":pydroid-loader")
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

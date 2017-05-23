@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.about
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
 
-@Suppress("ProtectedInFinal") @RestrictTo(RestrictTo.Scope.LIBRARY) class AboutLibrariesComponent(
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class AboutLibrariesComponent(
     private val aboutLibrariesModule: AboutLibrariesModule) {
 
   internal fun inject(fragment: AboutLibrariesFragment) {

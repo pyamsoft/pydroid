@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.version
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckComponent(
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class VersionCheckComponent(
     private val versionCheckModule: VersionCheckModule) {
 
   internal fun inject(activity: VersionCheckActivity) {

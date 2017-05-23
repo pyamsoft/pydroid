@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Collections
 import java.util.HashMap
 
-class AboutLibrariesInteractor(context: Context, licenses: List<AboutLibrariesModel>) {
+internal class AboutLibrariesInteractor(context: Context, licenses: List<AboutLibrariesModel>) {
 
   internal val licenses: List<AboutLibrariesModel> = Collections.unmodifiableList(licenses)
   private val assetManager: AssetManager = context.applicationContext.assets

@@ -21,7 +21,7 @@ import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class RatingModule(module: PYDroidModule) {
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class RatingModule(module: PYDroidModule) {
 
   private val interactor: RatingInteractor = RatingInteractor(module.provideRatingPreferences())
   private val obsScheduler: Scheduler = module.provideObsScheduler()

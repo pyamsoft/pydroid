@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) interface PYDroidComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal interface PYDroidComponent {
 
   @CheckResult fun plusVersionCheckComponent(): VersionCheckComponent
 

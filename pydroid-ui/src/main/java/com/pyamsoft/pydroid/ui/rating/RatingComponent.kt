@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.rating
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.rating.RatingModule
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class RatingComponent(
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class RatingComponent(
     private val ratingModule: RatingModule) {
 
   internal fun inject(launcher: RatingDialog.Launcher) {

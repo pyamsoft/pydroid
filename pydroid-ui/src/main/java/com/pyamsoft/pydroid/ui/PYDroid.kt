@@ -57,14 +57,13 @@ import timber.log.Timber
 
     @Volatile private var instance: PYDroid? = null
 
-    @VisibleForTesting @JvmStatic @RestrictTo(LIBRARY) internal fun setTestInstance(
-        instance: PYDroid) {
+    @VisibleForTesting @RestrictTo(LIBRARY) internal fun setTestInstance(instance: PYDroid) {
       synchronized(PYDroid::class.java) {
         this.instance = instance;
       }
     }
 
-    @JvmStatic @RestrictTo(LIBRARY) fun get(): PYDroid {
+    @RestrictTo(LIBRARY) fun get(): PYDroid {
       if (instance == null) {
         synchronized(PYDroid::class.java) {
           if (instance == null) {
@@ -79,7 +78,7 @@ import timber.log.Timber
     /**
      * Initialize the library
      */
-    fun initialize(context: Context, debug: Boolean) {
+    @JvmStatic fun initialize(context: Context, debug: Boolean) {
       if (instance == null) {
         synchronized(PYDroid::class.java) {
           if (instance == null) {

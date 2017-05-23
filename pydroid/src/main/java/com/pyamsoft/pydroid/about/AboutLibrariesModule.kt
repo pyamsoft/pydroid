@@ -21,7 +21,7 @@ import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class AboutLibrariesModule
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class AboutLibrariesModule
 (pyDroidModule: PYDroidModule) {
 
   private val interactor: AboutLibrariesInteractor = AboutLibrariesInteractor(

@@ -62,7 +62,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   companion object {
 
-    @JvmStatic @CheckResult fun withModule(module: PYDroidModule): PYDroidComponent {
+    @CheckResult fun withModule(module: PYDroidModule): PYDroidComponent {
       return PYDroidComponentImpl(module)
     }
   }

@@ -26,7 +26,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.Collections
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class PYDroidModule(context: Context, val isDebug: Boolean) {
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidModule(context: Context,
+    val isDebug: Boolean) {
 
   // Singleton
   private val appContext: Context = context.applicationContext
@@ -34,27 +35,27 @@ import java.util.Collections
   private val preferences: PYDroidPreferencesImpl = PYDroidPreferencesImpl(appContext)
 
   // Singleton
-  @CheckResult fun provideContext(): Context {
+  @CheckResult internal fun provideContext(): Context {
     return appContext
   }
 
   // Singleton
-  @CheckResult fun provideRatingPreferences(): RatingPreferences {
+  @CheckResult internal fun provideRatingPreferences(): RatingPreferences {
     return preferences
   }
 
   // Singleton
-  @CheckResult fun provideLicenseMap(): List<AboutLibrariesModel> {
+  @CheckResult internal fun provideLicenseMap(): List<AboutLibrariesModel> {
     return Collections.unmodifiableList(licenses)
   }
 
   // Singleton
-  @CheckResult fun provideSubScheduler(): Scheduler {
+  @CheckResult internal fun provideSubScheduler(): Scheduler {
     return Schedulers.io()
   }
 
   // Singleton
-  @CheckResult fun provideObsScheduler(): Scheduler {
+  @CheckResult internal fun provideObsScheduler(): Scheduler {
     return AndroidSchedulers.mainThread()
   }
 }

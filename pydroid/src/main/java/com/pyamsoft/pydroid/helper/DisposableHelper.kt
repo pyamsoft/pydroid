@@ -15,22 +15,30 @@
  *
  */
 
-package com.pyamsoft.pydroid.helper;
+package com.pyamsoft.pydroid.helper
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.annotation.CheckResult
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
 
-@Deprecated public final class Checker {
+class DisposableHelper private constructor() {
 
-  private Checker() {
-    throw new RuntimeException("Np instances");
+  init {
+    throw RuntimeException("No instances")
   }
 
-  @NonNull public static <T> T checkNonNull(@Nullable T source) {
-    if (source == null) {
-      throw new IllegalStateException("Object cannot be NULL");
-    }
+  companion object {
 
-    return source;
+    @JvmStatic @CheckResult fun dispose(disposable: Disposable?): Disposable {
+      if (disposable == null) {
+        return Disposables.empty()
+      }
+
+      if (!disposable.isDisposed) {
+        disposable.dispose()
+      }
+
+      return Disposables.empty()
+    }
   }
 }

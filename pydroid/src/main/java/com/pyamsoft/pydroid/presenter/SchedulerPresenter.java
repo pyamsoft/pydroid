@@ -30,8 +30,8 @@ public abstract class SchedulerPresenter extends Presenter {
   protected SchedulerPresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
 
-    SchedulerHelper.enforceObserveScheduler(observeScheduler);
-    SchedulerHelper.enforceSubscribeScheduler(subscribeScheduler);
+    SchedulerHelper.Companion.enforceObserveScheduler(observeScheduler);
+    SchedulerHelper.Companion.enforceSubscribeScheduler(subscribeScheduler);
 
     this.observeScheduler = observeScheduler;
     this.subscribeScheduler = subscribeScheduler;

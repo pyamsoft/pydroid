@@ -81,7 +81,7 @@ public abstract class TamperActivity extends RatingActivity {
     super.onPostResume();
     if (hasBeenTamperedWith) {
       Timber.e("Application has been tampered with, notify user");
-      DialogUtil.guaranteeSingleDialogFragment(this, new TamperDialog(), "tamper");
+      DialogUtil.Companion.guaranteeSingleDialogFragment(this, new TamperDialog(), "tamper");
     }
   }
 

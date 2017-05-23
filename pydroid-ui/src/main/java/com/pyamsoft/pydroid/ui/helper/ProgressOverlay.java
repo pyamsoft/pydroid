@@ -138,7 +138,7 @@ import timber.log.Timber;
       // Set elevation to above basically everything
       // Make sure elevation cannot be negative
       elevation = Math.max(0, elevation);
-      ViewCompat.setElevation(binding.getRoot(), AppUtil.convertToDP(activity, elevation));
+      ViewCompat.setElevation(binding.getRoot(), AppUtil.Companion.convertToDP(activity, elevation));
 
       // Set alpha
       binding.getRoot().setAlpha(((float) alphaPercent / 100.0F));

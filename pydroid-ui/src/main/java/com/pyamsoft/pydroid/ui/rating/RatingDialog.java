@@ -117,7 +117,7 @@ public class RatingDialog extends DialogFragmentBase {
   }
 
   private void initDialog() {
-    ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(getContext(), 8));
+    ViewCompat.setElevation(binding.ratingIcon, AppUtil.Companion.convertToDP(getContext(), 8));
 
     iconTask = LoaderHelper.unload(iconTask);
     iconTask = ImageLoader.fromResource(getContext(), changeLogIcon).into(binding.ratingIcon);
@@ -145,7 +145,7 @@ public class RatingDialog extends DialogFragmentBase {
             .saveVersionCode(versionCode, new RatingPresenter.SaveCallback() {
               @Override public void onRatingSaved() {
                 final String fullLink = "market://details?id=" + rateLink;
-                NetworkUtil.newLink(v.getContext().getApplicationContext(), fullLink);
+                NetworkUtil.Companion.newLink(v.getContext().getApplicationContext(), fullLink);
                 dismiss();
               }
 
@@ -199,7 +199,7 @@ public class RatingDialog extends DialogFragmentBase {
       presenter.loadRatingDialog(provider.getCurrentApplicationVersion(), force,
           new RatingPresenter.RatingCallback() {
             @Override public void onShowRatingDialog() {
-              DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
+              DialogUtil.Companion.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating");
             }
 
             @Override public void onRatingDialogLoadError(@NonNull Throwable throwable) {

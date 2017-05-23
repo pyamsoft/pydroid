@@ -90,7 +90,7 @@ public abstract class ResourceLoader extends GenericLoader<ResourceLoader, Drawa
     }
 
     if (tint != 0) {
-      loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint);
+      loaded = DrawableUtil.Companion.tintDrawableFromRes(context, loaded, tint);
     }
     return loaded;
   }

@@ -34,30 +34,30 @@ public abstract class RatingActivity extends VersionCheckActivity
     final String[] fullLines = new String[lines.length + 1];
     fullLines[0] = title;
     System.arraycopy(lines, 0, fullLines, 1, fullLines.length - 1);
-    final Spannable spannable = StringUtil.createLineBreakBuilder(fullLines);
+    final Spannable spannable = StringUtil.Companion.createLineBreakBuilder(fullLines);
 
     int start = 0;
     int end = title.length();
     final int largeSize =
-        StringUtil.getTextSizeFromAppearance(this, android.R.attr.textAppearanceLarge);
+        StringUtil.Companion.getTextSizeFromAppearance(this, android.R.attr.textAppearanceLarge);
     final int largeColor =
-        StringUtil.getTextColorFromAppearance(this, android.R.attr.textAppearanceLarge);
+        StringUtil.Companion.getTextColorFromAppearance(this, android.R.attr.textAppearanceLarge);
     final int smallSize =
-        StringUtil.getTextSizeFromAppearance(this, android.R.attr.textAppearanceSmall);
+        StringUtil.Companion.getTextSizeFromAppearance(this, android.R.attr.textAppearanceSmall);
     final int smallColor =
-        StringUtil.getTextColorFromAppearance(this, android.R.attr.textAppearanceSmall);
+        StringUtil.Companion.getTextColorFromAppearance(this, android.R.attr.textAppearanceSmall);
 
-    StringUtil.boldSpan(spannable, start, end);
-    StringUtil.sizeSpan(spannable, start, end, largeSize);
-    StringUtil.colorSpan(spannable, start, end, largeColor);
+    StringUtil.Companion.boldSpan(spannable, start, end);
+    StringUtil.Companion.sizeSpan(spannable, start, end, largeSize);
+    StringUtil.Companion.colorSpan(spannable, start, end, largeColor);
 
     start += end + 2;
     for (final String line : lines) {
       end += 2 + line.length();
     }
 
-    StringUtil.sizeSpan(spannable, start, end, smallSize);
-    StringUtil.colorSpan(spannable, start, end, smallColor);
+    StringUtil.Companion.sizeSpan(spannable, start, end, smallSize);
+    StringUtil.Companion.colorSpan(spannable, start, end, smallColor);
 
     return spannable;
   }

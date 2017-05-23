@@ -65,7 +65,7 @@ public abstract class VersionCheckActivity extends BackPressConfirmActivity
             @Override
             public void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode) {
               Timber.d("Updated version found. %d => %d", oldVersionCode, updatedVersionCode);
-              DialogUtil.guaranteeSingleDialogFragment(VersionCheckActivity.this,
+              DialogUtil.Companion.guaranteeSingleDialogFragment(VersionCheckActivity.this,
                   VersionUpgradeDialog.newInstance(provideApplicationName(), oldVersionCode,
                       updatedVersionCode), VersionUpgradeDialog.TAG);
             }

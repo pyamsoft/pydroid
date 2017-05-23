@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bus;
+package com.pyamsoft.pydroid.presenter
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+import com.pyamsoft.pydroid.helper.SchedulerHelper
+import io.reactivex.Scheduler
 
-@AutoValue abstract class BusEvent<T> {
+abstract class SchedulerPresenter protected constructor(protected val observeScheduler: Scheduler,
+    protected val subscribeScheduler: Scheduler) : Presenter() {
 
-  @CheckResult @NonNull static <T> BusEvent<T> create(@NonNull T event) {
-    return new AutoValue_BusEvent<>(event, false);
+  init {
+    SchedulerHelper.enforceObserveScheduler(observeScheduler)
+    SchedulerHelper.enforceSubscribeScheduler(subscribeScheduler)
   }
-
-  @CheckResult @NonNull static BusEvent<Object> empty() {
-    return new AutoValue_BusEvent<>(new Object(), true);
-  }
-
-  @CheckResult abstract T event();
-
-  @CheckResult abstract boolean isEmpty();
 }

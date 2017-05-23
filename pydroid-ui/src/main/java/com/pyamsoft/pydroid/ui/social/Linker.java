@@ -55,22 +55,22 @@ public final class Linker extends Presenter {
   }
 
   public void clickAppPage(@NonNull String link) {
-    NetworkUtil.newLink(appContext, BASE_MARKET + link);
+    NetworkUtil.Companion.newLink(appContext, BASE_MARKET + link);
   }
 
   public void clickGooglePlay() {
-    NetworkUtil.newLink(appContext, GOOGLE_PLAY_DEVELOPER_PAGE);
+    NetworkUtil.Companion.newLink(appContext, GOOGLE_PLAY_DEVELOPER_PAGE);
   }
 
   public void clickGooglePlus() {
-    NetworkUtil.newLink(appContext, GOOGLE_PLUS);
+    NetworkUtil.Companion.newLink(appContext, GOOGLE_PLUS);
   }
 
   public void clickBlogger() {
-    NetworkUtil.newLink(appContext, OFFICIAL_BLOG);
+    NetworkUtil.Companion.newLink(appContext, OFFICIAL_BLOG);
   }
 
   public void clickFacebook() {
-    NetworkUtil.newLink(appContext, FACEBOOK);
+    NetworkUtil.Companion.newLink(appContext, FACEBOOK);
   }
 }

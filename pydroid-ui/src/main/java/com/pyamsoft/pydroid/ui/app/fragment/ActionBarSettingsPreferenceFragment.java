@@ -174,7 +174,7 @@ public abstract class ActionBarSettingsPreferenceFragment extends ActionBarPrefe
 
           @Override public void onUpdatedVersionFound(int oldVersionCode, int updatedVersionCode) {
             Timber.d("Updated version found. %d => %d", oldVersionCode, updatedVersionCode);
-            DialogUtil.guaranteeSingleDialogFragment(getActivity(),
+            DialogUtil.Companion.guaranteeSingleDialogFragment(getActivity(),
                 VersionUpgradeDialog.newInstance(provideApplicationName(), oldVersionCode,
                     updatedVersionCode), VersionUpgradeDialog.TAG);
           }

@@ -49,7 +49,7 @@ class AboutLibrariesItem extends
     super.bindView(holder, payloads);
     holder.binding.aboutExpander.setTitle(getModel().name());
     holder.binding.aboutExpander.editDescriptionView()
-        .setOnClickListener(v -> NetworkUtil.newLink(v.getContext(), getModel().homepage()));
+        .setOnClickListener(v -> NetworkUtil.Companion.newLink(v.getContext(), getModel().homepage()));
     holder.webView.loadDataWithBaseURL(null, getModel().license(), "text/plain", "UTF-8", null);
   }
 

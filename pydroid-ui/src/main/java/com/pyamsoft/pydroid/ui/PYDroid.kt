@@ -25,7 +25,7 @@ import android.support.annotation.VisibleForTesting
 import com.pyamsoft.pydroid.PYDroidModule
 import timber.log.Timber
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class PYDroid internal constructor(module: PYDroidModule) {
+class PYDroid internal constructor(module: PYDroidModule) {
   private val component: PYDroidComponent = PYDroidComponentImpl.withModule(module)
   @get:RestrictTo(
       RestrictTo.Scope.LIBRARY) @get:CheckResult val isDebugMode: Boolean = module.isDebug
@@ -40,7 +40,8 @@ import timber.log.Timber
     Timber.i("Initialize PYDroid Injector singleton")
   }
 
-  @RestrictTo(RestrictTo.Scope.LIBRARY) @CheckResult internal fun provideComponent(): PYDroidComponent {
+  @RestrictTo(
+      RestrictTo.Scope.LIBRARY) @CheckResult internal fun provideComponent(): PYDroidComponent {
     return component
   }
 
@@ -53,7 +54,7 @@ import timber.log.Timber
     StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
   }
 
-  @RestrictTo(LIBRARY) companion object {
+  companion object {
 
     @Volatile private var instance: PYDroid? = null
 

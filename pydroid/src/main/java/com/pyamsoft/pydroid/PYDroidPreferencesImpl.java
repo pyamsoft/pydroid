@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.pyamsoft.pydroid;
@@ -23,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
 import com.pyamsoft.pydroid.helper.Checker;
+import com.pyamsoft.pydroid.helper.Optional;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class PYDroidPreferencesImpl implements RatingPreferences {
 

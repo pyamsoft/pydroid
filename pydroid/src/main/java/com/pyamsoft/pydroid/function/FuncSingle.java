@@ -12,14 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.pyamsoft.pydroid.function;
 
 import android.support.annotation.CheckResult;
 
-public interface FuncSingle<T, R> {
+@Deprecated public interface FuncSingle<T, R> {
 
   @CheckResult T call(R item);
 }

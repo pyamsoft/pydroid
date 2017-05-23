@@ -14,28 +14,30 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.loaded;
+package com.pyamsoft.pydroid.helper
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.Checker;
-import io.reactivex.disposables.Disposable;
+import android.support.annotation.CheckResult
 
-public class RxLoaded implements Loaded {
+data class Optional<out T> protected constructor(private val source: T?) {
 
-  @NonNull private final Disposable disposable;
-
-  public RxLoaded(@NonNull Disposable disposable) {
-    disposable = Checker.checkNonNull(disposable);
-    this.disposable = disposable;
+  @CheckResult fun isPresent(): Boolean {
+    return source != null
   }
 
-  @Override public void unload() {
-    if (!isUnloaded()) {
-      disposable.dispose();
+  @CheckResult fun item(): T {
+    return source!!
+  }
+
+  companion object {
+
+    @JvmStatic @CheckResult fun <T> ofNullable(source: T?): Optional<T> {
+      return Optional(source)
+    }
+
+    @JvmStatic @CheckResult fun <T> of(source: T): Optional<T> {
+      return Optional(source)
     }
   }
 
-  @Override public boolean isUnloaded() {
-    return disposable.isDisposed();
-  }
 }
+

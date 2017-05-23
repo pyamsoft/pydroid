@@ -55,7 +55,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
-  override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String) {
+  override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     @XmlRes val xmlResId = preferenceXmlResId
     if (xmlResId != 0) {
       addPreferencesFromResource(xmlResId)

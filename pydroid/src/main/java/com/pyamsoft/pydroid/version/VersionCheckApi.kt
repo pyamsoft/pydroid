@@ -14,23 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.version;
+package com.pyamsoft.pydroid.version
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import com.pyamsoft.pydroid.helper.Checker;
-import retrofit2.Retrofit;
+import android.support.annotation.CheckResult
+import android.support.annotation.RestrictTo
+import retrofit2.Retrofit
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckApi {
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class VersionCheckApi(private val client: Retrofit) {
 
-  @NonNull private final Retrofit client;
-
-  VersionCheckApi(@NonNull Retrofit client) {
-    this.client = Checker.checkNonNull(client);
-  }
-
-  @NonNull @CheckResult <T> T create(final Class<T> serviceClass) {
-    return client.create(Checker.checkNonNull(serviceClass));
+  @CheckResult fun <T> create(serviceClass: Class<T>): T {
+    return client.create(serviceClass)
   }
 }

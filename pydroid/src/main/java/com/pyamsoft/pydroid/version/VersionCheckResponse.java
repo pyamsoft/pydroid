@@ -23,13 +23,12 @@ import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
-import com.pyamsoft.pydroid.helper.Checker;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) @AutoValue abstract class VersionCheckResponse {
 
   @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static TypeAdapter<VersionCheckResponse> typeAdapter(@NonNull Gson gson) {
-    return new AutoValue_VersionCheckResponse.GsonTypeAdapter(Checker.checkNonNull(gson));
+    return new AutoValue_VersionCheckResponse.GsonTypeAdapter(gson);
   }
 
   @CheckResult @SerializedName("CURRENT_VERSION") abstract int currentVersion();

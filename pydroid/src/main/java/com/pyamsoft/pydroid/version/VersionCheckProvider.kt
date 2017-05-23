@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.version;
+package com.pyamsoft.pydroid.version
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+import android.support.annotation.CheckResult
 
-public interface VersionCheckProvider {
+interface VersionCheckProvider {
 
-  @CheckResult @NonNull String provideApplicationName();
+  @CheckResult fun provideApplicationName(): String
 
-  @CheckResult int getCurrentApplicationVersion();
+  @get:CheckResult val currentApplicationVersion: Int
 }

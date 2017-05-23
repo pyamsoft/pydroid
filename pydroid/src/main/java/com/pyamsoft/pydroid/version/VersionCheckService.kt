@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.version;
+package com.pyamsoft.pydroid.version
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import io.reactivex.Single;
-import retrofit2.http.GET;
-import retrofit2.http.Url;
+import android.support.annotation.CheckResult
+import android.support.annotation.RestrictTo
+import io.reactivex.Single
+import retrofit2.http.GET
+import retrofit2.http.Url
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) interface VersionCheckService {
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal interface VersionCheckService {
 
-  @CheckResult @NonNull @GET Single<VersionCheckResponse> checkVersion(@Url String packageName);
+  @CheckResult @GET fun checkVersion(@Url packageName: String): Single<VersionCheckResponse>
 }

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid;
+package com.pyamsoft.pydroid
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.RestrictTo;
+import android.support.annotation.CheckResult
+import android.support.annotation.RestrictTo
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) public interface RatingPreferences {
+@RestrictTo(RestrictTo.Scope.LIBRARY) interface RatingPreferences {
 
-  @CheckResult int getRatingAcceptedVersion();
-
-  void setRatingAcceptedVersion(int version);
+  @CheckResult fun getRatingAcceptedVersion(): Int
+  fun setRatingAcceptedVersion(version: Int)
 }

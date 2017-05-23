@@ -14,22 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.helper;
+package com.pyamsoft.pydroid.function
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+@Deprecated("") interface ActionSingle<I> {
 
-@Deprecated public final class Checker {
-
-  private Checker() {
-    throw new RuntimeException("Np instances");
-  }
-
-  @NonNull public static <T> T checkNonNull(@Nullable T source) {
-    if (source == null) {
-      throw new IllegalStateException("Object cannot be NULL");
-    }
-
-    return source;
-  }
+  fun call(item: I)
 }

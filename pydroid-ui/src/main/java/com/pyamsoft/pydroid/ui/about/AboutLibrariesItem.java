@@ -34,7 +34,7 @@ class AboutLibrariesItem extends
     GenericAbstractItem<AboutLibrariesModel, AboutLibrariesItem, AboutLibrariesItem.ViewHolder> {
 
   AboutLibrariesItem(@NonNull AboutLibrariesModel item) {
-    super(Checker.checkNonNull(item));
+    super(Checker.Companion.checkNonNull(item));
   }
 
   @CheckResult @Override public int getType() {

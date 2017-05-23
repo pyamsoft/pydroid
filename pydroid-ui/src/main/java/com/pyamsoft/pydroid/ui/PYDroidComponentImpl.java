@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final RatingComponent ratingComponent;
 
   private PYDroidComponentImpl(@NonNull PYDroidModule module) {
-    module = Checker.checkNonNull(module);
+    module = Checker.Companion.checkNonNull(module);
     VersionCheckModule versionCheckModule = new VersionCheckModule(module);
     AboutLibrariesModule aboutLibrariesModule = new AboutLibrariesModule(module);
     versionCheckComponent = new VersionCheckComponent(versionCheckModule);

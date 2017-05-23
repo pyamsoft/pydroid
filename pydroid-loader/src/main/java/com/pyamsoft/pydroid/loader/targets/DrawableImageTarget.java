@@ -30,7 +30,7 @@ public class DrawableImageTarget implements Target<Drawable> {
   @NonNull private final ImageView imageView;
 
   private DrawableImageTarget(@NonNull ImageView imageView) {
-    this.imageView = Checker.checkNonNull(imageView);
+    this.imageView = Checker.Companion.checkNonNull(imageView);
   }
 
   @CheckResult @NonNull public static Target<Drawable> forImageView(@NonNull ImageView imageView) {

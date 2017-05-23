@@ -47,8 +47,8 @@ public class AboutLibrariesFragment extends ActionBarFragment {
 
   public static void show(@NonNull FragmentActivity activity, @IdRes int containerResId,
       @NonNull BackStackState backStackState) {
-    activity = Checker.checkNonNull(activity);
-    backStackState = Checker.checkNonNull(backStackState);
+    activity = Checker.Companion.checkNonNull(activity);
+    backStackState = Checker.Companion.checkNonNull(backStackState);
 
     final FragmentManager fragmentManager = activity.getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(TAG) == null) {

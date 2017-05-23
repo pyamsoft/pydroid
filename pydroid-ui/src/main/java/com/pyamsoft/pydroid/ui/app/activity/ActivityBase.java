@@ -81,7 +81,7 @@ public abstract class ActivityBase extends AppCompatActivity {
      * Should be called from {@link Activity#onCreate(Bundle)} )}.
      */
     static void fixFocusedViewLeak(@NonNull Application application) {
-      application = Checker.checkNonNull(application);
+      application = Checker.Companion.checkNonNull(application);
 
       // LeakCanary reports this bug within IC_MR1 and M
       final int sdk = Build.VERSION.SDK_INT;
@@ -192,10 +192,10 @@ public abstract class ActivityBase extends AppCompatActivity {
 
       ReferenceCleaner(@NonNull InputMethodManager inputMethodManager, @NonNull Field lockField,
           @NonNull Field servedViewField, @NonNull Method finishInputLockedMethod) {
-        this.inputMethodManager = Checker.checkNonNull(inputMethodManager);
-        this.lockField = Checker.checkNonNull(lockField);
-        this.servedViewField = Checker.checkNonNull(servedViewField);
-        this.finishInputLockedMethod = Checker.checkNonNull(finishInputLockedMethod);
+        this.inputMethodManager = Checker.Companion.checkNonNull(inputMethodManager);
+        this.lockField = Checker.Companion.checkNonNull(lockField);
+        this.servedViewField = Checker.Companion.checkNonNull(servedViewField);
+        this.finishInputLockedMethod = Checker.Companion.checkNonNull(finishInputLockedMethod);
       }
 
       @Override public void onGlobalFocusChanged(@Nullable View oldFocus, @Nullable View newFocus) {
@@ -213,7 +213,7 @@ public abstract class ActivityBase extends AppCompatActivity {
       }
 
       @Override public void onViewDetachedFromWindow(@NonNull View v) {
-        Checker.checkNonNull(v).removeOnAttachStateChangeListener(this);
+        Checker.Companion.checkNonNull(v).removeOnAttachStateChangeListener(this);
         Looper.myQueue().removeIdleHandler(this);
         Looper.myQueue().addIdleHandler(this);
       }

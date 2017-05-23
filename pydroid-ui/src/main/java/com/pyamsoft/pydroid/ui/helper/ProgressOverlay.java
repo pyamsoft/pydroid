@@ -122,8 +122,8 @@ import timber.log.Timber;
 
     @CheckResult @NonNull private ProgressOverlay inflateOverlay(@NonNull Activity activity,
         @NonNull ViewGroup rootView) {
-      activity = Checker.checkNonNull(activity);
-      rootView = Checker.checkNonNull(rootView);
+      activity = Checker.Companion.checkNonNull(activity);
+      rootView = Checker.Companion.checkNonNull(rootView);
 
       final LayoutInflater inflater;
       if (theme == 0) {
@@ -174,7 +174,7 @@ import timber.log.Timber;
     }
 
     @CheckResult @NonNull public ProgressOverlay build(@NonNull Activity activity) {
-      activity = Checker.checkNonNull(activity);
+      activity = Checker.Companion.checkNonNull(activity);
       final View rootView;
       if (rootViewGroup == null) {
         // Use the default Android content view as Overlay root
@@ -200,8 +200,8 @@ import timber.log.Timber;
     private boolean disposed;
 
     Impl(@NonNull ViewProgressOverlayBinding binding, @NonNull ViewGroup root) {
-      this.binding = Checker.checkNonNull(binding);
-      this.root = Checker.checkNonNull(root);
+      this.binding = Checker.Companion.checkNonNull(binding);
+      this.root = Checker.Companion.checkNonNull(root);
       disposed = false;
 
       root.addView(binding.getRoot());

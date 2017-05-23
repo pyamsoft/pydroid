@@ -28,8 +28,8 @@ final class UiLicenses {
   }
 
   static void addLicenses() {
-    Licenses.create(Names.LEAK_CANARY, HomepageUrls.LEAK_CANARY, LicenseLocations.LEAK_CANARY);
-    Licenses.create(Names.FAST_ADAPTER, HomepageUrls.FAST_ADAPTER, LicenseLocations.FAST_ADAPTER);
+    Licenses.Companion.create(Names.LEAK_CANARY, HomepageUrls.LEAK_CANARY, LicenseLocations.LEAK_CANARY);
+    Licenses.Companion.create(Names.FAST_ADAPTER, HomepageUrls.FAST_ADAPTER, LicenseLocations.FAST_ADAPTER);
   }
 
   private static final class Names {
@@ -54,8 +54,8 @@ final class UiLicenses {
 
   private static final class LicenseLocations {
 
-    @NonNull static final String LEAK_CANARY = _BASE + "leakcanary";
-    @NonNull static final String FAST_ADAPTER = _BASE + "fastadapter";
+    @NonNull static final String LEAK_CANARY = Companion.get_BASE() + "leakcanary";
+    @NonNull static final String FAST_ADAPTER = Companion.get_BASE() + "fastadapter";
 
     private LicenseLocations() {
       throw new RuntimeException("No instances");

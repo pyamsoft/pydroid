@@ -62,7 +62,7 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
       View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
     super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
         dyUnconsumed);
-    child = Checker.checkNonNull(child);
+    child = Checker.Companion.checkNonNull(child);
 
     if (dyConsumed > distanceNeeded && child.isShown()) {
       if (!animating) {
@@ -70,7 +70,7 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
         Timber.w("Hide FAB");
         child.hide(new FloatingActionButton.OnVisibilityChangedListener() {
           @Override public void onHidden(FloatingActionButton fab) {
-            fab = Checker.checkNonNull(fab);
+            fab = Checker.Companion.checkNonNull(fab);
             super.onHidden(fab);
             onHiddenHook();
 
@@ -88,7 +88,7 @@ public class HideScrollFABBehavior extends FloatingActionButton.Behavior {
         Timber.w("Show FAB");
         child.show(new FloatingActionButton.OnVisibilityChangedListener() {
           @Override public void onShown(FloatingActionButton fab) {
-            fab = Checker.checkNonNull(fab);
+            fab = Checker.Companion.checkNonNull(fab);
             super.onShown(fab);
             onShownHook();
             fab.setVisibility(View.VISIBLE);

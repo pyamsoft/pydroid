@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.function;
+package com.pyamsoft.pydroid.function
 
-@Deprecated public interface ActionSingle<I> {
+@Deprecated("") interface ActionNone {
 
-  void call(I item);
+  fun call()
 }

@@ -58,13 +58,13 @@ public class RatingDialog extends DialogFragmentBase {
 
   public static void showRatingDialog(@NonNull FragmentActivity activity,
       @NonNull ChangeLogProvider provider, boolean force) {
-    activity = Checker.checkNonNull(activity);
-    provider = Checker.checkNonNull(provider);
+    activity = Checker.Companion.checkNonNull(activity);
+    provider = Checker.Companion.checkNonNull(provider);
     Launcher.INSTANCE.loadRatingDialog(activity, provider, force);
   }
 
   @CheckResult @NonNull static RatingDialog newInstance(@NonNull ChangeLogProvider provider) {
-    provider = Checker.checkNonNull(provider);
+    provider = Checker.Companion.checkNonNull(provider);
 
     final RatingDialog fragment = new RatingDialog();
     final Bundle args = new Bundle();

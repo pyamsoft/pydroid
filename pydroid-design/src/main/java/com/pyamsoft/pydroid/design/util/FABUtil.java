@@ -31,7 +31,7 @@ public final class FABUtil {
 
   public static void setupFABBehavior(@NonNull FloatingActionButton fab,
       final @Nullable FloatingActionButton.Behavior behavior) {
-    fab = Checker.checkNonNull(fab);
+    fab = Checker.Companion.checkNonNull(fab);
 
     final ViewGroup.LayoutParams params = fab.getLayoutParams();
     if (params instanceof CoordinatorLayout.LayoutParams) {

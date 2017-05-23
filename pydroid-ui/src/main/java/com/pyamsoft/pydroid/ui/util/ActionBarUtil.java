@@ -35,11 +35,11 @@ public class ActionBarUtil {
   }
 
   @CheckResult @NonNull public static ActionBar getActionBar(@NonNull Activity activity) {
-    activity = Checker.checkNonNull(activity);
+    activity = Checker.Companion.checkNonNull(activity);
 
     if (activity instanceof AppCompatActivity) {
       AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
-      return Checker.checkNonNull(appCompatActivity.getSupportActionBar());
+      return Checker.Companion.checkNonNull(appCompatActivity.getSupportActionBar());
     } else {
       throw new ClassCastException("Activity not instance of AppCompatActivity");
     }
@@ -51,7 +51,7 @@ public class ActionBarUtil {
 
   public static void setActionBarUpEnabled(@NonNull Activity activity, boolean up,
       @DrawableRes int icon) {
-    activity = Checker.checkNonNull(activity);
+    activity = Checker.Companion.checkNonNull(activity);
 
     final Drawable d;
     if (icon != 0) {
@@ -65,7 +65,7 @@ public class ActionBarUtil {
 
   public static void setActionBarUpEnabled(@NonNull Activity activity, boolean up,
       @Nullable Drawable icon) {
-    activity = Checker.checkNonNull(activity);
+    activity = Checker.Companion.checkNonNull(activity);
 
     ActionBar bar = getActionBar(activity);
     bar.setHomeButtonEnabled(up);

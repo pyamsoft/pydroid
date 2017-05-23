@@ -14,9 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.function;
+package com.pyamsoft.pydroid.helper
 
-@Deprecated public interface ActionNone {
+@Deprecated("") class Checker private constructor() {
 
-  void call();
+  init {
+    throw RuntimeException("No instances")
+  }
+
+  companion object {
+
+    @JvmStatic fun <T> checkNonNull(source: T?): T {
+      if (source == null) {
+        throw IllegalStateException("Object cannot be NULL")
+      }
+
+      return source
+    }
+  }
 }

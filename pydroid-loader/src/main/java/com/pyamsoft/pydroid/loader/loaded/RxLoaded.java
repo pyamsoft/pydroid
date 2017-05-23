@@ -25,7 +25,7 @@ public class RxLoaded implements Loaded {
   @NonNull private final Disposable disposable;
 
   public RxLoaded(@NonNull Disposable disposable) {
-    disposable = Checker.checkNonNull(disposable);
+    disposable = Checker.Companion.checkNonNull(disposable);
     this.disposable = disposable;
   }
 

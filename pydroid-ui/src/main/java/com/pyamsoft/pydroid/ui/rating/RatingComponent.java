@@ -26,10 +26,10 @@ import com.pyamsoft.pydroid.rating.RatingModule;
   @NonNull private final RatingModule ratingModule;
 
   public RatingComponent(@NonNull RatingModule ratingModule) {
-    this.ratingModule = Checker.checkNonNull(ratingModule);
+    this.ratingModule = Checker.Companion.checkNonNull(ratingModule);
   }
 
   void inject(@NonNull RatingDialog.Launcher launcher) {
-    Checker.checkNonNull(launcher).presenter = ratingModule.getPresenter();
+    Checker.Companion.checkNonNull(launcher).presenter = ratingModule.getPresenter();
   }
 }

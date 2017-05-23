@@ -35,7 +35,7 @@ public final class PYDroid {
 
   @RestrictTo(RestrictTo.Scope.LIBRARY)
   @SuppressWarnings("WeakerAccess") PYDroid(@NonNull PYDroidModule module) {
-    module = Checker.checkNonNull(module);
+    module = Checker.Companion.checkNonNull(module);
     component = PYDroidComponentImpl.withModule(module);
     debug = module.isDebug();
 
@@ -58,7 +58,7 @@ public final class PYDroid {
         }
       }
     }
-    return Checker.checkNonNull(instance);
+    return Checker.Companion.checkNonNull(instance);
   }
 
   @RestrictTo(RestrictTo.Scope.LIBRARY)
@@ -96,7 +96,7 @@ public final class PYDroid {
   @RestrictTo(RestrictTo.Scope.LIBRARY)
   @CheckResult @NonNull
   public PYDroidComponent provideComponent() {
-    return Checker.checkNonNull(component);
+    return Checker.Companion.checkNonNull(component);
   }
 
   /**

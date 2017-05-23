@@ -39,7 +39,7 @@ public final class Linker extends Presenter {
   @NonNull private final Context appContext;
 
   private Linker(@NonNull Context context) {
-    this.appContext = Checker.checkNonNull(context).getApplicationContext();
+    this.appContext = Checker.Companion.checkNonNull(context).getApplicationContext();
   }
 
   @CheckResult @NonNull public static Linker with(@NonNull Context context) {
@@ -51,7 +51,7 @@ public final class Linker extends Presenter {
       }
     }
 
-    return Checker.checkNonNull(instance);
+    return Checker.Companion.checkNonNull(instance);
   }
 
   public void clickAppPage(@NonNull String link) {

@@ -26,11 +26,11 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final VersionCheckModule versionCheckModule;
 
   public AppComponent(@NonNull VersionCheckModule versionCheckModule) {
-    this.versionCheckModule = Checker.checkNonNull(versionCheckModule);
+    this.versionCheckModule = Checker.Companion.checkNonNull(versionCheckModule);
   }
 
   void inject(@NonNull ActionBarSettingsPreferenceFragment fragment) {
-    fragment = Checker.checkNonNull(fragment);
+    fragment = Checker.Companion.checkNonNull(fragment);
     fragment.presenter = versionCheckModule.getPresenter();
   }
 }

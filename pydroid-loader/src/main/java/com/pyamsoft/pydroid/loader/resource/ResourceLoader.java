@@ -58,19 +58,19 @@ public abstract class ResourceLoader extends GenericLoader<ResourceLoader, Drawa
 
   @NonNull @Override
   public ResourceLoader setStartAction(@NonNull ActionSingle<Target<Drawable>> startAction) {
-    this.startAction = Checker.checkNonNull(startAction);
+    this.startAction = Checker.Companion.checkNonNull(startAction);
     return this;
   }
 
   @NonNull @Override
   public ResourceLoader setErrorAction(@NonNull ActionSingle<Target<Drawable>> errorAction) {
-    this.errorAction = Checker.checkNonNull(errorAction);
+    this.errorAction = Checker.Companion.checkNonNull(errorAction);
     return this;
   }
 
   @NonNull @Override
   public ResourceLoader setCompleteAction(@NonNull ActionSingle<Target<Drawable>> completeAction) {
-    this.completeAction = Checker.checkNonNull(completeAction);
+    this.completeAction = Checker.Companion.checkNonNull(completeAction);
     return this;
   }
 
@@ -83,7 +83,7 @@ public abstract class ResourceLoader extends GenericLoader<ResourceLoader, Drawa
   }
 
   @CheckResult @NonNull final Drawable loadResource(@NonNull Context context) {
-    context = Checker.checkNonNull(context);
+    context = Checker.Companion.checkNonNull(context);
     Drawable loaded = AppCompatResources.getDrawable(context, resource);
     if (loaded == null) {
       throw new NullPointerException("Could not load drawable for resource: " + resource);

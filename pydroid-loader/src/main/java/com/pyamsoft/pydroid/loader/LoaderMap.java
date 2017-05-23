@@ -37,8 +37,8 @@ public class LoaderMap {
    * If an old element exists, its task is cancelled first before adding the new one
    */
   public final void put(@NonNull String tag, @NonNull Loaded subscription) {
-    tag = Checker.checkNonNull(tag);
-    subscription = Checker.checkNonNull(subscription);
+    tag = Checker.Companion.checkNonNull(tag);
+    subscription = Checker.Companion.checkNonNull(subscription);
 
     if (map.containsKey(tag)) {
       map.put(tag, LoaderHelper.unload(map.get(tag)));
@@ -55,7 +55,7 @@ public class LoaderMap {
    */
   public final void clear() {
     for (final Map.Entry<String, Loaded> entry : map.entrySet()) {
-      Loaded value = Checker.checkNonNull(entry.getValue());
+      Loaded value = Checker.Companion.checkNonNull(entry.getValue());
       entry.setValue(LoaderHelper.unload(value));
     }
 

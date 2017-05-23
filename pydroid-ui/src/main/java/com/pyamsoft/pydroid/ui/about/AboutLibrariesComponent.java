@@ -26,10 +26,10 @@ import com.pyamsoft.pydroid.helper.Checker;
   @NonNull private final AboutLibrariesModule aboutLibrariesModule;
 
   public AboutLibrariesComponent(@NonNull AboutLibrariesModule aboutLibrariesModule) {
-    this.aboutLibrariesModule = Checker.checkNonNull(aboutLibrariesModule);
+    this.aboutLibrariesModule = Checker.Companion.checkNonNull(aboutLibrariesModule);
   }
 
   void inject(@NonNull AboutLibrariesFragment fragment) {
-    Checker.checkNonNull(fragment).presenter = aboutLibrariesModule.getPresenter();
+    Checker.Companion.checkNonNull(fragment).presenter = aboutLibrariesModule.getPresenter();
   }
 }

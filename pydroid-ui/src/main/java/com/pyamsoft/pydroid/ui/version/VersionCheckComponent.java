@@ -26,10 +26,10 @@ import com.pyamsoft.pydroid.version.VersionCheckModule;
   @NonNull private final VersionCheckModule versionCheckModule;
 
   public VersionCheckComponent(@NonNull VersionCheckModule versionCheckModule) {
-    this.versionCheckModule = Checker.checkNonNull(versionCheckModule);
+    this.versionCheckModule = Checker.Companion.checkNonNull(versionCheckModule);
   }
 
   void inject(@NonNull VersionCheckActivity activity) {
-    Checker.checkNonNull(activity).presenter = versionCheckModule.getPresenter();
+    Checker.Companion.checkNonNull(activity).presenter = versionCheckModule.getPresenter();
   }
 }

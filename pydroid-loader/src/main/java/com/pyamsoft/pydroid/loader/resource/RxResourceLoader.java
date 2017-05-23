@@ -43,7 +43,7 @@ public class RxResourceLoader extends ResourceLoader {
 
   @NonNull @Override
   protected Loaded load(@NonNull Target<Drawable> target, @DrawableRes int resource) {
-    final Target<Drawable> finalTarget = Checker.checkNonNull(target);
+    final Target<Drawable> finalTarget = Checker.Companion.checkNonNull(target);
     return new RxLoaded(Single.fromCallable(() -> loadResource(appContext))
         .subscribeOn(subScheduler)
         .observeOn(obsScheduler)

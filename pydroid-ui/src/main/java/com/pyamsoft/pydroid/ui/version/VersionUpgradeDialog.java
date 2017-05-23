@@ -41,7 +41,7 @@ import java.util.Locale;
   @CheckResult @NonNull
   public static VersionUpgradeDialog newInstance(@NonNull String applicationName,
       int currentVersion, int latestVersion) {
-    applicationName = Checker.checkNonNull(applicationName);
+    applicationName = Checker.Companion.checkNonNull(applicationName);
 
     final Bundle args = new Bundle();
     final VersionUpgradeDialog fragment = new VersionUpgradeDialog();

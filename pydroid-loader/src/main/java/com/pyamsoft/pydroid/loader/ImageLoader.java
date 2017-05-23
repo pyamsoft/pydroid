@@ -29,7 +29,7 @@ public final class ImageLoader {
   @CheckResult @NonNull
   public static <T extends GenericLoader<? extends GenericLoader<?, ?>, ?>> T fromLoader(
       @NonNull T loader) {
-    return Checker.checkNonNull(loader);
+    return Checker.Companion.checkNonNull(loader);
   }
 
   @CheckResult @NonNull

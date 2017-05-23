@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.function;
+package com.pyamsoft.pydroid.function
 
-import android.support.annotation.CheckResult;
+import android.support.annotation.CheckResult
 
-@Deprecated public interface FuncSingle<T, R> {
+@Deprecated("") interface FuncNone<T> {
 
-  @CheckResult T call(R item);
+  @CheckResult fun call(): T
 }

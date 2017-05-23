@@ -31,7 +31,7 @@ public class VersionCheckPresenter extends SchedulerPresenter {
   public VersionCheckPresenter(@NonNull VersionCheckInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
-    this.interactor = Checker.checkNonNull(interactor);
+    this.interactor = Checker.Companion.checkNonNull(interactor);
   }
 
   public void forceCheckForUpdates(@NonNull String packageName, int currentVersionCode,

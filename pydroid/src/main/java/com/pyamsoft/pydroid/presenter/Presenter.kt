@@ -37,14 +37,14 @@ abstract class Presenter protected constructor() {
   /**
    * Override per implementation
    */
-  protected fun onStop() {
+  protected open fun onStop() {
 
   }
 
   /**
    * Override per implementation
    */
-  protected fun onDestroy() {
+  protected open fun onDestroy() {
 
   }
 

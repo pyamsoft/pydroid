@@ -138,11 +138,11 @@ class RatingDialog : DialogFragmentBase() {
 
   interface ChangeLogProvider {
 
+    @CheckResult fun getPackageName(): String
+
     @get:CheckResult val changeLogText: Spannable
 
     @get:DrawableRes @get:CheckResult val applicationIcon: Int
-
-    @get:CheckResult val packageName: String
 
     @get:CheckResult val currentApplicationVersion: Int
   }
@@ -211,7 +211,7 @@ class RatingDialog : DialogFragmentBase() {
     @JvmStatic @CheckResult internal fun newInstance(provider: ChangeLogProvider): RatingDialog {
       val fragment = RatingDialog()
       val args = Bundle()
-      args.putString(RATE_LINK, provider.packageName)
+      args.putString(RATE_LINK, provider.getPackageName())
       args.putCharSequence(CHANGE_LOG_TEXT, provider.changeLogText)
       args.putInt(VERSION_CODE, provider.currentApplicationVersion)
       args.putInt(CHANGE_LOG_ICON, provider.applicationIcon)

@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.version;
+package com.pyamsoft.pydroid.version
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import com.google.gson.TypeAdapterFactory;
-import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory;
+import android.support.annotation.CheckResult
+import android.support.annotation.RestrictTo
+import com.google.gson.TypeAdapterFactory
+import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) @GsonTypeAdapterFactory
-abstract class AutoValueTypeAdapterFactory implements TypeAdapterFactory {
+@RestrictTo(
+    RestrictTo.Scope.LIBRARY) @GsonTypeAdapterFactory abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
 
-  @CheckResult @NonNull public static TypeAdapterFactory create() {
-    return new AutoValueGson_AutoValueTypeAdapterFactory();
+  companion object {
+
+    @JvmStatic @CheckResult fun create(): TypeAdapterFactory {
+      return AutoValueGson_AutoValueTypeAdapterFactory()
+    }
   }
 }

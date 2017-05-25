@@ -55,6 +55,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
+  @CallSuper
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     @XmlRes val xmlResId = preferenceXmlResId
     if (xmlResId != 0) {
@@ -122,14 +123,14 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   /**
    * Logs when the Clear All option is clicked, override to use unique implementation
    */
-  protected fun onClearAllClicked() {
+  protected open fun onClearAllClicked() {
     Timber.d("Clear all preferences clicked")
   }
 
   /**
    * Shows a page for Open Source licenses, override or extend to use unique implementation
    */
-  protected fun onLicenseItemClicked() {
+  @CallSuper protected open fun onLicenseItemClicked() {
     Timber.d("Show about licenses fragment")
     AboutLibrariesFragment.show(activity, rootViewContainer, isLastOnBackStack)
   }

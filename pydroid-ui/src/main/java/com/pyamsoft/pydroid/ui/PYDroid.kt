@@ -20,7 +20,6 @@ import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
-import android.support.annotation.VisibleForTesting
 import com.pyamsoft.pydroid.PYDroidModule
 import timber.log.Timber
 

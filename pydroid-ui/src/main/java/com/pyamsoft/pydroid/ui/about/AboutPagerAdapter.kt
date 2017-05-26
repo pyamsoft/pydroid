@@ -20,8 +20,8 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 
-internal class AboutPagerAdapter internal constructor(
-    fm: Fragment) : FragmentStatePagerAdapter(fm.childFragmentManager) {
+internal class AboutPagerAdapter internal constructor(fm: Fragment) : FragmentStatePagerAdapter(
+    fm.childFragmentManager) {
 
   private val models: MutableList<AboutLibrariesModel> = ArrayList()
 

@@ -29,8 +29,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckModule(
-    pyDroidModule: PYDroidModule) {
+@RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckModule(pyDroidModule: PYDroidModule) {
   private val interactor: VersionCheckInteractor
   private val obsScheduler: Scheduler = pyDroidModule.provideObsScheduler()
   private val subScheduler: Scheduler = pyDroidModule.provideSubScheduler()

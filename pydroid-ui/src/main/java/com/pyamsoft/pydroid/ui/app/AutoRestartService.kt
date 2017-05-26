@@ -24,8 +24,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.SystemClock
 import android.support.annotation.CheckResult
-import java.util.concurrent.TimeUnit
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 /**
  * Android API 19 has a bug where a service, even a foreground one, will stop when swiped away or

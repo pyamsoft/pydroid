@@ -73,6 +73,10 @@ dependencies {
   compile "com.android.support:support-vector-drawable:$supportLib"
   compile "com.android.support:cardview-v7:$supportLib"
 
+  // Material View Pager indicator
+
+  compile "com.github.ronaldsmartin:Material-ViewPagerIndicator:$viewPagerIndicator"
+
   // FastAdapter
   compile "com.mikepenz:fastadapter-commons:$fastAdapterCommons@aar"
   compile("com.mikepenz:fastadapter:$fastAdapter@aar") {

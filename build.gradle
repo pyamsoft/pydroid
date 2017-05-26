@@ -47,6 +47,7 @@ buildscript {
     rxandroid = "2.0.1"
     fastAdapter = "2.5.2"
     fastAdapterCommons = "2.5.2"
+    viewPagerIndicator = "1.0.3"
   }
 
   dependencies {
@@ -78,6 +79,9 @@ allprojects {
     maven {
       url "https://maven.google.com"
     }
+    maven {
+      url "https://jitpack.io"
+    }
   }
 
   gradle.projectsEvaluated {
@@ -86,22 +90,10 @@ allprojects {
              << '-Xep:MissingOverride:OFF' << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
   }
-
-  tasks.whenTaskAdded { task ->
-    if (task.name.startsWith("lint")) {
-      task.enabled = false
-    }
-  }
 }
 
 task clean(type: Delete) {
   delete rootProject.buildDir
-}
-
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
 }
 
 // JitPack stuff

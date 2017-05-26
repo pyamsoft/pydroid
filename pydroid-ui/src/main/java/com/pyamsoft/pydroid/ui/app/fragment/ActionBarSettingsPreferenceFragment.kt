@@ -46,7 +46,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.get().provideComponent().plusAppComponent().inject(this)
+    PYDroid.instance.provideComponent().plusAppComponent().inject(this)
   }
 
   @SuppressLint("ShowToast") @CallSuper override fun onCreateView(inflater: LayoutInflater,
@@ -55,8 +55,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
-  @CallSuper
-  override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+  @CallSuper override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     @XmlRes val xmlResId = preferenceXmlResId
     if (xmlResId != 0) {
       addPreferencesFromResource(xmlResId)

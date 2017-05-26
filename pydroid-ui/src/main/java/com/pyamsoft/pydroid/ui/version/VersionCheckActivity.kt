@@ -32,7 +32,7 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
 
   private // Always enabled for release builds
   val isVersionCheckEnabled: Boolean
-    @CheckResult get() = !PYDroid.get().isDebugMode || shouldCheckVersion()
+    @CheckResult get() = !PYDroid.instance.isDebugMode || shouldCheckVersion()
 
   @CheckResult protected fun shouldCheckVersion(): Boolean {
     return true
@@ -43,7 +43,7 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
     versionChecked = savedInstanceState != null && savedInstanceState.getBoolean(VERSION_CHECKED,
         false)
 
-    PYDroid.get().provideComponent().plusVersionCheckComponent().inject(this)
+    PYDroid.instance.provideComponent().plusVersionCheckComponent().inject(this)
   }
 
   @CallSuper override fun onStart() {

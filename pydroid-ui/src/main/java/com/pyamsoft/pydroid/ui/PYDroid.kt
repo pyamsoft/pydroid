@@ -20,7 +20,6 @@ import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
-import android.support.annotation.RestrictTo.Scope.LIBRARY
 import android.support.annotation.VisibleForTesting
 import com.pyamsoft.pydroid.PYDroidModule
 import timber.log.Timber
@@ -31,8 +30,6 @@ class PYDroid internal constructor(module: PYDroidModule) {
       RestrictTo.Scope.LIBRARY) @get:CheckResult val isDebugMode: Boolean = module.isDebug
 
   init {
-
-    UiLicenses.addLicenses()
     if (module.isDebug) {
       setStrictMode()
       Timber.plant(Timber.DebugTree())
@@ -56,39 +53,33 @@ class PYDroid internal constructor(module: PYDroidModule) {
 
   companion object {
 
-    @Volatile private var instance: PYDroid? = null
-
-    @VisibleForTesting @RestrictTo(LIBRARY) internal fun setTestInstance(instance: PYDroid) {
-      synchronized(PYDroid::class.java) {
-        this.instance = instance;
-      }
-    }
-
-    @RestrictTo(LIBRARY) fun get(): PYDroid {
-      if (instance == null) {
-        synchronized(PYDroid::class.java) {
-          if (instance == null) {
-            throw NullPointerException("PYDroid instance must be initialized first")
+    @Volatile private var __instance: PYDroid? = null
+    internal val instance: PYDroid
+      @get:CheckResult get() {
+        if (__instance == null) {
+          synchronized(PYDroid::class.java) {
+            if (__instance == null) {
+              throw NullPointerException("PYDroid instance must be initialized first")
+            }
           }
         }
-      }
 
-      return instance!!
-    }
+        return __instance!!
+      }
 
     /**
      * Initialize the library
      */
     @JvmStatic fun initialize(context: Context, debug: Boolean) {
-      if (instance == null) {
+      if (__instance == null) {
         synchronized(PYDroid::class.java) {
-          if (instance == null) {
-            instance = PYDroid(PYDroidModule(context.applicationContext, debug))
+          if (__instance == null) {
+            __instance = PYDroid(PYDroidModule(context.applicationContext, debug))
           }
         }
       }
 
-      if (instance == null) {
+      if (__instance == null) {
         throw RuntimeException("PYDroid initialization failed!")
       }
     }

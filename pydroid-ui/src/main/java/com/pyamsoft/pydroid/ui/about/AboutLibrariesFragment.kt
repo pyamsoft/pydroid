@@ -60,7 +60,7 @@ class AboutLibrariesFragment : ActionBarFragment() {
       else -> throw RuntimeException("Invalid back stack state: " + backStackStateName)
     }
 
-    PYDroid.get().provideComponent().plusAboutLibrariesComponent().inject(this)
+    PYDroid.instance.provideComponent().plusAboutLibrariesComponent().inject(this)
   }
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

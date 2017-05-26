@@ -14,21 +14,42 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     app:cardCornerRadius="4dp"
     app:cardElevation="2dp"
     app:cardMaxElevation="6dp"
     app:cardUseCompatPadding="true"
     >
 
-  <com.pyamsoft.pydroid.ui.widget.ExpanderView
-      android:id="@+id/about_expander"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
+      android:orientation="vertical"
+      android:padding="8dp"
+      >
+
+    <TextView
+        android:id="@+id/about_item_homepage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/blue500"
+        />
+
+    <WebView
+        android:id="@+id/about_item_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+  </LinearLayout>
 
 </android.support.v7.widget.CardView>

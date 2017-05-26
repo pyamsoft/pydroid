@@ -20,11 +20,14 @@ import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
 import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v4.view.ViewPager.OnPageChangeListener
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.LoadCallback
@@ -33,14 +36,17 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.LAST
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.NOT_LAST
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment
-import kotlinx.android.synthetic.main.fragment_about_libraries.about_loading
-import kotlinx.android.synthetic.main.fragment_about_libraries.recycler_about_libraries
+import kotlinx.android.synthetic.main.fragment_about_libraries.arrow_left
+import kotlinx.android.synthetic.main.fragment_about_libraries.arrow_right
+import kotlinx.android.synthetic.main.fragment_about_libraries.text_switcher
+import kotlinx.android.synthetic.main.fragment_about_libraries.view_pager
 import timber.log.Timber
+
 
 class AboutLibrariesFragment : ActionBarFragment() {
 
-  internal lateinit var fastItemAdapter: FastItemAdapter<AboutLibrariesItem>
   internal lateinit var presenter: AboutLibrariesPresenter
+  internal lateinit var pagerAdapter: AboutPagerAdapter
   private var lastOnBackStack: Boolean = false
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,46 +65,52 @@ class AboutLibrariesFragment : ActionBarFragment() {
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    fastItemAdapter = FastItemAdapter<AboutLibrariesItem>()
     return inflater?.inflate(R.layout.fragment_about_libraries, container, false)
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    fastItemAdapter.withSelectable(true)
+    pagerAdapter = AboutPagerAdapter(this)
+    view_pager.adapter = pagerAdapter
+    view_pager.offscreenPageLimit = 1
 
-    val manager = LinearLayoutManager(context)
-    manager.isItemPrefetchEnabled = true
-    manager.initialPrefetchItemCount = 3
-    recycler_about_libraries.layoutManager = manager
-    recycler_about_libraries.clipToPadding = false
-    recycler_about_libraries.setHasFixedSize(true)
-    recycler_about_libraries.adapter = fastItemAdapter
-  }
+    arrow_left.setOnClickListener { view_pager.arrowScroll(View.FOCUS_LEFT) }
+    arrow_right.setOnClickListener { view_pager.arrowScroll(View.FOCUS_RIGHT) }
 
-  override fun onStart() {
-    super.onStart()
+    text_switcher.setFactory {
+      val text = TextView(activity)
+      text.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+      text.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
+      text
+    }
+
+    view_pager.addOnPageChangeListener(object : OnPageChangeListener {
+      override fun onPageScrollStateChanged(state: Int) {
+      }
+
+      override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+      }
+
+      override fun onPageSelected(position: Int) {
+        text_switcher.setText(pagerAdapter.getPageTitle(position))
+      }
+
+    })
+
+    text_switcher.inAnimation = AnimationUtils.loadAnimation(activity, android.R.anim.slide_in_left)
+    text_switcher.outAnimation = AnimationUtils.loadAnimation(activity,
+        android.R.anim.slide_out_right)
+
     presenter.loadLicenses(object : LoadCallback {
       override fun onLicenseLoaded(model: AboutLibrariesModel) {
-        var alreadyHas = false
-        val items = fastItemAdapter.adapterItems
-        for (item in items) {
-          if (item.model === model) {
-            alreadyHas = true
-            break
-          }
-        }
+        Timber.d("Load license: %s", model)
+        pagerAdapter.add(model)
+      }
 
-        if (!alreadyHas) {
-          if (items.isEmpty()) {
-            Timber.d("Adding first Library item, hide loading spinner")
-            about_loading.visibility = View.GONE
-            recycler_about_libraries.visibility = View.VISIBLE
-          }
-
-          fastItemAdapter.add(AboutLibrariesItem(model))
-        }
-
+      override fun onAllLoaded() {
+        Timber.d("All licenses loaded")
+        pagerAdapter.notifyDataSetChanged()
+        text_switcher.setText(pagerAdapter.getPageTitle(view_pager.currentItem))
       }
     })
   }

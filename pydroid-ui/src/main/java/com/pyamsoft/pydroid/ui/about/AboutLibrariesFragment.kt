@@ -31,6 +31,8 @@ import android.widget.TextView
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.LoadCallback
+import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.LAST
@@ -48,6 +50,7 @@ class AboutLibrariesFragment : ActionBarFragment() {
   internal lateinit var presenter: AboutLibrariesPresenter
   internal lateinit var pagerAdapter: AboutPagerAdapter
   private var lastOnBackStack: Boolean = false
+  private val mapper = LoaderMap()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -74,7 +77,14 @@ class AboutLibrariesFragment : ActionBarFragment() {
     view_pager.adapter = pagerAdapter
     view_pager.offscreenPageLimit = 1
 
+    mapper.put("left",
+        ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(arrow_left))
+    arrow_left.rotation = 90F
     arrow_left.setOnClickListener { view_pager.arrowScroll(View.FOCUS_LEFT) }
+
+    mapper.put("right",
+        ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(arrow_right))
+    arrow_right.rotation = -90F
     arrow_right.setOnClickListener { view_pager.arrowScroll(View.FOCUS_RIGHT) }
 
     text_switcher.setFactory {
@@ -128,16 +138,17 @@ class AboutLibrariesFragment : ActionBarFragment() {
   override fun onResume() {
     super.onResume()
     setActionBarUpEnabled(true)
+    setActionBarTitle("Open Source Licenses")
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+    mapper.clear()
     if (lastOnBackStack) {
       Timber.d("About is last on backstack, set up false")
       setActionBarUpEnabled(false)
     }
   }
-
 
   enum class BackStackState {
     LAST, NOT_LAST

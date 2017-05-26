@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2017 Peter Kenji Yamanaka
   ~
@@ -16,14 +14,12 @@
   ~ limitations under the License.
   -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:shape="rectangle"
-    tools:keep="@drawable/shadow_up">
-
-  <gradient
-      android:angle="90"
-      android:endColor="#0000"
-      android:startColor="@color/shadow_scrim45"/>
-
-</shape>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="24dp"
+    android:viewportHeight="24.0"
+    android:viewportWidth="24.0"
+    android:width="24dp">
+  <path
+      android:fillColor="#9e9e9e"
+      android:pathData="M7,10l5,5 5,-5z"/>
+</vector>

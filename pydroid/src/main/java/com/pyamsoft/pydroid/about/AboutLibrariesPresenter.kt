@@ -26,8 +26,8 @@ class AboutLibrariesPresenter internal constructor(private val interactor: About
 
   fun loadLicenses(callback: LoadCallback) {
     disposeOnDestroy(interactor.loadLicenses().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ callback.onLicenseLoaded(it) },
-        { Timber.e(it, "onError loading licenses") }))
+        observeScheduler).doAfterTerminate { callback.onAllLoaded() }.subscribe(
+        { callback.onLicenseLoaded(it) }, { Timber.e(it, "onError loading licenses") }))
   }
 
   interface LoadCallback {

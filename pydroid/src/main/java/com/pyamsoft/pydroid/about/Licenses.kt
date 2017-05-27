@@ -42,9 +42,6 @@ class Licenses private constructor() {
     createItem(Names.RETROFIT, HomepageUrls.RETROFIT, LicenseLocations.RETROFIT)
     createItem(Names.ERROR_PRONE, HomepageUrls.ERROR_PRONE, LicenseLocations.ERROR_PRONE)
     createItem(Names.TIMBER, HomepageUrls.TIMBER, LicenseLocations.TIMBER)
-    createItem(Names.RETROLAMBDA, HomepageUrls.RETROLAMBDA, LicenseLocations.RETROLAMBDA)
-    createItem(Names.GRADLE_RETROLAMBDA, HomepageUrls.GRADLE_RETROLAMBDA,
-        LicenseLocations.GRADLE_RETROLAMBDA)
     createItem(Names.GRADLE_VERSIONS_PLUGIN, HomepageUrls.GRADLE_VERSIONS_PLUGIN,
         LicenseLocations.GRADLE_VERSIONS_PLUGIN)
     createItem(Names.DEXCOUNT_GRADLE_PLUGIN, HomepageUrls.DEXCOUNT_GRADLE_PLUGIN,
@@ -80,8 +77,6 @@ class Licenses private constructor() {
       internal val RETROFIT = "Retrofit"
       internal val ERROR_PRONE = "Error Prone"
       internal val TIMBER = "Timber"
-      internal val RETROLAMBDA = "Retrolambda"
-      internal val GRADLE_RETROLAMBDA = "Gradle Retrolambda"
       internal val DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin"
       internal val GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin"
     }
@@ -101,10 +96,8 @@ class Licenses private constructor() {
       internal val PYDROID = "https://pyamsoft.github.io/pydroid"
       internal val AUTO_VALUE = "https://github.com/google/auto"
       internal val RETROFIT = "https://square.github.io/retrofit/"
-      internal val ERROR_PRONE = "https://github.com/google/onError-prone"
+      internal val ERROR_PRONE = "https://github.com/google/error-prone"
       internal val TIMBER = "https://github.com/JakeWharton/timber"
-      internal val RETROLAMBDA = "https://github.com/orfjackal/retrolambda"
-      internal val GRADLE_RETROLAMBDA = "https://github.com/evant/gradle-retrolambda"
       internal val DEXCOUNT_GRADLE_PLUGIN = "https://github.com/KeepSafe/dexcount-gradle-plugin"
       internal val GRADLE_VERSIONS_PLUGIN = "https://github.com/ben-manes/gradle-versions-plugin"
     }
@@ -128,8 +121,6 @@ class Licenses private constructor() {
       internal val RETROFIT = _BASE + "retrofit"
       internal val ERROR_PRONE = _BASE + "errorprone"
       internal val TIMBER = _BASE + "timber"
-      internal val RETROLAMBDA = _BASE + "retrolambda"
-      internal val GRADLE_RETROLAMBDA = _BASE + "gradle-retrolambda"
       internal val DEXCOUNT_GRADLE_PLUGIN = _BASE + "dexcount-gradle-plugin"
       internal val GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin"
     }

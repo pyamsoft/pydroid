@@ -19,6 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     >
 
   <LinearLayout
@@ -31,21 +32,25 @@
         android:id="@+id/arrow_left"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         />
 
-    <TextSwitcher
-        android:id="@+id/text_switcher"
+    <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
+        android:id="@+id/about_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
     <com.pyamsoft.pydroid.ui.widget.SquareImageView
         android:id="@+id/arrow_right"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_margin="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         />
 
   </LinearLayout>
@@ -67,6 +72,5 @@
         />
 
   </android.support.v4.view.ViewPager>
-
 
 </LinearLayout>

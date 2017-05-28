@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.ui.helper
 import android.content.Context
 import android.support.annotation.StringRes
 import android.widget.Toast
-import com.pyamsoft.pydroid.ui.helper.Toasty.Duration.LENGTH_LONG
-import com.pyamsoft.pydroid.ui.helper.Toasty.Duration.LENGTH_SHORT
 
 /**
  * Toasty is a drop in replacement for native Android toasts.
@@ -41,10 +39,13 @@ class Toasty {
 
   companion object {
 
+    @JvmStatic val LENGTH_SHORT = Duration.LENGTH_SHORT
+    @JvmStatic val LENGTH_LONG = Duration.LENGTH_LONG
+
     @JvmStatic fun makeText(c: Context, message: CharSequence, duration: Duration): Toast {
       return Toast.makeText(c.applicationContext, message, when (duration) {
-        LENGTH_SHORT -> Toast.LENGTH_SHORT
-        LENGTH_LONG -> Toast.LENGTH_LONG
+        Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
+        Duration.LENGTH_LONG -> Toast.LENGTH_LONG
       })
     }
 

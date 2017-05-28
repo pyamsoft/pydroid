@@ -22,7 +22,7 @@ import com.google.gson.TypeAdapterFactory
 import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 
 @RestrictTo(
-    RestrictTo.Scope.LIBRARY) @GsonTypeAdapterFactory abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
+    RestrictTo.Scope.LIBRARY) @GsonTypeAdapterFactory abstract internal class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
 
   companion object {
 

@@ -24,7 +24,7 @@ import com.google.gson.TypeAdapter
 import com.google.gson.annotations.SerializedName
 
 @RestrictTo(
-    RestrictTo.Scope.LIBRARY) @AutoValue abstract class VersionCheckResponse internal constructor() {
+    RestrictTo.Scope.LIBRARY) @AutoValue abstract internal class VersionCheckResponse internal constructor() {
 
   @CheckResult @SerializedName("CURRENT_VERSION") internal abstract fun currentVersion(): Int
 

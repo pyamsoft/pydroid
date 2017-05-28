@@ -21,7 +21,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.BackPressConfirmActivity
-import com.pyamsoft.pydroid.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber

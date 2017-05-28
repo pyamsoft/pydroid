@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util
+package com.pyamsoft.pydroid.ui.util
 
 import android.content.Context
 import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.support.annotation.CheckResult
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorCompat
@@ -123,8 +125,8 @@ class AnimUtil private constructor(context: Context) {
 
     @JvmStatic fun animateActionBarToolbar(toolbar: Toolbar) {
       val t = toolbar.getChildAt(0)
-      if (t is TextView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        AnimUtil.fadeIn(t).start()
+      if (t is TextView && VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+        fadeIn(t).start()
       }
 
       val amv = toolbar.getChildAt(1)
@@ -135,7 +137,7 @@ class AnimUtil private constructor(context: Context) {
         var delay = 500
         for (i in 0..childCount - 1) {
           val item = actions.getChildAt(i) ?: continue
-          AnimUtil.popShow(item, delay, duration).start()
+          popShow(item, delay, duration).start()
           delay += duration
         }
       }

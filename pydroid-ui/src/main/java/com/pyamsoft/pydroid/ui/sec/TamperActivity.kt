@@ -21,7 +21,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
 abstract class TamperActivity : RatingActivity() {

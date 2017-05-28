@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 import com.pyamsoft.pydroid.util.AppUtil
-import com.pyamsoft.pydroid.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
 import kotlinx.android.synthetic.main.dialog_rating.rating_btn_go_rate
 import kotlinx.android.synthetic.main.dialog_rating.rating_btn_no_thanks

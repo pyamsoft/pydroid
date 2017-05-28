@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
-import com.pyamsoft.pydroid.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber

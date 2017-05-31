@@ -35,7 +35,6 @@ buildscript {
     minSdk = 16
     maxSdk = 25
     buildTools = "25.0.3"
-    heapSize = "2g"
 
     supportLib = "25.3.1"
     timber = "4.5.1"

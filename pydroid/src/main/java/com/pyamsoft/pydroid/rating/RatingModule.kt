@@ -27,6 +27,7 @@ import io.reactivex.Scheduler
   private val obsScheduler: Scheduler = module.provideObsScheduler()
   private val subScheduler: Scheduler = module.provideSubScheduler()
 
-  val presenter: RatingPresenter
-    @CheckResult get() = RatingPresenter(interactor, obsScheduler, subScheduler)
+  @CheckResult fun getPresenter(): RatingPresenter {
+    return RatingPresenter(interactor, obsScheduler, subScheduler)
+  }
 }

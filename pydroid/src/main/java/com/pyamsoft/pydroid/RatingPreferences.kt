@@ -17,10 +17,10 @@
 package com.pyamsoft.pydroid
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal interface RatingPreferences {
+interface RatingPreferences {
 
   @CheckResult fun getRatingAcceptedVersion(): Int
+
   fun setRatingAcceptedVersion(version: Int)
 }

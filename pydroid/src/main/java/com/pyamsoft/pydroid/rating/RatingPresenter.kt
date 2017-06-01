@@ -20,47 +20,32 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-class RatingPresenter internal constructor(private val interactor: RatingInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
-    observeScheduler, subscribeScheduler) {
+class RatingPresenter(private val interactor: RatingInteractor, observeScheduler: Scheduler,
+    subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {
 
-  fun loadRatingDialog(currentVersion: Int, force: Boolean, callback: RatingCallback) {
+  fun loadRatingDialog(currentVersion: Int, force: Boolean, onShowRatingDialog: () -> Unit,
+      onRatingDialogLoadError: (Throwable) -> Unit, onLoadComplete: () -> Unit) {
     disposeOnDestroy(interactor.needsToViewRating(currentVersion, force).subscribeOn(
         subscribeScheduler).observeOn(observeScheduler).doAfterTerminate(
-        { callback.onLoadComplete() }).subscribe({
+        { onLoadComplete() }).subscribe({
       if (it) {
-        callback.onShowRatingDialog()
+        onShowRatingDialog()
       }
-    }) {
+    }, {
       Timber.e(it, "on error loading rating dialog")
-      callback.onRatingDialogLoadError(it)
-    })
+      onRatingDialogLoadError(it)
+    }))
   }
 
-  fun saveRating(versionCode: Int, callback: SaveCallback) {
+  fun saveRating(versionCode: Int, onRatingSaved: () -> Unit,
+      onRatingDialogSaveError: (Throwable) -> Unit) {
     disposeOnDestroy(interactor.saveRating(versionCode).subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).subscribe({
       Timber.d("Saved current version code: %d", versionCode)
-      callback.onRatingSaved()
-    }) {
-      Timber.e(it, "on error loading rating dialog")
-      callback.onRatingDialogSaveError(it)
-    })
-  }
-
-  interface RatingCallback {
-
-    fun onShowRatingDialog()
-
-    fun onRatingDialogLoadError(throwable: Throwable)
-
-    fun onLoadComplete()
-  }
-
-  interface SaveCallback {
-
-    fun onRatingSaved()
-
-    fun onRatingDialogSaveError(throwable: Throwable)
+      onRatingSaved()
+    }, {
+      Timber.e(it, "Error saving rating dialog")
+      onRatingDialogSaveError(it)
+    }))
   }
 }

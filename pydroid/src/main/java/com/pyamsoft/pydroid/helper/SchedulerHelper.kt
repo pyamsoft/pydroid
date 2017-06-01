@@ -31,7 +31,7 @@ class SchedulerHelper private constructor() {
     /**
      * Returns whether the given scheduler is one that runs operations in a background thread
      */
-    @CheckResult private fun isBackgroundScheduler(scheduler: Scheduler): Boolean {
+    @JvmStatic @CheckResult private fun isBackgroundScheduler(scheduler: Scheduler): Boolean {
       return scheduler === Schedulers.computation() || scheduler === Schedulers.io() || scheduler === Schedulers.newThread()
     }
 

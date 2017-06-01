@@ -22,20 +22,20 @@ import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.Target
 
-abstract class GenericLoader<out R, T> protected constructor() {
+abstract class GenericLoader<out L, T> protected constructor() {
 
-  protected var startAction: ((Target<T>) -> Unit)? = null
-  protected var errorAction: ((Target<T>) -> Unit)? = null
-  protected var completeAction: ((Target<T>) -> Unit)? = null
+  protected var startAction: (Target<T>) -> Unit = {}
+  protected var errorAction: (Target<T>) -> Unit = {}
+  protected var completeAction: (Target<T>) -> Unit = {}
   protected var tint: Int = 0
 
-  @CheckResult abstract fun tint(@ColorRes color: Int): R
+  @CheckResult abstract fun tint(@ColorRes color: Int): L
 
-  @CheckResult abstract fun setStartAction(startAction: (Target<T>) -> Unit): R
+  @CheckResult abstract fun setStartAction(startAction: (Target<T>) -> Unit): L
 
-  @CheckResult abstract fun setErrorAction(errorAction: (Target<T>) -> Unit): R
+  @CheckResult abstract fun setErrorAction(errorAction: (Target<T>) -> Unit): L
 
-  @CheckResult abstract fun setCompleteAction(completeAction: (Target<T>) -> Unit): R
+  @CheckResult abstract fun setCompleteAction(completeAction: (Target<T>) -> Unit): L
 
   @CheckResult abstract fun into(imageView: ImageView): Loaded
 

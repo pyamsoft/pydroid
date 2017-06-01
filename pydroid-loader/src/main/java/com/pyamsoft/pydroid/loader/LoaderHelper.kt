@@ -19,36 +19,30 @@ package com.pyamsoft.pydroid.loader
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 
-class LoaderHelper private constructor() {
+object LoaderHelper {
 
-  init {
-    throw RuntimeException("No instances")
-  }
-
-  companion object {
-
-    @JvmStatic @CheckResult fun unload(entry: Loaded?): Loaded {
-      if (entry == null) {
-        return empty()
-      }
-
-      if (!entry.isUnloaded) {
-        entry.unload()
-      }
-      return empty()
+  @JvmOverloads @JvmStatic @CheckResult fun unload(entry: Loaded?,
+      defaultLoaded: Loaded = empty()): Loaded {
+    if (entry == null) {
+      return defaultLoaded
     }
 
-    @JvmStatic @CheckResult fun empty(): Loaded {
-      return object : Loaded {
+    if (!entry.isUnloaded) {
+      entry.unload()
+    }
+    return defaultLoaded
+  }
 
-        private var unloaded = false
+  @JvmStatic @CheckResult fun empty(): Loaded {
+    return object : Loaded {
 
-        override val isUnloaded: Boolean
-          get() = unloaded
+      private var unloaded = false
 
-        override fun unload() {
-          unloaded = true
-        }
+      override val isUnloaded: Boolean
+        get() = unloaded
+
+      override fun unload() {
+        unloaded = true
       }
     }
   }

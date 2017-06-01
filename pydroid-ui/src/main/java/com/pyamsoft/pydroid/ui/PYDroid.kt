@@ -53,18 +53,18 @@ class PYDroid internal constructor(module: PYDroidModule) {
   companion object {
 
     @Volatile private var __instance: PYDroid? = null
-    internal val instance: PYDroid
-      @get:CheckResult get() {
-        if (__instance == null) {
-          synchronized(PYDroid::class.java) {
-            if (__instance == null) {
-              throw NullPointerException("PYDroid instance must be initialized first")
-            }
+
+    @CheckResult @JvmStatic fun getInstance(): PYDroid {
+      if (__instance == null) {
+        synchronized(PYDroid::class.java) {
+          if (__instance == null) {
+            throw NullPointerException("PYDroid instance must be initialized first")
           }
         }
-
-        return __instance!!
       }
+
+      return __instance!!
+    }
 
     /**
      * Initialize the library

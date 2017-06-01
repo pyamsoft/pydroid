@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.loader
 
 import com.pyamsoft.pydroid.loader.loaded.Loaded
-import timber.log.Timber
 import java.util.HashMap
 
 class LoaderMap {
@@ -29,13 +28,11 @@ class LoaderMap {
 
    * If an old element exists, its task is cancelled first before adding the new one
    */
-  fun put(tag: String, subscription: Loaded) {
+  fun put(tag: String, loaded: Loaded) {
     if (map.containsKey(tag)) {
       map.put(tag, LoaderHelper.unload(map[tag]))
     }
-
-    Timber.d("Insert new subscription for tag: %s", tag)
-    map.put(tag, subscription)
+    map.put(tag, loaded)
   }
 
   /**
@@ -44,12 +41,9 @@ class LoaderMap {
    * If the elements have not been cancelled yet, cancel them before removing them
    */
   fun clear() {
-    for (entry in map.entries) {
-      val value = entry.value
-      entry.setValue(LoaderHelper.unload(value))
+    map.apply {
+      entries.forEach { it.setValue(LoaderHelper.unload(it.value)) }
+      clear()
     }
-
-    Timber.d("Clear AsyncDrawableMap")
-    map.clear()
   }
 }

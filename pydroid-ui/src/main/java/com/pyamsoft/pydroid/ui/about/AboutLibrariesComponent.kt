@@ -23,6 +23,6 @@ import com.pyamsoft.pydroid.about.AboutLibrariesModule
     private val aboutLibrariesModule: AboutLibrariesModule) {
 
   internal fun inject(fragment: AboutLibrariesFragment) {
-    fragment.presenter = aboutLibrariesModule.presenter
+    fragment.presenter = aboutLibrariesModule.getPresenter()
   }
 }

@@ -74,16 +74,16 @@ abstract class ResourceLoader protected constructor(context: Context,
   }
 
   @CheckResult protected fun loadResource(context: Context): Drawable {
-    val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(context,
-        resource) ?: throw NullPointerException("Could not load drawable for resource: " + resource)
-    setCompleteAction({})
-
-    var loaded = possiblyLoaded!!
-
-    if (tint != 0) {
-      loaded = DrawableUtil.tintDrawableFromRes(context, loaded, tint)
+    val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(context, resource)
+    if (possiblyLoaded == null) {
+      throw NullPointerException("Could not load drawable for resource: " + resource)
+    } else {
+      if (tint != 0) {
+        return DrawableUtil.tintDrawableFromRes(context, possiblyLoaded, tint)
+      } else {
+        return possiblyLoaded
+      }
     }
-    return loaded
   }
 
   @CheckResult protected abstract fun load(target: Target<Drawable>,

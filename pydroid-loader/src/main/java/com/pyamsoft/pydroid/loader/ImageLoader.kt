@@ -22,22 +22,14 @@ import android.support.annotation.DrawableRes
 import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 
-class ImageLoader private constructor() {
+object ImageLoader {
 
-  init {
-    throw RuntimeException("No instances")
+  @JvmStatic @CheckResult fun <T : GenericLoader<GenericLoader<*, *>, *>> fromLoader(loader: T): T {
+    return loader
   }
 
-  companion object {
-
-    @JvmStatic @CheckResult fun <T : GenericLoader<GenericLoader<*, *>, *>> fromLoader(
-        loader: T): T {
-      return loader
-    }
-
-    @JvmStatic @CheckResult fun fromResource(context: Context,
-        @DrawableRes resource: Int): ResourceLoader {
-      return RxResourceLoader(context, resource)
-    }
+  @JvmStatic @CheckResult fun fromResource(context: Context,
+      @DrawableRes resource: Int): ResourceLoader {
+    return RxResourceLoader(context, resource)
   }
 }

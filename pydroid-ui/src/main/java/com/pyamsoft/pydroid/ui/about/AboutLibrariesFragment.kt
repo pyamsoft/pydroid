@@ -24,9 +24,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.LoadCallback
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -59,7 +57,7 @@ class AboutLibrariesFragment : ActionBarFragment() {
       else -> throw RuntimeException("Invalid back stack state: " + backStackStateName)
     }
 
-    PYDroid.instance.provideComponent().plusAboutLibrariesComponent().inject(this)
+    PYDroid.getInstance().provideComponent().plusAboutLibrariesComponent().inject(this)
   }
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -96,17 +94,13 @@ class AboutLibrariesFragment : ActionBarFragment() {
 
     })
 
-    presenter.loadLicenses(object : LoadCallback {
-      override fun onLicenseLoaded(model: AboutLibrariesModel) {
-        Timber.d("Load license: %s", model)
-        pagerAdapter.add(model)
-      }
-
-      override fun onAllLoaded() {
-        Timber.d("All licenses loaded")
-        pagerAdapter.notifyDataSetChanged()
-        about_title.text = pagerAdapter.getPageTitle(view_pager.currentItem)
-      }
+    presenter.loadLicenses(onLicenseLoaded = {
+      Timber.d("Load license: %s", it)
+      pagerAdapter.add(it)
+    }, onAllLoaded = {
+      Timber.d("All licenses loaded")
+      pagerAdapter.notifyDataSetChanged()
+      about_title.text = pagerAdapter.getPageTitle(view_pager.currentItem)
     })
   }
 

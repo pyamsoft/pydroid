@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.loader.resource
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
+import com.pyamsoft.pydroid.helper.SchedulerHelper
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.loaded.RxLoaded
 import com.pyamsoft.pydroid.loader.targets.Target
@@ -34,18 +35,23 @@ class RxResourceLoader(context: Context, @DrawableRes resource: Int) : ResourceL
   private val obsScheduler: Scheduler = AndroidSchedulers.mainThread()
   private val subScheduler: Scheduler = Schedulers.io()
 
+  init {
+    SchedulerHelper.enforceObserveScheduler(obsScheduler)
+    SchedulerHelper.enforceSubscribeScheduler(subScheduler)
+  }
+
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(
         Single.fromCallable { loadResource(appContext) }.subscribeOn(subScheduler).observeOn(
-            obsScheduler).doOnSubscribe { _ ->
-          startAction?.invoke(target)
+            obsScheduler).doOnSubscribe {
+          startAction.invoke(target)
         }.doOnError {
           Timber.e(it, "Error loading AsyncDrawable")
-          errorAction?.invoke(target)
-        }.doAfterSuccess { _ ->
-          completeAction?.invoke(target)
-        }.subscribe({ target.loadImage(it) }) {
+          errorAction.invoke(target)
+        }.doAfterSuccess {
+          completeAction.invoke(target)
+        }.subscribe({ target.loadImage(it) }, {
           Timber.e(it, "Error loading Drawable using RxResourceLoader")
-        })
+        }))
   }
 }

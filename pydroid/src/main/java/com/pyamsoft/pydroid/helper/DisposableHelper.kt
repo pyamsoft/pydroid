@@ -28,16 +28,17 @@ class DisposableHelper private constructor() {
 
   companion object {
 
-    @JvmStatic @CheckResult fun dispose(disposable: Disposable?): Disposable {
+    @JvmOverloads @JvmStatic @CheckResult fun dispose(disposable: Disposable?,
+        defaultDisposable: Disposable = Disposables.empty()): Disposable {
       if (disposable == null) {
-        return Disposables.empty()
+        return defaultDisposable
       }
 
       if (!disposable.isDisposed) {
         disposable.dispose()
       }
 
-      return Disposables.empty()
+      return defaultDisposable
     }
   }
 }

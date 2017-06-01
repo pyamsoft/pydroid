@@ -54,7 +54,7 @@ buildscript {
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
 
     // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
 
     // Error prone compiler
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"

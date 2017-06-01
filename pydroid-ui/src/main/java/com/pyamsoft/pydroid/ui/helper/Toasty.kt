@@ -27,30 +27,36 @@ import android.widget.Toast
  * though very unlikely for the Toast to leak the Activity context if it is displayed and then
  * dismissed very quickly
  */
-class Toasty {
-
-  init {
-    throw RuntimeException("No instances")
-  }
+object Toasty {
 
   enum class Duration {
     LENGTH_SHORT, LENGTH_LONG
   }
 
-  companion object {
+  @JvmStatic val LENGTH_SHORT = Duration.LENGTH_SHORT
+  @JvmStatic val LENGTH_LONG = Duration.LENGTH_LONG
 
-    @JvmStatic val LENGTH_SHORT = Duration.LENGTH_SHORT
-    @JvmStatic val LENGTH_LONG = Duration.LENGTH_LONG
+  @JvmStatic fun makeText(c: Context, message: CharSequence, duration: Duration): Toast {
+    return Toast.makeText(c.applicationContext, message, when (duration) {
+      Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
+      Duration.LENGTH_LONG -> Toast.LENGTH_LONG
+    })
+  }
 
-    @JvmStatic fun makeText(c: Context, message: CharSequence, duration: Duration): Toast {
-      return Toast.makeText(c.applicationContext, message, when (duration) {
-        Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
-        Duration.LENGTH_LONG -> Toast.LENGTH_LONG
-      })
-    }
+  @JvmStatic fun makeText(c: Context, @StringRes resId: Int, duration: Duration): Toast {
+    return makeText(c, c.applicationContext.getString(resId), duration)
+  }
 
-    @JvmStatic fun makeText(c: Context, @StringRes resId: Int, duration: Duration): Toast {
-      return makeText(c, c.applicationContext.getString(resId), duration)
-    }
+  @JvmStatic fun makeText(c: Context, @StringRes resId: Int, duration: Int): Toast {
+    return makeText(c, c.applicationContext.getString(resId), duration)
+  }
+
+  @JvmStatic fun makeText(c: Context, message: CharSequence, duration: Int): Toast {
+    return makeText(c, message, when (duration) {
+      Toast.LENGTH_SHORT -> LENGTH_SHORT
+      Toast.LENGTH_LONG -> LENGTH_LONG
+      else -> throw IllegalArgumentException(
+          "Duration must be either Toast.LENGTH_SHORT or Toast.LENGTH_LONG")
+    })
   }
 }

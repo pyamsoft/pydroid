@@ -48,7 +48,6 @@ abstract class ProgressOverlay private constructor() {
   private class Empty internal constructor() : ProgressOverlay() {
 
     override fun dispose() {
-
     }
 
     override val isDisposed: Boolean
@@ -173,7 +172,6 @@ abstract class ProgressOverlay private constructor() {
 
     init {
       isDisposed = false
-
       root.addView(binding)
     }
 

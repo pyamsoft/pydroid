@@ -18,23 +18,17 @@ package com.pyamsoft.pydroid.ui.helper
 
 import android.support.annotation.CheckResult
 
-class ProgressOverlayHelper private constructor() {
+object ProgressOverlayHelper {
 
-  init {
-    throw RuntimeException("No instances")
-  }
-
-  companion object {
-
-    @JvmStatic @CheckResult fun dispose(overlay: ProgressOverlay?): ProgressOverlay {
-      if (overlay == null) {
-        return ProgressOverlay.empty()
-      }
-
-      if (!overlay.isDisposed) {
-        overlay.dispose()
-      }
-      return ProgressOverlay.empty()
+  @JvmOverloads @JvmStatic @CheckResult fun dispose(overlay: ProgressOverlay?,
+      defaultOverlay: ProgressOverlay = ProgressOverlay.empty()): ProgressOverlay {
+    if (overlay == null) {
+      return defaultOverlay
     }
+
+    if (!overlay.isDisposed) {
+      overlay.dispose()
+    }
+    return defaultOverlay
   }
 }

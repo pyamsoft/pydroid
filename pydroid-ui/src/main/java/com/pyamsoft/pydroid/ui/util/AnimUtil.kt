@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui.util
 
 import android.content.Context
-import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.support.annotation.CheckResult
@@ -131,12 +130,10 @@ class AnimUtil private constructor(context: Context) {
 
       val amv = toolbar.getChildAt(1)
       if (amv is ActionMenuView) {
-        val actions = amv
-        val childCount = actions.childCount
         val duration = 200
         var delay = 500
-        for (i in 0..childCount - 1) {
-          val item = actions.getChildAt(i) ?: continue
+        for (i in 0..amv.childCount - 1) {
+          val item = amv.getChildAt(i) ?: continue
           popShow(item, delay, duration).start()
           delay += duration
         }

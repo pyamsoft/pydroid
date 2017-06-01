@@ -25,47 +25,40 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 
-class ActionBarUtil private constructor() {
+object ActionBarUtil {
 
-  init {
-    throw RuntimeException("No instances")
+  @JvmStatic @CheckResult fun getActionBar(activity: Activity): ActionBar {
+    if (activity is AppCompatActivity) {
+      return activity.supportActionBar!!
+    } else {
+      throw ClassCastException("Activity not instance of AppCompatActivity")
+    }
   }
 
-  companion object {
-
-    @JvmStatic @CheckResult fun getActionBar(activity: Activity): ActionBar {
-      if (activity is AppCompatActivity) {
-        return activity.supportActionBar!!
-      } else {
-        throw ClassCastException("Activity not instance of AppCompatActivity")
-      }
+  @JvmStatic fun setActionBarUpEnabled(activity: Activity, up: Boolean, @DrawableRes icon: Int) {
+    val d: Drawable?
+    if (icon != 0) {
+      d = ContextCompat.getDrawable(activity, icon)
+    } else {
+      d = null
     }
 
-    @JvmStatic fun setActionBarUpEnabled(activity: Activity, up: Boolean, @DrawableRes icon: Int) {
-      val d: Drawable?
-      if (icon != 0) {
-        d = ContextCompat.getDrawable(activity, icon)
-      } else {
-        d = null
-      }
+    setActionBarUpEnabled(activity, up, d)
+  }
 
-      setActionBarUpEnabled(activity, up, d)
-    }
+  @JvmStatic @JvmOverloads fun setActionBarUpEnabled(activity: Activity, up: Boolean,
+      icon: Drawable? = null) {
+    val bar = getActionBar(activity)
+    bar.setHomeButtonEnabled(up)
+    bar.setDisplayHomeAsUpEnabled(up)
+    bar.setHomeAsUpIndicator(icon)
+  }
 
-    @JvmStatic @JvmOverloads fun setActionBarUpEnabled(activity: Activity, up: Boolean,
-        icon: Drawable? = null) {
-      val bar = getActionBar(activity)
-      bar.setHomeButtonEnabled(up)
-      bar.setDisplayHomeAsUpEnabled(up)
-      bar.setHomeAsUpIndicator(icon)
-    }
+  @JvmStatic fun setActionBarTitle(activity: Activity, title: CharSequence) {
+    getActionBar(activity).title = title
+  }
 
-    @JvmStatic fun setActionBarTitle(activity: Activity, title: CharSequence) {
-      getActionBar(activity).title = title
-    }
-
-    @JvmStatic fun setActionBarTitle(activity: Activity, @StringRes title: Int) {
-      getActionBar(activity).setTitle(title)
-    }
+  @JvmStatic fun setActionBarTitle(activity: Activity, @StringRes title: Int) {
+    getActionBar(activity).setTitle(title)
   }
 }

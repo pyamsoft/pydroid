@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.ui.social.Linker
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class VersionUpgradeDialog : DialogFragmentBase() {
+
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0
   private var applicationName: String? = null
@@ -61,10 +62,10 @@ import java.util.Locale
 
   companion object {
 
-    val TAG = "VersionUpgradeDialog"
-    private val KEY_NAME = "key_name"
-    private val KEY_LATEST_VERSION = "key_latest_version"
-    private val KEY_CURRENT_VERSION = "key_current_version"
+    const val TAG = "VersionUpgradeDialog"
+    private const val KEY_NAME = "key_name"
+    private const val KEY_LATEST_VERSION = "key_latest_version"
+    private const val KEY_CURRENT_VERSION = "key_current_version"
 
     @CheckResult fun newInstance(applicationName: String, currentVersion: Int,
         latestVersion: Int): VersionUpgradeDialog {

@@ -27,42 +27,38 @@ import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
 abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckProvider {
+
   internal lateinit var presenter: VersionCheckPresenter
   internal var versionChecked: Boolean = false
 
-  private // Always enabled for release builds
-  val isVersionCheckEnabled: Boolean
-    @CheckResult get() = !PYDroid.instance.isDebugMode || shouldCheckVersion()
+  // Always enabled for release builds
+  private val isVersionCheckEnabled: Boolean
+    @get:CheckResult get() = !PYDroid.getInstance().isDebugMode || shouldCheckVersion
 
-  @CheckResult protected fun shouldCheckVersion(): Boolean {
-    return true
-  }
+  protected open val shouldCheckVersion = true
+    @get:CheckResult get
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     versionChecked = savedInstanceState != null && savedInstanceState.getBoolean(VERSION_CHECKED,
         false)
 
-    PYDroid.instance.provideComponent().plusVersionCheckComponent().inject(this)
+    PYDroid.getInstance().provideComponent().plusVersionCheckComponent().inject(this)
   }
 
   @CallSuper override fun onStart() {
     super.onStart()
     if (!versionChecked && isVersionCheckEnabled) {
-      presenter.checkForUpdates(packageName, currentApplicationVersion,
-          object : VersionCheckPresenter.UpdateCheckCallback {
-            override fun onVersionCheckFinished() {
-              Timber.d("License check finished, mark")
-              versionChecked = true
-            }
-
-            override fun onUpdatedVersionFound(oldVersionCode: Int, updatedVersionCode: Int) {
-              Timber.d("Updated version found. %d => %d", oldVersionCode, updatedVersionCode)
-              DialogUtil.guaranteeSingleDialogFragment(this@VersionCheckActivity,
-                  VersionUpgradeDialog.newInstance(provideApplicationName(), oldVersionCode,
-                      updatedVersionCode), VersionUpgradeDialog.TAG)
-            }
-          })
+      presenter.checkForUpdates(packageName, curentApplicationVersion,
+          onUpdatedVersionFound = { current, updated ->
+            Timber.d("Updated version found. %d => %d", current, updated)
+            DialogUtil.guaranteeSingleDialogFragment(this@VersionCheckActivity,
+                VersionUpgradeDialog.newInstance(provideApplicationName(), current, updated),
+                VersionUpgradeDialog.TAG)
+          }, onVersionCheckFinished = {
+        Timber.d("License check finished, mark")
+        versionChecked = true
+      })
     }
   }
 

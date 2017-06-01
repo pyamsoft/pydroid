@@ -23,6 +23,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     private val versionCheckModule: VersionCheckModule) {
 
   internal fun inject(activity: VersionCheckActivity) {
-    activity.presenter = versionCheckModule.presenter
+    activity.presenter = versionCheckModule.getPresenter()
   }
 }

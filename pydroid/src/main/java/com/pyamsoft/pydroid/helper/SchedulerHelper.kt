@@ -20,39 +20,32 @@ import android.support.annotation.CheckResult
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 
-class SchedulerHelper private constructor() {
+object SchedulerHelper {
 
-  init {
-    throw RuntimeException("No instances")
+  /**
+   * Returns whether the given scheduler is one that runs operations in a background thread
+   */
+  @JvmStatic @CheckResult private fun isBackgroundScheduler(scheduler: Scheduler): Boolean {
+    return scheduler === Schedulers.computation() || scheduler === Schedulers.io() || scheduler === Schedulers.newThread()
   }
 
-  companion object {
-
-    /**
-     * Returns whether the given scheduler is one that runs operations in a background thread
-     */
-    @JvmStatic @CheckResult private fun isBackgroundScheduler(scheduler: Scheduler): Boolean {
-      return scheduler === Schedulers.computation() || scheduler === Schedulers.io() || scheduler === Schedulers.newThread()
+  /**
+   * Enforce that a given scheduler will run on a background thread
+   * OR on Immediate, for Testing
+   */
+  @JvmStatic fun enforceSubscribeScheduler(scheduler: Scheduler) {
+    if (!isBackgroundScheduler(scheduler) && scheduler !== Schedulers.trampoline()) {
+      throw RuntimeException("Cannot subscribe on a foreground scheduler")
     }
+  }
 
-    /**
-     * Enforce that a given scheduler will run on a background thread
-     * OR on Immediate, for Testing
-     */
-    @JvmStatic fun enforceSubscribeScheduler(scheduler: Scheduler) {
-      if (!isBackgroundScheduler(scheduler) && scheduler !== Schedulers.trampoline()) {
-        throw RuntimeException("Cannot subscribe on a foreground scheduler")
-      }
-    }
-
-    /**
-     * Enforce that a given scheduler will run on a foreground thread
-     * OR on Immediate, for Testing
-     */
-    @JvmStatic fun enforceObserveScheduler(scheduler: Scheduler) {
-      if (isBackgroundScheduler(scheduler)) {
-        throw RuntimeException("Cannot observe on a background scheduler")
-      }
+  /**
+   * Enforce that a given scheduler will run on a foreground thread
+   * OR on Immediate, for Testing
+   */
+  @JvmStatic fun enforceObserveScheduler(scheduler: Scheduler) {
+    if (isBackgroundScheduler(scheduler)) {
+      throw RuntimeException("Cannot observe on a background scheduler")
     }
   }
 }

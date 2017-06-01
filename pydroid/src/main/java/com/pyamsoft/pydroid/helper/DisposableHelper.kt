@@ -20,25 +20,19 @@ import android.support.annotation.CheckResult
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 
-class DisposableHelper private constructor() {
+object DisposableHelper {
 
-  init {
-    throw RuntimeException("No instances")
-  }
-
-  companion object {
-
-    @JvmOverloads @JvmStatic @CheckResult fun dispose(disposable: Disposable?,
-        defaultDisposable: Disposable = Disposables.empty()): Disposable {
-      if (disposable == null) {
-        return defaultDisposable
-      }
-
-      if (!disposable.isDisposed) {
-        disposable.dispose()
-      }
-
+  @JvmOverloads @JvmStatic @CheckResult fun dispose(disposable: Disposable?,
+      defaultDisposable: Disposable = Disposables.empty()): Disposable {
+    if (disposable == null) {
       return defaultDisposable
     }
+
+    if (!disposable.isDisposed) {
+      disposable.dispose()
+    }
+
+    return defaultDisposable
   }
+
 }

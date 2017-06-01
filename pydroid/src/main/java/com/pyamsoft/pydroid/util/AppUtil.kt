@@ -24,28 +24,21 @@ import android.support.annotation.CheckResult
 import android.util.TypedValue
 import timber.log.Timber
 
-class AppUtil private constructor() {
+object AppUtil {
 
-  init {
-    throw RuntimeException("No instances")
+  @JvmStatic @CheckResult fun getApplicationInfoIntent(packageName: String): Intent {
+    val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+    i.addCategory(Intent.CATEGORY_DEFAULT)
+    i.data = Uri.fromParts("package", packageName, null)
+    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+    return i
   }
 
-  companion object {
-
-    @JvmStatic @CheckResult fun getApplicationInfoIntent(packageName: String): Intent {
-      val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-      i.addCategory(Intent.CATEGORY_DEFAULT)
-      i.data = Uri.fromParts("package", packageName, null)
-      i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-      return i
-    }
-
-    @JvmStatic @CheckResult fun convertToDP(c: Context, px: Float): Float {
-      val m = c.applicationContext.resources.displayMetrics
-      val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
-      Timber.d("Convert %f px to %f dp", px, dp)
-      return dp
-    }
+  @JvmStatic @CheckResult fun convertToDP(c: Context, px: Float): Float {
+    val m = c.applicationContext.resources.displayMetrics
+    val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
+    Timber.d("Convert %f px to %f dp", px, dp)
+    return dp
   }
 }

@@ -26,27 +26,20 @@ import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.v4.content.ContextCompat
 
-class DrawableUtil private constructor() {
+object DrawableUtil {
 
-  init {
-    throw RuntimeException("No instances")
+  @JvmStatic @CheckResult fun colorFilter(@ColorInt color: Int): ColorFilter {
+    return PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
   }
 
-  companion object {
+  @JvmStatic @CheckResult fun tintDrawableFromColor(d: Drawable, @ColorInt c: Int): Drawable {
+    d.colorFilter = colorFilter(c)
+    return d
+  }
 
-    @JvmStatic @CheckResult fun colorFilter(@ColorInt color: Int): ColorFilter {
-      return PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-    }
-
-    @JvmStatic @CheckResult fun tintDrawableFromColor(d: Drawable, @ColorInt c: Int): Drawable {
-      d.colorFilter = colorFilter(c)
-      return d
-    }
-
-    @JvmStatic @CheckResult fun tintDrawableFromRes(c: Context, d: Drawable,
-        @ColorRes cl: Int): Drawable {
-      @ColorInt val i = ContextCompat.getColor(c, cl)
-      return tintDrawableFromColor(d, i)
-    }
+  @JvmStatic @CheckResult fun tintDrawableFromRes(c: Context, d: Drawable,
+      @ColorRes cl: Int): Drawable {
+    @ColorInt val i = ContextCompat.getColor(c, cl)
+    return tintDrawableFromColor(d, i)
   }
 }

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.about
 import android.support.annotation.CheckResult
 import java.util.ArrayList
 
-class Licenses private constructor() {
+object Licenses {
 
   private val licenses: MutableList<AboutLibrariesModel>
 
@@ -59,86 +59,60 @@ class Licenses private constructor() {
     licenses.add(item)
   }
 
-  private class Names private constructor() {
-
-    init {
-      throw RuntimeException("No instances")
-    }
-
-    companion object {
-
-      internal val RXJAVA = "RxJava"
-      internal val RXANDROID = "RxAndroid"
-      internal val ANDROID = "Android"
-      internal val ANDROID_SUPPORT = "Android Support Libraries"
-      internal val PYDROID = "PYDroid"
-      internal val AUTO_VALUE = "AutoValue"
-      internal val RETROFIT = "Retrofit"
-      internal val ERROR_PRONE = "Error Prone"
-      internal val TIMBER = "Timber"
-      internal val DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin"
-      internal val GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin"
-    }
+  private object Names {
+    internal val RXJAVA = "RxJava"
+    internal val RXANDROID = "RxAndroid"
+    internal val ANDROID = "Android"
+    internal val ANDROID_SUPPORT = "Android Support Libraries"
+    internal val PYDROID = "PYDroid"
+    internal val AUTO_VALUE = "AutoValue"
+    internal val RETROFIT = "Retrofit"
+    internal val ERROR_PRONE = "Error Prone"
+    internal val TIMBER = "Timber"
+    internal val DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin"
+    internal val GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin"
   }
 
-  private class HomepageUrls private constructor() {
-
-    init {
-      throw RuntimeException("No instances")
-    }
-
-    companion object {
-      internal val RXJAVA = "https://github.com/ReactiveX/RxJava"
-      internal val RXANDROID = "https://github.com/ReactiveX/RxAndroid"
-      internal val ANDROID = "https://source.android.com"
-      internal val ANDROID_SUPPORT = "https://source.android.com"
-      internal val PYDROID = "https://pyamsoft.github.io/pydroid"
-      internal val AUTO_VALUE = "https://github.com/google/auto"
-      internal val RETROFIT = "https://square.github.io/retrofit/"
-      internal val ERROR_PRONE = "https://github.com/google/error-prone"
-      internal val TIMBER = "https://github.com/JakeWharton/timber"
-      internal val DEXCOUNT_GRADLE_PLUGIN = "https://github.com/KeepSafe/dexcount-gradle-plugin"
-      internal val GRADLE_VERSIONS_PLUGIN = "https://github.com/ben-manes/gradle-versions-plugin"
-    }
+  private object HomepageUrls {
+    internal val RXJAVA = "https://github.com/ReactiveX/RxJava"
+    internal val RXANDROID = "https://github.com/ReactiveX/RxAndroid"
+    internal val ANDROID = "https://source.android.com"
+    internal val ANDROID_SUPPORT = "https://source.android.com"
+    internal val PYDROID = "https://pyamsoft.github.io/pydroid"
+    internal val AUTO_VALUE = "https://github.com/google/auto"
+    internal val RETROFIT = "https://square.github.io/retrofit/"
+    internal val ERROR_PRONE = "https://github.com/google/error-prone"
+    internal val TIMBER = "https://github.com/JakeWharton/timber"
+    internal val DEXCOUNT_GRADLE_PLUGIN = "https://github.com/KeepSafe/dexcount-gradle-plugin"
+    internal val GRADLE_VERSIONS_PLUGIN = "https://github.com/ben-manes/gradle-versions-plugin"
   }
 
-  class LicenseLocations private constructor() {
+  object LicenseLocations {
 
-    init {
-      throw RuntimeException("No instances")
-    }
-
-    companion object {
-      // Add an underscore to keep this name on top
-      @JvmField val _BASE = "licenses/"
-      internal val RXJAVA = _BASE + "rxjava"
-      internal val RXANDROID = _BASE + "rxandroid"
-      internal val ANDROID_SUPPORT = _BASE + "androidsupport"
-      internal val ANDROID = _BASE + "android"
-      internal val PYDROID = _BASE + "pydroid"
-      internal val AUTO_VALUE = _BASE + "autovalue"
-      internal val RETROFIT = _BASE + "retrofit"
-      internal val ERROR_PRONE = _BASE + "errorprone"
-      internal val TIMBER = _BASE + "timber"
-      internal val DEXCOUNT_GRADLE_PLUGIN = _BASE + "dexcount-gradle-plugin"
-      internal val GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin"
-    }
+    // Add an underscore to keep this name on top
+    @JvmField val _BASE = "licenses/"
+    internal val RXJAVA = _BASE + "rxjava"
+    internal val RXANDROID = _BASE + "rxandroid"
+    internal val ANDROID_SUPPORT = _BASE + "androidsupport"
+    internal val ANDROID = _BASE + "android"
+    internal val PYDROID = _BASE + "pydroid"
+    internal val AUTO_VALUE = _BASE + "autovalue"
+    internal val RETROFIT = _BASE + "retrofit"
+    internal val ERROR_PRONE = _BASE + "errorprone"
+    internal val TIMBER = _BASE + "timber"
+    internal val DEXCOUNT_GRADLE_PLUGIN = _BASE + "dexcount-gradle-plugin"
+    internal val GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin"
   }
 
-  companion object {
+  @JvmStatic fun create(name: String, homepageUrl: String, licenseLocation: String) {
+    createItem(name, homepageUrl, licenseLocation)
+  }
 
-    @JvmStatic private val INSTANCE = Licenses()
+  @JvmStatic fun createWithContent(name: String, homepageUrl: String, content: String) {
+    createItemWithContent(name, homepageUrl, content)
+  }
 
-    @JvmStatic fun create(name: String, homepageUrl: String, licenseLocation: String) {
-      INSTANCE.createItem(name, homepageUrl, licenseLocation)
-    }
-
-    @JvmStatic fun createWithContent(name: String, homepageUrl: String, content: String) {
-      INSTANCE.createItemWithContent(name, homepageUrl, content)
-    }
-
-    @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> {
-      return INSTANCE.licenses.toList()
-    }
+  @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> {
+    return licenses.toList()
   }
 }

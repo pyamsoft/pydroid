@@ -46,7 +46,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.getInstance().provideComponent().plusAppComponent().inject(this)
+    PYDroid.get().provideComponent().plusAppComponent().inject(this)
   }
 
   @SuppressLint("ShowToast") @CallSuper override fun onCreateView(inflater: LayoutInflater,

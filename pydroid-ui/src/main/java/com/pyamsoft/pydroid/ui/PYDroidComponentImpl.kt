@@ -37,10 +37,9 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   init {
     val versionCheckModule = VersionCheckModule(module)
-    val aboutLibrariesModule = AboutLibrariesModule(module)
     versionCheckComponent = VersionCheckComponent(versionCheckModule)
-    aboutLibrariesComponent = AboutLibrariesComponent(aboutLibrariesModule)
     appComponent = AppComponent(versionCheckModule)
+    aboutLibrariesComponent = AboutLibrariesComponent(AboutLibrariesModule(module))
     ratingComponent = RatingComponent(RatingModule(module))
   }
 
@@ -62,7 +61,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   companion object {
 
-    @CheckResult fun withModule(module: PYDroidModule): PYDroidComponent {
+    @JvmStatic @CheckResult fun withModule(module: PYDroidModule): PYDroidComponent {
       return PYDroidComponentImpl(module)
     }
   }

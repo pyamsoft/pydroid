@@ -24,9 +24,13 @@ import com.pyamsoft.pydroid.PYDroidModule
 import timber.log.Timber
 
 class PYDroid internal constructor(module: PYDroidModule) {
-  private val component: PYDroidComponent = PYDroidComponentImpl.withModule(module)
-  @get:RestrictTo(
-      RestrictTo.Scope.LIBRARY) @get:CheckResult val isDebugMode: Boolean = module.isDebug
+
+  @RestrictTo(
+      RestrictTo.Scope.LIBRARY) private val component: PYDroidComponent = PYDroidComponentImpl.withModule(
+      module)
+
+  val isDebugMode: Boolean = module.isDebug
+    @get:[RestrictTo(RestrictTo.Scope.LIBRARY) CheckResult] get
 
   init {
     if (module.isDebug) {
@@ -52,33 +56,33 @@ class PYDroid internal constructor(module: PYDroidModule) {
 
   companion object {
 
-    @Volatile private var __instance: PYDroid? = null
+    @Volatile private var instance: PYDroid? = null
 
-    @CheckResult @JvmStatic fun getInstance(): PYDroid {
-      if (__instance == null) {
+    @CheckResult @JvmStatic fun get(): PYDroid {
+      if (instance == null) {
         synchronized(PYDroid::class.java) {
-          if (__instance == null) {
+          if (instance == null) {
             throw NullPointerException("PYDroid instance must be initialized first")
           }
         }
       }
 
-      return __instance!!
+      return instance!!
     }
 
     /**
      * Initialize the library
      */
     @JvmStatic fun initialize(context: Context, debug: Boolean) {
-      if (__instance == null) {
+      if (instance == null) {
         synchronized(PYDroid::class.java) {
-          if (__instance == null) {
-            __instance = PYDroid(PYDroidModule(context.applicationContext, debug))
+          if (instance == null) {
+            instance = PYDroid(PYDroidModule(context.applicationContext, debug))
           }
         }
       }
 
-      if (__instance == null) {
+      if (instance == null) {
         throw RuntimeException("PYDroid initialization failed!")
       }
     }

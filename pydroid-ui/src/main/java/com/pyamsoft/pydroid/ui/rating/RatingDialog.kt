@@ -144,7 +144,7 @@ class RatingDialog : DialogFragmentBase() {
     internal lateinit var presenter: RatingPresenter
 
     init {
-      PYDroid.getInstance().provideComponent().plusRatingComponent().inject(this)
+      PYDroid.get().provideComponent().plusRatingComponent().inject(this)
     }
 
     fun loadRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider, force: Boolean) {

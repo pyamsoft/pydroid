@@ -23,6 +23,6 @@ import com.pyamsoft.pydroid.rating.RatingModule
     private val ratingModule: RatingModule) {
 
   internal fun inject(launcher: RatingDialog.Launcher) {
-    launcher.presenter = ratingModule.presenter
+    launcher.presenter = ratingModule.getPresenter()
   }
 }

@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
 abstract class TamperActivity : RatingActivity() {
+
   private var hasBeenTamperedWith: Boolean = false
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +47,7 @@ abstract class TamperActivity : RatingActivity() {
 
     // Check that we were installed from the play store.
     val installer = applicationContext.packageManager.getInstallerPackageName(safePackageName)
-    if (PYDroid.instance.isDebugMode) {
+    if (PYDroid.getInstance().isDebugMode) {
       if (installer == null) {
         Timber.i("Application is installed from APK. This is fine in DEBUG mode")
         return false

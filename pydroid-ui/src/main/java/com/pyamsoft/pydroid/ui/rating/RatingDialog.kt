@@ -33,8 +33,8 @@ import com.pyamsoft.pydroid.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
-import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.ui.util.DialogUtil
+import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
 import kotlinx.android.synthetic.main.dialog_rating.rating_btn_go_rate
 import kotlinx.android.synthetic.main.dialog_rating.rating_btn_no_thanks
@@ -94,39 +94,31 @@ class RatingDialog : DialogFragmentBase() {
     rating_text_change.text = changeLogText
 
     rating_btn_no_thanks.setOnClickListener({ v ->
-      Launcher.INSTANCE.saveVersionCode(versionCode, object : RatingPresenter.SaveCallback {
-        override fun onRatingSaved() {
-          dismiss()
-        }
-
-        override fun onRatingDialogSaveError(throwable: Throwable) {
-          Toast.makeText(v.context, "Error occurred while dismissing dialog. May show again later",
-              Toast.LENGTH_SHORT).show()
-          dismiss()
-        }
-      })
+      Launcher.saveVersionCode(versionCode, onRatingSaved = { dismiss() },
+          onRatingDialogSaveError = {
+            Toast.makeText(v.context,
+                "Error occurred while dismissing dialog. May show again later",
+                Toast.LENGTH_SHORT).show()
+            dismiss()
+          })
     })
 
     rating_btn_go_rate.setOnClickListener({ v ->
-      Launcher.INSTANCE.saveVersionCode(versionCode, object : RatingPresenter.SaveCallback {
-        override fun onRatingSaved() {
-          val fullLink = "market://details?id=" + rateLink
-          NetworkUtil.newLink(v.context.applicationContext, fullLink)
-          dismiss()
-        }
-
-        override fun onRatingDialogSaveError(throwable: Throwable) {
-          Toast.makeText(v.context, "Error occurred while dismissing dialog. May show again later",
-              Toast.LENGTH_SHORT).show()
-          dismiss()
-        }
+      Launcher.saveVersionCode(versionCode, onRatingSaved = {
+        val fullLink = "market://details?id=" + rateLink
+        NetworkUtil.newLink(v.context.applicationContext, fullLink)
+        dismiss()
+      }, onRatingDialogSaveError = {
+        Toast.makeText(v.context, "Error occurred while dismissing dialog. May show again later",
+            Toast.LENGTH_SHORT).show()
+        dismiss()
       })
     })
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    Launcher.INSTANCE.cleanup()
+    Launcher.cleanup()
   }
 
   override fun onResume() {
@@ -147,65 +139,50 @@ class RatingDialog : DialogFragmentBase() {
     @get:CheckResult val currentApplicationVersion: Int
   }
 
-  internal class Launcher private constructor() {
+  internal object Launcher {
 
     internal lateinit var presenter: RatingPresenter
 
     init {
-      PYDroid.instance.provideComponent().plusRatingComponent().inject(this)
+      PYDroid.getInstance().provideComponent().plusRatingComponent().inject(this)
     }
 
     fun loadRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider, force: Boolean) {
-      presenter.loadRatingDialog(provider.currentApplicationVersion, force,
-          object : RatingPresenter.RatingCallback {
-            override fun onShowRatingDialog() {
-              DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating")
-            }
-
-            override fun onRatingDialogLoadError(throwable: Throwable) {
-              Timber.e(throwable, "could not load rating dialog")
-            }
-
-            override fun onLoadComplete() {
-              presenter.destroy()
-            }
-          })
+      presenter.loadRatingDialog(provider.currentApplicationVersion, force, onShowRatingDialog = {
+        DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating")
+      }, onRatingDialogLoadError = {
+        Timber.e(it, "could not load rating dialog")
+      }, onLoadComplete = {
+        presenter.destroy()
+      })
     }
 
-    fun saveVersionCode(versionCode: Int, callback: RatingPresenter.SaveCallback) {
-      presenter.saveRating(versionCode, object : RatingPresenter.SaveCallback {
-        override fun onRatingSaved() {
-          Timber.d("Saved version code: %d", versionCode)
-          callback.onRatingSaved()
-        }
-
-        override fun onRatingDialogSaveError(throwable: Throwable) {
-          Timber.e(throwable, "error saving version code")
-          callback.onRatingDialogSaveError(throwable)
-        }
+    fun saveVersionCode(versionCode: Int, onRatingSaved: () -> Unit,
+        onRatingDialogSaveError: (Throwable) -> Unit) {
+      presenter.saveRating(versionCode, onRatingSaved = {
+        Timber.d("Saved version code: %d", versionCode)
+        onRatingSaved()
+      }, onRatingDialogSaveError = {
+        Timber.e(it, "error saving version code")
+        onRatingDialogSaveError(it)
       })
     }
 
     fun cleanup() {
       presenter.destroy()
     }
-
-    companion object {
-
-      @JvmField internal val INSTANCE = Launcher()
-    }
   }
 
   companion object {
 
-    private val CHANGE_LOG_TEXT = "change_log_text"
-    private val CHANGE_LOG_ICON = "change_log_icon"
-    private val VERSION_CODE = "version_code"
-    private val RATE_LINK = "rate_link"
+    private const val CHANGE_LOG_TEXT = "change_log_text"
+    private const val CHANGE_LOG_ICON = "change_log_icon"
+    private const val VERSION_CODE = "version_code"
+    private const val RATE_LINK = "rate_link"
 
     @JvmStatic fun showRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider,
         force: Boolean) {
-      Launcher.INSTANCE.loadRatingDialog(activity, provider, force)
+      Launcher.loadRatingDialog(activity, provider, force)
     }
 
     @JvmStatic @CheckResult internal fun newInstance(provider: ChangeLogProvider): RatingDialog {

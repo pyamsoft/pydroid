@@ -18,8 +18,8 @@ package com.pyamsoft.pydroid.about
 
 import android.support.annotation.CheckResult
 
-@Suppress("ProtectedInFinal") data class AboutLibrariesModel protected constructor(val name: String,
-    val homepage: String, val license: String, val customContent: String) {
+data class AboutLibrariesModel internal constructor(val name: String, val homepage: String,
+    val license: String, val customContent: String) {
 
   companion object {
 

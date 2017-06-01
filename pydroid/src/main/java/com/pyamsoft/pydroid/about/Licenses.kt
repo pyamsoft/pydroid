@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.about
 
 import android.support.annotation.CheckResult
 import java.util.ArrayList
-import java.util.Collections
 
 class Licenses private constructor() {
 
@@ -128,7 +127,7 @@ class Licenses private constructor() {
 
   companion object {
 
-    private val INSTANCE = Licenses()
+    @JvmStatic private val INSTANCE = Licenses()
 
     @JvmStatic fun create(name: String, homepageUrl: String, licenseLocation: String) {
       INSTANCE.createItem(name, homepageUrl, licenseLocation)
@@ -139,7 +138,7 @@ class Licenses private constructor() {
     }
 
     @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> {
-      return Collections.unmodifiableList(INSTANCE.licenses)
+      return INSTANCE.licenses.toList()
     }
   }
 }

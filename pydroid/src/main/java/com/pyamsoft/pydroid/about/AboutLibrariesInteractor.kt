@@ -26,12 +26,11 @@ import timber.log.Timber
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
-import java.util.Collections
 import java.util.HashMap
 
-internal class AboutLibrariesInteractor(context: Context, licenses: List<AboutLibrariesModel>) {
+internal class AboutLibrariesInteractor internal constructor(context: Context,
+    internal val licenses: List<AboutLibrariesModel>) {
 
-  internal val licenses: List<AboutLibrariesModel> = Collections.unmodifiableList(licenses)
   private val assetManager: AssetManager = context.applicationContext.assets
   internal val cachedLicenses: MutableMap<String, String>
 
@@ -57,22 +56,25 @@ internal class AboutLibrariesInteractor(context: Context, licenses: List<AboutLi
   @CheckResult internal fun loadLicenseText(model: AboutLibrariesModel): String {
     return Single.fromCallable<String> {
       val name = model.name
+      val result: String
       if (cachedLicenses.containsKey(name)) {
         Timber.d("Fetch from cache for name: %s", name)
-        cachedLicenses[name]
+        result = cachedLicenses.getOrDefault(name, "")
       } else {
         if (model.customContent.isEmpty()) {
           Timber.d("Load from asset location: %s (%s)", name, model.license)
-          loadNewLicense(model.license)
+          result = loadNewLicense(model.license)
         } else {
           Timber.d("License: %s provides custom content", name)
-          model.customContent
+          result = model.customContent
         }
       }
-    }.doOnSuccess { license ->
-      if (!license.isEmpty()) {
+
+      return@fromCallable result
+    }.doOnSuccess {
+      if (it.isNotEmpty()) {
         Timber.d("Put license into cache for model: %s", model.name)
-        cachedLicenses.put(model.name, license)
+        cachedLicenses.put(model.name, it)
       }
     }.blockingGet()
   }

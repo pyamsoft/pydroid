@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.RatingPreferences
 import io.reactivex.Completable
 import io.reactivex.Single
 
-class RatingInteractor(private val preferences: RatingPreferences) {
+class RatingInteractor(internal val preferences: RatingPreferences) {
 
   /**
    * public

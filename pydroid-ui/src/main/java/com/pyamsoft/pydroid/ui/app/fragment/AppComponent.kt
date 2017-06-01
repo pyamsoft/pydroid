@@ -23,6 +23,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     private val versionCheckModule: VersionCheckModule) {
 
   internal fun inject(fragment: ActionBarSettingsPreferenceFragment) {
-    fragment.presenter = versionCheckModule.presenter
+    fragment.presenter = versionCheckModule.getPresenter()
   }
 }

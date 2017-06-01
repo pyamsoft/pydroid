@@ -43,8 +43,10 @@ abstract class AutoRestartService : Service() {
   override fun onTaskRemoved(rootIntent: Intent) {
     super.onTaskRemoved(rootIntent)
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && isAutoRestartEnabled) {
-      Timber.w(
-          "Android KitKat is affected by a bug which causing START_STICKY " + "and Foreground services to be killed onTaskRemoved.")
+      Timber.w("""
+        |Android KitKat is affected by a bug which causes START_STICKY
+        |and Foreground services to be killed onTaskRemoved.
+      """)
       Timber.w(
           "The service will schedule an Alarm for 5 seconds out to automatically restart itself")
 
@@ -74,6 +76,6 @@ abstract class AutoRestartService : Service() {
   /**
    * Change to disable auto restart ability
    */
-  protected val isAutoRestartEnabled: Boolean
+  protected open val isAutoRestartEnabled: Boolean
     @CheckResult get() = true
 }

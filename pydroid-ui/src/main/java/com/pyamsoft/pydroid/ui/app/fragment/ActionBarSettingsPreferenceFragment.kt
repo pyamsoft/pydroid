@@ -178,7 +178,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   }
 
   internal val currentApplicationVersion: Int
-    @CheckResult get() = versionedActivity.curentApplicationVersion
+    @CheckResult get() = versionedActivity.currentApplicationVersion
 
   private val versionedActivity: VersionCheckProvider
     @CheckResult get() {

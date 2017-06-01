@@ -49,7 +49,7 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
   @CallSuper override fun onStart() {
     super.onStart()
     if (!versionChecked && isVersionCheckEnabled) {
-      presenter.checkForUpdates(packageName, curentApplicationVersion,
+      presenter.checkForUpdates(packageName, currentApplicationVersion,
           onUpdatedVersionFound = { current, updated ->
             Timber.d("Updated version found. %d => %d", current, updated)
             DialogUtil.guaranteeSingleDialogFragment(this@VersionCheckActivity,

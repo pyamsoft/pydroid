@@ -22,7 +22,7 @@ import android.util.AttributeSet
 
 /**
  * Attempts to fix TextView memory leak
-
+ *
  * https://github.com/square/leakcanary/issues/180
  */
 class NoLeakTextInputEditText : TextInputEditText {

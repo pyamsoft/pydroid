@@ -19,24 +19,17 @@ package com.pyamsoft.pydroid.design.util
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 
-class FABUtil private constructor() {
+object FABUtil {
 
-  init {
-    throw RuntimeException("No instances")
-  }
-
-  companion object {
-
-    @JvmStatic fun setupFABBehavior(fab: FloatingActionButton,
-        behavior: FloatingActionButton.Behavior?) {
-      val params = fab.layoutParams
-      if (params is CoordinatorLayout.LayoutParams) {
-        val coordParams = params
-        if (behavior == null) {
-          coordParams.behavior = FloatingActionButton.Behavior()
-        } else {
-          coordParams.behavior = behavior
-        }
+  @JvmStatic fun setupFABBehavior(fab: FloatingActionButton,
+      behavior: FloatingActionButton.Behavior?) {
+    val params = fab.layoutParams
+    if (params is CoordinatorLayout.LayoutParams) {
+      val coordParams = params
+      if (behavior == null) {
+        coordParams.behavior = FloatingActionButton.Behavior()
+      } else {
+        coordParams.behavior = behavior
       }
     }
   }

@@ -28,15 +28,10 @@ import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.HashMap
 
-internal class AboutLibrariesInteractor internal constructor(context: Context,
-    internal val licenses: List<AboutLibrariesModel>) {
+class AboutLibrariesInteractor(context: Context, private val licenses: List<AboutLibrariesModel>) {
 
   private val assetManager: AssetManager = context.applicationContext.assets
-  internal val cachedLicenses: MutableMap<String, String>
-
-  init {
-    cachedLicenses = HashMap<String, String>()
-  }
+  private val cachedLicenses: MutableMap<String, String> = HashMap()
 
   /**
    * public

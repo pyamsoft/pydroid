@@ -57,11 +57,7 @@ abstract class ActivityBase : AppCompatActivity() {
   /**
    * Hopefully fixes Android's glorious InputMethodManager related context leaks.
    */
-  private class IMMLeakUtil private constructor() {
-
-    init {
-      throw RuntimeException("No instances")
-    }
+  object IMMLeakUtil {
 
     /**
      * Simple class which allows us to not have to override every single callback, every single
@@ -98,9 +94,9 @@ abstract class ActivityBase : AppCompatActivity() {
       }
     }
 
-    internal class ReferenceCleaner(val inputMethodManager: InputMethodManager,
-        val lockField: Field, val servedViewField: Field,
-        val finishInputLockedMethod: Method) : MessageQueue.IdleHandler, View.OnAttachStateChangeListener, ViewTreeObserver.OnGlobalFocusChangeListener {
+    internal class ReferenceCleaner(internal val inputMethodManager: InputMethodManager,
+        internal val lockField: Field, internal val servedViewField: Field,
+        internal val finishInputLockedMethod: Method) : MessageQueue.IdleHandler, View.OnAttachStateChangeListener, ViewTreeObserver.OnGlobalFocusChangeListener {
 
       override fun onGlobalFocusChanged(oldFocus: View?, newFocus: View?) {
         if (newFocus == null) {
@@ -195,79 +191,59 @@ abstract class ActivityBase : AppCompatActivity() {
       }
     }
 
-    companion object {
-
-      /**
-       * Fix for https://code.google.com/p/android/issues/detail?id=171190 .
-
-       * When a view that has focus gets detached, we wait for the obs thread to be idle and then
-       * check if the InputMethodManager is leaking a view. If yes, we tell it that the decor view
-       * got
-       * focus, which is what happens if you press home and come back from recent apps. This replaces
-       * the reference to the detached view with a reference to the decor view.
-
-       * Should be called from [Activity.onCreate] )}.
-       */
-      @JvmStatic internal fun fixFocusedViewLeak(application: Application) {
-        // LeakCanary reports this bug within IC_MR1 and M
-        val sdk = Build.VERSION.SDK_INT
-        if (sdk < Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 || sdk > Build.VERSION_CODES.M) {
-          Timber.w("Invalid version: %d", sdk)
-          return
-        }
-
-        val inputMethodManager = application.getSystemService(
-            Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        val servedViewField: Field
-        val lockField: Field
-        val finishInputLockedMethod: Method
-        val focusInMethod: Method
-        try {
-          servedViewField = InputMethodManager::class.java.getDeclaredField("mServedView")
-          lockField = InputMethodManager::class.java.getDeclaredField("mServedView")
-          finishInputLockedMethod = InputMethodManager::class.java.getDeclaredMethod(
-              "finishInputLocked")
-          focusInMethod = InputMethodManager::class.java.getDeclaredMethod("focusIn",
-              View::class.java)
-          servedViewField.isAccessible = true
-          lockField.isAccessible = true
-          finishInputLockedMethod.isAccessible = true
-          focusInMethod.isAccessible = true
-        } catch (unexpected: Exception) {
-          Timber.e(unexpected, "Unexpected reflection exception")
-          return
-        }
-
-        // Change this based on when you wish to attach the callback
-        // reports from gist state that onActivityStarted may be safer
-        // https://gist.github.com/pyricau/4df64341cc978a7de414
-        Timber.d("Register lifecycle callback to catch IMM Leaks")
-        application.registerActivityLifecycleCallbacks(object : LifecycleCallbacksAdapter() {
-          override fun onActivityStarted(activity: Activity) {
-            val cleaner = ReferenceCleaner(inputMethodManager, lockField, servedViewField,
-                finishInputLockedMethod)
-            val window = activity.window
-            if (window == null) {
-              Timber.e("Activity Window is NULL")
-              return
-            }
-            val decorView = window.decorView
-            if (decorView == null) {
-              Timber.e("Window DecorView is NULL")
-              return
-            }
-            val rootView = decorView.rootView
-            if (rootView == null) {
-              Timber.e("DecorView Root is NULL")
-              return
-            }
-
-            val viewTreeObserver = rootView.viewTreeObserver
-            viewTreeObserver?.addOnGlobalFocusChangeListener(cleaner)
-          }
-        })
+    /**
+     * Fix for https://code.google.com/p/android/issues/detail?id=171190 .
+     *
+     * When a view that has focus gets detached, we wait for the obs thread to be idle and then
+     * check if the InputMethodManager is leaking a view. If yes, we tell it that the decor view
+     * got
+     * focus, which is what happens if you press home and come back from recent apps. This replaces
+     * the reference to the detached view with a reference to the decor view.
+     *
+     * Should be called from [Activity.onCreate] )}.
+     */
+    @JvmStatic internal fun fixFocusedViewLeak(application: Application) {
+      // LeakCanary reports this bug within IC_MR1 and M
+      val sdk = Build.VERSION.SDK_INT
+      if (sdk < Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 || sdk > Build.VERSION_CODES.M) {
+        Timber.w("Invalid version: %d", sdk)
+        return
       }
+
+      val inputMethodManager = application.getSystemService(
+          Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+      val servedViewField: Field
+      val lockField: Field
+      val finishInputLockedMethod: Method
+      val focusInMethod: Method
+      try {
+        servedViewField = InputMethodManager::class.java.getDeclaredField("mServedView")
+        lockField = InputMethodManager::class.java.getDeclaredField("mServedView")
+        finishInputLockedMethod = InputMethodManager::class.java.getDeclaredMethod(
+            "finishInputLocked")
+        focusInMethod = InputMethodManager::class.java.getDeclaredMethod("focusIn",
+            View::class.java)
+        servedViewField.isAccessible = true
+        lockField.isAccessible = true
+        finishInputLockedMethod.isAccessible = true
+        focusInMethod.isAccessible = true
+      } catch (unexpected: Exception) {
+        Timber.e(unexpected, "Unexpected reflection exception")
+        return
+      }
+
+      // Change this based on when you wish to attach the callback
+      // reports from gist state that onActivityStarted may be safer
+      // https://gist.github.com/pyricau/4df64341cc978a7de414
+      Timber.d("Register lifecycle callback to catch IMM Leaks")
+      application.registerActivityLifecycleCallbacks(object : LifecycleCallbacksAdapter() {
+        override fun onActivityStarted(activity: Activity) {
+          activity.window?.decorView?.rootView?.viewTreeObserver?.addOnGlobalFocusChangeListener(
+              ReferenceCleaner(inputMethodManager, lockField, servedViewField,
+                  finishInputLockedMethod))
+        }
+      })
     }
   }
 }

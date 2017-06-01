@@ -17,14 +17,12 @@
 package com.pyamsoft.pydroid.version
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import com.google.auto.value.AutoValue
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.annotations.SerializedName
 
-@RestrictTo(
-    RestrictTo.Scope.LIBRARY) @AutoValue abstract internal class VersionCheckResponse internal constructor() {
+@AutoValue abstract class VersionCheckResponse internal constructor() {
 
   @CheckResult @SerializedName("CURRENT_VERSION") internal abstract fun currentVersion(): Int
 

@@ -22,5 +22,6 @@ interface VersionCheckProvider {
 
   @CheckResult fun provideApplicationName(): String
 
-  @get:CheckResult val currentApplicationVersion: Int
+  @CheckResult fun getCurentApplicationVersion(): Int
+
 }

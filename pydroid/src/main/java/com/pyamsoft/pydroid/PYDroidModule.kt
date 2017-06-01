@@ -18,19 +18,20 @@ package com.pyamsoft.pydroid
 
 import android.content.Context
 import android.support.annotation.CheckResult
+import android.support.annotation.RestrictTo
+import android.support.annotation.RestrictTo.Scope.LIBRARY
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.Licenses
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.Collections
 
-class PYDroidModule(context: Context, val isDebug: Boolean) {
+@RestrictTo(LIBRARY) class PYDroidModule(context: Context, val isDebug: Boolean) {
 
   // Singleton
-  private val appContext: Context = context.applicationContext
-  private val licenses: List<AboutLibrariesModel> = Licenses.getLicenses()
-  private val preferences: PYDroidPreferencesImpl = PYDroidPreferencesImpl(appContext)
+  private val appContext = context.applicationContext
+  private val licenses = Licenses.getLicenses()
+  private val preferences = PYDroidPreferencesImpl(appContext)
 
   // Singleton
   @CheckResult internal fun provideContext(): Context {
@@ -44,7 +45,7 @@ class PYDroidModule(context: Context, val isDebug: Boolean) {
 
   // Singleton
   @CheckResult internal fun provideLicenseMap(): List<AboutLibrariesModel> {
-    return Collections.unmodifiableList(licenses)
+    return licenses
   }
 
   // Singleton

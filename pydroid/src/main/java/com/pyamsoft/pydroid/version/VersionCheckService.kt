@@ -17,12 +17,11 @@
 package com.pyamsoft.pydroid.version
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Url
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal interface VersionCheckService {
+interface VersionCheckService {
 
   @CheckResult @GET fun checkVersion(@Url packageName: String): Single<VersionCheckResponse>
 }

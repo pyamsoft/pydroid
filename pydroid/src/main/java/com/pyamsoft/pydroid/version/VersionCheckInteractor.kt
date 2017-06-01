@@ -20,10 +20,9 @@ import android.support.annotation.CheckResult
 import io.reactivex.Single
 import timber.log.Timber
 
-internal class VersionCheckInteractor internal constructor(
-    internal val versionCheckService: VersionCheckService) {
+class VersionCheckInteractor(private val versionCheckService: VersionCheckService) {
 
-  internal var cachedResponse: Single<VersionCheckResponse>? = null
+  private var cachedResponse: Single<VersionCheckResponse>? = null
 
   /**
    * public
@@ -40,7 +39,7 @@ internal class VersionCheckInteractor internal constructor(
         dataSource = cachedResponse!!
       }
 
-      dataSource
+      return@defer dataSource
     }.map { it.currentVersion() }
   }
 }

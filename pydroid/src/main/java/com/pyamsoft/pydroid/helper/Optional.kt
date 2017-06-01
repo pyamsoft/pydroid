@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.helper
 
 import android.support.annotation.CheckResult
 
-data class Optional<out T> protected constructor(private val source: T?) {
+data class Optional<out T> internal constructor(private val source: T?) {
 
   @CheckResult fun isPresent(): Boolean {
     return source != null

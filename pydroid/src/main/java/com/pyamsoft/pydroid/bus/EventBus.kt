@@ -25,12 +25,7 @@ import timber.log.Timber
 
 class EventBus private constructor() {
 
-  private val bus: Subject<Optional<*>>
-
-  init {
-    bus = PublishSubject.create()
-  }
-
+  private val bus: Subject<Optional<*>> = PublishSubject.create()
 
   /**
    * Publish an event to a registered Receiver class
@@ -45,12 +40,11 @@ class EventBus private constructor() {
    * ignored
    */
   fun <T> publish(event: T) {
-    if (!bus.hasObservers()) {
+    if (bus.hasObservers()) {
+      bus.onNext(Optional.of(event))
+    } else {
       Timber.w("No observers on bus, ignore publish event: %s", event)
-      return
     }
-
-    bus.onNext(Optional.of(event))
   }
 
 
@@ -73,7 +67,7 @@ class EventBus private constructor() {
 
   companion object {
 
-    @Volatile private var instance: EventBus? = null
+    @JvmStatic @Volatile private var instance: EventBus? = null
 
     /**
      * Create a new local bus instance to use

@@ -44,13 +44,13 @@ class RxResourceLoader(context: Context, @DrawableRes resource: Int) : ResourceL
     return RxLoaded(
         Single.fromCallable { loadResource(appContext) }.subscribeOn(subScheduler).observeOn(
             obsScheduler).doOnSubscribe {
-          startAction.invoke(target)
+          startAction(target)
         }.doOnError {
           Timber.e(it, "Error loading AsyncDrawable")
-          errorAction.invoke(target)
+          errorAction(target)
         }.doAfterSuccess {
-          completeAction.invoke(target)
-        }.subscribe({ target.loadImage(it) }, {
+          completeAction(target)
+        }.subscribe(target::loadImage, {
           Timber.e(it, "Error loading Drawable using RxResourceLoader")
         }))
   }

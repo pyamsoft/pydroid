@@ -25,11 +25,10 @@ object FABUtil {
       behavior: FloatingActionButton.Behavior?) {
     val params = fab.layoutParams
     if (params is CoordinatorLayout.LayoutParams) {
-      val coordParams = params
       if (behavior == null) {
-        coordParams.behavior = FloatingActionButton.Behavior()
+        params.behavior = FloatingActionButton.Behavior()
       } else {
-        coordParams.behavior = behavior
+        params.behavior = behavior
       }
     }
   }

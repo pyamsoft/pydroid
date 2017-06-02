@@ -22,6 +22,7 @@ import android.support.annotation.ColorInt
 import android.support.annotation.StyleRes
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
+import android.support.v7.content.res.AppCompatResources
 import android.util.TypedValue
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
@@ -125,7 +126,7 @@ abstract class ProgressOverlay private constructor() {
           // windowBackground is a color
           binding.setBackgroundColor(themeValue.data)
         } else {
-          val drawable = ContextCompat.getDrawable(activity, themeValue.resourceId)
+          val drawable = AppCompatResources.getDrawable(activity, themeValue.resourceId)
           if (drawable != null) {
             // windowBackground is not a color, probably a drawable
             binding.background = drawable

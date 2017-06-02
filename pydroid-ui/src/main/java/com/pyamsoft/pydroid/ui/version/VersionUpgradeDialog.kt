@@ -50,9 +50,9 @@ import java.util.Locale
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val message = String.format(Locale.US,
-        "A new version of %s is available!%nCurrent version: %d%nLatest verson: %d",
-        applicationName, currentVersion, latestVersion)
+    val message = """|A new version of $applicationName is available!
+                     |Current version: $currentVersion
+                     |Latest verson: $latestVersion""".trimMargin()
     return AlertDialog.Builder(activity).setTitle("New version available").setMessage(
         message).setPositiveButton("Update") { _, _ ->
       Linker.with(context).clickAppPage(context.packageName)

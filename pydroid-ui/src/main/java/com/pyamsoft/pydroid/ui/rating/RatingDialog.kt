@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
@@ -42,10 +43,11 @@ import kotlinx.android.synthetic.main.dialog_rating.rating_icon
 import kotlinx.android.synthetic.main.dialog_rating.rating_text_change
 import timber.log.Timber
 
+@Suppress("ProtectedInFinal")
 class RatingDialog : DialogFragmentBase() {
-  internal lateinit var rateLink: String
+  protected lateinit var rateLink: String
+  protected var versionCode: Int = 0
   private var changeLogText: Spannable? = null
-  private var versionCode: Int = 0
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()
 
@@ -93,24 +95,24 @@ class RatingDialog : DialogFragmentBase() {
     iconTask = ImageLoader.fromResource(context, changeLogIcon).into(rating_icon)
     rating_text_change.text = changeLogText
 
-    rating_btn_no_thanks.setOnClickListener({ v ->
+    rating_btn_no_thanks.setOnClickListener({
       Launcher.saveVersionCode(versionCode, onRatingSaved = { dismiss() },
           onRatingDialogSaveError = {
-            Toast.makeText(v.context,
+            Toasty.makeText(context.applicationContext,
                 "Error occurred while dismissing dialog. May show again later",
-                Toast.LENGTH_SHORT).show()
+                Toasty.LENGTH_SHORT).show()
             dismiss()
           })
     })
 
-    rating_btn_go_rate.setOnClickListener({ v ->
+    rating_btn_go_rate.setOnClickListener({
       Launcher.saveVersionCode(versionCode, onRatingSaved = {
         val fullLink = "market://details?id=" + rateLink
-        NetworkUtil.newLink(v.context.applicationContext, fullLink)
+        NetworkUtil.newLink(it.context.applicationContext, fullLink)
         dismiss()
       }, onRatingDialogSaveError = {
-        Toast.makeText(v.context, "Error occurred while dismissing dialog. May show again later",
-            Toast.LENGTH_SHORT).show()
+        Toasty.makeText(context.applicationContext, "Error occurred while dismissing dialog. May show again later",
+            Toasty.LENGTH_SHORT).show()
         dismiss()
       })
     })

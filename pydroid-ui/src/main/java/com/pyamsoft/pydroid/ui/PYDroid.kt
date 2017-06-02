@@ -58,7 +58,7 @@ class PYDroid internal constructor(module: PYDroidModule) {
 
     @Volatile private var instance: PYDroid? = null
 
-    @CheckResult @JvmStatic fun get(): PYDroid {
+    @CheckResult @JvmStatic internal fun get(): PYDroid {
       if (instance == null) {
         synchronized(PYDroid::class.java) {
           if (instance == null) {
@@ -83,7 +83,11 @@ class PYDroid internal constructor(module: PYDroidModule) {
       }
 
       if (instance == null) {
-        throw RuntimeException("PYDroid initialization failed!")
+        synchronized(PYDroid::class.java) {
+          if (instance == null) {
+            throw RuntimeException("PYDroid initialization failed!")
+          }
+        }
       }
     }
   }

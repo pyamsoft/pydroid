@@ -37,8 +37,6 @@ abstract class TamperActivity : RatingActivity() {
    * Returns true if the application has been tampered with, false if not
    */
   @CheckResult private fun checkNotTamperedWith(): Boolean {
-    val safePackageName = safePackageName
-
     // Check if we are renamed
     if (applicationContext.packageName.compareTo(safePackageName) != 0) {
       Timber.e("Application is potentially re-named")

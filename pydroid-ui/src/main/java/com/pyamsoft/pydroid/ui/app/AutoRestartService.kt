@@ -46,7 +46,7 @@ abstract class AutoRestartService : Service() {
       Timber.w("""
         |Android KitKat is affected by a bug which causes START_STICKY
         |and Foreground services to be killed onTaskRemoved.
-      """)
+      """.trimMargin())
       Timber.w(
           "The service will schedule an Alarm for 5 seconds out to automatically restart itself")
 

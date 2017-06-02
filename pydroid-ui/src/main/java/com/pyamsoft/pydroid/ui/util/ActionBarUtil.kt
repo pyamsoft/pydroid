@@ -24,6 +24,7 @@ import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.content.res.AppCompatResources
 
 object ActionBarUtil {
 
@@ -38,7 +39,7 @@ object ActionBarUtil {
   @JvmStatic fun setActionBarUpEnabled(activity: Activity, up: Boolean, @DrawableRes icon: Int) {
     val d: Drawable?
     if (icon != 0) {
-      d = ContextCompat.getDrawable(activity, icon)
+      d = AppCompatResources.getDrawable(activity, icon)
     } else {
       d = null
     }

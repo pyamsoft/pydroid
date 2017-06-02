@@ -62,7 +62,7 @@ class EventBus private constructor() {
       Optional.ofNullable(null)
     }).filter { it.isPresent() }.map { it.item() }.filter {
       eventClass.isAssignableFrom(it!!::class.java)
-    }.map { eventClass.cast(it) }
+    }.map(eventClass::cast)
   }
 
   companion object {

@@ -20,9 +20,10 @@ import android.support.annotation.CheckResult
 import io.reactivex.Single
 import timber.log.Timber
 
-class VersionCheckInteractor(internal val versionCheckService: VersionCheckService) {
+@Suppress("ProtectedInFinal")
+class VersionCheckInteractor(protected val versionCheckService: VersionCheckService) {
 
-  internal var cachedResponse: Single<VersionCheckResponse>? = null
+  protected var cachedResponse: Single<VersionCheckResponse>? = null
 
   /**
    * public

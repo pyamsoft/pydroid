@@ -21,7 +21,8 @@ import com.pyamsoft.pydroid.RatingPreferences
 import io.reactivex.Completable
 import io.reactivex.Single
 
-class RatingInteractor(internal val preferences: RatingPreferences) {
+@Suppress("ProtectedInFinal")
+class RatingInteractor(protected val preferences: RatingPreferences) {
 
   /**
    * public

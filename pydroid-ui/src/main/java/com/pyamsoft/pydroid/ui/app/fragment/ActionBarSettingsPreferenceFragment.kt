@@ -29,6 +29,7 @@ import android.widget.Toast
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.DialogUtil
@@ -37,7 +38,6 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
-import java.util.Locale
 
 abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment() {
 
@@ -51,7 +51,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
   @SuppressLint("ShowToast") @CallSuper override fun onCreateView(inflater: LayoutInflater,
       container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    toast = Toast.makeText(context, "Checking for updates...", Toast.LENGTH_SHORT)
+    toast = Toasty.makeText(context, "Checking for updates...", Toasty.LENGTH_SHORT)
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
@@ -64,7 +64,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
     val applicationSettings = findPreference("application_settings")
     if (applicationSettings != null) {
-      applicationSettings.title = String.format(Locale.getDefault(), "%s Settings", applicationName)
+      applicationSettings.title = "$applicationName Settings"
     }
   }
 
@@ -78,7 +78,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       } else {
         upgradeInfo.setOnPreferenceClickListener {
           onShowChangelogClicked()
-          true
+          return@setOnPreferenceClickListener true
         }
       }
     }
@@ -86,13 +86,13 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     val showAboutLicenses = findPreference(getString(R.string.about_license_key))
     showAboutLicenses.setOnPreferenceClickListener {
       onLicenseItemClicked()
-      true
+      return@setOnPreferenceClickListener true
     }
 
     val checkVersion = findPreference(getString(R.string.check_version_key))
     checkVersion.setOnPreferenceClickListener {
-      onCheckForUpdatesClicked()
-      true
+      onCheckForUpdatesClicked(presenter)
+      return@setOnPreferenceClickListener true
     }
 
     val clearAll = findPreference(getString(R.string.clear_all_key))
@@ -102,7 +102,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       } else {
         clearAll.setOnPreferenceClickListener {
           onClearAllClicked()
-          true
+          return@setOnPreferenceClickListener true
         }
       }
     }
@@ -110,13 +110,18 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     val rateApplication = findPreference(getString(R.string.rating_key))
     rateApplication.setOnPreferenceClickListener {
       Linker.with(it.context).clickAppPage(it.context.packageName)
-      true
+      return@setOnPreferenceClickListener true
     }
   }
 
   @CallSuper override fun onStop() {
     super.onStop()
     presenter.stop()
+  }
+
+  @CallSuper override fun onDestroy() {
+    super.onDestroy()
+    presenter.destroy()
   }
 
   /**
@@ -134,37 +139,29 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     AboutLibrariesFragment.show(activity, rootViewContainer, isLastOnBackStack)
   }
 
-  internal fun onShowChangelogClicked() {
+  /**
+   * Shows the changelog, override or extend to use unique implementation
+   */
+  protected open fun onShowChangelogClicked() {
     val activity = activity
     if (activity is RatingDialog.ChangeLogProvider) {
-      onShowChangelogClicked(activity)
+      RatingDialog.showRatingDialog(activity, activity, true)
     } else {
       throw ClassCastException("Activity is not a change log provider")
     }
   }
 
   /**
-   * Shows the changelog, override or extend to use unique implementation
-   */
-  protected fun onShowChangelogClicked(provider: RatingDialog.ChangeLogProvider) {
-    RatingDialog.showRatingDialog(activity, provider, true)
-  }
-
-  internal fun onCheckForUpdatesClicked() {
-    onCheckForUpdatesClicked(presenter)
-  }
-
-  /**
    * Checks the server for updates, override to use a custom behavior
    */
-  protected fun onCheckForUpdatesClicked(presenter: VersionCheckPresenter) {
+  protected open fun onCheckForUpdatesClicked(presenter: VersionCheckPresenter) {
     toast.show()
-    presenter.forceCheckForUpdates(context.packageName, currentApplicationVersion,
+    presenter.forceCheckForUpdates(context.packageName, versionedActivity.currentApplicationVersion,
         onUpdatedVersionFound = { current, updated ->
           Timber.d("Updated version found. %d => %d", current, updated)
           DialogUtil.guaranteeSingleDialogFragment(activity,
-              VersionUpgradeDialog.newInstance(provideApplicationName(), current, updated),
-              VersionUpgradeDialog.TAG)
+              VersionUpgradeDialog.newInstance(versionedActivity.provideApplicationName(), current,
+                  updated), VersionUpgradeDialog.TAG)
         }, onVersionCheckFinished = {
       Timber.d("License check finished.")
     })
@@ -172,13 +169,6 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
   protected open val isLastOnBackStack: AboutLibrariesFragment.BackStackState
     @CheckResult get() = AboutLibrariesFragment.BackStackState.NOT_LAST
-
-  @CheckResult internal fun provideApplicationName(): String {
-    return versionedActivity.provideApplicationName()
-  }
-
-  internal val currentApplicationVersion: Int
-    @CheckResult get() = versionedActivity.currentApplicationVersion
 
   private val versionedActivity: VersionCheckProvider
     @CheckResult get() {

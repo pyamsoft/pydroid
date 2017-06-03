@@ -57,7 +57,7 @@ abstract class ActivityBase : AppCompatActivity() {
   /**
    * Hopefully fixes Android's glorious InputMethodManager related context leaks.
    */
-  object IMMLeakUtil {
+  private object IMMLeakUtil {
 
     /**
      * Simple class which allows us to not have to override every single callback, every single

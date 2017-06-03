@@ -29,7 +29,7 @@ import timber.log.Timber
 abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckProvider {
 
   internal lateinit var presenter: VersionCheckPresenter
-  internal var versionChecked: Boolean = false
+  private var versionChecked: Boolean = false
 
   // Always enabled for release builds
   private val isVersionCheckEnabled: Boolean

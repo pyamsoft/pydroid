@@ -26,7 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
 import com.pyamsoft.pydroid.rating.RatingPresenter
@@ -43,10 +42,9 @@ import kotlinx.android.synthetic.main.dialog_rating.rating_icon
 import kotlinx.android.synthetic.main.dialog_rating.rating_text_change
 import timber.log.Timber
 
-@Suppress("ProtectedInFinal")
 class RatingDialog : DialogFragmentBase() {
-  protected lateinit var rateLink: String
-  protected var versionCode: Int = 0
+  private lateinit var rateLink: String
+  private var versionCode: Int = 0
   private var changeLogText: Spannable? = null
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()
@@ -111,7 +109,8 @@ class RatingDialog : DialogFragmentBase() {
         NetworkUtil.newLink(it.context.applicationContext, fullLink)
         dismiss()
       }, onRatingDialogSaveError = {
-        Toasty.makeText(context.applicationContext, "Error occurred while dismissing dialog. May show again later",
+        Toasty.makeText(context.applicationContext,
+            "Error occurred while dismissing dialog. May show again later",
             Toasty.LENGTH_SHORT).show()
         dismiss()
       })
@@ -187,7 +186,7 @@ class RatingDialog : DialogFragmentBase() {
       Launcher.loadRatingDialog(activity, provider, force)
     }
 
-    @JvmStatic @CheckResult internal fun newInstance(provider: ChangeLogProvider): RatingDialog {
+    @JvmStatic @CheckResult private fun newInstance(provider: ChangeLogProvider): RatingDialog {
       val fragment = RatingDialog()
       val args = Bundle()
       args.putString(RATE_LINK, provider.getPackageName())

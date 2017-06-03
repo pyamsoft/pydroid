@@ -22,12 +22,12 @@ import android.os.Handler
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.widget.Toast
+import com.pyamsoft.pydroid.ui.helper.Toasty
 
 abstract class BackPressConfirmActivity : ActivityBase() {
-  internal var backBeenPressed: Boolean = false
+  private var backBeenPressed: Boolean = false
   private lateinit var handler: Handler
   private lateinit var backBeenPressedToast: Toast
-  private lateinit var backBeenPressedRunnable: (() -> Unit)
 
   /**
    * Override this if you want normal back button behavior
@@ -50,15 +50,14 @@ abstract class BackPressConfirmActivity : ActivityBase() {
     } else {
       backBeenPressed = true
       backBeenPressedToast.show()
-      handler.postDelayed(backBeenPressedRunnable, BACK_PRESSED_DELAY)
+      handler.postDelayed({ backBeenPressed = false }, BACK_PRESSED_DELAY)
     }
   }
 
   @SuppressLint("ShowToast") private fun enableBackBeenPressedConfirmation() {
     backBeenPressed = false
     handler = Handler()
-    backBeenPressedToast = Toast.makeText(this, "Press Again to Exit", Toast.LENGTH_SHORT)
-    backBeenPressedRunnable = { backBeenPressed = false }
+    backBeenPressedToast = Toasty.makeText(this, "Press Again to Exit", Toasty.LENGTH_SHORT)
     handler.removeCallbacksAndMessages(null)
   }
 

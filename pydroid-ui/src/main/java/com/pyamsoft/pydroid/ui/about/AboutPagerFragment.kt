@@ -29,10 +29,9 @@ import com.pyamsoft.pydroid.util.NetworkUtil
 import kotlinx.android.synthetic.main.fragment_pager_about.about_item_homepage
 import kotlinx.android.synthetic.main.fragment_pager_about.about_item_webview
 
-@Suppress("ProtectedInFinal")
 class AboutPagerFragment : Fragment() {
 
-  protected lateinit var homepage: String
+  private lateinit var homepage: String
   private lateinit var license: String
 
   override fun onCreate(savedInstanceState: Bundle?) {

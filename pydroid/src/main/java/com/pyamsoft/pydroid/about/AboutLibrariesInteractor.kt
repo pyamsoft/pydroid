@@ -28,11 +28,10 @@ import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import java.util.HashMap
 
-@Suppress("ProtectedInFinal")
-class AboutLibrariesInteractor(context: Context, protected val licenses: List<AboutLibrariesModel>) {
+class AboutLibrariesInteractor(context: Context, private val licenses: List<AboutLibrariesModel>) {
 
   private val assetManager: AssetManager = context.applicationContext.assets
-  protected val cachedLicenses: MutableMap<String, String> = HashMap()
+  private val cachedLicenses: MutableMap<String, String> = HashMap()
 
   /**
    * public

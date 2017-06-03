@@ -25,11 +25,10 @@ import timber.log.Timber
 /**
  * Floating Action Button behavior which hides button after scroll distance is passed
  */
-@Suppress("ProtectedInFinal")
 class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionButton.Behavior() {
 
   var isAnimating = false
-    protected set
+    private set
 
   constructor() : this(0)
 

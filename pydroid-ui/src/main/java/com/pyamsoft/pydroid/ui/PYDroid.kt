@@ -21,6 +21,7 @@ import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
 class PYDroid internal constructor(module: PYDroidModule) {
@@ -37,6 +38,7 @@ class PYDroid internal constructor(module: PYDroidModule) {
       setStrictMode()
       Timber.plant(Timber.DebugTree())
     }
+    UiLicenses.addLicenses()
     Timber.i("Initialize PYDroid Injector singleton")
   }
 

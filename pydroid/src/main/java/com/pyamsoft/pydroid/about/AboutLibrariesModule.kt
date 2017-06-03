@@ -24,7 +24,7 @@ import io.reactivex.Scheduler
 @RestrictTo(RestrictTo.Scope.LIBRARY) class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
 
   private val interactor: AboutLibrariesInteractor = AboutLibrariesInteractor(
-      pyDroidModule.provideContext(), pyDroidModule.provideLicenseMap())
+      pyDroidModule.provideContext())
   private val obsScheduler: Scheduler = pyDroidModule.provideObsScheduler()
   private val subScheduler: Scheduler = pyDroidModule.provideSubScheduler()
 

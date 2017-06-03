@@ -30,7 +30,6 @@ import io.reactivex.schedulers.Schedulers
 
   // Singleton
   private val appContext = context.applicationContext
-  private val licenses = Licenses.getLicenses()
   private val preferences = PYDroidPreferencesImpl(appContext)
 
   // Singleton
@@ -41,11 +40,6 @@ import io.reactivex.schedulers.Schedulers
   // Singleton
   @CheckResult internal fun provideRatingPreferences(): RatingPreferences {
     return preferences
-  }
-
-  // Singleton
-  @CheckResult internal fun provideLicenseMap(): List<AboutLibrariesModel> {
-    return licenses
   }
 
   // Singleton

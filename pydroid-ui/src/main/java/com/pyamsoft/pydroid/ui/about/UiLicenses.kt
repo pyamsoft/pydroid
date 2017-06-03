@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.ui.about
 
 import com.pyamsoft.pydroid.about.Licenses
 
-object UiLicenses {
+internal object UiLicenses {
 
-  @JvmStatic fun addLicenses() {
+  @JvmStatic internal fun addLicenses() {
     Licenses.create(Names.MATERIAL_VIEW_PAGER_INDICATOR, HomePageUrls.MATERIAL_VIEW_PAGER_INDICATOR,
         LicenseLocations.MATERIAL_VIEW_PAGER_INDICATOR)
   }

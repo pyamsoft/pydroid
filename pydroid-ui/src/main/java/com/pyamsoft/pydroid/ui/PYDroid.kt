@@ -38,6 +38,8 @@ class PYDroid internal constructor(module: PYDroidModule) {
       setStrictMode()
       Timber.plant(Timber.DebugTree())
     }
+
+    UiLicenses.addLicenses()
     Timber.i("Initialize PYDroid Injector singleton")
   }
 

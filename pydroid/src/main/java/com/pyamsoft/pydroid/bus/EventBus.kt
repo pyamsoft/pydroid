@@ -41,7 +41,7 @@ class EventBus private constructor() {
    */
   fun <T> publish(event: T) {
     if (bus.hasObservers()) {
-      bus.onNext(Optional.of(event))
+      bus.onNext(Optional.ofNullable(event))
     } else {
       Timber.w("No observers on bus, ignore publish event: %s", event)
     }
@@ -67,7 +67,9 @@ class EventBus private constructor() {
 
   companion object {
 
-    @JvmStatic @Volatile private var instance: EventBus? = null
+    @JvmStatic private val singleton: EventBus by lazy {
+      newLocalBus()
+    }
 
     /**
      * Create a new local bus instance to use
@@ -80,15 +82,7 @@ class EventBus private constructor() {
      * Lazy load and return the EventBus
      */
     @JvmStatic @CheckResult fun get(): EventBus {
-      if (instance == null) {
-        synchronized(EventBus::class) {
-          if (instance == null) {
-            instance = newLocalBus()
-          }
-        }
-      }
-
-      return instance!!
+      return singleton
     }
   }
 }

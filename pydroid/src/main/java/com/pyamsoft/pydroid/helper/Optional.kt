@@ -30,14 +30,9 @@ data class Optional<out T> internal constructor(private val source: T?) {
 
   companion object {
 
-    @JvmStatic @CheckResult fun <T> ofNullable(source: T?): Optional<T> {
-      return Optional(source)
-    }
-
-    @JvmStatic @CheckResult fun <T> of(source: T): Optional<T> {
+    @JvmStatic @CheckResult fun <T> ofNullable(source: T): Optional<T> {
       return Optional(source)
     }
   }
-
 }
 

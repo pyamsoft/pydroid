@@ -21,6 +21,7 @@ import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.helper.ThreadSafe
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
@@ -59,39 +60,22 @@ class PYDroid internal constructor(module: PYDroidModule) {
 
   companion object {
 
-    @Volatile private var instance: PYDroid? = null
+    private val singleton = ThreadSafe.Singleton<PYDroid?>(null)
 
-    @CheckResult @JvmStatic internal fun get(): PYDroid {
-      if (instance == null) {
-        synchronized(PYDroid::class.java) {
-          if (instance == null) {
-            throw NullPointerException("PYDroid instance must be initialized first")
-          }
-        }
+    @CheckResult internal fun get(): PYDroid {
+      val pydroid = singleton.access()
+      if (pydroid == null) {
+        throw IllegalStateException("PYDroid must be initialized before access")
+      } else {
+        return pydroid
       }
-
-      return instance!!
     }
 
     /**
      * Initialize the library
      */
     @JvmStatic fun initialize(context: Context, debug: Boolean) {
-      if (instance == null) {
-        synchronized(PYDroid::class.java) {
-          if (instance == null) {
-            instance = PYDroid(PYDroidModule(context.applicationContext, debug))
-          }
-        }
-      }
-
-      if (instance == null) {
-        synchronized(PYDroid::class.java) {
-          if (instance == null) {
-            throw RuntimeException("PYDroid initialization failed!")
-          }
-        }
-      }
+      singleton.assign(PYDroid(PYDroidModule(context.applicationContext, debug)))
     }
   }
 }

@@ -18,6 +18,8 @@ package com.pyamsoft.pydroid.ui.social
 
 import android.content.Context
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.helper.ThreadSafe.DynamicSingleton
+import com.pyamsoft.pydroid.helper.ThreadSafe.Singleton
 import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.util.NetworkUtil
 
@@ -53,18 +55,12 @@ class Linker private constructor(context: Context) : Presenter() {
     private const val GOOGLE_PLUS = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts"
     private const val OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/"
 
-    @Volatile private var instance: Linker? = null
+    private val singleton = DynamicSingleton<Linker>(null)
 
     @CheckResult fun with(context: Context): Linker {
-      if (instance == null) {
-        synchronized(Linker::class.java) {
-          if (instance == null) {
-            instance = Linker(context.applicationContext)
-          }
-        }
+      return singleton.access {
+        Linker(context.applicationContext)
       }
-
-      return instance!!
     }
   }
 }

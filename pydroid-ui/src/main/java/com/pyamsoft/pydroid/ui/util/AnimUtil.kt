@@ -29,6 +29,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import android.widget.TextView
+import com.pyamsoft.pydroid.helper.ThreadSafe.DynamicSingleton
 
 class AnimUtil private constructor(context: Context) {
 
@@ -39,18 +40,10 @@ class AnimUtil private constructor(context: Context) {
 
   companion object {
 
-    @Volatile private var instance: AnimUtil? = null
+    private val singleton = DynamicSingleton<AnimUtil>(null)
 
     @CheckResult private fun with(context: Context): AnimUtil {
-      if (instance == null) {
-        synchronized(AnimUtil::class) {
-          if (instance == null) {
-            instance = AnimUtil(context)
-          }
-        }
-      }
-
-      return instance!!
+      return singleton.access { AnimUtil(context.applicationContext) }
     }
 
     @JvmStatic fun popShow(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {

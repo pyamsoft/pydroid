@@ -21,7 +21,7 @@ import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.helper.ThreadSafe
+import com.pyamsoft.pydroid.helper.ThreadSafe.MutableSingleton
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
@@ -60,15 +60,10 @@ class PYDroid internal constructor(module: PYDroidModule) {
 
   companion object {
 
-    private val singleton = ThreadSafe.Singleton<PYDroid?>(null)
+    private val singleton = MutableSingleton<PYDroid>(null)
 
     @CheckResult internal fun get(): PYDroid {
-      val pydroid = singleton.access()
-      if (pydroid == null) {
-        throw IllegalStateException("PYDroid must be initialized before access")
-      } else {
-        return pydroid
-      }
+      return singleton.access()
     }
 
     /**

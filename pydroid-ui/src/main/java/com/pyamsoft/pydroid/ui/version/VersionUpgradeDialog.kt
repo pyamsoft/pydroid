@@ -23,7 +23,6 @@ import android.support.annotation.RestrictTo
 import android.support.v7.app.AlertDialog
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 import com.pyamsoft.pydroid.ui.social.Linker
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class VersionUpgradeDialog : DialogFragmentBase() {
 
@@ -55,7 +54,7 @@ import java.util.Locale
                      |Latest verson: $latestVersion""".trimMargin()
     return AlertDialog.Builder(activity).setTitle("New version available").setMessage(
         message).setPositiveButton("Update") { _, _ ->
-      Linker.with(context).clickAppPage(context.packageName)
+      Linker.clickAppPage(context.packageName)
       dismiss()
     }.setNegativeButton("Later") { _, _ -> dismiss() }.create()
   }

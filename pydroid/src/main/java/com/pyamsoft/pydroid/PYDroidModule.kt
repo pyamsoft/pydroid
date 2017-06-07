@@ -20,8 +20,6 @@ import android.content.Context
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import android.support.annotation.RestrictTo.Scope.LIBRARY
-import com.pyamsoft.pydroid.about.AboutLibrariesModel
-import com.pyamsoft.pydroid.about.Licenses
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -33,22 +31,22 @@ import io.reactivex.schedulers.Schedulers
   private val preferences = PYDroidPreferencesImpl(appContext)
 
   // Singleton
-  @CheckResult internal fun provideContext(): Context {
+  @CheckResult fun provideContext(): Context {
     return appContext
   }
 
   // Singleton
-  @CheckResult internal fun provideRatingPreferences(): RatingPreferences {
+  @CheckResult fun provideRatingPreferences(): RatingPreferences {
     return preferences
   }
 
   // Singleton
-  @CheckResult internal fun provideSubScheduler(): Scheduler {
+  @CheckResult fun provideSubScheduler(): Scheduler {
     return Schedulers.io()
   }
 
   // Singleton
-  @CheckResult internal fun provideObsScheduler(): Scheduler {
+  @CheckResult fun provideObsScheduler(): Scheduler {
     return AndroidSchedulers.mainThread()
   }
 }

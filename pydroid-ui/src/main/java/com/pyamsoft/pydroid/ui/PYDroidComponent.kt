@@ -21,6 +21,8 @@ import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.social.SocialComponent
+import com.pyamsoft.pydroid.ui.util.UtilComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal interface PYDroidComponent {
@@ -32,4 +34,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
   @CheckResult fun plusAppComponent(): AppComponent
 
   @CheckResult fun plusRatingComponent(): RatingComponent
+
+  @CheckResult fun plusSocialComponent(): SocialComponent
+
+  @CheckResult fun plusUtilComponent(): UtilComponent
 }

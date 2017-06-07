@@ -46,7 +46,9 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.get().provideComponent().plusAppComponent().inject(this)
+    PYDroid.with {
+      it.plusAppComponent().inject(this)
+    }
   }
 
   @SuppressLint("ShowToast") @CallSuper override fun onCreateView(inflater: LayoutInflater,
@@ -109,7 +111,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
     val rateApplication = findPreference(getString(R.string.rating_key))
     rateApplication.setOnPreferenceClickListener {
-      Linker.with(it.context).clickAppPage(it.context.packageName)
+      Linker.clickAppPage(it.context.packageName)
       return@setOnPreferenceClickListener true
     }
   }

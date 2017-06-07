@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
@@ -24,16 +23,20 @@ import com.pyamsoft.pydroid.rating.RatingModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.social.SocialComponent
+import com.pyamsoft.pydroid.ui.util.UtilComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidComponentImpl private constructor(
+@RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidComponentImpl internal constructor(
     module: PYDroidModule) : PYDroidComponent {
 
   private val versionCheckComponent: VersionCheckComponent
   private val aboutLibrariesComponent: AboutLibrariesComponent
   private val appComponent: AppComponent
   private val ratingComponent: RatingComponent
+  private val socialComponent: SocialComponent
+  private val utilComponent: UtilComponent
 
   init {
     val versionCheckModule = VersionCheckModule(module)
@@ -41,6 +44,8 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     appComponent = AppComponent(versionCheckModule)
     aboutLibrariesComponent = AboutLibrariesComponent(AboutLibrariesModule(module))
     ratingComponent = RatingComponent(RatingModule(module))
+    socialComponent = SocialComponent(module)
+    utilComponent = UtilComponent(module)
   }
 
   override fun plusVersionCheckComponent(): VersionCheckComponent {
@@ -59,10 +64,11 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     return ratingComponent
   }
 
-  companion object {
+  override fun plusSocialComponent(): SocialComponent {
+    return socialComponent
+  }
 
-    @JvmStatic @CheckResult fun withModule(module: PYDroidModule): PYDroidComponent {
-      return PYDroidComponentImpl(module)
-    }
+  override fun plusUtilComponent(): UtilComponent {
+    return utilComponent
   }
 }

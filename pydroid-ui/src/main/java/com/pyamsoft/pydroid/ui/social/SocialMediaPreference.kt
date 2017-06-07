@@ -54,10 +54,10 @@ class SocialMediaPreference : BaseBoundPreference {
   override fun onBindViewHolder(holder: PreferenceViewHolder) {
     super.onBindViewHolder(holder)
     Timber.d("onBindViewHolder")
-    holder.itemView.google_play.setOnClickListener { Linker.with(it.context).clickGooglePlay() }
-    holder.itemView.google_plus.setOnClickListener { Linker.with(it.context).clickGooglePlus() }
-    holder.itemView.blogger.setOnClickListener { Linker.with(it.context).clickBlogger() }
-    holder.itemView.facebook.setOnClickListener { Linker.with(it.context).clickFacebook() }
+    holder.itemView.google_play.setOnClickListener { Linker.clickGooglePlay() }
+    holder.itemView.google_plus.setOnClickListener { Linker.clickGooglePlus() }
+    holder.itemView.blogger.setOnClickListener { Linker.clickBlogger() }
+    holder.itemView.facebook.setOnClickListener { Linker.clickFacebook() }
   }
 
   override fun onUnbindViewHolder(holder: PreferenceViewHolder?) {

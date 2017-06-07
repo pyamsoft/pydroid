@@ -17,60 +17,46 @@
 package com.pyamsoft.pydroid.ui
 
 import android.content.Context
-import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.helper.ThreadSafe.MutableSingleton
-import com.pyamsoft.pydroid.ui.about.UiLicenses
-import timber.log.Timber
 
-class PYDroid internal constructor(module: PYDroidModule) {
+object PYDroid {
+
+  @RestrictTo(RestrictTo.Scope.LIBRARY) private var component: PYDroidComponent? = null
+  @RestrictTo(RestrictTo.Scope.LIBRARY) private var debugMode = false
 
   @RestrictTo(
-      RestrictTo.Scope.LIBRARY) private val component: PYDroidComponent = PYDroidComponentImpl.withModule(
-      module)
-
-  val isDebugMode: Boolean = module.isDebug
-    @get:[RestrictTo(RestrictTo.Scope.LIBRARY) CheckResult] get
-
-  init {
-    if (module.isDebug) {
-      setStrictMode()
-      Timber.plant(Timber.DebugTree())
+      RestrictTo.Scope.LIBRARY) @JvmStatic private fun guaranteeNonNull(): PYDroidComponent {
+    val obj = component
+    if (obj == null) {
+      throw IllegalStateException("Component must undergo initialize(Context, Boolean) before use")
+    } else {
+      return obj
     }
-
-    UiLicenses.addLicenses()
-    Timber.i("Initialize PYDroid Injector singleton")
-  }
-
-  @RestrictTo(
-      RestrictTo.Scope.LIBRARY) @CheckResult internal fun provideComponent(): PYDroidComponent {
-    return component
   }
 
   /**
-   * Sets strict mode flags when running in debug mode
+   * Return the DEBUG state of the library
    */
-  private fun setStrictMode() {
-    StrictMode.setThreadPolicy(
-        StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads().permitDiskWrites().penaltyFlashScreen().build())
-    StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
+  @JvmStatic @CheckResult fun isDebugMode(): Boolean {
+    guaranteeNonNull()
+    return debugMode
   }
 
-  companion object {
+  /**
+   * Initialize the library
+   */
+  @JvmStatic fun initialize(context: Context, debug: Boolean) {
+    debugMode = debug
+    component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))
+  }
 
-    private val singleton = MutableSingleton<PYDroid>(null)
-
-    @CheckResult internal fun get(): PYDroid {
-      return singleton.access()
-    }
-
-    /**
-     * Initialize the library
-     */
-    @JvmStatic fun initialize(context: Context, debug: Boolean) {
-      singleton.assign(PYDroid(PYDroidModule(context.applicationContext, debug)))
-    }
+  /**
+   * For use internally in the library
+   */
+  @RestrictTo(RestrictTo.Scope.LIBRARY) @JvmStatic internal fun with(
+      func: (PYDroidComponent) -> Unit) {
+    func(guaranteeNonNull())
   }
 }

@@ -24,9 +24,6 @@ class VersionCheckInteractor(private val versionCheckService: VersionCheckServic
 
   private var cachedResponse: Single<VersionCheckResponse>? = null
 
-  /**
-   * public
-   */
   @CheckResult internal fun checkVersion(packageName: String, force: Boolean): Single<Int> {
     return Single.defer {
       val dataSource: Single<VersionCheckResponse>

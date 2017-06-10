@@ -42,22 +42,23 @@ class VersionCheckPresenter(private val interactor: VersionCheckInteractor,
   private fun checkForUpdates(packageName: String, currentVersionCode: Int, force: Boolean,
       onUpdatedVersionFound: (current: Int, updated: Int) -> Unit,
       onVersionCheckFinished: () -> Unit) {
-    disposeOnStop(
-        interactor.checkVersion(packageName, force).subscribeOn(subscribeScheduler).observeOn(
-            observeScheduler).subscribe({
-          Timber.i("Update check finished")
-          Timber.i("Current version: %d", currentVersionCode)
-          Timber.i("Latest version: %d", it)
-          onVersionCheckFinished()
-          if (currentVersionCode < it) {
-            onUpdatedVersionFound(currentVersionCode, it)
-          }
-        }, {
-          if (it is HttpException) {
-            Timber.e(it, "Network Failure: %d", it.code())
-          } else {
-            Timber.e(it, "onError")
-          }
-        }))
+    disposeOnStop {
+      interactor.checkVersion(packageName, force).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({
+        Timber.i("Update check finished")
+        Timber.i("Current version: %d", currentVersionCode)
+        Timber.i("Latest version: %d", it)
+        onVersionCheckFinished()
+        if (currentVersionCode < it) {
+          onUpdatedVersionFound(currentVersionCode, it)
+        }
+      }, {
+        if (it is HttpException) {
+          Timber.e(it, "Network Failure: %d", it.code())
+        } else {
+          Timber.e(it, "onError")
+        }
+      })
+    }
   }
 }

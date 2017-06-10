@@ -25,27 +25,30 @@ class RatingPresenter(private val interactor: RatingInteractor, observeScheduler
 
   fun loadRatingDialog(currentVersion: Int, force: Boolean, onShowRatingDialog: () -> Unit,
       onRatingDialogLoadError: (Throwable) -> Unit, onLoadComplete: () -> Unit) {
-    disposeOnDestroy(interactor.needsToViewRating(currentVersion, force).subscribeOn(
-        subscribeScheduler).observeOn(observeScheduler).doAfterTerminate(
-        { onLoadComplete() }).subscribe({
-      if (it) {
-        onShowRatingDialog()
-      }
-    }, {
-      Timber.e(it, "on error loading rating dialog")
-      onRatingDialogLoadError(it)
-    }))
+    disposeOnDestroy {
+      interactor.needsToViewRating(currentVersion, force).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).doAfterTerminate({ onLoadComplete() }).subscribe({
+        if (it) {
+          onShowRatingDialog()
+        }
+      }, {
+        Timber.e(it, "on error loading rating dialog")
+        onRatingDialogLoadError(it)
+      })
+    }
   }
 
   fun saveRating(versionCode: Int, onRatingSaved: () -> Unit,
       onRatingDialogSaveError: (Throwable) -> Unit) {
-    disposeOnDestroy(interactor.saveRating(versionCode).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({
-      Timber.d("Saved current version code: %d", versionCode)
-      onRatingSaved()
-    }, {
-      Timber.e(it, "Error saving rating dialog")
-      onRatingDialogSaveError(it)
-    }))
+    disposeOnDestroy {
+      interactor.saveRating(versionCode).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({
+        Timber.d("Saved current version code: %d", versionCode)
+        onRatingSaved()
+      }, {
+        Timber.e(it, "Error saving rating dialog")
+        onRatingDialogSaveError(it)
+      })
+    }
   }
 }

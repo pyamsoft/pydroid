@@ -33,7 +33,7 @@ buildscript {
   ext {
 
     minSdk = 16
-    maxSdk = 26
+    maxSdk = 25
     buildTools = "26.0.0"
 
     supportLib = "25.4.0"
@@ -95,4 +95,4 @@ task clean(type: Delete) {
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '10.4.2'
+version = '10.4.3'

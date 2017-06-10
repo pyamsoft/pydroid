@@ -33,9 +33,6 @@ class AboutLibrariesInteractor(context: Context) {
   private val assetManager: AssetManager = context.applicationContext.assets
   private val cachedLicenses: MutableMap<String, String> = HashMap()
 
-  /**
-   * public
-   */
   @CheckResult internal fun loadLicenses(): Observable<AboutLibrariesModel> {
     return Observable.defer {
       Observable.fromIterable(Licenses.getLicenses())
@@ -48,7 +45,7 @@ class AboutLibrariesInteractor(context: Context) {
     }
   }
 
-  @CheckResult internal fun loadLicenseText(model: AboutLibrariesModel): String {
+  @CheckResult private fun loadLicenseText(model: AboutLibrariesModel): String {
     return Single.fromCallable<String> {
       val name = model.name
       val result: String
@@ -74,7 +71,7 @@ class AboutLibrariesInteractor(context: Context) {
     }.blockingGet()
   }
 
-  @CheckResult internal fun loadNewLicense(licenseLocation: String): String {
+  @CheckResult private fun loadNewLicense(licenseLocation: String): String {
     if (licenseLocation.isEmpty()) {
       Timber.w("Empty license passed")
       return ""
@@ -89,17 +86,15 @@ class AboutLibrariesInteractor(context: Context) {
         inputStreamReader = InputStreamReader(it, "UTF-8")
       }
 
-      val br = BufferedReader(inputStreamReader)
-      val text = StringBuilder()
-      var line: String? = br.readLine()
-      while (line != null) {
-        text.append(line).append('\n')
-        line = br.readLine()
+      BufferedReader(inputStreamReader).use {
+        val text = StringBuilder()
+        var line: String? = it.readLine()
+        while (line != null) {
+          text.append(line).append('\n')
+          line = it.readLine()
+        }
+        return text.toString()
       }
-      br.close()
-
-      it.close()
-      return text.toString()
     }
   }
 }

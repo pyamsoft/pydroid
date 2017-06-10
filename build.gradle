@@ -33,10 +33,10 @@ buildscript {
   ext {
 
     minSdk = 16
-    maxSdk = 25
-    buildTools = "25.0.3"
+    maxSdk = 26
+    buildTools = "26.0.0"
 
-    supportLib = "25.3.1"
+    supportLib = "25.4.0"
     timber = "4.5.1"
     autoValue = "1.4.1"
     autoValueGSON = "0.4.6"

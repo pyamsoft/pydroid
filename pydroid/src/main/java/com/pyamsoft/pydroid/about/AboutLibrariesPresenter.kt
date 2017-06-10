@@ -25,8 +25,10 @@ class AboutLibrariesPresenter(private val interactor: AboutLibrariesInteractor,
     observeScheduler, subscribeScheduler) {
 
   fun loadLicenses(onLicenseLoaded: (AboutLibrariesModel) -> Unit, onAllLoaded: () -> Unit) {
-    disposeOnDestroy(interactor.loadLicenses().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
-        { Timber.e(it, "onError loading licenses") }))
+    disposeOnDestroy {
+      interactor.loadLicenses().subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
+          { Timber.e(it, "onError loading licenses") })
+    }
   }
 }

@@ -17,9 +17,12 @@
 package com.pyamsoft.pydroid.ui
 
 import android.content.Context
+import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.ui.about.UiLicenses
+import timber.log.Timber
 
 object PYDroid {
 
@@ -47,9 +50,22 @@ object PYDroid {
   /**
    * Initialize the library
    */
-  @JvmStatic fun initialize(context: Context, debug: Boolean) {
+  @JvmStatic fun initialize(context: Context, debug: Boolean, allowReInitialize: Boolean = false) {
     debugMode = debug
-    component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))
+    if (component == null || allowReInitialize) {
+      component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))
+      if (debug) {
+        Timber.plant(Timber.DebugTree())
+        setStrictMode()
+      }
+      UiLicenses.addLicenses()
+    }
+  }
+
+  private fun setStrictMode() {
+    StrictMode.setThreadPolicy(
+        StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads().permitDiskWrites().penaltyFlashScreen().build())
+    StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
   }
 
   /**

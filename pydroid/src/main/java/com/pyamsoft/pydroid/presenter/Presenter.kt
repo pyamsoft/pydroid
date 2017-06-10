@@ -51,8 +51,22 @@ abstract class Presenter protected constructor() {
   /**
    * Add a disposable to the internal list, dispose it onStop
    */
+  protected fun disposeOnStop(func: () -> Disposable) {
+    disposeOnStop(func())
+  }
+
+  /**
+   * Add a disposable to the internal list, dispose it onStop
+   */
   protected fun disposeOnStop(disposable: Disposable) {
     stopDisposables.add(disposable)
+  }
+
+  /**
+   * Add a disposable to the internal list, dispose it onDestroy
+   */
+  protected fun disposeOnDestroy(func: () -> Disposable) {
+    disposeOnDestroy(func())
   }
 
   /**

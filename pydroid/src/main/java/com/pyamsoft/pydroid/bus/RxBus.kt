@@ -18,23 +18,37 @@ package com.pyamsoft.pydroid.bus
 
 import android.support.annotation.CheckResult
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
+import timber.log.Timber
 
-interface EventBus<T : Any> {
+class RxBus<T : Any> private constructor() : EventBus<T> {
 
-  /**
-   * Publish an event to a registered Receiver class
-   *
-   * The bus does not make any restrictions on what type an Event should be. While events can be
-   * mutable, it is recommended to make your Event object immutable as the bus makes no guarantees
-   * about the state of the data
-   */
-  fun publish(event: T)
+  private val bus: Subject<T> = PublishSubject.create()
 
-  /**
-   * Listen for Bus events
-   *
-   */
-  @CheckResult fun listen(): Observable<T>
+  override fun publish(event: T) {
+    if (bus.hasObservers()) {
+      bus.onNext(event)
+    } else {
+      Timber.w("No observers on bus, ignore publish event: %s", event)
+    }
+  }
 
+
+  override fun listen(): Observable<T> {
+    return bus
+  }
+
+
+  companion object {
+
+    /**
+     * Create a new local bus instance to use
+     */
+    @JvmStatic @CheckResult fun <T : Any> create(): EventBus<T> {
+      return RxBus()
+    }
+
+  }
 }
 

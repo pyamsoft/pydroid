@@ -17,15 +17,14 @@
 package com.pyamsoft.pydroid.bus
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.helper.Optional
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import timber.log.Timber
 
-class EventBus private constructor() {
+class EventBus<T : Any> private constructor() {
 
-  private val bus: Subject<Optional<*>> = PublishSubject.create()
+  private val bus: Subject<T> = PublishSubject.create()
 
   /**
    * Publish an event to a registered Receiver class
@@ -39,9 +38,9 @@ class EventBus private constructor() {
    * At least one class type must be passed in with the publish call. Duplicate class types will be
    * ignored
    */
-  fun <T> publish(event: T) {
+  fun publish(event: T) {
     if (bus.hasObservers()) {
-      bus.onNext(Optional.ofNullable(event))
+      bus.onNext(event)
     } else {
       Timber.w("No observers on bus, ignore publish event: %s", event)
     }
@@ -56,33 +55,17 @@ class EventBus private constructor() {
    *
    * Any class which was not registered in a publish event will receive an empty stream
    */
-  @CheckResult fun <T> listen(eventClass: Class<out T>): Observable<out T> {
-    return bus.onErrorReturn({
-      Timber.e(it, "Error on EventBus. EventBus ignores error, continues with blank")
-      Optional.ofNullable(null)
-    }).filter { it.isPresent() }.map { it.item() }.filter {
-      eventClass.isAssignableFrom(it!!::class.java)
-    }.map(eventClass::cast)
+  @CheckResult fun listen(): Observable<T> {
+    return bus
   }
 
   companion object {
 
-    @JvmStatic private val singleton: EventBus by lazy {
-      newLocalBus()
-    }
-
     /**
      * Create a new local bus instance to use
      */
-    @JvmStatic @CheckResult fun newLocalBus(): EventBus {
+    @JvmStatic @CheckResult fun <T : Any> create(): EventBus<T> {
       return EventBus()
-    }
-
-    /**
-     * Lazy load and return the EventBus
-     */
-    @JvmStatic @CheckResult fun get(): EventBus {
-      return singleton
     }
   }
 }

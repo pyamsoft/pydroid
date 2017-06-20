@@ -24,15 +24,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
-import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding
 import com.pyamsoft.pydroid.util.NetworkUtil
-import kotlinx.android.synthetic.main.fragment_pager_about.about_item_homepage
-import kotlinx.android.synthetic.main.fragment_pager_about.about_item_webview
 
 class AboutPagerFragment : Fragment() {
 
   private lateinit var homepage: String
   private lateinit var license: String
+  private lateinit var binding: FragmentPagerAboutBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -45,20 +44,36 @@ class AboutPagerFragment : Fragment() {
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    return inflater?.inflate(R.layout.fragment_pager_about, container, false)
+    binding = FragmentPagerAboutBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    about_item_homepage.paintFlags = (about_item_homepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
-    about_item_homepage.text = homepage
-    about_item_homepage.setOnClickListener {
+    binding.aboutItemHomepage.paintFlags = (binding.aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+    binding.aboutItemHomepage.text = homepage
+
+    binding.aboutItemWebview.settings.defaultFontSize = 12
+    binding.aboutItemWebview.isVerticalScrollBarEnabled = true
+    binding.aboutItemWebview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    binding.aboutItemHomepage.setOnClickListener {
       NetworkUtil.newLink(context.applicationContext, homepage)
     }
+  }
 
-    about_item_webview.settings.defaultFontSize = 12
-    about_item_webview.isVerticalScrollBarEnabled = true
-    about_item_webview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
+  override fun onStop() {
+    super.onStop()
+    binding.aboutItemHomepage.setOnClickListener(null)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    binding.aboutItemHomepage.text = null
+    binding.aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
   }
 
   companion object {

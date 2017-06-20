@@ -14,90 +14,91 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:baselineAligned="false"
-    android:paddingBottom="8dp"
-    android:paddingEnd="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingStart="16dp"
-    android:paddingTop="8dp"
-    >
-
-  <FrameLayout
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="1"
+<layout>
+  <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:baselineAligned="false"
+      android:paddingBottom="8dp"
+      android:paddingEnd="16dp"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:paddingStart="16dp"
+      android:paddingTop="8dp"
       >
 
-    <com.pyamsoft.pydroid.ui.widget.SquareImageView
-        android:id="@+id/google_play"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/blank"
-        android:scaleType="fitXY"
-        android:src="@drawable/google_play"
-        />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
 
-  </FrameLayout>
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+          android:id="@+id/google_play"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          android:src="@drawable/google_play"
+          />
 
-  <FrameLayout
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="1"
-      >
+    </FrameLayout>
 
-    <com.pyamsoft.pydroid.ui.widget.SquareImageView
-        android:id="@+id/blogger"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/blank"
-        android:scaleType="fitXY"
-        android:src="@drawable/blogger_icon"
-        />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
 
-  </FrameLayout>
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+          android:id="@+id/blogger"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          android:src="@drawable/blogger_icon"
+          />
 
-  <FrameLayout
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="1"
-      >
+    </FrameLayout>
 
-    <com.pyamsoft.pydroid.ui.widget.SquareImageView
-        android:id="@+id/google_plus"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/blank"
-        android:scaleType="fitXY"
-        android:src="@drawable/google_plus"
-        />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
 
-  </FrameLayout>
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+          android:id="@+id/google_plus"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          android:src="@drawable/google_plus"
+          />
 
-  <FrameLayout
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="1"
-      >
+    </FrameLayout>
 
-    <com.pyamsoft.pydroid.ui.widget.SquareImageView
-        android:id="@+id/facebook"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/blank"
-        android:scaleType="fitXY"
-        android:src="@drawable/facebook_icon"
-        />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
 
-  </FrameLayout>
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+          android:id="@+id/facebook"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          android:src="@drawable/facebook_icon"
+          />
 
-</LinearLayout>
+    </FrameLayout>
+
+  </LinearLayout>
+</layout>

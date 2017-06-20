@@ -30,16 +30,12 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
 import com.pyamsoft.pydroid.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
+import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
-import kotlinx.android.synthetic.main.dialog_rating.rating_btn_go_rate
-import kotlinx.android.synthetic.main.dialog_rating.rating_btn_no_thanks
-import kotlinx.android.synthetic.main.dialog_rating.rating_icon
-import kotlinx.android.synthetic.main.dialog_rating.rating_text_change
 import timber.log.Timber
 
 class RatingDialog : DialogFragmentBase() {
@@ -48,6 +44,7 @@ class RatingDialog : DialogFragmentBase() {
   private var changeLogText: Spannable? = null
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()
+  private lateinit var binding: DialogRatingBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -78,7 +75,8 @@ class RatingDialog : DialogFragmentBase() {
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    return inflater?.inflate(R.layout.dialog_rating, container, false)
+    binding = DialogRatingBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -87,13 +85,16 @@ class RatingDialog : DialogFragmentBase() {
   }
 
   private fun initDialog() {
-    ViewCompat.setElevation(rating_icon, AppUtil.convertToDP(context, 8f))
+    ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(context, 8f))
 
     iconTask = LoaderHelper.unload(iconTask)
-    iconTask = ImageLoader.fromResource(context, changeLogIcon).into(rating_icon)
-    rating_text_change.text = changeLogText
+    iconTask = ImageLoader.fromResource(context, changeLogIcon).into(binding.ratingIcon)
+    binding.ratingTextChange.text = changeLogText
+  }
 
-    rating_btn_no_thanks.setOnClickListener({
+  override fun onStart() {
+    super.onStart()
+    binding.ratingBtnNoThanks.setOnClickListener {
       Launcher.saveVersionCode(versionCode, onRatingSaved = { dismiss() },
           onRatingDialogSaveError = {
             Toasty.makeText(context.applicationContext,
@@ -101,9 +102,9 @@ class RatingDialog : DialogFragmentBase() {
                 Toasty.LENGTH_SHORT).show()
             dismiss()
           })
-    })
+    }
 
-    rating_btn_go_rate.setOnClickListener({
+    binding.ratingBtnGoRate.setOnClickListener {
       Launcher.saveVersionCode(versionCode, onRatingSaved = {
         val fullLink = "market://details?id=" + rateLink
         NetworkUtil.newLink(it.context.applicationContext, fullLink)
@@ -114,7 +115,13 @@ class RatingDialog : DialogFragmentBase() {
             Toasty.LENGTH_SHORT).show()
         dismiss()
       })
-    })
+    }
+  }
+
+  override fun onStop() {
+    super.onStop()
+    binding.ratingBtnNoThanks.setOnClickListener(null)
+    binding.ratingBtnGoRate.setOnClickListener(null)
   }
 
   override fun onDestroy() {

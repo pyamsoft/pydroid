@@ -14,65 +14,67 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rating_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
-  <LinearLayout
-      android:id="@+id/rating_view"
+<layout>
+  <FrameLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/rating_root"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginTop="36dp"
-      android:orientation="vertical"
-      android:padding="8dp"
       >
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/rating_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_marginTop="36dp"
+        android:orientation="vertical"
+        android:padding="8dp"
         >
 
-      <TextView
-          android:id="@+id/rating_text_change"
+      <ScrollView
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_margin="8dp"
+          android:layout_weight="1"
+          >
+
+        <TextView
+            android:id="@+id/rating_text_change"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+      </ScrollView>
+
+      <Button
+          android:id="@+id/rating_btn_go_rate"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:text="@string/rate_application"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@android:color/white"
+          style="@style/Widget.AppCompat.Button.Colored"
           />
 
-    </ScrollView>
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
+          android:id="@+id/rating_btn_no_thanks"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="8dp"
+          android:gravity="center"
+          android:text="@string/no_thanks"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          />
 
-    <Button
-        android:id="@+id/rating_btn_go_rate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/rate_application"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white"
-        style="@style/Widget.AppCompat.Button.Colored"
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/rating_icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal|top"
+        android:contentDescription="@string/blank"
         />
 
-    <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
-        android:id="@+id/rating_btn_no_thanks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:text="@string/no_thanks"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
-
-  </LinearLayout>
-
-  <ImageView
-      android:id="@+id/rating_icon"
-      android:layout_width="56dp"
-      android:layout_height="56dp"
-      android:layout_gravity="center_horizontal|top"
-      android:contentDescription="@string/blank"
-      />
-
-</FrameLayout>
+  </FrameLayout>
+</layout>

@@ -16,13 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.support.annotation.RestrictTo
-import com.pyamsoft.pydroid.about.AboutLibrariesModule
+import com.pyamsoft.pydroid.ui.presenter.ViewPresenter
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class AboutLibrariesComponent(
-    private val aboutLibrariesModule: AboutLibrariesModule) {
+internal class AboutLibrariesViewPresenter : ViewPresenter()
 
-  internal fun inject(fragment: AboutLibrariesFragment) {
-    fragment.presenter = aboutLibrariesModule.getPresenter()
-  }
-}
+

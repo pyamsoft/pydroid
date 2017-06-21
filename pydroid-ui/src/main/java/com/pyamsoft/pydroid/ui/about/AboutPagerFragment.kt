@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding
 import com.pyamsoft.pydroid.util.NetworkUtil
 
@@ -32,9 +33,14 @@ class AboutPagerFragment : Fragment() {
   private lateinit var homepage: String
   private lateinit var license: String
   private lateinit var binding: FragmentPagerAboutBinding
+  internal lateinit var presenter: AboutLibrariesViewPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    PYDroid.with {
+      it.inject(this)
+    }
 
     homepage = arguments.getString(KEY_HOMEPAGE, null) ?: throw IllegalStateException(
         "Homepage is NULL")
@@ -60,18 +66,19 @@ class AboutPagerFragment : Fragment() {
 
   override fun onStart() {
     super.onStart()
-    binding.aboutItemHomepage.setOnClickListener {
-      NetworkUtil.newLink(context.applicationContext, homepage)
+    presenter.clickEvent(binding.aboutItemHomepage) {
+      NetworkUtil.newLink(it.context.applicationContext, homepage)
     }
   }
 
   override fun onStop() {
     super.onStop()
-    binding.aboutItemHomepage.setOnClickListener(null)
+    presenter.stop()
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+    presenter.destroy()
     binding.aboutItemHomepage.text = null
     binding.aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
   }

@@ -40,6 +40,7 @@ import timber.log.Timber
 class AboutLibrariesFragment : ActionBarFragment() {
 
   internal lateinit var presenter: AboutLibrariesPresenter
+  internal lateinit var viewPresenter: AboutLibrariesViewPresenter
   internal lateinit var pagerAdapter: AboutPagerAdapter
   private var lastOnBackStack: Boolean = false
   private val mapper = LoaderMap()
@@ -58,7 +59,7 @@ class AboutLibrariesFragment : ActionBarFragment() {
     }
 
     PYDroid.with {
-      it.plusAboutLibrariesComponent().inject(this)
+      it.inject(this)
     }
   }
 
@@ -110,21 +111,26 @@ class AboutLibrariesFragment : ActionBarFragment() {
     }
     binding.viewPager.addOnPageChangeListener(listener)
 
-    binding.arrowLeft.setOnClickListener { binding.viewPager.arrowScroll(View.FOCUS_LEFT) }
-    binding.arrowRight.setOnClickListener { binding.viewPager.arrowScroll(View.FOCUS_RIGHT) }
+
+    viewPresenter.clickEvent(binding.arrowLeft) {
+      binding.viewPager.arrowScroll(View.FOCUS_LEFT)
+    }
+    viewPresenter.clickEvent(binding.arrowRight) {
+      binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
+    }
   }
 
   override fun onStop() {
     super.onStop()
     presenter.stop()
+    viewPresenter.stop()
     binding.viewPager.removeOnPageChangeListener(listener)
-    binding.arrowLeft.setOnClickListener(null)
-    binding.arrowRight.setOnClickListener(null)
   }
 
   override fun onDestroy() {
     super.onDestroy()
     presenter.destroy()
+    viewPresenter.destroy()
   }
 
   override fun onResume() {

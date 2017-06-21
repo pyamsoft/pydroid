@@ -19,7 +19,9 @@ package com.pyamsoft.pydroid.ui
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent
+import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.about.AboutLibrariesViewPresenter
+import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingModule
@@ -33,17 +35,17 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   private val preferences = PYDroidPreferencesImpl(module.provideContext())
   private val versionCheckComponent: VersionCheckComponent
-  private val aboutLibrariesComponent: AboutLibrariesComponent
   private val appComponent: AppComponent
   private val ratingComponent: RatingComponent
   private val socialComponent: SocialComponent
   private val utilComponent: UtilComponent
+  private val aboutLibrariesModule: AboutLibrariesModule
 
   init {
     val versionCheckModule = VersionCheckModule(module)
     versionCheckComponent = VersionCheckComponent(versionCheckModule)
     appComponent = AppComponent(versionCheckModule)
-    aboutLibrariesComponent = AboutLibrariesComponent(AboutLibrariesModule(module))
+    aboutLibrariesModule = AboutLibrariesModule(module)
     ratingComponent = RatingComponent(RatingModule(module, preferences))
     socialComponent = SocialComponent(module)
     utilComponent = UtilComponent(module)
@@ -51,10 +53,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun plusVersionCheckComponent(): VersionCheckComponent {
     return versionCheckComponent
-  }
-
-  override fun plusAboutLibrariesComponent(): AboutLibrariesComponent {
-    return aboutLibrariesComponent
   }
 
   override fun plusAppComponent(): AppComponent {
@@ -71,5 +69,14 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun plusUtilComponent(): UtilComponent {
     return utilComponent
+  }
+
+  override fun inject(fragment: AboutPagerFragment) {
+    fragment.presenter = AboutLibrariesViewPresenter()
+  }
+
+  override fun inject(fragment: AboutLibrariesFragment) {
+    fragment.presenter = aboutLibrariesModule.getPresenter()
+    fragment.viewPresenter = AboutLibrariesViewPresenter()
   }
 }

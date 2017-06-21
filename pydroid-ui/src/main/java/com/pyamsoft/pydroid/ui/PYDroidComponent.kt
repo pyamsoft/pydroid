@@ -18,7 +18,8 @@ package com.pyamsoft.pydroid.ui
 
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent
+import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.social.SocialComponent
@@ -29,8 +30,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
   @CheckResult fun plusVersionCheckComponent(): VersionCheckComponent
 
-  @CheckResult fun plusAboutLibrariesComponent(): AboutLibrariesComponent
-
   @CheckResult fun plusAppComponent(): AppComponent
 
   @CheckResult fun plusRatingComponent(): RatingComponent
@@ -38,4 +37,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
   @CheckResult fun plusSocialComponent(): SocialComponent
 
   @CheckResult fun plusUtilComponent(): UtilComponent
+
+  fun inject(fragment: AboutPagerFragment)
+
+  fun inject(fragment: AboutLibrariesFragment)
 }

@@ -20,8 +20,10 @@ import android.support.v7.preference.Preference
 
 internal interface PreferencePresenterContract {
 
-  fun clickEvent(preference: Preference, func: (Preference) -> Unit)
+  fun clickEvent(preference: Preference, func: (Preference) -> Unit,
+      returnCondition: () -> Boolean = { true })
 
-  fun <T : Any> preferenceChangedEvent(preference: Preference, func: (Preference, T) -> Unit)
+  fun <T : Any> preferenceChangedEvent(preference: Preference, func: (Preference, T) -> Unit,
+      returnCondition: () -> Boolean = { true })
 }
 

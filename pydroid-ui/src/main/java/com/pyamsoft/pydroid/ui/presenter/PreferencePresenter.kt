@@ -22,18 +22,19 @@ import com.pyamsoft.pydroid.ui.rx.RxPreferences
 
 abstract class PreferencePresenter : Presenter(), PreferencePresenterContract {
 
-  final override fun clickEvent(preference: Preference, func: (Preference) -> Unit) {
+  final override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
+      returnCondition: () -> Boolean) {
     disposeOnStop {
-      RxPreferences.onClick(preference).subscribe {
+      RxPreferences.onClick(preference, returnCondition).subscribe {
         func(it)
       }
     }
   }
 
   final override fun <T : Any> preferenceChangedEvent(preference: Preference,
-      func: (Preference, T) -> Unit) {
+      func: (Preference, T) -> Unit, returnCondition: () -> Boolean) {
     disposeOnStop {
-      RxPreferences.onPreferenceChanged<T>(preference).subscribe {
+      RxPreferences.onPreferenceChanged<T>(preference, returnCondition).subscribe {
         func(it.preference, it.value)
       }
     }

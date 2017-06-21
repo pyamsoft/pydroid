@@ -79,37 +79,37 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       if (hideUpgradeInformation) {
         upgradeInfo.isVisible = false
       } else {
-        preferencePresenter.clickEvent(upgradeInfo) {
+        preferencePresenter.clickEvent(upgradeInfo, {
           onShowChangelogClicked()
-        }
+        })
       }
     }
 
     val showAboutLicenses = findPreference(getString(R.string.about_license_key))
-    preferencePresenter.clickEvent(showAboutLicenses) {
+    preferencePresenter.clickEvent(showAboutLicenses, {
       onLicenseItemClicked()
-    }
+    })
 
     val checkVersion = findPreference(getString(R.string.check_version_key))
-    preferencePresenter.clickEvent(checkVersion) {
+    preferencePresenter.clickEvent(checkVersion, {
       onCheckForUpdatesClicked(presenter)
-    }
+    })
 
     val clearAll = findPreference(getString(R.string.clear_all_key))
     if (clearAll != null) {
       if (hideClearAll) {
         clearAll.isVisible = false
       } else {
-        preferencePresenter.clickEvent(clearAll) {
+        preferencePresenter.clickEvent(clearAll, {
           onClearAllClicked()
-        }
+        })
       }
     }
 
     val rateApplication = findPreference(getString(R.string.rating_key))
-    preferencePresenter.clickEvent(rateApplication) {
+    preferencePresenter.clickEvent(rateApplication, {
       Linker.clickAppPage(it.context.packageName)
-    }
+    })
   }
 
   @CallSuper override fun onStop() {

@@ -47,7 +47,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.with {
-      it.plusAppComponent().inject(this)
+      it.inject(this)
     }
   }
 

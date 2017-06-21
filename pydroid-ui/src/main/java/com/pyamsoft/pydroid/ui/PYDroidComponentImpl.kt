@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesViewPresenter
 import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
-import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingModule
 import com.pyamsoft.pydroid.ui.social.SocialComponent
@@ -35,17 +35,14 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   private val preferences = PYDroidPreferencesImpl(module.provideContext())
   private val versionCheckComponent: VersionCheckComponent
-  private val appComponent: AppComponent
   private val ratingComponent: RatingComponent
   private val socialComponent: SocialComponent
   private val utilComponent: UtilComponent
-  private val aboutLibrariesModule: AboutLibrariesModule
+  private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(module)
+  private val versionCheckModule: VersionCheckModule = VersionCheckModule(module)
 
   init {
-    val versionCheckModule = VersionCheckModule(module)
     versionCheckComponent = VersionCheckComponent(versionCheckModule)
-    appComponent = AppComponent(versionCheckModule)
-    aboutLibrariesModule = AboutLibrariesModule(module)
     ratingComponent = RatingComponent(RatingModule(module, preferences))
     socialComponent = SocialComponent(module)
     utilComponent = UtilComponent(module)
@@ -53,10 +50,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun plusVersionCheckComponent(): VersionCheckComponent {
     return versionCheckComponent
-  }
-
-  override fun plusAppComponent(): AppComponent {
-    return appComponent
   }
 
   override fun plusRatingComponent(): RatingComponent {
@@ -78,5 +71,9 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
   override fun inject(fragment: AboutLibrariesFragment) {
     fragment.presenter = aboutLibrariesModule.getPresenter()
     fragment.viewPresenter = AboutLibrariesViewPresenter()
+  }
+
+  override fun inject(fragment: ActionBarSettingsPreferenceFragment) {
+    fragment.presenter = versionCheckModule.getPresenter()
   }
 }

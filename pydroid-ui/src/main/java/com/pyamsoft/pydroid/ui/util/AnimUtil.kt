@@ -38,7 +38,7 @@ object AnimUtil {
 
   init {
     PYDroid.with {
-      it.plusUtilComponent().inject(this)
+      it.inject(this)
     }
 
     overshootInterpolator = AnimationUtils.loadInterpolator(context.applicationContext,

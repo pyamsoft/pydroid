@@ -152,7 +152,7 @@ class RatingDialog : DialogFragmentBase() {
 
     init {
       PYDroid.with {
-        it.plusRatingComponent().inject(this)
+        it.inject(this)
       }
     }
 

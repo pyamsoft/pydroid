@@ -23,39 +23,22 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesViewPresenter
 import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
-import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.rating.RatingModule
-import com.pyamsoft.pydroid.ui.social.SocialComponent
-import com.pyamsoft.pydroid.ui.util.UtilComponent
+import com.pyamsoft.pydroid.ui.social.Linker
+import com.pyamsoft.pydroid.ui.util.AnimUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidComponentImpl internal constructor(
-    module: PYDroidModule) : PYDroidComponent {
-
-  private val preferences = PYDroidPreferencesImpl(module.provideContext())
-  private val ratingComponent: RatingComponent
-  private val socialComponent: SocialComponent
-  private val utilComponent: UtilComponent
+    private val module: PYDroidModule) : PYDroidComponent {
   private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(module)
   private val versionCheckModule: VersionCheckModule = VersionCheckModule(module)
+  private val ratingModule: RatingModule
 
   init {
-    ratingComponent = RatingComponent(RatingModule(module, preferences))
-    socialComponent = SocialComponent(module)
-    utilComponent = UtilComponent(module)
-  }
-
-  override fun plusRatingComponent(): RatingComponent {
-    return ratingComponent
-  }
-
-  override fun plusSocialComponent(): SocialComponent {
-    return socialComponent
-  }
-
-  override fun plusUtilComponent(): UtilComponent {
-    return utilComponent
+    val preferences = PYDroidPreferencesImpl(module.provideContext())
+    ratingModule = RatingModule(module, preferences)
   }
 
   override fun inject(fragment: AboutPagerFragment) {
@@ -73,5 +56,17 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun inject(activity: VersionCheckActivity) {
     activity.presenter = versionCheckModule.getPresenter()
+  }
+
+  override fun inject(animUtil: AnimUtil) {
+    animUtil.context = module.provideContext().applicationContext
+  }
+
+  override fun inject(linker: Linker) {
+    linker.appContext = module.provideContext().applicationContext
+  }
+
+  override fun inject(launcher: RatingDialog.Launcher) {
+    launcher.presenter = ratingModule.getPresenter()
   }
 }

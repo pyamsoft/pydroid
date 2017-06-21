@@ -26,7 +26,7 @@ object Linker {
 
   init {
     PYDroid.with {
-      it.plusSocialComponent().inject(this)
+      it.inject(this)
     }
   }
 

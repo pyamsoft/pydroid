@@ -14,26 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.rating
+package com.pyamsoft.pydroid.ui
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.RatingPreferences
-import io.reactivex.Completable
-import io.reactivex.Single
 
-class RatingInteractor(private val preferences: RatingPreferences) {
+interface RatingPreferences {
 
-  /**
-   * public
-   */
-  @CheckResult internal fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean> {
-    return Single.fromCallable { preferences.getRatingAcceptedVersion() < versionCode || force }
-  }
+  @CheckResult fun getRatingAcceptedVersion(): Int
 
-  /**
-   * public
-   */
-  @CheckResult internal fun saveRating(versionCode: Int): Completable {
-    return Completable.fromAction { preferences.setRatingAcceptedVersion(versionCode) }
-  }
+  fun setRatingAcceptedVersion(version: Int)
 }

@@ -28,16 +28,10 @@ import io.reactivex.schedulers.Schedulers
 
   // Singleton
   private val appContext = context.applicationContext
-  private val preferences = PYDroidPreferencesImpl(appContext)
 
   // Singleton
   @CheckResult fun provideContext(): Context {
     return appContext
-  }
-
-  // Singleton
-  @CheckResult fun provideRatingPreferences(): RatingPreferences {
-    return preferences
   }
 
   // Singleton

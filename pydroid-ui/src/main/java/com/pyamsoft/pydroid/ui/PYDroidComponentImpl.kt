@@ -19,10 +19,10 @@ package com.pyamsoft.pydroid.ui
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
-import com.pyamsoft.pydroid.rating.RatingModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.rating.RatingModule
 import com.pyamsoft.pydroid.ui.social.SocialComponent
 import com.pyamsoft.pydroid.ui.util.UtilComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidComponentImpl internal constructor(
     module: PYDroidModule) : PYDroidComponent {
 
+  private val preferences = PYDroidPreferencesImpl(module.provideContext())
   private val versionCheckComponent: VersionCheckComponent
   private val aboutLibrariesComponent: AboutLibrariesComponent
   private val appComponent: AppComponent
@@ -43,7 +44,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     versionCheckComponent = VersionCheckComponent(versionCheckModule)
     appComponent = AppComponent(versionCheckModule)
     aboutLibrariesComponent = AboutLibrariesComponent(AboutLibrariesModule(module))
-    ratingComponent = RatingComponent(RatingModule(module))
+    ratingComponent = RatingComponent(RatingModule(module, preferences))
     socialComponent = SocialComponent(module)
     utilComponent = UtilComponent(module)
   }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid
+package com.pyamsoft.pydroid.ui
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import android.support.annotation.RestrictTo
+import android.support.v7.preference.PreferenceManager
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidPreferencesImpl(
     context: Context) : RatingPreferences {

@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.rating
+package com.pyamsoft.pydroid.ui.rating
 
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
+import android.support.annotation.RestrictTo.Scope.LIBRARY
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Scheduler
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class RatingModule(module: PYDroidModule) {
+@RestrictTo(LIBRARY) class RatingModule(module: PYDroidModule, preferences: RatingPreferences) {
 
-  private val interactor: RatingInteractor = RatingInteractor(module.provideRatingPreferences())
+  private val interactor: RatingInteractor = RatingInteractor(preferences)
   private val obsScheduler: Scheduler = module.provideObsScheduler()
   private val subScheduler: Scheduler = module.provideSubScheduler()
 

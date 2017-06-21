@@ -44,7 +44,7 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
         false)
 
     PYDroid.with {
-      it.plusVersionCheckComponent().inject(this)
+      it.inject(this)
     }
   }
 

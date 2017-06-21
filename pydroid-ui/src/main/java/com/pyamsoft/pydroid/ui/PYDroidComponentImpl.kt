@@ -27,14 +27,13 @@ import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingModule
 import com.pyamsoft.pydroid.ui.social.SocialComponent
 import com.pyamsoft.pydroid.ui.util.UtilComponent
-import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidComponentImpl internal constructor(
     module: PYDroidModule) : PYDroidComponent {
 
   private val preferences = PYDroidPreferencesImpl(module.provideContext())
-  private val versionCheckComponent: VersionCheckComponent
   private val ratingComponent: RatingComponent
   private val socialComponent: SocialComponent
   private val utilComponent: UtilComponent
@@ -42,14 +41,9 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
   private val versionCheckModule: VersionCheckModule = VersionCheckModule(module)
 
   init {
-    versionCheckComponent = VersionCheckComponent(versionCheckModule)
     ratingComponent = RatingComponent(RatingModule(module, preferences))
     socialComponent = SocialComponent(module)
     utilComponent = UtilComponent(module)
-  }
-
-  override fun plusVersionCheckComponent(): VersionCheckComponent {
-    return versionCheckComponent
   }
 
   override fun plusRatingComponent(): RatingComponent {
@@ -75,5 +69,9 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun inject(fragment: ActionBarSettingsPreferenceFragment) {
     fragment.presenter = versionCheckModule.getPresenter()
+  }
+
+  override fun inject(activity: VersionCheckActivity) {
+    activity.presenter = versionCheckModule.getPresenter()
   }
 }

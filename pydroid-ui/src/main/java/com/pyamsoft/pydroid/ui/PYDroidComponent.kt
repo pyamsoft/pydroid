@@ -24,11 +24,9 @@ import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.social.SocialComponent
 import com.pyamsoft.pydroid.ui.util.UtilComponent
-import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal interface PYDroidComponent {
-
-  @CheckResult fun plusVersionCheckComponent(): VersionCheckComponent
 
   @CheckResult fun plusRatingComponent(): RatingComponent
 
@@ -41,4 +39,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
   fun inject(fragment: AboutLibrariesFragment)
 
   fun inject(fragment: ActionBarSettingsPreferenceFragment)
+
+  fun inject(activity: VersionCheckActivity)
 }

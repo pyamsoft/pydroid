@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.rating.RatingModule
+import com.pyamsoft.pydroid.ui.rating.RatingViewPresenter
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.AnimUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -68,5 +69,9 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun inject(launcher: RatingDialog.Launcher) {
     launcher.presenter = ratingModule.getPresenter()
+  }
+
+  override fun inject(ratingDialog: RatingDialog) {
+    ratingDialog.presenter = RatingViewPresenter()
   }
 }

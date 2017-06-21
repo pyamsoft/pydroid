@@ -44,9 +44,15 @@ class RatingDialog : DialogFragmentBase() {
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()
   private lateinit var binding: DialogRatingBinding
+  internal lateinit var presenter: RatingViewPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    PYDroid.with {
+      it.inject(this)
+    }
+
     isCancelable = false
     val launchArguments = arguments
     rateLink = launchArguments.getString(RATE_LINK, null)
@@ -93,7 +99,7 @@ class RatingDialog : DialogFragmentBase() {
 
   override fun onStart() {
     super.onStart()
-    binding.ratingBtnNoThanks.setOnClickListener {
+    presenter.clickEvent(binding.ratingBtnNoThanks) {
       Launcher.saveVersionCode(versionCode, onRatingSaved = { dismiss() },
           onRatingDialogSaveError = {
             Toasty.makeText(context.applicationContext,
@@ -103,7 +109,7 @@ class RatingDialog : DialogFragmentBase() {
           })
     }
 
-    binding.ratingBtnGoRate.setOnClickListener {
+    presenter.clickEvent(binding.ratingBtnGoRate) {
       Launcher.saveVersionCode(versionCode, onRatingSaved = {
         val fullLink = "market://details?id=" + rateLink
         NetworkUtil.newLink(it.context.applicationContext, fullLink)
@@ -119,13 +125,14 @@ class RatingDialog : DialogFragmentBase() {
 
   override fun onStop() {
     super.onStop()
-    binding.ratingBtnNoThanks.setOnClickListener(null)
-    binding.ratingBtnGoRate.setOnClickListener(null)
+    presenter.stop()
+    Launcher.stop()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    Launcher.cleanup()
+    presenter.destroy()
+    Launcher.destroy()
   }
 
   override fun onResume() {
@@ -177,7 +184,11 @@ class RatingDialog : DialogFragmentBase() {
       })
     }
 
-    fun cleanup() {
+    fun stop() {
+      presenter.stop()
+    }
+
+    fun destroy() {
       presenter.destroy()
     }
   }

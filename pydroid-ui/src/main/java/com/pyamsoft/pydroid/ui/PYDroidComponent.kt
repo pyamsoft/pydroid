@@ -40,4 +40,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
   fun inject(linker: Linker)
 
   fun inject(launcher: RatingDialog.Launcher)
+
+  fun inject(ratingDialog: RatingDialog)
 }

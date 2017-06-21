@@ -16,24 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.RatingPreferences
-import io.reactivex.Completable
-import io.reactivex.Single
+import com.pyamsoft.pydroid.ui.presenter.ViewPresenter
 
-internal class RatingInteractor(private val preferences: RatingPreferences) {
+internal class RatingViewPresenter : ViewPresenter()
 
-  /**
-   * public
-   */
-  @CheckResult internal fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean> {
-    return Single.fromCallable { preferences.getRatingAcceptedVersion() < versionCode || force }
-  }
 
-  /**
-   * public
-   */
-  @CheckResult internal fun saveRating(versionCode: Int): Completable {
-    return Completable.fromAction { preferences.setRatingAcceptedVersion(versionCode) }
-  }
-}

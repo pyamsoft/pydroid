@@ -23,7 +23,8 @@ import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Scheduler
 
-@RestrictTo(LIBRARY) class RatingModule(module: PYDroidModule, preferences: RatingPreferences) {
+@RestrictTo(LIBRARY) internal class RatingModule(module: PYDroidModule,
+    preferences: RatingPreferences) {
 
   private val interactor: RatingInteractor = RatingInteractor(preferences)
   private val obsScheduler: Scheduler = module.provideObsScheduler()

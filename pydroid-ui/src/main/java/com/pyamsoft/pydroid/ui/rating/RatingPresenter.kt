@@ -20,7 +20,7 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-class RatingPresenter(private val interactor: RatingInteractor, observeScheduler: Scheduler,
+internal class RatingPresenter(private val interactor: RatingInteractor, observeScheduler: Scheduler,
     subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {
 
   fun loadRatingDialog(currentVersion: Int, force: Boolean, onShowRatingDialog: () -> Unit,

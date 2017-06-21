@@ -26,8 +26,8 @@ class RatingPresenter(private val interactor: RatingInteractor, observeScheduler
   fun loadRatingDialog(currentVersion: Int, force: Boolean, onShowRatingDialog: () -> Unit,
       onRatingDialogLoadError: (Throwable) -> Unit, onLoadComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.needsToViewRating(currentVersion, force).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doAfterTerminate({ onLoadComplete() }).subscribe({
+      interactor.needsToViewRating(currentVersion, force).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doAfterTerminate({ onLoadComplete() }).subscribe({
         if (it) {
           onShowRatingDialog()
         }
@@ -41,8 +41,8 @@ class RatingPresenter(private val interactor: RatingInteractor, observeScheduler
   fun saveRating(versionCode: Int, onRatingSaved: () -> Unit,
       onRatingDialogSaveError: (Throwable) -> Unit) {
     disposeOnDestroy {
-      interactor.saveRating(versionCode).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({
+      interactor.saveRating(versionCode).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({
         Timber.d("Saved current version code: %d", versionCode)
         onRatingSaved()
       }, {

@@ -19,12 +19,16 @@ package com.pyamsoft.pydroid.util
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Looper
 import android.provider.Settings
 import android.support.annotation.CheckResult
 import android.util.TypedValue
-import timber.log.Timber
 
 object AppUtil {
+
+  private val cachedDP: MutableMap<Float, Float> by lazy {
+    HashMap<Float, Float>(10)
+  }
 
   @JvmStatic @CheckResult fun getApplicationInfoIntent(packageName: String): Intent {
     val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -36,9 +40,22 @@ object AppUtil {
   }
 
   @JvmStatic @CheckResult fun convertToDP(c: Context, px: Float): Float {
-    val m = c.applicationContext.resources.displayMetrics
-    val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
-    Timber.d("Convert %f px to %f dp", px, dp)
-    return dp
+    if (px <= 0F) {
+      return 0F
+    } else {
+      val cached: Float? = cachedDP[px]
+      if (cached != null) {
+        return cached
+      } else {
+        val m = c.applicationContext.resources.displayMetrics
+        val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
+        cachedDP[px] = dp
+        return dp
+      }
+    }
+  }
+
+  @JvmStatic @CheckResult fun checkMainThread(): Boolean {
+    return Looper.myLooper() == Looper.getMainLooper()
   }
 }

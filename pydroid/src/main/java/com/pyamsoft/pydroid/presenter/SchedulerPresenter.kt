@@ -19,11 +19,12 @@ package com.pyamsoft.pydroid.presenter
 import com.pyamsoft.pydroid.helper.SchedulerHelper
 import io.reactivex.Scheduler
 
-abstract class SchedulerPresenter protected constructor(protected val observeScheduler: Scheduler,
-    protected val subscribeScheduler: Scheduler) : Presenter() {
+abstract class SchedulerPresenter protected constructor(
+    protected val foregroundScheduler: Scheduler,
+    protected val backgroundScheduler: Scheduler) : Presenter() {
 
   init {
-    SchedulerHelper.enforceObserveScheduler(observeScheduler)
-    SchedulerHelper.enforceSubscribeScheduler(subscribeScheduler)
+    SchedulerHelper.enforceForegroundScheduler(foregroundScheduler)
+    SchedulerHelper.enforceBackgroundScheduler(backgroundScheduler)
   }
 }

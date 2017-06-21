@@ -33,9 +33,9 @@ object SchedulerHelper {
    * Enforce that a given scheduler will run on a background thread
    * OR on Immediate, for Testing
    */
-  @JvmStatic fun enforceSubscribeScheduler(scheduler: Scheduler) {
+  @JvmStatic fun enforceBackgroundScheduler(scheduler: Scheduler) {
     if (!isBackgroundScheduler(scheduler) && scheduler !== Schedulers.trampoline()) {
-      throw RuntimeException("Cannot subscribe on a foreground scheduler")
+      throw RuntimeException("Scheduler is not a background scheduler")
     }
   }
 
@@ -43,9 +43,9 @@ object SchedulerHelper {
    * Enforce that a given scheduler will run on a foreground thread
    * OR on Immediate, for Testing
    */
-  @JvmStatic fun enforceObserveScheduler(scheduler: Scheduler) {
+  @JvmStatic fun enforceForegroundScheduler(scheduler: Scheduler) {
     if (isBackgroundScheduler(scheduler)) {
-      throw RuntimeException("Cannot observe on a background scheduler")
+      throw RuntimeException("Scheduler is not a foreground scheduler")
     }
   }
 }

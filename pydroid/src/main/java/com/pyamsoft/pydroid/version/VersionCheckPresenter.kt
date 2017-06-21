@@ -43,8 +43,8 @@ class VersionCheckPresenter(private val interactor: VersionCheckInteractor,
       onUpdatedVersionFound: (current: Int, updated: Int) -> Unit,
       onVersionCheckFinished: () -> Unit) {
     disposeOnStop {
-      interactor.checkVersion(packageName, force).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({
+      interactor.checkVersion(packageName, force).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({
         Timber.i("Update check finished")
         Timber.i("Current version: %d", currentVersionCode)
         Timber.i("Latest version: %d", it)

@@ -36,8 +36,8 @@ class RxResourceLoader(context: Context, @DrawableRes resource: Int) : ResourceL
   private val subScheduler: Scheduler = Schedulers.io()
 
   init {
-    SchedulerHelper.enforceObserveScheduler(obsScheduler)
-    SchedulerHelper.enforceSubscribeScheduler(subScheduler)
+    SchedulerHelper.enforceForegroundScheduler(obsScheduler)
+    SchedulerHelper.enforceBackgroundScheduler(subScheduler)
   }
 
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {

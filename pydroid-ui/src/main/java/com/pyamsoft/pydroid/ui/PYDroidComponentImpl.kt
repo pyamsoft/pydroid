@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesViewPresenter
 import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferencePresenter
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.rating.RatingModule
 import com.pyamsoft.pydroid.ui.rating.RatingViewPresenter
@@ -53,6 +54,7 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun inject(fragment: ActionBarSettingsPreferenceFragment) {
     fragment.presenter = versionCheckModule.getPresenter()
+    fragment.preferencePresenter = ActionBarSettingsPreferencePresenter()
   }
 
   override fun inject(activity: VersionCheckActivity) {

@@ -42,6 +42,7 @@ import timber.log.Timber
 abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment() {
 
   internal lateinit var presenter: VersionCheckPresenter
+  internal lateinit var preferencePresenter: ActionBarSettingsPreferencePresenter
   private lateinit var toast: Toast
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,31 +71,28 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     }
   }
 
-  @CallSuper override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
+  @CallSuper override fun onStart() {
+    super.onStart()
 
     val upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
     if (upgradeInfo != null) {
       if (hideUpgradeInformation) {
         upgradeInfo.isVisible = false
       } else {
-        upgradeInfo.setOnPreferenceClickListener {
+        preferencePresenter.clickEvent(upgradeInfo) {
           onShowChangelogClicked()
-          return@setOnPreferenceClickListener true
         }
       }
     }
 
     val showAboutLicenses = findPreference(getString(R.string.about_license_key))
-    showAboutLicenses.setOnPreferenceClickListener {
+    preferencePresenter.clickEvent(showAboutLicenses) {
       onLicenseItemClicked()
-      return@setOnPreferenceClickListener true
     }
 
     val checkVersion = findPreference(getString(R.string.check_version_key))
-    checkVersion.setOnPreferenceClickListener {
+    preferencePresenter.clickEvent(checkVersion) {
       onCheckForUpdatesClicked(presenter)
-      return@setOnPreferenceClickListener true
     }
 
     val clearAll = findPreference(getString(R.string.clear_all_key))
@@ -102,28 +100,28 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       if (hideClearAll) {
         clearAll.isVisible = false
       } else {
-        clearAll.setOnPreferenceClickListener {
+        preferencePresenter.clickEvent(clearAll) {
           onClearAllClicked()
-          return@setOnPreferenceClickListener true
         }
       }
     }
 
     val rateApplication = findPreference(getString(R.string.rating_key))
-    rateApplication.setOnPreferenceClickListener {
+    preferencePresenter.clickEvent(rateApplication) {
       Linker.clickAppPage(it.context.packageName)
-      return@setOnPreferenceClickListener true
     }
   }
 
   @CallSuper override fun onStop() {
     super.onStop()
     presenter.stop()
+    preferencePresenter.stop()
   }
 
   @CallSuper override fun onDestroy() {
     super.onDestroy()
     presenter.destroy()
+    preferencePresenter.destroy()
   }
 
   /**

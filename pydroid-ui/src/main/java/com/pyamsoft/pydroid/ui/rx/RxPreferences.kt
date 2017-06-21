@@ -26,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 object RxPreferences {
 
   @JvmStatic @JvmOverloads @CheckResult fun onClick(preference: Preference,
+      returnCondition: () -> Boolean = { true },
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<Preference> {
     return Observable.create { emitter: ObservableEmitter<Preference> ->
 
@@ -36,7 +37,7 @@ object RxPreferences {
       preference.setOnPreferenceClickListener {
         if (!emitter.isDisposed) {
           emitter.onNext(it)
-          return@setOnPreferenceClickListener true
+          return@setOnPreferenceClickListener returnCondition()
         } else {
           return@setOnPreferenceClickListener false
         }
@@ -44,8 +45,8 @@ object RxPreferences {
     }.subscribeOn(scheduler)
   }
 
-  inline @JvmStatic @JvmOverloads @CheckResult fun <reified T : Any> onPreferenceChanged(
-      preference: Preference,
+  @JvmStatic @JvmOverloads @CheckResult fun <T : Any> onPreferenceChanged(preference: Preference,
+      returnCondition: () -> Boolean = { true },
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<PreferenceChangedEvent<T>> {
     return Observable.create { emitter: ObservableEmitter<PreferenceChangedEvent<T>> ->
 
@@ -55,8 +56,8 @@ object RxPreferences {
 
       preference.setOnPreferenceChangeListener { preference, any ->
         if (!emitter.isDisposed) {
-          emitter.onNext(PreferenceChangedEvent(preference, any as T))
-          return@setOnPreferenceChangeListener true
+          @Suppress("UNCHECKED_CAST") emitter.onNext(PreferenceChangedEvent(preference, any as T))
+          return@setOnPreferenceChangeListener returnCondition()
         } else {
           return@setOnPreferenceChangeListener false
         }

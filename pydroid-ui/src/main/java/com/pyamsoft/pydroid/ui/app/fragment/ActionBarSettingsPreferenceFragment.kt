@@ -22,6 +22,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
 import android.support.annotation.XmlRes
+import android.support.v7.preference.Preference
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,11 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   internal lateinit var presenter: VersionCheckPresenter
   internal lateinit var preferencePresenter: ActionBarSettingsPreferencePresenter
   private lateinit var toast: Toast
+  private var upgradeInfo: Preference? = null
+  private var clearAll: Preference? = null
+  private lateinit var showAboutLicenses: Preference
+  private lateinit var checkVersion: Preference
+  private lateinit var rateApplication: Preference
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -69,44 +75,48 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     if (applicationSettings != null) {
       applicationSettings.title = "$applicationName Settings"
     }
+
+    upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
+    clearAll = findPreference(getString(R.string.clear_all_key))
+    showAboutLicenses = findPreference(getString(R.string.about_license_key))
+    checkVersion = findPreference(getString(R.string.check_version_key))
+    rateApplication = findPreference(getString(R.string.rating_key))
   }
 
   @CallSuper override fun onStart() {
     super.onStart()
 
-    val upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
-    if (upgradeInfo != null) {
+    val upgrade = upgradeInfo
+    if (upgrade != null) {
       if (hideUpgradeInformation) {
-        upgradeInfo.isVisible = false
+        upgrade.isVisible = false
       } else {
-        preferencePresenter.clickEvent(upgradeInfo, {
+        preferencePresenter.clickEvent(upgrade, {
           onShowChangelogClicked()
         })
       }
     }
 
-    val showAboutLicenses = findPreference(getString(R.string.about_license_key))
     preferencePresenter.clickEvent(showAboutLicenses, {
       onLicenseItemClicked()
     })
 
-    val checkVersion = findPreference(getString(R.string.check_version_key))
     preferencePresenter.clickEvent(checkVersion, {
       onCheckForUpdatesClicked(presenter)
     })
 
-    val clearAll = findPreference(getString(R.string.clear_all_key))
-    if (clearAll != null) {
+
+    val clear = clearAll
+    if (clear != null) {
       if (hideClearAll) {
-        clearAll.isVisible = false
+        clear.isVisible = false
       } else {
-        preferencePresenter.clickEvent(clearAll, {
+        preferencePresenter.clickEvent(clear, {
           onClearAllClicked()
         })
       }
     }
 
-    val rateApplication = findPreference(getString(R.string.rating_key))
     preferencePresenter.clickEvent(rateApplication, {
       Linker.clickAppPage(it.context.packageName)
     })

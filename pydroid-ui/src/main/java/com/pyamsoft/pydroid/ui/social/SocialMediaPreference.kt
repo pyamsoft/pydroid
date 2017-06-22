@@ -21,7 +21,6 @@ import android.support.v7.preference.PreferenceViewHolder
 import android.util.AttributeSet
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.BaseBoundPreference
-import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding
 
 class SocialMediaPreference : BaseBoundPreference {
 
@@ -49,21 +48,19 @@ class SocialMediaPreference : BaseBoundPreference {
 
   override fun onBindViewHolder(holder: PreferenceViewHolder) {
     super.onBindViewHolder(holder)
-    val binding = ViewSocialMediaBinding.bind(holder.itemView)
-    binding.googlePlay.setOnClickListener { Linker.clickGooglePlay() }
-    binding.googlePlus.setOnClickListener { Linker.clickGooglePlus() }
-    binding.blogger.setOnClickListener { Linker.clickBlogger() }
-    binding.facebook.setOnClickListener { Linker.clickFacebook() }
+    holder.findViewById(R.id.google_play).setOnClickListener { Linker.clickGooglePlay() }
+    holder.findViewById(R.id.google_plus).setOnClickListener { Linker.clickGooglePlus() }
+    holder.findViewById(R.id.blogger).setOnClickListener { Linker.clickBlogger() }
+    holder.findViewById(R.id.facebook).setOnClickListener { Linker.clickFacebook() }
   }
 
   override fun onUnbindViewHolder(holder: PreferenceViewHolder?) {
     super.onUnbindViewHolder(holder)
     if (holder != null) {
-      val binding = ViewSocialMediaBinding.bind(holder.itemView)
-      binding.googlePlay.setOnClickListener(null)
-      binding.googlePlus.setOnClickListener(null)
-      binding.blogger.setOnClickListener(null)
-      binding.facebook.setOnClickListener(null)
+      holder.findViewById(R.id.google_play).setOnClickListener(null)
+      holder.findViewById(R.id.google_plus).setOnClickListener(null)
+      holder.findViewById(R.id.blogger).setOnClickListener(null)
+      holder.findViewById(R.id.facebook).setOnClickListener(null)
     }
   }
 }

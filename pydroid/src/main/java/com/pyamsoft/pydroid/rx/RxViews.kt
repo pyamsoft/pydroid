@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rx
+package com.pyamsoft.pydroid.rx
 
 import android.support.annotation.CheckResult
 import android.view.View

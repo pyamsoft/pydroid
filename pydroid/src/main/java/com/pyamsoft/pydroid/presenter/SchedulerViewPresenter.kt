@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.presenter
+package com.pyamsoft.pydroid.presenter
 
-import android.support.annotation.CallSuper
 import android.view.View
 import android.widget.CompoundButton
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 
 abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
@@ -37,12 +35,12 @@ abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
     delegate.checkChangedEvent(view, func)
   }
 
-  @CallSuper override fun onStop() {
+  @android.support.annotation.CallSuper override fun onStop() {
     super.onStop()
     delegate.stop()
   }
 
-  @CallSuper override fun onDestroy() {
+  @android.support.annotation.CallSuper override fun onDestroy() {
     super.onDestroy()
     delegate.destroy()
   }

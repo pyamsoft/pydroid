@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.ui.presenter.ViewPresenter
+import com.pyamsoft.pydroid.presenter.ViewPresenter
 
 internal class AboutLibrariesViewPresenter : ViewPresenter()
 

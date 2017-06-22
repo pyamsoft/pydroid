@@ -14,29 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.presenter
+package com.pyamsoft.pydroid.presenter
 
 import android.view.View
 import android.widget.CompoundButton
-import com.pyamsoft.pydroid.presenter.Presenter
-import com.pyamsoft.pydroid.ui.rx.RxViews
 
-abstract class ViewPresenter : Presenter(), ViewPresenterContract {
+internal interface ViewPresenterContract {
 
-  final override fun clickEvent(view: View, func: (View) -> Unit) {
-    disposeOnStop {
-      RxViews.onClick(view).subscribe {
-        func(it)
-      }
-    }
-  }
+  fun clickEvent(view: android.view.View, func: (android.view.View) -> Unit)
 
-  final override fun checkChangedEvent(view: CompoundButton, func: (CompoundButton, Boolean) -> Unit) {
-    disposeOnStop {
-      RxViews.onCheckChanged(view).subscribe {
-        func(it.view, it.checked)
-      }
-    }
-  }
+  fun checkChangedEvent(view: android.widget.CompoundButton, func: (android.widget.CompoundButton, Boolean) -> Unit)
 }
 

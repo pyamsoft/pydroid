@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.presenter
+package com.pyamsoft.pydroid.presenter
 
-import android.support.annotation.CallSuper
 import android.support.v7.preference.Preference
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 
 abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
@@ -37,12 +35,12 @@ abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
     delegate.preferenceChangedEvent(preference, func, returnCondition)
   }
 
-  @CallSuper override fun onStop() {
+  @android.support.annotation.CallSuper override fun onStop() {
     super.onStop()
     delegate.stop()
   }
 
-  @CallSuper override fun onDestroy() {
+  @android.support.annotation.CallSuper override fun onDestroy() {
     super.onDestroy()
     delegate.destroy()
   }

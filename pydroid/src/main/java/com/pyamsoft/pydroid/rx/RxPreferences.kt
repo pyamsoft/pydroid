@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rx
+package com.pyamsoft.pydroid.rx
 
 import android.support.annotation.CheckResult
 import android.support.v7.preference.Preference
@@ -25,7 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 object RxPreferences {
 
-  @JvmStatic @JvmOverloads @CheckResult fun onClick(preference: Preference,
+  @JvmStatic @JvmOverloads @CheckResult fun onClick(preference: android.support.v7.preference.Preference,
       returnCondition: () -> Boolean = { true },
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<Preference> {
     return Observable.create { emitter: ObservableEmitter<Preference> ->
@@ -45,7 +45,7 @@ object RxPreferences {
     }.subscribeOn(scheduler)
   }
 
-  @JvmStatic @JvmOverloads @CheckResult fun <T : Any> onPreferenceChanged(preference: Preference,
+  @JvmStatic @JvmOverloads @CheckResult fun <T : Any> onPreferenceChanged(preference: android.support.v7.preference.Preference,
       returnCondition: () -> Boolean = { true },
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<PreferenceChangedEvent<T>> {
     return Observable.create { emitter: ObservableEmitter<PreferenceChangedEvent<T>> ->
@@ -65,7 +65,7 @@ object RxPreferences {
     }.subscribeOn(scheduler)
   }
 
-  data class PreferenceChangedEvent<out T : Any>(val preference: Preference, val value: T)
+  data class PreferenceChangedEvent<out T : Any>(val preference: android.support.v7.preference.Preference, val value: T)
 
 }
 

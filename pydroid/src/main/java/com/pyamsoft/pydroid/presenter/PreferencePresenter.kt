@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.presenter
+package com.pyamsoft.pydroid.presenter
 
 import android.support.v7.preference.Preference
-import com.pyamsoft.pydroid.presenter.Presenter
-import com.pyamsoft.pydroid.ui.rx.RxPreferences
+import com.pyamsoft.pydroid.rx.RxPreferences
 
 abstract class PreferencePresenter : Presenter(), PreferencePresenterContract {
 

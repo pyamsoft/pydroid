@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.rx
 
 import android.support.annotation.CheckResult
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.RadioGroup
@@ -72,6 +73,23 @@ object RxViews {
           emitter.onNext(GroupChangedEvent(grp, checkedId))
         }
       }
+    }.subscribeOn(scheduler)
+  }
+
+  @CheckResult fun onRefreshed(view: SwipeRefreshLayout,
+      scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<Unit> {
+    return Observable.create { emitter: ObservableEmitter<Unit> ->
+
+      emitter.setCancellable {
+        view.setOnRefreshListener(null)
+      }
+
+      view.setOnRefreshListener {
+        if (!emitter.isDisposed) {
+          emitter.onNext(Unit)
+        }
+      }
+
     }.subscribeOn(scheduler)
   }
 

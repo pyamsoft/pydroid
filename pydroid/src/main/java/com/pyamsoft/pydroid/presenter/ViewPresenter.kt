@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.presenter
 
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.RadioGroup
@@ -41,11 +42,20 @@ abstract class ViewPresenter : Presenter(), ViewPresenterContract {
     }
   }
 
-  override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
+  final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
       scheduler: Scheduler) {
     disposeOnStop {
       RxViews.onCheckChanged(view, scheduler).subscribe {
         func(it.group, it.checkedId)
+      }
+    }
+  }
+
+  final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit,
+      scheduler: Scheduler) {
+    disposeOnStop {
+      RxViews.onRefreshed(view, scheduler).subscribe {
+        func()
       }
     }
   }

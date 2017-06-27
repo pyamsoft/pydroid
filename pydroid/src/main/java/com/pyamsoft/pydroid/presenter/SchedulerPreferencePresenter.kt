@@ -26,12 +26,12 @@ abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
 
   private val delegate = DelegatePreferencePresenter()
 
-  override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
+  final override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
       returnCondition: () -> Boolean, scheduler: Scheduler) {
     delegate.clickEvent(preference, func, returnCondition, scheduler)
   }
 
-  override fun <T : Any> preferenceChangedEvent(preference: Preference,
+  final override fun <T : Any> preferenceChangedEvent(preference: Preference,
       func: (Preference, T) -> Unit, returnCondition: () -> Boolean, scheduler: Scheduler) {
     delegate.preferenceChangedEvent(preference, func, returnCondition, scheduler)
   }

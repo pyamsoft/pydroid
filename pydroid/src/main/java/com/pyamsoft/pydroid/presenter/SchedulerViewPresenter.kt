@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.presenter
 
 import android.support.annotation.CallSuper
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.RadioGroup
@@ -28,18 +29,23 @@ abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
 
   private val delegate = DelegateViewPresenter()
 
-  override fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler) {
+  final override fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler) {
     delegate.clickEvent(view, func, foregroundScheduler)
   }
 
-  override fun checkChangedEvent(view: CompoundButton, func: (CompoundButton, Boolean) -> Unit,
+  final override fun checkChangedEvent(view: CompoundButton,
+      func: (CompoundButton, Boolean) -> Unit, scheduler: Scheduler) {
+    delegate.checkChangedEvent(view, func, foregroundScheduler)
+  }
+
+  final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
       scheduler: Scheduler) {
     delegate.checkChangedEvent(view, func, foregroundScheduler)
   }
 
-  override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
+  final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit,
       scheduler: Scheduler) {
-    delegate.checkChangedEvent(view, func, foregroundScheduler)
+    delegate.swipeRefresh(view, func, foregroundScheduler)
   }
 
   @CallSuper override fun onStop() {

@@ -37,8 +37,8 @@ abstract class SchedulerDesignPresenter(foregroundScheduler: Scheduler,
     delegate.destroy()
   }
 
-  override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
-      condition: (MenuItem) -> Boolean, scheduler: Scheduler) {
+  final override fun clickBottomNavigation(bottomBar: BottomNavigationView,
+      func: (MenuItem) -> Unit, condition: (MenuItem) -> Boolean, scheduler: Scheduler) {
     delegate.clickBottomNavigation(bottomBar, func, condition, foregroundScheduler)
   }
 

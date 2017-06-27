@@ -24,7 +24,7 @@ import io.reactivex.Scheduler
 
 abstract class DesignPresenter : Presenter(), DesignPresenterContract {
 
-  override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
+  final override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
       condition: (MenuItem) -> Boolean, scheduler: Scheduler) {
     disposeOnStop {
       RxDesign.onClickBottomNavigation(bottomBar, condition, scheduler).subscribe {

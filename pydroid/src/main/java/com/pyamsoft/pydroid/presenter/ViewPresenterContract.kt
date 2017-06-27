@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.presenter
 
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.RadioGroup
@@ -31,6 +32,9 @@ internal interface ViewPresenterContract {
       scheduler: Scheduler = AndroidSchedulers.mainThread())
 
   fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
+      scheduler: Scheduler = AndroidSchedulers.mainThread())
+
+  fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit,
       scheduler: Scheduler = AndroidSchedulers.mainThread())
 }
 

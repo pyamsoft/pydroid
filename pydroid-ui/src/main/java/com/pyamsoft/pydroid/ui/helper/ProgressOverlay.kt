@@ -140,9 +140,6 @@ abstract class ProgressOverlay private constructor() {
         binding.setBackgroundColor(backgroundColor)
       }
 
-      // Eat any click attempts while the overlay is showing
-      binding.setOnClickListener({ Timber.w("Eat click attempt with Overlay") })
-
       return Impl(binding, rootView)
     }
 
@@ -174,11 +171,16 @@ abstract class ProgressOverlay private constructor() {
     init {
       isDisposed = false
       root.addView(binding)
+
+
+      // Eat any click attempts while the overlay is showing
+      binding.setOnClickListener { Timber.w("Eat click attempt with Overlay") }
     }
 
     override fun dispose() {
       if (!isDisposed) {
         root.removeView(binding)
+        binding.setOnClickListener(null)
         isDisposed = true
       }
     }

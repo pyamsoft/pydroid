@@ -99,7 +99,7 @@ class RatingDialog : DialogFragmentBase() {
 
   override fun onStart() {
     super.onStart()
-    presenter.clickEvent(binding.ratingBtnNoThanks) {
+    presenter.clickEvent(binding.ratingBtnNoThanks, {
       Launcher.saveVersionCode(versionCode, onRatingSaved = { dismiss() },
           onRatingDialogSaveError = {
             Toasty.makeText(context.applicationContext,
@@ -107,9 +107,9 @@ class RatingDialog : DialogFragmentBase() {
                 Toasty.LENGTH_SHORT).show()
             dismiss()
           })
-    }
+    })
 
-    presenter.clickEvent(binding.ratingBtnGoRate) {
+    presenter.clickEvent(binding.ratingBtnGoRate, {
       Launcher.saveVersionCode(versionCode, onRatingSaved = {
         val fullLink = "market://details?id=" + rateLink
         NetworkUtil.newLink(it.context.applicationContext, fullLink)
@@ -120,7 +120,7 @@ class RatingDialog : DialogFragmentBase() {
             Toasty.LENGTH_SHORT).show()
         dismiss()
       })
-    }
+    })
   }
 
   override fun onStop() {

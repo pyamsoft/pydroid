@@ -18,16 +18,18 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.1.2-5'
+    kotlin_version = '1.1.3'
     plugin_version = "2.3.3"
   }
   repositories {
     jcenter()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
+
     maven {
       url "https://maven.google.com"
+    }
+
+    maven {
+      url "https://jitpack.io"
     }
   }
 
@@ -42,8 +44,8 @@ buildscript {
     autoValue = "1.4.1"
     autoValueGSON = "0.4.6"
     retrofit = "2.3.0"
-    retrofitLogging = "3.8.0"
-    rxjava = "2.1.0"
+    retrofitLogging = "3.8.1"
+    rxjava = "2.1.1"
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
   }
@@ -57,9 +59,6 @@ buildscript {
     // Gradle version checker
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
 
-    // Error prone compiler
-    classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"
-
     // To publish with JitPack
     classpath "com.github.dcendents:android-maven-gradle-plugin:1.5"
 
@@ -71,21 +70,13 @@ buildscript {
 allprojects {
   repositories {
     jcenter()
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
+
     maven {
       url "https://maven.google.com"
     }
+
     maven {
       url "https://jitpack.io"
-    }
-  }
-
-  gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) {
-      options.compilerArgs += [ '-XepDisableWarningsInGeneratedCode',
-        '-Xep:MissingOverride:OFF', '-Xlint:unchecked', '-Xlint:deprecation' ]
     }
   }
 }

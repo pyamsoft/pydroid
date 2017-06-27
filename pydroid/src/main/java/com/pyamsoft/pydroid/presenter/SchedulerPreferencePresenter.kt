@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.presenter
 
+import android.support.annotation.CallSuper
 import android.support.v7.preference.Preference
 import io.reactivex.Scheduler
 
@@ -25,22 +26,22 @@ abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
 
   private val delegate = DelegatePreferencePresenter()
 
-  override final fun clickEvent(preference: Preference, func: (Preference) -> Unit,
-      returnCondition: () -> Boolean) {
-    delegate.clickEvent(preference, func, returnCondition)
+  override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
+      returnCondition: () -> Boolean, scheduler: Scheduler) {
+    delegate.clickEvent(preference, func, returnCondition, scheduler)
   }
 
-  override final fun <T : Any> preferenceChangedEvent(preference: Preference,
-      func: (Preference, T) -> Unit, returnCondition: () -> Boolean) {
-    delegate.preferenceChangedEvent(preference, func, returnCondition)
+  override fun <T : Any> preferenceChangedEvent(preference: Preference,
+      func: (Preference, T) -> Unit, returnCondition: () -> Boolean, scheduler: Scheduler) {
+    delegate.preferenceChangedEvent(preference, func, returnCondition, scheduler)
   }
 
-  @android.support.annotation.CallSuper override fun onStop() {
+  @CallSuper override fun onStop() {
     super.onStop()
     delegate.stop()
   }
 
-  @android.support.annotation.CallSuper override fun onDestroy() {
+  @CallSuper override fun onDestroy() {
     super.onDestroy()
     delegate.destroy()
   }

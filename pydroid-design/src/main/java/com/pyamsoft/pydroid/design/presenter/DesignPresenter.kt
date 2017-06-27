@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.presenter
+package com.pyamsoft.pydroid.design.presenter
 
-import android.support.v7.preference.Preference
+import android.support.design.widget.BottomNavigationView
+import android.view.MenuItem
+import com.pyamsoft.pydroid.design.rx.RxDesign
+import com.pyamsoft.pydroid.presenter.Presenter
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 
-internal interface PreferencePresenterContract {
+abstract class DesignPresenter : Presenter(), DesignPresenterContract {
 
-  fun clickEvent(preference: Preference, func: (Preference) -> Unit,
-      returnCondition: () -> Boolean = { true },
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
-
-  fun <T : Any> preferenceChangedEvent(preference: Preference, func: (Preference, T) -> Unit,
-      returnCondition: () -> Boolean = { true },
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+  override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
+      condition: (MenuItem) -> Boolean, scheduler: Scheduler) {
+    disposeOnStop {
+      RxDesign.onClickBottomNavigation(bottomBar, condition, scheduler).subscribe {
+        func(it)
+      }
+    }
+  }
 }
 

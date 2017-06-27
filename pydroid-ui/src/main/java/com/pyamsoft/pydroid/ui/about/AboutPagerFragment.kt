@@ -66,9 +66,9 @@ class AboutPagerFragment : Fragment() {
 
   override fun onStart() {
     super.onStart()
-    presenter.clickEvent(binding.aboutItemHomepage) {
+    presenter.clickEvent(binding.aboutItemHomepage, {
       NetworkUtil.newLink(it.context.applicationContext, homepage)
-    }
+    })
   }
 
   override fun onStop() {

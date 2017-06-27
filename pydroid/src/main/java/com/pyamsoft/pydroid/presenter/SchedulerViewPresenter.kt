@@ -16,8 +16,10 @@
 
 package com.pyamsoft.pydroid.presenter
 
+import android.support.annotation.CallSuper
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.RadioGroup
 import io.reactivex.Scheduler
 
 abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
@@ -26,21 +28,26 @@ abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
 
   private val delegate = DelegateViewPresenter()
 
-  final override fun clickEvent(view: View, func: (View) -> Unit) {
-    delegate.clickEvent(view, func)
+  override fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler) {
+    delegate.clickEvent(view, func, foregroundScheduler)
   }
 
-  final override fun checkChangedEvent(view: CompoundButton,
-      func: (CompoundButton, Boolean) -> Unit) {
-    delegate.checkChangedEvent(view, func)
+  override fun checkChangedEvent(view: CompoundButton, func: (CompoundButton, Boolean) -> Unit,
+      scheduler: Scheduler) {
+    delegate.checkChangedEvent(view, func, foregroundScheduler)
   }
 
-  @android.support.annotation.CallSuper override fun onStop() {
+  override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
+      scheduler: Scheduler) {
+    delegate.checkChangedEvent(view, func, foregroundScheduler)
+  }
+
+  @CallSuper override fun onStop() {
     super.onStop()
     delegate.stop()
   }
 
-  @android.support.annotation.CallSuper override fun onDestroy() {
+  @CallSuper override fun onDestroy() {
     super.onDestroy()
     delegate.destroy()
   }

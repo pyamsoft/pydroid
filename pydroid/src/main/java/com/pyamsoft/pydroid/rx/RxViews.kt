@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.rx
 import android.support.annotation.CheckResult
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.RadioGroup
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Scheduler
@@ -58,7 +59,24 @@ object RxViews {
     }.subscribeOn(scheduler)
   }
 
+  @CheckResult fun onCheckChanged(group: RadioGroup,
+      scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<GroupChangedEvent> {
+    return Observable.create { emitter: ObservableEmitter<GroupChangedEvent> ->
+
+      emitter.setCancellable {
+        group.setOnCheckedChangeListener(null)
+      }
+
+      group.setOnCheckedChangeListener { grp, checkedId ->
+        if (!emitter.isDisposed) {
+          emitter.onNext(GroupChangedEvent(grp, checkedId))
+        }
+      }
+    }.subscribeOn(scheduler)
+  }
+
   data class CheckedChangedEvent(val view: CompoundButton, val checked: Boolean)
 
+  data class GroupChangedEvent(val group: RadioGroup, val checkedId: Int)
 }
 

@@ -55,7 +55,6 @@ class AboutLibrariesFragment : ActionBarFragment() {
     when (backStackState) {
       LAST -> lastOnBackStack = true
       NOT_LAST -> lastOnBackStack = false
-      else -> throw RuntimeException("Invalid back stack state: " + backStackStateName)
     }
 
     PYDroid.with {
@@ -90,6 +89,11 @@ class AboutLibrariesFragment : ActionBarFragment() {
       Timber.d("All licenses loaded")
       pagerAdapter.notifyDataSetChanged()
       binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
+
+      // Reload the last looked at page
+      if (savedInstanceState != null) {
+        binding.viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
+      }
     })
   }
 
@@ -112,12 +116,13 @@ class AboutLibrariesFragment : ActionBarFragment() {
     binding.viewPager.addOnPageChangeListener(listener)
 
 
-    viewPresenter.clickEvent(binding.arrowLeft) {
+    viewPresenter.clickEvent(binding.arrowLeft, {
       binding.viewPager.arrowScroll(View.FOCUS_LEFT)
-    }
-    viewPresenter.clickEvent(binding.arrowRight) {
+    })
+
+    viewPresenter.clickEvent(binding.arrowRight, {
       binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
-    }
+    })
   }
 
   override fun onStop() {
@@ -148,6 +153,11 @@ class AboutLibrariesFragment : ActionBarFragment() {
     }
   }
 
+  override fun onSaveInstanceState(outState: Bundle?) {
+    outState?.putInt(KEY_PAGE, binding.viewPager.currentItem)
+    super.onSaveInstanceState(outState)
+  }
+
   enum class BackStackState {
     LAST, NOT_LAST
   }
@@ -156,6 +166,7 @@ class AboutLibrariesFragment : ActionBarFragment() {
 
     const val TAG = "AboutLibrariesFragment"
     private const val KEY_BACK_STACK = "key_back_stack"
+    private const val KEY_PAGE = "key_current_page"
 
     @JvmStatic fun show(activity: FragmentActivity, @IdRes containerResId: Int,
         backStackState: BackStackState) {

@@ -18,11 +18,19 @@ package com.pyamsoft.pydroid.presenter
 
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.RadioGroup
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 internal interface ViewPresenterContract {
 
-  fun clickEvent(view: android.view.View, func: (android.view.View) -> Unit)
+  fun clickEvent(view: View, func: (View) -> Unit,
+      scheduler: Scheduler = AndroidSchedulers.mainThread())
 
-  fun checkChangedEvent(view: android.widget.CompoundButton, func: (android.widget.CompoundButton, Boolean) -> Unit)
+  fun checkChangedEvent(view: CompoundButton, func: (CompoundButton, Boolean) -> Unit,
+      scheduler: Scheduler = AndroidSchedulers.mainThread())
+
+  fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
+      scheduler: Scheduler = AndroidSchedulers.mainThread())
 }
 

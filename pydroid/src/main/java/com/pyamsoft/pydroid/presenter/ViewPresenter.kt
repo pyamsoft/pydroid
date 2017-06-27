@@ -18,23 +18,34 @@ package com.pyamsoft.pydroid.presenter
 
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.RadioGroup
 import com.pyamsoft.pydroid.rx.RxViews
+import io.reactivex.Scheduler
 
 abstract class ViewPresenter : Presenter(), ViewPresenterContract {
 
-  final override fun clickEvent(view: View, func: (View) -> Unit) {
+  final override fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler) {
     disposeOnStop {
-      RxViews.onClick(view).subscribe {
+      RxViews.onClick(view, scheduler).subscribe {
         func(it)
       }
     }
   }
 
   final override fun checkChangedEvent(view: CompoundButton,
-      func: (CompoundButton, Boolean) -> Unit) {
+      func: (CompoundButton, Boolean) -> Unit, scheduler: Scheduler) {
     disposeOnStop {
-      RxViews.onCheckChanged(view).subscribe {
+      RxViews.onCheckChanged(view, scheduler).subscribe {
         func(it.view, it.checked)
+      }
+    }
+  }
+
+  override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
+      scheduler: Scheduler) {
+    disposeOnStop {
+      RxViews.onCheckChanged(view, scheduler).subscribe {
+        func(it.group, it.checkedId)
       }
     }
   }

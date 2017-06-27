@@ -19,13 +19,13 @@ package com.pyamsoft.pydroid.design.presenter
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
 import com.pyamsoft.pydroid.design.rx.RxDesign
-import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.presenter.ViewPresenter
 import io.reactivex.Scheduler
 
-abstract class DesignPresenter : Presenter(), DesignPresenterContract {
+abstract class DesignPresenter : ViewPresenter(), DesignPresenterContract {
 
-  final override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
-      condition: (MenuItem) -> Boolean, scheduler: Scheduler) {
+  final override fun clickBottomNavigation(bottomBar: BottomNavigationView,
+      func: (MenuItem) -> Unit, condition: (MenuItem) -> Boolean, scheduler: Scheduler) {
     disposeOnStop {
       RxDesign.onClickBottomNavigation(bottomBar, condition, scheduler).subscribe {
         func(it)

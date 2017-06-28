@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import android.database.DataSetObserver
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
@@ -74,6 +75,23 @@ class AboutLibrariesFragment : ActionBarFragment() {
     binding.viewPager.adapter = pagerAdapter
     binding.viewPager.offscreenPageLimit = 1
 
+    // We must observe the data set for when it finishes.
+    // There is a race condition that can cause the UI to crash if pager.setCurrentItem is
+    // called before notifyDataSetChanged finishes
+    pagerAdapter.registerDataSetObserver(object : DataSetObserver() {
+
+      override fun onChanged() {
+        super.onChanged()
+        Timber.d("Data set changed! Set current item and unregister self")
+        pagerAdapter.unregisterDataSetObserver(this)
+
+        // Reload the last looked at page
+        if (savedInstanceState != null) {
+          binding.viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
+        }
+      }
+    })
+
     mapper.put("left",
         ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
     binding.arrowLeft.rotation = 90F
@@ -82,6 +100,7 @@ class AboutLibrariesFragment : ActionBarFragment() {
         ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
     binding.arrowRight.rotation = -90F
 
+
     presenter.loadLicenses(onLicenseLoaded = {
       Timber.d("Load license: %s", it)
       pagerAdapter.add(it)
@@ -89,11 +108,6 @@ class AboutLibrariesFragment : ActionBarFragment() {
       Timber.d("All licenses loaded")
       pagerAdapter.notifyDataSetChanged()
       binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
-
-      // Reload the last looked at page
-      if (savedInstanceState != null) {
-        binding.viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
-      }
     })
   }
 
@@ -151,6 +165,9 @@ class AboutLibrariesFragment : ActionBarFragment() {
       Timber.d("About is last on backstack, set up false")
       setActionBarUpEnabled(false)
     }
+
+    binding.viewPager.adapter = null
+    pagerAdapter.clear()
   }
 
   override fun onSaveInstanceState(outState: Bundle?) {

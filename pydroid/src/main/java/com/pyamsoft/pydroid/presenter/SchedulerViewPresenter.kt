@@ -29,23 +29,40 @@ abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
 
   private val delegate = DelegateViewPresenter()
 
+  final override fun clickEvent(view: View, func: (View) -> Unit) {
+    clickEvent(view, func, foregroundScheduler)
+  }
+
   final override fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler) {
-    delegate.clickEvent(view, func, foregroundScheduler)
+    delegate.clickEvent(view, func, scheduler)
+  }
+
+  final override fun checkChangedEvent(view: CompoundButton,
+      func: (CompoundButton, Boolean) -> Unit) {
+    checkChangedEvent(view, func, foregroundScheduler)
   }
 
   final override fun checkChangedEvent(view: CompoundButton,
       func: (CompoundButton, Boolean) -> Unit, scheduler: Scheduler) {
-    delegate.checkChangedEvent(view, func, foregroundScheduler)
+    delegate.checkChangedEvent(view, func, scheduler)
+  }
+
+  final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit) {
+    checkChangedEvent(view, func, foregroundScheduler)
   }
 
   final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
       scheduler: Scheduler) {
-    delegate.checkChangedEvent(view, func, foregroundScheduler)
+    delegate.checkChangedEvent(view, func, scheduler)
+  }
+
+  final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit) {
+    swipeRefresh(view, func, foregroundScheduler)
   }
 
   final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit,
       scheduler: Scheduler) {
-    delegate.swipeRefresh(view, func, foregroundScheduler)
+    delegate.swipeRefresh(view, func, scheduler)
   }
 
   @CallSuper override fun onStop() {

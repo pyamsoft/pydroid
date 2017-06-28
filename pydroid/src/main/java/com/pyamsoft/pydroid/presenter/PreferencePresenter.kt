@@ -19,8 +19,18 @@ package com.pyamsoft.pydroid.presenter
 import android.support.v7.preference.Preference
 import com.pyamsoft.pydroid.rx.RxPreferences
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 abstract class PreferencePresenter : Presenter(), PreferencePresenterContract {
+
+  final override fun clickEvent(preference: Preference, func: (Preference) -> Unit) {
+    clickEvent(preference, func) { true }
+  }
+
+  final override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
+      returnCondition: () -> Boolean) {
+    clickEvent(preference, func, returnCondition, AndroidSchedulers.mainThread())
+  }
 
   final override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
       returnCondition: () -> Boolean, scheduler: Scheduler) {
@@ -29,6 +39,16 @@ abstract class PreferencePresenter : Presenter(), PreferencePresenterContract {
         func(it)
       }
     }
+  }
+
+  final override fun <T : Any> preferenceChangedEvent(preference: Preference,
+      func: (Preference, T) -> Unit) {
+    preferenceChangedEvent(preference, func) { true }
+  }
+
+  final override fun <T : Any> preferenceChangedEvent(preference: Preference,
+      func: (Preference, T) -> Unit, returnCondition: () -> Boolean) {
+    preferenceChangedEvent(preference, func, returnCondition, AndroidSchedulers.mainThread())
   }
 
   final override fun <T : Any> preferenceChangedEvent(preference: Preference,

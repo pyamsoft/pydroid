@@ -18,16 +18,22 @@ package com.pyamsoft.pydroid.presenter
 
 import android.support.v7.preference.Preference
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 
 internal interface PreferencePresenterContract {
 
-  fun clickEvent(preference: Preference, func: (Preference) -> Unit,
-      returnCondition: () -> Boolean = { true },
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+  fun clickEvent(preference: Preference, func: (Preference) -> Unit)
+
+  fun clickEvent(preference: Preference, func: (Preference) -> Unit, returnCondition: () -> Boolean)
+
+  fun clickEvent(preference: Preference, func: (Preference) -> Unit, returnCondition: () -> Boolean,
+      scheduler: Scheduler)
+
+  fun <T : Any> preferenceChangedEvent(preference: Preference, func: (Preference, T) -> Unit)
 
   fun <T : Any> preferenceChangedEvent(preference: Preference, func: (Preference, T) -> Unit,
-      returnCondition: () -> Boolean = { true },
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+      returnCondition: () -> Boolean)
+
+  fun <T : Any> preferenceChangedEvent(preference: Preference, func: (Preference, T) -> Unit,
+      returnCondition: () -> Boolean, scheduler: Scheduler)
 }
 

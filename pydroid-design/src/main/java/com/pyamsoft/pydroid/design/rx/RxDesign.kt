@@ -26,7 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 object RxDesign {
 
-  @CheckResult fun onClickBottomNavigation(bottomBar: BottomNavigationView,
+  @JvmOverloads @CheckResult fun onClickBottomNavigation(bottomBar: BottomNavigationView,
       condition: (MenuItem) -> Boolean = { true },
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<MenuItem> {
     return Observable.create<MenuItem> { emitter: ObservableEmitter<MenuItem> ->

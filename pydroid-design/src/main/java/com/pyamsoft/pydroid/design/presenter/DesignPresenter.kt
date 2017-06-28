@@ -21,8 +21,18 @@ import android.view.MenuItem
 import com.pyamsoft.pydroid.design.rx.RxDesign
 import com.pyamsoft.pydroid.presenter.ViewPresenter
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 abstract class DesignPresenter : ViewPresenter(), DesignPresenterContract {
+
+  final override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit) {
+    clickBottomNavigation(bottomBar, func) { true }
+  }
+
+  final override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
+      condition: (MenuItem) -> Boolean) {
+    clickBottomNavigation(bottomBar, func, condition, AndroidSchedulers.mainThread())
+  }
 
   final override fun clickBottomNavigation(bottomBar: BottomNavigationView,
       func: (MenuItem) -> Unit, condition: (MenuItem) -> Boolean, scheduler: Scheduler) {

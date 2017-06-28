@@ -60,7 +60,7 @@ object RxViews {
     }.subscribeOn(scheduler)
   }
 
-  @CheckResult fun onCheckChanged(group: RadioGroup,
+  @JvmOverloads @CheckResult fun onCheckChanged(group: RadioGroup,
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<GroupChangedEvent> {
     return Observable.create { emitter: ObservableEmitter<GroupChangedEvent> ->
 
@@ -76,7 +76,7 @@ object RxViews {
     }.subscribeOn(scheduler)
   }
 
-  @CheckResult fun onRefreshed(view: SwipeRefreshLayout,
+  @JvmOverloads @CheckResult fun onRefreshed(view: SwipeRefreshLayout,
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<Unit> {
     return Observable.create { emitter: ObservableEmitter<Unit> ->
 

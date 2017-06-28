@@ -22,8 +22,13 @@ import android.widget.CompoundButton
 import android.widget.RadioGroup
 import com.pyamsoft.pydroid.rx.RxViews
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
 abstract class ViewPresenter : Presenter(), ViewPresenterContract {
+
+  final override fun clickEvent(view: View, func: (View) -> Unit) {
+    clickEvent(view, func, AndroidSchedulers.mainThread())
+  }
 
   final override fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler) {
     disposeOnStop {
@@ -31,6 +36,11 @@ abstract class ViewPresenter : Presenter(), ViewPresenterContract {
         func(it)
       }
     }
+  }
+
+  final override fun checkChangedEvent(view: CompoundButton,
+      func: (CompoundButton, Boolean) -> Unit) {
+    checkChangedEvent(view, func, AndroidSchedulers.mainThread())
   }
 
   final override fun checkChangedEvent(view: CompoundButton,
@@ -42,6 +52,10 @@ abstract class ViewPresenter : Presenter(), ViewPresenterContract {
     }
   }
 
+  final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit) {
+    checkChangedEvent(view, func, AndroidSchedulers.mainThread())
+  }
+
   final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
       scheduler: Scheduler) {
     disposeOnStop {
@@ -49,6 +63,10 @@ abstract class ViewPresenter : Presenter(), ViewPresenterContract {
         func(it.group, it.checkedId)
       }
     }
+  }
+
+  final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit) {
+    swipeRefresh(view, func, AndroidSchedulers.mainThread())
   }
 
   final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit,

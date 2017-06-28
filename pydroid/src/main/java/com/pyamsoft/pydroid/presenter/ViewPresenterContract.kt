@@ -21,20 +21,24 @@ import android.view.View
 import android.widget.CompoundButton
 import android.widget.RadioGroup
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 
 internal interface ViewPresenterContract {
 
-  fun clickEvent(view: View, func: (View) -> Unit,
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+  fun clickEvent(view: View, func: (View) -> Unit)
+
+  fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler)
+
+  fun checkChangedEvent(view: CompoundButton, func: (CompoundButton, Boolean) -> Unit)
 
   fun checkChangedEvent(view: CompoundButton, func: (CompoundButton, Boolean) -> Unit,
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+      scheduler: Scheduler)
 
-  fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+  fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit)
 
-  fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit,
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+  fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit, scheduler: Scheduler)
+
+  fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit)
+
+  fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit, scheduler: Scheduler)
 }
 

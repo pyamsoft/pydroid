@@ -19,12 +19,15 @@ package com.pyamsoft.pydroid.design.presenter
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 
 interface DesignPresenterContract {
 
+  fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit)
+
   fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
-      condition: (MenuItem) -> Boolean = { true },
-      scheduler: Scheduler = AndroidSchedulers.mainThread())
+      condition: (MenuItem) -> Boolean)
+
+  fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
+      condition: (MenuItem) -> Boolean, scheduler: Scheduler)
 }
 

@@ -31,11 +31,11 @@ abstract class GenericLoader<out L, T> protected constructor() {
 
   @CheckResult abstract fun tint(@ColorRes color: Int): L
 
-  @CheckResult abstract fun setStartAction(startAction: (Target<T>) -> Unit): L
+  @CheckResult abstract fun withStartAction(startAction: (Target<T>) -> Unit): L
 
-  @CheckResult abstract fun setErrorAction(errorAction: (Target<T>) -> Unit): L
+  @CheckResult abstract fun withErrorAction(errorAction: (Target<T>) -> Unit): L
 
-  @CheckResult abstract fun setCompleteAction(completeAction: (Target<T>) -> Unit): L
+  @CheckResult abstract fun withCompleteAction(completeAction: (Target<T>) -> Unit): L
 
   @CheckResult abstract fun into(imageView: ImageView): Loaded
 

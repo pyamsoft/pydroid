@@ -50,17 +50,18 @@ abstract class ResourceLoader protected constructor(context: Context,
     return this
   }
 
-  final override fun setStartAction(startAction: (Target<Drawable>) -> Unit): ResourceLoader {
+  final override fun withStartAction(startAction: (Target<Drawable>) -> Unit): ResourceLoader {
     this.startAction = startAction
     return this
   }
 
-  final override fun setErrorAction(errorAction: (Target<Drawable>) -> Unit): ResourceLoader {
+  final override fun withErrorAction(errorAction: (Target<Drawable>) -> Unit): ResourceLoader {
     this.errorAction = errorAction
     return this
   }
 
-  final override fun setCompleteAction(completeAction: (Target<Drawable>) -> Unit): ResourceLoader {
+  final override fun withCompleteAction(
+      completeAction: (Target<Drawable>) -> Unit): ResourceLoader {
     this.completeAction = completeAction
     return this
   }

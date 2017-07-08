@@ -50,7 +50,8 @@ object PYDroid {
   /**
    * Initialize the library
    */
-  @JvmStatic fun initialize(context: Context, debug: Boolean, allowReInitialize: Boolean = false) {
+  @JvmOverloads @JvmStatic fun initialize(context: Context, debug: Boolean,
+      allowReInitialize: Boolean = false) {
     debugMode = debug
     if (component == null || allowReInitialize) {
       component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))

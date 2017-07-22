@@ -42,7 +42,7 @@ buildscript {
     supportLib = "25.4.0"
     timber = "4.5.1"
     autoValue = "1.4.1"
-    autoValueGSON = "0.4.6"
+    autoValueGSON = "0.5.0"
     retrofit = "2.3.0"
     retrofitLogging = "3.8.1"
     rxjava = "2.1.1"
@@ -87,4 +87,4 @@ task clean(type: Delete) {
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '10.6.8'
+version = '10.6.9'

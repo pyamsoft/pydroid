@@ -18,19 +18,24 @@ package com.pyamsoft.pydroid.helper
 
 import android.support.annotation.CheckResult
 
-data class Optional<out T> internal constructor(private val source: T?) {
+data class Optional<out T : Any> internal constructor(private val source: T?) {
 
   @CheckResult fun isPresent(): Boolean {
     return source != null
   }
 
   @CheckResult fun item(): T {
-    return source!!
+    val obj: T? = source
+    if (obj == null) {
+      throw IllegalStateException("Optional: Cannot access source item as it is NULL")
+    } else {
+      return obj
+    }
   }
 
   companion object {
 
-    @JvmStatic @CheckResult fun <T> ofNullable(source: T): Optional<T> {
+    @JvmStatic @CheckResult fun <T : Any> ofNullable(source: T?): Optional<T> {
       return Optional(source)
     }
   }

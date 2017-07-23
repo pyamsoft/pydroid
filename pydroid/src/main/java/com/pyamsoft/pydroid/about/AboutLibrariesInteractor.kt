@@ -33,19 +33,19 @@ class AboutLibrariesInteractor(context: Context) {
   private val assetManager: AssetManager = context.applicationContext.assets
   @JvmField protected val cachedLicenses: MutableMap<String, String> = HashMap()
 
-  @CheckResult internal fun loadLicenses(): Observable<AboutLibrariesModel> {
+  @CheckResult fun loadLicenses(): Observable<AboutLibrariesModel> {
     return Observable.defer {
       Observable.fromIterable(Licenses.getLicenses())
     }.toSortedList { (name1), (name2) ->
       name1.compareTo(name2)
-    }.toObservable().concatMap<AboutLibrariesModel>({
-      Observable.fromIterable(it)
-    }).map {
-      AboutLibrariesModel.create(it.name, it.homepage, loadLicenseText(it))
+    }.flatMapObservable { Observable.fromIterable(it) }.concatMap { model ->
+      loadLicenseText(model).flatMapObservable {
+        Observable.just(AboutLibrariesModel.create(model.name, model.homepage, it))
+      }
     }
   }
 
-  @CheckResult private fun loadLicenseText(model: AboutLibrariesModel): String {
+  @CheckResult protected fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
     return Single.fromCallable<String> {
       val name = model.name
       val result: String
@@ -68,10 +68,10 @@ class AboutLibrariesInteractor(context: Context) {
         Timber.d("Put license into cache for model: %s", model.name)
         cachedLicenses.put(model.name, it)
       }
-    }.blockingGet()
+    }
   }
 
-  @CheckResult private fun loadNewLicense(licenseLocation: String): String {
+  @CheckResult protected fun loadNewLicense(licenseLocation: String): String {
     if (licenseLocation.isEmpty()) {
       Timber.w("Empty license passed")
       return ""

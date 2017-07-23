@@ -24,7 +24,7 @@ class VersionCheckInteractor(protected @JvmField val versionCheckService: Versio
 
   @JvmField protected var cachedResponse: Single<VersionCheckResponse>? = null
 
-  @CheckResult internal fun checkVersion(packageName: String, force: Boolean): Single<Int> {
+  @CheckResult fun checkVersion(packageName: String, force: Boolean): Single<Int> {
     return Single.defer {
       val dataSource: Single<VersionCheckResponse>
       if (cachedResponse == null || force) {

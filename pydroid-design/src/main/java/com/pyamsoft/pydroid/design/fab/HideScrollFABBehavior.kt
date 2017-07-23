@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.design.fab
 
+import android.support.annotation.CheckResult
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
@@ -27,17 +28,20 @@ import timber.log.Timber
  */
 class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionButton.Behavior() {
 
-  var isAnimating = false
-    private set
+  @JvmField protected var animating = false
+
+  @CheckResult fun isAnimating(): Boolean {
+    return animating
+  }
 
   constructor() : this(0)
 
   init {
-    isAnimating = false
+    animating = false
   }
 
   fun endAnimation() {
-    this.isAnimating = false
+    this.animating = false
   }
 
   fun onHiddenHook() {
@@ -57,8 +61,8 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
     }
 
     if (dyConsumed > distanceNeeded && child.isShown) {
-      if (!isAnimating) {
-        isAnimating = true
+      if (!animating) {
+        animating = true
         Timber.w("Hide FAB")
         child.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
           override fun onHidden(fab: FloatingActionButton?) {
@@ -70,14 +74,14 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
             Timber.w("Set it to invisible to fix this problem")
             fab?.apply {
               visibility = View.INVISIBLE
-              isAnimating = false
+              animating = false
             }
           }
         })
       }
     } else if (dyConsumed < -distanceNeeded && !child.isShown) {
-      if (!isAnimating) {
-        isAnimating = true
+      if (!animating) {
+        animating = true
         Timber.w("Show FAB")
         child.show(object : FloatingActionButton.OnVisibilityChangedListener() {
           override fun onShown(fab: FloatingActionButton?) {
@@ -85,7 +89,7 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
             onShownHook()
             fab?.apply {
               visibility = View.VISIBLE
-              isAnimating = false
+              animating = false
             }
           }
         })

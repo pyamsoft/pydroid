@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.util.DrawableUtil
 abstract class ResourceLoader protected constructor(context: Context,
     @param:DrawableRes private val resource: Int) : GenericLoader<ResourceLoader, Drawable>() {
 
-  protected val appContext: Context = context.applicationContext
+  @JvmField protected val appContext: Context = context.applicationContext
 
   init {
     if (this.resource == 0) {

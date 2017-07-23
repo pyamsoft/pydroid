@@ -25,11 +25,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 
 abstract class DesignPresenter : ViewPresenter(), DesignPresenterContract {
 
-  final override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit) {
+  final override fun clickBottomNavigation(bottomBar: BottomNavigationView,
+      func: (MenuItem) -> Unit) {
     clickBottomNavigation(bottomBar, func) { true }
   }
 
-  final override fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
+  final override fun clickBottomNavigation(bottomBar: BottomNavigationView,
+      func: (MenuItem) -> Unit,
       condition: (MenuItem) -> Boolean) {
     clickBottomNavigation(bottomBar, func, condition, AndroidSchedulers.mainThread())
   }

@@ -25,7 +25,7 @@ import android.widget.Toast
 import com.pyamsoft.pydroid.ui.helper.Toasty
 
 abstract class BackPressConfirmActivity : ActivityBase() {
-  private var backBeenPressed: Boolean = false
+  @JvmField protected var backBeenPressed: Boolean = false
   private lateinit var handler: Handler
   private lateinit var backBeenPressedToast: Toast
 

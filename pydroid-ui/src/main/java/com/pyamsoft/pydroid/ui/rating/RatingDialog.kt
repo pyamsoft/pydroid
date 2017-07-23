@@ -39,7 +39,7 @@ import timber.log.Timber
 
 class RatingDialog : DialogFragmentBase() {
   private lateinit var rateLink: String
-  private var versionCode: Int = 0
+  @JvmField protected var versionCode: Int = 0
   private var changeLogText: Spannable? = null
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()

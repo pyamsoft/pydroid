@@ -33,7 +33,7 @@ class AboutLibrariesInteractor(context: Context) {
   private val assetManager: AssetManager = context.applicationContext.assets
   @JvmField protected val cachedLicenses: MutableMap<String, String> = HashMap()
 
-  @CheckResult fun loadLicenses(): Observable<AboutLibrariesModel> {
+  @CheckResult internal fun loadLicenses(): Observable<AboutLibrariesModel> {
     return Observable.defer {
       Observable.fromIterable(Licenses.getLicenses())
     }.toSortedList { (name1), (name2) ->

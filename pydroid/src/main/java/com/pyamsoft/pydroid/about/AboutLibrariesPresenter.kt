@@ -20,13 +20,14 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-class AboutLibrariesPresenter(private val interactor: AboutLibrariesInteractor,
+class AboutLibrariesPresenter(protected @JvmField val interactor: AboutLibrariesInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
     observeScheduler, subscribeScheduler) {
 
   fun loadLicenses(onLicenseLoaded: (AboutLibrariesModel) -> Unit, onAllLoaded: () -> Unit) {
     disposeOnDestroy {
-      interactor.loadLicenses().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
+      interactor.loadLicenses().subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
           { Timber.e(it, "onError loading licenses") })
     }
   }

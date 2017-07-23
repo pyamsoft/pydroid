@@ -31,7 +31,7 @@ import java.util.HashMap
 class AboutLibrariesInteractor(context: Context) {
 
   private val assetManager: AssetManager = context.applicationContext.assets
-  private val cachedLicenses: MutableMap<String, String> = HashMap()
+  @JvmField protected val cachedLicenses: MutableMap<String, String> = HashMap()
 
   @CheckResult internal fun loadLicenses(): Observable<AboutLibrariesModel> {
     return Observable.defer {

@@ -52,14 +52,9 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
 
   }
 
-  override fun onNestedScroll(coordinatorLayout: CoordinatorLayout?, child: FloatingActionButton?,
-      target: View?, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int) {
-    super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed,
-        dyUnconsumed)
-    if (child == null) {
-      return
-    }
-
+  override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: FloatingActionButton,
+      target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
+      type: Int) {
     if (dyConsumed > distanceNeeded && child.isShown) {
       if (!animating) {
         animating = true
@@ -97,9 +92,9 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
     }
   }
 
-  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout?,
-      child: FloatingActionButton?, directTargetChild: View?, target: View?,
-      nestedScrollAxes: Int): Boolean {
-    return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL
+  override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout,
+      child: FloatingActionButton, directTargetChild: View, target: View, axes: Int,
+      type: Int): Boolean {
+    return axes == ViewCompat.SCROLL_AXIS_VERTICAL
   }
 }

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.presenter
+package com.pyamsoft.pydroid.ui.presenter
 
 import android.support.annotation.CallSuper
 import android.support.v7.preference.Preference
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 
 abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,

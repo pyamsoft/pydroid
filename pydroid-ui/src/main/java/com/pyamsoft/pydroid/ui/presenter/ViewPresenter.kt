@@ -14,68 +14,69 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.presenter
+package com.pyamsoft.pydroid.ui.presenter
 
-import android.support.annotation.CallSuper
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.RadioGroup
+import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.rx.RxViews
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
-abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
-    backgroundScheduler: Scheduler) : SchedulerPresenter(foregroundScheduler,
-    backgroundScheduler), ViewPresenterContract {
-
-  private val delegate = DelegateViewPresenter()
+abstract class ViewPresenter : Presenter(), ViewPresenterContract {
 
   final override fun clickEvent(view: View, func: (View) -> Unit) {
-    clickEvent(view, func, foregroundScheduler)
+    clickEvent(view, func, AndroidSchedulers.mainThread())
   }
 
   final override fun clickEvent(view: View, func: (View) -> Unit, scheduler: Scheduler) {
-    delegate.clickEvent(view, func, scheduler)
+    disposeOnStop {
+      RxViews.onClick(view, scheduler).subscribe {
+        func(it)
+      }
+    }
   }
 
   final override fun checkChangedEvent(view: CompoundButton,
       func: (CompoundButton, Boolean) -> Unit) {
-    checkChangedEvent(view, func, foregroundScheduler)
+    checkChangedEvent(view, func, AndroidSchedulers.mainThread())
   }
 
   final override fun checkChangedEvent(view: CompoundButton,
       func: (CompoundButton, Boolean) -> Unit, scheduler: Scheduler) {
-    delegate.checkChangedEvent(view, func, scheduler)
+    disposeOnStop {
+      RxViews.onCheckChanged(view, scheduler).subscribe {
+        func(it.view, it.checked)
+      }
+    }
   }
 
   final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit) {
-    checkChangedEvent(view, func, foregroundScheduler)
+    checkChangedEvent(view, func, AndroidSchedulers.mainThread())
   }
 
   final override fun checkChangedEvent(view: RadioGroup, func: (RadioGroup, Int) -> Unit,
       scheduler: Scheduler) {
-    delegate.checkChangedEvent(view, func, scheduler)
+    disposeOnStop {
+      RxViews.onCheckChanged(view, scheduler).subscribe {
+        func(it.group, it.checkedId)
+      }
+    }
   }
 
   final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit) {
-    swipeRefresh(view, func, foregroundScheduler)
+    swipeRefresh(view, func, AndroidSchedulers.mainThread())
   }
 
   final override fun swipeRefresh(view: SwipeRefreshLayout, func: () -> Unit,
       scheduler: Scheduler) {
-    delegate.swipeRefresh(view, func, scheduler)
+    disposeOnStop {
+      RxViews.onRefreshed(view, scheduler).subscribe {
+        func()
+      }
+    }
   }
-
-  @CallSuper override fun onStop() {
-    super.onStop()
-    delegate.stop()
-  }
-
-  @CallSuper override fun onDestroy() {
-    super.onDestroy()
-    delegate.destroy()
-  }
-
-  private class DelegateViewPresenter : ViewPresenter()
-
 }
 

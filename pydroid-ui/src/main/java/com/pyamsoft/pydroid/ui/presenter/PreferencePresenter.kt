@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.presenter
+package com.pyamsoft.pydroid.ui.presenter
 
 import android.support.v7.preference.Preference
+import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.rx.RxPreferences
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

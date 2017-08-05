@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.design.presenter
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
 import com.pyamsoft.pydroid.design.rx.RxDesign
-import com.pyamsoft.pydroid.presenter.ViewPresenter
+import com.pyamsoft.pydroid.ui.presenter.ViewPresenter
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 

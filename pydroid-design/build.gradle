@@ -64,7 +64,7 @@ dependencies {
   // Design support lib
   compile "com.android.support:design:$supportLib"
 
-  compile project(":pydroid")
+  compile project(":pydroid-ui")
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

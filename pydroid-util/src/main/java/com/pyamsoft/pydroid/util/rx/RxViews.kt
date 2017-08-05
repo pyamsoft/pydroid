@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.rx
+package com.pyamsoft.pydroid.util.rx
 
 import android.support.annotation.CheckResult
 import android.support.v4.widget.SwipeRefreshLayout
@@ -54,7 +54,8 @@ object RxViews {
 
       view.setOnCheckedChangeListener { buttonView, isChecked ->
         if (!emitter.isDisposed) {
-          emitter.onNext(CheckedChangedEvent(buttonView, isChecked))
+          emitter.onNext(
+              CheckedChangedEvent(buttonView, isChecked))
         }
       }
     }.subscribeOn(scheduler)

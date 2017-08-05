@@ -76,7 +76,7 @@ dependencies {
 
   compile "com.github.ronaldsmartin:Material-ViewPagerIndicator:$viewPagerIndicator"
 
-  compile project(":pydroid")
   compile project(":pydroid-loader")
+  compile project(":pydroid-util")
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

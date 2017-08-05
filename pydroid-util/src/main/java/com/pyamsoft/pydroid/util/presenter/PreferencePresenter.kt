@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.presenter
+package com.pyamsoft.pydroid.util.presenter
 
-import android.support.annotation.CallSuper
 import android.support.v7.preference.Preference
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.util.rx.RxPreferences
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 
-abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
-    backgroundScheduler: Scheduler) : SchedulerPresenter(foregroundScheduler,
-    backgroundScheduler), PreferencePresenterContract {
-
-  private val delegate = DelegatePreferencePresenter()
+abstract class PreferencePresenter : Presenter(), PreferencePresenterContract {
 
   final override fun clickEvent(preference: Preference, func: (Preference) -> Unit) {
     clickEvent(preference, func) { true }
@@ -33,40 +30,35 @@ abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
 
   final override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
       returnCondition: () -> Boolean) {
-    clickEvent(preference, func, returnCondition, foregroundScheduler)
+    clickEvent(preference, func, returnCondition, AndroidSchedulers.mainThread())
   }
 
   final override fun clickEvent(preference: Preference, func: (Preference) -> Unit,
       returnCondition: () -> Boolean, scheduler: Scheduler) {
-    delegate.clickEvent(preference, func, returnCondition, scheduler)
+    disposeOnStop {
+      RxPreferences.onClick(preference, returnCondition, scheduler).subscribe {
+        func(it)
+      }
+    }
   }
 
-  override fun <T : Any> preferenceChangedEvent(preference: Preference,
+  final override fun <T : Any> preferenceChangedEvent(preference: Preference,
       func: (Preference, T) -> Unit) {
     preferenceChangedEvent(preference, func) { true }
   }
 
-  override fun <T : Any> preferenceChangedEvent(preference: Preference,
+  final override fun <T : Any> preferenceChangedEvent(preference: Preference,
       func: (Preference, T) -> Unit, returnCondition: () -> Boolean) {
-    preferenceChangedEvent(preference, func, returnCondition, foregroundScheduler)
+    preferenceChangedEvent(preference, func, returnCondition, AndroidSchedulers.mainThread())
   }
 
   final override fun <T : Any> preferenceChangedEvent(preference: Preference,
       func: (Preference, T) -> Unit, returnCondition: () -> Boolean, scheduler: Scheduler) {
-    delegate.preferenceChangedEvent(preference, func, returnCondition, scheduler)
+    disposeOnStop {
+      RxPreferences.onPreferenceChanged<T>(preference, returnCondition, scheduler).subscribe {
+        func(it.preference, it.value)
+      }
+    }
   }
-
-  @CallSuper override fun onStop() {
-    super.onStop()
-    delegate.stop()
-  }
-
-  @CallSuper override fun onDestroy() {
-    super.onDestroy()
-    delegate.destroy()
-  }
-
-  private class DelegatePreferencePresenter : PreferencePresenter()
-
 }
 

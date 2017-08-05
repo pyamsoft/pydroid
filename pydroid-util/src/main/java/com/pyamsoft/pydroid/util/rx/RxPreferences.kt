@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.rx
+package com.pyamsoft.pydroid.util.rx
 
 import android.support.annotation.CheckResult
 import android.support.v7.preference.Preference
@@ -56,7 +56,8 @@ object RxPreferences {
 
       preference.setOnPreferenceChangeListener { pref, any ->
         if (!emitter.isDisposed) {
-          @Suppress("UNCHECKED_CAST") emitter.onNext(PreferenceChangedEvent(pref, any as T))
+          @Suppress("UNCHECKED_CAST") emitter.onNext(
+              PreferenceChangedEvent(pref, any as T))
           return@setOnPreferenceChangeListener returnCondition()
         } else {
           return@setOnPreferenceChangeListener false

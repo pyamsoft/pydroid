@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.presenter
+package com.pyamsoft.pydroid.util.presenter
 
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.RadioGroup
 import com.pyamsoft.pydroid.presenter.Presenter
-import com.pyamsoft.pydroid.rx.RxViews
+import com.pyamsoft.pydroid.util.rx.RxViews
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 

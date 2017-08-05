@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.util
 
+import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
@@ -92,7 +93,8 @@ object StringUtil {
 
   @JvmStatic @Size @CheckResult fun getTextSizeFromAppearance(context: Context,
       @AttrRes textAppearance: Int): Int {
-    val a = getAttributeFromAppearance(context, textAppearance, android.R.attr.textSize)
+    val a = getAttributeFromAppearance(context, textAppearance,
+        attr.textSize)
     val textSize = a.getDimensionPixelSize(0, -1)
     a.recycle()
     return textSize
@@ -100,7 +102,8 @@ object StringUtil {
 
   @JvmStatic @ColorInt @CheckResult fun getTextColorFromAppearance(context: Context,
       @AttrRes textAppearance: Int): Int {
-    val a = getAttributeFromAppearance(context, textAppearance, android.R.attr.textColor)
+    val a = getAttributeFromAppearance(context, textAppearance,
+        attr.textColor)
     val color = a.getColor(0, -1)
     a.recycle()
     return color

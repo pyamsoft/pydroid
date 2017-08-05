@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.presenter
+package com.pyamsoft.pydroid.util.presenter
 
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.View

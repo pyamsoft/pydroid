@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import com.pyamsoft.pydroid.ui.presenter.PreferencePresenter
+import com.pyamsoft.pydroid.util.presenter.PreferencePresenter
 
 internal class ActionBarSettingsPreferencePresenter internal constructor() : PreferencePresenter()
 

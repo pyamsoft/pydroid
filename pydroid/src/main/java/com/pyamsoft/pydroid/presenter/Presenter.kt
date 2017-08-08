@@ -22,8 +22,14 @@ import io.reactivex.disposables.Disposable
 abstract class Presenter<in T : Any> protected constructor() {
 
   private val stopDisposables: CompositeDisposable = CompositeDisposable()
+  private var started: Boolean = false
 
   fun start(bound: T) {
+    if (started) {
+      throw IllegalStateException("Must call stop() before start()")
+    }
+
+    started = true
     onStart(bound)
   }
 
@@ -35,6 +41,11 @@ abstract class Presenter<in T : Any> protected constructor() {
   }
 
   fun stop() {
+    if (!started) {
+      throw IllegalStateException("Must call start() before stop()")
+    }
+
+    started = false
     onStop()
     stopDisposables.clear()
   }

@@ -18,6 +18,6 @@ package com.pyamsoft.pydroid.ui.rating
 
 import com.pyamsoft.pydroid.util.presenter.ViewPresenter
 
-internal class RatingViewPresenter : ViewPresenter()
+internal class RatingViewPresenter : ViewPresenter<Unit>()
 
 

@@ -39,7 +39,7 @@ import timber.log.Timber
 
 class RatingDialog : DialogFragmentBase() {
   private lateinit var rateLink: String
-  @JvmField protected var versionCode: Int = 0
+  private var versionCode: Int = 0
   private var changeLogText: Spannable? = null
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()
@@ -99,6 +99,7 @@ class RatingDialog : DialogFragmentBase() {
 
   override fun onStart() {
     super.onStart()
+    presenter.start(Unit)
     presenter.clickEvent(binding.ratingBtnNoThanks, {
       Launcher.saveVersionCode(versionCode, onRatingSaved = { dismiss() },
           onRatingDialogSaveError = {
@@ -127,12 +128,6 @@ class RatingDialog : DialogFragmentBase() {
     super.onStop()
     presenter.stop()
     Launcher.stop()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    presenter.destroy()
-    Launcher.destroy()
   }
 
   override fun onResume() {
@@ -164,12 +159,11 @@ class RatingDialog : DialogFragmentBase() {
     }
 
     fun loadRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider, force: Boolean) {
+      presenter.start(Unit)
       presenter.loadRatingDialog(provider.currentApplicationVersion, force, onShowRatingDialog = {
         DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating")
       }, onRatingDialogLoadError = {
         Timber.e(it, "could not load rating dialog")
-      }, onLoadComplete = {
-        presenter.destroy()
       })
     }
 
@@ -186,10 +180,6 @@ class RatingDialog : DialogFragmentBase() {
 
     fun stop() {
       presenter.stop()
-    }
-
-    fun destroy() {
-      presenter.destroy()
     }
   }
 

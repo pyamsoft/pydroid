@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.util.presenter.ViewPresenter
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-abstract class DesignPresenter : ViewPresenter(), DesignPresenterContract {
+abstract class DesignPresenter<in T : Any> : ViewPresenter<T>(), DesignPresenterContract {
 
   final override fun clickBottomNavigation(bottomBar: BottomNavigationView,
       func: (MenuItem) -> Unit) {

@@ -26,6 +26,5 @@ class RxLoaded(private val disposable: Disposable) : Loaded {
     }
   }
 
-  override val isUnloaded: Boolean
-    get() = disposable.isDisposed
+  override val isUnloaded: Boolean = disposable.isDisposed
 }

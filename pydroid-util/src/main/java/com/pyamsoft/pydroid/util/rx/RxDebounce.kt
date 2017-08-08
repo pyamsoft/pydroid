@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.util.rx
 import android.view.View
 import io.reactivex.ObservableEmitter
 
-internal interface RxDebounce {
+interface RxDebounce {
 
   var enabled: Boolean
 

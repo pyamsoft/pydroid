@@ -161,7 +161,7 @@ class RatingDialog : DialogFragmentBase() {
     fun loadRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider, force: Boolean) {
       presenter.start(Unit)
       presenter.loadRatingDialog(provider.currentApplicationVersion, force, onShowRatingDialog = {
-        DialogUtil.onlyLoadOnceDialogFragment(activity, newInstance(provider), "rating")
+        DialogUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating")
       }, onRatingDialogLoadError = {
         Timber.e(it, "could not load rating dialog")
       })

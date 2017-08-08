@@ -28,7 +28,7 @@ import timber.log.Timber
  */
 class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionButton.Behavior() {
 
-  @JvmField protected var animating = false
+  private var animating = false
 
   @CheckResult fun isAnimating(): Boolean {
     return animating

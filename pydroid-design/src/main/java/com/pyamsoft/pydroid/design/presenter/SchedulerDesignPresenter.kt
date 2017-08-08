@@ -21,20 +21,15 @@ import android.view.MenuItem
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 
-abstract class SchedulerDesignPresenter(foregroundScheduler: Scheduler,
-    backgroundScheduler: Scheduler) : SchedulerPresenter(foregroundScheduler,
+abstract class SchedulerDesignPresenter<in T : Any>(foregroundScheduler: Scheduler,
+    backgroundScheduler: Scheduler) : SchedulerPresenter<T>(foregroundScheduler,
     backgroundScheduler), DesignPresenterContract {
 
-  private val delegate = DelegateDesignPresenter()
+  private val delegate: DesignPresenter<T> = DelegateDesignPresenter()
 
   override fun onStop() {
     super.onStop()
     delegate.stop()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    delegate.destroy()
   }
 
   final override fun clickBottomNavigation(bottomBar: BottomNavigationView,
@@ -52,7 +47,7 @@ abstract class SchedulerDesignPresenter(foregroundScheduler: Scheduler,
     delegate.clickBottomNavigation(bottomBar, func, condition, scheduler)
   }
 
-  private class DelegateDesignPresenter : DesignPresenter()
+  private class DelegateDesignPresenter<in T : Any> : DesignPresenter<T>()
 
 }
 

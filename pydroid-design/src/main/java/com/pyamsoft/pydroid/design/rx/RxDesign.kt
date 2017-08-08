@@ -19,12 +19,15 @@ package com.pyamsoft.pydroid.design.rx
 import android.support.annotation.CheckResult
 import android.support.design.widget.BottomNavigationView
 import android.view.MenuItem
+import com.pyamsoft.pydroid.util.rx.RxDebounce
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-object RxDesign {
+object RxDesign : RxDebounce {
+
+  override var enabled: Boolean = true
 
   @JvmOverloads @CheckResult fun onClickBottomNavigation(bottomBar: BottomNavigationView,
       condition: (MenuItem) -> Boolean = { true },
@@ -36,11 +39,7 @@ object RxDesign {
       }
 
       bottomBar.setOnNavigationItemSelectedListener {
-        val active = !emitter.isDisposed
-        if (active) {
-          emitter.onNext(it)
-        }
-
+        debounce(bottomBar, emitter, it)
         return@setOnNavigationItemSelectedListener condition(it)
       }
 

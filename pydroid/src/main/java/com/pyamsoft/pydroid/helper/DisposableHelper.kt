@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.helper
 
 import android.support.annotation.CheckResult
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables
 
@@ -33,6 +34,14 @@ object DisposableHelper {
     }
 
     return defaultDisposable
+  }
+
+  @JvmStatic fun add(compositeDisposable: CompositeDisposable, func: () -> Disposable) {
+    add(compositeDisposable, func())
+  }
+
+  @JvmStatic fun add(compositeDisposable: CompositeDisposable, disposable: Disposable) {
+    compositeDisposable.add(disposable)
   }
 
 }

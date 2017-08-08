@@ -127,7 +127,7 @@ class RatingDialog : DialogFragmentBase() {
   override fun onStop() {
     super.onStop()
     presenter.stop()
-    Launcher.stop()
+    Launcher.clear()
   }
 
   override fun onResume() {
@@ -159,7 +159,6 @@ class RatingDialog : DialogFragmentBase() {
     }
 
     fun loadRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider, force: Boolean) {
-      presenter.start(Unit)
       presenter.loadRatingDialog(provider.currentApplicationVersion, force, onShowRatingDialog = {
         DialogUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating")
       }, onRatingDialogLoadError = {
@@ -178,8 +177,8 @@ class RatingDialog : DialogFragmentBase() {
       })
     }
 
-    fun stop() {
-      presenter.stop()
+    fun clear() {
+      presenter.clear()
     }
   }
 

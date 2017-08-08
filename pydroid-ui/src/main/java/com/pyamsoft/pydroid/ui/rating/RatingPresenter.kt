@@ -16,17 +16,31 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
+import com.pyamsoft.pydroid.helper.DisposableHelper
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 internal class RatingPresenter(private val interactor: RatingInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Unit>(
     observeScheduler, subscribeScheduler) {
 
+  private val composite = CompositeDisposable()
+
+  override fun onStart(bound: Unit) {
+    super.onStart(bound)
+    throw IllegalStateException("RatingPresenter does not use start()")
+  }
+
+  override fun onStop() {
+    super.onStop()
+    throw IllegalStateException("RatingPresenter does not use stop()")
+  }
+
   fun loadRatingDialog(currentVersion: Int, force: Boolean, onShowRatingDialog: () -> Unit,
       onRatingDialogLoadError: (Throwable) -> Unit) {
-    disposeOnStop {
+    DisposableHelper.add(composite) {
       interactor.needsToViewRating(currentVersion, force).subscribeOn(
           backgroundScheduler).observeOn(foregroundScheduler).subscribe({
         if (it) {
@@ -41,7 +55,7 @@ internal class RatingPresenter(private val interactor: RatingInteractor,
 
   fun saveRating(versionCode: Int, onRatingSaved: () -> Unit,
       onRatingDialogSaveError: (Throwable) -> Unit) {
-    disposeOnStop {
+    DisposableHelper.add(composite) {
       interactor.saveRating(versionCode).subscribeOn(backgroundScheduler).observeOn(
           foregroundScheduler).subscribe({
         Timber.d("Saved current version code: %d", versionCode)
@@ -51,5 +65,9 @@ internal class RatingPresenter(private val interactor: RatingInteractor,
         onRatingDialogSaveError(it)
       })
     }
+  }
+
+  fun clear() {
+    composite.clear()
   }
 }

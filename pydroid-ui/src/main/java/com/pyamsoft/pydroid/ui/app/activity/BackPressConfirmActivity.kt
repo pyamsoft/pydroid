@@ -20,20 +20,19 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.CallSuper
-import android.support.annotation.CheckResult
 import android.widget.Toast
 import com.pyamsoft.pydroid.ui.helper.Toasty
 
 abstract class BackPressConfirmActivity : ActivityBase() {
-  @JvmField protected var backBeenPressed: Boolean = false
+
+  private var backBeenPressed: Boolean = false
   private lateinit var handler: Handler
   private lateinit var backBeenPressedToast: Toast
 
   /**
    * Override this if you want normal back button behavior
    */
-  protected open val shouldConfirmBackPress: Boolean
-    @CheckResult get() = true
+  protected open val shouldConfirmBackPress: Boolean = true
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

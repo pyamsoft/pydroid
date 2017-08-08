@@ -128,12 +128,6 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     preferencePresenter.stop()
   }
 
-  @CallSuper override fun onDestroy() {
-    super.onDestroy()
-    presenter.destroy()
-    preferencePresenter.destroy()
-  }
-
   /**
    * Logs when the Clear All option is clicked, override to use unique implementation
    */
@@ -177,8 +171,10 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     })
   }
 
-  protected open val isLastOnBackStack: AboutLibrariesFragment.BackStackState
-    @CheckResult get() = AboutLibrariesFragment.BackStackState.NOT_LAST
+  /**
+   * Indicates the state of the back stack with this fragment on it
+   */
+  protected open val isLastOnBackStack: AboutLibrariesFragment.BackStackState = AboutLibrariesFragment.BackStackState.NOT_LAST
 
   private val versionedActivity: VersionCheckProvider
     @CheckResult get() {
@@ -190,16 +186,13 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       }
     }
 
-  protected open val preferenceXmlResId: Int
-    @CheckResult @XmlRes get() = 0
+  protected open val preferenceXmlResId: Int = 0
 
-  protected open val hideUpgradeInformation: Boolean
-    @CheckResult get() = false
+  protected open val hideUpgradeInformation: Boolean = false
 
-  protected open val hideClearAll: Boolean
-    @CheckResult get() = false
+  protected open val hideClearAll: Boolean = false
 
-  @get:CheckResult @get:IdRes protected abstract val rootViewContainer: Int
+  @get:[CheckResult IdRes] protected abstract val rootViewContainer: Int
 
   @get:CheckResult protected abstract val applicationName: String
 }

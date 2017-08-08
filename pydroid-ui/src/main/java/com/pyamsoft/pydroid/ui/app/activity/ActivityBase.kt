@@ -41,8 +41,7 @@ abstract class ActivityBase : AppCompatActivity() {
   /**
    * Override if you do not want to handle IMM leaks
    */
-  protected open val shouldHandleIMMLeaks: Boolean
-    @CheckResult get() = true
+  protected open val shouldHandleIMMLeaks: Boolean = true
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     // These must go before the call to onCreate
@@ -63,7 +62,7 @@ abstract class ActivityBase : AppCompatActivity() {
      * Simple class which allows us to not have to override every single callback, every single
      * time.
      */
-    internal open class LifecycleCallbacksAdapter : Application.ActivityLifecycleCallbacks {
+    private open class LifecycleCallbacksAdapter : Application.ActivityLifecycleCallbacks {
 
       override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
 
@@ -94,9 +93,9 @@ abstract class ActivityBase : AppCompatActivity() {
       }
     }
 
-    internal class ReferenceCleaner(internal val inputMethodManager: InputMethodManager,
-        internal val lockField: Field, internal val servedViewField: Field,
-        internal val finishInputLockedMethod: Method) : MessageQueue.IdleHandler, View.OnAttachStateChangeListener, ViewTreeObserver.OnGlobalFocusChangeListener {
+    private class ReferenceCleaner(private val inputMethodManager: InputMethodManager,
+        private val lockField: Field, private val servedViewField: Field,
+        private val finishInputLockedMethod: Method) : MessageQueue.IdleHandler, View.OnAttachStateChangeListener, ViewTreeObserver.OnGlobalFocusChangeListener {
 
       override fun onGlobalFocusChanged(oldFocus: View?, newFocus: View?) {
         if (newFocus == null) {

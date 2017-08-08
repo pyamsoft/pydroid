@@ -104,6 +104,7 @@ class AboutLibrariesFragment : ActionBarFragment() {
 
   override fun onStart() {
     super.onStart()
+    viewPresenter.start(Unit)
     presenter.start(object : AboutLibrariesPresenter.View {
       override fun onLicenseLoaded(model: AboutLibrariesModel) {
         pagerAdapter.add(model)

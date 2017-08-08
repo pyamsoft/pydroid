@@ -23,7 +23,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.SystemClock
-import android.support.annotation.CheckResult
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -39,6 +38,11 @@ import java.util.concurrent.TimeUnit
  * generally limited in Android O, you should work to move away from them as best as possible.
  */
 abstract class AutoRestartService : Service() {
+
+  /**
+   * Change to disable auto restart ability
+   */
+  protected open val isAutoRestartEnabled: Boolean = true
 
   override fun onTaskRemoved(rootIntent: Intent) {
     super.onTaskRemoved(rootIntent)
@@ -72,10 +76,4 @@ abstract class AutoRestartService : Service() {
       }
     }
   }
-
-  /**
-   * Change to disable auto restart ability
-   */
-  protected open val isAutoRestartEnabled: Boolean
-    @CheckResult get() = true
 }

@@ -18,11 +18,12 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.annotation.CheckResult
 import android.support.v4.app.DialogFragment
 import android.view.Window
 
 abstract class DialogFragmentBase : DialogFragment() {
+
+  protected open val hasTitle: Boolean = false
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = super.onCreateDialog(savedInstanceState)
@@ -32,7 +33,4 @@ abstract class DialogFragmentBase : DialogFragment() {
 
     return dialog
   }
-
-  protected open val hasTitle: Boolean
-    @CheckResult get() = false
 }

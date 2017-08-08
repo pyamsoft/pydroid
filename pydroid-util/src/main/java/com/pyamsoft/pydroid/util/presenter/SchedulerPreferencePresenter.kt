@@ -21,11 +21,11 @@ import android.support.v7.preference.Preference
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 
-abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
-    backgroundScheduler: Scheduler) : SchedulerPresenter(foregroundScheduler,
+abstract class SchedulerPreferencePresenter<in T : Any>(foregroundScheduler: Scheduler,
+    backgroundScheduler: Scheduler) : SchedulerPresenter<T>(foregroundScheduler,
     backgroundScheduler), PreferencePresenterContract {
 
-  private val delegate = DelegatePreferencePresenter()
+  private val delegate: PreferencePresenter<T> = DelegatePreferencePresenter()
 
   final override fun clickEvent(preference: Preference, func: (Preference) -> Unit) {
     clickEvent(preference, func) { true }
@@ -61,12 +61,7 @@ abstract class SchedulerPreferencePresenter(foregroundScheduler: Scheduler,
     delegate.stop()
   }
 
-  @CallSuper override fun onDestroy() {
-    super.onDestroy()
-    delegate.destroy()
-  }
-
-  private class DelegatePreferencePresenter : PreferencePresenter()
+  private class DelegatePreferencePresenter<in T : Any> : PreferencePresenter<T>()
 
 }
 

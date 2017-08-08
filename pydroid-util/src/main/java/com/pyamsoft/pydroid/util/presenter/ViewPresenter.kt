@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.util.rx.RxViews
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-abstract class ViewPresenter : Presenter(), ViewPresenterContract {
+abstract class ViewPresenter<in T : Any> : Presenter<T>(), ViewPresenterContract {
 
   final override fun clickEvent(view: View, func: (View) -> Unit) {
     clickEvent(view, func, AndroidSchedulers.mainThread())

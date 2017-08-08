@@ -24,11 +24,11 @@ import android.widget.RadioGroup
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 
-abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
-    backgroundScheduler: Scheduler) : SchedulerPresenter(foregroundScheduler,
+abstract class SchedulerViewPresenter<in T : Any>(foregroundScheduler: Scheduler,
+    backgroundScheduler: Scheduler) : SchedulerPresenter<T>(foregroundScheduler,
     backgroundScheduler), ViewPresenterContract {
 
-  private val delegate = DelegateViewPresenter()
+  private val delegate: ViewPresenter<T> = DelegateViewPresenter()
 
   final override fun clickEvent(view: View, func: (View) -> Unit) {
     clickEvent(view, func, foregroundScheduler)
@@ -71,12 +71,7 @@ abstract class SchedulerViewPresenter(foregroundScheduler: Scheduler,
     delegate.stop()
   }
 
-  @CallSuper override fun onDestroy() {
-    super.onDestroy()
-    delegate.destroy()
-  }
-
-  private class DelegateViewPresenter : ViewPresenter()
+  private class DelegateViewPresenter<in T : Any> : ViewPresenter<T>()
 
 }
 

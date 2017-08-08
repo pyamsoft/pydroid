@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.util.rx.RxPreferences
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-abstract class PreferencePresenter : Presenter(), PreferencePresenterContract {
+abstract class PreferencePresenter<in T : Any> : Presenter<T>(), PreferencePresenterContract {
 
   final override fun clickEvent(preference: Preference, func: (Preference) -> Unit) {
     clickEvent(preference, func) { true }

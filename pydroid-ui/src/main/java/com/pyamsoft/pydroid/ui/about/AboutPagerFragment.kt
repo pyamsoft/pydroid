@@ -78,7 +78,6 @@ class AboutPagerFragment : Fragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    presenter.destroy()
     binding.aboutItemHomepage.text = null
     binding.aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
   }

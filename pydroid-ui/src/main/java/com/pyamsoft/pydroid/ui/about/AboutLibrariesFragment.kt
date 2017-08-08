@@ -26,6 +26,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
@@ -99,20 +100,21 @@ class AboutLibrariesFragment : ActionBarFragment() {
     mapper.put("right",
         ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
     binding.arrowRight.rotation = -90F
-
-
-    presenter.loadLicenses(onLicenseLoaded = {
-      Timber.d("Load license: %s", it)
-      pagerAdapter.add(it)
-    }, onAllLoaded = {
-      Timber.d("All licenses loaded")
-      pagerAdapter.notifyDataSetChanged()
-      binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
-    })
   }
 
   override fun onStart() {
     super.onStart()
+    presenter.start(object : AboutLibrariesPresenter.View {
+      override fun onLicenseLoaded(model: AboutLibrariesModel) {
+        pagerAdapter.add(model)
+      }
+
+      override fun onAllLoaded() {
+        pagerAdapter.notifyDataSetChanged()
+        binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
+      }
+    })
+
     if (listener == null) {
       listener = object : OnPageChangeListener {
         override fun onPageScrollStateChanged(state: Int) {
@@ -144,12 +146,6 @@ class AboutLibrariesFragment : ActionBarFragment() {
     presenter.stop()
     viewPresenter.stop()
     binding.viewPager.removeOnPageChangeListener(listener)
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    presenter.destroy()
-    viewPresenter.destroy()
   }
 
   override fun onResume() {

@@ -16,19 +16,40 @@
 
 package com.pyamsoft.pydroid.about
 
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.View
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-class AboutLibrariesPresenter(protected @JvmField val interactor: AboutLibrariesInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
+class AboutLibrariesPresenter(private val interactor: AboutLibrariesInteractor,
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<View>(
     observeScheduler, subscribeScheduler) {
 
-  fun loadLicenses(onLicenseLoaded: (AboutLibrariesModel) -> Unit, onAllLoaded: () -> Unit) {
-    disposeOnDestroy {
+  override fun onStart(bound: View) {
+    super.onStart(bound)
+    loadLicenses(bound::onLicenseLoaded, bound::onAllLoaded)
+  }
+
+  private fun loadLicenses(onLicenseLoaded: (AboutLibrariesModel) -> Unit,
+      onAllLoaded: () -> Unit) {
+    disposeOnStop {
       interactor.loadLicenses().subscribeOn(backgroundScheduler).observeOn(
           foregroundScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
           { Timber.e(it, "onError loading licenses") })
     }
+  }
+
+  interface View {
+
+    /**
+     * Called when a single license has finished loading. There are no guarantees about if the
+     * license was loaded for the first time.
+     */
+    fun onLicenseLoaded(model: AboutLibrariesModel)
+
+    /**
+     * Called when all licenses are done loading
+     */
+    fun onAllLoaded()
   }
 }

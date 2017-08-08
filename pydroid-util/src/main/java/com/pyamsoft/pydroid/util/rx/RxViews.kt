@@ -26,7 +26,9 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-object RxViews {
+object RxViews : RxDebounce {
+
+  override var enabled: Boolean = true
 
   @JvmStatic @JvmOverloads @CheckResult fun onClick(view: View,
       scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<View> {
@@ -37,9 +39,7 @@ object RxViews {
       }
 
       view.setOnClickListener {
-        if (!emitter.isDisposed) {
-          emitter.onNext(it)
-        }
+        debounce(it, emitter, it)
       }
     }.subscribeOn(scheduler)
   }
@@ -53,10 +53,7 @@ object RxViews {
       }
 
       view.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (!emitter.isDisposed) {
-          emitter.onNext(
-              CheckedChangedEvent(buttonView, isChecked))
-        }
+        debounce(buttonView, emitter, CheckedChangedEvent(buttonView, isChecked))
       }
     }.subscribeOn(scheduler)
   }
@@ -70,9 +67,7 @@ object RxViews {
       }
 
       group.setOnCheckedChangeListener { grp, checkedId ->
-        if (!emitter.isDisposed) {
-          emitter.onNext(GroupChangedEvent(grp, checkedId))
-        }
+        debounce(grp, emitter, GroupChangedEvent(group, checkedId))
       }
     }.subscribeOn(scheduler)
   }
@@ -86,9 +81,7 @@ object RxViews {
       }
 
       view.setOnRefreshListener {
-        if (!emitter.isDisposed) {
-          emitter.onNext(Unit)
-        }
+        debounce(view, emitter, Unit)
       }
 
     }.subscribeOn(scheduler)

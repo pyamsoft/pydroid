@@ -50,6 +50,7 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
 
   @CallSuper override fun onStart() {
     super.onStart()
+    presenter.start(Unit)
     if (!versionChecked && isVersionCheckEnabled) {
       presenter.checkForUpdates(packageName, currentApplicationVersion,
           onUpdatedVersionFound = { current, updated ->

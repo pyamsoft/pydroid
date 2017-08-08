@@ -85,6 +85,8 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
 
   @CallSuper override fun onStart() {
     super.onStart()
+    preferencePresenter.start(Unit)
+    presenter.start(Unit)
 
     val upgrade = upgradeInfo
     if (upgrade != null) {

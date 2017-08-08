@@ -47,7 +47,7 @@ import com.pyamsoft.pydroid.ui.social.Linker
    * Kills the app and clears the data to prevent any malicious services or code from possibly
    * running in the background
    */
-  protected fun killApp() {
+  private fun killApp() {
     dismiss()
     activity.finish()
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

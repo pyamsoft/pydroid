@@ -31,7 +31,7 @@ import java.util.HashMap
 class AboutLibrariesInteractor(context: Context) {
 
   private val assetManager: AssetManager = context.applicationContext.assets
-  @JvmField protected val cachedLicenses: MutableMap<String, String> = HashMap()
+  private val cachedLicenses: MutableMap<String, String> = HashMap()
 
   @CheckResult internal fun loadLicenses(): Observable<AboutLibrariesModel> {
     return Observable.defer {
@@ -45,7 +45,7 @@ class AboutLibrariesInteractor(context: Context) {
     }
   }
 
-  @CheckResult protected fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
+  @CheckResult private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
     return Single.fromCallable<String> {
       val name = model.name
       val result: String
@@ -71,7 +71,7 @@ class AboutLibrariesInteractor(context: Context) {
     }
   }
 
-  @CheckResult protected fun loadNewLicense(licenseLocation: String): String {
+  @CheckResult private fun loadNewLicense(licenseLocation: String): String {
     if (licenseLocation.isEmpty()) {
       Timber.w("Empty license passed")
       return ""

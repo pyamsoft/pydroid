@@ -21,8 +21,8 @@ import io.reactivex.Scheduler
 import retrofit2.HttpException
 import timber.log.Timber
 
-class VersionCheckPresenter(protected @JvmField val interactor: VersionCheckInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
+class VersionCheckPresenter(private val interactor: VersionCheckInteractor,
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Unit>(
     observeScheduler, subscribeScheduler) {
 
   fun forceCheckForUpdates(packageName: String, currentVersionCode: Int,

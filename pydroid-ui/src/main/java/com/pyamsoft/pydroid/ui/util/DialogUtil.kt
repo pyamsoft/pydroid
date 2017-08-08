@@ -48,25 +48,4 @@ object DialogUtil {
     Timber.d("Add new fragment with tag: %s", tag)
     dialogFragment.show(ft, tag)
   }
-
-  /**
-   * Guarantees that a fragment with the given tag is only added to the view once
-   */
-  @JvmStatic fun onlyLoadOnceDialogFragment(fragmentActivity: FragmentActivity?,
-      dialogFragment: DialogFragment, tag: String) {
-    if (fragmentActivity == null) {
-      Timber.w("Cannot attach a fragment to a NULL activity. No-op")
-      return
-    }
-
-    if (tag.isEmpty()) {
-      throw IllegalArgumentException("Cannot use EMPTY tag")
-    }
-
-    val fragmentManager = fragmentActivity.supportFragmentManager
-    val prev = fragmentManager.findFragmentByTag(tag)
-    if (prev == null) {
-      dialogFragment.show(fragmentManager, tag)
-    }
-  }
 }

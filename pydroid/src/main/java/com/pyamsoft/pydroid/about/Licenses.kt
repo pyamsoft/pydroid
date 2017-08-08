@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.about
 
 import android.support.annotation.CheckResult
-import java.util.ArrayList
 
 object Licenses {
 
@@ -106,10 +105,6 @@ object Licenses {
 
   @JvmStatic fun create(name: String, homepageUrl: String, licenseLocation: String) {
     createItem(name, homepageUrl, licenseLocation)
-  }
-
-  @JvmStatic fun createWithContent(name: String, homepageUrl: String, content: String) {
-    createItemWithContent(name, homepageUrl, content)
   }
 
   @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> {

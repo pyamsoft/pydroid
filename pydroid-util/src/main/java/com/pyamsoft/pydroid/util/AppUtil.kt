@@ -17,10 +17,6 @@
 package com.pyamsoft.pydroid.util
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Looper
-import android.provider.Settings
 import android.support.annotation.CheckResult
 import android.util.TypedValue
 
@@ -28,15 +24,6 @@ object AppUtil {
 
   private val cachedDP: MutableMap<Float, Float> by lazy {
     HashMap<Float, Float>(10)
-  }
-
-  @JvmStatic @CheckResult fun getApplicationInfoIntent(packageName: String): Intent {
-    val i = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-    i.addCategory(Intent.CATEGORY_DEFAULT)
-    i.data = Uri.fromParts("package", packageName, null)
-    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-    return i
   }
 
   @JvmStatic @CheckResult fun convertToDP(c: Context, px: Float): Float {
@@ -53,9 +40,5 @@ object AppUtil {
         return dp
       }
     }
-  }
-
-  @JvmStatic @CheckResult fun checkMainThread(): Boolean {
-    return Looper.myLooper() == Looper.getMainLooper()
   }
 }

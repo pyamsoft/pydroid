@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.text.Spannable
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.StringUtil
@@ -76,23 +75,24 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
 
   override fun onStart() {
     super.onStart()
-    val activity = this
-    ratingPresenter.start(object : Callback {
-
-      override fun onShowRatingDialog() {
-        DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
-            "rating")
-      }
-
-      override fun onRatingLoadError(throwable: Throwable) {
-        Timber.e(throwable, "Could not load rating dialog")
-      }
-
-    })
+    ratingPresenter.start(Unit)
   }
 
   override fun onStop() {
     super.onStop()
     ratingPresenter.stop()
+  }
+
+  override fun onPostResume() {
+    super.onPostResume()
+
+    // Dialog must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
+    val activity = this
+    ratingPresenter.loadRatingDialog(false, onShowRatingDialog = {
+      DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
+          "rating")
+    }, onRatingDialogLoadError = {
+      Timber.e(it, "Could not load rating dialog")
+    })
   }
 }

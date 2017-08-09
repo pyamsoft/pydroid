@@ -17,21 +17,15 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 internal class RatingPresenter(private val currentVersion: Int,
     private val interactor: RatingInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Callback>(
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Unit>(
     observeScheduler, subscribeScheduler) {
 
-  override fun onStart(bound: Callback) {
-    super.onStart(bound)
-    loadRatingDialog(false, bound::onShowRatingDialog, bound::onRatingLoadError)
-  }
-
-  private fun loadRatingDialog(force: Boolean, onShowRatingDialog: () -> Unit,
+  internal fun loadRatingDialog(force: Boolean, onShowRatingDialog: () -> Unit,
       onRatingDialogLoadError: (Throwable) -> Unit) {
     disposeOnStop {
       interactor.needsToViewRating(currentVersion, force).subscribeOn(
@@ -44,13 +38,5 @@ internal class RatingPresenter(private val currentVersion: Int,
         onRatingDialogLoadError(it)
       })
     }
-  }
-
-  interface Callback {
-
-    fun onShowRatingDialog()
-
-    fun onRatingLoadError(throwable: Throwable)
-
   }
 }

@@ -16,31 +16,24 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.helper.DisposableHelper
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
 import io.reactivex.Scheduler
-import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
-internal class RatingPresenter(private val interactor: RatingInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Unit>(
+internal class RatingPresenter(private val currentVersion: Int,
+    private val interactor: RatingInteractor,
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Callback>(
     observeScheduler, subscribeScheduler) {
 
-  private val composite = CompositeDisposable()
-
-  override fun onStart(bound: Unit) {
+  override fun onStart(bound: Callback) {
     super.onStart(bound)
-    throw IllegalStateException("RatingPresenter does not use start()")
+    loadRatingDialog(false, bound::onShowRatingDialog, bound::onRatingLoadError)
   }
 
-  override fun onStop() {
-    super.onStop()
-    throw IllegalStateException("RatingPresenter does not use stop()")
-  }
-
-  fun loadRatingDialog(currentVersion: Int, force: Boolean, onShowRatingDialog: () -> Unit,
+  private fun loadRatingDialog(force: Boolean, onShowRatingDialog: () -> Unit,
       onRatingDialogLoadError: (Throwable) -> Unit) {
-    DisposableHelper.add(composite) {
+    disposeOnStop {
       interactor.needsToViewRating(currentVersion, force).subscribeOn(
           backgroundScheduler).observeOn(foregroundScheduler).subscribe({
         if (it) {
@@ -53,21 +46,11 @@ internal class RatingPresenter(private val interactor: RatingInteractor,
     }
   }
 
-  fun saveRating(versionCode: Int, onRatingSaved: () -> Unit,
-      onRatingDialogSaveError: (Throwable) -> Unit) {
-    DisposableHelper.add(composite) {
-      interactor.saveRating(versionCode).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({
-        Timber.d("Saved current version code: %d", versionCode)
-        onRatingSaved()
-      }, {
-        Timber.e(it, "Error saving rating dialog")
-        onRatingDialogSaveError(it)
-      })
-    }
-  }
+  interface Callback {
 
-  fun clear() {
-    composite.clear()
+    fun onShowRatingDialog()
+
+    fun onRatingLoadError(throwable: Throwable)
+
   }
 }

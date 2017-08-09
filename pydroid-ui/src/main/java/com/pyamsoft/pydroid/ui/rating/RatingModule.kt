@@ -30,7 +30,11 @@ import io.reactivex.Scheduler
   private val obsScheduler: Scheduler = module.provideObsScheduler()
   private val subScheduler: Scheduler = module.provideSubScheduler()
 
-  @CheckResult fun getPresenter(): RatingPresenter {
-    return RatingPresenter(interactor, obsScheduler, subScheduler)
+  @CheckResult fun getPresenter(version: Int): RatingPresenter {
+    return RatingPresenter(version, interactor, obsScheduler, subScheduler)
+  }
+
+  @CheckResult fun getSavePresenter(version: Int): RatingSavePresenter {
+    return RatingSavePresenter(version, interactor, obsScheduler, subScheduler)
   }
 }

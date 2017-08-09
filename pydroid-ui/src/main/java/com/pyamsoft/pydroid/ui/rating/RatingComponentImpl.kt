@@ -16,8 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.util.presenter.ViewPresenter
+internal class RatingComponentImpl(private val version: Int,
+    private val ratingModule: RatingModule) : RatingComponent {
 
-internal class RatingViewPresenter : ViewPresenter<Unit>()
+  override fun inject(activity: RatingActivity) {
+    activity.ratingPresenter = ratingModule.getPresenter(version)
+  }
 
+  override fun inject(dialog: RatingDialog) {
+    dialog.presenter = ratingModule.getSavePresenter(version)
+  }
+
+}
 

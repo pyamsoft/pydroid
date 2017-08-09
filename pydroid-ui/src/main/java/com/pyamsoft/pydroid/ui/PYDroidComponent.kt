@@ -21,7 +21,7 @@ import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
-import com.pyamsoft.pydroid.ui.rating.RatingDialog
+import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.AnimUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
@@ -36,13 +36,10 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
   fun inject(linker: Linker)
 
-  fun inject(launcher: RatingDialog.Launcher)
-
-  fun inject(ratingDialog: RatingDialog)
-
   @CheckResult fun plusVersionCheckComponent(packageName: String,
       currentVersion: Int): VersionCheckComponent
 
-  @CheckResult fun plusAppComponent(packageName: String,
-      currentVersion: Int): AppComponent
+  @CheckResult fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent
+
+  @CheckResult fun plusRatingComponent(currentVersion: Int): RatingComponent
 }

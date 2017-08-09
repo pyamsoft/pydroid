@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.rating
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.annotation.DrawableRes
-import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewCompat
 import android.text.Spannable
 import android.view.LayoutInflater
@@ -32,10 +31,8 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
-import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
-import timber.log.Timber
 
 class RatingDialog : DialogFragmentBase() {
   private lateinit var rateLink: String
@@ -44,16 +41,12 @@ class RatingDialog : DialogFragmentBase() {
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()
   private lateinit var binding: DialogRatingBinding
-  internal lateinit var presenter: RatingViewPresenter
+  internal lateinit var presenter: RatingSavePresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
-    PYDroid.with {
-      it.inject(this)
-    }
-
     isCancelable = false
+
     val launchArguments = arguments
     rateLink = launchArguments.getString(RATE_LINK, null)
     versionCode = launchArguments.getInt(VERSION_CODE, 0)
@@ -70,6 +63,10 @@ class RatingDialog : DialogFragmentBase() {
 
     if (changeLogIcon == 0) {
       throw RuntimeException("Change Log Icon Id cannot be 0")
+    }
+
+    PYDroid.with {
+      it.plusRatingComponent(versionCode).inject(this)
     }
   }
 
@@ -101,21 +98,20 @@ class RatingDialog : DialogFragmentBase() {
     super.onStart()
     presenter.start(Unit)
     presenter.clickEvent(binding.ratingBtnNoThanks, {
-      Launcher.saveVersionCode(versionCode, onRatingSaved = { dismiss() },
-          onRatingDialogSaveError = {
-            Toasty.makeText(context.applicationContext,
-                "Error occurred while dismissing dialog. May show again later",
-                Toasty.LENGTH_SHORT).show()
-            dismiss()
-          })
+      presenter.saveRating({ dismiss() }, {
+        Toasty.makeText(context.applicationContext,
+            "Error occurred while dismissing dialog. May show again later",
+            Toasty.LENGTH_SHORT).show()
+        dismiss()
+      })
     })
 
     presenter.clickEvent(binding.ratingBtnGoRate, {
-      Launcher.saveVersionCode(versionCode, onRatingSaved = {
+      presenter.saveRating({
         val fullLink = "market://details?id=" + rateLink
         NetworkUtil.newLink(it.context.applicationContext, fullLink)
         dismiss()
-      }, onRatingDialogSaveError = {
+      }, {
         Toasty.makeText(context.applicationContext,
             "Error occurred while dismissing dialog. May show again later",
             Toasty.LENGTH_SHORT).show()
@@ -127,7 +123,6 @@ class RatingDialog : DialogFragmentBase() {
   override fun onStop() {
     super.onStop()
     presenter.stop()
-    Launcher.clear()
   }
 
   override fun onResume() {
@@ -148,40 +143,6 @@ class RatingDialog : DialogFragmentBase() {
     @get:CheckResult val currentApplicationVersion: Int
   }
 
-  internal object Launcher {
-
-    internal lateinit var presenter: RatingPresenter
-
-    init {
-      PYDroid.with {
-        it.inject(this)
-      }
-    }
-
-    fun loadRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider, force: Boolean) {
-      presenter.loadRatingDialog(provider.currentApplicationVersion, force, onShowRatingDialog = {
-        DialogUtil.guaranteeSingleDialogFragment(activity, newInstance(provider), "rating")
-      }, onRatingDialogLoadError = {
-        Timber.e(it, "could not load rating dialog")
-      })
-    }
-
-    fun saveVersionCode(versionCode: Int, onRatingSaved: () -> Unit,
-        onRatingDialogSaveError: (Throwable) -> Unit) {
-      presenter.saveRating(versionCode, onRatingSaved = {
-        Timber.d("Saved version code: %d", versionCode)
-        onRatingSaved()
-      }, onRatingDialogSaveError = {
-        Timber.e(it, "error saving version code")
-        onRatingDialogSaveError(it)
-      })
-    }
-
-    fun clear() {
-      presenter.clear()
-    }
-  }
-
   companion object {
 
     private const val CHANGE_LOG_TEXT = "change_log_text"
@@ -189,12 +150,7 @@ class RatingDialog : DialogFragmentBase() {
     private const val VERSION_CODE = "version_code"
     private const val RATE_LINK = "rate_link"
 
-    @JvmStatic fun showRatingDialog(activity: FragmentActivity, provider: ChangeLogProvider,
-        force: Boolean) {
-      Launcher.loadRatingDialog(activity, provider, force)
-    }
-
-    @JvmStatic @CheckResult private fun newInstance(provider: ChangeLogProvider): RatingDialog {
+    @JvmStatic @CheckResult fun newInstance(provider: ChangeLogProvider): RatingDialog {
       val fragment = RatingDialog()
       val args = Bundle()
       args.putString(RATE_LINK, provider.getPackageName())

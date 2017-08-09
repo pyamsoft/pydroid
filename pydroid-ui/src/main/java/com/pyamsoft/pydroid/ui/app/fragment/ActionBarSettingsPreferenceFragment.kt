@@ -163,7 +163,8 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   protected open fun onShowChangelogClicked() {
     val activity = activity
     if (activity is RatingDialog.ChangeLogProvider) {
-      RatingDialog.showRatingDialog(activity, activity, true)
+      DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
+          "rating")
     } else {
       throw ClassCastException("Activity is not a change log provider")
     }

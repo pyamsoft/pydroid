@@ -24,9 +24,9 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesViewPresenter
 import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
-import com.pyamsoft.pydroid.ui.rating.RatingDialog
+import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingModule
-import com.pyamsoft.pydroid.ui.rating.RatingViewPresenter
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.AnimUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
@@ -61,14 +61,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     linker.appContext = module.provideContext().applicationContext
   }
 
-  override fun inject(launcher: RatingDialog.Launcher) {
-    launcher.presenter = ratingModule.getPresenter()
-  }
-
-  override fun inject(ratingDialog: RatingDialog) {
-    ratingDialog.presenter = RatingViewPresenter()
-  }
-
   override fun plusVersionCheckComponent(packageName: String,
       currentVersion: Int): VersionCheckComponent {
     return VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
@@ -76,5 +68,9 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent {
     return AppComponentImpl(versionCheckModule, packageName, currentVersion)
+  }
+
+  override fun plusRatingComponent(currentVersion: Int): RatingComponent {
+    return RatingComponentImpl(currentVersion, ratingModule)
   }
 }

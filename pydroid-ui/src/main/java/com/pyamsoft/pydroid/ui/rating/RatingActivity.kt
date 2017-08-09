@@ -16,12 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
+import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.text.Spannable
+import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.StringUtil
+import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider {
+
+  internal lateinit var ratingPresenter: RatingPresenter
 
   override val changeLogText: Spannable
     get() {
@@ -59,4 +66,33 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
   @get:CheckResult protected abstract val changeLogLines: Array<String>
 
   @get:CheckResult protected abstract val versionName: String
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    PYDroid.with {
+      it.plusRatingComponent(currentApplicationVersion).inject(this)
+    }
+  }
+
+  override fun onStart() {
+    super.onStart()
+    val activity = this
+    ratingPresenter.start(object : Callback {
+
+      override fun onShowRatingDialog() {
+        DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
+            "rating")
+      }
+
+      override fun onRatingLoadError(throwable: Throwable) {
+        Timber.e(throwable, "Could not load rating dialog")
+      }
+
+    })
+  }
+
+  override fun onStop() {
+    super.onStop()
+    ratingPresenter.stop()
+  }
 }

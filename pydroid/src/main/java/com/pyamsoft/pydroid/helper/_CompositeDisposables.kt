@@ -14,34 +14,18 @@
  * limitations under the License.
  */
 
+@file:JvmName("CompositeDisposablesKt")
+
 package com.pyamsoft.pydroid.helper
 
-import android.support.annotation.CheckResult
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
 
-object DisposableHelper {
-
-  @JvmOverloads @JvmStatic @CheckResult fun dispose(disposable: Disposable?,
-      defaultDisposable: Disposable = Disposables.empty()): Disposable {
-    if (disposable == null) {
-      return defaultDisposable
-    }
-
-    if (!disposable.isDisposed) {
-      disposable.dispose()
-    }
-
-    return defaultDisposable
-  }
-
-  @JvmStatic fun add(compositeDisposable: CompositeDisposable, func: () -> Disposable) {
-    add(compositeDisposable, func())
-  }
-
-  @JvmStatic fun add(compositeDisposable: CompositeDisposable, disposable: Disposable) {
-    compositeDisposable.add(disposable)
-  }
-
+/**
+ * Extension function for Kotlin
+ *
+ * Allows CompositeDisposable to consume functions which return disposables
+ */
+inline fun CompositeDisposable.add(func: () -> Disposable) {
+  add(func())
 }

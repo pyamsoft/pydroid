@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 import com.pyamsoft.pydroid.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.version.VersionCheckPresenter.Callback
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
@@ -50,11 +51,18 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   private lateinit var showAboutLicenses: Preference
   private lateinit var checkVersion: Preference
   private lateinit var rateApplication: Preference
+  private val callback: (Int, Int) -> Unit = { current, updated ->
+    Timber.d("Updated version found. %d => %d", current, updated)
+    DialogUtil.guaranteeSingleDialogFragment(activity,
+        VersionUpgradeDialog.newInstance(versionedActivity.provideApplicationName(), current,
+            updated), VersionUpgradeDialog.TAG)
+  }
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.with {
-      it.inject(this)
+      it.plusAppComponent(context.packageName, versionedActivity.currentApplicationVersion).inject(
+          this)
     }
   }
 
@@ -86,7 +94,11 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   @CallSuper override fun onStart() {
     super.onStart()
     preferencePresenter.start(Unit)
-    presenter.start(Unit)
+    presenter.start(object : Callback {
+      override fun onUpdatedVersionFound(current: Int, updated: Int) {
+        callback(current, updated)
+      }
+    })
 
     val upgrade = upgradeInfo
     if (upgrade != null) {
@@ -162,15 +174,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
    */
   protected open fun onCheckForUpdatesClicked(presenter: VersionCheckPresenter) {
     toast.show()
-    presenter.forceCheckForUpdates(context.packageName, versionedActivity.currentApplicationVersion,
-        onUpdatedVersionFound = { current, updated ->
-          Timber.d("Updated version found. %d => %d", current, updated)
-          DialogUtil.guaranteeSingleDialogFragment(activity,
-              VersionUpgradeDialog.newInstance(versionedActivity.provideApplicationName(), current,
-                  updated), VersionUpgradeDialog.TAG)
-        }, onVersionCheckFinished = {
-      Timber.d("License check finished.")
-    })
+    presenter.checkForUpdates(callback)
   }
 
   /**

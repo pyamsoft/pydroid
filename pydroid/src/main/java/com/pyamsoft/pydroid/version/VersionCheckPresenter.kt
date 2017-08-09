@@ -17,38 +17,34 @@
 package com.pyamsoft.pydroid.version
 
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.version.VersionCheckPresenter.Callback
 import io.reactivex.Scheduler
 import retrofit2.HttpException
 import timber.log.Timber
 
-class VersionCheckPresenter(private val interactor: VersionCheckInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Unit>(
+class VersionCheckPresenter(private val packageName: String, private val currentVersionCode: Int,
+    private val interactor: VersionCheckInteractor,
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Callback>(
     observeScheduler, subscribeScheduler) {
 
-  fun forceCheckForUpdates(packageName: String, currentVersionCode: Int,
-      onUpdatedVersionFound: (current: Int, updated: Int) -> Unit,
-      onVersionCheckFinished: () -> Unit) {
-    checkForUpdates(packageName, currentVersionCode, true, onUpdatedVersionFound,
-        onVersionCheckFinished)
+  override fun onStart(bound: Callback) {
+    super.onStart(bound)
+    checkForUpdates(false, bound::onUpdatedVersionFound)
   }
 
-  fun checkForUpdates(packageName: String, currentVersionCode: Int,
-      onUpdatedVersionFound: (current: Int, updated: Int) -> Unit,
-      onVersionCheckFinished: () -> Unit) {
-    checkForUpdates(packageName, currentVersionCode, false, onUpdatedVersionFound,
-        onVersionCheckFinished)
+  fun checkForUpdates(
+      onUpdatedVersionFound: (current: Int, updated: Int) -> Unit) {
+    checkForUpdates(true, onUpdatedVersionFound)
   }
 
-  private fun checkForUpdates(packageName: String, currentVersionCode: Int, force: Boolean,
-      onUpdatedVersionFound: (current: Int, updated: Int) -> Unit,
-      onVersionCheckFinished: () -> Unit) {
+  private fun checkForUpdates(force: Boolean,
+      onUpdatedVersionFound: (current: Int, updated: Int) -> Unit) {
     disposeOnStop {
       interactor.checkVersion(packageName, force).subscribeOn(backgroundScheduler).observeOn(
           foregroundScheduler).subscribe({
         Timber.i("Update check finished")
         Timber.i("Current version: %d", currentVersionCode)
         Timber.i("Latest version: %d", it)
-        onVersionCheckFinished()
         if (currentVersionCode < it) {
           onUpdatedVersionFound(currentVersionCode, it)
         }
@@ -60,5 +56,10 @@ class VersionCheckPresenter(private val interactor: VersionCheckInteractor,
         }
       })
     }
+  }
+
+  interface Callback {
+
+    fun onUpdatedVersionFound(current: Int, updated: Int)
   }
 }

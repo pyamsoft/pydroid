@@ -26,17 +26,14 @@ class VersionCheckInteractor(private val versionCheckService: VersionCheckServic
 
   @CheckResult fun checkVersion(packageName: String, force: Boolean): Single<Int> {
     return Single.defer {
-      val dataSource: Single<VersionCheckResponse>
       if (cachedResponse == null || force) {
         Timber.d("Fetch from Network. Force: %s", force)
-        dataSource = versionCheckService.checkVersion(packageName).cache()
-        cachedResponse = dataSource
+        cachedResponse = versionCheckService.checkVersion(packageName).cache()
       } else {
         Timber.d("Fetch from cached response")
-        dataSource = cachedResponse!!
       }
 
-      return@defer dataSource
+      return@defer cachedResponse
     }.map { it.currentVersion() }
   }
 }

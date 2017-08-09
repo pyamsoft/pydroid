@@ -69,8 +69,9 @@ import retrofit2.converter.gson.GsonConverterFactory
         RxJava2CallAdapterFactory.createWithScheduler(subScheduler)).build()
   }
 
-  @CheckResult fun getPresenter(): VersionCheckPresenter {
-    return VersionCheckPresenter(interactor, obsScheduler, subScheduler)
+  @CheckResult fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
+    return VersionCheckPresenter(packageName, currentVersion, interactor, obsScheduler,
+        subScheduler)
   }
 
   companion object {

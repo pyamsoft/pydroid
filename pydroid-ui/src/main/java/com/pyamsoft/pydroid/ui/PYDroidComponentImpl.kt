@@ -22,14 +22,15 @@ import com.pyamsoft.pydroid.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesViewPresenter
 import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferencePresenter
+import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
+import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.rating.RatingModule
 import com.pyamsoft.pydroid.ui.rating.RatingViewPresenter
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.AnimUtil
-import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidComponentImpl internal constructor(
@@ -52,15 +53,6 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     fragment.viewPresenter = AboutLibrariesViewPresenter()
   }
 
-  override fun inject(fragment: ActionBarSettingsPreferenceFragment) {
-    fragment.presenter = versionCheckModule.getPresenter()
-    fragment.preferencePresenter = ActionBarSettingsPreferencePresenter()
-  }
-
-  override fun inject(activity: VersionCheckActivity) {
-    activity.presenter = versionCheckModule.getPresenter()
-  }
-
   override fun inject(animUtil: AnimUtil) {
     animUtil.context = module.provideContext().applicationContext
   }
@@ -75,5 +67,14 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
 
   override fun inject(ratingDialog: RatingDialog) {
     ratingDialog.presenter = RatingViewPresenter()
+  }
+
+  override fun plusVersionCheckComponent(packageName: String,
+      currentVersion: Int): VersionCheckComponent {
+    return VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
+  }
+
+  override fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent {
+    return AppComponentImpl(versionCheckModule, packageName, currentVersion)
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:JvmName("CompositeDisposablesKt")
+@file:JvmName("CompositeDisposableHelper")
 
 package com.pyamsoft.pydroid.helper
 

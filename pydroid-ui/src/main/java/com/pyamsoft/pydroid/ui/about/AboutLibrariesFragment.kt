@@ -42,7 +42,6 @@ import timber.log.Timber
 class AboutLibrariesFragment : ActionBarFragment() {
 
   internal lateinit var presenter: AboutLibrariesPresenter
-  internal lateinit var viewPresenter: AboutLibrariesViewPresenter
   internal lateinit var pagerAdapter: AboutPagerAdapter
   private var lastOnBackStack: Boolean = false
   private val mapper = LoaderMap()
@@ -72,6 +71,11 @@ class AboutLibrariesFragment : ActionBarFragment() {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    setupViewPager(savedInstanceState)
+    setupArrows()
+  }
+
+  private fun setupViewPager(savedInstanceState: Bundle?) {
     pagerAdapter = AboutPagerAdapter(this)
     binding.viewPager.adapter = pagerAdapter
     binding.viewPager.offscreenPageLimit = 1
@@ -93,18 +97,41 @@ class AboutLibrariesFragment : ActionBarFragment() {
       }
     })
 
+    listener = object : OnPageChangeListener {
+      override fun onPageScrollStateChanged(state: Int) {
+      }
+
+      override fun onPageScrolled(position: Int, positionOffset: Float,
+          positionOffsetPixels: Int) {
+      }
+
+      override fun onPageSelected(position: Int) {
+        binding.aboutTitle.text = pagerAdapter.getPageTitle(position)
+      }
+    }
+
+    binding.viewPager.addOnPageChangeListener(listener)
+  }
+
+
+  private fun setupArrows() {
     mapper.put("left",
         ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
     binding.arrowLeft.rotation = 90F
+    binding.arrowLeft.setOnClickListener {
+      binding.viewPager.arrowScroll(View.FOCUS_LEFT)
+    }
 
     mapper.put("right",
         ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
     binding.arrowRight.rotation = -90F
+    binding.arrowRight.setOnClickListener {
+      binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
+    }
   }
 
   override fun onStart() {
     super.onStart()
-    viewPresenter.start(Unit)
     presenter.start(object : AboutLibrariesPresenter.View {
       override fun onLicenseLoaded(model: AboutLibrariesModel) {
         pagerAdapter.add(model)
@@ -115,38 +142,11 @@ class AboutLibrariesFragment : ActionBarFragment() {
         binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
       }
     })
-
-    if (listener == null) {
-      listener = object : OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) {
-        }
-
-        override fun onPageScrolled(position: Int, positionOffset: Float,
-            positionOffsetPixels: Int) {
-        }
-
-        override fun onPageSelected(position: Int) {
-          binding.aboutTitle.text = pagerAdapter.getPageTitle(position)
-        }
-      }
-    }
-    binding.viewPager.addOnPageChangeListener(listener)
-
-
-    viewPresenter.clickEvent(binding.arrowLeft, {
-      binding.viewPager.arrowScroll(View.FOCUS_LEFT)
-    })
-
-    viewPresenter.clickEvent(binding.arrowRight, {
-      binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
-    })
   }
 
   override fun onStop() {
     super.onStop()
     presenter.stop()
-    viewPresenter.stop()
-    binding.viewPager.removeOnPageChangeListener(listener)
   }
 
   override fun onResume() {
@@ -163,8 +163,12 @@ class AboutLibrariesFragment : ActionBarFragment() {
       setActionBarUpEnabled(false)
     }
 
+    binding.viewPager.removeOnPageChangeListener(listener)
     binding.viewPager.adapter = null
     pagerAdapter.clear()
+
+    binding.arrowLeft.setOnClickListener(null)
+    binding.arrowRight.setOnClickListener(null)
   }
 
   override fun onSaveInstanceState(outState: Bundle?) {

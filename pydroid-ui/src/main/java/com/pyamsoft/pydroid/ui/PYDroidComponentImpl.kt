@@ -20,7 +20,6 @@ import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesViewPresenter
 import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl

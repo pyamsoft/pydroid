@@ -33,7 +33,6 @@ class AboutPagerFragment : Fragment() {
   private lateinit var homepage: String
   private lateinit var license: String
   private lateinit var binding: FragmentPagerAboutBinding
-  internal lateinit var presenter: AboutLibrariesViewPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -56,30 +55,21 @@ class AboutPagerFragment : Fragment() {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding.aboutItemHomepage.paintFlags = (binding.aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
-    binding.aboutItemHomepage.text = homepage
-
     binding.aboutItemWebview.settings.defaultFontSize = 12
     binding.aboutItemWebview.isVerticalScrollBarEnabled = true
     binding.aboutItemWebview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
-  }
 
-  override fun onStart() {
-    super.onStart()
-    presenter.start(Unit)
-    presenter.clickEvent(binding.aboutItemHomepage, {
+    binding.aboutItemHomepage.paintFlags = (binding.aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+    binding.aboutItemHomepage.text = homepage
+    binding.aboutItemHomepage.setOnClickListener {
       NetworkUtil.newLink(it.context.applicationContext, homepage)
-    })
-  }
-
-  override fun onStop() {
-    super.onStop()
-    presenter.stop()
+    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     binding.aboutItemHomepage.text = null
+    binding.aboutItemHomepage.setOnClickListener(null)
     binding.aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
   }
 

@@ -16,14 +16,24 @@
 
 package com.pyamsoft.pydroid.version
 
-import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
-import retrofit2.Retrofit
+import com.pyamsoft.pydroid.data.Cache
+import io.reactivex.Single
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class VersionCheckApi internal constructor(
-    private val client: Retrofit) {
+class VersionCheckInteractorCache(
+    private val impl: VersionCheckInteractor) : VersionCheckInteractor, Cache {
 
-  @CheckResult fun <T> create(serviceClass: Class<T>): T {
-    return client.create(serviceClass)
+  private var cachedResponse: Single<Int>? = null
+
+  override fun checkVersion(packageName: String, force: Boolean): Single<Int> {
+    return Single.defer {
+      if (force || cachedResponse == null) {
+        cachedResponse = impl.checkVersion(packageName, force).cache()
+      }
+      return@defer cachedResponse
+    }
+  }
+
+  override fun clearCache() {
+    cachedResponse = null
   }
 }

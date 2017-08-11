@@ -21,8 +21,9 @@ import android.support.annotation.RestrictTo
 import com.google.gson.TypeAdapterFactory
 import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 
-@RestrictTo(
-    RestrictTo.Scope.LIBRARY) @GsonTypeAdapterFactory abstract internal class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+@GsonTypeAdapterFactory
+abstract internal class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
 
   companion object {
 

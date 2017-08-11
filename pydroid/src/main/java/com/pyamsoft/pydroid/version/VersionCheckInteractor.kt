@@ -20,20 +20,7 @@ import android.support.annotation.CheckResult
 import io.reactivex.Single
 import timber.log.Timber
 
-class VersionCheckInteractor(private val versionCheckService: VersionCheckService) {
+interface VersionCheckInteractor {
 
-  private var cachedResponse: Single<VersionCheckResponse>? = null
-
-  @CheckResult fun checkVersion(packageName: String, force: Boolean): Single<Int> {
-    return Single.defer {
-      if (cachedResponse == null || force) {
-        Timber.d("Fetch from Network. Force: %s", force)
-        cachedResponse = versionCheckService.checkVersion(packageName).cache()
-      } else {
-        Timber.d("Fetch from cached response")
-      }
-
-      return@defer cachedResponse
-    }.map { it.currentVersion() }
-  }
+  @CheckResult fun checkVersion(packageName: String, force: Boolean): Single<Int>
 }

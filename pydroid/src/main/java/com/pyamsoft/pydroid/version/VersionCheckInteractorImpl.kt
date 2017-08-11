@@ -16,14 +16,12 @@
 
 package com.pyamsoft.pydroid.version
 
-import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
-import retrofit2.Retrofit
+import io.reactivex.Single
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class VersionCheckApi internal constructor(
-    private val client: Retrofit) {
+class VersionCheckInteractorImpl(
+    private val versionCheckService: VersionCheckService) : VersionCheckInteractor {
 
-  @CheckResult fun <T> create(serviceClass: Class<T>): T {
-    return client.create(serviceClass)
+  override fun checkVersion(packageName: String, force: Boolean): Single<Int> {
+    return versionCheckService.checkVersion(packageName).map { it.currentVersion() }
   }
 }

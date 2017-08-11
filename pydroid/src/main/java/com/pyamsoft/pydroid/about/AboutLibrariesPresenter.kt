@@ -28,13 +28,13 @@ class AboutLibrariesPresenter(private val interactor: AboutLibrariesInteractor,
 
   override fun onStart(bound: View) {
     super.onStart(bound)
-    loadLicenses(bound::onLicenseLoaded, bound::onAllLoaded)
+    loadLicenses(false, bound::onLicenseLoaded, bound::onAllLoaded)
   }
 
-  private fun loadLicenses(onLicenseLoaded: (AboutLibrariesModel) -> Unit,
+  private fun loadLicenses(force: Boolean, onLicenseLoaded: (AboutLibrariesModel) -> Unit,
       onAllLoaded: () -> Unit) {
     disposeOnStop {
-      interactor.loadLicenses().subscribeOn(ioScheduler).observeOn(
+      interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(
           mainThreadScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
           { Timber.e(it, "onError loading licenses") })
     }

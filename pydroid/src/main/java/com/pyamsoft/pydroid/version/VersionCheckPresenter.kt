@@ -24,24 +24,24 @@ import timber.log.Timber
 
 class VersionCheckPresenter(private val packageName: String, private val currentVersionCode: Int,
     private val interactor: VersionCheckInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Callback>(
-    observeScheduler, subscribeScheduler) {
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<Callback>(
+    computationScheduler, ioScheduler, mainThreadScheduler) {
 
   override fun onStart(bound: Callback) {
     super.onStart(bound)
     checkForUpdates(false, bound::onUpdatedVersionFound)
   }
 
-  fun checkForUpdates(
-      onUpdatedVersionFound: (current: Int, updated: Int) -> Unit) {
-    checkForUpdates(true, onUpdatedVersionFound)
+  fun checkForUpdates(callback: Callback) {
+    checkForUpdates(true, callback::onUpdatedVersionFound)
   }
 
   private fun checkForUpdates(force: Boolean,
       onUpdatedVersionFound: (current: Int, updated: Int) -> Unit) {
     disposeOnStop {
-      interactor.checkVersion(packageName, force).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({
+      interactor.checkVersion(packageName, force).subscribeOn(ioScheduler).observeOn(
+          mainThreadScheduler).subscribe({
         Timber.i("Update check finished")
         Timber.i("Current version: %d", currentVersionCode)
         Timber.i("Latest version: %d", it)

@@ -24,7 +24,7 @@ import timber.log.Timber
 class AboutLibrariesInteractorImpl(
     private val dataSource: AboutLibrariesDataSource) : AboutLibrariesInteractor {
 
-  @CheckResult override fun loadLicenses(): Observable<AboutLibrariesModel> {
+  override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
     return Observable.defer {
       Observable.fromIterable(Licenses.getLicenses())
     }.toSortedList { (name1), (name2) ->

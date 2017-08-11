@@ -22,6 +22,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,14 +32,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
-  private val interactor: VersionCheckInteractor
-  private val obsScheduler: Scheduler = pyDroidModule.provideObsScheduler()
-  private val subScheduler: Scheduler = pyDroidModule.provideSubScheduler()
+  private val cachedInteractor: VersionCheckInteractor
+  private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()
+  private val ioScheduler: Scheduler = pyDroidModule.provideIoScheduler()
+  private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
 
   init {
-    interactor = VersionCheckInteractor(VersionCheckApi(
-        provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson())).create(
-        VersionCheckService::class.java))
+    val versionCheckApi: VersionCheckApi = VersionCheckApi(
+        provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson()))
+    val versionCheckService: VersionCheckService = versionCheckApi.create(
+        VersionCheckService::class.java)
+    val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(versionCheckService)
+    cachedInteractor = VersionCheckInteractorCache(interactor)
   }
 
   @CheckResult private fun provideGson(): Gson {
@@ -66,12 +71,12 @@ import retrofit2.converter.gson.GsonConverterFactory
   @CheckResult private fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
     return Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL).client(
         okHttpClient).addConverterFactory(GsonConverterFactory.create(gson)).addCallAdapterFactory(
-        RxJava2CallAdapterFactory.createWithScheduler(subScheduler)).build()
+        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())).build()
   }
 
   @CheckResult fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
-    return VersionCheckPresenter(packageName, currentVersion, interactor, obsScheduler,
-        subScheduler)
+    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor,
+        computationScheduler, ioScheduler, mainThreadScheduler)
   }
 
   companion object {

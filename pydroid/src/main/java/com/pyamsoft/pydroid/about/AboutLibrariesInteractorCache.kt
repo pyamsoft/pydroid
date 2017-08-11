@@ -20,16 +20,15 @@ import com.pyamsoft.pydroid.data.Cache
 import io.reactivex.Observable
 
 class AboutLibrariesInteractorCache(
-    private val aboutLibrariesInteractor: AboutLibrariesInteractor) : AboutLibrariesInteractor, Cache {
+    private val impl: AboutLibrariesInteractor) : AboutLibrariesInteractor, Cache {
 
   private var cachedLicenses: Observable<AboutLibrariesModel>? = null
 
-  override fun loadLicenses(): Observable<AboutLibrariesModel> {
+  override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
     return Observable.defer {
-      if (cachedLicenses == null) {
-        cachedLicenses = aboutLibrariesInteractor.loadLicenses().cache()
+      if (force || cachedLicenses == null) {
+        cachedLicenses = impl.loadLicenses(force).cache()
       }
-
       return@defer cachedLicenses
     }
   }

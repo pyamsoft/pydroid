@@ -20,13 +20,11 @@ import com.pyamsoft.pydroid.helper.add
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class Presenter<V : Any> protected constructor() {
+abstract class Presenter<in V : Any> protected constructor() {
 
-  protected var view: V? = null
   private val stopDisposables: CompositeDisposable = CompositeDisposable()
 
   fun start(bound: V) {
-    view = bound
     onStart(bound)
   }
 
@@ -38,18 +36,14 @@ abstract class Presenter<V : Any> protected constructor() {
   }
 
   fun stop() {
-    val bound: V? = view
-    if (bound != null) {
-      onStop(bound)
-    }
+    onStop()
     stopDisposables.clear()
-    view = null
   }
 
   /**
    * Override per implementation
    */
-  protected open fun onStop(bound: V) {
+  protected open fun onStop() {
 
   }
 

@@ -16,41 +16,48 @@
 
 package com.pyamsoft.pydroid.presenter
 
+import com.pyamsoft.pydroid.helper.add
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class Presenter<in T : Any> protected constructor() {
+abstract class Presenter<V : Any> protected constructor() {
 
+  protected var view: V? = null
   private val stopDisposables: CompositeDisposable = CompositeDisposable()
 
-  fun start(bound: T) {
+  fun start(bound: V) {
+    view = bound
     onStart(bound)
   }
 
   /**
    * Override per implementation
    */
-  protected open fun onStart(bound: T) {
+  protected open fun onStart(bound: V) {
     // Intentionally empty
   }
 
   fun stop() {
-    onStop()
+    val bound: V? = view
+    if (bound != null) {
+      onStop(bound)
+    }
     stopDisposables.clear()
+    view = null
   }
 
   /**
    * Override per implementation
    */
-  protected open fun onStop() {
+  protected open fun onStop(bound: V) {
 
   }
 
   /**
    * Add a disposable to the internal list, dispose it onStop
    */
-  inline protected fun disposeOnStop(func: () -> Disposable) {
-    disposeOnStop(func())
+  protected fun disposeOnStop(func: () -> Disposable) {
+    stopDisposables.add(func)
   }
 
   /**

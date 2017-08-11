@@ -23,12 +23,20 @@ import io.reactivex.Scheduler
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
 
-  private val interactor: AboutLibrariesInteractor = AboutLibrariesInteractor(
-      pyDroidModule.provideContext())
-  private val obsScheduler: Scheduler = pyDroidModule.provideObsScheduler()
-  private val subScheduler: Scheduler = pyDroidModule.provideSubScheduler()
+  private val cacheInteractor: AboutLibrariesInteractor
+  private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()
+  private val ioScheduler: Scheduler = pyDroidModule.provideIoScheduler()
+  private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
+
+  init {
+    val dataSource: AboutLibrariesDataSource = AboutLibrariesDataSourceImpl(
+        pyDroidModule.provideContext())
+    val interactor: AboutLibrariesInteractor = AboutLibrariesInteractorImpl(dataSource)
+    cacheInteractor = AboutLibrariesInteractorCache(interactor)
+  }
 
   @CheckResult fun getPresenter(): AboutLibrariesPresenter {
-    return AboutLibrariesPresenter(interactor, obsScheduler, subScheduler)
+    return AboutLibrariesPresenter(cacheInteractor, computationScheduler, ioScheduler,
+        mainThreadScheduler)
   }
 }

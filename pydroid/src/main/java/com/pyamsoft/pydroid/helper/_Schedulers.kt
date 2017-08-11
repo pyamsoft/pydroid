@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.presenter
+@file:JvmName("SchedulerHelper")
 
-import com.pyamsoft.pydroid.helper.enforceComputation
-import com.pyamsoft.pydroid.helper.enforceIo
-import com.pyamsoft.pydroid.helper.enforceMainThread
+package com.pyamsoft.pydroid.helper
+
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-abstract class SchedulerPresenter<V : Any> protected constructor(
-    protected val computationScheduler: Scheduler,
-    protected val ioScheduler: Scheduler,
-    protected val mainThreadScheduler: Scheduler) : Presenter<V>() {
-
-  init {
-    computationScheduler.enforceComputation()
-    ioScheduler.enforceIo()
-    mainThreadScheduler.enforceMainThread()
+fun Scheduler.enforceComputation() {
+  if (this != Schedulers.computation()) {
+    throw RuntimeException("Scheduler is not computation scheduler: $this")
   }
 }
+
+fun Scheduler.enforceIo() {
+  if (this != Schedulers.io()) {
+    throw RuntimeException("Scheduler is not io scheduler: $this")
+  }
+}
+
+fun Scheduler.enforceMainThread() {
+  if (this != AndroidSchedulers.mainThread()) {
+    throw RuntimeException("Scheduler is not Android mainThread scheduler: $this")
+  }
+}
+

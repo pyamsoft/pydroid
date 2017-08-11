@@ -35,12 +35,17 @@ import io.reactivex.schedulers.Schedulers
   }
 
   // Singleton
-  @CheckResult fun provideSubScheduler(): Scheduler {
+  @CheckResult fun provideIoScheduler(): Scheduler {
     return Schedulers.io()
   }
 
   // Singleton
-  @CheckResult fun provideObsScheduler(): Scheduler {
+  @CheckResult fun provideComputationScheduler(): Scheduler {
+    return Schedulers.computation()
+  }
+
+  // Singleton
+  @CheckResult fun provideMainThreadScheduler(): Scheduler {
     return AndroidSchedulers.mainThread()
   }
 }

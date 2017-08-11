@@ -16,10 +16,25 @@
 
 package com.pyamsoft.pydroid.about
 
-import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.data.Cache
 import io.reactivex.Observable
 
-interface AboutLibrariesInteractor {
+class AboutLibrariesInteractorCache(
+    private val aboutLibrariesInteractor: AboutLibrariesInteractor) : AboutLibrariesInteractor, Cache {
 
-  @CheckResult fun loadLicenses(): Observable<AboutLibrariesModel>
+  private var cachedLicenses: Observable<AboutLibrariesModel>? = null
+
+  override fun loadLicenses(): Observable<AboutLibrariesModel> {
+    return Observable.defer {
+      if (cachedLicenses == null) {
+        cachedLicenses = aboutLibrariesInteractor.loadLicenses().cache()
+      }
+
+      return@defer cachedLicenses
+    }
+  }
+
+  override fun clearCache() {
+    cachedLicenses = null
+  }
 }

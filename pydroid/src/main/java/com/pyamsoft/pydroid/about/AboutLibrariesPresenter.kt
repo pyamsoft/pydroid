@@ -22,8 +22,9 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class AboutLibrariesPresenter(private val interactor: AboutLibrariesInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<View>(
-    observeScheduler, subscribeScheduler) {
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler, ioScheduler,
+    mainThreadScheduler) {
 
   override fun onStart(bound: View) {
     super.onStart(bound)
@@ -33,8 +34,8 @@ class AboutLibrariesPresenter(private val interactor: AboutLibrariesInteractor,
   private fun loadLicenses(onLicenseLoaded: (AboutLibrariesModel) -> Unit,
       onAllLoaded: () -> Unit) {
     disposeOnStop {
-      interactor.loadLicenses().subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
+      interactor.loadLicenses().subscribeOn(ioScheduler).observeOn(
+          mainThreadScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
           { Timber.e(it, "onError loading licenses") })
     }
   }

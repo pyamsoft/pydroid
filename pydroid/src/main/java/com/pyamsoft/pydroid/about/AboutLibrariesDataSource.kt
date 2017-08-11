@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.presenter
+package com.pyamsoft.pydroid.about
 
-import com.pyamsoft.pydroid.helper.enforceComputation
-import com.pyamsoft.pydroid.helper.enforceIo
-import com.pyamsoft.pydroid.helper.enforceMainThread
-import io.reactivex.Scheduler
+import android.support.annotation.CheckResult
 
-abstract class SchedulerPresenter<V : Any> protected constructor(
-    protected val computationScheduler: Scheduler,
-    protected val ioScheduler: Scheduler,
-    protected val mainThreadScheduler: Scheduler) : Presenter<V>() {
+interface AboutLibrariesDataSource {
 
-  init {
-    computationScheduler.enforceComputation()
-    ioScheduler.enforceIo()
-    mainThreadScheduler.enforceMainThread()
-  }
+  @CheckResult fun loadNewLicense(licenseLocation: String): String
 }

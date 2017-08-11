@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util.rx
+package com.pyamsoft.pydroid.data
 
-import android.view.View
-import io.reactivex.ObservableEmitter
+interface Cache {
 
-interface RxDebounce {
-
-  var enabled: Boolean
-
-  fun <T : Any> debounce(view: View, emitter: ObservableEmitter<T>, value: T) {
-    if (!emitter.isDisposed) {
-      if (enabled) {
-        enabled = false
-        view.post { enabled = true }
-        emitter.onNext(value)
-      }
-    }
-  }
+  fun clearCache()
 }
 

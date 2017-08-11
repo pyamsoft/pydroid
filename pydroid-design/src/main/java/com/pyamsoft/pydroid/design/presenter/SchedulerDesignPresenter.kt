@@ -27,8 +27,8 @@ abstract class SchedulerDesignPresenter<in T : Any>(foregroundScheduler: Schedul
 
   private val delegate: DesignPresenter<T> = DelegateDesignPresenter()
 
-  override fun onStop() {
-    super.onStop()
+  override fun onStop(bound: T?) {
+    super.onStop(bound)
     delegate.stop()
   }
 

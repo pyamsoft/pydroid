@@ -18,9 +18,8 @@ package com.pyamsoft.pydroid.version
 
 import android.support.annotation.CheckResult
 import io.reactivex.Single
-import timber.log.Timber
 
-interface VersionCheckInteractor {
+internal interface VersionCheckInteractor {
 
   @CheckResult fun checkVersion(packageName: String, force: Boolean): Single<Int>
 }

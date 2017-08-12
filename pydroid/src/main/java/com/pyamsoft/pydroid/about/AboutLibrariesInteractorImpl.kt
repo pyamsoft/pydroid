@@ -21,7 +21,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
 
-class AboutLibrariesInteractorImpl(
+internal class AboutLibrariesInteractorImpl internal constructor(
     private val dataSource: AboutLibrariesDataSource) : AboutLibrariesInteractor {
 
   override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {

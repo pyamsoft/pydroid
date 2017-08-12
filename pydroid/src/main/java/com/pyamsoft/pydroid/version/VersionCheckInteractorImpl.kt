@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.version
 
 import io.reactivex.Single
 
-class VersionCheckInteractorImpl(
+internal class VersionCheckInteractorImpl internal constructor(
     private val versionCheckService: VersionCheckService) : VersionCheckInteractor {
 
   override fun checkVersion(packageName: String, force: Boolean): Single<Int> {

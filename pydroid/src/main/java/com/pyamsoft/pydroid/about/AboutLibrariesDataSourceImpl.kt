@@ -25,7 +25,8 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
-class AboutLibrariesDataSourceImpl(context: Context) : AboutLibrariesDataSource {
+internal class AboutLibrariesDataSourceImpl internal constructor(
+    context: Context) : AboutLibrariesDataSource {
 
   private val assetManager: AssetManager = context.applicationContext.assets
 

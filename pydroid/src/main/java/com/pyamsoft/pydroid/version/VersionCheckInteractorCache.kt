@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.version
 import com.pyamsoft.pydroid.data.Cache
 import io.reactivex.Single
 
-class VersionCheckInteractorCache(
+internal class VersionCheckInteractorCache internal constructor(
     private val impl: VersionCheckInteractor) : VersionCheckInteractor, Cache {
 
   private var cachedResponse: Single<Int>? = null

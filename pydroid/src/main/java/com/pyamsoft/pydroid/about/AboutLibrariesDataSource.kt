@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.about
 
 import android.support.annotation.CheckResult
 
-interface AboutLibrariesDataSource {
+internal interface AboutLibrariesDataSource {
 
   @CheckResult fun loadNewLicense(licenseLocation: String): String
 }

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.about
 import com.pyamsoft.pydroid.data.Cache
 import io.reactivex.Observable
 
-class AboutLibrariesInteractorCache(
+internal class AboutLibrariesInteractorCache internal constructor(
     private val impl: AboutLibrariesInteractor) : AboutLibrariesInteractor, Cache {
 
   private var cachedLicenses: Observable<AboutLibrariesModel>? = null

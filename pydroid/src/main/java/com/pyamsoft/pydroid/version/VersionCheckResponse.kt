@@ -22,7 +22,7 @@ import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.annotations.SerializedName
 
-@AutoValue abstract class VersionCheckResponse internal constructor() {
+@AutoValue internal abstract class VersionCheckResponse internal constructor() {
 
   @CheckResult @SerializedName("CURRENT_VERSION") internal abstract fun currentVersion(): Int
 

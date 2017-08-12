@@ -17,11 +17,9 @@
 package com.pyamsoft.pydroid.version
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import retrofit2.Retrofit
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class VersionCheckApi internal constructor(
-    private val client: Retrofit) {
+internal class VersionCheckApi internal constructor(private val client: Retrofit) {
 
   @CheckResult fun <T> create(serviceClass: Class<T>): T {
     return client.create(serviceClass)

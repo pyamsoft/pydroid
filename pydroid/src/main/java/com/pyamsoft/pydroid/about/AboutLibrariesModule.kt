@@ -17,11 +17,10 @@
 package com.pyamsoft.pydroid.about
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
+class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
 
   private val cacheInteractor: AboutLibrariesInteractor
   private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()

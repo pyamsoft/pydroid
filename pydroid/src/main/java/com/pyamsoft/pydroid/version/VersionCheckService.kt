@@ -21,7 +21,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Url
 
-interface VersionCheckService {
+internal interface VersionCheckService {
 
   @CheckResult @GET fun checkVersion(@Url packageName: String): Single<VersionCheckResponse>
 }

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.about
 import android.support.annotation.CheckResult
 import io.reactivex.Observable
 
-interface AboutLibrariesInteractor {
+internal interface AboutLibrariesInteractor {
 
   @CheckResult fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel>
 }

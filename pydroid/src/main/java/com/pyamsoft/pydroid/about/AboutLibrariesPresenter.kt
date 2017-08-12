@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-class AboutLibrariesPresenter(private val interactor: AboutLibrariesInteractor,
+class AboutLibrariesPresenter internal constructor(private val interactor: AboutLibrariesInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
     mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler, ioScheduler,
     mainThreadScheduler) {

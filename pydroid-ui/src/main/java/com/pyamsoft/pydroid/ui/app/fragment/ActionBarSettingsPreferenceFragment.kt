@@ -50,7 +50,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     super.onCreate(savedInstanceState)
     PYDroid.with {
       it.plusAppComponent(context.packageName,
-          versionedActivity.provideApplicationVersion()).inject(
+          versionedActivity.currentApplicationVersion).inject(
           this)
     }
   }
@@ -125,7 +125,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
   override fun onUpdatedVersionFound(current: Int, updated: Int) {
     Timber.d("Updated version found. %d => %d", current, updated)
     DialogUtil.guaranteeSingleDialogFragment(activity,
-        VersionUpgradeDialog.newInstance(versionedActivity.provideApplicationName(), current,
+        VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current,
             updated), VersionUpgradeDialog.TAG)
   }
 

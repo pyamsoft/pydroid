@@ -33,7 +33,7 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.with {
-      it.plusVersionCheckComponent(packageName, provideApplicationVersion()).inject(this)
+      it.plusVersionCheckComponent(packageName, currentApplicationVersion).inject(this)
     }
   }
 
@@ -45,7 +45,7 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
   override fun onUpdatedVersionFound(current: Int, updated: Int) {
     Timber.d("Updated version found. %d => %d", current, updated)
     DialogUtil.guaranteeSingleDialogFragment(this,
-        VersionUpgradeDialog.newInstance(provideApplicationName(), current, updated),
+        VersionUpgradeDialog.newInstance(applicationName, current, updated),
         VersionUpgradeDialog.TAG)
   }
 

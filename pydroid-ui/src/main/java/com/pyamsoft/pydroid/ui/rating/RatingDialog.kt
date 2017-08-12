@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
+import com.pyamsoft.pydroid.version.VersionCheckProvider
 
 class RatingDialog : DialogFragmentBase() {
   private lateinit var rateLink: String
@@ -133,15 +134,13 @@ class RatingDialog : DialogFragmentBase() {
         WindowManager.LayoutParams.WRAP_CONTENT)
   }
 
-  interface ChangeLogProvider {
+  interface ChangeLogProvider : VersionCheckProvider {
 
     @CheckResult fun getPackageName(): String
 
     @get:CheckResult val changeLogText: Spannable
 
     @get:DrawableRes @get:CheckResult val applicationIcon: Int
-
-    @get:CheckResult val currentApplicationVersion: Int
   }
 
   companion object {

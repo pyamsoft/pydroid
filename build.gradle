@@ -39,7 +39,7 @@ buildscript {
     maxSdk = 26
     buildTools = "26.0.1"
 
-    supportLib = "26.0.0"
+    supportLib = "26.0.1"
     timber = "4.5.1"
     autoValue = "1.4.1"
     autoValueGSON = "0.5.0"
@@ -87,4 +87,4 @@ task clean(type: Delete) {
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '11.0.1'
+version = '12.0.0'

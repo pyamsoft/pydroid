@@ -24,7 +24,7 @@ import io.reactivex.Scheduler
 internal class RatingModule internal constructor(module: PYDroidModule,
     preferences: RatingPreferences) {
 
-  private val interactor: RatingInteractor;
+  private val interactor: RatingInteractor
   private val computationScheduler: Scheduler = module.provideComputationScheduler()
   private val ioScheduler: Scheduler = module.provideIoScheduler()
   private val mainThreadScheduler: Scheduler = module.provideMainThreadScheduler()

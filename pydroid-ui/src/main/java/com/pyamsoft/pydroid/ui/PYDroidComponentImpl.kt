@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
@@ -29,8 +28,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidComponentImpl internal constructor(
-    private val module: PYDroidModule) : PYDroidComponent {
+internal class PYDroidComponentImpl internal constructor(module: PYDroidModule) : PYDroidComponent {
   private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(module)
   private val versionCheckModule: VersionCheckModule = VersionCheckModule(module)
   private val ratingModule: RatingModule

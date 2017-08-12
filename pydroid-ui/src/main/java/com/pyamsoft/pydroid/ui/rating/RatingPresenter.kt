@@ -20,16 +20,17 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-internal class RatingPresenter(private val currentVersion: Int,
+internal class RatingPresenter internal constructor(private val currentVersion: Int,
     private val interactor: RatingInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter<Unit>(
-    observeScheduler, subscribeScheduler) {
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<Unit>(
+    computationScheduler, ioScheduler, mainThreadScheduler) {
 
   internal fun loadRatingDialog(force: Boolean, onShowRatingDialog: () -> Unit,
       onRatingDialogLoadError: (Throwable) -> Unit) {
     disposeOnStop {
       interactor.needsToViewRating(currentVersion, force).subscribeOn(
-          backgroundScheduler).observeOn(foregroundScheduler).subscribe({
+          ioScheduler).observeOn(mainThreadScheduler).subscribe({
         if (it) {
           onShowRatingDialog()
         }

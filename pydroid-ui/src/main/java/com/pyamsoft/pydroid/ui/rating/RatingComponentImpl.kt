@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-internal class RatingComponentImpl(private val version: Int,
+internal class RatingComponentImpl internal constructor(private val version: Int,
     private val ratingModule: RatingModule) : RatingComponent {
 
   override fun inject(activity: RatingActivity) {

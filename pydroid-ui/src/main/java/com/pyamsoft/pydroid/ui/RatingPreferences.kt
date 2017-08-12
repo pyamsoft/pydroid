@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.support.annotation.CheckResult
 
-interface RatingPreferences {
+internal interface RatingPreferences {
 
   @CheckResult fun getRatingAcceptedVersion(): Int
 

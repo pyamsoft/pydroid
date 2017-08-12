@@ -19,22 +19,13 @@ package com.pyamsoft.pydroid.ui
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
-import com.pyamsoft.pydroid.ui.social.Linker
-import com.pyamsoft.pydroid.ui.util.AnimUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal interface PYDroidComponent {
 
-  fun inject(fragment: AboutPagerFragment)
-
   fun inject(fragment: AboutLibrariesFragment)
-
-  fun inject(animUtil: AnimUtil)
-
-  fun inject(linker: Linker)
 
   @CheckResult fun plusVersionCheckComponent(packageName: String,
       currentVersion: Int): VersionCheckComponent

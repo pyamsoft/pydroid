@@ -21,19 +21,9 @@ import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Completable
 import io.reactivex.Single
 
-internal class RatingInteractor(private val preferences: RatingPreferences) {
+internal interface RatingInteractor {
 
-  /**
-   * public
-   */
-  @CheckResult internal fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean> {
-    return Single.fromCallable { preferences.getRatingAcceptedVersion() < versionCode || force }
-  }
+  @CheckResult fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean>
 
-  /**
-   * public
-   */
-  @CheckResult internal fun saveRating(versionCode: Int): Completable {
-    return Completable.fromAction { preferences.setRatingAcceptedVersion(versionCode) }
-  }
+  @CheckResult fun saveRating(versionCode: Int): Completable
 }

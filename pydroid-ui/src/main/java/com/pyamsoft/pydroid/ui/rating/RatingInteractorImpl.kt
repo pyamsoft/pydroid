@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.version.VersionCheckModule
+import com.pyamsoft.pydroid.ui.RatingPreferences
+import io.reactivex.Completable
+import io.reactivex.Single
 
-internal class AppComponentImpl internal constructor(
-    private val versionCheckModule: VersionCheckModule,
-    private val packageName: String, private val currentVersion: Int) : AppComponent {
+internal class RatingInteractorImpl internal constructor(
+    private val preferences: RatingPreferences) : RatingInteractor {
 
-  override fun inject(fragment: ActionBarSettingsPreferenceFragment) {
-    fragment.presenter = versionCheckModule.getPresenter(packageName, currentVersion)
+  override fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean> {
+    return Single.fromCallable { force || preferences.getRatingAcceptedVersion() < versionCode }
   }
 
-
+  override fun saveRating(versionCode: Int): Completable {
+    return Completable.fromAction { preferences.setRatingAcceptedVersion(versionCode) }
+  }
 }
-

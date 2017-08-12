@@ -41,27 +41,16 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter.Callback
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment() {
+abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment(), Callback {
 
   internal lateinit var presenter: VersionCheckPresenter
-  internal lateinit var preferencePresenter: ActionBarSettingsPreferencePresenter
   private lateinit var toast: Toast
-  private var upgradeInfo: Preference? = null
-  private var clearAll: Preference? = null
-  private lateinit var showAboutLicenses: Preference
-  private lateinit var checkVersion: Preference
-  private lateinit var rateApplication: Preference
-  private val callback: (Int, Int) -> Unit = { current, updated ->
-    Timber.d("Updated version found. %d => %d", current, updated)
-    DialogUtil.guaranteeSingleDialogFragment(activity,
-        VersionUpgradeDialog.newInstance(versionedActivity.provideApplicationName(), current,
-            updated), VersionUpgradeDialog.TAG)
-  }
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.with {
-      it.plusAppComponent(context.packageName, versionedActivity.currentApplicationVersion).inject(
+      it.plusAppComponent(context.packageName,
+          versionedActivity.provideApplicationVersion()).inject(
           this)
     }
   }
@@ -84,62 +73,65 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       applicationSettings.title = "$applicationName Settings"
     }
 
-    upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
-    clearAll = findPreference(getString(R.string.clear_all_key))
-    showAboutLicenses = findPreference(getString(R.string.about_license_key))
-    checkVersion = findPreference(getString(R.string.check_version_key))
-    rateApplication = findPreference(getString(R.string.rating_key))
+    val upgradeInfo: Preference? = findPreference(getString(R.string.upgrade_info_key))
+    if (upgradeInfo != null) {
+      if (hideUpgradeInformation) {
+        upgradeInfo.isVisible = false
+      } else {
+        upgradeInfo.setOnPreferenceClickListener {
+          onShowChangelogClicked()
+          return@setOnPreferenceClickListener true
+        }
+      }
+    }
+
+    val clearAll: Preference? = findPreference(getString(R.string.clear_all_key))
+    if (clearAll != null) {
+      if (hideClearAll) {
+        clearAll.isVisible = false
+      } else {
+        clearAll.setOnPreferenceClickListener {
+          onClearAllClicked()
+          return@setOnPreferenceClickListener true
+        }
+      }
+    }
+
+    val checkVersion: Preference = findPreference(getString(R.string.check_version_key))
+    checkVersion.setOnPreferenceClickListener {
+      onCheckForUpdatesClicked(presenter)
+      return@setOnPreferenceClickListener true
+    }
+
+    val showAboutLicenses: Preference = findPreference(getString(R.string.about_license_key))
+    showAboutLicenses.setOnPreferenceClickListener {
+      onLicenseItemClicked()
+      return@setOnPreferenceClickListener true
+    }
+
+    val rateApplication: Preference = findPreference(getString(R.string.rating_key))
+    rateApplication.setOnPreferenceClickListener {
+      Linker.clickAppPage(it.context, it.context.packageName)
+      return@setOnPreferenceClickListener true
+    }
   }
 
   @CallSuper override fun onStart() {
     super.onStart()
-    preferencePresenter.start(Unit)
-    presenter.start(object : Callback {
-      override fun onUpdatedVersionFound(current: Int, updated: Int) {
-        callback(current, updated)
-      }
-    })
+    presenter.start(this)
 
-    val upgrade = upgradeInfo
-    if (upgrade != null) {
-      if (hideUpgradeInformation) {
-        upgrade.isVisible = false
-      } else {
-        preferencePresenter.clickEvent(upgrade, {
-          onShowChangelogClicked()
-        })
-      }
-    }
+  }
 
-    preferencePresenter.clickEvent(showAboutLicenses, {
-      onLicenseItemClicked()
-    })
-
-    preferencePresenter.clickEvent(checkVersion, {
-      onCheckForUpdatesClicked(presenter)
-    })
-
-
-    val clear = clearAll
-    if (clear != null) {
-      if (hideClearAll) {
-        clear.isVisible = false
-      } else {
-        preferencePresenter.clickEvent(clear, {
-          onClearAllClicked()
-        })
-      }
-    }
-
-    preferencePresenter.clickEvent(rateApplication, {
-      Linker.clickAppPage(it.context.packageName)
-    })
+  override fun onUpdatedVersionFound(current: Int, updated: Int) {
+    Timber.d("Updated version found. %d => %d", current, updated)
+    DialogUtil.guaranteeSingleDialogFragment(activity,
+        VersionUpgradeDialog.newInstance(versionedActivity.provideApplicationName(), current,
+            updated), VersionUpgradeDialog.TAG)
   }
 
   @CallSuper override fun onStop() {
     super.onStop()
     presenter.stop()
-    preferencePresenter.stop()
   }
 
   /**
@@ -175,7 +167,7 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
    */
   protected open fun onCheckForUpdatesClicked(presenter: VersionCheckPresenter) {
     toast.show()
-    presenter.checkForUpdates(callback)
+    presenter.checkForUpdates(this)
   }
 
   /**

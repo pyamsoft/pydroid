@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
-import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding
 import com.pyamsoft.pydroid.util.NetworkUtil
 
@@ -36,11 +35,6 @@ class AboutPagerFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
-    PYDroid.with {
-      it.inject(this)
-    }
-
     homepage = arguments.getString(KEY_HOMEPAGE, null) ?: throw IllegalStateException(
         "Homepage is NULL")
     license = arguments.getString(KEY_LICENSE, null) ?: throw IllegalStateException(

@@ -18,11 +18,9 @@ package com.pyamsoft.pydroid.ui
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.annotation.RestrictTo
 import android.support.v7.preference.PreferenceManager
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal class PYDroidPreferencesImpl(
-    context: Context) : RatingPreferences {
+internal class PYDroidPreferencesImpl internal constructor(context: Context) : RatingPreferences {
 
   private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
       context.applicationContext)

@@ -39,7 +39,7 @@ import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import timber.log.Timber
 
 
-class AboutLibrariesFragment : ActionBarFragment() {
+class AboutLibrariesFragment : ActionBarFragment(), AboutLibrariesPresenter.View {
 
   internal lateinit var presenter: AboutLibrariesPresenter
   internal lateinit var pagerAdapter: AboutPagerAdapter
@@ -132,16 +132,16 @@ class AboutLibrariesFragment : ActionBarFragment() {
 
   override fun onStart() {
     super.onStart()
-    presenter.start(object : AboutLibrariesPresenter.View {
-      override fun onLicenseLoaded(model: AboutLibrariesModel) {
-        pagerAdapter.add(model)
-      }
+    presenter.start(this)
+  }
 
-      override fun onAllLoaded() {
-        pagerAdapter.notifyDataSetChanged()
-        binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
-      }
-    })
+  override fun onLicenseLoaded(model: AboutLibrariesModel) {
+    pagerAdapter.add(model)
+  }
+
+  override fun onAllLoaded() {
+    pagerAdapter.notifyDataSetChanged()
+    binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
   }
 
   override fun onStop() {

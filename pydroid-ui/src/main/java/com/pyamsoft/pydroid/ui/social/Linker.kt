@@ -17,18 +17,9 @@
 package com.pyamsoft.pydroid.ui.social
 
 import android.content.Context
-import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.util.NetworkUtil
 
 object Linker {
-
-  internal lateinit var appContext: Context
-
-  init {
-    PYDroid.with {
-      it.inject(this)
-    }
-  }
 
   private const val BASE_MARKET = "market://details?id="
   private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
@@ -36,24 +27,24 @@ object Linker {
   private const val GOOGLE_PLUS = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts"
   private const val OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/"
 
-  @JvmStatic fun clickAppPage(link: String) {
-    NetworkUtil.newLink(appContext, BASE_MARKET + link)
+  @JvmStatic fun clickAppPage(context: Context, link: String) {
+    NetworkUtil.newLink(context.applicationContext, BASE_MARKET + link)
   }
 
-  @JvmStatic fun clickGooglePlay() {
-    NetworkUtil.newLink(appContext, GOOGLE_PLAY_DEVELOPER_PAGE)
+  @JvmStatic fun clickGooglePlay(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, GOOGLE_PLAY_DEVELOPER_PAGE)
   }
 
-  @JvmStatic fun clickGooglePlus() {
-    NetworkUtil.newLink(appContext, GOOGLE_PLUS)
+  @JvmStatic fun clickGooglePlus(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, GOOGLE_PLUS)
   }
 
-  @JvmStatic fun clickBlogger() {
-    NetworkUtil.newLink(appContext, OFFICIAL_BLOG)
+  @JvmStatic fun clickBlogger(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, OFFICIAL_BLOG)
   }
 
-  @JvmStatic fun clickFacebook() {
-    NetworkUtil.newLink(appContext, FACEBOOK)
+  @JvmStatic fun clickFacebook(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, FACEBOOK)
   }
 
 }

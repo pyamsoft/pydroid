@@ -84,6 +84,28 @@ class RatingDialog : DialogFragmentBase() {
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initDialog()
+
+    binding.ratingBtnNoThanks.setOnClickListener {
+      presenter.saveRating({ dismiss() }, {
+        Toasty.makeText(context.applicationContext,
+            "Error occurred while dismissing dialog. May show again later",
+            Toasty.LENGTH_SHORT).show()
+        dismiss()
+      })
+    }
+
+    binding.ratingBtnGoRate.setOnClickListener {
+      presenter.saveRating({
+        val fullLink = "market://details?id=" + rateLink
+        NetworkUtil.newLink(it.context.applicationContext, fullLink)
+        dismiss()
+      }, {
+        Toasty.makeText(context.applicationContext,
+            "Error occurred while dismissing dialog. May show again later",
+            Toasty.LENGTH_SHORT).show()
+        dismiss()
+      })
+    }
   }
 
   private fun initDialog() {
@@ -97,27 +119,6 @@ class RatingDialog : DialogFragmentBase() {
   override fun onStart() {
     super.onStart()
     presenter.start(Unit)
-    presenter.clickEvent(binding.ratingBtnNoThanks, {
-      presenter.saveRating({ dismiss() }, {
-        Toasty.makeText(context.applicationContext,
-            "Error occurred while dismissing dialog. May show again later",
-            Toasty.LENGTH_SHORT).show()
-        dismiss()
-      })
-    })
-
-    presenter.clickEvent(binding.ratingBtnGoRate, {
-      presenter.saveRating({
-        val fullLink = "market://details?id=" + rateLink
-        NetworkUtil.newLink(it.context.applicationContext, fullLink)
-        dismiss()
-      }, {
-        Toasty.makeText(context.applicationContext,
-            "Error occurred while dismissing dialog. May show again later",
-            Toasty.LENGTH_SHORT).show()
-        dismiss()
-      })
-    })
   }
 
   override fun onStop() {

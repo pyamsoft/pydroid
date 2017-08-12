@@ -24,15 +24,15 @@ import android.util.AttributeSet
 
 abstract class BaseBoundPreference : Preference {
 
-  protected constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int,
+  constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int,
       defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
-  protected constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context,
+  constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context,
       attrs, defStyleAttr)
 
-  protected constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+  constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-  protected constructor(context: Context) : super(context)
+  constructor(context: Context) : super(context)
 
   @CallSuper override fun onBindViewHolder(holder: PreferenceViewHolder) {
     super.onBindViewHolder(holder)

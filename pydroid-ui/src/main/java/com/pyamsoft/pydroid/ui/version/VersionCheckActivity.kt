@@ -26,29 +26,27 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter.Callback
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckProvider {
+abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckProvider, Callback {
 
   internal lateinit var presenter: VersionCheckPresenter
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.with {
-      it.plusVersionCheckComponent(packageName, currentApplicationVersion).inject(this)
+      it.plusVersionCheckComponent(packageName, provideApplicationVersion()).inject(this)
     }
   }
 
   @CallSuper override fun onStart() {
     super.onStart()
+    presenter.start(this)
+  }
 
-    val activity = this
-    presenter.start(object : Callback {
-      override fun onUpdatedVersionFound(current: Int, updated: Int) {
-        Timber.d("Updated version found. %d => %d", current, updated)
-        DialogUtil.guaranteeSingleDialogFragment(activity,
-            VersionUpgradeDialog.newInstance(provideApplicationName(), current, updated),
-            VersionUpgradeDialog.TAG)
-      }
-    })
+  override fun onUpdatedVersionFound(current: Int, updated: Int) {
+    Timber.d("Updated version found. %d => %d", current, updated)
+    DialogUtil.guaranteeSingleDialogFragment(this,
+        VersionUpgradeDialog.newInstance(provideApplicationName(), current, updated),
+        VersionUpgradeDialog.TAG)
   }
 
   @CallSuper override fun onStop() {

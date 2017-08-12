@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.util
 import android.content.Context
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.support.annotation.CheckResult
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPropertyAnimatorCompat
 import android.support.v4.view.ViewPropertyAnimatorListener
@@ -28,27 +29,42 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import android.widget.TextView
-import com.pyamsoft.pydroid.ui.PYDroid
 
 object AnimUtil {
 
-  internal lateinit var context: Context
-  private val overshootInterpolator: Interpolator
-  private val accelCubicInterpolator: Interpolator
+  private var overshootInterpolator: Interpolator? = null
+  private var accelCubicInterpolator: Interpolator? = null
 
-  init {
-    PYDroid.with {
-      it.inject(this)
+  @CheckResult private fun getOvershootInterpolator(context: Context): Interpolator {
+    if (overshootInterpolator == null) {
+      overshootInterpolator = AnimationUtils.loadInterpolator(context.applicationContext,
+          android.R.interpolator.overshoot)
     }
 
-    overshootInterpolator = AnimationUtils.loadInterpolator(context.applicationContext,
-        android.R.interpolator.overshoot)
-    accelCubicInterpolator = AnimationUtils.loadInterpolator(context.applicationContext,
-        android.R.interpolator.accelerate_cubic)
+    val obj: Interpolator? = overshootInterpolator
+    if (obj == null) {
+      throw IllegalStateException("Overshoot interpolator is NULL")
+    } else {
+      return obj
+    }
+  }
+
+  @CheckResult private fun getAccelCubicInterpolator(context: Context): Interpolator {
+    if (accelCubicInterpolator == null) {
+      accelCubicInterpolator = AnimationUtils.loadInterpolator(context.applicationContext,
+          android.R.interpolator.accelerate_cubic)
+    }
+
+    val obj: Interpolator? = accelCubicInterpolator
+    if (obj == null) {
+      throw IllegalStateException("AccelCubic interpolator is NULL")
+    } else {
+      return obj
+    }
   }
 
   @JvmStatic fun popShow(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {
-    val i = overshootInterpolator
+    val i: Interpolator = getOvershootInterpolator(v.context)
     v.alpha = 0f
     v.scaleX = 0f
     v.scaleY = 0f
@@ -70,7 +86,7 @@ object AnimUtil {
   }
 
   @JvmStatic fun popHide(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {
-    val i = overshootInterpolator
+    val i: Interpolator = getOvershootInterpolator(v.context)
     v.alpha = 1f
     v.scaleX = 1f
     v.scaleY = 1f
@@ -93,7 +109,7 @@ object AnimUtil {
   }
 
   @JvmStatic fun fadeIn(v: View): ViewPropertyAnimatorCompat {
-    val i = accelCubicInterpolator
+    val i: Interpolator = getAccelCubicInterpolator(v.context)
     v.alpha = 0f
     v.scaleX = 0.8f
     v.scaleY = 0.8f
@@ -102,7 +118,7 @@ object AnimUtil {
   }
 
   @JvmStatic fun fadeAway(v: View): ViewPropertyAnimatorCompat {
-    val i = accelCubicInterpolator
+    val i: Interpolator = getAccelCubicInterpolator(v.context)
     v.alpha = 1f
     v.scaleX = 1f
     v.scaleY = 1f
@@ -111,7 +127,7 @@ object AnimUtil {
   }
 
   @JvmStatic fun flipVertical(v: View): ViewPropertyAnimatorCompat {
-    val i = accelCubicInterpolator
+    val i: Interpolator = getAccelCubicInterpolator(v.context)
     return ViewCompat.animate(v).scaleY(-v.scaleY).setStartDelay(100).setDuration(
         300).setInterpolator(i).setListener(null)
   }

@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.ui.social.Linker
     return AlertDialog.Builder(activity).setTitle(
         "WARNING: THIS APPLICATION IS NOT OFFICIAL").setMessage(R.string.tamper_msg).setCancelable(
         false).setPositiveButton("Take Me") { _, _ ->
-      Linker.clickGooglePlay()
+      Linker.clickGooglePlay(context)
       killApp()
     }.setNegativeButton("Close") { _, _ -> killApp() }.create()
   }

@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.version
 
 import android.support.annotation.CheckResult
 
-internal interface VersionCheckProvider {
+interface VersionCheckProvider {
 
   @CheckResult fun provideApplicationName(): String
 

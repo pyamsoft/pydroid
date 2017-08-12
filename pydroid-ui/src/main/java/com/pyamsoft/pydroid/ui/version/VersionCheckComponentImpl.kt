@@ -18,7 +18,8 @@ package com.pyamsoft.pydroid.ui.version
 
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
-internal class VersionCheckComponentImpl(private val versionCheckModule: VersionCheckModule,
+internal class VersionCheckComponentImpl internal constructor(
+    private val versionCheckModule: VersionCheckModule,
     private val packageName: String, private val currentVersion: Int) : VersionCheckComponent {
 
   override fun inject(activity: VersionCheckActivity) {

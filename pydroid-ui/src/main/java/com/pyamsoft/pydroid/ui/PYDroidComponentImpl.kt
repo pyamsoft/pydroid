@@ -20,14 +20,11 @@ import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.about.AboutPagerFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingModule
-import com.pyamsoft.pydroid.ui.social.Linker
-import com.pyamsoft.pydroid.ui.util.AnimUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 import com.pyamsoft.pydroid.version.VersionCheckModule
@@ -43,21 +40,8 @@ import com.pyamsoft.pydroid.version.VersionCheckModule
     ratingModule = RatingModule(module, preferences)
   }
 
-  override fun inject(fragment: AboutPagerFragment) {
-    fragment.presenter = AboutLibrariesViewPresenter()
-  }
-
   override fun inject(fragment: AboutLibrariesFragment) {
     fragment.presenter = aboutLibrariesModule.getPresenter()
-    fragment.viewPresenter = AboutLibrariesViewPresenter()
-  }
-
-  override fun inject(animUtil: AnimUtil) {
-    animUtil.context = module.provideContext().applicationContext
-  }
-
-  override fun inject(linker: Linker) {
-    linker.appContext = module.provideContext().applicationContext
   }
 
   override fun plusVersionCheckComponent(packageName: String,

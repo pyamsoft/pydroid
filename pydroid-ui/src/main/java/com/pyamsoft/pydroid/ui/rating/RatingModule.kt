@@ -17,24 +17,29 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
-import android.support.annotation.RestrictTo.Scope.LIBRARY
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Scheduler
 
-@RestrictTo(LIBRARY) internal class RatingModule(module: PYDroidModule,
+internal class RatingModule internal constructor(module: PYDroidModule,
     preferences: RatingPreferences) {
 
-  private val interactor: RatingInteractor = RatingInteractor(preferences)
-  private val obsScheduler: Scheduler = module.provideObsScheduler()
-  private val subScheduler: Scheduler = module.provideSubScheduler()
+  private val interactor: RatingInteractor;
+  private val computationScheduler: Scheduler = module.provideComputationScheduler()
+  private val ioScheduler: Scheduler = module.provideIoScheduler()
+  private val mainThreadScheduler: Scheduler = module.provideMainThreadScheduler()
+
+  init {
+    interactor = RatingInteractorImpl(preferences)
+  }
 
   @CheckResult fun getPresenter(version: Int): RatingPresenter {
-    return RatingPresenter(version, interactor, obsScheduler, subScheduler)
+    return RatingPresenter(version, interactor, computationScheduler, ioScheduler,
+        mainThreadScheduler)
   }
 
   @CheckResult fun getSavePresenter(version: Int): RatingSavePresenter {
-    return RatingSavePresenter(version, interactor, obsScheduler, subScheduler)
+    return RatingSavePresenter(version, interactor, computationScheduler, ioScheduler,
+        mainThreadScheduler)
   }
 }

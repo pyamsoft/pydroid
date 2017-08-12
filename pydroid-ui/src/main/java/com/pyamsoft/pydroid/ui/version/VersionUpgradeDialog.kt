@@ -54,7 +54,7 @@ import com.pyamsoft.pydroid.ui.social.Linker
                      |Latest verson: $latestVersion""".trimMargin()
     return AlertDialog.Builder(activity).setTitle("New version available").setMessage(
         message).setPositiveButton("Update") { _, _ ->
-      Linker.clickAppPage(context.packageName)
+      Linker.clickAppPage(context, context.packageName)
       dismiss()
     }.setNegativeButton("Later") { _, _ -> dismiss() }.create()
   }

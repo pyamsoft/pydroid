@@ -29,7 +29,7 @@ import io.reactivex.disposables.Disposables
  * The new disposable is by default, the empty disposable, so that all memory references
  * held by the disposable are marked for GC
  */
-@JvmOverloads fun Disposable?.dispose(disposable: Disposable = Disposables.empty()): Disposable {
+@JvmOverloads fun Disposable?.clear(disposable: Disposable = Disposables.empty()): Disposable {
   if (this == null) {
     return disposable
   }

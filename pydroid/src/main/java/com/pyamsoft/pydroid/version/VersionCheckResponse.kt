@@ -28,8 +28,7 @@ import com.google.gson.annotations.SerializedName
 
   companion object {
 
-    @JvmStatic @CheckResult fun typeAdapter(gson: Gson): TypeAdapter<VersionCheckResponse> {
-      return AutoValue_VersionCheckResponse.GsonTypeAdapter(gson)
-    }
+    @JvmStatic @CheckResult fun typeAdapter(gson: Gson): TypeAdapter<VersionCheckResponse> =
+        AutoValue_VersionCheckResponse.GsonTypeAdapter(gson)
   }
 }

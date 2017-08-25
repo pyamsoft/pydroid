@@ -38,11 +38,12 @@ internal class AboutLibrariesDataSourceImpl internal constructor(
 
     assetManager.open(licenseLocation).use {
       // Standard Charsets is only KitKat, add this extra check to support Home Button
-      val inputStreamReader: InputStreamReader
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        inputStreamReader = InputStreamReader(it, StandardCharsets.UTF_8)
+      val inputStreamReader = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        // Assign
+        InputStreamReader(it, StandardCharsets.UTF_8)
       } else {
-        inputStreamReader = InputStreamReader(it, "UTF-8")
+        // Assign
+        InputStreamReader(it, "UTF-8")
       }
 
       BufferedReader(inputStreamReader).use {

@@ -28,22 +28,18 @@ class PYDroidModule(context: Context, val isDebug: Boolean) {
   private val appContext = context.applicationContext
 
   // Singleton
-  @CheckResult fun provideContext(): Context {
-    return appContext
-  }
+  @CheckResult
+  fun provideContext(): Context = appContext
 
   // Singleton
-  @CheckResult fun provideIoScheduler(): Scheduler {
-    return Schedulers.io()
-  }
+  @CheckResult
+  fun provideIoScheduler(): Scheduler = Schedulers.io()
 
   // Singleton
-  @CheckResult fun provideComputationScheduler(): Scheduler {
-    return Schedulers.computation()
-  }
+  @CheckResult
+  fun provideComputationScheduler(): Scheduler = Schedulers.computation()
 
   // Singleton
-  @CheckResult fun provideMainThreadScheduler(): Scheduler {
-    return AndroidSchedulers.mainThread()
-  }
+  @CheckResult
+  fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
 }

@@ -39,16 +39,14 @@ internal class AboutLibrariesInteractorImpl internal constructor(
   @CheckResult private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
     return Single.fromCallable<String> {
       val name = model.name
-      val result: String
+
       if (model.customContent.isEmpty()) {
         Timber.d("Load from asset location: %s (%s)", name, model.license)
-        result = dataSource.loadNewLicense(model.license)
+        return@fromCallable dataSource.loadNewLicense(model.license)
       } else {
         Timber.d("License: %s provides custom content", name)
-        result = model.customContent
+        return@fromCallable model.customContent
       }
-
-      return@fromCallable result
     }
   }
 }

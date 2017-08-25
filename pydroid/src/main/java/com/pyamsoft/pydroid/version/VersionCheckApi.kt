@@ -21,7 +21,5 @@ import retrofit2.Retrofit
 
 internal class VersionCheckApi internal constructor(private val client: Retrofit) {
 
-  @CheckResult fun <T> create(serviceClass: Class<T>): T {
-    return client.create(serviceClass)
-  }
+  @CheckResult fun <T> create(serviceClass: Class<T>): T = client.create(serviceClass)
 }

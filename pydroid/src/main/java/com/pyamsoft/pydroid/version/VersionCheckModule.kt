@@ -37,7 +37,7 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
   private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
 
   init {
-    val versionCheckApi: VersionCheckApi = VersionCheckApi(
+    val versionCheckApi = VersionCheckApi(
         provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson()))
     val versionCheckService: VersionCheckService = versionCheckApi.create(
         VersionCheckService::class.java)

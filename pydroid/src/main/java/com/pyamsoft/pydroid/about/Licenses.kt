@@ -23,7 +23,7 @@ object Licenses {
   private val licenses: MutableList<AboutLibrariesModel>
 
   init {
-    licenses = ArrayList<AboutLibrariesModel>()
+    licenses = ArrayList()
     addCommonLicenses()
   }
 
@@ -107,7 +107,5 @@ object Licenses {
     createItem(name, homepageUrl, licenseLocation)
   }
 
-  @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> {
-    return licenses.toList()
-  }
+  @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> = licenses.toList()
 }

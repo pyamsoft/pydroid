@@ -35,9 +35,7 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
   }
 
 
-  override fun listen(): Observable<T> {
-    return bus
-  }
+  override fun listen(): Observable<T> = bus
 
 
   companion object {
@@ -45,9 +43,7 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
     /**
      * Create a new local bus instance to use
      */
-    @JvmStatic @CheckResult fun <T : Any> create(): EventBus<T> {
-      return RxBus()
-    }
+    @JvmStatic @CheckResult fun <T : Any> create(): EventBus<T> = RxBus()
 
   }
 }

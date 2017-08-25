@@ -26,18 +26,23 @@ object AppUtil {
     HashMap<Float, Float>(10)
   }
 
-  @JvmStatic @CheckResult fun convertToDP(c: Context, px: Float): Float {
-    if (px <= 0F) {
-      return 0F
+  @JvmStatic
+  @CheckResult
+  fun convertToDP(c: Context, px: Float): Float {
+    return if (px <= 0F) {
+      // Return
+      0F
     } else {
       val cached: Float? = cachedDP[px]
       if (cached != null) {
-        return cached
+        // Return
+        cached
       } else {
         val m = c.applicationContext.resources.displayMetrics
         val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
         cachedDP[px] = dp
-        return dp
+        // Return
+        dp
       }
     }
   }

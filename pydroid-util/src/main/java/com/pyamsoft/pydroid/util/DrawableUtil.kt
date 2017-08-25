@@ -28,9 +28,8 @@ import android.support.v4.content.ContextCompat
 
 object DrawableUtil {
 
-  @JvmStatic @CheckResult fun colorFilter(@ColorInt color: Int): ColorFilter {
-    return PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-  }
+  @JvmStatic @CheckResult fun colorFilter(@ColorInt color: Int): ColorFilter =
+      PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
 
   @JvmStatic @CheckResult fun tintDrawableFromColor(d: Drawable, @ColorInt c: Int): Drawable {
     d.colorFilter = colorFilter(c)

@@ -16,22 +16,33 @@
 
 package com.pyamsoft.pydroid.presenter
 
-import com.pyamsoft.pydroid.helper.add
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class Presenter<in V : Any> protected constructor() {
+abstract class Presenter<in Create : Any, in Start: Any> protected constructor() {
 
   private val stopDisposables: CompositeDisposable = CompositeDisposable()
+  private val destroyDisposables: CompositeDisposable = CompositeDisposable()
 
-  fun start(bound: V) {
+  fun create(bound: Create) {
+    onCreate(bound)
+  }
+
+  /**
+   * Override per implementation
+   */
+  protected open fun onCreate(bound: Create) {
+    // Intentionally empty
+  }
+
+  fun start(bound: Start) {
     onStart(bound)
   }
 
   /**
    * Override per implementation
    */
-  protected open fun onStart(bound: V) {
+  protected open fun onStart(bound: Start) {
     // Intentionally empty
   }
 
@@ -47,11 +58,23 @@ abstract class Presenter<in V : Any> protected constructor() {
 
   }
 
+  fun destroy() {
+    onDestroy()
+    destroyDisposables.clear()
+  }
+
+  /**
+   * Override per implementation
+   */
+  protected open fun onDestroy() {
+
+  }
+
   /**
    * Add a disposable to the internal list, dispose it onStop
    */
-  protected fun disposeOnStop(func: () -> Disposable) {
-    stopDisposables.add(func)
+  protected inline fun disposeOnStop(func: () -> Disposable) {
+    disposeOnStop(func())
   }
 
   /**
@@ -59,5 +82,19 @@ abstract class Presenter<in V : Any> protected constructor() {
    */
   protected fun disposeOnStop(disposable: Disposable) {
     stopDisposables.add(disposable)
+  }
+
+  /**
+   * Add a disposable to the internal list, dispose it onDestroy
+   */
+  protected inline fun disposeOnDestroy(func: () -> Disposable) {
+    disposeOnDestroy(func())
+  }
+
+  /**
+   * Add a disposable to the internal list, dispose it onDestroy
+   */
+  protected fun disposeOnDestroy(disposable: Disposable) {
+    destroyDisposables.add(disposable)
   }
 }

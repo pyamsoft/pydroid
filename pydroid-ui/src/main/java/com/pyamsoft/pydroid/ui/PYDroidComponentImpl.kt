@@ -43,15 +43,12 @@ internal class PYDroidComponentImpl internal constructor(module: PYDroidModule) 
   }
 
   override fun plusVersionCheckComponent(packageName: String,
-      currentVersion: Int): VersionCheckComponent {
-    return VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
-  }
+      currentVersion: Int): VersionCheckComponent =
+      VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
 
-  override fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent {
-    return AppComponentImpl(versionCheckModule, packageName, currentVersion)
-  }
+  override fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent =
+      AppComponentImpl(versionCheckModule, packageName, currentVersion)
 
-  override fun plusRatingComponent(currentVersion: Int): RatingComponent {
-    return RatingComponentImpl(currentVersion, ratingModule)
-  }
+  override fun plusRatingComponent(currentVersion: Int): RatingComponent =
+      RatingComponentImpl(currentVersion, ratingModule)
 }

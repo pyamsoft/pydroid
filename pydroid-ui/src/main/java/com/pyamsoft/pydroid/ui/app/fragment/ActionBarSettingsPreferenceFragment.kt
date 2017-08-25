@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
@@ -37,14 +38,16 @@ import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 import com.pyamsoft.pydroid.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.version.VersionCheckPresenter.Callback
+import com.pyamsoft.pydroid.version.VersionCheckPresenter.CheckCallback
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment(), Callback {
+abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragment(), CheckCallback {
 
   internal lateinit var presenter: VersionCheckPresenter
   private lateinit var toast: Toast
+
+  @CallSuper override fun provideBoundPresenters(): List<Presenter<*, *>> = listOf(presenter)
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -55,7 +58,8 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     }
   }
 
-  @SuppressLint("ShowToast") @CallSuper override fun onCreateView(inflater: LayoutInflater,
+  @SuppressLint("ShowToast")
+  @CallSuper override fun onCreateView(inflater: LayoutInflater,
       container: ViewGroup?, savedInstanceState: Bundle?): View? {
     toast = Toasty.makeText(context, "Checking for updates...", Toasty.LENGTH_SHORT)
     return super.onCreateView(inflater, container, savedInstanceState)
@@ -67,6 +71,10 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       addPreferencesFromResource(xmlResId)
     }
     addPreferencesFromResource(R.xml.pydroid)
+  }
+
+  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     val applicationSettings = findPreference("application_settings")
     if (applicationSettings != null) {
@@ -114,6 +122,8 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
       Linker.clickAppPage(it.context, it.context.packageName)
       return@setOnPreferenceClickListener true
     }
+
+    presenter.create(Unit)
   }
 
   @CallSuper override fun onStart() {
@@ -127,11 +137,6 @@ abstract class ActionBarSettingsPreferenceFragment : ActionBarPreferenceFragment
     DialogUtil.guaranteeSingleDialogFragment(activity,
         VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current,
             updated), VersionUpgradeDialog.TAG)
-  }
-
-  @CallSuper override fun onStop() {
-    super.onStop()
-    presenter.stop()
   }
 
   /**

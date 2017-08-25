@@ -28,18 +28,20 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.LoadCallback
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
+import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.LAST
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.NOT_LAST
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment
+import com.pyamsoft.pydroid.ui.app.fragment.DisposableFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import timber.log.Timber
 
 
-class AboutLibrariesFragment : ActionBarFragment(), AboutLibrariesPresenter.View {
+class AboutLibrariesFragment : DisposableFragment(), LoadCallback {
 
   internal lateinit var presenter: AboutLibrariesPresenter
   internal lateinit var pagerAdapter: AboutPagerAdapter
@@ -48,14 +50,16 @@ class AboutLibrariesFragment : ActionBarFragment(), AboutLibrariesPresenter.View
   private var listener: ViewPager.OnPageChangeListener? = null
   private lateinit var binding: FragmentAboutLibrariesBinding
 
+  override fun provideBoundPresenters(): List<Presenter<*, *>> = listOf(presenter)
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val backStackStateName = arguments.getString(KEY_BACK_STACK,
         null) ?: throw NullPointerException("BackStateState is NULL")
     val backStackState = BackStackState.valueOf(backStackStateName)
-    when (backStackState) {
-      LAST -> lastOnBackStack = true
-      NOT_LAST -> lastOnBackStack = false
+    lastOnBackStack = when (backStackState) {
+      LAST -> true
+      NOT_LAST -> false
     }
 
     PYDroid.with {
@@ -73,6 +77,17 @@ class AboutLibrariesFragment : ActionBarFragment(), AboutLibrariesPresenter.View
     super.onViewCreated(view, savedInstanceState)
     setupViewPager(savedInstanceState)
     setupArrows()
+
+    presenter.create(this)
+  }
+
+  override fun onLicenseLoaded(model: AboutLibrariesModel) {
+    pagerAdapter.add(model)
+  }
+
+  override fun onAllLoaded() {
+    pagerAdapter.notifyDataSetChanged()
+    binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
   }
 
   private fun setupViewPager(savedInstanceState: Bundle?) {
@@ -132,21 +147,7 @@ class AboutLibrariesFragment : ActionBarFragment(), AboutLibrariesPresenter.View
 
   override fun onStart() {
     super.onStart()
-    presenter.start(this)
-  }
-
-  override fun onLicenseLoaded(model: AboutLibrariesModel) {
-    pagerAdapter.add(model)
-  }
-
-  override fun onAllLoaded() {
-    pagerAdapter.notifyDataSetChanged()
-    binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
-  }
-
-  override fun onStop() {
-    super.onStop()
-    presenter.stop()
+    presenter.start(Unit)
   }
 
   override fun onResume() {
@@ -186,7 +187,8 @@ class AboutLibrariesFragment : ActionBarFragment(), AboutLibrariesPresenter.View
     private const val KEY_BACK_STACK = "key_back_stack"
     private const val KEY_PAGE = "key_current_page"
 
-    @JvmStatic fun show(activity: FragmentActivity, @IdRes containerResId: Int,
+    @JvmStatic
+    fun show(activity: FragmentActivity, @IdRes containerResId: Int,
         backStackState: BackStackState) {
       val fragmentManager = activity.supportFragmentManager
       if (fragmentManager.findFragmentByTag(TAG) == null) {
@@ -195,7 +197,8 @@ class AboutLibrariesFragment : ActionBarFragment(), AboutLibrariesPresenter.View
       }
     }
 
-    @JvmStatic @CheckResult private fun newInstance(
+    @JvmStatic
+    @CheckResult private fun newInstance(
         backStackState: BackStackState): AboutLibrariesFragment {
       val args = Bundle()
       val fragment = AboutLibrariesFragment()

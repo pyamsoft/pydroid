@@ -27,15 +27,17 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
+import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
+import com.pyamsoft.pydroid.ui.app.fragment.DisposableDialogFragment
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 
-class RatingDialog : DialogFragmentBase() {
+class RatingDialog : DisposableDialogFragment() {
+
   private lateinit var rateLink: String
   private var versionCode: Int = 0
   private var changeLogText: Spannable? = null
@@ -43,6 +45,8 @@ class RatingDialog : DialogFragmentBase() {
   private var iconTask = LoaderHelper.empty()
   private lateinit var binding: DialogRatingBinding
   internal lateinit var presenter: RatingSavePresenter
+
+  override fun provideBoundPresenters(): List<Presenter<*, *>> = listOf(presenter)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -107,6 +111,8 @@ class RatingDialog : DialogFragmentBase() {
         dismiss()
       })
     }
+
+    presenter.create(Unit)
   }
 
   private fun initDialog() {
@@ -122,11 +128,6 @@ class RatingDialog : DialogFragmentBase() {
     presenter.start(Unit)
   }
 
-  override fun onStop() {
-    super.onStop()
-    presenter.stop()
-  }
-
   override fun onResume() {
     super.onResume()
     // The dialog is super small for some reason. We have to set the size manually, in onResume
@@ -136,11 +137,15 @@ class RatingDialog : DialogFragmentBase() {
 
   interface ChangeLogProvider : VersionCheckProvider {
 
-    @CheckResult fun getPackageName(): String
+    @CheckResult
+    fun getPackageName(): String
 
-    @get:CheckResult val changeLogText: Spannable
+    @get:CheckResult
+    val changeLogText: Spannable
 
-    @get:DrawableRes @get:CheckResult val applicationIcon: Int
+    @get:DrawableRes
+    @get:CheckResult
+    val applicationIcon: Int
   }
 
   companion object {
@@ -150,7 +155,9 @@ class RatingDialog : DialogFragmentBase() {
     private const val VERSION_CODE = "version_code"
     private const val RATE_LINK = "rate_link"
 
-    @JvmStatic @CheckResult fun newInstance(provider: ChangeLogProvider): RatingDialog {
+    @JvmStatic
+    @CheckResult
+    fun newInstance(provider: ChangeLogProvider): RatingDialog {
       val fragment = RatingDialog()
       val args = Bundle()
       args.putString(RATE_LINK, provider.getPackageName())

@@ -16,31 +16,31 @@
 
 package com.pyamsoft.pydroid.about
 
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.View
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.LoadCallback
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(private val interactor: AboutLibrariesInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler, ioScheduler,
-    mainThreadScheduler) {
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<LoadCallback, Unit>(computationScheduler,
+    ioScheduler, mainThreadScheduler) {
 
-  override fun onStart(bound: View) {
-    super.onStart(bound)
+  override fun onCreate(bound: LoadCallback) {
+    super.onCreate(bound)
     loadLicenses(false, bound::onLicenseLoaded, bound::onAllLoaded)
   }
 
   private fun loadLicenses(force: Boolean, onLicenseLoaded: (AboutLibrariesModel) -> Unit,
       onAllLoaded: () -> Unit) {
-    disposeOnStop {
+    disposeOnDestroy {
       interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(
           mainThreadScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
           { Timber.e(it, "onError loading licenses") })
     }
   }
 
-  interface View {
+  interface LoadCallback {
 
     /**
      * Called when a single license has finished loading. There are no guarantees about if the

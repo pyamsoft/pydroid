@@ -18,23 +18,29 @@ package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.app.activity.BackPressConfirmActivity
+import com.pyamsoft.pydroid.ui.app.activity.DisposableActivity
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.version.VersionCheckPresenter.Callback
+import com.pyamsoft.pydroid.version.VersionCheckPresenter.CheckCallback
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckProvider, Callback {
+abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider, CheckCallback {
 
   internal lateinit var presenter: VersionCheckPresenter
+
+  @CallSuper
+  override fun provideBoundPresenters(): List<Presenter<*, *>> = listOf(presenter)
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.with {
       it.plusVersionCheckComponent(packageName, currentApplicationVersion).inject(this)
     }
+
+    presenter.create(Unit)
   }
 
   @CallSuper override fun onStart() {
@@ -49,8 +55,4 @@ abstract class VersionCheckActivity : BackPressConfirmActivity(), VersionCheckPr
         VersionUpgradeDialog.TAG)
   }
 
-  @CallSuper override fun onStop() {
-    super.onStop()
-    presenter.stop()
-  }
 }

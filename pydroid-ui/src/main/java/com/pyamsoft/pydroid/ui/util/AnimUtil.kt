@@ -142,7 +142,7 @@ object AnimUtil {
     if (amv is ActionMenuView) {
       val duration = 200
       var delay = 500
-      for (i in 0..amv.childCount - 1) {
+      for (i in 0 until amv.childCount) {
         val item = amv.getChildAt(i) ?: continue
         popShow(item, delay, duration).start()
         delay += duration

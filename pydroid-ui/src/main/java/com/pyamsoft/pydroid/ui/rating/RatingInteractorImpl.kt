@@ -23,11 +23,9 @@ import io.reactivex.Single
 internal class RatingInteractorImpl internal constructor(
     private val preferences: RatingPreferences) : RatingInteractor {
 
-  override fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean> {
-    return Single.fromCallable { force || preferences.getRatingAcceptedVersion() < versionCode }
-  }
+  override fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean> =
+      Single.fromCallable { force || preferences.getRatingAcceptedVersion() < versionCode }
 
-  override fun saveRating(versionCode: Int): Completable {
-    return Completable.fromAction { preferences.setRatingAcceptedVersion(versionCode) }
-  }
+  override fun saveRating(versionCode: Int): Completable =
+      Completable.fromAction { preferences.setRatingAcceptedVersion(versionCode) }
 }

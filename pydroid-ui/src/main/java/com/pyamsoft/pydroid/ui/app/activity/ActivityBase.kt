@@ -172,19 +172,18 @@ abstract class ActivityBase : AppCompatActivity() {
         var context = c
         Timber.d("Extract the current activity from context")
         while (true) {
-          if (context is Application) {
-            return null
-          } else if (context is Activity) {
-            return context
-          } else if (context is ContextWrapper) {
-            val baseContext = context.baseContext
-            // Prevent Stack Overflow.
-            if (baseContext === context) {
-              return null
+          when (context) {
+            is Application -> return null
+            is Activity -> return context
+            is ContextWrapper -> {
+              val baseContext = context.baseContext
+              // Prevent Stack Overflow.
+              if (baseContext === context) {
+                return null
+              }
+              context = baseContext
             }
-            context = baseContext
-          } else {
-            return null
+            else -> return null
           }
         }
       }

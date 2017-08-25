@@ -30,9 +30,7 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
 
   private var animating = false
 
-  @CheckResult fun isAnimating(): Boolean {
-    return animating
-  }
+  @CheckResult fun isAnimating(): Boolean = animating
 
   constructor() : this(0)
 
@@ -94,7 +92,5 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
 
   override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout,
       child: FloatingActionButton, directTargetChild: View, target: View, axes: Int,
-      type: Int): Boolean {
-    return axes == ViewCompat.SCROLL_AXIS_VERTICAL
-  }
+      type: Int): Boolean = axes == ViewCompat.SCROLL_AXIS_VERTICAL
 }

@@ -24,12 +24,8 @@ import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 
 object ImageLoader {
 
-  @JvmStatic @CheckResult fun <T : GenericLoader<GenericLoader<*, *>, *>> fromLoader(loader: T): T {
-    return loader
-  }
+  @JvmStatic @CheckResult fun <T : GenericLoader<GenericLoader<*, *>, *>> fromLoader(loader: T): T = loader
 
   @JvmStatic @CheckResult fun fromResource(context: Context,
-      @DrawableRes resource: Int): ResourceLoader {
-    return RxResourceLoader(context, resource)
-  }
+      @DrawableRes resource: Int): ResourceLoader = RxResourceLoader(context, resource)
 }

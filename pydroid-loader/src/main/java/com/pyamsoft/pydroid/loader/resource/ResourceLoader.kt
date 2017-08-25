@@ -66,23 +66,22 @@ abstract class ResourceLoader protected constructor(context: Context,
     return this
   }
 
-  override fun into(imageView: ImageView): Loaded {
-    return into(DrawableImageTarget.forImageView(imageView))
-  }
+  override fun into(imageView: ImageView): Loaded =
+      into(DrawableImageTarget.forImageView(imageView))
 
-  override fun into(target: Target<Drawable>): Loaded {
-    return load(target, resource)
-  }
+  override fun into(target: Target<Drawable>): Loaded = load(target, resource)
 
   @CheckResult protected fun loadResource(context: Context): Drawable {
     val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(context, resource)
     if (possiblyLoaded == null) {
       throw NullPointerException("Could not load drawable for resource: " + resource)
     } else {
-      if (tint != 0) {
-        return DrawableUtil.tintDrawableFromRes(context, possiblyLoaded, tint)
+      return if (tint != 0) {
+        // Return
+        DrawableUtil.tintDrawableFromRes(context, possiblyLoaded, tint)
       } else {
-        return possiblyLoaded
+        // Return
+        possiblyLoaded
       }
     }
   }

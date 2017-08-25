@@ -44,15 +44,14 @@ class RxResourceLoader(context: Context, @DrawableRes resource: Int) : ResourceL
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(
         Single.fromCallable { loadResource(appContext) }.subscribeOn(subScheduler).observeOn(
-            obsScheduler).doOnSubscribe {
-          startAction(target)
-        }.doOnError {
-          Timber.e(it, "Error loading AsyncDrawable")
-          errorAction(target)
-        }.doAfterSuccess {
-          completeAction(target)
-        }.subscribe(target::loadImage, {
-          Timber.e(it, "Error loading Drawable using RxResourceLoader")
-        }))
+            obsScheduler)
+            .doOnSubscribe { startAction(target) }
+            .doOnError {
+              Timber.e(it, "Error loading AsyncDrawable")
+              errorAction(target)
+            }.doAfterSuccess { completeAction(target) }
+            .subscribe(target::loadImage, {
+              Timber.e(it, "Error loading Drawable using RxResourceLoader")
+            }))
   }
 }

@@ -23,17 +23,17 @@ import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(private val interactor: AboutLibrariesInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<LoadCallback, Unit>(computationScheduler,
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<LoadCallback>(computationScheduler,
     ioScheduler, mainThreadScheduler) {
 
-  override fun onCreate(bound: LoadCallback) {
-    super.onCreate(bound)
-    loadLicenses(false, bound::onLicenseLoaded, bound::onAllLoaded)
+  override fun onBind(v: LoadCallback) {
+    super.onBind(v)
+    loadLicenses(false, v::onLicenseLoaded, v::onAllLoaded)
   }
 
   private fun loadLicenses(force: Boolean, onLicenseLoaded: (AboutLibrariesModel) -> Unit,
       onAllLoaded: () -> Unit) {
-    disposeOnDestroy {
+    dispose {
       interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(
           mainThreadScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
           { Timber.e(it, "onError loading licenses") })

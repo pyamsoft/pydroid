@@ -46,7 +46,7 @@ class RatingDialog : DisposableDialogFragment() {
   private lateinit var binding: DialogRatingBinding
   internal lateinit var presenter: RatingSavePresenter
 
-  override fun provideBoundPresenters(): List<Presenter< *>> = listOf(presenter)
+  override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

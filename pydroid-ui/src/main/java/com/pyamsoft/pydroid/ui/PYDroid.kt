@@ -30,7 +30,8 @@ object PYDroid {
   @RestrictTo(RestrictTo.Scope.LIBRARY) private var debugMode = false
 
   @RestrictTo(
-      RestrictTo.Scope.LIBRARY) @JvmStatic private fun guaranteeNonNull(): PYDroidComponent {
+      RestrictTo.Scope.LIBRARY)
+  @JvmStatic private fun guaranteeNonNull(): PYDroidComponent {
     val obj = component
     if (obj == null) {
       throw IllegalStateException("Component must undergo initialize(Context, Boolean) before use")
@@ -42,7 +43,9 @@ object PYDroid {
   /**
    * Return the DEBUG state of the library
    */
-  @JvmStatic @CheckResult fun isDebugMode(): Boolean {
+  @JvmStatic
+  @CheckResult
+  fun isDebugMode(): Boolean {
     guaranteeNonNull()
     return debugMode
   }
@@ -50,7 +53,9 @@ object PYDroid {
   /**
    * Initialize the library
    */
-  @JvmOverloads @JvmStatic fun initialize(context: Context, debug: Boolean,
+  @JvmOverloads
+  @JvmStatic
+  fun initialize(context: Context, debug: Boolean,
       allowReInitialize: Boolean = false) {
     debugMode = debug
     if (component == null || allowReInitialize) {
@@ -72,7 +77,8 @@ object PYDroid {
   /**
    * For use internally in the library
    */
-  @RestrictTo(RestrictTo.Scope.LIBRARY) @JvmStatic internal fun with(
+  @RestrictTo(RestrictTo.Scope.LIBRARY)
+  @JvmStatic internal fun with(
       func: (PYDroidComponent) -> Unit) {
     func(guaranteeNonNull())
   }

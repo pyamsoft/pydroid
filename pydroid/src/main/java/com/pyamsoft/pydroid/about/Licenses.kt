@@ -103,9 +103,12 @@ object Licenses {
     internal const val GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin"
   }
 
-  @JvmStatic fun create(name: String, homepageUrl: String, licenseLocation: String) {
+  @JvmStatic
+  fun create(name: String, homepageUrl: String, licenseLocation: String) {
     createItem(name, homepageUrl, licenseLocation)
   }
 
-  @JvmStatic @CheckResult fun getLicenses(): List<AboutLibrariesModel> = licenses.toList()
+  @JvmStatic
+  @CheckResult
+  fun getLicenses(): List<AboutLibrariesModel> = licenses.toList()
 }

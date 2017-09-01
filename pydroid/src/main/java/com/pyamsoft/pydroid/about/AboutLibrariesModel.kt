@@ -23,10 +23,14 @@ data class AboutLibrariesModel internal constructor(val name: String, val homepa
 
   companion object {
 
-    @JvmStatic @CheckResult fun create(name: String, homepage: String,
+    @JvmStatic
+    @CheckResult
+    fun create(name: String, homepage: String,
         license: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license, "")
 
-    @JvmStatic @CheckResult fun createWithContent(name: String, homepage: String,
+    @JvmStatic
+    @CheckResult
+    fun createWithContent(name: String, homepage: String,
         content: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, "", content)
   }
 }

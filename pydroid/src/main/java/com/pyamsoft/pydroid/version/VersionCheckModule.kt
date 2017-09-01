@@ -73,7 +73,8 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
         RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())).build()
   }
 
-  @CheckResult fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
+  @CheckResult
+  fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
     return VersionCheckPresenter(packageName, currentVersion, cachedInteractor,
         computationScheduler, ioScheduler, mainThreadScheduler)
   }

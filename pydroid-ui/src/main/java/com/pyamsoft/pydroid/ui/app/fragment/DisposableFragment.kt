@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.app.fragment
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.presenter.Presenter
-import com.pyamsoft.pydroid.ui.app.activity.BackPressConfirmActivity
 
 /**
  * Fragment which manages and automatically disposes of the provided presenters

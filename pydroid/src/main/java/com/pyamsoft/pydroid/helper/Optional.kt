@@ -20,9 +20,11 @@ import android.support.annotation.CheckResult
 
 data class Optional<out T : Any> internal constructor(private val source: T?) {
 
-  @CheckResult fun isPresent(): Boolean = source != null
+  @CheckResult
+  fun isPresent(): Boolean = source != null
 
-  @CheckResult fun item(): T {
+  @CheckResult
+  fun item(): T {
     val obj: T? = source
     if (obj == null) {
       throw IllegalStateException("Optional: Cannot access source item as it is NULL")
@@ -33,7 +35,9 @@ data class Optional<out T : Any> internal constructor(private val source: T?) {
 
   companion object {
 
-    @JvmStatic @CheckResult fun <T : Any> ofNullable(source: T?): Optional<T> = Optional(source)
+    @JvmStatic
+    @CheckResult
+    fun <T : Any> ofNullable(source: T?): Optional<T> = Optional(source)
   }
 }
 

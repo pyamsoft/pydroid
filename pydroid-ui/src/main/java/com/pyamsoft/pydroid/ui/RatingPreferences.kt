@@ -20,7 +20,8 @@ import android.support.annotation.CheckResult
 
 internal interface RatingPreferences {
 
-  @CheckResult fun getRatingAcceptedVersion(): Int
+  @CheckResult
+  fun getRatingAcceptedVersion(): Int
 
   fun setRatingAcceptedVersion(version: Int)
 }

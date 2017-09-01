@@ -20,5 +20,6 @@ import android.support.annotation.CheckResult
 
 internal interface AboutLibrariesDataSource {
 
-  @CheckResult fun loadNewLicense(licenseLocation: String): String
+  @CheckResult
+  fun loadNewLicense(licenseLocation: String): String
 }

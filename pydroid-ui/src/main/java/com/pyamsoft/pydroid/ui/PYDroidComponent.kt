@@ -27,10 +27,13 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
   fun inject(fragment: AboutLibrariesFragment)
 
-  @CheckResult fun plusVersionCheckComponent(packageName: String,
+  @CheckResult
+  fun plusVersionCheckComponent(packageName: String,
       currentVersion: Int): VersionCheckComponent
 
-  @CheckResult fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent
+  @CheckResult
+  fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent
 
-  @CheckResult fun plusRatingComponent(currentVersion: Int): RatingComponent
+  @CheckResult
+  fun plusRatingComponent(currentVersion: Int): RatingComponent
 }

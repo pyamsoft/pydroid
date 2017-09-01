@@ -17,13 +17,14 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Completable
 import io.reactivex.Single
 
 internal interface RatingInteractor {
 
-  @CheckResult fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean>
+  @CheckResult
+  fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean>
 
-  @CheckResult fun saveRating(versionCode: Int): Completable
+  @CheckResult
+  fun saveRating(versionCode: Int): Completable
 }

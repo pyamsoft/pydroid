@@ -168,7 +168,8 @@ abstract class ActivityBase : AppCompatActivity() {
 
       }
 
-      @CheckResult fun extractActivity(c: Context): Activity? {
+      @CheckResult
+      fun extractActivity(c: Context): Activity? {
         var context = c
         Timber.d("Extract the current activity from context")
         while (true) {

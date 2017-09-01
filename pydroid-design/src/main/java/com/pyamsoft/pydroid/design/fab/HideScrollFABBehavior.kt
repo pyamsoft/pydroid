@@ -30,7 +30,8 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
 
   private var animating = false
 
-  @CheckResult fun isAnimating(): Boolean = animating
+  @CheckResult
+  fun isAnimating(): Boolean = animating
 
   constructor() : this(0)
 

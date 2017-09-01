@@ -20,8 +20,10 @@ import android.support.annotation.CheckResult
 
 interface VersionCheckProvider {
 
-  @get:CheckResult val applicationName: String
+  @get:CheckResult
+  val applicationName: String
 
-  @get:CheckResult val currentApplicationVersion: Int
+  @get:CheckResult
+  val currentApplicationVersion: Int
 
 }

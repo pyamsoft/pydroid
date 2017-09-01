@@ -27,7 +27,8 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 import com.pyamsoft.pydroid.ui.social.Linker
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class TamperDialog : DialogFragmentBase() {
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+class TamperDialog : DialogFragmentBase() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

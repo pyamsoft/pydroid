@@ -24,11 +24,14 @@ import com.google.gson.annotations.SerializedName
 
 @AutoValue internal abstract class VersionCheckResponse internal constructor() {
 
-  @CheckResult @SerializedName("CURRENT_VERSION") internal abstract fun currentVersion(): Int
+  @CheckResult
+  @SerializedName("CURRENT_VERSION") internal abstract fun currentVersion(): Int
 
   companion object {
 
-    @JvmStatic @CheckResult fun typeAdapter(gson: Gson): TypeAdapter<VersionCheckResponse> =
+    @JvmStatic
+    @CheckResult
+    fun typeAdapter(gson: Gson): TypeAdapter<VersionCheckResponse> =
         AutoValue_VersionCheckResponse.GsonTypeAdapter(gson)
   }
 }

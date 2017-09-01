@@ -34,7 +34,8 @@ class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
     cacheInteractor = AboutLibrariesInteractorCache(interactor)
   }
 
-  @CheckResult fun getPresenter(): AboutLibrariesPresenter {
+  @CheckResult
+  fun getPresenter(): AboutLibrariesPresenter {
     return AboutLibrariesPresenter(cacheInteractor, computationScheduler, ioScheduler,
         mainThreadScheduler)
   }

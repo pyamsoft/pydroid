@@ -33,12 +33,14 @@ internal class RatingModule internal constructor(module: PYDroidModule,
     interactor = RatingInteractorImpl(preferences)
   }
 
-  @CheckResult fun getPresenter(version: Int): RatingPresenter {
+  @CheckResult
+  fun getPresenter(version: Int): RatingPresenter {
     return RatingPresenter(version, interactor, computationScheduler, ioScheduler,
         mainThreadScheduler)
   }
 
-  @CheckResult fun getSavePresenter(version: Int): RatingSavePresenter {
+  @CheckResult
+  fun getSavePresenter(version: Int): RatingSavePresenter {
     return RatingSavePresenter(version, interactor, computationScheduler, ioScheduler,
         mainThreadScheduler)
   }

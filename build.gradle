@@ -39,7 +39,7 @@ buildscript {
     maxSdk = 26
     buildTools = "26.0.1"
 
-    supportLib = "26.0.1"
+    supportLib = "26.0.2"
     timber = "4.5.1"
     autoValue = "1.5"
     autoValueGSON = "0.5.0"

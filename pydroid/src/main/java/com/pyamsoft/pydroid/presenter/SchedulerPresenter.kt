@@ -21,10 +21,10 @@ import com.pyamsoft.pydroid.helper.enforceIo
 import com.pyamsoft.pydroid.helper.enforceMainThread
 import io.reactivex.Scheduler
 
-abstract class SchedulerPresenter<in Create : Any, in Start : Any> protected constructor(
+abstract class SchedulerPresenter<in V : Any> protected constructor(
     protected val computationScheduler: Scheduler,
     protected val ioScheduler: Scheduler,
-    protected val mainThreadScheduler: Scheduler) : Presenter<Create, Start>() {
+    protected val mainThreadScheduler: Scheduler) : Presenter<V>() {
 
   init {
     computationScheduler.enforceComputation()

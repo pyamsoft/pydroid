@@ -18,13 +18,13 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
+import android.support.v4.app.Fragment
 import com.pyamsoft.pydroid.presenter.Presenter
-import com.pyamsoft.pydroid.ui.app.activity.BackPressConfirmActivity
 
 /**
- * Fragment which manages and automatically disposes of the provided presenters
+ * Headless fragment which manages and automatically disposes of the provided presenters
  */
-abstract class DisposableFragment : ActionBarFragment() {
+abstract class DisposableHeadlessFragment : Fragment() {
 
   /**
    * Cache so that the bound presenter list cannot change once it is set
@@ -50,8 +50,8 @@ abstract class DisposableFragment : ActionBarFragment() {
   }
 
   @CallSuper
-  override fun onDestroyView() {
-    super.onDestroyView()
+  override fun onDestroy() {
+    super.onDestroy()
     val presenters = getBoundPresenters()
     for (presenter in presenters) {
       presenter.unbind()

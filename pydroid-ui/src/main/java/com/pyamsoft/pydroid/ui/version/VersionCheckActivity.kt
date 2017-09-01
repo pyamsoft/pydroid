@@ -23,16 +23,15 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.DisposableActivity
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.version.VersionCheckPresenter.CheckCallback
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider, CheckCallback {
+abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider {
 
   internal lateinit var presenter: VersionCheckPresenter
 
   @CallSuper
-  override fun provideBoundPresenters(): List<Presenter<*, *>> = listOf(presenter)
+  override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,19 +39,17 @@ abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider
       it.plusVersionCheckComponent(packageName, currentApplicationVersion).inject(this)
     }
 
-    presenter.create(Unit)
+    presenter.bind(Unit)
   }
 
-  @CallSuper override fun onStart() {
-    super.onStart()
-    presenter.start(this)
+  // Start in post resume in case dialog launches before resume() is complete for fragments
+  override fun onPostResume() {
+    super.onPostResume()
+    presenter.checkForUpdates(false, onUpdatedVersionFound = { current, updated ->
+      Timber.d("Updated version found. %d => %d", current, updated)
+      DialogUtil.guaranteeSingleDialogFragment(this,
+          VersionUpgradeDialog.newInstance(applicationName, current, updated),
+          VersionUpgradeDialog.TAG)
+    })
   }
-
-  override fun onUpdatedVersionFound(current: Int, updated: Int) {
-    Timber.d("Updated version found. %d => %d", current, updated)
-    DialogUtil.guaranteeSingleDialogFragment(this,
-        VersionUpgradeDialog.newInstance(applicationName, current, updated),
-        VersionUpgradeDialog.TAG)
-  }
-
 }

@@ -46,7 +46,7 @@ class RatingDialog : DisposableDialogFragment() {
   private lateinit var binding: DialogRatingBinding
   internal lateinit var presenter: RatingSavePresenter
 
-  override fun provideBoundPresenters(): List<Presenter<*, *>> = listOf(presenter)
+  override fun provideBoundPresenters(): List<Presenter< *>> = listOf(presenter)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -112,7 +112,7 @@ class RatingDialog : DisposableDialogFragment() {
       })
     }
 
-    presenter.create(Unit)
+    presenter.bind(Unit)
   }
 
   private fun initDialog() {
@@ -121,11 +121,6 @@ class RatingDialog : DisposableDialogFragment() {
     iconTask = LoaderHelper.unload(iconTask)
     iconTask = ImageLoader.fromResource(context, changeLogIcon).into(binding.ratingIcon)
     binding.ratingTextChange.text = changeLogText
-  }
-
-  override fun onStart() {
-    super.onStart()
-    presenter.start(Unit)
   }
 
   override fun onResume() {

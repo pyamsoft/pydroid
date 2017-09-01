@@ -23,12 +23,12 @@ import timber.log.Timber
 internal class RatingSavePresenter internal constructor(private val currentVersion: Int,
     private val interactor: RatingInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<Unit, Unit>(
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<Unit>(
     computationScheduler, ioScheduler, mainThreadScheduler) {
 
 
   fun saveRating(onRatingSaved: () -> Unit, onRatingDialogSaveError: (Throwable) -> Unit) {
-    disposeOnDestroy {
+    dispose {
       interactor.saveRating(currentVersion).subscribeOn(ioScheduler).observeOn(
           mainThreadScheduler).subscribe({
         Timber.d("Saved current version code: %d", currentVersion)

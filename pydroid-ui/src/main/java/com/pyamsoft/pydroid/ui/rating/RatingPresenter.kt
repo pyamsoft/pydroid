@@ -23,12 +23,12 @@ import timber.log.Timber
 internal class RatingPresenter internal constructor(private val currentVersion: Int,
     private val interactor: RatingInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<Unit, Unit>(
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<Unit>(
     computationScheduler, ioScheduler, mainThreadScheduler) {
 
   internal fun loadRatingDialog(force: Boolean, onShowRatingDialog: () -> Unit,
       onRatingDialogLoadError: (Throwable) -> Unit) {
-    disposeOnStop {
+    dispose {
       interactor.needsToViewRating(currentVersion, force).subscribeOn(
           ioScheduler).observeOn(mainThreadScheduler).subscribe({
         if (it) {

@@ -31,7 +31,7 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
 
   internal lateinit var ratingPresenter: RatingPresenter
 
-  @CallSuper override fun provideBoundPresenters(): List<Presenter<*, *>> =
+  @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> =
       listOf(ratingPresenter) + super.provideBoundPresenters()
 
   override val changeLogText: Spannable
@@ -77,17 +77,7 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
       it.plusRatingComponent(currentApplicationVersion).inject(this)
     }
 
-    presenter.create(Unit)
-  }
-
-  override fun onStart() {
-    super.onStart()
-    ratingPresenter.start(Unit)
-  }
-
-  override fun onStop() {
-    super.onStop()
-    ratingPresenter.stop()
+    presenter.bind(Unit)
   }
 
   override fun onPostResume() {
@@ -101,10 +91,5 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
     }, onRatingDialogLoadError = {
       Timber.e(it, "Could not load rating dialog")
     })
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    presenter.destroy()
   }
 }

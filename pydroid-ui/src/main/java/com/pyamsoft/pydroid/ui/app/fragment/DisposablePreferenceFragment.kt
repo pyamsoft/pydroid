@@ -28,14 +28,14 @@ abstract class DisposablePreferenceFragment : ActionBarPreferenceFragment() {
   /**
    * Cache so that the bound presenter list cannot change once it is set
    */
-  private var boundPresenterSnapshot: List<Presenter<*, *>>? = null
+  private var boundPresenterSnapshot: List<Presenter<*>>? = null
 
   /**
    * List of presenters to bind to this Fragment
    */
-  @CheckResult protected abstract fun provideBoundPresenters(): List<Presenter<*, *>>
+  @CheckResult protected abstract fun provideBoundPresenters(): List<Presenter<*>>
 
-  @CheckResult private fun getBoundPresenters(): List<Presenter<*, *>> {
+  @CheckResult private fun getBoundPresenters(): List<Presenter<*>> {
     if (boundPresenterSnapshot == null) {
       boundPresenterSnapshot = provideBoundPresenters()
     }
@@ -49,20 +49,11 @@ abstract class DisposablePreferenceFragment : ActionBarPreferenceFragment() {
   }
 
   @CallSuper
-  override fun onStop() {
-    super.onStop()
+  override fun onDestroyView() {
+    super.onDestroyView()
     val presenters = getBoundPresenters()
     for (presenter in presenters) {
-      presenter.stop()
-    }
-  }
-
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    val presenters = getBoundPresenters()
-    for (presenter in presenters) {
-      presenter.destroy()
+      presenter.unbind()
     }
   }
 

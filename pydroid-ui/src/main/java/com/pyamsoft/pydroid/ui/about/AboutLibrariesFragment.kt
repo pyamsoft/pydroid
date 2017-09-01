@@ -50,7 +50,7 @@ class AboutLibrariesFragment : DisposableFragment(), LoadCallback {
   private var listener: ViewPager.OnPageChangeListener? = null
   private lateinit var binding: FragmentAboutLibrariesBinding
 
-  override fun provideBoundPresenters(): List<Presenter<*, *>> = listOf(presenter)
+  override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -78,7 +78,7 @@ class AboutLibrariesFragment : DisposableFragment(), LoadCallback {
     setupViewPager(savedInstanceState)
     setupArrows()
 
-    presenter.create(this)
+    presenter.bind(this)
   }
 
   override fun onLicenseLoaded(model: AboutLibrariesModel) {
@@ -143,11 +143,6 @@ class AboutLibrariesFragment : DisposableFragment(), LoadCallback {
     binding.arrowRight.setOnClickListener {
       binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
     }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    presenter.start(Unit)
   }
 
   override fun onResume() {

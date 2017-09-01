@@ -19,12 +19,11 @@ package com.pyamsoft.pydroid.ui.version
 import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import android.support.v7.app.AlertDialog
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 import com.pyamsoft.pydroid.ui.social.Linker
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) class VersionUpgradeDialog : DialogFragmentBase() {
+class VersionUpgradeDialog : DialogFragmentBase() {
 
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0
@@ -66,7 +65,8 @@ import com.pyamsoft.pydroid.ui.social.Linker
     private const val KEY_LATEST_VERSION = "key_latest_version"
     private const val KEY_CURRENT_VERSION = "key_current_version"
 
-    @CheckResult fun newInstance(applicationName: String, currentVersion: Int,
+    @CheckResult
+    fun newInstance(applicationName: String, currentVersion: Int,
         latestVersion: Int): VersionUpgradeDialog {
       val args = Bundle()
       val fragment = VersionUpgradeDialog()

@@ -16,20 +16,29 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.content.Context
 import android.support.annotation.CheckResult
-import android.support.annotation.DrawableRes
-import com.pyamsoft.pydroid.loader.resource.ResourceLoader
-import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
+import android.support.annotation.ColorRes
+import android.widget.ImageView
+import com.pyamsoft.pydroid.loader.loaded.Loaded
+import com.pyamsoft.pydroid.loader.targets.Target
 
-object ImageLoader {
+interface Loader<T> {
 
-  @JvmStatic
   @CheckResult
-  fun <T : GenericLoader<*>> fromLoader(loader: T): T = loader
+  fun tint(@ColorRes color: Int): Loader<T>
 
-  @JvmStatic
   @CheckResult
-  fun fromResource(context: Context,
-      @DrawableRes resource: Int): ResourceLoader = RxResourceLoader(context, resource)
+  fun withStartAction(startAction: () -> Unit): Loader<T>
+
+  @CheckResult
+  fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T>
+
+  @CheckResult
+  fun withCompleteAction(completeAction: (T) -> Unit): Loader<T>
+
+  @CheckResult
+  fun into(imageView: ImageView): Loaded
+
+  @CheckResult
+  fun into(target: Target<T>): Loaded
 }

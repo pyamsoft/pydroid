@@ -16,28 +16,32 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.support.annotation.CheckResult
 import android.support.annotation.ColorRes
-import android.widget.ImageView
-import com.pyamsoft.pydroid.loader.loaded.Loaded
-import com.pyamsoft.pydroid.loader.targets.Target
 
-abstract class GenericLoader<out L, T> protected constructor() {
+abstract class GenericLoader<T> protected constructor() : Loader<T> {
 
   @JvmField protected var startAction: () -> Unit = {}
   @JvmField protected var errorAction: (Throwable) -> Unit = {}
   @JvmField protected var completeAction: (T) -> Unit = {}
   @JvmField protected var tint: Int = 0
 
-  @CheckResult abstract fun tint(@ColorRes color: Int): L
+  final override fun withStartAction(startAction: () -> Unit): Loader<T> {
+    this.startAction = startAction
+    return this
+  }
 
-  @CheckResult abstract fun withStartAction(startAction: () -> Unit): L
+  final override fun withCompleteAction(completeAction: (T) -> Unit): Loader<T> {
+    this.completeAction = completeAction
+    return this
+  }
 
-  @CheckResult abstract fun withErrorAction(errorAction: (Throwable) -> Unit): L
+  final override fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T> {
+    this.errorAction = errorAction
+    return this
+  }
 
-  @CheckResult abstract fun withCompleteAction(completeAction: (T) -> Unit): L
-
-  @CheckResult abstract fun into(imageView: ImageView): Loaded
-
-  @CheckResult abstract fun into(target: Target<T>): Loaded
+  final override fun tint(@ColorRes color: Int): Loader<T> {
+    this.tint = color
+    return this
+  }
 }

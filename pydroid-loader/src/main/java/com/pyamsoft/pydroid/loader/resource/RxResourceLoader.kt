@@ -41,25 +41,9 @@ class RxResourceLoader(context: Context, @DrawableRes resource: Int) : ResourceL
     subScheduler.enforceIo()
   }
 
-  override fun withCompleteAction(completeAction: (Drawable) -> Unit): ResourceLoader {
-    this.completeAction = completeAction
-    return this
-  }
-
-  override fun withErrorAction(errorAction: (Throwable) -> Unit): ResourceLoader {
-    this.errorAction = errorAction
-    return this
-  }
-
-  override fun withStartAction(startAction: () -> Unit): ResourceLoader {
-    this.startAction = startAction
-    return this
-  }
-
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(
-        Single.fromCallable { loadResource(appContext) }.subscribeOn(subScheduler).observeOn(
-            obsScheduler)
+        Single.fromCallable { loadResource() }.subscribeOn(subScheduler).observeOn(obsScheduler)
             .doOnSubscribe { startAction() }
             .doOnError {
               Timber.e(it, "Error loading AsyncDrawable")

@@ -36,7 +36,7 @@ object StringUtil {
 
   /**
    * Takes an array of strings and creates a SpannableStringBuilder out of them If the array is
-   * null or empty, returns null
+   * null or empty, throws if null
    */
   @JvmStatic @CheckResult fun createBuilder(vararg strs: String): SpannableStringBuilder {
     val size = strs.size
@@ -51,6 +51,9 @@ object StringUtil {
     }
   }
 
+  /**
+   * Build a list of strings with line breaks in between each string
+   */
   @JvmStatic @CheckResult fun createLineBreakBuilder(vararg strs: String): SpannableStringBuilder {
     val size = strs.size
     if (size > 0) {

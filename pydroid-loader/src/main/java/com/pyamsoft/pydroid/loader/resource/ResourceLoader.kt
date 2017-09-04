@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.loader.resource
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
-import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.v7.content.res.AppCompatResources
 import android.widget.ImageView
@@ -31,13 +30,13 @@ import com.pyamsoft.pydroid.util.DrawableUtil
 
 /**
  * Loads Images from Resources.
-
- * Supports Drawable resource types
+ *
+ * Supports Drawable resource types, is not threaded
  */
 abstract class ResourceLoader protected constructor(context: Context,
-    @param:DrawableRes private val resource: Int) : GenericLoader<ResourceLoader, Drawable>() {
+    @param:DrawableRes private val resource: Int) : GenericLoader<Drawable>() {
 
-  @JvmField protected val appContext: Context = context.applicationContext
+  private val appContext: Context = context.applicationContext
 
   init {
     if (this.resource == 0) {
@@ -45,24 +44,19 @@ abstract class ResourceLoader protected constructor(context: Context,
     }
   }
 
-  final override fun tint(@ColorRes color: Int): ResourceLoader {
-    this.tint = color
-    return this
-  }
-
   final override fun into(imageView: ImageView): Loaded =
       into(DrawableImageTarget.forImageView(imageView))
 
   final override fun into(target: Target<Drawable>): Loaded = load(target, resource)
 
-  @CheckResult protected fun loadResource(context: Context): Drawable {
-    val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(context, resource)
+  @CheckResult protected fun loadResource(): Drawable {
+    val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(appContext, resource)
     if (possiblyLoaded == null) {
       throw NullPointerException("Could not load drawable for resource: " + resource)
     } else {
       return if (tint != 0) {
         // Return
-        DrawableUtil.tintDrawableFromRes(context, possiblyLoaded, tint)
+        DrawableUtil.tintDrawableFromRes(appContext, possiblyLoaded, tint)
       } else {
         // Return
         possiblyLoaded

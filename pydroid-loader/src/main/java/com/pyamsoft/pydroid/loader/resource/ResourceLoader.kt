@@ -50,26 +50,10 @@ abstract class ResourceLoader protected constructor(context: Context,
     return this
   }
 
-  final override fun withStartAction(startAction: (Target<Drawable>) -> Unit): ResourceLoader {
-    this.startAction = startAction
-    return this
-  }
-
-  final override fun withErrorAction(errorAction: (Target<Drawable>) -> Unit): ResourceLoader {
-    this.errorAction = errorAction
-    return this
-  }
-
-  final override fun withCompleteAction(
-      completeAction: (Target<Drawable>) -> Unit): ResourceLoader {
-    this.completeAction = completeAction
-    return this
-  }
-
-  override fun into(imageView: ImageView): Loaded =
+  final override fun into(imageView: ImageView): Loaded =
       into(DrawableImageTarget.forImageView(imageView))
 
-  override fun into(target: Target<Drawable>): Loaded = load(target, resource)
+  final override fun into(target: Target<Drawable>): Loaded = load(target, resource)
 
   @CheckResult protected fun loadResource(context: Context): Drawable {
     val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(context, resource)

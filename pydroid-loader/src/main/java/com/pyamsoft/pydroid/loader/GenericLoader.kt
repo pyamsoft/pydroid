@@ -24,18 +24,18 @@ import com.pyamsoft.pydroid.loader.targets.Target
 
 abstract class GenericLoader<out L, T> protected constructor() {
 
-  @JvmField protected var startAction: (Target<T>) -> Unit = {}
-  @JvmField protected var errorAction: (Target<T>) -> Unit = {}
-  @JvmField protected var completeAction: (Target<T>) -> Unit = {}
+  @JvmField protected var startAction: () -> Unit = {}
+  @JvmField protected var errorAction: (Throwable) -> Unit = {}
+  @JvmField protected var completeAction: (T) -> Unit = {}
   @JvmField protected var tint: Int = 0
 
   @CheckResult abstract fun tint(@ColorRes color: Int): L
 
-  @CheckResult abstract fun withStartAction(startAction: (Target<T>) -> Unit): L
+  @CheckResult abstract fun withStartAction(startAction: () -> Unit): L
 
-  @CheckResult abstract fun withErrorAction(errorAction: (Target<T>) -> Unit): L
+  @CheckResult abstract fun withErrorAction(errorAction: (Throwable) -> Unit): L
 
-  @CheckResult abstract fun withCompleteAction(completeAction: (Target<T>) -> Unit): L
+  @CheckResult abstract fun withCompleteAction(completeAction: (T) -> Unit): L
 
   @CheckResult abstract fun into(imageView: ImageView): Loaded
 

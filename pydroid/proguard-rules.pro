@@ -18,6 +18,7 @@
 -dontwarn java.nio.file.OpenOption
 
 # Retrofit2
+-dontwarn javax.annotation.**
 -dontwarn retrofit2.Platform$Java8
 -dontnote retrofit2.Platform
 -keepattributes Signature

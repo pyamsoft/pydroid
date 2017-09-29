@@ -29,7 +29,7 @@ internal class VersionCheckInteractorCache internal constructor(
       if (force || cachedResponse == null) {
         cachedResponse = impl.checkVersion(packageName, force).cache()
       }
-      return@defer cachedResponse
+      return@defer cachedResponse?.doOnError { clearCache() }
     }
   }
 

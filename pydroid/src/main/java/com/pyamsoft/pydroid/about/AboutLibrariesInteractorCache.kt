@@ -29,7 +29,7 @@ internal class AboutLibrariesInteractorCache internal constructor(
       if (force || cachedLicenses == null) {
         cachedLicenses = impl.loadLicenses(force).cache()
       }
-      return@defer cachedLicenses
+      return@defer cachedLicenses?.doOnError { clearCache() }
     }
   }
 

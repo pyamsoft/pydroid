@@ -24,7 +24,7 @@ import android.support.annotation.CheckResult
 /**
  * Interface respected by all Injector managers
  */
-interface SimpleInjector<out T :Any> {
+interface SimpleInjector {
 
   /**
    * The name for this injector
@@ -34,6 +34,7 @@ interface SimpleInjector<out T :Any> {
   /**
    * Obtain the singleton instance of this injector
    */
-  @CheckResult fun obtain(context: Context) : T
+  @CheckResult
+  fun obtain(context: Context): Any
 }
 

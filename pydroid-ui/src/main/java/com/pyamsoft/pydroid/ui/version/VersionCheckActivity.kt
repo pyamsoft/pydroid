@@ -37,10 +37,8 @@ abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.with {
-      it.plusVersionCheckComponent(packageName, currentApplicationVersion).inject(this)
-    }
-
+    PYDroid.obtain(this).plusVersionCheckComponent(packageName, currentApplicationVersion).inject(
+        this)
     presenter.bind(Unit)
   }
 

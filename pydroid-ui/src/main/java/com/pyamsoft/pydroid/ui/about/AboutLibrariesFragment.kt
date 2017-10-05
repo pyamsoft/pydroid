@@ -64,9 +64,7 @@ class AboutLibrariesFragment : DisposableFragment(), LoadCallback {
       NOT_LAST -> false
     }
 
-    PYDroid.with {
-      it.inject(this)
-    }
+    PYDroid.obtain(activity).inject(this)
   }
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

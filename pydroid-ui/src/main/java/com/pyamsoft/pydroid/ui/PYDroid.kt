@@ -23,16 +23,23 @@ import android.os.StrictMode
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.SimpleInjector
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
+/**
+ * PYDroid library entry point
+ *
+ * This actually does not inherit from the SimpleInjector interface because we want the
+ * obtain method to stay internal
+ */
 object PYDroid {
 
   @RestrictTo(RestrictTo.Scope.LIBRARY) private var component: PYDroidComponent? = null
   @RestrictTo(RestrictTo.Scope.LIBRARY) private var debugMode = false
 
-  @RestrictTo(
-      RestrictTo.Scope.LIBRARY)
+  @CheckResult
+  @RestrictTo(RestrictTo.Scope.LIBRARY)
   @JvmStatic private fun guaranteeNonNull(): PYDroidComponent {
     val obj = component
     if (obj == null) {
@@ -40,6 +47,20 @@ object PYDroid {
     } else {
       return obj
     }
+  }
+
+  private fun setStrictMode() {
+    StrictMode.setThreadPolicy(
+        StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()
+            .permitDiskWrites().penaltyFlashScreen().build())
+    StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
+  }
+
+  @CheckResult
+  @JvmStatic
+  internal fun obtain(context: Context): PYDroidComponent {
+    initialize(context, debugMode)
+    return guaranteeNonNull()
   }
 
   /**
@@ -59,8 +80,8 @@ object PYDroid {
   @JvmStatic
   fun initialize(context: Context, debug: Boolean,
       allowReInitialize: Boolean = false) {
-    debugMode = debug
     if (component == null || allowReInitialize) {
+      debugMode = debug
       component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))
       if (debug) {
         Timber.plant(Timber.DebugTree())
@@ -68,20 +89,5 @@ object PYDroid {
       }
       UiLicenses.addLicenses()
     }
-  }
-
-  private fun setStrictMode() {
-    StrictMode.setThreadPolicy(
-        StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads().permitDiskWrites().penaltyFlashScreen().build())
-    StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
-  }
-
-  /**
-   * For use internally in the library
-   */
-  @RestrictTo(RestrictTo.Scope.LIBRARY)
-  @JvmStatic internal fun with(
-      func: (PYDroidComponent) -> Unit) {
-    func(guaranteeNonNull())
   }
 }

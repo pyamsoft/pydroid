@@ -35,6 +35,6 @@ interface SimpleInjector {
    * Obtain the singleton instance of this injector
    */
   @CheckResult
-  fun obtain(context: Context): Any
+  fun <T : Any> obtain(context: Context): T
 }
 

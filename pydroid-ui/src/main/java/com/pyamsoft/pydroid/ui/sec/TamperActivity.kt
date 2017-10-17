@@ -50,9 +50,13 @@ abstract class TamperActivity : RatingActivity() {
     if (PYDroid.isDebugMode()) {
       return if (installer == null) {
         Timber.i("Application is installed from APK. This is fine in DEBUG mode")
+
+        // Return
         false
       } else {
         Timber.e("DEBUG Application is not installed from APK")
+
+        // Return
         true
       }
     } else {

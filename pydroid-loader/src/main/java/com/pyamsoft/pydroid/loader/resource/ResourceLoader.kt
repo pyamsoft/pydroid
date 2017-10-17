@@ -24,6 +24,7 @@ import android.support.annotation.CheckResult
 import android.support.annotation.DrawableRes
 import android.support.v7.content.res.AppCompatResources
 import android.widget.ImageView
+import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.loader.GenericLoader
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
@@ -52,17 +53,14 @@ abstract class ResourceLoader protected constructor(context: Context,
   final override fun into(target: Target<Drawable>): Loaded = load(target, resource)
 
   @CheckResult protected fun loadResource(): Drawable {
-    val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(appContext, resource)
-    if (possiblyLoaded == null) {
-      throw NullPointerException("Could not load drawable for resource: " + resource)
+    val possiblyLoaded: Drawable = AppCompatResources.getDrawable(appContext, resource).notNull(
+        "possiblyLoaded")
+    return if (tint != 0) {
+      // Return
+      DrawableUtil.tintDrawableFromRes(appContext, possiblyLoaded, tint)
     } else {
-      return if (tint != 0) {
-        // Return
-        DrawableUtil.tintDrawableFromRes(appContext, possiblyLoaded, tint)
-      } else {
-        // Return
-        possiblyLoaded
-      }
+      // Return
+      possiblyLoaded
     }
   }
 

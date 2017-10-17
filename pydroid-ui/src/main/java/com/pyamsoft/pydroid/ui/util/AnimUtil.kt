@@ -31,6 +31,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import android.widget.TextView
+import com.pyamsoft.pydroid.helper.notNull
 
 object AnimUtil {
 
@@ -43,12 +44,7 @@ object AnimUtil {
           android.R.interpolator.overshoot)
     }
 
-    val obj: Interpolator? = overshootInterpolator
-    if (obj == null) {
-      throw IllegalStateException("Overshoot interpolator is NULL")
-    } else {
-      return obj
-    }
+    return overshootInterpolator.notNull("overshootInterpolator")
   }
 
   @CheckResult private fun getAccelCubicInterpolator(context: Context): Interpolator {
@@ -57,12 +53,7 @@ object AnimUtil {
           android.R.interpolator.accelerate_cubic)
     }
 
-    val obj: Interpolator? = accelCubicInterpolator
-    if (obj == null) {
-      throw IllegalStateException("AccelCubic interpolator is NULL")
-    } else {
-      return obj
-    }
+    return accelCubicInterpolator.notNull("accelCubicInterpolator")
   }
 
   @JvmStatic

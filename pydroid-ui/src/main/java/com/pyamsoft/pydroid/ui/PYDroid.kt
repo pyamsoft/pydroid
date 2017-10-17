@@ -21,9 +21,8 @@ package com.pyamsoft.pydroid.ui
 import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.SimpleInjector
+import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
@@ -35,19 +34,9 @@ import timber.log.Timber
  */
 object PYDroid {
 
-  @RestrictTo(RestrictTo.Scope.LIBRARY) private var component: PYDroidComponent? = null
-  @RestrictTo(RestrictTo.Scope.LIBRARY) private var debugMode = false
+  private var component: PYDroidComponent? = null
+  private var debugMode = false
 
-  @CheckResult
-  @RestrictTo(RestrictTo.Scope.LIBRARY)
-  @JvmStatic private fun guaranteeNonNull(): PYDroidComponent {
-    val obj = component
-    if (obj == null) {
-      throw IllegalStateException("Component must undergo initialize(Context, Boolean) before use")
-    } else {
-      return obj
-    }
-  }
 
   private fun setStrictMode() {
     StrictMode.setThreadPolicy(
@@ -59,8 +48,8 @@ object PYDroid {
   @CheckResult
   @JvmStatic
   internal fun obtain(context: Context): PYDroidComponent {
-    initialize(context, debugMode)
-    return guaranteeNonNull()
+    init(context, debugMode)
+    return component.notNull("component")
   }
 
   /**
@@ -69,7 +58,7 @@ object PYDroid {
   @JvmStatic
   @CheckResult
   fun isDebugMode(): Boolean {
-    guaranteeNonNull()
+    component.notNull("component")
     return debugMode
   }
 
@@ -78,16 +67,20 @@ object PYDroid {
    */
   @JvmOverloads
   @JvmStatic
-  fun initialize(context: Context, debug: Boolean,
+  fun init(context: Context, debug: Boolean,
       allowReInitialize: Boolean = false) {
     if (component == null || allowReInitialize) {
-      debugMode = debug
-      component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))
-      if (debug) {
-        Timber.plant(Timber.DebugTree())
-        setStrictMode()
-      }
-      UiLicenses.addLicenses()
+      initialize(context, debug)
     }
+  }
+
+  private fun initialize(context: Context, debug: Boolean) {
+    debugMode = debug
+    component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))
+    if (debug) {
+      Timber.plant(Timber.DebugTree())
+      setStrictMode()
+    }
+    UiLicenses.addLicenses()
   }
 }

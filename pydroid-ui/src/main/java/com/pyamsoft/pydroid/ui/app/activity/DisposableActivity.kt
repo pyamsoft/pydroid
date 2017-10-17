@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.app.activity
 
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.presenter.Presenter
 
 /**
@@ -42,12 +43,7 @@ abstract class DisposableActivity : BackPressConfirmActivity() {
       boundPresenterSnapshot = provideBoundPresenters()
     }
 
-    val presenters = boundPresenterSnapshot
-    if (presenters == null) {
-      throw IllegalStateException("Bound Presenter list cannot be NULL")
-    } else {
-      return presenters
-    }
+    return boundPresenterSnapshot.notNull("boundPresenterSnapshot")
   }
 
   @CallSuper

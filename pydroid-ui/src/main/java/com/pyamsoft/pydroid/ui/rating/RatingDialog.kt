@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
 import com.pyamsoft.pydroid.presenter.Presenter
@@ -64,13 +65,11 @@ class RatingDialog : DisposableDialogFragment() {
       throw RuntimeException("Version code cannot be 0")
     }
 
-    if (changeLogText == null) {
-      throw RuntimeException("Change Log text cannot be NULL")
-    }
-
     if (changeLogIcon == 0) {
       throw RuntimeException("Change Log Icon Id cannot be 0")
     }
+
+    changeLogText.notNull("changeLogText")
 
     PYDroid.obtain(activity).plusRatingComponent(versionCode).inject(this)
   }

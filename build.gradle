@@ -44,10 +44,10 @@ buildscript {
     supportLib = "26.1.0"
     timber = "4.5.1"
     autoValue = "1.5.1"
-    autoValueGSON = "0.5.0"
+    autoValueGSON = "0.6.0"
     retrofit = "2.3.0"
-    retrofitLogging = "3.8.1"
-    rxjava = "2.1.4"
+    retrofitLogging = "3.9.0"
+    rxjava = "2.1.5"
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
   }

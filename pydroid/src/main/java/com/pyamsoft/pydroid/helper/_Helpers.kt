@@ -16,31 +16,18 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.version
+@file:JvmName("Helper")
 
-import com.pyamsoft.pydroid.data.Cache
-import io.reactivex.Single
+package com.pyamsoft.pydroid.helper
 
-internal class VersionCheckInteractorCache internal constructor(
-    private val impl: VersionCheckInteractor) : VersionCheckInteractor, Cache {
-
-  private var cachedResponse: Single<Int>? = null
-
-  override fun checkVersion(packageName: String, force: Boolean): Single<Int> {
-    return Single.defer {
-      val response: Single<Int>
-      val cache = cachedResponse
-      if (force || cache == null) {
-        response = impl.checkVersion(packageName, force).cache()
-        cachedResponse = response
-      } else {
-        response = cache
-      }
-      return@defer response.doOnError { clearCache() }
-    }
-  }
-
-  override fun clearCache() {
-    cachedResponse = null
+@JvmOverloads
+fun <T : Any> T?.notNull(name: String = ""): T {
+  val obj: T? = this
+  if (obj == null) {
+    throw IllegalStateException(
+        "${if (name.isBlank()) "Variable" else "'$name'"} should not be NULL")
+  } else {
+    return obj
   }
 }
+

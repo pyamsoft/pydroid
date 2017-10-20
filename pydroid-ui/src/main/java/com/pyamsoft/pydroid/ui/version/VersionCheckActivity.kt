@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider {
+abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider, VersionCheckPresenter.View {
 
   internal lateinit var presenter: VersionCheckPresenter
 
@@ -37,19 +37,21 @@ abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain(this).plusVersionCheckComponent(packageName, currentApplicationVersion).inject(
-        this)
-    presenter.bind(Unit)
+    PYDroid.obtain(this).plusVersionCheckComponent(packageName, currentApplicationVersion)
+        .inject(this)
+    presenter.bind(this)
   }
 
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
-    presenter.checkForUpdates(false, onUpdatedVersionFound = { current, updated ->
-      Timber.d("Updated version found. %d => %d", current, updated)
-      DialogUtil.guaranteeSingleDialogFragment(this,
-          VersionUpgradeDialog.newInstance(applicationName, current, updated),
-          VersionUpgradeDialog.TAG)
-    })
+    presenter.checkForUpdates(false)
+  }
+
+  override fun onUpdatedVersionFound(current: Int, updated: Int) {
+    Timber.d("Updated version found. %d => %d", current, updated)
+    DialogUtil.guaranteeSingleDialogFragment(this,
+        VersionUpgradeDialog.newInstance(applicationName, current, updated),
+        VersionUpgradeDialog.TAG)
   }
 }

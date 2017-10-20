@@ -19,6 +19,7 @@
 package com.pyamsoft.pydroid.version
 
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.version.VersionCheckPresenter.View
 import io.reactivex.Scheduler
 import retrofit2.HttpException
 import timber.log.Timber
@@ -27,19 +28,18 @@ class VersionCheckPresenter internal constructor(private val packageName: String
     private val currentVersionCode: Int,
     private val interactor: VersionCheckInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<Unit>(
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(
     computationScheduler, ioScheduler, mainThreadScheduler) {
 
-  fun checkForUpdates(force: Boolean,
-      onUpdatedVersionFound: (current: Int, updated: Int) -> Unit) {
+  fun checkForUpdates(force: Boolean) {
     dispose {
       interactor.checkVersion(packageName, force).subscribeOn(ioScheduler).observeOn(
-          mainThreadScheduler).subscribe({
+          mainThreadScheduler).subscribe({ updated ->
         Timber.i("Update check finished")
         Timber.i("Current version: %d", currentVersionCode)
-        Timber.i("Latest version: %d", it)
-        if (currentVersionCode < it) {
-          onUpdatedVersionFound(currentVersionCode, it)
+        Timber.i("Latest version: %d", updated)
+        if (currentVersionCode < updated) {
+          withView<UpdateCallback> { it.onUpdatedVersionFound(currentVersionCode, updated) }
         }
       }, {
         if (it is HttpException) {
@@ -49,5 +49,12 @@ class VersionCheckPresenter internal constructor(private val packageName: String
         }
       })
     }
+  }
+
+  interface View : UpdateCallback
+
+  interface UpdateCallback {
+
+    fun onUpdatedVersionFound(current: Int, updated: Int)
   }
 }

@@ -23,9 +23,11 @@ import io.reactivex.disposables.Disposable
 
 abstract class Presenter<in V : Any> protected constructor() {
 
+  private var view: V? = null
   private val disposables: CompositeDisposable = CompositeDisposable()
 
   fun bind(v: V) {
+    view = v
     onBind(v)
   }
 
@@ -38,6 +40,7 @@ abstract class Presenter<in V : Any> protected constructor() {
 
   fun unbind() {
     onUnbind()
+    view = null
     disposables.clear()
   }
 
@@ -60,5 +63,15 @@ abstract class Presenter<in V : Any> protected constructor() {
    */
   protected fun dispose(disposable: Disposable) {
     disposables.add(disposable)
+  }
+
+  /**
+   * Act on the view
+   */
+  protected fun <T : Any> withView(func: (T) -> Unit) {
+    view?.let {
+      @Suppress("UNCHECKED_CAST")
+      func(it as T)
+    }
   }
 }

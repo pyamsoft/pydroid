@@ -18,29 +18,31 @@
 
 package com.pyamsoft.pydroid.about
 
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.LoadCallback
+import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.View
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(private val interactor: AboutLibrariesInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<LoadCallback>(computationScheduler,
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler,
     ioScheduler, mainThreadScheduler) {
 
-  override fun onBind(v: LoadCallback) {
+  override fun onBind(v: View) {
     super.onBind(v)
-    loadLicenses(false, v::onLicenseLoaded, v::onAllLoaded)
+    loadLicenses(false)
   }
 
-  private fun loadLicenses(force: Boolean, onLicenseLoaded: (AboutLibrariesModel) -> Unit,
-      onAllLoaded: () -> Unit) {
+  private fun loadLicenses(force: Boolean) {
     dispose {
-      interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(
-          mainThreadScheduler).doAfterTerminate { onAllLoaded() }.subscribe({ onLicenseLoaded(it) },
-          { Timber.e(it, "onError loading licenses") })
+      interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(mainThreadScheduler)
+          .doAfterTerminate { withView<LoadCallback> { it.onAllLoaded() } }
+          .subscribe({ model -> withView<LoadCallback> { it.onLicenseLoaded(model) } },
+              { Timber.e(it, "onError loading licenses") })
     }
   }
+
+  interface View : LoadCallback
 
   interface LoadCallback {
 

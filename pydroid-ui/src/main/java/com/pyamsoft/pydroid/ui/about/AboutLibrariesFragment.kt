@@ -43,7 +43,7 @@ import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import timber.log.Timber
 
 
-class AboutLibrariesFragment : DisposableFragment(), LoadCallback {
+class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.View {
 
   internal lateinit var presenter: AboutLibrariesPresenter
   internal lateinit var pagerAdapter: AboutPagerAdapter

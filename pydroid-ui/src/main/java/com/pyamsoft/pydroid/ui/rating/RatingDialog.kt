@@ -39,7 +39,7 @@ import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 
-class RatingDialog : DisposableDialogFragment() {
+class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
 
   private lateinit var rateLink: String
   private var versionCode: Int = 0
@@ -71,7 +71,7 @@ class RatingDialog : DisposableDialogFragment() {
 
     changeLogText.notNull("changeLogText")
 
-    PYDroid.obtain(activity).plusRatingComponent(versionCode).inject(this)
+    PYDroid.obtain(context.applicationContext).plusRatingComponent(versionCode).inject(this)
   }
 
   override fun onDestroyView() {
@@ -89,29 +89,26 @@ class RatingDialog : DisposableDialogFragment() {
     super.onViewCreated(view, savedInstanceState)
     initDialog()
 
-    binding.ratingBtnNoThanks.setOnClickListener {
-      presenter.saveRating({ dismiss() }, {
-        Toasty.makeText(context.applicationContext,
-            "Error occurred while dismissing dialog. May show again later",
-            Toasty.LENGTH_SHORT).show()
-        dismiss()
-      })
+    binding.ratingBtnNoThanks.setOnClickListener { presenter.saveRating(false) }
+    binding.ratingBtnGoRate.setOnClickListener { presenter.saveRating(true) }
+
+    presenter.bind(this)
+  }
+
+  override fun onRatingSaved(accept: Boolean) {
+    if (accept) {
+      val fullLink = "market://details?id=" + rateLink
+      NetworkUtil.newLink(context.applicationContext, fullLink)
     }
 
-    binding.ratingBtnGoRate.setOnClickListener {
-      presenter.saveRating({
-        val fullLink = "market://details?id=" + rateLink
-        NetworkUtil.newLink(it.context.applicationContext, fullLink)
-        dismiss()
-      }, {
-        Toasty.makeText(context.applicationContext,
-            "Error occurred while dismissing dialog. May show again later",
-            Toasty.LENGTH_SHORT).show()
-        dismiss()
-      })
-    }
+    dismiss()
+  }
 
-    presenter.bind(Unit)
+  override fun onRatingDialogSaveError(throwable: Throwable) {
+    Toasty.makeText(context.applicationContext,
+        "Error occurred while dismissing dialog. May show again later",
+        Toasty.LENGTH_SHORT).show()
+    dismiss()
   }
 
   private fun initDialog() {

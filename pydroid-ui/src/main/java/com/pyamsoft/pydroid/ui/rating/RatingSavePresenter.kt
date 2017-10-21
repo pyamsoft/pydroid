@@ -19,26 +19,36 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.ui.rating.RatingSavePresenter.View
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 internal class RatingSavePresenter internal constructor(private val currentVersion: Int,
     private val interactor: RatingInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<Unit>(
+    mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(
     computationScheduler, ioScheduler, mainThreadScheduler) {
 
 
-  fun saveRating(onRatingSaved: () -> Unit, onRatingDialogSaveError: (Throwable) -> Unit) {
+  fun saveRating(accept: Boolean) {
     dispose {
       interactor.saveRating(currentVersion).subscribeOn(ioScheduler).observeOn(
           mainThreadScheduler).subscribe({
         Timber.d("Saved current version code: %d", currentVersion)
-        onRatingSaved()
+        view?.onRatingSaved(accept)
       }, {
         Timber.e(it, "Error saving rating dialog")
-        onRatingDialogSaveError(it)
+        view?.onRatingDialogSaveError(it)
       })
     }
+  }
+
+  interface View : SaveRatingCallback
+
+  interface SaveRatingCallback {
+
+    fun onRatingSaved(accept: Boolean)
+
+    fun onRatingDialogSaveError(throwable: Throwable)
   }
 }

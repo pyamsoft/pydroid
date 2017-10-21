@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.StringUtil
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider {
+abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider, RatingPresenter.View {
 
   internal lateinit var ratingPresenter: RatingPresenter
 
@@ -75,20 +75,22 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain(this).plusRatingComponent(currentApplicationVersion).inject(this)
-    presenter.bind(Unit)
+    PYDroid.obtain(applicationContext).plusRatingComponent(currentApplicationVersion).inject(this)
+    presenter.bind(this)
   }
 
   override fun onPostResume() {
     super.onPostResume()
 
     // Dialog must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
-    val activity = this
-    ratingPresenter.loadRatingDialog(false, onShowRatingDialog = {
-      DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
-          "rating")
-    }, onRatingDialogLoadError = {
-      Timber.e(it, "Could not load rating dialog")
-    })
+    ratingPresenter.loadRatingDialog(false)
+  }
+
+  override fun onShowRatingDialog() {
+    DialogUtil.guaranteeSingleDialogFragment(this, RatingDialog.newInstance(this), "rating")
+  }
+
+  override fun onRatingDialogLoadError(throwable: Throwable) {
+    Timber.e(throwable, "Could not load rating dialog")
   }
 }

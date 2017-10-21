@@ -43,16 +43,10 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragment() {
+abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragment(), VersionCheckPresenter.View {
 
   internal lateinit var presenter: VersionCheckPresenter
   private lateinit var toast: Toast
-  private val onUpdatedVersionFound: (Int, Int) -> Unit = { current, updated ->
-    Timber.d("Updated version found. %d => %d", current, updated)
-    DialogUtil.guaranteeSingleDialogFragment(activity,
-        VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current,
-            updated), VersionUpgradeDialog.TAG)
-  }
 
   @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
@@ -127,12 +121,19 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
       return@setOnPreferenceClickListener true
     }
 
-    presenter.bind(Unit)
+    presenter.bind(this)
   }
 
   override fun onStart() {
     super.onStart()
-    presenter.checkForUpdates(false, onUpdatedVersionFound)
+    presenter.checkForUpdates(false)
+  }
+
+  override fun onUpdatedVersionFound(current: Int, updated: Int) {
+    Timber.d("Updated version found. %d => %d", current, updated)
+    DialogUtil.guaranteeSingleDialogFragment(activity,
+        VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current,
+            updated), VersionUpgradeDialog.TAG)
   }
 
   /**
@@ -168,7 +169,7 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
    */
   protected open fun onCheckForUpdatesClicked(presenter: VersionCheckPresenter) {
     toast.show()
-    presenter.checkForUpdates(true, onUpdatedVersionFound)
+    presenter.checkForUpdates(true)
   }
 
   /**

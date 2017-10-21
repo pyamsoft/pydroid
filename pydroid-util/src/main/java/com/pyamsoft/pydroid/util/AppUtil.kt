@@ -24,12 +24,10 @@ import android.util.TypedValue
 
 object AppUtil {
 
-  @JvmStatic
   private val cachedDP: MutableMap<Float, Float> by lazy {
     HashMap<Float, Float>(10)
   }
 
-  @JvmStatic
   @CheckResult
   fun convertToDP(c: Context, px: Float): Float {
     return if (px <= 0F) {

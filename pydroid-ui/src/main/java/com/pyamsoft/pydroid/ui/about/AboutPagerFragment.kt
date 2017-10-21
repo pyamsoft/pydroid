@@ -74,7 +74,7 @@ class AboutPagerFragment : Fragment() {
     private const val KEY_HOMEPAGE = "key_homepage"
     private const val KEY_LICENSE = "key_license"
 
-    @JvmStatic
+
     @CheckResult
     fun newInstance(model: AboutLibrariesModel): AboutPagerFragment {
       val fragment = AboutPagerFragment()

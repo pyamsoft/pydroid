@@ -203,7 +203,7 @@ abstract class ActivityBase : AppCompatActivity() {
      *
      * Should be called from [Activity.onCreate] )}.
      */
-    @JvmStatic internal fun fixFocusedViewLeak(application: Application) {
+    internal fun fixFocusedViewLeak(application: Application) {
       // LeakCanary reports this bug within IC_MR1 and M
       val sdk = Build.VERSION.SDK_INT
       if (sdk < Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 || sdk > Build.VERSION_CODES.M) {

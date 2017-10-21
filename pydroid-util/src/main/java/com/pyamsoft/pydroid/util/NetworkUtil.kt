@@ -28,7 +28,7 @@ import timber.log.Timber
 
 object NetworkUtil {
 
-  @JvmStatic fun newLink(c: Context, link: String) {
+  fun newLink(c: Context, link: String) {
     val uri = Uri.parse(link)
     val intent = Intent(Intent.ACTION_VIEW)
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -43,7 +43,8 @@ object NetworkUtil {
     }
   }
 
-  @JvmStatic @CheckResult fun hasConnection(c: Context): Boolean {
+  @CheckResult
+  fun hasConnection(c: Context): Boolean {
     val connMan = c.applicationContext.getSystemService(
         Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connMan.activeNetworkInfo

@@ -45,7 +45,7 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
     /**
      * Create a new local bus instance to use
      */
-    @JvmStatic
+
     @CheckResult
     fun <T : Any> create(): EventBus<T> = RxBus()
 

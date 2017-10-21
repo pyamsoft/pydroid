@@ -29,7 +29,7 @@ abstract internal class AutoValueTypeAdapterFactory internal constructor() : Typ
 
   companion object {
 
-    @JvmStatic
+
     @CheckResult
     fun create(): TypeAdapterFactory =
         AutoValueGson_AutoValueTypeAdapterFactory()

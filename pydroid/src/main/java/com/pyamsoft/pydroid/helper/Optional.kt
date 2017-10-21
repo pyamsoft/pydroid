@@ -33,7 +33,7 @@ sealed class Optional<out T : Any> {
 
   companion object {
 
-    @JvmStatic
+
     @CheckResult
     fun <T : Any> asOptional(source: T?): Optional<T> = source.asOptional()
   }

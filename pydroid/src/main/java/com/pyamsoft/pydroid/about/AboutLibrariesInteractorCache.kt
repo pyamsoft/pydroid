@@ -28,11 +28,16 @@ internal class AboutLibrariesInteractorCache internal constructor(
 
   override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
     return Observable.defer {
-      if (force || cachedLicenses == null) {
-        cachedLicenses = impl.loadLicenses(force).cache()
+      val cache = cachedLicenses
+      val licenses: Observable<AboutLibrariesModel>
+      if (force || cache == null) {
+        licenses = impl.loadLicenses(force).cache()
+        cachedLicenses = licenses
+      } else {
+        licenses = cache
       }
-      return@defer cachedLicenses?.doOnError { clearCache() }
-    }
+      return@defer licenses
+    }.doOnError { clearCache() }
   }
 
   override fun clearCache() {

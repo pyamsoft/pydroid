@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.about.Licenses
 
 internal object UiLicenses {
 
-  @JvmStatic internal fun addLicenses() {
+  internal fun addLicenses() {
     Licenses.create(Names.MATERIAL_VIEW_PAGER_INDICATOR, HomePageUrls.MATERIAL_VIEW_PAGER_INDICATOR,
         LicenseLocations.MATERIAL_VIEW_PAGER_INDICATOR)
   }

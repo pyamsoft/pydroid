@@ -46,7 +46,6 @@ object PYDroid {
   }
 
   @CheckResult
-  @JvmStatic
   internal fun obtain(context: Context): PYDroidComponent {
     init(context, debugMode)
     return component.notNull("component")
@@ -55,7 +54,6 @@ object PYDroid {
   /**
    * Return the DEBUG state of the library
    */
-  @JvmStatic
   @CheckResult
   fun isDebugMode(): Boolean {
     component.notNull("component")
@@ -66,7 +64,6 @@ object PYDroid {
    * Initialize the library
    */
   @JvmOverloads
-  @JvmStatic
   fun init(context: Context, debug: Boolean,
       allowReInitialize: Boolean = false) {
     if (component == null || allowReInitialize) {

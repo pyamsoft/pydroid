@@ -28,16 +28,16 @@ internal class VersionCheckInteractorCache internal constructor(
 
   override fun checkVersion(packageName: String, force: Boolean): Single<Int> {
     return Single.defer {
-      val response: Single<Int>
       val cache = cachedResponse
+      val response: Single<Int>
       if (force || cache == null) {
         response = impl.checkVersion(packageName, force).cache()
         cachedResponse = response
       } else {
         response = cache
       }
-      return@defer response.doOnError { clearCache() }
-    }
+      return@defer response
+    }.doOnError { clearCache() }
   }
 
   override fun clearCache() {

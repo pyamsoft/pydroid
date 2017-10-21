@@ -28,7 +28,7 @@ object DialogUtil {
    * Using the fragment manager to handle transactions, this guarantees that any old
    * versions of the dialog fragment are removed before a new one is added.
    */
-  @JvmStatic
+
   fun guaranteeSingleDialogFragment(fragmentActivity: FragmentActivity?,
       dialogFragment: DialogFragment, tag: String) {
     if (fragmentActivity == null) {

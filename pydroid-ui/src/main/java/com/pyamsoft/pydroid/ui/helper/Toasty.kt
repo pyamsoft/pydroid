@@ -35,12 +35,12 @@ object Toasty {
     LENGTH_SHORT, LENGTH_LONG
   }
 
-  @JvmStatic
+
   val LENGTH_SHORT = Duration.LENGTH_SHORT
-  @JvmStatic
+
   val LENGTH_LONG = Duration.LENGTH_LONG
 
-  @JvmStatic
+
   fun makeText(c: Context, message: CharSequence, duration: Duration): Toast {
     return Toast.makeText(c.applicationContext, message, when (duration) {
       Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
@@ -48,17 +48,17 @@ object Toasty {
     })
   }
 
-  @JvmStatic
+
   fun makeText(c: Context, @StringRes resId: Int, duration: Duration): Toast {
     return makeText(c, c.applicationContext.getString(resId), duration)
   }
 
-  @JvmStatic
+
   fun makeText(c: Context, @StringRes resId: Int, duration: Int): Toast {
     return makeText(c, c.applicationContext.getString(resId), duration)
   }
 
-  @JvmStatic
+
   fun makeText(c: Context, message: CharSequence, duration: Int): Toast {
     return makeText(c, message, when (duration) {
       Toast.LENGTH_SHORT -> LENGTH_SHORT

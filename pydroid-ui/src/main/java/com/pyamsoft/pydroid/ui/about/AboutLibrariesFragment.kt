@@ -30,7 +30,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.LoadCallback
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.presenter.Presenter
@@ -182,7 +181,7 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     private const val KEY_BACK_STACK = "key_back_stack"
     private const val KEY_PAGE = "key_current_page"
 
-    @JvmStatic
+
     fun show(activity: FragmentActivity, @IdRes containerResId: Int,
         backStackState: BackStackState) {
       val fragmentManager = activity.supportFragmentManager
@@ -192,7 +191,7 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
       }
     }
 
-    @JvmStatic
+
     @CheckResult private fun newInstance(
         backStackState: BackStackState): AboutLibrariesFragment {
       val args = Bundle()

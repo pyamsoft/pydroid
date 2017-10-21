@@ -21,10 +21,10 @@ package com.pyamsoft.pydroid.presenter
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract class Presenter<in V : Any> protected constructor() {
+abstract class Presenter<V : Any> protected constructor() {
 
-  private var view: V? = null
   private val disposables: CompositeDisposable = CompositeDisposable()
+  protected var view: V? = null
 
   fun bind(v: V) {
     view = v
@@ -63,15 +63,5 @@ abstract class Presenter<in V : Any> protected constructor() {
    */
   protected fun dispose(disposable: Disposable) {
     disposables.add(disposable)
-  }
-
-  /**
-   * Act on the view
-   */
-  protected fun <T : Any> withView(func: (T) -> Unit) {
-    view?.let {
-      @Suppress("UNCHECKED_CAST")
-      func(it as T)
-    }
   }
 }

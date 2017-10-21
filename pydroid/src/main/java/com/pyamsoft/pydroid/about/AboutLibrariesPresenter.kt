@@ -36,9 +36,8 @@ class AboutLibrariesPresenter internal constructor(private val interactor: About
   private fun loadLicenses(force: Boolean) {
     dispose {
       interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(mainThreadScheduler)
-          .doAfterTerminate { withView<LoadCallback> { it.onAllLoaded() } }
-          .subscribe({ model -> withView<LoadCallback> { it.onLicenseLoaded(model) } },
-              { Timber.e(it, "onError loading licenses") })
+          .doAfterTerminate { view?.onAllLoaded() }
+          .subscribe({ view?.onLicenseLoaded(it) }, { Timber.e(it, "onError loading licenses") })
     }
   }
 

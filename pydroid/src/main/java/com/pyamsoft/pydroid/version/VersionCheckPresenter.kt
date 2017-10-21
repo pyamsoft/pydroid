@@ -34,12 +34,12 @@ class VersionCheckPresenter internal constructor(private val packageName: String
   fun checkForUpdates(force: Boolean) {
     dispose {
       interactor.checkVersion(packageName, force).subscribeOn(ioScheduler).observeOn(
-          mainThreadScheduler).subscribe({ updated ->
+          mainThreadScheduler).subscribe({
         Timber.i("Update check finished")
         Timber.i("Current version: %d", currentVersionCode)
-        Timber.i("Latest version: %d", updated)
-        if (currentVersionCode < updated) {
-          withView<UpdateCallback> { it.onUpdatedVersionFound(currentVersionCode, updated) }
+        Timber.i("Latest version: %d", it)
+        if (currentVersionCode < it) {
+          view?.onUpdatedVersionFound(currentVersionCode, it)
         }
       }, {
         if (it is HttpException) {

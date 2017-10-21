@@ -41,7 +41,6 @@ import com.pyamsoft.pydroid.ui.app.fragment.DisposableFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import timber.log.Timber
 
-
 class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.View {
 
   internal lateinit var presenter: AboutLibrariesPresenter
@@ -127,7 +126,6 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     binding.viewPager.addOnPageChangeListener(listener)
   }
 
-
   private fun setupArrows() {
     mapper.put("left",
         ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
@@ -181,7 +179,6 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     private const val KEY_BACK_STACK = "key_back_stack"
     private const val KEY_PAGE = "key_current_page"
 
-
     fun show(activity: FragmentActivity, @IdRes containerResId: Int,
         backStackState: BackStackState) {
       val fragmentManager = activity.supportFragmentManager
@@ -190,7 +187,6 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
             TAG).addToBackStack(null).commit()
       }
     }
-
 
     @CheckResult private fun newInstance(
         backStackState: BackStackState): AboutLibrariesFragment {

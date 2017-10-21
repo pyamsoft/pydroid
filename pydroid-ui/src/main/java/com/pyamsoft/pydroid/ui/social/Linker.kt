@@ -29,26 +29,21 @@ object Linker {
   private const val GOOGLE_PLUS = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts"
   private const val OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/"
 
-
   fun clickAppPage(context: Context, link: String) {
     NetworkUtil.newLink(context.applicationContext, BASE_MARKET + link)
   }
-
 
   fun clickGooglePlay(context: Context) {
     NetworkUtil.newLink(context.applicationContext, GOOGLE_PLAY_DEVELOPER_PAGE)
   }
 
-
   fun clickGooglePlus(context: Context) {
     NetworkUtil.newLink(context.applicationContext, GOOGLE_PLUS)
   }
 
-
   fun clickBlogger(context: Context) {
     NetworkUtil.newLink(context.applicationContext, OFFICIAL_BLOG)
   }
-
 
   fun clickFacebook(context: Context) {
     NetworkUtil.newLink(context.applicationContext, FACEBOOK)

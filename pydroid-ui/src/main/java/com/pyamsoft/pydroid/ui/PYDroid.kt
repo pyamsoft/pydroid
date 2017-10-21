@@ -37,7 +37,6 @@ object PYDroid {
   private var component: PYDroidComponent? = null
   private var debugMode = false
 
-
   private fun setStrictMode() {
     StrictMode.setThreadPolicy(
         StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()

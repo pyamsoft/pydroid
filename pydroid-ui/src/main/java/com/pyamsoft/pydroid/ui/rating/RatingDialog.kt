@@ -146,7 +146,6 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
     private const val VERSION_CODE = "version_code"
     private const val RATE_LINK = "rate_link"
 
-
     @CheckResult
     fun newInstance(provider: ChangeLogProvider): RatingDialog {
       val fragment = RatingDialog()

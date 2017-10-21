@@ -25,11 +25,9 @@ data class AboutLibrariesModel internal constructor(val name: String, val homepa
 
   companion object {
 
-
     @CheckResult
     fun create(name: String, homepage: String,
         license: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license, "")
-
 
     @CheckResult
     fun createWithContent(name: String, homepage: String,

@@ -135,7 +135,6 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
     presenter.checkForUpdates(false, onUpdatedVersionFound)
   }
 
-
   /**
    * Logs when the Clear All option is clicked, override to use unique implementation
    */

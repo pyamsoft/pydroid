@@ -26,10 +26,8 @@ import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 
 object ImageLoader {
 
-
   @CheckResult
   fun <T : GenericLoader<*>> fromLoader(loader: T): T = loader
-
 
   @CheckResult
   fun fromResource(context: Context,

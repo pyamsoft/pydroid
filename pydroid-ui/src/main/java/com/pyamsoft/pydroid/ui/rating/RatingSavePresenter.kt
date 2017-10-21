@@ -29,7 +29,6 @@ internal class RatingSavePresenter internal constructor(private val currentVersi
     mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(
     computationScheduler, ioScheduler, mainThreadScheduler) {
 
-
   fun saveRating(accept: Boolean) {
     dispose {
       interactor.saveRating(currentVersion).subscribeOn(ioScheduler).observeOn(

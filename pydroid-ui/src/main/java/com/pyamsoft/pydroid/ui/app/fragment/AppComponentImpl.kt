@@ -28,6 +28,5 @@ internal class AppComponentImpl internal constructor(
     fragment.presenter = versionCheckModule.getPresenter(packageName, currentVersion)
   }
 
-
 }
 

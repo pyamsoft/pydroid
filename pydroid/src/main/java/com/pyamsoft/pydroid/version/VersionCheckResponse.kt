@@ -31,7 +31,6 @@ import com.google.gson.annotations.SerializedName
 
   companion object {
 
-
     @CheckResult
     fun typeAdapter(gson: Gson): TypeAdapter<VersionCheckResponse> =
         AutoValue_VersionCheckResponse.GsonTypeAdapter(gson)

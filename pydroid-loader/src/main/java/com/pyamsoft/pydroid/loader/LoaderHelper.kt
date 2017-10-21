@@ -38,7 +38,6 @@ object LoaderHelper {
     return defaultLoaded
   }
 
-
   @CheckResult
   fun empty(): Loaded {
     return object : Loaded {

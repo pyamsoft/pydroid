@@ -29,7 +29,6 @@ abstract internal class AutoValueTypeAdapterFactory internal constructor() : Typ
 
   companion object {
 
-
     @CheckResult
     fun create(): TypeAdapterFactory =
         AutoValueGson_AutoValueTypeAdapterFactory()

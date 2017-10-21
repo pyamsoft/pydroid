@@ -36,9 +36,7 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
     }
   }
 
-
   override fun listen(): Observable<T> = bus
-
 
   companion object {
 

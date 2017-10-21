@@ -33,7 +33,6 @@ class DrawableImageTarget private constructor(private val imageView: ImageView) 
 
   companion object {
 
-
     @CheckResult
     fun forImageView(imageView: ImageView): Target<Drawable> =
         DrawableImageTarget(imageView)

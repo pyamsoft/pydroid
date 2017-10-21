@@ -35,11 +35,9 @@ object Toasty {
     LENGTH_SHORT, LENGTH_LONG
   }
 
-
   val LENGTH_SHORT = Duration.LENGTH_SHORT
 
   val LENGTH_LONG = Duration.LENGTH_LONG
-
 
   fun makeText(c: Context, message: CharSequence, duration: Duration): Toast {
     return Toast.makeText(c.applicationContext, message, when (duration) {
@@ -48,16 +46,13 @@ object Toasty {
     })
   }
 
-
   fun makeText(c: Context, @StringRes resId: Int, duration: Duration): Toast {
     return makeText(c, c.applicationContext.getString(resId), duration)
   }
 
-
   fun makeText(c: Context, @StringRes resId: Int, duration: Int): Toast {
     return makeText(c, c.applicationContext.getString(resId), duration)
   }
-
 
   fun makeText(c: Context, message: CharSequence, duration: Int): Toast {
     return makeText(c, message, when (duration) {

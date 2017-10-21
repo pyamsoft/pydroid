@@ -56,7 +56,6 @@ object AnimUtil {
     return accelCubicInterpolator.notNull("accelCubicInterpolator")
   }
 
-
   fun popShow(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(v.context)
     v.alpha = 0f
@@ -78,7 +77,6 @@ object AnimUtil {
           }
         })
   }
-
 
   fun popHide(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(v.context)
@@ -103,7 +101,6 @@ object AnimUtil {
         })
   }
 
-
   fun fadeIn(v: View): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(v.context)
     v.alpha = 0f
@@ -112,7 +109,6 @@ object AnimUtil {
     return ViewCompat.animate(v).alpha(1f).scaleX(1f).scaleY(1f).setStartDelay(300).setDuration(
         900).setInterpolator(i).setListener(null)
   }
-
 
   fun fadeAway(v: View): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(v.context)
@@ -123,13 +119,11 @@ object AnimUtil {
         i).setListener(null)
   }
 
-
   fun flipVertical(v: View): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(v.context)
     return ViewCompat.animate(v).scaleY(-v.scaleY).setStartDelay(100).setDuration(
         300).setInterpolator(i).setListener(null)
   }
-
 
   fun animateActionBarToolbar(toolbar: Toolbar) {
     val t = toolbar.getChildAt(0)

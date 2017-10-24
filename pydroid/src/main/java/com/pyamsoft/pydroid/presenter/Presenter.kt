@@ -25,6 +25,7 @@ abstract class Presenter<V : Any> protected constructor() {
 
   private val disposables: CompositeDisposable = CompositeDisposable()
   protected var view: V? = null
+    private set
 
   fun bind(v: V) {
     view = v

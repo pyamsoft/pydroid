@@ -22,7 +22,6 @@ import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
@@ -47,7 +46,7 @@ object PYDroid {
   @CheckResult
   internal fun obtain(context: Context): PYDroidComponent {
     init(context, debugMode)
-    return component.notNull("component")
+    return component!!
   }
 
   /**
@@ -55,7 +54,6 @@ object PYDroid {
    */
   @CheckResult
   fun isDebugMode(): Boolean {
-    component.notNull("component")
     return debugMode
   }
 

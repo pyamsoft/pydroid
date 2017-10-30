@@ -27,7 +27,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
 import com.pyamsoft.pydroid.presenter.Presenter
@@ -55,11 +54,12 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
     super.onCreate(savedInstanceState)
     isCancelable = false
 
-    val launchArguments = arguments
-    rateLink = launchArguments.getString(RATE_LINK, null)
-    versionCode = launchArguments.getInt(VERSION_CODE, 0)
-    changeLogText = launchArguments.getCharSequence(CHANGE_LOG_TEXT, null) as Spannable
-    changeLogIcon = launchArguments.getInt(CHANGE_LOG_ICON, 0)
+    arguments?.let {
+      rateLink = it.getString(RATE_LINK, null)
+      versionCode = it.getInt(VERSION_CODE, 0)
+      changeLogText = it.getCharSequence(CHANGE_LOG_TEXT, null) as Spannable
+      changeLogIcon = it.getInt(CHANGE_LOG_ICON, 0)
+    }
 
     if (versionCode == 0) {
       throw RuntimeException("Version code cannot be 0")
@@ -69,9 +69,7 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
       throw RuntimeException("Change Log Icon Id cannot be 0")
     }
 
-    changeLogText.notNull("changeLogText")
-
-    PYDroid.obtain(context.applicationContext).plusRatingComponent(versionCode).inject(this)
+    PYDroid.obtain(context!!.applicationContext).plusRatingComponent(versionCode).inject(this)
   }
 
   override fun onDestroyView() {
@@ -79,13 +77,13 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
     iconTask = LoaderHelper.unload(iconTask)
   }
 
-  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     binding = DialogRatingBinding.inflate(inflater, container, false)
     return binding.root
   }
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initDialog()
 
@@ -98,24 +96,24 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
   override fun onRatingSaved(accept: Boolean) {
     if (accept) {
       val fullLink = "market://details?id=" + rateLink
-      NetworkUtil.newLink(context.applicationContext, fullLink)
+      NetworkUtil.newLink(context!!.applicationContext, fullLink)
     }
 
     dismiss()
   }
 
   override fun onRatingDialogSaveError(throwable: Throwable) {
-    Toasty.makeText(context.applicationContext,
+    Toasty.makeText(context!!.applicationContext,
         "Error occurred while dismissing dialog. May show again later",
         Toasty.LENGTH_SHORT).show()
     dismiss()
   }
 
   private fun initDialog() {
-    ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(context, 8f))
+    ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(context!!, 8f))
 
     iconTask = LoaderHelper.unload(iconTask)
-    iconTask = ImageLoader.fromResource(context, changeLogIcon).into(binding.ratingIcon)
+    iconTask = ImageLoader.fromResource(context!!, changeLogIcon).into(binding.ratingIcon)
     binding.ratingTextChange.text = changeLogText
   }
 

@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.presenter.Presenter
 
 /**
@@ -43,7 +42,7 @@ abstract class DisposableDialogFragment : DialogFragmentBase() {
       boundPresenterSnapshot = provideBoundPresenters()
     }
 
-    return boundPresenterSnapshot.notNull("boundPresenterSnapshot")
+    return boundPresenterSnapshot!!
   }
 
   @CallSuper

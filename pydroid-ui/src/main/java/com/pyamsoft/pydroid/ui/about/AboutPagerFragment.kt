@@ -37,19 +37,19 @@ class AboutPagerFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    homepage = arguments.getString(KEY_HOMEPAGE, null) ?: throw IllegalStateException(
-        "Homepage is NULL")
-    license = arguments.getString(KEY_LICENSE, null) ?: throw IllegalStateException(
-        "License is NULL")
+    arguments?.let {
+      homepage = it.getString(KEY_HOMEPAGE, "")
+      license = it.getString(KEY_LICENSE, "")
+    }
   }
 
-  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     binding = FragmentPagerAboutBinding.inflate(inflater, container, false)
     return binding.root
   }
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     binding.aboutItemWebview.settings.defaultFontSize = 12
     binding.aboutItemWebview.isVerticalScrollBarEnabled = true

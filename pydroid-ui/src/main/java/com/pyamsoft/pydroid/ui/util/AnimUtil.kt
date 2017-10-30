@@ -31,7 +31,6 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import android.widget.TextView
-import com.pyamsoft.pydroid.helper.notNull
 
 object AnimUtil {
 
@@ -44,7 +43,7 @@ object AnimUtil {
           android.R.interpolator.overshoot)
     }
 
-    return overshootInterpolator.notNull("overshootInterpolator")
+    return overshootInterpolator!!
   }
 
   @CheckResult private fun getAccelCubicInterpolator(context: Context): Interpolator {
@@ -53,7 +52,7 @@ object AnimUtil {
           android.R.interpolator.accelerate_cubic)
     }
 
-    return accelCubicInterpolator.notNull("accelCubicInterpolator")
+    return accelCubicInterpolator!!
   }
 
   fun popShow(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {

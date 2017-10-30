@@ -27,22 +27,22 @@ import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 abstract class ActionBarPreferenceFragment : PreferenceFragmentCompat(), ActionBarProvider {
 
   override fun setActionBarUpEnabled(up: Boolean) {
-    ActionBarUtil.setActionBarUpEnabled(activity, up)
+    ActionBarUtil.setActionBarUpEnabled(activity!!, up)
   }
 
   override fun setActionBarUpEnabled(up: Boolean, @DrawableRes icon: Int) {
-    ActionBarUtil.setActionBarUpEnabled(activity, up, icon)
+    ActionBarUtil.setActionBarUpEnabled(activity!!, up, icon)
   }
 
   override fun setActionBarUpEnabled(up: Boolean, icon: Drawable?) {
-    ActionBarUtil.setActionBarUpEnabled(activity, up, icon)
+    ActionBarUtil.setActionBarUpEnabled(activity!!, up, icon)
   }
 
   override fun setActionBarTitle(title: CharSequence) {
-    ActionBarUtil.setActionBarTitle(activity, title)
+    ActionBarUtil.setActionBarTitle(activity!!, title)
   }
 
   override fun setActionBarTitle(@StringRes title: Int) {
-    ActionBarUtil.setActionBarTitle(activity, title)
+    ActionBarUtil.setActionBarTitle(activity!!, title)
   }
 }

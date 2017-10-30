@@ -21,7 +21,6 @@ package com.pyamsoft.pydroid.ui.app.fragment
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.support.v4.app.Fragment
-import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.presenter.Presenter
 
 /**
@@ -44,7 +43,7 @@ abstract class DisposableHeadlessFragment : Fragment() {
       boundPresenterSnapshot = provideBoundPresenters()
     }
 
-    return boundPresenterSnapshot.notNull("boundPresenterSnapshot")
+    return boundPresenterSnapshot!!
   }
 
   @CallSuper

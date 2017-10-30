@@ -47,31 +47,32 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
   internal lateinit var pagerAdapter: AboutPagerAdapter
   private var lastOnBackStack: Boolean = false
   private val mapper = LoaderMap()
-  private var listener: ViewPager.OnPageChangeListener? = null
+  private lateinit var listener: ViewPager.OnPageChangeListener
   private lateinit var binding: FragmentAboutLibrariesBinding
 
   override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val backStackStateName = arguments.getString(KEY_BACK_STACK,
-        null) ?: throw NullPointerException("BackStateState is NULL")
-    val backStackState = BackStackState.valueOf(backStackStateName)
-    lastOnBackStack = when (backStackState) {
-      LAST -> true
-      NOT_LAST -> false
-    }
+    arguments?.let {
+      val backStackStateName: String = it.getString(KEY_BACK_STACK, "")
+      val backStackState = BackStackState.valueOf(backStackStateName)
+      lastOnBackStack = when (backStackState) {
+        LAST -> true
+        NOT_LAST -> false
+      }
 
-    PYDroid.obtain(activity).inject(this)
+      PYDroid.obtain(activity!!).inject(this)
+    }
   }
 
-  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
     return binding.root
   }
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupViewPager(savedInstanceState)
     setupArrows()
@@ -110,7 +111,7 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
       }
     })
 
-    listener = object : OnPageChangeListener {
+    val obj = object : OnPageChangeListener {
       override fun onPageScrollStateChanged(state: Int) {
       }
 
@@ -123,19 +124,20 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
       }
     }
 
-    binding.viewPager.addOnPageChangeListener(listener)
+    listener = obj
+    binding.viewPager.addOnPageChangeListener(obj)
   }
 
   private fun setupArrows() {
     mapper.put("left",
-        ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
+        ImageLoader.fromResource(context!!, R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
     binding.arrowLeft.rotation = 90F
     binding.arrowLeft.setOnClickListener {
       binding.viewPager.arrowScroll(View.FOCUS_LEFT)
     }
 
     mapper.put("right",
-        ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
+        ImageLoader.fromResource(context!!, R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
     binding.arrowRight.rotation = -90F
     binding.arrowRight.setOnClickListener {
       binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
@@ -164,8 +166,8 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     binding.arrowRight.setOnClickListener(null)
   }
 
-  override fun onSaveInstanceState(outState: Bundle?) {
-    outState?.putInt(KEY_PAGE, binding.viewPager.currentItem)
+  override fun onSaveInstanceState(outState: Bundle) {
+    outState.putInt(KEY_PAGE, binding.viewPager.currentItem)
     super.onSaveInstanceState(outState)
   }
 

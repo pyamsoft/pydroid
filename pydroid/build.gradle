@@ -40,6 +40,13 @@ android {
 
     // Only English, I don't have any translations
     resConfigs "en"
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        // Fix kapt
+        includeCompileClasspath = true
+      }
+    }
   }
 
   compileOptions {
@@ -62,34 +69,28 @@ android {
 }
 
 dependencies {
-  compile fileTree(include: ["*.jar"], dir: "libs")
-
   // Android support library.
-  compile "com.android.support:appcompat-v7:$supportLib"
-  compile "com.android.support:preference-v14:$supportLib"
+  api "com.android.support:appcompat-v7:$supportLib"
+  api "com.android.support:preference-v14:$supportLib"
 
   // Timber logging
-  compile "com.jakewharton.timber:timber:$timber"
+  api "com.jakewharton.timber:timber:$timber"
 
   // Auto value
-  provided "com.google.auto.value:auto-value:$autoValue"
-  provided "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
+  compileOnly "com.google.auto.value:auto-value:$autoValue"
+  compileOnly "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
   kapt "com.google.auto.value:auto-value:$autoValue"
   kapt "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
 
   // RxJava
-  compile "io.reactivex.rxjava2:rxjava:$rxjava"
-  compile "io.reactivex.rxjava2:rxandroid:$rxandroid"
+  api "io.reactivex.rxjava2:rxjava:$rxjava"
+  api "io.reactivex.rxjava2:rxandroid:$rxandroid"
 
   // Retrofit
-  compile "com.squareup.retrofit2:retrofit:$retrofit"
-  compile "com.squareup.retrofit2:converter-gson:$retrofit"
-  compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
-  compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-}
-
-kapt {
-  correctErrorTypes = true
+  implementation "com.squareup.retrofit2:retrofit:$retrofit"
+  implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+  implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
+  implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

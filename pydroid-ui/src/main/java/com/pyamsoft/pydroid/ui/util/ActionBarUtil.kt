@@ -26,14 +26,13 @@ import android.support.annotation.StringRes
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
-import com.pyamsoft.pydroid.helper.notNull
 
 object ActionBarUtil {
 
   @CheckResult
   fun getActionBar(activity: Activity): ActionBar {
     if (activity is AppCompatActivity) {
-      return activity.supportActionBar.notNull("supportActionBar")
+      return activity.supportActionBar!!
     } else {
       throw ClassCastException("Activity not instance of AppCompatActivity")
     }

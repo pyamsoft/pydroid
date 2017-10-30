@@ -22,7 +22,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.v7.app.AlertDialog
-import com.pyamsoft.pydroid.helper.notNull
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 import com.pyamsoft.pydroid.ui.social.Linker
 
@@ -34,26 +33,28 @@ class VersionUpgradeDialog : DialogFragmentBase() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    latestVersion = arguments.getInt(KEY_LATEST_VERSION, 0)
-    if (latestVersion == 0) {
-      throw RuntimeException("Could not find latest version")
-    }
+    arguments?.let {
+      latestVersion = it.getInt(KEY_LATEST_VERSION, 0)
+      if (latestVersion == 0) {
+        throw RuntimeException("Could not find latest version")
+      }
 
-    currentVersion = arguments.getInt(KEY_CURRENT_VERSION, 0)
-    if (currentVersion == 0) {
-      throw RuntimeException("Could not find current version")
-    }
+      currentVersion = it.getInt(KEY_CURRENT_VERSION, 0)
+      if (currentVersion == 0) {
+        throw RuntimeException("Could not find current version")
+      }
 
-    applicationName = arguments.getString(KEY_NAME, null).notNull("applicationName")
+      applicationName = it.getString(KEY_NAME, null)
+    }
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val message = """|A new version of $applicationName is available!
                      |Current version: $currentVersion
                      |Latest verson: $latestVersion""".trimMargin()
-    return AlertDialog.Builder(activity).setTitle("New version available").setMessage(
+    return AlertDialog.Builder(activity!!).setTitle("New version available").setMessage(
         message).setPositiveButton("Update") { _, _ ->
-      Linker.clickAppPage(context, context.packageName)
+      Linker.clickAppPage(context!!, context!!.packageName)
       dismiss()
     }.setNegativeButton("Later") { _, _ -> dismiss() }.create()
   }

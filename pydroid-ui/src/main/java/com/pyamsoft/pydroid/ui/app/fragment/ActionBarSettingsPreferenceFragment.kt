@@ -52,14 +52,14 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain(activity).plusAppComponent(context.packageName,
+    PYDroid.obtain(activity!!).plusAppComponent(context!!.packageName,
         versionedActivity.currentApplicationVersion).inject(this)
   }
 
   @SuppressLint("ShowToast")
   @CallSuper override fun onCreateView(inflater: LayoutInflater,
       container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    toast = Toasty.makeText(context, "Checking for updates...", Toasty.LENGTH_SHORT)
+    toast = Toasty.makeText(context!!, "Checking for updates...", Toasty.LENGTH_SHORT)
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
@@ -71,7 +71,7 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
     addPreferencesFromResource(R.xml.pydroid)
   }
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     val applicationSettings = findPreference("application_settings")
@@ -148,7 +148,7 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
    */
   @CallSuper protected open fun onLicenseItemClicked() {
     Timber.d("Show about licenses fragment")
-    AboutLibrariesFragment.show(activity, rootViewContainer, isLastOnBackStack)
+    AboutLibrariesFragment.show(activity!!, rootViewContainer, isLastOnBackStack)
   }
 
   /**

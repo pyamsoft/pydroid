@@ -21,7 +21,7 @@
 buildscript {
   ext {
     kotlin_version = '1.1.51'
-    plugin_version = "2.3.3"
+    plugin_version = "3.0.0"
   }
   repositories {
     jcenter()
@@ -38,16 +38,16 @@ buildscript {
   ext {
 
     minSdk = 16
-    maxSdk = 26
-    buildTools = "26.0.2"
+    maxSdk = 27
+    buildTools = "27.0.0"
 
-    supportLib = "26.1.0"
+    supportLib = "27.0.0"
     timber = "4.5.1"
     autoValue = "1.5.1"
     autoValueGSON = "0.6.0"
     retrofit = "2.3.0"
     retrofitLogging = "3.9.0"
-    rxjava = "2.1.5"
+    rxjava = "2.1.6"
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
   }
@@ -59,7 +59,7 @@ buildscript {
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
 
     // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
 
     // To publish with JitPack
     classpath "com.github.dcendents:android-maven-gradle-plugin:1.5"

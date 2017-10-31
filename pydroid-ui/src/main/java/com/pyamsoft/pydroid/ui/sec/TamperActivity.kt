@@ -28,17 +28,17 @@ import timber.log.Timber
 
 abstract class TamperActivity : RatingActivity() {
 
-  private var hasBeenTamperedWith: Boolean = false
+  internal var debugMode: Boolean = false
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    hasBeenTamperedWith = checkNotTamperedWith()
+    PYDroid.obtain().inject(this)
   }
 
   /**
    * Returns true if the application has been tampered with, false if not
    */
-  @CheckResult private fun checkNotTamperedWith(): Boolean {
+  @CheckResult private fun applicationIsTampered(): Boolean {
     // Check if we are renamed
     if (applicationContext.packageName.compareTo(safePackageName) != 0) {
       Timber.e("Application is potentially re-named")
@@ -47,17 +47,13 @@ abstract class TamperActivity : RatingActivity() {
 
     // Check that we were installed from the play store.
     val installer = applicationContext.packageManager.getInstallerPackageName(safePackageName)
-    if (PYDroid.isDebugMode()) {
-      return if (installer == null) {
+    if (debugMode) {
+      if (installer == null) {
         Timber.i("Application is installed from APK. This is fine in DEBUG mode")
-
-        // Return
-        false
+        return false
       } else {
         Timber.e("DEBUG Application is not installed from APK")
-
-        // Return
-        true
+        return true
       }
     } else {
       if (installer == null) {
@@ -79,7 +75,7 @@ abstract class TamperActivity : RatingActivity() {
 
   override fun onPostResume() {
     super.onPostResume()
-    if (hasBeenTamperedWith) {
+    if (applicationIsTampered()) {
       Timber.e("Application has been tampered with, notify user")
       DialogUtil.guaranteeSingleDialogFragment(this, TamperDialog(), "tamper")
     }

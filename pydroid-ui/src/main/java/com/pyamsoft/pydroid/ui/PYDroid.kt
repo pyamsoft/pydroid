@@ -35,7 +35,6 @@ import timber.log.Timber
 object PYDroid {
 
   private var component: PYDroidComponent? = null
-  private var debugMode: Boolean = false
 
   private fun setStrictMode() {
     StrictMode.setThreadPolicy(
@@ -44,47 +43,40 @@ object PYDroid {
     StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
   }
 
+  /**
+   * Access point for library component graph
+   */
   @CheckResult
-  internal fun obtain(context: Context): PYDroidComponent = checkComponent(context, debugMode)
-
-  @CheckResult
-  private fun checkComponent(context: Context, debugMode: Boolean): PYDroidComponent {
-    val obj: PYDroidComponent? = component
+  internal fun obtain(): PYDroidComponent {
+    val obj = component
     if (obj == null) {
-      init(PYDroidModule(context.applicationContext, debugMode),
-          LoaderModule(context.applicationContext))
-      return component!!
+      throw IllegalStateException(
+          "PYDroid is not initialized. Please call PYDroid.init() before attempting to obtain.")
     } else {
       return obj
     }
   }
 
   /**
-   * Return the DEBUG state of the library
+   * Create the library entry point
    */
-  @CheckResult
-  fun isDebugMode(): Boolean {
-    return debugMode
-  }
-
-  /**
-   * Initialize the library
-   */
-  @JvmOverloads
-  fun init(pydroidModule: PYDroidModule, loaderModule: LoaderModule,
-      allowReInitialize: Boolean = false) {
-    if (component == null || allowReInitialize) {
-      initialize(pydroidModule, loaderModule)
-    }
-  }
-
   private fun initialize(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
-    debugMode = pydroidModule.isDebug
     component = PYDroidComponentImpl(pydroidModule, loaderModule)
-    if (debugMode) {
+    if (pydroidModule.isDebug) {
       Timber.plant(Timber.DebugTree())
       setStrictMode()
     }
     UiLicenses.addLicenses()
+  }
+
+  /**
+   * Initialize the library
+   *
+   * You should carry the passed modules with you to any other component graphs or you will have "doubled" singletons
+   */
+  fun init(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
+    if (component == null) {
+      initialize(pydroidModule, loaderModule)
+    }
   }
 }

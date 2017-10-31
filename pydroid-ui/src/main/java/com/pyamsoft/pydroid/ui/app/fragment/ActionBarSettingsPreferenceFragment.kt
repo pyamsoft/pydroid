@@ -52,7 +52,7 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain(activity!!).plusAppComponent(context!!.packageName,
+    PYDroid.obtain().plusAppComponent(context!!.packageName,
         versionedActivity.currentApplicationVersion).inject(this)
   }
 

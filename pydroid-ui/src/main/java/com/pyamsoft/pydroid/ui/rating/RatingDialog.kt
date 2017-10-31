@@ -70,7 +70,7 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
       throw RuntimeException("Change Log Icon Id cannot be 0")
     }
 
-    PYDroid.obtain(context!!.applicationContext).plusRatingComponent(versionCode).inject(this)
+    PYDroid.obtain().plusRatingComponent(versionCode).inject(this)
   }
 
   override fun onDestroyView() {

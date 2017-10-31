@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.loader.loaded.Loaded
 object LoaderHelper {
 
   @JvmOverloads
-
   @CheckResult
   fun unload(entry: Loaded?,
       defaultLoaded: Loaded = empty()): Loaded {

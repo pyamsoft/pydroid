@@ -63,7 +63,7 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
         NOT_LAST -> false
       }
 
-      PYDroid.obtain(activity!!).inject(this)
+      PYDroid.obtain().inject(this)
     }
   }
 

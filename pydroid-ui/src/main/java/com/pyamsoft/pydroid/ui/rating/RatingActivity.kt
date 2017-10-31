@@ -75,7 +75,7 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain(applicationContext).plusRatingComponent(currentApplicationVersion).inject(this)
+    PYDroid.obtain().plusRatingComponent(currentApplicationVersion).inject(this)
     presenter.bind(this)
   }
 

@@ -23,11 +23,14 @@ import android.support.annotation.RestrictTo
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal interface PYDroidComponent {
 
   fun inject(fragment: AboutLibrariesFragment)
+
+  fun inject(activity: TamperActivity)
 
   @CheckResult
   fun plusVersionCheckComponent(packageName: String,

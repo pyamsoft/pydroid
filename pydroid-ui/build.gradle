@@ -25,7 +25,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
   compileSdkVersion rootProject.ext.maxSdk
-  buildToolsVersion "$buildTools"
 
   //noinspection GroovyMissingReturnStatement
   defaultConfig {
@@ -70,10 +69,10 @@ dependencies {
 
   // Android support library.
   api "com.android.support:support-vector-drawable:$supportLib"
-  api "com.android.support:cardview-v7:$supportLib"
+  implementation "com.android.support:cardview-v7:$supportLib"
 
   // Material View Pager indicator
-  api "com.github.ronaldsmartin:Material-ViewPagerIndicator:$viewPagerIndicator"
+  implementation "com.github.ronaldsmartin:Material-ViewPagerIndicator:$viewPagerIndicator"
 
   api project(":pydroid-loader")
   api project(":pydroid-util")

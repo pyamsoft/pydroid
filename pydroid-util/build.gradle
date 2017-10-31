@@ -25,7 +25,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 android {
   compileSdkVersion rootProject.ext.maxSdk
-  buildToolsVersion "$buildTools"
 
   //noinspection GroovyMissingReturnStatement
   defaultConfig {

@@ -44,6 +44,7 @@ import timber.log.Timber
 class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.View {
 
   internal lateinit var presenter: AboutLibrariesPresenter
+  internal lateinit var imageLoader: ImageLoader
   internal lateinit var pagerAdapter: AboutPagerAdapter
   private var lastOnBackStack: Boolean = false
   private val mapper = LoaderMap()
@@ -130,14 +131,14 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
 
   private fun setupArrows() {
     mapper.put("left",
-        ImageLoader.fromResource(context!!, R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
+        imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
     binding.arrowLeft.rotation = 90F
     binding.arrowLeft.setOnClickListener {
       binding.viewPager.arrowScroll(View.FOCUS_LEFT)
     }
 
     mapper.put("right",
-        ImageLoader.fromResource(context!!, R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
+        imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
     binding.arrowRight.rotation = -90F
     binding.arrowRight.setOnClickListener {
       binding.viewPager.arrowScroll(View.FOCUS_RIGHT)

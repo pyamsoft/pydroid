@@ -46,8 +46,8 @@ abstract class DisposablePreferenceFragment : ActionBarPreferenceFragment() {
   }
 
   @CallSuper
-  override fun onDestroyView() {
-    super.onDestroyView()
+  override fun onDestroy() {
+    super.onDestroy()
     val presenters = getBoundPresenters()
     for (presenter in presenters) {
       presenter.unbind()

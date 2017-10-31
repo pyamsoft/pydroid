@@ -16,22 +16,25 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.loader
 
-import com.pyamsoft.pydroid.loader.LoaderModule
+import android.content.Context
+import android.graphics.drawable.Drawable
+import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.loader.cache.ImageCache
+import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
-internal class RatingComponentImpl internal constructor(private val version: Int,
-    private val ratingModule: RatingModule,
-    private val loaderModule: LoaderModule) : RatingComponent {
+class LoaderModule(context: Context) {
 
-  override fun inject(activity: RatingActivity) {
-    activity.ratingPresenter = ratingModule.getPresenter(version)
+  private val imageLoader: ImageLoader
+
+  init {
+    val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
+    imageLoader = ImageLoader(context.applicationContext, resourceImageCache)
   }
 
-  override fun inject(dialog: RatingDialog) {
-    dialog.presenter = ratingModule.getSavePresenter(version)
-    dialog.imageLoader = loaderModule.provideImageLoader()
-  }
-
+  // Singleton
+  @CheckResult
+  fun provideImageLoader(): ImageLoader = imageLoader
 }
 

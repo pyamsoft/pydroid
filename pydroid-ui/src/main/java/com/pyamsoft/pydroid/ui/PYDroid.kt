@@ -22,6 +22,7 @@ import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
@@ -34,7 +35,7 @@ import timber.log.Timber
 object PYDroid {
 
   private var component: PYDroidComponent? = null
-  private var debugMode = false
+  private var debugMode: Boolean = false
 
   private fun setStrictMode() {
     StrictMode.setThreadPolicy(
@@ -44,9 +45,18 @@ object PYDroid {
   }
 
   @CheckResult
-  internal fun obtain(context: Context): PYDroidComponent {
-    init(context, debugMode)
-    return component!!
+  internal fun obtain(context: Context): PYDroidComponent = checkComponent(context, debugMode)
+
+  @CheckResult
+  private fun checkComponent(context: Context, debugMode: Boolean): PYDroidComponent {
+    val obj: PYDroidComponent? = component
+    if (obj == null) {
+      init(PYDroidModule(context.applicationContext, debugMode),
+          LoaderModule(context.applicationContext))
+      return component!!
+    } else {
+      return obj
+    }
   }
 
   /**
@@ -61,17 +71,17 @@ object PYDroid {
    * Initialize the library
    */
   @JvmOverloads
-  fun init(context: Context, debug: Boolean,
+  fun init(pydroidModule: PYDroidModule, loaderModule: LoaderModule,
       allowReInitialize: Boolean = false) {
     if (component == null || allowReInitialize) {
-      initialize(context, debug)
+      initialize(pydroidModule, loaderModule)
     }
   }
 
-  private fun initialize(context: Context, debug: Boolean) {
-    debugMode = debug
-    component = PYDroidComponentImpl(PYDroidModule(context.applicationContext, debug))
-    if (debug) {
+  private fun initialize(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
+    debugMode = pydroidModule.isDebug
+    component = PYDroidComponentImpl(pydroidModule, loaderModule)
+    if (debugMode) {
       Timber.plant(Timber.DebugTree())
       setStrictMode()
     }

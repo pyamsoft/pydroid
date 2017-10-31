@@ -40,13 +40,14 @@ import com.pyamsoft.pydroid.version.VersionCheckProvider
 
 class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
 
+  internal lateinit var imageLoader: ImageLoader
+  internal lateinit var presenter: RatingSavePresenter
   private lateinit var rateLink: String
   private var versionCode: Int = 0
   private var changeLogText: Spannable? = null
   @DrawableRes private var changeLogIcon: Int = 0
   private var iconTask = LoaderHelper.empty()
   private lateinit var binding: DialogRatingBinding
-  internal lateinit var presenter: RatingSavePresenter
 
   override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
@@ -113,7 +114,7 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
     ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(context!!, 8f))
 
     iconTask = LoaderHelper.unload(iconTask)
-    iconTask = ImageLoader.fromResource(context!!, changeLogIcon).into(binding.ratingIcon)
+    iconTask = imageLoader.fromResource(changeLogIcon).into(binding.ratingIcon)
     binding.ratingTextChange.text = changeLogText
   }
 

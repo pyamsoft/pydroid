@@ -20,13 +20,10 @@ package com.pyamsoft.pydroid
 
 import android.content.Context
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
-import android.support.annotation.RestrictTo.Scope.LIBRARY
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-@RestrictTo(LIBRARY)
 class PYDroidModule(context: Context, val isDebug: Boolean) {
 
   // Singleton
@@ -47,4 +44,5 @@ class PYDroidModule(context: Context, val isDebug: Boolean) {
   // Singleton
   @CheckResult
   fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
+
 }

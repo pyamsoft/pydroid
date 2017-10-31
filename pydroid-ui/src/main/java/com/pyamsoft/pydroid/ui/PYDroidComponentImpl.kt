@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui
 
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.about.AboutLibrariesModule
+import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
@@ -30,18 +31,20 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 import com.pyamsoft.pydroid.version.VersionCheckModule
 
-internal class PYDroidComponentImpl internal constructor(module: PYDroidModule) : PYDroidComponent {
-  private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(module)
-  private val versionCheckModule: VersionCheckModule = VersionCheckModule(module)
+internal class PYDroidComponentImpl internal constructor(pyDroidModule: PYDroidModule,
+    private val loaderModule: LoaderModule) : PYDroidComponent {
+  private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(pyDroidModule)
+  private val versionCheckModule: VersionCheckModule = VersionCheckModule(pyDroidModule)
   private val ratingModule: RatingModule
 
   init {
-    val preferences = PYDroidPreferencesImpl(module.provideContext())
-    ratingModule = RatingModule(module, preferences)
+    val preferences = PYDroidPreferencesImpl(pyDroidModule.provideContext())
+    ratingModule = RatingModule(pyDroidModule, preferences)
   }
 
   override fun inject(fragment: AboutLibrariesFragment) {
     fragment.presenter = aboutLibrariesModule.getPresenter()
+    fragment.imageLoader = loaderModule.provideImageLoader()
   }
 
   override fun plusVersionCheckComponent(packageName: String,
@@ -52,5 +55,5 @@ internal class PYDroidComponentImpl internal constructor(module: PYDroidModule) 
       AppComponentImpl(versionCheckModule, packageName, currentVersion)
 
   override fun plusRatingComponent(currentVersion: Int): RatingComponent =
-      RatingComponentImpl(currentVersion, ratingModule)
+      RatingComponentImpl(currentVersion, ratingModule, loaderModule)
 }

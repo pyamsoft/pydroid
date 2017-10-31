@@ -31,6 +31,12 @@ class DrawableImageTarget private constructor(private val imageView: ImageView) 
     imageView.setImageDrawable(image)
   }
 
+  override fun loadError(error: Drawable?) {
+    if (error != null) {
+      imageView.setImageDrawable(error)
+    }
+  }
+
   companion object {
 
     @CheckResult

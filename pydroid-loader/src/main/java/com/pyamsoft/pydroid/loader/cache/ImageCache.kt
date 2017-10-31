@@ -16,14 +16,15 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.loader.targets
+package com.pyamsoft.pydroid.loader.cache
 
-/**
- * Load an Image of a generic type (Drawable or Bitmap)
- */
-interface Target<in T: Any> {
+import com.pyamsoft.pydroid.data.Cache
 
-  fun loadImage(image: T)
+interface ImageCache<in K : Any, T : Any> : Cache {
 
-  fun loadError(error: T?)
+  fun cache(key: ImageCacheKey<K>, entry: T)
+
+  fun retrieve(key: ImageCacheKey<K>): T?
+
+  data class ImageCacheKey<out K>(val data: K)
 }

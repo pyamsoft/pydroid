@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import com.pyamsoft.pydroid.helper.enforceIo
 import com.pyamsoft.pydroid.helper.enforceMainThread
+import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.loaded.RxLoaded
 import com.pyamsoft.pydroid.loader.targets.Target
@@ -32,8 +33,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class RxResourceLoader(context: Context, @DrawableRes resource: Int) : ResourceLoader(context,
-    resource) {
+internal class RxResourceLoader internal constructor(
+    context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
+    resourceImageCache: ImageCache<Int, Drawable>) : ResourceLoader(
+    context, resource, errorResource, resourceImageCache) {
 
   private val obsScheduler: Scheduler = AndroidSchedulers.mainThread()
   private val subScheduler: Scheduler = Schedulers.io()
@@ -46,13 +49,11 @@ class RxResourceLoader(context: Context, @DrawableRes resource: Int) : ResourceL
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(
         Single.fromCallable { loadResource() }.subscribeOn(subScheduler).observeOn(obsScheduler)
-            .doOnSubscribe { startAction() }
+            .doOnSubscribe { startAction?.invoke() }
+            .doAfterSuccess { completeAction?.invoke(it) }
             .doOnError {
-              Timber.e(it, "Error loading AsyncDrawable")
-              errorAction(it)
-            }.doAfterSuccess { completeAction(it) }
-            .subscribe(target::loadImage, {
               Timber.e(it, "Error loading Drawable using RxResourceLoader")
-            }))
+              errorAction?.invoke(it)
+            }.subscribe({ target.loadImage(it) }, { target.loadError(loadErrorResource()) }))
   }
 }

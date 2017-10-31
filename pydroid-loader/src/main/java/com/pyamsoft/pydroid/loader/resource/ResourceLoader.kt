@@ -25,6 +25,8 @@ import android.support.annotation.DrawableRes
 import android.support.v7.content.res.AppCompatResources
 import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.GenericLoader
+import com.pyamsoft.pydroid.loader.cache.ImageCache
+import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
 import com.pyamsoft.pydroid.loader.targets.Target
@@ -36,7 +38,11 @@ import com.pyamsoft.pydroid.util.DrawableUtil
  * Supports Drawable resource types, is not threaded
  */
 abstract class ResourceLoader protected constructor(context: Context,
-    @param:DrawableRes private val resource: Int) : GenericLoader<Drawable>() {
+    @param:DrawableRes private val resource: Int, @param:DrawableRes private val errorResource: Int,
+    private val resourceImageCache: ImageCache<Int, Drawable>) : GenericLoader<Drawable>() {
+
+  @CheckResult
+  private fun Int.toKey(): ImageCacheKey<Int> = ImageCacheKey(this)
 
   private val appContext: Context = context.applicationContext
 
@@ -52,6 +58,19 @@ abstract class ResourceLoader protected constructor(context: Context,
   final override fun into(target: Target<Drawable>): Loaded = load(target, resource)
 
   @CheckResult protected fun loadResource(): Drawable {
+    val key: ImageCacheKey<Int> = resource.toKey()
+    val cached: Drawable? = resourceImageCache.retrieve(key)
+    if (cached == null) {
+      val result = loadFreshResource()
+      resourceImageCache.cache(key, result)
+      return result
+    } else {
+      return cached
+    }
+  }
+
+  @CheckResult
+  private fun loadFreshResource(): Drawable {
     val possiblyLoaded: Drawable = AppCompatResources.getDrawable(appContext, resource)!!
     if (tint != 0) {
       // Return
@@ -59,6 +78,30 @@ abstract class ResourceLoader protected constructor(context: Context,
     } else {
       // Return
       return possiblyLoaded
+    }
+  }
+
+  @CheckResult protected fun loadErrorResource(): Drawable? {
+    val key: ImageCacheKey<Int> = errorResource.toKey()
+    val cached: Drawable? = resourceImageCache.retrieve(key)
+    if (cached == null) {
+      val result: Drawable? = loadFreshErrorResource()
+      if (result != null) {
+        resourceImageCache.cache(key, result)
+      }
+      return result
+    } else {
+      return cached
+    }
+  }
+
+  @CheckResult private fun loadFreshErrorResource(): Drawable? {
+    errorResource.let {
+      if (it == 0) {
+        return null
+      } else {
+        return AppCompatResources.getDrawable(appContext, it)
+      }
     }
   }
 

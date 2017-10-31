@@ -24,7 +24,7 @@ import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.Target
 
-interface Loader<T> {
+interface Loader<T: Any> {
 
   @CheckResult
   fun tint(@ColorRes color: Int): Loader<T>

@@ -16,14 +16,24 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.loader.targets
+package com.pyamsoft.pydroid.loader.cache
 
-/**
- * Load an Image of a generic type (Drawable or Bitmap)
- */
-interface Target<in T: Any> {
+import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
+import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
 
-  fun loadImage(image: T)
+internal class ResourceImageCache internal constructor() : ImageCache<@DrawableRes Int, Drawable> {
 
-  fun loadError(error: T?)
+  private val cache: MutableMap<Int, Drawable> = LinkedHashMap()
+
+  override fun clearCache() {
+    cache.clear()
+  }
+
+  override fun cache(key: ImageCacheKey<Int>, entry: Drawable) {
+    cache.put(key.data, entry)
+  }
+
+  override fun retrieve(key: ImageCacheKey<Int>): Drawable? = cache[key.data]
 }
+

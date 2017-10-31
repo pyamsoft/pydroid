@@ -61,9 +61,9 @@ android {
 
 dependencies {
   // Design support lib
-  api "com.android.support:design:$supportLib"
+  compile "com.android.support:design:$supportLib"
 
-  api project(":pydroid-util")
-  implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+  compile project(":pydroid-util")
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

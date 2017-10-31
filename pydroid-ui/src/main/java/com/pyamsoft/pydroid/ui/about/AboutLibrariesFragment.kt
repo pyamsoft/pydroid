@@ -92,8 +92,15 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
 
   private fun setupViewPager(savedInstanceState: Bundle?) {
     pagerAdapter = AboutPagerAdapter(this)
-    binding.viewPager.adapter = pagerAdapter
-    binding.viewPager.offscreenPageLimit = 1
+    binding.apply {
+      // Show spinner while loading
+      progressSpinner.visibility = View.VISIBLE
+
+      // Mark pager invisible while loading
+      viewPager.visibility = View.INVISIBLE
+      viewPager.adapter = pagerAdapter
+      viewPager.offscreenPageLimit = 1
+    }
 
     // We must observe the data set for when it finishes.
     // There is a race condition that can cause the UI to crash if pager.setCurrentItem is
@@ -105,9 +112,15 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
         Timber.d("Data set changed! Set current item and unregister self")
         pagerAdapter.unregisterDataSetObserver(this)
 
-        // Reload the last looked at page
-        if (savedInstanceState != null) {
-          binding.viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
+        // Hide spinner now that loading is done
+        binding.apply {
+          progressSpinner.visibility = View.GONE
+          viewPager.visibility = View.VISIBLE
+
+          // Reload the last looked at page
+          if (savedInstanceState != null) {
+            viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
+          }
         }
       }
     })

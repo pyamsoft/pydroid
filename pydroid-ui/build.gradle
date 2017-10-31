@@ -70,7 +70,7 @@ dependencies {
 
   // Android support library.
   api "com.android.support:support-vector-drawable:$supportLib"
-  implementation "com.android.support:cardview-v7:$supportLib"
+  api "com.android.support:cardview-v7:$supportLib"
 
   // Material View Pager indicator
   implementation "com.github.ronaldsmartin:Material-ViewPagerIndicator:$viewPagerIndicator"

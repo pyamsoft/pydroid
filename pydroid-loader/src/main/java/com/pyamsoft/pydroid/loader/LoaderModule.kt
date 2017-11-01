@@ -21,6 +21,7 @@ package com.pyamsoft.pydroid.loader
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
@@ -36,5 +37,9 @@ class LoaderModule(context: Context) {
   // Singleton
   @CheckResult
   fun provideImageLoader(): ImageLoader = imageLoader
+
+  // Singleton
+  @CheckResult
+  fun provideImageLoaderCache(): Cache = imageLoader
 }
 

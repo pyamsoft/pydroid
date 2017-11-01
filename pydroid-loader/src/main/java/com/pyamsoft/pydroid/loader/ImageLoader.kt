@@ -22,12 +22,17 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
 import android.support.annotation.DrawableRes
+import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 
 class ImageLoader internal constructor(private val context: Context,
-    private val resourceImageCache: ImageCache<Int, Drawable>) {
+    private val resourceImageCache: ImageCache<Int, Drawable>): Cache {
+
+  override fun clearCache() {
+    resourceImageCache.clearCache()
+  }
 
   @CheckResult
   fun fromResource(

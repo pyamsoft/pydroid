@@ -19,6 +19,8 @@
 package com.pyamsoft.pydroid.helper
 
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.helper.Optional.Absent
+import com.pyamsoft.pydroid.helper.Optional.Present
 
 sealed class Optional<out T : Any> {
 
@@ -33,8 +35,12 @@ sealed class Optional<out T : Any> {
 
   companion object {
 
+    @JvmStatic
     @CheckResult
     fun <T : Any> asOptional(source: T?): Optional<T> = source.asOptional()
   }
 }
 
+@CheckResult
+fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) Absent else Present(
+    this)

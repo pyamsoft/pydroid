@@ -29,6 +29,7 @@ import android.support.v7.content.res.AppCompatResources
 
 object ActionBarUtil {
 
+  @JvmStatic
   @CheckResult
   fun getActionBar(activity: Activity): ActionBar {
     if (activity is AppCompatActivity) {
@@ -38,6 +39,7 @@ object ActionBarUtil {
     }
   }
 
+  @JvmStatic
   fun setActionBarUpEnabled(activity: Activity, up: Boolean, @DrawableRes icon: Int) {
     val d: Drawable? = if (icon != 0) {
       AppCompatResources.getDrawable(activity, icon)
@@ -48,6 +50,7 @@ object ActionBarUtil {
     setActionBarUpEnabled(activity, up, d)
   }
 
+  @JvmStatic
   @JvmOverloads
   fun setActionBarUpEnabled(activity: Activity, up: Boolean,
       icon: Drawable? = null) {
@@ -57,10 +60,12 @@ object ActionBarUtil {
     bar.setHomeAsUpIndicator(icon)
   }
 
+  @JvmStatic
   fun setActionBarTitle(activity: Activity, title: CharSequence) {
     getActionBar(activity).title = title
   }
 
+  @JvmStatic
   fun setActionBarTitle(activity: Activity, @StringRes title: Int) {
     getActionBar(activity).setTitle(title)
   }

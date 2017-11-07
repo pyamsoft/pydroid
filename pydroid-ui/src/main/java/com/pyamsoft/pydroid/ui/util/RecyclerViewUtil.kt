@@ -16,25 +16,23 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid
+package com.pyamsoft.pydroid.ui.util
 
-import android.content.Context
 import android.support.annotation.CheckResult
+import android.support.v7.widget.RecyclerView.ItemAnimator
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 
-/**
- * Interface respected by all Injector managers
- */
-interface SimpleInjector {
+object RecyclerViewUtil {
 
-  /**
-   * The name for this injector
-   */
-  val name: String
-
-  /**
-   * Obtain the singleton instance of this injector
-   */
+  @JvmStatic
   @CheckResult
-  fun <T : Any> obtain(context: Context): T
+  fun withStandardDurations(animator: ItemAnimator = SlideInUpAnimator()): ItemAnimator {
+    return animator.apply {
+      addDuration = 300L
+      moveDuration = 300L
+      removeDuration = 400L
+      changeDuration = 10L
+    }
+  }
 }
 

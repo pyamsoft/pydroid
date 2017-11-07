@@ -36,6 +36,7 @@ object PYDroid {
 
   private var component: PYDroidComponent? = null
 
+  @JvmStatic
   private fun setStrictMode() {
     StrictMode.setThreadPolicy(
         StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()
@@ -46,6 +47,7 @@ object PYDroid {
   /**
    * Access point for library component graph
    */
+  @JvmStatic
   @CheckResult
   internal fun obtain(): PYDroidComponent {
     val obj = component
@@ -60,6 +62,7 @@ object PYDroid {
   /**
    * Create the library entry point
    */
+  @JvmStatic
   private fun initialize(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
     component = PYDroidComponentImpl(pydroidModule, loaderModule)
     if (pydroidModule.isDebug) {
@@ -74,6 +77,7 @@ object PYDroid {
    *
    * You should carry the passed modules with you to any other component graphs or you will have "doubled" singletons
    */
+  @JvmStatic
   fun init(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
     if (component == null) {
       initialize(pydroidModule, loaderModule)

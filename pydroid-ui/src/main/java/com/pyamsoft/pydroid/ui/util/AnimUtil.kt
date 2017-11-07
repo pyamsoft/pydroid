@@ -37,6 +37,7 @@ object AnimUtil {
   private var overshootInterpolator: Interpolator? = null
   private var accelCubicInterpolator: Interpolator? = null
 
+  @JvmStatic
   @CheckResult private fun getOvershootInterpolator(context: Context): Interpolator {
     if (overshootInterpolator == null) {
       overshootInterpolator = AnimationUtils.loadInterpolator(context.applicationContext,
@@ -46,6 +47,7 @@ object AnimUtil {
     return overshootInterpolator!!
   }
 
+  @JvmStatic
   @CheckResult private fun getAccelCubicInterpolator(context: Context): Interpolator {
     if (accelCubicInterpolator == null) {
       accelCubicInterpolator = AnimationUtils.loadInterpolator(context.applicationContext,
@@ -55,6 +57,7 @@ object AnimUtil {
     return accelCubicInterpolator!!
   }
 
+  @JvmStatic
   fun popShow(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(v.context)
     v.alpha = 0f
@@ -77,6 +80,7 @@ object AnimUtil {
         })
   }
 
+  @JvmStatic
   fun popHide(v: View, startDelay: Int, duration: Int): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(v.context)
     v.alpha = 1f
@@ -100,6 +104,7 @@ object AnimUtil {
         })
   }
 
+  @JvmStatic
   fun fadeIn(v: View): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(v.context)
     v.alpha = 0f
@@ -109,6 +114,7 @@ object AnimUtil {
         900).setInterpolator(i).setListener(null)
   }
 
+  @JvmStatic
   fun fadeAway(v: View): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(v.context)
     v.alpha = 1f
@@ -118,12 +124,14 @@ object AnimUtil {
         i).setListener(null)
   }
 
+  @JvmStatic
   fun flipVertical(v: View): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(v.context)
     return ViewCompat.animate(v).scaleY(-v.scaleY).setStartDelay(100).setDuration(
         300).setInterpolator(i).setListener(null)
   }
 
+  @JvmStatic
   fun animateActionBarToolbar(toolbar: Toolbar) {
     val t = toolbar.getChildAt(0)
     if (t is TextView && VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {

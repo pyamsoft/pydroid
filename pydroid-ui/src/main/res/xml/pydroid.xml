@@ -50,9 +50,6 @@
         android:summary="@string/rating_summary"
         android:title="@string/rating_title"/>
 
-    <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.pydroid.ui.social.SocialMediaPreference/>
-
   </PreferenceCategory>
 
 </PreferenceScreen>

@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding
+import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.NetworkUtil
 
 class AboutPagerFragment : Fragment() {
@@ -57,7 +58,7 @@ class AboutPagerFragment : Fragment() {
 
     binding.aboutItemHomepage.paintFlags = (binding.aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
     binding.aboutItemHomepage.text = homepage
-    binding.aboutItemHomepage.setOnClickListener {
+    binding.aboutItemHomepage.setOnDebouncedClickListener {
       NetworkUtil.newLink(it.context.applicationContext, homepage)
     }
   }
@@ -65,7 +66,7 @@ class AboutPagerFragment : Fragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     binding.aboutItemHomepage.text = null
-    binding.aboutItemHomepage.setOnClickListener(null)
+    binding.aboutItemHomepage.setOnDebouncedClickListener(null)
     binding.aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
   }
 

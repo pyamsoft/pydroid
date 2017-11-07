@@ -39,6 +39,7 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.LAST
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.NOT_LAST
 import com.pyamsoft.pydroid.ui.app.fragment.DisposableFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
+import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import timber.log.Timber
 
 class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.View {
@@ -146,14 +147,14 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     mapper.put("left",
         imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
     binding.arrowLeft.rotation = 90F
-    binding.arrowLeft.setOnClickListener {
+    binding.arrowLeft.setOnDebouncedClickListener {
       binding.viewPager.arrowScroll(View.FOCUS_LEFT)
     }
 
     mapper.put("right",
         imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
     binding.arrowRight.rotation = -90F
-    binding.arrowRight.setOnClickListener {
+    binding.arrowRight.setOnDebouncedClickListener {
       binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
     }
   }
@@ -176,8 +177,8 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     binding.viewPager.adapter = null
     pagerAdapter.clear()
 
-    binding.arrowLeft.setOnClickListener(null)
-    binding.arrowRight.setOnClickListener(null)
+    binding.arrowLeft.setOnDebouncedClickListener(null)
+    binding.arrowRight.setOnDebouncedClickListener(null)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

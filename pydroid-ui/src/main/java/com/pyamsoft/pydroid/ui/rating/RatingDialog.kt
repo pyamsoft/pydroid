@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.DisposableDialogFragment
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
+import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
 import com.pyamsoft.pydroid.version.VersionCheckProvider
@@ -88,8 +89,8 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
     super.onViewCreated(view, savedInstanceState)
     initDialog()
 
-    binding.ratingBtnNoThanks.setOnClickListener { presenter.saveRating(false) }
-    binding.ratingBtnGoRate.setOnClickListener { presenter.saveRating(true) }
+    binding.ratingBtnNoThanks.setOnDebouncedClickListener { presenter.saveRating(false) }
+    binding.ratingBtnGoRate.setOnDebouncedClickListener { presenter.saveRating(true) }
 
     presenter.bind(this)
   }

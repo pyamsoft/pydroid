@@ -20,26 +20,21 @@ package com.pyamsoft.pydroid.loader
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.annotation.CheckResult
+import android.support.annotation.DrawableRes
 import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
-import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
+import com.pyamsoft.pydroid.loader.resource.ResourceLoader
+import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 
-class LoaderModule(context: Context) {
+internal class ImageLoaderImpl internal constructor(private val context: Context,
+    private val resourceImageCache: ImageCache<Int, Drawable>) : ImageLoader, Cache {
 
-  private val imageLoader: ImageLoaderImpl
-
-  init {
-    val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
-    imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache)
+  override fun clearCache() {
+    resourceImageCache.clearCache()
   }
 
-  // Singleton
-  @CheckResult
-  fun provideImageLoader(): ImageLoader = imageLoader
+  override fun fromResource(@DrawableRes resource: Int): ResourceLoader = fromResource(resource, 0)
 
-  // Singleton
-  @CheckResult
-  fun provideImageLoaderCache(): Cache = imageLoader
+  override fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader = RxResourceLoader(
+      context.applicationContext, resource, errorResource, resourceImageCache)
 }
-

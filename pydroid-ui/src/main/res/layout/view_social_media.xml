@@ -16,14 +16,17 @@
   ~     with this program; if not, write to the Free Software Foundation, Inc.,
   ~     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   -->
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
   <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:baselineAligned="false"
       android:orientation="horizontal"
-      android:padding="16dp"
+      android:paddingBottom="8dp"
+      android:paddingEnd="16dp"
+      android:paddingStart="16dp"
+      android:paddingTop="8dp"
       >
 
     <FrameLayout
@@ -34,12 +37,12 @@
 
       <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/google_play"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"
-          android:src="@drawable/google_play"
+          app:srcCompat="@drawable/google_play"
           />
 
     </FrameLayout>
@@ -52,12 +55,12 @@
 
       <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/blogger"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"
-          android:src="@drawable/blogger_icon"
+          app:srcCompat="@drawable/blogger_icon"
           />
 
     </FrameLayout>
@@ -70,12 +73,12 @@
 
       <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/google_plus"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"
-          android:src="@drawable/google_plus"
+          app:srcCompat="@drawable/google_plus"
           />
 
     </FrameLayout>
@@ -88,12 +91,12 @@
 
       <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/facebook"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="fitXY"
-          android:src="@drawable/facebook_icon"
+          app:srcCompat="@drawable/facebook_icon"
           />
 
     </FrameLayout>

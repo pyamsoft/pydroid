@@ -20,17 +20,21 @@ package com.pyamsoft.pydroid.ui.social
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.loader.LoaderMap
+import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
+import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 
 class SocialMediaLayout : LinearLayout {
 
-  private val googlePlay: View
-  private val googlePlus: View
-  private val blogger: View
-  private val facebook: View
+  internal lateinit var imageLoader: ImageLoader
+  private lateinit var binding: ViewSocialMediaBinding
+  private val loaderMap: LoaderMap = LoaderMap()
 
   constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
       context, attrs, defStyleAttr, defStyleRes)
@@ -44,27 +48,42 @@ class SocialMediaLayout : LinearLayout {
 
   init {
     orientation = HORIZONTAL
-    inflate(context, R.layout.view_social_media, this)
-    googlePlay = findViewById(R.id.google_play)
-    googlePlus = findViewById(R.id.google_plus)
-    blogger = findViewById(R.id.blogger)
-    facebook = findViewById(R.id.facebook)
+    binding = ViewSocialMediaBinding.inflate(LayoutInflater.from(context), this, false)
+    addView(binding.root)
+    PYDroid.obtain().inject(this)
   }
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    googlePlay.setOnDebouncedClickListener { Linker.clickGooglePlay(googlePlay.context) }
-    googlePlus.setOnDebouncedClickListener { Linker.clickGooglePlus(googlePlus.context) }
-    blogger.setOnDebouncedClickListener { Linker.clickBlogger(blogger.context) }
-    facebook.setOnDebouncedClickListener { Linker.clickFacebook(facebook.context) }
+    binding.apply {
+      googlePlay.setOnDebouncedClickListener { Linker.clickGooglePlay(context) }
+      googlePlus.setOnDebouncedClickListener { Linker.clickGooglePlus(context) }
+      blogger.setOnDebouncedClickListener { Linker.clickBlogger(context) }
+      facebook.setOnDebouncedClickListener { Linker.clickFacebook(context) }
+    }
+
+    loaderMap.apply {
+      put("googlePlay", imageLoader.fromResource(R.drawable.google_play).into(
+          DrawableImageTarget.forImageView(binding.googlePlay)))
+      put("googlePlus", imageLoader.fromResource(R.drawable.google_plus).into(
+          DrawableImageTarget.forImageView(binding.googlePlus)))
+      put("blogger", imageLoader.fromResource(R.drawable.blogger_icon).into(
+          DrawableImageTarget.forImageView(binding.blogger)))
+      put("facebook", imageLoader.fromResource(R.drawable.facebook_icon).into(
+          DrawableImageTarget.forImageView(binding.facebook)))
+    }
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
-    googlePlay.setOnDebouncedClickListener(null)
-    googlePlus.setOnDebouncedClickListener(null)
-    blogger.setOnDebouncedClickListener(null)
-    facebook.setOnDebouncedClickListener(null)
+    binding.apply {
+      googlePlay.setOnDebouncedClickListener(null)
+      googlePlus.setOnDebouncedClickListener(null)
+      blogger.setOnDebouncedClickListener(null)
+      facebook.setOnDebouncedClickListener(null)
+    }
+
+    loaderMap.clear()
   }
 
 }

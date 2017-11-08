@@ -16,7 +16,7 @@
   ~     with this program; if not, write to the Free Software Foundation, Inc.,
   ~     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   -->
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
   <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
@@ -37,12 +37,11 @@
 
       <ImageView
           android:id="@+id/google_play"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="centerInside"
-          app:srcCompat="@drawable/google_play"
           />
 
     </FrameLayout>
@@ -55,12 +54,11 @@
 
       <ImageView
           android:id="@+id/blogger"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="centerInside"
-          app:srcCompat="@drawable/blogger_icon"
           />
 
     </FrameLayout>
@@ -73,12 +71,11 @@
 
       <ImageView
           android:id="@+id/google_plus"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="centerInside"
-          app:srcCompat="@drawable/google_plus"
           />
 
     </FrameLayout>
@@ -91,12 +88,11 @@
 
       <ImageView
           android:id="@+id/facebook"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           android:scaleType="centerInside"
-          app:srcCompat="@drawable/facebook_icon"
           />
 
     </FrameLayout>

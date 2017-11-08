@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingModule
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
+import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 import com.pyamsoft.pydroid.version.VersionCheckModule
@@ -51,6 +52,10 @@ internal class PYDroidComponentImpl internal constructor(pyDroidModule: PYDroidM
 
   override fun inject(activity: TamperActivity) {
     activity.debugMode = debugMode
+  }
+
+  override fun inject(layout: SocialMediaLayout) {
+    layout.imageLoader = loaderModule.provideImageLoader()
   }
 
   override fun plusVersionCheckComponent(packageName: String,

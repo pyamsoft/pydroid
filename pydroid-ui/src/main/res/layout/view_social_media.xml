@@ -20,7 +20,7 @@
   <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="@dimen/social_media_bar_size"
       android:baselineAligned="false"
       android:orientation="horizontal"
       android:paddingBottom="8dp"
@@ -35,13 +35,13 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+      <ImageView
           android:id="@+id/google_play"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
-          android:scaleType="fitXY"
+          android:scaleType="centerInside"
           app:srcCompat="@drawable/google_play"
           />
 
@@ -53,13 +53,13 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+      <ImageView
           android:id="@+id/blogger"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
-          android:scaleType="fitXY"
+          android:scaleType="centerInside"
           app:srcCompat="@drawable/blogger_icon"
           />
 
@@ -71,13 +71,13 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+      <ImageView
           android:id="@+id/google_plus"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
-          android:scaleType="fitXY"
+          android:scaleType="centerInside"
           app:srcCompat="@drawable/google_plus"
           />
 
@@ -89,13 +89,13 @@
         android:layout_weight="1"
         >
 
-      <com.pyamsoft.pydroid.ui.widget.SquareImageView
+      <ImageView
           android:id="@+id/facebook"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
-          android:scaleType="fitXY"
+          android:scaleType="centerInside"
           app:srcCompat="@drawable/facebook_icon"
           />
 

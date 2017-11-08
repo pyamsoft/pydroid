@@ -42,11 +42,10 @@
     <FrameLayout
         android:id="@+id/app_settings_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/social_media_bar_size"
         android:layout_above="@id/social_media_layout"
         android:layout_alignParentTop="true"
         />
-
 
   </RelativeLayout>
 </layout>

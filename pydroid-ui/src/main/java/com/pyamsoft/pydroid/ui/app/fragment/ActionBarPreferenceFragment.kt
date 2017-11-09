@@ -19,14 +19,10 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.support.annotation.CallSuper
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v7.preference.PreferenceFragmentCompat
-import android.view.View
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
-import com.pyamsoft.pydroid.ui.util.RecyclerViewUtil
 
 abstract class ActionBarPreferenceFragment : PreferenceFragmentCompat(), ActionBarProvider {
 
@@ -48,11 +44,5 @@ abstract class ActionBarPreferenceFragment : PreferenceFragmentCompat(), ActionB
 
   override fun setActionBarTitle(@StringRes title: Int) {
     ActionBarUtil.setActionBarTitle(activity!!, title)
-  }
-
-  @CallSuper
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    listView.itemAnimator = RecyclerViewUtil.withStandardDurations()
   }
 }

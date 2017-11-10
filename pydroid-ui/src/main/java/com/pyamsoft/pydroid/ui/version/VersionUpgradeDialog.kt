@@ -25,7 +25,7 @@ import android.support.v7.app.AlertDialog
 import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 import com.pyamsoft.pydroid.ui.social.Linker
 
-class VersionUpgradeDialog : DialogFragmentBase() {
+internal class VersionUpgradeDialog : DialogFragmentBase() {
 
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0

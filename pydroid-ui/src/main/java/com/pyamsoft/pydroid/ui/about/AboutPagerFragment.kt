@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.NetworkUtil
 
-class AboutPagerFragment : Fragment() {
+internal class AboutPagerFragment : Fragment() {
 
   private lateinit var homepage: String
   private lateinit var license: String

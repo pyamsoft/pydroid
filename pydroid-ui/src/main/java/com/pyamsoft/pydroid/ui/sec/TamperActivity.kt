@@ -73,6 +73,7 @@ abstract class TamperActivity : RatingActivity() {
     }
   }
 
+  @CallSuper
   override fun onPostResume() {
     super.onPostResume()
     if (applicationIsTampered()) {

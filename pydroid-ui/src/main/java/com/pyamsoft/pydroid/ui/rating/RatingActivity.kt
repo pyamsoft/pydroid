@@ -79,6 +79,7 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
     presenter.bind(this)
   }
 
+  @CallSuper
   override fun onPostResume() {
     super.onPostResume()
 

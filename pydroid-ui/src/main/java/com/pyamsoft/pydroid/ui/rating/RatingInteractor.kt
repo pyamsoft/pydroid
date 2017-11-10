@@ -25,7 +25,7 @@ import io.reactivex.Single
 internal interface RatingInteractor {
 
   @CheckResult
-  fun needsToViewRating(versionCode: Int, force: Boolean): Single<Boolean>
+  fun needsToViewRating(force: Boolean, versionCode: Int): Single<Boolean>
 
   @CheckResult
   fun saveRating(versionCode: Int): Completable

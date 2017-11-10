@@ -31,7 +31,7 @@ internal class RatingPresenter internal constructor(private val currentVersion: 
 
   internal fun loadRatingDialog(force: Boolean) {
     dispose {
-      interactor.needsToViewRating(currentVersion, force).subscribeOn(
+      interactor.needsToViewRating(force, currentVersion).subscribeOn(
           ioScheduler).observeOn(mainThreadScheduler).subscribe({
         if (it) {
           view?.onShowRatingDialog()

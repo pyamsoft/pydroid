@@ -141,6 +141,7 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
 
   companion object {
 
+    const val TAG = "RatingDialog"
     private const val CHANGE_LOG_TEXT = "change_log_text"
     private const val CHANGE_LOG_ICON = "change_log_icon"
     private const val VERSION_CODE = "version_code"

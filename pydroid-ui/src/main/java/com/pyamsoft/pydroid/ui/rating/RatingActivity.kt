@@ -88,7 +88,7 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
   }
 
   override fun onShowRatingDialog() {
-    DialogUtil.guaranteeSingleDialogFragment(this, RatingDialog.newInstance(this), "rating")
+    DialogUtil.guaranteeSingleDialogFragment(this, RatingDialog.newInstance(this), RatingDialog.TAG)
   }
 
   override fun onRatingDialogLoadError(throwable: Throwable) {

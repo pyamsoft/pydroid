@@ -29,7 +29,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
@@ -51,7 +50,8 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
   internal lateinit var ratingPresenter: RatingPresenter
   private lateinit var toast: Toast
 
-  @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> = listOf(versionPresenter, ratingPresenter)
+  @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> = listOf(versionPresenter,
+      ratingPresenter)
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -134,13 +134,13 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
   }
 
   override fun onShowRatingDialog() {
-        val activity = activity
-        if (activity is RatingDialog.ChangeLogProvider) {
-          DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
-              "rating")
-        } else {
-          throw ClassCastException("Activity is not a change log provider")
-        }
+    val activity = activity
+    if (activity is RatingDialog.ChangeLogProvider) {
+      DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
+          RatingDialog.TAG)
+    } else {
+      throw ClassCastException("Activity is not a change log provider")
+    }
   }
 
   override fun onRatingDialogLoadError(throwable: Throwable) {

@@ -39,7 +39,7 @@ import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 
-class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
+internal class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
 
   internal lateinit var imageLoader: ImageLoader
   internal lateinit var presenter: RatingSavePresenter
@@ -141,7 +141,7 @@ class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
 
   companion object {
 
-    const val TAG = "RatingDialog"
+    internal const val TAG = "RatingDialog"
     private const val CHANGE_LOG_TEXT = "change_log_text"
     private const val CHANGE_LOG_ICON = "change_log_icon"
     private const val VERSION_CODE = "version_code"

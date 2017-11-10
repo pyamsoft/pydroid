@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 class SocialMediaLayout : LinearLayout {
 
   internal lateinit var imageLoader: ImageLoader
-  private lateinit var binding: ViewSocialMediaBinding
+  private val binding: ViewSocialMediaBinding
   private val loaderMap: LoaderMap = LoaderMap()
 
   constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(

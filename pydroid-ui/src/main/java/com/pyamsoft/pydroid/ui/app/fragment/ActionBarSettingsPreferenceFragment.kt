@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
+import com.pyamsoft.pydroid.ui.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -44,12 +45,13 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragment(), VersionCheckPresenter.View {
+abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragment(), VersionCheckPresenter.View, RatingPresenter.View {
 
-  internal lateinit var presenter: VersionCheckPresenter
+  internal lateinit var versionPresenter: VersionCheckPresenter
+  internal lateinit var ratingPresenter: RatingPresenter
   private lateinit var toast: Toast
 
-  @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
+  @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> = listOf(versionPresenter, ratingPresenter)
 
   @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -106,7 +108,7 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
 
     val checkVersion: Preference = findPreference(getString(R.string.check_version_key))
     checkVersion.setOnPreferenceClickListener {
-      onCheckForUpdatesClicked(presenter)
+      onCheckForUpdatesClicked(versionPresenter)
       return@setOnPreferenceClickListener true
     }
 
@@ -122,12 +124,27 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
       return@setOnPreferenceClickListener true
     }
 
-    presenter.bind(this)
+    versionPresenter.bind(this)
+    ratingPresenter.bind(this)
   }
 
   override fun onStart() {
     super.onStart()
-    presenter.checkForUpdates(false)
+    versionPresenter.checkForUpdates(false)
+  }
+
+  override fun onShowRatingDialog() {
+        val activity = activity
+        if (activity is RatingDialog.ChangeLogProvider) {
+          DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
+              "rating")
+        } else {
+          throw ClassCastException("Activity is not a change log provider")
+        }
+  }
+
+  override fun onRatingDialogLoadError(throwable: Throwable) {
+    Timber.e(throwable, "Error loading rating dialog")
   }
 
   override fun onUpdatedVersionFound(current: Int, updated: Int) {
@@ -156,13 +173,7 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
    * Shows the changelog, override or extend to use unique implementation
    */
   protected open fun onShowChangelogClicked() {
-    val activity = activity
-    if (activity is RatingDialog.ChangeLogProvider) {
-      DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
-          "rating")
-    } else {
-      throw ClassCastException("Activity is not a change log provider")
-    }
+    ratingPresenter.loadRatingDialog(true)
   }
 
   /**

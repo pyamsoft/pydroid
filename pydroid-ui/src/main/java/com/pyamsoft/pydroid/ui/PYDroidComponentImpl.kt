@@ -63,7 +63,7 @@ internal class PYDroidComponentImpl internal constructor(pyDroidModule: PYDroidM
       VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
 
   override fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent =
-      AppComponentImpl(versionCheckModule, packageName, currentVersion)
+      AppComponentImpl(versionCheckModule, ratingModule, packageName, currentVersion)
 
   override fun plusRatingComponent(currentVersion: Int): RatingComponent =
       RatingComponentImpl(currentVersion, ratingModule, loaderModule)

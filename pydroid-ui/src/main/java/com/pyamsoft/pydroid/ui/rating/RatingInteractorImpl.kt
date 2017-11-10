@@ -21,22 +21,12 @@ package com.pyamsoft.pydroid.ui.rating
 import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Completable
 import io.reactivex.Single
-import timber.log.Timber
 
 internal class RatingInteractorImpl internal constructor(
     private val preferences: RatingPreferences) : RatingInteractor {
 
   override fun needsToViewRating(force: Boolean, versionCode: Int): Single<Boolean> {
-    return Single.fromCallable {
-      if (force) {
-        return@fromCallable true
-      } else {
-        val code: Int = preferences.getRatingAcceptedVersion()
-        val result = (code < versionCode)
-        Timber.d("Version check: $code is lower than $versionCode ?  $result")
-        return@fromCallable result
-      }
-    }
+    return Single.fromCallable { force || preferences.getRatingAcceptedVersion() < versionCode }
   }
 
   override fun saveRating(versionCode: Int): Completable =

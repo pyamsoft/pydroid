@@ -24,12 +24,6 @@ import com.pyamsoft.pydroid.helper.Optional.Present
 
 sealed class Optional<out T : Any> {
 
-  @CheckResult
-  fun get(): T? = when (this) {
-    is Present -> value
-    is Absent -> null
-  }
-
   data class Present<out T : Any>(val value: T) : Optional<T>()
   object Absent : Optional<Nothing>()
 

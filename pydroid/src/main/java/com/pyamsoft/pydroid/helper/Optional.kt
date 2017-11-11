@@ -30,8 +30,8 @@ sealed class Optional<out T : Any> {
     is Absent -> null
   }
 
-  internal data class Present<out T : Any>(val value: T) : Optional<T>()
-  internal object Absent : Optional<Nothing>()
+  data class Present<out T : Any>(val value: T) : Optional<T>()
+  object Absent : Optional<Nothing>()
 
   companion object {
 

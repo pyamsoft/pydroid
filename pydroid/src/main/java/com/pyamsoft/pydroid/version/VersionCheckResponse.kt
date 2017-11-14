@@ -27,13 +27,30 @@ import com.google.gson.annotations.SerializedName
 @AutoValue internal abstract class VersionCheckResponse internal constructor() {
 
   @CheckResult
-  @SerializedName("CURRENT_VERSION") internal abstract fun currentVersion(): Int
+  @SerializedName("response_objects") abstract fun responseObjects(): List<ResponseObject>
+
+  @AutoValue internal abstract class ResponseObject internal constructor() {
+
+    @CheckResult
+    @SerializedName("min_api") abstract fun minApi(): Int
+
+    @CheckResult abstract fun version(): Int
+
+    companion object {
+
+      @JvmStatic
+      @CheckResult
+      fun typeAdapter(gson: Gson): TypeAdapter<ResponseObject> =
+          AutoValue_VersionCheckResponse_ResponseObject.GsonTypeAdapter(gson)
+              .setDefaultMinApi(0).setDefaultVersion(0)
+    }
+  }
 
   companion object {
 
     @JvmStatic
     @CheckResult
     fun typeAdapter(gson: Gson): TypeAdapter<VersionCheckResponse> =
-        AutoValue_VersionCheckResponse.GsonTypeAdapter(gson)
+        AutoValue_VersionCheckResponse.GsonTypeAdapter(gson).setDefaultResponseObjects(emptyList())
   }
 }

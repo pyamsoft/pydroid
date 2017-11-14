@@ -44,6 +44,10 @@ android {
       annotationProcessorOptions {
         // Fix kapt
         includeCompileClasspath = true
+
+        // Autovalue generates default empty collections and setters
+        arguments = ['autovaluegson.defaultCollectionsToEmpty'        : 'true',
+                     'autovaluegson.mutableAdaptersWithDefaultSetters': 'true']
       }
     }
   }

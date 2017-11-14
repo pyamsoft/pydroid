@@ -18,11 +18,24 @@
 
 package com.pyamsoft.pydroid.version
 
+import android.os.Build
 import io.reactivex.Single
 
 internal class VersionCheckInteractorImpl internal constructor(
     private val versionCheckService: VersionCheckService) : VersionCheckInteractor {
 
-  override fun checkVersion(packageName: String, force: Boolean): Single<Int> =
-      versionCheckService.checkVersion(packageName).map { it.currentVersion() }
+  override fun checkVersion(packageName: String, force: Boolean): Single<Int> {
+    return versionCheckService.checkVersion(packageName)
+        .map {
+          val apiVersion: Int = Build.VERSION.SDK_INT
+          var lowestApplicableVersionCode = 0
+          it.responseObjects().sortedBy { it.minApi() }.forEach {
+            if (it.minApi() <= apiVersion) {
+              lowestApplicableVersionCode = it.version()
+            }
+          }
+
+          return@map lowestApplicableVersionCode
+        }
+  }
 }

@@ -22,12 +22,21 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.helper.Optional.Absent
 import com.pyamsoft.pydroid.helper.Optional.Present
 
-sealed class Optional {
+/**
+ * Keep the unused T here for better casting
+ */
+sealed class Optional<out T : Any> {
 
-  data class Present<out T : Any>(val value: T) : Optional()
-  object Absent : Optional()
+  data class Present<out T : Any>(val value: T) : Optional<T>()
+  object Absent : Optional<Nothing>()
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
+  }
 }
 
 @CheckResult
-@JvmName("ofNullable")
-fun <T : Any> T?.asOptional(): Optional = if (this == null) Absent else Present(this)
+fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) Absent else Present(this)

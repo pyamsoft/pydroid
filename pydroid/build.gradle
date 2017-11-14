@@ -84,6 +84,7 @@ dependencies {
   provided "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
   kapt "com.google.auto.value:auto-value:$autoValue"
   kapt "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
+  compile "com.google.code.gson:gson:$gson"
 
   // RxJava
   compile "io.reactivex.rxjava2:rxjava:$rxjava"

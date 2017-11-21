@@ -27,7 +27,7 @@ internal class PYDroidPreferencesImpl internal constructor(context: Context) : R
   private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
       context.applicationContext)
 
-  override fun getRatingAcceptedVersion(): Int = preferences.getInt(RATING_ACCEPTED_VERSION, 0)
+  override fun getRatingAcceptedVersion(): Int = preferences.getInt(RATING_ACCEPTED_VERSION, 1)
 
   override fun setRatingAcceptedVersion(version: Int) {
     preferences.edit().putInt(RATING_ACCEPTED_VERSION, version).apply()

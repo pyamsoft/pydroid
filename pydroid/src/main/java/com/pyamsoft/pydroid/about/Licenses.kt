@@ -54,11 +54,6 @@ object Licenses {
         licenses.add(item)
     }
 
-    private fun createItemWithContent(name: String, homepageUrl: String, content: String) {
-        val item = AboutLibrariesModel.createWithContent(name, homepageUrl, content)
-        licenses.add(item)
-    }
-
     private object Names {
         internal const val RXJAVA = "RxJava"
         internal const val RXANDROID = "RxAndroid"

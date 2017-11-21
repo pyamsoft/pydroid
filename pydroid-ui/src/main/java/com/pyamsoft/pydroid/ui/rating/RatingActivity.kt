@@ -29,69 +29,73 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.StringUtil
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider, RatingPresenter.View {
+abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider,
+        RatingPresenter.View {
 
-  internal lateinit var ratingPresenter: RatingPresenter
+    internal lateinit var ratingPresenter: RatingPresenter
 
-  @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> =
-      listOf(ratingPresenter) + super.provideBoundPresenters()
+    @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> =
+            listOf(ratingPresenter) + super.provideBoundPresenters()
 
-  override val changeLogText: Spannable
-    get() {
-      val title = "What's New in Version " + versionName
-      val lines = changeLogLines
-      val fullLines = Array(lines.size + 1, { "" })
-      fullLines[0] = title
-      System.arraycopy(lines, 0, fullLines, 1, fullLines.size - 1)
-      val spannable = StringUtil.createLineBreakBuilder(*fullLines)
+    override val changeLogText: Spannable
+        get() {
+            val title = "What's New in Version " + versionName
+            val lines = changeLogLines
+            val fullLines: Array<String> = Array(lines.size + 1) { "" }
+            fullLines[0] = title
+            System.arraycopy(lines, 0, fullLines, 1, fullLines.size - 1)
+            val spannable = StringUtil.createLineBreakBuilder(fullLines)
 
-      var start = 0
-      var end = title.length
-      val largeSize = StringUtil.getTextSizeFromAppearance(this, android.R.attr.textAppearanceLarge)
-      val largeColor = StringUtil.getTextColorFromAppearance(this,
-          android.R.attr.textAppearanceLarge)
-      val smallSize = StringUtil.getTextSizeFromAppearance(this, android.R.attr.textAppearanceSmall)
-      val smallColor = StringUtil.getTextColorFromAppearance(this,
-          android.R.attr.textAppearanceSmall)
+            var start = 0
+            var end = title.length
+            val largeSize = StringUtil.getTextSizeFromAppearance(this,
+                    android.R.attr.textAppearanceLarge)
+            val largeColor = StringUtil.getTextColorFromAppearance(this,
+                    android.R.attr.textAppearanceLarge)
+            val smallSize = StringUtil.getTextSizeFromAppearance(this,
+                    android.R.attr.textAppearanceSmall)
+            val smallColor = StringUtil.getTextColorFromAppearance(this,
+                    android.R.attr.textAppearanceSmall)
 
-      StringUtil.boldSpan(spannable, start, end)
-      StringUtil.sizeSpan(spannable, start, end, largeSize)
-      StringUtil.colorSpan(spannable, start, end, largeColor)
+            StringUtil.boldSpan(spannable, start, end)
+            StringUtil.sizeSpan(spannable, start, end, largeSize)
+            StringUtil.colorSpan(spannable, start, end, largeColor)
 
-      start += end + 2
-      for (line in lines) {
-        end += 2 + line.length
-      }
+            start += end + 2
+            for (line in lines) {
+                end += 2 + line.length
+            }
 
-      StringUtil.sizeSpan(spannable, start, end, smallSize)
-      StringUtil.colorSpan(spannable, start, end, smallColor)
+            StringUtil.sizeSpan(spannable, start, end, smallSize)
+            StringUtil.colorSpan(spannable, start, end, smallColor)
 
-      return spannable
+            return spannable
+        }
+
+    @get:CheckResult protected abstract val changeLogLines: Array<String>
+
+    @get:CheckResult protected abstract val versionName: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        PYDroid.obtain().plusRatingComponent(currentApplicationVersion).inject(this)
+        ratingPresenter.bind(this)
     }
 
-  @get:CheckResult protected abstract val changeLogLines: Array<String>
+    @CallSuper
+    override fun onPostResume() {
+        super.onPostResume()
 
-  @get:CheckResult protected abstract val versionName: String
+        // Dialog must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
+        ratingPresenter.loadRatingDialog(false)
+    }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    PYDroid.obtain().plusRatingComponent(currentApplicationVersion).inject(this)
-    ratingPresenter.bind(this)
-  }
+    override fun onShowRatingDialog() {
+        DialogUtil.guaranteeSingleDialogFragment(this, RatingDialog.newInstance(this),
+                RatingDialog.TAG)
+    }
 
-  @CallSuper
-  override fun onPostResume() {
-    super.onPostResume()
-
-    // Dialog must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
-    ratingPresenter.loadRatingDialog(false)
-  }
-
-  override fun onShowRatingDialog() {
-    DialogUtil.guaranteeSingleDialogFragment(this, RatingDialog.newInstance(this), RatingDialog.TAG)
-  }
-
-  override fun onRatingDialogLoadError(throwable: Throwable) {
-    Timber.e(throwable, "Could not load rating dialog")
-  }
+    override fun onRatingDialogLoadError(throwable: Throwable) {
+        Timber.e(throwable, "Could not load rating dialog")
+    }
 }

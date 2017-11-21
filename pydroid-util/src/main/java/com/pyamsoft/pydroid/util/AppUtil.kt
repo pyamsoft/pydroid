@@ -24,27 +24,28 @@ import android.util.TypedValue
 
 object AppUtil {
 
-  private val cachedDP: MutableMap<Float, Float> by lazy {
-    HashMap<Float, Float>(10)
-  }
-
-  @CheckResult
-  fun convertToDP(c: Context, px: Float): Float {
-    return if (px <= 0F) {
-      // Return
-      0F
-    } else {
-      val cached: Float? = cachedDP[px]
-      if (cached != null) {
-        // Return
-        cached
-      } else {
-        val m = c.applicationContext.resources.displayMetrics
-        val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
-        cachedDP[px] = dp
-        // Return
-        dp
-      }
+    private val cachedDP: MutableMap<Float, Float> by lazy {
+        HashMap<Float, Float>(10)
     }
-  }
+
+    @JvmStatic
+    @CheckResult
+    fun convertToDP(c: Context, px: Float): Float {
+        return if (px <= 0F) {
+            // Return
+            0F
+        } else {
+            val cached: Float? = cachedDP[px]
+            if (cached != null) {
+                // Return
+                cached
+            } else {
+                val m = c.applicationContext.resources.displayMetrics
+                val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
+                cachedDP[px] = dp
+                // Return
+                dp
+            }
+        }
+    }
 }

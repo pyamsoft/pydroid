@@ -19,6 +19,7 @@
 package com.pyamsoft.pydroid.ui.helper
 
 import android.content.Context
+import android.support.annotation.CheckResult
 import android.support.annotation.StringRes
 import android.widget.Toast
 
@@ -31,35 +32,43 @@ import android.widget.Toast
  */
 object Toasty {
 
-  enum class Duration {
-    LENGTH_SHORT, LENGTH_LONG
-  }
+    enum class Duration {
+        LENGTH_SHORT, LENGTH_LONG
+    }
 
-  val LENGTH_SHORT = Duration.LENGTH_SHORT
+    @JvmField
+    val LENGTH_SHORT = Duration.LENGTH_SHORT
 
-  val LENGTH_LONG = Duration.LENGTH_LONG
+    @JvmField
+    val LENGTH_LONG = Duration.LENGTH_LONG
 
-  fun makeText(c: Context, message: CharSequence, duration: Duration): Toast {
-    return Toast.makeText(c.applicationContext, message, when (duration) {
-      Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
-      Duration.LENGTH_LONG -> Toast.LENGTH_LONG
-    })
-  }
+    @JvmStatic
+    @CheckResult
+    fun makeText(c: Context, message: CharSequence, duration: Duration): Toast {
+        return Toast.makeText(c.applicationContext, message, when (duration) {
+            Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
+            Duration.LENGTH_LONG -> Toast.LENGTH_LONG
+        })
+    }
 
-  fun makeText(c: Context, @StringRes resId: Int, duration: Duration): Toast {
-    return makeText(c, c.applicationContext.getString(resId), duration)
-  }
+    @JvmStatic
+    @CheckResult
+    fun makeText(c: Context, @StringRes resId: Int, duration: Duration): Toast =
+            makeText(c, c.applicationContext.getString(resId), duration)
 
-  fun makeText(c: Context, @StringRes resId: Int, duration: Int): Toast {
-    return makeText(c, c.applicationContext.getString(resId), duration)
-  }
+    @JvmStatic
+    @CheckResult
+    fun makeText(c: Context, @StringRes resId: Int, duration: Int): Toast =
+            makeText(c, c.applicationContext.getString(resId), duration)
 
-  fun makeText(c: Context, message: CharSequence, duration: Int): Toast {
-    return makeText(c, message, when (duration) {
-      Toast.LENGTH_SHORT -> LENGTH_SHORT
-      Toast.LENGTH_LONG -> LENGTH_LONG
-      else -> throw IllegalArgumentException(
-          "Duration must be either Toast.LENGTH_SHORT or Toast.LENGTH_LONG")
-    })
-  }
+    @JvmStatic
+    @CheckResult
+    fun makeText(c: Context, message: CharSequence, duration: Int): Toast {
+        return makeText(c, message, when (duration) {
+            Toast.LENGTH_SHORT -> LENGTH_SHORT
+            Toast.LENGTH_LONG -> LENGTH_LONG
+            else -> throw IllegalArgumentException(
+                    "Duration must be either Toast.LENGTH_SHORT or Toast.LENGTH_LONG")
+        })
+    }
 }

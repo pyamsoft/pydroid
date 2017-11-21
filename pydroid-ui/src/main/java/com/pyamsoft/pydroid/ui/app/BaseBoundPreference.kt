@@ -26,27 +26,27 @@ import android.util.AttributeSet
 
 abstract class BaseBoundPreference : Preference {
 
-  constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int,
-      defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int,
+            defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
 
-  constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context,
-      attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context,
+            attrs, defStyleAttr)
 
-  constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-  constructor(context: Context) : super(context)
+    constructor(context: Context) : super(context)
 
-  @CallSuper override fun onBindViewHolder(holder: PreferenceViewHolder) {
-    super.onBindViewHolder(holder)
-    onUnbindViewHolder(holder)
-  }
+    @CallSuper override fun onBindViewHolder(holder: PreferenceViewHolder) {
+        super.onBindViewHolder(holder)
+        onUnbindViewHolder(holder)
+    }
 
-  @CallSuper override fun onDetached() {
-    super.onDetached()
-    onUnbindViewHolder(null)
-  }
+    @CallSuper override fun onDetached() {
+        super.onDetached()
+        onUnbindViewHolder(null)
+    }
 
-  protected open fun onUnbindViewHolder(holder: PreferenceViewHolder?) {
+    protected open fun onUnbindViewHolder(holder: PreferenceViewHolder?) {
 
-  }
+    }
 }

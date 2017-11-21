@@ -36,57 +36,59 @@ import retrofit2.converter.gson.GsonConverterFactory
 @RestrictTo(LIBRARY)
 class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
-  private val cachedInteractor: VersionCheckInteractor
-  private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()
-  private val ioScheduler: Scheduler = pyDroidModule.provideIoScheduler()
-  private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
+    private val cachedInteractor: VersionCheckInteractor
+    private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()
+    private val ioScheduler: Scheduler = pyDroidModule.provideIoScheduler()
+    private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
 
-  init {
-    val versionCheckApi = VersionCheckApi(
-        provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson()))
-    val versionCheckService: VersionCheckService = versionCheckApi.create(
-        VersionCheckService::class.java)
-    val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(versionCheckService)
-    cachedInteractor = VersionCheckInteractorCache(interactor)
-  }
-
-  @CheckResult private fun provideGson(): Gson {
-    val gsonBuilder = GsonBuilder().registerTypeAdapterFactory(AutoValueTypeAdapterFactory.create())
-    return gsonBuilder.create()
-  }
-
-  @CheckResult private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
-    val builder = OkHttpClient.Builder()
-    if (debug) {
-      val logging = HttpLoggingInterceptor()
-      logging.level = HttpLoggingInterceptor.Level.BODY
-      builder.addInterceptor(logging)
+    init {
+        val versionCheckApi = VersionCheckApi(
+                provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson()))
+        val versionCheckService: VersionCheckService = versionCheckApi.create(
+                VersionCheckService::class.java)
+        val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(versionCheckService)
+        cachedInteractor = VersionCheckInteractorCache(interactor)
     }
 
-    val pinner = CertificatePinner.Builder().add(GITHUB_URL,
-        "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw=").add(GITHUB_URL,
-        "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=").add(GITHUB_URL,
-        "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=").build()
-    builder.certificatePinner(pinner)
+    @CheckResult private fun provideGson(): Gson {
+        val gsonBuilder = GsonBuilder().registerTypeAdapterFactory(
+                AutoValueTypeAdapterFactory.create())
+        return gsonBuilder.create()
+    }
 
-    return builder.build()
-  }
+    @CheckResult private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+        if (debug) {
+            val logging = HttpLoggingInterceptor()
+            logging.level = HttpLoggingInterceptor.Level.BODY
+            builder.addInterceptor(logging)
+        }
 
-  @CheckResult private fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
-    return Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL).client(
-        okHttpClient).addConverterFactory(GsonConverterFactory.create(gson)).addCallAdapterFactory(
-        RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())).build()
-  }
+        val pinner = CertificatePinner.Builder().add(GITHUB_URL,
+                "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw=").add(GITHUB_URL,
+                "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=").add(GITHUB_URL,
+                "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=").build()
+        builder.certificatePinner(pinner)
 
-  @CheckResult
-  fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
-    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor,
-        computationScheduler, ioScheduler, mainThreadScheduler)
-  }
+        return builder.build()
+    }
 
-  companion object {
+    @CheckResult private fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+        return Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL).client(
+                okHttpClient).addConverterFactory(
+                GsonConverterFactory.create(gson)).addCallAdapterFactory(
+                RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())).build()
+    }
 
-    private const val GITHUB_URL = "raw.githubusercontent.com"
-    private const val CURRENT_VERSION_REPO_BASE_URL = "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
-  }
+    @CheckResult
+    fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
+        return VersionCheckPresenter(packageName, currentVersion, cachedInteractor,
+                computationScheduler, ioScheduler, mainThreadScheduler)
+    }
+
+    companion object {
+
+        private const val GITHUB_URL = "raw.githubusercontent.com"
+        private const val CURRENT_VERSION_REPO_BASE_URL = "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
+    }
 }

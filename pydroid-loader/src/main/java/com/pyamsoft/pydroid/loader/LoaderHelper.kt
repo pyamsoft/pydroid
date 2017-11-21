@@ -23,34 +23,33 @@ import com.pyamsoft.pydroid.loader.loaded.Loaded
 
 object LoaderHelper {
 
-  @JvmOverloads
-  @JvmStatic
-  @CheckResult
-  fun unload(entry: Loaded?,
-      defaultLoaded: Loaded = empty()): Loaded {
-    if (entry == null) {
-      return defaultLoaded
+    @JvmOverloads
+    @JvmStatic
+    @CheckResult
+    fun unload(entry: Loaded?,
+            defaultLoaded: Loaded = empty()): Loaded {
+        if (entry == null) {
+            return defaultLoaded
+        }
+
+        if (!entry.isUnloaded) {
+            entry.unload()
+        }
+        return defaultLoaded
     }
 
-    if (!entry.isUnloaded) {
-      entry.unload()
+    @JvmStatic
+    @CheckResult
+    fun empty(): Loaded {
+        return object : Loaded {
+
+            private var unloaded = false
+
+            override val isUnloaded: Boolean = unloaded
+
+            override fun unload() {
+                unloaded = true
+            }
+        }
     }
-    return defaultLoaded
-  }
-
-  @JvmStatic
-  @CheckResult
-  fun empty(): Loaded {
-    return object : Loaded {
-
-      private var unloaded = false
-
-      override val isUnloaded: Boolean
-        get() = unloaded
-
-      override fun unload() {
-        unloaded = true
-      }
-    }
-  }
 }

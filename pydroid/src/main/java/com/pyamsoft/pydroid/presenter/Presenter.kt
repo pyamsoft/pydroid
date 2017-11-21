@@ -23,46 +23,46 @@ import io.reactivex.disposables.Disposable
 
 abstract class Presenter<V : Any> protected constructor() {
 
-  private val disposables: CompositeDisposable = CompositeDisposable()
-  protected var view: V? = null
-    private set
+    private val disposables: CompositeDisposable = CompositeDisposable()
+    protected var view: V? = null
+        private set
 
-  fun bind(v: V) {
-    view = v
-    onBind(v)
-  }
+    fun bind(v: V) {
+        view = v
+        onBind(v)
+    }
 
-  /**
-   * Override per implementation
-   */
-  protected open fun onBind(v: V) {
-    // Intentionally empty
-  }
+    /**
+     * Override per implementation
+     */
+    protected open fun onBind(v: V) {
+        // Intentionally empty
+    }
 
-  fun unbind() {
-    onUnbind()
-    view = null
-    disposables.clear()
-  }
+    fun unbind() {
+        onUnbind()
+        view = null
+        disposables.clear()
+    }
 
-  /**
-   * Override per implementation
-   */
-  protected open fun onUnbind() {
-    // Intentionally empty
-  }
+    /**
+     * Override per implementation
+     */
+    protected open fun onUnbind() {
+        // Intentionally empty
+    }
 
-  /**
-   * Add a disposable to the internal list, dispose it onUnbind
-   */
-  protected inline fun dispose(func: () -> Disposable) {
-    dispose(func())
-  }
+    /**
+     * Add a disposable to the internal list, dispose it onUnbind
+     */
+    protected inline fun dispose(func: () -> Disposable) {
+        dispose(func())
+    }
 
-  /**
-   * Add a disposable to the internal list, dispose it onUnbind
-   */
-  protected fun dispose(disposable: Disposable) {
-    disposables.add(disposable)
-  }
+    /**
+     * Add a disposable to the internal list, dispose it onUnbind
+     */
+    protected fun dispose(disposable: Disposable) {
+        disposables.add(disposable)
+    }
 }

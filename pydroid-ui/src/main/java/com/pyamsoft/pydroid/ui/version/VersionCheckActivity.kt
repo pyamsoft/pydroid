@@ -28,31 +28,32 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider, VersionCheckPresenter.View {
+abstract class VersionCheckActivity : DisposableActivity(), VersionCheckProvider,
+        VersionCheckPresenter.View {
 
-  internal lateinit var presenter: VersionCheckPresenter
+    internal lateinit var presenter: VersionCheckPresenter
 
-  @CallSuper
-  override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
+    @CallSuper
+    override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
-  @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    PYDroid.obtain().plusVersionCheckComponent(packageName,
-        currentApplicationVersion)
-        .inject(this)
-    presenter.bind(this)
-  }
+    @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        PYDroid.obtain().plusVersionCheckComponent(packageName,
+                currentApplicationVersion)
+                .inject(this)
+        presenter.bind(this)
+    }
 
-  // Start in post resume in case dialog launches before resume() is complete for fragments
-  override fun onPostResume() {
-    super.onPostResume()
-    presenter.checkForUpdates(false)
-  }
+    // Start in post resume in case dialog launches before resume() is complete for fragments
+    override fun onPostResume() {
+        super.onPostResume()
+        presenter.checkForUpdates(false)
+    }
 
-  override fun onUpdatedVersionFound(current: Int, updated: Int) {
-    Timber.d("Updated version found. %d => %d", current, updated)
-    DialogUtil.guaranteeSingleDialogFragment(this,
-        VersionUpgradeDialog.newInstance(applicationName, current, updated),
-        VersionUpgradeDialog.TAG)
-  }
+    override fun onUpdatedVersionFound(current: Int, updated: Int) {
+        Timber.d("Updated version found. %d => %d", current, updated)
+        DialogUtil.guaranteeSingleDialogFragment(this,
+                VersionUpgradeDialog.newInstance(applicationName, current, updated),
+                VersionUpgradeDialog.TAG)
+    }
 }

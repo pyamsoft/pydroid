@@ -27,37 +27,37 @@ import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 
 abstract class AppSettingsFragment : DisposableFragment() {
 
-  private lateinit var binding: FragmentAppSettingsBinding
+    private lateinit var binding: FragmentAppSettingsBinding
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-      savedInstanceState: Bundle?): View? {
-    binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
-    return binding.root
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    binding.unbind()
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    showPreferenceFragment()
-  }
-
-  private fun showPreferenceFragment() {
-    val fragmentManager = childFragmentManager
-    val tag: String = provideSettingsTag()
-    if (fragmentManager.findFragmentByTag(tag) == null) {
-      fragmentManager.beginTransaction()
-          .replace(R.id.app_settings_content, provideSettingsFragment(), tag)
-          .commit()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?): View? {
+        binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
-  }
 
-  abstract fun provideSettingsFragment(): ActionBarSettingsPreferenceFragment
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.unbind()
+    }
 
-  abstract fun provideSettingsTag(): String
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        showPreferenceFragment()
+    }
+
+    private fun showPreferenceFragment() {
+        val fragmentManager = childFragmentManager
+        val tag: String = provideSettingsTag()
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.app_settings_content, provideSettingsFragment(), tag)
+                    .commit()
+        }
+    }
+
+    abstract fun provideSettingsFragment(): ActionBarSettingsPreferenceFragment
+
+    abstract fun provideSettingsTag(): String
 
 }
 

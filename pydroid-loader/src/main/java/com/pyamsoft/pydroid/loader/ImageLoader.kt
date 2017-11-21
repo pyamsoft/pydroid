@@ -24,9 +24,9 @@ import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 
 interface ImageLoader {
 
-  @CheckResult
-  fun fromResource(@DrawableRes resource: Int): ResourceLoader
+    @CheckResult
+    fun fromResource(@DrawableRes resource: Int): ResourceLoader
 
-  @CheckResult
-  fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader
+    @CheckResult
+    fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader
 }

@@ -27,19 +27,19 @@ import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
 class LoaderModule(context: Context) {
 
-  private val imageLoader: ImageLoaderImpl
+    private val imageLoader: ImageLoaderImpl
 
-  init {
-    val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
-    imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache)
-  }
+    init {
+        val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
+        imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache)
+    }
 
-  // Singleton
-  @CheckResult
-  fun provideImageLoader(): ImageLoader = imageLoader
+    // Singleton
+    @CheckResult
+    fun provideImageLoader(): ImageLoader = imageLoader
 
-  // Singleton
-  @CheckResult
-  fun provideImageLoaderCache(): Cache = imageLoader
+    // Singleton
+    @CheckResult
+    fun provideImageLoaderCache(): Cache = imageLoader
 }
 

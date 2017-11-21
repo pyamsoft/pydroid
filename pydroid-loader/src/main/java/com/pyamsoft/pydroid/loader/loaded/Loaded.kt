@@ -22,8 +22,8 @@ import android.support.annotation.CheckResult
 
 interface Loaded {
 
-  fun unload()
+    fun unload()
 
-  @get:CheckResult
-  val isUnloaded: Boolean
+    @get:CheckResult
+    val isUnloaded: Boolean
 }

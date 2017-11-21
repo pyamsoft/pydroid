@@ -24,13 +24,13 @@ import android.support.annotation.StringRes
 
 internal interface ActionBarProvider {
 
-  fun setActionBarUpEnabled(up: Boolean)
+    fun setActionBarUpEnabled(up: Boolean)
 
-  fun setActionBarUpEnabled(up: Boolean, @DrawableRes icon: Int)
+    fun setActionBarUpEnabled(up: Boolean, @DrawableRes icon: Int)
 
-  fun setActionBarUpEnabled(up: Boolean, icon: Drawable?)
+    fun setActionBarUpEnabled(up: Boolean, icon: Drawable?)
 
-  fun setActionBarTitle(title: CharSequence)
+    fun setActionBarTitle(title: CharSequence)
 
-  fun setActionBarTitle(@StringRes title: Int)
+    fun setActionBarTitle(@StringRes title: Int)
 }

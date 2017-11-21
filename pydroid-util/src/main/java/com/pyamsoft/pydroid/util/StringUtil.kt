@@ -36,89 +36,97 @@ import android.util.TypedValue
 
 object StringUtil {
 
-  /**
-   * Takes an array of strings and creates a SpannableStringBuilder out of them If the array is
-   * null or empty, throws if null
-   */
-  @CheckResult
-  fun createBuilder(vararg strs: String): SpannableStringBuilder {
-    val size = strs.size
-    if (size > 0) {
-      val strb = SpannableStringBuilder(strs[0])
-      for (i in 1 until size) {
-        strb.append(strs[i])
-      }
-      return strb
-    } else {
-      throw IllegalArgumentException("Cannot format empty array of strings")
-    }
-  }
-
-  /**
-   * Build a list of strings with line breaks in between each string
-   */
-  @CheckResult
-  fun createLineBreakBuilder(vararg strs: String): SpannableStringBuilder {
-    val size = strs.size
-    if (size > 0) {
-      val sizeWithBreaks = (size shl 1) - 1
-      val lineBreakStrings = Array(sizeWithBreaks, { "" })
-      var j = 0
-      var i = 0
-      while (i < size) {
-        lineBreakStrings[j] = strs[i]
-        if (++j < sizeWithBreaks) {
-          lineBreakStrings[j] = "\n\n"
+    /**
+     * Takes an array of strings and creates a SpannableStringBuilder out of them If the array is
+     * null or empty, throws if null
+     */
+    @JvmStatic
+    @CheckResult
+    fun createBuilder(strs: Array<String>): SpannableStringBuilder {
+        val size = strs.size
+        if (size > 0) {
+            val strb = SpannableStringBuilder(strs[0])
+            for (i in 1 until size) {
+                strb.append(strs[i])
+            }
+            return strb
+        } else {
+            throw IllegalArgumentException("Cannot format empty array of strings")
         }
-        ++i
-        ++j
-      }
-      return createBuilder(*lineBreakStrings)
-    } else {
-      throw IllegalArgumentException("Cannot format empty array of strings")
     }
-  }
 
-  fun colorSpan(out: Spannable, start: Int, stop: Int, @ColorInt color: Int) {
-    out.setSpan(ForegroundColorSpan(color), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-  }
+    /**
+     * Build a list of strings with line breaks in between each string
+     */
+    @JvmStatic
+    @CheckResult
+    fun createLineBreakBuilder(strs: Array<String>): SpannableStringBuilder {
+        val size = strs.size
+        if (size > 0) {
+            val sizeWithBreaks = (size shl 1) - 1
+            val lineBreakStrings: Array<String> = Array(sizeWithBreaks) { "" }
+            var j = 0
+            var i = 0
+            while (i < size) {
+                lineBreakStrings[j] = strs[i]
+                if (++j < sizeWithBreaks) {
+                    lineBreakStrings[j] = "\n\n"
+                }
+                ++i
+                ++j
+            }
+            return createBuilder(lineBreakStrings)
+        } else {
+            throw IllegalArgumentException("Cannot format empty array of strings")
+        }
+    }
 
-  fun boldSpan(out: Spannable, start: Int, stop: Int) {
-    out.setSpan(StyleSpan(Typeface.BOLD), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-  }
+    @JvmStatic
+    fun colorSpan(out: Spannable, start: Int, stop: Int, @ColorInt color: Int) {
+        out.setSpan(ForegroundColorSpan(color), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+    }
 
-  fun sizeSpan(out: Spannable, start: Int, stop: Int, @Size size: Int) {
-    out.setSpan(AbsoluteSizeSpan(size), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-  }
+    @JvmStatic
+    fun boldSpan(out: Spannable, start: Int, stop: Int) {
+        out.setSpan(StyleSpan(Typeface.BOLD), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+    }
 
-  @SuppressLint("Recycle")
-  @CheckResult
-  fun getAttributeFromAppearance(context: Context,
-      @AttrRes style: Int, @AttrRes attr: Int): TypedArray {
-    val typedValue = TypedValue()
-    context.theme.resolveAttribute(style, typedValue, true)
-    return context.obtainStyledAttributes(typedValue.data, intArrayOf(attr))
-  }
+    @JvmStatic
+    fun sizeSpan(out: Spannable, start: Int, stop: Int, @Size size: Int) {
+        out.setSpan(AbsoluteSizeSpan(size), start, stop, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+    }
 
-  @Size
-  @CheckResult
-  fun getTextSizeFromAppearance(context: Context,
-      @AttrRes textAppearance: Int): Int {
-    val a = getAttributeFromAppearance(context, textAppearance,
-        attr.textSize)
-    val textSize = a.getDimensionPixelSize(0, -1)
-    a.recycle()
-    return textSize
-  }
+    @SuppressLint("Recycle")
+    @CheckResult
+    @JvmStatic
+    fun getAttributeFromAppearance(context: Context,
+            @AttrRes style: Int, @AttrRes attr: Int): TypedArray {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(style, typedValue, true)
+        return context.obtainStyledAttributes(typedValue.data, intArrayOf(attr))
+    }
 
-  @ColorInt
-  @CheckResult
-  fun getTextColorFromAppearance(context: Context,
-      @AttrRes textAppearance: Int): Int {
-    val a = getAttributeFromAppearance(context, textAppearance,
-        attr.textColor)
-    val color = a.getColor(0, -1)
-    a.recycle()
-    return color
-  }
+    @Size
+    @CheckResult
+    @JvmStatic
+    fun getTextSizeFromAppearance(context: Context,
+            @AttrRes textAppearance: Int): Int {
+        val a = getAttributeFromAppearance(context, textAppearance,
+                attr.textSize)
+        val textSize = a.getDimensionPixelSize(0, -1)
+        a.recycle()
+        return textSize
+    }
+
+    @ColorInt
+    @CheckResult
+    @JvmStatic
+    fun getTextColorFromAppearance(context: Context,
+            @AttrRes textAppearance: Int): Int {
+        val a = getAttributeFromAppearance(context, textAppearance,
+                attr.textColor)
+        val color = a.getColor(0, -1)
+        a.recycle()
+        return color
+    }
 }

@@ -18,7 +18,6 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
@@ -34,53 +33,53 @@ import timber.log.Timber
  */
 object PYDroid {
 
-  private var component: PYDroidComponent? = null
+    private var component: PYDroidComponent? = null
 
-  @JvmStatic
-  private fun setStrictMode() {
-    StrictMode.setThreadPolicy(
-        StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()
-            .permitDiskWrites().penaltyFlashScreen().build())
-    StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
-  }
-
-  /**
-   * Access point for library component graph
-   */
-  @JvmStatic
-  @CheckResult
-  internal fun obtain(): PYDroidComponent {
-    val obj = component
-    if (obj == null) {
-      throw IllegalStateException(
-          "PYDroid is not initialized. Please call PYDroid.init() before attempting to obtain.")
-    } else {
-      return obj
+    @JvmStatic
+    private fun setStrictMode() {
+        StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()
+                        .permitDiskWrites().penaltyFlashScreen().build())
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
     }
-  }
 
-  /**
-   * Create the library entry point
-   */
-  @JvmStatic
-  private fun initialize(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
-    component = PYDroidComponentImpl(pydroidModule, loaderModule)
-    if (pydroidModule.isDebug) {
-      Timber.plant(Timber.DebugTree())
-      setStrictMode()
+    /**
+     * Access point for library component graph
+     */
+    @JvmStatic
+    @CheckResult
+    internal fun obtain(): PYDroidComponent {
+        val obj = component
+        if (obj == null) {
+            throw IllegalStateException(
+                    "PYDroid is not initialized. Please call PYDroid.init() before attempting to obtain.")
+        } else {
+            return obj
+        }
     }
-    UiLicenses.addLicenses()
-  }
 
-  /**
-   * Initialize the library
-   *
-   * You should carry the passed modules with you to any other component graphs or you will have "doubled" singletons
-   */
-  @JvmStatic
-  fun init(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
-    if (component == null) {
-      initialize(pydroidModule, loaderModule)
+    /**
+     * Create the library entry point
+     */
+    @JvmStatic
+    private fun initialize(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
+        component = PYDroidComponentImpl(pydroidModule, loaderModule)
+        if (pydroidModule.isDebug) {
+            Timber.plant(Timber.DebugTree())
+            setStrictMode()
+        }
+        UiLicenses.addLicenses()
     }
-  }
+
+    /**
+     * Initialize the library
+     *
+     * You should carry the passed modules with you to any other component graphs or you will have "doubled" singletons
+     */
+    @JvmStatic
+    fun init(pydroidModule: PYDroidModule, loaderModule: LoaderModule) {
+        if (component == null) {
+            initialize(pydroidModule, loaderModule)
+        }
+    }
 }

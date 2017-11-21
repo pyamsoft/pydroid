@@ -23,29 +23,29 @@ import java.util.HashMap
 
 class LoaderMap {
 
-  private val map: MutableMap<String, Loaded> = HashMap()
+    private val map: MutableMap<String, Loaded> = HashMap()
 
-  /**
-   * Puts a new element into the map
+    /**
+     * Puts a new element into the map
 
-   * If an old element exists, its task is cancelled first before adding the new one
-   */
-  fun put(tag: String, loaded: Loaded) {
-    if (map.containsKey(tag)) {
-      map.put(tag, LoaderHelper.unload(map[tag]))
+     * If an old element exists, its task is cancelled first before adding the new one
+     */
+    fun put(tag: String, loaded: Loaded) {
+        if (map.containsKey(tag)) {
+            map.put(tag, LoaderHelper.unload(map[tag]))
+        }
+        map.put(tag, loaded)
     }
-    map.put(tag, loaded)
-  }
 
-  /**
-   * Clear all elements in the map
+    /**
+     * Clear all elements in the map
 
-   * If the elements have not been cancelled yet, cancel them before removing them
-   */
-  fun clear() {
-    map.apply {
-      entries.forEach { it.setValue(LoaderHelper.unload(it.value)) }
-      clear()
+     * If the elements have not been cancelled yet, cancel them before removing them
+     */
+    fun clear() {
+        map.apply {
+            entries.forEach { it.setValue(LoaderHelper.unload(it.value)) }
+            clear()
+        }
     }
-  }
 }

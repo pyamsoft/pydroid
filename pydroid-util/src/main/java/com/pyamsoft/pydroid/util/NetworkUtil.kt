@@ -21,6 +21,7 @@ package com.pyamsoft.pydroid.util
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.support.annotation.CheckResult
 import android.widget.Toast
@@ -28,26 +29,28 @@ import timber.log.Timber
 
 object NetworkUtil {
 
-  fun newLink(c: Context, link: String) {
-    val uri = Uri.parse(link)
-    val intent = Intent(Intent.ACTION_VIEW)
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    intent.data = uri
-    Timber.d("Start intent for URI: %s", uri)
-    try {
-      c.applicationContext.startActivity(intent)
-    } catch (e: Exception) {
-      Timber.e(e, "Error")
-      Toast.makeText(c.applicationContext, "No activity available to handle link: " + link,
-          Toast.LENGTH_SHORT).show()
+    @JvmStatic
+    fun newLink(c: Context, link: String) {
+        val uri = Uri.parse(link)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.data = uri
+        Timber.d("Start intent for URI: %s", uri)
+        try {
+            c.applicationContext.startActivity(intent)
+        } catch (e: Exception) {
+            Timber.e(e, "Error")
+            Toast.makeText(c.applicationContext, "No activity available to handle link: " + link,
+                    Toast.LENGTH_SHORT).show()
+        }
     }
-  }
 
-  @CheckResult
-  fun hasConnection(c: Context): Boolean {
-    val connMan = c.applicationContext.getSystemService(
-        Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork = connMan.activeNetworkInfo
-    return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-  }
+    @JvmStatic
+    @CheckResult
+    fun hasConnection(c: Context): Boolean {
+        val connMan = c.applicationContext.getSystemService(
+                Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    }
 }

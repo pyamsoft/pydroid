@@ -22,11 +22,11 @@ import io.reactivex.disposables.Disposable
 
 class RxLoaded(private val disposable: Disposable) : Loaded {
 
-  override fun unload() {
-    if (!isUnloaded) {
-      disposable.dispose()
+    override fun unload() {
+        if (!isUnloaded) {
+            disposable.dispose()
+        }
     }
-  }
 
-  override val isUnloaded: Boolean = disposable.isDisposed
+    override val isUnloaded: Boolean = disposable.isDisposed
 }

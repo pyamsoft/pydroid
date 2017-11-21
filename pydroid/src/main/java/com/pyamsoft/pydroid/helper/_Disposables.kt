@@ -33,13 +33,13 @@ import io.reactivex.disposables.Disposables
  */
 @JvmOverloads
 fun Disposable?.clear(disposable: Disposable = Disposables.empty()): Disposable {
-  if (this == null) {
+    if (this == null) {
+        return disposable
+    }
+
+    if (!isDisposed) {
+        dispose()
+    }
+
     return disposable
-  }
-
-  if (!isDisposed) {
-    dispose()
-  }
-
-  return disposable
 }

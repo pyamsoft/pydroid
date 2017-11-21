@@ -28,35 +28,35 @@ import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
 internal class AboutLibrariesDataSourceImpl internal constructor(
-    context: Context) : AboutLibrariesDataSource {
+        context: Context) : AboutLibrariesDataSource {
 
-  private val assetManager: AssetManager = context.applicationContext.assets
+    private val assetManager: AssetManager = context.applicationContext.assets
 
-  @CheckResult override fun loadNewLicense(licenseLocation: String): String {
-    if (licenseLocation.isEmpty()) {
-      Timber.w("Empty license passed")
-      return ""
-    }
-
-    assetManager.open(licenseLocation).use {
-      // Standard Charsets is only KitKat, add this extra check to support Home Button
-      val inputStreamReader = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        // Assign
-        InputStreamReader(it, StandardCharsets.UTF_8)
-      } else {
-        // Assign
-        InputStreamReader(it, "UTF-8")
-      }
-
-      BufferedReader(inputStreamReader).use {
-        val text = StringBuilder()
-        var line: String? = it.readLine()
-        while (line != null) {
-          text.append(line).append('\n')
-          line = it.readLine()
+    @CheckResult override fun loadNewLicense(licenseLocation: String): String {
+        if (licenseLocation.isEmpty()) {
+            Timber.w("Empty license passed")
+            return ""
         }
-        return text.toString()
-      }
+
+        assetManager.open(licenseLocation).use {
+            // Standard Charsets is only KitKat, add this extra check to support Home Button
+            val inputStreamReader = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                // Assign
+                InputStreamReader(it, StandardCharsets.UTF_8)
+            } else {
+                // Assign
+                InputStreamReader(it, "UTF-8")
+            }
+
+            BufferedReader(inputStreamReader).use {
+                val text = StringBuilder()
+                var line: String? = it.readLine()
+                while (line != null) {
+                    text.append(line).append('\n')
+                    line = it.readLine()
+                }
+                return text.toString()
+            }
+        }
     }
-  }
 }

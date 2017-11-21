@@ -27,31 +27,31 @@ import com.pyamsoft.pydroid.presenter.Presenter
  */
 abstract class DisposableFragment : ActionBarFragment() {
 
-  /**
-   * Cache so that the bound presenter list cannot change once it is set
-   */
-  private var boundPresenterSnapshot: List<Presenter<*>>? = null
+    /**
+     * Cache so that the bound presenter list cannot change once it is set
+     */
+    private var boundPresenterSnapshot: List<Presenter<*>>? = null
 
-  /**
-   * List of presenters to bind to this Fragment
-   */
-  @CheckResult protected abstract fun provideBoundPresenters(): List<Presenter<*>>
+    /**
+     * List of presenters to bind to this Fragment
+     */
+    @CheckResult protected abstract fun provideBoundPresenters(): List<Presenter<*>>
 
-  @CheckResult private fun getBoundPresenters(): List<Presenter<*>> {
-    if (boundPresenterSnapshot == null) {
-      boundPresenterSnapshot = provideBoundPresenters()
+    @CheckResult private fun getBoundPresenters(): List<Presenter<*>> {
+        if (boundPresenterSnapshot == null) {
+            boundPresenterSnapshot = provideBoundPresenters()
+        }
+
+        return boundPresenterSnapshot!!
     }
 
-    return boundPresenterSnapshot!!
-  }
-
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    val presenters = getBoundPresenters()
-    for (presenter in presenters) {
-      presenter.unbind()
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        val presenters = getBoundPresenters()
+        for (presenter in presenters) {
+            presenter.unbind()
+        }
     }
-  }
 
 }

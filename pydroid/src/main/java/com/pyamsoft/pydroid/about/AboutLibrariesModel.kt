@@ -21,16 +21,20 @@ package com.pyamsoft.pydroid.about
 import android.support.annotation.CheckResult
 
 data class AboutLibrariesModel internal constructor(val name: String, val homepage: String,
-    val license: String, val customContent: String) {
+        val license: String, val customContent: String) {
 
-  companion object {
+    companion object {
 
-    @CheckResult
-    fun create(name: String, homepage: String,
-        license: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license, "")
+        @JvmStatic
+        @CheckResult
+        fun create(name: String, homepage: String,
+                license: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license,
+                "")
 
-    @CheckResult
-    fun createWithContent(name: String, homepage: String,
-        content: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, "", content)
-  }
+        @JvmStatic
+        @CheckResult
+        fun createWithContent(name: String, homepage: String,
+                content: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, "",
+                content)
+    }
 }

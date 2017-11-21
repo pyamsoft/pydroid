@@ -41,41 +41,43 @@ import java.util.concurrent.TimeUnit
  */
 abstract class AutoRestartService : Service() {
 
-  /**
-   * Change to disable auto restart ability
-   */
-  protected open val isAutoRestartEnabled: Boolean = true
+    /**
+     * Change to disable auto restart ability
+     */
+    protected open val isAutoRestartEnabled: Boolean = true
 
-  override fun onTaskRemoved(rootIntent: Intent) {
-    super.onTaskRemoved(rootIntent)
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && isAutoRestartEnabled) {
-      Timber.w("""
+    override fun onTaskRemoved(rootIntent: Intent) {
+        super.onTaskRemoved(rootIntent)
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && isAutoRestartEnabled) {
+            Timber.w("""
         |Android KitKat is affected by a bug which causes START_STICKY
         |and Foreground services to be killed onTaskRemoved.
       """.trimMargin())
-      Timber.w(
-          "The service will schedule an Alarm for 5 seconds out to automatically restart itself")
+            Timber.w(
+                    "The service will schedule an Alarm for 5 seconds out to automatically restart itself")
 
-      val restartIntent = Intent(applicationContext, javaClass)
-      restartIntent.`package` = packageName
+            val restartIntent = Intent(applicationContext, javaClass)
+            restartIntent.`package` = packageName
 
-      // We must use a non-zero value for the RC, Samsung seems to like things over 1000
-      val pendingIntent = PendingIntent.getService(applicationContext, 1024, restartIntent,
-          PendingIntent.FLAG_ONE_SHOT)
+            // We must use a non-zero value for the RC, Samsung seems to like things over 1000
+            val pendingIntent = PendingIntent.getService(applicationContext, 1024, restartIntent,
+                    PendingIntent.FLAG_ONE_SHOT)
 
-      val alarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val alarmManager = applicationContext.getSystemService(
+                    Context.ALARM_SERVICE) as AlarmManager
 
-      // Cancel any old alarms
-      alarmManager.cancel(pendingIntent)
-      pendingIntent.cancel()
+            // Cancel any old alarms
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
 
-      // Schedule alarm
-      val restartTime = SystemClock.elapsedRealtime() + TimeUnit.SECONDS.toMillis(5)
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME, restartTime, pendingIntent)
-      } else {
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME, restartTime, pendingIntent)
-      }
+            // Schedule alarm
+            val restartTime = SystemClock.elapsedRealtime() + TimeUnit.SECONDS.toMillis(5)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME, restartTime,
+                        pendingIntent)
+            } else {
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME, restartTime, pendingIntent)
+            }
+        }
     }
-  }
 }

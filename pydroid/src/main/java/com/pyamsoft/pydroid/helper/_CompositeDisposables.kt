@@ -29,5 +29,5 @@ import io.reactivex.disposables.Disposable
  * Allows CompositeDisposable to consume functions which return disposables
  */
 inline fun CompositeDisposable.add(func: () -> Disposable) {
-  add(func())
+    add(func())
 }

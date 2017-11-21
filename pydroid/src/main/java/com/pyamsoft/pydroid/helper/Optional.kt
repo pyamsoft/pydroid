@@ -27,15 +27,15 @@ import com.pyamsoft.pydroid.helper.Optional.Present
  */
 sealed class Optional<out T : Any> {
 
-  data class Present<out T : Any>(val value: T) : Optional<T>()
-  object Absent : Optional<Nothing>()
+    data class Present<out T : Any>(val value: T) : Optional<T>()
+    object Absent : Optional<Nothing>()
 
-  companion object {
+    companion object {
 
-    @JvmStatic
-    @CheckResult
-    fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
-  }
+        @JvmStatic
+        @CheckResult
+        fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
+    }
 }
 
 @CheckResult

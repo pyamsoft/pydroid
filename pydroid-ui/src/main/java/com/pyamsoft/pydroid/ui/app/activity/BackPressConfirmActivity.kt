@@ -27,44 +27,44 @@ import com.pyamsoft.pydroid.ui.helper.Toasty
 
 abstract class BackPressConfirmActivity : ActivityBase() {
 
-  private var backBeenPressed: Boolean = false
-  private lateinit var handler: Handler
-  private lateinit var backBeenPressedToast: Toast
+    private var backBeenPressed: Boolean = false
+    private lateinit var handler: Handler
+    private lateinit var backBeenPressedToast: Toast
 
-  /**
-   * Override this if you want normal back button behavior
-   */
-  protected open val shouldConfirmBackPress: Boolean = true
+    /**
+     * Override this if you want normal back button behavior
+     */
+    protected open val shouldConfirmBackPress: Boolean = true
 
-  @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    if (shouldConfirmBackPress) {
-      enableBackBeenPressedConfirmation()
+    @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (shouldConfirmBackPress) {
+            enableBackBeenPressedConfirmation()
+        }
     }
-  }
 
-  @CallSuper override fun onBackPressed() {
-    if (backBeenPressed || !shouldConfirmBackPress) {
-      backBeenPressed = false
-      handler.removeCallbacksAndMessages(null)
-      super.onBackPressed()
-    } else {
-      backBeenPressed = true
-      backBeenPressedToast.show()
-      handler.postDelayed({ backBeenPressed = false }, BACK_PRESSED_DELAY)
+    @CallSuper override fun onBackPressed() {
+        if (backBeenPressed || !shouldConfirmBackPress) {
+            backBeenPressed = false
+            handler.removeCallbacksAndMessages(null)
+            super.onBackPressed()
+        } else {
+            backBeenPressed = true
+            backBeenPressedToast.show()
+            handler.postDelayed({ backBeenPressed = false }, BACK_PRESSED_DELAY)
+        }
     }
-  }
 
-  @SuppressLint("ShowToast") private fun enableBackBeenPressedConfirmation() {
-    backBeenPressed = false
-    handler = Handler()
-    backBeenPressedToast = Toasty.makeText(this, "Press Again to Exit", Toasty.LENGTH_SHORT)
-    handler.removeCallbacksAndMessages(null)
-  }
+    @SuppressLint("ShowToast") private fun enableBackBeenPressedConfirmation() {
+        backBeenPressed = false
+        handler = Handler()
+        backBeenPressedToast = Toasty.makeText(this, "Press Again to Exit", Toasty.LENGTH_SHORT)
+        handler.removeCallbacksAndMessages(null)
+    }
 
-  companion object {
+    companion object {
 
-    private const val BACK_PRESSED_DELAY = 1600L
-  }
+        private const val BACK_PRESSED_DELAY = 1600L
+    }
 }
 

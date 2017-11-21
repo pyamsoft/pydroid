@@ -24,23 +24,23 @@ import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.Target
 
-interface Loader<T: Any> {
+interface Loader<T : Any> {
 
-  @CheckResult
-  fun tint(@ColorRes color: Int): Loader<T>
+    @CheckResult
+    fun tint(@ColorRes color: Int): Loader<T>
 
-  @CheckResult
-  fun withStartAction(startAction: () -> Unit): Loader<T>
+    @CheckResult
+    fun withStartAction(startAction: () -> Unit): Loader<T>
 
-  @CheckResult
-  fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T>
+    @CheckResult
+    fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T>
 
-  @CheckResult
-  fun withCompleteAction(completeAction: (T) -> Unit): Loader<T>
+    @CheckResult
+    fun withCompleteAction(completeAction: (T) -> Unit): Loader<T>
 
-  @CheckResult
-  fun into(imageView: ImageView): Loaded
+    @CheckResult
+    fun into(imageView: ImageView): Loaded
 
-  @CheckResult
-  fun into(target: Target<T>): Loaded
+    @CheckResult
+    fun into(target: Target<T>): Loaded
 }

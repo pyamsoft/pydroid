@@ -20,6 +20,6 @@ package com.pyamsoft.pydroid.ui.version
 
 internal interface VersionCheckComponent {
 
-  fun inject(activity: VersionCheckActivity)
+    fun inject(activity: VersionCheckActivity)
 }
 

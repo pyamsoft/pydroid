@@ -23,6 +23,6 @@ import io.reactivex.Single
 
 internal interface VersionCheckInteractor {
 
-  @CheckResult
-  fun checkVersion(packageName: String, force: Boolean): Single<Int>
+    @CheckResult
+    fun checkVersion(packageName: String, force: Boolean): Single<Int>
 }

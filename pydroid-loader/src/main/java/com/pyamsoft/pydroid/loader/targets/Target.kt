@@ -21,9 +21,9 @@ package com.pyamsoft.pydroid.loader.targets
 /**
  * Load an Image of a generic type (Drawable or Bitmap)
  */
-interface Target<in T: Any> {
+interface Target<in T : Any> {
 
-  fun loadImage(image: T)
+    fun loadImage(image: T)
 
-  fun loadError(error: T?)
+    fun loadError(error: T?)
 }

@@ -24,36 +24,37 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(private val interactor: AboutLibrariesInteractor,
-    computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler,
-    ioScheduler, mainThreadScheduler) {
+        computationScheduler: Scheduler, ioScheduler: Scheduler,
+        mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler,
+        ioScheduler, mainThreadScheduler) {
 
-  override fun onBind(v: View) {
-    super.onBind(v)
-    loadLicenses(false)
-  }
-
-  private fun loadLicenses(force: Boolean) {
-    dispose {
-      interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(mainThreadScheduler)
-          .doAfterTerminate { view?.onAllLoaded() }
-          .subscribe({ view?.onLicenseLoaded(it) }, { Timber.e(it, "onError loading licenses") })
+    override fun onBind(v: View) {
+        super.onBind(v)
+        loadLicenses(false)
     }
-  }
 
-  interface View : LoadCallback
+    private fun loadLicenses(force: Boolean) {
+        dispose {
+            interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(mainThreadScheduler)
+                    .doAfterTerminate { view?.onAllLoaded() }
+                    .subscribe({ view?.onLicenseLoaded(it) },
+                            { Timber.e(it, "onError loading licenses") })
+        }
+    }
 
-  interface LoadCallback {
+    interface View : LoadCallback
 
-    /**
-     * Called when a single license has finished loading. There are no guarantees about if the
-     * license was loaded for the first time.
-     */
-    fun onLicenseLoaded(model: AboutLibrariesModel)
+    interface LoadCallback {
 
-    /**
-     * Called when all licenses are done loading
-     */
-    fun onAllLoaded()
-  }
+        /**
+         * Called when a single license has finished loading. There are no guarantees about if the
+         * license was loaded for the first time.
+         */
+        fun onLicenseLoaded(model: AboutLibrariesModel)
+
+        /**
+         * Called when all licenses are done loading
+         */
+        fun onAllLoaded()
+    }
 }

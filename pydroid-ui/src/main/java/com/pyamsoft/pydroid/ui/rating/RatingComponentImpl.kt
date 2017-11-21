@@ -21,17 +21,17 @@ package com.pyamsoft.pydroid.ui.rating
 import com.pyamsoft.pydroid.loader.LoaderModule
 
 internal class RatingComponentImpl internal constructor(private val version: Int,
-    private val ratingModule: RatingModule,
-    private val loaderModule: LoaderModule) : RatingComponent {
+        private val ratingModule: RatingModule,
+        private val loaderModule: LoaderModule) : RatingComponent {
 
-  override fun inject(activity: RatingActivity) {
-    activity.ratingPresenter = ratingModule.getPresenter(version)
-  }
+    override fun inject(activity: RatingActivity) {
+        activity.ratingPresenter = ratingModule.getPresenter(version)
+    }
 
-  override fun inject(dialog: RatingDialog) {
-    dialog.presenter = ratingModule.getSavePresenter(version)
-    dialog.imageLoader = loaderModule.provideImageLoader()
-  }
+    override fun inject(dialog: RatingDialog) {
+        dialog.presenter = ratingModule.getSavePresenter(version)
+        dialog.imageLoader = loaderModule.provideImageLoader()
+    }
 
 }
 

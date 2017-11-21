@@ -34,26 +34,28 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 internal class RxResourceLoader internal constructor(
-    context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
-    resourceImageCache: ImageCache<Int, Drawable>) : ResourceLoader(
-    context, resource, errorResource, resourceImageCache) {
+        context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
+        resourceImageCache: ImageCache<Int, Drawable>) : ResourceLoader(
+        context, resource, errorResource, resourceImageCache) {
 
-  private val obsScheduler: Scheduler = AndroidSchedulers.mainThread()
-  private val subScheduler: Scheduler = Schedulers.io()
+    private val obsScheduler: Scheduler = AndroidSchedulers.mainThread()
+    private val subScheduler: Scheduler = Schedulers.io()
 
-  init {
-    obsScheduler.enforceMainThread()
-    subScheduler.enforceIo()
-  }
+    init {
+        obsScheduler.enforceMainThread()
+        subScheduler.enforceIo()
+    }
 
-  override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
-    return RxLoaded(
-        Single.fromCallable { loadResource() }.subscribeOn(subScheduler).observeOn(obsScheduler)
-            .doOnSubscribe { startAction?.invoke() }
-            .doAfterSuccess { completeAction?.invoke(it) }
-            .doOnError {
-              Timber.e(it, "Error loading Drawable using RxResourceLoader")
-              errorAction?.invoke(it)
-            }.subscribe({ target.loadImage(it) }, { target.loadError(loadErrorResource()) }))
-  }
+    override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
+        return RxLoaded(
+                Single.fromCallable { loadResource() }.subscribeOn(subScheduler).observeOn(
+                        obsScheduler)
+                        .doOnSubscribe { startAction?.invoke() }
+                        .doAfterSuccess { completeAction?.invoke(it) }
+                        .doOnError {
+                            Timber.e(it, "Error loading Drawable using RxResourceLoader")
+                            errorAction?.invoke(it)
+                        }.subscribe({ target.loadImage(it) },
+                        { target.loadError(loadErrorResource()) }))
+    }
 }

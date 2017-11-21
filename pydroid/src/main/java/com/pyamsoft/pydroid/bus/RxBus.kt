@@ -26,27 +26,27 @@ import timber.log.Timber
 
 class RxBus<T : Any> private constructor() : EventBus<T> {
 
-  private val bus: Subject<T> = PublishSubject.create()
+    private val bus: Subject<T> = PublishSubject.create()
 
-  override fun publish(event: T) {
-    if (bus.hasObservers()) {
-      bus.onNext(event)
-    } else {
-      Timber.w("No observers on bus, ignore publish event: %s", event)
+    override fun publish(event: T) {
+        if (bus.hasObservers()) {
+            bus.onNext(event)
+        } else {
+            Timber.w("No observers on bus, ignore publish event: %s", event)
+        }
     }
-  }
 
-  override fun listen(): Observable<T> = bus
+    override fun listen(): Observable<T> = bus
 
-  companion object {
+    companion object {
 
-    /**
-     * Create a new local bus instance to use
-     */
-    @JvmStatic
-    @CheckResult
-    fun <T : Any> create(): EventBus<T> = RxBus()
+        /**
+         * Create a new local bus instance to use
+         */
+        @JvmStatic
+        @CheckResult
+        fun <T : Any> create(): EventBus<T> = RxBus()
 
-  }
+    }
 }
 

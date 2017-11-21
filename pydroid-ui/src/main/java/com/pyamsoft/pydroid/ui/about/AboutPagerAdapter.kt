@@ -24,22 +24,22 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal class AboutPagerAdapter internal constructor(
-    fm: Fragment) : FragmentStatePagerAdapter(fm.childFragmentManager) {
+        fm: Fragment) : FragmentStatePagerAdapter(fm.childFragmentManager) {
 
-  private val models: MutableList<AboutLibrariesModel> = ArrayList()
+    private val models: MutableList<AboutLibrariesModel> = ArrayList()
 
-  fun add(model: AboutLibrariesModel) {
-    models.add(model)
-  }
+    fun add(model: AboutLibrariesModel) {
+        models.add(model)
+    }
 
-  fun clear() {
-    models.clear()
-  }
+    fun clear() {
+        models.clear()
+    }
 
-  override fun getCount(): Int = models.size
+    override fun getCount(): Int = models.size
 
-  override fun getItem(position: Int): Fragment = AboutPagerFragment.newInstance(models[position])
+    override fun getItem(position: Int): Fragment = AboutPagerFragment.newInstance(models[position])
 
-  override fun getPageTitle(position: Int): CharSequence = models[position].name
+    override fun getPageTitle(position: Int): CharSequence = models[position].name
 }
 

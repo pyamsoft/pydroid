@@ -22,28 +22,28 @@ import android.support.annotation.ColorRes
 
 abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 
-  protected var startAction: (() -> Unit)? = null
-  protected var errorAction: ((Throwable) -> Unit)? = null
-  protected var completeAction: ((T) -> Unit)? = null
-  protected var tint: Int = 0
+    protected var startAction: (() -> Unit)? = null
+    protected var errorAction: ((Throwable) -> Unit)? = null
+    protected var completeAction: ((T) -> Unit)? = null
+    protected var tint: Int = 0
 
-  final override fun withStartAction(startAction: () -> Unit): Loader<T> {
-    this.startAction = startAction
-    return this
-  }
+    final override fun withStartAction(startAction: () -> Unit): Loader<T> {
+        this.startAction = startAction
+        return this
+    }
 
-  final override fun withCompleteAction(completeAction: (T) -> Unit): Loader<T> {
-    this.completeAction = completeAction
-    return this
-  }
+    final override fun withCompleteAction(completeAction: (T) -> Unit): Loader<T> {
+        this.completeAction = completeAction
+        return this
+    }
 
-  final override fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T> {
-    this.errorAction = errorAction
-    return this
-  }
+    final override fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T> {
+        this.errorAction = errorAction
+        return this
+    }
 
-  final override fun tint(@ColorRes color: Int): Loader<T> {
-    this.tint = color
-    return this
-  }
+    final override fun tint(@ColorRes color: Int): Loader<T> {
+        this.tint = color
+        return this
+    }
 }

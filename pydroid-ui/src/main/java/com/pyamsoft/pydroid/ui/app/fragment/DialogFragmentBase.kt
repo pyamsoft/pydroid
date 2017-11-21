@@ -25,14 +25,14 @@ import android.view.Window
 
 abstract class DialogFragmentBase : DialogFragment() {
 
-  protected open val hasTitle: Boolean = false
+    protected open val hasTitle: Boolean = false
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = super.onCreateDialog(savedInstanceState)
-    if (!hasTitle) {
-      dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        if (!hasTitle) {
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        }
+
+        return dialog
     }
-
-    return dialog
-  }
 }

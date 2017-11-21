@@ -40,7 +40,6 @@ object Licenses {
         createItem(Names.PYDROID, HomepageUrls.PYDROID, LicenseLocations.PYDROID)
         createItem(Names.AUTO_VALUE, HomepageUrls.AUTO_VALUE, LicenseLocations.AUTO_VALUE)
         createItem(Names.RETROFIT, HomepageUrls.RETROFIT, LicenseLocations.RETROFIT)
-        createItem(Names.ERROR_PRONE, HomepageUrls.ERROR_PRONE, LicenseLocations.ERROR_PRONE)
         createItem(Names.TIMBER, HomepageUrls.TIMBER, LicenseLocations.TIMBER)
         createItem(Names.GRADLE_VERSIONS_PLUGIN, HomepageUrls.GRADLE_VERSIONS_PLUGIN,
                 LicenseLocations.GRADLE_VERSIONS_PLUGIN)
@@ -68,7 +67,6 @@ object Licenses {
         internal const val PYDROID = "PYDroid"
         internal const val AUTO_VALUE = "AutoValue"
         internal const val RETROFIT = "Retrofit"
-        internal const val ERROR_PRONE = "Error Prone"
         internal const val TIMBER = "Timber"
         internal const val DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin"
         internal const val GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin"
@@ -82,7 +80,6 @@ object Licenses {
         internal const val PYDROID = "https://pyamsoft.github.io/pydroid"
         internal const val AUTO_VALUE = "https://github.com/google/auto"
         internal const val RETROFIT = "https://square.github.io/retrofit/"
-        internal const val ERROR_PRONE = "https://github.com/google/error-prone"
         internal const val TIMBER = "https://github.com/JakeWharton/timber"
         internal const val DEXCOUNT_GRADLE_PLUGIN = "https://github.com/KeepSafe/dexcount-gradle-plugin"
         internal const val GRADLE_VERSIONS_PLUGIN = "https://github.com/ben-manes/gradle-versions-plugin"
@@ -99,7 +96,6 @@ object Licenses {
         internal const val PYDROID = _BASE + "pydroid"
         internal const val AUTO_VALUE = _BASE + "autovalue"
         internal const val RETROFIT = _BASE + "retrofit"
-        internal const val ERROR_PRONE = _BASE + "errorprone"
         internal const val TIMBER = _BASE + "timber"
         internal const val DEXCOUNT_GRADLE_PLUGIN = _BASE + "dexcount-gradle-plugin"
         internal const val GRADLE_VERSIONS_PLUGIN = _BASE + "gradle-versions-plugin"

@@ -51,7 +51,7 @@ buildscript {
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
     gson = "2.8.2"
-    backstack = "66a8113309"
+    backstack = "5f59208bac"
 
   }
 

@@ -52,7 +52,7 @@ abstract class AppSettingsFragment : DisposableFragment() {
         val fragmentManager = childFragmentManager
         val tag: String = provideSettingsTag()
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            backstack.set(provideSettingsTag(), provideSettingsFragment())
+            backstack.set(AppSettingsKey(provideSettingsTag()) { provideSettingsFragment() })
         }
     }
 

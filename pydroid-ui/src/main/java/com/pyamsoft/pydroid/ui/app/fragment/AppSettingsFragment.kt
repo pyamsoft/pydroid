@@ -22,15 +22,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pyamsoft.backstack.BackStack
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 
 abstract class AppSettingsFragment : DisposableFragment() {
 
     private lateinit var binding: FragmentAppSettingsBinding
+    private lateinit var backstack: BackStack
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
+        backstack = BackStack.create(this, R.id.app_settings_content)
         binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -49,11 +52,11 @@ abstract class AppSettingsFragment : DisposableFragment() {
         val fragmentManager = childFragmentManager
         val tag: String = provideSettingsTag()
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            fragmentManager.beginTransaction()
-                    .replace(R.id.app_settings_content, provideSettingsFragment(), tag)
-                    .commit()
+            backstack.set(provideSettingsTag(), provideSettingsFragment())
         }
     }
+
+    override fun handleBackPress(): Boolean = backstack.back()
 
     abstract fun provideSettingsFragment(): ActionBarSettingsPreferenceFragment
 

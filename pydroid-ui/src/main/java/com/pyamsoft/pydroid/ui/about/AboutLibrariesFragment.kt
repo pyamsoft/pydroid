@@ -21,13 +21,15 @@ package com.pyamsoft.pydroid.ui.about
 import android.database.DataSetObserver
 import android.os.Bundle
 import android.support.annotation.CheckResult
-import android.support.annotation.IdRes
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pyamsoft.backstack.BackStack
+import com.pyamsoft.backstack.BackStackKey
 import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
@@ -197,25 +199,23 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
         private const val KEY_PAGE = "key_current_page"
 
         @JvmStatic
-        fun show(activity: FragmentActivity, @IdRes containerResId: Int,
-                backStackState: BackStackState) {
+        fun show(activity: FragmentActivity, backStack: BackStack,
+                state: BackStackState) {
             val fragmentManager = activity.supportFragmentManager
             if (fragmentManager.findFragmentByTag(TAG) == null) {
-                fragmentManager.beginTransaction().replace(containerResId,
-                        newInstance(backStackState),
-                        TAG).addToBackStack(null).commit()
+                backStack.add(TAG, newFragment(state))
             }
         }
 
         @JvmStatic
         @CheckResult
-        private fun newInstance(backStackState: BackStackState): AboutLibrariesFragment {
-            val args = Bundle()
-            val fragment = AboutLibrariesFragment()
-
-            args.putString(KEY_BACK_STACK, backStackState.name)
-            fragment.arguments = args
-            return fragment
+        private fun newFragment(
+                backStackState: BackStackState): AboutLibrariesFragment {
+            return AboutLibrariesFragment().apply {
+                arguments = Bundle().apply {
+                    putString(KEY_BACK_STACK, backStackState.name)
+                }
+            }
         }
 
     }

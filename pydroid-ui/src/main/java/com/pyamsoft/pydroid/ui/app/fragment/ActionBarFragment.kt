@@ -24,7 +24,7 @@ import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 
-abstract class ActionBarFragment : Fragment(), ActionBarProvider {
+abstract class ActionBarFragment : Fragment(), ActionBarProvider, BackPressHandler {
 
     override fun setActionBarUpEnabled(up: Boolean) {
         ActionBarUtil.setActionBarUpEnabled(activity!!, up)
@@ -44,5 +44,9 @@ abstract class ActionBarFragment : Fragment(), ActionBarProvider {
 
     override fun setActionBarTitle(@StringRes title: Int) {
         ActionBarUtil.setActionBarTitle(activity!!, title)
+    }
+
+    override fun handleBackPress(): Boolean {
+        return false
     }
 }

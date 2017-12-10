@@ -20,7 +20,7 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.1.60'
+    kotlin_version = '1.2.0'
     plugin_version = "3.0.1"
   }
   repositories {
@@ -41,7 +41,7 @@ buildscript {
     minSdk = 16
     maxSdk = 27
 
-    supportLib = "27.0.1"
+    supportLib = "27.0.2"
     timber = "4.6.0"
     autoValue = "1.5.2"
     autoValueGSON = "0.6.0"
@@ -51,6 +51,8 @@ buildscript {
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
     gson = "2.8.2"
+    backstack = "66a8113309"
+
   }
 
   dependencies {

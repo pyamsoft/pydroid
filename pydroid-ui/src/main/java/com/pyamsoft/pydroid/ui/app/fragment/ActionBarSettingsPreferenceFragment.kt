@@ -29,6 +29,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.pyamsoft.backstack.BackStack
 import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
@@ -167,7 +168,10 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
      */
     @CallSuper protected open fun onLicenseItemClicked() {
         Timber.d("Show about licenses fragment")
-        AboutLibrariesFragment.show(activity!!, rootViewContainer, isLastOnBackStack)
+        activity!!.let {
+            AboutLibrariesFragment.show(it, BackStack.create(it, rootViewContainer),
+                    isLastOnBackStack)
+        }
     }
 
     /**

@@ -24,7 +24,8 @@ import android.support.annotation.StringRes
 import android.support.v7.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 
-abstract class ActionBarPreferenceFragment : PreferenceFragmentCompat(), ActionBarProvider {
+abstract class ActionBarPreferenceFragment : PreferenceFragmentCompat(), ActionBarProvider,
+        BackPressHandler {
 
     override fun setActionBarUpEnabled(up: Boolean) {
         ActionBarUtil.setActionBarUpEnabled(activity!!, up)
@@ -44,5 +45,9 @@ abstract class ActionBarPreferenceFragment : PreferenceFragmentCompat(), ActionB
 
     override fun setActionBarTitle(@StringRes title: Int) {
         ActionBarUtil.setActionBarTitle(activity!!, title)
+    }
+
+    override fun handleBackPress(): Boolean {
+        return false
     }
 }

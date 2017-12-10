@@ -51,7 +51,7 @@ buildscript {
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
     gson = "2.8.2"
-    backstack = "1.0.1"
+    backstack = "1.0.2"
 
   }
 
@@ -93,4 +93,4 @@ task clean(type: Delete) {
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '14.1.1'
+version = '14.1.2'

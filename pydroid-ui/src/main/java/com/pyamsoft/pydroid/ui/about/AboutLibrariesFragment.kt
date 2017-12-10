@@ -201,7 +201,7 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
                 state: BackStackState) {
             val fragmentManager = activity.supportFragmentManager
             if (fragmentManager.findFragmentByTag(TAG) == null) {
-                backStack.add(AboutLibrariesKey(TAG) { newFragment(state) })
+                backStack.add(TAG) { newFragment(state) }
             }
         }
 

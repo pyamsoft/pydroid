@@ -19,6 +19,7 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,10 +53,11 @@ abstract class AppSettingsFragment : DisposableFragment() {
         val fragmentManager = childFragmentManager
         val tag: String = provideSettingsTag()
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            backstack.set(AppSettingsKey(provideSettingsTag()) { provideSettingsFragment() })
+            backstack.set(provideSettingsTag()) { provideSettingsFragment() }
         }
     }
 
+    @CallSuper
     override fun handleBackPress(): Boolean = backstack.back()
 
     abstract fun provideSettingsFragment(): ActionBarSettingsPreferenceFragment

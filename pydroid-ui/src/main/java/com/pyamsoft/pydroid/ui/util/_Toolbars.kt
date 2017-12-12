@@ -24,6 +24,7 @@ package com.pyamsoft.pydroid.ui.util
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.Toolbar
+import android.util.TypedValue
 import com.pyamsoft.pydroid.ui.R
 
 private var cachedIcon: Drawable? = null
@@ -34,8 +35,10 @@ private fun Toolbar.loadIcon(): Drawable? {
 
     if (icon == null) {
         // If not icon is available, resolve it from the current theme
-        val typedArray: TypedArray = context.obtainStyledAttributes(
-                intArrayOf(R.attr.toolbarStyle))
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.toolbarStyle, typedValue, true)
+        val typedArray: TypedArray = context.obtainStyledAttributes(typedValue.data,
+                intArrayOf(R.attr.homeAsUpIndicator))
         icon = typedArray.getDrawable(0)
         typedArray.recycle()
 

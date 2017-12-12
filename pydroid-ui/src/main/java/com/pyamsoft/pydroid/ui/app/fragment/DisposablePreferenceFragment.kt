@@ -20,12 +20,13 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
+import android.support.v7.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.presenter.Presenter
 
 /**
  * Fragment which manages and automatically disposes of the provided presenters
  */
-abstract class DisposablePreferenceFragment : ActionBarPreferenceFragment() {
+abstract class DisposablePreferenceFragment : PreferenceFragmentCompat(), BackPressHandler {
 
     /**
      * Cache so that the bound presenter list cannot change once it is set
@@ -52,6 +53,10 @@ abstract class DisposablePreferenceFragment : ActionBarPreferenceFragment() {
         for (presenter in presenters) {
             presenter.unbind()
         }
+    }
+
+    override fun onBackPressed(): Boolean {
+        return false
     }
 
 }

@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.database.DataSetObserver
 import android.os.Bundle
-import android.support.annotation.CheckResult
 import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.OnPageChangeListener
@@ -35,8 +34,6 @@ import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.LAST
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.NOT_LAST
 import com.pyamsoft.pydroid.ui.app.fragment.DisposableFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
@@ -47,25 +44,15 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     internal lateinit var presenter: AboutLibrariesPresenter
     internal lateinit var imageLoader: ImageLoader
     internal lateinit var pagerAdapter: AboutPagerAdapter
-    private var lastOnBackStack: Boolean = false
-    private val mapper = LoaderMap()
     private lateinit var listener: ViewPager.OnPageChangeListener
     private lateinit var binding: FragmentAboutLibrariesBinding
+    private val mapper = LoaderMap()
 
     override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            val backStackStateName: String = it.getString(KEY_BACK_STACK, "")
-            val backStackState = BackStackState.valueOf(backStackStateName)
-            lastOnBackStack = when (backStackState) {
-                LAST -> true
-                NOT_LAST -> false
-            }
-
-            PYDroid.obtain().inject(this)
-        }
+        PYDroid.obtain().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -159,20 +146,9 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        setActionBarUpEnabled(true)
-        setActionBarTitle("Open Source Licenses")
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         mapper.clear()
-        if (lastOnBackStack) {
-            Timber.d("About is last on backstack, set up false")
-            setActionBarUpEnabled(false)
-        }
-
         binding.viewPager.removeOnPageChangeListener(listener)
         binding.viewPager.adapter = null
         pagerAdapter.clear()
@@ -186,33 +162,16 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
         super.onSaveInstanceState(outState)
     }
 
-    enum class BackStackState {
-        LAST, NOT_LAST
-    }
-
     companion object {
 
         const val TAG = "AboutLibrariesFragment"
-        private const val KEY_BACK_STACK = "key_back_stack"
         private const val KEY_PAGE = "key_current_page"
 
         @JvmStatic
-        fun show(activity: FragmentActivity, backStack: BackStack,
-                state: BackStackState) {
+        fun show(activity: FragmentActivity, backStack: BackStack) {
             val fragmentManager = activity.supportFragmentManager
             if (fragmentManager.findFragmentByTag(TAG) == null) {
-                backStack.add(TAG) { newFragment(state) }
-            }
-        }
-
-        @JvmStatic
-        @CheckResult
-        private fun newFragment(
-                backStackState: BackStackState): AboutLibrariesFragment {
-            return AboutLibrariesFragment().apply {
-                arguments = Bundle().apply {
-                    putString(KEY_BACK_STACK, backStackState.name)
-                }
+                backStack.add(TAG) { AboutLibrariesFragment() }
             }
         }
 

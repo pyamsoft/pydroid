@@ -59,7 +59,7 @@ abstract class ActivityBase : AppCompatActivity() {
     @CallSuper
     override fun onBackPressed() {
         supportFragmentManager.fragments.asSequence()
-                .filter { it is BackPressHandler && it.handleBackPress() }.forEach { return }
+                .filter { it is BackPressHandler && it.onBackPressed() }.forEach { return }
         super.onBackPressed()
     }
 

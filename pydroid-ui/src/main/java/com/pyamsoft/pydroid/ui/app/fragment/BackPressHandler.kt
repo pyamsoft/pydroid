@@ -23,6 +23,6 @@ import android.support.annotation.CheckResult
 internal interface BackPressHandler {
 
     @CheckResult
-    fun handleBackPress(): Boolean
+    fun onBackPressed(): Boolean
 }
 

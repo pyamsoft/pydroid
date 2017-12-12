@@ -58,9 +58,11 @@ abstract class AppSettingsFragment : DisposableFragment() {
     }
 
     @CallSuper
-    override fun handleBackPress(): Boolean = backstack.back()
+    override fun onBackPressed(): Boolean {
+        return backstack.back()
+    }
 
-    abstract fun provideSettingsFragment(): ActionBarSettingsPreferenceFragment
+    abstract fun provideSettingsFragment(): SettingsPreferenceFragment
 
     abstract fun provideSettingsTag(): String
 

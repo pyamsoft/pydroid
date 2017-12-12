@@ -45,7 +45,7 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragment(),
+abstract class SettingsPreferenceFragment : DisposablePreferenceFragment(),
         VersionCheckPresenter.View, RatingPresenter.View {
 
     internal lateinit var versionPresenter: VersionCheckPresenter
@@ -169,8 +169,7 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
     @CallSuper protected open fun onLicenseItemClicked() {
         Timber.d("Show about licenses fragment")
         activity!!.let {
-            AboutLibrariesFragment.show(it, BackStack.create(it, rootViewContainer),
-                    isLastOnBackStack)
+            AboutLibrariesFragment.show(it, BackStack.create(it, rootViewContainer))
         }
     }
 
@@ -188,11 +187,6 @@ abstract class ActionBarSettingsPreferenceFragment : DisposablePreferenceFragmen
         toast.show()
         presenter.checkForUpdates(true)
     }
-
-    /**
-     * Indicates the state of the back stack with this fragment on it
-     */
-    protected open val isLastOnBackStack: AboutLibrariesFragment.BackStackState = AboutLibrariesFragment.BackStackState.NOT_LAST
 
     private val versionedActivity: VersionCheckProvider
         @CheckResult get() {

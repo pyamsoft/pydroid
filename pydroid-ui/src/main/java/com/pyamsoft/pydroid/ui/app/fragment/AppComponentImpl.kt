@@ -26,7 +26,7 @@ internal class AppComponentImpl internal constructor(
         private val ratingModule: RatingModule,
         private val packageName: String, private val currentVersion: Int) : AppComponent {
 
-    override fun inject(fragment: ActionBarSettingsPreferenceFragment) {
+    override fun inject(fragment: SettingsPreferenceFragment) {
         fragment.versionPresenter = versionCheckModule.getPresenter(packageName, currentVersion)
         fragment.ratingPresenter = ratingModule.getPresenter(currentVersion)
     }

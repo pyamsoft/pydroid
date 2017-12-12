@@ -38,6 +38,7 @@ object Licenses {
         createItem(Names.ANDROID_SUPPORT, HomepageUrls.ANDROID_SUPPORT,
                 LicenseLocations.ANDROID_SUPPORT)
         createItem(Names.PYDROID, HomepageUrls.PYDROID, LicenseLocations.PYDROID)
+        createItem(Names.BACKSTACK, HomepageUrls.BACKSTACK, LicenseLocations.BACKSTACK)
         createItem(Names.AUTO_VALUE, HomepageUrls.AUTO_VALUE, LicenseLocations.AUTO_VALUE)
         createItem(Names.RETROFIT, HomepageUrls.RETROFIT, LicenseLocations.RETROFIT)
         createItem(Names.TIMBER, HomepageUrls.TIMBER, LicenseLocations.TIMBER)
@@ -60,6 +61,7 @@ object Licenses {
         internal const val ANDROID = "Android"
         internal const val ANDROID_SUPPORT = "Android Support Libraries"
         internal const val PYDROID = "PYDroid"
+        internal const val BACKSTACK = "BackStack"
         internal const val AUTO_VALUE = "AutoValue"
         internal const val RETROFIT = "Retrofit"
         internal const val TIMBER = "Timber"
@@ -73,8 +75,9 @@ object Licenses {
         internal const val ANDROID = "https://source.android.com"
         internal const val ANDROID_SUPPORT = "https://source.android.com"
         internal const val PYDROID = "https://pyamsoft.github.io/pydroid"
+        internal const val BACKSTACK = "https://github.com/pyamsoft/backstack"
         internal const val AUTO_VALUE = "https://github.com/google/auto"
-        internal const val RETROFIT = "https://square.github.io/retrofit/"
+        internal const val RETROFIT = "https://square.github.io/retrofit"
         internal const val TIMBER = "https://github.com/JakeWharton/timber"
         internal const val DEXCOUNT_GRADLE_PLUGIN = "https://github.com/KeepSafe/dexcount-gradle-plugin"
         internal const val GRADLE_VERSIONS_PLUGIN = "https://github.com/ben-manes/gradle-versions-plugin"
@@ -89,6 +92,7 @@ object Licenses {
         internal const val ANDROID_SUPPORT = _BASE + "androidsupport"
         internal const val ANDROID = _BASE + "android"
         internal const val PYDROID = _BASE + "pydroid"
+        internal const val BACKSTACK = _BASE + "backstack"
         internal const val AUTO_VALUE = _BASE + "autovalue"
         internal const val RETROFIT = _BASE + "retrofit"
         internal const val TIMBER = _BASE + "timber"

@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.presenter.Presenter
 /**
  * Activity which manages and automatically disposes of the provided presenters
  */
-abstract class DisposableActivity : BackPressConfirmActivity() {
+abstract class DisposableActivity : ActivityBase() {
 
     /**
      * Cache so that the bound presenter list cannot change once it is set

@@ -22,11 +22,12 @@ import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.support.v4.app.Fragment
 import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 /**
  * Fragment which manages and automatically disposes of the provided presenters
  */
-abstract class DisposableFragment : Fragment(), BackPressHandler {
+abstract class DisposableFragment : Fragment(), BackPressHandler, ToolbarProvider {
 
     /**
      * Cache so that the bound presenter list cannot change once it is set
@@ -52,6 +53,15 @@ abstract class DisposableFragment : Fragment(), BackPressHandler {
         val presenters = getBoundPresenters()
         for (presenter in presenters) {
             presenter.unbind()
+        }
+    }
+
+    override fun getToolbarActivity(): ToolbarActivity {
+        val a = activity
+        if (a is ToolbarActivity) {
+            return a
+        } else {
+            throw ClassCastException("Activity does not implement ToolbarActivity")
         }
     }
 

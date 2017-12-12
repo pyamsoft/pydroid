@@ -30,6 +30,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
+import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
@@ -39,12 +40,13 @@ import timber.log.Timber
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
-abstract class ActivityBase : AppCompatActivity() {
+abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
     /**
      * Override if you do not want to handle IMM leaks
      */
     protected open val shouldHandleIMMLeaks: Boolean = true
+    private var capturedToolbar: Toolbar? = null
 
     @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
         // These must go before the call to onCreate
@@ -61,6 +63,22 @@ abstract class ActivityBase : AppCompatActivity() {
         supportFragmentManager.fragments.asSequence()
                 .filter { it is BackPressHandler && it.onBackPressed() }.forEach { return }
         super.onBackPressed()
+    }
+
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // Clear captured Toolbar
+        capturedToolbar = null
+    }
+
+    override fun withToolbar(func: (Toolbar) -> Unit) {
+        capturedToolbar?.let(func)
+    }
+
+    protected fun setToolbar(toolbar: Toolbar?) {
+        capturedToolbar = toolbar
     }
 
     /**

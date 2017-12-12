@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 internal interface ToolbarProvider {
 
-    @CheckResult
-    fun getToolbarActivity(): ToolbarActivity
+    val toolbarActivity: ToolbarActivity
+        @get:CheckResult get
 }
 

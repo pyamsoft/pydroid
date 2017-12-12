@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.DisposableFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import timber.log.Timber
 
 class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.View {
@@ -143,6 +144,14 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
         binding.arrowRight.rotation = -90F
         binding.arrowRight.setOnDebouncedClickListener {
             binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        toolbarActivity.withToolbar {
+            it.title = "Open Source Licenses"
+            it.setUpEnabled(true)
         }
     }
 

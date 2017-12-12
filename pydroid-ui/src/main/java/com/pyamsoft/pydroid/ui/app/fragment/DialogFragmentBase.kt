@@ -20,11 +20,22 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.app.Dialog
 import android.os.Bundle
+import android.support.annotation.CheckResult
 import android.support.v4.app.DialogFragment
 import android.view.Window
 import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 abstract class DialogFragmentBase : DialogFragment(), ToolbarProvider {
+
+    override val toolbarActivity: ToolbarActivity
+        @get:CheckResult get() {
+            val a = activity
+            if (a is ToolbarActivity) {
+                return a
+            } else {
+                throw ClassCastException("Activity does not implement ToolbarActivity")
+            }
+        }
 
     protected open val hasTitle: Boolean = false
 
@@ -37,12 +48,4 @@ abstract class DialogFragmentBase : DialogFragment(), ToolbarProvider {
         return dialog
     }
 
-    override fun getToolbarActivity(): ToolbarActivity {
-        val a = activity
-        if (a is ToolbarActivity) {
-            return a
-        } else {
-            throw ClassCastException("Activity does not implement ToolbarActivity")
-        }
-    }
 }

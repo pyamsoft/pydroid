@@ -30,6 +30,16 @@ import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 abstract class DisposablePreferenceFragment : PreferenceFragmentCompat(), BackPressHandler,
         ToolbarProvider {
 
+    override val toolbarActivity: ToolbarActivity
+        @get:CheckResult get() {
+            val a = activity
+            if (a is ToolbarActivity) {
+                return a
+            } else {
+                throw ClassCastException("Activity does not implement ToolbarActivity")
+            }
+        }
+
     /**
      * Cache so that the bound presenter list cannot change once it is set
      */
@@ -54,15 +64,6 @@ abstract class DisposablePreferenceFragment : PreferenceFragmentCompat(), BackPr
         val presenters = getBoundPresenters()
         for (presenter in presenters) {
             presenter.unbind()
-        }
-    }
-
-    override fun getToolbarActivity(): ToolbarActivity {
-        val a = activity
-        if (a is ToolbarActivity) {
-            return a
-        } else {
-            throw ClassCastException("Activity does not implement ToolbarActivity")
         }
     }
 

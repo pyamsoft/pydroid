@@ -26,7 +26,7 @@ import android.view.View
  */
 abstract class DebouncedOnClickListener : View.OnClickListener {
 
-    override fun onClick(view: View) {
+    final override fun onClick(view: View) {
         if (enabled) {
             enabled = false
             view.post(enableAgain)

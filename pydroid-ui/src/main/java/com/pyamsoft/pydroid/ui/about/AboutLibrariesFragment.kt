@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.DisposableFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
+import com.pyamsoft.pydroid.ui.helper.Poster
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import timber.log.Timber
@@ -47,12 +48,14 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     internal lateinit var pagerAdapter: AboutPagerAdapter
     private lateinit var listener: ViewPager.OnPageChangeListener
     private lateinit var binding: FragmentAboutLibrariesBinding
+    private lateinit var poster: Poster
     private val mapper = LoaderMap()
 
     override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        poster = Poster.install(this)
         PYDroid.obtain().inject(this)
     }
 
@@ -71,12 +74,14 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     }
 
     override fun onLicenseLoaded(model: AboutLibrariesModel) {
-        pagerAdapter.add(model)
+        poster.post(binding.viewPager) { pagerAdapter.add(model) }
     }
 
     override fun onAllLoaded() {
-        pagerAdapter.notifyDataSetChanged()
-        binding.aboutTitle.text = pagerAdapter.getPageTitle(binding.viewPager.currentItem)
+        poster.post(binding.viewPager) {
+            pagerAdapter.notifyDataSetChanged()
+            binding.aboutTitle.text = pagerAdapter.getPageTitle(it.currentItem)
+        }
     }
 
     private fun setupViewPager(savedInstanceState: Bundle?) {

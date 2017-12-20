@@ -25,7 +25,7 @@ import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 @GsonTypeAdapterFactory
-abstract internal class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
+internal abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
 
     companion object {
 

@@ -18,7 +18,7 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: "com.github.ben-manes.versions"
+apply plugin: 'kotlin-kapt'
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: 'com.github.dcendents.android-maven'
 

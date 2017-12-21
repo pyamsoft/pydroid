@@ -37,7 +37,7 @@ abstract class ToolbarDialog : DialogFragment(), ToolbarProvider, ViewLifecycleP
 
     private val viewLifecycleOwner = ViewLifecycleOwner()
     protected open val hasTitle: Boolean = false
-    override final val viewLifecycle: LifecycleOwner = viewLifecycleOwner
+    final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -48,7 +48,7 @@ abstract class ToolbarDialog : DialogFragment(), ToolbarProvider, ViewLifecycleP
         return dialog
     }
 
-    override final val toolbarActivity: ToolbarActivity
+    final override val toolbarActivity: ToolbarActivity
         @get:CheckResult get() {
             val a = activity
             if (a is ToolbarActivity) {

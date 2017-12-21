@@ -35,7 +35,7 @@ abstract class ToolbarFragment : Fragment(), BackPressHandler, ToolbarProvider,
         ViewLifecycleProvider {
 
     private val viewLifecycleOwner = ViewLifecycleOwner()
-    override final val viewLifecycle: LifecycleOwner = viewLifecycleOwner
+    final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner
 
     override val toolbarActivity: ToolbarActivity
         @get:CheckResult get() {

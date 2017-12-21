@@ -31,17 +31,16 @@ import com.pyamsoft.pydroid.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
-import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.fragment.DisposableFragment
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.helper.postWith
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import timber.log.Timber
 
-class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.View {
+class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
     internal lateinit var presenter: AboutLibrariesPresenter
     internal lateinit var imageLoader: ImageLoader
@@ -49,8 +48,6 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
     private lateinit var listener: ViewPager.OnPageChangeListener
     private lateinit var binding: FragmentAboutLibrariesBinding
     private val mapper = LoaderMap()
-
-    override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +65,7 @@ class AboutLibrariesFragment : DisposableFragment(), AboutLibrariesPresenter.Vie
         setupViewPager(savedInstanceState)
         setupArrows()
 
-        presenter.bind(this)
+        presenter.bind(viewLifecycle, this)
     }
 
     override fun onLicenseLoaded(model: AboutLibrariesModel) {

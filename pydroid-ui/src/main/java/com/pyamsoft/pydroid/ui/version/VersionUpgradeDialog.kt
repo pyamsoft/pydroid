@@ -22,10 +22,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.v7.app.AlertDialog
-import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 
-internal class VersionUpgradeDialog : DialogFragmentBase() {
+internal class VersionUpgradeDialog : ToolbarDialog() {
 
     private var latestVersion: Int = 0
     private var currentVersion: Int = 0

@@ -43,9 +43,9 @@ internal class RatingPresenter internal constructor(private val currentVersion: 
         }
     }
 
-    interface View : RatingLoadCallback
+    internal interface View : RatingLoadCallback
 
-    interface RatingLoadCallback {
+    internal interface RatingLoadCallback {
 
         fun onShowRatingDialog()
 

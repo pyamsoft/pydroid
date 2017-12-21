@@ -29,7 +29,7 @@ internal class RatingSavePresenter internal constructor(private val currentVersi
         mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(
         computationScheduler, ioScheduler, mainThreadScheduler) {
 
-    fun saveRating(accept: Boolean) {
+    internal fun saveRating(accept: Boolean) {
         dispose {
             interactor.saveRating(currentVersion).subscribeOn(ioScheduler).observeOn(
                     mainThreadScheduler).subscribe({
@@ -42,9 +42,9 @@ internal class RatingSavePresenter internal constructor(private val currentVersi
         }
     }
 
-    interface View : SaveRatingCallback
+    internal interface View : SaveRatingCallback
 
-    interface SaveRatingCallback {
+    internal interface SaveRatingCallback {
 
         fun onRatingSaved(accept: Boolean)
 

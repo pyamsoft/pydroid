@@ -25,10 +25,10 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 
-internal class TamperDialog : DialogFragmentBase() {
+internal class TamperDialog : ToolbarDialog() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

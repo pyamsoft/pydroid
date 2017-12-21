@@ -27,7 +27,7 @@ import com.pyamsoft.backstack.BackStack
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 
-abstract class AppSettingsFragment : DisposableFragment() {
+abstract class AppSettingsFragment : ToolbarFragment() {
 
     private lateinit var binding: FragmentAppSettingsBinding
     private lateinit var backstack: BackStack

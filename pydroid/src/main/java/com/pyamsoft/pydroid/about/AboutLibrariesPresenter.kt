@@ -28,8 +28,8 @@ class AboutLibrariesPresenter internal constructor(private val interactor: About
         mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler,
         ioScheduler, mainThreadScheduler) {
 
-    override fun onBind(v: View) {
-        super.onBind(v)
+    override fun onCreate() {
+        super.onCreate()
         loadLicenses(false)
     }
 

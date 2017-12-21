@@ -18,34 +18,12 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import android.app.Dialog
-import android.os.Bundle
+import android.arch.lifecycle.LifecycleOwner
 import android.support.annotation.CheckResult
-import android.support.v4.app.DialogFragment
-import android.view.Window
-import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
-abstract class DialogFragmentBase : DialogFragment(), ToolbarProvider {
+internal interface ViewLifecycleProvider {
 
-    override val toolbarActivity: ToolbarActivity
-        @get:CheckResult get() {
-            val a = activity
-            if (a is ToolbarActivity) {
-                return a
-            } else {
-                throw ClassCastException("Activity does not implement ToolbarActivity")
-            }
-        }
-
-    protected open val hasTitle: Boolean = false
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        if (!hasTitle) {
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        }
-
-        return dialog
-    }
-
+    val viewLifecycle: LifecycleOwner
+        @get:CheckResult get
 }
+

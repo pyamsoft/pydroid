@@ -30,7 +30,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.pyamsoft.backstack.BackStack
-import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
@@ -45,15 +44,12 @@ import com.pyamsoft.pydroid.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class SettingsPreferenceFragment : DisposablePreferenceFragment(),
+abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
         VersionCheckPresenter.View, RatingPresenter.View {
 
     internal lateinit var versionPresenter: VersionCheckPresenter
     internal lateinit var ratingPresenter: RatingPresenter
     private lateinit var toast: Toast
-
-    @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> = listOf(versionPresenter,
-            ratingPresenter)
 
     @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -126,13 +122,8 @@ abstract class SettingsPreferenceFragment : DisposablePreferenceFragment(),
             return@setOnPreferenceClickListener true
         }
 
-        versionPresenter.bind(this)
-        ratingPresenter.bind(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        versionPresenter.checkForUpdates(false)
+        versionPresenter.bind(viewLifecycle, this)
+        ratingPresenter.bind(viewLifecycle, this)
     }
 
     override fun onShowRatingDialog() {

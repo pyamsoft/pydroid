@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.text.Spannable
-import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -33,9 +32,6 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
         RatingPresenter.View {
 
     internal lateinit var ratingPresenter: RatingPresenter
-
-    @CallSuper override fun provideBoundPresenters(): List<Presenter<*>> =
-            listOf(ratingPresenter) + super.provideBoundPresenters()
 
     override val changeLogText: Spannable
         get() {
@@ -79,7 +75,7 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PYDroid.obtain().plusRatingComponent(currentApplicationVersion).inject(this)
-        ratingPresenter.bind(this)
+        ratingPresenter.bind(this, this)
     }
 
     @CallSuper

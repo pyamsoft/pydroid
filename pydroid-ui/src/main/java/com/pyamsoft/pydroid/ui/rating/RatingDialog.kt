@@ -29,9 +29,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
-import com.pyamsoft.pydroid.presenter.Presenter
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.app.fragment.DisposableDialogFragment
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
@@ -39,7 +38,7 @@ import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
 import com.pyamsoft.pydroid.version.VersionCheckProvider
 
-internal class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.View {
+internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
     internal lateinit var imageLoader: ImageLoader
     internal lateinit var presenter: RatingSavePresenter
@@ -49,8 +48,6 @@ internal class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.Vi
     @DrawableRes private var changeLogIcon: Int = 0
     private var iconTask = LoaderHelper.empty()
     private lateinit var binding: DialogRatingBinding
-
-    override fun provideBoundPresenters(): List<Presenter<*>> = listOf(presenter)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +89,7 @@ internal class RatingDialog : DisposableDialogFragment(), RatingSavePresenter.Vi
         binding.ratingBtnNoThanks.setOnDebouncedClickListener { presenter.saveRating(false) }
         binding.ratingBtnGoRate.setOnDebouncedClickListener { presenter.saveRating(true) }
 
-        presenter.bind(this)
+        presenter.bind(viewLifecycle, this)
     }
 
     override fun onRatingSaved(accept: Boolean) {

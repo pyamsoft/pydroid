@@ -40,6 +40,4 @@ internal object UiLicenses {
     private object LicenseLocations {
         internal const val MATERIAL_VIEW_PAGER_INDICATOR = Licenses.LicenseLocations._BASE + "material-view-pager"
     }
-
 }
-

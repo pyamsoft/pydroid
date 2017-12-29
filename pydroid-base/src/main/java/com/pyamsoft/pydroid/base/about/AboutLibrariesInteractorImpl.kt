@@ -19,7 +19,6 @@
 package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.base.about.AboutLibrariesModel.Companion
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber

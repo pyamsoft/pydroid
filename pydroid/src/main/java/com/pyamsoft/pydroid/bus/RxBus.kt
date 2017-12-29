@@ -46,7 +46,5 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
         @JvmStatic
         @CheckResult
         fun <T : Any> create(): EventBus<T> = RxBus()
-
     }
 }
-

@@ -22,4 +22,3 @@ interface Cache {
 
     fun clearCache()
 }
-

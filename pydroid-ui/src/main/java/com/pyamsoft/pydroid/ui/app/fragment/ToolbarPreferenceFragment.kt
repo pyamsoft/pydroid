@@ -80,5 +80,4 @@ abstract class ToolbarPreferenceFragment : PreferenceFragmentCompat(), BackPress
         super.onDestroyView()
         viewLifecycleOwner.registry.handleLifecycleEvent(ON_DESTROY)
     }
-
 }

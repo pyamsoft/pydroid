@@ -42,4 +42,3 @@ class LoaderModule(context: Context) {
     @CheckResult
     fun provideImageLoaderCache(): Cache = imageLoader
 }
-

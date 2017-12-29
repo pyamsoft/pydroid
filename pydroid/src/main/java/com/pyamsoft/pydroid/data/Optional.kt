@@ -36,4 +36,3 @@ sealed class Optional<out T : Any> {
         fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
     }
 }
-

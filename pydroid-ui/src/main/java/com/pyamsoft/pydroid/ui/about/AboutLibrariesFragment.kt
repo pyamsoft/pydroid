@@ -189,7 +189,5 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
                 backStack.add(TAG) { AboutLibrariesFragment() }
             }
         }
-
     }
 }
-

@@ -85,5 +85,4 @@ class SocialMediaLayout : LinearLayout {
 
         loaderMap.clear()
     }
-
 }

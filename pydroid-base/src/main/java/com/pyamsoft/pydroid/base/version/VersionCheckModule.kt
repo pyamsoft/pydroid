@@ -95,6 +95,6 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
     companion object {
 
         private const val GITHUB_URL = "raw.githubusercontent.com"
-        private const val CURRENT_VERSION_REPO_BASE_URL = "https://${GITHUB_URL}/pyamsoft/android-project-versions/master/"
+        private const val CURRENT_VERSION_REPO_BASE_URL = "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
     }
 }

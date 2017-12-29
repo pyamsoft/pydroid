@@ -24,4 +24,3 @@ internal interface RatingComponent {
 
     fun inject(dialog: RatingDialog)
 }
-

@@ -32,6 +32,4 @@ internal class RatingComponentImpl internal constructor(private val version: Int
         dialog.presenter = ratingModule.getSavePresenter(version)
         dialog.imageLoader = loaderModule.provideImageLoader()
     }
-
 }
-

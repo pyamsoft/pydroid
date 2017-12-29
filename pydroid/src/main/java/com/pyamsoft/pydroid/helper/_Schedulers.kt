@@ -41,4 +41,3 @@ fun Scheduler.enforceMainThread() {
         throw RuntimeException("Scheduler is not Android mainThread scheduler: $this")
     }
 }
-

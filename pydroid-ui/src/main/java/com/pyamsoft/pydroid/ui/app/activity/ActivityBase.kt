@@ -93,31 +93,24 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
         private open class LifecycleCallbacksAdapter : Application.ActivityLifecycleCallbacks {
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-
             }
 
             override fun onActivityStarted(activity: Activity) {
-
             }
 
             override fun onActivityResumed(activity: Activity) {
-
             }
 
             override fun onActivityPaused(activity: Activity) {
-
             }
 
             override fun onActivityStopped(activity: Activity) {
-
             }
 
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-
             }
 
             override fun onActivityDestroyed(activity: Activity) {
-
             }
         }
 
@@ -194,7 +187,6 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
                 } catch (unexpected: Exception) {
                     Timber.e(unexpected, "Unexpected reflection exception")
                 }
-
             }
 
             @CheckResult
@@ -275,4 +267,3 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
         }
     }
 }
-

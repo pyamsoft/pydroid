@@ -29,6 +29,4 @@ internal class ViewLifecycleOwner internal constructor() : LifecycleOwner {
     override fun getLifecycle(): Lifecycle {
         return registry
     }
-
 }
-

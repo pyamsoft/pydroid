@@ -44,5 +44,4 @@ class PYDroidModule(context: Context, val isDebug: Boolean) {
     // Singleton
     @CheckResult
     fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
-
 }

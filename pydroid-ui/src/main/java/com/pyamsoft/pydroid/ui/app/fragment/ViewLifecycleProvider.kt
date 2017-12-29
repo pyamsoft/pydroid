@@ -26,4 +26,3 @@ internal interface ViewLifecycleProvider {
     val viewLifecycle: LifecycleOwner
         @get:CheckResult get
 }
-

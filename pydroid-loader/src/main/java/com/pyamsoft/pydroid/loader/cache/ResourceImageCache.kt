@@ -36,4 +36,3 @@ internal class ResourceImageCache internal constructor() : ImageCache<@DrawableR
 
     override fun retrieve(key: ImageCacheKey<Int>): Drawable? = cache[key.data]
 }
-

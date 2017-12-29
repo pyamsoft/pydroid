@@ -87,5 +87,4 @@ abstract class ToolbarDialog : DialogFragment(), ToolbarProvider, ViewLifecycleP
         super.onDestroyView()
         viewLifecycleOwner.registry.handleLifecycleEvent(ON_DESTROY)
     }
-
 }

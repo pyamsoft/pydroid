@@ -46,11 +46,9 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
     }
 
     fun onHiddenHook() {
-
     }
 
     fun onShownHook() {
-
     }
 
     override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: FloatingActionButton,

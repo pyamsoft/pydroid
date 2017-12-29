@@ -42,4 +42,3 @@ import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 
     override fun getPageTitle(position: Int): CharSequence = models[position].name
 }
-

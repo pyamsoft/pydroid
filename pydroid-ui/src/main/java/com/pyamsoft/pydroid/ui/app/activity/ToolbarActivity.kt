@@ -24,4 +24,3 @@ interface ToolbarActivity {
 
     fun withToolbar(func: (Toolbar) -> Unit)
 }
-

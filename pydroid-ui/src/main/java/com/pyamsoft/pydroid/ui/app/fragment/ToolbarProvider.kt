@@ -26,4 +26,3 @@ internal interface ToolbarProvider {
     val toolbarActivity: ToolbarActivity
         @get:CheckResult get
 }
-

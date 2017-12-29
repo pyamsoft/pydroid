@@ -66,6 +66,4 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     abstract fun provideSettingsFragment(): SettingsPreferenceFragment
 
     abstract fun provideSettingsTag(): String
-
 }
-

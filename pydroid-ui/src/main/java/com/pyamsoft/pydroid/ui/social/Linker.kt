@@ -53,5 +53,4 @@ object Linker {
     fun clickFacebook(context: Context) {
         NetworkUtil.newLink(context.applicationContext, FACEBOOK)
     }
-
 }

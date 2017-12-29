@@ -38,6 +38,4 @@ interface EventBus<T : Any> {
      */
     @CheckResult
     fun listen(): Observable<T>
-
 }
-

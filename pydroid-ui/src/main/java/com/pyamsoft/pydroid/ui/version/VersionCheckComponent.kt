@@ -22,4 +22,3 @@ internal interface VersionCheckComponent {
 
     fun inject(activity: VersionCheckActivity)
 }
-

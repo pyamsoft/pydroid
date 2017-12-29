@@ -59,4 +59,3 @@ fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?) {
 inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> Unit) {
     setOnClickListener(DebouncedOnClickListener.create(func))
 }
-

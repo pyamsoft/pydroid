@@ -86,6 +86,4 @@ internal class AboutPagerFragment : Fragment() {
             return fragment
         }
     }
-
 }
-

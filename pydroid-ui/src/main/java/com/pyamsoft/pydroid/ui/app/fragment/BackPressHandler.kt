@@ -25,4 +25,3 @@ internal interface BackPressHandler {
     @CheckResult
     fun onBackPressed(): Boolean
 }
-

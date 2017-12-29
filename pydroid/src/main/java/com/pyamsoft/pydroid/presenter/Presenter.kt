@@ -44,7 +44,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     }
 
     @OnLifecycleEvent(ON_CREATE)
-    private fun performCreate() {
+    internal fun performCreate() {
         onCreate()
     }
 
@@ -52,7 +52,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     }
 
     @OnLifecycleEvent(ON_START)
-    private fun performStart() {
+    internal fun performStart() {
         onStart()
     }
 
@@ -60,7 +60,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     }
 
     @OnLifecycleEvent(ON_RESUME)
-    private fun performResume() {
+    internal fun performResume() {
         onResume()
     }
 
@@ -68,7 +68,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     }
 
     @OnLifecycleEvent(ON_PAUSE)
-    private fun performPause() {
+    internal fun performPause() {
         onPause()
     }
 
@@ -76,7 +76,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     }
 
     @OnLifecycleEvent(ON_STOP)
-    private fun performStop() {
+    internal fun performStop() {
         onStop()
     }
 
@@ -84,7 +84,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     }
 
     @OnLifecycleEvent(ON_DESTROY)
-    private fun performDestroy() {
+    internal fun performDestroy() {
         // Unbind the view
         this.view = null
         onDestroy()

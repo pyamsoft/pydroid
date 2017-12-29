@@ -16,4 +16,4 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-include ':pydroid', ':pydroid-ui', ':pydroid-design', ':pydroid-loader', ':pydroid-util'
+include ':pydroid', ':pydroid-ui', ':pydroid-design', ':pydroid-loader', ':pydroid-util', ':pydroid-base'

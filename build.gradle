@@ -55,8 +55,10 @@ buildscript {
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
     gson = "2.8.2"
-    backstack = "1.0.7"
+    backstack = "1.1.0"
     ktlint = "2.3.0"
+    lifecycleRuntime = "1.0.3"
+    lifecycleCompiler = "1.0.0"
   }
 
   dependencies {
@@ -82,6 +84,11 @@ buildscript {
 subprojects {
   apply plugin: "org.jlleitschuh.gradle.ktlint"
   apply plugin: "com.github.ben-manes.versions"
+
+  ktlint {
+    version = "0.14.0"
+    android = true
+  }
 }
 
 allprojects {

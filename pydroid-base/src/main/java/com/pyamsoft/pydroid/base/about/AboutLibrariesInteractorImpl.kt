@@ -16,15 +16,17 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.about
+package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.base.about.AboutLibrariesModel.Companion
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
 
 internal class AboutLibrariesInteractorImpl internal constructor(
-        private val dataSource: AboutLibrariesDataSource) : AboutLibrariesInteractor {
+        private val dataSource: AboutLibrariesDataSource) :
+        AboutLibrariesInteractor {
 
     override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
         return Observable.defer {
@@ -33,7 +35,9 @@ internal class AboutLibrariesInteractorImpl internal constructor(
             name1.compareTo(name2)
         }.flatMapObservable { Observable.fromIterable(it) }.concatMap { model ->
             loadLicenseText(model).flatMapObservable {
-                Observable.just(AboutLibrariesModel.create(model.name, model.homepage, it))
+                Observable.just(
+                        AboutLibrariesModel.create(
+                                model.name, model.homepage, it))
             }
         }
     }

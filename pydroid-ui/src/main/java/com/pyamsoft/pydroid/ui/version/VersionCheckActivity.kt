@@ -23,11 +23,12 @@ import android.support.annotation.CallSuper
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.util.DialogUtil
-import com.pyamsoft.pydroid.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.version.VersionCheckProvider
+import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import timber.log.Timber
 
-abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider,
+abstract class VersionCheckActivity : ActivityBase(),
+        VersionCheckProvider,
         VersionCheckPresenter.View {
 
     internal lateinit var presenter: VersionCheckPresenter

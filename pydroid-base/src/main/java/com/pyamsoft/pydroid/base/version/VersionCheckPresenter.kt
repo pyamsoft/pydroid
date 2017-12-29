@@ -16,10 +16,9 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.version
+package com.pyamsoft.pydroid.base.version
 
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import com.pyamsoft.pydroid.version.VersionCheckPresenter.View
 import io.reactivex.Scheduler
 import retrofit2.HttpException
 import timber.log.Timber
@@ -28,7 +27,7 @@ class VersionCheckPresenter internal constructor(private val packageName: String
         private val currentVersionCode: Int,
         private val interactor: VersionCheckInteractor,
         computationScheduler: Scheduler, ioScheduler: Scheduler,
-        mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(
+        mainThreadScheduler: Scheduler) : SchedulerPresenter<VersionCheckPresenter.View>(
         computationScheduler, ioScheduler, mainThreadScheduler) {
 
     override fun onStart() {

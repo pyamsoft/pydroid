@@ -16,16 +16,13 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.version
+package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
+import io.reactivex.Single
 
-interface VersionCheckProvider {
+internal interface VersionCheckInteractor {
 
-    @get:CheckResult
-    val applicationName: String
-
-    @get:CheckResult
-    val currentApplicationVersion: Int
-
+    @CheckResult
+    fun checkVersion(packageName: String, force: Boolean): Single<Int>
 }

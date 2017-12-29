@@ -16,18 +16,16 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-@file:JvmName("CompositeDisposableHelper")
+package com.pyamsoft.pydroid.base.version
 
-package com.pyamsoft.pydroid.helper
+import android.support.annotation.CheckResult
 
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+interface VersionCheckProvider {
 
-/**
- * Extension function for Kotlin
- *
- * Allows CompositeDisposable to consume functions which return disposables
- */
-inline fun CompositeDisposable.add(func: () -> Disposable) {
-    add(func())
+    @get:CheckResult
+    val applicationName: String
+
+    @get:CheckResult
+    val currentApplicationVersion: Int
+
 }

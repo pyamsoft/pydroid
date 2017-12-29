@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
-import com.pyamsoft.pydroid.version.VersionCheckProvider
+import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 
 internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 

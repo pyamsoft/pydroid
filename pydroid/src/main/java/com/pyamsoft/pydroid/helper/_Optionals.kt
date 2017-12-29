@@ -19,24 +19,9 @@
 package com.pyamsoft.pydroid.helper
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.helper.Optional.Absent
-import com.pyamsoft.pydroid.helper.Optional.Present
-
-/**
- * Keep the unused T here for better casting
- */
-sealed class Optional<out T : Any> {
-
-    data class Present<out T : Any>(val value: T) : Optional<T>()
-    object Absent : Optional<Nothing>()
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
-    }
-}
+import com.pyamsoft.pydroid.data.Optional
+import com.pyamsoft.pydroid.data.Optional.Absent
+import com.pyamsoft.pydroid.data.Optional.Present
 
 @CheckResult
 fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) Absent else Present(this)

@@ -16,33 +16,22 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid
+package com.pyamsoft.pydroid.base.version
 
-import android.content.Context
 import android.support.annotation.CheckResult
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import android.support.annotation.RestrictTo
+import com.google.gson.TypeAdapterFactory
+import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 
-class PYDroidModule(context: Context, val isDebug: Boolean) {
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+@GsonTypeAdapterFactory
+internal abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
 
-    // Singleton
-    private val appContext = context.applicationContext
+    companion object {
 
-    // Singleton
-    @CheckResult
-    fun provideContext(): Context = appContext
-
-    // Singleton
-    @CheckResult
-    fun provideIoScheduler(): Scheduler = Schedulers.io()
-
-    // Singleton
-    @CheckResult
-    fun provideComputationScheduler(): Scheduler = Schedulers.computation()
-
-    // Singleton
-    @CheckResult
-    fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
-
+        @JvmStatic
+        @CheckResult
+        fun create(): TypeAdapterFactory =
+                AutoValueGson_AutoValueTypeAdapterFactory()
+    }
 }

@@ -43,10 +43,6 @@ android {
       annotationProcessorOptions {
         // Fix kapt
         includeCompileClasspath = true
-
-        // Autovalue generates default empty collections and setters
-        arguments = ['autovaluegson.defaultCollectionsToEmpty'        : 'true',
-                     'autovaluegson.mutableAdaptersWithDefaultSetters': 'true']
       }
     }
   }
@@ -71,29 +67,17 @@ android {
 }
 
 dependencies {
-  // Android support library.
-  compile "com.android.support:appcompat-v7:$supportLib"
-  compile "com.android.support:preference-v14:$supportLib"
-
   // Timber logging
   compile "com.jakewharton.timber:timber:$timber"
 
-  // Auto value
-  provided "com.google.auto.value:auto-value:$autoValue"
-  provided "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
-  kapt "com.google.auto.value:auto-value:$autoValue"
-  kapt "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
-  compile "com.google.code.gson:gson:$gson"
+  // Android support library.
+  compile "android.arch.lifecycle:runtime:$lifecycleRuntime"
+  kapt "android.arch.lifecycle:compiler:$lifecycleCompiler"
 
   // RxJava
   compile "io.reactivex.rxjava2:rxjava:$rxjava"
   compile "io.reactivex.rxjava2:rxandroid:$rxandroid"
 
-  // Retrofit
-  compile "com.squareup.retrofit2:retrofit:$retrofit"
-  compile "com.squareup.retrofit2:converter-gson:$retrofit"
-  compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
-  compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

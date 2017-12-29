@@ -16,26 +16,13 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-@file:JvmName("DisposableHelper")
+package com.pyamsoft.pydroid.base.version
 
-package com.pyamsoft.pydroid.helper
+import android.support.annotation.CheckResult
+import retrofit2.Retrofit
 
-import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
+internal class VersionCheckApi internal constructor(private val client: Retrofit) {
 
-/**
- * Extension function for Kotlin
- *
- * If the Disposable is non-null, disposes of it and then returns the new disposable
- *
- * The new disposable is by default, the empty disposable, so that all memory references
- * held by the disposable are marked for GC
- */
-@JvmOverloads
-fun Disposable.clear(disposable: Disposable = Disposables.empty()): Disposable {
-    if (!isDisposed) {
-        dispose()
-    }
-
-    return disposable
+    @CheckResult
+    fun <T> create(serviceClass: Class<T>): T = client.create(serviceClass)
 }

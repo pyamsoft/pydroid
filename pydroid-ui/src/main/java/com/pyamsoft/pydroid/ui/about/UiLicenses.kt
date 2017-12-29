@@ -18,7 +18,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.about.Licenses
+import com.pyamsoft.pydroid.base.about.Licenses
 
 internal object UiLicenses {
 

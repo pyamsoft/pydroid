@@ -19,7 +19,7 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import com.pyamsoft.pydroid.ui.rating.RatingModule
-import com.pyamsoft.pydroid.version.VersionCheckModule
+import com.pyamsoft.pydroid.base.version.VersionCheckModule
 
 internal class AppComponentImpl internal constructor(
         private val versionCheckModule: VersionCheckModule,

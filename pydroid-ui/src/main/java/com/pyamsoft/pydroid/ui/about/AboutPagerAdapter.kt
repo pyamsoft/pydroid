@@ -21,7 +21,7 @@ package com.pyamsoft.pydroid.ui.about
 import android.support.annotation.RestrictTo
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
-import com.pyamsoft.pydroid.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY) internal class AboutPagerAdapter internal constructor(
         fm: Fragment) : FragmentStatePagerAdapter(fm.childFragmentManager) {

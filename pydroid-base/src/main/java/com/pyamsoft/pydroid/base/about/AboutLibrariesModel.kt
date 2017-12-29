@@ -16,7 +16,7 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.about
+package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
 
@@ -28,13 +28,15 @@ data class AboutLibrariesModel internal constructor(val name: String, val homepa
         @JvmStatic
         @CheckResult
         fun create(name: String, homepage: String,
-                license: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license,
+                license: String): AboutLibrariesModel = AboutLibrariesModel(
+                name, homepage, license,
                 "")
 
         @JvmStatic
         @CheckResult
         fun createWithContent(name: String, homepage: String,
-                content: String): AboutLibrariesModel = AboutLibrariesModel(name, homepage, "",
+                content: String): AboutLibrariesModel = AboutLibrariesModel(
+                name, homepage, "",
                 content)
     }
 }

@@ -16,16 +16,13 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.version
+package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
-import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.Url
+import io.reactivex.Observable
 
-internal interface VersionCheckService {
+internal interface AboutLibrariesInteractor {
 
     @CheckResult
-    @GET
-    fun checkVersion(@Url packageName: String): Single<VersionCheckResponse>
+    fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel>
 }

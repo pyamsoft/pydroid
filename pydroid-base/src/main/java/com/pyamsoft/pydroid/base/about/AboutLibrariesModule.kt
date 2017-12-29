@@ -16,12 +16,12 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.about
+package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import android.support.annotation.RestrictTo.Scope.LIBRARY
-import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.base.PYDroidModule
 import io.reactivex.Scheduler
 
 @RestrictTo(LIBRARY)
@@ -35,13 +35,15 @@ class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
     init {
         val dataSource: AboutLibrariesDataSource = AboutLibrariesDataSourceImpl(
                 pyDroidModule.provideContext())
-        val interactor: AboutLibrariesInteractor = AboutLibrariesInteractorImpl(dataSource)
+        val interactor: AboutLibrariesInteractor = AboutLibrariesInteractorImpl(
+                dataSource)
         cacheInteractor = AboutLibrariesInteractorCache(interactor)
     }
 
     @CheckResult
     fun getPresenter(): AboutLibrariesPresenter {
-        return AboutLibrariesPresenter(cacheInteractor, computationScheduler, ioScheduler,
+        return AboutLibrariesPresenter(cacheInteractor,
+                computationScheduler, ioScheduler,
                 mainThreadScheduler)
     }
 }

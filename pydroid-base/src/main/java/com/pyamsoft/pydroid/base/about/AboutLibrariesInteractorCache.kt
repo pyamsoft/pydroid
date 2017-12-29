@@ -16,7 +16,7 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.about
+package com.pyamsoft.pydroid.base.about
 
 import com.pyamsoft.pydroid.data.Cache
 import io.reactivex.Observable

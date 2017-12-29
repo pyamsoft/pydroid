@@ -16,17 +16,17 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.about
+package com.pyamsoft.pydroid.base.about
 
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter.View
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(private val interactor: AboutLibrariesInteractor,
         computationScheduler: Scheduler, ioScheduler: Scheduler,
-        mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(computationScheduler,
-        ioScheduler, mainThreadScheduler) {
+        mainThreadScheduler: Scheduler) :
+        SchedulerPresenter<AboutLibrariesPresenter.View>(computationScheduler, ioScheduler,
+                mainThreadScheduler) {
 
     override fun onCreate() {
         super.onCreate()

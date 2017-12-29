@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.backstack.BackStack
+import com.pyamsoft.backstack.BackStacks
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 
@@ -34,7 +35,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        backstack = BackStack.create(this, R.id.app_settings_content)
+        backstack = BackStacks.create(this, viewLifecycle, R.id.app_settings_content)
         binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }

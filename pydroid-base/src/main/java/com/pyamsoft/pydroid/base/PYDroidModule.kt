@@ -16,13 +16,33 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.version
+package com.pyamsoft.pydroid.base
 
+import android.content.Context
 import android.support.annotation.CheckResult
-import retrofit2.Retrofit
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-internal class VersionCheckApi internal constructor(private val client: Retrofit) {
+class PYDroidModule(context: Context, val isDebug: Boolean) {
 
+    // Singleton
+    private val appContext = context.applicationContext
+
+    // Singleton
     @CheckResult
-    fun <T> create(serviceClass: Class<T>): T = client.create(serviceClass)
+    fun provideContext(): Context = appContext
+
+    // Singleton
+    @CheckResult
+    fun provideIoScheduler(): Scheduler = Schedulers.io()
+
+    // Singleton
+    @CheckResult
+    fun provideComputationScheduler(): Scheduler = Schedulers.computation()
+
+    // Singleton
+    @CheckResult
+    fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
+
 }

@@ -25,21 +25,19 @@ import android.net.NetworkInfo
 import android.net.Uri
 import android.support.annotation.CheckResult
 import android.widget.Toast
-import timber.log.Timber
 
 object NetworkUtil {
 
     @JvmStatic
     fun newLink(c: Context, link: String) {
-        val uri = Uri.parse(link)
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.data = uri
-        Timber.d("Start intent for URI: %s", uri)
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            data = Uri.parse(link)
+        }
+
         try {
             c.applicationContext.startActivity(intent)
         } catch (e: Exception) {
-            Timber.e(e, "Error")
             Toast.makeText(c.applicationContext, "No activity available to handle link: " + link,
                     Toast.LENGTH_SHORT).show()
         }

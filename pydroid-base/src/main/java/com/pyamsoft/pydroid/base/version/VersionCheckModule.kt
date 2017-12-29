@@ -16,14 +16,14 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.version
+package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import android.support.annotation.RestrictTo.Scope.LIBRARY
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.base.PYDroidModule
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import okhttp3.CertificatePinner
@@ -46,7 +46,8 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
                 provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson()))
         val versionCheckService: VersionCheckService = versionCheckApi.create(
                 VersionCheckService::class.java)
-        val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(versionCheckService)
+        val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(
+                versionCheckService)
         cachedInteractor = VersionCheckInteractorCache(interactor)
     }
 
@@ -64,9 +65,12 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
             builder.addInterceptor(logging)
         }
 
-        val pinner = CertificatePinner.Builder().add(GITHUB_URL,
-                "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw=").add(GITHUB_URL,
-                "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=").add(GITHUB_URL,
+        val pinner = CertificatePinner.Builder().add(
+                GITHUB_URL,
+                "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw=").add(
+                GITHUB_URL,
+                "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=").add(
+                GITHUB_URL,
                 "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=").build()
         builder.certificatePinner(pinner)
 
@@ -74,7 +78,8 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
     }
 
     @CheckResult private fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
-        return Retrofit.Builder().baseUrl(CURRENT_VERSION_REPO_BASE_URL).client(
+        return Retrofit.Builder().baseUrl(
+                CURRENT_VERSION_REPO_BASE_URL).client(
                 okHttpClient).addConverterFactory(
                 GsonConverterFactory.create(gson)).addCallAdapterFactory(
                 RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())).build()
@@ -82,13 +87,14 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
     @CheckResult
     fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
-        return VersionCheckPresenter(packageName, currentVersion, cachedInteractor,
+        return VersionCheckPresenter(packageName, currentVersion,
+                cachedInteractor,
                 computationScheduler, ioScheduler, mainThreadScheduler)
     }
 
     companion object {
 
         private const val GITHUB_URL = "raw.githubusercontent.com"
-        private const val CURRENT_VERSION_REPO_BASE_URL = "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
+        private const val CURRENT_VERSION_REPO_BASE_URL = "https://${GITHUB_URL}/pyamsoft/android-project-versions/master/"
     }
 }

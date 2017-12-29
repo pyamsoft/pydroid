@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.os.StrictMode
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.base.PYDroidModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber

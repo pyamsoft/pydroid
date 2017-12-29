@@ -16,22 +16,24 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.version
+package com.pyamsoft.pydroid.data
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
-import com.google.gson.TypeAdapterFactory
-import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
+import com.pyamsoft.pydroid.helper.asOptional
 
-@RestrictTo(RestrictTo.Scope.LIBRARY)
-@GsonTypeAdapterFactory
-internal abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
+/**
+ * Keep the unused T here for better casting
+ */
+sealed class Optional<out T : Any> {
+
+    data class Present<out T : Any>(val value: T) : Optional<T>()
+    object Absent : Optional<Nothing>()
 
     companion object {
 
         @JvmStatic
         @CheckResult
-        fun create(): TypeAdapterFactory =
-                AutoValueGson_AutoValueTypeAdapterFactory()
+        fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
     }
 }
+

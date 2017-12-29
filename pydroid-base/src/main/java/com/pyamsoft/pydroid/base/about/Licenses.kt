@@ -16,9 +16,10 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.about
+package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.base.about.AboutLibrariesModel.Companion
 
 object Licenses {
 
@@ -34,24 +35,55 @@ object Licenses {
      * pydroid
      */
     private fun addCommonLicenses() {
-        createItem(Names.ANDROID, HomepageUrls.ANDROID, LicenseLocations.ANDROID)
-        createItem(Names.ANDROID_SUPPORT, HomepageUrls.ANDROID_SUPPORT,
+        createItem(
+                Names.ANDROID,
+                HomepageUrls.ANDROID,
+                LicenseLocations.ANDROID)
+        createItem(
+                Names.ANDROID_SUPPORT,
+                HomepageUrls.ANDROID_SUPPORT,
                 LicenseLocations.ANDROID_SUPPORT)
-        createItem(Names.PYDROID, HomepageUrls.PYDROID, LicenseLocations.PYDROID)
-        createItem(Names.BACKSTACK, HomepageUrls.BACKSTACK, LicenseLocations.BACKSTACK)
-        createItem(Names.AUTO_VALUE, HomepageUrls.AUTO_VALUE, LicenseLocations.AUTO_VALUE)
-        createItem(Names.RETROFIT, HomepageUrls.RETROFIT, LicenseLocations.RETROFIT)
-        createItem(Names.TIMBER, HomepageUrls.TIMBER, LicenseLocations.TIMBER)
-        createItem(Names.GRADLE_VERSIONS_PLUGIN, HomepageUrls.GRADLE_VERSIONS_PLUGIN,
+        createItem(
+                Names.PYDROID,
+                HomepageUrls.PYDROID,
+                LicenseLocations.PYDROID)
+        createItem(
+                Names.BACKSTACK,
+                HomepageUrls.BACKSTACK,
+                LicenseLocations.BACKSTACK)
+        createItem(
+                Names.AUTO_VALUE,
+                HomepageUrls.AUTO_VALUE,
+                LicenseLocations.AUTO_VALUE)
+        createItem(
+                Names.RETROFIT,
+                HomepageUrls.RETROFIT,
+                LicenseLocations.RETROFIT)
+        createItem(
+                Names.TIMBER,
+                HomepageUrls.TIMBER,
+                LicenseLocations.TIMBER)
+        createItem(
+                Names.GRADLE_VERSIONS_PLUGIN,
+                HomepageUrls.GRADLE_VERSIONS_PLUGIN,
                 LicenseLocations.GRADLE_VERSIONS_PLUGIN)
-        createItem(Names.DEXCOUNT_GRADLE_PLUGIN, HomepageUrls.DEXCOUNT_GRADLE_PLUGIN,
+        createItem(
+                Names.DEXCOUNT_GRADLE_PLUGIN,
+                HomepageUrls.DEXCOUNT_GRADLE_PLUGIN,
                 LicenseLocations.DEXCOUNT_GRADLE_PLUGIN)
-        createItem(Names.RXJAVA, HomepageUrls.RXJAVA, LicenseLocations.RXJAVA)
-        createItem(Names.RXANDROID, HomepageUrls.RXANDROID, LicenseLocations.RXANDROID)
+        createItem(
+                Names.RXJAVA,
+                HomepageUrls.RXJAVA,
+                LicenseLocations.RXJAVA)
+        createItem(
+                Names.RXANDROID,
+                HomepageUrls.RXANDROID,
+                LicenseLocations.RXANDROID)
     }
 
     private fun createItem(name: String, homepageUrl: String, licenseLocation: String) {
-        val item = AboutLibrariesModel.create(name, homepageUrl, licenseLocation)
+        val item = AboutLibrariesModel.create(name,
+                homepageUrl, licenseLocation)
         licenses.add(item)
     }
 

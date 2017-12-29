@@ -27,8 +27,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.backstack.BackStack
-import com.pyamsoft.pydroid.about.AboutLibrariesModel
-import com.pyamsoft.pydroid.about.AboutLibrariesPresenter
+import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.PYDroid

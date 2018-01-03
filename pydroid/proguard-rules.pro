@@ -10,22 +10,3 @@
 
 # Silence some pydroid warnings
 -dontwarn com.pyamsoft.pydroid.**
-
-# Silence some okio warnings
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
--dontwarn java.nio.file.Files
--dontwarn java.nio.file.Path
--dontwarn java.nio.file.OpenOption
-
-# Retrofit2
--dontwarn javax.annotation.**
--dontwarn retrofit2.Platform$Java8
--dontnote retrofit2.Platform
--keepattributes Signature
--keepattributes Exceptions
-
-# For use with proguard-android-optimize.txt
-# Needed or else requests with crash with a IllegalArgumentException: Missng GET or @Url
--keepclasseswithmembers class * {
-    @retrofit2.http.* <methods>;
-}

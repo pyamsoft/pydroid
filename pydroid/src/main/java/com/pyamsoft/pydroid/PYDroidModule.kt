@@ -21,27 +21,25 @@ package com.pyamsoft.pydroid
 import android.content.Context
 import android.support.annotation.CheckResult
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
-class PYDroidModule(context: Context, val isDebug: Boolean) {
+interface PYDroidModule {
 
     // Singleton
-    private val appContext = context.applicationContext
+    val isDebug: Boolean
 
     // Singleton
     @CheckResult
-    fun provideContext(): Context = appContext
+    fun provideContext(): Context
 
     // Singleton
     @CheckResult
-    fun provideIoScheduler(): Scheduler = Schedulers.io()
+    fun provideIoScheduler(): Scheduler
 
     // Singleton
     @CheckResult
-    fun provideComputationScheduler(): Scheduler = Schedulers.computation()
+    fun provideComputationScheduler(): Scheduler
 
     // Singleton
     @CheckResult
-    fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
+    fun provideMainThreadScheduler(): Scheduler
 }

@@ -16,18 +16,34 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid
 
+import android.content.Context
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.data.Cache
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-interface LoaderModule {
+class PYDroidModuleImpl(context: Context, debug: Boolean) : PYDroidModule {
+
+    // Singleton
+    private val appContext = context.applicationContext
+
+    override val isDebug: Boolean = debug
 
     // Singleton
     @CheckResult
-    fun provideImageLoader(): ImageLoader
+    override fun provideContext(): Context = appContext
 
     // Singleton
     @CheckResult
-    fun provideImageLoaderCache(): Cache
+    override fun provideIoScheduler(): Scheduler = Schedulers.io()
+
+    // Singleton
+    @CheckResult
+    override fun provideComputationScheduler(): Scheduler = Schedulers.computation()
+
+    // Singleton
+    @CheckResult
+    override fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
 }

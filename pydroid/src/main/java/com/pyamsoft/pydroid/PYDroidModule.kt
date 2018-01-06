@@ -16,7 +16,7 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.base
+package com.pyamsoft.pydroid
 
 import android.content.Context
 import android.support.annotation.CheckResult

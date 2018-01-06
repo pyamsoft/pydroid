@@ -23,7 +23,7 @@ import android.support.annotation.RestrictTo
 import android.support.annotation.RestrictTo.Scope.LIBRARY
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.pyamsoft.pydroid.base.PYDroidModule
+import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import okhttp3.CertificatePinner

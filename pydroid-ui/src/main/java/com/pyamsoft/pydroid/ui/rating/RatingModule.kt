@@ -19,7 +19,7 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.base.PYDroidModule
+import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Scheduler
 

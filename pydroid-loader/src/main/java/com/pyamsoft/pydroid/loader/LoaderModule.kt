@@ -18,20 +18,21 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
-class LoaderModule(context: Context) {
+class LoaderModule(module: PYDroidModule) {
 
     private val imageLoader: ImageLoaderImpl
 
     init {
         val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
-        imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache)
+        imageLoader = ImageLoaderImpl(module.provideContext(), resourceImageCache,
+                module.provideMainThreadScheduler(), module.provideIoScheduler())
     }
 
     // Singleton

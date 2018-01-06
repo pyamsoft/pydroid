@@ -21,7 +21,7 @@ package com.pyamsoft.pydroid.base.about
 import android.support.annotation.CheckResult
 import android.support.annotation.RestrictTo
 import android.support.annotation.RestrictTo.Scope.LIBRARY
-import com.pyamsoft.pydroid.base.PYDroidModule
+import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 
 @RestrictTo(LIBRARY)

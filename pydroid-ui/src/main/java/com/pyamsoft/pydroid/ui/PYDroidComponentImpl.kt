@@ -18,7 +18,7 @@
 
 package com.pyamsoft.pydroid.ui
 
-import com.pyamsoft.pydroid.base.PYDroidModule
+import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment

@@ -25,9 +25,12 @@ import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
+import io.reactivex.Scheduler
 
 internal class ImageLoaderImpl internal constructor(private val context: Context,
-        private val resourceImageCache: ImageCache<Int, Drawable>) : ImageLoader, Cache {
+        private val resourceImageCache: ImageCache<Int, Drawable>,
+        private val mainThreadScheduler: Scheduler, private val ioScheduler: Scheduler) :
+        ImageLoader, Cache {
 
     override fun clearCache() {
         resourceImageCache.clearCache()
@@ -37,5 +40,5 @@ internal class ImageLoaderImpl internal constructor(private val context: Context
             0)
 
     override fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader = RxResourceLoader(
-            context.applicationContext, resource, errorResource, resourceImageCache)
+            context.applicationContext, resource, errorResource, resourceImageCache, mainThreadScheduler, ioScheduler)
 }

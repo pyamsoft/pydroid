@@ -18,15 +18,29 @@
 
 package com.pyamsoft.pydroid.loader.loaded
 
+import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.helper.clear
 import io.reactivex.disposables.Disposable
 
-class RxLoaded(private val disposable: Disposable) : Loaded {
+class RxLoaded(private var disposable: Disposable) : Loaded, LifecycleObserver {
 
-    override fun unload() {
-        if (!isUnloaded) {
-            disposable.dispose()
-        }
+    private var lifeCycleOwner: LifecycleOwner? = null
+
+    override fun bind(owner: LifecycleOwner) {
+        owner.lifecycle.addObserver(this)
+        lifeCycleOwner = owner
     }
 
-    override val isUnloaded: Boolean = disposable.isDisposed
+    @OnLifecycleEvent(ON_DESTROY)
+    internal fun unbindOnDestroy() {
+        lifeCycleOwner?.lifecycle?.removeObserver(this)
+        lifeCycleOwner = null
+
+        if (!disposable.isDisposed) {
+            disposable = disposable.clear()
+        }
+    }
 }

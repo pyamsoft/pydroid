@@ -27,8 +27,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.loader.LoaderHelper
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
@@ -36,7 +36,6 @@ import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
-import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 
 internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
@@ -46,7 +45,6 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     private var versionCode: Int = 0
     private var changeLogText: Spannable? = null
     @DrawableRes private var changeLogIcon: Int = 0
-    private var iconTask = LoaderHelper.empty()
     private lateinit var binding: DialogRatingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,11 +69,6 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
         PYDroid.obtain().plusRatingComponent(versionCode).inject(this)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        iconTask = LoaderHelper.unload(iconTask)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
         binding = DialogRatingBinding.inflate(inflater, container, false)
@@ -86,8 +79,10 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
         super.onViewCreated(view, savedInstanceState)
         initDialog()
 
-        binding.ratingBtnNoThanks.setOnDebouncedClickListener { presenter.saveRating(false) }
-        binding.ratingBtnGoRate.setOnDebouncedClickListener { presenter.saveRating(true) }
+        binding.apply {
+            ratingBtnNoThanks.setOnDebouncedClickListener { presenter.saveRating(false) }
+            ratingBtnGoRate.setOnDebouncedClickListener { presenter.saveRating(true) }
+        }
 
         presenter.bind(viewLifecycle, this)
     }
@@ -109,10 +104,9 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     }
 
     private fun initDialog() {
-        ViewCompat.setElevation(binding.ratingIcon, AppUtil.convertToDP(context!!, 8f))
-
-        iconTask = LoaderHelper.unload(iconTask)
-        iconTask = imageLoader.fromResource(changeLogIcon).into(binding.ratingIcon)
+        ViewCompat.setElevation(binding.ratingIcon,
+                AppUtil.convertToDP(binding.ratingIcon.context, 8F))
+        imageLoader.fromResource(changeLogIcon).into(binding.ratingIcon).bind(viewLifecycle)
         binding.ratingTextChange.text = changeLogText
     }
 
@@ -147,14 +141,14 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
         @CheckResult
         @JvmStatic
         fun newInstance(provider: ChangeLogProvider): RatingDialog {
-            val fragment = RatingDialog()
-            val args = Bundle()
-            args.putString(RATE_LINK, provider.getPackageName())
-            args.putCharSequence(CHANGE_LOG_TEXT, provider.changeLogText)
-            args.putInt(VERSION_CODE, provider.currentApplicationVersion)
-            args.putInt(CHANGE_LOG_ICON, provider.applicationIcon)
-            fragment.arguments = args
-            return fragment
+            return RatingDialog().apply {
+                arguments = Bundle().apply {
+                    putString(RATE_LINK, provider.getPackageName())
+                    putCharSequence(CHANGE_LOG_TEXT, provider.changeLogText)
+                    putInt(VERSION_CODE, provider.currentApplicationVersion)
+                    putInt(CHANGE_LOG_ICON, provider.applicationIcon)
+                }
+            }
         }
     }
 }

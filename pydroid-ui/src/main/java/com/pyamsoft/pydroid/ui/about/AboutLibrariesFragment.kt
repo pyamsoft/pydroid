@@ -30,7 +30,6 @@ import com.pyamsoft.backstack.BackStack
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
@@ -47,7 +46,6 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     internal lateinit var pagerAdapter: AboutPagerAdapter
     private lateinit var listener: ViewPager.OnPageChangeListener
     private lateinit var binding: FragmentAboutLibrariesBinding
-    private val mapper = LoaderMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,18 +136,22 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     }
 
     private fun setupArrows() {
-        mapper.put("left",
-                imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft))
-        binding.arrowLeft.rotation = 90F
-        binding.arrowLeft.setOnDebouncedClickListener {
-            binding.viewPager.arrowScroll(View.FOCUS_LEFT)
+        imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft)
+                .bind(viewLifecycle)
+        binding.apply {
+            arrowLeft.rotation = 90F
+            arrowLeft.setOnDebouncedClickListener {
+                viewPager.arrowScroll(View.FOCUS_LEFT)
+            }
         }
 
-        mapper.put("right",
-                imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowRight))
-        binding.arrowRight.rotation = -90F
-        binding.arrowRight.setOnDebouncedClickListener {
-            binding.viewPager.arrowScroll(View.FOCUS_RIGHT)
+        imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowRight)
+                .bind(viewLifecycle)
+        binding.apply {
+            arrowRight.rotation = -90F
+            arrowRight.setOnDebouncedClickListener {
+                viewPager.arrowScroll(View.FOCUS_RIGHT)
+            }
         }
     }
 
@@ -163,13 +165,14 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mapper.clear()
-        binding.viewPager.removeOnPageChangeListener(listener)
-        binding.viewPager.adapter = null
-        pagerAdapter.clear()
+        binding.apply {
+            viewPager.removeOnPageChangeListener(listener)
+            viewPager.adapter = null
+            pagerAdapter.clear()
 
-        binding.arrowLeft.setOnDebouncedClickListener(null)
-        binding.arrowRight.setOnDebouncedClickListener(null)
+            arrowLeft.setOnDebouncedClickListener(null)
+            arrowRight.setOnDebouncedClickListener(null)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

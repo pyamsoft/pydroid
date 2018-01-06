@@ -18,12 +18,9 @@
 
 package com.pyamsoft.pydroid.loader.loaded
 
-import android.support.annotation.CheckResult
+import android.arch.lifecycle.LifecycleOwner
 
 interface Loaded {
 
-    fun unload()
-
-    @get:CheckResult
-    val isUnloaded: Boolean
+    fun bind(owner: LifecycleOwner)
 }

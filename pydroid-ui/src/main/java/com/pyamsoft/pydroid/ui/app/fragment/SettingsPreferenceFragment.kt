@@ -29,7 +29,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.pyamsoft.backstack.BackStacks
 import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -160,7 +159,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
     @CallSuper protected open fun onLicenseItemClicked() {
         Timber.d("Show about licenses fragment")
         activity!!.let {
-            AboutLibrariesFragment.show(it, BackStacks.create(it, rootViewContainer))
+            AboutLibrariesFragment.show(it, this, rootViewContainer)
         }
     }
 

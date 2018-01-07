@@ -20,22 +20,19 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.support.annotation.CheckResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.backstack.BackStack
-import com.pyamsoft.backstack.BackStacks
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 
 abstract class AppSettingsFragment : ToolbarFragment() {
 
     private lateinit var binding: FragmentAppSettingsBinding
-    private lateinit var backstack: BackStack
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
-        backstack = BackStacks.create(this, viewLifecycle, R.id.app_settings_content)
         binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -54,16 +51,20 @@ abstract class AppSettingsFragment : ToolbarFragment() {
         val fragmentManager = childFragmentManager
         val tag: String = provideSettingsTag()
         if (fragmentManager.findFragmentByTag(tag) == null) {
-            backstack.set(provideSettingsTag()) { provideSettingsFragment() }
+            fragmentManager.beginTransaction()
+                    .add(R.id.app_settings_content, provideSettingsFragment(), tag)
+                    .commit()
         }
     }
 
     @CallSuper
     override fun onBackPressed(): Boolean {
-        return backstack.back()
+        return false
     }
 
+    @CheckResult
     abstract fun provideSettingsFragment(): SettingsPreferenceFragment
 
+    @CheckResult
     abstract fun provideSettingsTag(): String
 }

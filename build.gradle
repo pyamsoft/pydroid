@@ -55,7 +55,6 @@ buildscript {
     rxandroid = "2.0.1"
     viewPagerIndicator = "1.0.4"
     gson = "2.8.2"
-    backstack = "1.1.0"
     ktlint = "2.3.0"
     lifecycleRuntime = "1.0.3"
     lifecycleCompiler = "1.0.0"

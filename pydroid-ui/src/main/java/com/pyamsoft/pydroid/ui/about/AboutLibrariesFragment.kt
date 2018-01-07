@@ -20,13 +20,14 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.database.DataSetObserver
 import android.os.Bundle
+import android.support.annotation.IdRes
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.backstack.BackStack
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
@@ -186,10 +187,14 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
         private const val KEY_PAGE = "key_current_page"
 
         @JvmStatic
-        fun show(activity: FragmentActivity, backStack: BackStack) {
+        fun show(activity: FragmentActivity,
+                currentFragment: Fragment, @IdRes rootViewContainer: Int) {
             val fragmentManager = activity.supportFragmentManager
             if (fragmentManager.findFragmentByTag(TAG) == null) {
-                backStack.add(TAG) { AboutLibrariesFragment() }
+                fragmentManager.beginTransaction().detach(currentFragment)
+                        .add(rootViewContainer, AboutLibrariesFragment(), TAG)
+                        .addToBackStack(null)
+                        .commit()
             }
         }
     }

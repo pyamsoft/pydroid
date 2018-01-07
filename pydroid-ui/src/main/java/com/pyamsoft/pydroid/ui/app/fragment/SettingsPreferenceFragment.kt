@@ -197,7 +197,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
 
     protected open val hideClearAll: Boolean = false
 
-    protected open val aboutReplaceFragment: Fragment? = parentFragment
+    protected abstract val aboutReplaceFragment: Fragment?
 
     @get:[CheckResult IdRes] protected abstract val rootViewContainer: Int
 

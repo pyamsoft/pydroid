@@ -16,67 +16,76 @@
   ~     with this program; if not, write to the Free Software Foundation, Inc.,
   ~     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   -->
-<layout>
-  <FrameLayout
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+  <android.support.constraint.ConstraintLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/rating_root"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
-
-    <LinearLayout
-        android:id="@+id/rating_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="36dp"
-        android:orientation="vertical"
-        android:padding="8dp"
-        >
-
-      <ScrollView
-          android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:layout_margin="8dp"
-          android:layout_weight="1"
-          >
-
-        <TextView
-            android:id="@+id/rating_text_change"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-      </ScrollView>
-
-      <Button
-          android:id="@+id/rating_btn_go_rate"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="@string/rate_application"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textColor="@android:color/white"
-          style="@style/Widget.AppCompat.Button.Colored"
-          />
-
-      <TextView
-          android:id="@+id/rating_btn_no_thanks"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="8dp"
-          android:gravity="center"
-          android:text="@string/no_thanks"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          />
-
-    </LinearLayout>
 
     <ImageView
         android:id="@+id/rating_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="16dp"
         android:contentDescription="@string/blank"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
-  </FrameLayout>
+    <ScrollView
+        android:id="@+id/rating_changelog_scroller"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/rating_btn_go_rate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rating_icon"
+        >
+
+      <TextView
+          android:id="@+id/rating_text_change"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/rating_btn_go_rate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/rate_application"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/rating_btn_no_thanks"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/Widget.AppCompat.Button.Colored"
+        />
+
+    <TextView
+        android:id="@+id/rating_btn_no_thanks"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
+        android:text="@string/no_thanks"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+  </android.support.constraint.ConstraintLayout>
 </layout>

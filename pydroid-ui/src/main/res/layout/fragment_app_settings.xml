@@ -17,35 +17,42 @@
   ~     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   -->
 
-<layout>
-  <RelativeLayout
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+  <android.support.constraint.ConstraintLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/relativeLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
       >
 
     <com.pyamsoft.pydroid.ui.social.SocialMediaLayout
         android:id="@+id/social_media_layout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
     <View
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="4dp"
-        android:layout_above="@id/social_media_layout"
         android:background="@drawable/shadow_scrim_up"
+        app:layout_constraintBottom_toTopOf="@+id/social_media_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
     <FrameLayout
         android:id="@+id/app_settings_content"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/social_media_bar_size"
-        android:layout_above="@id/social_media_layout"
-        android:layout_alignParentTop="true"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/social_media_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
-  </RelativeLayout>
+  </android.support.constraint.ConstraintLayout>
 </layout>

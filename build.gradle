@@ -58,6 +58,7 @@ buildscript {
     ktlint = "2.3.0"
     lifecycleRuntime = "1.0.3"
     lifecycleCompiler = "1.0.0"
+    constraintLayout = "1.0.2"
   }
 
   dependencies {
@@ -111,4 +112,4 @@ task clean(type: Delete) {
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '15.3.5'
+version = '15.3.6'

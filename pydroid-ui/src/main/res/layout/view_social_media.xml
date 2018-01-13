@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~     Copyright (C) 2017 Peter Kenji Yamanaka
   ~
   ~     This program is free software; you can redistribute it and/or modify
@@ -17,86 +16,85 @@
   ~     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   -->
 <layout>
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/linearLayout"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/social_media_bar_size"
-      android:baselineAligned="false"
-      android:paddingBottom="8dp"
-      android:paddingEnd="16dp"
-      android:paddingStart="16dp"
-      android:paddingTop="8dp"
-      >
+
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/social_media_bar_size"
+    android:baselineAligned="false"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
     <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        >
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_weight="1"
+      android:padding="8dp">
 
-      <ImageView
-          android:id="@+id/google_play"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:layout_gravity="center"
-          android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
-          />
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+        android:id="@+id/google_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/blank"
+        android:scaleType="centerInside"
+        tools:src="@drawable/google_play" />
 
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_weight="1"
+      android:padding="8dp">
+
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+        android:id="@+id/blogger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
-        >
-
-      <ImageView
-          android:id="@+id/blogger"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:layout_gravity="center"
-          android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
-          />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        >
-
-      <ImageView
-          android:id="@+id/google_plus"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:layout_gravity="center"
-          android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
-          />
+        android:contentDescription="@string/blank"
+        android:scaleType="centerInside"
+        tools:src="@drawable/blogger_icon" />
 
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        >
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_weight="1"
+      android:padding="8dp">
 
-      <ImageView
-          android:id="@+id/facebook"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:layout_gravity="center"
-          android:contentDescription="@string/blank"
-          android:scaleType="centerInside"
-          />
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+        android:id="@+id/google_plus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/blank"
+        android:scaleType="centerInside"
+        tools:src="@drawable/google_plus" />
+
+    </FrameLayout>
+
+    <FrameLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_weight="1"
+      android:padding="8dp">
+
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+        android:id="@+id/facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/blank"
+        android:scaleType="centerInside"
+        tools:src="@drawable/facebook_icon" />
 
     </FrameLayout>
 

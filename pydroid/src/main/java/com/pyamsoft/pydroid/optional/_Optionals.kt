@@ -16,21 +16,11 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.presenter
+package com.pyamsoft.pydroid.optional
 
-import com.pyamsoft.pydroid.ktext.enforceComputation
-import com.pyamsoft.pydroid.ktext.enforceIo
-import com.pyamsoft.pydroid.ktext.enforceMainThread
-import io.reactivex.Scheduler
+import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.optional.OptionalImpl.AbsentImpl
+import com.pyamsoft.pydroid.optional.OptionalImpl.PresentImpl
 
-abstract class SchedulerPresenter<V : Any> protected constructor(
-        protected val computationScheduler: Scheduler,
-        protected val ioScheduler: Scheduler,
-        protected val mainThreadScheduler: Scheduler) : Presenter<V>() {
-
-    init {
-        computationScheduler.enforceComputation()
-        ioScheduler.enforceIo()
-        mainThreadScheduler.enforceMainThread()
-    }
-}
+@CheckResult
+fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) AbsentImpl else PresentImpl(this)

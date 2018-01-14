@@ -16,12 +16,13 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.helper
+package com.pyamsoft.pydroid.optional
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.data.Optional
-import com.pyamsoft.pydroid.data.Optional.Absent
-import com.pyamsoft.pydroid.data.Optional.Present
 
-@CheckResult
-fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) Absent else Present(this)
+object Optionals {
+
+    @JvmStatic
+    @CheckResult
+    fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
+}

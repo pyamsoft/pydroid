@@ -18,7 +18,7 @@
 
 @file:JvmName("SchedulerHelper")
 
-package com.pyamsoft.pydroid.helper
+package com.pyamsoft.pydroid.ktext
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

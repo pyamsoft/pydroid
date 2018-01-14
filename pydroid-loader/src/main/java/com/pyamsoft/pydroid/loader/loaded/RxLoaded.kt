@@ -22,7 +22,7 @@ import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
-import com.pyamsoft.pydroid.helper.clear
+import com.pyamsoft.pydroid.ktext.clear
 import io.reactivex.disposables.Disposable
 
 class RxLoaded(private var disposable: Disposable) : Loaded, LifecycleObserver {

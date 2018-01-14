@@ -16,26 +16,19 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-@file:JvmName("DisposableHelper")
+package com.pyamsoft.pydroid.optional
 
-package com.pyamsoft.pydroid.helper
-
-import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
+import com.pyamsoft.pydroid.optional.Optional.Absent
+import com.pyamsoft.pydroid.optional.Optional.Present
 
 /**
- * Extension function for Kotlin
- *
- * If the Disposable is non-null, disposes of it and then returns the new disposable
- *
- * The new disposable is by default, the empty disposable, so that all memory references
- * held by the disposable are marked for GC
+ * PYDroid implementation of the Optional interface contract
  */
-@JvmOverloads
-fun Disposable.clear(disposable: Disposable = Disposables.empty()): Disposable {
-    if (!isDisposed) {
-        dispose()
-    }
+internal sealed class OptionalImpl<out T : Any> : Optional<T> {
 
-    return disposable
+    internal data class PresentImpl<out T : Any> internal constructor(override val value: T) :
+            Present<T>
+
+    internal object AbsentImpl : Absent
+
 }

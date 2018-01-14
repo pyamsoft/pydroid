@@ -16,21 +16,26 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.presenter
+@file:JvmName("DisposableHelper")
 
-import com.pyamsoft.pydroid.ktext.enforceComputation
-import com.pyamsoft.pydroid.ktext.enforceIo
-import com.pyamsoft.pydroid.ktext.enforceMainThread
-import io.reactivex.Scheduler
+package com.pyamsoft.pydroid.ktext
 
-abstract class SchedulerPresenter<V : Any> protected constructor(
-        protected val computationScheduler: Scheduler,
-        protected val ioScheduler: Scheduler,
-        protected val mainThreadScheduler: Scheduler) : Presenter<V>() {
+import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.Disposables
 
-    init {
-        computationScheduler.enforceComputation()
-        ioScheduler.enforceIo()
-        mainThreadScheduler.enforceMainThread()
+/**
+ * Extension function for Kotlin
+ *
+ * If the Disposable is non-null, disposes of it and then returns the new disposable
+ *
+ * The new disposable is by default, the empty disposable, so that all memory references
+ * held by the disposable are marked for GC
+ */
+@JvmOverloads
+fun Disposable.clear(disposable: Disposable = Disposables.empty()): Disposable {
+    if (!isDisposed) {
+        dispose()
     }
+
+    return disposable
 }

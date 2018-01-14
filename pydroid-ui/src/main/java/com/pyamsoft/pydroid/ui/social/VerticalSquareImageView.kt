@@ -27,12 +27,12 @@ import android.util.AttributeSet
  */
 internal class VerticalSquareImageView : AppCompatImageView {
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs,
-            defStyleAttr)
+    internal constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context,
+            attrs, defStyleAttr)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    internal constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(context: Context) : super(context)
+    internal constructor(context: Context) : super(context)
 
     /**
      * Sets the dimensions of the view to the height in both dimensions.

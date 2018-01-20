@@ -27,8 +27,10 @@ import android.util.AttributeSet
  */
 internal class VerticalSquareImageView : AppCompatImageView {
 
-    internal constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context,
-            attrs, defStyleAttr)
+    internal constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs, defStyleAttr
+    )
 
     internal constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 

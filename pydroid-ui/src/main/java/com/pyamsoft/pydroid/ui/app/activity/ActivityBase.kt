@@ -48,7 +48,8 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
     protected open val shouldHandleIMMLeaks: Boolean = true
     private var capturedToolbar: Toolbar? = null
 
-    @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         // These must go before the call to onCreate
         if (shouldHandleIMMLeaks) {
             IMMLeakUtil.fixFocusedViewLeak(application)
@@ -61,7 +62,7 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
     @CallSuper
     override fun onBackPressed() {
         supportFragmentManager.fragments.asSequence()
-                .filter { it is BackPressHandler && it.onBackPressed() }.forEach { return }
+            .filter { it is BackPressHandler && it.onBackPressed() }.forEach { return }
         super.onBackPressed()
     }
 
@@ -114,10 +115,12 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
             }
         }
 
-        private class ReferenceCleaner(private val inputMethodManager: InputMethodManager,
-                private val lockField: Field, private val servedViewField: Field,
-                private val finishInputLockedMethod: Method) : MessageQueue.IdleHandler,
-                View.OnAttachStateChangeListener, ViewTreeObserver.OnGlobalFocusChangeListener {
+        private class ReferenceCleaner(
+            private val inputMethodManager: InputMethodManager,
+            private val lockField: Field, private val servedViewField: Field,
+            private val finishInputLockedMethod: Method
+        ) : MessageQueue.IdleHandler,
+            View.OnAttachStateChangeListener, ViewTreeObserver.OnGlobalFocusChangeListener {
 
             override fun onGlobalFocusChanged(oldFocus: View?, newFocus: View?) {
                 if (newFocus == null) {
@@ -136,7 +139,8 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
                 Looper.myQueue().addIdleHandler(this)
             }
 
-            @CheckResult override fun queueIdle(): Boolean {
+            @CheckResult
+            override fun queueIdle(): Boolean {
                 clearInputMethodManagerLeak()
                 return false
             }
@@ -231,7 +235,8 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
             }
 
             val inputMethodManager = application.getSystemService(
-                    Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                Context.INPUT_METHOD_SERVICE
+            ) as InputMethodManager
 
             val servedViewField: Field
             val lockField: Field
@@ -241,9 +246,12 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
                 servedViewField = InputMethodManager::class.java.getDeclaredField("mServedView")
                 lockField = InputMethodManager::class.java.getDeclaredField("mServedView")
                 finishInputLockedMethod = InputMethodManager::class.java.getDeclaredMethod(
-                        "finishInputLocked")
-                focusInMethod = InputMethodManager::class.java.getDeclaredMethod("focusIn",
-                        View::class.java)
+                    "finishInputLocked"
+                )
+                focusInMethod = InputMethodManager::class.java.getDeclaredMethod(
+                    "focusIn",
+                    View::class.java
+                )
                 servedViewField.isAccessible = true
                 lockField.isAccessible = true
                 finishInputLockedMethod.isAccessible = true
@@ -260,8 +268,11 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
             application.registerActivityLifecycleCallbacks(object : LifecycleCallbacksAdapter() {
                 override fun onActivityStarted(activity: Activity) {
                     activity.window?.decorView?.rootView?.viewTreeObserver?.addOnGlobalFocusChangeListener(
-                            ReferenceCleaner(inputMethodManager, lockField, servedViewField,
-                                    finishInputLockedMethod))
+                        ReferenceCleaner(
+                            inputMethodManager, lockField, servedViewField,
+                            finishInputLockedMethod
+                        )
+                    )
                 }
             })
         }

@@ -18,12 +18,7 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
-import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
-import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
-import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
-import android.arch.lifecycle.Lifecycle.Event.ON_START
-import android.arch.lifecycle.Lifecycle.Event.ON_STOP
+import android.arch.lifecycle.Lifecycle.Event.*
 import android.arch.lifecycle.LifecycleOwner
 import android.os.Bundle
 import android.support.annotation.CheckResult
@@ -32,7 +27,7 @@ import android.view.View
 import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 abstract class ToolbarPreferenceFragment : PreferenceFragmentCompat(), BackPressHandler,
-        ToolbarProvider, ViewLifecycleProvider {
+    ToolbarProvider, ViewLifecycleProvider {
 
     private val viewLifecycleOwner = ViewLifecycleOwner()
     final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner

@@ -32,6 +32,6 @@ internal abstract class AutoValueTypeAdapterFactory internal constructor() : Typ
         @JvmStatic
         @CheckResult
         fun create(): TypeAdapterFactory =
-                AutoValueGson_AutoValueTypeAdapterFactory()
+            AutoValueGson_AutoValueTypeAdapterFactory()
     }
 }

@@ -53,7 +53,8 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
                      |Current version: $currentVersion
                      |Latest verson: $latestVersion""".trimMargin()
         return AlertDialog.Builder(activity!!).setTitle("New version available").setMessage(
-                message).setPositiveButton("Update") { _, _ ->
+            message
+        ).setPositiveButton("Update") { _, _ ->
             Linker.clickAppPage(context!!, context!!.packageName)
             dismiss()
         }.setNegativeButton("Later") { _, _ -> dismiss() }.create()
@@ -68,8 +69,10 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
 
         @JvmStatic
         @CheckResult
-        fun newInstance(applicationName: String, currentVersion: Int,
-                latestVersion: Int): VersionUpgradeDialog {
+        fun newInstance(
+            applicationName: String, currentVersion: Int,
+            latestVersion: Int
+        ): VersionUpgradeDialog {
             val args = Bundle()
             val fragment = VersionUpgradeDialog()
             args.putString(KEY_NAME, applicationName)

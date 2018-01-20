@@ -33,7 +33,7 @@ object DrawableUtil {
     @JvmStatic
     @CheckResult
     fun colorFilter(@ColorInt color: Int): ColorFilter =
-            PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+        PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
 
     @JvmStatic
     @CheckResult
@@ -44,8 +44,10 @@ object DrawableUtil {
 
     @JvmStatic
     @CheckResult
-    fun tintDrawableFromRes(c: Context, d: Drawable,
-            @ColorRes cl: Int): Drawable {
+    fun tintDrawableFromRes(
+        c: Context, d: Drawable,
+        @ColorRes cl: Int
+    ): Drawable {
         @ColorInt val i: Int = ContextCompat.getColor(c, cl)
         return tintDrawableFromColor(d, i)
     }

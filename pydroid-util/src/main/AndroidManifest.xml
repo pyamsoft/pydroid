@@ -16,10 +16,9 @@
   ~     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   -->
 
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pyamsoft.pydroid.util">
 
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

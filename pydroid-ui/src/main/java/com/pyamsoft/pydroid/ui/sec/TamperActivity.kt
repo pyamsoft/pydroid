@@ -30,7 +30,8 @@ abstract class TamperActivity : RatingActivity() {
 
     internal var debugMode: Boolean = false
 
-    @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PYDroid.obtain().inject(this)
     }
@@ -38,7 +39,8 @@ abstract class TamperActivity : RatingActivity() {
     /**
      * Returns true if the application has been tampered with, false if not
      */
-    @CheckResult private fun applicationIsTampered(): Boolean {
+    @CheckResult
+    private fun applicationIsTampered(): Boolean {
         // Check if we are renamed
         if (applicationContext.packageName.compareTo(safePackageName) != 0) {
             Timber.e("Application is potentially re-named")
@@ -85,7 +87,8 @@ abstract class TamperActivity : RatingActivity() {
     /**
      * The package name that we expect to be running under
      */
-    @get:CheckResult protected abstract val safePackageName: String
+    @get:CheckResult
+    protected abstract val safePackageName: String
 
     companion object {
 

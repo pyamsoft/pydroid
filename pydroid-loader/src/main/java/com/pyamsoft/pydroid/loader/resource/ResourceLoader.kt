@@ -37,9 +37,11 @@ import com.pyamsoft.pydroid.util.DrawableUtil
  *
  * Supports Drawable resource types, is not threaded
  */
-abstract class ResourceLoader protected constructor(context: Context,
-        @param:DrawableRes private val resource: Int, @param:DrawableRes private val errorResource: Int,
-        private val resourceImageCache: ImageCache<Int, Drawable>) : GenericLoader<Drawable>() {
+abstract class ResourceLoader protected constructor(
+    context: Context,
+    @param:DrawableRes private val resource: Int, @param:DrawableRes private val errorResource: Int,
+    private val resourceImageCache: ImageCache<Int, Drawable>
+) : GenericLoader<Drawable>() {
 
     @CheckResult
     private fun Int.toKey(): ImageCacheKey<Int> = ImageCacheKey(this)
@@ -53,11 +55,12 @@ abstract class ResourceLoader protected constructor(context: Context,
     }
 
     final override fun into(imageView: ImageView): Loaded =
-            into(DrawableImageTarget.forImageView(imageView))
+        into(DrawableImageTarget.forImageView(imageView))
 
     final override fun into(target: Target<Drawable>): Loaded = load(target, resource)
 
-    @CheckResult protected fun loadResource(): Drawable {
+    @CheckResult
+    protected fun loadResource(): Drawable {
         val key: ImageCacheKey<Int> = resource.toKey()
         val cached: Drawable? = resourceImageCache.retrieve(key)
         if (cached == null) {
@@ -81,7 +84,8 @@ abstract class ResourceLoader protected constructor(context: Context,
         }
     }
 
-    @CheckResult protected fun loadErrorResource(): Drawable? {
+    @CheckResult
+    protected fun loadErrorResource(): Drawable? {
         val key: ImageCacheKey<Int> = errorResource.toKey()
         val cached: Drawable? = resourceImageCache.retrieve(key)
         if (cached == null) {
@@ -95,7 +99,8 @@ abstract class ResourceLoader protected constructor(context: Context,
         }
     }
 
-    @CheckResult private fun loadFreshErrorResource(): Drawable? {
+    @CheckResult
+    private fun loadFreshErrorResource(): Drawable? {
         errorResource.let {
             if (it == 0) {
                 return null
@@ -105,6 +110,9 @@ abstract class ResourceLoader protected constructor(context: Context,
         }
     }
 
-    @CheckResult protected abstract fun load(target: Target<Drawable>,
-            @DrawableRes resource: Int): Loaded
+    @CheckResult
+    protected abstract fun load(
+        target: Target<Drawable>,
+        @DrawableRes resource: Int
+    ): Loaded
 }

@@ -53,8 +53,10 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
         PYDroid.obtain().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -123,8 +125,10 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
             override fun onPageScrollStateChanged(state: Int) {
             }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float,
-                    positionOffsetPixels: Int) {
+            override fun onPageScrolled(
+                position: Int, positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
             }
 
             override fun onPageSelected(position: Int) {
@@ -138,7 +142,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
     private fun setupArrows() {
         imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft)
-                .bind(viewLifecycle)
+            .bind(viewLifecycle)
         binding.apply {
             arrowLeft.rotation = 90F
             arrowLeft.setOnDebouncedClickListener {
@@ -147,7 +151,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
         }
 
         imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowRight)
-                .bind(viewLifecycle)
+            .bind(viewLifecycle)
         binding.apply {
             arrowRight.rotation = -90F
             arrowRight.setOnDebouncedClickListener {
@@ -187,14 +191,16 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
         private const val KEY_PAGE = "key_current_page"
 
         @JvmStatic
-        fun show(activity: FragmentActivity,
-                currentFragment: Fragment, @IdRes rootViewContainer: Int) {
+        fun show(
+            activity: FragmentActivity,
+            currentFragment: Fragment, @IdRes rootViewContainer: Int
+        ) {
             val fragmentManager = activity.supportFragmentManager
             if (fragmentManager.findFragmentByTag(TAG) == null) {
                 fragmentManager.beginTransaction().detach(currentFragment)
-                        .add(rootViewContainer, AboutLibrariesFragment(), TAG)
-                        .addToBackStack(null)
-                        .commit()
+                    .add(rootViewContainer, AboutLibrariesFragment(), TAG)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }

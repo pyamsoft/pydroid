@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~     Copyright (C) 2017 Peter Kenji Yamanaka
   ~
   ~     This program is free software; you can redistribute it and/or modify
@@ -19,22 +18,22 @@
 
 <resources>
 
-  <string name="clear_all_key">clear_all</string>
-  <string name="clear_all_title">Reset All Settings</string>
-  <string name="clear_all_summary">Reset all application settings to default</string>
+    <string name="clear_all_key">clear_all</string>
+    <string name="clear_all_title">Reset All Settings</string>
+    <string name="clear_all_summary">Reset all application settings to default</string>
 
-  <string name="upgrade_info_key">upgrade_info</string>
-  <string name="upgrade_info_title">Show Upgrade Information</string>
-  <string name="upgrade_info_summary">Show the most recent upgrade change log</string>
+    <string name="upgrade_info_key">upgrade_info</string>
+    <string name="upgrade_info_title">Show Upgrade Information</string>
+    <string name="upgrade_info_summary">Show the most recent upgrade change log</string>
 
-  <string name="about_license_key">about_license</string>
-  <string name="about_license_title">Open Source Licenses</string>
+    <string name="about_license_key">about_license</string>
+    <string name="about_license_title">Open Source Licenses</string>
 
-  <string name="check_version_key">check_version</string>
-  <string name="check_version_title">Check for Updates</string>
+    <string name="check_version_key">check_version</string>
+    <string name="check_version_title">Check for Updates</string>
 
-  <string name="rating_key">rate_application</string>
-  <string name="rating_title">Rate Application</string>
-  <string name="rating_summary">Leave a review on the Google Play Store</string>
+    <string name="rating_key">rate_application</string>
+    <string name="rating_title">Rate Application</string>
+    <string name="rating_summary">Leave a review on the Google Play Store</string>
 
 </resources>

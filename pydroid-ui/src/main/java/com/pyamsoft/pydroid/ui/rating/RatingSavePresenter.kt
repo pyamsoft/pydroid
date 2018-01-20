@@ -23,16 +23,20 @@ import com.pyamsoft.pydroid.ui.rating.RatingSavePresenter.View
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-internal class RatingSavePresenter internal constructor(private val currentVersion: Int,
-        private val interactor: RatingInteractor,
-        computationScheduler: Scheduler, ioScheduler: Scheduler,
-        mainThreadScheduler: Scheduler) : SchedulerPresenter<View>(
-        computationScheduler, ioScheduler, mainThreadScheduler) {
+internal class RatingSavePresenter internal constructor(
+    private val currentVersion: Int,
+    private val interactor: RatingInteractor,
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainThreadScheduler: Scheduler
+) : SchedulerPresenter<View>(
+    computationScheduler, ioScheduler, mainThreadScheduler
+) {
 
     internal fun saveRating(accept: Boolean) {
         dispose {
             interactor.saveRating(currentVersion).subscribeOn(ioScheduler).observeOn(
-                    mainThreadScheduler).subscribe({
+                mainThreadScheduler
+            ).subscribe({
                 Timber.d("Saved current version code: %d", currentVersion)
                 view?.onRatingSaved(accept)
             }, {

@@ -27,7 +27,8 @@ import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
-@RestrictTo(RestrictTo.Scope.LIBRARY) internal interface PYDroidComponent {
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+internal interface PYDroidComponent {
 
     fun inject(fragment: AboutLibrariesFragment)
 
@@ -36,8 +37,10 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
     fun inject(layout: SocialMediaLayout)
 
     @CheckResult
-    fun plusVersionCheckComponent(packageName: String,
-            currentVersion: Int): VersionCheckComponent
+    fun plusVersionCheckComponent(
+        packageName: String,
+        currentVersion: Int
+    ): VersionCheckComponent
 
     @CheckResult
     fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent

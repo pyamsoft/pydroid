@@ -22,11 +22,15 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-class AboutLibrariesPresenter internal constructor(private val interactor: AboutLibrariesInteractor,
-        computationScheduler: Scheduler, ioScheduler: Scheduler,
-        mainThreadScheduler: Scheduler) :
-        SchedulerPresenter<AboutLibrariesPresenter.View>(computationScheduler, ioScheduler,
-                mainThreadScheduler) {
+class AboutLibrariesPresenter internal constructor(
+    private val interactor: AboutLibrariesInteractor,
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainThreadScheduler: Scheduler
+) :
+    SchedulerPresenter<AboutLibrariesPresenter.View>(
+        computationScheduler, ioScheduler,
+        mainThreadScheduler
+    ) {
 
     override fun onCreate() {
         super.onCreate()
@@ -36,9 +40,9 @@ class AboutLibrariesPresenter internal constructor(private val interactor: About
     private fun loadLicenses(force: Boolean) {
         dispose {
             interactor.loadLicenses(force).subscribeOn(ioScheduler).observeOn(mainThreadScheduler)
-                    .doAfterTerminate { view?.onAllLoaded() }
-                    .subscribe({ view?.onLicenseLoaded(it) },
-                            { Timber.e(it, "onError loading licenses") })
+                .doAfterTerminate { view?.onAllLoaded() }
+                .subscribe({ view?.onLicenseLoaded(it) },
+                    { Timber.e(it, "onError loading licenses") })
         }
     }
 

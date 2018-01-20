@@ -44,7 +44,8 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     private lateinit var rateLink: String
     private var versionCode: Int = 0
     private var changeLogText: Spannable? = null
-    @DrawableRes private var changeLogIcon: Int = 0
+    @DrawableRes
+    private var changeLogIcon: Int = 0
     private lateinit var binding: DialogRatingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,8 +70,10 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
         PYDroid.obtain().plusRatingComponent(versionCode).inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DialogRatingBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -97,15 +100,19 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     }
 
     override fun onRatingDialogSaveError(throwable: Throwable) {
-        Toasty.makeText(context!!.applicationContext,
-                "Error occurred while dismissing dialog. May show again later",
-                Toasty.LENGTH_SHORT).show()
+        Toasty.makeText(
+            context!!.applicationContext,
+            "Error occurred while dismissing dialog. May show again later",
+            Toasty.LENGTH_SHORT
+        ).show()
         dismiss()
     }
 
     private fun initDialog() {
-        ViewCompat.setElevation(binding.ratingIcon,
-                AppUtil.convertToDP(binding.ratingIcon.context, 8F))
+        ViewCompat.setElevation(
+            binding.ratingIcon,
+            AppUtil.convertToDP(binding.ratingIcon.context, 8F)
+        )
         imageLoader.fromResource(changeLogIcon).into(binding.ratingIcon).bind(viewLifecycle)
         binding.ratingTextChange.text = changeLogText
     }
@@ -113,8 +120,10 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     override fun onResume() {
         super.onResume()
         // The dialog is super small for some reason. We have to set the size manually, in onResume
-        dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT)
+        dialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT
+        )
     }
 
     interface ChangeLogProvider : VersionCheckProvider {

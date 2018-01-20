@@ -24,24 +24,28 @@ import io.reactivex.Single
 import timber.log.Timber
 
 internal class AboutLibrariesInteractorImpl internal constructor(
-        private val dataSource: AboutLibrariesDataSource) :
-        AboutLibrariesInteractor {
+    private val dataSource: AboutLibrariesDataSource
+) :
+    AboutLibrariesInteractor {
 
     override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
         return Observable.defer {
             Observable.fromIterable(Licenses.getLicenses())
         }.toSortedList { (name1), (name2) ->
-            name1.compareTo(name2)
-        }.flatMapObservable { Observable.fromIterable(it) }.concatMap { model ->
+                name1.compareTo(name2)
+            }.flatMapObservable { Observable.fromIterable(it) }.concatMap { model ->
             loadLicenseText(model).flatMapObservable {
                 Observable.just(
-                        AboutLibrariesModel.create(
-                                model.name, model.homepage, it))
+                    AboutLibrariesModel.create(
+                        model.name, model.homepage, it
+                    )
+                )
             }
         }
     }
 
-    @CheckResult private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
+    @CheckResult
+    private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
         return Single.fromCallable<String> {
             val name = model.name
 

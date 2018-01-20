@@ -23,12 +23,15 @@ import io.reactivex.Scheduler
 import retrofit2.HttpException
 import timber.log.Timber
 
-class VersionCheckPresenter internal constructor(private val packageName: String,
-        private val currentVersionCode: Int,
-        private val interactor: VersionCheckInteractor,
-        computationScheduler: Scheduler, ioScheduler: Scheduler,
-        mainThreadScheduler: Scheduler) : SchedulerPresenter<VersionCheckPresenter.View>(
-        computationScheduler, ioScheduler, mainThreadScheduler) {
+class VersionCheckPresenter internal constructor(
+    private val packageName: String,
+    private val currentVersionCode: Int,
+    private val interactor: VersionCheckInteractor,
+    computationScheduler: Scheduler, ioScheduler: Scheduler,
+    mainThreadScheduler: Scheduler
+) : SchedulerPresenter<VersionCheckPresenter.View>(
+    computationScheduler, ioScheduler, mainThreadScheduler
+) {
 
     override fun onStart() {
         super.onStart()
@@ -38,7 +41,8 @@ class VersionCheckPresenter internal constructor(private val packageName: String
     fun checkForUpdates(force: Boolean) {
         dispose {
             interactor.checkVersion(packageName, force).subscribeOn(ioScheduler).observeOn(
-                    mainThreadScheduler).subscribe({
+                mainThreadScheduler
+            ).subscribe({
                 Timber.i("Update check finished")
                 Timber.i("Current version: %d", currentVersionCode)
                 Timber.i("Latest version: %d", it)

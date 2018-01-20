@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~     Copyright (C) 2017 Peter Kenji Yamanaka
   ~
   ~     This program is free software; you can redistribute it and/or modify
@@ -17,42 +16,38 @@
   ~     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
   -->
 <layout>
-  <android.support.v7.widget.CardView
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:cardCornerRadius="4dp"
-      app:cardElevation="2dp"
-      app:cardMaxElevation="6dp"
-      app:cardUseCompatPadding="true"
-      >
 
-    <LinearLayout
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:cardMaxElevation="6dp"
+        app:cardUseCompatPadding="true">
 
-      <TextView
-          android:id="@+id/about_item_homepage"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="16dp"
-          android:layout_marginTop="8dp"
-          android:gravity="center"
-          android:maxLines="1"
-          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-          android:textColor="@color/blue500"
-          />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-      <WebView
-          android:id="@+id/about_item_webview"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          />
+            <TextView
+                android:id="@+id/about_item_homepage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/blue500" />
 
-    </LinearLayout>
+            <WebView
+                android:id="@+id/about_item_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-  </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 </layout>

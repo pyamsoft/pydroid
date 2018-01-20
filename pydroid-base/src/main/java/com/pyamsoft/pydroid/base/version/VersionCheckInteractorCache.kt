@@ -23,7 +23,8 @@ import io.reactivex.Single
 import java.util.concurrent.TimeUnit
 
 internal class VersionCheckInteractorCache internal constructor(
-        private val impl: VersionCheckInteractor) : VersionCheckInteractor, Cache {
+    private val impl: VersionCheckInteractor
+) : VersionCheckInteractor, Cache {
 
     private var cachedResponse: Single<Int>? = null
     private var responseLastAccess: Long = 0L

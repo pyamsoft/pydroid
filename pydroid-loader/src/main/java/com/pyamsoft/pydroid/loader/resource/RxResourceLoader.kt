@@ -21,8 +21,6 @@ package com.pyamsoft.pydroid.loader.resource
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
-import com.pyamsoft.pydroid.ktext.enforceIo
-import com.pyamsoft.pydroid.ktext.enforceMainThread
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.loaded.RxLoaded
@@ -32,10 +30,12 @@ import io.reactivex.Single
 import timber.log.Timber
 
 internal class RxResourceLoader internal constructor(
-        context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
-        resourceImageCache: ImageCache<Int, Drawable>, private val mainThreadScheduler: Scheduler,
-        private val ioScheduler: Scheduler) : ResourceLoader(
-        context, resource, errorResource, resourceImageCache) {
+    context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
+    resourceImageCache: ImageCache<Int, Drawable>, private val mainThreadScheduler: Scheduler,
+    private val ioScheduler: Scheduler
+) : ResourceLoader(
+    context, resource, errorResource, resourceImageCache
+) {
 
     init {
         mainThreadScheduler.enforceMainThread()
@@ -44,15 +44,16 @@ internal class RxResourceLoader internal constructor(
 
     override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
         return RxLoaded(
-                Single.fromCallable { loadResource() }
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainThreadScheduler)
-                        .doOnSubscribe { startAction?.invoke() }
-                        .doAfterSuccess { completeAction?.invoke(it) }
-                        .doOnError {
-                            Timber.e(it, "Error loading Drawable using RxResourceLoader")
-                            errorAction?.invoke(it)
-                        }.subscribe({ target.loadImage(it) },
-                        { target.loadError(loadErrorResource()) }))
+            Single.fromCallable { loadResource() }
+                .subscribeOn(ioScheduler)
+                .observeOn(mainThreadScheduler)
+                .doOnSubscribe { startAction?.invoke() }
+                .doAfterSuccess { completeAction?.invoke(it) }
+                .doOnError {
+                    Timber.e(it, "Error loading Drawable using RxResourceLoader")
+                    errorAction?.invoke(it)
+                }.subscribe({ target.loadImage(it) },
+                    { target.loadError(loadErrorResource()) })
+        )
     }
 }

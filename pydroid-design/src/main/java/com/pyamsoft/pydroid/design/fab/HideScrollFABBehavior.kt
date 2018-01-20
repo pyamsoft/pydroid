@@ -51,9 +51,11 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
     fun onShownHook() {
     }
 
-    override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: FloatingActionButton,
-            target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
-            type: Int) {
+    override fun onNestedScroll(
+        coordinatorLayout: CoordinatorLayout, child: FloatingActionButton,
+        target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
+        type: Int
+    ) {
         if (dyConsumed > distanceNeeded && child.isShown) {
             if (!animating) {
                 animating = true
@@ -64,7 +66,8 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
                         onHiddenHook()
 
                         Timber.w(
-                                "Support library as on 25.1.0 sets FAB visibility to GONE, making it ignore other scrolling event.")
+                            "Support library as on 25.1.0 sets FAB visibility to GONE, making it ignore other scrolling event."
+                        )
                         Timber.w("Set it to invisible to fix this problem")
                         fab?.apply {
                             visibility = View.INVISIBLE
@@ -91,7 +94,9 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
         }
     }
 
-    override fun onStartNestedScroll(coordinatorLayout: CoordinatorLayout,
-            child: FloatingActionButton, directTargetChild: View, target: View, axes: Int,
-            type: Int): Boolean = axes == ViewCompat.SCROLL_AXIS_VERTICAL
+    override fun onStartNestedScroll(
+        coordinatorLayout: CoordinatorLayout,
+        child: FloatingActionButton, directTargetChild: View, target: View, axes: Int,
+        type: Int
+    ): Boolean = axes == ViewCompat.SCROLL_AXIS_VERTICAL
 }

@@ -19,12 +19,7 @@
 package com.pyamsoft.pydroid.ui.social
 
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
-import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
-import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
-import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
-import android.arch.lifecycle.Lifecycle.Event.ON_START
-import android.arch.lifecycle.Lifecycle.Event.ON_STOP
+import android.arch.lifecycle.Lifecycle.Event.*
 import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
 import android.util.AttributeSet
@@ -45,10 +40,13 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
     private val lifecycleOwner = ViewLifecycleOwner()
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
-            context, attrs, defStyleAttr, defStyleRes)
+        context, attrs, defStyleAttr, defStyleRes
+    )
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs,
-            defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context, attrs,
+        defStyleAttr
+    )
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
@@ -83,17 +81,21 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
         val self = this
         imageLoader.apply {
             fromResource(R.drawable.google_play).into(
-                    DrawableImageTarget.forImageView(binding.googlePlay))
-                    .bind(self)
+                DrawableImageTarget.forImageView(binding.googlePlay)
+            )
+                .bind(self)
             fromResource(R.drawable.google_plus).into(
-                    DrawableImageTarget.forImageView(binding.googlePlus))
-                    .bind(self)
+                DrawableImageTarget.forImageView(binding.googlePlus)
+            )
+                .bind(self)
             fromResource(R.drawable.blogger_icon).into(
-                    DrawableImageTarget.forImageView(binding.blogger))
-                    .bind(self)
+                DrawableImageTarget.forImageView(binding.blogger)
+            )
+                .bind(self)
             fromResource(R.drawable.facebook_icon).into(
-                    DrawableImageTarget.forImageView(binding.facebook))
-                    .bind(self)
+                DrawableImageTarget.forImageView(binding.facebook)
+            )
+                .bind(self)
         }
     }
 

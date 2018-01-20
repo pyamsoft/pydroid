@@ -23,48 +23,48 @@ apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-  compileSdkVersion rootProject.ext.maxSdk
+    compileSdkVersion rootProject.ext.maxSdk
 
-  //noinspection GroovyMissingReturnStatement
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdk
-    targetSdkVersion rootProject.ext.maxSdk
+    //noinspection GroovyMissingReturnStatement
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.maxSdk
 
-    // For vector drawables
-    vectorDrawables.useSupportLibrary = true
+        // For vector drawables
+        vectorDrawables.useSupportLibrary = true
 
-    // Consumer proguard file
-    consumerProguardFiles "proguard-rules.pro"
+        // Consumer proguard file
+        consumerProguardFiles "proguard-rules.pro"
 
-    // Only English, I don't have any translations
-    resConfigs "en"
-  }
-
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
-
-  buildTypes {
-    debug {
-      minifyEnabled false
-      shrinkResources false
+        // Only English, I don't have any translations
+        resConfigs "en"
     }
 
-    release {
-      minifyEnabled false
-      shrinkResources false
-      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
-  }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+        }
+
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
 }
 
 dependencies {
-  // Design support lib
-  compile "com.android.support:design:$supportLib"
+    // Design support lib
+    compile "com.android.support:design:$supportLib"
 
-  compile project(":pydroid")
-  compile project(":pydroid-util")
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile project(":pydroid")
+    compile project(":pydroid-util")
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

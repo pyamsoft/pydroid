@@ -99,8 +99,10 @@ object StringUtil {
     @SuppressLint("Recycle")
     @CheckResult
     @JvmStatic
-    fun getAttributeFromAppearance(context: Context,
-            @AttrRes style: Int, @AttrRes attr: Int): TypedArray {
+    fun getAttributeFromAppearance(
+        context: Context,
+        @AttrRes style: Int, @AttrRes attr: Int
+    ): TypedArray {
         val typedValue = TypedValue()
         context.theme.resolveAttribute(style, typedValue, true)
         return context.obtainStyledAttributes(typedValue.data, intArrayOf(attr))
@@ -109,10 +111,14 @@ object StringUtil {
     @Size
     @CheckResult
     @JvmStatic
-    fun getTextSizeFromAppearance(context: Context,
-            @AttrRes textAppearance: Int): Int {
-        val a = getAttributeFromAppearance(context, textAppearance,
-                attr.textSize)
+    fun getTextSizeFromAppearance(
+        context: Context,
+        @AttrRes textAppearance: Int
+    ): Int {
+        val a = getAttributeFromAppearance(
+            context, textAppearance,
+            attr.textSize
+        )
         val textSize = a.getDimensionPixelSize(0, -1)
         a.recycle()
         return textSize
@@ -121,10 +127,14 @@ object StringUtil {
     @ColorInt
     @CheckResult
     @JvmStatic
-    fun getTextColorFromAppearance(context: Context,
-            @AttrRes textAppearance: Int): Int {
-        val a = getAttributeFromAppearance(context, textAppearance,
-                attr.textColor)
+    fun getTextColorFromAppearance(
+        context: Context,
+        @AttrRes textAppearance: Int
+    ): Int {
+        val a = getAttributeFromAppearance(
+            context, textAppearance,
+            attr.textColor
+        )
         val color = a.getColor(0, -1)
         a.recycle()
         return color

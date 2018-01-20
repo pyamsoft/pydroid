@@ -31,8 +31,10 @@ class LoaderModuleImpl(module: PYDroidModule) : LoaderModule {
 
     init {
         val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
-        imageLoader = ImageLoaderImpl(module.provideContext(), resourceImageCache,
-                module.provideMainThreadScheduler(), module.provideIoScheduler())
+        imageLoader = ImageLoaderImpl(
+            module.provideContext(), resourceImageCache,
+            module.provideMainThreadScheduler(), module.provideIoScheduler()
+        )
     }
 
     // Singleton

@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui
 
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModule
+import com.pyamsoft.pydroid.base.version.VersionCheckModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
@@ -31,14 +32,17 @@ import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
-import com.pyamsoft.pydroid.base.version.VersionCheckModule
 
-internal class PYDroidComponentImpl internal constructor(pyDroidModule: PYDroidModule,
-        private val loaderModule: LoaderModule) : PYDroidComponent {
+internal class PYDroidComponentImpl internal constructor(
+    pyDroidModule: PYDroidModule,
+    private val loaderModule: LoaderModule
+) : PYDroidComponent {
     private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(
-            pyDroidModule)
+        pyDroidModule
+    )
     private val versionCheckModule: VersionCheckModule = VersionCheckModule(
-            pyDroidModule)
+        pyDroidModule
+    )
     private val ratingModule: RatingModule
     private val debugMode: Boolean = pyDroidModule.isDebug
 
@@ -60,13 +64,15 @@ internal class PYDroidComponentImpl internal constructor(pyDroidModule: PYDroidM
         layout.imageLoader = loaderModule.provideImageLoader()
     }
 
-    override fun plusVersionCheckComponent(packageName: String,
-            currentVersion: Int): VersionCheckComponent =
-            VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
+    override fun plusVersionCheckComponent(
+        packageName: String,
+        currentVersion: Int
+    ): VersionCheckComponent =
+        VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
 
     override fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent =
-            AppComponentImpl(versionCheckModule, ratingModule, packageName, currentVersion)
+        AppComponentImpl(versionCheckModule, ratingModule, packageName, currentVersion)
 
     override fun plusRatingComponent(currentVersion: Int): RatingComponent =
-            RatingComponentImpl(currentVersion, ratingModule, loaderModule)
+        RatingComponentImpl(currentVersion, ratingModule, loaderModule)
 }

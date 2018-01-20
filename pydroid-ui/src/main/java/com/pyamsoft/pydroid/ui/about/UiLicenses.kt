@@ -24,9 +24,11 @@ internal object UiLicenses {
 
     @JvmStatic
     internal fun addLicenses() {
-        Licenses.create(Names.MATERIAL_VIEW_PAGER_INDICATOR,
-                HomePageUrls.MATERIAL_VIEW_PAGER_INDICATOR,
-                LicenseLocations.MATERIAL_VIEW_PAGER_INDICATOR)
+        Licenses.create(
+            Names.MATERIAL_VIEW_PAGER_INDICATOR,
+            HomePageUrls.MATERIAL_VIEW_PAGER_INDICATOR,
+            LicenseLocations.MATERIAL_VIEW_PAGER_INDICATOR
+        )
     }
 
     private object Names {
@@ -34,7 +36,8 @@ internal object UiLicenses {
     }
 
     private object HomePageUrls {
-        internal const val MATERIAL_VIEW_PAGER_INDICATOR = "https://github.com/ronaldsmartin/Material-ViewPagerIndicator"
+        internal const val MATERIAL_VIEW_PAGER_INDICATOR =
+            "https://github.com/ronaldsmartin/Material-ViewPagerIndicator"
     }
 
     private object LicenseLocations {

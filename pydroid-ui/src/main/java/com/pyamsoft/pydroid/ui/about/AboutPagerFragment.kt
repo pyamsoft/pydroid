@@ -44,8 +44,10 @@ internal class AboutPagerFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentPagerAboutBinding.inflate(inflater, container, false)
         return binding.root
     }

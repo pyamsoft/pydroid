@@ -18,16 +18,13 @@
 
 package com.pyamsoft.pydroid.optional
 
-import com.pyamsoft.pydroid.optional.Optional.Absent
-import com.pyamsoft.pydroid.optional.Optional.Present
-
 /**
  * PYDroid implementation of the Optional interface contract
  */
 internal sealed class OptionalImpl<out T : Any> : Optional<T> {
 
     internal data class PresentImpl<out T : Any> internal constructor(override val value: T) :
-            Present<T>
+        Present<T>
 
     internal object AbsentImpl : Absent
 

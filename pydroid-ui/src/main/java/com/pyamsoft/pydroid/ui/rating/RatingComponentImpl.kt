@@ -20,9 +20,11 @@ package com.pyamsoft.pydroid.ui.rating
 
 import com.pyamsoft.pydroid.loader.LoaderModule
 
-internal class RatingComponentImpl internal constructor(private val version: Int,
-        private val ratingModule: RatingModule,
-        private val loaderModule: LoaderModule) : RatingComponent {
+internal class RatingComponentImpl internal constructor(
+    private val version: Int,
+    private val ratingModule: RatingModule,
+    private val loaderModule: LoaderModule
+) : RatingComponent {
 
     override fun inject(activity: RatingActivity) {
         activity.ratingPresenter = ratingModule.getPresenter(version)

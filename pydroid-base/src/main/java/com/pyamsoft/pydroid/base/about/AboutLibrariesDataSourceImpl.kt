@@ -28,11 +28,13 @@ import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 
 internal class AboutLibrariesDataSourceImpl internal constructor(
-        context: Context) : AboutLibrariesDataSource {
+    context: Context
+) : AboutLibrariesDataSource {
 
     private val assetManager: AssetManager = context.applicationContext.assets
 
-    @CheckResult override fun loadNewLicense(licenseLocation: String): String {
+    @CheckResult
+    override fun loadNewLicense(licenseLocation: String): String {
         if (licenseLocation.isEmpty()) {
             Timber.w("Empty license passed")
             return ""

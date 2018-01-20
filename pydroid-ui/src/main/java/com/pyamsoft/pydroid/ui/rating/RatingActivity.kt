@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.util.StringUtil
 import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider,
-        RatingPresenter.View {
+    RatingPresenter.View {
 
     internal lateinit var ratingPresenter: RatingPresenter
 
@@ -44,14 +44,22 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
 
             var start = 0
             var end = title.length
-            val largeSize = StringUtil.getTextSizeFromAppearance(this,
-                    android.R.attr.textAppearanceLarge)
-            val largeColor = StringUtil.getTextColorFromAppearance(this,
-                    android.R.attr.textAppearanceLarge)
-            val smallSize = StringUtil.getTextSizeFromAppearance(this,
-                    android.R.attr.textAppearanceSmall)
-            val smallColor = StringUtil.getTextColorFromAppearance(this,
-                    android.R.attr.textAppearanceSmall)
+            val largeSize = StringUtil.getTextSizeFromAppearance(
+                this,
+                android.R.attr.textAppearanceLarge
+            )
+            val largeColor = StringUtil.getTextColorFromAppearance(
+                this,
+                android.R.attr.textAppearanceLarge
+            )
+            val smallSize = StringUtil.getTextSizeFromAppearance(
+                this,
+                android.R.attr.textAppearanceSmall
+            )
+            val smallColor = StringUtil.getTextColorFromAppearance(
+                this,
+                android.R.attr.textAppearanceSmall
+            )
 
             StringUtil.boldSpan(spannable, start, end)
             StringUtil.sizeSpan(spannable, start, end, largeSize)
@@ -68,9 +76,11 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
             return spannable
         }
 
-    @get:CheckResult protected abstract val changeLogLines: Array<String>
+    @get:CheckResult
+    protected abstract val changeLogLines: Array<String>
 
-    @get:CheckResult protected abstract val versionName: String
+    @get:CheckResult
+    protected abstract val versionName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,8 +97,10 @@ abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogPr
     }
 
     override fun onShowRatingDialog() {
-        DialogUtil.guaranteeSingleDialogFragment(this, RatingDialog.newInstance(this),
-                RatingDialog.TAG)
+        DialogUtil.guaranteeSingleDialogFragment(
+            this, RatingDialog.newInstance(this),
+            RatingDialog.TAG
+        )
     }
 
     override fun onRatingDialogLoadError(throwable: Throwable) {

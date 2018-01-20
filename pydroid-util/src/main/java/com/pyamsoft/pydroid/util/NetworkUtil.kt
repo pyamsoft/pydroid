@@ -38,8 +38,10 @@ object NetworkUtil {
         try {
             c.applicationContext.startActivity(intent)
         } catch (e: Exception) {
-            Toast.makeText(c.applicationContext, "No activity available to handle link: " + link,
-                    Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                c.applicationContext, "No activity available to handle link: " + link,
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -47,7 +49,8 @@ object NetworkUtil {
     @CheckResult
     fun hasConnection(c: Context): Boolean {
         val connMan = c.applicationContext.getSystemService(
-                Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
         val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting
     }

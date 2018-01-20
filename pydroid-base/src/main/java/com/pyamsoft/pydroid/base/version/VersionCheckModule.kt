@@ -43,21 +43,27 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
     init {
         val versionCheckApi = VersionCheckApi(
-                provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson()))
+            provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson())
+        )
         val versionCheckService: VersionCheckService = versionCheckApi.create(
-                VersionCheckService::class.java)
+            VersionCheckService::class.java
+        )
         val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(
-                versionCheckService)
+            versionCheckService
+        )
         cachedInteractor = VersionCheckInteractorCache(interactor)
     }
 
-    @CheckResult private fun provideGson(): Gson {
+    @CheckResult
+    private fun provideGson(): Gson {
         val gsonBuilder = GsonBuilder().registerTypeAdapterFactory(
-                AutoValueTypeAdapterFactory.create())
+            AutoValueTypeAdapterFactory.create()
+        )
         return gsonBuilder.create()
     }
 
-    @CheckResult private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
+    @CheckResult
+    private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
         val builder = OkHttpClient.Builder()
         if (debug) {
             val logging = HttpLoggingInterceptor()
@@ -66,35 +72,46 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
         }
 
         val pinner = CertificatePinner.Builder().add(
-                GITHUB_URL,
-                "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw=").add(
-                GITHUB_URL,
-                "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=").add(
-                GITHUB_URL,
-                "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=").build()
+            GITHUB_URL,
+            "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw="
+        ).add(
+            GITHUB_URL,
+            "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws="
+        ).add(
+            GITHUB_URL,
+            "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18="
+        ).build()
         builder.certificatePinner(pinner)
 
         return builder.build()
     }
 
-    @CheckResult private fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
+    @CheckResult
+    private fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder().baseUrl(
-                CURRENT_VERSION_REPO_BASE_URL).client(
-                okHttpClient).addConverterFactory(
-                GsonConverterFactory.create(gson)).addCallAdapterFactory(
-                RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())).build()
+            CURRENT_VERSION_REPO_BASE_URL
+        ).client(
+            okHttpClient
+        ).addConverterFactory(
+            GsonConverterFactory.create(gson)
+        ).addCallAdapterFactory(
+            RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())
+        ).build()
     }
 
     @CheckResult
     fun getPresenter(packageName: String, currentVersion: Int): VersionCheckPresenter {
-        return VersionCheckPresenter(packageName, currentVersion,
-                cachedInteractor,
-                computationScheduler, ioScheduler, mainThreadScheduler)
+        return VersionCheckPresenter(
+            packageName, currentVersion,
+            cachedInteractor,
+            computationScheduler, ioScheduler, mainThreadScheduler
+        )
     }
 
     companion object {
 
         private const val GITHUB_URL = "raw.githubusercontent.com"
-        private const val CURRENT_VERSION_REPO_BASE_URL = "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
+        private const val CURRENT_VERSION_REPO_BASE_URL =
+            "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
     }
 }

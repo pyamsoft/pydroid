@@ -38,9 +38,12 @@ internal class TamperDialog : ToolbarDialog() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         activity!!.let {
             return AlertDialog.Builder(it).setTitle(
-                    "WARNING: THIS APPLICATION IS NOT OFFICIAL").setMessage(
-                    R.string.tamper_msg).setCancelable(
-                    false).setPositiveButton("Take Me") { _, _ ->
+                "WARNING: THIS APPLICATION IS NOT OFFICIAL"
+            ).setMessage(
+                R.string.tamper_msg
+            ).setCancelable(
+                false
+            ).setPositiveButton("Take Me") { _, _ ->
                 Linker.clickGooglePlay(it)
                 killApp()
             }.setNegativeButton("Close") { _, _ -> killApp() }.create()
@@ -57,7 +60,8 @@ internal class TamperDialog : ToolbarDialog() {
             it.finish()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 val activityManager = it.applicationContext.getSystemService(
-                        Context.ACTIVITY_SERVICE) as ActivityManager
+                    Context.ACTIVITY_SERVICE
+                ) as ActivityManager
                 activityManager.clearApplicationUserData()
             }
         }

@@ -45,26 +45,33 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
-        VersionCheckPresenter.View, RatingPresenter.View {
+    VersionCheckPresenter.View, RatingPresenter.View {
 
     internal lateinit var versionPresenter: VersionCheckPresenter
     internal lateinit var ratingPresenter: RatingPresenter
     private lateinit var toast: Toast
 
-    @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
+    @CallSuper
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PYDroid.obtain().plusAppComponent(context!!.packageName,
-                versionedActivity.currentApplicationVersion).inject(this)
+        PYDroid.obtain().plusAppComponent(
+            context!!.packageName,
+            versionedActivity.currentApplicationVersion
+        ).inject(this)
     }
 
     @SuppressLint("ShowToast")
-    @CallSuper override fun onCreateView(inflater: LayoutInflater,
-            container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    @CallSuper
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         toast = Toasty.makeText(context!!, "Checking for updates...", Toasty.LENGTH_SHORT)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    @CallSuper override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    @CallSuper
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         @XmlRes val xmlResId: Int = preferenceXmlResId
         if (xmlResId != 0) {
             addPreferencesFromResource(xmlResId)
@@ -129,8 +136,10 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
     override fun onShowRatingDialog() {
         val activity = activity
         if (activity is RatingDialog.ChangeLogProvider) {
-            DialogUtil.guaranteeSingleDialogFragment(activity, RatingDialog.newInstance(activity),
-                    RatingDialog.TAG)
+            DialogUtil.guaranteeSingleDialogFragment(
+                activity, RatingDialog.newInstance(activity),
+                RatingDialog.TAG
+            )
         } else {
             throw ClassCastException("Activity is not a change log provider")
         }
@@ -142,9 +151,13 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
 
     override fun onUpdatedVersionFound(current: Int, updated: Int) {
         Timber.d("Updated version found. %d => %d", current, updated)
-        DialogUtil.guaranteeSingleDialogFragment(activity,
-                VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current,
-                        updated), VersionUpgradeDialog.TAG)
+        DialogUtil.guaranteeSingleDialogFragment(
+            activity,
+            VersionUpgradeDialog.newInstance(
+                versionedActivity.applicationName, current,
+                updated
+            ), VersionUpgradeDialog.TAG
+        )
     }
 
     /**
@@ -157,7 +170,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
     /**
      * Shows a page for Open Source licenses, override or extend to use unique implementation
      */
-    @CallSuper protected open fun onLicenseItemClicked() {
+    @CallSuper
+    protected open fun onLicenseItemClicked() {
         Timber.d("Show about licenses fragment")
         val act = activity
         val replace = aboutReplaceFragment
@@ -199,7 +213,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
 
     protected abstract val aboutReplaceFragment: Fragment?
 
-    @get:[CheckResult IdRes] protected abstract val rootViewContainer: Int
+    @get:[CheckResult IdRes]
+    protected abstract val rootViewContainer: Int
 
-    @get:CheckResult protected abstract val applicationName: String
+    @get:CheckResult
+    protected abstract val applicationName: String
 }

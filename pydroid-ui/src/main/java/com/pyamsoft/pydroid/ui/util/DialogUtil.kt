@@ -29,8 +29,10 @@ object DialogUtil {
      * versions of the dialog fragment are removed before a new one is added.
      */
     @JvmStatic
-    fun guaranteeSingleDialogFragment(fragmentActivity: FragmentActivity?,
-            dialogFragment: DialogFragment, tag: String) {
+    fun guaranteeSingleDialogFragment(
+        fragmentActivity: FragmentActivity?,
+        dialogFragment: DialogFragment, tag: String
+    ) {
         if (fragmentActivity == null) {
             Timber.w("Cannot attach a fragment to a NULL activity. No-op")
             return

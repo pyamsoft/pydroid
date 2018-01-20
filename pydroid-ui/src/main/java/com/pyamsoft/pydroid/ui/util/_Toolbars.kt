@@ -37,8 +37,10 @@ private fun Toolbar.loadIcon(): Drawable? {
         // If not icon is available, resolve it from the current theme
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.toolbarStyle, typedValue, true)
-        val typedArray: TypedArray = context.obtainStyledAttributes(typedValue.data,
-                intArrayOf(R.attr.homeAsUpIndicator))
+        val typedArray: TypedArray = context.obtainStyledAttributes(
+            typedValue.data,
+            intArrayOf(R.attr.homeAsUpIndicator)
+        )
         icon = typedArray.getDrawable(0)
         typedArray.recycle()
 

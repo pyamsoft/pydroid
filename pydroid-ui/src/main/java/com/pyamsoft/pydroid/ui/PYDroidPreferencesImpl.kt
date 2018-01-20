@@ -25,7 +25,8 @@ import android.support.v7.preference.PreferenceManager
 internal class PYDroidPreferencesImpl internal constructor(context: Context) : RatingPreferences {
 
     private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-            context.applicationContext)
+        context.applicationContext
+    )
 
     override fun getRatingAcceptedVersion(): Int = preferences.getInt(RATING_ACCEPTED_VERSION, 1)
 

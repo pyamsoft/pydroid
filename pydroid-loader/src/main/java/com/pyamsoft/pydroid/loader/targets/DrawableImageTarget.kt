@@ -42,6 +42,6 @@ class DrawableImageTarget private constructor(private val imageView: ImageView) 
         @CheckResult
         @JvmStatic
         fun forImageView(imageView: ImageView): Target<Drawable> =
-                DrawableImageTarget(imageView)
+            DrawableImageTarget(imageView)
     }
 }

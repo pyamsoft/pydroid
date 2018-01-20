@@ -31,8 +31,10 @@ abstract class AppSettingsFragment : ToolbarFragment() {
 
     private lateinit var binding: FragmentAppSettingsBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -52,8 +54,8 @@ abstract class AppSettingsFragment : ToolbarFragment() {
         val tag: String = provideSettingsTag()
         if (fragmentManager.findFragmentByTag(tag) == null) {
             fragmentManager.beginTransaction()
-                    .add(R.id.app_settings_content, provideSettingsFragment(), tag)
-                    .commit()
+                .add(R.id.app_settings_content, provideSettingsFragment(), tag)
+                .commit()
         }
     }
 

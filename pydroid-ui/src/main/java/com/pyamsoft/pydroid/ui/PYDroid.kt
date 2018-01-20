@@ -38,8 +38,9 @@ object PYDroid {
     @JvmStatic
     private fun setStrictMode() {
         StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()
-                        .permitDiskWrites().penaltyFlashScreen().build())
+            StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()
+                .permitDiskWrites().penaltyFlashScreen().build()
+        )
         StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
     }
 
@@ -52,7 +53,8 @@ object PYDroid {
         val obj = component
         if (obj == null) {
             throw IllegalStateException(
-                    "PYDroid is not initialized. Please call PYDroid.init() before attempting to obtain.")
+                "PYDroid is not initialized. Please call PYDroid.init() before attempting to obtain."
+            )
         } else {
             return obj
         }

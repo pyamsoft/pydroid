@@ -77,5 +77,4 @@ dependencies {
 
     compile project(":pydroid-base")
     compile project(":pydroid-loader")
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

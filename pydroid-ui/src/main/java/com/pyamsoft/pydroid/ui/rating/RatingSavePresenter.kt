@@ -28,9 +28,7 @@ internal class RatingSavePresenter internal constructor(
     private val interactor: RatingInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
     mainThreadScheduler: Scheduler
-) : SchedulerPresenter<View>(
-    computationScheduler, ioScheduler, mainThreadScheduler
-) {
+) : SchedulerPresenter<View>(computationScheduler, ioScheduler, mainThreadScheduler) {
 
     internal fun saveRating(accept: Boolean) {
         dispose {

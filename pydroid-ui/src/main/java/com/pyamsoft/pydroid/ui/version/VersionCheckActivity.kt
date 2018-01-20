@@ -27,9 +27,7 @@ import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
-abstract class VersionCheckActivity : ActivityBase(),
-    VersionCheckProvider,
-    VersionCheckPresenter.View {
+abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider, VersionCheckPresenter.View {
 
     internal lateinit var presenter: VersionCheckPresenter
 

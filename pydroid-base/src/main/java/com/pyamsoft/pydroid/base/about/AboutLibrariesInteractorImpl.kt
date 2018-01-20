@@ -25,8 +25,7 @@ import timber.log.Timber
 
 internal class AboutLibrariesInteractorImpl internal constructor(
     private val dataSource: AboutLibrariesDataSource
-) :
-    AboutLibrariesInteractor {
+) : AboutLibrariesInteractor {
 
     override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
         return Observable.defer {

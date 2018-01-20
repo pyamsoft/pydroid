@@ -115,10 +115,7 @@ object StringUtil {
         context: Context,
         @AttrRes textAppearance: Int
     ): Int {
-        val a = getAttributeFromAppearance(
-            context, textAppearance,
-            attr.textSize
-        )
+        val a = getAttributeFromAppearance(context, textAppearance, attr.textSize)
         val textSize = a.getDimensionPixelSize(0, -1)
         a.recycle()
         return textSize
@@ -131,10 +128,7 @@ object StringUtil {
         context: Context,
         @AttrRes textAppearance: Int
     ): Int {
-        val a = getAttributeFromAppearance(
-            context, textAppearance,
-            attr.textColor
-        )
+        val a = getAttributeFromAppearance(context, textAppearance, attr.textColor)
         val color = a.getColor(0, -1)
         a.recycle()
         return color

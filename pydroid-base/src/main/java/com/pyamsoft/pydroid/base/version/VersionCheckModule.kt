@@ -19,8 +19,6 @@
 package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
-import android.support.annotation.RestrictTo.Scope.LIBRARY
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.pyamsoft.pydroid.PYDroidModule
@@ -33,7 +31,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-@RestrictTo(LIBRARY)
 class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
     private val cachedInteractor: VersionCheckInteractor

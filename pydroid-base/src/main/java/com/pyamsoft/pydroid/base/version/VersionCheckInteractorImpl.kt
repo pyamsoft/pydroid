@@ -23,8 +23,7 @@ import io.reactivex.Single
 
 internal class VersionCheckInteractorImpl internal constructor(
     private val versionCheckService: VersionCheckService
-) :
-    VersionCheckInteractor {
+) : VersionCheckInteractor {
 
     override fun checkVersion(packageName: String, force: Boolean): Single<Int> {
         return versionCheckService.checkVersion(packageName)

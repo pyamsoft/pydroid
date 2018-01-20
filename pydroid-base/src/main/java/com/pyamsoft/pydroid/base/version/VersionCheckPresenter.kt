@@ -29,9 +29,7 @@ class VersionCheckPresenter internal constructor(
     private val interactor: VersionCheckInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
     mainThreadScheduler: Scheduler
-) : SchedulerPresenter<VersionCheckPresenter.View>(
-    computationScheduler, ioScheduler, mainThreadScheduler
-) {
+) : SchedulerPresenter<VersionCheckPresenter.View>(computationScheduler, ioScheduler, mainThreadScheduler) {
 
     override fun onStart() {
         super.onStart()

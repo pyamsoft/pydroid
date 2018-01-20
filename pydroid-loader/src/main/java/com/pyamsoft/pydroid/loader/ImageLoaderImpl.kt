@@ -31,8 +31,7 @@ internal class ImageLoaderImpl internal constructor(
     private val context: Context,
     private val resourceImageCache: ImageCache<Int, Drawable>,
     private val mainThreadScheduler: Scheduler, private val ioScheduler: Scheduler
-) :
-    ImageLoader, Cache {
+) : ImageLoader, Cache {
 
     override fun clearCache() {
         resourceImageCache.clearCache()

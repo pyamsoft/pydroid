@@ -26,11 +26,7 @@ class AboutLibrariesPresenter internal constructor(
     private val interactor: AboutLibrariesInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
     mainThreadScheduler: Scheduler
-) :
-    SchedulerPresenter<AboutLibrariesPresenter.View>(
-        computationScheduler, ioScheduler,
-        mainThreadScheduler
-    ) {
+) : SchedulerPresenter<AboutLibrariesPresenter.View>(computationScheduler, ioScheduler, mainThreadScheduler) {
 
     override fun onCreate() {
         super.onCreate()

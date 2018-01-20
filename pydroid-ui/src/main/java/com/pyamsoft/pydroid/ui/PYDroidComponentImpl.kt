@@ -37,12 +37,9 @@ internal class PYDroidComponentImpl internal constructor(
     pyDroidModule: PYDroidModule,
     private val loaderModule: LoaderModule
 ) : PYDroidComponent {
-    private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(
-        pyDroidModule
-    )
-    private val versionCheckModule: VersionCheckModule = VersionCheckModule(
-        pyDroidModule
-    )
+
+    private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(pyDroidModule)
+    private val versionCheckModule: VersionCheckModule = VersionCheckModule(pyDroidModule)
     private val ratingModule: RatingModule
     private val debugMode: Boolean = pyDroidModule.isDebug
 

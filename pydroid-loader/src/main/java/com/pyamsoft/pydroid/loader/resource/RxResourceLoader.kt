@@ -35,9 +35,7 @@ internal class RxResourceLoader internal constructor(
     context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
     resourceImageCache: ImageCache<Int, Drawable>, private val mainThreadScheduler: Scheduler,
     private val ioScheduler: Scheduler
-) : ResourceLoader(
-    context, resource, errorResource, resourceImageCache
-) {
+) : ResourceLoader(context, resource, errorResource, resourceImageCache) {
 
     init {
         mainThreadScheduler.enforceMainThread()

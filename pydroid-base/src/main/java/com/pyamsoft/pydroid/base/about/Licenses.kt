@@ -19,6 +19,7 @@
 package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
+import java.util.Collections
 
 object Licenses {
 
@@ -143,5 +144,5 @@ object Licenses {
 
     @JvmStatic
     @CheckResult
-    fun getLicenses(): List<AboutLibrariesModel> = licenses.toList()
+    fun getLicenses(): List<AboutLibrariesModel> = Collections.unmodifiableList(licenses.toList())
 }

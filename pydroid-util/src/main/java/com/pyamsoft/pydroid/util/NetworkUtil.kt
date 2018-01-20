@@ -48,9 +48,7 @@ object NetworkUtil {
     @JvmStatic
     @CheckResult
     fun hasConnection(c: Context): Boolean {
-        val connMan = c.applicationContext.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
+        val connMan = c.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting
     }

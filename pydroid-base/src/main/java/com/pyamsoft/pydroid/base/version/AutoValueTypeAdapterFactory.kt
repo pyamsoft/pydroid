@@ -19,11 +19,9 @@
 package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
-import android.support.annotation.RestrictTo
 import com.google.gson.TypeAdapterFactory
 import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 
-@RestrictTo(RestrictTo.Scope.LIBRARY)
 @GsonTypeAdapterFactory
 internal abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
 

@@ -19,9 +19,16 @@
 package com.pyamsoft.pydroid.ui.social
 
 import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Lifecycle.Event.*
+import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
+import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
+import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
+import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
+import android.arch.lifecycle.Lifecycle.Event.ON_START
+import android.arch.lifecycle.Lifecycle.Event.ON_STOP
 import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -39,6 +46,7 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
     private val binding: ViewSocialMediaBinding
     private val lifecycleOwner = ViewLifecycleOwner()
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
         context, attrs, defStyleAttr, defStyleRes
     )

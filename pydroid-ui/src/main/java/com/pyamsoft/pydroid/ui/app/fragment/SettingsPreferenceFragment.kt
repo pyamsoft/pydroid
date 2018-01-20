@@ -44,8 +44,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 import timber.log.Timber
 
-abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(),
-    VersionCheckPresenter.View, RatingPresenter.View {
+abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), VersionCheckPresenter.View,
+    RatingPresenter.View {
 
     internal lateinit var versionPresenter: VersionCheckPresenter
     internal lateinit var ratingPresenter: RatingPresenter

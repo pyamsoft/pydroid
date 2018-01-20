@@ -28,9 +28,7 @@ internal class RatingPresenter internal constructor(
     private val interactor: RatingInteractor,
     computationScheduler: Scheduler, ioScheduler: Scheduler,
     mainThreadScheduler: Scheduler
-) : SchedulerPresenter<View>(
-    computationScheduler, ioScheduler, mainThreadScheduler
-) {
+) : SchedulerPresenter<View>(computationScheduler, ioScheduler, mainThreadScheduler) {
 
     internal fun loadRatingDialog(force: Boolean) {
         dispose {

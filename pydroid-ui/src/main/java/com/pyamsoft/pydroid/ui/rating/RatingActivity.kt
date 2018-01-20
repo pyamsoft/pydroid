@@ -28,8 +28,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.StringUtil
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider,
-    RatingPresenter.View {
+abstract class RatingActivity : VersionCheckActivity(), RatingDialog.ChangeLogProvider, RatingPresenter.View {
 
     internal lateinit var ratingPresenter: RatingPresenter
 

@@ -24,8 +24,8 @@ package com.pyamsoft.pydroid.optional
 internal sealed class OptionalImpl<out T : Any> : Optional<T> {
 
     internal data class PresentImpl<out T : Any> internal constructor(override val value: T) :
-        Present<T>
+        Optional.Present<T>
 
-    internal object AbsentImpl : Absent
+    internal object AbsentImpl : Optional.Absent
 
 }

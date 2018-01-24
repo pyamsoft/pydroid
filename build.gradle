@@ -20,7 +20,7 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.2.20'
+        kotlin_version = '1.2.21'
         plugin_version = "3.0.1"
     }
     repositories {
@@ -56,8 +56,8 @@ buildscript {
         viewPagerIndicator = "1.0.4"
         gson = "2.8.2"
         ktlint = "2.3.0"
-        lifecycleRuntime = "1.0.3"
-        lifecycleCompiler = "1.0.0"
+        lifecycleRuntime = "1.1.0"
+        lifecycleCompiler = "1.1.0"
         constraintLayout = "1.0.2"
     }
 

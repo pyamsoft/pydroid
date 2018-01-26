@@ -35,10 +35,7 @@ internal interface PYDroidComponent {
     fun inject(layout: SocialMediaLayout)
 
     @CheckResult
-    fun plusVersionCheckComponent(
-        packageName: String,
-        currentVersion: Int
-    ): VersionCheckComponent
+    fun plusVersionCheckComponent(packageName: String, currentVersion: Int): VersionCheckComponent
 
     @CheckResult
     fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent

@@ -32,85 +32,88 @@ import io.reactivex.disposables.Disposable
 
 abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
 
-    private val disposables: CompositeDisposable = CompositeDisposable()
-    protected var view: V? = null
-        private set
-    private var lifecycleOwner: LifecycleOwner? = null
+  private val disposables: CompositeDisposable = CompositeDisposable()
+  protected var view: V? = null
+    private set
+  private var lifecycleOwner: LifecycleOwner? = null
 
-    fun bind(owner: LifecycleOwner, view: V) {
-        this.view = view
-        this.lifecycleOwner = owner
-        owner.lifecycle.addObserver(this)
-    }
+  fun bind(
+    owner: LifecycleOwner,
+    view: V
+  ) {
+    this.view = view
+    this.lifecycleOwner = owner
+    owner.lifecycle.addObserver(this)
+  }
 
-    @OnLifecycleEvent(ON_CREATE)
-    internal fun performCreate() {
-        onCreate()
-    }
+  @OnLifecycleEvent(ON_CREATE)
+  internal fun performCreate() {
+    onCreate()
+  }
 
-    protected open fun onCreate() {
-    }
+  protected open fun onCreate() {
+  }
 
-    @OnLifecycleEvent(ON_START)
-    internal fun performStart() {
-        onStart()
-    }
+  @OnLifecycleEvent(ON_START)
+  internal fun performStart() {
+    onStart()
+  }
 
-    protected open fun onStart() {
-    }
+  protected open fun onStart() {
+  }
 
-    @OnLifecycleEvent(ON_RESUME)
-    internal fun performResume() {
-        onResume()
-    }
+  @OnLifecycleEvent(ON_RESUME)
+  internal fun performResume() {
+    onResume()
+  }
 
-    protected open fun onResume() {
-    }
+  protected open fun onResume() {
+  }
 
-    @OnLifecycleEvent(ON_PAUSE)
-    internal fun performPause() {
-        onPause()
-    }
+  @OnLifecycleEvent(ON_PAUSE)
+  internal fun performPause() {
+    onPause()
+  }
 
-    protected open fun onPause() {
-    }
+  protected open fun onPause() {
+  }
 
-    @OnLifecycleEvent(ON_STOP)
-    internal fun performStop() {
-        onStop()
-    }
+  @OnLifecycleEvent(ON_STOP)
+  internal fun performStop() {
+    onStop()
+  }
 
-    protected open fun onStop() {
-    }
+  protected open fun onStop() {
+  }
 
-    @OnLifecycleEvent(ON_DESTROY)
-    internal fun performDestroy() {
-        // Unbind the view
-        this.view = null
-        onDestroy()
+  @OnLifecycleEvent(ON_DESTROY)
+  internal fun performDestroy() {
+    // Unbind the view
+    this.view = null
+    onDestroy()
 
-        // Clear disposables after onDestroy incase something accidentally subscribes
-        disposables.clear()
+    // Clear disposables after onDestroy incase something accidentally subscribes
+    disposables.clear()
 
-        // Remove the lifecycle observer since we are dead
-        lifecycleOwner?.lifecycle?.removeObserver(this)
-        lifecycleOwner = null
-    }
+    // Remove the lifecycle observer since we are dead
+    lifecycleOwner?.lifecycle?.removeObserver(this)
+    lifecycleOwner = null
+  }
 
-    protected open fun onDestroy() {
-    }
+  protected open fun onDestroy() {
+  }
 
-    /**
-     * Add a disposable to the internal list, dispose it onUnbind
-     */
-    protected inline fun dispose(func: () -> Disposable) {
-        dispose(func())
-    }
+  /**
+   * Add a disposable to the internal list, dispose it onUnbind
+   */
+  protected inline fun dispose(func: () -> Disposable) {
+    dispose(func())
+  }
 
-    /**
-     * Add a disposable to the internal list, dispose it onUnbind
-     */
-    protected fun dispose(disposable: Disposable) {
-        disposables.add(disposable)
-    }
+  /**
+   * Add a disposable to the internal list, dispose it onUnbind
+   */
+  protected fun dispose(disposable: Disposable) {
+    disposables.add(disposable)
+  }
 }

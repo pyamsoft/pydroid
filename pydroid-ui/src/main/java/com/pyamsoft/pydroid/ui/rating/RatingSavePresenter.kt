@@ -24,32 +24,36 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 internal class RatingSavePresenter internal constructor(
-    private val currentVersion: Int,
-    private val interactor: RatingInteractor,
-    computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler
+  private val currentVersion: Int,
+  private val interactor: RatingInteractor,
+  computationScheduler: Scheduler,
+  ioScheduler: Scheduler,
+  mainThreadScheduler: Scheduler
 ) : SchedulerPresenter<View>(computationScheduler, ioScheduler, mainThreadScheduler) {
 
-    internal fun saveRating(accept: Boolean) {
-        dispose {
-            interactor.saveRating(currentVersion).subscribeOn(ioScheduler).observeOn(
-                mainThreadScheduler
-            ).subscribe({
-                Timber.d("Saved current version code: %d", currentVersion)
-                view?.onRatingSaved(accept)
-            }, {
-                Timber.e(it, "Error saving rating dialog")
-                view?.onRatingDialogSaveError(it)
-            })
-        }
+  internal fun saveRating(accept: Boolean) {
+    dispose {
+      interactor.saveRating(currentVersion)
+          .subscribeOn(ioScheduler)
+          .observeOn(
+              mainThreadScheduler
+          )
+          .subscribe({
+            Timber.d("Saved current version code: %d", currentVersion)
+            view?.onRatingSaved(accept)
+          }, {
+            Timber.e(it, "Error saving rating dialog")
+            view?.onRatingDialogSaveError(it)
+          })
     }
+  }
 
-    internal interface View : SaveRatingCallback
+  internal interface View : SaveRatingCallback
 
-    internal interface SaveRatingCallback {
+  internal interface SaveRatingCallback {
 
-        fun onRatingSaved(accept: Boolean)
+    fun onRatingSaved(accept: Boolean)
 
-        fun onRatingDialogSaveError(throwable: Throwable)
-    }
+    fun onRatingDialogSaveError(throwable: Throwable)
+  }
 }

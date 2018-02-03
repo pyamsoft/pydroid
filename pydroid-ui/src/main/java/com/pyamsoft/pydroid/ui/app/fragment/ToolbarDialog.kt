@@ -19,7 +19,12 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.app.Dialog
-import android.arch.lifecycle.Lifecycle.Event.*
+import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
+import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
+import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
+import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
+import android.arch.lifecycle.Lifecycle.Event.ON_START
+import android.arch.lifecycle.Lifecycle.Event.ON_STOP
 import android.arch.lifecycle.LifecycleOwner
 import android.os.Bundle
 import android.support.annotation.CheckResult
@@ -30,56 +35,59 @@ import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 abstract class ToolbarDialog : DialogFragment(), ToolbarProvider, ViewLifecycleProvider {
 
-    private val viewLifecycleOwner = ViewLifecycleOwner()
-    protected open val hasTitle: Boolean = false
-    final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner
+  private val viewLifecycleOwner = ViewLifecycleOwner()
+  protected open val hasTitle: Boolean = false
+  final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        if (!hasTitle) {
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        }
-
-        return dialog
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val dialog = super.onCreateDialog(savedInstanceState)
+    if (!hasTitle) {
+      dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 
-    final override val toolbarActivity: ToolbarActivity
-        @get:CheckResult get() {
-            val a = activity
-            if (a is ToolbarActivity) {
-                return a
-            } else {
-                throw ClassCastException("Activity does not implement ToolbarActivity")
-            }
-        }
+    return dialog
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_CREATE)
+  final override val toolbarActivity: ToolbarActivity
+    @get:CheckResult get() {
+      val a = activity
+      if (a is ToolbarActivity) {
+        return a
+      } else {
+        throw ClassCastException("Activity does not implement ToolbarActivity")
+      }
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_START)
-    }
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_CREATE)
+  }
 
-    override fun onResume() {
-        super.onResume()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_RESUME)
-    }
+  override fun onStart() {
+    super.onStart()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_START)
+  }
 
-    override fun onPause() {
-        super.onPause()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_PAUSE)
-    }
+  override fun onResume() {
+    super.onResume()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_RESUME)
+  }
 
-    override fun onStop() {
-        super.onStop()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_STOP)
-    }
+  override fun onPause() {
+    super.onPause()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_PAUSE)
+  }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_DESTROY)
-    }
+  override fun onStop() {
+    super.onStop()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_STOP)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_DESTROY)
+  }
 }

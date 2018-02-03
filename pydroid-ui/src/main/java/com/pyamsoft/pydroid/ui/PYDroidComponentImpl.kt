@@ -34,42 +34,45 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 
 internal class PYDroidComponentImpl internal constructor(
-    pyDroidModule: PYDroidModule,
-    private val loaderModule: LoaderModule
+  pyDroidModule: PYDroidModule,
+  private val loaderModule: LoaderModule
 ) : PYDroidComponent {
 
-    private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(pyDroidModule)
-    private val versionCheckModule: VersionCheckModule = VersionCheckModule(pyDroidModule)
-    private val ratingModule: RatingModule
-    private val debugMode: Boolean = pyDroidModule.isDebug
+  private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(pyDroidModule)
+  private val versionCheckModule: VersionCheckModule = VersionCheckModule(pyDroidModule)
+  private val ratingModule: RatingModule
+  private val debugMode: Boolean = pyDroidModule.isDebug
 
-    init {
-        val preferences = PYDroidPreferencesImpl(pyDroidModule.provideContext())
-        ratingModule = RatingModule(pyDroidModule, preferences)
-    }
+  init {
+    val preferences = PYDroidPreferencesImpl(pyDroidModule.provideContext())
+    ratingModule = RatingModule(pyDroidModule, preferences)
+  }
 
-    override fun inject(fragment: AboutLibrariesFragment) {
-        fragment.presenter = aboutLibrariesModule.getPresenter()
-        fragment.imageLoader = loaderModule.provideImageLoader()
-    }
+  override fun inject(fragment: AboutLibrariesFragment) {
+    fragment.presenter = aboutLibrariesModule.getPresenter()
+    fragment.imageLoader = loaderModule.provideImageLoader()
+  }
 
-    override fun inject(activity: TamperActivity) {
-        activity.debugMode = debugMode
-    }
+  override fun inject(activity: TamperActivity) {
+    activity.debugMode = debugMode
+  }
 
-    override fun inject(layout: SocialMediaLayout) {
-        layout.imageLoader = loaderModule.provideImageLoader()
-    }
+  override fun inject(layout: SocialMediaLayout) {
+    layout.imageLoader = loaderModule.provideImageLoader()
+  }
 
-    override fun plusVersionCheckComponent(
-        packageName: String,
-        currentVersion: Int
-    ): VersionCheckComponent =
-        VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
+  override fun plusVersionCheckComponent(
+    packageName: String,
+    currentVersion: Int
+  ): VersionCheckComponent =
+    VersionCheckComponentImpl(versionCheckModule, packageName, currentVersion)
 
-    override fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent =
-        AppComponentImpl(versionCheckModule, ratingModule, packageName, currentVersion)
+  override fun plusAppComponent(
+    packageName: String,
+    currentVersion: Int
+  ): AppComponent =
+    AppComponentImpl(versionCheckModule, ratingModule, packageName, currentVersion)
 
-    override fun plusRatingComponent(currentVersion: Int): RatingComponent =
-        RatingComponentImpl(currentVersion, ratingModule, loaderModule)
+  override fun plusRatingComponent(currentVersion: Int): RatingComponent =
+    RatingComponentImpl(currentVersion, ratingModule, loaderModule)
 }

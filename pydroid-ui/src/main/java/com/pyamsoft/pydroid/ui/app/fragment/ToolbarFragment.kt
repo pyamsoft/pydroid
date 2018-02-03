@@ -31,52 +31,58 @@ import android.support.v4.app.Fragment
 import android.view.View
 import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
-abstract class ToolbarFragment : Fragment(), BackPressHandler, ToolbarProvider, ViewLifecycleProvider {
+abstract class ToolbarFragment : Fragment(),
+    BackPressHandler,
+    ToolbarProvider,
+    ViewLifecycleProvider {
 
-    private val viewLifecycleOwner = ViewLifecycleOwner()
-    final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner
+  private val viewLifecycleOwner = ViewLifecycleOwner()
+  final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner
 
-    override val toolbarActivity: ToolbarActivity
-        @get:CheckResult get() {
-            val a = activity
-            if (a is ToolbarActivity) {
-                return a
-            } else {
-                throw ClassCastException("Activity does not implement ToolbarActivity")
-            }
-        }
-
-    override fun onBackPressed(): Boolean {
-        return false
+  override val toolbarActivity: ToolbarActivity
+    @get:CheckResult get() {
+      val a = activity
+      if (a is ToolbarActivity) {
+        return a
+      } else {
+        throw ClassCastException("Activity does not implement ToolbarActivity")
+      }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_CREATE)
-    }
+  override fun onBackPressed(): Boolean {
+    return false
+  }
 
-    override fun onStart() {
-        super.onStart()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_START)
-    }
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_CREATE)
+  }
 
-    override fun onResume() {
-        super.onResume()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_RESUME)
-    }
+  override fun onStart() {
+    super.onStart()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_START)
+  }
 
-    override fun onPause() {
-        super.onPause()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_PAUSE)
-    }
+  override fun onResume() {
+    super.onResume()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_RESUME)
+  }
 
-    override fun onStop() {
-        super.onStop()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_STOP)
-    }
+  override fun onPause() {
+    super.onPause()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_PAUSE)
+  }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewLifecycleOwner.registry.handleLifecycleEvent(ON_DESTROY)
-    }
+  override fun onStop() {
+    super.onStop()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_STOP)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    viewLifecycleOwner.registry.handleLifecycleEvent(ON_DESTROY)
+  }
 }

@@ -28,70 +28,71 @@ import timber.log.Timber
 
 abstract class TamperActivity : RatingActivity() {
 
-    internal var debugMode: Boolean = false
+  internal var debugMode: Boolean = false
 
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        PYDroid.obtain().inject(this)
+  @CallSuper
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    PYDroid.obtain()
+        .inject(this)
+  }
+
+  /**
+   * Returns true if the application has been tampered with, false if not
+   */
+  @CheckResult
+  private fun applicationIsTampered(): Boolean {
+    // Check if we are renamed
+    if (applicationContext.packageName.compareTo(safePackageName) != 0) {
+      Timber.e("Application is potentially re-named")
+      return true
     }
 
-    /**
-     * Returns true if the application has been tampered with, false if not
-     */
-    @CheckResult
-    private fun applicationIsTampered(): Boolean {
-        // Check if we are renamed
-        if (applicationContext.packageName.compareTo(safePackageName) != 0) {
-            Timber.e("Application is potentially re-named")
-            return true
-        }
+    // Check that we were installed from the play store.
+    val installer = applicationContext.packageManager.getInstallerPackageName(safePackageName)
+    if (debugMode) {
+      if (installer == null) {
+        Timber.i("Application is installed from APK. This is fine in DEBUG mode")
+        return false
+      } else {
+        Timber.e("DEBUG Application is not installed from APK")
+        return true
+      }
+    } else {
+      if (installer == null) {
+        Timber.e("RELEASE Application is not installed from Google Play Store")
+        Timber.e("Installer: NULL")
+        return true
+      }
 
-        // Check that we were installed from the play store.
-        val installer = applicationContext.packageManager.getInstallerPackageName(safePackageName)
-        if (debugMode) {
-            if (installer == null) {
-                Timber.i("Application is installed from APK. This is fine in DEBUG mode")
-                return false
-            } else {
-                Timber.e("DEBUG Application is not installed from APK")
-                return true
-            }
-        } else {
-            if (installer == null) {
-                Timber.e("RELEASE Application is not installed from Google Play Store")
-                Timber.e("Installer: NULL")
-                return true
-            }
+      if (GOOGLE_PLAY_STORE_INSTALLER.compareTo(installer) != 0) {
+        Timber.e("RELEASE Application is not installed from Google Play Store")
+        Timber.e("Installer: %s", installer)
+        return true
+      }
 
-            if (GOOGLE_PLAY_STORE_INSTALLER.compareTo(installer) != 0) {
-                Timber.e("RELEASE Application is not installed from Google Play Store")
-                Timber.e("Installer: %s", installer)
-                return true
-            }
-
-            Timber.d("Application is safe")
-            return false
-        }
+      Timber.d("Application is safe")
+      return false
     }
+  }
 
-    @CallSuper
-    override fun onPostResume() {
-        super.onPostResume()
-        if (applicationIsTampered()) {
-            Timber.e("Application has been tampered with, notify user")
-            DialogUtil.guaranteeSingleDialogFragment(this, TamperDialog(), "tamper")
-        }
+  @CallSuper
+  override fun onPostResume() {
+    super.onPostResume()
+    if (applicationIsTampered()) {
+      Timber.e("Application has been tampered with, notify user")
+      DialogUtil.guaranteeSingleDialogFragment(this, TamperDialog(), "tamper")
     }
+  }
 
-    /**
-     * The package name that we expect to be running under
-     */
-    @get:CheckResult
-    protected abstract val safePackageName: String
+  /**
+   * The package name that we expect to be running under
+   */
+  @get:CheckResult
+  protected abstract val safePackageName: String
 
-    companion object {
+  companion object {
 
-        private const val GOOGLE_PLAY_STORE_INSTALLER = "com.android.vending"
-    }
+    private const val GOOGLE_PLAY_STORE_INSTALLER = "com.android.vending"
+  }
 }

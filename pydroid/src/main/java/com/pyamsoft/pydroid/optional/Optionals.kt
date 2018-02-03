@@ -22,7 +22,7 @@ import android.support.annotation.CheckResult
 
 object Optionals {
 
-    @JvmStatic
-    @CheckResult
-    fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
+  @JvmStatic
+  @CheckResult
+  fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
 }

@@ -22,5 +22,5 @@ import android.arch.lifecycle.LifecycleOwner
 
 interface Loaded {
 
-    fun bind(owner: LifecycleOwner)
+  fun bind(owner: LifecycleOwner)
 }

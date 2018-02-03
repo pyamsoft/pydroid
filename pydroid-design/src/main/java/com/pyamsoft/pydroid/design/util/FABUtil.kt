@@ -23,15 +23,15 @@ import android.support.design.widget.FloatingActionButton
 
 object FABUtil {
 
-    @JvmStatic
-    @JvmOverloads
-    fun setupFABBehavior(
-        fab: FloatingActionButton,
-        behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()
-    ) {
-        val params = fab.layoutParams
-        if (params is CoordinatorLayout.LayoutParams) {
-            params.behavior = behavior
-        }
+  @JvmStatic
+  @JvmOverloads
+  fun setupFABBehavior(
+    fab: FloatingActionButton,
+    behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()
+  ) {
+    val params = fab.layoutParams
+    if (params is CoordinatorLayout.LayoutParams) {
+      params.behavior = behavior
     }
+  }
 }

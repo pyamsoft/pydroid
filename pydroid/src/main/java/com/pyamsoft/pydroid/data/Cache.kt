@@ -20,5 +20,5 @@ package com.pyamsoft.pydroid.data
 
 interface Cache {
 
-    fun clearCache()
+  fun clearCache()
 }

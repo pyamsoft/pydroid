@@ -24,32 +24,32 @@ import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Scheduler
 
 internal class RatingModule internal constructor(
-    module: PYDroidModule,
-    preferences: RatingPreferences
+  module: PYDroidModule,
+  preferences: RatingPreferences
 ) {
 
-    private val interactor: RatingInteractor
-    private val computationScheduler: Scheduler = module.provideComputationScheduler()
-    private val ioScheduler: Scheduler = module.provideIoScheduler()
-    private val mainThreadScheduler: Scheduler = module.provideMainThreadScheduler()
+  private val interactor: RatingInteractor
+  private val computationScheduler: Scheduler = module.provideComputationScheduler()
+  private val ioScheduler: Scheduler = module.provideIoScheduler()
+  private val mainThreadScheduler: Scheduler = module.provideMainThreadScheduler()
 
-    init {
-        interactor = RatingInteractorImpl(preferences)
-    }
+  init {
+    interactor = RatingInteractorImpl(preferences)
+  }
 
-    @CheckResult
-    fun getPresenter(version: Int): RatingPresenter {
-        return RatingPresenter(
-            version, interactor, computationScheduler, ioScheduler,
-            mainThreadScheduler
-        )
-    }
+  @CheckResult
+  fun getPresenter(version: Int): RatingPresenter {
+    return RatingPresenter(
+        version, interactor, computationScheduler, ioScheduler,
+        mainThreadScheduler
+    )
+  }
 
-    @CheckResult
-    fun getSavePresenter(version: Int): RatingSavePresenter {
-        return RatingSavePresenter(
-            version, interactor, computationScheduler, ioScheduler,
-            mainThreadScheduler
-        )
-    }
+  @CheckResult
+  fun getSavePresenter(version: Int): RatingSavePresenter {
+    return RatingSavePresenter(
+        version, interactor, computationScheduler, ioScheduler,
+        mainThreadScheduler
+    )
+  }
 }

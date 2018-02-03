@@ -24,43 +24,52 @@ import retrofit2.HttpException
 import timber.log.Timber
 
 class VersionCheckPresenter internal constructor(
-    private val packageName: String,
-    private val currentVersionCode: Int,
-    private val interactor: VersionCheckInteractor,
-    computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler
-) : SchedulerPresenter<VersionCheckPresenter.View>(computationScheduler, ioScheduler, mainThreadScheduler) {
+  private val packageName: String,
+  private val currentVersionCode: Int,
+  private val interactor: VersionCheckInteractor,
+  computationScheduler: Scheduler,
+  ioScheduler: Scheduler,
+  mainThreadScheduler: Scheduler
+) : SchedulerPresenter<VersionCheckPresenter.View>(
+    computationScheduler, ioScheduler, mainThreadScheduler
+) {
 
-    override fun onStart() {
-        super.onStart()
-        checkForUpdates(false)
+  override fun onStart() {
+    super.onStart()
+    checkForUpdates(false)
+  }
+
+  fun checkForUpdates(force: Boolean) {
+    dispose {
+      interactor.checkVersion(packageName, force)
+          .subscribeOn(ioScheduler)
+          .observeOn(
+              mainThreadScheduler
+          )
+          .subscribe({
+            Timber.i("Update check finished")
+            Timber.i("Current version: %d", currentVersionCode)
+            Timber.i("Latest version: %d", it)
+            if (currentVersionCode < it) {
+              view?.onUpdatedVersionFound(currentVersionCode, it)
+            }
+          }, {
+            if (it is HttpException) {
+              Timber.e(it, "Network Failure: %d", it.code())
+            } else {
+              Timber.e(it, "onError")
+            }
+          })
     }
+  }
 
-    fun checkForUpdates(force: Boolean) {
-        dispose {
-            interactor.checkVersion(packageName, force).subscribeOn(ioScheduler).observeOn(
-                mainThreadScheduler
-            ).subscribe({
-                Timber.i("Update check finished")
-                Timber.i("Current version: %d", currentVersionCode)
-                Timber.i("Latest version: %d", it)
-                if (currentVersionCode < it) {
-                    view?.onUpdatedVersionFound(currentVersionCode, it)
-                }
-            }, {
-                if (it is HttpException) {
-                    Timber.e(it, "Network Failure: %d", it.code())
-                } else {
-                    Timber.e(it, "onError")
-                }
-            })
-        }
-    }
+  interface View : UpdateCallback
 
-    interface View : UpdateCallback
+  interface UpdateCallback {
 
-    interface UpdateCallback {
-
-        fun onUpdatedVersionFound(current: Int, updated: Int)
-    }
+    fun onUpdatedVersionFound(
+      current: Int,
+      updated: Int
+    )
+  }
 }

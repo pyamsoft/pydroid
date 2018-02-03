@@ -25,19 +25,19 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 fun Scheduler.enforceComputation() {
-    if (this != Schedulers.computation()) {
-        throw RuntimeException("Scheduler is not computation scheduler: $this")
-    }
+  if (this != Schedulers.computation()) {
+    throw RuntimeException("Scheduler is not computation scheduler: $this")
+  }
 }
 
 fun Scheduler.enforceIo() {
-    if (this != Schedulers.io()) {
-        throw RuntimeException("Scheduler is not io scheduler: $this")
-    }
+  if (this != Schedulers.io()) {
+    throw RuntimeException("Scheduler is not io scheduler: $this")
+  }
 }
 
 fun Scheduler.enforceMainThread() {
-    if (this != AndroidSchedulers.mainThread()) {
-        throw RuntimeException("Scheduler is not Android mainThread scheduler: $this")
-    }
+  if (this != AndroidSchedulers.mainThread()) {
+    throw RuntimeException("Scheduler is not Android mainThread scheduler: $this")
+  }
 }

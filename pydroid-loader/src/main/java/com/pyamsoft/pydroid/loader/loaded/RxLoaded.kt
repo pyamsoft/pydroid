@@ -27,20 +27,20 @@ import io.reactivex.disposables.Disposable
 
 class RxLoaded(private var disposable: Disposable) : Loaded, LifecycleObserver {
 
-    private var lifeCycleOwner: LifecycleOwner? = null
+  private var lifeCycleOwner: LifecycleOwner? = null
 
-    override fun bind(owner: LifecycleOwner) {
-        owner.lifecycle.addObserver(this)
-        lifeCycleOwner = owner
+  override fun bind(owner: LifecycleOwner) {
+    owner.lifecycle.addObserver(this)
+    lifeCycleOwner = owner
+  }
+
+  @OnLifecycleEvent(ON_DESTROY)
+  internal fun unbindOnDestroy() {
+    lifeCycleOwner?.lifecycle?.removeObserver(this)
+    lifeCycleOwner = null
+
+    if (!disposable.isDisposed) {
+      disposable = disposable.clear()
     }
-
-    @OnLifecycleEvent(ON_DESTROY)
-    internal fun unbindOnDestroy() {
-        lifeCycleOwner?.lifecycle?.removeObserver(this)
-        lifeCycleOwner = null
-
-        if (!disposable.isDisposed) {
-            disposable = disposable.clear()
-        }
-    }
+  }
 }

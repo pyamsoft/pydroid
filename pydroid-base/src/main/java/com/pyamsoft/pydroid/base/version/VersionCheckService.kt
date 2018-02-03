@@ -25,7 +25,7 @@ import retrofit2.http.Url
 
 internal interface VersionCheckService {
 
-    @CheckResult
-    @GET
-    fun checkVersion(@Url packageName: String): Single<VersionCheckResponse>
+  @CheckResult
+  @GET
+  fun checkVersion(@Url packageName: String): Single<VersionCheckResponse>
 }

@@ -23,39 +23,39 @@ import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.Toolbar
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.BackPressHandler
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
-    private var capturedToolbar: Toolbar? = null
+  private var capturedToolbar: Toolbar? = null
 
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        PreferenceManager.setDefaultValues(this, R.xml.pydroid, false)
-    }
+  @CallSuper
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    PreferenceManager.setDefaultValues(this, R.xml.pydroid, false)
+  }
 
-    @CallSuper
-    override fun onBackPressed() {
-        supportFragmentManager.fragments.asSequence()
-            .filter { it is BackPressHandler && it.onBackPressed() }.forEach { return }
-        super.onBackPressed()
-    }
+  @CallSuper
+  override fun onBackPressed() {
+    supportFragmentManager.fragments.asSequence()
+        .filter { it is BackPressHandler && it.onBackPressed() }
+        .forEach { return }
+    super.onBackPressed()
+  }
 
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
 
-        // Clear captured Toolbar
-        capturedToolbar = null
-    }
+    // Clear captured Toolbar
+    capturedToolbar = null
+  }
 
-    override fun withToolbar(func: (Toolbar) -> Unit) {
-        capturedToolbar?.let(func)
-    }
+  override fun withToolbar(func: (Toolbar) -> Unit) {
+    capturedToolbar?.let(func)
+  }
 
-    protected fun setToolbar(toolbar: Toolbar?) {
-        capturedToolbar = toolbar
-    }
+  protected fun setToolbar(toolbar: Toolbar?) {
+    capturedToolbar = toolbar
+  }
 }

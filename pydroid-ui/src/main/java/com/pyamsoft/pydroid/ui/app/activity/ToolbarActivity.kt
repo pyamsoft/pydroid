@@ -22,5 +22,5 @@ import android.support.v7.widget.Toolbar
 
 interface ToolbarActivity {
 
-    fun withToolbar(func: (Toolbar) -> Unit)
+  fun withToolbar(func: (Toolbar) -> Unit)
 }

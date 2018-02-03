@@ -24,26 +24,29 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class PYDroidModuleImpl(context: Context, debug: Boolean) : PYDroidModule {
+class PYDroidModuleImpl(
+  context: Context,
+  debug: Boolean
+) : PYDroidModule {
 
-    // Singleton
-    private val appContext = context.applicationContext
+  // Singleton
+  private val appContext = context.applicationContext
 
-    override val isDebug: Boolean = debug
+  override val isDebug: Boolean = debug
 
-    // Singleton
-    @CheckResult
-    override fun provideContext(): Context = appContext
+  // Singleton
+  @CheckResult
+  override fun provideContext(): Context = appContext
 
-    // Singleton
-    @CheckResult
-    override fun provideIoScheduler(): Scheduler = Schedulers.io()
+  // Singleton
+  @CheckResult
+  override fun provideIoScheduler(): Scheduler = Schedulers.io()
 
-    // Singleton
-    @CheckResult
-    override fun provideComputationScheduler(): Scheduler = Schedulers.computation()
+  // Singleton
+  @CheckResult
+  override fun provideComputationScheduler(): Scheduler = Schedulers.computation()
 
-    // Singleton
-    @CheckResult
-    override fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
+  // Singleton
+  @CheckResult
+  override fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
 }

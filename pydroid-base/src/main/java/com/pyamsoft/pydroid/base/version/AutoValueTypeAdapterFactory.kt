@@ -25,11 +25,11 @@ import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
 @GsonTypeAdapterFactory
 internal abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
 
-    companion object {
+  companion object {
 
-        @JvmStatic
-        @CheckResult
-        fun create(): TypeAdapterFactory =
-            AutoValueGson_AutoValueTypeAdapterFactory()
-    }
+    @JvmStatic
+    @CheckResult
+    fun create(): TypeAdapterFactory =
+      AutoValueGson_AutoValueTypeAdapterFactory()
+  }
 }

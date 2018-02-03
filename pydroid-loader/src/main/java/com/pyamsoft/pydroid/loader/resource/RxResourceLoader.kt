@@ -32,28 +32,29 @@ import io.reactivex.Single
 import timber.log.Timber
 
 internal class RxResourceLoader internal constructor(
-    context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
-    resourceImageCache: ImageCache<Int, Drawable>, private val mainThreadScheduler: Scheduler,
-    private val ioScheduler: Scheduler
+  context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
+  resourceImageCache: ImageCache<Int, Drawable>,
+  private val mainThreadScheduler: Scheduler,
+  private val ioScheduler: Scheduler
 ) : ResourceLoader(context, resource, errorResource, resourceImageCache) {
 
-    init {
-        mainThreadScheduler.enforceMainThread()
-        ioScheduler.enforceIo()
-    }
+  init {
+    mainThreadScheduler.enforceMainThread()
+    ioScheduler.enforceIo()
+  }
 
-    override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
-        return RxLoaded(
-            Single.fromCallable { loadResource() }
-                .subscribeOn(ioScheduler)
-                .observeOn(mainThreadScheduler)
-                .doOnSubscribe { startAction?.invoke() }
-                .doAfterSuccess { completeAction?.invoke(it) }
-                .doOnError {
-                    Timber.e(it, "Error loading Drawable using RxResourceLoader")
-                    errorAction?.invoke(it)
-                }.subscribe({ target.loadImage(it) },
-                    { target.loadError(loadErrorResource()) })
-        )
-    }
+  override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
+    return RxLoaded(
+        Single.fromCallable { loadResource() }
+            .subscribeOn(ioScheduler)
+            .observeOn(mainThreadScheduler)
+            .doOnSubscribe { startAction?.invoke() }
+            .doAfterSuccess { completeAction?.invoke(it) }
+            .doOnError {
+              Timber.e(it, "Error loading Drawable using RxResourceLoader")
+              errorAction?.invoke(it)
+            }.subscribe({ target.loadImage(it) },
+                { target.loadError(loadErrorResource()) })
+    )
+  }
 }

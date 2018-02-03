@@ -32,7 +32,6 @@ import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.helper.postWith
@@ -42,166 +41,175 @@ import timber.log.Timber
 
 class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
-    internal lateinit var presenter: AboutLibrariesPresenter
-    internal lateinit var imageLoader: ImageLoader
-    internal lateinit var pagerAdapter: AboutPagerAdapter
-    private lateinit var listener: ViewPager.OnPageChangeListener
-    private lateinit var binding: FragmentAboutLibrariesBinding
+  internal lateinit var presenter: AboutLibrariesPresenter
+  internal lateinit var imageLoader: ImageLoader
+  internal lateinit var pagerAdapter: AboutPagerAdapter
+  private lateinit var listener: ViewPager.OnPageChangeListener
+  private lateinit var binding: FragmentAboutLibrariesBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        PYDroid.obtain().inject(this)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    PYDroid.obtain()
+        .inject(this)
+  }
+
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
+    return binding.root
+  }
+
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    setupViewPager(savedInstanceState)
+    setupArrows()
+
+    presenter.bind(viewLifecycle, this)
+  }
+
+  override fun onLicenseLoaded(model: AboutLibrariesModel) {
+    binding.viewPager.postWith {
+      if (view != null) {
+        pagerAdapter.add(model)
+      }
+    }
+  }
+
+  override fun onAllLoaded() {
+    binding.viewPager.postWith {
+      if (view != null) {
+        pagerAdapter.notifyDataSetChanged()
+        binding.aboutTitle.text = pagerAdapter.getPageTitle(it.currentItem)
+      }
+    }
+  }
+
+  private fun setupViewPager(savedInstanceState: Bundle?) {
+    pagerAdapter = AboutPagerAdapter(this)
+    binding.apply {
+      // Show spinner while loading
+      progressSpinner.visibility = View.VISIBLE
+
+      // Mark pager invisible while loading
+      viewPager.visibility = View.INVISIBLE
+      viewPager.adapter = pagerAdapter
+      viewPager.offscreenPageLimit = 1
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    // We must observe the data set for when it finishes.
+    // There is a race condition that can cause the UI to crash if pager.setCurrentItem is
+    // called before notifyDataSetChanged finishes
+    pagerAdapter.registerDataSetObserver(object : DataSetObserver() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupViewPager(savedInstanceState)
-        setupArrows()
+      override fun onChanged() {
+        super.onChanged()
+        Timber.d("Data set changed! Set current item and unregister self")
+        pagerAdapter.unregisterDataSetObserver(this)
 
-        presenter.bind(viewLifecycle, this)
-    }
-
-    override fun onLicenseLoaded(model: AboutLibrariesModel) {
-        binding.viewPager.postWith {
-            if (view != null) {
-                pagerAdapter.add(model)
-            }
-        }
-    }
-
-    override fun onAllLoaded() {
-        binding.viewPager.postWith {
-            if (view != null) {
-                pagerAdapter.notifyDataSetChanged()
-                binding.aboutTitle.text = pagerAdapter.getPageTitle(it.currentItem)
-            }
-        }
-    }
-
-    private fun setupViewPager(savedInstanceState: Bundle?) {
-        pagerAdapter = AboutPagerAdapter(this)
+        // Hide spinner now that loading is done
         binding.apply {
-            // Show spinner while loading
-            progressSpinner.visibility = View.VISIBLE
+          progressSpinner.visibility = View.GONE
+          viewPager.visibility = View.VISIBLE
 
-            // Mark pager invisible while loading
-            viewPager.visibility = View.INVISIBLE
-            viewPager.adapter = pagerAdapter
-            viewPager.offscreenPageLimit = 1
+          // Reload the last looked at page
+          if (savedInstanceState != null) {
+            viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
+          }
         }
+      }
+    })
 
-        // We must observe the data set for when it finishes.
-        // There is a race condition that can cause the UI to crash if pager.setCurrentItem is
-        // called before notifyDataSetChanged finishes
-        pagerAdapter.registerDataSetObserver(object : DataSetObserver() {
+    val obj = object : OnPageChangeListener {
+      override fun onPageScrollStateChanged(state: Int) {
+      }
 
-            override fun onChanged() {
-                super.onChanged()
-                Timber.d("Data set changed! Set current item and unregister self")
-                pagerAdapter.unregisterDataSetObserver(this)
+      override fun onPageScrolled(
+        position: Int,
+        positionOffset: Float,
+        positionOffsetPixels: Int
+      ) {
+      }
 
-                // Hide spinner now that loading is done
-                binding.apply {
-                    progressSpinner.visibility = View.GONE
-                    viewPager.visibility = View.VISIBLE
-
-                    // Reload the last looked at page
-                    if (savedInstanceState != null) {
-                        viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
-                    }
-                }
-            }
-        })
-
-        val obj = object : OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
-
-            override fun onPageScrolled(
-                position: Int, positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-            }
-
-            override fun onPageSelected(position: Int) {
-                binding.aboutTitle.text = pagerAdapter.getPageTitle(position)
-            }
-        }
-
-        listener = obj
-        binding.viewPager.addOnPageChangeListener(obj)
+      override fun onPageSelected(position: Int) {
+        binding.aboutTitle.text = pagerAdapter.getPageTitle(position)
+      }
     }
 
-    private fun setupArrows() {
-        imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowLeft)
-            .bind(viewLifecycle)
-        binding.apply {
-            arrowLeft.rotation = 90F
-            arrowLeft.setOnDebouncedClickListener {
-                viewPager.arrowScroll(View.FOCUS_LEFT)
-            }
-        }
+    listener = obj
+    binding.viewPager.addOnPageChangeListener(obj)
+  }
 
-        imageLoader.fromResource(R.drawable.ic_arrow_down_24dp).into(binding.arrowRight)
-            .bind(viewLifecycle)
-        binding.apply {
-            arrowRight.rotation = -90F
-            arrowRight.setOnDebouncedClickListener {
-                viewPager.arrowScroll(View.FOCUS_RIGHT)
-            }
-        }
+  private fun setupArrows() {
+    imageLoader.fromResource(R.drawable.ic_arrow_down_24dp)
+        .into(binding.arrowLeft)
+        .bind(viewLifecycle)
+    binding.apply {
+      arrowLeft.rotation = 90F
+      arrowLeft.setOnDebouncedClickListener {
+        viewPager.arrowScroll(View.FOCUS_LEFT)
+      }
     }
 
-    override fun onResume() {
-        super.onResume()
-        toolbarActivity.withToolbar {
-            it.title = "Open Source Licenses"
-            it.setUpEnabled(true)
-        }
+    imageLoader.fromResource(R.drawable.ic_arrow_down_24dp)
+        .into(binding.arrowRight)
+        .bind(viewLifecycle)
+    binding.apply {
+      arrowRight.rotation = -90F
+      arrowRight.setOnDebouncedClickListener {
+        viewPager.arrowScroll(View.FOCUS_RIGHT)
+      }
     }
+  }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.apply {
-            viewPager.removeOnPageChangeListener(listener)
-            viewPager.adapter = null
-            pagerAdapter.clear()
-
-            arrowLeft.setOnDebouncedClickListener(null)
-            arrowRight.setOnDebouncedClickListener(null)
-        }
+  override fun onResume() {
+    super.onResume()
+    toolbarActivity.withToolbar {
+      it.title = "Open Source Licenses"
+      it.setUpEnabled(true)
     }
+  }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(KEY_PAGE, binding.viewPager.currentItem)
-        super.onSaveInstanceState(outState)
+  override fun onDestroyView() {
+    super.onDestroyView()
+    binding.apply {
+      viewPager.removeOnPageChangeListener(listener)
+      viewPager.adapter = null
+      pagerAdapter.clear()
+
+      arrowLeft.setOnDebouncedClickListener(null)
+      arrowRight.setOnDebouncedClickListener(null)
     }
+  }
 
-    companion object {
+  override fun onSaveInstanceState(outState: Bundle) {
+    outState.putInt(KEY_PAGE, binding.viewPager.currentItem)
+    super.onSaveInstanceState(outState)
+  }
 
-        const val TAG = "AboutLibrariesFragment"
-        private const val KEY_PAGE = "key_current_page"
+  companion object {
 
-        @JvmStatic
-        fun show(
-            activity: FragmentActivity,
-            currentFragment: Fragment, @IdRes rootViewContainer: Int
-        ) {
-            val fragmentManager = activity.supportFragmentManager
-            if (fragmentManager.findFragmentByTag(TAG) == null) {
-                fragmentManager.beginTransaction().detach(currentFragment)
-                    .add(rootViewContainer, AboutLibrariesFragment(), TAG)
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
+    const val TAG = "AboutLibrariesFragment"
+    private const val KEY_PAGE = "key_current_page"
+
+    @JvmStatic
+    fun show(
+      activity: FragmentActivity,
+      currentFragment: Fragment, @IdRes rootViewContainer: Int
+    ) {
+      val fragmentManager = activity.supportFragmentManager
+      if (fragmentManager.findFragmentByTag(TAG) == null) {
+        fragmentManager.beginTransaction()
+            .detach(currentFragment)
+            .add(rootViewContainer, AboutLibrariesFragment(), TAG)
+            .addToBackStack(null)
+            .commit()
+      }
     }
+  }
 }

@@ -23,7 +23,7 @@ package com.pyamsoft.pydroid.loader.targets
  */
 interface Target<in T : Any> {
 
-    fun loadImage(image: T)
+  fun loadImage(image: T)
 
-    fun loadError(error: T?)
+  fun loadError(error: T?)
 }

@@ -24,18 +24,20 @@ import android.support.v7.preference.PreferenceManager
 
 internal class PYDroidPreferencesImpl internal constructor(context: Context) : RatingPreferences {
 
-    private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-        context.applicationContext
-    )
+  private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+      context.applicationContext
+  )
 
-    override fun getRatingAcceptedVersion(): Int = preferences.getInt(RATING_ACCEPTED_VERSION, 1)
+  override fun getRatingAcceptedVersion(): Int = preferences.getInt(RATING_ACCEPTED_VERSION, 1)
 
-    override fun setRatingAcceptedVersion(version: Int) {
-        preferences.edit().putInt(RATING_ACCEPTED_VERSION, version).apply()
-    }
+  override fun setRatingAcceptedVersion(version: Int) {
+    preferences.edit()
+        .putInt(RATING_ACCEPTED_VERSION, version)
+        .apply()
+  }
 
-    companion object {
+  companion object {
 
-        private const val RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version"
-    }
+    private const val RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version"
+  }
 }

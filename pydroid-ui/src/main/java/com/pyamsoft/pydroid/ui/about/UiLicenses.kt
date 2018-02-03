@@ -22,25 +22,26 @@ import com.pyamsoft.pydroid.base.about.Licenses
 
 internal object UiLicenses {
 
-    @JvmStatic
-    internal fun addLicenses() {
-        Licenses.create(
-            Names.MATERIAL_VIEW_PAGER_INDICATOR,
-            HomePageUrls.MATERIAL_VIEW_PAGER_INDICATOR,
-            LicenseLocations.MATERIAL_VIEW_PAGER_INDICATOR
-        )
-    }
+  @JvmStatic
+  internal fun addLicenses() {
+    Licenses.create(
+        Names.MATERIAL_VIEW_PAGER_INDICATOR,
+        HomePageUrls.MATERIAL_VIEW_PAGER_INDICATOR,
+        LicenseLocations.MATERIAL_VIEW_PAGER_INDICATOR
+    )
+  }
 
-    private object Names {
-        internal const val MATERIAL_VIEW_PAGER_INDICATOR = "Material ViewPagerIndicator"
-    }
+  private object Names {
+    internal const val MATERIAL_VIEW_PAGER_INDICATOR = "Material ViewPagerIndicator"
+  }
 
-    private object HomePageUrls {
-        internal const val MATERIAL_VIEW_PAGER_INDICATOR =
-            "https://github.com/ronaldsmartin/Material-ViewPagerIndicator"
-    }
+  private object HomePageUrls {
+    internal const val MATERIAL_VIEW_PAGER_INDICATOR =
+      "https://github.com/ronaldsmartin/Material-ViewPagerIndicator"
+  }
 
-    private object LicenseLocations {
-        internal const val MATERIAL_VIEW_PAGER_INDICATOR = Licenses.LicenseLocations._BASE + "material-view-pager"
-    }
+  private object LicenseLocations {
+    internal const val MATERIAL_VIEW_PAGER_INDICATOR =
+      Licenses.LicenseLocations._BASE + "material-view-pager"
+  }
 }

@@ -23,71 +23,71 @@ apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-    compileSdkVersion rootProject.ext.maxSdk
+  compileSdkVersion rootProject.ext.maxSdk
 
-    //noinspection GroovyMissingReturnStatement
-    defaultConfig {
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.maxSdk
+  //noinspection GroovyMissingReturnStatement
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdk
+    targetSdkVersion rootProject.ext.maxSdk
 
-        // For vector drawables
-        vectorDrawables.useSupportLibrary = true
+    // For vector drawables
+    vectorDrawables.useSupportLibrary = true
 
-        // Consumer proguard file
-        consumerProguardFiles "proguard-rules.pro"
+    // Consumer proguard file
+    consumerProguardFiles "proguard-rules.pro"
 
-        // Only English, I don't have any translations
-        resConfigs "en"
+    // Only English, I don't have any translations
+    resConfigs "en"
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                // Fix kapt
-                includeCompileClasspath = true
+    javaCompileOptions {
+      annotationProcessorOptions {
+        // Fix kapt
+        includeCompileClasspath = true
 
-                // Autovalue generates default empty collections and setters
-                arguments = ['autovaluegson.defaultCollectionsToEmpty'        : 'true',
-                             'autovaluegson.mutableAdaptersWithDefaultSetters': 'true']
-            }
-        }
+        // Autovalue generates default empty collections and setters
+        arguments = ['autovaluegson.defaultCollectionsToEmpty'        : 'true',
+                     'autovaluegson.mutableAdaptersWithDefaultSetters': 'true']
+      }
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+
+  buildTypes {
+    debug {
+      minifyEnabled false
+      shrinkResources false
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+    release {
+      minifyEnabled false
+      shrinkResources false
+      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
     }
-
-    buildTypes {
-        debug {
-            minifyEnabled false
-            shrinkResources false
-        }
-
-        release {
-            minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-        }
-    }
+  }
 }
 
 dependencies {
-    // Android support library.
-    compile "com.android.support:appcompat-v7:$supportLib"
-    compile "com.android.support:preference-v14:$supportLib"
+  // Android support library.
+  compile "com.android.support:appcompat-v7:$supportLib"
+  compile "com.android.support:preference-v14:$supportLib"
 
-    // Auto value
-    provided "com.google.auto.value:auto-value:$autoValue"
-    provided "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
-    kapt "com.google.auto.value:auto-value:$autoValue"
-    kapt "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
-    compile "com.google.code.gson:gson:$gson"
+  // Auto value
+  provided "com.google.auto.value:auto-value:$autoValue"
+  provided "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
+  kapt "com.google.auto.value:auto-value:$autoValue"
+  kapt "com.ryanharter.auto.value:auto-value-gson:$autoValueGSON"
+  compile "com.google.code.gson:gson:$gson"
 
-    // Retrofit
-    compile "com.squareup.retrofit2:retrofit:$retrofit"
-    compile "com.squareup.retrofit2:converter-gson:$retrofit"
-    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
-    compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
+  // Retrofit
+  compile "com.squareup.retrofit2:retrofit:$retrofit"
+  compile "com.squareup.retrofit2:converter-gson:$retrofit"
+  compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
+  compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 
-    compile project(":pydroid")
+  compile project(":pydroid")
 }
 

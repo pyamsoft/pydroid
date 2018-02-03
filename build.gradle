@@ -19,95 +19,95 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext {
-        kotlin_version = '1.2.21'
-        plugin_version = "3.0.1"
-    }
-    repositories {
-        jcenter()
-        google()
+  ext {
+    kotlin_version = '1.2.21'
+    plugin_version = "3.0.1"
+  }
+  repositories {
+    jcenter()
+    google()
 
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-
-        maven {
-            url "https://maven.google.com"
-        }
-
-        maven {
-            url "https://jitpack.io"
-        }
+    maven {
+      url "https://plugins.gradle.org/m2/"
     }
 
-    ext {
-
-        minSdk = 16
-        maxSdk = 27
-
-        supportLib = "27.0.2"
-        timber = "4.6.0"
-        autoValue = "1.5.3"
-        autoValueGSON = "0.7.0"
-        retrofit = "2.3.0"
-        retrofitLogging = "3.9.1"
-        rxjava = "2.1.9"
-        rxandroid = "2.0.1"
-        viewPagerIndicator = "1.0.4"
-        gson = "2.8.2"
-        ktlint = "3.0.0"
-        lifecycleRuntime = "1.1.0"
-        lifecycleCompiler = "1.1.0"
-        constraintLayout = "1.0.2"
+    maven {
+      url "https://maven.google.com"
     }
 
-    dependencies {
-        classpath "com.android.tools.build:gradle:$plugin_version"
-
-        // Dex count
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
-
-        // Gradle version checker
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-
-        // To publish with JitPack
-        classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
-
-        // Kotlin
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // Ktlint
-        classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:$ktlint"
+    maven {
+      url "https://jitpack.io"
     }
+  }
+
+  ext {
+
+    minSdk = 16
+    maxSdk = 27
+
+    supportLib = "27.0.2"
+    timber = "4.6.0"
+    autoValue = "1.5.3"
+    autoValueGSON = "0.7.0"
+    retrofit = "2.3.0"
+    retrofitLogging = "3.9.1"
+    rxjava = "2.1.9"
+    rxandroid = "2.0.1"
+    viewPagerIndicator = "1.0.4"
+    gson = "2.8.2"
+    ktlint = "3.0.0"
+    lifecycleRuntime = "1.1.0"
+    lifecycleCompiler = "1.1.0"
+    constraintLayout = "1.0.2"
+  }
+
+  dependencies {
+    classpath "com.android.tools.build:gradle:$plugin_version"
+
+    // Dex count
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
+
+    // Gradle version checker
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+
+    // To publish with JitPack
+    classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
+
+    // Kotlin
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+    // Ktlint
+    classpath "gradle.plugin.org.jlleitschuh.gradle:ktlint-gradle:$ktlint"
+  }
 }
 
 subprojects {
-    apply plugin: "org.jlleitschuh.gradle.ktlint"
-    apply plugin: "com.github.ben-manes.versions"
+  apply plugin: "org.jlleitschuh.gradle.ktlint"
+  apply plugin: "com.github.ben-manes.versions"
 
-    ktlint {
-        version = "0.15.0"
-        android = true
-    }
+  ktlint {
+    version = "0.15.0"
+    android = true
+  }
 }
 
 allprojects {
-    repositories {
-        jcenter()
-        google()
+  repositories {
+    jcenter()
+    google()
 
-        maven {
-            url "https://maven.google.com"
-        }
-
-        maven {
-            url "https://jitpack.io"
-        }
+    maven {
+      url "https://maven.google.com"
     }
+
+    maven {
+      url "https://jitpack.io"
+    }
+  }
 }
 
 task clean(type: Delete) {
-    delete rootProject.buildDir
+  delete rootProject.buildDir
 }
 
 // JitPack stuff

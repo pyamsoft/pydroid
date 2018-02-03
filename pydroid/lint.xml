@@ -18,9 +18,9 @@
   -->
 
 <lint>
-    <issue id="all">
-        <ignore path="build"/>
-        <ignore path="assets"/>
-        <ignore path="rel"/>
-    </issue>
+  <issue id="all">
+    <ignore path="build"/>
+    <ignore path="assets"/>
+    <ignore path="rel"/>
+  </issue>
 </lint>

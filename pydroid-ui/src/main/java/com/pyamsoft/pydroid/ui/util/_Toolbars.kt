@@ -25,58 +25,60 @@ import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.Toolbar
 import android.util.TypedValue
-import com.pyamsoft.pydroid.ui.R
 
 private var cachedIcon: Drawable? = null
 
 private fun Toolbar.loadIcon(): Drawable? {
-    // Pull icon from cache if possible
-    var icon = cachedIcon
+  // Pull icon from cache if possible
+  var icon = cachedIcon
 
-    if (icon == null) {
-        // If not icon is available, resolve it from the current theme
-        val typedValue = TypedValue()
-        context.theme.resolveAttribute(R.attr.toolbarStyle, typedValue, true)
-        val typedArray: TypedArray = context.obtainStyledAttributes(
-            typedValue.data,
-            intArrayOf(R.attr.homeAsUpIndicator)
-        )
-        icon = typedArray.getDrawable(0)
-        typedArray.recycle()
+  if (icon == null) {
+    // If not icon is available, resolve it from the current theme
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(R.attr.toolbarStyle, typedValue, true)
+    val typedArray: TypedArray = context.obtainStyledAttributes(
+        typedValue.data,
+        intArrayOf(R.attr.homeAsUpIndicator)
+    )
+    icon = typedArray.getDrawable(0)
+    typedArray.recycle()
 
-        // Cache the loaded icon
-        if (icon != null) {
-            cachedIcon = icon
-        }
+    // Cache the loaded icon
+    if (icon != null) {
+      cachedIcon = icon
     }
+  }
 
-    return icon
+  return icon
 }
 
 private fun Toolbar.showUpIcon(customIcon: Drawable? = null) {
-    var icon: Drawable?
+  var icon: Drawable?
 
-    if (customIcon != null) {
-        // Use the custom icon if available
-        icon = customIcon
-    } else {
-        // Use the current icon if available
-        icon = navigationIcon
-    }
+  if (customIcon != null) {
+    // Use the custom icon if available
+    icon = customIcon
+  } else {
+    // Use the current icon if available
+    icon = navigationIcon
+  }
 
-    if (icon == null) {
-        icon = loadIcon()
-    }
+  if (icon == null) {
+    icon = loadIcon()
+  }
 
-    if (icon != null) {
-        navigationIcon = icon
-    }
+  if (icon != null) {
+    navigationIcon = icon
+  }
 }
 
-fun Toolbar.setUpEnabled(up: Boolean, customIcon: Drawable? = null) {
-    if (up) {
-        showUpIcon(customIcon)
-    } else {
-        navigationIcon = null
-    }
+fun Toolbar.setUpEnabled(
+  up: Boolean,
+  customIcon: Drawable? = null
+) {
+  if (up) {
+    showUpIcon(customIcon)
+  } else {
+    navigationIcon = null
+  }
 }

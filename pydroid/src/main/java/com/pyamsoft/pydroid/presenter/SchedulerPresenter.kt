@@ -24,14 +24,14 @@ import com.pyamsoft.pydroid.ktext.enforceMainThread
 import io.reactivex.Scheduler
 
 abstract class SchedulerPresenter<V : Any> protected constructor(
-    protected val computationScheduler: Scheduler,
-    protected val ioScheduler: Scheduler,
-    protected val mainThreadScheduler: Scheduler
+  protected val computationScheduler: Scheduler,
+  protected val ioScheduler: Scheduler,
+  protected val mainThreadScheduler: Scheduler
 ) : Presenter<V>() {
 
-    init {
-        computationScheduler.enforceComputation()
-        ioScheduler.enforceIo()
-        mainThreadScheduler.enforceMainThread()
-    }
+  init {
+    computationScheduler.enforceComputation()
+    ioScheduler.enforceIo()
+    mainThreadScheduler.enforceMainThread()
+  }
 }

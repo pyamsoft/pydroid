@@ -17,86 +17,95 @@
   -->
 <layout>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/social_media_bar_size"
-        android:baselineAligned="false"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp">
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:id="@+id/linearLayout"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/social_media_bar_size"
+      android:baselineAligned="false"
+      android:paddingEnd="16dp"
+      android:paddingStart="16dp"
+      >
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="8dp">
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:padding="8dp"
+        >
 
-            <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
-                android:id="@+id/google_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/blank"
-                android:scaleType="centerInside"
-                tools:src="@drawable/google_play" />
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+          android:id="@+id/google_play"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
+          tools:src="@drawable/google_play"
+          />
 
-        </FrameLayout>
+    </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="8dp">
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:padding="8dp"
+        >
 
-            <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
-                android:id="@+id/blogger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/blank"
-                android:scaleType="centerInside"
-                tools:src="@drawable/blogger_icon" />
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+          android:id="@+id/blogger"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
+          tools:src="@drawable/blogger_icon"
+          />
 
-        </FrameLayout>
+    </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="8dp">
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:padding="8dp"
+        >
 
-            <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
-                android:id="@+id/google_plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/blank"
-                android:scaleType="centerInside"
-                tools:src="@drawable/google_plus" />
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+          android:id="@+id/google_plus"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
+          tools:src="@drawable/google_plus"
+          />
 
-        </FrameLayout>
+    </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:padding="8dp">
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:padding="8dp"
+        >
 
-            <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
-                android:id="@+id/facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:contentDescription="@string/blank"
-                android:scaleType="centerInside"
-                tools:src="@drawable/facebook_icon" />
+      <com.pyamsoft.pydroid.ui.social.VerticalSquareImageView
+          android:id="@+id/facebook"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="centerInside"
+          tools:src="@drawable/facebook_icon"
+          />
 
-        </FrameLayout>
+    </FrameLayout>
 
-    </LinearLayout>
+  </LinearLayout>
 </layout>

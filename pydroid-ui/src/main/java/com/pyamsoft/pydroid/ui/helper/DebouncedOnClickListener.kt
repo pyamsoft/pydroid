@@ -26,36 +26,36 @@ import android.view.View
  */
 abstract class DebouncedOnClickListener : View.OnClickListener {
 
-    final override fun onClick(view: View) {
-        if (enabled) {
-            enabled = false
-            view.post(enableAgain)
-            doClick(view)
-        }
+  final override fun onClick(view: View) {
+    if (enabled) {
+      enabled = false
+      view.post(enableAgain)
+      doClick(view)
     }
+  }
 
-    abstract fun doClick(view: View)
+  abstract fun doClick(view: View)
 
-    companion object {
-        private var enabled: Boolean = true
-        private var enableAgain: Runnable = Runnable { enabled = true }
+  companion object {
+    private var enabled: Boolean = true
+    private var enableAgain: Runnable = Runnable { enabled = true }
 
-        @CheckResult
-        @JvmStatic
-        inline fun create(crossinline func: (View) -> Unit): View.OnClickListener {
-            return object : DebouncedOnClickListener() {
-                override fun doClick(view: View) {
-                    func(view)
-                }
-            }
+    @CheckResult
+    @JvmStatic
+    inline fun create(crossinline func: (View) -> Unit): View.OnClickListener {
+      return object : DebouncedOnClickListener() {
+        override fun doClick(view: View) {
+          func(view)
         }
+      }
     }
+  }
 }
 
 fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?) {
-    setOnClickListener(listener)
+  setOnClickListener(listener)
 }
 
 inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> Unit) {
-    setOnClickListener(DebouncedOnClickListener.create(func))
+  setOnClickListener(DebouncedOnClickListener.create(func))
 }

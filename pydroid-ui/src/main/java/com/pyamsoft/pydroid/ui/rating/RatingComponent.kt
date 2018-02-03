@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.ui.rating
 
 internal interface RatingComponent {
 
-    fun inject(activity: RatingActivity)
+  fun inject(activity: RatingActivity)
 
-    fun inject(dialog: RatingDialog)
+  fun inject(dialog: RatingDialog)
 }

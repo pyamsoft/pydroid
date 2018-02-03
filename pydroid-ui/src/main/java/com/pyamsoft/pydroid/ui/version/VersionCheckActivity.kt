@@ -27,33 +27,39 @@ import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 
-abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider, VersionCheckPresenter.View {
+abstract class VersionCheckActivity : ActivityBase(),
+    VersionCheckProvider,
+    VersionCheckPresenter.View {
 
-    internal lateinit var presenter: VersionCheckPresenter
+  internal lateinit var presenter: VersionCheckPresenter
 
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        PYDroid.obtain().plusVersionCheckComponent(
+  @CallSuper
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    PYDroid.obtain()
+        .plusVersionCheckComponent(
             packageName,
             currentApplicationVersion
         )
-            .inject(this)
-        presenter.bind(this, this)
-    }
+        .inject(this)
+    presenter.bind(this, this)
+  }
 
-    // Start in post resume in case dialog launches before resume() is complete for fragments
-    override fun onPostResume() {
-        super.onPostResume()
-        presenter.checkForUpdates(false)
-    }
+  // Start in post resume in case dialog launches before resume() is complete for fragments
+  override fun onPostResume() {
+    super.onPostResume()
+    presenter.checkForUpdates(false)
+  }
 
-    override fun onUpdatedVersionFound(current: Int, updated: Int) {
-        Timber.d("Updated version found. %d => %d", current, updated)
-        DialogUtil.guaranteeSingleDialogFragment(
-            this,
-            VersionUpgradeDialog.newInstance(applicationName, current, updated),
-            VersionUpgradeDialog.TAG
-        )
-    }
+  override fun onUpdatedVersionFound(
+    current: Int,
+    updated: Int
+  ) {
+    Timber.d("Updated version found. %d => %d", current, updated)
+    DialogUtil.guaranteeSingleDialogFragment(
+        this,
+        VersionUpgradeDialog.newInstance(applicationName, current, updated),
+        VersionUpgradeDialog.TAG
+    )
+  }
 }

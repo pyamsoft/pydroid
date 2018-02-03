@@ -24,15 +24,18 @@ import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
 
 internal class ResourceImageCache internal constructor() : ImageCache<@DrawableRes Int, Drawable> {
 
-    private val cache: MutableMap<Int, Drawable> = LinkedHashMap()
+  private val cache: MutableMap<Int, Drawable> = LinkedHashMap()
 
-    override fun clearCache() {
-        cache.clear()
-    }
+  override fun clearCache() {
+    cache.clear()
+  }
 
-    override fun cache(key: ImageCacheKey<Int>, entry: Drawable) {
-        cache.put(key.data, entry)
-    }
+  override fun cache(
+    key: ImageCacheKey<Int>,
+    entry: Drawable
+  ) {
+    cache.put(key.data, entry)
+  }
 
-    override fun retrieve(key: ImageCacheKey<Int>): Drawable? = cache[key.data]
+  override fun retrieve(key: ImageCacheKey<Int>): Drawable? = cache[key.data]
 }

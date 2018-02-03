@@ -22,9 +22,12 @@ import com.pyamsoft.pydroid.data.Cache
 
 interface ImageCache<in K : Any, T : Any> : Cache {
 
-    fun cache(key: ImageCacheKey<K>, entry: T)
+  fun cache(
+    key: ImageCacheKey<K>,
+    entry: T
+  )
 
-    fun retrieve(key: ImageCacheKey<K>): T?
+  fun retrieve(key: ImageCacheKey<K>): T?
 
-    data class ImageCacheKey<out K>(val data: K)
+  data class ImageCacheKey<out K>(val data: K)
 }

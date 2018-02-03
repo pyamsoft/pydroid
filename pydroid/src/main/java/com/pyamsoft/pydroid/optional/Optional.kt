@@ -26,10 +26,10 @@ package com.pyamsoft.pydroid.optional
  */
 interface Optional<out T : Any> {
 
-    interface Present<out T : Any> : Optional<T> {
+  interface Present<out T : Any> : Optional<T> {
 
-        val value: T
-    }
+    val value: T
+  }
 
-    interface Absent : Optional<Nothing>
+  interface Absent : Optional<Nothing>
 }

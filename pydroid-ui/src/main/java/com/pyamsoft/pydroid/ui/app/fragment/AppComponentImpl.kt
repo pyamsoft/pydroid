@@ -22,13 +22,14 @@ import com.pyamsoft.pydroid.base.version.VersionCheckModule
 import com.pyamsoft.pydroid.ui.rating.RatingModule
 
 internal class AppComponentImpl internal constructor(
-    private val versionCheckModule: VersionCheckModule,
-    private val ratingModule: RatingModule,
-    private val packageName: String, private val currentVersion: Int
+  private val versionCheckModule: VersionCheckModule,
+  private val ratingModule: RatingModule,
+  private val packageName: String,
+  private val currentVersion: Int
 ) : AppComponent {
 
-    override fun inject(fragment: SettingsPreferenceFragment) {
-        fragment.versionPresenter = versionCheckModule.getPresenter(packageName, currentVersion)
-        fragment.ratingPresenter = ratingModule.getPresenter(currentVersion)
-    }
+  override fun inject(fragment: SettingsPreferenceFragment) {
+    fragment.versionPresenter = versionCheckModule.getPresenter(packageName, currentVersion)
+    fragment.ratingPresenter = ratingModule.getPresenter(currentVersion)
+  }
 }

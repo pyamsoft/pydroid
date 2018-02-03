@@ -21,11 +21,12 @@ package com.pyamsoft.pydroid.ui.version
 import com.pyamsoft.pydroid.base.version.VersionCheckModule
 
 internal class VersionCheckComponentImpl internal constructor(
-    private val versionCheckModule: VersionCheckModule,
-    private val packageName: String, private val currentVersion: Int
+  private val versionCheckModule: VersionCheckModule,
+  private val packageName: String,
+  private val currentVersion: Int
 ) : VersionCheckComponent {
 
-    override fun inject(activity: VersionCheckActivity) {
-        activity.presenter = versionCheckModule.getPresenter(packageName, currentVersion)
-    }
+  override fun inject(activity: VersionCheckActivity) {
+    activity.presenter = versionCheckModule.getPresenter(packageName, currentVersion)
+  }
 }

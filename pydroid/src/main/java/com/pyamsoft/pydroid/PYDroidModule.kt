@@ -24,22 +24,22 @@ import io.reactivex.Scheduler
 
 interface PYDroidModule {
 
-    // Singleton
-    val isDebug: Boolean
+  // Singleton
+  val isDebug: Boolean
 
-    // Singleton
-    @CheckResult
-    fun provideContext(): Context
+  // Singleton
+  @CheckResult
+  fun provideContext(): Context
 
-    // Singleton
-    @CheckResult
-    fun provideIoScheduler(): Scheduler
+  // Singleton
+  @CheckResult
+  fun provideIoScheduler(): Scheduler
 
-    // Singleton
-    @CheckResult
-    fun provideComputationScheduler(): Scheduler
+  // Singleton
+  @CheckResult
+  fun provideComputationScheduler(): Scheduler
 
-    // Singleton
-    @CheckResult
-    fun provideMainThreadScheduler(): Scheduler
+  // Singleton
+  @CheckResult
+  fun provideMainThreadScheduler(): Scheduler
 }

@@ -24,33 +24,37 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 internal class RatingPresenter internal constructor(
-    private val currentVersion: Int,
-    private val interactor: RatingInteractor,
-    computationScheduler: Scheduler, ioScheduler: Scheduler,
-    mainThreadScheduler: Scheduler
+  private val currentVersion: Int,
+  private val interactor: RatingInteractor,
+  computationScheduler: Scheduler,
+  ioScheduler: Scheduler,
+  mainThreadScheduler: Scheduler
 ) : SchedulerPresenter<View>(computationScheduler, ioScheduler, mainThreadScheduler) {
 
-    internal fun loadRatingDialog(force: Boolean) {
-        dispose {
-            interactor.needsToViewRating(force, currentVersion).subscribeOn(
-                ioScheduler
-            ).observeOn(mainThreadScheduler).subscribe({
-                if (it) {
-                    view?.onShowRatingDialog()
-                }
-            }, {
-                Timber.e(it, "on error loading rating dialog")
-                view?.onRatingDialogLoadError(it)
-            })
-        }
+  internal fun loadRatingDialog(force: Boolean) {
+    dispose {
+      interactor.needsToViewRating(force, currentVersion)
+          .subscribeOn(
+              ioScheduler
+          )
+          .observeOn(mainThreadScheduler)
+          .subscribe({
+            if (it) {
+              view?.onShowRatingDialog()
+            }
+          }, {
+            Timber.e(it, "on error loading rating dialog")
+            view?.onRatingDialogLoadError(it)
+          })
     }
+  }
 
-    internal interface View : RatingLoadCallback
+  internal interface View : RatingLoadCallback
 
-    internal interface RatingLoadCallback {
+  internal interface RatingLoadCallback {
 
-        fun onShowRatingDialog()
+    fun onShowRatingDialog()
 
-        fun onRatingDialogLoadError(throwable: Throwable)
-    }
+    fun onRatingDialogLoadError(throwable: Throwable)
+  }
 }

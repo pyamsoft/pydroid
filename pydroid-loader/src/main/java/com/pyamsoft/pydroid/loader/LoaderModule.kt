@@ -23,11 +23,11 @@ import com.pyamsoft.pydroid.data.Cache
 
 interface LoaderModule {
 
-    // Singleton
-    @CheckResult
-    fun provideImageLoader(): ImageLoader
+  // Singleton
+  @CheckResult
+  fun provideImageLoader(): ImageLoader
 
-    // Singleton
-    @CheckResult
-    fun provideImageLoaderCache(): Cache
+  // Singleton
+  @CheckResult
+  fun provideImageLoaderCache(): Cache
 }

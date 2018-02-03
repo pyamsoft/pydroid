@@ -27,59 +27,65 @@ import com.pyamsoft.pydroid.ui.social.Linker
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
-    private var latestVersion: Int = 0
-    private var currentVersion: Int = 0
-    private var applicationName: String? = null
+  private var latestVersion: Int = 0
+  private var currentVersion: Int = 0
+  private var applicationName: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            latestVersion = it.getInt(KEY_LATEST_VERSION, 0)
-            if (latestVersion == 0) {
-                throw RuntimeException("Could not find latest version")
-            }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    arguments?.let {
+      latestVersion = it.getInt(KEY_LATEST_VERSION, 0)
+      if (latestVersion == 0) {
+        throw RuntimeException("Could not find latest version")
+      }
 
-            currentVersion = it.getInt(KEY_CURRENT_VERSION, 0)
-            if (currentVersion == 0) {
-                throw RuntimeException("Could not find current version")
-            }
+      currentVersion = it.getInt(KEY_CURRENT_VERSION, 0)
+      if (currentVersion == 0) {
+        throw RuntimeException("Could not find current version")
+      }
 
-            applicationName = it.getString(KEY_NAME, null)
-        }
+      applicationName = it.getString(KEY_NAME, null)
     }
+  }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val message = """|A new version of $applicationName is available!
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val message = """|A new version of $applicationName is available!
                      |Current version: $currentVersion
                      |Latest verson: $latestVersion""".trimMargin()
-        return AlertDialog.Builder(activity!!).setTitle("New version available").setMessage(
+    return AlertDialog.Builder(activity!!)
+        .setTitle("New version available")
+        .setMessage(
             message
-        ).setPositiveButton("Update") { _, _ ->
-            Linker.clickAppPage(context!!, context!!.packageName)
-            dismiss()
-        }.setNegativeButton("Later") { _, _ -> dismiss() }.create()
-    }
-
-    companion object {
-
-        internal const val TAG = "VersionUpgradeDialog"
-        private const val KEY_NAME = "key_name"
-        private const val KEY_LATEST_VERSION = "key_latest_version"
-        private const val KEY_CURRENT_VERSION = "key_current_version"
-
-        @JvmStatic
-        @CheckResult
-        fun newInstance(
-            applicationName: String, currentVersion: Int,
-            latestVersion: Int
-        ): VersionUpgradeDialog {
-            val args = Bundle()
-            val fragment = VersionUpgradeDialog()
-            args.putString(KEY_NAME, applicationName)
-            args.putInt(KEY_CURRENT_VERSION, currentVersion)
-            args.putInt(KEY_LATEST_VERSION, latestVersion)
-            fragment.arguments = args
-            return fragment
+        )
+        .setPositiveButton("Update") { _, _ ->
+          Linker.clickAppPage(context!!, context!!.packageName)
+          dismiss()
         }
+        .setNegativeButton("Later") { _, _ -> dismiss() }
+        .create()
+  }
+
+  companion object {
+
+    internal const val TAG = "VersionUpgradeDialog"
+    private const val KEY_NAME = "key_name"
+    private const val KEY_LATEST_VERSION = "key_latest_version"
+    private const val KEY_CURRENT_VERSION = "key_current_version"
+
+    @JvmStatic
+    @CheckResult
+    fun newInstance(
+      applicationName: String,
+      currentVersion: Int,
+      latestVersion: Int
+    ): VersionUpgradeDialog {
+      val args = Bundle()
+      val fragment = VersionUpgradeDialog()
+      args.putString(KEY_NAME, applicationName)
+      args.putInt(KEY_CURRENT_VERSION, currentVersion)
+      args.putInt(KEY_LATEST_VERSION, latestVersion)
+      fragment.arguments = args
+      return fragment
     }
+  }
 }

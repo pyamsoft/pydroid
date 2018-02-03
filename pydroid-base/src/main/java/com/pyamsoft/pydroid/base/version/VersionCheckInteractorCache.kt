@@ -23,34 +23,39 @@ import io.reactivex.Single
 import java.util.concurrent.TimeUnit
 
 internal class VersionCheckInteractorCache internal constructor(
-    private val impl: VersionCheckInteractor
+  private val impl: VersionCheckInteractor
 ) : VersionCheckInteractor, Cache {
 
-    private var cachedResponse: Single<Int>? = null
-    private var responseLastAccess: Long = 0L
+  private var cachedResponse: Single<Int>? = null
+  private var responseLastAccess: Long = 0L
 
-    override fun checkVersion(packageName: String, force: Boolean): Single<Int> {
-        return Single.defer {
-            val cache = cachedResponse
-            val response: Single<Int>
-            val currentTime = System.currentTimeMillis()
-            if (force || cache == null || responseLastAccess + THIRTY_SECONDS_MILLIS < currentTime) {
-                response = impl.checkVersion(packageName, force).cache()
-                cachedResponse = response
-                responseLastAccess = currentTime
-            } else {
-                response = cache
-            }
-            return@defer response
-        }.doOnError { clearCache() }
+  override fun checkVersion(
+    packageName: String,
+    force: Boolean
+  ): Single<Int> {
+    return Single.defer {
+      val cache = cachedResponse
+      val response: Single<Int>
+      val currentTime = System.currentTimeMillis()
+      if (force || cache == null || responseLastAccess + THIRTY_SECONDS_MILLIS < currentTime) {
+        response = impl.checkVersion(packageName, force)
+            .cache()
+        cachedResponse = response
+        responseLastAccess = currentTime
+      } else {
+        response = cache
+      }
+      return@defer response
     }
+        .doOnError { clearCache() }
+  }
 
-    override fun clearCache() {
-        cachedResponse = null
-    }
+  override fun clearCache() {
+    cachedResponse = null
+  }
 
-    companion object {
+  companion object {
 
-        private val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)
-    }
+    private val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)
+  }
 }

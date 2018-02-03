@@ -24,37 +24,40 @@ import io.reactivex.Single
 import timber.log.Timber
 
 internal class AboutLibrariesInteractorImpl internal constructor(
-    private val dataSource: AboutLibrariesDataSource
+  private val dataSource: AboutLibrariesDataSource
 ) : AboutLibrariesInteractor {
 
-    override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
-        return Observable.defer {
-            Observable.fromIterable(Licenses.getLicenses())
-        }.toSortedList { (name1), (name2) ->
-                name1.compareTo(name2)
-            }.flatMapObservable { Observable.fromIterable(it) }.concatMap { model ->
-            loadLicenseText(model).flatMapObservable {
-                Observable.just(
-                    AboutLibrariesModel.create(
-                        model.name, model.homepage, it
-                    )
+  override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
+    return Observable.defer {
+      Observable.fromIterable(Licenses.getLicenses())
+    }
+        .toSortedList { (name1), (name2) ->
+          name1.compareTo(name2)
+        }
+        .flatMapObservable { Observable.fromIterable(it) }
+        .concatMap { model ->
+          loadLicenseText(model).flatMapObservable {
+            Observable.just(
+                AboutLibrariesModel.create(
+                    model.name, model.homepage, it
                 )
-            }
+            )
+          }
         }
-    }
+  }
 
-    @CheckResult
-    private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
-        return Single.fromCallable<String> {
-            val name = model.name
+  @CheckResult
+  private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
+    return Single.fromCallable<String> {
+      val name = model.name
 
-            if (model.customContent.isEmpty()) {
-                Timber.d("Load from asset location: %s (%s)", name, model.license)
-                return@fromCallable dataSource.loadNewLicense(model.license)
-            } else {
-                Timber.d("License: %s provides custom content", name)
-                return@fromCallable model.customContent
-            }
-        }
+      if (model.customContent.isEmpty()) {
+        Timber.d("Load from asset location: %s (%s)", name, model.license)
+        return@fromCallable dataSource.loadNewLicense(model.license)
+      } else {
+        Timber.d("License: %s provides custom content", name)
+        return@fromCallable model.customContent
+      }
     }
+  }
 }

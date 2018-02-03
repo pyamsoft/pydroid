@@ -28,18 +28,24 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
 internal interface PYDroidComponent {
 
-    fun inject(fragment: AboutLibrariesFragment)
+  fun inject(fragment: AboutLibrariesFragment)
 
-    fun inject(activity: TamperActivity)
+  fun inject(activity: TamperActivity)
 
-    fun inject(layout: SocialMediaLayout)
+  fun inject(layout: SocialMediaLayout)
 
-    @CheckResult
-    fun plusVersionCheckComponent(packageName: String, currentVersion: Int): VersionCheckComponent
+  @CheckResult
+  fun plusVersionCheckComponent(
+    packageName: String,
+    currentVersion: Int
+  ): VersionCheckComponent
 
-    @CheckResult
-    fun plusAppComponent(packageName: String, currentVersion: Int): AppComponent
+  @CheckResult
+  fun plusAppComponent(
+    packageName: String,
+    currentVersion: Int
+  ): AppComponent
 
-    @CheckResult
-    fun plusRatingComponent(currentVersion: Int): RatingComponent
+  @CheckResult
+  fun plusRatingComponent(currentVersion: Int): RatingComponent
 }

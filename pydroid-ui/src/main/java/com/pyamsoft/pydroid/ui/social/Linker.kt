@@ -23,34 +23,38 @@ import com.pyamsoft.pydroid.util.NetworkUtil
 
 object Linker {
 
-    private const val BASE_MARKET = "market://details?id="
-    private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
-    private const val GOOGLE_PLAY_DEVELOPER_PAGE = "https://play.google.com/store/apps/dev?id=5257476342110165153"
-    private const val GOOGLE_PLUS = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts"
-    private const val OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/"
+  private const val BASE_MARKET = "market://details?id="
+  private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
+  private const val GOOGLE_PLAY_DEVELOPER_PAGE =
+    "https://play.google.com/store/apps/dev?id=5257476342110165153"
+  private const val GOOGLE_PLUS = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts"
+  private const val OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/"
 
-    @JvmStatic
-    fun clickAppPage(context: Context, link: String) {
-        NetworkUtil.newLink(context.applicationContext, BASE_MARKET + link)
-    }
+  @JvmStatic
+  fun clickAppPage(
+    context: Context,
+    link: String
+  ) {
+    NetworkUtil.newLink(context.applicationContext, BASE_MARKET + link)
+  }
 
-    @JvmStatic
-    fun clickGooglePlay(context: Context) {
-        NetworkUtil.newLink(context.applicationContext, GOOGLE_PLAY_DEVELOPER_PAGE)
-    }
+  @JvmStatic
+  fun clickGooglePlay(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, GOOGLE_PLAY_DEVELOPER_PAGE)
+  }
 
-    @JvmStatic
-    fun clickGooglePlus(context: Context) {
-        NetworkUtil.newLink(context.applicationContext, GOOGLE_PLUS)
-    }
+  @JvmStatic
+  fun clickGooglePlus(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, GOOGLE_PLUS)
+  }
 
-    @JvmStatic
-    fun clickBlogger(context: Context) {
-        NetworkUtil.newLink(context.applicationContext, OFFICIAL_BLOG)
-    }
+  @JvmStatic
+  fun clickBlogger(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, OFFICIAL_BLOG)
+  }
 
-    @JvmStatic
-    fun clickFacebook(context: Context) {
-        NetworkUtil.newLink(context.applicationContext, FACEBOOK)
-    }
+  @JvmStatic
+  fun clickFacebook(context: Context) {
+    NetworkUtil.newLink(context.applicationContext, FACEBOOK)
+  }
 }

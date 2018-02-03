@@ -20,5 +20,5 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 internal interface AppComponent {
 
-    fun inject(fragment: SettingsPreferenceFragment)
+  fun inject(fragment: SettingsPreferenceFragment)
 }

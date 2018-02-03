@@ -21,25 +21,31 @@ package com.pyamsoft.pydroid.ui.helper
 import android.view.View
 
 inline fun <T : View> T.postWith(crossinline func: (T) -> Unit) {
-    post { func(this) }
+  post { func(this) }
 }
 
-inline fun <T : View> T.postWith(delay: Long, crossinline func: (T) -> Unit) {
-    if (delay == 0L) {
-        postWith(func)
-    } else {
-        postDelayed({ func(this) }, delay)
-    }
+inline fun <T : View> T.postWith(
+  delay: Long,
+  crossinline func: (T) -> Unit
+) {
+  if (delay == 0L) {
+    postWith(func)
+  } else {
+    postDelayed({ func(this) }, delay)
+  }
 }
 
 inline fun <T : View> T.postOnAnimationWith(crossinline func: (T) -> Unit) {
-    postOnAnimation { func(this) }
+  postOnAnimation { func(this) }
 }
 
-inline fun <T : View> T.postOnAnimationWith(delay: Long, crossinline func: (T) -> Unit) {
-    if (delay == 0L) {
-        postOnAnimationWith(func)
-    } else {
-        postOnAnimationDelayed({ func(this) }, delay)
-    }
+inline fun <T : View> T.postOnAnimationWith(
+  delay: Long,
+  crossinline func: (T) -> Unit
+) {
+  if (delay == 0L) {
+    postOnAnimationWith(func)
+  } else {
+    postOnAnimationDelayed({ func(this) }, delay)
+  }
 }

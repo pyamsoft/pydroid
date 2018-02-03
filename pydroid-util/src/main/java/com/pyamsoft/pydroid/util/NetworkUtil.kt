@@ -28,28 +28,33 @@ import android.widget.Toast
 
 object NetworkUtil {
 
-    @JvmStatic
-    fun newLink(c: Context, link: String) {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            data = Uri.parse(link)
-        }
-
-        try {
-            c.applicationContext.startActivity(intent)
-        } catch (e: Exception) {
-            Toast.makeText(
-                c.applicationContext, "No activity available to handle link: " + link,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+  @JvmStatic
+  fun newLink(
+    c: Context,
+    link: String
+  ) {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+      addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      data = Uri.parse(link)
     }
 
-    @JvmStatic
-    @CheckResult
-    fun hasConnection(c: Context): Boolean {
-        val connMan = c.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    try {
+      c.applicationContext.startActivity(intent)
+    } catch (e: Exception) {
+      Toast.makeText(
+          c.applicationContext, "No activity available to handle link: " + link,
+          Toast.LENGTH_SHORT
+      )
+          .show()
     }
+  }
+
+  @JvmStatic
+  @CheckResult
+  fun hasConnection(c: Context): Boolean {
+    val connMan =
+      c.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
+    return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+  }
 }

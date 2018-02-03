@@ -24,9 +24,9 @@ import android.arch.lifecycle.LifecycleRegistry
 
 internal class ViewLifecycleOwner internal constructor() : LifecycleOwner {
 
-    internal val registry = LifecycleRegistry(this)
+  internal val registry = LifecycleRegistry(this)
 
-    override fun getLifecycle(): Lifecycle {
-        return registry
-    }
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
 }

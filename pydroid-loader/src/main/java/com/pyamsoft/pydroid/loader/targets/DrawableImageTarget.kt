@@ -27,21 +27,21 @@ import android.widget.ImageView
  */
 class DrawableImageTarget private constructor(private val imageView: ImageView) : Target<Drawable> {
 
-    override fun loadImage(image: Drawable) {
-        imageView.setImageDrawable(image)
-    }
+  override fun loadImage(image: Drawable) {
+    imageView.setImageDrawable(image)
+  }
 
-    override fun loadError(error: Drawable?) {
-        if (error != null) {
-            imageView.setImageDrawable(error)
-        }
+  override fun loadError(error: Drawable?) {
+    if (error != null) {
+      imageView.setImageDrawable(error)
     }
+  }
 
-    companion object {
+  companion object {
 
-        @CheckResult
-        @JvmStatic
-        fun forImageView(imageView: ImageView): Target<Drawable> =
-            DrawableImageTarget(imageView)
-    }
+    @CheckResult
+    @JvmStatic
+    fun forImageView(imageView: ImageView): Target<Drawable> =
+      DrawableImageTarget(imageView)
+  }
 }

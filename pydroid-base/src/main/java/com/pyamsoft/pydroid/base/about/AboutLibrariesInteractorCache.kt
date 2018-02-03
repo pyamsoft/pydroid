@@ -22,26 +22,28 @@ import com.pyamsoft.pydroid.data.Cache
 import io.reactivex.Observable
 
 internal class AboutLibrariesInteractorCache internal constructor(
-    private val impl: AboutLibrariesInteractor
+  private val impl: AboutLibrariesInteractor
 ) : AboutLibrariesInteractor, Cache {
 
-    private var cachedLicenses: Observable<AboutLibrariesModel>? = null
+  private var cachedLicenses: Observable<AboutLibrariesModel>? = null
 
-    override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
-        return Observable.defer {
-            val cache = cachedLicenses
-            val licenses: Observable<AboutLibrariesModel>
-            if (force || cache == null) {
-                licenses = impl.loadLicenses(force).cache()
-                cachedLicenses = licenses
-            } else {
-                licenses = cache
-            }
-            return@defer licenses
-        }.doOnError { clearCache() }
+  override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
+    return Observable.defer {
+      val cache = cachedLicenses
+      val licenses: Observable<AboutLibrariesModel>
+      if (force || cache == null) {
+        licenses = impl.loadLicenses(force)
+            .cache()
+        cachedLicenses = licenses
+      } else {
+        licenses = cache
+      }
+      return@defer licenses
     }
+        .doOnError { clearCache() }
+  }
 
-    override fun clearCache() {
-        cachedLicenses = null
-    }
+  override fun clearCache() {
+    cachedLicenses = null
+  }
 }

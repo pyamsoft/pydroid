@@ -35,6 +35,7 @@ import android.widget.LinearLayout
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ViewLifecycleOwner
 import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener

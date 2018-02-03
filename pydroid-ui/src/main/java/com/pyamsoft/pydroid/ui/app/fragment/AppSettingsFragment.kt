@@ -24,6 +24,7 @@ import android.support.annotation.CheckResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 
 abstract class AppSettingsFragment : ToolbarFragment() {

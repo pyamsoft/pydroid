@@ -33,6 +33,7 @@ import android.widget.Toast
 import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.rating.RatingDialog

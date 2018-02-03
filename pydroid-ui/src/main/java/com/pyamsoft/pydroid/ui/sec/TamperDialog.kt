@@ -24,6 +24,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 

@@ -23,6 +23,7 @@ import android.support.annotation.CallSuper
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
 import android.support.v7.widget.Toolbar
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.BackPressHandler
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {

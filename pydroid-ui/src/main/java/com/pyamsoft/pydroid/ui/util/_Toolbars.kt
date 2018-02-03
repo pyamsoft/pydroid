@@ -25,6 +25,7 @@ import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.Toolbar
 import android.util.TypedValue
+import com.pyamsoft.pydroid.ui.R
 
 private var cachedIcon: Drawable? = null
 

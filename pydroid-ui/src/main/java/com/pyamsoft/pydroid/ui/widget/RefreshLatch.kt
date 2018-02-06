@@ -44,6 +44,7 @@ class RefreshLatch private constructor(
 
   private var lifecycleOwner: LifecycleOwner? = null
   private var lastShownTime: Long = 0L
+  private var refreshState: Boolean = false
 
   init {
     owner.lifecycle.addObserver(this)
@@ -61,22 +62,31 @@ class RefreshLatch private constructor(
     Timber.d("Start refreshing")
     onRefreshed(true)
     lastShownTime = SystemClock.uptimeMillis()
+    refreshState = true
   }
 
   private fun hide() {
     Timber.d("Stop refreshing")
     onRefreshed(false)
     lastShownTime = 0L
+    refreshState = false
   }
 
   private fun clearOldCommands() {
     handler.removeCallbacksAndMessages(null)
   }
 
-  var refreshing: Boolean = false
+  fun forceRefresh() {
+    refreshState = true
+    clearOldCommands()
+    show()
+  }
+
+  var refreshing: Boolean
+    get() = refreshState
     set(value) {
-      if (field != value) {
-        field = value
+      if (refreshState != value) {
+        refreshState = value
 
         // Clear old commands
         clearOldCommands()

@@ -77,9 +77,11 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
           viewPager.visibility = View.INVISIBLE
           aboutTitle.visibility = View.INVISIBLE
         } else {
-          progressSpinner.visibility = View.GONE
-          viewPager.visibility = View.VISIBLE
-          aboutTitle.visibility = View.VISIBLE
+          // Load complete
+          viewPager.postWith {
+            pagerAdapter.notifyDataSetChanged()
+            aboutTitle.text = pagerAdapter.getPageTitle(it.currentItem)
+          }
         }
       }
     }
@@ -102,18 +104,12 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   }
 
   override fun onAllLoaded() {
-    binding.viewPager.postWith {
-      if (view != null) {
-        pagerAdapter.notifyDataSetChanged()
-        binding.aboutTitle.text = pagerAdapter.getPageTitle(it.currentItem)
-      }
-    }
+    refreshLatch.refreshing = false
   }
 
   private fun setupViewPager(savedInstanceState: Bundle?) {
     pagerAdapter = AboutPagerAdapter(this)
     binding.apply {
-      refreshLatch.refreshing = true
       viewPager.adapter = pagerAdapter
       viewPager.offscreenPageLimit = 1
     }
@@ -130,7 +126,9 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
         // Hide spinner now that loading is done
         binding.apply {
-          refreshLatch.refreshing = false
+          progressSpinner.visibility = View.GONE
+          viewPager.visibility = View.VISIBLE
+          aboutTitle.visibility = View.VISIBLE
 
           // Reload the last looked at page
           if (savedInstanceState != null) {
@@ -158,6 +156,8 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
     listener = obj
     binding.viewPager.addOnPageChangeListener(obj)
+
+    refreshLatch.refreshing = true
   }
 
   private fun setupArrows() {

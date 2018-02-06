@@ -28,7 +28,7 @@ import android.os.SystemClock
 import android.support.annotation.CheckResult
 import kotlin.LazyThreadSafetyMode.NONE
 
-class ProgressTimeLatch private constructor(
+class RefreshLatch private constructor(
   owner: LifecycleOwner,
   var delay: Long = 500L,
   var minShowTime: Long = 500L,
@@ -107,8 +107,8 @@ class ProgressTimeLatch private constructor(
     fun create(
       owner: LifecycleOwner,
       onRefreshed: (Boolean) -> Unit
-    ): ProgressTimeLatch {
-      return ProgressTimeLatch(owner, onRefreshed = onRefreshed)
+    ): RefreshLatch {
+      return RefreshLatch(owner, onRefreshed = onRefreshed)
     }
 
     @JvmStatic
@@ -117,8 +117,8 @@ class ProgressTimeLatch private constructor(
       owner: LifecycleOwner,
       delay: Long,
       onRefreshed: (Boolean) -> Unit
-    ): ProgressTimeLatch {
-      return ProgressTimeLatch(owner, delay = delay, onRefreshed = onRefreshed)
+    ): RefreshLatch {
+      return RefreshLatch(owner, delay = delay, onRefreshed = onRefreshed)
     }
 
     @JvmStatic
@@ -128,8 +128,8 @@ class ProgressTimeLatch private constructor(
       delay: Long,
       minShowTime: Long,
       onRefreshed: (Boolean) -> Unit
-    ): ProgressTimeLatch {
-      return ProgressTimeLatch(owner, delay, minShowTime, onRefreshed)
+    ): RefreshLatch {
+      return RefreshLatch(owner, delay, minShowTime, onRefreshed)
     }
   }
 }

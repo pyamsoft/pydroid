@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.helper.postWith
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
-import com.pyamsoft.pydroid.ui.widget.ProgressTimeLatch
+import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 import timber.log.Timber
 
 class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
@@ -48,7 +48,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   internal lateinit var pagerAdapter: AboutPagerAdapter
   private lateinit var listener: ViewPager.OnPageChangeListener
   private lateinit var binding: FragmentAboutLibrariesBinding
-  private lateinit var progressTimeLatch: ProgressTimeLatch
+  private lateinit var refreshLatch: RefreshLatch
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -70,7 +70,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    progressTimeLatch = ProgressTimeLatch.create(viewLifecycle) {
+    refreshLatch = RefreshLatch.create(viewLifecycle) {
       binding.apply {
         if (it) {
           progressSpinner.visibility = View.VISIBLE
@@ -109,7 +109,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   private fun setupViewPager(savedInstanceState: Bundle?) {
     pagerAdapter = AboutPagerAdapter(this)
     binding.apply {
-      progressTimeLatch.refreshing = true
+      refreshLatch.refreshing = true
       viewPager.adapter = pagerAdapter
       viewPager.offscreenPageLimit = 1
     }
@@ -126,7 +126,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
         // Hide spinner now that loading is done
         binding.apply {
-          progressTimeLatch.refreshing = false
+          refreshLatch.refreshing = false
 
           // Reload the last looked at page
           if (savedInstanceState != null) {

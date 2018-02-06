@@ -83,6 +83,10 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
         }
       }
     }
+
+    // Latch will show spinner if needed
+    binding.progressSpinner.visibility = View.INVISIBLE
+
     setupViewPager(savedInstanceState)
     setupArrows()
 

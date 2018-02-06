@@ -26,12 +26,13 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.support.annotation.CheckResult
+import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
 
 class RefreshLatch private constructor(
   owner: LifecycleOwner,
-  var delay: Long = 500L,
-  var minShowTime: Long = 500L,
+  var delay: Long = 600L,
+  var minShowTime: Long = 600L,
   private val onRefreshed: (Boolean) -> Unit
 ) : LifecycleObserver {
 
@@ -57,11 +58,13 @@ class RefreshLatch private constructor(
   }
 
   private fun show() {
+    Timber.d("Start refreshing")
     onRefreshed(true)
     lastShownTime = SystemClock.uptimeMillis()
   }
 
   private fun hide() {
+    Timber.d("Stop refreshing")
     onRefreshed(false)
     lastShownTime = 0L
   }

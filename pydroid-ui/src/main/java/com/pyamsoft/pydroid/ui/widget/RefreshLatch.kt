@@ -31,8 +31,8 @@ import kotlin.LazyThreadSafetyMode.NONE
 
 class RefreshLatch private constructor(
   owner: LifecycleOwner,
-  var delay: Long = 600L,
-  var minShowTime: Long = 600L,
+  var delay: Long = 300L,
+  var minShowTime: Long = 700L,
   private val onRefreshed: (Boolean) -> Unit
 ) : LifecycleObserver {
 

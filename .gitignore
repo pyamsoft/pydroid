@@ -1,6 +1,7 @@
-.idea
+!.idea/copyright
 !.idea/codeStyleSettings.xml
 !.idea/externalDependencies.xml
+.idea
 
 *.iml
 .gradle

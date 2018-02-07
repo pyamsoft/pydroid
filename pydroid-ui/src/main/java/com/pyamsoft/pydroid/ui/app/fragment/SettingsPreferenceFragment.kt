@@ -35,7 +35,7 @@ import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.helper.Toasty
+import com.pyamsoft.pydroid.util.Toasty
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.social.Linker

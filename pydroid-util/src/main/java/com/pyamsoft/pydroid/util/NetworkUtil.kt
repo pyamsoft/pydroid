@@ -41,7 +41,7 @@ object NetworkUtil {
     try {
       c.applicationContext.startActivity(intent)
     } catch (e: Exception) {
-      Toast.makeText(
+      Toasty.makeText(
           c.applicationContext, "No activity available to handle link: " + link,
           Toast.LENGTH_SHORT
       )

@@ -25,7 +25,7 @@ import android.util.TypedValue
 object AppUtil {
 
   private val cachedDP: MutableMap<Float, Float> by lazy {
-    HashMap<Float, Float>(10)
+    LinkedHashMap<Float, Float>(10)
   }
 
   @JvmStatic

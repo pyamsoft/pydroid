@@ -16,7 +16,7 @@
  *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-package com.pyamsoft.pydroid.ui.helper
+package com.pyamsoft.pydroid.util
 
 import android.content.Context
 import android.support.annotation.CheckResult
@@ -50,12 +50,11 @@ object Toasty {
     message: CharSequence,
     duration: Duration
   ): Toast {
-    return Toast.makeText(
-        c.applicationContext, message, when (duration) {
+    val length: Int = when (duration) {
       Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
       Duration.LENGTH_LONG -> Toast.LENGTH_LONG
     }
-    )
+    return Toast.makeText(c.applicationContext, message, length)
   }
 
   @JvmStatic
@@ -63,16 +62,14 @@ object Toasty {
   fun makeText(
     c: Context, @StringRes resId: Int,
     duration: Duration
-  ): Toast =
-    makeText(c, c.applicationContext.getString(resId), duration)
+  ): Toast = makeText(c, c.applicationContext.getString(resId), duration)
 
   @JvmStatic
   @CheckResult
   fun makeText(
     c: Context, @StringRes resId: Int,
     duration: Int
-  ): Toast =
-    makeText(c, c.applicationContext.getString(resId), duration)
+  ): Toast = makeText(c, c.applicationContext.getString(resId), duration)
 
   @JvmStatic
   @CheckResult
@@ -81,14 +78,13 @@ object Toasty {
     message: CharSequence,
     duration: Int
   ): Toast {
-    return makeText(
-        c, message, when (duration) {
+    val length: Duration = when (duration) {
       Toast.LENGTH_SHORT -> LENGTH_SHORT
       Toast.LENGTH_LONG -> LENGTH_LONG
       else -> throw IllegalArgumentException(
           "Duration must be either Toast.LENGTH_SHORT or Toast.LENGTH_LONG"
       )
     }
-    )
+    return makeText(c, message, length)
   }
 }

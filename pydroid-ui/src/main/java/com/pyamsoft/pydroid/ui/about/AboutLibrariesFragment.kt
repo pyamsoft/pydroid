@@ -68,7 +68,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    refreshLatch = RefreshLatch.create(viewLifecycle) {
+    refreshLatch = RefreshLatch.create(viewLifecycle, delay = 150L) {
       binding.apply {
         if (it) {
           progressSpinner.visibility = View.VISIBLE

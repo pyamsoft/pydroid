@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
@@ -25,6 +24,7 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -38,7 +38,7 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
   init {
     val versionCheckApi = VersionCheckApi(
-        provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideGson())
+        provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideConverter())
     )
     val versionCheckService: VersionCheckService = versionCheckApi.create(
         VersionCheckService::class.java
@@ -50,59 +50,57 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
   }
 
   @CheckResult
-  private fun provideGson(): Gson {
+  private fun provideConverter(): Converter.Factory {
     val gsonBuilder = GsonBuilder().registerTypeAdapterFactory(
         AutoValueTypeAdapterFactory.create()
     )
-    return gsonBuilder.create()
+    return GsonConverterFactory.create(gsonBuilder.create())
   }
 
   @CheckResult
   private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
-    val builder = OkHttpClient.Builder()
-    if (debug) {
-      val logging = HttpLoggingInterceptor()
-      logging.level = HttpLoggingInterceptor.Level.BODY
-      builder.addInterceptor(logging)
-    }
-
     val pinner = CertificatePinner.Builder()
-        .add(
-            GITHUB_URL,
-            "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw="
-        )
-        .add(
-            GITHUB_URL,
-            "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws="
-        )
-        .add(
-            GITHUB_URL,
-            "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18="
-        )
+        .apply {
+          add(
+              GITHUB_URL,
+              "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw="
+          )
+          add(
+              GITHUB_URL,
+              "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws="
+          )
+          add(
+              GITHUB_URL,
+              "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18="
+          )
+        }
         .build()
-    builder.certificatePinner(pinner)
 
-    return builder.build()
+    return OkHttpClient.Builder()
+        .apply {
+          certificatePinner(pinner)
+          if (debug) {
+            val logging = HttpLoggingInterceptor()
+            logging.level = HttpLoggingInterceptor.Level.BODY
+            addInterceptor(logging)
+          }
+        }
+        .build()
   }
 
   @CheckResult
   private fun provideRetrofit(
     okHttpClient: OkHttpClient,
-    gson: Gson
+    converter: Converter.Factory
   ): Retrofit {
+    val callAdapter = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())
     return Retrofit.Builder()
-        .baseUrl(
-            CURRENT_VERSION_REPO_BASE_URL
-        )
-        .client(
-            okHttpClient
-        )
-        .addConverterFactory(
-            GsonConverterFactory.create(gson)
-        )
-        .addCallAdapterFactory(
-            RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())
-        )
+        .apply {
+          baseUrl(CURRENT_VERSION_REPO_BASE_URL)
+          client(okHttpClient)
+          addConverterFactory(converter)
+          addCallAdapterFactory(callAdapter)
+        }
         .build()
   }
 

@@ -58,7 +58,7 @@ android {
 }
 
 dependencies {
-  compile project(":pydroid")
-  compile project(":pydroid-util")
+  api project(":pydroid")
+  api project(":pydroid-util")
 }
 

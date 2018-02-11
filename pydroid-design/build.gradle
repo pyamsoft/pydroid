@@ -59,9 +59,9 @@ android {
 
 dependencies {
   // Design support lib
-  compile "com.android.support:design:$supportLib"
+  api "com.android.support:design:$supportLib"
 
-  compile project(":pydroid")
-  compile project(":pydroid-util")
+  api project(":pydroid")
+  api project(":pydroid-util")
 }
 

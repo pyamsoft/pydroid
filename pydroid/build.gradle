@@ -66,16 +66,16 @@ android {
 
 dependencies {
   // Timber logging
-  compile "com.jakewharton.timber:timber:$timber"
+  api "com.jakewharton.timber:timber:$timber"
 
   // Android support library.
-  compile "android.arch.lifecycle:runtime:$lifecycleRuntime"
+  api "android.arch.lifecycle:runtime:$lifecycleRuntime"
   kapt "android.arch.lifecycle:compiler:$lifecycleCompiler"
 
   // RxJava
-  compile "io.reactivex.rxjava2:rxjava:$rxjava"
-  compile "io.reactivex.rxjava2:rxandroid:$rxandroid"
+  api "io.reactivex.rxjava2:rxjava:$rxjava"
+  api "io.reactivex.rxjava2:rxandroid:$rxandroid"
 
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+  api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 

@@ -70,24 +70,24 @@ android {
 
 dependencies {
   // Android support library.
-  compile "com.android.support:appcompat-v7:$supportLib"
-  compile "com.android.support:preference-v14:$supportLib"
+  api "com.android.support:appcompat-v7:$supportLib"
+  api "com.android.support:preference-v14:$supportLib"
 
   // Auto value
-  provided "com.google.auto.value:auto-value:$autoValue"
+  compileOnly "com.google.auto.value:auto-value:$autoValue"
   kapt "com.google.auto.value:auto-value:$autoValue"
 
   // Moshi
-  compile "com.squareup.moshi:moshi:$moshi"
-  provided "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshi"
+  compileOnly "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshi"
   kapt "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshi"
+  implementation "com.squareup.moshi:moshi:$moshi"
 
   // Retrofit
-  compile "com.squareup.retrofit2:retrofit:$retrofit"
-  compile "com.squareup.retrofit2:converter-moshi:$retrofit"
-  compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
-  compile "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
+  implementation "com.squareup.retrofit2:retrofit:$retrofit"
+  implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
+  implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
+  implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 
-  compile project(":pydroid")
+  api project(":pydroid")
 }
 

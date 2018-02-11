@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
-import com.google.gson.GsonBuilder
 import com.pyamsoft.pydroid.PYDroidModule
+import com.squareup.moshi.Moshi
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import okhttp3.CertificatePinner
@@ -27,7 +27,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
@@ -51,10 +51,11 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
   @CheckResult
   private fun provideConverter(): Converter.Factory {
-    val gsonBuilder = GsonBuilder().registerTypeAdapterFactory(
-        AutoValueTypeAdapterFactory.create()
+    return MoshiConverterFactory.create(
+        Moshi.Builder().add(
+            AutoValueTypeAdapterFactory.create()
+        ).build()
     )
-    return GsonConverterFactory.create(gsonBuilder.create())
   }
 
   @CheckResult

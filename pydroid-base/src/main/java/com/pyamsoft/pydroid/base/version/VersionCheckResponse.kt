@@ -18,22 +18,22 @@ package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
 import com.google.auto.value.AutoValue
-import com.google.gson.Gson
-import com.google.gson.TypeAdapter
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
 
 @AutoValue
 internal abstract class VersionCheckResponse internal constructor() {
 
   @CheckResult
-  @SerializedName("response_objects")
+  @Json(name = "response_objects")
   abstract fun responseObjects(): List<ResponseObject>
 
   @AutoValue
   internal abstract class ResponseObject internal constructor() {
 
     @CheckResult
-    @SerializedName("min_api")
+    @Json(name = "min_api")
     abstract fun minApi(): Int
 
     @CheckResult
@@ -43,9 +43,8 @@ internal abstract class VersionCheckResponse internal constructor() {
 
       @JvmStatic
       @CheckResult
-      fun typeAdapter(gson: Gson): TypeAdapter<ResponseObject> =
-        AutoValue_VersionCheckResponse_ResponseObject.GsonTypeAdapter(gson)
-            .setDefaultMinApi(0).setDefaultVersion(0)
+      fun typeAdapter(moshi: Moshi): JsonAdapter<ResponseObject> =
+        AutoValue_VersionCheckResponse_ResponseObject.MoshiJsonAdapter(moshi)
     }
   }
 
@@ -53,9 +52,7 @@ internal abstract class VersionCheckResponse internal constructor() {
 
     @JvmStatic
     @CheckResult
-    fun typeAdapter(gson: Gson): TypeAdapter<VersionCheckResponse> =
-      AutoValue_VersionCheckResponse.GsonTypeAdapter(gson).setDefaultResponseObjects(
-          emptyList()
-      )
+    fun typeAdapter(moshi: Moshi): JsonAdapter<VersionCheckResponse> =
+      AutoValue_VersionCheckResponse.MoshiJsonAdapter(moshi)
   }
 }

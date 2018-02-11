@@ -17,17 +17,16 @@
 package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
-import com.google.gson.TypeAdapterFactory
-import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory
+import com.ryanharter.auto.value.moshi.MoshiAdapterFactory
+import com.squareup.moshi.JsonAdapter
 
-@GsonTypeAdapterFactory
-internal abstract class AutoValueTypeAdapterFactory internal constructor() : TypeAdapterFactory {
+@MoshiAdapterFactory(nullSafe = true)
+internal abstract class AutoValueTypeAdapterFactory internal constructor() : JsonAdapter.Factory {
 
   companion object {
 
     @JvmStatic
     @CheckResult
-    fun create(): TypeAdapterFactory =
-      AutoValueGson_AutoValueTypeAdapterFactory()
+    fun create(): JsonAdapter.Factory = AutoValueMoshi_AutoValueTypeAdapterFactory()
   }
 }

@@ -20,12 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Silence some okio warnings
--dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
--dontwarn java.nio.file.Files
--dontwarn java.nio.file.Path
--dontwarn java.nio.file.OpenOption
-
 # Retrofit2
 -dontwarn javax.annotation.**
 -dontwarn retrofit2.Platform$Java8
@@ -39,6 +33,11 @@
     @retrofit2.http.* <methods>;
 }
 
-# autovalue GSON
--keepnames class **_GsonTypeAdapter
--keepnames @com.ryanharter.auto.value.gson.GenerateTypeAdapter class *
+# Moshi
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-keepclasseswithmembers class * {
+    @com.squareup.moshi.* <methods>;
+}
+-keep @com.squareup.moshi.JsonQualifier interface *
+

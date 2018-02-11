@@ -110,4 +110,4 @@ task clean(type: Delete) {
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '16.0.0'
+version = '16.0.1'

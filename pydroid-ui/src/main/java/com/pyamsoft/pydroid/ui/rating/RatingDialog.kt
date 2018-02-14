@@ -25,15 +25,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.pyamsoft.pydroid.base.rating.RatingSavePresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
-import com.pyamsoft.pydroid.util.Toasty
 import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.NetworkUtil
+import com.pyamsoft.pydroid.util.Toasty
 
 internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
@@ -103,7 +104,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     dismiss()
   }
 
-  override fun onRatingDialogSaveError(throwable: Throwable) {
+  override fun onRatingSaveError(throwable: Throwable) {
     Toasty.makeText(
         context!!.applicationContext,
         "Error occurred while dismissing dialog. May show again later",

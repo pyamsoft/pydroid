@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.base.rating
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.ui.RatingPreferences
 import io.reactivex.Scheduler
 
-internal class RatingModule internal constructor(
+class RatingModule(
   module: PYDroidModule,
   preferences: RatingPreferences
 ) {

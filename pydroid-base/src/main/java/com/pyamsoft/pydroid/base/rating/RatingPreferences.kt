@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.base.rating
 
 import android.support.annotation.CheckResult
 
-internal interface RatingPreferences {
+interface RatingPreferences {
 
   var ratingAcceptedVersion: Int
     @get:CheckResult get

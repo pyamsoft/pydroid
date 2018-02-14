@@ -28,18 +28,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.util.Toasty
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
-import com.pyamsoft.pydroid.ui.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
+import com.pyamsoft.pydroid.util.Toasty
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), VersionCheckPresenter.View,
@@ -140,7 +140,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     ratingPresenter.bind(viewLifecycle, this)
   }
 
-  override fun onShowRatingDialog() {
+  override fun onShowRating() {
     val activity = activity
     if (activity is RatingDialog.ChangeLogProvider) {
       DialogUtil.guaranteeSingleDialogFragment(
@@ -152,7 +152,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     }
   }
 
-  override fun onRatingDialogLoadError(throwable: Throwable) {
+  override fun onShowRatingError(throwable: Throwable) {
     Timber.e(throwable, "Error loading rating dialog")
   }
 

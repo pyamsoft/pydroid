@@ -19,8 +19,10 @@ package com.pyamsoft.pydroid.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
+import com.pyamsoft.pydroid.base.PYDroidPreferences
+import com.pyamsoft.pydroid.base.rating.RatingPreferences
 
-internal class PYDroidPreferencesImpl internal constructor(context: Context) : RatingPreferences {
+internal class PYDroidPreferencesImpl internal constructor(context: Context) : PYDroidPreferences {
 
   private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
       context.applicationContext

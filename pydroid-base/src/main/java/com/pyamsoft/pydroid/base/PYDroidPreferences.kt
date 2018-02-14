@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.base
 
-import android.support.annotation.CheckResult
-import io.reactivex.Completable
-import io.reactivex.Single
+import com.pyamsoft.pydroid.base.rating.RatingPreferences
 
-internal interface RatingInteractor {
+interface PYDroidPreferences : RatingPreferences
 
-  @CheckResult
-  fun needsToViewRating(
-    force: Boolean,
-    versionCode: Int
-  ): Single<Boolean>
-
-  @CheckResult
-  fun saveRating(versionCode: Int): Completable
-}

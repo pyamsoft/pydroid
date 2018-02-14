@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
+import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 
 internal class RatingComponentImpl internal constructor(

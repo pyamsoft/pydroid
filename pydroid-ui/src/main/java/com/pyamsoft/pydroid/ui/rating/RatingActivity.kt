@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.text.Spannable
+import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -97,14 +98,14 @@ abstract class RatingActivity : VersionCheckActivity(),
     ratingPresenter.loadRatingDialog(false)
   }
 
-  override fun onShowRatingDialog() {
+  override fun onShowRating() {
     DialogUtil.guaranteeSingleDialogFragment(
         this, RatingDialog.newInstance(this),
         RatingDialog.TAG
     )
   }
 
-  override fun onRatingDialogLoadError(throwable: Throwable) {
+  override fun onShowRatingError(throwable: Throwable) {
     Timber.e(throwable, "Could not load rating dialog")
   }
 }

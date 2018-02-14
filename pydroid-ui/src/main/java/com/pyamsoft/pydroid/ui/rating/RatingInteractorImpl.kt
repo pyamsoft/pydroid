@@ -27,9 +27,22 @@ internal class RatingInteractorImpl internal constructor(
   override fun needsToViewRating(
     force: Boolean,
     versionCode: Int
-  ): Single<Boolean> =
-    Single.fromCallable { force || preferences.getRatingAcceptedVersion() < versionCode }
+  ): Single<Boolean> = Single.fromCallable {
+    if (force) {
+      return@fromCallable true
+    } else {
+      // If the version code is 1, it's the first app version, don't show a changelog
+      if (versionCode <= 1) {
+        return@fromCallable false
+      } else {
+        // If the preference is default, the app may be installed for the first time
+        // regardless of the current version. Don't show change log, else show it
+        val lastSeenVersion: Int = preferences.ratingAcceptedVersion
+        return@fromCallable lastSeenVersion > RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
+      }
+    }
+  }
 
   override fun saveRating(versionCode: Int): Completable =
-    Completable.fromAction { preferences.setRatingAcceptedVersion(versionCode) }
+    Completable.fromAction { preferences.ratingAcceptedVersion = versionCode }
 }

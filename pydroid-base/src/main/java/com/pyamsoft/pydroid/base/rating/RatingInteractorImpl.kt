@@ -38,7 +38,7 @@ internal class RatingInteractorImpl internal constructor(
           // If the preference is default, the app may be installed for the first time
           // regardless of the current version. Don't show change log, else show it
           val lastSeenVersion: Int = preferences.ratingAcceptedVersion
-          return@fromCallable lastSeenVersion > RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
+          return@fromCallable lastSeenVersion < RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
         }
       }
     }

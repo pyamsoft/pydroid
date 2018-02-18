@@ -22,37 +22,38 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.net.Uri
 import android.support.annotation.CheckResult
-import android.widget.Toast
 
 object NetworkUtil {
 
   @JvmStatic
-  fun newLink(
+  @CheckResult
+  fun asHyperlink(
     c: Context,
-    link: String
-  ) {
+    link: String,
+    navigate: Boolean = true
+  ): HyperlinkIntent {
     val intent = Intent(Intent.ACTION_VIEW).apply {
       addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       data = Uri.parse(link)
     }
 
-    try {
-      c.applicationContext.startActivity(intent)
-    } catch (e: Exception) {
-      Toasty.makeText(
-          c.applicationContext, "No activity available to handle link: " + link,
-          Toast.LENGTH_SHORT
-      )
-          .show()
+    return HyperlinkIntent(c.applicationContext, intent, link).also {
+      if (navigate) {
+        it.navigate()
+      }
     }
   }
 
   @JvmStatic
   @CheckResult
-  fun hasConnection(c: Context): Boolean {
+  fun isConnected(c: Context): Boolean {
     val connMan =
       c.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
     return activeNetwork != null && activeNetwork.isConnectedOrConnecting
   }
+}
+
+fun String.navigate(context: Context): HyperlinkIntent {
+  return NetworkUtil.asHyperlink(context, this, navigate = true)
 }

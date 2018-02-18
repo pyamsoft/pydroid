@@ -28,7 +28,7 @@ object AppUtil {
 
   @JvmStatic
   @CheckResult
-  fun convertToDP(
+  internal fun toDp(
     c: Context,
     px: Float
   ): Float {
@@ -50,3 +50,6 @@ object AppUtil {
     }
   }
 }
+
+@CheckResult
+fun Number.toDp(c: Context): Float = AppUtil.toDp(c, this.toFloat())

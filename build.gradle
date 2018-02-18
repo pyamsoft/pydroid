@@ -57,6 +57,7 @@ buildscript {
     lifecycleRuntime = "1.1.0"
     lifecycleCompiler = "1.1.0"
     constraintLayout = "1.0.2"
+    ktx = "0.1"
   }
 
   dependencies {

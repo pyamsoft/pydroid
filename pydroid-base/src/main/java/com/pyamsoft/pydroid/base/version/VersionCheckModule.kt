@@ -44,7 +44,7 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
         VersionCheckService::class.java
     )
     val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(
-        versionCheckService
+        pyDroidModule.provideContext(), versionCheckService
     )
     cachedInteractor = VersionCheckInteractorCache(interactor)
   }
@@ -52,9 +52,7 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
   @CheckResult
   private fun provideConverter(): Converter.Factory {
     return MoshiConverterFactory.create(
-        Moshi.Builder().add(
-            AutoValueTypeAdapterFactory.create()
-        ).build()
+        Moshi.Builder().add(AutoValueTypeAdapterFactory.create()).build()
     )
   }
 

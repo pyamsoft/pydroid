@@ -94,5 +94,6 @@ dependencies {
   implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 
   api project(":pydroid")
+  api project(":pydroid-util")
 }
 

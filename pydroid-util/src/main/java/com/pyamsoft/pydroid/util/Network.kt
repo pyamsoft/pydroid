@@ -21,14 +21,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.support.annotation.CheckResult
 
-object NetworkUtil {
-
-  @JvmStatic
-  @CheckResult
-  fun isConnected(c: Context): Boolean {
-    val connMan =
-      c.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
-    return activeNetwork != null && activeNetwork.isConnectedOrConnecting
-  }
+@CheckResult
+fun isConnected(c: Context): Boolean {
+  val connMan = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
+  return activeNetwork != null && activeNetwork.isConnectedOrConnecting
 }
+
+object NoNetworkException : Exception("No Internet connection, please try again later")

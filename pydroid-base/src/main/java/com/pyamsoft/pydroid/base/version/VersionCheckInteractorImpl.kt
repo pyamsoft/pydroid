@@ -16,10 +16,14 @@
 
 package com.pyamsoft.pydroid.base.version
 
+import android.content.Context
 import android.os.Build
+import com.pyamsoft.pydroid.util.NoNetworkException
+import com.pyamsoft.pydroid.util.isConnected
 import io.reactivex.Single
 
 internal class VersionCheckInteractorImpl internal constructor(
+  private val context: Context,
   private val versionCheckService: VersionCheckService
 ) : VersionCheckInteractor {
 
@@ -27,19 +31,25 @@ internal class VersionCheckInteractorImpl internal constructor(
     packageName: String,
     force: Boolean
   ): Single<Int> {
-    return versionCheckService.checkVersion(packageName)
-        .map {
-          val apiVersion: Int = Build.VERSION.SDK_INT
-          var lowestApplicableVersionCode = 0
-          it.responseObjects()
-              .sortedBy { it.minApi() }
-              .forEach {
-                if (it.minApi() <= apiVersion) {
-                  lowestApplicableVersionCode = it.version()
-                }
-              }
+    return Single.defer {
+      if (!isConnected(context)) {
+        throw NoNetworkException
+      }
 
-          return@map lowestApplicableVersionCode
-        }
+      return@defer versionCheckService.checkVersion(packageName)
+          .map {
+            val apiVersion: Int = Build.VERSION.SDK_INT
+            var lowestApplicableVersionCode = 0
+            it.responseObjects()
+                .sortedBy { it.minApi() }
+                .forEach {
+                  if (it.minApi() <= apiVersion) {
+                    lowestApplicableVersionCode = it.version()
+                  }
+                }
+
+            return@map lowestApplicableVersionCode
+          }
+    }
   }
 }

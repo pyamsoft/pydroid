@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid
 
+import android.app.Application
 import android.content.Context
 import android.support.annotation.CheckResult
 import io.reactivex.Scheduler
@@ -23,18 +24,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class PYDroidModuleImpl(
-  context: Context,
-  debug: Boolean
+  private val application: Application,
+  override val isDebug: Boolean
 ) : PYDroidModule {
 
   // Singleton
-  private val appContext = context.applicationContext
-
-  override val isDebug: Boolean = debug
-
-  // Singleton
   @CheckResult
-  override fun provideContext(): Context = appContext
+  override fun provideContext(): Context = application
 
   // Singleton
   @CheckResult

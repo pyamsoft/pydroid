@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.Toasty
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.toDp
+import timber.log.Timber
 
 internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
@@ -123,6 +124,8 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     imageLoader.fromResource(changeLogIcon)
         .into(binding.ratingIcon)
         .bind(viewLifecycle)
+
+    Timber.d("changeLogText: $changeLogText")
     binding.ratingTextChange.text = changeLogText
   }
 

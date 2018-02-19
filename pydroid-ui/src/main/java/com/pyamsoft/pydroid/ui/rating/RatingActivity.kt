@@ -47,9 +47,9 @@ abstract class RatingActivity : VersionCheckActivity(),
         val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
         withStyledAttributes(android.R.attr.textAppearanceLarge, attrArray) {
           val size = getDimensionPixelSize(indexOfSize, 0)
-          val color = getColor(indexOfColor, 0)
+//          val color = getColor(indexOfColor, 0)
 
-          inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+          inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size)) {
             append("What's New in version $versionName")
             append("\n")
           }
@@ -57,9 +57,9 @@ abstract class RatingActivity : VersionCheckActivity(),
 
         withStyledAttributes(android.R.attr.textAppearanceSmall, attrArray) {
           val size = getDimensionPixelSize(indexOfSize, 0)
-          val color = getColor(indexOfColor, 0)
+//          val color = getColor(indexOfColor, 0)
 
-          inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+          inSpans(AbsoluteSizeSpan(size)) {
             for (line in changeLogLines) {
               append(line)
               append("\n")

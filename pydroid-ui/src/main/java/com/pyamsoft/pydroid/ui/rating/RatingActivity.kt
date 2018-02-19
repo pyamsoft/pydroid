@@ -21,8 +21,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.text.SpannedString
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import androidx.content.withStyledAttributes
 import androidx.text.buildSpannedString
@@ -46,28 +44,26 @@ abstract class RatingActivity : VersionCheckActivity(),
         val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
         val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
         withStyledAttributes(android.R.attr.textAppearanceLarge, attrArray) {
-          val size = getDimensionPixelSize(indexOfSize, 0)
+//          val size = getDimensionPixelSize(indexOfSize, 0)
 //          val color = getColor(indexOfColor, 0)
 
-          inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size)) {
+          inSpans(StyleSpan(BOLD)) {
             append("What's New in version $versionName")
             append("\n")
           }
         }
 
         withStyledAttributes(android.R.attr.textAppearanceSmall, attrArray) {
-          val size = getDimensionPixelSize(indexOfSize, 0)
+//          val size = getDimensionPixelSize(indexOfSize, 0)
 //          val color = getColor(indexOfColor, 0)
 
-          inSpans(AbsoluteSizeSpan(size)) {
-            for (line in changeLogLines) {
-              append(line)
-              append("\n")
-            }
+//          inSpans(AbsoluteSizeSpan(size)) {
+          for (line in changeLogLines) {
+            append(line)
+            append("\n")
           }
+//          }
         }
-
-        Timber.d("changeLogText: $this")
       }
     }
 

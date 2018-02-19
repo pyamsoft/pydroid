@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.util
 
 import android.content.Context
-import android.support.annotation.CheckResult
 import android.support.annotation.StringRes
 import android.widget.Toast
 
@@ -42,7 +41,6 @@ object Toasty {
   val LENGTH_LONG = Duration.LENGTH_LONG
 
   @JvmStatic
-  @CheckResult
   fun makeText(
     c: Context,
     message: CharSequence,
@@ -58,7 +56,6 @@ object Toasty {
   }
 
   @JvmStatic
-  @CheckResult
   fun makeText(
     c: Context,
     @StringRes resId: Int,
@@ -67,7 +64,6 @@ object Toasty {
   ): Toast = makeText(c, c.applicationContext.getString(resId), duration, show)
 
   @JvmStatic
-  @CheckResult
   fun makeText(
     c: Context,
     @StringRes resId: Int,
@@ -76,7 +72,6 @@ object Toasty {
   ): Toast = makeText(c, c.applicationContext.getString(resId), duration, show)
 
   @JvmStatic
-  @CheckResult
   fun makeText(
     c: Context,
     message: CharSequence,

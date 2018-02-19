@@ -112,7 +112,6 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
         "Error occurred while dismissing dialog. May show again later",
         Toasty.LENGTH_SHORT
     )
-        .show()
     dismiss()
   }
 

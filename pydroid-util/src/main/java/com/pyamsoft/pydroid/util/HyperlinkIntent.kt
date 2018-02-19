@@ -35,7 +35,6 @@ data class HyperlinkIntent internal constructor(
           appContext, "No activity available to handle link: $link",
           Toast.LENGTH_SHORT
       )
-          .show()
     }
   }
 

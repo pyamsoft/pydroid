@@ -46,12 +46,12 @@ abstract class RatingActivity : VersionCheckActivity(),
             android.R.attr.textAppearanceLarge,
             intArrayOf(android.R.attr.textColor, android.R.attr.textSize)
         ) {
-          val size = getDimensionPixelSize(1, 0)
           val color = getColor(0, 0)
+          val size = getDimensionPixelSize(1, 0)
 
           inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             append("What's New in version $versionName")
-            append('\n')
+            append("\n")
           }
         }
 
@@ -59,16 +59,18 @@ abstract class RatingActivity : VersionCheckActivity(),
             android.R.attr.textAppearanceSmall,
             intArrayOf(android.R.attr.textColor, android.R.attr.textSize)
         ) {
-          val size = getDimensionPixelSize(1, 0)
           val color = getColor(0, 0)
+          val size = getDimensionPixelSize(1, 0)
 
           inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             for (line in changeLogLines) {
               append(line)
-              append('\n')
+              append("\n")
             }
           }
         }
+
+        Timber.d("changeLogText: $this")
       }
     }
 

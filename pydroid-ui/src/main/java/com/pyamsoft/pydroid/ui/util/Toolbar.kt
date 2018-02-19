@@ -16,13 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.Toolbar
-import android.util.TypedValue
 import android.widget.TextView
+import androidx.content.withStyledAttributes
 import com.pyamsoft.pydroid.ui.R
 
 private var cachedIcon: Drawable? = null
@@ -32,15 +31,10 @@ private fun Toolbar.loadIcon(): Drawable? {
   var icon = cachedIcon
 
   if (icon == null) {
-    // If not icon is available, resolve it from the current theme
-    val typedValue = TypedValue()
-    context.theme.resolveAttribute(R.attr.toolbarStyle, typedValue, true)
-    val typedArray: TypedArray = context.obtainStyledAttributes(
-        typedValue.data,
-        intArrayOf(R.attr.homeAsUpIndicator)
-    )
-    icon = typedArray.getDrawable(0)
-    typedArray.recycle()
+    // If no icon is available, resolve it from the current theme
+    context.withStyledAttributes(R.attr.toolbarStyle, intArrayOf(R.attr.homeAsUpIndicator)) {
+      icon = getDrawable(0)
+    }
 
     // Cache the loaded icon
     if (icon != null) {
@@ -91,8 +85,8 @@ fun Toolbar.animateMenu() {
 
   val amv = getChildAt(1)
   if (amv is ActionMenuView) {
-    val duration: Long = 300L
-    var delay: Long = 500L
+    val duration = 300L
+    var delay = 500L
     for (i in 0 until amv.childCount) {
       val item = amv.getChildAt(i) ?: continue
       item.popShow(delay, duration)

@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.annotation.DrawableRes
 import android.support.v4.view.ViewCompat
-import android.text.Spannable
 import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +42,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
   internal lateinit var presenter: RatingSavePresenter
   private lateinit var rateLink: String
   private var versionCode: Int = 0
-  private var changeLogText: Spannable? = null
+  private var changeLogText: SpannedString? = null
   @DrawableRes
   private var changeLogIcon: Int = 0
   private lateinit var binding: DialogRatingBinding
@@ -55,7 +54,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     arguments?.let {
       rateLink = it.getString(RATE_LINK, null)
       versionCode = it.getInt(VERSION_CODE, 0)
-      changeLogText = it.getCharSequence(CHANGE_LOG_TEXT, null) as Spannable
+      changeLogText = it.getCharSequence(CHANGE_LOG_TEXT, null) as SpannedString
       changeLogIcon = it.getInt(CHANGE_LOG_ICON, 0)
     }
 

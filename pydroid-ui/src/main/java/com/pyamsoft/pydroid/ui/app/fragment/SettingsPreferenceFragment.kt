@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.show
@@ -141,7 +142,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
 
   override fun onShowRating() {
     val activity = activity
-    if (activity is RatingDialog.ChangeLogProvider) {
+    if (activity is ChangeLogProvider) {
       RatingDialog.newInstance(activity)
           .show(activity, RatingDialog.TAG)
     } else {

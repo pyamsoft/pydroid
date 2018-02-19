@@ -26,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.pyamsoft.pydroid.base.rating.RatingSavePresenter
-import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
@@ -43,7 +42,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
   internal lateinit var presenter: RatingSavePresenter
   private lateinit var rateLink: String
   private var versionCode: Int = 0
-  private var changeLogText: SpannedString? = null
+  private var changelog: SpannedString? = null
   @DrawableRes
   private var changeLogIcon: Int = 0
   private lateinit var binding: DialogRatingBinding
@@ -55,7 +54,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     arguments?.let {
       rateLink = it.getString(RATE_LINK, null)
       versionCode = it.getInt(VERSION_CODE, 0)
-      changeLogText = it.getCharSequence(CHANGE_LOG_TEXT, null) as SpannedString
+      changelog = it.getCharSequence(CHANGE_LOG_TEXT, null) as SpannedString
       changeLogIcon = it.getInt(CHANGE_LOG_ICON, 0)
     }
 
@@ -124,9 +123,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     imageLoader.fromResource(changeLogIcon)
         .into(binding.ratingIcon)
         .bind(viewLifecycle)
-
-    Timber.d("changeLogText: $changeLogText")
-    binding.ratingTextChange.text = changeLogText
+    binding.ratingTextChange.text = changelog
   }
 
   override fun onResume() {
@@ -136,19 +133,6 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.WRAP_CONTENT
     )
-  }
-
-  interface ChangeLogProvider : VersionCheckProvider {
-
-    @CheckResult
-    fun getPackageName(): String
-
-    @get:CheckResult
-    val changeLogText: SpannedString
-
-    @get:DrawableRes
-    @get:CheckResult
-    val applicationIcon: Int
   }
 
   companion object {
@@ -165,7 +149,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
       return RatingDialog().apply {
         arguments = Bundle().apply {
           putString(RATE_LINK, provider.getPackageName())
-          putCharSequence(CHANGE_LOG_TEXT, provider.changeLogText)
+          putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
           putInt(VERSION_CODE, provider.currentApplicationVersion)
           putInt(CHANGE_LOG_ICON, provider.applicationIcon)
         }

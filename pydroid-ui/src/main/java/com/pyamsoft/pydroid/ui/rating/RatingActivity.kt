@@ -21,6 +21,8 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.text.SpannedString
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import androidx.content.withStyledAttributes
 import androidx.text.buildSpannedString
@@ -32,43 +34,54 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(),
-    RatingDialog.ChangeLogProvider,
+    ChangeLogProvider,
     RatingPresenter.View {
 
   internal lateinit var ratingPresenter: RatingPresenter
 
-  override val changeLogText: SpannedString
+  @CheckResult
+  private fun Int.validate(what: String): Int {
+    if (this < 0) {
+      throw IllegalArgumentException("Value for $what is: $this")
+    } else {
+      Timber.d("Value for $what is: $this")
+      return this
+    }
+  }
+
+  final override val changelog: SpannedString
     get() {
       return buildSpannedString {
+
         val attrArray = intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
         val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
         val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
-        withStyledAttributes(android.R.attr.textAppearanceLarge, attrArray) {
-//          val size = getDimensionPixelSize(indexOfSize, 0)
-//          val color = getColor(indexOfColor, 0)
+        withStyledAttributes(android.R.attr.textAppearanceLarge, attrArray.copyOf()) {
+          val size: Int = getDimensionPixelSize(indexOfSize, -1).validate("dimensionPixelSize")
+          val color: Int = getColor(indexOfColor, -1).validate("color")
 
-          inSpans(StyleSpan(BOLD)) {
+          inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             append("What's New in version $versionName")
             append("\n")
           }
         }
 
-        withStyledAttributes(android.R.attr.textAppearanceSmall, attrArray) {
-//          val size = getDimensionPixelSize(indexOfSize, 0)
-//          val color = getColor(indexOfColor, 0)
+        withStyledAttributes(android.R.attr.textAppearanceSmall, attrArray.copyOf()) {
+          val size: Int = getDimensionPixelSize(indexOfSize, -1).validate("dimensionPixelSize")
+          val color: Int = getColor(indexOfColor, -1).validate("color")
 
-//          inSpans(AbsoluteSizeSpan(size)) {
-          for (line in changeLogLines) {
-            append(line)
-            append("\n")
+          inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+            for (line in changeLogLines.build()) {
+              append(line)
+              append("\n")
+            }
           }
-//          }
         }
       }
     }
 
   @get:CheckResult
-  protected abstract val changeLogLines: Array<String>
+  protected abstract val changeLogLines: ChangeLogBuilder
 
   @get:CheckResult
   protected abstract val versionName: String

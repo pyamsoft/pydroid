@@ -42,12 +42,12 @@ abstract class RatingActivity : VersionCheckActivity(),
   override val changeLogText: SpannedString
     get() {
       return buildSpannedString {
-        withStyledAttributes(
-            android.R.attr.textAppearanceLarge,
-            intArrayOf(android.R.attr.textSize, android.R.attr.textColor)
-        ) {
-          val size = getDimensionPixelSize(0, 0)
-          val color = getColor(1, 0)
+        val attrArray = intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
+        val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
+        val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
+        withStyledAttributes(android.R.attr.textAppearanceLarge, attrArray) {
+          val size = getDimensionPixelSize(indexOfSize, 0)
+          val color = getColor(indexOfColor, 0)
 
           inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             append("What's New in version $versionName")
@@ -55,12 +55,9 @@ abstract class RatingActivity : VersionCheckActivity(),
           }
         }
 
-        withStyledAttributes(
-            android.R.attr.textAppearanceSmall,
-            intArrayOf(android.R.attr.textSize, android.R.attr.textColor)
-        ) {
-          val size = getDimensionPixelSize(0, 0)
-          val color = getColor(1, 0)
+        withStyledAttributes(android.R.attr.textAppearanceSmall, attrArray) {
+          val size = getDimensionPixelSize(indexOfSize, 0)
+          val color = getColor(indexOfColor, 0)
 
           inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             for (line in changeLogLines) {

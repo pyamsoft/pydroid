@@ -29,6 +29,7 @@ import androidx.text.buildSpannedString
 import androidx.text.inSpans
 import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
@@ -52,11 +53,10 @@ abstract class RatingActivity : VersionCheckActivity(),
   final override val changelog: SpannedString
     get() {
       return buildSpannedString {
-
         val attrArray = intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
         val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
         val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
-        withStyledAttributes(android.R.attr.textAppearanceLarge, attrArray.copyOf()) {
+        withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
           val size: Int = getDimensionPixelSize(indexOfSize, -1).validate("dimensionPixelSize")
           val color: Int = getColor(indexOfColor, -1).validate("color")
 
@@ -66,7 +66,7 @@ abstract class RatingActivity : VersionCheckActivity(),
           }
         }
 
-        withStyledAttributes(android.R.attr.textAppearanceSmall, attrArray.copyOf()) {
+        withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
           val size: Int = getDimensionPixelSize(indexOfSize, -1).validate("dimensionPixelSize")
           val color: Int = getColor(indexOfColor, -1).validate("color")
 

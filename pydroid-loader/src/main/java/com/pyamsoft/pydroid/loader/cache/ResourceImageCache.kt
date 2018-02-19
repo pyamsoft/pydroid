@@ -32,7 +32,7 @@ internal class ResourceImageCache internal constructor() : ImageCache<@DrawableR
     key: ImageCacheKey<Int>,
     entry: Drawable
   ) {
-    cache.put(key.data, entry)
+    cache[key.data] = entry
   }
 
   override fun retrieve(key: ImageCacheKey<Int>): Drawable? = cache[key.data]

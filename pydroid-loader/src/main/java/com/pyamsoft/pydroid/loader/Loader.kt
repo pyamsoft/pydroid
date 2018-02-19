@@ -25,16 +25,16 @@ import com.pyamsoft.pydroid.loader.targets.Target
 interface Loader<T : Any> {
 
   @CheckResult
-  fun tint(@ColorRes color: Int): Loader<T>
+  fun tint(@ColorRes tint: Int): Loader<T>
 
   @CheckResult
-  fun withStartAction(startAction: () -> Unit): Loader<T>
+  fun withStartAction(action: () -> Unit): Loader<T>
 
   @CheckResult
-  fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T>
+  fun withErrorAction(action: (Throwable) -> Unit): Loader<T>
 
   @CheckResult
-  fun withCompleteAction(completeAction: (T) -> Unit): Loader<T>
+  fun withCompleteAction(action: (T) -> Unit): Loader<T>
 
   @CheckResult
   fun into(imageView: ImageView): Loaded

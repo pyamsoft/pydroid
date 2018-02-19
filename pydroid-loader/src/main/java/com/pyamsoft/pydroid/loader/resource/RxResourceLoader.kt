@@ -51,8 +51,7 @@ internal class RxResourceLoader internal constructor(
             .doOnError {
               Timber.e(it, "Error loading Drawable using RxResourceLoader")
               errorAction?.invoke(it)
-            }.subscribe({ target.loadImage(it) },
-                { target.loadError(loadErrorResource()) })
+            }.subscribe({ target.loadImage(it) }, { target.loadError(loadErrorResource()) })
     )
   }
 }

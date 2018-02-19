@@ -21,32 +21,25 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
 import android.view.View
+import com.pyamsoft.pydroid.design.util.hide
+import com.pyamsoft.pydroid.design.util.show
 import timber.log.Timber
 
 /**
  * Floating Action Button behavior which hides button after scroll distance is passed
  */
-class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionButton.Behavior() {
+class HideScrollFABBehavior(
+  private val distanceNeeded: Int = 0,
+  private val onHidden: (FloatingActionButton) -> Unit = {},
+  private val onShown: (FloatingActionButton) -> Unit = {}
+) : FloatingActionButton.Behavior() {
 
-  private var animating = false
-
-  @CheckResult
-  fun isAnimating(): Boolean = animating
-
-  constructor() : this(0)
-
-  init {
-    animating = false
-  }
+  var isAnimating = false
+    @get:CheckResult get
+    private set
 
   fun endAnimation() {
-    this.animating = false
-  }
-
-  fun onHiddenHook() {
-  }
-
-  fun onShownHook() {
+    this.isAnimating = false
   }
 
   override fun onNestedScroll(
@@ -60,39 +53,28 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
     type: Int
   ) {
     if (dyConsumed > distanceNeeded && child.isShown) {
-      if (!animating) {
-        animating = true
+      if (!isAnimating) {
+        isAnimating = true
         Timber.w("Hide FAB")
-        child.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
-          override fun onHidden(fab: FloatingActionButton?) {
-            super.onHidden(fab)
-            onHiddenHook()
-
-            Timber.w(
-                "Support library as on 25.1.0 sets FAB visibility to GONE, making it ignore other scrolling event."
-            )
-            Timber.w("Set it to invisible to fix this problem")
-            fab?.apply {
-              visibility = View.INVISIBLE
-              animating = false
-            }
-          }
-        })
+        child.hide {
+          Timber.w(
+              "Support library as on 25.1.0 sets FAB visibility to GONE, making it ignore other scrolling event."
+          )
+          Timber.w("Set it to invisible to fix this problem")
+          visibility = View.INVISIBLE
+          isAnimating = false
+          onHidden(this)
+        }
       }
     } else if (dyConsumed < -distanceNeeded && !child.isShown) {
-      if (!animating) {
-        animating = true
+      if (!isAnimating) {
+        isAnimating = true
         Timber.w("Show FAB")
-        child.show(object : FloatingActionButton.OnVisibilityChangedListener() {
-          override fun onShown(fab: FloatingActionButton?) {
-            super.onShown(fab)
-            onShownHook()
-            fab?.apply {
-              visibility = View.VISIBLE
-              animating = false
-            }
-          }
-        })
+        child.show {
+          visibility = View.VISIBLE
+          isAnimating = false
+          onShown(this)
+        }
       }
     }
   }
@@ -104,5 +86,5 @@ class HideScrollFABBehavior(private val distanceNeeded: Int) : FloatingActionBut
     target: View,
     axes: Int,
     type: Int
-  ): Boolean = axes == ViewCompat.SCROLL_AXIS_VERTICAL
+  ): Boolean = (axes == ViewCompat.SCROLL_AXIS_VERTICAL)
 }

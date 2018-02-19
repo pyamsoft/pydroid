@@ -19,17 +19,35 @@ package com.pyamsoft.pydroid.design.util
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 
-object FABUtil {
-
-  @JvmStatic
-  @JvmOverloads
-  fun setupFABBehavior(
-    fab: FloatingActionButton,
-    behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()
-  ) {
-    val params = fab.layoutParams
+fun FloatingActionButton.withBehavior(behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()): FloatingActionButton {
+  return this.also {
+    val params = it.layoutParams
     if (params is CoordinatorLayout.LayoutParams) {
       params.behavior = behavior
     }
   }
+}
+
+fun FloatingActionButton.hide(func: FloatingActionButton.() -> Unit) {
+  this.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
+
+    override fun onHidden(fab: FloatingActionButton?) {
+      super.onHidden(fab)
+      if (fab != null) {
+        func(fab)
+      }
+    }
+  })
+}
+
+fun FloatingActionButton.show(func: FloatingActionButton.() -> Unit) {
+  this.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
+
+    override fun onShown(fab: FloatingActionButton?) {
+      super.onShown(fab)
+      if (fab != null) {
+        func(fab)
+      }
+    }
+  })
 }

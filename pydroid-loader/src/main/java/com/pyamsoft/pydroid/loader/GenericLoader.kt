@@ -25,23 +25,19 @@ abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
   protected var completeAction: ((T) -> Unit)? = null
   protected var tint: Int = 0
 
-  final override fun withStartAction(startAction: () -> Unit): Loader<T> {
-    this.startAction = startAction
-    return this
+  final override fun withStartAction(action: () -> Unit): Loader<T> {
+    return this.also { it.startAction = action }
   }
 
-  final override fun withCompleteAction(completeAction: (T) -> Unit): Loader<T> {
-    this.completeAction = completeAction
-    return this
+  final override fun withCompleteAction(action: (T) -> Unit): Loader<T> {
+    return this.also { it.completeAction = action }
   }
 
-  final override fun withErrorAction(errorAction: (Throwable) -> Unit): Loader<T> {
-    this.errorAction = errorAction
-    return this
+  final override fun withErrorAction(action: (Throwable) -> Unit): Loader<T> {
+    return this.also { it.errorAction = action }
   }
 
-  final override fun tint(@ColorRes color: Int): Loader<T> {
-    this.tint = color
-    return this
+  final override fun tint(@ColorRes tint: Int): Loader<T> {
+    return this.also { it.tint = tint }
   }
 }

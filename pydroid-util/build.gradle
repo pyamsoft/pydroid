@@ -63,6 +63,9 @@ android {
 }
 
 dependencies {
+  // KTX
+  api "androidx.core:core-ktx:$ktx"
+
   // Android support library.
   api "com.android.support:appcompat-v7:$supportLib"
 

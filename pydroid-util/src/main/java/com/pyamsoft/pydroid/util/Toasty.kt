@@ -46,35 +46,42 @@ object Toasty {
   fun makeText(
     c: Context,
     message: CharSequence,
-    duration: Duration
+    duration: Duration,
+    show: Boolean = true
   ): Toast {
     val length: Int = when (duration) {
       Duration.LENGTH_SHORT -> Toast.LENGTH_SHORT
       Duration.LENGTH_LONG -> Toast.LENGTH_LONG
     }
     return Toast.makeText(c.applicationContext, message, length)
+        .also { if (show) it.show() }
   }
 
   @JvmStatic
   @CheckResult
   fun makeText(
-    c: Context, @StringRes resId: Int,
-    duration: Duration
-  ): Toast = makeText(c, c.applicationContext.getString(resId), duration)
+    c: Context,
+    @StringRes resId: Int,
+    duration: Duration,
+    show: Boolean = true
+  ): Toast = makeText(c, c.applicationContext.getString(resId), duration, show)
 
   @JvmStatic
   @CheckResult
   fun makeText(
-    c: Context, @StringRes resId: Int,
-    duration: Int
-  ): Toast = makeText(c, c.applicationContext.getString(resId), duration)
+    c: Context,
+    @StringRes resId: Int,
+    duration: Int,
+    show: Boolean = true
+  ): Toast = makeText(c, c.applicationContext.getString(resId), duration, show)
 
   @JvmStatic
   @CheckResult
   fun makeText(
     c: Context,
     message: CharSequence,
-    duration: Int
+    duration: Int,
+    show: Boolean = true
   ): Toast {
     val length: Duration = when (duration) {
       Toast.LENGTH_SHORT -> LENGTH_SHORT
@@ -83,6 +90,6 @@ object Toasty {
           "Duration must be either Toast.LENGTH_SHORT or Toast.LENGTH_LONG"
       )
     }
-    return makeText(c, message, length)
+    return makeText(c, message, length, show)
   }
 }

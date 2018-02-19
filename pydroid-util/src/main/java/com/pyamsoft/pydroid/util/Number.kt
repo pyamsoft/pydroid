@@ -18,38 +18,34 @@ package com.pyamsoft.pydroid.util
 
 import android.content.Context
 import android.support.annotation.CheckResult
+import android.support.annotation.Px
+import android.util.DisplayMetrics
+import android.util.SparseIntArray
 import android.util.TypedValue
+import kotlin.math.roundToInt
 
-object AppUtil {
+private val cachedDP: SparseIntArray by lazy {
+  SparseIntArray(10)
+}
 
-  private val cachedDP: MutableMap<Float, Float> by lazy {
-    LinkedHashMap<Float, Float>(10)
-  }
-
-  @JvmStatic
-  @CheckResult
-  internal fun toDp(
-    c: Context,
-    px: Float
-  ): Float {
-    return if (px <= 0F) {
-      // Return
-      0F
+@CheckResult
+private fun toDp(c: Context, @Px px: Int): Int {
+  if (px <= 0) {
+    return 0
+  } else {
+    val cached: Int = cachedDP[px, 0]
+    if (cached != 0) {
+      return cached
     } else {
-      val cached: Float? = cachedDP[px]
-      if (cached != null) {
-        // Return
-        cached
-      } else {
-        val m = c.applicationContext.resources.displayMetrics
-        val dp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px, m)
-        cachedDP[px] = dp
-        // Return
-        dp
-      }
+      val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
+      val dp: Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
+          .roundToInt()
+      cachedDP.put(px, dp)
+      // Return
+      return dp
     }
   }
 }
 
 @CheckResult
-fun Number.toDp(c: Context): Float = AppUtil.toDp(c, this.toFloat())
+fun Number.toDp(c: Context): Int = toDp(c, this.toInt())

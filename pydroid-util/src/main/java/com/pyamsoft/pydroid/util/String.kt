@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.optional
+package com.pyamsoft.pydroid.util
 
+import android.content.Context
+import android.content.Intent
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.optional.OptionalImpl.AbsentImpl
-import com.pyamsoft.pydroid.optional.OptionalImpl.PresentImpl
+import androidx.net.toUri
 
 @CheckResult
-fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) AbsentImpl else PresentImpl(this)
+fun String.hyperlink(c: Context): HyperlinkIntent {
+  val intent = Intent(Intent.ACTION_VIEW).also {
+    it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    it.data = this.toUri()
+  }
+
+  return HyperlinkIntent(c.applicationContext, intent, this)
+}

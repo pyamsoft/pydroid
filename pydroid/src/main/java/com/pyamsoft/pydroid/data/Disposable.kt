@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-@file:JvmName("DisposableHelper")
-
-package com.pyamsoft.pydroid.ktext
+package com.pyamsoft.pydroid.data
 
 import io.reactivex.disposables.Disposable
 import io.reactivex.disposables.Disposables

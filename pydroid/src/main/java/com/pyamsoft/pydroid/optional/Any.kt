@@ -14,30 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util
+package com.pyamsoft.pydroid.optional
 
-import android.content.Context
-import android.content.Intent
-import android.widget.Toast
+import android.support.annotation.CheckResult
 
-data class HyperlinkIntent internal constructor(
-  private val context: Context,
-  private val intent: Intent,
-  private val link: String
-) {
-
-  fun navigate() {
-    val appContext = context.applicationContext
-    try {
-      appContext.startActivity(intent)
-    } catch (e: Exception) {
-      Toasty.makeText(
-          appContext, "No activity available to handle link: $link",
-          Toast.LENGTH_SHORT
-      )
-          .show()
-    }
-  }
-
-}
-
+@CheckResult
+fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) AbsentImpl else PresentImpl(this)

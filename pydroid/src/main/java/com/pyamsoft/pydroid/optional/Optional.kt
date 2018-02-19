@@ -31,3 +31,9 @@ interface Optional<out T : Any> {
 
   interface Absent : Optional<Nothing>
 }
+
+internal data class PresentImpl<out T : Any> internal constructor(override val value: T) :
+    Optional.Present<T>
+
+internal object AbsentImpl : Optional.Absent
+

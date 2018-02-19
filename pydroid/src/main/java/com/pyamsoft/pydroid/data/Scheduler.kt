@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-@file:JvmName("SchedulerHelper")
-
-package com.pyamsoft.pydroid.ktext
+package com.pyamsoft.pydroid.data
 
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

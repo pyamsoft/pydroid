@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.util
 
 import android.content.Context
-import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
@@ -27,17 +26,11 @@ import android.support.annotation.ColorRes
 import android.support.v4.content.ContextCompat
 
 @CheckResult
-private fun filter(@ColorInt color: Int): ColorFilter =
-  PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+fun Drawable.tintWith(@ColorInt c: Int): Drawable =
+  this.also { colorFilter = PorterDuffColorFilter(c, PorterDuff.Mode.SRC_IN) }
 
 @CheckResult
-fun Drawable.tintWith(@ColorInt c: Int): Drawable = this.also { colorFilter = filter(c) }
-
-@CheckResult
-fun Drawable.tintWith(
-  c: Context,
-  @ColorRes cl: Int
-): Drawable {
+fun Drawable.tintWith(c: Context, @ColorRes cl: Int): Drawable {
   @ColorInt val i: Int = ContextCompat.getColor(c, cl)
   return tintWith(i)
 }

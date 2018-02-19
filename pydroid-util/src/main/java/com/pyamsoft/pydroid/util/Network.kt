@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.optional
+package com.pyamsoft.pydroid.util
 
-/**
- * PYDroid implementation of the Optional interface contract
- */
-internal sealed class OptionalImpl<out T : Any> : Optional<T> {
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.support.annotation.CheckResult
 
-  internal data class PresentImpl<out T : Any> internal constructor(override val value: T) :
-      Optional.Present<T>
+object NetworkUtil {
 
-  internal object AbsentImpl : Optional.Absent
-
+  @JvmStatic
+  @CheckResult
+  fun isConnected(c: Context): Boolean {
+    val connMan =
+      c.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
+    return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+  }
 }

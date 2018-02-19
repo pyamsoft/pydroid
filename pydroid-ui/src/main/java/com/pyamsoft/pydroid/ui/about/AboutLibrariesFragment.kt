@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
+import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
 import android.support.v4.view.ViewPager.OnPageChangeListener
@@ -46,11 +46,17 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   private lateinit var listener: ViewPager.OnPageChangeListener
   private lateinit var binding: FragmentAboutLibrariesBinding
   private lateinit var refreshLatch: RefreshLatch
+  private var backStackCount: Int = 0
+  private var oldTitle: CharSequence? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.obtain()
         .inject(this)
+
+    arguments!!.let {
+      backStackCount = it.getInt(KEY_BACK_STACK, 0)
+    }
   }
 
   override fun onCreateView(
@@ -174,6 +180,9 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   override fun onResume() {
     super.onResume()
     toolbarActivity.withToolbar {
+      if (oldTitle == null) {
+        oldTitle = it.title
+      }
       it.title = "Open Source Licenses"
       it.setUpEnabled(true)
     }
@@ -189,6 +198,18 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
       arrowLeft.setOnDebouncedClickListener(null)
       arrowRight.setOnDebouncedClickListener(null)
     }
+
+    toolbarActivity.withToolbar { toolbar ->
+      // Set title back to original
+      oldTitle?.let {
+        toolbar.title = it
+      }
+
+      // If this page was last on the back stack, set up false
+      if (backStackCount == 0) {
+        toolbar.setUpEnabled(false)
+      }
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -198,21 +219,34 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
   companion object {
 
-    const val TAG = "AboutLibrariesFragment"
+    private const val TAG = "AboutLibrariesFragment"
     private const val KEY_PAGE = "key_current_page"
+    private const val KEY_BACK_STACK = "key_back_stack"
 
     @JvmStatic
-    fun show(
-      activity: FragmentActivity,
-      currentFragment: Fragment, @IdRes rootViewContainer: Int
-    ) {
+    fun show(activity: FragmentActivity, @IdRes rootViewContainer: Int) {
       val fragmentManager = activity.supportFragmentManager
+      val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {
         fragmentManager.beginTransaction()
-            .detach(currentFragment)
-            .add(rootViewContainer, AboutLibrariesFragment(), TAG)
+            .replace(rootViewContainer, newInstance(backStackCount), TAG)
             .addToBackStack(null)
             .commit()
+      }
+    }
+
+    @JvmStatic
+    @CheckResult
+    fun isPresent(activity: FragmentActivity): Boolean =
+      (activity.supportFragmentManager.findFragmentByTag(TAG) != null)
+
+    @JvmStatic
+    @CheckResult
+    private fun newInstance(backStackCount: Int): AboutLibrariesFragment {
+      return AboutLibrariesFragment().apply {
+        arguments = Bundle().apply {
+          putInt(KEY_BACK_STACK, backStackCount)
+        }
       }
     }
   }

@@ -22,7 +22,6 @@ import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
 import android.support.annotation.XmlRes
-import android.support.v4.app.Fragment
 import android.support.v7.preference.Preference
 import android.view.LayoutInflater
 import android.view.View
@@ -175,11 +174,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
    */
   @CallSuper
   protected open fun onLicenseItemClicked() {
-    Timber.d("Show about licenses fragment")
-    val act = activity
-    val replace = aboutReplaceFragment
-    if (act != null && replace != null) {
-      AboutLibrariesFragment.show(act, replace, rootViewContainer)
+    activity?.let {
+      Timber.d("Show about licenses fragment")
+      AboutLibrariesFragment.show(it, rootViewContainer)
     }
   }
 
@@ -213,8 +210,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
   protected open val hideUpgradeInformation: Boolean = false
 
   protected open val hideClearAll: Boolean = false
-
-  protected abstract val aboutReplaceFragment: Fragment?
 
   @get:[CheckResult IdRes]
   protected abstract val rootViewContainer: Int

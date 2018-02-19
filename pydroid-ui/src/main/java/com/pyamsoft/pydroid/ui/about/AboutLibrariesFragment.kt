@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.database.DataSetObserver
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
@@ -33,6 +32,7 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
+import com.pyamsoft.pydroid.ui.util.listenSingleChange
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
@@ -98,7 +98,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   }
 
   override fun onAllLoaded() {
-    refreshLatch.refreshing = false
+    refreshLatch.isRefreshing = false
   }
 
   private fun setupViewPager(savedInstanceState: Bundle?) {
@@ -111,26 +111,21 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     // We must observe the data set for when it finishes.
     // There is a race condition that can cause the UI to crash if pager.setCurrentItem is
     // called before notifyDataSetChanged finishes
-    pagerAdapter.registerDataSetObserver(object : DataSetObserver() {
+    pagerAdapter.listenSingleChange {
+      Timber.d("Data set changed! Set current item")
 
-      override fun onChanged() {
-        super.onChanged()
-        Timber.d("Data set changed! Set current item and unregister self")
-        pagerAdapter.unregisterDataSetObserver(this)
+      // Hide spinner now that loading is done
+      binding.apply {
+        progressSpinner.visibility = View.GONE
+        viewPager.visibility = View.VISIBLE
+        aboutTitle.visibility = View.VISIBLE
 
-        // Hide spinner now that loading is done
-        binding.apply {
-          progressSpinner.visibility = View.GONE
-          viewPager.visibility = View.VISIBLE
-          aboutTitle.visibility = View.VISIBLE
-
-          // Reload the last looked at page
-          if (savedInstanceState != null) {
-            viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
-          }
+        // Reload the last looked at page
+        if (savedInstanceState != null) {
+          viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
         }
       }
-    })
+    }
 
     val obj = object : OnPageChangeListener {
       override fun onPageScrollStateChanged(state: Int) {
@@ -151,7 +146,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     listener = obj
     binding.viewPager.addOnPageChangeListener(obj)
 
-    refreshLatch.refreshing = true
+    refreshLatch.isRefreshing = true
   }
 
   private fun setupArrows() {

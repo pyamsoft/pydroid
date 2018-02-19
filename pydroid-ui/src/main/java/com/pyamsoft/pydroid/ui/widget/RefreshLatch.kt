@@ -57,14 +57,14 @@ class RefreshLatch private constructor(
   }
 
   private fun show() {
-    Timber.d("Start refreshing")
+    Timber.d("Start isRefreshing")
     onRefreshed(true)
     lastShownTime = SystemClock.uptimeMillis()
     refreshState = true
   }
 
   private fun hide() {
-    Timber.d("Stop refreshing")
+    Timber.d("Stop isRefreshing")
     onRefreshed(false)
     lastShownTime = 0L
     refreshState = false
@@ -80,7 +80,7 @@ class RefreshLatch private constructor(
     show()
   }
 
-  var refreshing: Boolean
+  var isRefreshing: Boolean
     get() = refreshState
     set(value) {
       if (refreshState != value) {

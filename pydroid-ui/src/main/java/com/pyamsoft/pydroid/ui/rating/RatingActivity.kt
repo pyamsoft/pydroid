@@ -42,7 +42,7 @@ abstract class RatingActivity : VersionCheckActivity(),
 
   @CheckResult
   private fun Int.validate(what: String): Int {
-    if (this < 0) {
+    if (this == RESOURCE_NOT_FOUND) {
       throw IllegalArgumentException("Value for $what is: $this")
     } else {
       Timber.d("Value for $what is: $this")
@@ -57,8 +57,9 @@ abstract class RatingActivity : VersionCheckActivity(),
         val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
         val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
         withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
-          val size: Int = getDimensionPixelSize(indexOfSize, -1).validate("dimensionPixelSize")
-          val color: Int = getColor(indexOfColor, -1).validate("color")
+          val size: Int =
+            getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
+          val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
           inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             append("What's New in version $versionName")
@@ -67,8 +68,9 @@ abstract class RatingActivity : VersionCheckActivity(),
         }
 
         withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
-          val size: Int = getDimensionPixelSize(indexOfSize, -1).validate("dimensionPixelSize")
-          val color: Int = getColor(indexOfColor, -1).validate("color")
+          val size: Int =
+            getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
+          val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
           inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             for (line in changeLogLines.build()) {
@@ -109,5 +111,10 @@ abstract class RatingActivity : VersionCheckActivity(),
 
   override fun onShowRatingError(throwable: Throwable) {
     Timber.e(throwable, "Could not load rating dialog")
+  }
+
+  companion object {
+
+    private const val RESOURCE_NOT_FOUND = 0
   }
 }

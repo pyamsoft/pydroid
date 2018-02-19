@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.social
 
 import android.content.Context
-import com.pyamsoft.pydroid.util.NetworkUtil
+import com.pyamsoft.pydroid.util.hyperlink
 
 object Linker {
 
@@ -33,26 +33,31 @@ object Linker {
     context: Context,
     link: String
   ) {
-    NetworkUtil.newLink(context.applicationContext, BASE_MARKET + link)
+    "$BASE_MARKET$link".hyperlink(context)
+        .navigate()
   }
 
   @JvmStatic
   fun clickGooglePlay(context: Context) {
-    NetworkUtil.newLink(context.applicationContext, GOOGLE_PLAY_DEVELOPER_PAGE)
+    GOOGLE_PLAY_DEVELOPER_PAGE.hyperlink(context)
+        .navigate()
   }
 
   @JvmStatic
   fun clickGooglePlus(context: Context) {
-    NetworkUtil.newLink(context.applicationContext, GOOGLE_PLUS)
+    GOOGLE_PLUS.hyperlink(context)
+        .navigate()
   }
 
   @JvmStatic
   fun clickBlogger(context: Context) {
-    NetworkUtil.newLink(context.applicationContext, OFFICIAL_BLOG)
+    OFFICIAL_BLOG.hyperlink(context)
+        .navigate()
   }
 
   @JvmStatic
   fun clickFacebook(context: Context) {
-    NetworkUtil.newLink(context.applicationContext, FACEBOOK)
+    FACEBOOK.hyperlink(context)
+        .navigate()
   }
 }

@@ -25,8 +25,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding
-import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.util.NetworkUtil
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutPagerFragment : Fragment() {
 
@@ -56,23 +56,28 @@ internal class AboutPagerFragment : Fragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    binding.aboutItemWebview.settings.defaultFontSize = 12
-    binding.aboutItemWebview.isVerticalScrollBarEnabled = true
-    binding.aboutItemWebview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
+    binding.apply {
+      aboutItemWebview.settings.defaultFontSize = 12
+      aboutItemWebview.isVerticalScrollBarEnabled = true
+      aboutItemWebview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
 
-    binding.aboutItemHomepage.paintFlags =
-        (binding.aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
-    binding.aboutItemHomepage.text = homepage
-    binding.aboutItemHomepage.setOnDebouncedClickListener {
-      NetworkUtil.newLink(it.context.applicationContext, homepage)
+      aboutItemHomepage.paintFlags = (aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+      aboutItemHomepage.text = homepage
+      aboutItemHomepage.setOnDebouncedClickListener {
+        homepage.hyperlink(it.context)
+            .navigate()
+      }
     }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    binding.aboutItemHomepage.text = null
-    binding.aboutItemHomepage.setOnDebouncedClickListener(null)
-    binding.aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
+    binding.apply {
+      aboutItemHomepage.text = null
+      aboutItemHomepage.setOnDebouncedClickListener(null)
+      aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
+      unbind()
+    }
   }
 
   companion object {
@@ -83,12 +88,12 @@ internal class AboutPagerFragment : Fragment() {
     @JvmStatic
     @CheckResult
     fun newInstance(model: AboutLibrariesModel): AboutPagerFragment {
-      val fragment = AboutPagerFragment()
-      val args = Bundle()
-      args.putString(KEY_HOMEPAGE, model.homepage)
-      args.putString(KEY_LICENSE, model.license)
-      fragment.arguments = args
-      return fragment
+      return AboutPagerFragment().apply {
+        arguments = Bundle().apply {
+          putString(KEY_HOMEPAGE, model.homepage)
+          putString(KEY_LICENSE, model.license)
+        }
+      }
     }
   }
 }

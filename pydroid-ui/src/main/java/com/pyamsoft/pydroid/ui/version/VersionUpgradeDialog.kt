@@ -77,13 +77,13 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
       currentVersion: Int,
       latestVersion: Int
     ): VersionUpgradeDialog {
-      val args = Bundle()
-      val fragment = VersionUpgradeDialog()
-      args.putString(KEY_NAME, applicationName)
-      args.putInt(KEY_CURRENT_VERSION, currentVersion)
-      args.putInt(KEY_LATEST_VERSION, latestVersion)
-      fragment.arguments = args
-      return fragment
+      return VersionUpgradeDialog().apply {
+        arguments = Bundle().apply {
+          putString(KEY_NAME, applicationName)
+          putInt(KEY_CURRENT_VERSION, currentVersion)
+          putInt(KEY_LATEST_VERSION, latestVersion)
+        }
+      }
     }
   }
 }

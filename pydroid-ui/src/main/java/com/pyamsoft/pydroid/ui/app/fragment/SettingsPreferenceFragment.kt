@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.social.Linker
-import com.pyamsoft.pydroid.ui.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.Toasty
@@ -143,10 +143,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
   override fun onShowRating() {
     val activity = activity
     if (activity is RatingDialog.ChangeLogProvider) {
-      DialogUtil.guaranteeSingleDialogFragment(
-          activity, RatingDialog.newInstance(activity),
-          RatingDialog.TAG
-      )
+      RatingDialog.newInstance(activity)
+          .show(activity, RatingDialog.TAG)
     } else {
       throw ClassCastException("Activity is not a change log provider")
     }
@@ -161,13 +159,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     updated: Int
   ) {
     Timber.d("Updated version found. %d => %d", current, updated)
-    DialogUtil.guaranteeSingleDialogFragment(
-        activity,
-        VersionUpgradeDialog.newInstance(
-            versionedActivity.applicationName, current,
-            updated
-        ), VersionUpgradeDialog.TAG
-    )
+    VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current, updated)
+        .show(activity, VersionUpgradeDialog.TAG)
   }
 
   /**

@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ViewLifecycleOwner
 import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding
-import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 class SocialMediaLayout : LinearLayout, LifecycleOwner {
 

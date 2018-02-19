@@ -33,8 +33,7 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
-import com.pyamsoft.pydroid.ui.helper.postWith
-import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 import timber.log.Timber
@@ -76,9 +75,10 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
           aboutTitle.visibility = View.INVISIBLE
         } else {
           // Load complete
-          viewPager.postWith {
+          val pager = viewPager
+          pager.post {
             pagerAdapter.notifyDataSetChanged()
-            aboutTitle.text = pagerAdapter.getPageTitle(it.currentItem)
+            aboutTitle.text = pagerAdapter.getPageTitle(pager.currentItem)
           }
         }
       }
@@ -94,11 +94,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   }
 
   override fun onLicenseLoaded(model: AboutLibrariesModel) {
-    binding.viewPager.postWith {
-      if (view != null) {
-        pagerAdapter.add(model)
-      }
-    }
+    binding.viewPager.post { pagerAdapter.add(model) }
   }
 
   override fun onAllLoaded() {

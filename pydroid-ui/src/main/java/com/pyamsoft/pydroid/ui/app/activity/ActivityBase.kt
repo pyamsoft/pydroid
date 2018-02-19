@@ -36,9 +36,9 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
   @CallSuper
   override fun onBackPressed() {
-    supportFragmentManager.fragments.asSequence()
-        .filter { it is BackPressHandler && it.onBackPressed() }
-        .forEach { return }
+    if (supportFragmentManager.fragments.any { it is BackPressHandler && it.onBackPressed() }) {
+      return
+    }
     super.onBackPressed()
   }
 

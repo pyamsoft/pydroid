@@ -14,33 +14,15 @@
  * limitations under the License.
  */
 
-@file:JvmName("Toolbars")
-@file:JvmMultifileClass
-
-/*
- *     Copyright (C) 2017 Peter Kenji Yamanaka
- *
- *     This program is free software; you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation; either version 2 of the License, or
- *     (at your option) any later version.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License along
- *     with this program; if not, write to the Free Software Foundation, Inc.,
- *     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-
 package com.pyamsoft.pydroid.ui.util
 
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
+import android.os.Build
+import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.Toolbar
 import android.util.TypedValue
+import android.widget.TextView
 import com.pyamsoft.pydroid.ui.R
 
 private var cachedIcon: Drawable? = null
@@ -97,5 +79,25 @@ fun Toolbar.setUpEnabled(
     showUpIcon(customIcon)
   } else {
     navigationIcon = null
+  }
+}
+
+fun Toolbar.animateMenu() {
+  val t = getChildAt(0)
+  if (t is TextView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    t.fadeIn()
+        .start()
+  }
+
+  val amv = getChildAt(1)
+  if (amv is ActionMenuView) {
+    val duration: Long = 300L
+    var delay: Long = 500L
+    for (i in 0 until amv.childCount) {
+      val item = amv.getChildAt(i) ?: continue
+      item.popShow(delay, duration)
+          .start()
+      delay += duration
+    }
   }
 }

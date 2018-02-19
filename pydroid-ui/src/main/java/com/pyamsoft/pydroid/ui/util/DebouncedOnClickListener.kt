@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.helper
+package com.pyamsoft.pydroid.ui.util
 
 import android.support.annotation.CheckResult
 import android.view.View
@@ -22,7 +22,7 @@ import android.view.View
 /**
  * Click listener which debounces all other click events for the frame
  */
-abstract class DebouncedOnClickListener : View.OnClickListener {
+abstract class DebouncedOnClickListener protected constructor() : View.OnClickListener {
 
   final override fun onClick(view: View) {
     if (enabled) {
@@ -48,12 +48,4 @@ abstract class DebouncedOnClickListener : View.OnClickListener {
       }
     }
   }
-}
-
-fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?) {
-  setOnClickListener(listener)
-}
-
-inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> Unit) {
-  setOnClickListener(DebouncedOnClickListener.create(func))
 }

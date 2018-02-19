@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult
 import android.support.annotation.DrawableRes
 import android.support.v4.view.ViewCompat
 import android.text.Spannable
+import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,10 +32,10 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
-import com.pyamsoft.pydroid.ui.helper.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.util.AppUtil
-import com.pyamsoft.pydroid.util.NetworkUtil
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.Toasty
+import com.pyamsoft.pydroid.util.hyperlink
+import com.pyamsoft.pydroid.util.toDp
 
 internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
@@ -98,7 +99,8 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
   override fun onRatingSaved(accept: Boolean) {
     if (accept) {
       val fullLink = "market://details?id=" + rateLink
-      NetworkUtil.newLink(context!!.applicationContext, fullLink)
+      fullLink.hyperlink(context!!)
+          .navigate()
     }
 
     dismiss()
@@ -117,8 +119,9 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
   private fun initDialog() {
     ViewCompat.setElevation(
         binding.ratingIcon,
-        AppUtil.convertToDP(binding.ratingIcon.context, 8F)
+        8.toDp(binding.ratingIcon.context).toFloat()
     )
+
     imageLoader.fromResource(changeLogIcon)
         .into(binding.ratingIcon)
         .bind(viewLifecycle)
@@ -140,7 +143,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     fun getPackageName(): String
 
     @get:CheckResult
-    val changeLogText: Spannable
+    val changeLogText: SpannedString
 
     @get:DrawableRes
     @get:CheckResult

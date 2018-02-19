@@ -16,15 +16,21 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
+import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
-import android.text.Spannable
+import android.text.SpannedString
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
+import androidx.content.withStyledAttributes
+import androidx.text.buildSpannedString
+import androidx.text.inSpans
 import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
-import com.pyamsoft.pydroid.util.StringUtil
 import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(),
@@ -33,47 +39,37 @@ abstract class RatingActivity : VersionCheckActivity(),
 
   internal lateinit var ratingPresenter: RatingPresenter
 
-  override val changeLogText: Spannable
+  override val changeLogText: SpannedString
     get() {
-      val title = "What's New in Version " + versionName
-      val lines = changeLogLines
-      val fullLines: Array<String> = Array(lines.size + 1) { "" }
-      fullLines[0] = title
-      System.arraycopy(lines, 0, fullLines, 1, fullLines.size - 1)
-      val spannable = StringUtil.createLineBreakBuilder(fullLines)
+      return buildSpannedString {
+        withStyledAttributes(
+            android.R.attr.textAppearanceLarge,
+            intArrayOf(android.R.attr.textColor, android.R.attr.textSize)
+        ) {
+          val size = getDimensionPixelSize(1, 0)
+          val color = getColor(0, 0)
 
-      var start = 0
-      var end = title.length
-      val largeSize = StringUtil.getTextSizeFromAppearance(
-          this,
-          android.R.attr.textAppearanceLarge
-      )
-      val largeColor = StringUtil.getTextColorFromAppearance(
-          this,
-          android.R.attr.textAppearanceLarge
-      )
-      val smallSize = StringUtil.getTextSizeFromAppearance(
-          this,
-          android.R.attr.textAppearanceSmall
-      )
-      val smallColor = StringUtil.getTextColorFromAppearance(
-          this,
-          android.R.attr.textAppearanceSmall
-      )
+          inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+            append("What's New in version $versionName")
+            append('\n')
+          }
+        }
 
-      StringUtil.boldSpan(spannable, start, end)
-      StringUtil.sizeSpan(spannable, start, end, largeSize)
-      StringUtil.colorSpan(spannable, start, end, largeColor)
+        withStyledAttributes(
+            android.R.attr.textAppearanceSmall,
+            intArrayOf(android.R.attr.textColor, android.R.attr.textSize)
+        ) {
+          val size = getDimensionPixelSize(1, 0)
+          val color = getColor(0, 0)
 
-      start += end + 2
-      for (line in lines) {
-        end += 2 + line.length
+          inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+            for (line in changeLogLines) {
+              append(line)
+              append('\n')
+            }
+          }
+        }
       }
-
-      StringUtil.sizeSpan(spannable, start, end, smallSize)
-      StringUtil.colorSpan(spannable, start, end, smallColor)
-
-      return spannable
     }
 
   @get:CheckResult
@@ -94,15 +90,13 @@ abstract class RatingActivity : VersionCheckActivity(),
   override fun onPostResume() {
     super.onPostResume()
 
-    // Dialog must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
+    // DialogFragment must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
     ratingPresenter.loadRatingDialog(false)
   }
 
   override fun onShowRating() {
-    DialogUtil.guaranteeSingleDialogFragment(
-        this, RatingDialog.newInstance(this),
-        RatingDialog.TAG
-    )
+    RatingDialog.newInstance(this)
+        .show(this, RatingDialog.TAG)
   }
 
   override fun onShowRatingError(throwable: Throwable) {

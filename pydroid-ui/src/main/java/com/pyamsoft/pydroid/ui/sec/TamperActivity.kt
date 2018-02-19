@@ -21,7 +21,7 @@ import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.util.DialogUtil
+import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
 abstract class TamperActivity : RatingActivity() {
@@ -79,7 +79,7 @@ abstract class TamperActivity : RatingActivity() {
     super.onPostResume()
     if (applicationIsTampered()) {
       Timber.e("Application has been tampered with, notify user")
-      DialogUtil.guaranteeSingleDialogFragment(this, TamperDialog(), "tamper")
+      TamperDialog().show(this, TamperDialog.TAG)
     }
   }
 

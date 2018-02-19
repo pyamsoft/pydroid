@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
 import com.pyamsoft.pydroid.loader.targets.Target
-import com.pyamsoft.pydroid.util.DrawableUtil
+import com.pyamsoft.pydroid.util.tintWith
 
 /**
  * Loads Images from Resources.
@@ -74,10 +74,8 @@ abstract class ResourceLoader protected constructor(
   private fun loadFreshResource(): Drawable {
     val possiblyLoaded: Drawable = AppCompatResources.getDrawable(appContext, resource)!!
     if (tint != 0) {
-      // Return
-      return DrawableUtil.tintDrawableFromRes(appContext, possiblyLoaded, tint)
+      return possiblyLoaded.tintWith(appContext, tint)
     } else {
-      // Return
       return possiblyLoaded
     }
   }

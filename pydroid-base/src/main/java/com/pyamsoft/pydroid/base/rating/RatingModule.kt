@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 
 class RatingModule(
-  module: PYDroidModule,
+  module: PYDroidModule<*>,
   preferences: RatingPreferences
 ) {
 

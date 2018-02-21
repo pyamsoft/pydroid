@@ -16,14 +16,14 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import android.content.Context
-import android.os.Build
+import com.pyamsoft.pydroid.base.version.api.MinimumApiProvider
+import com.pyamsoft.pydroid.base.version.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.util.NoNetworkException
-import com.pyamsoft.pydroid.util.isConnected
 import io.reactivex.Single
 
 internal class VersionCheckInteractorImpl internal constructor(
-  private val context: Context,
+  private val minimumApiProvider: MinimumApiProvider,
+  private val networkStatusProvider: NetworkStatusProvider,
   private val versionCheckService: VersionCheckService
 ) : VersionCheckInteractor {
 
@@ -32,24 +32,23 @@ internal class VersionCheckInteractorImpl internal constructor(
     force: Boolean
   ): Single<Int> {
     return Single.defer {
-      if (!isConnected(context)) {
+      if (!networkStatusProvider.hasConnection()) {
         throw NoNetworkException
-      }
-
-      return@defer versionCheckService.checkVersion(packageName)
-          .map {
-            val apiVersion: Int = Build.VERSION.SDK_INT
-            var lowestApplicableVersionCode = 0
-            it.responseObjects()
-                .sortedBy { it.minApi() }
-                .forEach {
-                  if (it.minApi() <= apiVersion) {
-                    lowestApplicableVersionCode = it.version()
+      } else {
+        return@defer versionCheckService.checkVersion(packageName)
+            .map {
+              var lowestApplicableVersionCode = 0
+              it.responseObjects()
+                  .sortedBy { it.minApi() }
+                  .forEach {
+                    if (it.minApi() <= minimumApiProvider.minApi()) {
+                      lowestApplicableVersionCode = it.version()
+                    }
                   }
-                }
 
-            return@map lowestApplicableVersionCode
-          }
+              return@map lowestApplicableVersionCode
+            }
+      }
     }
   }
 }

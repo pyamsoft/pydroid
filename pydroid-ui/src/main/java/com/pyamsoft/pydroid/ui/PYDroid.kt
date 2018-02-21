@@ -63,7 +63,7 @@ object PYDroid {
    */
   @JvmStatic
   private fun initialize(
-    pydroidModule: PYDroidModule,
+    pydroidModule: PYDroidModule<*>,
     loaderModule: LoaderModule
   ) {
     component = PYDroidComponentImpl(pydroidModule, loaderModule)
@@ -81,7 +81,7 @@ object PYDroid {
    */
   @JvmStatic
   fun init(
-    pydroidModule: PYDroidModule,
+    pydroidModule: PYDroidModule<*>,
     loaderModule: LoaderModule
   ) {
     if (component == null) {

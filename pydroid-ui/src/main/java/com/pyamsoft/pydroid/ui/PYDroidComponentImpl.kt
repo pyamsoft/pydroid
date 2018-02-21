@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModule
+import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.base.version.VersionCheckModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
@@ -25,14 +26,13 @@ import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
-import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 
 internal class PYDroidComponentImpl internal constructor(
-  pyDroidModule: PYDroidModule,
+  pyDroidModule: PYDroidModule<*>,
   private val loaderModule: LoaderModule
 ) : PYDroidComponent {
 

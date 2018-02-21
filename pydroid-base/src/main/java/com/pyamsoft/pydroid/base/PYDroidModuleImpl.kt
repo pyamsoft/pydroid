@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid
+package com.pyamsoft.pydroid.base
 
 import android.app.Application
-import android.content.Context
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class PYDroidModuleImpl(
-  private val application: Application,
+class PYDroidModuleImpl<out T : Application>(
+  private val application: T,
   override val isDebug: Boolean
-) : PYDroidModule {
+) : PYDroidModule<T> {
 
   // Singleton
-  @CheckResult
-  override fun provideContext(): Context = application
+  override fun provideApplication(): T = application
 
   // Singleton
   @CheckResult

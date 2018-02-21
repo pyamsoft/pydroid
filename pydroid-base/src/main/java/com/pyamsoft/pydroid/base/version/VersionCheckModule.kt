@@ -18,6 +18,10 @@ package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.base.version.api.MinimumApiProvider
+import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
+import com.pyamsoft.pydroid.base.version.network.NetworkStatusProvider
+import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
 import com.squareup.moshi.Moshi
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
@@ -29,7 +33,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class VersionCheckModule(pyDroidModule: PYDroidModule) {
+class VersionCheckModule(pyDroidModule: PYDroidModule<*>) {
 
   private val cachedInteractor: VersionCheckInteractor
   private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()
@@ -40,12 +44,20 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
     val versionCheckApi = VersionCheckApi(
         provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideConverter())
     )
+
     val versionCheckService: VersionCheckService = versionCheckApi.create(
         VersionCheckService::class.java
     )
+
+    val networkStatusProvider: NetworkStatusProvider =
+      NetworkStatusProviderImpl(pyDroidModule.provideContext())
+
+    val minimumApiProvider: MinimumApiProvider = MinimumApiProviderImpl()
+
     val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(
-        pyDroidModule.provideContext(), versionCheckService
+        minimumApiProvider, networkStatusProvider, versionCheckService
     )
+
     cachedInteractor = VersionCheckInteractorCache(interactor)
   }
 

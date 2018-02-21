@@ -14,35 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid
+package com.pyamsoft.pydroid.base.version.network
 
-import android.app.Application
-import android.content.Context
 import android.support.annotation.CheckResult
-import io.reactivex.Scheduler
 
-interface PYDroidModule<out T : Application> {
+interface NetworkStatusProvider {
 
-  // Singleton
-  val isDebug: Boolean
-
-  // Singleton
-  @CheckResult
-  fun provideApplication(): T
-
-  // Singleton
-  @CheckResult
-  fun provideContext(): Context = provideApplication()
-
-  // Singleton
-  @CheckResult
-  fun provideIoScheduler(): Scheduler
-
-  // Singleton
-  @CheckResult
-  fun provideComputationScheduler(): Scheduler
-
-  // Singleton
-  @CheckResult
-  fun provideMainThreadScheduler(): Scheduler
+  @CheckResult fun hasConnection(): Boolean
 }
+

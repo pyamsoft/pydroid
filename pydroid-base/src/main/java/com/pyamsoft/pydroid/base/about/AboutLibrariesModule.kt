@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
 import io.reactivex.Scheduler
 
-class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
+class AboutLibrariesModule(pyDroidModule: PYDroidModule<*>) {
 
   private val cacheInteractor: AboutLibrariesInteractor
   private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()

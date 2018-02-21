@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.base.version.api
 
-import android.support.annotation.CheckResult
-import android.support.annotation.DrawableRes
-import android.text.SpannedString
-import com.pyamsoft.pydroid.base.version.VersionCheckProvider
+import android.os.Build
 
-interface ChangeLogProvider : VersionCheckProvider {
+internal class MinimumApiProviderImpl internal constructor() : MinimumApiProvider {
 
-  @CheckResult
-  fun getPackageName(): String
+  override fun minApi(): Int {
+    return Build.VERSION.SDK_INT
+  }
 
-  @get:CheckResult
-  val changelog: SpannedString
-
-  @get:DrawableRes
-  @get:CheckResult
-  val applicationIcon: Int
 }
+

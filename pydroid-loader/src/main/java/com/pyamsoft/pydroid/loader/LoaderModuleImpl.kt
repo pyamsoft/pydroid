@@ -18,12 +18,12 @@ package com.pyamsoft.pydroid.loader
 
 import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.ApplicationModule
 import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
-class LoaderModuleImpl(module: PYDroidModule) : LoaderModule {
+class LoaderModuleImpl(module: ApplicationModule) : LoaderModule {
 
   private val imageLoader: ImageLoaderImpl
 

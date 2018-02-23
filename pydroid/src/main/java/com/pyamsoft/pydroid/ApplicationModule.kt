@@ -29,7 +29,7 @@ interface ApplicationModule {
 
   // Singleton
   @CheckResult
-  fun provideContext(): Context = provideApplication()
+  fun provideContext(): Context
 
   // Singleton
   @CheckResult

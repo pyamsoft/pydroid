@@ -17,28 +17,10 @@
 package com.pyamsoft.pydroid.base
 
 import android.app.Application
-import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class PYDroidModuleImpl(
-  private val application: Application,
+  application: Application,
   override val isDebug: Boolean
-) : PYDroidModule {
+) : ApplicationModuleImpl(application), PYDroidModule
 
-  override fun provideApplication(): Application = application
-
-  // Singleton
-  @CheckResult
-  override fun provideIoScheduler(): Scheduler = Schedulers.io()
-
-  // Singleton
-  @CheckResult
-  override fun provideComputationScheduler(): Scheduler = Schedulers.computation()
-
-  // Singleton
-  @CheckResult
-  override fun provideMainThreadScheduler(): Scheduler = AndroidSchedulers.mainThread()
-}

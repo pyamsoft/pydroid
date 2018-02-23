@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.loader.resource
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
-import com.pyamsoft.pydroid.data.enforceIo
-import com.pyamsoft.pydroid.data.enforceMainThread
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.loaded.RxLoaded
@@ -35,11 +33,6 @@ internal class RxResourceLoader internal constructor(
   private val mainThreadScheduler: Scheduler,
   private val ioScheduler: Scheduler
 ) : ResourceLoader(context, resource, errorResource, resourceImageCache) {
-
-  init {
-    mainThreadScheduler.enforceMainThread()
-    ioScheduler.enforceIo()
-  }
 
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(

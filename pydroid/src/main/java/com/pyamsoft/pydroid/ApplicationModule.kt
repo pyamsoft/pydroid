@@ -16,8 +16,30 @@
 
 package com.pyamsoft.pydroid
 
-interface PYDroidModule : ApplicationModule {
+import android.app.Application
+import android.content.Context
+import android.support.annotation.CheckResult
+import io.reactivex.Scheduler
+
+interface ApplicationModule {
 
   // Singleton
-  val isDebug: Boolean
+  @CheckResult
+  fun provideApplication(): Application
+
+  // Singleton
+  @CheckResult
+  fun provideContext(): Context = provideApplication()
+
+  // Singleton
+  @CheckResult
+  fun provideIoScheduler(): Scheduler
+
+  // Singleton
+  @CheckResult
+  fun provideComputationScheduler(): Scheduler
+
+  // Singleton
+  @CheckResult
+  fun provideMainThreadScheduler(): Scheduler
 }

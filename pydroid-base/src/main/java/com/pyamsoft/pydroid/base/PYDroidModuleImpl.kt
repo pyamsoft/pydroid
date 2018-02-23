@@ -23,13 +23,12 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class PYDroidModuleImpl<out T : Application>(
-  private val application: T,
+class PYDroidModuleImpl(
+  private val application: Application,
   override val isDebug: Boolean
-) : PYDroidModule<T> {
+) : PYDroidModule {
 
-  // Singleton
-  override fun provideApplication(): T = application
+  override fun provideApplication(): Application = application
 
   // Singleton
   @CheckResult

@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 
 internal class PYDroidComponentImpl internal constructor(
-  pyDroidModule: PYDroidModule<*>,
+  pyDroidModule: PYDroidModule,
   private val loaderModule: LoaderModule
 ) : PYDroidComponent {
 

@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.data.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
-class LoaderModuleImpl(module: PYDroidModule<*>) : LoaderModule {
+class LoaderModuleImpl(module: PYDroidModule) : LoaderModule {
 
   private val imageLoader: ImageLoaderImpl
 

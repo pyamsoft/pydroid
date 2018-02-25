@@ -21,13 +21,26 @@ import com.google.auto.value.AutoValue
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
+import timber.log.Timber
+import java.util.Collections
 
 @AutoValue
 internal abstract class VersionCheckResponse internal constructor() {
 
   @CheckResult
   @Json(name = "response_objects")
-  abstract fun responseObjects(): List<ResponseObject>
+  protected abstract fun internalResponseObjects(): List<ResponseObject>?
+
+  @CheckResult
+  fun responseObjects(): List<ResponseObject> {
+    val response: List<ResponseObject>? = internalResponseObjects()
+    if (response == null) {
+      Timber.w("responseObjects was null: return emptyList()")
+      return emptyList()
+    } else {
+      return Collections.unmodifiableList(response)
+    }
+  }
 
   @AutoValue
   internal abstract class ResponseObject internal constructor() {

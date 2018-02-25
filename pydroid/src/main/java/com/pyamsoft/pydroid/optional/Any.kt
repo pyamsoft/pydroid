@@ -17,6 +17,23 @@
 package com.pyamsoft.pydroid.optional
 
 import android.support.annotation.CheckResult
+import timber.log.Timber
 
+@JvmOverloads
 @CheckResult
-fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) AbsentImpl else PresentImpl(this)
+fun <T : Any> T?.notNull(
+  name: String = "object",
+  fallback: (() ->T)? = null
+): T {
+  if (this == null) {
+    val nullMessage = "Expected not-null $name was null"
+    if (fallback == null) {
+      throw NullPointerException(nullMessage)
+    } else {
+      Timber.w(nullMessage)
+      return fallback()
+    }
+  } else {
+    return this
+  }
+}

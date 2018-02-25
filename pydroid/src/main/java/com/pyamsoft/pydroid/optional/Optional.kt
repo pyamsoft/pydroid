@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.optional
 
+import android.support.annotation.CheckResult
+
 /**
  * A simple Optional API, You can drop in your own implementation if needed.
  *
@@ -37,3 +39,5 @@ internal data class PresentImpl<out T : Any> internal constructor(override val v
 
 internal object AbsentImpl : Optional.Absent
 
+@CheckResult
+fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) AbsentImpl else PresentImpl(this)

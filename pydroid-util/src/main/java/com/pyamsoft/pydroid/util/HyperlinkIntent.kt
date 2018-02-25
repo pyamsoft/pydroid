@@ -37,6 +37,4 @@ data class HyperlinkIntent internal constructor(
       )
     }
   }
-
 }
-

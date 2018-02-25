@@ -23,4 +23,3 @@ class PYDroidModuleImpl(
   application: Application,
   override val isDebug: Boolean
 ) : ApplicationModuleImpl(application), PYDroidModule
-

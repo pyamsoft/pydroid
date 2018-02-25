@@ -25,6 +25,4 @@ internal class NetworkStatusProviderImpl internal constructor(private val contex
   override fun hasConnection(): Boolean {
     return isConnected(context)
   }
-
 }
-

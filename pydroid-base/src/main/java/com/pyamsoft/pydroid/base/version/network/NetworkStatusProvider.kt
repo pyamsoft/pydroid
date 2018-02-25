@@ -22,4 +22,3 @@ interface NetworkStatusProvider {
 
   @CheckResult fun hasConnection(): Boolean
 }
-

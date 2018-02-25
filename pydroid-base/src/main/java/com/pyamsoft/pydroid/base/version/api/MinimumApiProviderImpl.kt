@@ -23,6 +23,4 @@ internal class MinimumApiProviderImpl internal constructor() : MinimumApiProvide
   override fun minApi(): Int {
     return Build.VERSION.SDK_INT
   }
-
 }
-

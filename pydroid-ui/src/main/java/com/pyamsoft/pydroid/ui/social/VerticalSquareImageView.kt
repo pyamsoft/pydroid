@@ -51,4 +51,3 @@ internal class VerticalSquareImageView : AppCompatImageView {
     super.onMeasure(heightMeasureSpec, heightMeasureSpec)
   }
 }
-

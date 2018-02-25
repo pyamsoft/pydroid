@@ -19,4 +19,3 @@ package com.pyamsoft.pydroid.base
 import com.pyamsoft.pydroid.base.rating.RatingPreferences
 
 interface PYDroidPreferences : RatingPreferences
-

@@ -30,4 +30,3 @@ inline fun <T : FragmentStatePagerAdapter> T.listenSingleChange(crossinline func
     }
   })
 }
-

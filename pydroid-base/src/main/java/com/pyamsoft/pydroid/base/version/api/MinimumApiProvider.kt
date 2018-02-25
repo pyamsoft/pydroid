@@ -22,4 +22,3 @@ interface MinimumApiProvider {
 
   @CheckResult fun minApi(): Int
 }
-

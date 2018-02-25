@@ -23,7 +23,7 @@ import timber.log.Timber
 @CheckResult
 fun <T : Any> T?.notNull(
   name: String = "object",
-  fallback: (() ->T)? = null
+  fallback: (() -> T)? = null
 ): T {
   if (this == null) {
     val nullMessage = "Expected not-null $name was null"

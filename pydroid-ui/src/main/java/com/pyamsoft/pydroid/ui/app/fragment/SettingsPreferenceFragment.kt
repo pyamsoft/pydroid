@@ -175,7 +175,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
    */
   @CallSuper
   protected open fun onLicenseItemClicked() {
-    activity?.let {
+    activity?.also {
       Timber.d("Show about licenses fragment")
       AboutLibrariesFragment.show(it, rootViewContainer)
     }

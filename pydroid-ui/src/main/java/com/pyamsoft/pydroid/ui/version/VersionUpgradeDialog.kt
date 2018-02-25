@@ -31,7 +31,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    arguments?.let {
+    arguments?.also {
       latestVersion = it.getInt(KEY_LATEST_VERSION, 0)
       if (latestVersion == 0) {
         throw RuntimeException("Could not find latest version")

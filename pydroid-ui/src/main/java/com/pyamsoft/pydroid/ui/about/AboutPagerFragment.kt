@@ -36,7 +36,7 @@ internal class AboutPagerFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    arguments?.let {
+    arguments?.also {
       homepage = it.getString(KEY_HOMEPAGE, "")
       license = it.getString(KEY_LICENSE, "")
     }

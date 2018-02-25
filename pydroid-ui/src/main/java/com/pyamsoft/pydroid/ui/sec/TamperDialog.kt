@@ -54,7 +54,7 @@ internal class TamperDialog : ToolbarDialog() {
    */
   private fun killApp() {
     dismiss()
-    activity?.let {
+    activity?.also {
       it.finish()
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         val activityManager =

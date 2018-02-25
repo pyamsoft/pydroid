@@ -50,7 +50,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     super.onCreate(savedInstanceState)
     isCancelable = false
 
-    arguments?.let {
+    arguments?.also {
       rateLink = it.getString(RATE_LINK, null)
       versionCode = it.getInt(VERSION_CODE, 0)
       changelog = it.getCharSequence(CHANGE_LOG_TEXT, null) as SpannedString

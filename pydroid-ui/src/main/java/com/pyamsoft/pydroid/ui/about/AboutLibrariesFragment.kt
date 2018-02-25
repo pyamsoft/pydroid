@@ -54,7 +54,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     PYDroid.obtain()
         .inject(this)
 
-    arguments!!.let {
+    arguments?.also {
       backStackCount = it.getInt(KEY_BACK_STACK, 0)
     }
   }
@@ -201,9 +201,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
     toolbarActivity.withToolbar { toolbar ->
       // Set title back to original
-      oldTitle?.let {
-        toolbar.title = it
-      }
+      toolbar.title = oldTitle ?: toolbar.title
 
       // If this page was last on the back stack, set up false
       if (backStackCount == 0) {

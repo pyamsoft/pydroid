@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.diff
+package com.pyamsoft.pydroid.list
 
 import android.support.annotation.CheckResult
-import android.support.v7.util.ListUpdateCallback
 
-interface ListDiffResult<out T : Any> {
+interface ListDiffProvider<out T : Any> {
 
-  fun ifEmpty(func: () -> Unit)
-
-  fun withValues(func: (ListData<T>) -> Unit)
-
-  interface ListData<out T : Any> {
-
-    @CheckResult
-    fun list(): List<T>
-
-    fun dispatch(callback: ListUpdateCallback)
-
-  }
+  @CheckResult
+  fun data(): T
 }
+

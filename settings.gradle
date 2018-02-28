@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-include ':pydroid', ':pydroid-ui', ':pydroid-design', ':pydroid-loader', ':pydroid-util',
+include ':pydroid', ':pydroid-ui', ':pydroid-design', ':pydroid-loader', ':pydroid-util', ':pydroid-list',
     ':pydroid-base'

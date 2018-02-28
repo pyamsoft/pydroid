@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.diff
+package com.pyamsoft.pydroid.list
 
 import android.support.annotation.CheckResult
+import android.support.v7.util.ListUpdateCallback
+import android.support.v7.widget.RecyclerView
 
-interface ListDiffProvider<out T : Any> {
+interface ListDiffResult<out T : Any> {
 
-  @CheckResult
-  fun data(): T
+  fun ifEmpty(func: () -> Unit)
+
+  fun withValues(func: (ListData<T>) -> Unit)
+
+  interface ListData<out T : Any> {
+
+    @CheckResult
+    fun list(): List<T>
+
+    fun dispatch(adapter: RecyclerView.Adapter<*>)
+
+    fun dispatch(callback: ListUpdateCallback)
+
+  }
 }
-

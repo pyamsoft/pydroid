@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.diff
+package com.pyamsoft.pydroid.list
 
 import android.support.v7.util.DiffUtil.DiffResult
 import android.support.v7.util.ListUpdateCallback
-import com.pyamsoft.pydroid.ui.diff.ListDiffResult.ListData
+import android.support.v7.widget.RecyclerView.Adapter
+import com.pyamsoft.pydroid.list.ListDiffResult.ListData
 import java.util.Collections
 
 class ListDiffResultImpl<out T : Any>(
@@ -48,6 +49,10 @@ class ListDiffResultImpl<out T : Any>(
     private val list: List<T> = Collections.unmodifiableList(list)
 
     override fun list(): List<T> = list
+
+    override fun dispatch(adapter: Adapter<*>) {
+      result.dispatchUpdatesTo(adapter)
+    }
 
     override fun dispatch(callback: ListUpdateCallback) {
       result.dispatchUpdatesTo(callback)

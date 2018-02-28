@@ -97,7 +97,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
   override fun onRatingSaved(accept: Boolean) {
     if (accept) {
       val fullLink = "market://details?id=" + rateLink
-      fullLink.hyperlink(context!!)
+      fullLink.hyperlink(requireContext())
           .navigate()
     }
 
@@ -106,7 +106,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
   override fun onRatingSaveError(throwable: Throwable) {
     Toasty.makeText(
-        context!!.applicationContext,
+        requireContext().applicationContext,
         "Error occurred while dismissing dialog. May show again later",
         Toasty.LENGTH_SHORT
     )

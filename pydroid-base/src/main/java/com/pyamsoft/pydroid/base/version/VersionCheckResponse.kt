@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
 import com.google.auto.value.AutoValue
-import com.pyamsoft.pydroid.optional.notNull
+import com.pyamsoft.pydroid.optional.elseDefault
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -34,7 +34,7 @@ internal abstract class VersionCheckResponse internal constructor() {
   @CheckResult
   fun responseObjects(): List<ResponseObject> {
     return Collections.unmodifiableList(
-        internalResponseObjects().notNull("responseObjects", { emptyList() })
+        internalResponseObjects().elseDefault { emptyList() }
     )
   }
 

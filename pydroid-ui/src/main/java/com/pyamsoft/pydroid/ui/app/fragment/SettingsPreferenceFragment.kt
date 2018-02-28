@@ -54,7 +54,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     super.onCreate(savedInstanceState)
     PYDroid.obtain()
         .plusAppComponent(
-            context!!.packageName,
+            requireContext().packageName,
             versionedActivity.currentApplicationVersion
         )
         .inject(this)
@@ -67,7 +67,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    toast = Toasty.makeText(context!!, "Checking for updates...", Toasty.LENGTH_SHORT, show = false)
+    toast = Toasty.makeText(requireContext(), "Checking for updates...", Toasty.LENGTH_SHORT, show = false)
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 

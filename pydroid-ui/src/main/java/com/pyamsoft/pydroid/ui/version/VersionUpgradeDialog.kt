@@ -50,13 +50,13 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
     val message = """|A new version of $applicationName is available!
                      |Current version: $currentVersion
                      |Latest verson: $latestVersion""".trimMargin()
-    return AlertDialog.Builder(activity!!)
+    return AlertDialog.Builder(requireActivity())
         .setTitle("New version available")
         .setMessage(
             message
         )
         .setPositiveButton("Update") { _, _ ->
-          Linker.clickAppPage(context!!, context!!.packageName)
+          Linker.clickAppPage(requireContext(), requireContext().packageName)
           dismiss()
         }
         .setNegativeButton("Later") { _, _ -> dismiss() }

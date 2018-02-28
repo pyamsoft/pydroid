@@ -43,7 +43,7 @@ buildscript {
     minSdk = 16
     maxSdk = 27
 
-    supportLib = "27.0.2"
+    supportLib = "27.1.0"
     timber = "4.6.1"
     autoValue = "1.5.3"
     autoValueMoshi = "0.4.5"

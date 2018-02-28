@@ -72,11 +72,15 @@ abstract class ResourceLoader protected constructor(
 
   @CheckResult
   private fun loadFreshResource(): Drawable {
-    val possiblyLoaded: Drawable = AppCompatResources.getDrawable(appContext, resource)!!
-    if (tint != 0) {
-      return possiblyLoaded.tintWith(appContext, tint)
+    val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(appContext, resource)
+    if (possiblyLoaded == null) {
+      throw NullPointerException("AppCompatResources failed to find drawable: $resource")
     } else {
-      return possiblyLoaded
+      if (tint != 0) {
+        return possiblyLoaded.tintWith(appContext, tint)
+      } else {
+        return possiblyLoaded
+      }
     }
   }
 

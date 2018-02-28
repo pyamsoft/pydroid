@@ -34,7 +34,7 @@ internal class TamperDialog : ToolbarDialog() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    activity!!.let {
+    requireActivity().let {
       return AlertDialog.Builder(it)
           .setTitle("WARNING: THIS APPLICATION IS NOT OFFICIAL")
           .setMessage(R.string.tamper_msg)

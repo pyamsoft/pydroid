@@ -40,7 +40,7 @@ class CacheTimeout @JvmOverloads constructor(
     if (tag.isNotBlank()) {
       return tag
     } else {
-      return cache::class.java.simpleName
+      return cache.toString()
     }
   }
 

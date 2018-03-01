@@ -20,11 +20,16 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import com.pyamsoft.pydroid.cache.CacheTimeout
 import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
+import timber.log.Timber
 
 internal class ResourceImageCache internal constructor() : ImageCache<@DrawableRes Int, Drawable> {
 
   private val cacheTimeout = CacheTimeout(this)
   private val cache: MutableMap<Int, Drawable> = LinkedHashMap()
+
+  init {
+    Timber.d("New ${this::class.java.simpleName}")
+  }
 
   override fun clearCache() {
     cache.clear()

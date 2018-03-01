@@ -74,6 +74,14 @@ class TimedMap<in K : Any, V : Any>(size: Int = 5) : CacheMap<K, V> {
     cacheMap.evictAll()
   }
 
+  override fun put(
+    key: K,
+    value: V
+  ): CacheMap<K, V> {
+    cacheMap.put(key, TimedCacheEntry(value, System.currentTimeMillis()))
+    return this
+  }
+
   override fun updateIfAvailable(
     key: K,
     func: (V) -> V

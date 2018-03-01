@@ -16,18 +16,31 @@
 
 package com.pyamsoft.pydroid.cache
 
+import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.data.clear
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 import timber.log.Timber
 import java.util.concurrent.TimeUnit.MILLISECONDS
 
-class CacheTimeout(private val cache: Cache) {
+class CacheTimeout @JvmOverloads constructor(
+  private val cache: Cache,
+  private val tag: String = ""
+) {
 
   private var disposable = Disposables.empty()
 
   private fun clear() {
     disposable = disposable.clear()
+  }
+
+  @CheckResult
+  private fun generateTag(): String {
+    if (tag.isNotBlank()) {
+      return tag
+    } else {
+      return cache::class.java.simpleName
+    }
   }
 
   fun reset() {
@@ -37,12 +50,13 @@ class CacheTimeout(private val cache: Cache) {
   fun queue() {
     clear()
 
+    Timber.d("Queue cache timeout for: ${generateTag()}")
     disposable = Observable.interval(DEFAULT_CACHE_TIMEOUT, MILLISECONDS)
         .subscribe({
-          Timber.d("Clear cache on timeout: $cache")
+          Timber.d("Clear cache on timeout: ${generateTag()}")
           cache.clearCache()
         }, {
-          Timber.e(it, "Error clearing on timeout: $cache")
+          Timber.e(it, "Error clearing on timeout: ${generateTag()}")
         })
   }
 }

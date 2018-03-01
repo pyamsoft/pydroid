@@ -23,5 +23,10 @@ interface CacheMap<in K : Any, V : Any> : Cache {
     func: (V) -> V
   ): CacheMap<K, V>
 
+  fun put(
+    key: K,
+    value: V
+  ): CacheMap<K, V>
+
   fun remove(key: K): V?
 }

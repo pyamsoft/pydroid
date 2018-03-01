@@ -20,6 +20,7 @@ import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.cache.CacheTimeout
 import com.pyamsoft.pydroid.cache.TimedEntry
 import io.reactivex.Observable
+import timber.log.Timber
 
 internal class AboutLibrariesInteractorCache internal constructor(
   private val impl: AboutLibrariesInteractor
@@ -27,6 +28,10 @@ internal class AboutLibrariesInteractorCache internal constructor(
 
   private val cachedTimeout = CacheTimeout(this)
   private val cachedLicenses = TimedEntry<Observable<AboutLibrariesModel>>()
+
+  init {
+    Timber.d("New ${this::class.java.simpleName}")
+  }
 
   override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
     return cachedLicenses.getElseFresh(force) {

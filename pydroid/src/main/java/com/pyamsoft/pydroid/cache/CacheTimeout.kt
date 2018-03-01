@@ -25,17 +25,18 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class CacheTimeout @JvmOverloads constructor(
   private val cache: Cache,
-  private val tag: String = ""
+  tag: String = ""
 ) {
 
   private var disposable = Disposables.empty()
+  private val logTag: String = generateTag(tag)
 
   private fun clear() {
     disposable = disposable.clear()
   }
 
   @CheckResult
-  private fun generateTag(): String {
+  private fun generateTag(tag: String): String {
     if (tag.isNotBlank()) {
       return tag
     } else {
@@ -44,20 +45,20 @@ class CacheTimeout @JvmOverloads constructor(
   }
 
   fun reset() {
-    Timber.d("Reset cache timeout for ${generateTag()}")
+    Timber.d("Reset cache timeout for $logTag")
     clear()
   }
 
   fun queue() {
     clear()
 
-    Timber.d("Queue cache timeout for: ${generateTag()}")
+    Timber.d("Queue cache timeout for: $logTag")
     disposable = Observable.interval(DEFAULT_CACHE_TIMEOUT, MILLISECONDS)
         .subscribe({
-          Timber.d("Clear cache on timeout: ${generateTag()}")
+          Timber.d("Clear cache on timeout: $logTag")
           cache.clearCache()
         }, {
-          Timber.e(it, "Error clearing on timeout: ${generateTag()}")
+          Timber.e(it, "Error clearing on timeout: $logTag")
         })
   }
 }

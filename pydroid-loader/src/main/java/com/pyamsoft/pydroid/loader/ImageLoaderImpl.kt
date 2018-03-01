@@ -36,10 +36,7 @@ internal class ImageLoaderImpl internal constructor(
     resourceImageCache.clearCache()
   }
 
-  override fun fromResource(@DrawableRes resource: Int): ResourceLoader = fromResource(
-      resource,
-      0
-  )
+  override fun fromResource(@DrawableRes resource: Int): ResourceLoader = fromResource(resource, 0)
 
   override fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader =
     RxResourceLoader(

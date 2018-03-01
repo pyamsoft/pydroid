@@ -16,32 +16,28 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import com.pyamsoft.pydroid.data.Cache
+import com.pyamsoft.pydroid.cache.Cache
+import com.pyamsoft.pydroid.cache.CacheTimeout
+import com.pyamsoft.pydroid.cache.TimedEntry
 import io.reactivex.Observable
 
 internal class AboutLibrariesInteractorCache internal constructor(
   private val impl: AboutLibrariesInteractor
 ) : AboutLibrariesInteractor, Cache {
 
-  private var cachedLicenses: Observable<AboutLibrariesModel>? = null
+  private val cachedTimeout = CacheTimeout(this)
+  private val cachedLicenses = TimedEntry<Observable<AboutLibrariesModel>>()
 
   override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
-    return Observable.defer {
-      val cache = cachedLicenses
-      val licenses: Observable<AboutLibrariesModel>
-      if (force || cache == null) {
-        licenses = impl.loadLicenses(force)
-            .cache()
-        cachedLicenses = licenses
-      } else {
-        licenses = cache
-      }
-      return@defer licenses
+    return cachedLicenses.getElseFresh(force) {
+      impl.loadLicenses(true)
+          .cache()
     }
         .doOnError { clearCache() }
+        .doAfterTerminate { cachedTimeout.queue() }
   }
 
   override fun clearCache() {
-    cachedLicenses = null
+    cachedLicenses.clearCache()
   }
 }

@@ -21,6 +21,6 @@ import android.support.annotation.CheckResult
 interface ListDiffProvider<out T : Any> {
 
   @CheckResult
-  fun data(): T
+  fun data(): List<T>
 }
 

@@ -16,7 +16,15 @@
 
 package com.pyamsoft.pydroid.data
 
-interface Cache {
+import android.support.annotation.CheckResult
+import timber.log.Timber
 
-  fun clearCache()
+@CheckResult
+inline fun <reified T : Any> T?.elseDefault(crossinline fallback: () -> T): T {
+  if (this == null) {
+    Timber.w("Expected not-null ${T::class.java.simpleName}")
+    return fallback()
+  } else {
+    return this
+  }
 }

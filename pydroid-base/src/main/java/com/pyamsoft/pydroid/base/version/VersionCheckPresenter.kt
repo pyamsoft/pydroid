@@ -39,7 +39,7 @@ class VersionCheckPresenter internal constructor(
 
   fun checkForUpdates(force: Boolean) {
     dispose {
-      interactor.checkVersion(packageName, force)
+      interactor.checkVersion(force, packageName)
           .subscribeOn(ioScheduler)
           .observeOn(
               mainThreadScheduler

@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.optional
+package com.pyamsoft.pydroid.cache
 
-import android.support.annotation.CheckResult
-import timber.log.Timber
+interface CacheMap<in K : Any, V : Any> : Cache {
 
-@CheckResult
-inline fun <reified T : Any> T?.elseDefault(crossinline fallback: () -> T): T {
-  if (this == null) {
-    Timber.w("Expected not-null ${T::class.java.simpleName}")
-    return fallback()
-  } else {
-    return this
-  }
+  fun put(
+    key: K,
+    value: V
+  ): CacheMap<K, V>
+
+  fun remove(key: K): V?
 }

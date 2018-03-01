@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.cache
 
-import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.cache.Cache
+interface Cache {
 
-interface LoaderModule {
-
-  // Singleton
-  @CheckResult
-  fun provideImageLoader(): ImageLoader
-
-  // Singleton
-  @CheckResult
-  fun provideImageLoaderCache(): Cache
+  fun clearCache()
 }

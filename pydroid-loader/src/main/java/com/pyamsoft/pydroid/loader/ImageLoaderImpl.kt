@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.loader
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
-import com.pyamsoft.pydroid.data.Cache
+import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 import com.pyamsoft.pydroid.loader.resource.RxResourceLoader

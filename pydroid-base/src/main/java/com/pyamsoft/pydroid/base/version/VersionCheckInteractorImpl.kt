@@ -28,8 +28,8 @@ internal class VersionCheckInteractorImpl internal constructor(
 ) : VersionCheckInteractor {
 
   override fun checkVersion(
-    packageName: String,
-    force: Boolean
+    force: Boolean,
+    packageName: String
   ): Single<Int> {
     return Single.defer {
       if (!networkStatusProvider.hasConnection()) {

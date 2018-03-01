@@ -16,44 +16,31 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import com.pyamsoft.pydroid.data.Cache
+import com.pyamsoft.pydroid.cache.Cache
+import com.pyamsoft.pydroid.cache.CacheTimeout
+import com.pyamsoft.pydroid.cache.TimedEntry
 import io.reactivex.Single
-import java.util.concurrent.TimeUnit
 
 internal class VersionCheckInteractorCache internal constructor(
   private val impl: VersionCheckInteractor
 ) : VersionCheckInteractor, Cache {
 
-  private var cachedResponse: Single<Int>? = null
-  private var responseLastAccess: Long = 0L
+  private val cacheTimeout = CacheTimeout(this)
+  private val cachedResponse = TimedEntry<Single<Int>>()
 
   override fun checkVersion(
-    packageName: String,
-    force: Boolean
+    force: Boolean,
+    packageName: String
   ): Single<Int> {
-    return Single.defer {
-      val cache = cachedResponse
-      val response: Single<Int>
-      val currentTime = System.currentTimeMillis()
-      if (force || cache == null || responseLastAccess + THIRTY_SECONDS_MILLIS < currentTime) {
-        response = impl.checkVersion(packageName, force)
-            .cache()
-        cachedResponse = response
-        responseLastAccess = currentTime
-      } else {
-        response = cache
-      }
-      return@defer response
+    return cachedResponse.getElseFresh(force) {
+      impl.checkVersion(true, packageName)
+          .cache()
     }
         .doOnError { clearCache() }
+        .doAfterTerminate { cacheTimeout.queue() }
   }
 
   override fun clearCache() {
-    cachedResponse = null
-  }
-
-  companion object {
-
-    private val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)
+    cachedResponse.clearCache()
   }
 }

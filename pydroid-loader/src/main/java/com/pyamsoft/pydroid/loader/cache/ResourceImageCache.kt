@@ -18,10 +18,12 @@ package com.pyamsoft.pydroid.loader.cache
 
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
+import com.pyamsoft.pydroid.cache.CacheTimeout
 import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
 
 internal class ResourceImageCache internal constructor() : ImageCache<@DrawableRes Int, Drawable> {
 
+  private val cacheTimeout = CacheTimeout(this)
   private val cache: MutableMap<Int, Drawable> = LinkedHashMap()
 
   override fun clearCache() {
@@ -33,7 +35,10 @@ internal class ResourceImageCache internal constructor() : ImageCache<@DrawableR
     entry: Drawable
   ) {
     cache[key.data] = entry
+    cacheTimeout.queue()
   }
 
-  override fun retrieve(key: ImageCacheKey<Int>): Drawable? = cache[key.data]
+  override fun retrieve(key: ImageCacheKey<Int>): Drawable? = cache[key.data].also {
+    cacheTimeout.queue()
+  }
 }

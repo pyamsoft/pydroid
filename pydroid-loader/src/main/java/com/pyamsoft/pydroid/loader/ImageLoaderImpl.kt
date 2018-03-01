@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 import io.reactivex.Scheduler
-import timber.log.Timber
 
 internal class ImageLoaderImpl internal constructor(
   private val context: Context,
@@ -32,10 +31,6 @@ internal class ImageLoaderImpl internal constructor(
   private val mainThreadScheduler: Scheduler,
   private val ioScheduler: Scheduler
 ) : ImageLoader, Cache {
-
-  init {
-    Timber.d("New ${this::class.java.simpleName}")
-  }
 
   override fun clearCache() {
     resourceImageCache.clearCache()

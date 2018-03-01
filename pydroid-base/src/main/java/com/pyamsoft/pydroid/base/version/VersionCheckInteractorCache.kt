@@ -20,7 +20,6 @@ import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.cache.CacheTimeout
 import com.pyamsoft.pydroid.cache.TimedEntry
 import io.reactivex.Single
-import timber.log.Timber
 
 internal class VersionCheckInteractorCache internal constructor(
   private val impl: VersionCheckInteractor
@@ -28,10 +27,6 @@ internal class VersionCheckInteractorCache internal constructor(
 
   private val cacheTimeout = CacheTimeout(this)
   private val cachedResponse = TimedEntry<Single<Int>>()
-
-  init {
-    Timber.d("New ${this::class.java.simpleName}")
-  }
 
   override fun checkVersion(
     force: Boolean,

@@ -44,6 +44,7 @@ class CacheTimeout @JvmOverloads constructor(
   }
 
   fun reset() {
+    Timber.d("Reset cache timeout for ${generateTag()}")
     clear()
   }
 

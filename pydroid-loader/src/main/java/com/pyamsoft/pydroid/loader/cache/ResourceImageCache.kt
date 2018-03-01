@@ -28,6 +28,7 @@ internal class ResourceImageCache internal constructor() : ImageCache<@DrawableR
 
   override fun clearCache() {
     cache.clear()
+    cacheTimeout.reset()
   }
 
   override fun cache(

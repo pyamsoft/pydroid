@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.cache
 
 interface CacheMap<in K : Any, V : Any> : Cache {
 
-  fun put(
+  fun updateIfAvailable(
     key: K,
-    value: V
+    func: (V) -> V
   ): CacheMap<K, V>
 
   fun remove(key: K): V?

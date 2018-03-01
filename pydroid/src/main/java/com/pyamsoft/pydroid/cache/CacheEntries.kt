@@ -36,6 +36,15 @@ class TimedEntry<T : Any> : Cache {
     cacheEntry = null
   }
 
+  fun updateIfAvailable(func: (T) -> T): TimedEntry<T> {
+    val cached = cacheEntry
+    if (cached != null) {
+      cacheEntry = TimedCacheEntry(func(cached.data), cached.accessTime)
+    }
+
+    return this
+  }
+
   @JvmOverloads
   @CheckResult
   fun getElseFresh(
@@ -57,7 +66,7 @@ class TimedEntry<T : Any> : Cache {
   }
 }
 
-class TimedMap<K : Any, V : Any>(size: Int = 5) : CacheMap<K, V> {
+class TimedMap<in K : Any, V : Any>(size: Int = 5) : CacheMap<K, V> {
 
   private val cacheMap = lruCache<K, TimedCacheEntry<V>>(size)
 
@@ -65,11 +74,16 @@ class TimedMap<K : Any, V : Any>(size: Int = 5) : CacheMap<K, V> {
     cacheMap.evictAll()
   }
 
-  override fun put(
+  override fun updateIfAvailable(
     key: K,
-    value: V
-  ): CacheMap<K, V> = this.also {
-    it.cacheMap.put(key, TimedCacheEntry(value, System.currentTimeMillis()))
+    func: (V) -> V
+  ): CacheMap<K, V> {
+    val cached = cacheMap.get(key)
+    if (cached != null) {
+      cacheMap.put(key, TimedCacheEntry(func(cached.data), cached.accessTime))
+    }
+
+    return this
   }
 
   override fun remove(key: K): V? = cacheMap.remove(key)?.data

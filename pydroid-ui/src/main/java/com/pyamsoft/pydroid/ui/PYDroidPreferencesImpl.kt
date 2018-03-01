@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
+import androidx.content.edit
 import com.pyamsoft.pydroid.base.PYDroidPreferences
 import com.pyamsoft.pydroid.base.rating.RatingPreferences
 
@@ -33,9 +34,9 @@ internal class PYDroidPreferencesImpl internal constructor(context: Context) : P
         RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
     )
     set(value) {
-      preferences.edit()
-          .putInt(RATING_ACCEPTED_VERSION, value)
-          .apply()
+      preferences.edit {
+        putInt(RATING_ACCEPTED_VERSION, value)
+      }
     }
 
   companion object {

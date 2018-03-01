@@ -42,5 +42,6 @@ internal class VersionCheckInteractorCache internal constructor(
 
   override fun clearCache() {
     cachedResponse.clearCache()
+    cacheTimeout.reset()
   }
 }

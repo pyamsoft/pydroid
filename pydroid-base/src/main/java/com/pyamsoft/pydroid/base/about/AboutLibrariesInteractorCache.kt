@@ -33,11 +33,14 @@ internal class AboutLibrariesInteractorCache internal constructor(
       impl.loadLicenses(true)
           .cache()
     }
-        .doOnError { clearCache() }
+        .doOnError {
+          clearCache()
+        }
         .doAfterTerminate { cachedTimeout.queue() }
   }
 
   override fun clearCache() {
     cachedLicenses.clearCache()
+    cachedTimeout.reset()
   }
 }

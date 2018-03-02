@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.base.version
 
 import com.pyamsoft.pydroid.cache.Cache
-import com.pyamsoft.pydroid.cache.CacheTimeout
 import com.pyamsoft.pydroid.cache.TimedEntry
 import io.reactivex.Single
 
@@ -25,7 +24,6 @@ internal class VersionCheckInteractorCache internal constructor(
   private val impl: VersionCheckInteractor
 ) : VersionCheckInteractor, Cache {
 
-  private val cacheTimeout = CacheTimeout(this)
   private val cachedResponse = TimedEntry<Single<Int>>()
 
   override fun checkVersion(
@@ -37,11 +35,9 @@ internal class VersionCheckInteractorCache internal constructor(
           .cache()
     }
         .doOnError { clearCache() }
-        .doAfterTerminate { cacheTimeout.queue() }
   }
 
   override fun clearCache() {
     cachedResponse.clearCache()
-    cacheTimeout.reset()
   }
 }

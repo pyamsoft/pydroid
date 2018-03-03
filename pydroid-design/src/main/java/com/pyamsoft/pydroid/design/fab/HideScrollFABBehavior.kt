@@ -21,6 +21,8 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
 import android.view.View
+import androidx.view.isInvisible
+import androidx.view.isVisible
 import com.pyamsoft.pydroid.design.util.hide
 import com.pyamsoft.pydroid.design.util.show
 import timber.log.Timber
@@ -42,6 +44,29 @@ class HideScrollFABBehavior(
     this.isAnimating = false
   }
 
+  private fun hideFab(fab: FloatingActionButton) {
+    isAnimating = true
+    Timber.w("Hide FAB")
+    fab.hide {
+      // Support library as on 25.1.0 sets FAB visibility to GONE
+      // making it ignore other scrolling event.
+      // Set it to invisible to fix this problem
+      isInvisible = true
+      isAnimating = false
+      onHidden(this)
+    }
+  }
+
+  private fun showFab(fab: FloatingActionButton) {
+    isAnimating = true
+    Timber.w("Show FAB")
+    fab.show {
+      isVisible  = true
+      isAnimating = false
+      onShown(this)
+    }
+  }
+
   override fun onNestedScroll(
     coordinatorLayout: CoordinatorLayout,
     child: FloatingActionButton,
@@ -54,27 +79,11 @@ class HideScrollFABBehavior(
   ) {
     if (dyConsumed > distanceNeeded && child.isShown) {
       if (!isAnimating) {
-        isAnimating = true
-        Timber.w("Hide FAB")
-        child.hide {
-          Timber.w(
-              "Support library as on 25.1.0 sets FAB visibility to GONE, making it ignore other scrolling event."
-          )
-          Timber.w("Set it to invisible to fix this problem")
-          visibility = View.INVISIBLE
-          isAnimating = false
-          onHidden(this)
-        }
+        hideFab(child)
       }
     } else if (dyConsumed < -distanceNeeded && !child.isShown) {
       if (!isAnimating) {
-        isAnimating = true
-        Timber.w("Show FAB")
-        child.show {
-          visibility = View.VISIBLE
-          isAnimating = false
-          onShown(this)
-        }
+        showFab(child)
       }
     }
   }

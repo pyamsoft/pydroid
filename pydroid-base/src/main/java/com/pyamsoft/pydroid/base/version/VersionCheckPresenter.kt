@@ -41,13 +41,13 @@ class VersionCheckPresenter internal constructor(
     dispose {
       interactor.checkVersion(force, packageName)
           .subscribeOn(ioScheduler)
-          .observeOn(
-              mainThreadScheduler
-          )
-          .subscribe({
+          .observeOn(mainThreadScheduler)
+          .doOnSuccess {
             Timber.i("Update check finished")
             Timber.i("Current version: %d", currentVersionCode)
             Timber.i("Latest version: %d", it)
+          }
+          .subscribe({
             if (currentVersionCode < it) {
               view?.onUpdatedVersionFound(currentVersionCode, it)
             }

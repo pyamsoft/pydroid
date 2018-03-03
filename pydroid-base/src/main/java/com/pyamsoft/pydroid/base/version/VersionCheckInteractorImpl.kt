@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version
 
+import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.util.NoNetworkException
@@ -27,6 +28,22 @@ internal class VersionCheckInteractorImpl internal constructor(
   private val versionCheckService: VersionCheckService
 ) : VersionCheckInteractor {
 
+  @CheckResult
+  private fun versionCodeForApi(
+    response: VersionCheckResponse,
+    api: Int
+  ): Int {
+    var versionCode = 0
+    response.responseObjects()
+        .sortedBy { it.minApi() }
+        .forEach {
+          if (it.minApi() <= api) {
+            versionCode = it.version()
+          }
+        }
+    return versionCode
+  }
+
   override fun checkVersion(
     force: Boolean,
     packageName: String
@@ -36,19 +53,8 @@ internal class VersionCheckInteractorImpl internal constructor(
         throw NoNetworkException
       } else {
         return@defer versionCheckService.checkVersion(packageName)
-            .map {
-              var lowestApplicableVersionCode = 0
-              it.responseObjects()
-                  .sortedBy { it.minApi() }
-                  .forEach {
-                    if (it.minApi() <= minimumApiProvider.minApi()) {
-                      lowestApplicableVersionCode = it.version()
-                    }
-                  }
-
-              return@map lowestApplicableVersionCode
-            }
       }
     }
+        .map { versionCodeForApi(it, minimumApiProvider.minApi()) }
   }
 }

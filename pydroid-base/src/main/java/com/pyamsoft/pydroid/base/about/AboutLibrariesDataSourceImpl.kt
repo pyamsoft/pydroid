@@ -22,7 +22,9 @@ import android.os.Build
 import android.support.annotation.CheckResult
 import timber.log.Timber
 import java.io.BufferedReader
+import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.Reader
 import java.nio.charset.StandardCharsets
 
 internal class AboutLibrariesDataSourceImpl internal constructor(
@@ -30,6 +32,16 @@ internal class AboutLibrariesDataSourceImpl internal constructor(
 ) : AboutLibrariesDataSource {
 
   private val assetManager: AssetManager = context.applicationContext.assets
+
+  @CheckResult
+  private fun createStreamReader(inputStream: InputStream): Reader {
+    // Standard Charsets is only KitKat, add this extra check to support API 16 apps
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      return InputStreamReader(inputStream, StandardCharsets.UTF_8)
+    } else {
+      return InputStreamReader(inputStream, "UTF-8")
+    }
+  }
 
   @CheckResult
   override fun loadNewLicense(licenseLocation: String): String {
@@ -40,24 +52,8 @@ internal class AboutLibrariesDataSourceImpl internal constructor(
 
     assetManager.open(licenseLocation)
         .use {
-          // Standard Charsets is only KitKat, add this extra check to support Home Button
-          val inputStreamReader = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // Assign
-            InputStreamReader(it, StandardCharsets.UTF_8)
-          } else {
-            // Assign
-            InputStreamReader(it, "UTF-8")
-          }
-
-          BufferedReader(inputStreamReader).use {
-            val text = StringBuilder()
-            var line: String? = it.readLine()
-            while (line != null) {
-              text.append(line)
-                  .append('\n')
-              line = it.readLine()
-            }
-            return text.toString()
+          BufferedReader(createStreamReader(it)).useLines {
+            return it.joinToString(separator = "\n") { it }
           }
         }
   }

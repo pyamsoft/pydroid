@@ -33,10 +33,7 @@ data class AboutLibrariesModel internal constructor(
       name: String,
       homepage: String,
       license: String
-    ): AboutLibrariesModel = AboutLibrariesModel(
-        name, homepage, license,
-        ""
-    )
+    ): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license, "")
 
     @JvmStatic
     @CheckResult
@@ -44,9 +41,6 @@ data class AboutLibrariesModel internal constructor(
       name: String,
       homepage: String,
       content: String
-    ): AboutLibrariesModel = AboutLibrariesModel(
-        name, homepage, "",
-        content
-    )
+    ): AboutLibrariesModel = AboutLibrariesModel(name, homepage, "", content)
   }
 }

@@ -21,10 +21,9 @@ import java.util.Collections
 
 object Licenses {
 
-  private val licenses: MutableList<AboutLibrariesModel>
+  private val licenses: MutableList<AboutLibrariesModel> = ArrayList()
 
   init {
-    licenses = ArrayList()
     addCommonLicenses()
   }
 

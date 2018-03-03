@@ -28,21 +28,16 @@ class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
   private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
 
   init {
-    val dataSource: AboutLibrariesDataSource = AboutLibrariesDataSourceImpl(
-        pyDroidModule.provideContext()
-    )
-    val interactor: AboutLibrariesInteractor = AboutLibrariesInteractorImpl(
-        dataSource
-    )
+    val dataSource: AboutLibrariesDataSource =
+      AboutLibrariesDataSourceImpl(pyDroidModule.provideContext())
+    val interactor: AboutLibrariesInteractor = AboutLibrariesInteractorImpl(dataSource)
     cacheInteractor = AboutLibrariesInteractorCache(interactor)
   }
 
   @CheckResult
   fun getPresenter(): AboutLibrariesPresenter {
     return AboutLibrariesPresenter(
-        cacheInteractor,
-        computationScheduler, ioScheduler,
-        mainThreadScheduler
+        cacheInteractor, computationScheduler, ioScheduler, mainThreadScheduler
     )
   }
 }

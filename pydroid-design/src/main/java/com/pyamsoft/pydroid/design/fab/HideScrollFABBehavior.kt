@@ -61,7 +61,7 @@ class HideScrollFABBehavior(
     isAnimating = true
     Timber.w("Show FAB")
     fab.show {
-      isVisible  = true
+      isVisible = true
       isAnimating = false
       onShown(this)
     }

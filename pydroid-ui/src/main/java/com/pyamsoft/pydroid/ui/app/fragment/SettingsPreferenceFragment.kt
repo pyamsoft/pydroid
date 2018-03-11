@@ -67,7 +67,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    toast = Toasty.makeText(requireContext(), "Checking for updates...", Toasty.LENGTH_SHORT, show = false)
+    toast = Toasty.makeText(
+        requireContext(), "Checking for updates...", Toasty.LENGTH_SHORT, show = false
+    )
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 

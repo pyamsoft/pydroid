@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.presenter
 
+import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
 import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
 import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
@@ -25,9 +26,6 @@ import android.arch.lifecycle.Lifecycle.Event.ON_STOP
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
-import com.pyamsoft.pydroid.presenter.Presenter.Lifecycle.DESTROY
-import com.pyamsoft.pydroid.presenter.Presenter.Lifecycle.PAUSE
-import com.pyamsoft.pydroid.presenter.Presenter.Lifecycle.STOP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -116,10 +114,10 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
    */
   @JvmOverloads
   protected inline fun dispose(
-    lifecycle: Lifecycle = DESTROY,
+    event: Lifecycle.Event = ON_DESTROY,
     func: () -> Disposable
   ) {
-    dispose(lifecycle, func())
+    dispose(event, func())
   }
 
   /**
@@ -127,21 +125,16 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
    */
   @JvmOverloads
   protected fun dispose(
-    lifecycle: Lifecycle = DESTROY,
+    event: Lifecycle.Event = ON_DESTROY,
     disposable: Disposable
   ) {
-    val disposables: CompositeDisposable = when (lifecycle) {
-      PAUSE -> pauseDisposables
-      STOP -> stopDisposables
-      DESTROY -> destroyDisposables
+    val disposables: CompositeDisposable = when (event) {
+      ON_PAUSE -> pauseDisposables
+      ON_STOP -> stopDisposables
+      ON_DESTROY -> destroyDisposables
+      else -> throw IllegalArgumentException("Unsupported event event: $event")
     }
     disposables.add(disposable)
-  }
-
-  enum class Lifecycle {
-    PAUSE,
-    STOP,
-    DESTROY
   }
 
 }

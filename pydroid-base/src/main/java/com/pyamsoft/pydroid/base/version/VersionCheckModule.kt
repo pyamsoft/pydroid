@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.base.version.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
 import com.squareup.moshi.Moshi
 import io.reactivex.Scheduler
-import io.reactivex.schedulers.Schedulers
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -104,13 +103,12 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
     okHttpClient: OkHttpClient,
     converter: Converter.Factory
   ): Retrofit {
-    val callAdapter = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread())
     return Retrofit.Builder()
         .apply {
           baseUrl(CURRENT_VERSION_REPO_BASE_URL)
           client(okHttpClient)
           addConverterFactory(converter)
-          addCallAdapterFactory(callAdapter)
+          addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         }
         .build()
   }

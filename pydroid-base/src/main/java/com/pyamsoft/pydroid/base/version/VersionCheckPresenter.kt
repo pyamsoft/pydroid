@@ -32,11 +32,6 @@ class VersionCheckPresenter internal constructor(
     computationScheduler, ioScheduler, mainThreadScheduler
 ) {
 
-  override fun onStart() {
-    super.onStart()
-    checkForUpdates(false)
-  }
-
   fun checkForUpdates(force: Boolean) {
     dispose {
       interactor.checkVersion(force, packageName)

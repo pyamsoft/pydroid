@@ -75,6 +75,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
   internal fun performPause() {
     onPause()
 
+    // Clear disposables after hook in case something accidentally subscribes
     pauseDisposables.clear()
   }
 
@@ -85,6 +86,8 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
   internal fun performStop() {
     onStop()
 
+    // Clear disposables after hook in case something accidentally subscribes
+    pauseDisposables.clear()
     stopDisposables.clear()
   }
 
@@ -102,7 +105,9 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
 
     onDestroy()
 
-    // Clear disposables after onDestroy incase something accidentally subscribes
+    // Clear disposables after hook in case something accidentally subscribes
+    pauseDisposables.clear()
+    stopDisposables.clear()
     destroyDisposables.clear()
   }
 

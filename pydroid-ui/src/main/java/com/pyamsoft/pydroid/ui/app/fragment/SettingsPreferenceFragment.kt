@@ -162,7 +162,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
   ) {
     Timber.d("Updated version found. %d => %d", current, updated)
     VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current, updated)
-        .show(activity, VersionUpgradeDialog.TAG)
+        .show(requireActivity(), VersionUpgradeDialog.TAG)
   }
 
   /**

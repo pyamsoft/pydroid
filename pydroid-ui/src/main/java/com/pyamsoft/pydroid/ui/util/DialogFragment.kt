@@ -25,14 +25,9 @@ import timber.log.Timber
  * versions of the dialog fragment are removed before a new one is added.
  */
 fun <T : DialogFragment> T.show(
-  activity: FragmentActivity?,
+  activity: FragmentActivity,
   tag: String
 ): T {
-  if (activity == null) {
-    Timber.w("Cannot attach a fragment to a NULL activity. No-op")
-    return this
-  }
-
   if (tag.isEmpty()) {
     throw IllegalArgumentException("Cannot use EMPTY tag")
   }

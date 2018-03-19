@@ -25,15 +25,20 @@ import android.arch.lifecycle.Lifecycle.Event.ON_STOP
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.presenter.Presenter.Lifecycle.DESTROY
+import com.pyamsoft.pydroid.presenter.Presenter.Lifecycle.PAUSE
+import com.pyamsoft.pydroid.presenter.Presenter.Lifecycle.STOP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
 
-  private val disposables: CompositeDisposable = CompositeDisposable()
+  private val pauseDisposables = CompositeDisposable()
+  private val stopDisposables = CompositeDisposable()
+  private val destroyDisposables = CompositeDisposable()
+  private var lifecycleOwner: LifecycleOwner? = null
   protected var view: V? = null
     private set
-  private var lifecycleOwner: LifecycleOwner? = null
 
   fun bind(
     owner: LifecycleOwner,
@@ -71,6 +76,8 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
   @OnLifecycleEvent(ON_PAUSE)
   internal fun performPause() {
     onPause()
+
+    pauseDisposables.clear()
   }
 
   protected open fun onPause() {
@@ -79,6 +86,8 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
   @OnLifecycleEvent(ON_STOP)
   internal fun performStop() {
     onStop()
+
+    stopDisposables.clear()
   }
 
   protected open fun onStop() {
@@ -88,14 +97,15 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
   internal fun performDestroy() {
     // Unbind the view
     this.view = null
-    onDestroy()
-
-    // Clear disposables after onDestroy incase something accidentally subscribes
-    disposables.clear()
 
     // Remove the lifecycle observer since we are dead
     lifecycleOwner?.lifecycle?.removeObserver(this)
     lifecycleOwner = null
+
+    onDestroy()
+
+    // Clear disposables after onDestroy incase something accidentally subscribes
+    destroyDisposables.clear()
   }
 
   protected open fun onDestroy() {
@@ -104,14 +114,34 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
   /**
    * Add a disposable to the internal list, dispose it onUnbind
    */
-  protected inline fun dispose(func: () -> Disposable) {
-    dispose(func())
+  @JvmOverloads
+  protected inline fun dispose(
+    lifecycle: Lifecycle = DESTROY,
+    func: () -> Disposable
+  ) {
+    dispose(lifecycle, func())
   }
 
   /**
    * Add a disposable to the internal list, dispose it onUnbind
    */
-  protected fun dispose(disposable: Disposable) {
+  @JvmOverloads
+  protected fun dispose(
+    lifecycle: Lifecycle = DESTROY,
+    disposable: Disposable
+  ) {
+    val disposables: CompositeDisposable = when (lifecycle) {
+      PAUSE -> pauseDisposables
+      STOP -> stopDisposables
+      DESTROY -> destroyDisposables
+    }
     disposables.add(disposable)
   }
+
+  enum class Lifecycle {
+    PAUSE,
+    STOP,
+    DESTROY
+  }
+
 }

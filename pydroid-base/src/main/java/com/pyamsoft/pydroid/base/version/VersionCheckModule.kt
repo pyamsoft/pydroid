@@ -62,26 +62,8 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
   @CheckResult
   private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
-    val pinner = CertificatePinner.Builder()
-        .apply {
-          add(
-              GITHUB_URL,
-              "sha256/m41PSCmB5CaR0rKh7VMMXQbDFgCNFXchcoNFm3RuoXw="
-          )
-          add(
-              GITHUB_URL,
-              "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws="
-          )
-          add(
-              GITHUB_URL,
-              "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18="
-          )
-        }
-        .build()
-
     return OkHttpClient.Builder()
         .apply {
-          certificatePinner(pinner)
           if (debug) {
             val logging = HttpLoggingInterceptor()
             logging.level = HttpLoggingInterceptor.Level.BODY

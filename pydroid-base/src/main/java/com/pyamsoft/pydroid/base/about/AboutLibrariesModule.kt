@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.cache.cacheMany
 import io.reactivex.Scheduler
 
 class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
@@ -28,10 +29,11 @@ class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
   private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
 
   init {
-    val dataSource: AboutLibrariesDataSource =
-      AboutLibrariesDataSourceImpl(pyDroidModule.provideContext())
-    val interactor: AboutLibrariesInteractor = AboutLibrariesInteractorImpl(dataSource)
-    cacheInteractor = AboutLibrariesInteractorCache(interactor)
+    val dataSource = AboutLibrariesDataSourceImpl(pyDroidModule.provideContext())
+
+    val disk = AboutLibrariesInteractorDisk(dataSource)
+    val licenseCache = cacheMany<AboutLibrariesModel>()
+    cacheInteractor = AboutLibrariesInteractorImpl(disk, licenseCache)
   }
 
   @CheckResult

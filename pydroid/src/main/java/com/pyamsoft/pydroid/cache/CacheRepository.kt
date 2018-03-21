@@ -16,17 +16,26 @@
 
 package com.pyamsoft.pydroid.cache
 
-interface CacheMap<in K : Any, V : Any> : Cache {
+import android.support.annotation.CheckResult
+import java.util.concurrent.TimeUnit
 
-  fun updateIfAvailable(
-    key: K,
-    func: (V) -> V
-  ): CacheMap<K, V>
+interface CacheRepository<out R : Any> : Cache {
 
-  fun put(
-    key: K,
-    value: V
-  ): CacheMap<K, V>
+  @CheckResult
+  fun get(bypass: Boolean): R
 
-  fun remove(key: K): V?
 }
+
+@JvmField
+val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)
+
+@CheckResult
+fun <T : Any> cacheSingle(): SingleRepository<T> {
+  return SingleRepositoryImpl()
+}
+
+@CheckResult
+fun <T : Any> cacheMany(): ManyRepository<T> {
+  return ManyRepositoryImpl()
+}
+

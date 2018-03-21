@@ -22,5 +22,5 @@ import io.reactivex.Observable
 internal interface AboutLibrariesInteractor {
 
   @CheckResult
-  fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel>
+  fun loadLicenses(bypass: Boolean): Observable<AboutLibrariesModel>
 }

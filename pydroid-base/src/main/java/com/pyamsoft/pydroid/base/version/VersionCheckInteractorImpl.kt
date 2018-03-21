@@ -16,45 +16,30 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.base.version.api.MinimumApiProvider
-import com.pyamsoft.pydroid.base.version.network.NetworkStatusProvider
-import com.pyamsoft.pydroid.util.NoNetworkException
+import com.pyamsoft.pydroid.cache.Cache
+import com.pyamsoft.pydroid.cache.SingleRepository
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 internal class VersionCheckInteractorImpl internal constructor(
-  private val minimumApiProvider: MinimumApiProvider,
-  private val networkStatusProvider: NetworkStatusProvider,
-  private val versionCheckService: VersionCheckService
-) : VersionCheckInteractor {
-
-  @CheckResult
-  private fun versionCodeForApi(
-    response: VersionCheckResponse,
-    api: Int
-  ): Int {
-    var versionCode = 0
-    response.responseObjects()
-        .sortedBy { it.minApi() }
-        .forEach {
-          if (it.minApi() <= api) {
-            versionCode = it.version()
-          }
-        }
-    return versionCode
-  }
+  private val network: VersionCheckInteractor,
+  private val versionCache: SingleRepository<Int>
+) : VersionCheckInteractor, Cache {
 
   override fun checkVersion(
-    force: Boolean,
+    bypass: Boolean,
     packageName: String
   ): Single<Int> {
     return Single.defer {
-      if (!networkStatusProvider.hasConnection()) {
-        throw NoNetworkException
-      } else {
-        return@defer versionCheckService.checkVersion(packageName)
-      }
+      Maybe.concat(
+          versionCache.get(bypass),
+          network.checkVersion(bypass, packageName).doOnSuccess { versionCache.set(it) }.toMaybe()
+      )
+          .firstOrError()
     }
-        .map { versionCodeForApi(it, minimumApiProvider.minApi()) }
+  }
+
+  override fun clearCache() {
+    versionCache.clearCache()
   }
 }

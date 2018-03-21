@@ -16,39 +16,27 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.cache.Cache
+import com.pyamsoft.pydroid.cache.ManyRepository
 import io.reactivex.Observable
-import io.reactivex.Single
 
 internal class AboutLibrariesInteractorImpl internal constructor(
-  private val dataSource: AboutLibrariesDataSource
-) : AboutLibrariesInteractor {
+  private val disk: AboutLibrariesInteractor,
+  private val licenseCache: ManyRepository<AboutLibrariesModel>
+) : AboutLibrariesInteractor, Cache {
 
-  @CheckResult
-  private fun createLicenseStream(): Observable<AboutLibrariesModel> {
-    return Observable.defer { Observable.fromIterable(Licenses.getLicenses()) }
-  }
-
-  @CheckResult
-  private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
-    return Single.fromCallable<String> {
-      if (model.customContent.isEmpty()) {
-        return@fromCallable dataSource.loadNewLicense(model.license)
-      } else {
-        return@fromCallable model.customContent
-      }
+  override fun loadLicenses(bypass: Boolean): Observable<AboutLibrariesModel> {
+    return Observable.defer {
+      Observable.concat(
+          licenseCache.get(bypass),
+          disk.loadLicenses(bypass)
+              .doOnSubscribe { licenseCache.prepare() }
+              .doOnNext { licenseCache.add(it) }
+      )
     }
   }
 
-  @CheckResult
-  private fun loadTextForAboutModel(model: AboutLibrariesModel): Observable<AboutLibrariesModel> {
-    return loadLicenseText(model).map { AboutLibrariesModel.create(model.name, model.homepage, it) }
-        .toObservable()
-  }
-
-  override fun loadLicenses(force: Boolean): Observable<AboutLibrariesModel> {
-    return createLicenseStream()
-        .sorted { o1, o2 -> o1.name.compareTo(o2.name, ignoreCase = true) }
-        .concatMap { loadTextForAboutModel(it) }
+  override fun clearCache() {
+    licenseCache.clearCache()
   }
 }

@@ -18,10 +18,9 @@ package com.pyamsoft.pydroid.base.version
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.base.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
-import com.pyamsoft.pydroid.base.version.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
+import com.pyamsoft.pydroid.cache.cacheSingle
 import com.squareup.moshi.Moshi
 import io.reactivex.Scheduler
 import okhttp3.CertificatePinner
@@ -44,20 +43,14 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
         provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideConverter())
     )
 
-    val versionCheckService: VersionCheckService = versionCheckApi.create(
-        VersionCheckService::class.java
-    )
+    val versionCheckService = versionCheckApi.create(VersionCheckService::class.java)
+    val networkStatusProvider = NetworkStatusProviderImpl(pyDroidModule.provideContext())
+    val minimumApiProvider = MinimumApiProviderImpl()
 
-    val networkStatusProvider: NetworkStatusProvider =
-      NetworkStatusProviderImpl(pyDroidModule.provideContext())
-
-    val minimumApiProvider: MinimumApiProvider = MinimumApiProviderImpl()
-
-    val interactor: VersionCheckInteractor = VersionCheckInteractorImpl(
-        minimumApiProvider, networkStatusProvider, versionCheckService
-    )
-
-    cachedInteractor = VersionCheckInteractorCache(interactor)
+    val network =
+      VersionCheckInteractorNetwork(minimumApiProvider, networkStatusProvider, versionCheckService)
+    val versionCache = cacheSingle<Int>()
+    cachedInteractor = VersionCheckInteractorImpl(network, versionCache)
   }
 
   @CheckResult

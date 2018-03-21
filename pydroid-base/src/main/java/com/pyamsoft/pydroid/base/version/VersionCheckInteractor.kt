@@ -23,7 +23,7 @@ internal interface VersionCheckInteractor {
 
   @CheckResult
   fun checkVersion(
-    force: Boolean,
+    bypass: Boolean,
     packageName: String
   ): Single<Int>
 }

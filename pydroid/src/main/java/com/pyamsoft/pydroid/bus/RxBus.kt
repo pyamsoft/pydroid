@@ -24,7 +24,8 @@ import timber.log.Timber
 
 class RxBus<T : Any> private constructor() : EventBus<T> {
 
-  private val bus: Subject<T> = PublishSubject.create()
+  private val bus: Subject<T> = PublishSubject.create<T>()
+      .toSerialized()
 
   override fun publish(event: T) {
     if (bus.hasObservers()) {

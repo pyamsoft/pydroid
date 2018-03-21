@@ -85,7 +85,7 @@ subprojects {
   apply plugin: "com.github.ben-manes.versions"
 
   ktlint {
-    version = "0.20.0"
+    version = "0.22.0"
     android = true
   }
 }
@@ -116,4 +116,4 @@ task clean(type: Delete) {
 
 // JitPack stuff
 group = 'com.github.pyamsoft'
-version = '16.4.0'
+version = '16.4.1'

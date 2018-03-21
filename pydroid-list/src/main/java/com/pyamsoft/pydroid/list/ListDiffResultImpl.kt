@@ -17,8 +17,6 @@
 package com.pyamsoft.pydroid.list
 
 import android.support.v7.util.DiffUtil.DiffResult
-import android.support.v7.util.ListUpdateCallback
-import android.support.v7.widget.RecyclerView.Adapter
 import com.pyamsoft.pydroid.list.ListDiffResult.ListData
 import java.util.Collections
 
@@ -50,12 +48,8 @@ class ListDiffResultImpl<out T : Any>(
 
     override fun list(): List<T> = list
 
-    override fun dispatch(adapter: Adapter<*>) {
-      result.dispatchUpdatesTo(adapter)
-    }
-
-    override fun dispatch(callback: ListUpdateCallback) {
-      result.dispatchUpdatesTo(callback)
+    override fun dispatch(func: (DiffResult) -> Unit) {
+      func(result)
     }
 
   }

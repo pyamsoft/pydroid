@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.list
+package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
-import android.support.v7.util.DiffUtil.DiffResult
 
-interface ListDiffResult<out T : Any> {
+interface CacheRepositoryMap<in K : Any, V : Any, out R : Any> : Cache {
 
-  fun ifEmpty(func: () -> Unit)
+  @CheckResult
+  fun get(
+    bypass: Boolean,
+    key: K
+  ): R
 
-  fun withValues(func: (ListData<T>) -> Unit)
-
-  interface ListData<out T : Any> {
-
-    @CheckResult
-    fun list(): List<T>
-
-    fun dispatch(func: (DiffResult) -> Unit)
-
-  }
+  fun remove(key: K)
 }
+
+@CheckResult
+fun <K : Any, V : Any> cacheSingleMap(): SingleRepositoryMap<K, V> {
+  return SingleRepositoryMapImpl()
+}
+
+@CheckResult
+fun <K : Any, V : Any> cacheManyMap(): ManyRepositoryMap<K, V> {
+  return ManyRepositoryMapImpl()
+}
+

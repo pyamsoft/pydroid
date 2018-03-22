@@ -21,23 +21,28 @@
 #-renamesourcefileattribute SourceFile
 
 # Retrofit2
--dontwarn javax.annotation.**
--dontwarn retrofit2.Platform$Java8
--dontnote retrofit2.Platform
+# Retain generic type information for use by reflection by converters and adapters.
 -keepattributes Signature
--keepattributes Exceptions
-
-# For use with proguard-android-optimize.txt
-# Needed or else requests with crash with a IllegalArgumentException: Missng GET or @Url
--keepclasseswithmembers class * {
+# Retain service method parameters.
+-keepclassmembernames,allowobfuscation interface * {
     @retrofit2.http.* <methods>;
 }
+# Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+# OkHTTP
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
 
 # Moshi
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 -keepclasseswithmembers class * {
-    @com.squareup.moshi.* <methods>;
+      @com.squareup.moshi.* <meyoutthods>;
 }
 -keep @com.squareup.moshi.JsonQualifier interface *
 

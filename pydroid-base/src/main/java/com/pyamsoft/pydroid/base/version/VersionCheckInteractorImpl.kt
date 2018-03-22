@@ -17,13 +17,13 @@
 package com.pyamsoft.pydroid.base.version
 
 import com.pyamsoft.pydroid.cache.Cache
-import com.pyamsoft.pydroid.cache.SingleRepository
+import com.pyamsoft.pydroid.cache.Repository
 import io.reactivex.Maybe
 import io.reactivex.Single
 
 internal class VersionCheckInteractorImpl internal constructor(
   private val network: VersionCheckInteractor,
-  private val versionCache: SingleRepository<Int>
+  private val versionCache: Repository<Int>
 ) : VersionCheckInteractor, Cache {
 
   override fun checkVersion(

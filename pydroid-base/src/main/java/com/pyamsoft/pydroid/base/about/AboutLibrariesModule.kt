@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.cache.cacheMany
+import com.pyamsoft.pydroid.cache.newRepository
 import io.reactivex.Scheduler
 
 class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
@@ -32,7 +32,7 @@ class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
     val dataSource = AboutLibrariesDataSourceImpl(pyDroidModule.provideContext())
 
     val disk = AboutLibrariesInteractorDisk(dataSource)
-    val licenseCache = cacheMany<AboutLibrariesModel>()
+    val licenseCache = newRepository<List<AboutLibrariesModel>>()
     cacheInteractor = AboutLibrariesInteractorImpl(disk, licenseCache)
   }
 

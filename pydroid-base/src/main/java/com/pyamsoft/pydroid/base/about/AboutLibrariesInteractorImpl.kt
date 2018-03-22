@@ -17,22 +17,26 @@
 package com.pyamsoft.pydroid.base.about
 
 import com.pyamsoft.pydroid.cache.Cache
-import com.pyamsoft.pydroid.cache.ManyRepository
+import com.pyamsoft.pydroid.cache.Repository
+import io.reactivex.Maybe
 import io.reactivex.Observable
 
 internal class AboutLibrariesInteractorImpl internal constructor(
   private val disk: AboutLibrariesInteractor,
-  private val licenseCache: ManyRepository<AboutLibrariesModel>
+  private val licenseCache: Repository<List<AboutLibrariesModel>>
 ) : AboutLibrariesInteractor, Cache {
 
   override fun loadLicenses(bypass: Boolean): Observable<AboutLibrariesModel> {
     return Observable.defer {
-      Observable.concat(
+      Maybe.concat(
           licenseCache.get(bypass),
           disk.loadLicenses(bypass)
-              .doOnSubscribe { licenseCache.prepare() }
-              .doOnNext { licenseCache.add(it) }
+              .toList()
+              .doOnSuccess { licenseCache.set(it) }
+              .toMaybe()
       )
+          .firstOrError()
+          .flatMapObservable { Observable.fromIterable(it) }
     }
   }
 

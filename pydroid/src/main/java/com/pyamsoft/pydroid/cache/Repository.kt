@@ -18,13 +18,23 @@ package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
 import io.reactivex.Maybe
+import java.util.concurrent.TimeUnit
 
-interface SingleRepository<T : Any> : CacheRepository<Maybe<T>> {
+interface Repository<T : Any> : Cache {
+
+  @CheckResult
+  fun get(bypass: Boolean): Maybe<T>
+
+  @CheckResult
+  fun get(
+    bypass: Boolean,
+    timeout: Long
+  ): Maybe<T>
 
   fun set(data: T)
 }
 
-internal class SingleRepositoryImpl<T : Any> internal constructor() : SingleRepository<T> {
+internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
 
   private var data: T? = null
   private var time: Long = 0
@@ -36,8 +46,16 @@ internal class SingleRepositoryImpl<T : Any> internal constructor() : SingleRepo
 
   @CheckResult
   override fun get(bypass: Boolean): Maybe<T> {
+    return get(bypass, THIRTY_SECONDS_MILLIS)
+  }
+
+  @CheckResult
+  override fun get(
+    bypass: Boolean,
+    timeout: Long
+  ): Maybe<T> {
     return Maybe.defer<T> {
-      if (bypass || data == null || time + THIRTY_SECONDS_MILLIS < System.currentTimeMillis()) {
+      if (bypass || data == null || time + timeout < System.currentTimeMillis()) {
         return@defer Maybe.empty()
       } else {
         return@defer Maybe.just(data)
@@ -49,5 +67,14 @@ internal class SingleRepositoryImpl<T : Any> internal constructor() : SingleRepo
     this.data = data
     time = System.currentTimeMillis()
   }
+
+  companion object {
+
+    private val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)
+  }
 }
 
+@CheckResult
+fun <T : Any> newRepository(): Repository<T> {
+  return RepositoryImpl()
+}

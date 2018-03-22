@@ -19,7 +19,22 @@ package com.pyamsoft.pydroid.cache
 import android.support.annotation.CheckResult
 import io.reactivex.Maybe
 
-interface SingleRepositoryMap<in K : Any, V : Any> : CacheRepositoryMap<K, V, Maybe<V>> {
+interface RepositoryMap<in K : Any, V : Any> : Cache {
+
+  @CheckResult
+  fun get(
+    bypass: Boolean,
+    key: K
+  ): Maybe<V>
+
+  @CheckResult
+  fun get(
+    bypass: Boolean,
+    key: K,
+    timeout: Long
+  ): Maybe<V>
+
+  fun remove(key: K)
 
   fun set(
     key: K,
@@ -27,17 +42,17 @@ interface SingleRepositoryMap<in K : Any, V : Any> : CacheRepositoryMap<K, V, Ma
   )
 }
 
-internal class SingleRepositoryMapImpl<in K : Any, V : Any> internal constructor(
-) : SingleRepositoryMap<K, V>, Cache {
+internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
+) : RepositoryMap<K, V> {
 
-  private val cache = LinkedHashMap<K, SingleRepository<V>>()
+  private val cache = LinkedHashMap<K, Repository<V>>()
 
   override fun clearCache() {
     cache.clear()
   }
 
   @CheckResult
-  private fun get(key: K): SingleRepository<V> = cache.getOrElse(key) { cacheSingle() }
+  private fun get(key: K): Repository<V> = cache.getOrElse(key) { newRepository() }
 
   @CheckResult
   override fun get(
@@ -46,6 +61,16 @@ internal class SingleRepositoryMapImpl<in K : Any, V : Any> internal constructor
   ): Maybe<V> {
     return Maybe.defer<V> {
       return@defer get(key).get(bypass)
+    }
+  }
+
+  override fun get(
+    bypass: Boolean,
+    key: K,
+    timeout: Long
+  ): Maybe<V> {
+    return Maybe.defer<V> {
+      return@defer get(key).get(bypass, timeout)
     }
   }
 
@@ -60,5 +85,10 @@ internal class SingleRepositoryMapImpl<in K : Any, V : Any> internal constructor
     cache.remove(key)
   }
 
+}
+
+@CheckResult
+fun <K : Any, V : Any> newRepositoryMap(): RepositoryMap<K, V> {
+  return RepositoryMapImpl()
 }
 

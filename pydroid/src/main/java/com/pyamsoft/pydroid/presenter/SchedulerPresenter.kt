@@ -16,10 +16,29 @@
 
 package com.pyamsoft.pydroid.presenter
 
+import com.pyamsoft.pydroid.data.enforceComputation
+import com.pyamsoft.pydroid.data.enforceIo
+import com.pyamsoft.pydroid.data.enforceMainThread
 import io.reactivex.Scheduler
 
 abstract class SchedulerPresenter<V : Any> protected constructor(
   protected val computationScheduler: Scheduler,
   protected val ioScheduler: Scheduler,
-  protected val mainThreadScheduler: Scheduler
-) : Presenter<V>()
+  protected val mainThreadScheduler: Scheduler,
+  enforce: Boolean = true
+) : Presenter<V>() {
+
+  constructor(
+    computationScheduler: Scheduler,
+    ioScheduler: Scheduler,
+    mainThreadScheduler: Scheduler
+  ) : this(computationScheduler, ioScheduler, mainThreadScheduler, enforce = false)
+
+  init {
+    if (enforce) {
+      computationScheduler.enforceComputation()
+      ioScheduler.enforceIo()
+      mainThreadScheduler.enforceMainThread()
+    }
+  }
+}

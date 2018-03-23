@@ -17,29 +17,27 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
-import io.reactivex.Maybe
+import io.reactivex.Single
 
 interface RepositoryMap<in K : Any, V : Any> : Cache {
 
   @CheckResult
   fun get(
     bypass: Boolean,
-    key: K
-  ): Maybe<V>
+    key: K,
+    fresh: () -> Single<V>
+  ): Single<V>
 
   @CheckResult
   fun get(
     bypass: Boolean,
     key: K,
-    timeout: Long
-  ): Maybe<V>
+    timeout: Long,
+    fresh: () -> Single<V>
+  ): Single<V>
 
   fun remove(key: K)
 
-  fun set(
-    key: K,
-    data: V
-  )
 }
 
 internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
@@ -57,28 +55,19 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
   @CheckResult
   override fun get(
     bypass: Boolean,
-    key: K
-  ): Maybe<V> {
-    return Maybe.defer<V> {
-      return@defer get(key).get(bypass)
-    }
+    key: K,
+    fresh: () -> Single<V>
+  ): Single<V> {
+    return get(key).get(bypass, fresh)
   }
 
   override fun get(
     bypass: Boolean,
     key: K,
-    timeout: Long
-  ): Maybe<V> {
-    return Maybe.defer<V> {
-      return@defer get(key).get(bypass, timeout)
-    }
-  }
-
-  override fun set(
-    key: K,
-    data: V
-  ) {
-    get(key).set(data)
+    timeout: Long,
+    fresh: () -> Single<V>
+  ): Single<V> {
+    return get(key).get(bypass, timeout, fresh)
   }
 
   override fun remove(key: K) {

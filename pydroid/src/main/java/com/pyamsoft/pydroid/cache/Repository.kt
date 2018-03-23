@@ -18,12 +18,8 @@ package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.subjects.AsyncSubject
-import io.reactivex.subjects.Subject
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicReference
 
 interface Repository<T : Any> : Cache {
 
@@ -43,13 +39,11 @@ interface Repository<T : Any> : Cache {
 
 internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
 
-  private var subject: AtomicReference<Subject<T>?> = AtomicReference(null)
   private var data: T? = null
   private var time: Long = 0
 
   override fun clearCache() {
     set(null, 0)
-    subject.set(null)
   }
 
   @CheckResult
@@ -77,24 +71,6 @@ internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
   }
 
   @CheckResult
-  private fun persistFreshRequestUntilComplete(fresh: () -> Single<T>): Single<T> {
-    return Observable.defer {
-      val freshCache = subject.get()
-      if (freshCache != null) {
-        return@defer freshCache
-      } else {
-        return@defer AsyncSubject.create<T>()
-            .also {
-              fresh().toObservable()
-                  .subscribe(it)
-              subject.set(it)
-            }
-      }
-    }
-        .firstOrError()
-  }
-
-  @CheckResult
   override fun get(
     bypass: Boolean,
     timeout: Long,
@@ -103,9 +79,7 @@ internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
     return Single.defer {
       Maybe.concat(
           getFromDataCache(bypass, timeout),
-          persistFreshRequestUntilComplete(fresh).doOnSuccess {
-            set(it, System.currentTimeMillis())
-          }.toMaybe()
+          fresh().doOnSuccess { set(it, System.currentTimeMillis()) }.toMaybe()
       )
           .firstOrError()
     }
@@ -117,7 +91,6 @@ internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
   ) {
     this.data = data
     this.time = time
-    this.subject.set(null)
   }
 
   companion object {

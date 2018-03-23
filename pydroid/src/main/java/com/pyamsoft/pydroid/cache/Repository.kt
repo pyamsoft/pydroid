@@ -17,9 +17,14 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
-import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.AsyncSubject
+import io.reactivex.subjects.Subject
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 interface Repository<T : Any> : Cache {
 
@@ -37,13 +42,44 @@ interface Repository<T : Any> : Cache {
   ): Single<T>
 }
 
-internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
+internal class RepositoryImpl<T : Any> internal constructor(
+  private val provideScheduler: () -> Scheduler
+) : Repository<T> {
 
-  private var data: T? = null
+  private var data: AtomicReference<Subject<T>?> = AtomicReference(null)
   private var time: Long = 0
 
   override fun clearCache() {
-    set(null, 0)
+    data.set(null)
+    time = 0
+  }
+
+  @CheckResult
+  private fun getFreshOrCached(
+    force: Boolean,
+    currentTime: Long,
+    fresh: () -> Single<T>
+  ): Single<T> {
+    return Observable.defer {
+      val cachedSubject = data.get()
+      if (cachedSubject == null || force) {
+        val asyncSubject = AsyncSubject.create<T>()
+        val scheduler = provideScheduler()
+        fresh().toObservable()
+            .subscribeOn(scheduler)
+            .observeOn(scheduler)
+            .subscribe(asyncSubject)
+
+        // Cache for later
+        data.set(asyncSubject)
+        time = currentTime
+
+        return@defer asyncSubject
+      } else {
+        return@defer cachedSubject
+      }
+    }
+        .firstOrError()
   }
 
   @CheckResult
@@ -55,42 +91,16 @@ internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
   }
 
   @CheckResult
-  private fun getFromDataCache(
-    bypass: Boolean,
-    timeout: Long
-  ): Maybe<T> {
-    return Maybe.defer<T> {
-      if (bypass || data == null || time + timeout < System.currentTimeMillis()) {
-        // Clear data cache if exists
-        set(null, 0)
-        return@defer Maybe.empty()
-      } else {
-        return@defer Maybe.just(data)
-      }
-    }
-  }
-
-  @CheckResult
   override fun get(
     bypass: Boolean,
     timeout: Long,
     fresh: () -> Single<T>
   ): Single<T> {
     return Single.defer {
-      Maybe.concat(
-          getFromDataCache(bypass, timeout),
-          fresh().doOnSuccess { set(it, System.currentTimeMillis()) }.toMaybe()
-      )
-          .firstOrError()
+      val currentTime = System.currentTimeMillis()
+      val shouldForce = bypass || data.get() == null || time + timeout < currentTime
+      return@defer getFreshOrCached(shouldForce, currentTime, fresh)
     }
-  }
-
-  private fun set(
-    data: T?,
-    time: Long
-  ) {
-    this.data = data
-    this.time = time
   }
 
   companion object {
@@ -100,6 +110,9 @@ internal class RepositoryImpl<T : Any> internal constructor() : Repository<T> {
 }
 
 @CheckResult
-fun <T : Any> newRepository(): Repository<T> {
-  return RepositoryImpl()
+@JvmOverloads
+fun <T : Any> newRepository(
+  scheduler: () -> Scheduler = { Schedulers.io() }
+): Repository<T> {
+  return RepositoryImpl(scheduler)
 }

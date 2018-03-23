@@ -17,7 +17,9 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 interface RepositoryMap<in K : Any, V : Any> : Cache {
 
@@ -41,6 +43,7 @@ interface RepositoryMap<in K : Any, V : Any> : Cache {
 }
 
 internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
+  private val provideScheduler: () -> Scheduler
 ) : RepositoryMap<K, V> {
 
   private val cache = LinkedHashMap<K, Repository<V>>()
@@ -50,7 +53,7 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
   }
 
   @CheckResult
-  private fun get(key: K): Repository<V> = cache.getOrElse(key) { newRepository() }
+  private fun get(key: K): Repository<V> = cache.getOrElse(key) { newRepository(provideScheduler) }
 
   @CheckResult
   override fun get(
@@ -77,7 +80,10 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
 }
 
 @CheckResult
-fun <K : Any, V : Any> newRepositoryMap(): RepositoryMap<K, V> {
-  return RepositoryMapImpl()
+@JvmOverloads
+fun <K : Any, V : Any> newRepositoryMap(
+  scheduler: () -> Scheduler = { Schedulers.io() }
+): RepositoryMap<K, V> {
+  return RepositoryMapImpl(scheduler)
 }
 

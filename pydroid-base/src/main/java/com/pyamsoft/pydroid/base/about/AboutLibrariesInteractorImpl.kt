@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.base.about
 
 import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.cache.Repository
-import io.reactivex.Maybe
 import io.reactivex.Observable
 
 internal class AboutLibrariesInteractorImpl internal constructor(
@@ -27,17 +26,11 @@ internal class AboutLibrariesInteractorImpl internal constructor(
 ) : AboutLibrariesInteractor, Cache {
 
   override fun loadLicenses(bypass: Boolean): Observable<AboutLibrariesModel> {
-    return Observable.defer {
-      Maybe.concat(
-          licenseCache.get(bypass),
-          disk.loadLicenses(bypass)
-              .toList()
-              .doOnSuccess { licenseCache.set(it) }
-              .toMaybe()
-      )
-          .firstOrError()
-          .flatMapObservable { Observable.fromIterable(it) }
+    return licenseCache.get(bypass) {
+      disk.loadLicenses(true)
+          .toList()
     }
+        .flatMapObservable { Observable.fromIterable(it) }
   }
 
   override fun clearCache() {

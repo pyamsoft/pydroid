@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.base.version
 
 import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.cache.Repository
-import io.reactivex.Maybe
 import io.reactivex.Single
 
 internal class VersionCheckInteractorImpl internal constructor(
@@ -30,13 +29,7 @@ internal class VersionCheckInteractorImpl internal constructor(
     bypass: Boolean,
     packageName: String
   ): Single<Int> {
-    return Single.defer {
-      Maybe.concat(
-          versionCache.get(bypass),
-          network.checkVersion(bypass, packageName).doOnSuccess { versionCache.set(it) }.toMaybe()
-      )
-          .firstOrError()
-    }
+    return versionCache.get(bypass) { network.checkVersion(true, packageName) }
   }
 
   override fun clearCache() {

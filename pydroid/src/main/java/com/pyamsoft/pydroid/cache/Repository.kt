@@ -17,14 +17,15 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
-import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.SingleObserver
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.AsyncSubject
 import io.reactivex.subjects.Subject
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.atomic.AtomicLong
 
 interface Repository<T : Any> : Cache {
 
@@ -46,12 +47,12 @@ internal class RepositoryImpl<T : Any> internal constructor(
   private val provideScheduler: () -> Scheduler
 ) : Repository<T> {
 
-  private var data: AtomicReference<Subject<T>?> = AtomicReference(null)
-  private var time: Long = 0
+  private var data: Subject<T>? = null
+  private var time = AtomicLong(0)
 
   override fun clearCache() {
-    data.set(null)
-    time = 0
+    data = null
+    time.set(0)
   }
 
   @CheckResult
@@ -60,26 +61,45 @@ internal class RepositoryImpl<T : Any> internal constructor(
     currentTime: Long,
     fresh: () -> Single<T>
   ): Single<T> {
-    return Observable.defer {
-      val cachedSubject = data.get()
-      if (cachedSubject == null || force) {
-        val asyncSubject = AsyncSubject.create<T>()
+    return Single.defer {
+      if (force) {
+        // Time is atomic and should stop re-entry off multiple threads
+        time.set(currentTime)
+
+        // Make a new thread safe subject and use it
+        data = AsyncSubject.create<T>()
+            .toSerialized()
+
+        // We subscribe indirectly and push onto the subject
+        // so that the actual consumer subscribes to a source
+        // which is un-opinionated about the Schedulers
         val scheduler = provideScheduler()
-        fresh().toObservable()
-            .subscribeOn(scheduler)
+        fresh().subscribeOn(scheduler)
             .observeOn(scheduler)
-            .subscribe(asyncSubject)
+            .subscribe(object : SingleObserver<T> {
 
-        // Cache for later
-        data.set(asyncSubject)
-        time = currentTime
+              private val dispatch = data!!
 
-        return@defer asyncSubject
-      } else {
-        return@defer cachedSubject
+              override fun onSubscribe(d: Disposable) {
+                dispatch.onSubscribe(d)
+              }
+
+              override fun onSuccess(t: T) {
+                dispatch.also {
+                  it.onNext(t)
+                  it.onComplete()
+                }
+              }
+
+              override fun onError(e: Throwable) {
+                dispatch.onError(e)
+              }
+
+            })
       }
+
+      return@defer data!!.firstOrError()
     }
-        .firstOrError()
   }
 
   @CheckResult
@@ -98,7 +118,7 @@ internal class RepositoryImpl<T : Any> internal constructor(
   ): Single<T> {
     return Single.defer {
       val currentTime = System.currentTimeMillis()
-      val shouldForce = bypass || data.get() == null || time + timeout < currentTime
+      val shouldForce = bypass || time.get() + timeout < currentTime
       return@defer getFreshOrCached(shouldForce, currentTime, fresh)
     }
   }

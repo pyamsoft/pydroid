@@ -83,6 +83,10 @@ buildscript {
 subprojects {
   apply plugin: "org.jlleitschuh.gradle.ktlint"
   apply plugin: "com.github.ben-manes.versions"
+  apply plugin: "com.github.dcendents.android-maven"
+
+  group = "com.github.pyamsoft"
+  version = "16.4.8"
 
   ktlint {
     version = "0.22.0"
@@ -113,7 +117,3 @@ allprojects {
 task clean(type: Delete) {
   delete rootProject.buildDir
 }
-
-// JitPack stuff
-group = 'com.github.pyamsoft'
-version = '16.4.7'

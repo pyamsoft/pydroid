@@ -86,7 +86,7 @@ subprojects {
   apply plugin: "com.github.dcendents.android-maven"
 
   group = "com.github.pyamsoft"
-  version = "16.4.8"
+  version = "16.4.9"
 
   ktlint {
     version = "0.22.0"

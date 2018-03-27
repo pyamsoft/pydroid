@@ -17,13 +17,14 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 interface RepositoryMap<in K : Any, V : Any> : Cache {
 
   @CheckResult
   fun get(
-    bypass: Boolean,
     key: K,
     fresh: () -> Single<V>
   ): Single<V>
@@ -32,7 +33,6 @@ interface RepositoryMap<in K : Any, V : Any> : Cache {
   fun get(
     bypass: Boolean,
     key: K,
-    timeout: Long,
     fresh: () -> Single<V>
   ): Single<V>
 
@@ -40,7 +40,10 @@ interface RepositoryMap<in K : Any, V : Any> : Cache {
 
 }
 
-internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor() : RepositoryMap<K, V> {
+internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
+  private val ttl: Long,
+  private val schedulerProvider: () -> Scheduler
+) : RepositoryMap<K, V> {
 
   private val cache = LinkedHashMap<K, Repository<V>>()
 
@@ -49,24 +52,23 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor() : R
   }
 
   @CheckResult
-  private fun get(key: K): Repository<V> = cache.getOrElse(key) { newRepository() }
+  private fun get(key: K): Repository<V> =
+    cache.getOrElse(key) { newRepository(ttl, schedulerProvider) }
 
   @CheckResult
+  override fun get(
+    key: K,
+    fresh: () -> Single<V>
+  ): Single<V> {
+    return get(key).get(fresh)
+  }
+
   override fun get(
     bypass: Boolean,
     key: K,
     fresh: () -> Single<V>
   ): Single<V> {
     return get(key).get(bypass, fresh)
-  }
-
-  override fun get(
-    bypass: Boolean,
-    key: K,
-    timeout: Long,
-    fresh: () -> Single<V>
-  ): Single<V> {
-    return get(key).get(bypass, timeout, fresh)
   }
 
   override fun remove(key: K) {
@@ -76,7 +78,10 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor() : R
 }
 
 @CheckResult
-fun <K : Any, V : Any> newRepositoryMap(): RepositoryMap<K, V> {
-  return RepositoryMapImpl()
+fun <K : Any, V : Any> newRepositoryMap(
+  ttl: Long = THIRTY_SECONDS_MILLIS,
+  scheduler: () -> Scheduler = { Schedulers.io() }
+): RepositoryMap<K, V> {
+  return RepositoryMapImpl(ttl, scheduler)
 }
 

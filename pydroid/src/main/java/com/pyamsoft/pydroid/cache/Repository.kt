@@ -30,20 +30,17 @@ import java.util.concurrent.atomic.AtomicLong
 interface Repository<T : Any> : Cache {
 
   @CheckResult
-  fun get(
-    bypass: Boolean,
-    fresh: () -> Single<T>
-  ): Single<T>
+  fun get(fresh: () -> Single<T>): Single<T>
 
   @CheckResult
   fun get(
     bypass: Boolean,
-    timeout: Long,
     fresh: () -> Single<T>
   ): Single<T>
 }
 
 internal class RepositoryImpl<T : Any> internal constructor(
+  private val ttl: Long,
   private val provideScheduler: () -> Scheduler
 ) : Repository<T> {
 
@@ -103,36 +100,30 @@ internal class RepositoryImpl<T : Any> internal constructor(
   }
 
   @CheckResult
-  override fun get(
-    bypass: Boolean,
-    fresh: () -> Single<T>
-  ): Single<T> {
-    return get(bypass, THIRTY_SECONDS_MILLIS, fresh)
+  override fun get(fresh: () -> Single<T>): Single<T> {
+    return get(false, fresh)
   }
 
   @CheckResult
   override fun get(
     bypass: Boolean,
-    timeout: Long,
     fresh: () -> Single<T>
   ): Single<T> {
     return Single.defer {
       val currentTime = System.currentTimeMillis()
-      val shouldForce = bypass || time.get() + timeout < currentTime
+      val shouldForce = bypass || time.get() + ttl < currentTime
       return@defer getFreshOrCached(shouldForce, currentTime, fresh)
     }
-  }
-
-  companion object {
-
-    private val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)
   }
 }
 
 @CheckResult
 @JvmOverloads
 fun <T : Any> newRepository(
+  ttl: Long = THIRTY_SECONDS_MILLIS,
   scheduler: () -> Scheduler = { Schedulers.io() }
 ): Repository<T> {
-  return RepositoryImpl(scheduler)
+  return RepositoryImpl(ttl, scheduler)
 }
+
+@JvmField internal val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)

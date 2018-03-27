@@ -20,6 +20,8 @@ import android.support.annotation.CheckResult
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 
 interface RepositoryMap<in K : Any, V : Any> : Cache {
 
@@ -36,24 +38,40 @@ interface RepositoryMap<in K : Any, V : Any> : Cache {
     fresh: () -> Single<V>
   ): Single<V>
 
+}
+
+interface MutableRepositoryMap<in K : Any, V : Any> : RepositoryMap<K, V> {
+
+  fun set(
+    key: K,
+    value: V
+  )
+
+  fun update(
+    key: K,
+    func: (V) -> V
+  )
+
   fun remove(key: K)
 
 }
 
 internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
-  private val ttl: Long,
+  initialSize: Int,
+  private val time: Long,
+  private val timeUnit: TimeUnit,
   private val schedulerProvider: () -> Scheduler
-) : RepositoryMap<K, V> {
+) : MutableRepositoryMap<K, V> {
 
-  private val cache = LinkedHashMap<K, Repository<V>>()
+  private val cache = ConcurrentHashMap<K, MutableRepository<V>>(initialSize)
 
   override fun clearCache() {
     cache.clear()
   }
 
   @CheckResult
-  private fun get(key: K): Repository<V> =
-    cache.getOrElse(key) { newRepository(ttl, schedulerProvider) }
+  private fun get(key: K): MutableRepository<V> =
+    cache.getOrElse(key) { mutableRepository(time, timeUnit, schedulerProvider) }
 
   @CheckResult
   override fun get(
@@ -71,6 +89,20 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
     return get(key).get(bypass, fresh)
   }
 
+  override fun set(
+    key: K,
+    value: V
+  ) {
+    get(key).set(value)
+  }
+
+  override fun update(
+    key: K,
+    func: (V) -> V
+  ) {
+    get(key).update(func)
+  }
+
   override fun remove(key: K) {
     cache.remove(key)
   }
@@ -78,10 +110,23 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
 }
 
 @CheckResult
-fun <K : Any, V : Any> newRepositoryMap(
-  ttl: Long = THIRTY_SECONDS_MILLIS,
+@JvmOverloads
+fun <K : Any, V : Any> repositoryMap(
+  initialSize: Int = 16,
+  time: Long = 30L,
+  timeUnit: TimeUnit = TimeUnit.SECONDS,
   scheduler: () -> Scheduler = { Schedulers.io() }
 ): RepositoryMap<K, V> {
-  return RepositoryMapImpl(ttl, scheduler)
+  return mutableRepositoryMap(initialSize, time, timeUnit, scheduler)
 }
 
+@CheckResult
+@JvmOverloads
+fun <K : Any, V : Any> mutableRepositoryMap(
+  initialSize: Int = 16,
+  time: Long = 30L,
+  timeUnit: TimeUnit = TimeUnit.SECONDS,
+  scheduler: () -> Scheduler = { Schedulers.io() }
+): RepositoryMap<K, V> {
+  return RepositoryMapImpl(initialSize, time, timeUnit, scheduler)
+}

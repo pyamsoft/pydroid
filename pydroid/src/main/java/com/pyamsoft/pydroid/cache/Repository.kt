@@ -17,15 +17,15 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.AsyncSubject
-import io.reactivex.subjects.Subject
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 
 interface Repository<T : Any> : Cache {
 
@@ -39,64 +39,24 @@ interface Repository<T : Any> : Cache {
   ): Single<T>
 }
 
+interface MutableRepository<T : Any> : Repository<T> {
+
+  fun set(value: T)
+
+  fun update(func: (T) -> T)
+}
+
 internal class RepositoryImpl<T : Any> internal constructor(
   private val ttl: Long,
   private val provideScheduler: () -> Scheduler
-) : Repository<T> {
+) : MutableRepository<T> {
 
-  private var data: Subject<T>? = null
-  private var time = AtomicLong(0)
+  private var data = ConcurrentHashMap<Int, AsyncSubject<T>?>(1)
+  private var time: Long = 0
 
   override fun clearCache() {
-    data = null
-    time.set(0)
-  }
-
-  @CheckResult
-  private fun getFreshOrCached(
-    force: Boolean,
-    currentTime: Long,
-    fresh: () -> Single<T>
-  ): Single<T> {
-    return Single.defer {
-      if (force) {
-        // Time is atomic and should stop re-entry off multiple threads
-        time.set(currentTime)
-
-        // Make a new thread safe subject and use it
-        data = AsyncSubject.create<T>()
-            .toSerialized()
-
-        // We subscribe indirectly and push onto the subject
-        // so that the actual consumer subscribes to a source
-        // which is un-opinionated about the Schedulers
-        val scheduler = provideScheduler()
-        fresh().subscribeOn(scheduler)
-            .observeOn(scheduler)
-            .subscribe(object : SingleObserver<T> {
-
-              private val dispatch = data!!
-
-              override fun onSubscribe(d: Disposable) {
-                dispatch.onSubscribe(d)
-              }
-
-              override fun onSuccess(t: T) {
-                dispatch.also {
-                  it.onNext(t)
-                  it.onComplete()
-                }
-              }
-
-              override fun onError(e: Throwable) {
-                dispatch.onError(e)
-              }
-
-            })
-      }
-
-      return@defer data!!.firstOrError()
-    }
+    data.clear()
+    time = 0
   }
 
   @CheckResult
@@ -109,21 +69,104 @@ internal class RepositoryImpl<T : Any> internal constructor(
     bypass: Boolean,
     fresh: () -> Single<T>
   ): Single<T> {
-    return Single.defer {
+    return Observable.defer {
       val currentTime = System.currentTimeMillis()
-      val shouldForce = bypass || time.get() + ttl < currentTime
-      return@defer getFreshOrCached(shouldForce, currentTime, fresh)
+
+      // If we need to force a refresh, clear the cache
+      if (bypass || time + ttl < currentTime) {
+        clearCache()
+      }
+
+      // If we have a cached entry return it
+      var subject: AsyncSubject<T>? = data[0]
+      if (subject != null) {
+        return@defer subject
+      }
+
+      // Make new data and store it for later
+      time = currentTime
+      subject = AsyncSubject.create<T>()
+
+      // If someone has already put data in, use it
+      val cached: AsyncSubject<T>? = data.putIfAbsent(0, subject)
+      if (cached != null) {
+        return@defer cached
+      }
+
+      // We subscribe indirectly and push onto the subject
+      // so that the actual consumer subscribes to a source
+      // which is un-opinionated about the Schedulers
+      val scheduler = provideScheduler()
+      fresh().subscribeOn(scheduler)
+          .observeOn(scheduler)
+          .subscribe(object : SingleObserver<T> {
+
+            override fun onSubscribe(d: Disposable) {
+              subject.onSubscribe(d)
+            }
+
+            override fun onSuccess(t: T) {
+              subject.also {
+                it.onNext(t)
+                it.onComplete()
+              }
+            }
+
+            override fun onError(e: Throwable) {
+              subject.onError(e)
+            }
+
+          })
+
+      return@defer subject
+    }
+        .singleOrError()
+  }
+
+  private fun set(
+    value: T,
+    newTime: Long
+  ) {
+    clearCache()
+    data[0] = AsyncSubject.create<T>()
+        .also {
+          it.onNext(value)
+          it.onComplete()
+        }
+    time = newTime
+  }
+
+  override fun set(value: T) {
+    set(value, System.currentTimeMillis())
+  }
+
+  override fun update(func: (T) -> T) {
+    val subject: AsyncSubject<T>? = data[0]
+    if (subject != null) {
+      val value: T? = subject.value
+      if (value != null) {
+        set(func(value), time)
+      }
     }
   }
 }
 
 @CheckResult
 @JvmOverloads
-fun <T : Any> newRepository(
-  ttl: Long = THIRTY_SECONDS_MILLIS,
+fun <T : Any> repository(
+  time: Long = 30L,
+  timeUnit: TimeUnit = TimeUnit.SECONDS,
   scheduler: () -> Scheduler = { Schedulers.io() }
 ): Repository<T> {
-  return RepositoryImpl(ttl, scheduler)
+  return mutableRepository(time, timeUnit, scheduler)
 }
 
-@JvmField internal val THIRTY_SECONDS_MILLIS = TimeUnit.SECONDS.toMillis(30L)
+@CheckResult
+@JvmOverloads
+fun <T : Any> mutableRepository(
+  time: Long = 30L,
+  timeUnit: TimeUnit = TimeUnit.SECONDS,
+  scheduler: () -> Scheduler = { Schedulers.io() }
+): MutableRepository<T> {
+  return RepositoryImpl(timeUnit.toMillis(time), scheduler)
+}

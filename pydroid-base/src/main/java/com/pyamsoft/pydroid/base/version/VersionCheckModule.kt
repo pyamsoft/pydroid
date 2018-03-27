@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
-import com.pyamsoft.pydroid.cache.newRepository
+import com.pyamsoft.pydroid.cache.repository
 import com.squareup.moshi.Moshi
 import io.reactivex.Scheduler
 import okhttp3.OkHttpClient
@@ -48,7 +48,7 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
     val network =
       VersionCheckInteractorNetwork(minimumApiProvider, networkStatusProvider, versionCheckService)
-    val versionCache = newRepository<Int>()
+    val versionCache = repository<Int>()
     cachedInteractor = VersionCheckInteractorImpl(network, versionCache)
   }
 

@@ -17,9 +17,7 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
-import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -35,10 +33,7 @@ interface Repository<T : Any> : Cache {
   ): Single<T>
 }
 
-internal class RepositoryImpl<T : Any> internal constructor(
-  private val ttl: Long,
-  private val provideScheduler: () -> Scheduler
-) : Repository<T> {
+internal class RepositoryImpl<T : Any> internal constructor(private val ttl: Long) : Repository<T> {
 
   private var data = ConcurrentHashMap<Int, Single<T>?>(1)
   private var time: Long = 0
@@ -91,9 +86,8 @@ internal class RepositoryImpl<T : Any> internal constructor(
 @JvmOverloads
 fun <T : Any> repository(
   time: Long = 30L,
-  timeUnit: TimeUnit = TimeUnit.SECONDS,
-  scheduler: () -> Scheduler = { Schedulers.io() }
+  timeUnit: TimeUnit = TimeUnit.SECONDS
 ): Repository<T> {
-  return RepositoryImpl(timeUnit.toMillis(time), scheduler)
+  return RepositoryImpl(timeUnit.toMillis(time))
 }
 

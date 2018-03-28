@@ -20,8 +20,6 @@ import android.support.annotation.CheckResult
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.SingleObserver
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.AsyncSubject
 import io.reactivex.subjects.Subject
@@ -91,27 +89,10 @@ internal class RepositoryImpl<T : Any> internal constructor(
       // We subscribe indirectly and push onto the subject
       // so that the actual consumer subscribes to a source
       // which is un-opinionated about the Schedulers
-      val scheduler = provideScheduler()
-      fresh().subscribeOn(scheduler)
-          .observeOn(scheduler)
-          .subscribe(object : SingleObserver<T> {
-
-            override fun onSubscribe(d: Disposable) {
-              subject.onSubscribe(d)
-            }
-
-            override fun onSuccess(t: T) {
-              subject.also {
-                it.onNext(t)
-                it.onComplete()
-              }
-            }
-
-            override fun onError(e: Throwable) {
-              subject.onError(e)
-            }
-
-          })
+      subject.also {
+        it.onNext(fresh().blockingGet())
+        it.onComplete()
+      }
 
       return@defer subject
     }

@@ -38,21 +38,7 @@ interface RepositoryMap<in K : Any, V : Any> : Cache {
     fresh: () -> Single<V>
   ): Single<V>
 
-}
-
-interface MutableRepositoryMap<in K : Any, V : Any> : RepositoryMap<K, V> {
-
-  fun set(
-    key: K,
-    value: V
-  )
-
-  fun update(
-    key: K,
-    func: (V) -> V
-  )
-
-  fun remove(key: K)
+  fun clearKey(key: K)
 
 }
 
@@ -61,17 +47,17 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
   private val time: Long,
   private val timeUnit: TimeUnit,
   private val schedulerProvider: () -> Scheduler
-) : MutableRepositoryMap<K, V> {
+) : RepositoryMap<K, V> {
 
-  private val cache = ConcurrentHashMap<K, MutableRepository<V>>(initialSize)
+  private val cache = ConcurrentHashMap<K, Repository<V>>(initialSize)
 
   override fun clearCache() {
     cache.clear()
   }
 
   @CheckResult
-  private fun get(key: K): MutableRepository<V> =
-    cache.getOrElse(key) { mutableRepository(time, timeUnit, schedulerProvider) }
+  private fun get(key: K): Repository<V> =
+    cache.getOrElse(key) { repository(time, timeUnit, schedulerProvider) }
 
   @CheckResult
   override fun get(
@@ -89,21 +75,7 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
     return get(key).get(bypass, fresh)
   }
 
-  override fun set(
-    key: K,
-    value: V
-  ) {
-    get(key).set(value)
-  }
-
-  override fun update(
-    key: K,
-    func: (V) -> V
-  ) {
-    get(key).update(func)
-  }
-
-  override fun remove(key: K) {
+  override fun clearKey(key: K) {
     cache.remove(key)
   }
 
@@ -117,16 +89,6 @@ fun <K : Any, V : Any> repositoryMap(
   timeUnit: TimeUnit = TimeUnit.SECONDS,
   scheduler: () -> Scheduler = { Schedulers.io() }
 ): RepositoryMap<K, V> {
-  return mutableRepositoryMap(initialSize, time, timeUnit, scheduler)
-}
-
-@CheckResult
-@JvmOverloads
-fun <K : Any, V : Any> mutableRepositoryMap(
-  initialSize: Int = 16,
-  time: Long = 30L,
-  timeUnit: TimeUnit = TimeUnit.SECONDS,
-  scheduler: () -> Scheduler = { Schedulers.io() }
-): MutableRepositoryMap<K, V> {
   return RepositoryMapImpl(initialSize, time, timeUnit, scheduler)
 }
+

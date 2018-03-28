@@ -24,6 +24,7 @@ import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.AsyncSubject
+import io.reactivex.subjects.Subject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -39,19 +40,12 @@ interface Repository<T : Any> : Cache {
   ): Single<T>
 }
 
-interface MutableRepository<T : Any> : Repository<T> {
-
-  fun set(value: T)
-
-  fun update(func: (T) -> T)
-}
-
 internal class RepositoryImpl<T : Any> internal constructor(
   private val ttl: Long,
   private val provideScheduler: () -> Scheduler
-) : MutableRepository<T> {
+) : Repository<T> {
 
-  private var data = ConcurrentHashMap<Int, AsyncSubject<T>?>(1)
+  private var data = ConcurrentHashMap<Int, Subject<T>?>(1)
   private var time: Long = 0
 
   override fun clearCache() {
@@ -78,7 +72,7 @@ internal class RepositoryImpl<T : Any> internal constructor(
       }
 
       // If we have a cached entry return it
-      var subject: AsyncSubject<T>? = data[0]
+      var subject: Subject<T>? = data[0]
       if (subject != null) {
         return@defer subject
       }
@@ -86,9 +80,10 @@ internal class RepositoryImpl<T : Any> internal constructor(
       // Make new data and store it for later
       time = currentTime
       subject = AsyncSubject.create<T>()
+          .toSerialized()
 
       // If someone has already put data in, use it
-      val cached: AsyncSubject<T>? = data.putIfAbsent(0, subject)
+      val cached: Subject<T>? = data.putIfAbsent(0, subject)
       if (cached != null) {
         return@defer cached
       }
@@ -122,33 +117,6 @@ internal class RepositoryImpl<T : Any> internal constructor(
     }
         .singleOrError()
   }
-
-  private fun set(
-    value: T,
-    newTime: Long
-  ) {
-    clearCache()
-    data[0] = AsyncSubject.create<T>()
-        .also {
-          it.onNext(value)
-          it.onComplete()
-        }
-    time = newTime
-  }
-
-  override fun set(value: T) {
-    set(value, System.currentTimeMillis())
-  }
-
-  override fun update(func: (T) -> T) {
-    val subject: AsyncSubject<T>? = data[0]
-    if (subject != null) {
-      val value: T? = subject.value
-      if (value != null) {
-        set(func(value), time)
-      }
-    }
-  }
 }
 
 @CheckResult
@@ -158,15 +126,6 @@ fun <T : Any> repository(
   timeUnit: TimeUnit = TimeUnit.SECONDS,
   scheduler: () -> Scheduler = { Schedulers.io() }
 ): Repository<T> {
-  return mutableRepository(time, timeUnit, scheduler)
-}
-
-@CheckResult
-@JvmOverloads
-fun <T : Any> mutableRepository(
-  time: Long = 30L,
-  timeUnit: TimeUnit = TimeUnit.SECONDS,
-  scheduler: () -> Scheduler = { Schedulers.io() }
-): MutableRepository<T> {
   return RepositoryImpl(timeUnit.toMillis(time), scheduler)
 }
+

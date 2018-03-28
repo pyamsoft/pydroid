@@ -17,12 +17,9 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
-import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.AsyncSubject
-import io.reactivex.subjects.Subject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -43,7 +40,7 @@ internal class RepositoryImpl<T : Any> internal constructor(
   private val provideScheduler: () -> Scheduler
 ) : Repository<T> {
 
-  private var data = ConcurrentHashMap<Int, Subject<T>?>(1)
+  private var data = ConcurrentHashMap<Int, Single<T>?>(1)
   private var time: Long = 0
 
   override fun clearCache() {
@@ -61,7 +58,7 @@ internal class RepositoryImpl<T : Any> internal constructor(
     bypass: Boolean,
     fresh: () -> Single<T>
   ): Single<T> {
-    return Observable.defer {
+    return Single.defer {
       val currentTime = System.currentTimeMillis()
 
       // If we need to force a refresh, clear the cache
@@ -70,33 +67,23 @@ internal class RepositoryImpl<T : Any> internal constructor(
       }
 
       // If we have a cached entry return it
-      var subject: Subject<T>? = data[0]
-      if (subject != null) {
-        return@defer subject
+      var single: Single<T>? = data[0]
+      if (single != null) {
+        return@defer single
       }
 
       // Make new data and store it for later
       time = currentTime
-      subject = AsyncSubject.create<T>()
-          .toSerialized()
+      single = fresh().cache()
 
       // If someone has already put data in, use it
-      val cached: Subject<T>? = data.putIfAbsent(0, subject)
+      val cached: Single<T>? = data.putIfAbsent(0, single)
       if (cached != null) {
         return@defer cached
       }
 
-      // We subscribe indirectly and push onto the subject
-      // so that the actual consumer subscribes to a source
-      // which is un-opinionated about the Schedulers
-      subject.also {
-        it.onNext(fresh().blockingGet())
-        it.onComplete()
-      }
-
-      return@defer subject
+      return@defer single
     }
-        .singleOrError()
   }
 }
 

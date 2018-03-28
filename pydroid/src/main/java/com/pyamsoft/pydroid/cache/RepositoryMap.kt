@@ -127,6 +127,6 @@ fun <K : Any, V : Any> mutableRepositoryMap(
   time: Long = 30L,
   timeUnit: TimeUnit = TimeUnit.SECONDS,
   scheduler: () -> Scheduler = { Schedulers.io() }
-): RepositoryMap<K, V> {
+): MutableRepositoryMap<K, V> {
   return RepositoryMapImpl(initialSize, time, timeUnit, scheduler)
 }

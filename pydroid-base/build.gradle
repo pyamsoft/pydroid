@@ -73,7 +73,7 @@ dependencies {
   api "com.android.support:preference-v14:$supportLib"
 
   // Auto value
-  compileOnly "com.google.auto.value:auto-value:$autoValue"
+  compileOnly "com.google.auto.value:auto-value-annotations:$autoValue"
   kapt "com.google.auto.value:auto-value:$autoValue"
 
   // Moshi

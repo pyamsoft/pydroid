@@ -44,16 +44,16 @@ buildscript {
     maxSdk = 27
 
     supportLib = "27.1.0"
-    timber = "4.6.1"
-    autoValue = "1.5.3"
+    timber = "4.7.0"
+    autoValue = "1.6"
     autoValueMoshi = "0.4.5"
     moshi = "1.5.0"
     retrofit = "2.4.0"
     retrofitLogging = "3.10.0"
-    rxjava = "2.1.11"
+    rxjava = "2.1.12"
     rxandroid = "2.0.2"
     viewPagerIndicator = "1.0.4"
-    ktlint = "3.0.0"
+    ktlint = "3.2.0"
     lifecycleRuntime = "1.1.0"
     lifecycleCompiler = "1.1.0"
     constraintLayout = "1.0.2"
@@ -93,7 +93,7 @@ subprojects {
   version = "16.5.2"
 
   ktlint {
-    version = "0.22.0"
+    version = "0.20.0"
     android = true
   }
 }

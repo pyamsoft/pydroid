@@ -17,7 +17,14 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
+import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.SingleObserver
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.AsyncSubject
+import io.reactivex.subjects.Subject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -33,9 +40,12 @@ interface Repository<T : Any> : Cache {
   ): Single<T>
 }
 
-internal class RepositoryImpl<T : Any> internal constructor(private val ttl: Long) : Repository<T> {
+internal class RepositoryImpl<T : Any> internal constructor(
+  private val ttl: Long,
+  private val provideScheduler: () -> Scheduler
+) : Repository<T> {
 
-  private var data = ConcurrentHashMap<Int, Single<T>?>(1)
+  private var data = ConcurrentHashMap<Int, Subject<T>?>(1)
   private var time: Long = 0
 
   override fun clearCache() {
@@ -53,7 +63,7 @@ internal class RepositoryImpl<T : Any> internal constructor(private val ttl: Lon
     bypass: Boolean,
     fresh: () -> Single<T>
   ): Single<T> {
-    return Single.defer {
+    return Observable.defer {
       val currentTime = System.currentTimeMillis()
 
       // If we need to force a refresh, clear the cache
@@ -62,23 +72,46 @@ internal class RepositoryImpl<T : Any> internal constructor(private val ttl: Lon
       }
 
       // If we have a cached entry return it
-      var single: Single<T>? = data[0]
-      if (single != null) {
-        return@defer single
+      var subject: Subject<T>? = data[0]
+      if (subject != null) {
+        return@defer subject
       }
 
       // Make new data and store it for later
       time = currentTime
-      single = fresh().cache()
+      subject = AsyncSubject.create<T>()
+          .toSerialized()
 
       // If someone has already put data in, use it
-      val cached: Single<T>? = data.putIfAbsent(0, single)
+      val cached: Subject<T>? = data.putIfAbsent(0, subject)
       if (cached != null) {
         return@defer cached
       }
 
-      return@defer single
+      val scheduler = provideScheduler()
+      fresh().subscribeOn(scheduler)
+          .observeOn(scheduler)
+          .subscribe(object : SingleObserver<T> {
+
+            override fun onSubscribe(d: Disposable) {
+              subject.onSubscribe(d)
+            }
+
+            override fun onSuccess(t: T) {
+              subject.also {
+                it.onNext(t)
+                it.onComplete()
+              }
+            }
+
+            override fun onError(e: Throwable) {
+              subject.onError(e)
+            }
+          })
+
+      return@defer subject
     }
+        .singleOrError()
   }
 }
 
@@ -86,8 +119,9 @@ internal class RepositoryImpl<T : Any> internal constructor(private val ttl: Lon
 @JvmOverloads
 fun <T : Any> repository(
   time: Long = 30L,
-  timeUnit: TimeUnit = TimeUnit.SECONDS
+  timeUnit: TimeUnit = TimeUnit.SECONDS,
+  provideScheduler: () -> Scheduler = { Schedulers.io() }
 ): Repository<T> {
-  return RepositoryImpl(timeUnit.toMillis(time))
+  return RepositoryImpl(timeUnit.toMillis(time), provideScheduler)
 }
 

@@ -17,7 +17,9 @@
 package com.pyamsoft.pydroid.cache
 
 import android.support.annotation.CheckResult
+import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -43,7 +45,8 @@ interface RepositoryMap<in K : Any, V : Any> : Cache {
 internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
   initialSize: Int,
   private val time: Long,
-  private val timeUnit: TimeUnit
+  private val timeUnit: TimeUnit,
+  private val provideScheduler: () -> Scheduler
 ) : RepositoryMap<K, V> {
 
   private val cache = ConcurrentHashMap<K, Repository<V>>(initialSize)
@@ -54,7 +57,7 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
 
   @CheckResult
   private fun get(key: K): Repository<V> =
-    cache.getOrElse(key) { repository(time, timeUnit) }
+    cache.getOrElse(key) { repository(time, timeUnit, provideScheduler) }
 
   @CheckResult
   override fun get(
@@ -83,8 +86,9 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
 fun <K : Any, V : Any> repositoryMap(
   initialSize: Int = 16,
   time: Long = 30L,
-  timeUnit: TimeUnit = TimeUnit.SECONDS
+  timeUnit: TimeUnit = TimeUnit.SECONDS,
+  provideScheduler: () -> Scheduler = { Schedulers.io() }
 ): RepositoryMap<K, V> {
-  return RepositoryMapImpl(initialSize, time, timeUnit)
+  return RepositoryMapImpl(initialSize, time, timeUnit, provideScheduler)
 }
 

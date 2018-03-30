@@ -19,7 +19,7 @@
 buildscript {
   ext {
     kotlin_version = '1.2.31'
-    plugin_version = "3.0.1"
+    plugin_version = "3.1.0"
   }
   repositories {
     jcenter()

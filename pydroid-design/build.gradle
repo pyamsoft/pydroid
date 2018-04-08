@@ -60,7 +60,7 @@ dependencies {
   // Design support lib
   api "com.android.support:design:$supportLib"
 
-  api project(":pydroid")
+  api project(":pydroid-ui")
   api project(":pydroid-util")
 }
 

@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.util
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 
 data class HyperlinkIntent internal constructor(
   private val context: Context,
@@ -26,15 +26,12 @@ data class HyperlinkIntent internal constructor(
   private val link: String
 ) {
 
-  fun navigate() {
+  fun navigate(onNavigateError: (Exception) -> Unit) {
     val appContext = context.applicationContext
     try {
-      appContext.startActivity(intent)
-    } catch (e: Exception) {
-      Toasty.makeText(
-          appContext, "No activity available to handle link: $link",
-          Toast.LENGTH_SHORT
-      )
+      appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    } catch (e: ActivityNotFoundException) {
+      onNavigateError(e)
     }
   }
 }

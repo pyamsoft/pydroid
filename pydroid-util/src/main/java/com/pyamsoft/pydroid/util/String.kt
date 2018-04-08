@@ -24,7 +24,6 @@ import androidx.net.toUri
 @CheckResult
 fun String.hyperlink(c: Context): HyperlinkIntent {
   val intent = Intent(Intent.ACTION_VIEW).also {
-    it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     it.data = this.toUri()
   }
 

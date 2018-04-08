@@ -16,48 +16,59 @@
 
 package com.pyamsoft.pydroid.ui.social
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.util.hyperlink
 
-object Linker {
+class Linker private constructor(
+  private val context: Context,
+  private val appLink: String,
+  private val onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+) {
 
-  private const val BASE_MARKET = "market://details?id="
-  private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
-  private const val GOOGLE_PLAY_DEVELOPER_PAGE =
-    "https://play.google.com/store/apps/dev?id=5257476342110165153"
-  private const val GOOGLE_PLUS = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts"
-  private const val OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/"
-
-  @JvmStatic
-  fun clickAppPage(
-    context: Context,
-    link: String
-  ) {
-    "$BASE_MARKET$link".hyperlink(context)
-        .navigate()
+  fun clickAppPage() {
+    "$BASE_MARKET$appLink".hyperlink(context)
+        .navigate(onNavigationErrorHandler)
   }
 
-  @JvmStatic
-  fun clickGooglePlay(context: Context) {
+  fun clickGooglePlay() {
     GOOGLE_PLAY_DEVELOPER_PAGE.hyperlink(context)
-        .navigate()
+        .navigate(onNavigationErrorHandler)
   }
 
-  @JvmStatic
-  fun clickGooglePlus(context: Context) {
+  fun clickGooglePlus() {
     GOOGLE_PLUS.hyperlink(context)
-        .navigate()
+        .navigate(onNavigationErrorHandler)
   }
 
-  @JvmStatic
-  fun clickBlogger(context: Context) {
+  fun clickBlogger() {
     OFFICIAL_BLOG.hyperlink(context)
-        .navigate()
+        .navigate(onNavigationErrorHandler)
   }
 
-  @JvmStatic
-  fun clickFacebook(context: Context) {
+  fun clickFacebook() {
     FACEBOOK.hyperlink(context)
-        .navigate()
+        .navigate(onNavigationErrorHandler)
+  }
+
+  companion object {
+
+    private const val BASE_MARKET = "market://details?id="
+    private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
+    private const val GOOGLE_PLAY_DEVELOPER_PAGE =
+      "https://play.google.com/store/apps/dev?id=5257476342110165153"
+    private const val GOOGLE_PLUS = "https://plus.google.com/+Pyamsoft-officialBlogspot/posts"
+    private const val OFFICIAL_BLOG = "https://pyamsoft.blogspot.com/"
+
+    @JvmStatic
+    @CheckResult
+    fun create(
+      context: Context,
+      appLink: String,
+      onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+    ): Linker {
+      return Linker(context.applicationContext, appLink, onNavigationErrorHandler)
+    }
   }
 }

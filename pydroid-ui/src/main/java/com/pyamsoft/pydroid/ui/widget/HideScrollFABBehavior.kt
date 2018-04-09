@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.design.fab
+package com.pyamsoft.pydroid.ui.widget
 
 import android.support.annotation.CheckResult
 import android.support.design.widget.CoordinatorLayout
@@ -23,8 +23,8 @@ import android.support.v4.view.ViewCompat
 import android.view.View
 import androidx.view.isInvisible
 import androidx.view.isVisible
-import com.pyamsoft.pydroid.design.util.hide
-import com.pyamsoft.pydroid.design.util.show
+import com.pyamsoft.pydroid.ui.util.hide
+import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
 /**

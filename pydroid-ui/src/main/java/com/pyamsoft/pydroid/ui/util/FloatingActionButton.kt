@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.design.util
+package com.pyamsoft.pydroid.ui.util
 
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton

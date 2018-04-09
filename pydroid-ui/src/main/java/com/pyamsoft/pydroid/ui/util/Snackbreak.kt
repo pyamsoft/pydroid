@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.design.util
+package com.pyamsoft.pydroid.ui.util
 
 import android.app.Dialog
 import android.os.Bundle
@@ -24,8 +24,6 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import android.view.View
-import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
-import com.pyamsoft.pydroid.ui.util.show
 
 object Snackbreak {
 
@@ -36,7 +34,9 @@ object Snackbreak {
     detail: ErrorDetail,
     message: CharSequence = "An unexpected error occurred"
   ) {
-    withDetail(activity, view, Snackbar.LENGTH_SHORT, detail, message)
+    withDetail(
+        activity, view, Snackbar.LENGTH_SHORT, detail, message
+    )
   }
 
   @JvmStatic
@@ -46,7 +46,9 @@ object Snackbreak {
     detail: ErrorDetail,
     message: CharSequence = "An unexpected error occurred"
   ) {
-    withDetail(activity, view, Snackbar.LENGTH_LONG, detail, message)
+    withDetail(
+        activity, view, Snackbar.LENGTH_LONG, detail, message
+    )
   }
 
   @JvmStatic
@@ -56,7 +58,9 @@ object Snackbreak {
     detail: ErrorDetail,
     message: CharSequence = "An unexpected error occurred"
   ) {
-    withDetail(activity, view, Snackbar.LENGTH_INDEFINITE, detail, message)
+    withDetail(
+        activity, view, Snackbar.LENGTH_INDEFINITE, detail, message
+    )
   }
 
   @JvmStatic
@@ -87,8 +91,12 @@ object Snackbreak {
     override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       arguments!!.also {
-        errorTitle = it.getCharSequence(KEY_ERROR_TITLE) ?: ""
-        errorMessage = it.getCharSequence(KEY_ERROR_MESSAGE) ?: "An unexpected error occurred."
+        errorTitle = it.getCharSequence(
+            KEY_ERROR_TITLE
+        ) ?: ""
+        errorMessage = it.getCharSequence(
+            KEY_ERROR_MESSAGE
+        ) ?: "An unexpected error occurred."
       }
     }
 
@@ -112,10 +120,13 @@ object Snackbreak {
       @JvmStatic
       @CheckResult
       internal fun newInstance(detail: ErrorDetail): DetailDialogFragment {
-        return DetailDialogFragment().apply {
+        return DetailDialogFragment()
+            .apply {
           arguments = Bundle().apply {
-            putCharSequence(KEY_ERROR_TITLE, detail.title)
-            putCharSequence(KEY_ERROR_MESSAGE, detail.message)
+            putCharSequence(
+                KEY_ERROR_TITLE, detail.title)
+            putCharSequence(
+                KEY_ERROR_MESSAGE, detail.message)
           }
         }
       }

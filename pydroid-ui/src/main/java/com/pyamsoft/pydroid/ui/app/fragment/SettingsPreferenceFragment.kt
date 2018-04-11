@@ -16,17 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
 import android.support.annotation.XmlRes
+import android.support.design.widget.Snackbar
 import android.support.v7.preference.Preference
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider
@@ -36,18 +33,22 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.social.Linker
+import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
+import com.pyamsoft.pydroid.ui.util.clickAppPage
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
-import com.pyamsoft.pydroid.util.Toasty
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), VersionCheckPresenter.View,
-    RatingPresenter.View {
+    RatingPresenter.View, SettingsPreferencePresenter.View {
 
+  internal lateinit var linker: Linker
+  internal lateinit var presenter: SettingsPreferencePresenter
   internal lateinit var versionPresenter: VersionCheckPresenter
   internal lateinit var ratingPresenter: RatingPresenter
-  private lateinit var toast: Toast
+  private lateinit var snackbar: Snackbar
 
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,19 +59,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
             versionedActivity.currentApplicationVersion
         )
         .inject(this)
-  }
-
-  @SuppressLint("ShowToast")
-  @CallSuper
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    toast = Toasty.makeText(
-        requireContext(), "Checking for updates...", Toasty.LENGTH_SHORT, show = false
-    )
-    return super.onCreateView(inflater, container, savedInstanceState)
   }
 
   @CallSuper
@@ -90,6 +78,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+    snackbar = Snackbar.make(view, "Checking for updates...", Snackbar.LENGTH_SHORT)
 
     val applicationSettings = findPreference("application_settings")
     if (applicationSettings != null) {
@@ -134,12 +123,13 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
 
     val rateApplication: Preference = findPreference(getString(R.string.rating_key))
     rateApplication.setOnPreferenceClickListener {
-      Linker.clickAppPage(it.context, it.context.packageName)
+      linker.clickAppPage(requireActivity(), view)
       return@setOnPreferenceClickListener true
     }
 
     versionPresenter.bind(viewLifecycle, this)
     ratingPresenter.bind(viewLifecycle, this)
+    presenter.bind(viewLifecycle, this)
   }
 
   override fun onShowRating() {
@@ -194,8 +184,25 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
    * Checks the server for updates, override to use a custom behavior
    */
   protected open fun onCheckForUpdatesClicked(presenter: VersionCheckPresenter) {
-    toast.show()
+    if (!snackbar.isShownOrQueued) {
+      snackbar.show()
+    }
     presenter.checkForUpdates(true)
+  }
+
+  private fun onError(throwable: Throwable) {
+    view?.also {
+      val details = ErrorDetail(message = throwable.localizedMessage)
+      Snackbreak.short(requireActivity(), it, details)
+    }
+  }
+
+  override fun onLinkerError(throwable: Throwable) {
+    onError(throwable)
+  }
+
+  override fun onRatingError(throwable: Throwable) {
+    onError(throwable)
   }
 
   private val versionedActivity: VersionCheckProvider

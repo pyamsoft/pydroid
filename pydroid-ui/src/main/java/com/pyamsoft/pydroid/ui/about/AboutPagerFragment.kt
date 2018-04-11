@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding
+import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.hyperlink
 
@@ -65,7 +66,7 @@ internal class AboutPagerFragment : Fragment() {
       aboutItemHomepage.text = homepage
       aboutItemHomepage.setOnDebouncedClickListener {
         homepage.hyperlink(it.context)
-            .navigate()
+            .navigate(requireActivity(), view)
       }
     }
   }

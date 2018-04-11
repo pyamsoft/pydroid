@@ -22,15 +22,21 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 
 internal class TamperDialog : ToolbarDialog() {
 
+  internal lateinit var linker: Linker
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     isCancelable = false
+
+    PYDroid.obtain()
+        .inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -40,7 +46,9 @@ internal class TamperDialog : ToolbarDialog() {
           .setMessage(R.string.tamper_msg)
           .setCancelable(false)
           .setPositiveButton("Take Me") { _, _ ->
-            Linker.clickGooglePlay(it)
+            linker.clickGooglePlay {
+              // Who cares we're dead
+            }
             killApp()
           }
           .setNegativeButton("Close") { _, _ -> killApp() }

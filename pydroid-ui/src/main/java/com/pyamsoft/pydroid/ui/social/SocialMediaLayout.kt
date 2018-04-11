@@ -40,6 +40,8 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 class SocialMediaLayout : LinearLayout, LifecycleOwner {
 
+  internal lateinit var linker: Linker
+  internal lateinit var linkerErrorPublisher: LinkerErrorPublisher
   internal lateinit var imageLoader: ImageLoader
   private val binding: ViewSocialMediaBinding
   private val lifecycleOwner = ViewLifecycleOwner()
@@ -85,10 +87,26 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     binding.apply {
-      googlePlay.setOnDebouncedClickListener { Linker.clickGooglePlay(context) }
-      googlePlus.setOnDebouncedClickListener { Linker.clickGooglePlus(context) }
-      blogger.setOnDebouncedClickListener { Linker.clickBlogger(context) }
-      facebook.setOnDebouncedClickListener { Linker.clickFacebook(context) }
+      googlePlay.setOnDebouncedClickListener {
+        linker.clickGooglePlay {
+          linkerErrorPublisher.publish(it)
+        }
+      }
+      googlePlus.setOnDebouncedClickListener {
+        linker.clickGooglePlus {
+          linkerErrorPublisher.publish(it)
+        }
+      }
+      blogger.setOnDebouncedClickListener {
+        linker.clickBlogger {
+          linkerErrorPublisher.publish(it)
+        }
+      }
+      facebook.setOnDebouncedClickListener {
+        linker.clickFacebook {
+          linkerErrorPublisher.publish(it)
+        }
+      }
     }
 
     lifecycleOwner.registry.apply {

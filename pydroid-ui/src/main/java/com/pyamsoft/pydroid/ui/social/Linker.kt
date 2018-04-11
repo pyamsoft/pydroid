@@ -23,31 +23,40 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 class Linker private constructor(
   private val context: Context,
-  private val appLink: String,
-  private val onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+  private val appLink: String
 ) {
 
-  fun clickAppPage() {
+  fun clickAppPage(
+    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+  ) {
     "$BASE_MARKET$appLink".hyperlink(context)
         .navigate(onNavigationErrorHandler)
   }
 
-  fun clickGooglePlay() {
+  fun clickGooglePlay(
+    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+  ) {
     GOOGLE_PLAY_DEVELOPER_PAGE.hyperlink(context)
         .navigate(onNavigationErrorHandler)
   }
 
-  fun clickGooglePlus() {
+  fun clickGooglePlus(
+    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+  ) {
     GOOGLE_PLUS.hyperlink(context)
         .navigate(onNavigationErrorHandler)
   }
 
-  fun clickBlogger() {
+  fun clickBlogger(
+    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+  ) {
     OFFICIAL_BLOG.hyperlink(context)
         .navigate(onNavigationErrorHandler)
   }
 
-  fun clickFacebook() {
+  fun clickFacebook(
+    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+  ) {
     FACEBOOK.hyperlink(context)
         .navigate(onNavigationErrorHandler)
   }
@@ -65,10 +74,9 @@ class Linker private constructor(
     @CheckResult
     fun create(
       context: Context,
-      appLink: String,
-      onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
+      appLink: String
     ): Linker {
-      return Linker(context.applicationContext, appLink, onNavigationErrorHandler)
+      return Linker(context.applicationContext, appLink)
     }
   }
 }

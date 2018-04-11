@@ -25,20 +25,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.pyamsoft.pydroid.base.rating.RatingErrorPublisher
 import com.pyamsoft.pydroid.base.rating.RatingSavePresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
+import com.pyamsoft.pydroid.ui.social.Linker
+import com.pyamsoft.pydroid.ui.util.clickAppPage
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.util.Toasty
-import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.toDp
 
 internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
+  internal lateinit var linker: Linker
   internal lateinit var imageLoader: ImageLoader
   internal lateinit var presenter: RatingSavePresenter
+  internal lateinit var errorPublisher: RatingErrorPublisher
   private lateinit var rateLink: String
   private var versionCode: Int = 0
   private var changelog: SpannedString? = null
@@ -96,20 +99,16 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
   override fun onRatingSaved(accept: Boolean) {
     if (accept) {
-      val fullLink = "market://details?id=" + rateLink
-      fullLink.hyperlink(requireContext())
-          .navigate()
+      view?.also {
+        linker.clickAppPage(requireActivity(), it)
+      }
     }
 
     dismiss()
   }
 
   override fun onRatingSaveError(throwable: Throwable) {
-    Toasty.makeText(
-        requireContext().applicationContext,
-        "Error occurred while dismissing dialog. May show again later",
-        Toasty.LENGTH_SHORT
-    )
+    errorPublisher.publish(throwable)
     dismiss()
   }
 

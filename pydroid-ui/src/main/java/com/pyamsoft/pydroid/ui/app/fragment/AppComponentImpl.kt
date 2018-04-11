@@ -16,18 +16,31 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
+import com.pyamsoft.pydroid.ApplicationModule
 import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.base.version.VersionCheckModule
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.ui.UiModule
 
 internal class AppComponentImpl internal constructor(
+  applicationModule: ApplicationModule,
+  private val uiModule: UiModule,
   private val versionCheckModule: VersionCheckModule,
   private val ratingModule: RatingModule,
+  linkerErrorBus: EventBus<Throwable>,
   private val packageName: String,
   private val currentVersion: Int
 ) : AppComponent {
 
+  private val settingsPreferencePresenter = SettingsPreferencePresenter(
+      linkerErrorBus, applicationModule.provideComputationScheduler(),
+      applicationModule.provideIoScheduler(), applicationModule.provideMainThreadScheduler()
+  )
+
   override fun inject(fragment: SettingsPreferenceFragment) {
     fragment.versionPresenter = versionCheckModule.getPresenter(packageName, currentVersion)
     fragment.ratingPresenter = ratingModule.getPresenter(currentVersion)
+    fragment.linker = uiModule.provideLinker()
+    fragment.presenter = settingsPreferencePresenter
   }
 }

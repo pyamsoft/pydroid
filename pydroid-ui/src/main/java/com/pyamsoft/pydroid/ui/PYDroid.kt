@@ -66,7 +66,12 @@ object PYDroid {
     pydroidModule: PYDroidModule,
     loaderModule: LoaderModule
   ) {
-    component = PYDroidComponentImpl(pydroidModule, loaderModule)
+    val context = pydroidModule.provideContext()
+    component = PYDroidComponentImpl(
+        pydroidModule,
+        loaderModule,
+        UiModuleImpl(context, context.packageName)
+    )
     if (pydroidModule.isDebug) {
       Timber.plant(Timber.DebugTree())
       setStrictMode()

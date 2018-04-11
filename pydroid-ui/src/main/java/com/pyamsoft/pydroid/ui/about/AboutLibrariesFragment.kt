@@ -42,7 +42,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
   internal lateinit var presenter: AboutLibrariesPresenter
   internal lateinit var imageLoader: ImageLoader
-  internal lateinit var pagerAdapter: AboutPagerAdapter
+  private lateinit var pagerAdapter: AboutPagerAdapter
   private lateinit var listener: ViewPager.OnPageChangeListener
   private lateinit var binding: FragmentAboutLibrariesBinding
   private lateinit var refreshLatch: RefreshLatch

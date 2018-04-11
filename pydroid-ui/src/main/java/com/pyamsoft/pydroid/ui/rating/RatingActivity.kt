@@ -24,12 +24,15 @@ import android.text.SpannedString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.view.View
 import androidx.content.withStyledAttributes
 import androidx.text.buildSpannedString
 import androidx.text.inSpans
 import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
@@ -88,6 +91,9 @@ abstract class RatingActivity : VersionCheckActivity(),
   @get:CheckResult
   protected abstract val versionName: String
 
+  @get:CheckResult
+  protected abstract val rootView: View
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.obtain()
@@ -111,6 +117,11 @@ abstract class RatingActivity : VersionCheckActivity(),
 
   override fun onShowRatingError(throwable: Throwable) {
     Timber.e(throwable, "Could not load rating dialog")
+  }
+
+  override fun onRatingError(throwable: Throwable) {
+    val details = ErrorDetail(message = throwable.localizedMessage)
+    Snackbreak.short(this, rootView, details)
   }
 
   companion object {

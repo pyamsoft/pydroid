@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base.rating
+package com.pyamsoft.pydroid.ui.app.fragment
 
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-class RatingPresenter internal constructor(
-  private val currentVersion: Int,
-  private val interactor: RatingInteractor,
-  private val ratingErrorBus: EventBus<Throwable>,
+class SettingsPreferencePresenter internal constructor(
+  private val linkerErrorBus: EventBus<Throwable>,
   computationScheduler: Scheduler,
   ioScheduler: Scheduler,
   mainThreadScheduler: Scheduler
-) : SchedulerPresenter<RatingPresenter.View>(
+) : SchedulerPresenter<SettingsPreferencePresenter.View>(
     computationScheduler, ioScheduler, mainThreadScheduler
 ) {
 
@@ -36,43 +34,20 @@ class RatingPresenter internal constructor(
     super.onCreate()
 
     dispose {
-      ratingErrorBus.listen()
+      linkerErrorBus.listen()
           .subscribeOn(ioScheduler)
           .observeOn(mainThreadScheduler)
-          .subscribe({ view?.onRatingError(it) }, {
-            Timber.e(it, "Error receiving RatingError")
+          .subscribe({ view?.onLinkerError(it) }, {
+            Timber.e(it, "Error receiving LinkerError")
           })
     }
   }
 
-  fun loadRatingDialog(force: Boolean) {
-    dispose {
-      interactor.needsToViewRating(force, currentVersion)
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
-          .subscribe({
-            if (it) {
-              view?.onShowRating()
-            }
-          }, {
-            Timber.e(it, "on error loading rating dialog")
-            view?.onShowRatingError(it)
-          })
-    }
-  }
+  interface View : LinkerErrorCallback
 
-  interface View : RatingLoadCallback, RatingErrorCallback
+  interface LinkerErrorCallback {
 
-  interface RatingErrorCallback {
+    fun onLinkerError(throwable: Throwable)
 
-    fun onRatingError(throwable: Throwable)
-
-  }
-
-  interface RatingLoadCallback {
-
-    fun onShowRating()
-
-    fun onShowRatingError(throwable: Throwable)
   }
 }

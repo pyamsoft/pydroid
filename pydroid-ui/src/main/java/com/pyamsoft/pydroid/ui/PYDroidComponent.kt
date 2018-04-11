@@ -21,8 +21,10 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
+import com.pyamsoft.pydroid.ui.sec.TamperDialog
 import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal interface PYDroidComponent {
 
@@ -31,6 +33,10 @@ internal interface PYDroidComponent {
   fun inject(activity: TamperActivity)
 
   fun inject(layout: SocialMediaLayout)
+
+  fun inject(tamperDialog: TamperDialog)
+
+  fun inject(versionUpgradeDialog: VersionUpgradeDialog)
 
   @CheckResult
   fun plusVersionCheckComponent(

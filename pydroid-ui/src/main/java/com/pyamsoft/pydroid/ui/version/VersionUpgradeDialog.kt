@@ -20,11 +20,15 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.social.Linker
+import com.pyamsoft.pydroid.ui.social.LinkerErrorPublisher
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
+  internal lateinit var linker: Linker
+  internal lateinit var linkerErrorPublisher: LinkerErrorPublisher
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0
   private var applicationName: String? = null
@@ -44,6 +48,9 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
 
       applicationName = it.getString(KEY_NAME, null)
     }
+
+    PYDroid.obtain()
+        .inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -56,7 +63,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
             message
         )
         .setPositiveButton("Update") { _, _ ->
-          Linker.clickAppPage(requireContext(), requireContext().packageName)
+          linker.clickAppPage { linkerErrorPublisher.publish(it) }
           dismiss()
         }
         .setNegativeButton("Later") { _, _ -> dismiss() }

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.util
 import android.content.Context
 import android.content.Intent
 import android.support.annotation.CheckResult
-import androidx.net.toUri
+import androidx.core.net.toUri
 
 @CheckResult
 fun String.hyperlink(c: Context): HyperlinkIntent {

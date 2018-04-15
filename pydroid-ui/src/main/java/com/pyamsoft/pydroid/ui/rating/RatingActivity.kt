@@ -25,9 +25,9 @@ import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
-import androidx.content.withStyledAttributes
-import androidx.text.buildSpannedString
-import androidx.text.inSpans
+import androidx.core.content.withStyledAttributes
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R

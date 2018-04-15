@@ -43,7 +43,7 @@ buildscript {
     minSdk = 16
     maxSdk = 27
 
-    supportLib = "27.1.0"
+    supportLib = "27.1.1"
     timber = "4.7.0"
     autoValue = "1.6"
     autoValueMoshi = "0.4.5"
@@ -57,7 +57,7 @@ buildscript {
     lifecycleRuntime = "1.1.0"
     lifecycleCompiler = "1.1.0"
     constraintLayout = "1.0.2"
-    ktx = "0.2"
+    ktx = "0.3"
   }
 
   dependencies {
@@ -90,7 +90,7 @@ subprojects {
   apply plugin: "com.github.ben-manes.versions"
 
   group = "com.github.pyamsoft"
-  version = "16.6.0"
+  version = "16.6.1"
 
   ktlint {
     version = "0.20.0"

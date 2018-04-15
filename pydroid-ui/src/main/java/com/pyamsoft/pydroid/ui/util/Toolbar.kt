@@ -21,7 +21,7 @@ import android.os.Build
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.Toolbar
 import android.widget.TextView
-import androidx.content.withStyledAttributes
+import androidx.core.content.withStyledAttributes
 import com.pyamsoft.pydroid.ui.R
 
 private var cachedIcon: Drawable? = null

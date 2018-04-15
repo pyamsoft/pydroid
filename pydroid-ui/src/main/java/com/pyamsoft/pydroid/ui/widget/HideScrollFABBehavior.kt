@@ -21,8 +21,8 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.view.ViewCompat
 import android.view.View
-import androidx.view.isInvisible
-import androidx.view.isVisible
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.ui.util.hide
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber

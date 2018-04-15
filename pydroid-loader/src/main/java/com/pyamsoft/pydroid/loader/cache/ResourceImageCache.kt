@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.loader.cache
 
 import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
-import androidx.util.lruCache
+import androidx.core.util.lruCache
 import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
 
 internal class ResourceImageCache internal constructor() : ImageCache<@DrawableRes Int, Drawable> {

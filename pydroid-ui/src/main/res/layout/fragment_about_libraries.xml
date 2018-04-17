@@ -13,11 +13,13 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-  <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  <android.support.constraint.ConstraintLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:paddingBottom="16dp"
@@ -81,7 +83,8 @@
         app:layout_constraintTop_toBottomOf="@+id/about_title"
         >
 
-      <com.itsronald.widget.ViewPagerIndicator xmlns:app="http://schemas.android.com/apk/res-auto"
+      <com.itsronald.widget.ViewPagerIndicator
+          xmlns:app="http://schemas.android.com/apk/res-auto"
           android:id="@+id/view_pager_indicator"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

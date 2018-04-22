@@ -19,26 +19,10 @@ package com.pyamsoft.pydroid.base
 import android.app.Application
 import android.content.Context
 import com.pyamsoft.pydroid.ApplicationModule
-import com.pyamsoft.pydroid.data.enforceComputation
-import com.pyamsoft.pydroid.data.enforceIo
-import com.pyamsoft.pydroid.data.enforceMainThread
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
-open class ApplicationModuleImpl(
-  private val application: Application
-) : ApplicationModule {
+open class ApplicationModuleImpl(private val application: Application) : ApplicationModule {
 
   override fun provideApplication(): Application = application
 
-  override fun provideContext(): Context = application.applicationContext
-
-  override fun provideIoScheduler(): Scheduler = Schedulers.io().also { it.enforceIo() }
-
-  override fun provideComputationScheduler(): Scheduler =
-    Schedulers.computation().also { it.enforceComputation() }
-
-  override fun provideMainThreadScheduler(): Scheduler =
-    AndroidSchedulers.mainThread().also { it.enforceMainThread() }
+  override fun provideContext(): Context = provideApplication()
 }

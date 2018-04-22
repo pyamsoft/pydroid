@@ -21,7 +21,7 @@ import java.util.Collections
 
 object Licenses {
 
-  private val licenses: MutableList<AboutLibrariesModel> = ArrayList()
+  private val licenses: MutableSet<AboutLibrariesModel> = LinkedHashSet()
 
   init {
     addCommonLicenses()
@@ -150,5 +150,5 @@ object Licenses {
 
   @JvmStatic
   @CheckResult
-  fun getLicenses(): List<AboutLibrariesModel> = Collections.unmodifiableList(licenses.toList())
+  fun getLicenses(): Set<AboutLibrariesModel> = Collections.unmodifiableSet(licenses.toSet())
 }

@@ -30,6 +30,11 @@ internal class AboutPagerAdapter internal constructor(
     models.add(model)
   }
 
+  fun add(list: List<AboutLibrariesModel>) {
+    list.asSequence()
+        .filterNotTo(models) { models.contains(it) }
+  }
+
   fun clear() {
     models.clear()
   }

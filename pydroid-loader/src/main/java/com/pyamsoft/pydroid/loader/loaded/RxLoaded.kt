@@ -20,10 +20,9 @@ import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.OnLifecycleEvent
-import com.pyamsoft.pydroid.data.clear
 import io.reactivex.disposables.Disposable
 
-class RxLoaded(private var disposable: Disposable) : Loaded, LifecycleObserver {
+class RxLoaded(private val disposable: Disposable) : Loaded, LifecycleObserver {
 
   private var lifeCycleOwner: LifecycleOwner? = null
 
@@ -38,7 +37,7 @@ class RxLoaded(private var disposable: Disposable) : Loaded, LifecycleObserver {
     lifeCycleOwner = null
 
     if (!disposable.isDisposed) {
-      disposable = disposable.clear()
+      disposable.dispose()
     }
   }
 }

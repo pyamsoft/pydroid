@@ -18,15 +18,14 @@ package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.RxBus
 import com.pyamsoft.pydroid.cache.repository
-import io.reactivex.Scheduler
 
 class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
 
   private val cacheInteractor: AboutLibrariesInteractor
-  private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()
-  private val ioScheduler: Scheduler = pyDroidModule.provideIoScheduler()
-  private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
+  private val bus: EventBus<List<AboutLibrariesModel>> = RxBus.create()
 
   init {
     val dataSource = AboutLibrariesDataSourceImpl(pyDroidModule.provideContext())
@@ -38,8 +37,6 @@ class AboutLibrariesModule(pyDroidModule: PYDroidModule) {
 
   @CheckResult
   fun getPresenter(): AboutLibrariesPresenter {
-    return AboutLibrariesPresenter(
-        cacheInteractor, computationScheduler, ioScheduler, mainThreadScheduler
-    )
+    return AboutLibrariesPresenter(cacheInteractor, bus)
   }
 }

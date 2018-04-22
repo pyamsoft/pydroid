@@ -51,6 +51,11 @@ abstract class ToolbarFragment : Fragment(),
     return false
   }
 
+  @CheckResult
+  protected fun requireView(): View {
+    return checkNotNull(view) { "View is required and cannot be null." }
+  }
+
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?

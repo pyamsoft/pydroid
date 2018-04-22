@@ -32,6 +32,8 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
+import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.listenSingleChange
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
@@ -99,11 +101,19 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     presenter.bind(viewLifecycle, this)
   }
 
-  override fun onLicenseLoaded(model: AboutLibrariesModel) {
-    binding.viewPager.post { pagerAdapter.add(model) }
+  override fun onLicenseLoadBegin() {
+    refreshLatch.isRefreshing = true
   }
 
-  override fun onAllLoaded() {
+  override fun onLicenseLoaded(licenses: List<AboutLibrariesModel>) {
+    pagerAdapter.add(licenses)
+  }
+
+  override fun onLicenseLoadError(throwable: Throwable) {
+    Snackbreak.short(requireActivity(), requireView(), ErrorDetail("", throwable.localizedMessage))
+  }
+
+  override fun onLicenseLoadComplete() {
     refreshLatch.isRefreshing = false
   }
 

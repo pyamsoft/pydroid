@@ -16,32 +16,41 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.presenter.Presenter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(
   private val interactor: AboutLibrariesInteractor,
-  computationScheduler: Scheduler,
-  ioScheduler: Scheduler,
-  mainThreadScheduler: Scheduler
-) : SchedulerPresenter<AboutLibrariesPresenter.View>(
-    computationScheduler, ioScheduler, mainThreadScheduler
-) {
+  private val bus: EventBus<List<AboutLibrariesModel>>
+) : Presenter<AboutLibrariesPresenter.View>() {
 
   override fun onCreate() {
     super.onCreate()
+
+    dispose {
+      bus.listen()
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe { view?.onLicenseLoaded(it) }
+    }
+
     loadLicenses(false)
   }
 
   private fun loadLicenses(force: Boolean) {
     dispose {
       interactor.loadLicenses(force)
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
-          .doAfterTerminate { view?.onAllLoaded() }
-          .subscribe({ view?.onLicenseLoaded(it) },
-              { Timber.e(it, "onError loading licenses") })
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnSubscribe { view?.onLicenseLoadBegin() }
+          .doAfterTerminate { view?.onLicenseLoadComplete() }
+          .subscribe({ bus.publish(it) }, {
+            Timber.e(it, "onError loading licenses")
+            view?.onLicenseLoadError(it)
+          })
     }
   }
 
@@ -49,15 +58,12 @@ class AboutLibrariesPresenter internal constructor(
 
   interface LoadCallback {
 
-    /**
-     * Called when a single license has finished loading. There are no guarantees about if the
-     * license was loaded for the first time.
-     */
-    fun onLicenseLoaded(model: AboutLibrariesModel)
+    fun onLicenseLoadBegin()
 
-    /**
-     * Called when all licenses are done loading
-     */
-    fun onAllLoaded()
+    fun onLicenseLoaded(licenses: List<AboutLibrariesModel>)
+
+    fun onLicenseLoadError(throwable: Throwable)
+
+    fun onLicenseLoadComplete()
   }
 }

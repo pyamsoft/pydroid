@@ -23,22 +23,21 @@ import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.loaded.RxLoaded
 import com.pyamsoft.pydroid.loader.targets.Target
-import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 internal class RxResourceLoader internal constructor(
   context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
-  resourceImageCache: ImageCache<Int, Drawable>,
-  private val mainThreadScheduler: Scheduler,
-  private val ioScheduler: Scheduler
+  resourceImageCache: ImageCache<Int, Drawable>
 ) : ResourceLoader(context, resource, errorResource, resourceImageCache) {
 
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(
         Single.fromCallable { loadResource() }
-            .subscribeOn(ioScheduler)
-            .observeOn(mainThreadScheduler)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { startAction?.invoke() }
             .doAfterSuccess { completeAction?.invoke(it) }
             .doOnError {

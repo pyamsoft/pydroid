@@ -25,8 +25,8 @@ internal class AboutLibrariesInteractorDisk internal constructor(
 ) : AboutLibrariesInteractor {
 
   @CheckResult
-  private fun createLicenseStream(): Observable<AboutLibrariesModel> {
-    return Observable.defer { Observable.fromIterable(Licenses.getLicenses()) }
+  private fun createLicenseStream(): Single<Set<AboutLibrariesModel>> {
+    return Single.fromCallable { Licenses.getLicenses() }
   }
 
   @CheckResult
@@ -41,14 +41,14 @@ internal class AboutLibrariesInteractorDisk internal constructor(
   }
 
   @CheckResult
-  private fun loadTextForAboutModel(model: AboutLibrariesModel): Observable<AboutLibrariesModel> {
+  private fun loadTextForAboutModel(model: AboutLibrariesModel): Single<AboutLibrariesModel> {
     return loadLicenseText(model).map { AboutLibrariesModel.create(model.name, model.homepage, it) }
-        .toObservable()
   }
 
-  override fun loadLicenses(bypass: Boolean): Observable<AboutLibrariesModel> {
+  override fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>> {
     return createLicenseStream()
-        .sorted { o1, o2 -> o1.name.compareTo(o2.name, ignoreCase = true) }
-        .concatMap { loadTextForAboutModel(it) }
+        .flatMapObservable { Observable.fromIterable(it) }
+        .flatMapSingle { loadTextForAboutModel(it) }
+        .toSortedList { o1, o2 -> o1.name.compareTo(o2.name, ignoreCase = true) }
   }
 }

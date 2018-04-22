@@ -18,19 +18,15 @@ package com.pyamsoft.pydroid.base.about
 
 import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.cache.Repository
-import io.reactivex.Observable
+import io.reactivex.Single
 
 internal class AboutLibrariesInteractorImpl internal constructor(
   private val disk: AboutLibrariesInteractor,
   private val licenseCache: Repository<List<AboutLibrariesModel>>
 ) : AboutLibrariesInteractor, Cache {
 
-  override fun loadLicenses(bypass: Boolean): Observable<AboutLibrariesModel> {
-    return licenseCache.get(bypass) {
-      disk.loadLicenses(true)
-          .toList()
-    }
-        .flatMapObservable { Observable.fromIterable(it) }
+  override fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>> {
+    return licenseCache.get(bypass) { disk.loadLicenses(true) }
   }
 
   override fun clearCache() {

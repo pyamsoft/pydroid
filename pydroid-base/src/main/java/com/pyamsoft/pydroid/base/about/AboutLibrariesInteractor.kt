@@ -17,10 +17,10 @@
 package com.pyamsoft.pydroid.base.about
 
 import android.support.annotation.CheckResult
-import io.reactivex.Observable
+import io.reactivex.Single
 
 internal interface AboutLibrariesInteractor {
 
   @CheckResult
-  fun loadLicenses(bypass: Boolean): Observable<AboutLibrariesModel>
+  fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>>
 }

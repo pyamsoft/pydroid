@@ -16,18 +16,9 @@
 
 package com.pyamsoft.pydroid.optional
 
-/**
- * A simple Optional API, You can drop in your own implementation if needed.
- *
- * The PYDroid standard implementation is found in OptionalImpl
- * Keep the unused T here for better casting
- */
-interface Optional<out T : Any> {
+import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.optional.OptionalImpl.AbsentImpl
+import com.pyamsoft.pydroid.optional.OptionalImpl.PresentImpl
 
-  interface Present<out T : Any> : Optional<T> {
-
-    val value: T
-  }
-
-  interface Absent : Optional<Nothing>
-}
+@CheckResult
+fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) AbsentImpl else PresentImpl(this)

@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.data
-
-import io.reactivex.disposables.Disposable
-import io.reactivex.disposables.Disposables
+package com.pyamsoft.pydroid.optional
 
 /**
- * Extension function for Kotlin
+ * A simple Optional API, You can drop in your own implementation if needed.
  *
- * If the Disposable is non-null, disposes of it and then returns the new disposable
- *
- * The new disposable is by default, the empty disposable, so that all memory references
- * held by the disposable are marked for GC
+ * The PYDroid standard implementation is found in OptionalImpl
+ * Keep the unused T here for better casting
  */
-@JvmOverloads
-fun Disposable.clear(disposable: Disposable = Disposables.empty()): Disposable {
-  if (!isDisposed) {
-    dispose()
-  }
+internal sealed class OptionalImpl<out T : Any> {
 
-  return disposable
+  internal data class PresentImpl<out T : Any> internal constructor(override val value: T) :
+      Optional.Present<T>, OptionalImpl<T>()
+
+  internal object AbsentImpl : Optional.Absent, OptionalImpl<Nothing>()
 }

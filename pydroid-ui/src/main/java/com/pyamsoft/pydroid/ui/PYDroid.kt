@@ -92,6 +92,8 @@ class PYDroid private constructor(
 
     /**
      * Access point for library component graph
+     *
+     * PYDroid internal
      */
     @JvmStatic
     @CheckResult
@@ -109,7 +111,9 @@ class PYDroid private constructor(
     /**
      * Initialize the library
      *
-     * You should carry the passed modules with you to any other component graphs or you will have "doubled" singletons
+     * Track the Instance at the application level, such as:
+     *
+     * PYDroid.init(this, this, DEBUG)
      */
     @JvmStatic
     fun init(

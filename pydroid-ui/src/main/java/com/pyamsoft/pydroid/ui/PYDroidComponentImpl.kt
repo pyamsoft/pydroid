@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
   debug: Boolean
-) : PYDroidComponent {
+) : PYDroidComponent, ModuleProvider {
 
   private val loaderModule = LoaderModule(application)
   private val uiModule = UiModule(application)

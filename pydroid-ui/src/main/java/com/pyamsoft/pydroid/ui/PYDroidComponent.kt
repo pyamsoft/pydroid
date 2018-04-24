@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
-internal interface PYDroidComponent : ModuleProvider {
+internal interface PYDroidComponent {
 
   fun inject(fragment: AboutLibrariesFragment)
 

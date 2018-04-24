@@ -31,7 +31,14 @@ class PYDroid private constructor(
   debug: Boolean
 ) {
 
-  private val component: PYDroidComponent = PYDroidComponentImpl(application, debug)
+  private val component: PYDroidComponent
+  private val modules: ModuleProvider
+
+  init {
+    val impl = PYDroidComponentImpl(application, debug)
+    component = impl
+    modules = impl
+  }
 
   init {
     if (debug) {
@@ -49,7 +56,7 @@ class PYDroid private constructor(
    */
   @CheckResult
   fun modules(): ModuleProvider {
-    return component
+    return modules
   }
 
   interface Instance {

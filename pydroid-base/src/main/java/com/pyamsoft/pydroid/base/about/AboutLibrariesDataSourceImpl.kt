@@ -18,14 +18,11 @@ package com.pyamsoft.pydroid.base.about
 
 import android.content.Context
 import android.content.res.AssetManager
-import android.os.Build
 import android.support.annotation.CheckResult
+import okio.BufferedSource
+import okio.Okio
 import timber.log.Timber
-import java.io.BufferedReader
 import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.Reader
-import java.nio.charset.StandardCharsets
 
 internal class AboutLibrariesDataSourceImpl internal constructor(
   context: Context
@@ -34,12 +31,24 @@ internal class AboutLibrariesDataSourceImpl internal constructor(
   private val assetManager: AssetManager = context.applicationContext.assets
 
   @CheckResult
-  private fun createStreamReader(inputStream: InputStream): Reader {
-    // Standard Charsets is only KitKat, add this extra check to support API 16 apps
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-      return InputStreamReader(inputStream, StandardCharsets.UTF_8)
-    } else {
-      return InputStreamReader(inputStream, "UTF-8")
+  private fun createStreamReader(inputStream: InputStream): BufferedSource {
+    return Okio.buffer(Okio.source(inputStream))
+  }
+
+  @CheckResult
+  private fun readLines(source: BufferedSource): String {
+    source.use {
+      val lines = ArrayList<String>()
+      while (true) {
+        val line = it.readUtf8Line()
+        if (line == null) {
+          break
+        } else {
+          lines.add(line.trim())
+        }
+      }
+
+      return lines.joinToString(separator = "\n") { it }
     }
   }
 
@@ -51,10 +60,6 @@ internal class AboutLibrariesDataSourceImpl internal constructor(
     }
 
     assetManager.open(licenseLocation)
-        .use {
-          BufferedReader(createStreamReader(it)).useLines {
-            return it.joinToString(separator = "\n") { it }
-          }
-        }
+        .use { return readLines(createStreamReader(it)) }
   }
 }

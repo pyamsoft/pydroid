@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version
 
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -25,9 +26,19 @@ import timber.log.Timber
 class VersionCheckPresenter internal constructor(
   private val packageName: String,
   private val currentVersionCode: Int,
-  private val interactor: VersionCheckInteractor
-) : Presenter<VersionCheckPresenter.View>(
-) {
+  private val interactor: VersionCheckInteractor,
+  private val bus: EventBus<Int>
+) : Presenter<VersionCheckPresenter.View>() {
+
+  override fun onCreate() {
+    super.onCreate()
+    dispose {
+      bus.listen()
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe { view?.onUpdatedVersionFound(currentVersionCode, it) }
+    }
+  }
 
   fun checkForUpdates(force: Boolean) {
     dispose {
@@ -41,7 +52,7 @@ class VersionCheckPresenter internal constructor(
           }
           .subscribe({
             if (currentVersionCode < it) {
-              view?.onUpdatedVersionFound(currentVersionCode, it)
+              bus.publish(it)
             }
           }, {
             if (it is HttpException) {

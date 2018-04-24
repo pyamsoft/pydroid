@@ -20,9 +20,10 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.RxBus
 import com.pyamsoft.pydroid.cache.repository
 import com.squareup.moshi.Moshi
-import io.reactivex.Scheduler
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
@@ -32,7 +33,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
+  private val packageName: String = pyDroidModule.provideContext().packageName
   private val cachedInteractor: VersionCheckInteractor
+  private val bus: EventBus<Int> = RxBus.create()
 
   init {
     val versionCheckApi = VersionCheckApi(
@@ -85,11 +88,8 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
   }
 
   @CheckResult
-  fun getPresenter(
-    packageName: String,
-    currentVersion: Int
-  ): VersionCheckPresenter {
-    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor)
+  fun getPresenter(currentVersion: Int): VersionCheckPresenter {
+    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor, bus)
   }
 
   companion object {

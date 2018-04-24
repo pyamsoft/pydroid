@@ -18,24 +18,26 @@ package com.pyamsoft.pydroid.base.rating
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.Publisher
 import com.pyamsoft.pydroid.bus.RxBus
 
 class RatingModule(preferences: RatingPreferences) {
 
-  val errorBus: EventBus<Throwable> = RxBus.create()
-  private val interactor: RatingInteractor
+  private val errorBus: EventBus<Throwable> = RxBus.create()
+  private val ratingBus: EventBus<Unit> = RxBus.create()
+  private val saveBus: EventBus<Boolean> = RxBus.create()
+  private val interactor: RatingInteractor = RatingInteractorImpl(preferences)
 
-  init {
-    interactor = RatingInteractorImpl(preferences)
-  }
+  @CheckResult
+  fun getPublisher(): Publisher<Throwable> = errorBus
 
   @CheckResult
   fun getPresenter(version: Int): RatingPresenter {
-    return RatingPresenter(version, interactor, errorBus)
+    return RatingPresenter(version, interactor, errorBus, ratingBus)
   }
 
   @CheckResult
   fun getSavePresenter(version: Int): RatingSavePresenter {
-    return RatingSavePresenter(version, interactor)
+    return RatingSavePresenter(version, interactor, saveBus)
   }
 }

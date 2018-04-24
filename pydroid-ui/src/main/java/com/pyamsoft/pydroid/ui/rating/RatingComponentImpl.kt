@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.base.rating.RatingErrorPublisher
 import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.UiModule
@@ -28,9 +27,6 @@ internal class RatingComponentImpl internal constructor(
   private val version: Int
 ) : RatingComponent {
 
-  private val ratingErrorPublisher: RatingErrorPublisher =
-    RatingErrorPublisherImpl(ratingModule.errorBus)
-
   override fun inject(activity: RatingActivity) {
     activity.ratingPresenter = ratingModule.getPresenter(version)
   }
@@ -38,7 +34,7 @@ internal class RatingComponentImpl internal constructor(
   override fun inject(dialog: RatingDialog) {
     dialog.presenter = ratingModule.getSavePresenter(version)
     dialog.imageLoader = loaderModule.provideImageLoader()
+    dialog.errorPublisher = ratingModule.getPublisher()
     dialog.linker = uiModule.provideLinker()
-    dialog.errorPublisher = ratingErrorPublisher
   }
 }

@@ -16,7 +16,10 @@
 
 package com.pyamsoft.pydroid.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.RxBus
 import com.pyamsoft.pydroid.ui.social.Linker
 
 internal class UiModuleImpl internal constructor(
@@ -25,9 +28,14 @@ internal class UiModuleImpl internal constructor(
 ) : UiModule {
 
   private val linker = Linker.create(context.applicationContext, packageName)
+  private val linkerErrorBus = RxBus.create<ActivityNotFoundException>()
 
   override fun provideLinker(): Linker {
     return linker
+  }
+
+  override fun provideLinkerErrorBus(): EventBus<ActivityNotFoundException> {
+    return linkerErrorBus
   }
 
 }

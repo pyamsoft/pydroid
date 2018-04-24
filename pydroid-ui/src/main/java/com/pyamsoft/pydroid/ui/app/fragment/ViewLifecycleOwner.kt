@@ -22,9 +22,13 @@ import android.arch.lifecycle.LifecycleRegistry
 
 internal class ViewLifecycleOwner internal constructor() : LifecycleOwner {
 
-  internal val registry = LifecycleRegistry(this)
+  private val registry = LifecycleRegistry(this)
 
   override fun getLifecycle(): Lifecycle {
     return registry
+  }
+
+  internal fun handleLifecycleEvent(event: Lifecycle.Event) {
+    registry.handleLifecycleEvent(event)
   }
 }

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.base.rating
 
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -23,8 +24,20 @@ import timber.log.Timber
 
 class RatingSavePresenter internal constructor(
   private val currentVersion: Int,
-  private val interactor: RatingInteractor
+  private val interactor: RatingInteractor,
+  private val bus: EventBus<Boolean>
 ) : Presenter<RatingSavePresenter.View>() {
+
+  override fun onCreate() {
+    super.onCreate()
+
+    dispose {
+      bus.listen()
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe { view?.onRatingSaved(it) }
+    }
+  }
 
   fun saveRating(accept: Boolean) {
     dispose {
@@ -33,7 +46,7 @@ class RatingSavePresenter internal constructor(
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe({
             Timber.d("Saved current version code: %d", currentVersion)
-            view?.onRatingSaved(accept)
+            bus.publish(accept)
           }, {
             Timber.e(it, "Error saving rating dialog")
             view?.onRatingSaveError(it)

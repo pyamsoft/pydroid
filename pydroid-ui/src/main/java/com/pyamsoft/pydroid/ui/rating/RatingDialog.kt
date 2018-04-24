@@ -25,8 +25,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.pyamsoft.pydroid.base.rating.RatingErrorPublisher
 import com.pyamsoft.pydroid.base.rating.RatingSavePresenter
+import com.pyamsoft.pydroid.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
@@ -38,16 +38,15 @@ import com.pyamsoft.pydroid.util.toDp
 
 internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
+  private lateinit var rateLink: String
+  private lateinit var binding: DialogRatingBinding
   internal lateinit var linker: Linker
   internal lateinit var imageLoader: ImageLoader
   internal lateinit var presenter: RatingSavePresenter
-  internal lateinit var errorPublisher: RatingErrorPublisher
-  private lateinit var rateLink: String
+  internal lateinit var errorPublisher: Publisher<Throwable>
+  @DrawableRes private var changeLogIcon: Int = 0
   private var versionCode: Int = 0
   private var changelog: SpannedString? = null
-  @DrawableRes
-  private var changeLogIcon: Int = 0
-  private lateinit var binding: DialogRatingBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

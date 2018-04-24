@@ -17,18 +17,19 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.pydroid.bus.Publisher
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.social.Linker
-import com.pyamsoft.pydroid.ui.social.LinkerErrorPublisher
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
   internal lateinit var linker: Linker
-  internal lateinit var linkerErrorPublisher: LinkerErrorPublisher
+  internal lateinit var linkerErrorPublisher: Publisher<ActivityNotFoundException>
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0
   private var applicationName: String? = null

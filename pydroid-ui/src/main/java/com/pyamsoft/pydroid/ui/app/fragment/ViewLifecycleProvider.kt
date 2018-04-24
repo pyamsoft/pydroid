@@ -21,6 +21,6 @@ import android.support.annotation.CheckResult
 
 internal interface ViewLifecycleProvider {
 
+  @get:CheckResult
   val viewLifecycle: LifecycleOwner
-    @get:CheckResult get
 }

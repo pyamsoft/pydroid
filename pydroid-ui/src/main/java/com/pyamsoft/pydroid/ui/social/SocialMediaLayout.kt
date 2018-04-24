@@ -24,12 +24,14 @@ import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
 import android.arch.lifecycle.Lifecycle.Event.ON_START
 import android.arch.lifecycle.Lifecycle.Event.ON_STOP
 import android.arch.lifecycle.LifecycleOwner
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.pyamsoft.pydroid.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -41,7 +43,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 class SocialMediaLayout : LinearLayout, LifecycleOwner {
 
   internal lateinit var linker: Linker
-  internal lateinit var linkerErrorPublisher: LinkerErrorPublisher
+  internal lateinit var linkerErrorPublisher: Publisher<ActivityNotFoundException>
   internal lateinit var imageLoader: ImageLoader
   private val binding: ViewSocialMediaBinding
   private val lifecycleOwner = ViewLifecycleOwner()
@@ -81,7 +83,7 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
   }
 
   override fun getLifecycle(): Lifecycle {
-    return lifecycleOwner.registry
+    return lifecycleOwner.lifecycle
   }
 
   override fun onAttachedToWindow() {
@@ -109,7 +111,7 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
       }
     }
 
-    lifecycleOwner.registry.apply {
+    lifecycleOwner.apply {
       handleLifecycleEvent(ON_CREATE)
       handleLifecycleEvent(ON_START)
       handleLifecycleEvent(ON_RESUME)
@@ -145,7 +147,7 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
       facebook.setOnDebouncedClickListener(null)
     }
 
-    lifecycleOwner.registry.apply {
+    lifecycleOwner.apply {
       handleLifecycleEvent(ON_PAUSE)
       handleLifecycleEvent(ON_STOP)
       handleLifecycleEvent(ON_DESTROY)

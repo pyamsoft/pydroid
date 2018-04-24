@@ -51,36 +51,41 @@ abstract class ToolbarPreferenceFragment : PreferenceFragmentCompat(),
     return false
   }
 
+  @CheckResult
+  protected fun requireView(): View {
+    return checkNotNull(view) { "View is required and cannot be null." }
+  }
+
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    viewLifecycleOwner.registry.handleLifecycleEvent(ON_CREATE)
+    viewLifecycleOwner.handleLifecycleEvent(ON_CREATE)
   }
 
   override fun onStart() {
     super.onStart()
-    viewLifecycleOwner.registry.handleLifecycleEvent(ON_START)
+    viewLifecycleOwner.handleLifecycleEvent(ON_START)
   }
 
   override fun onResume() {
     super.onResume()
-    viewLifecycleOwner.registry.handleLifecycleEvent(ON_RESUME)
+    viewLifecycleOwner.handleLifecycleEvent(ON_RESUME)
   }
 
   override fun onPause() {
     super.onPause()
-    viewLifecycleOwner.registry.handleLifecycleEvent(ON_PAUSE)
+    viewLifecycleOwner.handleLifecycleEvent(ON_PAUSE)
   }
 
   override fun onStop() {
     super.onStop()
-    viewLifecycleOwner.registry.handleLifecycleEvent(ON_STOP)
+    viewLifecycleOwner.handleLifecycleEvent(ON_STOP)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    viewLifecycleOwner.registry.handleLifecycleEvent(ON_DESTROY)
+    viewLifecycleOwner.handleLifecycleEvent(ON_DESTROY)
   }
 }

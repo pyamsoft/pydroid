@@ -33,9 +33,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class VersionCheckModule(pyDroidModule: PYDroidModule) {
 
   private val cachedInteractor: VersionCheckInteractor
-  private val computationScheduler: Scheduler = pyDroidModule.provideComputationScheduler()
-  private val ioScheduler: Scheduler = pyDroidModule.provideIoScheduler()
-  private val mainThreadScheduler: Scheduler = pyDroidModule.provideMainThreadScheduler()
 
   init {
     val versionCheckApi = VersionCheckApi(
@@ -92,11 +89,7 @@ class VersionCheckModule(pyDroidModule: PYDroidModule) {
     packageName: String,
     currentVersion: Int
   ): VersionCheckPresenter {
-    return VersionCheckPresenter(
-        packageName, currentVersion,
-        cachedInteractor,
-        computationScheduler, ioScheduler, mainThreadScheduler
-    )
+    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor)
   }
 
   companion object {

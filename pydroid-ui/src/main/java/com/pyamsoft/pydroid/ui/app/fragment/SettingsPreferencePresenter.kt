@@ -17,26 +17,22 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.presenter.Presenter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class SettingsPreferencePresenter internal constructor(
-  private val linkerErrorBus: EventBus<Throwable>,
-  computationScheduler: Scheduler,
-  ioScheduler: Scheduler,
-  mainThreadScheduler: Scheduler
-) : SchedulerPresenter<SettingsPreferencePresenter.View>(
-    computationScheduler, ioScheduler, mainThreadScheduler
-) {
+  private val linkerErrorBus: EventBus<Throwable>
+) : Presenter<SettingsPreferencePresenter.View>() {
 
   override fun onCreate() {
     super.onCreate()
 
     dispose {
       linkerErrorBus.listen()
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
           .subscribe({ view?.onLinkerError(it) }, {
             Timber.e(it, "Error receiving LinkerError")
           })

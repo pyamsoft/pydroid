@@ -46,13 +46,12 @@ internal class PYDroidComponentImpl internal constructor(
   private val versionCheckModule: VersionCheckModule = VersionCheckModule(pyDroidModule)
   private val ratingModule: RatingModule
   private val debugMode: Boolean = pyDroidModule.isDebug
-  private val ratingErrorBus = RxBus.create<Throwable>()
   private val linkerErrorBus = RxBus.create<Throwable>()
   private val linkerErrorPublisher: LinkerErrorPublisher = LinkerErrorPublisherImpl(linkerErrorBus)
 
   init {
     val preferences = PYDroidPreferencesImpl(pyDroidModule.provideContext())
-    ratingModule = RatingModule(pyDroidModule, preferences, ratingErrorBus)
+    ratingModule = RatingModule(preferences)
   }
 
   override fun inject(fragment: AboutLibrariesFragment) {
@@ -88,12 +87,10 @@ internal class PYDroidComponentImpl internal constructor(
   override fun plusAppComponent(
     packageName: String,
     currentVersion: Int
-  ): AppComponent =
-    AppComponentImpl(
-        pyDroidModule, uiModule, versionCheckModule, ratingModule, linkerErrorBus,
-        packageName, currentVersion
-    )
+  ): AppComponent = AppComponentImpl(
+      uiModule, versionCheckModule, ratingModule, linkerErrorBus, packageName, currentVersion
+  )
 
   override fun plusRatingComponent(currentVersion: Int): RatingComponent =
-    RatingComponentImpl(uiModule, ratingModule, loaderModule, ratingErrorBus, currentVersion)
+    RatingComponentImpl(uiModule, ratingModule, loaderModule, currentVersion)
 }

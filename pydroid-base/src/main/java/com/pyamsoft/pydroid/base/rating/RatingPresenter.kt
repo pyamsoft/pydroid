@@ -17,28 +17,24 @@
 package com.pyamsoft.pydroid.base.rating
 
 import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.presenter.Presenter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class RatingPresenter internal constructor(
   private val currentVersion: Int,
   private val interactor: RatingInteractor,
-  private val ratingErrorBus: EventBus<Throwable>,
-  computationScheduler: Scheduler,
-  ioScheduler: Scheduler,
-  mainThreadScheduler: Scheduler
-) : SchedulerPresenter<RatingPresenter.View>(
-    computationScheduler, ioScheduler, mainThreadScheduler
-) {
+  private val ratingErrorBus: EventBus<Throwable>
+) : Presenter<RatingPresenter.View>() {
 
   override fun onCreate() {
     super.onCreate()
 
     dispose {
       ratingErrorBus.listen()
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
           .subscribe({ view?.onRatingError(it) }, {
             Timber.e(it, "Error receiving RatingError")
           })
@@ -48,8 +44,8 @@ class RatingPresenter internal constructor(
   fun loadRatingDialog(force: Boolean) {
     dispose {
       interactor.needsToViewRating(force, currentVersion)
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
           .subscribe({
             if (it) {
               view?.onShowRating()

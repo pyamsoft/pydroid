@@ -16,27 +16,24 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.presenter.Presenter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import timber.log.Timber
 
 class VersionCheckPresenter internal constructor(
   private val packageName: String,
   private val currentVersionCode: Int,
-  private val interactor: VersionCheckInteractor,
-  computationScheduler: Scheduler,
-  ioScheduler: Scheduler,
-  mainThreadScheduler: Scheduler
-) : SchedulerPresenter<VersionCheckPresenter.View>(
-    computationScheduler, ioScheduler, mainThreadScheduler
+  private val interactor: VersionCheckInteractor
+) : Presenter<VersionCheckPresenter.View>(
 ) {
 
   fun checkForUpdates(force: Boolean) {
     dispose {
       interactor.checkVersion(force, packageName)
-          .subscribeOn(ioScheduler)
-          .observeOn(mainThreadScheduler)
+          .subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
           .doOnSuccess {
             Timber.i("Update check finished")
             Timber.i("Current version: %d", currentVersionCode)

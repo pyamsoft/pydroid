@@ -17,20 +17,13 @@
 package com.pyamsoft.pydroid.base.rating
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.bus.EventBus
-import io.reactivex.Scheduler
+import com.pyamsoft.pydroid.bus.RxBus
 
-class RatingModule(
-  module: PYDroidModule,
-  preferences: RatingPreferences,
-  private val errorBus: EventBus<Throwable>
-) {
+class RatingModule(preferences: RatingPreferences) {
 
+  val errorBus: EventBus<Throwable> = RxBus.create()
   private val interactor: RatingInteractor
-  private val computationScheduler: Scheduler = module.provideComputationScheduler()
-  private val ioScheduler: Scheduler = module.provideIoScheduler()
-  private val mainThreadScheduler: Scheduler = module.provideMainThreadScheduler()
 
   init {
     interactor = RatingInteractorImpl(preferences)
@@ -38,17 +31,11 @@ class RatingModule(
 
   @CheckResult
   fun getPresenter(version: Int): RatingPresenter {
-    return RatingPresenter(
-        version, interactor, errorBus,
-        computationScheduler, ioScheduler, mainThreadScheduler
-    )
+    return RatingPresenter(version, interactor, errorBus)
   }
 
   @CheckResult
   fun getSavePresenter(version: Int): RatingSavePresenter {
-    return RatingSavePresenter(
-        version, interactor,
-        computationScheduler, ioScheduler, mainThreadScheduler
-    )
+    return RatingSavePresenter(version, interactor)
   }
 }

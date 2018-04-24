@@ -53,7 +53,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain()
+    PYDroid.obtain(requireContext())
         .inject(this)
 
     arguments?.also {

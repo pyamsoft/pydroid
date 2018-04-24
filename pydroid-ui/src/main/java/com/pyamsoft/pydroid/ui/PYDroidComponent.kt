@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
@@ -40,4 +41,7 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusRatingComponent(currentVersion: Int): RatingComponent
+
+  @CheckResult
+  fun loaderModule(): LoaderModule
 }

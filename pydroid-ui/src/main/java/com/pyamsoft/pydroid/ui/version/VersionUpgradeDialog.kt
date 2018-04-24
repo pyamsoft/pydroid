@@ -50,7 +50,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
       applicationName = it.getString(KEY_NAME, null)
     }
 
-    PYDroid.obtain()
+    PYDroid.obtain(requireContext())
         .inject(this)
   }
 

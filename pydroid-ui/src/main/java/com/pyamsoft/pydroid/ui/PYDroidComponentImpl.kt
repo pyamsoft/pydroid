@@ -37,8 +37,7 @@ internal class PYDroidComponentImpl internal constructor(
   debug: Boolean
 ) : PYDroidComponent {
 
-  val loaderModule: LoaderModule = LoaderModuleImpl(application)
-
+  private val loaderModule: LoaderModule = LoaderModuleImpl(application)
   private val uiModule: UiModule = UiModuleImpl(application)
   private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(application)
   private val versionCheckModule: VersionCheckModule = VersionCheckModule(application, debug)
@@ -73,4 +72,8 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun plusRatingComponent(currentVersion: Int): RatingComponent =
     RatingComponentImpl(uiModule, ratingModule, loaderModule, currentVersion)
+
+  override fun loaderModule(): LoaderModule {
+    return loaderModule
+  }
 }

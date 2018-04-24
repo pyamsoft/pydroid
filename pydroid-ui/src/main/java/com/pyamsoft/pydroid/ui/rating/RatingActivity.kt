@@ -96,7 +96,7 @@ abstract class RatingActivity : VersionCheckActivity(),
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain()
+    PYDroid.obtain(this)
         .plusRatingComponent(currentApplicationVersion)
         .inject(this)
     ratingPresenter.bind(this, this)

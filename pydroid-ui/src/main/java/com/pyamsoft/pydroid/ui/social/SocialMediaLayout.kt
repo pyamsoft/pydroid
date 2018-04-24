@@ -78,7 +78,7 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
     orientation = HORIZONTAL
     binding = ViewSocialMediaBinding.inflate(LayoutInflater.from(context), this, false)
     addView(binding.root)
-    PYDroid.obtain()
+    PYDroid.obtain(context)
         .inject(this)
   }
 

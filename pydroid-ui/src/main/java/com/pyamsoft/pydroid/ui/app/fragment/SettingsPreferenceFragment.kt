@@ -53,7 +53,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain()
+    PYDroid.obtain(requireContext())
         .plusAppComponent(versionedActivity.currentApplicationVersion)
         .inject(this)
   }

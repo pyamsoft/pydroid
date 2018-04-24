@@ -67,7 +67,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
       throw RuntimeException("Change Log Icon Id cannot be 0")
     }
 
-    PYDroid.obtain()
+    PYDroid.obtain(requireContext())
         .plusRatingComponent(versionCode)
         .inject(this)
   }

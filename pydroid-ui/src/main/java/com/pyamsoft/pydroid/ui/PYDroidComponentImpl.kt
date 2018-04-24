@@ -21,7 +21,6 @@ import com.pyamsoft.pydroid.base.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.base.version.VersionCheckModule
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.loader.LoaderModuleImpl
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
@@ -37,10 +36,10 @@ internal class PYDroidComponentImpl internal constructor(
   debug: Boolean
 ) : PYDroidComponent {
 
-  private val loaderModule: LoaderModule = LoaderModuleImpl(application)
-  private val uiModule: UiModule = UiModuleImpl(application)
-  private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(application)
-  private val versionCheckModule: VersionCheckModule = VersionCheckModule(application, debug)
+  private val loaderModule = LoaderModule(application)
+  private val uiModule = UiModule(application)
+  private val aboutLibrariesModule = AboutLibrariesModule(application)
+  private val versionCheckModule = VersionCheckModule(application, debug)
   private val ratingModule: RatingModule
 
   init {
@@ -75,5 +74,21 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun loaderModule(): LoaderModule {
     return loaderModule
+  }
+
+  override fun ratingModule(): RatingModule {
+    return ratingModule
+  }
+
+  override fun aboutLibrariesModule(): AboutLibrariesModule {
+    return aboutLibrariesModule
+  }
+
+  override fun versionCheckModule(): VersionCheckModule {
+    return versionCheckModule
+  }
+
+  override fun uiModule(): UiModule {
+    return uiModule
   }
 }

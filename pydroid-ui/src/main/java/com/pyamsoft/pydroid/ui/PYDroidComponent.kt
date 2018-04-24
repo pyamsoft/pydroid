@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
@@ -25,7 +24,7 @@ import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
-internal interface PYDroidComponent {
+internal interface PYDroidComponent : ModuleProvider {
 
   fun inject(fragment: AboutLibrariesFragment)
 
@@ -42,6 +41,4 @@ internal interface PYDroidComponent {
   @CheckResult
   fun plusRatingComponent(currentVersion: Int): RatingComponent
 
-  @CheckResult
-  fun loaderModule(): LoaderModule
 }

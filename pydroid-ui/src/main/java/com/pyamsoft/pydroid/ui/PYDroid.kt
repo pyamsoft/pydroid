@@ -20,7 +20,6 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
@@ -43,11 +42,14 @@ class PYDroid private constructor(
   }
 
   /**
-   * Exposed so that outside applications can take advantage of the ImageLoader instance and cache
+   * Exposed so that outside applications can take advantage of the Module singletons
+   *
+   * This is not exposed outside of the object created in the PYDroid.Instance as it is
+   * intended to only be used during the construction of the application level object graph.
    */
   @CheckResult
-  fun loaderModule(): LoaderModule {
-    return component.loaderModule()
+  fun modules(): ModuleProvider {
+    return component
   }
 
   interface Instance {

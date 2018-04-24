@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.ui
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.cache.Cache
-import com.pyamsoft.pydroid.loader.cache.ImageCache
-import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
+import com.pyamsoft.pydroid.base.about.AboutLibrariesModule
+import com.pyamsoft.pydroid.base.rating.RatingModule
+import com.pyamsoft.pydroid.base.version.VersionCheckModule
+import com.pyamsoft.pydroid.loader.LoaderModule
 
-class LoaderModuleImpl(context: Context) : LoaderModule {
+interface ModuleProvider {
 
-  private val imageLoader: ImageLoaderImpl
-
-  init {
-    val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
-    imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache)
-  }
-
-  // Singleton
   @CheckResult
-  override fun provideImageLoader(): ImageLoader = imageLoader
+  fun loaderModule(): LoaderModule
 
-  // Singleton
   @CheckResult
-  override fun provideImageLoaderCache(): Cache = imageLoader
+  fun ratingModule(): RatingModule
+
+  @CheckResult
+  fun uiModule(): UiModule
+
+  @CheckResult
+  fun aboutLibrariesModule(): AboutLibrariesModule
+
+  @CheckResult
+  fun versionCheckModule(): VersionCheckModule
+
 }

@@ -16,10 +16,9 @@
 
 package com.pyamsoft.pydroid.ui
 
+import android.app.Application
 import android.os.StrictMode
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.PYDroidModule
-import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
@@ -36,10 +35,21 @@ object PYDroid {
   @JvmStatic
   private fun setStrictMode() {
     StrictMode.setThreadPolicy(
-        StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyDeath().permitDiskReads()
-            .permitDiskWrites().penaltyFlashScreen().build()
+        StrictMode.ThreadPolicy.Builder()
+            .detectAll()
+            .penaltyLog()
+            .penaltyDeath()
+            .permitDiskReads()
+            .permitDiskWrites()
+            .penaltyFlashScreen()
+            .build()
     )
-    StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
+    StrictMode.setVmPolicy(
+        StrictMode.VmPolicy.Builder()
+            .detectAll()
+            .penaltyLog()
+            .build()
+    )
   }
 
   /**
@@ -63,16 +73,11 @@ object PYDroid {
    */
   @JvmStatic
   private fun initialize(
-    pydroidModule: PYDroidModule,
-    loaderModule: LoaderModule
+    application: Application,
+    debug: Boolean
   ) {
-    val context = pydroidModule.provideContext()
-    component = PYDroidComponentImpl(
-        pydroidModule,
-        loaderModule,
-        UiModuleImpl(context, context.packageName)
-    )
-    if (pydroidModule.isDebug) {
+    component = PYDroidComponentImpl(application, debug)
+    if (debug) {
       Timber.plant(Timber.DebugTree())
       setStrictMode()
     }
@@ -86,11 +91,11 @@ object PYDroid {
    */
   @JvmStatic
   fun init(
-    pydroidModule: PYDroidModule,
-    loaderModule: LoaderModule
+    application: Application,
+    debug: Boolean
   ) {
     if (component == null) {
-      initialize(pydroidModule, loaderModule)
+      initialize(application, debug)
     }
   }
 }

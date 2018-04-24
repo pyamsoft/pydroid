@@ -20,7 +20,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.support.v7.preference.PreferenceManager
 import androidx.core.content.edit
-import com.pyamsoft.pydroid.base.PYDroidPreferences
 import com.pyamsoft.pydroid.base.rating.RatingPreferences
 
 internal class PYDroidPreferencesImpl internal constructor(context: Context) : PYDroidPreferences {

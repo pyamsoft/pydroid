@@ -22,12 +22,9 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.bus.RxBus
 import com.pyamsoft.pydroid.ui.social.Linker
 
-internal class UiModuleImpl internal constructor(
-  context: Context,
-  packageName: String
-) : UiModule {
+internal class UiModuleImpl internal constructor(context: Context) : UiModule {
 
-  private val linker = Linker.create(context.applicationContext, packageName)
+  private val linker = Linker.create(context.applicationContext, context.packageName)
   private val linkerErrorBus = RxBus.create<ActivityNotFoundException>()
 
   override fun provideLinker(): Linker {

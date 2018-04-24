@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.base
+package com.pyamsoft.pydroid.ui
 
-import android.app.Application
-import com.pyamsoft.pydroid.PYDroidModule
+import com.pyamsoft.pydroid.base.rating.RatingPreferences
 
-class PYDroidModuleImpl(
-  application: Application,
-  override val isDebug: Boolean
-) : ApplicationModuleImpl(application), PYDroidModule
+interface PYDroidPreferences : RatingPreferences

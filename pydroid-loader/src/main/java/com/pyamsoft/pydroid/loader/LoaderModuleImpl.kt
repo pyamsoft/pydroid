@@ -16,20 +16,20 @@
 
 package com.pyamsoft.pydroid.loader
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.ApplicationModule
 import com.pyamsoft.pydroid.cache.Cache
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
-class LoaderModuleImpl(module: ApplicationModule) : LoaderModule {
+class LoaderModuleImpl(context: Context) : LoaderModule {
 
   private val imageLoader: ImageLoaderImpl
 
   init {
     val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
-    imageLoader = ImageLoaderImpl(module.provideContext(), resourceImageCache)
+    imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache)
   }
 
   // Singleton

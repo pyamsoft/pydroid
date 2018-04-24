@@ -16,11 +16,12 @@
 
 package com.pyamsoft.pydroid.ui
 
-import com.pyamsoft.pydroid.PYDroidModule
+import android.app.Application
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.base.version.VersionCheckModule
 import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.loader.LoaderModuleImpl
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
@@ -32,17 +33,19 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal class PYDroidComponentImpl internal constructor(
-  pyDroidModule: PYDroidModule,
-  private val loaderModule: LoaderModule,
-  private val uiModule: UiModule
+  application: Application,
+  debug: Boolean
 ) : PYDroidComponent {
 
-  private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(pyDroidModule)
-  private val versionCheckModule: VersionCheckModule = VersionCheckModule(pyDroidModule)
+  val loaderModule: LoaderModule = LoaderModuleImpl(application)
+
+  private val uiModule: UiModule = UiModuleImpl(application)
+  private val aboutLibrariesModule: AboutLibrariesModule = AboutLibrariesModule(application)
+  private val versionCheckModule: VersionCheckModule = VersionCheckModule(application, debug)
   private val ratingModule: RatingModule
 
   init {
-    val preferences = PYDroidPreferencesImpl(pyDroidModule.provideContext())
+    val preferences = PYDroidPreferencesImpl(application)
     ratingModule = RatingModule(preferences)
   }
 

@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.base.version
 
+import android.content.Context
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.PYDroidModule
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bus.EventBus
@@ -31,19 +31,22 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class VersionCheckModule(pyDroidModule: PYDroidModule) {
+class VersionCheckModule(
+  context: Context,
+  debug: Boolean
+) {
 
-  private val packageName: String = pyDroidModule.provideContext().packageName
+  private val packageName: String = context.packageName
   private val cachedInteractor: VersionCheckInteractor
   private val bus: EventBus<Int> = RxBus.create()
 
   init {
     val versionCheckApi = VersionCheckApi(
-        provideRetrofit(provideOkHttpClient(pyDroidModule.isDebug), provideConverter())
+        provideRetrofit(provideOkHttpClient(debug), provideConverter())
     )
 
     val versionCheckService = versionCheckApi.create(VersionCheckService::class.java)
-    val networkStatusProvider = NetworkStatusProviderImpl(pyDroidModule.provideContext())
+    val networkStatusProvider = NetworkStatusProviderImpl(context.applicationContext)
     val minimumApiProvider = MinimumApiProviderImpl()
 
     val network =

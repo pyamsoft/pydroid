@@ -20,7 +20,6 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.about.UiLicenses
 import timber.log.Timber
 
 /**

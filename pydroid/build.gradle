@@ -71,8 +71,8 @@ dependencies {
   api "com.jakewharton.timber:timber:$timber"
 
   // Android support library.
-  api "android.arch.lifecycle:runtime:$lifecycleRuntime"
-  kapt "android.arch.lifecycle:compiler:$lifecycleCompiler"
+  api "android.arch.lifecycle:runtime:$lifecycle"
+  kapt "android.arch.lifecycle:compiler:$lifecycle"
 
   // RxJava
   api "io.reactivex.rxjava2:rxjava:$rxjava"

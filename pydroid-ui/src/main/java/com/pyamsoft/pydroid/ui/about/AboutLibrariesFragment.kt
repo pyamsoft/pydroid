@@ -193,7 +193,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
       if (oldTitle == null) {
         oldTitle = it.title
       }
-      it.title = "Open Source Licenses"
+      it.title = "Open Source AboutLibraries"
       it.setUpEnabled(true)
     }
   }

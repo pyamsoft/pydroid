@@ -28,6 +28,7 @@ private val cachedDP: SparseIntArray by lazy {
   SparseIntArray(10)
 }
 
+
 @CheckResult
 private fun toDp(c: Context, @Px px: Int): Int {
   if (px <= 0) {

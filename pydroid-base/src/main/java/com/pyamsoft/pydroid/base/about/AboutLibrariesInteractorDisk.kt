@@ -26,7 +26,7 @@ internal class AboutLibrariesInteractorDisk internal constructor(
 
   @CheckResult
   private fun createLicenseStream(): Single<Set<AboutLibrariesModel>> {
-    return Single.fromCallable { Licenses.getLicenses() }
+    return Single.fromCallable { AboutLibraries.getLicenses() }
   }
 
   @CheckResult

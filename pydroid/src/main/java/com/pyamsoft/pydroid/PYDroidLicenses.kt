@@ -16,11 +16,11 @@
 
 package com.pyamsoft.pydroid
 
-object Licenses {
+object PYDroidLicenses {
 
   object Names {
     const val ANDROID = "Android"
-    const val ANDROID_SUPPORT = "Android Support Libraries"
+    const val ARCH_SUPPORT = "Architecture Components"
     const val DEXCOUNT_GRADLE_PLUGIN = "Dexcount Gradle Plugin"
     const val GRADLE_VERSIONS_PLUGIN = "Gradle Versions Plugin"
     const val KOTLIN = "Kotlin"
@@ -32,7 +32,7 @@ object Licenses {
 
   object HomepageUrls {
     const val ANDROID = "https://source.android.com"
-    const val ANDROID_SUPPORT = "https://source.android.com"
+    const val ARCH_SUPPORT = "https://source.android.com"
     const val DEXCOUNT_GRADLE_PLUGIN = "https://github.com/KeepSafe/dexcount-gradle-plugin"
     const val GRADLE_VERSIONS_PLUGIN = "https://github.com/ben-manes/gradle-versions-plugin"
     const val KOTLIN = "https://github.com/JetBrains/kotlin"
@@ -47,7 +47,7 @@ object Licenses {
     // Add an underscore to keep this name on top
     const val __DIR = "licenses/"
     const val ANDROID = __DIR + "android"
-    const val ANDROID_SUPPORT = __DIR + "androidsupport"
+    const val ARCH_SUPPORT = __DIR + "arch-components"
     const val DEXCOUNT_GRADLE_PLUGIN = __DIR + "dexcount-gradle-plugin"
     const val GRADLE_VERSIONS_PLUGIN = __DIR + "gradle-versions-plugin"
     const val KOTLIN = __DIR + "kotlin"

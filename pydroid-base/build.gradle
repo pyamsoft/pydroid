@@ -85,7 +85,7 @@ dependencies {
   implementation "com.squareup.retrofit2:retrofit:$retrofit"
   implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
   implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
-  implementation "com.squareup.okhttp:logging-interceptor:$retrofitLogging"
+  implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 
   api project(":pydroid-util")
 }

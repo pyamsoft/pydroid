@@ -76,7 +76,7 @@ subprojects {
   apply plugin: "com.github.ben-manes.versions"
 
   group = "com.github.pyamsoft"
-  version = "16.7.0"
+  version = "16.7.1"
 }
 
 allprojects {

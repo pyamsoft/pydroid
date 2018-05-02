@@ -16,50 +16,31 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
 import timber.log.Timber
 
 class VersionCheckPresenter internal constructor(
   private val packageName: String,
   private val currentVersionCode: Int,
-  private val interactor: VersionCheckInteractor,
-  private val bus: EventBus<Int>
+  private val interactor: VersionCheckInteractor
 ) : Presenter<VersionCheckPresenter.View>() {
-
-  override fun onCreate() {
-    super.onCreate()
-    dispose {
-      bus.listen()
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe { view?.onUpdatedVersionFound(currentVersionCode, it) }
-    }
-  }
 
   fun checkForUpdates(force: Boolean) {
     dispose {
       interactor.checkVersion(force, packageName)
           .subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread())
-          .doOnSuccess {
-            Timber.i("Update check finished")
+          .subscribe({
             Timber.i("Current version: %d", currentVersionCode)
             Timber.i("Latest version: %d", it)
-          }
-          .subscribe({
             if (currentVersionCode < it) {
-              bus.publish(it)
+              view?.onUpdatedVersionFound(currentVersionCode, it)
             }
           }, {
-            if (it is HttpException) {
-              Timber.e(it, "Network Failure: %d", it.code())
-            } else {
-              Timber.e(it, "onError")
-            }
+            Timber.e(it, "Error checking for latest version")
+            view?.onUpdatedVersionError(it)
           })
     }
   }
@@ -72,5 +53,7 @@ class VersionCheckPresenter internal constructor(
       current: Int,
       updated: Int
     )
+
+    fun onUpdatedVersionError(throwable: Throwable)
   }
 }

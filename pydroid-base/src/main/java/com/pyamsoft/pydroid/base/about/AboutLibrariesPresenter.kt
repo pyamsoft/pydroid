@@ -16,27 +16,17 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(
-  private val interactor: AboutLibrariesInteractor,
-  private val bus: EventBus<List<AboutLibrariesModel>>
+  private val interactor: AboutLibrariesInteractor
 ) : Presenter<AboutLibrariesPresenter.View>() {
 
   override fun onCreate() {
     super.onCreate()
-
-    dispose {
-      bus.listen()
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe { view?.onLicenseLoaded(it) }
-    }
-
     loadLicenses(false)
   }
 
@@ -47,7 +37,7 @@ class AboutLibrariesPresenter internal constructor(
           .observeOn(AndroidSchedulers.mainThread())
           .doOnSubscribe { view?.onLicenseLoadBegin() }
           .doAfterTerminate { view?.onLicenseLoadComplete() }
-          .subscribe({ bus.publish(it) }, {
+          .subscribe({ view?.onLicenseLoaded(it) }, {
             Timber.e(it, "onError loading licenses")
             view?.onLicenseLoadError(it)
           })

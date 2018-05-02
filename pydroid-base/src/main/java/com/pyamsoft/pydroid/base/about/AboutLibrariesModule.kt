@@ -18,14 +18,11 @@ package com.pyamsoft.pydroid.base.about
 
 import android.content.Context
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.RxBus
 import com.pyamsoft.pydroid.cache.repository
 
 class AboutLibrariesModule(context: Context) {
 
   private val cacheInteractor: AboutLibrariesInteractor
-  private val bus: EventBus<List<AboutLibrariesModel>> = RxBus.create()
 
   init {
     val dataSource = AboutLibrariesDataSourceImpl(context.applicationContext)
@@ -37,6 +34,6 @@ class AboutLibrariesModule(context: Context) {
 
   @CheckResult
   fun getPresenter(): AboutLibrariesPresenter {
-    return AboutLibrariesPresenter(cacheInteractor, bus)
+    return AboutLibrariesPresenter(cacheInteractor)
   }
 }

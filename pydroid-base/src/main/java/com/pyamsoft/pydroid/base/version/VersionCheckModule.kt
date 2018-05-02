@@ -20,8 +20,6 @@ import android.content.Context
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.RxBus
 import com.pyamsoft.pydroid.cache.repository
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -38,7 +36,6 @@ class VersionCheckModule(
 
   private val packageName: String = context.packageName
   private val cachedInteractor: VersionCheckInteractor
-  private val bus: EventBus<Int> = RxBus.create()
 
   init {
     val versionCheckApi = VersionCheckApi(
@@ -92,7 +89,7 @@ class VersionCheckModule(
 
   @CheckResult
   fun getPresenter(currentVersion: Int): VersionCheckPresenter {
-    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor, bus)
+    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor)
   }
 
   companion object {

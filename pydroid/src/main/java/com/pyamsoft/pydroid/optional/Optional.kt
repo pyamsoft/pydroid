@@ -16,18 +16,23 @@
 
 package com.pyamsoft.pydroid.optional
 
+import android.support.annotation.CheckResult
+
 /**
- * A simple Optional API, You can drop in your own implementation if needed.
+ * A simple Optional API
  *
- * The PYDroid standard implementation is found in OptionalImpl
  * Keep the unused T here for better casting
  */
-interface Optional<out T : Any> {
+sealed class Optional<out T : Any> {
 
-  interface Present<out T : Any> : Optional<T> {
+  data class Present<out T : Any> constructor(val value: T) : Optional<T>()
 
-    val value: T
+  object Absent : Optional<Nothing>()
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
   }
-
-  interface Absent : Optional<Nothing>
 }

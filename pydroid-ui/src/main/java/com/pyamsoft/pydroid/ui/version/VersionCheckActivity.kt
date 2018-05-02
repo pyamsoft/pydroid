@@ -54,4 +54,8 @@ abstract class VersionCheckActivity : ActivityBase(),
     VersionUpgradeDialog.newInstance(applicationName, current, updated)
         .show(this, VersionUpgradeDialog.TAG)
   }
+
+  override fun onUpdatedVersionError(throwable: Throwable) {
+    // Silently drop version check errors
+  }
 }

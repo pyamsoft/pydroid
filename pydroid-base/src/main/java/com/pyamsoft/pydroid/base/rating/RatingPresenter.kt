@@ -25,9 +25,8 @@ import timber.log.Timber
 class RatingPresenter internal constructor(
   private val currentVersion: Int,
   private val interactor: RatingInteractor,
-  private val ratingErrorBus: EventBus<Throwable>,
-  private val bus: EventBus<Unit>
-) : Presenter<RatingPresenter.View>() {
+  private val ratingErrorBus: EventBus<Throwable>
+    ) : Presenter<RatingPresenter.View>() {
 
   override fun onCreate() {
     super.onCreate()
@@ -38,13 +37,6 @@ class RatingPresenter internal constructor(
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe { view?.onRatingError(it) }
     }
-
-    dispose {
-      bus.listen()
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe { view?.onShowRating() }
-    }
   }
 
   fun loadRatingDialog(force: Boolean) {
@@ -54,7 +46,7 @@ class RatingPresenter internal constructor(
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe({
             if (it) {
-              bus.publish(Unit)
+              view?.onShowRating()
             }
           }, {
             Timber.e(it, "on error loading rating dialog")

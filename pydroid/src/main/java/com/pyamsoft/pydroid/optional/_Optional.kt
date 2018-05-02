@@ -17,8 +17,12 @@
 package com.pyamsoft.pydroid.optional
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.optional.OptionalImpl.AbsentImpl
-import com.pyamsoft.pydroid.optional.OptionalImpl.PresentImpl
 
 @CheckResult
-fun <T : Any> T?.asOptional(): Optional<T> = if (this == null) AbsentImpl else PresentImpl(this)
+fun <T : Any> T?.asOptional(): Optional<T> {
+  if (this == null) {
+    return Optional.Absent
+  } else {
+    return Optional.Present(this)
+  }
+}

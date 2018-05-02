@@ -24,8 +24,6 @@ import com.pyamsoft.pydroid.bus.RxBus
 class RatingModule(preferences: RatingPreferences) {
 
   private val errorBus: EventBus<Throwable> = RxBus.create()
-  private val ratingBus: EventBus<Unit> = RxBus.create()
-  private val saveBus: EventBus<Boolean> = RxBus.create()
   private val interactor: RatingInteractor = RatingInteractorImpl(preferences)
 
   @CheckResult
@@ -33,11 +31,11 @@ class RatingModule(preferences: RatingPreferences) {
 
   @CheckResult
   fun getPresenter(version: Int): RatingPresenter {
-    return RatingPresenter(version, interactor, errorBus, ratingBus)
+    return RatingPresenter(version, interactor, errorBus)
   }
 
   @CheckResult
   fun getSavePresenter(version: Int): RatingSavePresenter {
-    return RatingSavePresenter(version, interactor, saveBus)
+    return RatingSavePresenter(version, interactor)
   }
 }

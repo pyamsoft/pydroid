@@ -152,6 +152,10 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
         .show(requireActivity(), VersionUpgradeDialog.TAG)
   }
 
+  override fun onUpdatedVersionError(throwable: Throwable) {
+    // Silently drop version check errors
+  }
+
   /**
    * Logs when the Clear All option is clicked, override to use unique implementation
    */

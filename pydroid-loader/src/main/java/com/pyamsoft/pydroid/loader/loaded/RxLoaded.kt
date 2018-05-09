@@ -16,10 +16,10 @@
 
 package com.pyamsoft.pydroid.loader.loaded
 
-import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.Disposable
 
 class RxLoaded(private val disposable: Disposable) : Loaded, LifecycleObserver {

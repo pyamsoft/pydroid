@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.cache
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single

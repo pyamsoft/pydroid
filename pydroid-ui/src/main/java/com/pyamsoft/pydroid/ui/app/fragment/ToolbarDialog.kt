@@ -17,18 +17,18 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.app.Dialog
-import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
-import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
-import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
-import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
-import android.arch.lifecycle.Lifecycle.Event.ON_START
-import android.arch.lifecycle.Lifecycle.Event.ON_STOP
-import android.arch.lifecycle.LifecycleOwner
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.v4.app.DialogFragment
 import android.view.View
 import android.view.Window
+import androidx.annotation.CheckResult
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle.Event.ON_CREATE
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
+import androidx.lifecycle.Lifecycle.Event.ON_RESUME
+import androidx.lifecycle.Lifecycle.Event.ON_START
+import androidx.lifecycle.Lifecycle.Event.ON_STOP
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 abstract class ToolbarDialog : DialogFragment(), ToolbarProvider, ViewLifecycleProvider {

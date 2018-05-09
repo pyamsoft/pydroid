@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version.network
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 interface NetworkStatusProvider {
 

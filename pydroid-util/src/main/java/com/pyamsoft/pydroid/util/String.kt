@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.util
 
 import android.content.Context
 import android.content.Intent
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import androidx.core.net.toUri
 
 @CheckResult

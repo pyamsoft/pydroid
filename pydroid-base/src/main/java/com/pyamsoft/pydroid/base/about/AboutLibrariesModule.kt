@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.base.about
 
 import android.content.Context
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.cache.repository
 
 class AboutLibrariesModule(context: Context) {

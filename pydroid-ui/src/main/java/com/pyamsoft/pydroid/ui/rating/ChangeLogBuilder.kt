@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import java.util.Collections
 
 class ChangeLogBuilder {

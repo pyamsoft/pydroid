@@ -17,14 +17,14 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.annotation.IdRes
-import android.support.v4.app.FragmentActivity
-import android.support.v4.view.ViewPager
-import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader

@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui.social
 
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.util.hyperlink
 
 class Linker private constructor(

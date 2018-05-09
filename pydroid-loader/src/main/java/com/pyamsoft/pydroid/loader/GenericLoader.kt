@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
 
 abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 

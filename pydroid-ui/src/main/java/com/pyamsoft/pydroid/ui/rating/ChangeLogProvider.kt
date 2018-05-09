@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import android.support.annotation.CheckResult
-import android.support.annotation.DrawableRes
+import androidx.annotation.CheckResult
+import androidx.annotation.DrawableRes
 import android.text.SpannedString
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.list
 
-import android.support.v7.util.DiffUtil.DiffResult
+import androidx.recyclerview.widget.DiffUtil.DiffResult
 import com.pyamsoft.pydroid.list.ListDiffResult.ListData
 import java.util.Collections
 

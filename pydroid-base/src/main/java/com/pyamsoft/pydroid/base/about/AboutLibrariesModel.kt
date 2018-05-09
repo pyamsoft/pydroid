@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 data class AboutLibrariesModel internal constructor(
   val name: String,

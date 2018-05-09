@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import io.reactivex.Single
 
 internal interface VersionCheckInteractor {

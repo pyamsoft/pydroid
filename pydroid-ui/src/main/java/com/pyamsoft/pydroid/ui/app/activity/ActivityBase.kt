@@ -17,10 +17,10 @@
 package com.pyamsoft.pydroid.ui.app.activity
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceManager
-import android.support.v7.widget.Toolbar
+import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.BackPressHandler
 

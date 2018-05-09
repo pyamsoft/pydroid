@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.base.about
 
 import android.content.Context
 import android.content.res.AssetManager
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import okio.BufferedSource
 import okio.Okio
 import timber.log.Timber

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version.api
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 interface MinimumApiProvider {
 

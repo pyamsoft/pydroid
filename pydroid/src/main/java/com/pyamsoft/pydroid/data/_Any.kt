@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.data
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import timber.log.Timber
 
 @CheckResult

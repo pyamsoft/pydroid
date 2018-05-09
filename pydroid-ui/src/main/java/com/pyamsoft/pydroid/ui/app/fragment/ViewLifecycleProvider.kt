@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import android.arch.lifecycle.LifecycleOwner
-import android.support.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
+import androidx.annotation.CheckResult
 
 internal interface ViewLifecycleProvider {
 

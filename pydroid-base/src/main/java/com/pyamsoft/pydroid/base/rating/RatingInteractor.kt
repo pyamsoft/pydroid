@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.rating
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import io.reactivex.Completable
 import io.reactivex.Single
 

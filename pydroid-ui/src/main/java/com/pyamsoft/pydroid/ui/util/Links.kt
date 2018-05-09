@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.support.v4.app.FragmentActivity
 import android.view.View
+import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.util.HyperlinkIntent

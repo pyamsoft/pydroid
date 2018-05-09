@@ -53,7 +53,7 @@ android {
 
 dependencies {
   // Android support library.
-  api "com.android.support:appcompat-v7:$supportLib"
+  api "androidx.appcompat:appcompat:$androidx"
 
   api project(":pydroid")
 }

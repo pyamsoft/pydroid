@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.list
 
-import android.support.annotation.CheckResult
-import android.support.v7.util.DiffUtil.DiffResult
+import androidx.annotation.CheckResult
+import androidx.recyclerview.widget.DiffUtil.DiffResult
 
 interface ListDiffResult<out T : Any> {
 

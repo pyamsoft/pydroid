@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import android.view.View
 
 /**

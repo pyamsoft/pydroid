@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.list
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 interface ListDiffProvider<out T : Any> {
 

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import io.reactivex.Observable
 import io.reactivex.Single
 

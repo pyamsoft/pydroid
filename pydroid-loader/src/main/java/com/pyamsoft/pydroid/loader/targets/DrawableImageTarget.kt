@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.loader.targets
 
 import android.graphics.drawable.Drawable
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import android.widget.ImageView
 
 /**

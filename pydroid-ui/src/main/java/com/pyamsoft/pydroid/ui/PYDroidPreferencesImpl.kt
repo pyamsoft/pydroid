@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import androidx.core.content.edit
 import com.pyamsoft.pydroid.base.rating.RatingPreferences
 

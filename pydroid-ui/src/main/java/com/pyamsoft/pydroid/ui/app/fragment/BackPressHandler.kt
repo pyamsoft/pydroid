@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 internal interface BackPressHandler {
 

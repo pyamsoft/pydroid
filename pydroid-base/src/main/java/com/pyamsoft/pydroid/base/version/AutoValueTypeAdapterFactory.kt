@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.ryanharter.auto.value.moshi.MoshiAdapterFactory
 import com.squareup.moshi.JsonAdapter
 

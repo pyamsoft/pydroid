@@ -17,13 +17,13 @@
 package com.pyamsoft.pydroid.ui.util
 
 import android.content.Context
-import android.support.annotation.CheckResult
-import android.support.v4.view.ViewCompat
-import android.support.v4.view.ViewPropertyAnimatorCompat
-import android.support.v4.view.ViewPropertyAnimatorListener
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
+import androidx.annotation.CheckResult
+import androidx.core.view.ViewCompat
+import androidx.core.view.ViewPropertyAnimatorCompat
+import androidx.core.view.ViewPropertyAnimatorListener
 
 @CheckResult
 private fun getOvershootInterpolator(context: Context): Interpolator {

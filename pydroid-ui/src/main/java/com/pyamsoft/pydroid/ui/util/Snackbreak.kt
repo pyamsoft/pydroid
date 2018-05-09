@@ -18,12 +18,12 @@ package com.pyamsoft.pydroid.ui.util
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.design.widget.Snackbar
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.app.AlertDialog
 import android.view.View
+import androidx.annotation.CheckResult
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
+import com.google.android.material.snackbar.Snackbar
 
 object Snackbreak {
 
@@ -122,13 +122,15 @@ object Snackbreak {
       internal fun newInstance(detail: ErrorDetail): DetailDialogFragment {
         return DetailDialogFragment()
             .apply {
-          arguments = Bundle().apply {
-            putCharSequence(
-                KEY_ERROR_TITLE, detail.title)
-            putCharSequence(
-                KEY_ERROR_MESSAGE, detail.message)
-          }
-        }
+              arguments = Bundle().apply {
+                putCharSequence(
+                    KEY_ERROR_TITLE, detail.title
+                )
+                putCharSequence(
+                    KEY_ERROR_MESSAGE, detail.message
+                )
+              }
+            }
       }
     }
   }

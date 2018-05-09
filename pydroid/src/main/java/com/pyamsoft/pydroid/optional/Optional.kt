@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.optional
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 /**
  * A simple Optional API

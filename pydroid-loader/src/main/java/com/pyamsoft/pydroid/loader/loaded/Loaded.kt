@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.loader.loaded
 
-import android.arch.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 
 interface Loaded {
 

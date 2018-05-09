@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.util
 
 import android.content.Context
-import android.support.annotation.CheckResult
-import android.support.annotation.Px
+import androidx.annotation.CheckResult
+import androidx.annotation.Px
 import android.util.DisplayMetrics
 import android.util.SparseIntArray
 import android.util.TypedValue

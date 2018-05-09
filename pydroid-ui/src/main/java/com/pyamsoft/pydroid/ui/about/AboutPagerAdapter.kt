@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 
 internal class AboutPagerAdapter internal constructor(

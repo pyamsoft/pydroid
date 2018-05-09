@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.base.version
 
 import android.content.Context
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.cache.repository

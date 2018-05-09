@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.base.rating.RatingModule
 import com.pyamsoft.pydroid.base.version.VersionCheckModule

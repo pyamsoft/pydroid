@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.app.activity
 
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 
 interface ToolbarActivity {
 

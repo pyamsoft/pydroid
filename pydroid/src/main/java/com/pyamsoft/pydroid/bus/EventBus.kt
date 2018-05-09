@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.bus
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import io.reactivex.Observable
 
 interface EventBus<T : Any> : Publisher<T> {

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import retrofit2.Retrofit
 
 internal class VersionCheckApi internal constructor(private val client: Retrofit) {

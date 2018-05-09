@@ -60,7 +60,7 @@ android {
 
 dependencies {
   // KTX
-  api "androidx.core:core-ktx:$ktx"
+  api "androidx.core:core-ktx:$androidx"
 
   // Timber logging
   api "com.jakewharton.timber:timber:$timber"

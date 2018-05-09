@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.support.design.widget.CoordinatorLayout
-import android.support.design.widget.FloatingActionButton
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 fun FloatingActionButton.withBehavior(behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()): FloatingActionButton {
   return this.also {

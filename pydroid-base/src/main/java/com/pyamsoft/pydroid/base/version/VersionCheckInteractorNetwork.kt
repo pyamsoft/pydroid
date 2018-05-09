@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.util.NoNetworkException

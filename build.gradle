@@ -35,7 +35,9 @@ buildscript {
     minSdk = 16
     maxSdk = 27
 
-    supportLib = "27.1.1"
+    androidx = "1.0.0-alpha1"
+    constraintLayout = "1.1.0"
+
     timber = "4.7.0"
     autoValue = "1.6"
     autoValueMoshi = "0.4.5"
@@ -45,8 +47,6 @@ buildscript {
     rxjava = "2.1.12"
     rxandroid = "2.0.2"
     viewPagerIndicator = "1.0.4"
-    constraintLayout = "1.1.0"
-    ktx = "0.3"
   }
 
   dependencies {

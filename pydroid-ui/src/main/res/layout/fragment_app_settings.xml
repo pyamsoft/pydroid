@@ -16,7 +16,7 @@
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <android.support.constraint.ConstraintLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/relativeLayout"
       android:layout_width="match_parent"
@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent"
         />
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/app_settings_content"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -51,5 +51,5 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-  </android.support.constraint.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

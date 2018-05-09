@@ -64,8 +64,7 @@ android {
 
 dependencies {
   // Android support library.
-  api "com.android.support:appcompat-v7:$supportLib"
-  api "com.android.support:preference-v14:$supportLib"
+  api "androidx.preference:preference:$androidx"
 
   // Auto value
   compileOnly "com.google.auto.value:auto-value-annotations:$autoValue"

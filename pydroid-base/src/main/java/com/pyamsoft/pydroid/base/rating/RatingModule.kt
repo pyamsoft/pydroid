@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.rating
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.bus.Publisher
 import com.pyamsoft.pydroid.bus.RxBus

@@ -52,7 +52,7 @@ android {
 }
 
 dependencies {
-  api "com.android.support:recyclerview-v7:$supportLib"
+  api "androidx.recyclerview:recyclerview:$androidx"
 
   api project(":pydroid")
 }

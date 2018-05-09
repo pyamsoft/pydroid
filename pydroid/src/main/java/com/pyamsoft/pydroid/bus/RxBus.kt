@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.bus
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject

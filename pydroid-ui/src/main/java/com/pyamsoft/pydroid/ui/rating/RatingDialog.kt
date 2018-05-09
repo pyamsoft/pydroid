@@ -17,14 +17,14 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.annotation.DrawableRes
-import android.support.v4.view.ViewCompat
 import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.annotation.CheckResult
+import androidx.annotation.DrawableRes
+import androidx.core.view.ViewCompat
 import com.pyamsoft.pydroid.base.rating.RatingSavePresenter
 import com.pyamsoft.pydroid.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader

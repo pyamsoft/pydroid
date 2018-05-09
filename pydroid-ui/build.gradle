@@ -56,14 +56,15 @@ android {
 }
 
 dependencies {
-  kapt "com.android.databinding:compiler:$plugin_version"
-
-  api "com.android.support.constraint:constraint-layout:$constraintLayout"
+  //  kapt "androidx.databinding:compiler:$plugin_version"
 
   // Android support library.
-  api "com.android.support:support-vector-drawable:$supportLib"
-  api "com.android.support:cardview-v7:$supportLib"
-  api "com.android.support:design:$supportLib"
+  api "androidx.vectordrawable:vectordrawable:$androidx"
+  api "androidx.cardview:cardview:$androidx"
+  api "androidx.coordinatorlayout:coordinatorlayout:$androidx"
+  api "androidx.constraintlayout:constraintlayout:$constraintLayout"
+  api "androidx.viewpager:viewpager:$androidx"
+  api "com.google.android.material:material:$androidx"
 
   // Material View Pager indicator
   implementation "com.github.ronaldsmartin:Material-ViewPagerIndicator:$viewPagerIndicator"

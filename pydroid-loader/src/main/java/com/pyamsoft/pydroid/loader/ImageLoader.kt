@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.support.annotation.CheckResult
-import android.support.annotation.DrawableRes
+import androidx.annotation.CheckResult
+import androidx.annotation.DrawableRes
 import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 
 interface ImageLoader {

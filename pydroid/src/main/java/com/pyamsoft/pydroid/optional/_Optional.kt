@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.optional
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 
 @CheckResult
 fun <T : Any> T?.asOptional(): Optional<T> {

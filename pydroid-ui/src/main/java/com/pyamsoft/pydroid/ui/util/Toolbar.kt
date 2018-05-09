@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.ui.util
 
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.v7.widget.ActionMenuView
-import android.support.v7.widget.Toolbar
 import android.widget.TextView
+import androidx.appcompat.widget.ActionMenuView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.withStyledAttributes
 import com.pyamsoft.pydroid.ui.R
 

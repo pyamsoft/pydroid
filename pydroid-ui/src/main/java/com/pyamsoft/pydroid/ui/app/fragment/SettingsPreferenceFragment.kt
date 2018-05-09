@@ -17,13 +17,13 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
-import android.support.annotation.CheckResult
-import android.support.annotation.IdRes
-import android.support.annotation.XmlRes
-import android.support.design.widget.Snackbar
-import android.support.v7.preference.Preference
 import android.view.View
+import androidx.annotation.CallSuper
+import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
+import androidx.annotation.XmlRes
+import androidx.preference.Preference
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.base.rating.RatingPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider

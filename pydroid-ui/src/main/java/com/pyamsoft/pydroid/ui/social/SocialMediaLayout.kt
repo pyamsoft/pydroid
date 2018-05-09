@@ -16,21 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.social
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.Lifecycle.Event.ON_CREATE
-import android.arch.lifecycle.Lifecycle.Event.ON_DESTROY
-import android.arch.lifecycle.Lifecycle.Event.ON_PAUSE
-import android.arch.lifecycle.Lifecycle.Event.ON_RESUME
-import android.arch.lifecycle.Lifecycle.Event.ON_START
-import android.arch.lifecycle.Lifecycle.Event.ON_STOP
-import android.arch.lifecycle.LifecycleOwner
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.os.Build
-import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.Event.ON_CREATE
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
+import androidx.lifecycle.Lifecycle.Event.ON_RESUME
+import androidx.lifecycle.Lifecycle.Event.ON_START
+import androidx.lifecycle.Lifecycle.Event.ON_STOP
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
@@ -48,24 +46,11 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
   private val binding: ViewSocialMediaBinding
   private val lifecycleOwner = ViewLifecycleOwner()
 
-  @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-  constructor(
-    context: Context,
-    attrs: AttributeSet,
-    defStyleAttr: Int,
-    defStyleRes: Int
-  ) : super(
-      context, attrs, defStyleAttr, defStyleRes
-  )
-
   constructor(
     context: Context,
     attrs: AttributeSet,
     defStyleAttr: Int
-  ) : super(
-      context, attrs,
-      defStyleAttr
-  )
+  ) : super(context, attrs, defStyleAttr)
 
   constructor(
     context: Context,

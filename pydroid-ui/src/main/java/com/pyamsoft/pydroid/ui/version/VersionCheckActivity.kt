@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.base.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import com.google.auto.value.AutoValue
 import com.pyamsoft.pydroid.data.elseDefault
 import com.squareup.moshi.Json

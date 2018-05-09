@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.util
 
 import android.database.DataSetObserver
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 
 inline fun <T : FragmentStatePagerAdapter> T.listenSingleChange(crossinline func: (T) -> Unit) {
   val self = this

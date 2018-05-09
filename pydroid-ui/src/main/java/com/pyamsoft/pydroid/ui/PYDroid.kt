@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import timber.log.Timber
 
 /**

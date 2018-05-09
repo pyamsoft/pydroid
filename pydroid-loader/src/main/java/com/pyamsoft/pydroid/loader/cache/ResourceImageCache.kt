@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.loader.cache
 
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import androidx.core.util.lruCache
 import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
 

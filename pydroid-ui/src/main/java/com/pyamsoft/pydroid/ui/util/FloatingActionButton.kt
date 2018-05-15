@@ -28,7 +28,7 @@ fun FloatingActionButton.withBehavior(behavior: FloatingActionButton.Behavior = 
   }
 }
 
-fun FloatingActionButton.hide(func: FloatingActionButton.() -> Unit) {
+inline fun FloatingActionButton.hide(crossinline func: FloatingActionButton.() -> Unit) {
   this.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
 
     override fun onHidden(fab: FloatingActionButton?) {
@@ -40,7 +40,7 @@ fun FloatingActionButton.hide(func: FloatingActionButton.() -> Unit) {
   })
 }
 
-fun FloatingActionButton.show(func: FloatingActionButton.() -> Unit) {
+inline fun FloatingActionButton.show(crossinline func: FloatingActionButton.() -> Unit) {
   this.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
 
     override fun onShown(fab: FloatingActionButton?) {

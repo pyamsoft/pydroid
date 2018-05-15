@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import androidx.annotation.CheckResult
 import android.view.View
+import androidx.annotation.CheckResult
 
 /**
  * Click listener which debounces all other click events for the frame

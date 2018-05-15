@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.loader.resource
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.widget.ImageView
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
-import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import com.pyamsoft.pydroid.loader.GenericLoader
 import com.pyamsoft.pydroid.loader.cache.ImageCache

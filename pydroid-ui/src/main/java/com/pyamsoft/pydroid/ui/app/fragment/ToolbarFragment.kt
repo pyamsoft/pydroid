@@ -16,6 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
+import android.os.Bundle
+import android.view.View
+import androidx.annotation.CheckResult
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle.Event.ON_CREATE
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
@@ -23,10 +27,6 @@ import androidx.lifecycle.Lifecycle.Event.ON_RESUME
 import androidx.lifecycle.Lifecycle.Event.ON_START
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleOwner
-import android.os.Bundle
-import androidx.annotation.CheckResult
-import android.view.View
-import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 abstract class ToolbarFragment : Fragment(),

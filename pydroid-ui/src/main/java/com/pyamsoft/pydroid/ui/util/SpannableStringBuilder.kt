@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import androidx.annotation.CheckResult
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import androidx.annotation.CheckResult
 import androidx.core.text.inSpans
 
 @CheckResult

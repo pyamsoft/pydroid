@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.loader
 
+import android.widget.ImageView
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
-import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.Target
 

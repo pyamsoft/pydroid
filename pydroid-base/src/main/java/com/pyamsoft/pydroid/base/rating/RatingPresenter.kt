@@ -26,7 +26,7 @@ class RatingPresenter internal constructor(
   private val currentVersion: Int,
   private val interactor: RatingInteractor,
   private val ratingErrorBus: EventBus<Throwable>
-    ) : Presenter<RatingPresenter.View>() {
+) : Presenter<RatingPresenter.View>() {
 
   override fun onCreate() {
     super.onCreate()

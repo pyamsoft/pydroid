@@ -18,13 +18,13 @@ package com.pyamsoft.pydroid.ui.rating
 
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
-import androidx.annotation.CallSuper
-import androidx.annotation.CheckResult
 import android.text.SpannedString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.view.View
+import androidx.annotation.CallSuper
+import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans

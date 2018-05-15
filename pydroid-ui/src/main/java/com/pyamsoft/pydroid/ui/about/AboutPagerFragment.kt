@@ -18,10 +18,10 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.graphics.Paint
 import android.os.Bundle
-import androidx.annotation.CheckResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.ui.databinding.FragmentPagerAboutBinding

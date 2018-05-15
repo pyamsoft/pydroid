@@ -16,14 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.widget
 
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.annotation.CheckResult
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
 

@@ -17,17 +17,16 @@
 package com.pyamsoft.pydroid.util
 
 import android.content.Context
-import androidx.annotation.CheckResult
-import androidx.annotation.Px
 import android.util.DisplayMetrics
 import android.util.SparseIntArray
 import android.util.TypedValue
+import androidx.annotation.CheckResult
+import androidx.annotation.Px
 import kotlin.math.roundToInt
 
 private val cachedDP: SparseIntArray by lazy {
   SparseIntArray(10)
 }
-
 
 @CheckResult
 private fun toDp(c: Context, @Px px: Int): Int {

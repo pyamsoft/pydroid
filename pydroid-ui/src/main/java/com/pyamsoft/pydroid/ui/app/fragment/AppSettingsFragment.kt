@@ -17,11 +17,11 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.os.Bundle
-import androidx.annotation.CallSuper
-import androidx.annotation.CheckResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 

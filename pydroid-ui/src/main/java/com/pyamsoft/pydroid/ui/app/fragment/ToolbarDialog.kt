@@ -22,20 +22,11 @@ import android.view.View
 import android.view.Window
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Lifecycle.Event.ON_CREATE
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
-import androidx.lifecycle.Lifecycle.Event.ON_RESUME
-import androidx.lifecycle.Lifecycle.Event.ON_START
-import androidx.lifecycle.Lifecycle.Event.ON_STOP
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
-abstract class ToolbarDialog : DialogFragment(), ToolbarProvider, ViewLifecycleProvider {
+abstract class ToolbarDialog : DialogFragment(), ToolbarProvider {
 
-  private val viewLifecycleOwner = ViewLifecycleOwner()
   protected open val hasTitle: Boolean = false
-  final override val viewLifecycle: LifecycleOwner = viewLifecycleOwner
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = super.onCreateDialog(savedInstanceState)
@@ -61,36 +52,4 @@ abstract class ToolbarDialog : DialogFragment(), ToolbarProvider, ViewLifecycleP
     return checkNotNull(view) { "View is required and cannot be null." }
   }
 
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-    viewLifecycleOwner.handleLifecycleEvent(ON_CREATE)
-  }
-
-  override fun onStart() {
-    super.onStart()
-    viewLifecycleOwner.handleLifecycleEvent(ON_START)
-  }
-
-  override fun onResume() {
-    super.onResume()
-    viewLifecycleOwner.handleLifecycleEvent(ON_RESUME)
-  }
-
-  override fun onPause() {
-    super.onPause()
-    viewLifecycleOwner.handleLifecycleEvent(ON_PAUSE)
-  }
-
-  override fun onStop() {
-    super.onStop()
-    viewLifecycleOwner.handleLifecycleEvent(ON_STOP)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    viewLifecycleOwner.handleLifecycleEvent(ON_DESTROY)
-  }
 }

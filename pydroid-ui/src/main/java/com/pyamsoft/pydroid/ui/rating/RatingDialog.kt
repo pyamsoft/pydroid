@@ -93,7 +93,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
       ratingBtnGoRate.setOnDebouncedClickListener { presenter.saveRating(true) }
     }
 
-    presenter.bind(viewLifecycle, this)
+    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onRatingSaved(accept: Boolean) {
@@ -119,7 +119,7 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
 
     imageLoader.fromResource(changeLogIcon)
         .into(binding.ratingIcon)
-        .bind(viewLifecycle)
+        .bind(viewLifecycleOwner)
     binding.ratingTextChange.text = changelog
   }
 

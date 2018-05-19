@@ -124,9 +124,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
       return@setOnPreferenceClickListener true
     }
 
-    versionPresenter.bind(viewLifecycle, this)
-    ratingPresenter.bind(viewLifecycle, this)
-    presenter.bind(viewLifecycle, this)
+    versionPresenter.bind(viewLifecycleOwner, this)
+    ratingPresenter.bind(viewLifecycleOwner, this)
+    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onShowRating() {

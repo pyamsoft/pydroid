@@ -75,7 +75,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    refreshLatch = RefreshLatch.create(viewLifecycle, delay = 150L) {
+    refreshLatch = RefreshLatch.create(viewLifecycleOwner, delay = 150L) {
       binding.apply {
         if (it) {
           progressSpinner.visibility = View.VISIBLE
@@ -98,7 +98,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     setupViewPager(savedInstanceState)
     setupArrows()
 
-    presenter.bind(viewLifecycle, this)
+    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onLicenseLoadBegin() {
@@ -168,7 +168,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   private fun setupArrows() {
     imageLoader.fromResource(R.drawable.ic_arrow_down_24dp)
         .into(binding.arrowLeft)
-        .bind(viewLifecycle)
+        .bind(viewLifecycleOwner)
     binding.apply {
       arrowLeft.rotation = 90F
       arrowLeft.setOnDebouncedClickListener {
@@ -178,7 +178,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
     imageLoader.fromResource(R.drawable.ic_arrow_down_24dp)
         .into(binding.arrowRight)
-        .bind(viewLifecycle)
+        .bind(viewLifecycleOwner)
     binding.apply {
       arrowRight.rotation = -90F
       arrowRight.setOnDebouncedClickListener {

@@ -34,7 +34,7 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
   private val pauseDisposables = CompositeDisposable()
   private val stopDisposables = CompositeDisposable()
   private val destroyDisposables = CompositeDisposable()
-  private var lifecycleOwner: LifecycleOwner? = null
+  private var lifecycle: Lifecycle? = null
   protected var view: V? = null
     private set
 
@@ -42,9 +42,16 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     owner: LifecycleOwner,
     view: V
   ) {
+    bind(owner.lifecycle, view)
+  }
+
+  fun bind(
+    lifecycle: Lifecycle,
+    view: V
+  ) {
     this.view = view
-    this.lifecycleOwner = owner
-    owner.lifecycle.addObserver(this)
+    this.lifecycle = lifecycle
+    lifecycle.addObserver(this)
   }
 
   @OnLifecycleEvent(ON_CREATE)
@@ -100,8 +107,8 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     this.view = null
 
     // Remove the lifecycle observer since we are dead
-    lifecycleOwner?.lifecycle?.removeObserver(this)
-    lifecycleOwner = null
+    lifecycle?.removeObserver(this)
+    lifecycle = null
 
     onDestroy()
 

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright (C) 2018 Peter Kenji Yamanaka
   ~
@@ -16,14 +15,14 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <string name="blank"/>
-  <string name="no_thanks">No Thanks</string>
-  <string name="homepage">Homepage</string>
-  <string name="tamper_msg">This application may have been installed from an unofficial source or shows signs of being tampered with. It is recommended you uninstall it immediately. You can find the official pyamsoft applications by clicing the button below.</string>
-  <string name="rate_application">Rate Application</string>
-  <string name="support_pyamsoft">Support pyamsoft</string>
-  <string name="report_a_bug">Report a Bug</string>
 
-</resources>
+  <item
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:id="@+id/menu_item_bugreport"
+      android:icon="@drawable/ic_bug_report_24dp"
+      android:title="@string/report_a_bug"
+      app:showAsAction="ifRoom"/>
+
+</menu>

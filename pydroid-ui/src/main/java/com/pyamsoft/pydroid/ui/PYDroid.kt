@@ -41,7 +41,7 @@ class PYDroid private constructor(
 
   init {
     if (debug) {
-      Timber.plant(Timber.DebugTree())
+      Timber.plant()
       setStrictMode()
     }
     PYDroidUiLicenses.addLicenses()

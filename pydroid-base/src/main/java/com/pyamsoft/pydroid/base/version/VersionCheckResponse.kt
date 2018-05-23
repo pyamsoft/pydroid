@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.base.version
 
 import androidx.annotation.CheckResult
 import com.google.auto.value.AutoValue
-import com.pyamsoft.pydroid.data.elseDefault
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -33,9 +32,13 @@ internal abstract class VersionCheckResponse internal constructor() {
 
   @CheckResult
   fun responseObjects(): List<ResponseObject> {
-    return Collections.unmodifiableList(
-        internalResponseObjects().elseDefault { emptyList() }
-    )
+    return internalResponseObjects().let {
+      if (it == null) {
+        throw RuntimeException("VersionCheckResponse: responseObjects was null")
+      } else {
+        return@let Collections.unmodifiableList(it)
+      }
+    }
   }
 
   @AutoValue
@@ -43,10 +46,33 @@ internal abstract class VersionCheckResponse internal constructor() {
 
     @CheckResult
     @Json(name = "min_api")
-    abstract fun minApi(): Int
+    internal abstract fun internalMinApi(): Int
 
     @CheckResult
-    abstract fun version(): Int
+    @Json(name = "version")
+    internal abstract fun internalVersion(): Int
+
+    @CheckResult
+    fun minApi(): Int {
+      return internalMinApi().let {
+        if (it == 0) {
+          throw RuntimeException("ResponseObject: minApi was 0")
+        } else {
+          return@let it
+        }
+      }
+    }
+
+    @CheckResult
+    fun version(): Int {
+      return internalVersion().let {
+        if (it == 0) {
+          throw RuntimeException("ResponseObject: version was 0")
+        } else {
+          return@let it
+        }
+      }
+    }
 
     companion object {
 

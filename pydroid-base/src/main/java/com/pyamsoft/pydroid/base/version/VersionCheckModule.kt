@@ -38,10 +38,7 @@ class VersionCheckModule(
   private val cachedInteractor: VersionCheckInteractor
 
   init {
-    val versionCheckApi = VersionCheckApi(
-        provideRetrofit(provideOkHttpClient(debug), provideConverter())
-    )
-
+    val versionCheckApi = VersionCheckApi(provideRetrofit(provideOkHttpClient(debug)))
     val versionCheckService = versionCheckApi.create(VersionCheckService::class.java)
     val networkStatusProvider = NetworkStatusProviderImpl(context.applicationContext)
     val minimumApiProvider = MinimumApiProviderImpl()
@@ -53,20 +50,25 @@ class VersionCheckModule(
   }
 
   @CheckResult
-  private fun provideConverter(): Converter.Factory {
+  private fun provideMoshiConverter(): Converter.Factory {
+    val moshi = Moshi.Builder()
+        .build()
     return MoshiConverterFactory.create(
-        Moshi.Builder().add(AutoValueTypeAdapterFactory.create()).build()
+        moshi.newBuilder()
+            .add(VersionCheckResponseEntry.jsonAdapter(moshi))
+            .add(VersionCheckResponse.jsonAdapter(moshi))
+            .build()
     )
   }
 
   @CheckResult
   private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
     return OkHttpClient.Builder()
-        .apply {
+        .also {
           if (debug) {
             val logging = HttpLoggingInterceptor()
             logging.level = HttpLoggingInterceptor.Level.BODY
-            addInterceptor(logging)
+            it.addInterceptor(logging)
           }
         }
         .build()
@@ -74,16 +76,13 @@ class VersionCheckModule(
 
   @CheckResult
   private fun provideRetrofit(
-    okHttpClient: OkHttpClient,
-    converter: Converter.Factory
+    okHttpClient: OkHttpClient
   ): Retrofit {
     return Retrofit.Builder()
-        .apply {
-          baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-          client(okHttpClient)
-          addConverterFactory(converter)
-          addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        }
+        .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(provideMoshiConverter())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
   }
 

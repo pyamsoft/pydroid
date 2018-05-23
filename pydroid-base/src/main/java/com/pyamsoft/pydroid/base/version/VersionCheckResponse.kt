@@ -17,22 +17,19 @@
 package com.pyamsoft.pydroid.base.version
 
 import androidx.annotation.CheckResult
-import com.google.auto.value.AutoValue
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
+import com.squareup.moshi.JsonClass
 import java.util.Collections
 
-@AutoValue
-internal abstract class VersionCheckResponse internal constructor() {
+@JsonClass(generateAdapter = true)
+internal data class VersionCheckResponse internal constructor(
+  @field:Json(name = "response_objects")
+  internal val responseObjects: List<VersionCheckResponseEntry>?
+) {
 
   @CheckResult
-  @Json(name = "response_objects")
-  protected abstract fun internalResponseObjects(): List<ResponseObject>?
-
-  @CheckResult
-  fun responseObjects(): List<ResponseObject> {
-    return internalResponseObjects().let {
+  fun responseObjects(): List<VersionCheckResponseEntry> {
+    return responseObjects.let {
       if (it == null) {
         throw RuntimeException("VersionCheckResponse: responseObjects was null")
       } else {
@@ -41,53 +38,6 @@ internal abstract class VersionCheckResponse internal constructor() {
     }
   }
 
-  @AutoValue
-  internal abstract class ResponseObject internal constructor() {
+  companion object
 
-    @CheckResult
-    @Json(name = "min_api")
-    internal abstract fun internalMinApi(): Int
-
-    @CheckResult
-    @Json(name = "version")
-    internal abstract fun internalVersion(): Int
-
-    @CheckResult
-    fun minApi(): Int {
-      return internalMinApi().let {
-        if (it == 0) {
-          throw RuntimeException("ResponseObject: minApi was 0")
-        } else {
-          return@let it
-        }
-      }
-    }
-
-    @CheckResult
-    fun version(): Int {
-      return internalVersion().let {
-        if (it == 0) {
-          throw RuntimeException("ResponseObject: version was 0")
-        } else {
-          return@let it
-        }
-      }
-    }
-
-    companion object {
-
-      @JvmStatic
-      @CheckResult
-      fun typeAdapter(moshi: Moshi): JsonAdapter<ResponseObject> =
-        AutoValue_VersionCheckResponse_ResponseObject.MoshiJsonAdapter(moshi)
-    }
-  }
-
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    fun typeAdapter(moshi: Moshi): JsonAdapter<VersionCheckResponse> =
-      AutoValue_VersionCheckResponse.MoshiJsonAdapter(moshi)
-  }
 }

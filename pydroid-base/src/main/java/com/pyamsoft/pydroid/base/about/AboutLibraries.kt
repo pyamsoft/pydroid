@@ -90,11 +90,6 @@ object AboutLibraries {
         LicenseLocations.PYDROID
     )
     createItem(
-        Names.AUTO_VALUE,
-        HomepageUrls.AUTO_VALUE,
-        LicenseLocations.AUTO_VALUE
-    )
-    createItem(
         Names.RETROFIT,
         HomepageUrls.RETROFIT,
         LicenseLocations.RETROFIT
@@ -105,9 +100,9 @@ object AboutLibraries {
         LicenseLocations.MOSHI
     )
     createItem(
-        Names.AUTO_VALUE_MOSHI,
-        HomepageUrls.AUTO_VALUE_MOSHI,
-        LicenseLocations.AUTO_VALUE_MOSHI
+        Names.MOSHI_KT_CODEGEN,
+        HomepageUrls.MOSHI_KT_CODEGEN,
+        LicenseLocations.MOSHI_KT_CODEGEN
     )
     createItem(
         Names.OKHTTP,
@@ -135,30 +130,27 @@ object AboutLibraries {
 
   object Names {
     const val PYDROID = "PYDroid"
-    const val AUTO_VALUE = "AutoValue"
     const val RETROFIT = "Retrofit"
     const val MOSHI = "Moshi"
-    const val AUTO_VALUE_MOSHI = "AutoValue Moshi"
+    const val MOSHI_KT_CODEGEN = "Moshi Kotlin Codegen"
     const val OKHTTP = "OkHTTP"
     const val OKIO = "Okio"
   }
 
   object HomepageUrls {
     const val PYDROID = "https://pyamsoft.github.io/pydroid"
-    const val AUTO_VALUE = "https://github.com/google/auto"
     const val RETROFIT = "https://github.com/square/retrofit"
     const val MOSHI = "https://github.com/square/moshi"
-    const val AUTO_VALUE_MOSHI = "https://github.com/rharter/auto-value-moshi"
+    const val MOSHI_KT_CODEGEN = "https://github.com/square/moshi"
     const val OKHTTP = "https://github.com/square/okhttp"
     const val OKIO = "https://github.com/square/okio"
   }
 
   object LicenseLocations {
     const val PYDROID = PYDroidLicenses.LicenseLocations.__DIR + "pydroid"
-    const val AUTO_VALUE = PYDroidLicenses.LicenseLocations.__DIR + "autovalue"
     const val RETROFIT = PYDroidLicenses.LicenseLocations.__DIR + "retrofit"
     const val MOSHI = PYDroidLicenses.LicenseLocations.__DIR + "moshi"
-    const val AUTO_VALUE_MOSHI = PYDroidLicenses.LicenseLocations.__DIR + "autovalue-moshi"
+    const val MOSHI_KT_CODEGEN = PYDroidLicenses.LicenseLocations.__DIR + "moshi-kt-codegen"
     const val OKHTTP = PYDroidLicenses.LicenseLocations.__DIR + "okhttp"
     const val OKIO = PYDroidLicenses.LicenseLocations.__DIR + "okio"
   }

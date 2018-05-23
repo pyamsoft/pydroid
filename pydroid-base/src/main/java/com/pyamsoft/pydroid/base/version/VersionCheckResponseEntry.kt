@@ -17,16 +17,37 @@
 package com.pyamsoft.pydroid.base.version
 
 import androidx.annotation.CheckResult
-import com.ryanharter.auto.value.moshi.MoshiAdapterFactory
-import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-@MoshiAdapterFactory(nullSafe = true)
-internal abstract class AutoValueTypeAdapterFactory internal constructor() : JsonAdapter.Factory {
+@JsonClass(generateAdapter = true)
+internal data class VersionCheckResponseEntry internal constructor(
+  @field:Json(name = "min_api")
+  internal val minApi: Int,
+  internal val version: Int
+) {
 
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    fun create(): JsonAdapter.Factory = AutoValueMoshi_AutoValueTypeAdapterFactory()
+  @CheckResult
+  fun minApi(): Int {
+    return minApi.let {
+      if (it == 0) {
+        throw RuntimeException("ResponseObject: minApi was 0")
+      } else {
+        return@let it
+      }
+    }
   }
+
+  @CheckResult
+  fun version(): Int {
+    return version.let {
+      if (it == 0) {
+        throw RuntimeException("ResponseObject: version was 0")
+      } else {
+        return@let it
+      }
+    }
+  }
+
+  companion object
 }

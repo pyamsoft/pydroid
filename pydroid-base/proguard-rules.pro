@@ -46,3 +46,10 @@
 }
 -keep @com.squareup.moshi.JsonQualifier interface *
 
+# Moshi Kotlin Codegen
+-keep class **JsonAdapter {
+    <init>(...);
+    <fields>;
+}
+-keepnames @com.squareup.moshi.JsonClass class *
+

@@ -35,12 +35,16 @@ android {
       annotationProcessorOptions {
         // Fix kapt
         includeCompileClasspath = true
-
-        // Autovalue generates default empty collections and setters
-        arguments = ['autovaluegson.defaultCollectionsToEmpty'        : 'true',
-                     'autovaluegson.mutableAdaptersWithDefaultSetters': 'true']
       }
     }
+  }
+
+  // For correct Kotlin codegen for moshi-kotlin-codegen
+  sourceSets {
+    main.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/main")]
+    debug.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/debug")]
+    release.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/release")]
+    test.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/test")]
   }
 
   buildTypes {
@@ -66,14 +70,9 @@ dependencies {
   // Android support library.
   api "androidx.preference:preference:$androidx"
 
-  // Auto value
-  compileOnly "com.google.auto.value:auto-value-annotations:$autoValue"
-  kapt "com.google.auto.value:auto-value:$autoValue"
-
   // Moshi
-  compileOnly "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshi"
-  kapt "com.ryanharter.auto.value:auto-value-moshi:$autoValueMoshi"
   implementation "com.squareup.moshi:moshi:$moshi"
+  kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
   // Retrofit
   implementation "com.squareup.retrofit2:retrofit:$retrofit"

@@ -30,14 +30,15 @@ internal class VersionCheckInteractorNetwork internal constructor(
 
   @CheckResult
   private fun versionCodeForApi(
-    response: VersionCheckResponse,
-    api: Int
+    response: VersionCheckResponse
   ): Int {
+    val minApi = minimumApiProvider.minApi()
     var versionCode = 0
     response.responseObjects()
+        .asSequence()
         .sortedBy { it.minApi() }
         .forEach {
-          if (it.minApi() <= api) {
+          if (it.minApi() <= minApi) {
             versionCode = it.version()
           }
         }
@@ -55,6 +56,6 @@ internal class VersionCheckInteractorNetwork internal constructor(
         return@defer versionCheckService.checkVersion(packageName)
       }
     }
-        .map { versionCodeForApi(it, minimumApiProvider.minApi()) }
+        .map { versionCodeForApi(it) }
   }
 }

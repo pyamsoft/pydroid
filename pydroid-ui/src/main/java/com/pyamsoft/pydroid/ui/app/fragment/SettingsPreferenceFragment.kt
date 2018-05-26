@@ -75,7 +75,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    snackbar = Snackbar.make(view, "Checking for updates...", Snackbar.LENGTH_SHORT)
+    snackbar = Snackbreak.make(view, "Checking for updates...", Snackbar.LENGTH_SHORT)
 
     val applicationSettings = findPreference("application_settings")
     if (applicationSettings != null) {

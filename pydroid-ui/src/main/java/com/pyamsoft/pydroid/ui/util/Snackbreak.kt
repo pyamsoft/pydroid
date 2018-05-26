@@ -17,15 +17,72 @@
 package com.pyamsoft.pydroid.ui.util
 
 import android.app.Dialog
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.util.toDp
 
 object Snackbreak {
+
+  private fun setMargin(snackbar: Snackbar) {
+    val params = snackbar.view.layoutParams as? ViewGroup.MarginLayoutParams
+    if (params != null) {
+      val margin = 8.toDp(snackbar.context)
+      params.setMargins(margin, margin, margin, margin)
+      snackbar.view.layoutParams = params
+    }
+  }
+
+  private fun setBackground(snackbar: Snackbar) {
+    val drawable = GradientDrawable().mutate() as? GradientDrawable
+    val background = drawable?.apply {
+      shape = GradientDrawable.RECTANGLE
+      setColor(ContextCompat.getColor(snackbar.context, R.color.snackbreak_background))
+
+      cornerRadius = 4.toDp(snackbar.context)
+          .toFloat()
+    }
+    if (background != null) {
+      snackbar.view.background = background
+    }
+  }
+
+  private fun Snackbar.materialDesign() {
+    setMargin(this)
+    setBackground(this)
+    ViewCompat.setElevation(view, 6.toDp(context).toFloat())
+  }
+
+  @JvmStatic
+  @CheckResult
+  fun make(
+    view: View, @StringRes resId: Int,
+    duration: Int
+  ): Snackbar {
+    return Snackbar.make(view, resId, duration)
+        .also { it.materialDesign() }
+  }
+
+  @JvmStatic
+  @CheckResult
+  fun make(
+    view: View,
+    message: CharSequence,
+    duration: Int
+  ): Snackbar {
+    return Snackbar.make(view, message, duration)
+        .also { it.materialDesign() }
+  }
 
   @JvmStatic
   fun short(

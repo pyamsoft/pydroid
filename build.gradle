@@ -90,7 +90,7 @@ subprojects {
   }
 
   group = "com.github.pyamsoft"
-  version = "16.7.3"
+  version = "17.0.0"
 }
 
 allprojects {

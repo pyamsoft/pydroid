@@ -35,14 +35,14 @@ buildscript {
     minSdk = 16
     maxSdk = 27
 
-    androidx = "1.0.0-alpha1"
+    androidx = "1.0.0-alpha3"
     constraintLayout = "1.1.0"
 
     timber = "4.7.0"
     moshi = "1.6.0"
     retrofit = "2.4.0"
     retrofitLogging = "3.10.0"
-    rxjava = "2.1.12"
+    rxjava = "2.1.13"
     rxandroid = "2.0.2"
     viewPagerIndicator = "1.0.4"
   }

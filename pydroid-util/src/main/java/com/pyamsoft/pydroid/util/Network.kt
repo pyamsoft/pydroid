@@ -25,7 +25,7 @@ import androidx.annotation.CheckResult
 fun isConnected(c: Context): Boolean {
   val connMan = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
   val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
-  return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+  return activeNetwork != null && activeNetwork.isConnected
 }
 
 object NoNetworkException : Exception("No Internet connection, please try again later")

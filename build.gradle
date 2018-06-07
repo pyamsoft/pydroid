@@ -33,7 +33,7 @@ buildscript {
   ext {
 
     minSdk = 16
-    maxSdk = 27
+    maxSdk = 28
 
     androidx = "1.0.0-alpha3"
     constraintLayout = "1.1.0"

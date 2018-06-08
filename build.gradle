@@ -19,11 +19,11 @@
 buildscript {
   ext {
     kotlin_version = '1.2.41'
-    plugin_version = "3.1.2"
+    plugin_version = "3.2.0-alpha16"
   }
   repositories {
-    jcenter()
     google()
+    jcenter()
 
     maven {
       url "https://jitpack.io"
@@ -36,13 +36,13 @@ buildscript {
     maxSdk = 28
 
     androidx = "1.0.0-alpha3"
-    constraintLayout = "1.1.0"
+    constraintLayout = "1.1.1"
 
     timber = "4.7.0"
     moshi = "1.6.0"
     retrofit = "2.4.0"
     retrofitLogging = "3.10.0"
-    rxjava = "2.1.13"
+    rxjava = "2.1.14"
     rxandroid = "2.0.2"
     viewPagerIndicator = "1.0.4"
   }
@@ -73,14 +73,14 @@ subprojects {
   apply plugin: "com.github.ben-manes.versions"
 
   // Include kapt generated Kotlin code as source
-  android {
-    sourceSets {
-      main.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/main")]
-      debug.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/debug")]
-      release.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/release")]
-      test.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/test")]
-    }
-  }
+//  android {
+//    sourceSets {
+//      main.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/main")]
+//      debug.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/debug")]
+//      release.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/release")]
+//      test.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/test")]
+//    }
+//  }
 
   // Kapt flags
   kapt {
@@ -95,8 +95,8 @@ subprojects {
 
 allprojects {
   repositories {
-    jcenter()
     google()
+    jcenter()
 
     maven {
       url "https://jitpack.io"

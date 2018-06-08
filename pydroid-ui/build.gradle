@@ -56,11 +56,10 @@ android {
 }
 
 dependencies {
-  //  kapt "androidx.databinding:compiler:$plugin_version"
+  kapt "androidx.databinding:databinding-compiler:$plugin_version"
 
   // Android support library.
   api "androidx.vectordrawable:vectordrawable:$androidx"
-  api "androidx.cardview:cardview:$androidx"
   api "androidx.coordinatorlayout:coordinatorlayout:$androidx"
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
   api "androidx.viewpager:viewpager:$androidx"

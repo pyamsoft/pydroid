@@ -16,7 +16,7 @@
 
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <androidx.constraintlayout.ConstraintLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/relativeLayout"
       android:layout_width="match_parent"
@@ -51,5 +51,5 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.ConstraintLayout>
 </layout>

@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <androidx.constraintlayout.ConstraintLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -110,5 +110,5 @@
         app:layout_constraintTop_toTopOf="@id/view_pager"
         />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.ConstraintLayout>
 </layout>

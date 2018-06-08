@@ -21,7 +21,6 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.cache.repository
-import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
@@ -50,18 +49,6 @@ class VersionCheckModule(
   }
 
   @CheckResult
-  private fun provideMoshiConverter(): Converter.Factory {
-    val moshi = Moshi.Builder()
-        .build()
-    return MoshiConverterFactory.create(
-        moshi.newBuilder()
-            .add(VersionCheckResponseEntry.jsonAdapter(moshi))
-            .add(VersionCheckResponse.jsonAdapter(moshi))
-            .build()
-    )
-  }
-
-  @CheckResult
   private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
     return OkHttpClient.Builder()
         .also {
@@ -81,7 +68,7 @@ class VersionCheckModule(
     return Retrofit.Builder()
         .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(provideMoshiConverter())
+        .addConverterFactory(MoshiConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
   }

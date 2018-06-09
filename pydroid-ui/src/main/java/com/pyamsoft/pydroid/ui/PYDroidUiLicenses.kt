@@ -18,23 +18,12 @@ package com.pyamsoft.pydroid.ui
 
 import com.pyamsoft.pydroid.PYDroidLicenses
 import com.pyamsoft.pydroid.base.about.AboutLibraries
+import com.pyamsoft.pydroid.list.PYDroidListLicenses
 
 object PYDroidUiLicenses {
 
   @JvmStatic
   internal fun addLicenses() {
-    AboutLibraries.create(
-        Names.VIEW_PAGER_INDICATOR,
-        HomepageUrls.VIEW_PAGER_INDICATOR,
-        LicenseLocations.VIEW_PAGER_INDICATOR
-    )
-
-    AboutLibraries.create(
-        Names.CARDVIEW,
-        HomepageUrls.CARDVIEW,
-        LicenseLocations.CARDVIEW
-    )
-
     AboutLibraries.create(
         Names.CONSTRAINTLAYOUT,
         HomepageUrls.CONSTRAINTLAYOUT,
@@ -52,31 +41,31 @@ object PYDroidUiLicenses {
         HomepageUrls.SUPPORT_VECTOR,
         LicenseLocations.SUPPORT_VECTOR
     )
+
+    AboutLibraries.create(
+        PYDroidListLicenses.Names.RECYCLERVIEW,
+        PYDroidListLicenses.HomepageUrls.RECYCLERVIEW,
+        PYDroidListLicenses.LicenseLocations.RECYCLERVIEW
+    )
   }
 
   object Names {
-    const val CARDVIEW = "CardView v7"
     const val CONSTRAINTLAYOUT = "Constraint Layout"
-    const val DESIGN = "Design Support"
+    const val DESIGN = "Material Design Support"
     const val SUPPORT_VECTOR = "Vector Support"
-    const val VIEW_PAGER_INDICATOR = "Material ViewPagerIndicator"
   }
 
   object HomepageUrls {
-    const val CARDVIEW = "https://source.android.com"
     const val CONSTRAINTLAYOUT = "https://source.android.com"
     const val DESIGN = "https://source.android.com"
     const val SUPPORT_VECTOR = "https://source.android.com"
-    const val VIEW_PAGER_INDICATOR = "https://github.com/ronaldsmartin/Material-ViewPagerIndicator"
   }
 
   object LicenseLocations {
 
     // Add an underscore to keep this name on top
-    const val CARDVIEW = PYDroidLicenses.LicenseLocations.__DIR + "cardview-v7"
     const val CONSTRAINTLAYOUT = PYDroidLicenses.LicenseLocations.__DIR + "constraintlayout"
     const val DESIGN = PYDroidLicenses.LicenseLocations.__DIR + "design"
     const val SUPPORT_VECTOR = PYDroidLicenses.LicenseLocations.__DIR + "support-vector"
-    const val VIEW_PAGER_INDICATOR = PYDroidLicenses.LicenseLocations.__DIR + "material-view-pager"
   }
 }

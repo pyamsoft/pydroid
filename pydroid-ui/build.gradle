@@ -62,12 +62,9 @@ dependencies {
   api "androidx.vectordrawable:vectordrawable:$androidx"
   api "androidx.coordinatorlayout:coordinatorlayout:$androidx"
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
-  api "androidx.viewpager:viewpager:$androidx"
   api "com.google.android.material:material:$androidx"
 
-  // Material View Pager indicator
-  implementation "com.github.ronaldsmartin:Material-ViewPagerIndicator:$viewPagerIndicator"
-
   api project(":pydroid-base")
+  api project(":pydroid-list")
   api project(":pydroid-loader")
 }

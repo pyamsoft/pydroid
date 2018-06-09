@@ -16,32 +16,94 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentStatePagerAdapter
+import android.graphics.Paint
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.ViewHolder
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
+import com.pyamsoft.pydroid.ui.util.navigate
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.util.hyperlink
 
-internal class AboutPagerAdapter internal constructor(
-  fm: Fragment
-) : FragmentStatePagerAdapter(fm.childFragmentManager) {
+internal class AboutPagerAdapter(private val activity: FragmentActivity) : RecyclerView.Adapter<ViewHolder>() {
 
-  private val models: MutableList<AboutLibrariesModel> = ArrayList()
+  private val items: MutableList<AboutLibrariesModel> = ArrayList()
 
-  fun add(model: AboutLibrariesModel) {
-    models.add(model)
-  }
-
-  fun add(list: List<AboutLibrariesModel>) {
-    list.asSequence()
-        .filterNotTo(models) { models.contains(it) }
+  fun addAll(models: List<AboutLibrariesModel>) {
+    val oldCount = itemCount
+    items.addAll(models)
+    notifyItemRangeInserted(oldCount, itemCount - 1)
   }
 
   fun clear() {
-    models.clear()
+    val size = itemCount
+    items.clear()
+    notifyItemRangeRemoved(0, size - 1)
   }
 
-  override fun getCount(): Int = models.size
+  @CheckResult
+  fun getTitleAt(position: Int): String {
+    return items[position].name
+  }
 
-  override fun getItem(position: Int): Fragment = AboutPagerFragment.newInstance(models[position])
+  override fun onCreateViewHolder(
+    parent: ViewGroup,
+    viewType: Int
+  ): ViewHolder {
+    return ViewHolder(parent)
+  }
 
-  override fun getPageTitle(position: Int): CharSequence = models[position].name
+  override fun getItemCount(): Int {
+    return items.size
+  }
+
+  override fun onBindViewHolder(
+    holder: ViewHolder,
+    position: Int
+  ) {
+    holder.bind(activity, items[position])
+  }
+
+  override fun onViewRecycled(holder: ViewHolder) {
+    super.onViewRecycled(holder)
+    holder.unbind()
+  }
+
+  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    private val binding: AdapterItemAboutBinding = AdapterItemAboutBinding.bind(view)
+
+    fun bind(
+      activity: FragmentActivity,
+      model: AboutLibrariesModel
+    ) {
+      val license = model.license
+      val homepage = model.homepage
+      binding.apply {
+        aboutItemWebview.settings.defaultFontSize = 12
+        aboutItemWebview.isVerticalScrollBarEnabled = true
+        aboutItemWebview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
+
+        aboutItemHomepage.paintFlags = (aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+        aboutItemHomepage.text = homepage
+        aboutItemHomepage.setOnDebouncedClickListener {
+          homepage.hyperlink(it.context)
+              .navigate(activity, itemView)
+        }
+      }
+    }
+
+    fun unbind() {
+      binding.apply {
+        aboutItemHomepage.text = null
+        aboutItemHomepage.setOnDebouncedClickListener(null)
+        aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
+      }
+    }
+
+  }
 }

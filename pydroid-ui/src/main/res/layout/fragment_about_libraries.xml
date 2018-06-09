@@ -50,8 +50,8 @@
         android:layout_marginStart="8dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toStartOf="@id/arrow_right"
-        app:layout_constraintStart_toEndOf="@id/arrow_left"
+        app:layout_constraintEnd_toStartOf="@+id/arrow_right"
+        app:layout_constraintStart_toEndOf="@+id/arrow_left"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_height="40dp"
         />
@@ -70,30 +70,17 @@
         tools:layout_width="40dp"
         />
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/about_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/about_title"
-        >
-
-      <com.itsronald.widget.ViewPagerIndicator
-          xmlns:app="http://schemas.android.com/apk/res-auto"
-          android:id="@+id/view_pager_indicator"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="bottom"
-          android:gravity="center"
-          app:selectedDotColor="?attr/colorPrimary"
-          />
-
-    </androidx.viewpager.widget.ViewPager>
+        />
 
     <ProgressBar
         android:id="@+id/progress_spinner"
@@ -104,10 +91,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="@+id/view_pager"
-        app:layout_constraintEnd_toEndOf="@+id/view_pager"
-        app:layout_constraintStart_toStartOf="@+id/view_pager"
-        app:layout_constraintTop_toTopOf="@id/view_pager"
+        app:layout_constraintBottom_toBottomOf="@+id/about_list"
+        app:layout_constraintEnd_toEndOf="@+id/about_list"
+        app:layout_constraintStart_toStartOf="@+id/about_list"
+        app:layout_constraintTop_toTopOf="@+id/about_list"
         />
 
   </androidx.constraintlayout.ConstraintLayout>

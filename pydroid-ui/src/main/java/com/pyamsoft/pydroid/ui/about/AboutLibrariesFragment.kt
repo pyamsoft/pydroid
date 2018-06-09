@@ -23,8 +23,9 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
@@ -34,20 +35,18 @@ import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
-import com.pyamsoft.pydroid.ui.util.listenSingleChange
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
-import timber.log.Timber
 
 class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
   internal lateinit var presenter: AboutLibrariesPresenter
   internal lateinit var imageLoader: ImageLoader
   private lateinit var pagerAdapter: AboutPagerAdapter
-  private lateinit var listener: ViewPager.OnPageChangeListener
   private lateinit var binding: FragmentAboutLibrariesBinding
   private lateinit var refreshLatch: RefreshLatch
+  private var lastViewedItem: Int = 0
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
 
@@ -79,15 +78,17 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
       binding.apply {
         if (it) {
           progressSpinner.visibility = View.VISIBLE
-          viewPager.visibility = View.INVISIBLE
+          aboutList.visibility = View.INVISIBLE
           aboutTitle.visibility = View.INVISIBLE
         } else {
           // Load complete
-          val pager = viewPager
-          pager.post {
-            pagerAdapter.notifyDataSetChanged()
-            aboutTitle.text = pagerAdapter.getPageTitle(pager.currentItem)
-          }
+          progressSpinner.visibility = View.GONE
+          aboutList.visibility = View.VISIBLE
+          aboutTitle.visibility = View.VISIBLE
+
+          val lastViewed = lastViewedItem
+          aboutList.scrollToPosition(lastViewed)
+          aboutTitle.text = pagerAdapter.getTitleAt(lastViewed)
         }
       }
     }
@@ -95,10 +96,21 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     // Latch will show spinner if needed
     binding.progressSpinner.visibility = View.INVISIBLE
 
-    setupViewPager(savedInstanceState)
+    lastViewedItem = savedInstanceState?.getInt(KEY_PAGE) ?: 0
+    setupAboutList()
     setupArrows()
 
     presenter.bind(viewLifecycleOwner, this)
+  }
+
+  @CheckResult
+  private fun getCurrentPosition(): Int {
+    val manager = binding.aboutList.layoutManager
+    if (manager is LinearLayoutManager) {
+      return manager.findFirstVisibleItemPosition()
+    } else {
+      return 0
+    }
   }
 
   override fun onLicenseLoadBegin() {
@@ -106,7 +118,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   }
 
   override fun onLicenseLoaded(licenses: List<AboutLibrariesModel>) {
-    pagerAdapter.add(licenses)
+    pagerAdapter.addAll(licenses)
   }
 
   override fun onLicenseLoadError(throwable: Throwable) {
@@ -117,51 +129,33 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     refreshLatch.isRefreshing = false
   }
 
-  private fun setupViewPager(savedInstanceState: Bundle?) {
-    pagerAdapter = AboutPagerAdapter(this)
+  private fun setupAboutList() {
+    pagerAdapter = AboutPagerAdapter(requireActivity())
     binding.apply {
-      viewPager.adapter = pagerAdapter
-      viewPager.offscreenPageLimit = 1
-    }
+      aboutList.adapter = pagerAdapter
+      aboutList.layoutManager =
+          LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false).apply {
+            initialPrefetchItemCount = 0
+            isItemPrefetchEnabled = false
+          }
 
-    // We must observe the data set for when it finishes.
-    // There is a race condition that can cause the UI to crash if pager.setCurrentItem is
-    // called before notifyDataSetChanged finishes
-    pagerAdapter.listenSingleChange {
-      Timber.d("Data set changed! Set current item")
+      val snapHelper = PagerSnapHelper()
+      snapHelper.attachToRecyclerView(aboutList)
 
-      // Hide spinner now that loading is done
-      binding.apply {
-        progressSpinner.visibility = View.GONE
-        viewPager.visibility = View.VISIBLE
-        aboutTitle.visibility = View.VISIBLE
+      aboutList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-        // Reload the last looked at page
-        if (savedInstanceState != null) {
-          viewPager.setCurrentItem(savedInstanceState.getInt(KEY_PAGE, 0), false)
+        override fun onScrollStateChanged(
+          recyclerView: RecyclerView,
+          newState: Int
+        ) {
+          super.onScrollStateChanged(recyclerView, newState)
+          if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+            aboutTitle.text = pagerAdapter.getTitleAt(getCurrentPosition())
+          }
         }
-      }
+
+      })
     }
-
-    val obj = object : OnPageChangeListener {
-      override fun onPageScrollStateChanged(state: Int) {
-      }
-
-      override fun onPageScrolled(
-        position: Int,
-        positionOffset: Float,
-        positionOffsetPixels: Int
-      ) {
-      }
-
-      override fun onPageSelected(position: Int) {
-        binding.aboutTitle.text = pagerAdapter.getPageTitle(position)
-      }
-    }
-
-    listener = obj
-    binding.viewPager.addOnPageChangeListener(obj)
-
     refreshLatch.isRefreshing = true
   }
 
@@ -172,7 +166,10 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     binding.apply {
       arrowLeft.rotation = 90F
       arrowLeft.setOnDebouncedClickListener {
-        viewPager.arrowScroll(View.FOCUS_LEFT)
+        val position = getCurrentPosition()
+        if (position > 0) {
+          aboutList.scrollToPosition(position - 1)
+        }
       }
     }
 
@@ -182,7 +179,10 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     binding.apply {
       arrowRight.rotation = -90F
       arrowRight.setOnDebouncedClickListener {
-        viewPager.arrowScroll(View.FOCUS_RIGHT)
+        val position = getCurrentPosition()
+        if (position < pagerAdapter.itemCount) {
+          aboutList.scrollToPosition(position + 1)
+        }
       }
     }
   }
@@ -201,27 +201,27 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
   override fun onDestroyView() {
     super.onDestroyView()
     binding.apply {
-      viewPager.removeOnPageChangeListener(listener)
-      viewPager.adapter = null
+      aboutList.adapter = null
+      aboutList.clearOnScrollListeners()
       pagerAdapter.clear()
 
       arrowLeft.setOnDebouncedClickListener(null)
       arrowRight.setOnDebouncedClickListener(null)
     }
 
-    toolbarActivity.withToolbar { toolbar ->
+    toolbarActivity.withToolbar {
       // Set title back to original
-      toolbar.title = oldTitle ?: toolbar.title
+      it.title = oldTitle ?: it.title
 
       // If this page was last on the back stack, set up false
       if (backStackCount == 0) {
-        toolbar.setUpEnabled(false)
+        it.setUpEnabled(false)
       }
     }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-    outState.putInt(KEY_PAGE, binding.viewPager.currentItem)
+    outState.putInt(KEY_PAGE, getCurrentPosition())
     super.onSaveInstanceState(outState)
   }
 

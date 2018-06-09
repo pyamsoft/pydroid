@@ -169,6 +169,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
         val position = getCurrentPosition()
         if (position > 0) {
           aboutList.scrollToPosition(position - 1)
+          aboutTitle.text = pagerAdapter.getTitleAt(position - 1)
         }
       }
     }
@@ -182,6 +183,7 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
         val position = getCurrentPosition()
         if (position < pagerAdapter.itemCount) {
           aboutList.scrollToPosition(position + 1)
+          aboutTitle.text = pagerAdapter.getTitleAt(position + 1)
         }
       }
     }

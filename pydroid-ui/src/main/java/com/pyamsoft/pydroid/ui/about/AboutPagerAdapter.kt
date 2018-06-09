@@ -78,6 +78,14 @@ internal class AboutPagerAdapter(private val activity: FragmentActivity) : Recyc
     private val binding: AdapterItemAboutBinding
   ) : RecyclerView.ViewHolder(binding.root) {
 
+    init {
+      binding.apply {
+        aboutItemWebview.settings.defaultFontSize = 12
+        aboutItemWebview.isVerticalScrollBarEnabled = true
+        aboutItemHomepage.paintFlags = (aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
+      }
+    }
+
     fun bind(
       activity: FragmentActivity,
       model: AboutLibrariesModel
@@ -85,11 +93,7 @@ internal class AboutPagerAdapter(private val activity: FragmentActivity) : Recyc
       val license = model.license
       val homepage = model.homepage
       binding.apply {
-        aboutItemWebview.settings.defaultFontSize = 12
-        aboutItemWebview.isVerticalScrollBarEnabled = true
         aboutItemWebview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
-
-        aboutItemHomepage.paintFlags = (aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
         aboutItemHomepage.text = homepage
         aboutItemHomepage.setOnDebouncedClickListener {
           homepage.hyperlink(it.context)

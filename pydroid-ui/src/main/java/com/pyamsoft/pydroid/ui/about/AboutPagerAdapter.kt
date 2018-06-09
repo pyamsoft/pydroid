@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.graphics.Paint
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
@@ -54,7 +54,8 @@ internal class AboutPagerAdapter(private val activity: FragmentActivity) : Recyc
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
-    return ViewHolder(parent)
+    val inflater = LayoutInflater.from(parent.context)
+    return ViewHolder(AdapterItemAboutBinding.inflate(inflater, parent, false))
   }
 
   override fun getItemCount(): Int {
@@ -73,9 +74,9 @@ internal class AboutPagerAdapter(private val activity: FragmentActivity) : Recyc
     holder.unbind()
   }
 
-  class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    private val binding: AdapterItemAboutBinding = AdapterItemAboutBinding.bind(view)
+  internal class ViewHolder(
+    private val binding: AdapterItemAboutBinding
+  ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
       activity: FragmentActivity,

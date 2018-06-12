@@ -15,4 +15,4 @@
  */
 
 include ':core', ':ui', ':loader',
-        ':pydroid-util', ':list', ':bootstrap'
+    ':util', ':list', ':bootstrap'

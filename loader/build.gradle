@@ -52,6 +52,6 @@ android {
 }
 
 dependencies {
-  api project(":pydroid-util")
+  api project(':util')
 }
 

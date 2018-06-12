@@ -66,5 +66,5 @@ dependencies {
 
   api project(':bootstrap')
   api project(':list')
-  api project(":pydroid-loader")
+  api project(':loader')
 }

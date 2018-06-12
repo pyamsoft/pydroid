@@ -22,6 +22,7 @@ buildscript {
     plugin_version = "3.2.0-alpha16"
   }
   repositories {
+    mavenLocal()
     google()
     jcenter()
 
@@ -99,12 +100,13 @@ subprojects {
     mapDiagnosticLocations = true
   }
 
-  group = "com.github.pyamsoft"
-  version = "17.0.4"
+  group = "com.github.pyamsoft.pydroid"
+  version = "17.0.5"
 }
 
 allprojects {
   repositories {
+    mavenLocal()
     google()
     jcenter()
 

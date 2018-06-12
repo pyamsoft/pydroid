@@ -14,8 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.version
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import com.pyamsoft.pydroid.core.cache.Cache
+import com.pyamsoft.pydroid.core.cache.Repository
+import io.reactivex.Single
 
-interface PYDroidPreferences : RatingPreferences
+internal class VersionCheckInteractorImpl internal constructor(
+  private val network: VersionCheckInteractor,
+  private val versionCache: Repository<Int>
+) : VersionCheckInteractor, Cache {
+
+  override fun checkVersion(
+    bypass: Boolean,
+    packageName: String
+  ): Single<Int> {
+    return versionCache.get(bypass) { network.checkVersion(true, packageName) }
+  }
+
+  override fun clearCache() {
+    versionCache.clearCache()
+  }
+}

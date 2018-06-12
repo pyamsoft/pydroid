@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.bootstrap.version
 
-import android.text.SpannedString
 import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import java.util.Collections
 
-interface ChangeLogProvider : VersionCheckProvider {
+@JsonClass(generateAdapter = true)
+internal data class VersionCheckResponse internal constructor(
+  @field:Json(name = "response_objects")
+  internal val responseObjects: List<VersionCheckResponseEntry>?
+) {
 
   @CheckResult
-  fun getPackageName(): String
+  fun responseObjects(): List<VersionCheckResponseEntry> {
+    return responseObjects.let {
+      if (it == null) {
+        throw RuntimeException("VersionCheckResponse: responseObjects was null")
+      } else {
+        return@let Collections.unmodifiableList(it)
+      }
+    }
+  }
 
-  @get:CheckResult
-  val changelog: SpannedString
+  companion object
 
-  @get:DrawableRes
-  @get:CheckResult
-  val applicationIcon: Int
 }

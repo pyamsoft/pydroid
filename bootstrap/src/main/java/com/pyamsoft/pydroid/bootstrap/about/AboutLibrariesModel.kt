@@ -14,22 +14,33 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.bootstrap.about
 
-import android.text.SpannedString
 import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 
-interface ChangeLogProvider : VersionCheckProvider {
+data class AboutLibrariesModel internal constructor(
+  val name: String,
+  val homepage: String,
+  val license: String,
+  val customContent: String
+) {
 
-  @CheckResult
-  fun getPackageName(): String
+  companion object {
 
-  @get:CheckResult
-  val changelog: SpannedString
+    @JvmStatic
+    @CheckResult
+    fun create(
+      name: String,
+      homepage: String,
+      license: String
+    ): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license, "")
 
-  @get:DrawableRes
-  @get:CheckResult
-  val applicationIcon: Int
+    @JvmStatic
+    @CheckResult
+    fun createWithContent(
+      name: String,
+      homepage: String,
+      content: String
+    ): AboutLibrariesModel = AboutLibrariesModel(name, homepage, "", content)
+  }
 }

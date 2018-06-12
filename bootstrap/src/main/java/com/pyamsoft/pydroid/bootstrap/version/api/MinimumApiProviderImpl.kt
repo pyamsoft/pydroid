@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.version.api
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import android.os.Build
 
-interface PYDroidPreferences : RatingPreferences
+internal class MinimumApiProviderImpl internal constructor() : MinimumApiProvider {
+
+  override fun minApi(): Int {
+    return Build.VERSION.SDK_INT
+  }
+}

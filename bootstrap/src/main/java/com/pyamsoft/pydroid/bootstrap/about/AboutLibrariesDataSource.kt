@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.about
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import androidx.annotation.CheckResult
 
-interface PYDroidPreferences : RatingPreferences
+internal interface AboutLibrariesDataSource {
+
+  @CheckResult
+  fun loadNewLicense(licenseLocation: String): String
+}

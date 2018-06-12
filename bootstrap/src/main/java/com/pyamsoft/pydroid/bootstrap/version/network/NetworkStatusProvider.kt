@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.version.network
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import androidx.annotation.CheckResult
 
-interface PYDroidPreferences : RatingPreferences
+interface NetworkStatusProvider {
+
+  @CheckResult fun hasConnection(): Boolean
+}

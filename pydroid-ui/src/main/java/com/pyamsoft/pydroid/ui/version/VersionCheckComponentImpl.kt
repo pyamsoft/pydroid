@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import com.pyamsoft.pydroid.base.version.VersionCheckModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 
 internal class VersionCheckComponentImpl internal constructor(
   private val versionCheckModule: VersionCheckModule,

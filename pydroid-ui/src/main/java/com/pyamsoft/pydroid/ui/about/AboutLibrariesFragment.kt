@@ -26,8 +26,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
-import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter
+import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesPresenter
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R

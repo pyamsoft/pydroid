@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.version
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import androidx.annotation.CheckResult
+import io.reactivex.Single
 
-interface PYDroidPreferences : RatingPreferences
+internal interface VersionCheckInteractor {
+
+  @CheckResult
+  fun checkVersion(
+    bypass: Boolean,
+    packageName: String
+  ): Single<Int>
+}

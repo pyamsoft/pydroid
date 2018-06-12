@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.bootstrap.about
 
-import android.text.SpannedString
+import android.content.Context
 import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
+import com.pyamsoft.pydroid.core.cache.repository
 
-interface ChangeLogProvider : VersionCheckProvider {
+class AboutLibrariesModule(context: Context) {
+
+  private val cacheInteractor: AboutLibrariesInteractor
+
+  init {
+    val dataSource = AboutLibrariesDataSourceImpl(context.applicationContext)
+
+    val disk = AboutLibrariesInteractorDisk(dataSource)
+    val licenseCache = repository<List<AboutLibrariesModel>>()
+    cacheInteractor = AboutLibrariesInteractorImpl(disk, licenseCache)
+  }
 
   @CheckResult
-  fun getPackageName(): String
-
-  @get:CheckResult
-  val changelog: SpannedString
-
-  @get:DrawableRes
-  @get:CheckResult
-  val applicationIcon: Int
+  fun getPresenter(): AboutLibrariesPresenter {
+    return AboutLibrariesPresenter(cacheInteractor)
+  }
 }

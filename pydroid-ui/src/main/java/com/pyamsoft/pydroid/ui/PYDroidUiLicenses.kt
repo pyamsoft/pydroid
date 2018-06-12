@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import com.pyamsoft.pydroid.core.PYDroidLicenses
-import com.pyamsoft.pydroid.base.about.AboutLibraries
+import com.pyamsoft.pydroid.bootstrap.about.AboutLibraries
 import com.pyamsoft.pydroid.list.PYDroidListLicenses
 
 object PYDroidUiLicenses {

@@ -18,8 +18,8 @@ package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.base.version.VersionCheckProvider
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show

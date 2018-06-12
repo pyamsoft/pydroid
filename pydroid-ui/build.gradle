@@ -64,7 +64,7 @@ dependencies {
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
   api "com.google.android.material:material:$androidx"
 
-  api project(":pydroid-base")
+  api project(':bootstrap')
   api project(":pydroid-list")
   api project(":pydroid-loader")
 }

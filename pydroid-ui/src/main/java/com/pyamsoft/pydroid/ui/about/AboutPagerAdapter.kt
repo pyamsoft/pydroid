@@ -22,7 +22,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.base.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.ViewHolder
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
 import com.pyamsoft.pydroid.ui.util.navigate

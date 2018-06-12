@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.version
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import androidx.annotation.CheckResult
+import retrofit2.Retrofit
 
-interface PYDroidPreferences : RatingPreferences
+internal class VersionCheckApi internal constructor(private val client: Retrofit) {
+
+  @CheckResult
+  fun <T> create(serviceClass: Class<T>): T = client.create(serviceClass)
+}

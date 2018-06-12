@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.version.network
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import android.content.Context
+import com.pyamsoft.pydroid.util.isConnected
 
-interface PYDroidPreferences : RatingPreferences
+internal class NetworkStatusProviderImpl internal constructor(private val context: Context) :
+    NetworkStatusProvider {
+
+  override fun hasConnection(): Boolean {
+    return isConnected(context)
+  }
+}

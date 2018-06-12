@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.RxBus
 
-interface ModuleProvider {
+class RatingModule(preferences: RatingPreferences) {
 
-  @CheckResult
-  fun loaderModule(): LoaderModule
-
-  @CheckResult
-  fun ratingModule(): RatingModule
+  private val errorBus: EventBus<Throwable> = RxBus.create()
+  private val interactor: RatingInteractor = RatingInteractorImpl(preferences)
 
   @CheckResult
-  fun uiModule(): UiModule
+  fun getPublisher(): Publisher<Throwable> = errorBus
 
   @CheckResult
-  fun aboutLibrariesModule(): AboutLibrariesModule
+  fun getPresenter(version: Int): RatingPresenter {
+    return RatingPresenter(version, interactor, errorBus)
+  }
 
   @CheckResult
-  fun versionCheckModule(): VersionCheckModule
-
+  fun getSavePresenter(version: Int): RatingSavePresenter {
+    return RatingSavePresenter(version, interactor)
+  }
 }

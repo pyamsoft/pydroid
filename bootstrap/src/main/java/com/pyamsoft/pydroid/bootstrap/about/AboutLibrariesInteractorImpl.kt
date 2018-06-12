@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.about
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import com.pyamsoft.pydroid.core.cache.Cache
+import com.pyamsoft.pydroid.core.cache.Repository
+import io.reactivex.Single
 
-interface PYDroidPreferences : RatingPreferences
+internal class AboutLibrariesInteractorImpl internal constructor(
+  private val disk: AboutLibrariesInteractor,
+  private val licenseCache: Repository<List<AboutLibrariesModel>>
+) : AboutLibrariesInteractor, Cache {
+
+  override fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>> {
+    return licenseCache.get(bypass) { disk.loadLicenses(true) }
+  }
+
+  override fun clearCache() {
+    licenseCache.clearCache()
+  }
+}

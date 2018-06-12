@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.bootstrap.rating
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import androidx.annotation.CheckResult
 
-interface PYDroidPreferences : RatingPreferences
+interface RatingPreferences {
+
+  var ratingAcceptedVersion: Int
+    @get:CheckResult get
+
+  companion object {
+
+    const val DEFAULT_RATING_ACCEPTED_VERSION: Int = 0
+  }
+}

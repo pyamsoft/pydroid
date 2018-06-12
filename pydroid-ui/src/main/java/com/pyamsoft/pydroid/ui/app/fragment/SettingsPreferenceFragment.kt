@@ -24,9 +24,9 @@ import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
 import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
-import com.pyamsoft.pydroid.base.rating.RatingPresenter
-import com.pyamsoft.pydroid.base.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.base.version.VersionCheckProvider
+import com.pyamsoft.pydroid.bootstrap.rating.RatingPresenter
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment

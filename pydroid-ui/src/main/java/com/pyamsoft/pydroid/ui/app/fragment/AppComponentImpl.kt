@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import com.pyamsoft.pydroid.base.rating.RatingModule
-import com.pyamsoft.pydroid.base.version.VersionCheckModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.ui.UiModule
 
 internal class AppComponentImpl internal constructor(

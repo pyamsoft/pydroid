@@ -16,7 +16,8 @@
 
 package com.pyamsoft.pydroid.base.version
 
-import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.base.version.VersionCheckPresenter.View
+import com.pyamsoft.pydroid.core.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -25,7 +26,7 @@ class VersionCheckPresenter internal constructor(
   private val packageName: String,
   private val currentVersionCode: Int,
   private val interactor: VersionCheckInteractor
-) : Presenter<VersionCheckPresenter.View>() {
+) : Presenter<View>() {
 
   fun checkForUpdates(force: Boolean) {
     dispose {

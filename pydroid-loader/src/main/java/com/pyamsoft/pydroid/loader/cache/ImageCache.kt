@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.loader.cache
 
-import com.pyamsoft.pydroid.cache.Cache
+import com.pyamsoft.pydroid.core.cache.Cache
 
 interface ImageCache<in K : Any, T : Any> : Cache {
 

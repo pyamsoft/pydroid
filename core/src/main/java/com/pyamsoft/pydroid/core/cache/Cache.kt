@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.optional
+package com.pyamsoft.pydroid.core.cache
 
-import androidx.annotation.CheckResult
+interface Cache {
 
-@CheckResult
-fun <T : Any> T?.asOptional(): Optional<T> {
-  if (this == null) {
-    return Optional.Absent
-  } else {
-    return Optional.Present(this)
-  }
+  fun clearCache()
 }

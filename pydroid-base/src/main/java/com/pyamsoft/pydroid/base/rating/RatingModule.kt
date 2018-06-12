@@ -17,9 +17,9 @@
 package com.pyamsoft.pydroid.base.rating
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.Publisher
-import com.pyamsoft.pydroid.bus.RxBus
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.RxBus
 
 class RatingModule(preferences: RatingPreferences) {
 

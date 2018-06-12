@@ -16,8 +16,9 @@
 
 package com.pyamsoft.pydroid.base.rating
 
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.base.rating.RatingPresenter.View
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -26,7 +27,7 @@ class RatingPresenter internal constructor(
   private val currentVersion: Int,
   private val interactor: RatingInteractor,
   private val ratingErrorBus: EventBus<Throwable>
-) : Presenter<RatingPresenter.View>() {
+) : Presenter<View>() {
 
   override fun onCreate() {
     super.onCreate()

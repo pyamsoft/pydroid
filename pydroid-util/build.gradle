@@ -55,6 +55,6 @@ dependencies {
   // Android support library.
   api "androidx.appcompat:appcompat:$androidx"
 
-  api project(":pydroid")
+  api project(':core')
 }
 

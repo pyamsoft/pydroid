@@ -16,14 +16,15 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.base.about.AboutLibrariesPresenter.View
+import com.pyamsoft.pydroid.core.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class AboutLibrariesPresenter internal constructor(
   private val interactor: AboutLibrariesInteractor
-) : Presenter<AboutLibrariesPresenter.View>() {
+) : Presenter<View>() {
 
   override fun onCreate() {
     super.onCreate()

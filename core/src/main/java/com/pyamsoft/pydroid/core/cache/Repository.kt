@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.cache
+package com.pyamsoft.pydroid.core.cache
 
 import androidx.annotation.CheckResult
 import io.reactivex.Observable

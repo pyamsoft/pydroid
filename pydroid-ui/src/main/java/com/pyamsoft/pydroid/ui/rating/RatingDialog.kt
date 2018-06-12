@@ -26,7 +26,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
 import com.pyamsoft.pydroid.base.rating.RatingSavePresenter
-import com.pyamsoft.pydroid.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog

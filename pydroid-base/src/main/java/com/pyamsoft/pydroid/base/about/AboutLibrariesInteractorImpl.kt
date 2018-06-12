@@ -16,8 +16,8 @@
 
 package com.pyamsoft.pydroid.base.about
 
-import com.pyamsoft.pydroid.cache.Cache
-import com.pyamsoft.pydroid.cache.Repository
+import com.pyamsoft.pydroid.core.cache.Cache
+import com.pyamsoft.pydroid.core.cache.Repository
 import io.reactivex.Single
 
 internal class AboutLibrariesInteractorImpl internal constructor(

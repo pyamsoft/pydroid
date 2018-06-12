@@ -20,7 +20,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.base.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.base.version.network.NetworkStatusProviderImpl
-import com.pyamsoft.pydroid.cache.repository
+import com.pyamsoft.pydroid.core.cache.repository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter

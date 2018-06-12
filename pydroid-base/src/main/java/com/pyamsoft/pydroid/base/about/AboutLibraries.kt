@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.base.about
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.PYDroidLicenses
+import com.pyamsoft.pydroid.core.PYDroidLicenses
 import com.pyamsoft.pydroid.util.PYDroidUtilLicenses
 import java.util.Collections
 

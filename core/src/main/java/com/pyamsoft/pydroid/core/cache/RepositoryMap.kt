@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.cache
+package com.pyamsoft.pydroid.core.cache
 
 import androidx.annotation.CheckResult
 import io.reactivex.Scheduler
@@ -57,7 +57,11 @@ internal class RepositoryMapImpl<in K : Any, V : Any> internal constructor(
 
   @CheckResult
   private fun get(key: K): Repository<V> =
-    cache.getOrElse(key) { repository(time, timeUnit, provideScheduler) }
+    cache.getOrElse(key) {
+      repository(
+          time, timeUnit, provideScheduler
+      )
+    }
 
   @CheckResult
   override fun get(
@@ -89,6 +93,8 @@ fun <K : Any, V : Any> repositoryMap(
   timeUnit: TimeUnit = TimeUnit.SECONDS,
   provideScheduler: () -> Scheduler = { Schedulers.io() }
 ): RepositoryMap<K, V> {
-  return RepositoryMapImpl(initialSize, time, timeUnit, provideScheduler)
+  return RepositoryMapImpl(
+      initialSize, time, timeUnit, provideScheduler
+  )
 }
 

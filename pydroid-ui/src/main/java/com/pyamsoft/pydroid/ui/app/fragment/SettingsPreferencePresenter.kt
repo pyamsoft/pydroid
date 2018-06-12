@@ -17,15 +17,16 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.presenter.Presenter
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferencePresenter.View
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class SettingsPreferencePresenter internal constructor(
   private val linkerErrorBus: EventBus<ActivityNotFoundException>
-) : Presenter<SettingsPreferencePresenter.View>() {
+) : Presenter<View>() {
 
   override fun onCreate() {
     super.onCreate()

@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bus
+package com.pyamsoft.pydroid.core.optional
 
 import androidx.annotation.CheckResult
-import io.reactivex.Observable
 
-interface EventBus<T : Any> : Publisher<T> {
+/**
+ * A simple Optional API
+ *
+ * Keep the unused T here for better casting
+ */
+sealed class Optional<out T : Any> {
 
-  /**
-   * Listen for Bus events
-   *
-   */
-  @CheckResult
-  fun listen(): Observable<T>
+  data class Present<out T : Any> constructor(val value: T) : Optional<T>()
+
+  object Absent : Optional<Nothing>()
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
+  }
 }

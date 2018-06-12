@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bus
+package com.pyamsoft.pydroid.core.optional
 
-interface Publisher<T : Any> {
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.optional.Optional.Absent
+import com.pyamsoft.pydroid.core.optional.Optional.Present
 
-  /**
-   * Publish an event to a registered Receiver class
-   *
-   * The bus does not make any restrictions on what type an Event should be. While events can be
-   * mutable, it is recommended to make your Event object immutable as the bus makes no guarantees
-   * about the state of the data
-   */
-  fun publish(event: T)
+@CheckResult
+fun <T : Any> T?.asOptional(): Optional<T> {
+  if (this == null) {
+    return Absent
+  } else {
+    return Present(this)
+  }
 }

@@ -54,6 +54,6 @@ android {
 dependencies {
   api "androidx.recyclerview:recyclerview:$androidx"
 
-  api project(":pydroid")
+  api project(':core')
 }
 

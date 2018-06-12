@@ -16,7 +16,8 @@
 
 package com.pyamsoft.pydroid.base.rating
 
-import com.pyamsoft.pydroid.presenter.Presenter
+import com.pyamsoft.pydroid.base.rating.RatingSavePresenter.View
+import com.pyamsoft.pydroid.core.presenter.Presenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -24,7 +25,7 @@ import timber.log.Timber
 class RatingSavePresenter internal constructor(
   private val currentVersion: Int,
   private val interactor: RatingInteractor
-) : Presenter<RatingSavePresenter.View>() {
+) : Presenter<View>() {
 
   fun saveRating(accept: Boolean) {
     dispose {

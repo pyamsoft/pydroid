@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.list
 
-import com.pyamsoft.pydroid.PYDroidLicenses
+import com.pyamsoft.pydroid.core.PYDroidLicenses
 
 object PYDroidListLicenses {
 

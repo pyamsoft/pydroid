@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.ui
 import android.content.ActivityNotFoundException
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bus.EventBus
-import com.pyamsoft.pydroid.bus.RxBus
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.social.Linker
 
 class UiModule(context: Context) {

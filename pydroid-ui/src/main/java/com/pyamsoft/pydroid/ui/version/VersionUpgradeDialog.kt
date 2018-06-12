@@ -21,7 +21,7 @@ import android.content.ActivityNotFoundException
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
-import com.pyamsoft.pydroid.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.social.Linker

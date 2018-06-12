@@ -65,6 +65,6 @@ dependencies {
   api "com.google.android.material:material:$androidx"
 
   api project(':bootstrap')
-  api project(":pydroid-list")
+  api project(':list')
   api project(":pydroid-loader")
 }

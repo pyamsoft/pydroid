@@ -74,16 +74,6 @@ subprojects {
   apply plugin: 'com.github.ben-manes.versions'
   apply plugin: 'maven-publish'
 
-  // Include kapt generated Kotlin code as source
-//  android {
-//    sourceSets {
-//      main.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/main")]
-//      debug.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/debug")]
-//      release.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/release")]
-//      test.java.srcDirs += [file("$buildDir/generated/source/kaptKotlin/test")]
-//    }
-//  }
-
   task androidSourcesJar(type: Jar) {
     classifier = 'sources'
     from android.sourceSets.main.java.source
@@ -101,7 +91,7 @@ subprojects {
   }
 
   group = "com.github.pyamsoft.pydroid"
-  version = "17.0.5"
+  version = "18.0.0"
 }
 
 allprojects {

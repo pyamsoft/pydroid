@@ -54,6 +54,10 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
     capturedToolbar?.let(func)
   }
 
+  override fun requireToolbar(func: (Toolbar) -> Unit) {
+    capturedToolbar!!.let(func)
+  }
+
   protected fun setToolbar(toolbar: Toolbar?) {
     capturedToolbar = toolbar
   }

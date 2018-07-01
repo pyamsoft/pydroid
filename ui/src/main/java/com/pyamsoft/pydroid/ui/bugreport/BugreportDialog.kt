@@ -33,12 +33,18 @@ import timber.log.Timber
 class BugreportDialog : ToolbarDialog() {
 
   private lateinit var appName: String
+  private var appVersion: Int = 0
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     arguments!!.also {
       appName = it.getString(APP_NAME, null) ?:
           throw IllegalArgumentException("App Name cannot be NULL")
+      appVersion = it.getInt(APP_VERSION)
+    }
+
+    if (appVersion == 0) {
+      throw IllegalAccessException("App Version cannot be 0")
     }
   }
 
@@ -68,11 +74,11 @@ class BugreportDialog : ToolbarDialog() {
   @CheckResult
   private fun sendEmailReport(): Boolean {
     return requireActivity().let {
-      val email = "pyam.soft+bugs.${it.packageName}@gmail.com"
+      val email = "pyam.soft+bugs@gmail.com"
       val intent: Intent = ShareCompat.IntentBuilder.from(it)
           .addEmailTo(email)
           .setType("text/plain")
-          .setSubject("Bug Report - $appName")
+          .setSubject("Bug Report - $appName ($appVersion)")
           .setChooserTitle("Email Bug Report")
           .createChooserIntent()
 
@@ -88,32 +94,37 @@ class BugreportDialog : ToolbarDialog() {
   companion object {
 
     private const val APP_NAME = "app_name"
+    private const val APP_VERSION = "app_version"
 
     @JvmStatic
     @CheckResult
-    fun newInstance(appName: String): BugreportDialog {
+    fun newInstance(
+      appName: String,
+      appVersion: Int
+    ): BugreportDialog {
       return BugreportDialog().apply {
         arguments = Bundle().apply {
           putString(APP_NAME, appName)
+          putInt(APP_VERSION, appVersion)
         }
       }
     }
 
     @JvmStatic
-    @CheckResult
     fun attachToToolbar(
       activity: ActivityBase,
-      appName: String
+      appName: String,
+      appVersion: Int
     ) {
-      activity.withToolbar { attachToToolbar(activity, it, appName) }
+      activity.requireToolbar { attachToToolbar(activity, it, appName, appVersion) }
     }
 
     @JvmStatic
-    @CheckResult
     fun attachToToolbar(
       activity: FragmentActivity,
       toolbar: Toolbar,
-      appName: String
+      appName: String,
+      appVersion: Int
     ) {
       toolbar.apply {
         inflateMenu(R.menu.bugreport_menu)
@@ -122,7 +133,7 @@ class BugreportDialog : ToolbarDialog() {
         // we should be crashing
         menu.findItem(R.id.menu_item_bugreport)
             .setOnMenuItemClickListener {
-              BugreportDialog.newInstance(appName)
+              BugreportDialog.newInstance(appName, appVersion)
                   .show(activity, "bugreport")
               return@setOnMenuItemClickListener true
             }

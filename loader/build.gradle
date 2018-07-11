@@ -14,43 +14,6 @@
  * limitations under the License.
  */
 
-android {
-  compileSdkVersion rootProject.ext.maxSdk
-
-  //noinspection GroovyMissingReturnStatement
-  defaultConfig {
-    minSdkVersion rootProject.ext.minSdk
-    targetSdkVersion rootProject.ext.maxSdk
-
-    // For vector drawables
-    vectorDrawables.useSupportLibrary = true
-
-    // Consumer proguard file
-    consumerProguardFiles "proguard-rules.pro"
-
-    // Only English, I don't have any translations
-    resConfigs "en"
-  }
-
-  buildTypes {
-    debug {
-      minifyEnabled false
-      shrinkResources false
-    }
-
-    release {
-      minifyEnabled false
-      shrinkResources false
-      proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-    }
-  }
-
-  // TODO replace with https://issuetracker.google.com/issues/72050365 once released.
-  libraryVariants.all {
-    it.generateBuildConfig.enabled = false
-  }
-}
-
 dependencies {
   api project(':util')
 }

@@ -57,8 +57,9 @@ buildscript {
     // Gradle version checker
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
 
-    // To publish with JitPack
+    // To publish
     classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
+    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
 
     // Kotlin
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -75,10 +76,11 @@ subprojects {
   apply plugin: "com.getkeepsafe.dexcount"
   apply plugin: 'com.github.dcendents.android-maven'
   apply plugin: 'com.github.ben-manes.versions'
-  apply plugin: 'maven-publish'
   apply plugin: 'org.jetbrains.dokka-android'
+  apply plugin: 'maven-publish'
+  apply plugin: 'com.jfrog.bintray'
 
-  group = "com.github.pyamsoft.pydroid"
+  group = "com.pyamsoft.pydroid"
   version = "18.0.0"
 
   task androidSourcesJar(type: Jar) {
@@ -86,7 +88,7 @@ subprojects {
     from android.sourceSets.main.java.source
   }
 
-  task androidJavadocsJar(type: Jar) {
+  task androidJavadocsJar(type: Jar, dependsOn: dokka) {
     classifier = 'javadoc'
     from "$buildDir/dokka"
   }
@@ -147,6 +149,33 @@ subprojects {
     // TODO replace with https://issuetracker.google.com/issues/72050365 once released.
     libraryVariants.all {
       it.generateBuildConfig.enabled = false
+    }
+  }
+
+  publishing {
+    publications {
+      PYDroid(MavenPublication) {
+        artifact bundleReleaseAar
+        artifact androidSourcesJar
+        artifact androidJavadocsJar
+        groupId group
+        artifactId project.name
+        version version
+
+        pom.withXml {
+          def dependenciesNode = asNode().appendNode('dependencies')
+
+          configurations.implementation.allDependencies.each {
+            // Ensure dependencies such as fileTree are not included in the pom.
+            if (it.name != 'unspecified') {
+              def dependencyNode = dependenciesNode.appendNode('dependency')
+              dependencyNode.appendNode('groupId', it.group)
+              dependencyNode.appendNode('artifactId', it.name)
+              dependencyNode.appendNode('version', it.version)
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -23,13 +23,8 @@ buildscript {
     dokka_version = "0.9.17"
   }
   repositories {
-    mavenLocal()
     google()
     jcenter()
-
-    maven {
-      url "https://jitpack.io"
-    }
   }
 
   ext {
@@ -208,13 +203,8 @@ subprojects {
 
 allprojects {
   repositories {
-    mavenLocal()
     google()
     jcenter()
-
-    maven {
-      url "https://jitpack.io"
-    }
   }
 
   tasks.withType(JavaCompile) {

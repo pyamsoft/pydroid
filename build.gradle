@@ -80,8 +80,11 @@ subprojects {
   apply plugin: 'maven-publish'
   apply plugin: 'com.jfrog.bintray'
 
-  group = "com.pyamsoft.pydroid"
-  version = "18.0.0"
+  final String POM_GROUP = "com.pyamsoft.pydroid"
+  final String POM_VERSION = "18.0.0"
+
+  group = POM_GROUP
+  version = POM_VERSION
 
   task androidSourcesJar(type: Jar) {
     classifier = 'sources'
@@ -158,9 +161,9 @@ subprojects {
         artifact bundleReleaseAar
         artifact androidSourcesJar
         artifact androidJavadocsJar
-        groupId group
+        groupId POM_GROUP
         artifactId project.name
-        version version
+        version POM_VERSION
 
         pom.withXml {
           def dependenciesNode = asNode().appendNode('dependencies')
@@ -175,6 +178,29 @@ subprojects {
             }
           }
         }
+      }
+    }
+  }
+
+  final String GITHUB_ROOT_URL = "https://github.com/pyamsoft/pydroid"
+  bintray {
+    user = 'pyamsoft'
+    key = BINTRAY_API_KEY
+    publications = ['PYDroid']
+    override = true
+    pkg {
+      repo = 'PYDroid'
+      name = project.name
+      desc = "PYDroid library: ${project.name}"
+      licenses = ['Apache-2.0']
+      vcsUrl = "${GITHUB_ROOT_URL}/tree/master/${project.name}"
+      websiteUrl = "${GITHUB_ROOT_URL}"
+      version {
+        name = POM_VERSION
+        issueTrackerUrl = "${GITHUB_ROOT_URL}/issues"
+        desc = "PYDroid library: ${project.name}"
+        released = new Date()
+        vcsTag = POM_VERSION
       }
     }
   }

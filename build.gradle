@@ -50,7 +50,7 @@ buildscript {
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
 
     // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
 
     // To publish
     classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
@@ -76,7 +76,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.0.0"
+  final String POM_VERSION = "18.0.1-SNAPSHOT"
 
   group = POM_GROUP
   version = POM_VERSION

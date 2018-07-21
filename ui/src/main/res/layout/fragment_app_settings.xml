@@ -14,10 +14,12 @@
   ~ limitations under the License.
   -->
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
 
   <androidx.constraintlayout.widget.ConstraintLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
       android:id="@+id/relativeLayout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -30,6 +32,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/view_social_media"
+        tools:layout_height="@dimen/social_media_bar_size"
         />
 
     <View

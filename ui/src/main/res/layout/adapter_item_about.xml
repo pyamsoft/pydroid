@@ -20,17 +20,17 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginEnd="16dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginRight="16dp"
-      android:layout_marginStart="16dp"
+      android:layout_marginEnd="8dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginStart="8dp"
       app:cardCornerRadius="4dp"
       app:cardElevation="2dp"
       app:cardMaxElevation="6dp"
       app:cardUseCompatPadding="true"
       >
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -38,23 +38,30 @@
 
       <TextView
           android:id="@+id/about_item_homepage"
-          android:layout_width="match_parent"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="16dp"
+          android:layout_marginBottom="8dp"
           android:layout_marginTop="8dp"
           android:gravity="center"
           android:maxLines="1"
           android:textAppearance="@style/TextAppearance.AppCompat.Medium"
           android:textColor="@color/blue500"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
           />
 
       <WebView
           android:id="@+id/about_item_webview"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@id/about_item_homepage"
           />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
   </com.google.android.material.card.MaterialCardView>
 </layout>

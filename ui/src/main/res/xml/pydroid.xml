@@ -45,6 +45,11 @@
         android:summary="@string/rating_summary"
         android:title="@string/rating_title"/>
 
+    <com.pyamsoft.pydroid.ui.social.SocialMediaPreference
+        android:key="@string/social_media_key"
+        android:summary="@string/blank"
+        android:title="@string/blank"/>
+
   </PreferenceCategory>
 
 </PreferenceScreen>

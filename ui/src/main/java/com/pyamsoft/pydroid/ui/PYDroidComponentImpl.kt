@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
-import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
+import com.pyamsoft.pydroid.ui.social.SocialMediaPreference
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
@@ -52,7 +52,7 @@ internal class PYDroidComponentImpl internal constructor(
     fragment.imageLoader = loaderModule.provideImageLoader()
   }
 
-  override fun inject(layout: SocialMediaLayout) {
+  override fun inject(layout: SocialMediaPreference) {
     layout.imageLoader = loaderModule.provideImageLoader()
     layout.linker = uiModule.provideLinker()
     layout.linkerErrorPublisher = uiModule.provideLinkerErrorBus()

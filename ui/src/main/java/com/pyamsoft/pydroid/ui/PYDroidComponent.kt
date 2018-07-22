@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
-import com.pyamsoft.pydroid.ui.social.SocialMediaLayout
+import com.pyamsoft.pydroid.ui.social.SocialMediaPreference
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
@@ -28,7 +28,7 @@ internal interface PYDroidComponent {
 
   fun inject(fragment: AboutLibrariesFragment)
 
-  fun inject(layout: SocialMediaLayout)
+  fun inject(layout: SocialMediaPreference)
 
   fun inject(versionUpgradeDialog: VersionUpgradeDialog)
 

@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.ui.social
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.widget.LinearLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_CREATE
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
@@ -30,20 +28,22 @@ import androidx.lifecycle.Lifecycle.Event.ON_START
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.preference.Preference
+import androidx.preference.PreferenceViewHolder
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.databinding.ViewSocialMediaBinding
+import com.pyamsoft.pydroid.ui.databinding.PreferenceSocialMediaBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import timber.log.Timber
 
-class SocialMediaLayout : LinearLayout, LifecycleOwner {
+class SocialMediaPreference : Preference, LifecycleOwner {
 
   internal lateinit var linker: Linker
   internal lateinit var linkerErrorPublisher: Publisher<ActivityNotFoundException>
   internal lateinit var imageLoader: ImageLoader
-  private val binding: ViewSocialMediaBinding
+  private var binding: PreferenceSocialMediaBinding? = null
   private val registry = LifecycleRegistry(this)
 
   constructor(
@@ -60,10 +60,8 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
   constructor(context: Context) : super(context)
 
   init {
-    orientation = HORIZONTAL
-    binding = ViewSocialMediaBinding.inflate(LayoutInflater.from(context), this, false)
-    addView(binding.root)
-    PYDroid.obtain(context)
+    layoutResource = R.layout.preference_social_media
+    PYDroid.obtain(context.applicationContext)
         .inject(this)
   }
 
@@ -71,66 +69,66 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
     return registry
   }
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    binding.apply {
+  override fun onBindViewHolder(holder: PreferenceViewHolder) {
+    super.onBindViewHolder(holder)
+    val view = holder.itemView
+    val bind = PreferenceSocialMediaBinding.bind(view)
+
+    bind.apply {
       googlePlay.setOnDebouncedClickListener {
-        linker.clickGooglePlay {
-          linkerErrorPublisher.publish(it)
-        }
+        linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
       }
+
       googlePlus.setOnDebouncedClickListener {
-        linker.clickGooglePlus {
-          linkerErrorPublisher.publish(it)
-        }
+        linker.clickGooglePlus { linkerErrorPublisher.publish(it) }
       }
+
       blogger.setOnDebouncedClickListener {
-        linker.clickBlogger {
-          linkerErrorPublisher.publish(it)
-        }
+        linker.clickBlogger { linkerErrorPublisher.publish(it) }
       }
+
       facebook.setOnDebouncedClickListener {
-        linker.clickFacebook {
-          linkerErrorPublisher.publish(it)
-        }
+        linker.clickFacebook { linkerErrorPublisher.publish(it) }
       }
     }
 
+    imageLoader.also {
+      it.fromResource(R.drawable.google_play)
+          .into(bind.googlePlay)
+          .bind(this)
+
+      it.fromResource(R.drawable.google_plus)
+          .into(bind.googlePlus)
+          .bind(this)
+
+      it.fromResource(R.drawable.blogger_icon)
+          .into(bind.blogger)
+          .bind(this)
+
+      it.fromResource(R.drawable.facebook_icon)
+          .into(bind.facebook)
+          .bind(this)
+    }
+
+    binding = bind
     registry.apply {
       handleLifecycleEvent(ON_CREATE)
       handleLifecycleEvent(ON_START)
       handleLifecycleEvent(ON_RESUME)
     }
-
-    val self = this
-    imageLoader.apply {
-      fromResource(R.drawable.google_play).into(
-          DrawableImageTarget.forImageView(binding.googlePlay)
-      )
-          .bind(self)
-      fromResource(R.drawable.google_plus).into(
-          DrawableImageTarget.forImageView(binding.googlePlus)
-      )
-          .bind(self)
-      fromResource(R.drawable.blogger_icon).into(
-          DrawableImageTarget.forImageView(binding.blogger)
-      )
-          .bind(self)
-      fromResource(R.drawable.facebook_icon).into(
-          DrawableImageTarget.forImageView(binding.facebook)
-      )
-          .bind(self)
-    }
   }
 
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding.apply {
+  override fun onPrepareForRemoval() {
+    super.onPrepareForRemoval()
+    Timber.d("onPrepareForRemoval")
+    binding?.apply {
       googlePlay.setOnDebouncedClickListener(null)
       googlePlus.setOnDebouncedClickListener(null)
       blogger.setOnDebouncedClickListener(null)
       facebook.setOnDebouncedClickListener(null)
+      unbind()
     }
+    binding = null
 
     registry.apply {
       handleLifecycleEvent(ON_PAUSE)
@@ -138,4 +136,5 @@ class SocialMediaLayout : LinearLayout, LifecycleOwner {
       handleLifecycleEvent(ON_DESTROY)
     }
   }
+
 }

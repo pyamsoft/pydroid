@@ -84,15 +84,15 @@ class SocialMediaPreference : Preference, LifecycleOwner {
     }
 
     googlePlus.setOnDebouncedClickListener {
-      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
+      linker.clickGooglePlus { linkerErrorPublisher.publish(it) }
     }
 
     blogger.setOnDebouncedClickListener {
-      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
+      linker.clickBlogger { linkerErrorPublisher.publish(it) }
     }
 
     facebook.setOnDebouncedClickListener {
-      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
+      linker.clickFacebook { linkerErrorPublisher.publish(it) }
     }
 
     imageLoader.also {

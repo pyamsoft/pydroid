@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.social
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_CREATE
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
@@ -34,7 +35,6 @@ import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.databinding.PreferenceSocialMediaBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import timber.log.Timber
 
@@ -43,8 +43,11 @@ class SocialMediaPreference : Preference, LifecycleOwner {
   internal lateinit var linker: Linker
   internal lateinit var linkerErrorPublisher: Publisher<ActivityNotFoundException>
   internal lateinit var imageLoader: ImageLoader
-  private var binding: PreferenceSocialMediaBinding? = null
   private val registry = LifecycleRegistry(this)
+  private var googlePlay: ImageView? = null
+  private var googlePlus: ImageView? = null
+  private var blogger: ImageView? = null
+  private var facebook: ImageView? = null
 
   constructor(
     context: Context,
@@ -71,46 +74,50 @@ class SocialMediaPreference : Preference, LifecycleOwner {
 
   override fun onBindViewHolder(holder: PreferenceViewHolder) {
     super.onBindViewHolder(holder)
-    val view = holder.itemView
-    val bind = PreferenceSocialMediaBinding.bind(view)
+    val googlePlay = (holder.findViewById(R.id.google_play) as ImageView)
+    val googlePlus = (holder.findViewById(R.id.google_plus) as ImageView)
+    val blogger = (holder.findViewById(R.id.blogger) as ImageView)
+    val facebook = (holder.findViewById(R.id.facebook) as ImageView)
 
-    bind.apply {
-      googlePlay.setOnDebouncedClickListener {
-        linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
-      }
+    googlePlay.setOnDebouncedClickListener {
+      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
+    }
 
-      googlePlus.setOnDebouncedClickListener {
-        linker.clickGooglePlus { linkerErrorPublisher.publish(it) }
-      }
+    googlePlus.setOnDebouncedClickListener {
+      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
+    }
 
-      blogger.setOnDebouncedClickListener {
-        linker.clickBlogger { linkerErrorPublisher.publish(it) }
-      }
+    blogger.setOnDebouncedClickListener {
+      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
+    }
 
-      facebook.setOnDebouncedClickListener {
-        linker.clickFacebook { linkerErrorPublisher.publish(it) }
-      }
+    facebook.setOnDebouncedClickListener {
+      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
     }
 
     imageLoader.also {
       it.fromResource(R.drawable.google_play)
-          .into(bind.googlePlay)
+          .into(googlePlay)
           .bind(this)
 
       it.fromResource(R.drawable.google_plus)
-          .into(bind.googlePlus)
+          .into(googlePlus)
           .bind(this)
 
       it.fromResource(R.drawable.blogger_icon)
-          .into(bind.blogger)
+          .into(blogger)
           .bind(this)
 
       it.fromResource(R.drawable.facebook_icon)
-          .into(bind.facebook)
+          .into(facebook)
           .bind(this)
     }
 
-    binding = bind
+    this.googlePlay = googlePlay
+    this.googlePlus = googlePlus
+    this.blogger = blogger
+    this.facebook = facebook
+
     registry.apply {
       handleLifecycleEvent(ON_CREATE)
       handleLifecycleEvent(ON_START)
@@ -118,17 +125,17 @@ class SocialMediaPreference : Preference, LifecycleOwner {
     }
   }
 
-  override fun onPrepareForRemoval() {
-    super.onPrepareForRemoval()
-    Timber.d("onPrepareForRemoval")
-    binding?.apply {
-      googlePlay.setOnDebouncedClickListener(null)
-      googlePlus.setOnDebouncedClickListener(null)
-      blogger.setOnDebouncedClickListener(null)
-      facebook.setOnDebouncedClickListener(null)
-      unbind()
-    }
-    binding = null
+  override fun onDetached() {
+    super.onDetached()
+    googlePlay?.setOnDebouncedClickListener(null)
+    googlePlus?.setOnDebouncedClickListener(null)
+    blogger?.setOnDebouncedClickListener(null)
+    facebook?.setOnDebouncedClickListener(null)
+
+    googlePlay = null
+    googlePlus = null
+    blogger = null
+    facebook = null
 
     registry.apply {
       handleLifecycleEvent(ON_PAUSE)

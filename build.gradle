@@ -38,8 +38,8 @@ buildscript {
     timber = "4.7.1"
     moshi = "1.6.0"
     retrofit = "2.4.0"
-    retrofitLogging = "3.10.0"
-    rxjava = "2.1.16"
+    retrofitLogging = "3.11.0"
+    rxjava = "2.1.17"
     rxandroid = "2.0.2"
   }
 

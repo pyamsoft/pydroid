@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (C) 2018 Peter Kenji Yamanaka
   ~
@@ -16,5 +17,55 @@
   -->
 
 <resources>
-  <color name="snackbreak_background">#323232</color>
+
+  <color name="white">#FFFFFF</color>
+  <color name="black">#000000</color>
+
+  <color name="amber500">#ffffc107</color>
+  <color name="amber700">#ffffa000</color>
+
+  <color name="cyan500">#ff00bcd4</color>
+  <color name="cyan700">#ff0097A7</color>
+
+  <color name="red300">#FFE57373</color>
+  <color name="red500">#fff44336</color>
+  <color name="red700">#ffD32F2F</color>
+  <color name="redA400">#FFFF1744</color>
+
+  <color name="grey500">#ff9e9e9e</color>
+
+  <color name="teal500">#ff009688</color>
+  <color name="teal700">#ff00796B</color>
+
+  <color name="pinkA200">#ffFF4081</color>
+  <color name="pink500">#ffe91e63</color>
+  <color name="pink700">#ffC2185B</color>
+
+  <color name="green500">#FF4CAF50</color>
+  <color name="green700">#FF338E3C</color>
+
+  <color name="orangeA200">#FFFFAB40</color>
+  <color name="orange500">#FFFF9800</color>
+  <color name="orange700">#ffF57C00</color>
+
+  <color name="lightblueA200">#ff40C4FF</color>
+
+  <color name="blue500">#ff2196F3</color>
+  <color name="blue700">#ff1976D2</color>
+
+  <color name="purple500">#ff9c27b0</color>
+  <color name="purple700">#ff7B1FA2</color>
+
+  <color name="lightgreen500">#ff8BC34A</color>
+  <color name="lightgreen700">#ff689F38</color>
+
+  <color name="yellow500">#ffFFEB3B</color>
+  <color name="yellow700">#ffFBC02D</color>
+
+  <color name="shadow_scrim45">#45000000</color>
+  <color name="snackbar">#323232</color>
+
+  <color name="material_dark_background">#ff303030</color>
+  <color name="material_light_background">#fffafafa</color>
+
 </resources>

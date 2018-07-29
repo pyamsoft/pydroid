@@ -47,7 +47,7 @@ object Snackbreak {
     val drawable = GradientDrawable().mutate() as? GradientDrawable
     val background = drawable?.apply {
       shape = GradientDrawable.RECTANGLE
-      setColor(ContextCompat.getColor(snackbar.context, R.color.snackbreak_background))
+      setColor(ContextCompat.getColor(snackbar.context, R.color.snackbar))
 
       cornerRadius = 4.toDp(snackbar.context)
           .toFloat()

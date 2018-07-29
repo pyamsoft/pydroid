@@ -52,9 +52,6 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    PYDroid.obtain(requireContext())
-        .inject(this)
-
     arguments?.also {
       backStackCount = it.getInt(KEY_BACK_STACK, 0)
     }
@@ -99,6 +96,12 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     lastViewedItem = savedInstanceState?.getInt(KEY_PAGE) ?: 0
     setupAboutList()
     setupArrows()
+  }
+
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
+    PYDroid.obtain(requireContext())
+        .inject(this)
 
     presenter.bind(viewLifecycleOwner, this)
   }

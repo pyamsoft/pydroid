@@ -49,9 +49,6 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
 
       applicationName = it.getString(KEY_NAME, null)
     }
-
-    PYDroid.obtain(requireContext())
-        .inject(this)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -69,6 +66,13 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
         }
         .setNegativeButton("Later") { _, _ -> dismiss() }
         .create()
+  }
+
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
+
+    PYDroid.obtain(requireContext())
+        .inject(this)
   }
 
   companion object {

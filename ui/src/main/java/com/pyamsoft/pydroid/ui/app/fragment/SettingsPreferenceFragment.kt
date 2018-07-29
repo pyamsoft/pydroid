@@ -51,6 +51,14 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
   private lateinit var snackbar: Snackbar
 
   @CallSuper
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    PYDroid.obtain(requireContext())
+        .plusAppComponent(versionedActivity.currentApplicationVersion)
+        .inject(this)
+  }
+
+  @CallSuper
   override fun onCreatePreferences(
     savedInstanceState: Bundle?,
     rootKey: String?
@@ -115,13 +123,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
       linker.clickAppPage(requireActivity(), view)
       return@setOnPreferenceClickListener true
     }
-  }
-
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
-    super.onActivityCreated(savedInstanceState)
-    PYDroid.obtain(requireContext())
-        .plusAppComponent(versionedActivity.currentApplicationVersion)
-        .inject(this)
 
     versionPresenter.bind(viewLifecycleOwner, this)
     ratingPresenter.bind(viewLifecycleOwner, this)

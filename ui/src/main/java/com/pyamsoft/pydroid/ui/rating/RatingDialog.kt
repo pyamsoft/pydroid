@@ -66,6 +66,10 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     if (changeLogIcon == 0) {
       throw RuntimeException("Change Log Icon Id cannot be 0")
     }
+
+    PYDroid.obtain(requireContext())
+        .plusRatingComponent(versionCode)
+        .inject(this)
   }
 
   override fun onCreateView(
@@ -88,14 +92,6 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
       ratingBtnNoThanks.setOnDebouncedClickListener { presenter.saveRating(false) }
       ratingBtnGoRate.setOnDebouncedClickListener { presenter.saveRating(true) }
     }
-
-  }
-
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
-    super.onActivityCreated(savedInstanceState)
-    PYDroid.obtain(requireContext())
-        .plusRatingComponent(versionCode)
-        .inject(this)
 
     presenter.bind(viewLifecycleOwner, this)
   }

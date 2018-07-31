@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
-import com.pyamsoft.pydroid.core.cache.repository
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -43,7 +43,8 @@ class VersionCheckModule(
 
     val network =
       VersionCheckInteractorNetwork(minimumApiProvider, networkStatusProvider, versionCheckService)
-    val versionCache = repository<Int>()
+    val versionCache = newRepoBuilder<Int>().memoryCache()
+        .buildSingle()
     cachedInteractor = VersionCheckInteractorImpl(network, versionCache)
   }
 

@@ -85,6 +85,11 @@ object AboutLibraries {
         PYDroidUtilLicenses.LicenseLocations.APPCOMPAT
     )
     createItem(
+        PYDroidLicenses.Names.REPO,
+        PYDroidLicenses.HomepageUrls.REPO,
+        PYDroidLicenses.LicenseLocations.REPO
+    )
+    createItem(
         Names.PYDROID,
         HomepageUrls.PYDROID,
         LicenseLocations.PYDROID

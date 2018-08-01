@@ -29,7 +29,7 @@ buildscript {
 
   ext {
 
-    minSdk = 16
+    minSdk = 19
     maxSdk = 28
 
     // AndroidX

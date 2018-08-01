@@ -15,7 +15,7 @@
  */
 
 dependencies {
-  api "androidx.recyclerview:recyclerview:$androidx"
+  api "androidx.recyclerview:recyclerview:$recyclerView"
 
   api project(':core')
 }

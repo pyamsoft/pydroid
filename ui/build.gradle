@@ -18,10 +18,10 @@ dependencies {
   kapt "androidx.databinding:databinding-compiler:$plugin_version"
 
   // Android support library.
-  api "androidx.vectordrawable:vectordrawable:$androidx"
-  api "androidx.coordinatorlayout:coordinatorlayout:$androidx"
+  api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
+  api "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayout"
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
-  api "com.google.android.material:material:$androidx"
+  api "com.google.android.material:material:$materialDesign"
 
   api project(':bootstrap')
   api project(':list')

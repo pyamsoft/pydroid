@@ -16,7 +16,7 @@
 
 dependencies {
   // Android support library.
-  api "androidx.preference:preference:$androidx"
+  api "androidx.preference:preference:$preference"
 
   // Moshi
   implementation "com.squareup.moshi:moshi:$moshi"

@@ -16,7 +16,7 @@
 
 dependencies {
   // Android support library.
-  api "androidx.appcompat:appcompat:$androidx"
+  api "androidx.appcompat:appcompat:$appCompat"
 
   api project(':core')
 }

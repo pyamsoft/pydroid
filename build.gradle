@@ -32,15 +32,23 @@ buildscript {
     minSdk = 16
     maxSdk = 28
 
-    androidx = "1.0.0-beta01"
+    // AndroidX
+    ktx = "1.0.0-beta01"
     constraintLayout = "1.1.2"
+    lifecycle = "2.0.0-beta01"
+    vectorDrawable = "1.0.0-beta01"
+    coordinatorLayout = "1.0.0-beta01"
+    materialDesign = "1.0.0-beta01"
+    preference = "1.0.0-beta01"
+    recyclerView = "1.0.0-beta01"
+    appCompat = "1.0.0-beta01"
 
     repo = "0.0.4"
     timber = "4.7.1"
     moshi = "1.6.0"
     retrofit = "2.4.0"
     retrofitLogging = "3.11.0"
-    rxjava = "2.1.17"
+    rxjava = "2.2.0"
     rxandroid = "2.0.2"
   }
 

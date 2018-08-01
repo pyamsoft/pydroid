@@ -16,7 +16,10 @@
 
 dependencies {
   // KTX
-  api "androidx.core:core-ktx:$androidx"
+  api "androidx.core:core-ktx:$ktx"
+
+  // AndroidX Lifecycle
+  implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle"
 
   // Timber logging
   api "com.jakewharton.timber:timber:$timber"

@@ -36,7 +36,7 @@ internal class RxResourceLoader internal constructor(
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(
         Single.fromCallable { loadResource() }
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { startAction?.invoke() }
             .doAfterSuccess { completeAction?.invoke(it) }

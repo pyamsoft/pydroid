@@ -20,6 +20,7 @@ import android.app.Application
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
@@ -36,15 +37,20 @@ internal class PYDroidComponentImpl internal constructor(
   debug: Boolean
 ) : PYDroidComponent, ModuleProvider {
 
-  private val loaderModule = LoaderModule(application)
+  private val enforcer = Enforcer(debug)
+  private val loaderModule = LoaderModule(application, enforcer)
   private val uiModule = UiModule(application)
-  private val aboutLibrariesModule = AboutLibrariesModule(application)
-  private val versionCheckModule = VersionCheckModule(application, debug)
+  private val aboutLibrariesModule = AboutLibrariesModule(application, enforcer)
+  private val versionCheckModule = VersionCheckModule(application, enforcer, debug)
   private val ratingModule: RatingModule
 
   init {
     val preferences = PYDroidPreferencesImpl(application)
-    ratingModule = RatingModule(preferences)
+    ratingModule = RatingModule(preferences, enforcer)
+  }
+
+  override fun enforcer(): Enforcer {
+    return enforcer
   }
 
   override fun inject(fragment: AboutLibrariesFragment) {

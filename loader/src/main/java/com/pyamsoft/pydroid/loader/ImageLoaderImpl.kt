@@ -20,13 +20,15 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 import com.pyamsoft.pydroid.core.cache.Cache
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 
 internal class ImageLoaderImpl internal constructor(
   private val context: Context,
-  private val resourceImageCache: ImageCache<Int, Drawable>
+  private val resourceImageCache: ImageCache<Int, Drawable>,
+  private val enforcer: Enforcer
 ) : ImageLoader, Cache {
 
   override fun clearCache() {
@@ -36,5 +38,8 @@ internal class ImageLoaderImpl internal constructor(
   override fun fromResource(@DrawableRes resource: Int): ResourceLoader = fromResource(resource, 0)
 
   override fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader =
-    RxResourceLoader(context.applicationContext, resource, errorResource, resourceImageCache)
+    RxResourceLoader(
+        enforcer, context.applicationContext,
+        resource, errorResource, resourceImageCache
+    )
 }

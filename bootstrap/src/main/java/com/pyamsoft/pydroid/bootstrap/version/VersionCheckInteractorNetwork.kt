@@ -19,10 +19,12 @@ package com.pyamsoft.pydroid.bootstrap.version
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProvider
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.util.NoNetworkException
 import io.reactivex.Single
 
 internal class VersionCheckInteractorNetwork internal constructor(
+  private val enforcer: Enforcer,
   private val minimumApiProvider: MinimumApiProvider,
   private val networkStatusProvider: NetworkStatusProvider,
   private val versionCheckService: VersionCheckService
@@ -32,6 +34,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
   private fun versionCodeForApi(
     response: VersionCheckResponse
   ): Int {
+    enforcer.assertNotOnMainThread()
     val minApi = minimumApiProvider.minApi()
     var versionCode = 0
     response.responseObjects()
@@ -50,6 +53,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
     packageName: String
   ): Single<Int> {
     return Single.defer {
+      enforcer.assertNotOnMainThread()
       if (!networkStatusProvider.hasConnection()) {
         throw NoNetworkException
       } else {

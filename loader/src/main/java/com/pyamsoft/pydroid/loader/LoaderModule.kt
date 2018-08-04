@@ -20,16 +20,20 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.cache.Cache
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.cache.ResourceImageCache
 
-class LoaderModule(context: Context) {
+class LoaderModule(
+  context: Context,
+  enforcer: Enforcer
+) {
 
   private val imageLoader: ImageLoaderImpl
 
   init {
     val resourceImageCache: ImageCache<Int, Drawable> = ResourceImageCache()
-    imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache)
+    imageLoader = ImageLoaderImpl(context.applicationContext, resourceImageCache, enforcer)
   }
 
   // Singleton

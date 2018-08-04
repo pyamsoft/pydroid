@@ -17,21 +17,27 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Observable
 import io.reactivex.Single
 
 internal class AboutLibrariesInteractorDisk internal constructor(
+  private val enforcer: Enforcer,
   private val dataSource: AboutLibrariesDataSource
 ) : AboutLibrariesInteractor {
 
   @CheckResult
   private fun createLicenseStream(): Single<Set<AboutLibrariesModel>> {
-    return Single.fromCallable { AboutLibraries.getLicenses() }
+    return Single.fromCallable {
+      enforcer.assertNotOnMainThread()
+      return@fromCallable AboutLibraries.getLicenses()
+    }
   }
 
   @CheckResult
   private fun loadLicenseText(model: AboutLibrariesModel): Single<String> {
     return Single.fromCallable<String> {
+      enforcer.assertNotOnMainThread()
       if (model.customContent.isEmpty()) {
         return@fromCallable dataSource.loadNewLicense(model.license)
       } else {
@@ -47,8 +53,17 @@ internal class AboutLibrariesInteractorDisk internal constructor(
 
   override fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>> {
     return createLicenseStream()
-        .flatMapObservable { Observable.fromIterable(it) }
-        .flatMapSingle { loadTextForAboutModel(it) }
-        .toSortedList { o1, o2 -> o1.name.compareTo(o2.name, ignoreCase = true) }
+        .flatMapObservable {
+          enforcer.assertNotOnMainThread()
+          return@flatMapObservable Observable.fromIterable(it)
+        }
+        .flatMapSingle {
+          enforcer.assertNotOnMainThread()
+          return@flatMapSingle loadTextForAboutModel(it)
+        }
+        .toSortedList { o1, o2 ->
+          enforcer.assertNotOnMainThread()
+          return@toSortedList o1.name.compareTo(o2.name, ignoreCase = true)
+        }
   }
 }

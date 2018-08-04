@@ -20,8 +20,9 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
-import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
+import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,6 +31,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 class VersionCheckModule(
   context: Context,
+  enforcer: Enforcer,
   debug: Boolean
 ) {
 
@@ -43,10 +45,13 @@ class VersionCheckModule(
     val minimumApiProvider = MinimumApiProviderImpl()
 
     val network =
-      VersionCheckInteractorNetwork(minimumApiProvider, networkStatusProvider, versionCheckService)
+      VersionCheckInteractorNetwork(
+          enforcer, minimumApiProvider,
+          networkStatusProvider, versionCheckService
+      )
     val versionCache = newRepoBuilder<Int>().memoryCache()
         .buildSingle()
-    cachedInteractor = VersionCheckInteractorImpl(network, versionCache)
+    cachedInteractor = VersionCheckInteractorImpl(enforcer, network, versionCache)
   }
 
   @CheckResult

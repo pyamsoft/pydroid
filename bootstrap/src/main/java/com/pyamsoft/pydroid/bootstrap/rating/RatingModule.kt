@@ -20,11 +20,15 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-class RatingModule(preferences: RatingPreferences) {
+class RatingModule(
+  preferences: RatingPreferences,
+  enforcer: Enforcer
+) {
 
   private val errorBus: EventBus<Throwable> = RxBus.create()
-  private val interactor: RatingInteractor = RatingInteractorImpl(preferences)
+  private val interactor: RatingInteractor = RatingInteractorImpl(enforcer, preferences)
 
   @CheckResult
   fun getPublisher(): Publisher<Throwable> = errorBus

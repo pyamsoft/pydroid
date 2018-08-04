@@ -22,6 +22,7 @@ import android.widget.ImageView
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.GenericLoader
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.cache.ImageCache.ImageCacheKey
@@ -36,6 +37,7 @@ import com.pyamsoft.pydroid.util.tintWith
  * Supports Drawable resource types, is not threaded
  */
 abstract class ResourceLoader protected constructor(
+  private val enforcer: Enforcer,
   context: Context,
   @param:DrawableRes private val resource: Int, @param:DrawableRes private val errorResource: Int,
   private val resourceImageCache: ImageCache<Int, Drawable>
@@ -59,6 +61,7 @@ abstract class ResourceLoader protected constructor(
 
   @CheckResult
   protected fun loadResource(): Drawable {
+    enforcer.assertNotOnMainThread()
     val key: ImageCacheKey<Int> = resource.toKey()
     val cached: Drawable? = resourceImageCache.retrieve(key)
     if (cached == null) {
@@ -72,6 +75,7 @@ abstract class ResourceLoader protected constructor(
 
   @CheckResult
   private fun loadFreshResource(): Drawable {
+    enforcer.assertNotOnMainThread()
     val possiblyLoaded: Drawable? = AppCompatResources.getDrawable(appContext, resource)
     if (possiblyLoaded == null) {
       throw NullPointerException("AppCompatResources failed to find drawable: $resource")
@@ -86,6 +90,7 @@ abstract class ResourceLoader protected constructor(
 
   @CheckResult
   protected fun loadErrorResource(): Drawable? {
+    enforcer.assertNotOnMainThread()
     val key: ImageCacheKey<Int> = errorResource.toKey()
     val cached: Drawable? = resourceImageCache.retrieve(key)
     if (cached == null) {
@@ -101,6 +106,7 @@ abstract class ResourceLoader protected constructor(
 
   @CheckResult
   private fun loadFreshErrorResource(): Drawable? {
+    enforcer.assertNotOnMainThread()
     errorResource.let {
       if (it == 0) {
         return null

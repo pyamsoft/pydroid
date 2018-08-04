@@ -19,19 +19,23 @@ package com.pyamsoft.pydroid.bootstrap.about
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.newRepoBuilder
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-class AboutLibrariesModule(context: Context) {
+class AboutLibrariesModule(
+  context: Context,
+  enforcer: Enforcer
+) {
 
   private val cacheInteractor: AboutLibrariesInteractor
 
   init {
     val dataSource = AboutLibrariesDataSourceImpl(context.applicationContext)
 
-    val disk = AboutLibrariesInteractorDisk(dataSource)
+    val disk = AboutLibrariesInteractorDisk(enforcer, dataSource)
     val licenseCache = newRepoBuilder<List<AboutLibrariesModel>>()
         .memoryCache()
         .buildSingle()
-    cacheInteractor = AboutLibrariesInteractorImpl(disk, licenseCache)
+    cacheInteractor = AboutLibrariesInteractorImpl(enforcer, disk, licenseCache)
   }
 
   @CheckResult

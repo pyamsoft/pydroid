@@ -5,16 +5,27 @@ package com.pyamsoft.pydroid.core.threads
 import android.os.Looper
 import androidx.annotation.CheckResult
 
-private val mainLooper = Looper.getMainLooper()
+class Enforcer(private val debug: Boolean) {
 
-@CheckResult
-fun isMainThread(): Boolean {
-  return mainLooper.thread == Thread.currentThread()
-}
+  private val mainLooper = Looper.getMainLooper()
 
-fun assertNotOnMainThread() {
-  if (isMainThread()) {
-    throw AssertionError("Should be off main thread!")
+  @CheckResult
+  fun isMainThread(): Boolean {
+    return mainLooper.thread == Thread.currentThread()
   }
+
+  fun assertNotOnMainThread() {
+    // No enforcement in production mode - we will deal with things being slow instead
+    // of flat out crashing
+    if (!debug) {
+      return
+    }
+
+    if (isMainThread()) {
+      throw AssertionError("Should be off main thread!")
+    }
+  }
+
 }
+
 

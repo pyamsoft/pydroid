@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.loader.resource
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.cache.ImageCache
 import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.loaded.RxLoaded
@@ -29,9 +30,10 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 internal class RxResourceLoader internal constructor(
-  context: Context, @DrawableRes resource: Int, @DrawableRes errorResource: Int,
+  enforcer: Enforcer, context: Context,
+  @DrawableRes resource: Int, @DrawableRes errorResource: Int,
   resourceImageCache: ImageCache<Int, Drawable>
-) : ResourceLoader(context, resource, errorResource, resourceImageCache) {
+) : ResourceLoader(enforcer, context, resource, errorResource, resourceImageCache) {
 
   override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
     return RxLoaded(

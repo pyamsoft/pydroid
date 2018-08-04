@@ -16,10 +16,12 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Completable
 import io.reactivex.Single
 
 internal class RatingInteractorImpl internal constructor(
+  private val enforcer: Enforcer,
   private val preferences: RatingPreferences
 ) : RatingInteractor {
 
@@ -28,6 +30,7 @@ internal class RatingInteractorImpl internal constructor(
     versionCode: Int
   ): Single<Boolean> {
     return Single.fromCallable {
+      enforcer.assertNotOnMainThread()
       if (force) {
         return@fromCallable true
       } else {
@@ -45,5 +48,8 @@ internal class RatingInteractorImpl internal constructor(
   }
 
   override fun saveRating(versionCode: Int): Completable =
-    Completable.fromAction { preferences.ratingAcceptedVersion = versionCode }
+    Completable.fromAction {
+      enforcer.assertNotOnMainThread()
+      preferences.ratingAcceptedVersion = versionCode
+    }
 }

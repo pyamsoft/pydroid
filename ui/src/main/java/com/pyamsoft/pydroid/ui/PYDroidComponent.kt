@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
@@ -25,6 +26,9 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal interface PYDroidComponent {
+
+  @CheckResult
+  fun enforcer(): Enforcer
 
   fun inject(fragment: AboutLibrariesFragment)
 

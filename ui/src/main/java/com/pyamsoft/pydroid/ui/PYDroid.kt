@@ -20,6 +20,7 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import timber.log.Timber
 
 /**
@@ -30,14 +31,7 @@ class PYDroid private constructor(
   debug: Boolean
 ) {
 
-  private val component: PYDroidComponent
-  private val modules: ModuleProvider
-
-  init {
-    val impl = PYDroidComponentImpl(application, debug)
-    component = impl
-    modules = impl
-  }
+  private val impl = PYDroidComponentImpl(application, debug)
 
   init {
     if (debug) {
@@ -55,7 +49,18 @@ class PYDroid private constructor(
    */
   @CheckResult
   fun modules(): ModuleProvider {
-    return modules
+    return impl
+  }
+
+  /**
+   * Exposed so that outside applications can take advantage of the Enforcer singleton
+   *
+   * This is not exposed outside of the object created in the PYDroid.Instance as it is
+   * intended to only be used during the construction of the application level object graph.
+   */
+  @CheckResult
+  fun enforcer(): Enforcer {
+    return impl.enforcer()
   }
 
   interface Instance {
@@ -101,7 +106,7 @@ class PYDroid private constructor(
     internal fun obtain(context: Context): PYDroidComponent {
       val app = context.applicationContext
       if (app is PYDroid.Instance) {
-        return checkNotNull(app.getPydroid()?.component) {
+        return checkNotNull(app.getPydroid()?.impl) {
           "PYDroid not initialized. call PYDroid.init(Application, PYDroid.Instance, Boolean)"
         }
       } else {

@@ -22,7 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.fragment.BackPressHandler
+import com.pyamsoft.pydroid.ui.app.fragment.BackPressDelegate
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
@@ -36,10 +36,9 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
   @CallSuper
   override fun onBackPressed() {
-    if (supportFragmentManager.fragments.any { it is BackPressHandler && it.onBackPressed() }) {
-      return
+    if (!BackPressDelegate.onBackPressed(supportFragmentManager)) {
+      super.onBackPressed()
     }
-    super.onBackPressed()
   }
 
   @CallSuper

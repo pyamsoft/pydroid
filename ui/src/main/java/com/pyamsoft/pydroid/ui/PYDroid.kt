@@ -76,14 +76,16 @@ class PYDroid private constructor(
               .detectAll()
               .penaltyLog()
               .penaltyDeath()
-              .permitDiskReads()
+              // Needed for SharedPreferences initialization
               .permitDiskWrites()
-              .penaltyDeath()
+              // Needed for SharedPreferences initialization
+              .permitDiskReads()
               .build()
       )
       StrictMode.setVmPolicy(
           StrictMode.VmPolicy.Builder()
               .detectAll()
+              .penaltyLog()
               .penaltyDeath()
               .build()
       )

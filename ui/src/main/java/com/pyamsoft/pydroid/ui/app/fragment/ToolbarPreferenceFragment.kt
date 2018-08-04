@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.view.View
+import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
@@ -35,8 +36,9 @@ abstract class ToolbarPreferenceFragment : PreferenceFragmentCompat(),
       }
     }
 
+  @CallSuper
   override fun onBackPressed(): Boolean {
-    return false
+    return BackPressDelegate.onBackPressed(childFragmentManager)
   }
 
   @CheckResult

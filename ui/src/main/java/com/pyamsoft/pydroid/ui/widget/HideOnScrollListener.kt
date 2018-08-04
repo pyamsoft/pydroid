@@ -70,16 +70,16 @@ class HideOnScrollListener private constructor(
 
     @JvmStatic
     @CheckResult
-    fun withActionButton(
+    fun withView(
       view: View,
       onVisibilityChanged: (Boolean) -> Unit
     ): HideOnScrollListener {
-      return withActionButton(view, DEFAULT_DISTANCE, onVisibilityChanged)
+      return withView(view, DEFAULT_DISTANCE, onVisibilityChanged)
     }
 
     @JvmStatic
     @CheckResult
-    fun withActionButton(
+    fun withView(
       view: View,
       distance: Int,
       onVisibilityChanged: (Boolean) -> Unit

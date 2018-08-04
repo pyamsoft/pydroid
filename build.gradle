@@ -18,7 +18,7 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.2.51'
+    kotlin_version = '1.2.60'
     plugin_version = '3.2.0-beta04'
     dokka_version = "0.9.17"
   }
@@ -85,7 +85,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.1.0-SNAPSHOT"
+  final String POM_VERSION = "18.1.0"
 
   group = POM_GROUP
   version = POM_VERSION

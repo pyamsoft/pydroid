@@ -20,12 +20,14 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
+import com.pyamsoft.pydroid.bootstrap.version.network.DelegatingSocketFactory
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.net.SocketFactory
 
 class VersionCheckModule(
   context: Context,
@@ -51,6 +53,7 @@ class VersionCheckModule(
   @CheckResult
   private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
     return OkHttpClient.Builder()
+        .socketFactory(DelegatingSocketFactory(SocketFactory.getDefault()))
         .also {
           if (debug) {
             val logging = HttpLoggingInterceptor()

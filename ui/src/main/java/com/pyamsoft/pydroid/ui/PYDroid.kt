@@ -78,13 +78,13 @@ class PYDroid private constructor(
               .penaltyDeath()
               .permitDiskReads()
               .permitDiskWrites()
-              .penaltyFlashScreen()
+              .penaltyDeath()
               .build()
       )
       StrictMode.setVmPolicy(
           StrictMode.VmPolicy.Builder()
               .detectAll()
-              .penaltyLog()
+              .penaltyDeath()
               .build()
       )
     }

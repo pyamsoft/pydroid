@@ -43,7 +43,7 @@ buildscript {
     recyclerView = "1.0.0-beta01"
     appCompat = "1.0.0-beta01"
 
-    repo = "0.0.4"
+    repo = "0.0.5"
     timber = "4.7.1"
     moshi = "1.6.0"
     retrofit = "2.4.0"

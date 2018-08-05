@@ -80,7 +80,6 @@ fun Toolbar.animateMenu() {
   val t = getChildAt(0)
   if (t is TextView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
     t.fadeIn()
-        .start()
   }
 
   val amv = getChildAt(1)
@@ -90,7 +89,6 @@ fun Toolbar.animateMenu() {
     for (i in 0 until amv.childCount) {
       val item = amv.getChildAt(i) ?: continue
       item.popShow(delay, duration)
-          .start()
       delay += duration
     }
   }

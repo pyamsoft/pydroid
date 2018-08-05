@@ -41,7 +41,7 @@ inline fun FloatingActionButton.hide(crossinline func: FloatingActionButton.() -
 }
 
 inline fun FloatingActionButton.show(crossinline func: FloatingActionButton.() -> Unit) {
-  this.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
+  this.show(object : FloatingActionButton.OnVisibilityChangedListener() {
 
     override fun onShown(fab: FloatingActionButton?) {
       super.onShown(fab)

@@ -16,23 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.app.activity
 
-import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.preference.PreferenceManager
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.BackPressDelegate
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
   private var capturedToolbar: Toolbar? = null
-
-  @CallSuper
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    PreferenceManager.setDefaultValues(this, R.xml.pydroid, false)
-  }
 
   @CallSuper
   override fun onBackPressed() {

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Completable
 import io.reactivex.Single
+import timber.log.Timber
 
 internal class RatingInteractorImpl internal constructor(
   private val enforcer: Enforcer,
@@ -32,16 +33,24 @@ internal class RatingInteractorImpl internal constructor(
     return Single.fromCallable {
       enforcer.assertNotOnMainThread()
       if (force) {
+        Timber.d("Force view rating")
         return@fromCallable true
       } else {
         // If the version code is 1, it's the first app version, don't show a changelog
         if (versionCode <= 1) {
+          Timber.w("Version code is invalid: $versionCode")
           return@fromCallable false
         } else {
           // If the preference is default, the app may be installed for the first time
           // regardless of the current version. Don't show change log, else show it
           val lastSeenVersion: Int = preferences.ratingAcceptedVersion
-          return@fromCallable lastSeenVersion < RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
+          if (lastSeenVersion == RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION) {
+            Timber.i("Last seen version is default, app is installed for the first time or reset")
+            return@fromCallable false
+          } else {
+            Timber.d("Compare version code to last seen: $versionCode <-> $lastSeenVersion")
+            return@fromCallable lastSeenVersion < versionCode
+          }
         }
       }
     }

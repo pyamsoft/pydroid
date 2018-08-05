@@ -46,6 +46,7 @@ internal class RatingInteractorImpl internal constructor(
           val lastSeenVersion: Int = preferences.ratingAcceptedVersion
           if (lastSeenVersion == RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION) {
             Timber.i("Last seen version is default, app is installed for the first time or reset")
+            preferences.ratingAcceptedVersion = versionCode
             return@fromCallable false
           } else {
             Timber.d("Compare version code to last seen: $versionCode <-> $lastSeenVersion")

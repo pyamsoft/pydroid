@@ -57,7 +57,7 @@ class VersionCheckModule(
   @CheckResult
   private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
     return OkHttpClient.Builder()
-        .socketFactory(DelegatingSocketFactory())
+        .socketFactory(DelegatingSocketFactory.create())
         .also {
           if (debug) {
             val logging = HttpLoggingInterceptor()

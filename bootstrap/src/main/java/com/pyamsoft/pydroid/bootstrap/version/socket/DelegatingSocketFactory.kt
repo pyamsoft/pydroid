@@ -6,9 +6,9 @@ import java.net.InetAddress
 import java.net.Socket
 import javax.net.SocketFactory
 
-open class DelegatingSocketFactory : SocketFactory() {
-
-  private val delegate = SocketFactory.getDefault()
+open class DelegatingSocketFactory private constructor(
+  private val delegate: SocketFactory
+) : SocketFactory() {
 
   override fun createSocket(): Socket {
     return delegate.createSocket()
@@ -60,4 +60,13 @@ open class DelegatingSocketFactory : SocketFactory() {
     return socket
   }
 
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    @JvmOverloads
+    fun create(factory: SocketFactory = SocketFactory.getDefault()): SocketFactory {
+      return DelegatingSocketFactory(factory)
+    }
+  }
 }

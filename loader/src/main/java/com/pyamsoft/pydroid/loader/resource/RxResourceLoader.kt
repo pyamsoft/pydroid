@@ -30,13 +30,19 @@ import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 internal class RxResourceLoader internal constructor(
-  enforcer: Enforcer, context: Context,
+  enforcer: Enforcer,
+  context: Context,
   @DrawableRes resource: Int, @DrawableRes errorResource: Int,
   resourceImageCache: ImageCache<Int, Drawable>
 ) : ResourceLoader(enforcer, context, resource, errorResource, resourceImageCache) {
 
-  override fun load(target: Target<Drawable>, @DrawableRes resource: Int): Loaded {
-    return RxLoaded(
+  init {
+    Timber.d("New RxResourceLoader for resource: $resource")
+  }
+
+  override fun load(target: Target<Drawable>): Loaded {
+    Timber.d("Load resource into target: $target")
+    return RxLoaded(target,
         Single.fromCallable { loadResource() }
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())

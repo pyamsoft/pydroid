@@ -20,24 +20,30 @@ import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.loader.targets.Target
 import io.reactivex.disposables.Disposable
+import timber.log.Timber
 
-class RxLoaded(private val disposable: Disposable) : Loaded, LifecycleObserver {
+class RxLoaded(
+  private val target: Target<*>,
+  private val disposable: Disposable
+) : Loaded, LifecycleObserver {
 
   private var lifeCycleOwner: LifecycleOwner? = null
 
   override fun bind(owner: LifecycleOwner) {
+    Timber.d("Bind RxLoaded to lifecycle")
     owner.lifecycle.addObserver(this)
     lifeCycleOwner = owner
   }
 
   @OnLifecycleEvent(ON_DESTROY)
   internal fun unbindOnDestroy() {
+    Timber.d("RxLoaded unbind on destroy")
     lifeCycleOwner?.lifecycle?.removeObserver(this)
     lifeCycleOwner = null
 
-    if (!disposable.isDisposed) {
-      disposable.dispose()
-    }
+    disposable.dispose()
+    target.clear()
   }
 }

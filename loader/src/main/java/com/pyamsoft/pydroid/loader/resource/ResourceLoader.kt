@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.loader.loaded.Loaded
 import com.pyamsoft.pydroid.loader.targets.DrawableImageTarget
 import com.pyamsoft.pydroid.loader.targets.Target
 import com.pyamsoft.pydroid.util.tintWith
+import timber.log.Timber
 
 /**
  * Loads Images from Resources.
@@ -57,7 +58,7 @@ abstract class ResourceLoader protected constructor(
   final override fun into(imageView: ImageView): Loaded =
     into(DrawableImageTarget.forImageView(imageView))
 
-  final override fun into(target: Target<Drawable>): Loaded = load(target, resource)
+  final override fun into(target: Target<Drawable>): Loaded = load(target)
 
   @CheckResult
   protected fun loadResource(): Drawable {
@@ -65,10 +66,12 @@ abstract class ResourceLoader protected constructor(
     val key: ImageCacheKey<Int> = resource.toKey()
     val cached: Drawable? = resourceImageCache.retrieve(key)
     if (cached == null) {
+      Timber.d("Loading fresh resource $key")
       val result = loadFreshResource()
       resourceImageCache.cache(key, result)
       return result
     } else {
+      Timber.d("Loading cached resource $key")
       return cached
     }
   }
@@ -96,10 +99,12 @@ abstract class ResourceLoader protected constructor(
     if (cached == null) {
       val result: Drawable? = loadFreshErrorResource()
       if (result != null) {
+        Timber.d("Loading fresh error resource $key")
         resourceImageCache.cache(key, result)
       }
       return result
     } else {
+      Timber.d("Loading cached error resource $key")
       return cached
     }
   }
@@ -117,8 +122,5 @@ abstract class ResourceLoader protected constructor(
   }
 
   @CheckResult
-  protected abstract fun load(
-    target: Target<Drawable>,
-    @DrawableRes resource: Int
-  ): Loaded
+  protected abstract fun load(target: Target<Drawable>): Loaded
 }

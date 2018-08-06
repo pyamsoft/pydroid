@@ -19,18 +19,26 @@ package com.pyamsoft.pydroid.loader.targets
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.CheckResult
+import timber.log.Timber
 
 /**
  * Target which loads Drawables into an ImageView
  */
 class DrawableImageTarget private constructor(private val imageView: ImageView) : Target<Drawable> {
 
+  override fun clear() {
+    Timber.d("Clearing DrawableImageTarget")
+    imageView.setImageDrawable(null)
+  }
+
   override fun loadImage(image: Drawable) {
+    Timber.d("Load drawable into target")
     imageView.setImageDrawable(image)
   }
 
   override fun loadError(error: Drawable?) {
     if (error != null) {
+      Timber.d("Load error drawable into target")
       imageView.setImageDrawable(error)
     }
   }

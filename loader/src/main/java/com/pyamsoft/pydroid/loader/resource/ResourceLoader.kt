@@ -65,14 +65,23 @@ abstract class ResourceLoader protected constructor(
     enforcer.assertNotOnMainThread()
     val key: ImageCacheKey<Int> = resource.toKey()
     val cached: Drawable? = resourceImageCache.retrieve(key)
+    val drawable: Drawable
     if (cached == null) {
       Timber.d("Loading fresh resource $key")
       val result = loadFreshResource()
       resourceImageCache.cache(key, result)
-      return result
+      drawable = result
     } else {
       Timber.d("Loading cached resource $key")
-      return cached
+      drawable = cached
+    }
+
+    return mutator.let {
+      if (it == null) {
+        return@let drawable
+      } else {
+        return@let it(drawable)
+      }
     }
   }
 

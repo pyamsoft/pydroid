@@ -37,6 +37,9 @@ interface Loader<T : Any> {
   fun withCompleteAction(action: (T) -> Unit): Loader<T>
 
   @CheckResult
+  fun mutate(action: (T) -> T): Loader<T>
+
+  @CheckResult
   fun into(imageView: ImageView): Loaded
 
   @CheckResult

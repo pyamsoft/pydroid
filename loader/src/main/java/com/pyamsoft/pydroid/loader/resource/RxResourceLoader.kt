@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.loader.targets.Target
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
 internal class RxResourceLoader internal constructor(
   enforcer: Enforcer,
@@ -36,12 +35,7 @@ internal class RxResourceLoader internal constructor(
   resourceImageCache: ImageCache<Int, Drawable>
 ) : ResourceLoader(enforcer, context, resource, errorResource, resourceImageCache) {
 
-  init {
-    Timber.d("New RxResourceLoader for resource: $resource")
-  }
-
   override fun load(target: Target<Drawable>): Loaded {
-    Timber.d("Load resource into target: $target")
     return RxLoaded(target,
         Single.fromCallable { loadResource() }
             .subscribeOn(Schedulers.computation())
@@ -49,7 +43,6 @@ internal class RxResourceLoader internal constructor(
             .doOnSubscribe { startAction?.invoke() }
             .doAfterSuccess { completeAction?.invoke(it) }
             .doOnError {
-              Timber.e(it, "Error loading Drawable using RxResourceLoader")
               errorAction?.invoke(it)
             }.subscribe({ target.loadImage(it) }, { target.loadError(loadErrorResource()) })
     )

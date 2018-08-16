@@ -29,6 +29,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
+@Deprecated("Use ViewModel")
 abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
 
   private val pauseDisposables = CompositeDisposable()
@@ -149,4 +150,43 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
     disposables.add(disposable)
   }
 
+}
+
+abstract class ViewModel protected constructor() : LifecycleObserver {
+
+  private var disposables: CompositeDisposable? = null
+  private var lifecycle: Lifecycle? = null
+
+  fun bind(owner: LifecycleOwner) {
+    bind(owner.lifecycle)
+  }
+
+  fun bind(lifecycle: Lifecycle) {
+    if (this.disposables != null || this.lifecycle != null) {
+      throw IllegalStateException("Calling bind() multiple times on a ViewModel is not supported.")
+    } else {
+      this.lifecycle = lifecycle
+      this.disposables = CompositeDisposable()
+      lifecycle.addObserver(this)
+    }
+  }
+
+  @OnLifecycleEvent(ON_DESTROY)
+  internal fun onCleared() {
+    if (this.disposables == null || this.lifecycle == null) {
+      throw IllegalStateException(
+          "Calling onCleared() multiple times on a ViewModel is not supported."
+      )
+    } else {
+      disposables?.also {
+        it.clear()
+        it.dispose()
+      }
+
+      lifecycle?.removeObserver(this)
+
+      disposables = null
+      lifecycle = null
+    }
+  }
 }

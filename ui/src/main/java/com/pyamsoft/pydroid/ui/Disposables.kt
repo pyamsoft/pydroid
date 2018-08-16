@@ -1,4 +1,4 @@
-package com.pyamsoft.pydroid.core
+package com.pyamsoft.pydroid.ui
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY

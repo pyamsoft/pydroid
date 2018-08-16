@@ -16,5 +16,15 @@
 
 package com.pyamsoft.pydroid.core.bus
 
-interface EventBus<T : Any> : Publisher<T>, Listener<T>
+import androidx.annotation.CheckResult
+import io.reactivex.Observable
 
+interface Listener<T : Any> {
+
+  /**
+   * Listen for Bus events
+   *
+   */
+  @CheckResult
+  fun listen(): Observable<T>
+}

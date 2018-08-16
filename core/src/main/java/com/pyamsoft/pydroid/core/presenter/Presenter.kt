@@ -213,15 +213,15 @@ abstract class ViewModel protected constructor() : LifecycleObserver {
     return ViewNotificationBusImpl()
   }
 
-  sealed class Event {
-    object Empty : Event()
-    object Loading : Event()
-    data class Success<T : Any>(val data: T) : Event()
-    data class Error(val error: Throwable) : Event()
-    object Complete : Event()
+  sealed class Event<T : Any> {
+    class Empty<T : Any> : Event<T>()
+    class Loading<T : Any> : Event<T>()
+    data class Success<T : Any>(val data: T) : Event<T>()
+    data class Error<T : Any>(val error: Throwable) : Event<T>()
+    class Complete<T : Any> : Event<T>()
   }
 
-  protected interface ViewNotificationBus<T : Any> : Listener<Event> {
+  protected interface ViewNotificationBus<T : Any> : Listener<Event<T>> {
 
     fun loading()
 
@@ -233,24 +233,24 @@ abstract class ViewModel protected constructor() : LifecycleObserver {
 
   }
 
-  private class ViewNotificationBusImpl<T : Any> : ViewNotificationBus<T>, EventBus<Event> {
+  private class ViewNotificationBusImpl<T : Any> : ViewNotificationBus<T>, EventBus<Event<T>> {
 
-    private val bus = RxBus.create<Event>()
+    private val bus = RxBus.create<Event<T>>()
 
-    override fun listen(): Observable<Event> {
+    override fun listen(): Observable<Event<T>> {
       return bus.listen()
-          .onErrorReturnItem(Empty)
+          .onErrorReturnItem(Empty())
           .filter { it !is Empty }
     }
 
-    override fun publish(event: Event) {
+    override fun publish(event: Event<T>) {
       if (event !is Empty) {
         bus.publish(event)
       }
     }
 
     override fun loading() {
-      publish(Loading)
+      publish(Loading())
     }
 
     override fun success(data: T) {
@@ -262,7 +262,7 @@ abstract class ViewModel protected constructor() : LifecycleObserver {
     }
 
     override fun complete() {
-      publish(Complete)
+      publish(Complete())
     }
 
   }

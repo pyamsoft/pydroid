@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.core.bus
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.bus.RxBus.Event.Empty
+import com.pyamsoft.pydroid.core.bus.RxBus.Event.Wrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -24,18 +26,27 @@ import timber.log.Timber
 
 class RxBus<T : Any> private constructor() : EventBus<T> {
 
-  private val bus: Subject<T> = PublishSubject.create<T>()
+  private val bus: Subject<Event<T>> = PublishSubject.create<Event<T>>()
       .toSerialized()
 
   override fun publish(event: T) {
     if (bus.hasObservers()) {
-      bus.onNext(event)
+      bus.onNext(Wrapper(event))
     } else {
       Timber.w("No observers on bus, ignore publish event: %s", event)
     }
   }
 
   override fun listen(): Observable<T> = bus
+      .onErrorReturnItem(Empty())
+      .filter { it !is Empty }
+      .map { it as Wrapper }
+      .map { it.data }
+
+  sealed class Event<T : Any> {
+    class Empty<T : Any> : Event<T>()
+    data class Wrapper<T : Any>(val data: T) : Event<T>()
+  }
 
   companion object {
 
@@ -44,7 +55,6 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
      */
     @JvmStatic
     @CheckResult
-    fun <T : Any> create(): EventBus<T> =
-      RxBus()
+    fun <T : Any> create(): EventBus<T> = RxBus()
   }
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
-import androidx.lifecycle.Lifecycle.State.CREATED
+import androidx.lifecycle.Lifecycle.State.INITIALIZED
 import androidx.lifecycle.Lifecycle.State.RESUMED
 import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.LifecycleObserver
@@ -54,8 +54,8 @@ interface LifecycleViewModel {
       when {
         currentState.isAtLeast(RESUMED) -> disposeOnPause = true
         currentState.isAtLeast(STARTED) -> disposeOnStop = true
-        currentState.isAtLeast(CREATED) -> disposeOnDestroy = true
-        else -> throw IllegalStateException("Lifecycle is invalid state: $currentState")
+        // State can be either CREATED or INITIALIZED in the case of lifecycle
+        else -> disposeOnDestroy = true
       }
 
       bindToLifecycle(disposable, lifecycle, disposeOnPause, disposeOnStop, disposeOnDestroy)
@@ -66,7 +66,7 @@ interface LifecycleViewModel {
       lifecycle: Lifecycle
     ) {
       val currentState = lifecycle.currentState
-      if (currentState.isAtLeast(CREATED)) {
+      if (currentState.isAtLeast(INITIALIZED)) {
         bindToLifecycle(disposable, lifecycle, disposeOnDestroy = true)
       } else {
         throw IllegalStateException("Lifecycle is invalid state: $currentState")

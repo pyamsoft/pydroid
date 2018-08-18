@@ -54,7 +54,7 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun inject(fragment: AboutLibrariesFragment) {
-    fragment.presenter = aboutLibrariesModule.getPresenter()
+    fragment.viewModel = aboutLibrariesModule.getViewModel()
     fragment.imageLoader = loaderModule.provideImageLoader()
   }
 

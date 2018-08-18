@@ -21,8 +21,8 @@ interface Publisher<T : Any> {
   /**
    * Publish an event to a registered Receiver class
    *
-   * The bus does not make any restrictions on what type an Event should be. While events can be
-   * mutable, it is recommended to make your Event object immutable as the bus makes no guarantees
+   * The viewBus does not make any restrictions on what type an DataWrapper should be. While events can be
+   * mutable, it is recommended to make your DataWrapper object immutable as the viewBus makes no guarantees
    * about the state of the data
    */
   fun publish(event: T)

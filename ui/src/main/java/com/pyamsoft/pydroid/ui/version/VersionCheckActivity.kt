@@ -18,18 +18,16 @@ package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
-abstract class VersionCheckActivity : ActivityBase(),
-    VersionCheckProvider,
-    VersionCheckPresenter.View {
+abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
 
-  internal lateinit var presenter: VersionCheckPresenter
+  internal lateinit var viewModel: VersionCheckViewModel
 
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,16 +35,24 @@ abstract class VersionCheckActivity : ActivityBase(),
     PYDroid.obtain(this)
         .plusVersionCheckComponent(currentApplicationVersion)
         .inject(this)
-    presenter.bind(this, this)
+
+    observeUpdates()
+  }
+
+  private fun observeUpdates() {
+    viewModel.onUpdateAvailable(this) { wrapper ->
+      wrapper.onSuccess { onUpdatedVersionFound(currentApplicationVersion, it) }
+      wrapper.onError { onUpdatedVersionError(it) }
+    }
   }
 
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
-    presenter.checkForUpdates(false)
+    viewModel.checkForUpdates(this, false)
   }
 
-  override fun onUpdatedVersionFound(
+  private fun onUpdatedVersionFound(
     current: Int,
     updated: Int
   ) {
@@ -55,7 +61,8 @@ abstract class VersionCheckActivity : ActivityBase(),
         .show(this, VersionUpgradeDialog.TAG)
   }
 
-  override fun onUpdatedVersionError(throwable: Throwable) {
+  private fun onUpdatedVersionError(throwable: Throwable) {
     // Silently drop version check errors
+    Timber.e(throwable)
   }
 }

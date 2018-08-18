@@ -23,7 +23,7 @@ fun Disposable.bind(lifecycle: Lifecycle) {
     state.isAtLeast(RESUMED) -> LifecycleDisposable(disposeOnPause = true)
     state.isAtLeast(STARTED) -> LifecycleDisposable(disposeOnStop = true)
     state.isAtLeast(CREATED) -> LifecycleDisposable(disposeOnDestroy = true)
-    else -> throw IllegalStateException("Cannot bind Disposable to state: $state")
+    else -> throw IllegalStateException("Cannot disposeOnClear Disposable to state: $state")
   }
 
   disposable.bind(this, lifecycle)

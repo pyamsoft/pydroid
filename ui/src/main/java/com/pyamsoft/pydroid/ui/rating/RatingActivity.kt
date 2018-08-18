@@ -28,7 +28,7 @@ import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPresenter
+import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.Snackbreak
@@ -37,11 +37,9 @@ import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity(),
-    ChangeLogProvider,
-    RatingPresenter.View {
+abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
-  internal lateinit var ratingPresenter: RatingPresenter
+  internal lateinit var ratingViewModel: RatingViewModel
 
   @CheckResult
   private fun Int.validate(what: String): Int {
@@ -99,7 +97,19 @@ abstract class RatingActivity : VersionCheckActivity(),
     PYDroid.obtain(this)
         .plusRatingComponent(currentApplicationVersion)
         .inject(this)
-    ratingPresenter.bind(this, this)
+
+    observeShowRating()
+  }
+
+  private fun observeShowRating() {
+    ratingViewModel.onRatingError(this) {
+      onRatingError(it)
+    }
+
+    ratingViewModel.onRatingDialogLoaded(this) { wrapper ->
+      wrapper.onSuccess { onShowRating() }
+      wrapper.onError { onShowRatingError(it) }
+    }
   }
 
   @CallSuper
@@ -107,19 +117,19 @@ abstract class RatingActivity : VersionCheckActivity(),
     super.onPostResume()
 
     // DialogFragment must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
-    ratingPresenter.loadRatingDialog(false)
+    ratingViewModel.loadRatingDialog(this, false)
   }
 
-  override fun onShowRating() {
+  private fun onShowRating() {
     RatingDialog.newInstance(this)
         .show(this, RatingDialog.TAG)
   }
 
-  override fun onShowRatingError(throwable: Throwable) {
+  private fun onShowRatingError(throwable: Throwable) {
     Timber.e(throwable, "Could not load rating dialog")
   }
 
-  override fun onRatingError(throwable: Throwable) {
+  private fun onRatingError(throwable: Throwable) {
     val details = ErrorDetail(message = throwable.localizedMessage)
     Snackbreak.short(this, rootView, details)
   }

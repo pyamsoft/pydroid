@@ -25,7 +25,7 @@ import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
-import com.pyamsoft.pydroid.bootstrap.rating.RatingSavePresenter
+import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -36,13 +36,13 @@ import com.pyamsoft.pydroid.ui.util.clickAppPage
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.toDp
 
-internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
+internal class RatingDialog : ToolbarDialog() {
 
   private lateinit var rateLink: String
   private lateinit var binding: DialogRatingBinding
   internal lateinit var linker: Linker
   internal lateinit var imageLoader: ImageLoader
-  internal lateinit var presenter: RatingSavePresenter
+  internal lateinit var viewModel: RatingViewModel
   internal lateinit var errorPublisher: Publisher<Throwable>
   @DrawableRes private var changeLogIcon: Int = 0
   private var versionCode: Int = 0
@@ -89,26 +89,36 @@ internal class RatingDialog : ToolbarDialog(), RatingSavePresenter.View {
     initDialog()
 
     binding.apply {
-      ratingBtnNoThanks.setOnDebouncedClickListener { presenter.saveRating(false) }
-      ratingBtnGoRate.setOnDebouncedClickListener { presenter.saveRating(true) }
+      ratingBtnNoThanks.setOnDebouncedClickListener {
+        viewModel.saveRating(viewLifecycleOwner, false)
+      }
+      ratingBtnGoRate.setOnDebouncedClickListener {
+        viewModel.saveRating(viewLifecycleOwner, true)
+      }
     }
 
-    presenter.bind(viewLifecycleOwner, this)
+    observeRatingSaved()
   }
 
-  override fun onRatingSaved(accept: Boolean) {
+  private fun observeRatingSaved() {
+    viewModel.onRatingSaved(viewLifecycleOwner) { wrapper ->
+      wrapper.onSuccess { onRatingSaved(it) }
+      wrapper.onError { onRatingSaveError(it) }
+      wrapper.onComplete { dismiss() }
+    }
+  }
+
+  private fun onRatingSaved(accept: Boolean) {
     if (accept) {
       view?.also {
         linker.clickAppPage(requireActivity(), it)
       }
     }
 
-    dismiss()
   }
 
-  override fun onRatingSaveError(throwable: Throwable) {
+  private fun onRatingSaveError(throwable: Throwable) {
     errorPublisher.publish(throwable)
-    dismiss()
   }
 
   private fun initDialog() {

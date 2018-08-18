@@ -33,7 +33,7 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
     if (bus.hasObservers()) {
       bus.onNext(Wrapper(event))
     } else {
-      Timber.w("No observers on bus, ignore publish event: %s", event)
+      Timber.w("No observers on viewBus, ignore publish event: %s", event)
     }
   }
 
@@ -43,15 +43,15 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
       .map { it as Wrapper }
       .map { it.data }
 
-  sealed class Event<T : Any> {
-    class Empty<T : Any> : Event<T>()
-    data class Wrapper<T : Any>(val data: T) : Event<T>()
+  internal sealed class Event<T : Any> {
+    internal class Empty<T : Any> : Event<T>()
+    internal data class Wrapper<T : Any>(val data: T) : Event<T>()
   }
 
   companion object {
 
     /**
-     * Create a new local bus instance to use
+     * Create a new local viewBus instance to use
      */
     @JvmStatic
     @CheckResult

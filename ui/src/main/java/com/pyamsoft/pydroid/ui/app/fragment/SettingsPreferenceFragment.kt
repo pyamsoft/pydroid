@@ -24,30 +24,25 @@ import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
 import androidx.preference.Preference
 import com.google.android.material.snackbar.Snackbar
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPresenter
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.clickAppPage
-import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
-import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 import timber.log.Timber
 
-abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), VersionCheckPresenter.View,
-    RatingPresenter.View, SettingsPreferencePresenter.View {
+abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var linker: Linker
-  internal lateinit var presenter: SettingsPreferencePresenter
-  internal lateinit var versionPresenter: VersionCheckPresenter
-  internal lateinit var ratingPresenter: RatingPresenter
+  internal lateinit var viewModel: SettingsPreferenceViewModel
+  internal lateinit var versionViewModel: VersionCheckViewModel
+  internal lateinit var ratingViewModel: RatingViewModel
   private lateinit var snackbar: Snackbar
 
   @CallSuper
@@ -108,7 +103,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
 
     val checkVersion: Preference = findPreference(getString(R.string.check_version_key))
     checkVersion.setOnPreferenceClickListener {
-      onCheckForUpdatesClicked(versionPresenter)
+      onCheckForUpdatesClicked(versionViewModel)
       return@setOnPreferenceClickListener true
     }
 
@@ -124,36 +119,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
       return@setOnPreferenceClickListener true
     }
 
-    versionPresenter.bind(viewLifecycleOwner, this)
-    ratingPresenter.bind(viewLifecycleOwner, this)
-    presenter.bind(viewLifecycleOwner, this)
-  }
-
-  override fun onShowRating() {
-    val activity = activity
-    if (activity is ChangeLogProvider) {
-      RatingDialog.newInstance(activity)
-          .show(activity, RatingDialog.TAG)
-    } else {
-      throw ClassCastException("Activity is not a change log provider")
-    }
-  }
-
-  override fun onShowRatingError(throwable: Throwable) {
-    Timber.e(throwable, "Error loading rating dialog")
-  }
-
-  override fun onUpdatedVersionFound(
-    current: Int,
-    updated: Int
-  ) {
-    Timber.d("Updated version found. %d => %d", current, updated)
-    VersionUpgradeDialog.newInstance(versionedActivity.applicationName, current, updated)
-        .show(requireActivity(), VersionUpgradeDialog.TAG)
-  }
-
-  override fun onUpdatedVersionError(throwable: Throwable) {
-    // Silently drop version check errors
+    viewModel.onLinkerError(viewLifecycleOwner) { onError(it) }
   }
 
   /**
@@ -178,17 +144,17 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
    * Shows the changelog, override or extend to use unique implementation
    */
   protected open fun onShowChangelogClicked() {
-    ratingPresenter.loadRatingDialog(true)
+    ratingViewModel.loadRatingDialog(viewLifecycleOwner, true)
   }
 
   /**
    * Checks the server for updates, override to use a custom behavior
    */
-  protected open fun onCheckForUpdatesClicked(presenter: VersionCheckPresenter) {
+  protected open fun onCheckForUpdatesClicked(viewModel: VersionCheckViewModel) {
     if (!snackbar.isShownOrQueued) {
       snackbar.show()
     }
-    presenter.checkForUpdates(true)
+    viewModel.checkForUpdates(viewLifecycleOwner, true)
   }
 
   private fun onError(throwable: Throwable) {
@@ -196,14 +162,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment(), Version
       val details = ErrorDetail(message = throwable.localizedMessage)
       Snackbreak.short(requireActivity(), it, details)
     }
-  }
-
-  override fun onLinkerError(throwable: Throwable) {
-    onError(throwable)
-  }
-
-  override fun onRatingError(throwable: Throwable) {
-    onError(throwable)
   }
 
   private val versionedActivity: VersionCheckProvider

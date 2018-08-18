@@ -24,6 +24,6 @@ internal class VersionCheckComponentImpl internal constructor(
 ) : VersionCheckComponent {
 
   override fun inject(activity: VersionCheckActivity) {
-    activity.presenter = versionCheckModule.getPresenter(currentVersion)
+    activity.viewModel = versionCheckModule.getViewModel(currentVersion)
   }
 }

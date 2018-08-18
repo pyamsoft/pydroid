@@ -28,11 +28,11 @@ internal class RatingComponentImpl internal constructor(
 ) : RatingComponent {
 
   override fun inject(activity: RatingActivity) {
-    activity.ratingPresenter = ratingModule.getPresenter(version)
+    activity.ratingViewModel = ratingModule.getViewModel(version)
   }
 
   override fun inject(dialog: RatingDialog) {
-    dialog.presenter = ratingModule.getSavePresenter(version)
+    dialog.viewModel = ratingModule.getViewModel(version)
     dialog.imageLoader = loaderModule.provideImageLoader()
     dialog.errorPublisher = ratingModule.getPublisher()
     dialog.linker = uiModule.provideLinker()

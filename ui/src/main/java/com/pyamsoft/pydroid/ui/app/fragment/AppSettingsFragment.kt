@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
@@ -59,11 +58,6 @@ abstract class AppSettingsFragment : ToolbarFragment() {
           .add(R.id.app_settings_content, provideSettingsFragment(), tag)
           .commit()
     }
-  }
-
-  @CallSuper
-  override fun onBackPressed(): Boolean {
-    return false
   }
 
   @CheckResult

@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
-import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesPresenter
+import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesViewModel
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
@@ -39,9 +39,9 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 
-class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
+class AboutLibrariesFragment : ToolbarFragment() {
 
-  internal lateinit var presenter: AboutLibrariesPresenter
+  internal lateinit var viewModel: AboutLibrariesViewModel
   internal lateinit var imageLoader: ImageLoader
   private lateinit var pagerAdapter: AboutPagerAdapter
   private lateinit var binding: FragmentAboutLibrariesBinding
@@ -100,7 +100,17 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     setupAboutList()
     setupArrows()
 
-    presenter.bind(viewLifecycleOwner, this)
+    observeLicenses()
+    viewModel.loadLicenses(viewLifecycleOwner, false)
+  }
+
+  private fun observeLicenses() {
+    viewModel.onLicensesLoaded(viewLifecycleOwner) { wrapper ->
+      wrapper.onLoading { onLicenseLoadBegin() }
+      wrapper.onSuccess { onLicenseLoaded(it) }
+      wrapper.onError { onLicenseLoadError(it) }
+      wrapper.onComplete { onLicenseLoadComplete() }
+    }
   }
 
   @CheckResult
@@ -113,19 +123,19 @@ class AboutLibrariesFragment : ToolbarFragment(), AboutLibrariesPresenter.View {
     }
   }
 
-  override fun onLicenseLoadBegin() {
+  private fun onLicenseLoadBegin() {
     refreshLatch.isRefreshing = true
   }
 
-  override fun onLicenseLoaded(licenses: List<AboutLibrariesModel>) {
+  private fun onLicenseLoaded(licenses: List<AboutLibrariesModel>) {
     pagerAdapter.addAll(licenses)
   }
 
-  override fun onLicenseLoadError(throwable: Throwable) {
+  private fun onLicenseLoadError(throwable: Throwable) {
     Snackbreak.short(requireActivity(), requireView(), ErrorDetail("", throwable.localizedMessage))
   }
 
-  override fun onLicenseLoadComplete() {
+  private fun onLicenseLoadComplete() {
     refreshLatch.isRefreshing = false
   }
 

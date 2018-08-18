@@ -28,9 +28,9 @@ internal class AppComponentImpl internal constructor(
 ) : AppComponent {
 
   override fun inject(fragment: SettingsPreferenceFragment) {
-    fragment.versionPresenter = versionCheckModule.getPresenter(currentVersion)
-    fragment.ratingPresenter = ratingModule.getPresenter(currentVersion)
+    fragment.versionViewModel = versionCheckModule.getViewModel(currentVersion)
+    fragment.ratingViewModel = ratingModule.getViewModel(currentVersion)
     fragment.linker = uiModule.provideLinker()
-    fragment.presenter = SettingsPreferencePresenter(uiModule.provideLinkerErrorBus())
+    fragment.viewModel = SettingsPreferenceViewModel(uiModule.provideLinkerErrorBus())
   }
 }

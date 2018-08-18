@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -35,6 +36,7 @@ class VersionCheckModule(
   debug: Boolean
 ) {
 
+  private val updateBus = LifecycleViewModel.viewBus<Int>()
   private val packageName: String = context.packageName
   private val cachedInteractor: VersionCheckInteractor
 
@@ -81,8 +83,8 @@ class VersionCheckModule(
   }
 
   @CheckResult
-  fun getPresenter(currentVersion: Int): VersionCheckPresenter {
-    return VersionCheckPresenter(packageName, currentVersion, cachedInteractor)
+  fun getViewModel(currentVersion: Int): VersionCheckViewModel {
+    return VersionCheckViewModel(updateBus, packageName, currentVersion, cachedInteractor)
   }
 
   companion object {

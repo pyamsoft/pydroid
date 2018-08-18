@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.core.presenter
 
-import androidx.annotation.CheckResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_CREATE
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
@@ -27,19 +26,10 @@ import androidx.lifecycle.Lifecycle.Event.ON_STOP
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.core.presenter.ViewModel.Event.Complete
-import com.pyamsoft.pydroid.core.presenter.ViewModel.Event.Empty
-import com.pyamsoft.pydroid.core.presenter.ViewModel.Event.Error
-import com.pyamsoft.pydroid.core.presenter.ViewModel.Event.Loading
-import com.pyamsoft.pydroid.core.presenter.ViewModel.Event.Success
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-@Deprecated("Use ViewModel")
+@Deprecated("Use LifecycleViewModel")
 abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
 
   private val pauseDisposables = CompositeDisposable()
@@ -162,108 +152,3 @@ abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
 
 }
 
-abstract class ViewModel protected constructor() : LifecycleObserver {
-
-  private var disposables: CompositeDisposable? = null
-  private var lifecycle: Lifecycle? = null
-
-  fun bind(owner: LifecycleOwner) {
-    bind(owner.lifecycle)
-  }
-
-  fun bind(lifecycle: Lifecycle) {
-    if (this.disposables != null || this.lifecycle != null) {
-      throw IllegalStateException("Calling bind() multiple times on a ViewModel is not supported.")
-    } else {
-      this.lifecycle = lifecycle
-      this.disposables = CompositeDisposable()
-      lifecycle.addObserver(this)
-    }
-  }
-
-  @OnLifecycleEvent(ON_DESTROY)
-  internal fun onCleared() {
-    if (this.disposables == null || this.lifecycle == null) {
-      throw IllegalStateException(
-          "Calling onCleared() multiple times on a ViewModel is not supported."
-      )
-    } else {
-      disposables?.also {
-        it.clear()
-        it.dispose()
-      }
-
-      lifecycle?.removeObserver(this)
-
-      disposables = null
-      lifecycle = null
-    }
-  }
-
-  protected fun dispose(disposable: Disposable) {
-    disposables?.add(disposable)
-  }
-
-  protected fun dispose(disposable: () -> Disposable) {
-    disposables?.add(disposable())
-  }
-
-  @CheckResult
-  protected fun <T : Any> bus(): ViewNotificationBus<T> {
-    return ViewNotificationBusImpl()
-  }
-
-  sealed class Event<T : Any> {
-    class Empty<T : Any> : Event<T>()
-    class Loading<T : Any> : Event<T>()
-    data class Success<T : Any>(val data: T) : Event<T>()
-    data class Error<T : Any>(val error: Throwable) : Event<T>()
-    class Complete<T : Any> : Event<T>()
-  }
-
-  protected interface ViewNotificationBus<T : Any> : Listener<Event<T>> {
-
-    fun loading()
-
-    fun success(data: T)
-
-    fun error(error: Throwable)
-
-    fun complete()
-
-  }
-
-  private class ViewNotificationBusImpl<T : Any> : ViewNotificationBus<T>, EventBus<Event<T>> {
-
-    private val bus = RxBus.create<Event<T>>()
-
-    override fun listen(): Observable<Event<T>> {
-      return bus.listen()
-          .onErrorReturnItem(Empty())
-          .filter { it !is Empty }
-    }
-
-    override fun publish(event: Event<T>) {
-      if (event !is Empty) {
-        bus.publish(event)
-      }
-    }
-
-    override fun loading() {
-      publish(Loading())
-    }
-
-    override fun success(data: T) {
-      publish(Success(data))
-    }
-
-    override fun error(error: Throwable) {
-      publish(Error(error))
-    }
-
-    override fun complete() {
-      publish(Complete())
-    }
-
-  }
-}

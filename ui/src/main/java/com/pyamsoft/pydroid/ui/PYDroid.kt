@@ -18,9 +18,12 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.content.Context
+import android.os.Looper
 import android.os.StrictMode
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 
 /**
@@ -34,11 +37,13 @@ class PYDroid private constructor(
   private val impl = PYDroidComponentImpl(application, debug)
 
   init {
+    setupAsyncMainThreadScheduler()
+    PYDroidUiLicenses.addLicenses()
+
     if (debug) {
       Timber.plant(Timber.DebugTree())
       setStrictMode()
     }
-    PYDroidUiLicenses.addLicenses()
   }
 
   /**
@@ -80,11 +85,7 @@ class PYDroid private constructor(
           StrictMode.ThreadPolicy.Builder()
               .detectAll()
               .penaltyLog()
-              .penaltyDeath()
-              // Needed for SharedPreferences initialization
-              .permitDiskWrites()
-              // Needed for SharedPreferences initialization
-              .permitDiskReads()
+              .penaltyFlashScreen()
               .build()
       )
       StrictMode.setVmPolicy(
@@ -94,6 +95,15 @@ class PYDroid private constructor(
               .penaltyDeath()
               .build()
       )
+    }
+
+    // Async main thread scheduler
+    // https://medium.com/@sweers/rxandroids-new-async-api-4ab5b3ad3e93
+    @JvmStatic
+    private fun setupAsyncMainThreadScheduler() {
+      val async = AndroidSchedulers.from(Looper.getMainLooper(), true)
+      RxAndroidPlugins.setInitMainThreadSchedulerHandler { async }
+      RxAndroidPlugins.setMainThreadSchedulerHandler { async }
     }
 
     /**

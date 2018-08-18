@@ -17,35 +17,24 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.content.ActivityNotFoundException
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.presenter.Presenter
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferencePresenter.View
+import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 
-class SettingsPreferencePresenter internal constructor(
+class SettingsPreferenceViewModel internal constructor(
   private val linkerErrorBus: EventBus<ActivityNotFoundException>
-) : Presenter<View>() {
+) : LifecycleViewModel {
 
-  override fun onCreate() {
-    super.onCreate()
-
-    dispose {
-      linkerErrorBus.listen()
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe({ view?.onLinkerError(it) }, {
-            Timber.e(it, "Error receiving LinkerError")
-          })
-    }
-  }
-
-  interface View : LinkerErrorCallback
-
-  interface LinkerErrorCallback {
-
-    fun onLinkerError(throwable: Throwable)
-
+  fun onLinkerError(
+    owner: LifecycleOwner,
+    func: (Throwable) -> Unit
+  ) {
+    linkerErrorBus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(func)
+        .bind(owner)
   }
 }

@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
 
 class AboutLibrariesModule(
   context: Context,
@@ -27,6 +28,7 @@ class AboutLibrariesModule(
 ) {
 
   private val cacheInteractor: AboutLibrariesInteractor
+  private val viewBus = LifecycleViewModel.viewBus<List<AboutLibrariesModel>>()
 
   init {
     val dataSource = AboutLibrariesDataSourceImpl(context.applicationContext)
@@ -39,7 +41,7 @@ class AboutLibrariesModule(
   }
 
   @CheckResult
-  fun getPresenter(): AboutLibrariesPresenter {
-    return AboutLibrariesPresenter(cacheInteractor)
+  fun getViewModel(): AboutLibrariesViewModel {
+    return AboutLibrariesViewModel(viewBus, cacheInteractor)
   }
 }

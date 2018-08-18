@@ -5,7 +5,7 @@ import com.pyamsoft.pydroid.core.bus.Listener
 // Interface to avoid exposing the generic publish() function
 interface ViewModelBus<T : Any> : Listener<DataWrapper<T>> {
 
-  fun loading()
+  fun loading(forced: Boolean)
 
   fun success(data: T)
 

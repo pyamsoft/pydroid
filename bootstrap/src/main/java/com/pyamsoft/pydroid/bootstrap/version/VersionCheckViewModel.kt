@@ -50,7 +50,7 @@ class VersionCheckViewModel internal constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .filter { currentVersionCode < it }
-        .doOnSubscribe { updateBus.loading() }
+        .doOnSubscribe { updateBus.loading(force) }
         .doAfterTerminate { updateBus.complete() }
         .subscribe({ updateBus.success(it) }, {
           Timber.e(it, "Error checking for latest version")

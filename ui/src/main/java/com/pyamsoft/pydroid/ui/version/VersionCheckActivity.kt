@@ -17,17 +17,22 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.CallSuper
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
 abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
 
   internal lateinit var viewModel: VersionCheckViewModel
+
+  abstract val rootView: View
 
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +46,16 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
 
   private fun observeUpdates() {
     viewModel.onUpdateAvailable(this) { wrapper ->
+      wrapper.onLoading { onCheckingForUpdates(it) }
       wrapper.onSuccess { onUpdatedVersionFound(currentApplicationVersion, it) }
       wrapper.onError { onUpdatedVersionError(it) }
+    }
+  }
+
+  private fun onCheckingForUpdates(showSnackbar: Boolean) {
+    if (showSnackbar) {
+      Snackbreak.make(rootView, "Checking for updates...", Snackbar.LENGTH_SHORT)
+          .show()
     }
   }
 

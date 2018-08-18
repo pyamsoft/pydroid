@@ -47,7 +47,7 @@ class AboutLibrariesViewModel internal constructor(
     interactor.loadLicenses(force)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { licenseBus.loading() }
+        .doOnSubscribe { licenseBus.loading(force) }
         .doAfterTerminate { licenseBus.complete() }
         .subscribe({ licenseBus.success(it) }, {
           Timber.e(it, "Error loading licenses")

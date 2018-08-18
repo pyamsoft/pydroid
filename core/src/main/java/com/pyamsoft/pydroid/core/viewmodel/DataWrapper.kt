@@ -6,14 +6,14 @@ sealed class DataWrapper<T : Any> {
   // No-op event
   internal class Empty<T : Any> internal constructor() : DataWrapper<T>()
 
-  internal class Loading<T : Any> internal constructor() : DataWrapper<T>()
+  internal class Loading<T : Any> internal constructor(val forced: Boolean) : DataWrapper<T>()
   internal data class Success<T : Any> internal constructor(val data: T) : DataWrapper<T>()
   internal data class Error<T : Any> internal constructor(val error: Throwable) : DataWrapper<T>()
   internal class Complete<T : Any> internal constructor() : DataWrapper<T>()
 
-  fun onLoading(func: () -> Unit) {
+  fun onLoading(func: (Boolean) -> Unit) {
     if (this is Loading) {
-      func()
+      func(this.forced)
     }
   }
 

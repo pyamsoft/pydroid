@@ -75,7 +75,7 @@ class RatingViewModel internal constructor(
         .map { Unit }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { ratingDialogBus.loading() }
+        .doOnSubscribe { ratingDialogBus.loading(force) }
         .doAfterTerminate { ratingDialogBus.complete() }
         .subscribe({ ratingDialogBus.success(it) }, {
           Timber.e(it, "on error loading rating dialog")
@@ -91,7 +91,7 @@ class RatingViewModel internal constructor(
     interactor.saveRating(currentVersion)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { ratingSavBus.loading() }
+        .doOnSubscribe { ratingSavBus.loading(false) }
         .doAfterTerminate { ratingSavBus.complete() }
         .subscribe({
           Timber.d("Saved current version code: %d", currentVersion)

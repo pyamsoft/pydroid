@@ -43,7 +43,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   internal lateinit var viewModel: SettingsPreferenceViewModel
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
-  private var snackbar: Snackbar? = null
 
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +69,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    snackbar = Snackbreak.make(view, "Checking for updates...", Snackbar.LENGTH_SHORT)
 
     val applicationSettings = findPreference("application_settings")
     if (applicationSettings != null) {
@@ -122,16 +120,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     viewModel.onLinkerError(viewLifecycleOwner) { onError(it) }
   }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    snackbar?.also {
-      if (it.isShownOrQueued) {
-        it.dismiss()
-      }
-    }
-    snackbar = null
-  }
-
   /**
    * Logs when the Clear All option is clicked, override to use unique implementation
    */
@@ -161,11 +149,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
    * Checks the server for updates, override to use a custom behavior
    */
   protected open fun onCheckForUpdatesClicked(viewModel: VersionCheckViewModel) {
-    snackbar?.also {
-      if (!it.isShownOrQueued) {
-        it.show()
-      }
-    }
     viewModel.checkForUpdates(viewLifecycleOwner, true)
   }
 

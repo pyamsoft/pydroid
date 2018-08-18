@@ -26,8 +26,8 @@ internal class ViewModelBusImpl<T : Any> : ViewModelBus<T>, EventBus<DataWrapper
     }
   }
 
-  override fun loading() {
-    publish(Loading())
+  override fun loading(forced: Boolean) {
+    publish(Loading(forced))
   }
 
   override fun success(data: T) {

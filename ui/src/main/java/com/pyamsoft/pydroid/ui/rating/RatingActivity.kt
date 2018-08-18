@@ -22,7 +22,6 @@ import android.text.SpannedString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
@@ -88,9 +87,6 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
   @get:CheckResult
   protected abstract val versionName: String
-
-  @get:CheckResult
-  protected abstract val rootView: View
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

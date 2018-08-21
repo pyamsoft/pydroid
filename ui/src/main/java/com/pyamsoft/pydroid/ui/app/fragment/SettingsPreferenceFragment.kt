@@ -17,13 +17,14 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
 import androidx.preference.Preference
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
@@ -64,12 +65,12 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     addPreferencesFromResource(R.xml.pydroid)
   }
 
-  override fun onViewCreated(
-    view: View,
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
     savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-
+  ): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
     val applicationSettings = findPreference("application_settings")
     if (applicationSettings != null) {
       applicationSettings.title = "$applicationName Settings"
@@ -112,12 +113,13 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     }
 
     val rateApplication: Preference = findPreference(getString(R.string.rating_key))
-    rateApplication.setOnPreferenceClickListener {
-      linker.clickAppPage(requireActivity(), view)
+    rateApplication.setOnPreferenceClickListener { _ ->
+      view?.also { linker.clickAppPage(requireActivity(), it) }
       return@setOnPreferenceClickListener true
     }
 
     viewModel.onLinkerError(viewLifecycleOwner) { onError(it) }
+    return view
   }
 
   /**

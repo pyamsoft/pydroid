@@ -66,14 +66,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ): View? {
     binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
-    return binding.root
-  }
 
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
     refreshLatch = RefreshLatch.create(viewLifecycleOwner, delay = 150L) {
       binding.apply {
         if (it) {
@@ -102,6 +95,8 @@ class AboutLibrariesFragment : ToolbarFragment() {
 
     observeLicenses()
     viewModel.loadLicenses(viewLifecycleOwner, false)
+
+    return binding.root
   }
 
   private fun observeLicenses() {
@@ -219,6 +214,8 @@ class AboutLibrariesFragment : ToolbarFragment() {
 
       arrowLeft.setOnDebouncedClickListener(null)
       arrowRight.setOnDebouncedClickListener(null)
+
+      unbind()
     }
 
     toolbarActivity.withToolbar {

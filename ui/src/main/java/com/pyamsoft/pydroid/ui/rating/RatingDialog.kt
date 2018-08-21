@@ -78,26 +78,11 @@ internal class RatingDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ): View? {
     binding = DialogRatingBinding.inflate(inflater, container, false)
-    return binding.root
-  }
 
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
     initDialog()
-
-    binding.apply {
-      ratingBtnNoThanks.setOnDebouncedClickListener {
-        viewModel.saveRating(viewLifecycleOwner, false)
-      }
-      ratingBtnGoRate.setOnDebouncedClickListener {
-        viewModel.saveRating(viewLifecycleOwner, true)
-      }
-    }
-
     observeRatingSaved()
+
+    return binding.root
   }
 
   private fun observeRatingSaved() {
@@ -131,6 +116,15 @@ internal class RatingDialog : ToolbarDialog() {
         .into(binding.ratingIcon)
         .bind(viewLifecycleOwner)
     binding.ratingTextChange.text = changelog
+
+    binding.apply {
+      ratingBtnNoThanks.setOnDebouncedClickListener {
+        viewModel.saveRating(viewLifecycleOwner, false)
+      }
+      ratingBtnGoRate.setOnDebouncedClickListener {
+        viewModel.saveRating(viewLifecycleOwner, true)
+      }
+    }
   }
 
   override fun onResume() {

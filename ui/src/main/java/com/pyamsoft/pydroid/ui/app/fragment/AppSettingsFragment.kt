@@ -34,20 +34,15 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ): View? {
     binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
+
+    showPreferenceFragment()
+
     return binding.root
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     binding.unbind()
-  }
-
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-    showPreferenceFragment()
   }
 
   private fun showPreferenceFragment() {

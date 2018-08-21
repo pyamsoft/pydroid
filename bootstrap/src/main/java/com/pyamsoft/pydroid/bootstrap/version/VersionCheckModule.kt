@@ -23,8 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -37,7 +36,7 @@ class VersionCheckModule(
   debug: Boolean
 ) {
 
-  private val updateBus = LiveDataWrapper<Int>()
+  private val updateBus = DataBus<Int>()
   private val packageName: String = context.packageName
   private val cachedInteractor: VersionCheckInteractor
 

@@ -17,15 +17,15 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class AboutLibrariesViewModel internal constructor(
-  private val licenseBus: LiveDataWrapper<List<AboutLibrariesModel>>,
+  private val licenseBus: DataBus<List<AboutLibrariesModel>>,
   private val interactor: AboutLibrariesInteractor
 ) : LifecycleViewModel {
 
@@ -33,7 +33,11 @@ class AboutLibrariesViewModel internal constructor(
     owner: LifecycleOwner,
     func: (DataWrapper<List<AboutLibrariesModel>>) -> Unit
   ) {
-    licenseBus.observe(owner, func)
+    licenseBus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(func)
+        .bind(owner)
   }
 
   fun loadLicenses(
@@ -49,6 +53,6 @@ class AboutLibrariesViewModel internal constructor(
           Timber.e(it, "Error loading licenses")
           licenseBus.publishError(it)
         })
-        .bind(owner)
+        .disposeOnClear(owner)
   }
 }

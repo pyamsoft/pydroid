@@ -18,16 +18,16 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class RatingViewModel internal constructor(
-  private val ratingDialogBus: LiveDataWrapper<Unit>,
-  private val ratingSavBus: LiveDataWrapper<Boolean>,
+  private val ratingDialogBus: DataBus<Unit>,
+  private val ratingSaveBus: DataBus<Boolean>,
   private val currentVersion: Int,
   private val interactor: RatingInteractor,
   private val ratingErrorBus: EventBus<Throwable>
@@ -37,14 +37,22 @@ class RatingViewModel internal constructor(
     owner: LifecycleOwner,
     func: (DataWrapper<Unit>) -> Unit
   ) {
-    ratingDialogBus.observe(owner, func)
+    ratingDialogBus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(func)
+        .bind(owner)
   }
 
   fun onRatingSaved(
     owner: LifecycleOwner,
     func: (DataWrapper<Boolean>) -> Unit
   ) {
-    ratingSavBus.observe(owner, func)
+    ratingSaveBus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(func)
+        .bind(owner)
   }
 
   fun onRatingError(
@@ -73,7 +81,7 @@ class RatingViewModel internal constructor(
           Timber.e(it, "on error loading rating dialog")
           ratingDialogBus.publishError(it)
         })
-        .bind(owner)
+        .disposeOnClear(owner)
   }
 
   fun saveRating(
@@ -83,16 +91,16 @@ class RatingViewModel internal constructor(
     interactor.saveRating(currentVersion)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { ratingSavBus.publishLoading(false) }
-        .doAfterTerminate { ratingSavBus.publishComplete() }
+        .doOnSubscribe { ratingSaveBus.publishLoading(false) }
+        .doAfterTerminate { ratingSaveBus.publishComplete() }
         .subscribe({
           Timber.d("Saved current version code: %d", currentVersion)
-          ratingSavBus.publishSuccess(accept)
+          ratingSaveBus.publishSuccess(accept)
         }, {
           Timber.e(it, "Error saving rating dialog")
-          ratingSavBus.publishError(it)
+          ratingSaveBus.publishError(it)
         })
-        .bind(owner)
+        .disposeOnClear(owner)
   }
 
 }

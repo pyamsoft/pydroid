@@ -17,15 +17,15 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class VersionCheckViewModel internal constructor(
-  private val updateBus: LiveDataWrapper<Int>,
+  private val updateBus: DataBus<Int>,
   private val packageName: String,
   private val currentVersionCode: Int,
   private val interactor: VersionCheckInteractor
@@ -35,7 +35,11 @@ class VersionCheckViewModel internal constructor(
     owner: LifecycleOwner,
     func: (DataWrapper<Int>) -> Unit
   ) {
-    updateBus.observe(owner, func)
+    updateBus.listen()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(func)
+        .bind(owner)
   }
 
   fun checkForUpdates(
@@ -52,6 +56,6 @@ class VersionCheckViewModel internal constructor(
           Timber.e(it, "Error checking for latest version")
           updateBus.publishError(it)
         })
-        .bind(owner)
+        .disposeOnClear(owner)
   }
 }

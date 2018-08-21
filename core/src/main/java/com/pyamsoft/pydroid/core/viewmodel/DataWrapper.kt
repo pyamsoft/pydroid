@@ -1,13 +1,11 @@
 package com.pyamsoft.pydroid.core.viewmodel
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Empty
+import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.core.bus.RxBus
+import io.reactivex.Observable
 
 // The common set of activity events
 sealed class DataWrapper<T : Any> {
-  internal class Empty<T : Any> internal constructor() : DataWrapper<T>()
   internal class Loading<T : Any> internal constructor(val forced: Boolean) : DataWrapper<T>()
   internal data class Success<T : Any> internal constructor(val data: T) : DataWrapper<T>()
   internal data class Error<T : Any> internal constructor(val error: Throwable) : DataWrapper<T>()
@@ -38,42 +36,33 @@ sealed class DataWrapper<T : Any> {
   }
 }
 
-class LiveDataWrapper<T : Any> : MutableLiveData<DataWrapper<T>>() {
+class DataBus<T : Any> : Listener<DataWrapper<T>> {
 
-  inline fun observe(
-    owner: LifecycleOwner,
-    crossinline func: (DataWrapper<T>) -> Unit
-  ) {
-    observe(owner, Observer {
-      if (it !is Empty) {
-        func(it)
-      }
-    })
+  private val bus = RxBus.create<DataWrapper<T>>()
+
+  override fun listen(): Observable<DataWrapper<T>> {
+    return bus.listen()
+  }
+
+  private fun publish(event: DataWrapper<T>) {
+    bus.publish(event)
   }
 
   fun publishLoading(forced: Boolean) {
-    super.setValue(DataWrapper.Loading(forced))
+    publish(DataWrapper.Loading(forced))
   }
 
   fun publishSuccess(data: T) {
-    super.setValue(DataWrapper.Success(data))
+    publish(DataWrapper.Success(data))
   }
 
   fun publishError(error: Throwable) {
-    super.setValue(DataWrapper.Error(error))
+    publish(DataWrapper.Error(error))
   }
 
   fun publishComplete() {
     // Notify active watchers that we are complete
-    super.setValue(DataWrapper.Complete())
-
-    // Publish an Empty event to reset the completed state
-    // The next new observer will not instantly receive a Completed event
-    super.setValue(DataWrapper.Empty())
-  }
-
-  override fun setValue(value: DataWrapper<T>) {
-    throw RuntimeException("Do not access setValue directly, use publish methods")
+    publish(DataWrapper.Complete())
   }
 
 }

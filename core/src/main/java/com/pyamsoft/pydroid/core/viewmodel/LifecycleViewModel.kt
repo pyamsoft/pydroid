@@ -2,7 +2,10 @@ package com.pyamsoft.pydroid.core.viewmodel
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.Lifecycle.State.INITIALIZED
+import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
+import androidx.lifecycle.Lifecycle.Event.ON_STOP
+import androidx.lifecycle.Lifecycle.State.RESUMED
+import androidx.lifecycle.Lifecycle.State.STARTED
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
@@ -19,28 +22,53 @@ interface LifecycleViewModel {
     LifecycleDisposable().bind(this, lifecycle)
   }
 
+  fun Disposable.disposeOnClear(owner: LifecycleOwner) {
+    disposeOnClear(owner.lifecycle)
+  }
+
+  fun Disposable.disposeOnClear(lifecycle: Lifecycle) {
+    LifecycleDisposable().disposeOnClear(this, lifecycle)
+  }
+
   private data class LifecycleDisposable(
     private val neededForUnique: UUID = UUID.randomUUID()
   ) : LifecycleObserver {
 
     private var lifecycle: Lifecycle? = null
     private var disposable: Disposable? = null
+    private var disposeOnPause: Boolean = false
+    private var disposeOnStop: Boolean = false
+    private var disposeOnDestroy: Boolean = false
 
     internal fun bind(
       disposable: Disposable,
       lifecycle: Lifecycle
     ) {
-      val currentState = lifecycle.currentState
-      if (currentState.isAtLeast(INITIALIZED)) {
-        bindToLifecycle(disposable, lifecycle)
-      } else {
-        throw IllegalStateException("Lifecycle is invalid state: $currentState")
+      var disposeOnPause = false
+      var disposeOnStop = false
+      var disposeOnDestroy = false
+      val state = lifecycle.currentState
+      when {
+        state.isAtLeast(RESUMED) -> disposeOnPause = true
+        state.isAtLeast(STARTED) -> disposeOnStop = true
+        else -> disposeOnDestroy = true
       }
+      bindToLifecycle(disposable, lifecycle, disposeOnPause, disposeOnStop, disposeOnDestroy)
+    }
+
+    internal fun disposeOnClear(
+      disposable: Disposable,
+      lifecycle: Lifecycle
+    ) {
+      bindToLifecycle(disposable, lifecycle, disposeOnDestroy = true)
     }
 
     private fun bindToLifecycle(
       disposable: Disposable,
-      lifecycle: Lifecycle
+      lifecycle: Lifecycle,
+      disposeOnPause: Boolean = false,
+      disposeOnStop: Boolean = false,
+      disposeOnDestroy: Boolean = false
     ) {
       if (this.disposable != null) {
         throw IllegalStateException("Disposable is already bound!")
@@ -50,30 +78,58 @@ interface LifecycleViewModel {
         throw IllegalStateException("Lifecycle is already observed!")
       }
 
+      if (!disposeOnPause && !disposeOnStop && !disposeOnDestroy) {
+        throw IllegalStateException("Must dispose on a lifecycle event!")
+      }
+
       lifecycle.addObserver(this)
       this.lifecycle = lifecycle
       this.disposable = disposable
+
+      this.disposeOnPause = disposeOnPause
+      this.disposeOnStop = disposeOnStop
+      this.disposeOnDestroy = disposeOnDestroy
+    }
+
+    @OnLifecycleEvent(ON_PAUSE)
+    internal fun onPause() {
+      disposeOnCondition(disposeOnPause)
+    }
+
+    @OnLifecycleEvent(ON_STOP)
+    internal fun onStop() {
+      disposeOnCondition(disposeOnStop)
     }
 
     @OnLifecycleEvent(ON_DESTROY)
     internal fun onDestroy() {
-      if (disposable == null) {
-        throw IllegalStateException("Disposable is already disposed!")
-      }
+      disposeOnCondition(disposeOnDestroy)
+    }
 
-      if (lifecycle == null) {
-        throw IllegalStateException("Lifecycle is already unbound!")
-      }
-
-      disposable?.also {
-        if (!it.isDisposed) {
-          it.dispose()
+    private fun disposeOnCondition(condition: Boolean) {
+      if (condition) {
+        if (disposable == null) {
+          throw IllegalStateException("Disposable is already disposed!")
         }
-      }
-      lifecycle?.removeObserver(this)
 
-      disposable = null
-      lifecycle = null
+        if (lifecycle == null) {
+          throw IllegalStateException("Lifecycle is already unbound!")
+        }
+
+        disposable?.also {
+          if (!it.isDisposed) {
+            it.dispose()
+          }
+        }
+        lifecycle?.removeObserver(this)
+
+        disposable = null
+        lifecycle = null
+
+        this.disposeOnPause = false
+        this.disposeOnStop = false
+        this.disposeOnDestroy = false
+      }
     }
   }
 }

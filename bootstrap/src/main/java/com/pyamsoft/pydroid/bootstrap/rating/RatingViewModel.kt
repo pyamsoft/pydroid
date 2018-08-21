@@ -20,14 +20,14 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import com.pyamsoft.pydroid.core.viewmodel.ViewModelBus
+import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class RatingViewModel internal constructor(
-  private val ratingDialogBus: ViewModelBus<Unit>,
-  private val ratingSavBus: ViewModelBus<Boolean>,
+  private val ratingDialogBus: LiveDataWrapper<Unit>,
+  private val ratingSavBus: LiveDataWrapper<Boolean>,
   private val currentVersion: Int,
   private val interactor: RatingInteractor,
   private val ratingErrorBus: EventBus<Throwable>
@@ -37,22 +37,14 @@ class RatingViewModel internal constructor(
     owner: LifecycleOwner,
     func: (DataWrapper<Unit>) -> Unit
   ) {
-    ratingDialogBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
-        .bind(owner)
+    ratingDialogBus.observe(owner, func)
   }
 
   fun onRatingSaved(
     owner: LifecycleOwner,
     func: (DataWrapper<Boolean>) -> Unit
   ) {
-    ratingSavBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
-        .bind(owner)
+    ratingSavBus.observe(owner, func)
   }
 
   fun onRatingError(
@@ -75,13 +67,13 @@ class RatingViewModel internal constructor(
         .map { Unit }
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { ratingDialogBus.loading(force) }
-        .doAfterTerminate { ratingDialogBus.complete() }
-        .subscribe({ ratingDialogBus.success(it) }, {
+        .doOnSubscribe { ratingDialogBus.publishLoading(force) }
+        .doAfterTerminate { ratingDialogBus.publishComplete() }
+        .subscribe({ ratingDialogBus.publishSuccess(it) }, {
           Timber.e(it, "on error loading rating dialog")
-          ratingDialogBus.error(it)
+          ratingDialogBus.publishError(it)
         })
-        .disposeOnClear(owner)
+        .bind(owner)
   }
 
   fun saveRating(
@@ -91,16 +83,16 @@ class RatingViewModel internal constructor(
     interactor.saveRating(currentVersion)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { ratingSavBus.loading(false) }
-        .doAfterTerminate { ratingSavBus.complete() }
+        .doOnSubscribe { ratingSavBus.publishLoading(false) }
+        .doAfterTerminate { ratingSavBus.publishComplete() }
         .subscribe({
           Timber.d("Saved current version code: %d", currentVersion)
-          ratingSavBus.success(accept)
+          ratingSavBus.publishSuccess(accept)
         }, {
           Timber.e(it, "Error saving rating dialog")
-          ratingSavBus.error(it)
+          ratingSavBus.publishError(it)
         })
-        .disposeOnClear(owner)
+        .bind(owner)
   }
 
 }

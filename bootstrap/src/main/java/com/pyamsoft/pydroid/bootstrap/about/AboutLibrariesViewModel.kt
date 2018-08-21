@@ -19,13 +19,13 @@ package com.pyamsoft.pydroid.bootstrap.about
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import com.pyamsoft.pydroid.core.viewmodel.ViewModelBus
+import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class AboutLibrariesViewModel internal constructor(
-  private val licenseBus: ViewModelBus<List<AboutLibrariesModel>>,
+  private val licenseBus: LiveDataWrapper<List<AboutLibrariesModel>>,
   private val interactor: AboutLibrariesInteractor
 ) : LifecycleViewModel {
 
@@ -33,11 +33,7 @@ class AboutLibrariesViewModel internal constructor(
     owner: LifecycleOwner,
     func: (DataWrapper<List<AboutLibrariesModel>>) -> Unit
   ) {
-    licenseBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
-        .bind(owner)
+    licenseBus.observe(owner, func)
   }
 
   fun loadLicenses(
@@ -47,12 +43,12 @@ class AboutLibrariesViewModel internal constructor(
     interactor.loadLicenses(force)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { licenseBus.loading(force) }
-        .doAfterTerminate { licenseBus.complete() }
-        .subscribe({ licenseBus.success(it) }, {
+        .doOnSubscribe { licenseBus.publishLoading(force) }
+        .doAfterTerminate { licenseBus.publishComplete() }
+        .subscribe({ licenseBus.publishSuccess(it) }, {
           Timber.e(it, "Error loading licenses")
-          licenseBus.error(it)
+          licenseBus.publishError(it)
         })
-        .disposeOnClear(owner)
+        .bind(owner)
   }
 }

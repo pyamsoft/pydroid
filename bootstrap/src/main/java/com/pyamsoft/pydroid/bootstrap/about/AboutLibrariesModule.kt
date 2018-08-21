@@ -20,7 +20,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
+import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 
 class AboutLibrariesModule(
   context: Context,
@@ -28,7 +28,7 @@ class AboutLibrariesModule(
 ) {
 
   private val cacheInteractor: AboutLibrariesInteractor
-  private val viewBus = LifecycleViewModel.viewBus<List<AboutLibrariesModel>>()
+  private val viewBus = LiveDataWrapper<List<AboutLibrariesModel>>()
 
   init {
     val dataSource = AboutLibrariesDataSourceImpl(context.applicationContext)

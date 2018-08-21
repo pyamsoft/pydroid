@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
+import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 
 class RatingModule(
   preferences: RatingPreferences,
@@ -30,8 +30,8 @@ class RatingModule(
 
   private val errorBus: EventBus<Throwable> = RxBus.create()
   private val interactor: RatingInteractor = RatingInteractorImpl(enforcer, preferences)
-  private val ratingBus = LifecycleViewModel.viewBus<Unit>()
-  private val ratingSaveBus = LifecycleViewModel.viewBus<Boolean>()
+  private val ratingBus = LiveDataWrapper<Unit>()
+  private val ratingSaveBus = LiveDataWrapper<Boolean>()
 
   @CheckResult
   fun getPublisher(): Publisher<Throwable> = errorBus

@@ -19,13 +19,13 @@ package com.pyamsoft.pydroid.bootstrap.version
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import com.pyamsoft.pydroid.core.viewmodel.ViewModelBus
+import com.pyamsoft.pydroid.core.viewmodel.LiveDataWrapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
 class VersionCheckViewModel internal constructor(
-  private val updateBus: ViewModelBus<Int>,
+  private val updateBus: LiveDataWrapper<Int>,
   private val packageName: String,
   private val currentVersionCode: Int,
   private val interactor: VersionCheckInteractor
@@ -35,11 +35,7 @@ class VersionCheckViewModel internal constructor(
     owner: LifecycleOwner,
     func: (DataWrapper<Int>) -> Unit
   ) {
-    updateBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(func)
-        .bind(owner)
+    updateBus.observe(owner, func)
   }
 
   fun checkForUpdates(
@@ -50,12 +46,12 @@ class VersionCheckViewModel internal constructor(
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .filter { currentVersionCode < it }
-        .doOnSubscribe { updateBus.loading(force) }
-        .doAfterTerminate { updateBus.complete() }
-        .subscribe({ updateBus.success(it) }, {
+        .doOnSubscribe { updateBus.publishLoading(force) }
+        .doAfterTerminate { updateBus.publishComplete() }
+        .subscribe({ updateBus.publishSuccess(it) }, {
           Timber.e(it, "Error checking for latest version")
-          updateBus.error(it)
+          updateBus.publishError(it)
         })
-        .disposeOnClear(owner)
+        .bind(owner)
   }
 }

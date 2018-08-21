@@ -101,8 +101,11 @@ class PYDroid private constructor(
     // https://medium.com/@sweers/rxandroids-new-async-api-4ab5b3ad3e93
     @JvmStatic
     private fun setupAsyncMainThreadScheduler() {
+      RxAndroidPlugins.setInitMainThreadSchedulerHandler {
+        AndroidSchedulers.from(Looper.getMainLooper(), true)
+      }
+
       val async = AndroidSchedulers.from(Looper.getMainLooper(), true)
-      RxAndroidPlugins.setInitMainThreadSchedulerHandler { async }
       RxAndroidPlugins.setMainThreadSchedulerHandler { async }
     }
 

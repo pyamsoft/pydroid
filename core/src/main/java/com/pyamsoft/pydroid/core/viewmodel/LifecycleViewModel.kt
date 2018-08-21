@@ -20,7 +20,7 @@ interface LifecycleViewModel {
   }
 
   private data class LifecycleDisposable(
-    private val neededForUniqueDataClassHashCodeAndEquals: UUID = UUID.randomUUID()
+    private val neededForUnique: UUID = UUID.randomUUID()
   ) : LifecycleObserver {
 
     private var lifecycle: Lifecycle? = null

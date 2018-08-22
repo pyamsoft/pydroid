@@ -40,15 +40,9 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
   internal lateinit var ratingViewModel: RatingViewModel
 
-  @CheckResult
-  private fun Int.validate(what: String): Int {
-    if (this == RESOURCE_NOT_FOUND) {
-      throw IllegalArgumentException("Value for $what is: $this")
-    } else {
-      Timber.d("Value for $what is: $this")
-      return this
-    }
-  }
+  protected abstract val changeLogLines: ChangeLogBuilder
+
+  protected abstract val versionName: String
 
   final override val changelog: SpannedString
     get() {
@@ -62,8 +56,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
           val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
           inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-            append("What's New in version $versionName")
-            append("\n")
+            appendln("What's New in version $versionName")
           }
         }
 
@@ -74,19 +67,22 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
           inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
             for (line in changeLogLines.build()) {
-              append(line)
-              append("\n")
+              appendln(line)
             }
           }
         }
       }
     }
 
-  @get:CheckResult
-  protected abstract val changeLogLines: ChangeLogBuilder
-
-  @get:CheckResult
-  protected abstract val versionName: String
+  @CheckResult
+  private fun Int.validate(what: String): Int {
+    if (this == RESOURCE_NOT_FOUND) {
+      throw IllegalArgumentException("Value for $what is: $this")
+    } else {
+      Timber.d("Value for $what is: $this")
+      return this
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

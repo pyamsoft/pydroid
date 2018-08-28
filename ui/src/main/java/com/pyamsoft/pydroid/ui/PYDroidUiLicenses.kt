@@ -16,9 +16,8 @@
 
 package com.pyamsoft.pydroid.ui
 
-import com.pyamsoft.pydroid.core.PYDroidLicenses
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibraries
-import com.pyamsoft.pydroid.list.PYDroidListLicenses
+import com.pyamsoft.pydroid.core.PYDroidLicenses
 
 object PYDroidUiLicenses {
 
@@ -43,9 +42,9 @@ object PYDroidUiLicenses {
     )
 
     AboutLibraries.create(
-        PYDroidListLicenses.Names.RECYCLERVIEW,
-        PYDroidListLicenses.HomepageUrls.RECYCLERVIEW,
-        PYDroidListLicenses.LicenseLocations.RECYCLERVIEW
+        Names.RECYCLERVIEW,
+        HomepageUrls.RECYCLERVIEW,
+        LicenseLocations.RECYCLERVIEW
     )
   }
 
@@ -53,12 +52,14 @@ object PYDroidUiLicenses {
     const val CONSTRAINTLAYOUT = "Constraint Layout"
     const val DESIGN = "Material Design Support"
     const val SUPPORT_VECTOR = "Vector Support"
+    const val RECYCLERVIEW = "RecyclerView v7"
   }
 
   object HomepageUrls {
     const val CONSTRAINTLAYOUT = "https://source.android.com"
     const val DESIGN = "https://source.android.com"
     const val SUPPORT_VECTOR = "https://source.android.com"
+    const val RECYCLERVIEW = "https://source.android.com"
   }
 
   object LicenseLocations {
@@ -67,5 +68,6 @@ object PYDroidUiLicenses {
     const val CONSTRAINTLAYOUT = PYDroidLicenses.LicenseLocations.__DIR + "constraintlayout"
     const val DESIGN = PYDroidLicenses.LicenseLocations.__DIR + "design"
     const val SUPPORT_VECTOR = PYDroidLicenses.LicenseLocations.__DIR + "support-vector"
+    const val RECYCLERVIEW = PYDroidLicenses.LicenseLocations.__DIR + "recyclerview-v7"
   }
 }

@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-include ':core', ':ui', ':loader',
-    ':util', ':list', ':bootstrap'
+include ':core', ':ui', ':loader', ':util', ':bootstrap'

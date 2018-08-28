@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.ui.UiModule
@@ -24,13 +25,18 @@ internal class AppComponentImpl internal constructor(
   private val uiModule: UiModule,
   private val versionCheckModule: VersionCheckModule,
   private val ratingModule: RatingModule,
-  private val currentVersion: Int
+  private val currentVersion: Int,
+  private val schedulerProvider: SchedulerProvider
 ) : AppComponent {
 
   override fun inject(fragment: SettingsPreferenceFragment) {
     fragment.versionViewModel = versionCheckModule.getViewModel(currentVersion)
     fragment.ratingViewModel = ratingModule.getViewModel(currentVersion)
     fragment.linker = uiModule.provideLinker()
-    fragment.viewModel = SettingsPreferenceViewModel(uiModule.provideLinkerErrorBus())
+    fragment.viewModel = SettingsPreferenceViewModel(
+        uiModule.provideLinkerErrorBus(),
+        schedulerProvider.foregroundScheduler,
+        schedulerProvider.backgroundScheduler
+    )
   }
 }

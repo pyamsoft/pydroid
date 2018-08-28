@@ -1,5 +1,9 @@
-package com.pyamsoft.pydroid.core.viewmodel
+package com.pyamsoft.pydroid.core
 
+import com.pyamsoft.pydroid.core.DataWrapper.Complete
+import com.pyamsoft.pydroid.core.DataWrapper.Error
+import com.pyamsoft.pydroid.core.DataWrapper.Loading
+import com.pyamsoft.pydroid.core.DataWrapper.Success
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable
@@ -49,20 +53,20 @@ class DataBus<T : Any> : Listener<DataWrapper<T>> {
   }
 
   fun publishLoading(forced: Boolean) {
-    publish(DataWrapper.Loading(forced))
+    publish(Loading(forced))
   }
 
   fun publishSuccess(data: T) {
-    publish(DataWrapper.Success(data))
+    publish(Success(data))
   }
 
   fun publishError(error: Throwable) {
-    publish(DataWrapper.Error(error))
+    publish(Error(error))
   }
 
   fun publishComplete() {
     // Notify active watchers that we are complete
-    publish(DataWrapper.Complete())
+    publish(Complete())
   }
 
 }

@@ -28,12 +28,16 @@ import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
+import com.pyamsoft.pydroid.core.addTo
+import com.pyamsoft.pydroid.core.disposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
@@ -84,6 +88,9 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     }
   }
 
+  private val compositeDisposable = CompositeDisposable()
+  private var ratingLoadDisposable by disposable()
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.obtain(this)
@@ -94,14 +101,14 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
   }
 
   private fun observeShowRating() {
-    ratingViewModel.onRatingError(this) {
-      onRatingError(it)
-    }
+    ratingViewModel.onRatingError { onRatingError(it) }
+        .addTo(compositeDisposable)
 
-    ratingViewModel.onRatingDialogLoaded(this) { wrapper ->
+    ratingViewModel.onRatingDialogLoaded { wrapper ->
       wrapper.onSuccess { onShowRating() }
       wrapper.onError { onShowRatingError(it) }
     }
+        .addTo(compositeDisposable)
   }
 
   @CallSuper
@@ -109,7 +116,19 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     super.onPostResume()
 
     // DialogFragment must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
-    ratingViewModel.loadRatingDialog(this, false)
+    ratingLoadDisposable = ratingViewModel.loadRatingDialog(false)
+  }
+
+  @CallSuper
+  override fun onPause() {
+    super.onPause()
+    ratingLoadDisposable.tryDispose()
+  }
+
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    compositeDisposable.clear()
   }
 
   private fun onShowRating() {

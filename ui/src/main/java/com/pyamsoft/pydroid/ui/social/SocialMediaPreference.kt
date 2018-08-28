@@ -36,7 +36,6 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import timber.log.Timber
 
 class SocialMediaPreference : Preference, LifecycleOwner {
 
@@ -79,19 +78,19 @@ class SocialMediaPreference : Preference, LifecycleOwner {
     val blogger = (holder.findViewById(R.id.blogger) as ImageView)
     val facebook = (holder.findViewById(R.id.facebook) as ImageView)
 
-    googlePlay.setOnDebouncedClickListener {
+    googlePlay.setOnDebouncedClickListener { _ ->
       linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
     }
 
-    googlePlus.setOnDebouncedClickListener {
+    googlePlus.setOnDebouncedClickListener { _ ->
       linker.clickGooglePlus { linkerErrorPublisher.publish(it) }
     }
 
-    blogger.setOnDebouncedClickListener {
+    blogger.setOnDebouncedClickListener { _ ->
       linker.clickBlogger { linkerErrorPublisher.publish(it) }
     }
 
-    facebook.setOnDebouncedClickListener {
+    facebook.setOnDebouncedClickListener { _ ->
       linker.clickFacebook { linkerErrorPublisher.publish(it) }
     }
 

@@ -16,13 +16,12 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
-import androidx.lifecycle.LifecycleOwner
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.DataBus
+import com.pyamsoft.pydroid.core.DataWrapper
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
-import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
-import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class RatingViewModel internal constructor(
@@ -30,67 +29,55 @@ class RatingViewModel internal constructor(
   private val ratingSaveBus: DataBus<Boolean>,
   private val currentVersion: Int,
   private val interactor: RatingInteractor,
-  private val ratingErrorBus: EventBus<Throwable>
-) : LifecycleViewModel {
+  private val ratingErrorBus: EventBus<Throwable>,
+  private val foregroundScheduler: Scheduler,
+  private val backgroundScheduler: Scheduler
+) {
 
-  fun onRatingDialogLoaded(
-    owner: LifecycleOwner,
-    func: (DataWrapper<Unit>) -> Unit
-  ) {
-    ratingDialogBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  @CheckResult
+  fun onRatingDialogLoaded(func: (DataWrapper<Unit>) -> Unit): Disposable {
+    return ratingDialogBus.listen()
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .subscribe(func)
-        .bind(owner)
   }
 
-  fun onRatingSaved(
-    owner: LifecycleOwner,
-    func: (DataWrapper<Boolean>) -> Unit
-  ) {
-    ratingSaveBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  @CheckResult
+  fun onRatingSaved(func: (DataWrapper<Boolean>) -> Unit): Disposable {
+    return ratingSaveBus.listen()
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .subscribe(func)
-        .bind(owner)
   }
 
-  fun onRatingError(
-    owner: LifecycleOwner,
-    func: (Throwable) -> Unit
-  ) {
-    ratingErrorBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  @CheckResult
+  fun onRatingError(func: (Throwable) -> Unit): Disposable {
+    return ratingErrorBus.listen()
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .subscribe(func)
-        .bind(owner)
   }
 
-  fun loadRatingDialog(
-    owner: LifecycleOwner,
-    force: Boolean
-  ) {
-    interactor.needsToViewRating(force, currentVersion)
+  @CheckResult
+  fun loadRatingDialog(force: Boolean): Disposable {
+    return interactor.needsToViewRating(force, currentVersion)
         .filter { it }
         .map { Unit }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .doOnSubscribe { ratingDialogBus.publishLoading(force) }
         .doAfterTerminate { ratingDialogBus.publishComplete() }
         .subscribe({ ratingDialogBus.publishSuccess(it) }, {
           Timber.e(it, "on error loading rating dialog")
           ratingDialogBus.publishError(it)
         })
-        .disposeOnClear(owner)
   }
 
-  fun saveRating(
-    owner: LifecycleOwner,
-    accept: Boolean
-  ) {
-    interactor.saveRating(currentVersion)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  @CheckResult
+  fun saveRating(accept: Boolean): Disposable {
+    return interactor.saveRating(currentVersion)
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .doOnSubscribe { ratingSaveBus.publishLoading(false) }
         .doAfterTerminate { ratingSaveBus.publishComplete() }
         .subscribe({
@@ -100,7 +87,6 @@ class RatingViewModel internal constructor(
           Timber.e(it, "Error saving rating dialog")
           ratingSaveBus.publishError(it)
         })
-        .disposeOnClear(owner)
   }
 
 }

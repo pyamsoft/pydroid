@@ -22,10 +22,14 @@ import androidx.annotation.CallSuper
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.core.addTo
+import com.pyamsoft.pydroid.core.disposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
@@ -33,6 +37,9 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
   internal lateinit var viewModel: VersionCheckViewModel
 
   abstract val rootView: View
+
+  private val compositeDisposable = CompositeDisposable()
+  private var updateDisposable by disposable()
 
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,11 +52,12 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
   }
 
   private fun observeUpdates() {
-    viewModel.onUpdateAvailable(this) { wrapper ->
+    viewModel.onUpdateAvailable { wrapper ->
       wrapper.onLoading { onCheckingForUpdates(it) }
       wrapper.onSuccess { onUpdatedVersionFound(currentApplicationVersion, it) }
       wrapper.onError { onUpdatedVersionError(it) }
     }
+        .addTo(compositeDisposable)
   }
 
   private fun onCheckingForUpdates(showSnackbar: Boolean) {
@@ -62,7 +70,19 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
-    viewModel.checkForUpdates(this, false)
+    updateDisposable = viewModel.checkForUpdates(false)
+  }
+
+  @CallSuper
+  override fun onPause() {
+    super.onPause()
+    updateDisposable.tryDispose()
+  }
+
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    compositeDisposable.clear()
   }
 
   private fun onUpdatedVersionFound(

@@ -28,6 +28,9 @@ import androidx.preference.Preference
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.core.addTo
+import com.pyamsoft.pydroid.core.disposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
@@ -36,6 +39,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.clickAppPage
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
@@ -44,6 +48,10 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   internal lateinit var viewModel: SettingsPreferenceViewModel
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
+
+  private val compositeDisposable = CompositeDisposable()
+  private var loadRatingDisposable by disposable()
+  private var checkUpdatesDisposable by disposable()
 
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,7 +126,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
       return@setOnPreferenceClickListener true
     }
 
-    viewModel.onLinkerError(viewLifecycleOwner) { onError(it) }
+    viewModel.onLinkerError { onError(it) }
+        .addTo(compositeDisposable)
     return view
   }
 
@@ -144,14 +153,22 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
    * Shows the changelog, override or extend to use unique implementation
    */
   protected open fun onShowChangelogClicked() {
-    ratingViewModel.loadRatingDialog(viewLifecycleOwner, true)
+    loadRatingDisposable = ratingViewModel.loadRatingDialog(true)
   }
 
   /**
    * Checks the server for updates, override to use a custom behavior
    */
   protected open fun onCheckForUpdatesClicked(viewModel: VersionCheckViewModel) {
-    viewModel.checkForUpdates(viewLifecycleOwner, true)
+    checkUpdatesDisposable = viewModel.checkForUpdates(true)
+  }
+
+  @CallSuper
+  override fun onDestroyView() {
+    super.onDestroyView()
+    loadRatingDisposable.tryDispose()
+    checkUpdatesDisposable.tryDispose()
+    compositeDisposable.clear()
   }
 
   private fun onError(throwable: Throwable) {

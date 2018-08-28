@@ -21,6 +21,7 @@ import android.content.Context
 import android.os.Looper
 import android.os.StrictMode
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,10 +32,11 @@ import timber.log.Timber
  */
 class PYDroid private constructor(
   application: Application,
-  debug: Boolean
+  debug: Boolean,
+  schedulerProvider: SchedulerProvider = SchedulerProvider.Default
 ) {
 
-  private val impl = PYDroidComponentImpl(application, debug)
+  private val impl = PYDroidComponentImpl(application, debug, schedulerProvider)
 
   init {
     setupAsyncMainThreadScheduler()

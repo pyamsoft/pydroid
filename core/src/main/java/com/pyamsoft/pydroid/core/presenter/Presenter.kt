@@ -29,7 +29,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-@Deprecated("Use LifecycleViewModel")
+@Deprecated("Use BaseViewModel")
 abstract class Presenter<V : Any> protected constructor() : LifecycleObserver {
 
   private val pauseDisposables = CompositeDisposable()

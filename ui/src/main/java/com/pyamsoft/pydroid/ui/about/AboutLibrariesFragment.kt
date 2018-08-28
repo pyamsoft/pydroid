@@ -28,6 +28,9 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesViewModel
+import com.pyamsoft.pydroid.core.addTo
+import com.pyamsoft.pydroid.core.disposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
@@ -38,6 +41,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
+import io.reactivex.disposables.CompositeDisposable
 
 class AboutLibrariesFragment : ToolbarFragment() {
 
@@ -49,6 +53,9 @@ class AboutLibrariesFragment : ToolbarFragment() {
   private var lastViewedItem: Int = 0
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
+
+  private val compositeDisposable = CompositeDisposable()
+  private var loadLicenseDisposable by disposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -94,18 +101,19 @@ class AboutLibrariesFragment : ToolbarFragment() {
     setupArrows()
 
     observeLicenses()
-    viewModel.loadLicenses(viewLifecycleOwner, false)
+    loadLicenseDisposable = viewModel.loadLicenses(false)
 
     return binding.root
   }
 
   private fun observeLicenses() {
-    viewModel.onLicensesLoaded(viewLifecycleOwner) { wrapper ->
+    viewModel.onLicensesLoaded { wrapper ->
       wrapper.onLoading { onLicenseLoadBegin() }
       wrapper.onSuccess { onLicenseLoaded(it) }
       wrapper.onError { onLicenseLoadError(it) }
       wrapper.onComplete { onLicenseLoadComplete() }
     }
+        .addTo(compositeDisposable)
   }
 
   @CheckResult
@@ -227,6 +235,9 @@ class AboutLibrariesFragment : ToolbarFragment() {
         it.setUpEnabled(false)
       }
     }
+
+    loadLicenseDisposable.tryDispose()
+    compositeDisposable.clear()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

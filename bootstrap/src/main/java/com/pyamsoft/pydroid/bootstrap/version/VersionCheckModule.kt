@@ -19,11 +19,12 @@ package com.pyamsoft.pydroid.bootstrap.version
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.newRepoBuilder
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
+import com.pyamsoft.pydroid.core.DataBus
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -33,7 +34,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class VersionCheckModule(
   context: Context,
   enforcer: Enforcer,
-  debug: Boolean
+  debug: Boolean,
+    private val schedulerProvider: SchedulerProvider
 ) {
 
   private val updateBus = DataBus<Int>()
@@ -84,7 +86,13 @@ class VersionCheckModule(
 
   @CheckResult
   fun getViewModel(currentVersion: Int): VersionCheckViewModel {
-    return VersionCheckViewModel(updateBus, packageName, currentVersion, cachedInteractor)
+    return VersionCheckViewModel(
+        updateBus,
+        packageName,
+        currentVersion,
+        cachedInteractor,
+        schedulerProvider.foregroundScheduler,
+        schedulerProvider.backgroundScheduler)
   }
 
   companion object {

@@ -16,39 +16,35 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
-import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
-import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.DataBus
+import com.pyamsoft.pydroid.core.DataWrapper
+import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class VersionCheckViewModel internal constructor(
   private val updateBus: DataBus<Int>,
   private val packageName: String,
   private val currentVersionCode: Int,
-  private val interactor: VersionCheckInteractor
-) : LifecycleViewModel {
+  private val interactor: VersionCheckInteractor,
+  private val foregroundScheduler: Scheduler,
+  private val backgroundScheduler: Scheduler
+) {
 
-  fun onUpdateAvailable(
-    owner: LifecycleOwner,
-    func: (DataWrapper<Int>) -> Unit
-  ) {
-    updateBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  @CheckResult
+  fun onUpdateAvailable(func: (DataWrapper<Int>) -> Unit): Disposable {
+    return updateBus.listen()
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .subscribe(func)
-        .bind(owner)
   }
 
-  fun checkForUpdates(
-    owner: LifecycleOwner,
-    force: Boolean
-  ) {
-    interactor.checkVersion(force, packageName)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  @CheckResult
+  fun checkForUpdates(force: Boolean): Disposable {
+    return interactor.checkVersion(force, packageName)
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .filter { currentVersionCode < it }
         .doOnSubscribe { updateBus.publishLoading(force) }
         .doAfterTerminate { updateBus.publishComplete() }
@@ -56,6 +52,5 @@ class VersionCheckViewModel internal constructor(
           Timber.e(it, "Error checking for latest version")
           updateBus.publishError(it)
         })
-        .disposeOnClear(owner)
   }
 }

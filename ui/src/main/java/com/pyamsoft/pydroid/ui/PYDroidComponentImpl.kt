@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import android.app.Application
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
@@ -34,19 +35,21 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
-  debug: Boolean
+  debug: Boolean,
+  private val schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
   private val enforcer = Enforcer(debug)
   private val loaderModule = LoaderModule(application, enforcer)
   private val uiModule = UiModule(application)
-  private val aboutLibrariesModule = AboutLibrariesModule(application, enforcer)
-  private val versionCheckModule = VersionCheckModule(application, enforcer, debug)
+  private val aboutLibrariesModule = AboutLibrariesModule(application, enforcer, schedulerProvider)
+  private val versionCheckModule =
+    VersionCheckModule(application, enforcer, debug, schedulerProvider)
   private val ratingModule: RatingModule
 
   init {
     val preferences = PYDroidPreferencesImpl(application)
-    ratingModule = RatingModule(preferences, enforcer)
+    ratingModule = RatingModule(preferences, enforcer, schedulerProvider)
   }
 
   override fun enforcer(): Enforcer {
@@ -73,7 +76,7 @@ internal class PYDroidComponentImpl internal constructor(
     VersionCheckComponentImpl(versionCheckModule, currentVersion)
 
   override fun plusAppComponent(currentVersion: Int): AppComponent =
-    AppComponentImpl(uiModule, versionCheckModule, ratingModule, currentVersion)
+    AppComponentImpl(uiModule, versionCheckModule, ratingModule, currentVersion, schedulerProvider)
 
   override fun plusRatingComponent(currentVersion: Int): RatingComponent =
     RatingComponentImpl(uiModule, ratingModule, loaderModule, currentVersion)

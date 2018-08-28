@@ -16,43 +16,37 @@
 
 package com.pyamsoft.pydroid.bootstrap.about
 
-import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
-import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
-import com.pyamsoft.pydroid.core.viewmodel.LifecycleViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.DataBus
+import com.pyamsoft.pydroid.core.DataWrapper
+import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class AboutLibrariesViewModel internal constructor(
   private val licenseBus: DataBus<List<AboutLibrariesModel>>,
-  private val interactor: AboutLibrariesInteractor
-) : LifecycleViewModel {
+  private val interactor: AboutLibrariesInteractor,
+  private val foregroundScheduler: Scheduler,
+  private val backgroundScheduler: Scheduler
+) {
 
-  fun onLicensesLoaded(
-    owner: LifecycleOwner,
-    func: (DataWrapper<List<AboutLibrariesModel>>) -> Unit
-  ) {
-    licenseBus.listen()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  @CheckResult
+  fun onLicensesLoaded(func: (DataWrapper<List<AboutLibrariesModel>>) -> Unit): Disposable {
+    return licenseBus.listen()
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .subscribe(func)
-        .bind(owner)
   }
 
-  fun loadLicenses(
-    owner: LifecycleOwner,
-    force: Boolean
-  ) {
-    interactor.loadLicenses(force)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+  fun loadLicenses(force: Boolean): Disposable {
+    return interactor.loadLicenses(force)
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
         .doOnSubscribe { licenseBus.publishLoading(force) }
         .doAfterTerminate { licenseBus.publishComplete() }
         .subscribe({ licenseBus.publishSuccess(it) }, {
           Timber.e(it, "Error loading licenses")
           licenseBus.publishError(it)
         })
-        .disposeOnClear(owner)
   }
 }

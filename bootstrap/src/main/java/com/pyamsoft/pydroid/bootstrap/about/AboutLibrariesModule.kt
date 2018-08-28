@@ -19,12 +19,14 @@ package com.pyamsoft.pydroid.bootstrap.about
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.newRepoBuilder
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.DataBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
 
 class AboutLibrariesModule(
   context: Context,
-  enforcer: Enforcer
+  enforcer: Enforcer,
+  private val schedulerProvider: SchedulerProvider
 ) {
 
   private val cacheInteractor: AboutLibrariesInteractor
@@ -42,6 +44,11 @@ class AboutLibrariesModule(
 
   @CheckResult
   fun getViewModel(): AboutLibrariesViewModel {
-    return AboutLibrariesViewModel(viewBus, cacheInteractor)
+    return AboutLibrariesViewModel(
+        viewBus,
+        cacheInteractor,
+        schedulerProvider.foregroundScheduler,
+        schedulerProvider.backgroundScheduler
+    )
   }
 }

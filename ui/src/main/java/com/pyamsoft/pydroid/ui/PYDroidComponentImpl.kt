@@ -40,11 +40,10 @@ internal class PYDroidComponentImpl internal constructor(
 ) : PYDroidComponent, ModuleProvider {
 
   private val enforcer = Enforcer(debug)
-  private val loaderModule = LoaderModule(application, enforcer)
+  private val loaderModule = LoaderModule(application)
   private val uiModule = UiModule(application)
-  private val aboutLibrariesModule = AboutLibrariesModule(application, enforcer, schedulerProvider)
-  private val versionCheckModule =
-    VersionCheckModule(application, enforcer, debug, schedulerProvider)
+  private val aboutModule = AboutLibrariesModule(application, enforcer, schedulerProvider)
+  private val versionModule = VersionCheckModule(application, enforcer, debug, schedulerProvider)
   private val ratingModule: RatingModule
 
   init {
@@ -57,7 +56,7 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun inject(fragment: AboutLibrariesFragment) {
-    fragment.viewModel = aboutLibrariesModule.getViewModel()
+    fragment.viewModel = aboutModule.getViewModel()
     fragment.imageLoader = loaderModule.provideImageLoader()
   }
 
@@ -73,10 +72,10 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun plusVersionCheckComponent(currentVersion: Int): VersionCheckComponent =
-    VersionCheckComponentImpl(versionCheckModule, currentVersion)
+    VersionCheckComponentImpl(versionModule, currentVersion)
 
   override fun plusAppComponent(currentVersion: Int): AppComponent =
-    AppComponentImpl(uiModule, versionCheckModule, ratingModule, currentVersion, schedulerProvider)
+    AppComponentImpl(uiModule, versionModule, ratingModule, currentVersion, schedulerProvider)
 
   override fun plusRatingComponent(currentVersion: Int): RatingComponent =
     RatingComponentImpl(uiModule, ratingModule, loaderModule, currentVersion)
@@ -90,11 +89,11 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun aboutLibrariesModule(): AboutLibrariesModule {
-    return aboutLibrariesModule
+    return aboutModule
   }
 
   override fun versionCheckModule(): VersionCheckModule {
-    return versionCheckModule
+    return versionModule
   }
 
   override fun uiModule(): UiModule {

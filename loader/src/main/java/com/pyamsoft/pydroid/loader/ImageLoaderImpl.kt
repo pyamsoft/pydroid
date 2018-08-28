@@ -19,27 +19,11 @@ package com.pyamsoft.pydroid.loader
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
-import com.pyamsoft.pydroid.core.cache.Cache
-import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.loader.cache.ImageCache
-import com.pyamsoft.pydroid.loader.resource.ResourceLoader
-import com.pyamsoft.pydroid.loader.resource.RxResourceLoader
 
-internal class ImageLoaderImpl internal constructor(
-  private val context: Context,
-  private val resourceImageCache: ImageCache<Int, Drawable>,
-  private val enforcer: Enforcer
-) : ImageLoader, Cache {
+internal class ImageLoaderImpl internal constructor(private val context: Context) : ImageLoader {
 
-  override fun clearCache() {
-    resourceImageCache.clearCache()
+  override fun fromResource(@DrawableRes resource: Int): GenericLoader<Drawable> {
+    return GlideLoader(context.applicationContext, resource)
   }
 
-  override fun fromResource(@DrawableRes resource: Int): ResourceLoader = fromResource(resource, 0)
-
-  override fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader =
-    RxResourceLoader(
-        enforcer, context.applicationContext,
-        resource, errorResource, resourceImageCache
-    )
 }

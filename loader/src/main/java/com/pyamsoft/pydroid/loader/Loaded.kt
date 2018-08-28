@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.cache
+package com.pyamsoft.pydroid.loader
 
-import com.pyamsoft.pydroid.core.cache.Cache
+import androidx.lifecycle.LifecycleOwner
 
-interface ImageCache<in K : Any, T : Any> : Cache {
+interface Loaded {
 
-  fun cache(
-    key: ImageCacheKey<K>,
-    entry: T
-  )
-
-  fun retrieve(key: ImageCacheKey<K>): T?
-
-  data class ImageCacheKey<out K>(val data: K)
+  fun bind(owner: LifecycleOwner)
 }

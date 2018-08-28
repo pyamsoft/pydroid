@@ -19,8 +19,6 @@ package com.pyamsoft.pydroid.loader
 import android.widget.ImageView
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
-import com.pyamsoft.pydroid.loader.loaded.Loaded
-import com.pyamsoft.pydroid.loader.targets.Target
 
 interface Loader<T : Any> {
 
@@ -41,7 +39,4 @@ interface Loader<T : Any> {
 
   @CheckResult
   fun into(imageView: ImageView): Loaded
-
-  @CheckResult
-  fun into(target: Target<T>): Loaded
 }

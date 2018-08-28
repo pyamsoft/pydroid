@@ -35,21 +35,22 @@ buildscript {
     // AndroidX
     ktx = "1.0.0-rc01"
     constraintLayout = "1.1.2"
-    lifecycle = "2.0.0-rc01"
-    vectorDrawable = "1.0.0-rc01"
-    coordinatorLayout = "1.0.0-rc01"
+    lifecycle = "2.0.0-rc02"
     materialDesign = "1.0.0-rc01"
-    preference = "1.0.0-rc01"
-    recyclerView = "1.0.0-rc01"
-    appCompat = "1.0.0-rc01"
+    vectorDrawable = "1.0.0-rc02"
+    coordinatorLayout = "1.0.0-rc02"
+    preference = "1.0.0-rc02"
+    recyclerView = "1.0.0-rc02"
+    appCompat = "1.0.0-rc02"
 
     repo = "0.0.7"
     timber = "4.7.1"
     moshi = "1.6.0"
     retrofit = "2.4.0"
     retrofitLogging = "3.11.0"
-    rxjava = "2.2.0"
+    rxjava = "2.2.1"
     rxandroid = "2.1.0"
+    glide = "4.8.0"
   }
 
   dependencies {
@@ -85,7 +86,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.1.4"
+  final String POM_VERSION = "18.1.5-SNAPSHOT"
 
   group = POM_GROUP
   version = POM_VERSION

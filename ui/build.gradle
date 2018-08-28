@@ -15,6 +15,9 @@
  */
 
 dependencies {
+  // AndroidX Lifecycle
+  api "androidx.lifecycle:lifecycle-runtime:$lifecycle"
+
   kapt "androidx.databinding:databinding-compiler:$plugin_version"
 
   // Android support library.

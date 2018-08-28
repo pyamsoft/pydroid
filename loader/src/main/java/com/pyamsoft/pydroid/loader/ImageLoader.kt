@@ -16,15 +16,12 @@
 
 package com.pyamsoft.pydroid.loader
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
-import com.pyamsoft.pydroid.loader.resource.ResourceLoader
 
 interface ImageLoader {
 
   @CheckResult
-  fun fromResource(@DrawableRes resource: Int): ResourceLoader
-
-  @CheckResult
-  fun fromResource(@DrawableRes resource: Int, @DrawableRes errorResource: Int): ResourceLoader
+  fun fromResource(@DrawableRes resource: Int): GenericLoader<Drawable>
 }

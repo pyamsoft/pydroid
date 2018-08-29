@@ -23,5 +23,5 @@ import androidx.annotation.DrawableRes
 interface ImageLoader {
 
   @CheckResult
-  fun fromResource(@DrawableRes resource: Int): GenericLoader<Drawable>
+  fun fromResource(@DrawableRes resource: Int): Loader<Drawable>
 }

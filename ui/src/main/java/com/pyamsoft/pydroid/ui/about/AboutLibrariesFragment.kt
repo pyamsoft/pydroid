@@ -28,9 +28,6 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesViewModel
-import com.pyamsoft.pydroid.core.addTo
-import com.pyamsoft.pydroid.core.disposable
-import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
@@ -41,7 +38,6 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
-import io.reactivex.disposables.CompositeDisposable
 
 class AboutLibrariesFragment : ToolbarFragment() {
 
@@ -54,25 +50,21 @@ class AboutLibrariesFragment : ToolbarFragment() {
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
 
-  private val compositeDisposable = CompositeDisposable()
-  private var loadLicenseDisposable by disposable()
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    PYDroid.obtain(requireContext())
-        .inject(this)
-
-    arguments?.also {
-      backStackCount = it.getInt(KEY_BACK_STACK, 0)
-    }
-  }
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
     binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
+
+    PYDroid.obtain(requireContext())
+        .plusAboutComponent(viewLifecycleOwner)
+        .inject(this)
+
+    arguments?.also {
+      backStackCount = it.getInt(KEY_BACK_STACK, 0)
+    }
+
 
     refreshLatch = RefreshLatch.create(viewLifecycleOwner, delay = 150L) {
       binding.apply {
@@ -101,7 +93,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
     setupArrows()
 
     observeLicenses()
-    loadLicenseDisposable = viewModel.loadLicenses(false)
+    viewModel.loadLicenses(false)
 
     return binding.root
   }
@@ -113,7 +105,6 @@ class AboutLibrariesFragment : ToolbarFragment() {
       wrapper.onError { onLicenseLoadError(it) }
       wrapper.onComplete { onLicenseLoadComplete() }
     }
-        .addTo(compositeDisposable)
   }
 
   @CheckResult
@@ -235,9 +226,6 @@ class AboutLibrariesFragment : ToolbarFragment() {
         it.setUpEnabled(false)
       }
     }
-
-    loadLicenseDisposable.tryDispose()
-    compositeDisposable.clear()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

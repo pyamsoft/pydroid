@@ -19,6 +19,9 @@ package com.pyamsoft.pydroid.ui.version
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
 import com.pyamsoft.pydroid.core.bus.Publisher
@@ -34,8 +37,11 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   private var currentVersion: Int = 0
   private var applicationName: String? = null
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     arguments?.also {
       latestVersion = it.getInt(KEY_LATEST_VERSION, 0)
       if (latestVersion == 0) {
@@ -52,6 +58,8 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
 
     PYDroid.obtain(requireContext())
         .inject(this)
+
+    return super.onCreateView(inflater, container, savedInstanceState)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

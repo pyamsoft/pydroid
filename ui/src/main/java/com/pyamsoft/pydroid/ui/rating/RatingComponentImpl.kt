@@ -16,11 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.UiModule
 
 internal class RatingComponentImpl internal constructor(
+  private val owner: LifecycleOwner,
   private val uiModule: UiModule,
   private val ratingModule: RatingModule,
   private val loaderModule: LoaderModule,
@@ -28,11 +30,11 @@ internal class RatingComponentImpl internal constructor(
 ) : RatingComponent {
 
   override fun inject(activity: RatingActivity) {
-    activity.ratingViewModel = ratingModule.getViewModel(version)
+    activity.ratingViewModel = ratingModule.getViewModel(owner, version)
   }
 
   override fun inject(dialog: RatingDialog) {
-    dialog.viewModel = ratingModule.getViewModel(version)
+    dialog.viewModel = ratingModule.getViewModel(owner, version)
     dialog.imageLoader = loaderModule.provideImageLoader()
     dialog.errorPublisher = ratingModule.getPublisher()
     dialog.linker = uiModule.provideLinker()

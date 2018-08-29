@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.about
 import androidx.annotation.CheckResult
 import io.reactivex.Single
 
-internal interface AboutLibrariesInteractor {
+interface AboutLibrariesInteractor {
 
   @CheckResult
   fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>>

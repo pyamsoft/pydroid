@@ -17,22 +17,24 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.content.ActivityNotFoundException
-import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
 
 class SettingsPreferenceViewModel internal constructor(
+  owner: LifecycleOwner,
   private val linkerErrorBus: EventBus<ActivityNotFoundException>,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
-) {
+) : BaseViewModel(owner) {
 
-  @CheckResult
-  fun onLinkerError(func: (Throwable) -> Unit): Disposable {
-    return linkerErrorBus.listen()
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
-        .subscribe(func)
+  fun onLinkerError(func: (Throwable) -> Unit) {
+    dispose {
+      linkerErrorBus.listen()
+          .subscribeOn(backgroundScheduler)
+          .observeOn(foregroundScheduler)
+          .subscribe(func)
+    }
   }
 }

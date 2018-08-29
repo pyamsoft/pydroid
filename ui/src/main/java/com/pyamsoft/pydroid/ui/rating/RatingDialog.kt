@@ -26,10 +26,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
-import com.pyamsoft.pydroid.core.addTo
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.core.disposable
-import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
@@ -38,7 +35,6 @@ import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.clickAppPage
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.toDp
-import io.reactivex.disposables.CompositeDisposable
 
 internal class RatingDialog : ToolbarDialog() {
 
@@ -52,13 +48,16 @@ internal class RatingDialog : ToolbarDialog() {
   private var versionCode: Int = 0
   private var changelog: SpannedString? = null
 
-  private val compositeDisposable = CompositeDisposable()
-  private var saveRatingDisposable by disposable()
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     isCancelable = false
+  }
 
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     arguments?.also {
       rateLink = it.getString(RATE_LINK, null)
       versionCode = it.getInt(VERSION_CODE, 0)
@@ -75,15 +74,9 @@ internal class RatingDialog : ToolbarDialog() {
     }
 
     PYDroid.obtain(requireContext())
-        .plusRatingComponent(versionCode)
+        .plusRatingComponent(viewLifecycleOwner, versionCode)
         .inject(this)
-  }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
     binding = DialogRatingBinding.inflate(inflater, container, false)
 
     initDialog()
@@ -98,7 +91,6 @@ internal class RatingDialog : ToolbarDialog() {
       wrapper.onError { onRatingSaveError(it) }
       wrapper.onComplete { dismiss() }
     }
-        .addTo(compositeDisposable)
   }
 
   private fun onRatingSaved(accept: Boolean) {
@@ -124,10 +116,10 @@ internal class RatingDialog : ToolbarDialog() {
 
     binding.apply {
       ratingBtnNoThanks.setOnDebouncedClickListener {
-        saveRatingDisposable = viewModel.saveRating(false)
+        viewModel.saveRating(false)
       }
       ratingBtnGoRate.setOnDebouncedClickListener {
-        saveRatingDisposable = viewModel.saveRating(true)
+        viewModel.saveRating(true)
       }
     }
   }
@@ -139,12 +131,6 @@ internal class RatingDialog : ToolbarDialog() {
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.WRAP_CONTENT
     )
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    compositeDisposable.clear()
-    saveRatingDisposable.tryDispose()
   }
 
   companion object {

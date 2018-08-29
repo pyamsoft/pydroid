@@ -16,15 +16,16 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.DataBus
-import com.pyamsoft.pydroid.core.DataWrapper
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
+import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class RatingViewModel internal constructor(
+  owner: LifecycleOwner,
   private val ratingDialogBus: DataBus<Unit>,
   private val ratingSaveBus: DataBus<Boolean>,
   private val currentVersion: Int,
@@ -32,35 +33,46 @@ class RatingViewModel internal constructor(
   private val ratingErrorBus: EventBus<Throwable>,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
-) {
+) : BaseViewModel(owner) {
 
-  @CheckResult
-  fun onRatingDialogLoaded(func: (DataWrapper<Unit>) -> Unit): Disposable {
-    return ratingDialogBus.listen()
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
-        .subscribe(func)
+  private var loadRatingDisposable by disposable()
+  private var saveRatingDisposable by disposable()
+
+  override fun onCleared() {
+    super.onCleared()
+    loadRatingDisposable.tryDispose()
+    saveRatingDisposable.tryDispose()
   }
 
-  @CheckResult
-  fun onRatingSaved(func: (DataWrapper<Boolean>) -> Unit): Disposable {
-    return ratingSaveBus.listen()
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
-        .subscribe(func)
+  fun onRatingDialogLoaded(func: (DataWrapper<Unit>) -> Unit) {
+    dispose {
+      ratingDialogBus.listen()
+          .subscribeOn(backgroundScheduler)
+          .observeOn(foregroundScheduler)
+          .subscribe(func)
+    }
   }
 
-  @CheckResult
-  fun onRatingError(func: (Throwable) -> Unit): Disposable {
-    return ratingErrorBus.listen()
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
-        .subscribe(func)
+  fun onRatingSaved(func: (DataWrapper<Boolean>) -> Unit) {
+    dispose {
+      ratingSaveBus.listen()
+          .subscribeOn(backgroundScheduler)
+          .observeOn(foregroundScheduler)
+          .subscribe(func)
+    }
   }
 
-  @CheckResult
-  fun loadRatingDialog(force: Boolean): Disposable {
-    return interactor.needsToViewRating(force, currentVersion)
+  fun onRatingError(func: (Throwable) -> Unit) {
+    dispose {
+      ratingErrorBus.listen()
+          .subscribeOn(backgroundScheduler)
+          .observeOn(foregroundScheduler)
+          .subscribe(func)
+    }
+  }
+
+  fun loadRatingDialog(force: Boolean) {
+    loadRatingDisposable = interactor.needsToViewRating(force, currentVersion)
         .filter { it }
         .map { Unit }
         .subscribeOn(backgroundScheduler)
@@ -73,9 +85,8 @@ class RatingViewModel internal constructor(
         })
   }
 
-  @CheckResult
-  fun saveRating(accept: Boolean): Disposable {
-    return interactor.saveRating(currentVersion)
+  fun saveRating(accept: Boolean) {
+    saveRatingDisposable = interactor.saveRating(currentVersion)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
         .doOnSubscribe { ratingSaveBus.publishLoading(false) }

@@ -16,33 +16,41 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.DataBus
-import com.pyamsoft.pydroid.core.DataWrapper
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
+import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class VersionCheckViewModel internal constructor(
+  owner: LifecycleOwner,
   private val updateBus: DataBus<Int>,
   private val packageName: String,
   private val currentVersionCode: Int,
   private val interactor: VersionCheckInteractor,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
-) {
+) : BaseViewModel(owner) {
 
-  @CheckResult
-  fun onUpdateAvailable(func: (DataWrapper<Int>) -> Unit): Disposable {
-    return updateBus.listen()
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
-        .subscribe(func)
+  private var checkUpdateDisposable by disposable()
+
+  override fun onCleared() {
+    super.onCleared()
+    checkUpdateDisposable.tryDispose()
   }
 
-  @CheckResult
-  fun checkForUpdates(force: Boolean): Disposable {
-    return interactor.checkVersion(force, packageName)
+  fun onUpdateAvailable(func: (DataWrapper<Int>) -> Unit) {
+    dispose {
+      updateBus.listen()
+          .subscribeOn(backgroundScheduler)
+          .observeOn(foregroundScheduler)
+          .subscribe(func)
+    }
+  }
+
+  fun checkForUpdates(force: Boolean) {
+    checkUpdateDisposable = interactor.checkVersion(force, packageName)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
         .filter { currentVersionCode < it }

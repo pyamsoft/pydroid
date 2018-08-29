@@ -17,13 +17,15 @@
 package com.pyamsoft.pydroid.ui
 
 import android.app.Application
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.about.AboutComponent
+import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
@@ -55,11 +57,6 @@ internal class PYDroidComponentImpl internal constructor(
     return enforcer
   }
 
-  override fun inject(fragment: AboutLibrariesFragment) {
-    fragment.viewModel = aboutModule.getViewModel()
-    fragment.imageLoader = loaderModule.provideImageLoader()
-  }
-
   override fun inject(layout: SocialMediaPreference) {
     layout.imageLoader = loaderModule.provideImageLoader()
     layout.linker = uiModule.provideLinker()
@@ -71,14 +68,29 @@ internal class PYDroidComponentImpl internal constructor(
     versionUpgradeDialog.linkerErrorPublisher = uiModule.provideLinkerErrorBus()
   }
 
-  override fun plusVersionCheckComponent(currentVersion: Int): VersionCheckComponent =
-    VersionCheckComponentImpl(versionModule, currentVersion)
+  override fun plusAboutComponent(owner: LifecycleOwner): AboutComponent {
+    return AboutComponentImpl(owner, aboutModule, loaderModule)
+  }
 
-  override fun plusAppComponent(currentVersion: Int): AppComponent =
-    AppComponentImpl(uiModule, versionModule, ratingModule, currentVersion, schedulerProvider)
+  override fun plusVersionCheckComponent(
+    owner: LifecycleOwner,
+    currentVersion: Int
+  ): VersionCheckComponent =
+    VersionCheckComponentImpl(owner, versionModule, currentVersion)
 
-  override fun plusRatingComponent(currentVersion: Int): RatingComponent =
-    RatingComponentImpl(uiModule, ratingModule, loaderModule, currentVersion)
+  override fun plusAppComponent(
+    owner: LifecycleOwner,
+    currentVersion: Int
+  ): AppComponent =
+    AppComponentImpl(
+        owner, uiModule, versionModule, ratingModule, currentVersion, schedulerProvider
+    )
+
+  override fun plusRatingComponent(
+    owner: LifecycleOwner,
+    currentVersion: Int
+  ): RatingComponent =
+    RatingComponentImpl(owner, uiModule, ratingModule, loaderModule, currentVersion)
 
   override fun loaderModule(): LoaderModule {
     return loaderModule

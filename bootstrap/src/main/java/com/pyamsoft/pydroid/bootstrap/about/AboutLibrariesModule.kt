@@ -18,10 +18,11 @@ package com.pyamsoft.pydroid.bootstrap.about
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.DataBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
 
 class AboutLibrariesModule(
   context: Context,
@@ -43,8 +44,9 @@ class AboutLibrariesModule(
   }
 
   @CheckResult
-  fun getViewModel(): AboutLibrariesViewModel {
+  fun getViewModel(owner: LifecycleOwner): AboutLibrariesViewModel {
     return AboutLibrariesViewModel(
+        owner,
         viewBus,
         cacheInteractor,
         schedulerProvider.foregroundScheduler,

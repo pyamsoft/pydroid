@@ -16,30 +16,39 @@
 
 package com.pyamsoft.pydroid.bootstrap.about
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.DataBus
-import com.pyamsoft.pydroid.core.DataWrapper
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
+import com.pyamsoft.pydroid.core.viewmodel.DataBus
+import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import io.reactivex.Scheduler
-import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class AboutLibrariesViewModel internal constructor(
+  owner: LifecycleOwner,
   private val licenseBus: DataBus<List<AboutLibrariesModel>>,
   private val interactor: AboutLibrariesInteractor,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
-) {
+) : BaseViewModel(owner) {
 
-  @CheckResult
-  fun onLicensesLoaded(func: (DataWrapper<List<AboutLibrariesModel>>) -> Unit): Disposable {
-    return licenseBus.listen()
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
-        .subscribe(func)
+  private var loadDisposable by disposable()
+
+  override fun onCleared() {
+    super.onCleared()
+    loadDisposable.tryDispose()
   }
 
-  fun loadLicenses(force: Boolean): Disposable {
-    return interactor.loadLicenses(force)
+  fun onLicensesLoaded(func: (DataWrapper<List<AboutLibrariesModel>>) -> Unit) {
+    dispose {
+      licenseBus.listen()
+          .subscribeOn(backgroundScheduler)
+          .observeOn(foregroundScheduler)
+          .subscribe(func)
+    }
+  }
+
+  fun loadLicenses(force: Boolean) {
+    loadDisposable = interactor.loadLicenses(force)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
         .doOnSubscribe { licenseBus.publishLoading(force) }

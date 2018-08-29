@@ -16,12 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.ui.UiModule
 
 internal class AppComponentImpl internal constructor(
+  private val owner: LifecycleOwner,
   private val uiModule: UiModule,
   private val versionCheckModule: VersionCheckModule,
   private val ratingModule: RatingModule,
@@ -30,10 +32,11 @@ internal class AppComponentImpl internal constructor(
 ) : AppComponent {
 
   override fun inject(fragment: SettingsPreferenceFragment) {
-    fragment.versionViewModel = versionCheckModule.getViewModel(currentVersion)
-    fragment.ratingViewModel = ratingModule.getViewModel(currentVersion)
+    fragment.versionViewModel = versionCheckModule.getViewModel(owner, currentVersion)
+    fragment.ratingViewModel = ratingModule.getViewModel(owner, currentVersion)
     fragment.linker = uiModule.provideLinker()
     fragment.viewModel = SettingsPreferenceViewModel(
+        owner,
         uiModule.provideLinkerErrorBus(),
         schedulerProvider.foregroundScheduler,
         schedulerProvider.backgroundScheduler

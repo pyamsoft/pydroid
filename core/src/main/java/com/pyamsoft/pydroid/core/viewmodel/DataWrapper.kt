@@ -1,9 +1,9 @@
-package com.pyamsoft.pydroid.core
+package com.pyamsoft.pydroid.core.viewmodel
 
-import com.pyamsoft.pydroid.core.DataWrapper.Complete
-import com.pyamsoft.pydroid.core.DataWrapper.Error
-import com.pyamsoft.pydroid.core.DataWrapper.Loading
-import com.pyamsoft.pydroid.core.DataWrapper.Success
+import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Complete
+import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Error
+import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Loading
+import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Success
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable

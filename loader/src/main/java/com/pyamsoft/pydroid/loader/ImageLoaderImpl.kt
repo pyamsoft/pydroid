@@ -22,7 +22,7 @@ import androidx.annotation.DrawableRes
 
 internal class ImageLoaderImpl internal constructor(private val context: Context) : ImageLoader {
 
-  override fun fromResource(@DrawableRes resource: Int): GenericLoader<Drawable> {
+  override fun fromResource(@DrawableRes resource: Int): Loader<Drawable> {
     return GlideLoader(context.applicationContext, resource)
   }
 

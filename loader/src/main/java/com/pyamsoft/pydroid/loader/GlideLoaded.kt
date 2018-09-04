@@ -9,7 +9,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.bumptech.glide.Glide
 import timber.log.Timber
 
-internal class GlideLoaded(
+class GlideLoaded(
   private val context: Context,
   private val view: ImageView
 ) : Loaded, LifecycleObserver {

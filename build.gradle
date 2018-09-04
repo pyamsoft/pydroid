@@ -19,7 +19,7 @@
 buildscript {
   ext {
     kotlin_version = '1.2.61'
-    plugin_version = '3.2.0-beta05'
+    plugin_version = '3.2.0-rc02'
     dokka_version = "0.9.17"
   }
   repositories {
@@ -33,7 +33,7 @@ buildscript {
     maxSdk = 28
 
     // AndroidX
-    ktx = "1.0.0-rc01"
+    ktx = "1.0.0-rc02"
     constraintLayout = "1.1.2"
     lifecycle = "2.0.0-rc02"
     materialDesign = "1.0.0-rc01"

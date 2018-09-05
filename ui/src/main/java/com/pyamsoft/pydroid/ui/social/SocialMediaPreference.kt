@@ -95,19 +95,19 @@ class SocialMediaPreference : Preference, LifecycleOwner {
     }
 
     imageLoader.also {
-      it.fromResource(R.drawable.google_play)
+      it.load(R.drawable.google_play)
           .into(googlePlay)
           .bind(this)
 
-      it.fromResource(R.drawable.google_plus)
+      it.load(R.drawable.google_plus)
           .into(googlePlus)
           .bind(this)
 
-      it.fromResource(R.drawable.blogger_icon)
+      it.load(R.drawable.blogger_icon)
           .into(blogger)
           .bind(this)
 
-      it.fromResource(R.drawable.facebook_icon)
+      it.load(R.drawable.facebook_icon)
           .into(facebook)
           .bind(this)
     }

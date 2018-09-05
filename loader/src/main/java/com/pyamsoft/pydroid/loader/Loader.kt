@@ -18,21 +18,17 @@ package com.pyamsoft.pydroid.loader
 
 import android.widget.ImageView
 import androidx.annotation.CheckResult
-import androidx.annotation.ColorRes
 
 interface Loader<T : Any> {
 
   @CheckResult
-  fun tint(@ColorRes tint: Int): Loader<T>
+  fun onRequest(action: () -> Unit): Loader<T>
 
   @CheckResult
-  fun withStartAction(action: () -> Unit): Loader<T>
+  fun onError(action: (T?) -> Unit): Loader<T>
 
   @CheckResult
-  fun withErrorAction(action: (Throwable) -> Unit): Loader<T>
-
-  @CheckResult
-  fun withCompleteAction(action: (T) -> Unit): Loader<T>
+  fun onLoaded(action: (T) -> Unit): Loader<T>
 
   @CheckResult
   fun mutate(action: (T) -> T): Loader<T>

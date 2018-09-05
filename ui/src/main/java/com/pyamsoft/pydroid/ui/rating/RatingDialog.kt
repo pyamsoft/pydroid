@@ -109,7 +109,7 @@ internal class RatingDialog : ToolbarDialog() {
         8.toDp(binding.ratingIcon.context).toFloat()
     )
 
-    imageLoader.fromResource(changeLogIcon)
+    imageLoader.load(changeLogIcon)
         .into(binding.ratingIcon)
         .bind(viewLifecycleOwner)
     binding.ratingTextChange.text = changelog

@@ -164,7 +164,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
   }
 
   private fun setupArrows() {
-    imageLoader.fromResource(R.drawable.ic_arrow_down_24dp)
+    imageLoader.load(R.drawable.ic_arrow_down_24dp)
         .into(binding.arrowLeft)
         .bind(viewLifecycleOwner)
     binding.apply {
@@ -178,7 +178,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
       }
     }
 
-    imageLoader.fromResource(R.drawable.ic_arrow_down_24dp)
+    imageLoader.load(R.drawable.ic_arrow_down_24dp)
         .into(binding.arrowRight)
         .bind(viewLifecycleOwner)
     binding.apply {

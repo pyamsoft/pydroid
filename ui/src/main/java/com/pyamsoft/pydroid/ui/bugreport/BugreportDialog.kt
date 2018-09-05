@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
+import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
@@ -37,7 +38,7 @@ class BugreportDialog : ToolbarDialog() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    arguments!!.also {
+    requireArguments().also {
       appName = it.getString(APP_NAME, null) ?:
           throw IllegalArgumentException("App Name cannot be NULL")
       appVersion = it.getInt(APP_VERSION)

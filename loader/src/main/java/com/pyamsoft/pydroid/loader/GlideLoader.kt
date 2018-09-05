@@ -1,35 +1,42 @@
 package com.pyamsoft.pydroid.loader
 
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
+import androidx.annotation.CheckResult
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
-import timber.log.Timber
 
-internal class GlideLoader(
-  private val context: Context,
-  @DrawableRes private val resource: Int
-) : GenericLoader<Drawable>() {
+abstract class GlideLoader<T : Any> : GenericLoader<T>() {
 
-  override fun into(imageView: ImageView): Loaded {
+  @CheckResult
+  protected abstract fun createRequest(request: RequestManager): RequestBuilder<T>
+
+  @CheckResult
+  protected abstract fun mutateResource(resource: T): T
+
+  protected abstract fun setImage(
+    view: ImageView,
+    image: T
+  )
+
+  final override fun into(imageView: ImageView): Loaded {
+    val context = imageView.context.applicationContext
 
     val needsCustomTarget = errorAction != null ||
         completeAction != null ||
         mutator != null
 
-    val loadRequest = Glide.with(context)
-        .load(resource)
+    val loadRequest = createRequest(Glide.with(context))
 
     startAction?.invoke()
     if (needsCustomTarget) {
-      val target = object : CustomViewTarget<ImageView, Drawable>(imageView) {
-        override fun onLoadFailed(errorDrawable: Drawable?) {
-          Timber.w("Error occured when loading $resource into $imageView")
-          errorAction?.invoke(errorDrawable)
-          getView().setImageDrawable(errorDrawable)
+      val target = object : CustomViewTarget<ImageView, T>(imageView) {
+        override fun onLoadFailed(error: Drawable?) {
+          errorAction?.invoke(error)
+          getView().setImageDrawable(error)
         }
 
         override fun onResourceCleared(placeholder: Drawable?) {
@@ -37,12 +44,12 @@ internal class GlideLoader(
         }
 
         override fun onResourceReady(
-          resource: Drawable,
-          transition: Transition<in Drawable>?
+          resource: T,
+          transition: Transition<in T>?
         ) {
-          val mutated = mutator?.invoke(resource.mutate()) ?: resource
+          val mutated = mutator?.invoke(mutateResource(resource)) ?: resource
           completeAction?.invoke(mutated)
-          getView().setImageDrawable(mutated)
+          setImage(getView(), mutated)
         }
       }
 
@@ -50,7 +57,7 @@ internal class GlideLoader(
     } else {
       loadRequest.into(imageView)
     }
-    return GlideLoaded(context.applicationContext, imageView)
+    return GlideLoaded(imageView)
   }
 
 }

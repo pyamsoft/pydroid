@@ -16,12 +16,11 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.content.Context
 import androidx.annotation.CheckResult
 
-class LoaderModule(context: Context) {
+class LoaderModule {
 
-  private val imageLoader: ImageLoaderImpl = ImageLoaderImpl(context.applicationContext)
+  private val imageLoader: ImageLoaderImpl = ImageLoaderImpl()
 
   // Singleton
   @CheckResult

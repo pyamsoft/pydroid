@@ -30,6 +30,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.util.toDp
 
 object Snackbreak {
@@ -147,7 +148,7 @@ object Snackbreak {
 
     override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
-      arguments!!.also {
+      requireArguments().also {
         errorTitle = it.getCharSequence(
             KEY_ERROR_TITLE
         ) ?: ""

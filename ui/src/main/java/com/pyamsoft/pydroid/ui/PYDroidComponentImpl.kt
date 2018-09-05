@@ -42,7 +42,7 @@ internal class PYDroidComponentImpl internal constructor(
 ) : PYDroidComponent, ModuleProvider {
 
   private val enforcer = Enforcer(debug)
-  private val loaderModule = LoaderModule(application)
+  private val loaderModule = LoaderModule()
   private val uiModule = UiModule(application)
   private val aboutModule = AboutLibrariesModule(application, enforcer, schedulerProvider)
   private val versionModule = VersionCheckModule(application, enforcer, debug, schedulerProvider)

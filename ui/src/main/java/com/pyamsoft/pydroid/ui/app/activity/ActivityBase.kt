@@ -25,7 +25,6 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
   private var capturedToolbar: Toolbar? = null
 
-  @CallSuper
   override fun onBackPressed() {
     if (!BackPressDelegate.onBackPressed(supportFragmentManager)) {
       super.onBackPressed()
@@ -45,7 +44,7 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
   }
 
   override fun requireToolbar(func: (Toolbar) -> Unit) {
-    capturedToolbar!!.let(func)
+    requireNotNull(capturedToolbar).let(func)
   }
 
   protected fun setToolbar(toolbar: Toolbar?) {

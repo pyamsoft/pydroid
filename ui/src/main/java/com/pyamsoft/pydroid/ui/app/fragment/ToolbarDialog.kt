@@ -18,13 +18,10 @@ package com.pyamsoft.pydroid.ui.app.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
 import android.view.Window
-import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
-import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
-abstract class ToolbarDialog : DialogFragment(), ToolbarProvider {
+abstract class ToolbarDialog : DialogFragment() {
 
   protected open val hasTitle: Boolean = false
 
@@ -35,21 +32,6 @@ abstract class ToolbarDialog : DialogFragment(), ToolbarProvider {
     }
 
     return dialog
-  }
-
-  final override val toolbarActivity: ToolbarActivity
-    @get:CheckResult get() {
-      val a = activity
-      if (a is ToolbarActivity) {
-        return a
-      } else {
-        throw ClassCastException("Activity does not implement ToolbarActivity")
-      }
-    }
-
-  @CheckResult
-  protected fun requireView(): View {
-    return checkNotNull(view) { "View is required and cannot be null." }
   }
 
 }

@@ -32,6 +32,9 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
+import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
+import com.pyamsoft.pydroid.ui.app.fragment.requireView
+import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
@@ -195,12 +198,27 @@ class AboutLibrariesFragment : ToolbarFragment() {
 
   override fun onResume() {
     super.onResume()
-    toolbarActivity.withToolbar {
+    requireToolbarActivity().withToolbar {
       if (oldTitle == null) {
         oldTitle = it.title
       }
       it.title = "Open Source Libraries"
       it.setUpEnabled(true)
+    }
+  }
+
+  override fun onPause() {
+    super.onPause()
+    if (isRemoving) {
+      toolbarActivity?.withToolbar {
+        // Set title back to original
+        it.title = oldTitle ?: it.title
+
+        // If this page was last on the back stack, set up false
+        if (backStackCount == 0) {
+          it.setUpEnabled(false)
+        }
+      }
     }
   }
 
@@ -215,16 +233,6 @@ class AboutLibrariesFragment : ToolbarFragment() {
       arrowRight.setOnDebouncedClickListener(null)
 
       unbind()
-    }
-
-    toolbarActivity.withToolbar {
-      // Set title back to original
-      it.title = oldTitle ?: it.title
-
-      // If this page was last on the back stack, set up false
-      if (backStackCount == 0) {
-        it.setUpEnabled(false)
-      }
     }
   }
 

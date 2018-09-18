@@ -36,4 +36,7 @@ interface Loader<T : Any> {
 
   @CheckResult
   fun into(imageView: ImageView): Loaded
+
+  @CheckResult
+  fun into(target: ImageTarget<T>): Loaded
 }

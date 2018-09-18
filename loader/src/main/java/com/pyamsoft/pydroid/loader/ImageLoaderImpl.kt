@@ -19,7 +19,8 @@ package com.pyamsoft.pydroid.loader
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
 
-internal class ImageLoaderImpl internal constructor() : ImageLoader {
+internal class ImageLoaderImpl internal constructor(
+) : ImageLoader {
 
   override fun load(@DrawableRes resource: Int): Loader<Drawable> {
     return GlideResourceLoader(resource)

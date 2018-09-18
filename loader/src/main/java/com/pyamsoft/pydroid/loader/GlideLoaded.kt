@@ -1,6 +1,5 @@
 package com.pyamsoft.pydroid.loader
 
-import android.widget.ImageView
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -9,7 +8,7 @@ import com.bumptech.glide.Glide
 import timber.log.Timber
 
 class GlideLoaded(
-  private val view: ImageView
+  private val target: ImageTarget<*>
 ) : Loaded, LifecycleObserver {
 
   private var lifeCycleOwner: LifecycleOwner? = null
@@ -26,9 +25,10 @@ class GlideLoaded(
     lifeCycleOwner?.lifecycle?.removeObserver(this)
     lifeCycleOwner = null
 
+    val view = target.view()
     Glide.with(view.context.applicationContext)
         .clear(view)
-    view.setImageDrawable(null)
+    target.clear()
   }
 
 }

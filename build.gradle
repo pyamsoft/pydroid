@@ -18,7 +18,7 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.2.61'
+    kotlin_version = '1.2.70'
     plugin_version = '3.2.0-rc02'
     dokka_version = "0.9.17"
   }
@@ -43,7 +43,7 @@ buildscript {
     recyclerView = "1.0.0-rc02"
     appCompat = "1.0.0-rc02"
 
-    repo = "0.0.7"
+    repo = "0.0.8"
     timber = "4.7.1"
     moshi = "1.6.0"
     retrofit = "2.4.0"

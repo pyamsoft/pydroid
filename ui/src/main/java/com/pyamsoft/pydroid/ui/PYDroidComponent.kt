@@ -28,9 +28,6 @@ import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal interface PYDroidComponent {
 
-  @CheckResult
-  fun enforcer(): Enforcer
-
   fun inject(layout: SocialMediaPreference)
 
   fun inject(versionUpgradeDialog: VersionUpgradeDialog)

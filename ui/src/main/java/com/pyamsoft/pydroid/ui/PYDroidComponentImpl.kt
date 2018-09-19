@@ -18,6 +18,8 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.lifecycle.LifecycleOwner
+import com.popinnow.android.repo.Repo
+import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
@@ -41,11 +43,16 @@ internal class PYDroidComponentImpl internal constructor(
   private val schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
+  private val repo = newRepoBuilder()
+      .debug(debug)
+      .memoryCache()
+      .build()
   private val enforcer = Enforcer(debug)
   private val loaderModule = LoaderModule()
   private val uiModule = UiModule(application)
-  private val aboutModule = AboutLibrariesModule(application, enforcer, schedulerProvider)
-  private val versionModule = VersionCheckModule(application, enforcer, debug, schedulerProvider)
+  private val aboutModule = AboutLibrariesModule(application, enforcer, repo, schedulerProvider)
+  private val versionModule =
+    VersionCheckModule(application, enforcer, debug, repo, schedulerProvider)
   private val ratingModule: RatingModule
 
   init {
@@ -55,6 +62,10 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun enforcer(): Enforcer {
     return enforcer
+  }
+
+  override fun repo(): Repo {
+    return repo
   }
 
   override fun inject(layout: SocialMediaPreference) {

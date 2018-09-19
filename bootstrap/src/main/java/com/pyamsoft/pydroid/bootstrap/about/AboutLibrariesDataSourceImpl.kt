@@ -37,10 +37,10 @@ internal class AboutLibrariesDataSourceImpl internal constructor(
 
   @CheckResult
   private fun readLines(source: BufferedSource): String {
-    source.use {
+    source.use { src ->
       val lines = ArrayList<String>()
       while (true) {
-        val line = it.readUtf8Line()
+        val line = src.readUtf8Line()
         if (line == null) {
           break
         } else {

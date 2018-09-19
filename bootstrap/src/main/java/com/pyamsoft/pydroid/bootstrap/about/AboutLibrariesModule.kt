@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.about
 import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.popinnow.android.repo.newRepoBuilder
+import com.popinnow.android.repo.Repo
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.core.viewmodel.DataBus
@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.core.viewmodel.DataBus
 class AboutLibrariesModule(
   context: Context,
   enforcer: Enforcer,
+  repo: Repo,
   private val schedulerProvider: SchedulerProvider
 ) {
 
@@ -37,10 +38,7 @@ class AboutLibrariesModule(
     val dataSource = AboutLibrariesDataSourceImpl(context.applicationContext)
 
     val disk = AboutLibrariesInteractorDisk(enforcer, dataSource)
-    val licenseCache = newRepoBuilder<List<AboutLibrariesModel>>()
-        .memoryCache()
-        .buildSingle()
-    cacheInteractor = AboutLibrariesInteractorImpl(enforcer, disk, licenseCache)
+    cacheInteractor = AboutLibrariesInteractorImpl(enforcer, disk, repo)
   }
 
   @CheckResult

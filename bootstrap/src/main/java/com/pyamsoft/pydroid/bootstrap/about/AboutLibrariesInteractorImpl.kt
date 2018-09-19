@@ -16,7 +16,8 @@
 
 package com.pyamsoft.pydroid.bootstrap.about
 
-import com.popinnow.android.repo.SingleRepo
+import com.popinnow.android.repo.Repo
+import com.pyamsoft.pydroid.bootstrap.CacheKeys
 import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Single
@@ -24,17 +25,17 @@ import io.reactivex.Single
 internal class AboutLibrariesInteractorImpl internal constructor(
   private val enforcer: Enforcer,
   private val disk: AboutLibrariesInteractor,
-  private val licenseCache: SingleRepo<List<AboutLibrariesModel>>
+  private val repo: Repo
 ) : AboutLibrariesInteractor, Cache {
 
   override fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>> {
-    return licenseCache.get(bypass, "load-licenses") {
+    return repo.get(bypass, CacheKeys.KEY_ABOUT_LIBRARIES) {
       enforcer.assertNotOnMainThread()
       return@get disk.loadLicenses(true)
     }
   }
 
   override fun clearCache() {
-    licenseCache.clearAll()
+    repo.invalidate(CacheKeys.KEY_ABOUT_LIBRARIES)
   }
 }

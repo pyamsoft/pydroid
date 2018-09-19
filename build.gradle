@@ -24,6 +24,7 @@ buildscript {
   }
   repositories {
     google()
+    mavenCentral()
     jcenter()
   }
 
@@ -36,7 +37,7 @@ buildscript {
     ktx = "1.0.0-rc02"
     constraintLayout = "1.1.2"
     lifecycle = "2.0.0-rc02"
-    materialDesign = "1.0.0-rc01"
+    materialDesign = "1.0.0-rc02"
     vectorDrawable = "1.0.0-rc02"
     coordinatorLayout = "1.0.0-rc02"
     preference = "1.0.0-rc02"
@@ -48,7 +49,7 @@ buildscript {
     moshi = "1.6.0"
     retrofit = "2.4.0"
     retrofitLogging = "3.11.0"
-    rxjava = "2.2.1"
+    rxjava = "2.2.2"
     rxandroid = "2.1.0"
     glide = "4.8.0"
   }
@@ -214,6 +215,7 @@ subprojects {
 allprojects {
   repositories {
     google()
+    mavenCentral()
     jcenter()
   }
 

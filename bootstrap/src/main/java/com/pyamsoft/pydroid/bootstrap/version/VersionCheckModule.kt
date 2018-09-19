@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version
 import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.popinnow.android.repo.newRepoBuilder
+import com.popinnow.android.repo.Repo
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
@@ -36,6 +36,7 @@ class VersionCheckModule(
   context: Context,
   enforcer: Enforcer,
   debug: Boolean,
+  repo: Repo,
   private val schedulerProvider: SchedulerProvider
 ) {
 
@@ -54,9 +55,7 @@ class VersionCheckModule(
           enforcer, minimumApiProvider,
           networkStatusProvider, versionCheckService
       )
-    val versionCache = newRepoBuilder<Int>().memoryCache()
-        .buildSingle()
-    cachedInteractor = VersionCheckInteractorImpl(enforcer, network, versionCache)
+    cachedInteractor = VersionCheckInteractorImpl(enforcer, network, repo)
   }
 
   @CheckResult

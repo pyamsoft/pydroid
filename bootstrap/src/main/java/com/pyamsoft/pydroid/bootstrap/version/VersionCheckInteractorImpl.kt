@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import com.popinnow.android.repo.Repo
-import com.pyamsoft.pydroid.bootstrap.CacheKeys
 import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Single
@@ -25,20 +24,20 @@ import io.reactivex.Single
 internal class VersionCheckInteractorImpl internal constructor(
   private val enforcer: Enforcer,
   private val network: VersionCheckInteractor,
-  private val repo: Repo
+  private val repo: Repo<Int>
 ) : VersionCheckInteractor, Cache {
 
   override fun checkVersion(
     bypass: Boolean,
     packageName: String
   ): Single<Int> {
-    return repo.get(bypass, CacheKeys.KEY_VERSION_CHECK) {
+    return repo.get(bypass) {
       enforcer.assertNotOnMainThread()
       return@get network.checkVersion(true, packageName)
     }
   }
 
   override fun clearCache() {
-    repo.invalidate(CacheKeys.KEY_VERSION_CHECK)
+    repo.clearAll()
   }
 }

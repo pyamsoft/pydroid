@@ -22,7 +22,6 @@ import android.os.Looper
 import android.os.StrictMode
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
@@ -57,17 +56,6 @@ class PYDroid private constructor(
   @CheckResult
   fun modules(): ModuleProvider {
     return impl
-  }
-
-  /**
-   * Exposed so that outside applications can take advantage of the Enforcer singleton
-   *
-   * This is not exposed outside of the object created in the PYDroid.Instance as it is
-   * intended to only be used during the construction of the application level object graph.
-   */
-  @CheckResult
-  fun enforcer(): Enforcer {
-    return impl.enforcer()
   }
 
   interface Instance {

@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
 import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
@@ -33,7 +35,7 @@ class VersionCheckViewModel internal constructor(
   private val backgroundScheduler: Scheduler
 ) : BaseViewModel(owner) {
 
-  private var checkUpdateDisposable by disposable()
+  private var checkUpdateDisposable by singleDisposable()
 
   override fun onCleared() {
     super.onCleared()

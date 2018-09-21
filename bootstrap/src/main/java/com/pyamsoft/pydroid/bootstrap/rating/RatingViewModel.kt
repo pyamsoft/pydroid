@@ -18,6 +18,8 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
 import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
@@ -35,8 +37,8 @@ class RatingViewModel internal constructor(
   private val backgroundScheduler: Scheduler
 ) : BaseViewModel(owner) {
 
-  private var loadRatingDisposable by disposable()
-  private var saveRatingDisposable by disposable()
+  private var loadRatingDisposable by singleDisposable()
+  private var saveRatingDisposable by singleDisposable()
 
   override fun onCleared() {
     super.onCleared()

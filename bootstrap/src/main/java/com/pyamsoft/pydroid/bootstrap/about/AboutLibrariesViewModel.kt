@@ -17,6 +17,8 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
 import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
@@ -31,7 +33,7 @@ class AboutLibrariesViewModel internal constructor(
   private val backgroundScheduler: Scheduler
 ) : BaseViewModel(owner) {
 
-  private var loadDisposable by disposable()
+  private var loadDisposable by singleDisposable()
 
   override fun onCleared() {
     super.onCleared()

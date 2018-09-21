@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
-import com.popinnow.android.repo.Repo
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
@@ -28,9 +27,6 @@ interface ModuleProvider {
 
   @CheckResult
   fun enforcer(): Enforcer
-
-  @CheckResult
-  fun repo(): Repo
 
   @CheckResult
   fun loaderModule(): LoaderModule

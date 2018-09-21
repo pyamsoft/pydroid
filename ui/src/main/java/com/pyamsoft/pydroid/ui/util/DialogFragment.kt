@@ -33,14 +33,13 @@ fun <T : DialogFragment> T.show(
   }
 
   val fragmentManager = activity.supportFragmentManager
+  val transaction = fragmentManager.beginTransaction()
   val prev = fragmentManager.findFragmentByTag(tag)
   if (prev != null) {
     Timber.d("Remove old fragment with tag: %s", tag)
-    fragmentManager.beginTransaction()
-        .remove(prev)
-        .commitNow()
+    transaction.remove(prev)
   }
 
   Timber.d("Add new fragment with tag: %s", tag)
-  return this.also { showNow(fragmentManager, tag) }
+  return this.also { show(transaction, tag) }
 }

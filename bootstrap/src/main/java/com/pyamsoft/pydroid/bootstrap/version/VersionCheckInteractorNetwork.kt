@@ -57,7 +57,13 @@ internal class VersionCheckInteractorNetwork internal constructor(
       if (!networkStatusProvider.hasConnection()) {
         throw NoNetworkException
       } else {
-        return@defer versionCheckService.checkVersion(packageName)
+        val targetName: String
+        if (packageName.endsWith(".dev")) {
+          targetName = packageName.substringBefore(".dev")
+        } else {
+          targetName = packageName
+        }
+        return@defer versionCheckService.checkVersion(targetName)
       }
     }
         .map { versionCodeForApi(it) }

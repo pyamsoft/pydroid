@@ -19,50 +19,34 @@ package com.pyamsoft.pydroid.ui.version
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
+import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.social.Linker
+import kotlin.LazyThreadSafetyMode.NONE
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
   internal lateinit var linker: Linker
   internal lateinit var linkerErrorPublisher: Publisher<ActivityNotFoundException>
+
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0
-  private var applicationName: String? = null
+  private val applicationName by lazy(NONE) { requireArguments().getString(KEY_NAME, "") }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    arguments?.also {
-      latestVersion = it.getInt(KEY_LATEST_VERSION, 0)
-      if (latestVersion == 0) {
-        throw RuntimeException("Could not find latest version")
-      }
-
-      currentVersion = it.getInt(KEY_CURRENT_VERSION, 0)
-      if (currentVersion == 0) {
-        throw RuntimeException("Could not find current version")
-      }
-
-      applicationName = it.getString(KEY_NAME, null)
-    }
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
+    currentVersion = requireArguments().getInt(KEY_CURRENT_VERSION, 0)
+    require(latestVersion > 0)
+    require(currentVersion > 0)
+    require(applicationName.isNotBlank())
 
     PYDroid.obtain(requireContext())
         .inject(this)
 
-    return super.onCreateView(inflater, container, savedInstanceState)
-  }
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val message = """|A new version of $applicationName is available!
                      |Current version: $currentVersion
                      |Latest verson: $latestVersion""".trimMargin()

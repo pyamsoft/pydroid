@@ -24,10 +24,10 @@ import timber.log.Timber
  * Using the fragment manager to handle transactions, this guarantees that any old
  * versions of the dialog fragment are removed before a new one is added.
  */
-fun <T : DialogFragment> T.show(
+fun DialogFragment.show(
   activity: FragmentActivity,
   tag: String
-): T {
+) {
   if (tag.isEmpty()) {
     throw IllegalArgumentException("Cannot use EMPTY tag")
   }
@@ -41,5 +41,5 @@ fun <T : DialogFragment> T.show(
   }
 
   Timber.d("Add new fragment with tag: %s", tag)
-  return this.also { show(transaction, tag) }
+  show(transaction, tag)
 }

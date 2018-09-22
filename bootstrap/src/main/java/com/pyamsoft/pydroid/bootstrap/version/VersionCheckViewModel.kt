@@ -27,9 +27,10 @@ import timber.log.Timber
 
 class VersionCheckViewModel internal constructor(
   owner: LifecycleOwner,
+  private val debug: Boolean,
+  private val currentVersionCode: Int,
   private val updateBus: DataBus<Int>,
   private val packageName: String,
-  private val currentVersionCode: Int,
   private val interactor: VersionCheckInteractor,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
@@ -55,7 +56,7 @@ class VersionCheckViewModel internal constructor(
     checkUpdateDisposable = interactor.checkVersion(force, packageName)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
-        .filter { currentVersionCode < it }
+        .filter { currentVersionCode < it || (debug && force) }
         .doOnSubscribe { updateBus.publishLoading(force) }
         .doAfterTerminate { updateBus.publishComplete() }
         .subscribe({ updateBus.publishSuccess(it) }, {

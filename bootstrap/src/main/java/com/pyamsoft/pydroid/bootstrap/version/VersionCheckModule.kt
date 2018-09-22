@@ -35,7 +35,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class VersionCheckModule(
   context: Context,
   enforcer: Enforcer,
-  debug: Boolean,
+  private val debug: Boolean,
   private val schedulerProvider: SchedulerProvider
 ) {
 
@@ -91,9 +91,10 @@ class VersionCheckModule(
   ): VersionCheckViewModel {
     return VersionCheckViewModel(
         owner,
+        debug,
+        currentVersion,
         updateBus,
         packageName,
-        currentVersion,
         cachedInteractor,
         schedulerProvider.foregroundScheduler,
         schedulerProvider.backgroundScheduler

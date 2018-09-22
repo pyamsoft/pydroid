@@ -34,8 +34,6 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
 
   abstract val rootView: View
 
-  abstract val forceUpdateCheck: Boolean
-
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -64,7 +62,7 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
-    viewModel.checkForUpdates(forceUpdateCheck)
+    viewModel.checkForUpdates(false)
   }
 
   private fun onUpdatedVersionFound(

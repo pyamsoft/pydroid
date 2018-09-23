@@ -31,7 +31,6 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
@@ -120,8 +119,8 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
   }
 
   private fun onRatingError(throwable: Throwable) {
-    val details = ErrorDetail(message = throwable.localizedMessage)
-    Snackbreak.short(this, rootView, details)
+    Snackbreak.short(rootView, throwable.localizedMessage)
+        .show()
   }
 
   companion object {

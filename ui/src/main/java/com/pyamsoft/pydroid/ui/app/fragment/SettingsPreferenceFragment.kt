@@ -33,7 +33,6 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.clickAppPage
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
@@ -111,7 +110,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
     val rateApplication: Preference = findPreference(getString(R.string.rating_key))
     rateApplication.setOnPreferenceClickListener { _ ->
-      view?.also { linker.clickAppPage(requireActivity(), it) }
+      view?.also { linker.clickAppPage(it) }
       return@setOnPreferenceClickListener true
     }
 
@@ -153,8 +152,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   private fun onError(throwable: Throwable) {
     view?.also {
-      val details = ErrorDetail(message = throwable.localizedMessage)
-      Snackbreak.short(requireActivity(), it, details)
+      Snackbreak.short(it, throwable.localizedMessage)
+          .show()
     }
   }
 

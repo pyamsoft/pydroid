@@ -16,23 +16,16 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.app.Dialog
 import android.graphics.drawable.GradientDrawable
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.util.toDp
-import kotlin.LazyThreadSafetyMode.NONE
 
 object Snackbreak {
 
@@ -46,17 +39,17 @@ object Snackbreak {
   }
 
   private fun setBackground(snackbar: Snackbar) {
-    val drawable = GradientDrawable().mutate() as? GradientDrawable
-    val background = drawable?.apply {
+    val drawable = GradientDrawable().mutate() as GradientDrawable
+
+    val background = drawable.apply {
       shape = GradientDrawable.RECTANGLE
       setColor(ContextCompat.getColor(snackbar.context, R.color.snackbar))
 
       cornerRadius = 4.toDp(snackbar.context)
           .toFloat()
     }
-    if (background != null) {
-      snackbar.view.background = background
-    }
+
+    snackbar.view.background = background
   }
 
   private fun Snackbar.materialDesign() {
@@ -67,8 +60,9 @@ object Snackbreak {
 
   @JvmStatic
   @CheckResult
-  fun make(
-    view: View, @StringRes resId: Int,
+  private fun make(
+    view: View,
+    @StringRes resId: Int,
     duration: Int
   ): Snackbar {
     return Snackbar.make(view, resId, duration)
@@ -77,7 +71,7 @@ object Snackbreak {
 
   @JvmStatic
   @CheckResult
-  fun make(
+  private fun make(
     view: View,
     message: CharSequence,
     duration: Int
@@ -94,28 +88,11 @@ object Snackbreak {
   ): Snackbar = make(view, message, Snackbar.LENGTH_SHORT)
 
   @JvmStatic
+  @CheckResult
   fun short(
-    activity: FragmentActivity,
     view: View,
-    detail: ErrorDetail,
-    message: CharSequence = "An unexpected error occurred"
-  ) {
-    withDetail(
-        activity, view, Snackbar.LENGTH_SHORT, detail, message
-    )
-  }
-
-  @JvmStatic
-  fun long(
-    activity: FragmentActivity,
-    view: View,
-    detail: ErrorDetail,
-    message: CharSequence = "An unexpected error occurred"
-  ) {
-    withDetail(
-        activity, view, Snackbar.LENGTH_LONG, detail, message
-    )
-  }
+    @StringRes message: Int
+  ): Snackbar = make(view, message, Snackbar.LENGTH_SHORT)
 
   @JvmStatic
   @CheckResult
@@ -125,16 +102,11 @@ object Snackbreak {
   ): Snackbar = make(view, message, Snackbar.LENGTH_LONG)
 
   @JvmStatic
-  fun indefinite(
-    activity: FragmentActivity,
+  @CheckResult
+  fun long(
     view: View,
-    detail: ErrorDetail,
-    message: CharSequence = "An unexpected error occurred"
-  ) {
-    withDetail(
-        activity, view, Snackbar.LENGTH_INDEFINITE, detail, message
-    )
-  }
+    @StringRes message: Int
+  ): Snackbar = make(view, message, Snackbar.LENGTH_LONG)
 
   @JvmStatic
   @CheckResult
@@ -144,63 +116,10 @@ object Snackbreak {
   ): Snackbar = make(view, message, Snackbar.LENGTH_INDEFINITE)
 
   @JvmStatic
-  private fun withDetail(
-    activity: FragmentActivity,
+  @CheckResult
+  fun indefinite(
     view: View,
-    duration: Int,
-    detail: ErrorDetail,
-    message: CharSequence
-  ) {
-    val snackbar = make(view, message, duration)
-    snackbar.setAction("Details", DebouncedOnClickListener.create {
-      DetailDialogFragment.newInstance(detail)
-          .show(activity, "snackbreak_detail_dialog")
-    })
-  }
-
-  data class ErrorDetail(
-    val title: CharSequence = "",
-    val message: CharSequence
-  )
-
-  internal class DetailDialogFragment : DialogFragment() {
-
-    private val errorTitle by lazy(NONE) {
-      requireArguments().getCharSequence(KEY_ERROR_TITLE, "")
-    }
-    private val errorMessage by lazy(NONE) {
-      requireArguments().getCharSequence(KEY_ERROR_MESSAGE, "")
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-      require(errorMessage.isNotBlank())
-      return AlertDialog.Builder(requireActivity())
-          .apply {
-            if (errorTitle.isNotBlank()) {
-              setTitle(errorTitle)
-            }
-            setMessage(errorMessage)
-            setPositiveButton("Okay") { _, _ -> dismiss() }
-          }
-          .create()
-    }
-
-    companion object {
-
-      private const val KEY_ERROR_TITLE = "error_title"
-      private const val KEY_ERROR_MESSAGE = "error_message"
-
-      @JvmStatic
-      @CheckResult
-      internal fun newInstance(detail: ErrorDetail): DetailDialogFragment {
-        return DetailDialogFragment().apply {
-          arguments = Bundle().apply {
-            putCharSequence(KEY_ERROR_TITLE, detail.title)
-            putCharSequence(KEY_ERROR_MESSAGE, detail.message)
-          }
-        }
-      }
-    }
-  }
+    @StringRes message: Int
+  ): Snackbar = make(view, message, Snackbar.LENGTH_INDEFINITE)
 
 }

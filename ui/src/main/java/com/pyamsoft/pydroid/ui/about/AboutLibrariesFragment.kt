@@ -37,7 +37,6 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
@@ -129,7 +128,8 @@ class AboutLibrariesFragment : ToolbarFragment() {
   }
 
   private fun onLicenseLoadError(throwable: Throwable) {
-    Snackbreak.short(requireActivity(), requireView(), ErrorDetail("", throwable.localizedMessage))
+    Snackbreak.short(requireView(), throwable.localizedMessage)
+        .show()
   }
 
   private fun onLicenseLoadComplete() {
@@ -137,7 +137,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
   }
 
   private fun setupAboutList() {
-    pagerAdapter = AboutPagerAdapter(requireActivity())
+    pagerAdapter = AboutPagerAdapter()
     binding.apply {
       aboutList.adapter = pagerAdapter
       aboutList.layoutManager =

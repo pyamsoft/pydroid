@@ -95,7 +95,7 @@ internal class RatingDialog : ToolbarDialog() {
 
   private fun onRatingSaved(accept: Boolean) {
     if (accept) {
-      view?.also { linker.clickAppPage(requireActivity(), it) }
+      view?.also { linker.clickAppPage(it) }
     }
   }
 

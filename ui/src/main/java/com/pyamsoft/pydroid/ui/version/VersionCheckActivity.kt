@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -54,7 +53,7 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
 
   private fun onCheckingForUpdates(showSnackbar: Boolean) {
     if (showSnackbar) {
-      Snackbreak.make(rootView, "Checking for updates...", Snackbar.LENGTH_SHORT)
+      Snackbreak.short(rootView, "Checking for updates...")
           .show()
     }
   }

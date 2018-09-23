@@ -17,60 +17,36 @@
 package com.pyamsoft.pydroid.ui.util
 
 import android.view.View
-import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.social.Linker
-import com.pyamsoft.pydroid.ui.util.Snackbreak.ErrorDetail
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 private fun snackbreak(
-  activity: FragmentActivity,
   view: View
 ) {
-  val detail = ErrorDetail(
-      "Unable to navigate",
-      "No application is available to handle this URL navigation request"
-  )
-  Snackbreak.short(activity, view, detail, "Unable to navigate")
+  Snackbreak.short(view, "No application can handle this URL")
+      .show()
 }
 
-internal fun HyperlinkIntent.navigate(
-  activity: FragmentActivity,
-  view: View
-) {
-  navigate { snackbreak(activity, view) }
+fun HyperlinkIntent.navigate(view: View) {
+  navigate { snackbreak(view) }
 }
 
-internal fun Linker.clickAppPage(
-  activity: FragmentActivity,
-  view: View
-) {
-  clickAppPage { snackbreak(activity, view) }
+internal fun Linker.clickAppPage(view: View) {
+  clickAppPage { snackbreak(view) }
 }
 
-internal fun Linker.clickBlogger(
-  activity: FragmentActivity,
-  view: View
-) {
-  clickBlogger { snackbreak(activity, view) }
+internal fun Linker.clickBlogger(view: View) {
+  clickBlogger { snackbreak(view) }
 }
 
-internal fun Linker.clickGooglePlay(
-  activity: FragmentActivity,
-  view: View
-) {
-  clickGooglePlay { snackbreak(activity, view) }
+internal fun Linker.clickGooglePlay(view: View) {
+  clickGooglePlay { snackbreak(view) }
 }
 
-internal fun Linker.clickGooglePlus(
-  activity: FragmentActivity,
-  view: View
-) {
-  clickGooglePlus { snackbreak(activity, view) }
+internal fun Linker.clickGooglePlus(view: View) {
+  clickGooglePlus { snackbreak(view) }
 }
 
-internal fun Linker.clickFacebook(
-  activity: FragmentActivity,
-  view: View
-) {
-  clickFacebook { snackbreak(activity, view) }
+internal fun Linker.clickFacebook(view: View) {
+  clickFacebook { snackbreak(view) }
 }

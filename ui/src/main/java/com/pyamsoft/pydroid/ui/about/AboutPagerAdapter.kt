@@ -20,7 +20,6 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
 import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.ViewHolder
@@ -29,7 +28,7 @@ import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.hyperlink
 
-internal class AboutPagerAdapter(private val activity: FragmentActivity) : RecyclerView.Adapter<ViewHolder>() {
+internal class AboutPagerAdapter : RecyclerView.Adapter<ViewHolder>() {
 
   private val items: MutableList<AboutLibrariesModel> = ArrayList()
 
@@ -66,7 +65,7 @@ internal class AboutPagerAdapter(private val activity: FragmentActivity) : Recyc
     holder: ViewHolder,
     position: Int
   ) {
-    holder.bind(activity, items[position])
+    holder.bind(items[position])
   }
 
   override fun onViewRecycled(holder: ViewHolder) {
@@ -86,10 +85,7 @@ internal class AboutPagerAdapter(private val activity: FragmentActivity) : Recyc
       }
     }
 
-    fun bind(
-      activity: FragmentActivity,
-      model: AboutLibrariesModel
-    ) {
+    fun bind(model: AboutLibrariesModel) {
       val license = model.license
       val homepage = model.homepage
       binding.apply {
@@ -97,7 +93,7 @@ internal class AboutPagerAdapter(private val activity: FragmentActivity) : Recyc
         aboutItemHomepage.text = homepage
         aboutItemHomepage.setOnDebouncedClickListener {
           homepage.hyperlink(it.context)
-              .navigate(activity, itemView)
+              .navigate(itemView)
         }
       }
     }

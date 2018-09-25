@@ -18,8 +18,8 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.2.70'
-    plugin_version = '3.2.0-rc02'
+    kotlin_version = '1.2.71'
+    plugin_version = '3.2.0'
     dokka_version = "0.9.17"
   }
   repositories {

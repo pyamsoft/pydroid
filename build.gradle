@@ -46,7 +46,7 @@ buildscript {
 
     repo = "0.0.9"
     timber = "4.7.1"
-    moshi = "1.6.0"
+    moshi = "1.7.0"
     retrofit = "2.4.0"
     retrofitLogging = "3.11.0"
     rxjava = "2.2.2"
@@ -87,7 +87,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.1.6-SNAPSHOT-3"
+  final String POM_VERSION = "18.1.6-SNAPSHOT-4"
 
   group = POM_GROUP
   version = POM_VERSION

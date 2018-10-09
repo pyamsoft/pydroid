@@ -17,15 +17,15 @@
 package com.pyamsoft.pydroid.ui.util
 
 import android.graphics.drawable.Drawable
-import android.os.Build
-import android.widget.TextView
-import androidx.appcompat.widget.ActionMenuView
+import androidx.annotation.CheckResult
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.withStyledAttributes
 import com.pyamsoft.pydroid.ui.R
 
 private var cachedIcon: Drawable? = null
 
+@CheckResult
 private fun Toolbar.loadIcon(): Drawable? {
   // Pull icon from cache if possible
   var icon = cachedIcon
@@ -33,7 +33,10 @@ private fun Toolbar.loadIcon(): Drawable? {
   if (icon == null) {
     // If no icon is available, resolve it from the current theme
     context.withStyledAttributes(R.attr.toolbarStyle, intArrayOf(R.attr.homeAsUpIndicator)) {
-      icon = getDrawable(0)
+      val resId = getResourceId(0, 0)
+      if (resId != 0) {
+        icon = AppCompatResources.getDrawable(context, resId)
+      }
     }
 
     // Cache the loaded icon
@@ -73,23 +76,5 @@ fun Toolbar.setUpEnabled(
     showUpIcon(customIcon)
   } else {
     navigationIcon = null
-  }
-}
-
-fun Toolbar.animateMenu() {
-  val t = getChildAt(0)
-  if (t is TextView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-    t.fadeIn()
-  }
-
-  val amv = getChildAt(1)
-  if (amv is ActionMenuView) {
-    val duration = 300L
-    var delay = 500L
-    for (i in 0 until amv.childCount) {
-      val item = amv.getChildAt(i) ?: continue
-      item.popShow(delay, duration)
-      delay += duration
-    }
   }
 }

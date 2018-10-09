@@ -22,6 +22,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.withStyledAttributes
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.util.tintWith
 
 private var cachedIcon: Drawable? = null
 
@@ -36,6 +37,7 @@ private fun Toolbar.loadIcon(): Drawable? {
       val resId = getResourceId(0, 0)
       if (resId != 0) {
         icon = AppCompatResources.getDrawable(context, resId)
+            ?.tintWith(context, R.color.white)
       }
     }
 

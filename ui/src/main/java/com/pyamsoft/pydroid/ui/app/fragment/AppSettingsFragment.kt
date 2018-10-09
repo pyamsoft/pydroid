@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
+import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : ToolbarFragment() {
 
@@ -51,7 +52,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     if (fragmentManager.findFragmentByTag(tag) == null) {
       fragmentManager.beginTransaction()
           .add(R.id.app_settings_content, provideSettingsFragment(), tag)
-          .commit()
+          .commit(viewLifecycleOwner)
     }
   }
 

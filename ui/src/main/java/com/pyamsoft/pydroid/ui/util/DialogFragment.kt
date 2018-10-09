@@ -39,7 +39,9 @@ fun DialogFragment.show(
 
     @Suppress("unused")
     @OnLifecycleEvent(ON_START)
-    fun showDialog() {
+    fun safeShowDialog() {
+      activity.lifecycle.removeObserver(this)
+
       val fragmentManager = activity.supportFragmentManager
       val transaction = fragmentManager.beginTransaction()
       val prev = fragmentManager.findFragmentByTag(tag)
@@ -50,7 +52,6 @@ fun DialogFragment.show(
 
       Timber.d("Add new fragment with tag: %s", tag)
       show(transaction, tag)
-      activity.lifecycle.removeObserver(this)
     }
 
   }

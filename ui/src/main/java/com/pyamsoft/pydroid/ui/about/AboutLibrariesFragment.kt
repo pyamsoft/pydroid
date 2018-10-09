@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
@@ -255,7 +256,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
         fragmentManager.beginTransaction()
             .replace(rootViewContainer, newInstance(backStackCount), TAG)
             .addToBackStack(null)
-            .commit()
+            .commit(activity)
       }
     }
 

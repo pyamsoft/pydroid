@@ -18,6 +18,9 @@ package com.pyamsoft.pydroid.ui.util
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle.Event.ON_START
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
 
 /**
@@ -32,14 +35,25 @@ fun DialogFragment.show(
     throw IllegalArgumentException("Cannot use EMPTY tag")
   }
 
-  val fragmentManager = activity.supportFragmentManager
-  val transaction = fragmentManager.beginTransaction()
-  val prev = fragmentManager.findFragmentByTag(tag)
-  if (prev != null) {
-    Timber.d("Remove old fragment with tag: %s", tag)
-    transaction.remove(prev)
+  val observer = object : LifecycleObserver {
+
+    @Suppress("unused")
+    @OnLifecycleEvent(ON_START)
+    fun showDialog() {
+      val fragmentManager = activity.supportFragmentManager
+      val transaction = fragmentManager.beginTransaction()
+      val prev = fragmentManager.findFragmentByTag(tag)
+      if (prev != null) {
+        Timber.d("Remove old fragment with tag: %s", tag)
+        transaction.remove(prev)
+      }
+
+      Timber.d("Add new fragment with tag: %s", tag)
+      show(transaction, tag)
+      activity.lifecycle.removeObserver(this)
+    }
+
   }
 
-  Timber.d("Add new fragment with tag: %s", tag)
-  show(transaction, tag)
+  activity.lifecycle.addObserver(observer)
 }

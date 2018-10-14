@@ -8,9 +8,10 @@ functions and classes that are used in multiple pyamsoft projects.
 It is an always changing, always actively developed library, and as
 such is not meant for use outside of pyamsoft projects.
 
-**It is not written with public usage in mind** and will **not** be taking pull
-requests on GitHub or elsewhere for new features, unless it will result
-in less duplication of effort across other pyamsoft applications.
+## Contributions
+
+PYDroid is open to contributions, though it will maintain a focus around  
+the development experience of **pyamsoft** applications.
 
 ## License
 

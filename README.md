@@ -3,10 +3,10 @@ PYDroid library for pyamsoft applications
 
 ## What is PYDroid
 
-PYDroid is the **py**amsoft An**droid** library. It contains common
-functions and classes that are used in multiple pyamsoft projects.
-It is an always changing, always actively developed library, and as
-such is not meant for use outside of pyamsoft projects.
+PYDroid is the **py**amsoft An**droid** library. It contains common  
+functions and classes that are used in multiple pyamsoft projects.  
+It is an always changing, always actively developed library, and as  
+such is not meant for use outside of pyamsoft projects.  
 
 ## Contributions
 

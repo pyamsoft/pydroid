@@ -92,6 +92,7 @@ private fun Toolbar.showUpIcon(customIcon: Drawable? = null, @ColorRes customCol
   }
 }
 
+@JvmOverloads
 fun Toolbar.setUpEnabled(
   up: Boolean,
   customIcon: Drawable? = null

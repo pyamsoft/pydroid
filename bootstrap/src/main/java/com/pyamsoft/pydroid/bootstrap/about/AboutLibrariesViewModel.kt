@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
@@ -27,7 +28,7 @@ import timber.log.Timber
 
 class AboutLibrariesViewModel internal constructor(
   owner: LifecycleOwner,
-  private val licenseBus: DataBus<List<AboutLibrariesModel>>,
+  private val licenseBus: DataBus<List<OssLibrary>>,
   private val interactor: AboutLibrariesInteractor,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
@@ -40,7 +41,7 @@ class AboutLibrariesViewModel internal constructor(
     loadDisposable.tryDispose()
   }
 
-  fun onLicensesLoaded(func: (DataWrapper<List<AboutLibrariesModel>>) -> Unit) {
+  fun onLicensesLoaded(func: (DataWrapper<List<OssLibrary>>) -> Unit) {
     dispose {
       licenseBus.listen()
           .subscribeOn(backgroundScheduler)

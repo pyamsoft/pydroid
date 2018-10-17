@@ -26,7 +26,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesViewModel
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -124,7 +124,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
     refreshLatch.isRefreshing = true
   }
 
-  private fun onLicenseLoaded(licenses: List<AboutLibrariesModel>) {
+  private fun onLicenseLoaded(licenses: List<OssLibrary>) {
     pagerAdapter.addAll(licenses)
   }
 

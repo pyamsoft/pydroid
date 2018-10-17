@@ -17,11 +17,9 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.app.Dialog
-import android.content.ActivityNotFoundException
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
-import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
@@ -31,7 +29,6 @@ import kotlin.LazyThreadSafetyMode.NONE
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
   internal lateinit var linker: Linker
-  internal lateinit var linkerErrorPublisher: Publisher<ActivityNotFoundException>
 
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0
@@ -52,11 +49,10 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
                      |Latest verson: $latestVersion""".trimMargin()
     return AlertDialog.Builder(requireActivity())
         .setTitle("New version available")
-        .setMessage(
-            message
-        )
+        .setMessage(message)
         .setPositiveButton("Update") { _, _ ->
-          linker.clickAppPage { linkerErrorPublisher.publish(it) }
+          // Show on the Activity window because we may have dismissed at the resolution point.
+          linker.clickAppPage(requireActivity().window.decorView)
           dismiss()
         }
         .setNegativeButton("Later") { _, _ -> dismiss() }

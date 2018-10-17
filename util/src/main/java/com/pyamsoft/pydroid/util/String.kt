@@ -27,5 +27,5 @@ fun String.hyperlink(c: Context): HyperlinkIntent {
     it.data = this.toUri()
   }
 
-  return HyperlinkIntent(c.applicationContext, intent, this)
+  return HyperlinkIntent(c.applicationContext, intent)
 }

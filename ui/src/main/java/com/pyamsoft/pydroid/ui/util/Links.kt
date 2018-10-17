@@ -17,36 +17,12 @@
 package com.pyamsoft.pydroid.ui.util
 
 import android.view.View
-import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
-private fun snackbreak(
-  view: View
-) {
-  Snackbreak.short(view, "No application can handle this URL")
-      .show()
-}
-
 fun HyperlinkIntent.navigate(view: View) {
-  navigate { snackbreak(view) }
+  navigate {
+    Snackbreak.short(view, "No application can handle this URL")
+        .show()
+  }
 }
 
-internal fun Linker.clickAppPage(view: View) {
-  clickAppPage { snackbreak(view) }
-}
-
-internal fun Linker.clickBlogger(view: View) {
-  clickBlogger { snackbreak(view) }
-}
-
-internal fun Linker.clickGooglePlay(view: View) {
-  clickGooglePlay { snackbreak(view) }
-}
-
-internal fun Linker.clickGooglePlus(view: View) {
-  clickGooglePlus { snackbreak(view) }
-}
-
-internal fun Linker.clickFacebook(view: View) {
-  clickFacebook { snackbreak(view) }
-}

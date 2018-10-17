@@ -17,10 +17,11 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import io.reactivex.Single
 
 internal interface AboutLibrariesInteractor {
 
   @CheckResult
-  fun loadLicenses(bypass: Boolean): Single<List<AboutLibrariesModel>>
+  fun loadLicenses(bypass: Boolean): Single<List<OssLibrary>>
 }

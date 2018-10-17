@@ -16,26 +16,17 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.social.Linker
 
 class UiModule(context: Context) {
 
   private val linker = Linker.create(context.applicationContext, context.packageName)
-  private val linkerErrorBus = RxBus.create<ActivityNotFoundException>()
 
   @CheckResult
   fun provideLinker(): Linker {
     return linker
-  }
-
-  @CheckResult
-  fun provideLinkerErrorBus(): EventBus<ActivityNotFoundException> {
-    return linkerErrorBus
   }
 
 }

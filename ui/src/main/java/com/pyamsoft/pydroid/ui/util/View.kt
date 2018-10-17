@@ -40,6 +40,7 @@ private fun getAccelCubicInterpolator(context: Context): Interpolator {
   )
 }
 
+@JvmOverloads
 fun View.popShow(
   startDelay: Long = 300L,
   duration: Long = 500L,
@@ -71,6 +72,7 @@ fun View.popShow(
       })
 }
 
+@JvmOverloads
 fun View.popHide(
   startDelay: Long = 300L,
   duration: Long = 500L,
@@ -103,6 +105,7 @@ fun View.popHide(
       })
 }
 
+@JvmOverloads
 fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null) {
   val i: Interpolator = getAccelCubicInterpolator(context)
   alpha = 0f
@@ -118,6 +121,7 @@ fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null) {
       .setListener(listener)
 }
 
+@JvmOverloads
 fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null) {
   val i: Interpolator = getAccelCubicInterpolator(context)
   alpha = 1f
@@ -131,6 +135,7 @@ fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null) {
       .setListener(listener)
 }
 
+@JvmOverloads
 fun View.flipVertical(listener: ViewPropertyAnimatorListener? = null) {
   val i: Interpolator = getAccelCubicInterpolator(context)
   ViewCompat.animate(this)

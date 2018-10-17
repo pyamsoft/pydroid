@@ -39,7 +39,6 @@ class PYDroid private constructor(
 
   init {
     setupAsyncMainThreadScheduler()
-    PYDroidUiLicenses.addLicenses()
 
     if (debug) {
       Timber.plant(Timber.DebugTree())

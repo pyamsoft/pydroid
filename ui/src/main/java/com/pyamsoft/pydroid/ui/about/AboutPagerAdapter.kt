@@ -21,18 +21,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModel
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.ViewHolder
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
-import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutPagerAdapter : RecyclerView.Adapter<ViewHolder>() {
 
-  private val items: MutableList<AboutLibrariesModel> = ArrayList()
+  private val items: MutableList<OssLibrary> = ArrayList()
 
-  fun addAll(models: List<AboutLibrariesModel>) {
+  fun addAll(models: List<OssLibrary>) {
     val oldCount = itemCount
     items.addAll(models)
     notifyItemRangeInserted(oldCount, itemCount - 1)
@@ -77,33 +75,10 @@ internal class AboutPagerAdapter : RecyclerView.Adapter<ViewHolder>() {
     private val binding: AdapterItemAboutBinding
   ) : RecyclerView.ViewHolder(binding.root) {
 
-    init {
-      binding.apply {
-        aboutItemWebview.settings.defaultFontSize = 12
-        aboutItemWebview.isVerticalScrollBarEnabled = true
-        aboutItemHomepage.paintFlags = (aboutItemHomepage.paintFlags or Paint.UNDERLINE_TEXT_FLAG)
-      }
-    }
-
-    fun bind(model: AboutLibrariesModel) {
-      val license = model.license
-      val homepage = model.homepage
-      binding.apply {
-        aboutItemWebview.loadDataWithBaseURL(null, license, "text/plain", "UTF-8", null)
-        aboutItemHomepage.text = homepage
-        aboutItemHomepage.setOnDebouncedClickListener {
-          homepage.hyperlink(it.context)
-              .navigate(itemView)
-        }
-      }
+    fun bind(model: OssLibrary) {
     }
 
     fun unbind() {
-      binding.apply {
-        aboutItemHomepage.text = null
-        aboutItemHomepage.setOnDebouncedClickListener(null)
-        aboutItemWebview.loadDataWithBaseURL(null, null, "text/plain", "UTF-8", null)
-      }
     }
 
   }

@@ -16,9 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.social
 
-import android.content.ActivityNotFoundException
 import android.content.Context
+import android.view.View
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.util.hyperlink
 
 class Linker private constructor(
@@ -26,39 +27,29 @@ class Linker private constructor(
   private val appLink: String
 ) {
 
-  fun clickAppPage(
-    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
-  ) {
+  fun clickAppPage(view: View) {
     "$BASE_MARKET$appLink".hyperlink(context)
-        .navigate(onNavigationErrorHandler)
+        .navigate(view)
   }
 
-  fun clickGooglePlay(
-    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
-  ) {
+  fun clickGooglePlay(view: View) {
     GOOGLE_PLAY_DEVELOPER_PAGE.hyperlink(context)
-        .navigate(onNavigationErrorHandler)
+        .navigate(view)
   }
 
-  fun clickGooglePlus(
-    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
-  ) {
+  fun clickGooglePlus(view: View) {
     GOOGLE_PLUS.hyperlink(context)
-        .navigate(onNavigationErrorHandler)
+        .navigate(view)
   }
 
-  fun clickBlogger(
-    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
-  ) {
+  fun clickBlogger(view: View) {
     OFFICIAL_BLOG.hyperlink(context)
-        .navigate(onNavigationErrorHandler)
+        .navigate(view)
   }
 
-  fun clickFacebook(
-    onNavigationErrorHandler: (ActivityNotFoundException) -> Unit
-  ) {
+  fun clickFacebook(view: View) {
     FACEBOOK.hyperlink(context)
-        .navigate(onNavigationErrorHandler)
+        .navigate(view)
   }
 
   companion object {

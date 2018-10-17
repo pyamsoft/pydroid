@@ -12,20 +12,22 @@ abstract class BaseViewModel(private val owner: LifecycleOwner) : LifecycleObser
   private val compositeDisposable = CompositeDisposable()
 
   init {
-    bindToLifecycle()
-  }
-
-  private fun bindToLifecycle() {
     owner.lifecycle.addObserver(this)
   }
 
-  protected fun dispose(func: () -> Disposable) {
-    compositeDisposable.add(func())
+  protected inline fun dispose(func: () -> Disposable) {
+    dispose(func())
   }
 
+  protected fun dispose(disposable: Disposable) {
+    compositeDisposable.add(disposable)
+  }
+
+  @Suppress("unused")
   @OnLifecycleEvent(ON_DESTROY)
   internal fun clear() {
     owner.lifecycle.removeObserver(this)
+
     compositeDisposable.clear()
     onCleared()
   }

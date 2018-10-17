@@ -27,19 +27,12 @@ internal class AppComponentImpl internal constructor(
   private val uiModule: UiModule,
   private val versionCheckModule: VersionCheckModule,
   private val ratingModule: RatingModule,
-  private val currentVersion: Int,
-  private val schedulerProvider: SchedulerProvider
+  private val currentVersion: Int
 ) : AppComponent {
 
   override fun inject(fragment: SettingsPreferenceFragment) {
     fragment.versionViewModel = versionCheckModule.getViewModel(owner, currentVersion)
     fragment.ratingViewModel = ratingModule.getViewModel(owner, currentVersion)
     fragment.linker = uiModule.provideLinker()
-    fragment.viewModel = SettingsPreferenceViewModel(
-        owner,
-        uiModule.provideLinkerErrorBus(),
-        schedulerProvider.foregroundScheduler,
-        schedulerProvider.backgroundScheduler
-    )
   }
 }

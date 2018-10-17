@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 
 class LoaderModule {
 
-  private val imageLoader: ImageLoaderImpl = ImageLoaderImpl()
+  private val imageLoader = ImageLoaderImpl()
 
   // Singleton
   @CheckResult

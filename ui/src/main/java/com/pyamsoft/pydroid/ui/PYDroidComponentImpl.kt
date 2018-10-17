@@ -44,7 +44,7 @@ internal class PYDroidComponentImpl internal constructor(
   private val enforcer = Enforcer(debug)
   private val loaderModule = LoaderModule()
   private val uiModule = UiModule(application)
-  private val aboutModule = AboutLibrariesModule(application, enforcer, schedulerProvider)
+  private val aboutModule = AboutLibrariesModule(enforcer, schedulerProvider)
   private val versionModule =
     VersionCheckModule(application, enforcer, debug, schedulerProvider)
   private val ratingModule: RatingModule
@@ -61,12 +61,10 @@ internal class PYDroidComponentImpl internal constructor(
   override fun inject(layout: SocialMediaPreference) {
     layout.imageLoader = loaderModule.provideImageLoader()
     layout.linker = uiModule.provideLinker()
-    layout.linkerErrorPublisher = uiModule.provideLinkerErrorBus()
   }
 
   override fun inject(versionUpgradeDialog: VersionUpgradeDialog) {
     versionUpgradeDialog.linker = uiModule.provideLinker()
-    versionUpgradeDialog.linkerErrorPublisher = uiModule.provideLinkerErrorBus()
   }
 
   override fun plusAboutComponent(owner: LifecycleOwner): AboutComponent {
@@ -84,7 +82,7 @@ internal class PYDroidComponentImpl internal constructor(
     currentVersion: Int
   ): AppComponent =
     AppComponentImpl(
-        owner, uiModule, versionModule, ratingModule, currentVersion, schedulerProvider
+        owner, uiModule, versionModule, ratingModule, currentVersion
     )
 
   override fun plusRatingComponent(

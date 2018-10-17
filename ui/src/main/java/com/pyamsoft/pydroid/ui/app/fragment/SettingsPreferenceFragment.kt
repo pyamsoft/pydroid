@@ -32,15 +32,12 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.social.Linker
-import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.ui.util.clickAppPage
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var linker: Linker
-  internal lateinit var viewModel: SettingsPreferenceViewModel
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
 
@@ -114,7 +111,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
       return@setOnPreferenceClickListener true
     }
 
-    viewModel.onLinkerError { onError(it) }
     return view
   }
 
@@ -148,13 +144,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
    */
   protected open fun onCheckForUpdatesClicked(viewModel: VersionCheckViewModel) {
     viewModel.checkForUpdates(true)
-  }
-
-  private fun onError(throwable: Throwable) {
-    view?.also {
-      Snackbreak.short(it, throwable.localizedMessage)
-          .show()
-    }
   }
 
   private val versionedActivity: VersionCheckProvider

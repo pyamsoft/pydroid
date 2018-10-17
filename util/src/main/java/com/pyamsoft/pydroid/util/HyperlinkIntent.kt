@@ -21,12 +21,11 @@ import android.content.Context
 import android.content.Intent
 
 data class HyperlinkIntent internal constructor(
-  private val context: Context,
-  private val intent: Intent,
-  private val link: String
+  val context: Context,
+  val intent: Intent
 ) {
 
-  fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit) {
+  inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit) {
     val appContext = context.applicationContext
     try {
       appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

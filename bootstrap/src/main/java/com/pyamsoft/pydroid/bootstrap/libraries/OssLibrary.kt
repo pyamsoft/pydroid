@@ -14,25 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.about
+package com.pyamsoft.pydroid.bootstrap.libraries
 
-import androidx.annotation.CheckResult
-
-data class AboutLibrariesModel internal constructor(
+data class OssLibrary(
   val name: String,
-  val homepage: String,
-  val license: String,
-  val customContent: String
-) {
-
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    fun create(
-      name: String,
-      homepage: String,
-      license: String
-    ): AboutLibrariesModel = AboutLibrariesModel(name, homepage, license, "")
-  }
-}
+  val libraryUrl: String,
+  val licenseUrl: String
+)

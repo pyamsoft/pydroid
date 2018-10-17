@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.social
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ImageView
@@ -31,7 +30,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
-import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
@@ -40,7 +38,6 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 class SocialMediaPreference : Preference, LifecycleOwner {
 
   internal lateinit var linker: Linker
-  internal lateinit var linkerErrorPublisher: Publisher<ActivityNotFoundException>
   internal lateinit var imageLoader: ImageLoader
   private val registry = LifecycleRegistry(this)
   private var googlePlay: ImageView? = null
@@ -73,25 +70,25 @@ class SocialMediaPreference : Preference, LifecycleOwner {
 
   override fun onBindViewHolder(holder: PreferenceViewHolder) {
     super.onBindViewHolder(holder)
-    val googlePlay = (holder.findViewById(R.id.google_play) as ImageView)
-    val googlePlus = (holder.findViewById(R.id.google_plus) as ImageView)
-    val blogger = (holder.findViewById(R.id.blogger) as ImageView)
-    val facebook = (holder.findViewById(R.id.facebook) as ImageView)
+    val googlePlay = holder.findViewById(R.id.google_play) as ImageView
+    val googlePlus = holder.findViewById(R.id.google_plus) as ImageView
+    val blogger = holder.findViewById(R.id.blogger) as ImageView
+    val facebook = holder.findViewById(R.id.facebook) as ImageView
 
     googlePlay.setOnDebouncedClickListener { _ ->
-      linker.clickGooglePlay { linkerErrorPublisher.publish(it) }
+      linker.clickGooglePlay(holder.itemView.rootView)
     }
 
     googlePlus.setOnDebouncedClickListener { _ ->
-      linker.clickGooglePlus { linkerErrorPublisher.publish(it) }
+      linker.clickGooglePlus(holder.itemView.rootView)
     }
 
     blogger.setOnDebouncedClickListener { _ ->
-      linker.clickBlogger { linkerErrorPublisher.publish(it) }
+      linker.clickBlogger(holder.itemView.rootView)
     }
 
     facebook.setOnDebouncedClickListener { _ ->
-      linker.clickFacebook { linkerErrorPublisher.publish(it) }
+      linker.clickFacebook(holder.itemView.rootView)
     }
 
     imageLoader.also {

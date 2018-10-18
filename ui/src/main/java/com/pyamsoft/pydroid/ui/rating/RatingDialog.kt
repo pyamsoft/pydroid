@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
+import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
 import com.pyamsoft.pydroid.ui.social.Linker
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -57,7 +58,7 @@ internal class RatingDialog : ToolbarDialog() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    arguments?.also {
+    requireArguments().also {
       rateLink = it.getString(RATE_LINK, null)
       versionCode = it.getInt(VERSION_CODE, 0)
       changelog = it.getCharSequence(CHANGE_LOG_TEXT, null) as SpannedString

@@ -16,17 +16,20 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CheckResult
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.ViewHolder
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
+import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.util.hyperlink
 
-internal class AboutPagerAdapter : RecyclerView.Adapter<ViewHolder>() {
+internal class AboutPagerAdapter(private val rootView: View) : RecyclerView.Adapter<ViewHolder>() {
 
   private val items: MutableList<OssLibrary> = ArrayList()
 
@@ -42,17 +45,13 @@ internal class AboutPagerAdapter : RecyclerView.Adapter<ViewHolder>() {
     notifyItemRangeRemoved(0, size - 1)
   }
 
-  @CheckResult
-  fun getTitleAt(position: Int): String {
-    return items[position].name
-  }
-
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
-    return ViewHolder(AdapterItemAboutBinding.inflate(inflater, parent, false))
+    val binding = AdapterItemAboutBinding.inflate(inflater, parent, false)
+    return ViewHolder(binding, rootView)
   }
 
   override fun getItemCount(): Int {
@@ -72,13 +71,39 @@ internal class AboutPagerAdapter : RecyclerView.Adapter<ViewHolder>() {
   }
 
   internal class ViewHolder(
-    private val binding: AdapterItemAboutBinding
+    private val binding: AdapterItemAboutBinding,
+    private val rootView: View
   ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: OssLibrary) {
+      binding.apply {
+        aboutLibraryTitle.text = model.name
+        aboutLibraryLicense.text = "License: ${model.licenseName}"
+        aboutLibraryDescription.text = model.description
+        aboutLibraryDescription.isVisible = model.description.isNotBlank()
+
+        aboutLibraryVisitHomepage.setOnDebouncedClickListener {
+          model.libraryUrl.hyperlink(it.context)
+              .navigate(rootView)
+        }
+        aboutLibraryViewLicense.setOnDebouncedClickListener {
+          model.licenseUrl.hyperlink(it.context)
+              .navigate(rootView)
+        }
+      }
     }
 
     fun unbind() {
+      binding.apply {
+        aboutLibraryTitle.text = null
+        aboutLibraryLicense.text = null
+        aboutLibraryDescription.text = null
+        aboutLibraryDescription.isGone = true
+        aboutLibraryVisitHomepage.setOnDebouncedClickListener(null)
+        aboutLibraryViewLicense.setOnDebouncedClickListener(null)
+
+        unbind()
+      }
     }
 
   }

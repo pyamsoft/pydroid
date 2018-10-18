@@ -18,6 +18,8 @@ package com.pyamsoft.pydroid.bootstrap.libraries
 
 data class OssLibrary(
   val name: String,
+  val description: String,
   val libraryUrl: String,
+  val licenseName: String,
   val licenseUrl: String
 )

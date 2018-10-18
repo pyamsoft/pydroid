@@ -23,22 +23,22 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesViewModel
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
+import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
 import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 
@@ -64,7 +64,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
         .plusAboutComponent(viewLifecycleOwner)
         .inject(this)
 
-    arguments?.also {
+    requireArguments().also {
       backStackCount = it.getInt(KEY_BACK_STACK, 0)
     }
 
@@ -74,26 +74,19 @@ class AboutLibrariesFragment : ToolbarFragment() {
         if (it) {
           progressSpinner.visibility = View.VISIBLE
           aboutList.visibility = View.INVISIBLE
-          aboutTitle.visibility = View.INVISIBLE
         } else {
           // Load complete
           progressSpinner.visibility = View.GONE
           aboutList.visibility = View.VISIBLE
-          aboutTitle.visibility = View.VISIBLE
 
           val lastViewed = lastViewedItem
           aboutList.scrollToPosition(lastViewed)
-          aboutTitle.text = pagerAdapter.getTitleAt(lastViewed)
         }
       }
     }
 
-    // Latch will show spinner if needed
-    binding.progressSpinner.visibility = View.INVISIBLE
-
     lastViewedItem = savedInstanceState?.getInt(KEY_PAGE) ?: 0
     setupAboutList()
-    setupArrows()
 
     observeLicenses()
     viewModel.loadLicenses(false)
@@ -138,63 +131,16 @@ class AboutLibrariesFragment : ToolbarFragment() {
   }
 
   private fun setupAboutList() {
-    pagerAdapter = AboutPagerAdapter()
+    val columnCount = resources.getInteger(R.integer.about_libraries_column_count)
+    pagerAdapter = AboutPagerAdapter(requireView())
     binding.apply {
       aboutList.adapter = pagerAdapter
-      aboutList.layoutManager =
-          LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false).apply {
-            initialPrefetchItemCount = 0
-            isItemPrefetchEnabled = false
-          }
-
-      val snapHelper = PagerSnapHelper()
-      snapHelper.attachToRecyclerView(aboutList)
-
-      aboutList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-        override fun onScrollStateChanged(
-          recyclerView: RecyclerView,
-          newState: Int
-        ) {
-          super.onScrollStateChanged(recyclerView, newState)
-          if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-            aboutTitle.text = pagerAdapter.getTitleAt(getCurrentPosition())
-          }
-        }
-
-      })
+      aboutList.layoutManager = GridLayoutManager(requireActivity(), columnCount).apply {
+        initialPrefetchItemCount = 3
+        isItemPrefetchEnabled = false
+      }
     }
     refreshLatch.isRefreshing = true
-  }
-
-  private fun setupArrows() {
-    imageLoader.load(R.drawable.ic_arrow_down_24dp)
-        .into(binding.arrowLeft)
-        .bind(viewLifecycleOwner)
-    binding.apply {
-      arrowLeft.rotation = 90F
-      arrowLeft.setOnDebouncedClickListener {
-        val position = getCurrentPosition()
-        if (position > 0) {
-          aboutList.smoothScrollToPosition(position - 1)
-          aboutTitle.text = pagerAdapter.getTitleAt(position - 1)
-        }
-      }
-    }
-
-    imageLoader.load(R.drawable.ic_arrow_down_24dp)
-        .into(binding.arrowRight)
-        .bind(viewLifecycleOwner)
-    binding.apply {
-      arrowRight.rotation = -90F
-      arrowRight.setOnDebouncedClickListener {
-        val position = getCurrentPosition()
-        if (position < pagerAdapter.itemCount) {
-          aboutList.smoothScrollToPosition(position + 1)
-          aboutTitle.text = pagerAdapter.getTitleAt(position + 1)
-        }
-      }
-    }
   }
 
   override fun onResume() {
@@ -230,9 +176,6 @@ class AboutLibrariesFragment : ToolbarFragment() {
       aboutList.clearOnScrollListeners()
       pagerAdapter.clear()
 
-      arrowLeft.setOnDebouncedClickListener(null)
-      arrowRight.setOnDebouncedClickListener(null)
-
       unbind()
     }
   }
@@ -250,6 +193,13 @@ class AboutLibrariesFragment : ToolbarFragment() {
 
     @JvmStatic
     fun show(activity: FragmentActivity, @IdRes rootViewContainer: Int) {
+      // If you're using this function, all of these are available
+      OssLibraries.CORE = true
+      OssLibraries.BOOTSTRAP = true
+      OssLibraries.UTIL = true
+      OssLibraries.LOADER = true
+      OssLibraries.UI = true
+
       val fragmentManager = activity.supportFragmentManager
       val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {

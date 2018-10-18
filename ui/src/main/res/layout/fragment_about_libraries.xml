@@ -15,85 +15,31 @@
   -->
 <layout>
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <FrameLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:paddingTop="16dp"
       >
-
-    <ImageView
-        android:id="@+id/arrow_left"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/blank"
-        app:layout_constraintBottom_toBottomOf="@+id/about_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_height="40dp"
-        tools:layout_width="40dp"
-        />
-
-    <TextView
-        android:id="@+id/about_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toStartOf="@+id/arrow_right"
-        app:layout_constraintStart_toEndOf="@+id/arrow_left"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_height="40dp"
-        />
-
-    <ImageView
-        android:id="@+id/arrow_right"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:contentDescription="@string/blank"
-        app:layout_constraintBottom_toBottomOf="@+id/about_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_height="40dp"
-        tools:layout_width="40dp"
-        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/about_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="8dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/about_title"
+        tools:listitem="@layout/adapter_item_about"
+        tools:visibility="visible"
         />
 
     <ProgressBar
         android:id="@+id/progress_spinner"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_gravity="center"
         android:indeterminate="true"
-        app:layout_constraintBottom_toBottomOf="@+id/about_list"
-        app:layout_constraintEnd_toEndOf="@+id/about_list"
-        app:layout_constraintStart_toStartOf="@+id/about_list"
-        app:layout_constraintTop_toTopOf="@+id/about_list"
+        android:visibility="invisible"
         />
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  </FrameLayout>
 </layout>

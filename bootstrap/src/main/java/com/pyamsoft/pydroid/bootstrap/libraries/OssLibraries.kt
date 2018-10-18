@@ -77,9 +77,18 @@ object OssLibraries {
   fun add(
     name: String,
     url: String,
+    description: String = "",
     license: OssLicenses = OssLicenses.APACHE2
   ) {
-    libraries.add(OssLibrary(name, url, license.location))
+    libraries.add(
+        OssLibrary(
+            name = name,
+            description = description,
+            libraryUrl = url,
+            licenseName = license.license,
+            licenseUrl = license.location
+        )
+    )
   }
 
   @JvmStatic

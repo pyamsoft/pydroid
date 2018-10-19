@@ -23,14 +23,12 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesViewModel
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
@@ -86,7 +84,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
     }
 
     lastViewedItem = savedInstanceState?.getInt(KEY_PAGE) ?: 0
-    setupAboutList()
+    setupAboutList(binding.root)
 
     observeLicenses()
     viewModel.loadLicenses(false)
@@ -130,12 +128,11 @@ class AboutLibrariesFragment : ToolbarFragment() {
     refreshLatch.isRefreshing = false
   }
 
-  private fun setupAboutList() {
-    val columnCount = resources.getInteger(R.integer.about_libraries_column_count)
-    pagerAdapter = AboutPagerAdapter(requireView())
+  private fun setupAboutList(view: View) {
+    pagerAdapter = AboutPagerAdapter(view)
     binding.apply {
       aboutList.adapter = pagerAdapter
-      aboutList.layoutManager = GridLayoutManager(requireActivity(), columnCount).apply {
+      aboutList.layoutManager = LinearLayoutManager(requireActivity()).apply {
         initialPrefetchItemCount = 3
         isItemPrefetchEnabled = false
       }

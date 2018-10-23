@@ -112,6 +112,12 @@ subprojects {
     correctErrorTypes = true
     useBuildCache = true
     mapDiagnosticLocations = true
+
+    javacOptions {
+      option("-Xlint:unchecked")
+      option("-Xlint:deprecation")
+      option("-Xmaxerrs", 10000)
+    }
   }
 
   android {

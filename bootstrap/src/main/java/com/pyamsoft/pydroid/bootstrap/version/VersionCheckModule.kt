@@ -55,7 +55,7 @@ class VersionCheckModule(
       .persister(
           30, MINUTES,
           File(context.cacheDir, "versioncache"),
-          MoshiPersister.create(moshi, Int::class.java)
+          MoshiPersister.create(moshi, Int::class.javaObjectType)
       )
       .build()
 

@@ -23,6 +23,7 @@ buildscript {
     dokka_version = "0.9.17"
   }
   repositories {
+    mavenLocal()
     google()
     mavenCentral()
     jcenter()
@@ -44,7 +45,7 @@ buildscript {
     recyclerView = "1.0.0"
     appCompat = "1.0.0"
 
-    repo = "0.1.0"
+    repo = "0.2.0-SNAPSHOT"
     timber = "4.7.1"
     moshi = "1.7.0"
     retrofit = "2.4.0"
@@ -87,7 +88,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.1.6-SNAPSHOT-6"
+  final String POM_VERSION = "18.1.6-SNAPSHOT-7"
 
   group = POM_GROUP
   version = POM_VERSION
@@ -220,6 +221,7 @@ subprojects {
 
 allprojects {
   repositories {
+    mavenLocal()
     google()
     mavenCentral()
     jcenter()

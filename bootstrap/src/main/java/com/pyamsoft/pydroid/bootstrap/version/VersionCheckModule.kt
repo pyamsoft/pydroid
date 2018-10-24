@@ -19,18 +19,22 @@ package com.pyamsoft.pydroid.bootstrap.version
 import android.content.Context
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.popinnow.android.repo.newRepo
+import com.popinnow.android.repo.moshi.MoshiPersister
+import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.core.viewmodel.DataBus
+import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.io.File
+import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(
   context: Context,
@@ -42,7 +46,18 @@ class VersionCheckModule(
   private val updateBus = DataBus<Int>()
   private val packageName: String = context.packageName
   private val cachedInteractor: VersionCheckInteractor
-  private val repo = newRepo<Int>()
+
+  private val moshi = Moshi.Builder()
+      .build()
+
+  private val repo = newRepoBuilder<Int>()
+      .memoryCache(2, MINUTES)
+      .persister(
+          30, MINUTES,
+          File(context.cacheDir, "versioncache"),
+          MoshiPersister.create(moshi, Int::class.java)
+      )
+      .build()
 
   init {
     val versionCheckApi = VersionCheckApi(provideRetrofit(provideOkHttpClient(debug)))
@@ -79,9 +94,14 @@ class VersionCheckModule(
     return Retrofit.Builder()
         .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
+  }
+
+  @CheckResult
+  fun getMoshi(): Moshi {
+    return moshi
   }
 
   @CheckResult

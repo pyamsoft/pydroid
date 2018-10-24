@@ -30,6 +30,7 @@ dependencies {
 
   // Repo
   api "com.popinnow.android.repo:repo:$repo"
+  api "com.popinnow.android.repo:repo-persister-moshi:$repo"
 
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

@@ -84,12 +84,12 @@ internal class AboutPagerAdapter(
         aboutLibraryDescription.isVisible = model.description.isNotBlank()
 
         aboutLibraryVisitHomepage.setOnDebouncedClickListener {
-          ViewLicenseDialog.newInstance(model.libraryUrl)
+          ViewLicenseDialog.newInstance(model.name, model.libraryUrl)
               .show(activity, ViewLicenseDialog.TAG)
         }
 
         aboutLibraryViewLicense.setOnDebouncedClickListener {
-          ViewLicenseDialog.newInstance(model.licenseUrl)
+          ViewLicenseDialog.newInstance(model.name, model.licenseUrl)
               .show(activity, ViewLicenseDialog.TAG)
         }
       }

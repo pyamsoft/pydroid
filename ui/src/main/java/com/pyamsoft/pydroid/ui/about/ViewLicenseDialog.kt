@@ -32,6 +32,7 @@ import timber.log.Timber
 internal class ViewLicenseDialog : ToolbarDialog() {
 
   private lateinit var binding: DialogWebviewBinding
+  private lateinit var name: String
   private lateinit var link: String
 
   internal lateinit var imageLoader: ImageLoader
@@ -42,6 +43,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ): View? {
     requireArguments().also {
+      name = it.getString(NAME, "")
       link = it.getString(LINK, "")
     }
 
@@ -122,7 +124,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
   private fun inflateToolbarMenu(view: View) {
     binding.apply {
-      toolbar.title = "Open Source License"
+      toolbar.title = name
 
       // Inflate menu
       toolbar.inflateMenu(R.menu.oss_library_menu)
@@ -181,13 +183,18 @@ internal class ViewLicenseDialog : ToolbarDialog() {
   companion object {
 
     internal const val TAG = "ViewLicenseDialog"
+    private const val NAME = "name"
     private const val LINK = "link"
 
     @CheckResult
     @JvmStatic
-    fun newInstance(link: String): ViewLicenseDialog {
+    fun newInstance(
+      name: String,
+      link: String
+    ): ViewLicenseDialog {
       return ViewLicenseDialog().apply {
         arguments = Bundle().apply {
+          putString(NAME, name)
           putString(LINK, link)
         }
       }

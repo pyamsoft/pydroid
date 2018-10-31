@@ -36,11 +36,6 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
   internal lateinit var imageLoader: ImageLoader
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    isCancelable = false
-  }
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,

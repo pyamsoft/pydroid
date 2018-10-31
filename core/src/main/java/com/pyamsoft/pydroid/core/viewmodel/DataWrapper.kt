@@ -15,25 +15,25 @@ sealed class DataWrapper<T : Any> {
   data class Error<T : Any> internal constructor(val error: Throwable) : DataWrapper<T>()
   class Complete<T : Any> internal constructor() : DataWrapper<T>()
 
-  fun onLoading(func: (Boolean) -> Unit) {
+  inline fun onLoading(func: (Boolean) -> Unit) {
     if (this is Loading) {
       func(this.forced)
     }
   }
 
-  fun onSuccess(func: (T) -> Unit) {
+  inline fun onSuccess(func: (T) -> Unit) {
     if (this is Success) {
       func(this.data)
     }
   }
 
-  fun onError(func: (Throwable) -> Unit) {
+  inline fun onError(func: (Throwable) -> Unit) {
     if (this is Error) {
       func(this.error)
     }
   }
 
-  fun onComplete(func: () -> Unit) {
+  inline fun onComplete(func: () -> Unit) {
     if (this is Complete) {
       func()
     }

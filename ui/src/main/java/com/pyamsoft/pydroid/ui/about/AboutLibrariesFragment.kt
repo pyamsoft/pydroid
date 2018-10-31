@@ -50,7 +50,6 @@ class AboutLibrariesFragment : ToolbarFragment() {
   private var lastViewedItem: Int = 0
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
-  private var isLightToolbar = true
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -65,7 +64,6 @@ class AboutLibrariesFragment : ToolbarFragment() {
 
     requireArguments().also {
       backStackCount = it.getInt(KEY_BACK_STACK, 0)
-      isLightToolbar = it.getBoolean(KEY_LIGHT_TOOLBAR, true)
     }
 
 
@@ -131,7 +129,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
   }
 
   private fun setupAboutList() {
-    pagerAdapter = AboutPagerAdapter(requireActivity(), isLightToolbar)
+    pagerAdapter = AboutPagerAdapter(requireActivity())
     binding.apply {
       aboutList.adapter = pagerAdapter
       aboutList.layoutManager = LinearLayoutManager(requireActivity()).apply {
@@ -189,13 +187,11 @@ class AboutLibrariesFragment : ToolbarFragment() {
     private const val TAG = "AboutLibrariesFragment"
     private const val KEY_PAGE = "key_current_page"
     private const val KEY_BACK_STACK = "key_back_stack"
-    private const val KEY_LIGHT_TOOLBAR = "key_light_toolbar"
 
     @JvmStatic
-    @JvmOverloads
     fun show(
-      activity: FragmentActivity, @IdRes rootViewContainer: Int,
-      isLightToolbar: Boolean = true
+      activity: FragmentActivity,
+      @IdRes rootViewContainer: Int
     ) {
       // If you're using this function, all of these are available
       OssLibraries.CORE = true
@@ -208,7 +204,7 @@ class AboutLibrariesFragment : ToolbarFragment() {
       val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {
         fragmentManager.beginTransaction()
-            .replace(rootViewContainer, newInstance(backStackCount, isLightToolbar), TAG)
+            .replace(rootViewContainer, newInstance(backStackCount), TAG)
             .addToBackStack(null)
             .commit(activity)
       }
@@ -221,14 +217,10 @@ class AboutLibrariesFragment : ToolbarFragment() {
 
     @JvmStatic
     @CheckResult
-    private fun newInstance(
-      backStackCount: Int,
-      isLightToolbar: Boolean
-    ): AboutLibrariesFragment {
+    private fun newInstance(backStackCount: Int): AboutLibrariesFragment {
       return AboutLibrariesFragment().apply {
         arguments = Bundle().apply {
           putInt(KEY_BACK_STACK, backStackCount)
-          putBoolean(KEY_LIGHT_TOOLBAR, isLightToolbar)
         }
       }
     }

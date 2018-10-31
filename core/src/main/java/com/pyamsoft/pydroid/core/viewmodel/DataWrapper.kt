@@ -1,11 +1,11 @@
 package com.pyamsoft.pydroid.core.viewmodel
 
+import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Complete
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Error
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Loading
 import com.pyamsoft.pydroid.core.viewmodel.DataWrapper.Success
-import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable
 
 // The common set of activity events

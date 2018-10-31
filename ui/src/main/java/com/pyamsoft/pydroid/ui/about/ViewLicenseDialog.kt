@@ -14,7 +14,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.CheckResult
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.loader.ImageLoader
@@ -28,14 +27,12 @@ import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.util.hyperlink
-import com.pyamsoft.pydroid.util.tintWith
 import timber.log.Timber
 
 internal class ViewLicenseDialog : ToolbarDialog() {
 
   private lateinit var binding: DialogWebviewBinding
   private lateinit var link: String
-  private var isLightToolbar = true
 
   internal lateinit var imageLoader: ImageLoader
 
@@ -109,7 +106,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
           }
         }
 
-        @Suppress("DEPRECATION")
+        @Suppress("DEPRECATION", "OverridingDeprecatedMember")
         override fun onReceivedError(
           view: WebView,
           errorCode: Int,
@@ -141,13 +138,6 @@ internal class ViewLicenseDialog : ToolbarDialog() {
       })
 
       imageLoader.load(R.drawable.ic_close_24dp)
-          .mutate {
-            if (!isLightToolbar) {
-              return@mutate it.tintWith(requireActivity(), R.color.black)
-            } else {
-              return@mutate it
-            }
-          }
           .into(object : ImageTarget<Drawable> {
 
             override fun view(): View {
@@ -180,19 +170,6 @@ internal class ViewLicenseDialog : ToolbarDialog() {
                 .navigate(view)
             return@setOnMenuItemClickListener true
           }
-
-      // Tint icon if needed
-      val openExternally = toolbar.menu.findItem(R.id.menu_item_view_license)
-      val icon = openExternally.icon
-      if (isLightToolbar) {
-        icon.mutate()
-            .also {
-              val tintedIcon = it.tintWith(requireActivity(), R.color.white)
-              openExternally.icon = tintedIcon
-            }
-      } else {
-        toolbar.setTitleTextColor(ContextCompat.getColor(view.context, R.color.black))
-      }
     }
 
   }
@@ -210,18 +187,13 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
     internal const val TAG = "ViewLicenseDialog"
     private const val LINK = "link"
-    private const val LIGHT_TOOLBAR = "light_toolbar"
 
     @CheckResult
     @JvmStatic
-    fun newInstance(
-      link: String,
-      isLightToolbar: Boolean
-    ): ViewLicenseDialog {
+    fun newInstance(link: String): ViewLicenseDialog {
       return ViewLicenseDialog().apply {
         arguments = Bundle().apply {
           putString(LINK, link)
-          putBoolean(LIGHT_TOOLBAR, isLightToolbar)
         }
       }
     }

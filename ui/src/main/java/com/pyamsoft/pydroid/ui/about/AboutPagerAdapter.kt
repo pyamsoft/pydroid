@@ -29,8 +29,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.show
 
 internal class AboutPagerAdapter(
-  private val activity: FragmentActivity,
-  private val isLightToolbar: Boolean
+  private val activity: FragmentActivity
 ) : RecyclerView.Adapter<ViewHolder>() {
 
   private val items: MutableList<OssLibrary> = ArrayList()
@@ -53,7 +52,7 @@ internal class AboutPagerAdapter(
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     val binding = AdapterItemAboutBinding.inflate(inflater, parent, false)
-    return ViewHolder(binding, activity, isLightToolbar)
+    return ViewHolder(binding, activity)
   }
 
   override fun getItemCount(): Int {
@@ -74,8 +73,7 @@ internal class AboutPagerAdapter(
 
   internal class ViewHolder(
     private val binding: AdapterItemAboutBinding,
-    private val activity: FragmentActivity,
-    private val isLightToolbar: Boolean
+    private val activity: FragmentActivity
   ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: OssLibrary) {
@@ -86,12 +84,12 @@ internal class AboutPagerAdapter(
         aboutLibraryDescription.isVisible = model.description.isNotBlank()
 
         aboutLibraryVisitHomepage.setOnDebouncedClickListener {
-          ViewLicenseDialog.newInstance(model.libraryUrl, isLightToolbar)
+          ViewLicenseDialog.newInstance(model.libraryUrl)
               .show(activity, ViewLicenseDialog.TAG)
         }
 
         aboutLibraryViewLicense.setOnDebouncedClickListener {
-          ViewLicenseDialog.newInstance(model.licenseUrl, isLightToolbar)
+          ViewLicenseDialog.newInstance(model.licenseUrl)
               .show(activity, ViewLicenseDialog.TAG)
         }
       }

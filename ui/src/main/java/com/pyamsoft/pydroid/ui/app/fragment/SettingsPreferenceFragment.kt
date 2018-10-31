@@ -97,21 +97,28 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     setupFollows(view)
 
     if (isDarkTheme) {
-      adjustIconColorsForDarkTheme(view)
+      adjustIconColorsForDarkTheme()
     }
 
     return view
   }
 
-  private fun adjustIconColorsForDarkTheme(view: View) {
-    val screen = preferenceScreen
-    val count = screen.preferenceCount
-    for (index in 0 until count) {
-      val preference = screen.getPreference(index)
-      val icon = preference.icon
-      if (icon != null) {
-        preference.icon = icon.tintWith(ContextCompat.getColor(view.context, R.color.white))
-      }
+  private fun adjustIconColorsForDarkTheme() {
+    applicationSettings.adjustForDarkTheme()
+    upgradeInfo.adjustForDarkTheme()
+    clearAll.adjustForDarkTheme()
+    checkVersion.adjustForDarkTheme()
+    showAboutLicenses.adjustForDarkTheme()
+    rateApplication.adjustForDarkTheme()
+    moreApps.adjustForDarkTheme()
+    followSocialMedia.adjustForDarkTheme()
+    followBlog.adjustForDarkTheme()
+  }
+
+  private fun Preference.adjustForDarkTheme() {
+    val icon = this.icon
+    if (icon != null) {
+      this.icon = icon.tintWith(ContextCompat.getColor(context, R.color.white))
     }
   }
 

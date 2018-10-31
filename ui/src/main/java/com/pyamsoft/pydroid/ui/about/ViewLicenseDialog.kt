@@ -2,6 +2,7 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.CheckResult
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -27,6 +29,7 @@ import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
+import timber.log.Timber
 
 internal class ViewLicenseDialog : ToolbarDialog() {
 
@@ -75,23 +78,49 @@ internal class ViewLicenseDialog : ToolbarDialog() {
       webview.settings.javaScriptEnabled = true
       webview.webViewClient = object : WebViewClient() {
 
-        override fun onLoadResource(
-          view: WebView?,
-          url: String?
+        override fun onPageFinished(
+          view: WebView,
+          url: String
         ) {
-          super.onLoadResource(view, url)
-          if (url == link) {
+          super.onPageFinished(view, url)
+          val fixedUrl = url.trimEnd('/')
+          if (fixedUrl == link) {
+            Timber.d("Loaded url: $url, show webview")
+            showWebView()
+          }
+
+          // If we are showing the webview and we've navigated off the url, close the dialog
+          if (webview.isVisible && fixedUrl != link) {
+            Timber.w("Navigated away from page: $url - close dialog")
+            dismiss()
+          }
+        }
+
+        @RequiresApi(VERSION_CODES.M)
+        override fun onReceivedError(
+          view: WebView,
+          request: WebResourceRequest,
+          error: WebResourceError
+        ) {
+          super.onReceivedError(view, request, error)
+          if (request.url.toString() == link) {
+            Timber.e("Webview error: ${error.errorCode} ${error.description}")
             showWebView()
           }
         }
 
+        @Suppress("DEPRECATION")
         override fun onReceivedError(
-          view: WebView?,
-          request: WebResourceRequest?,
-          error: WebResourceError?
+          view: WebView,
+          errorCode: Int,
+          description: String?,
+          failingUrl: String?
         ) {
-          super.onReceivedError(view, request, error)
-          showWebView()
+          super.onReceivedError(view, errorCode, description, failingUrl)
+          if (failingUrl == link) {
+            Timber.e("Webview error: $errorCode $description")
+            showWebView()
+          }
         }
 
       }

@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
-import com.pyamsoft.pydroid.ui.social.Linker
+import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.toDp
 
@@ -40,7 +40,6 @@ internal class RatingDialog : ToolbarDialog() {
 
   private lateinit var rateLink: String
   private lateinit var binding: DialogRatingBinding
-  internal lateinit var linker: Linker
   internal lateinit var imageLoader: ImageLoader
   internal lateinit var viewModel: RatingViewModel
   internal lateinit var errorPublisher: Publisher<Throwable>
@@ -95,7 +94,7 @@ internal class RatingDialog : ToolbarDialog() {
 
   private fun onRatingSaved(accept: Boolean) {
     if (accept) {
-      view?.also { linker.clickAppPage(it) }
+      view?.also { MarketLinker.linkToMarketPage(it.context.packageName, it) }
     }
   }
 

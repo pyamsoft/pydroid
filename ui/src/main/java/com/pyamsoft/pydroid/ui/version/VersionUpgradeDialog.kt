@@ -20,15 +20,12 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
-import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
-import com.pyamsoft.pydroid.ui.social.Linker
+import com.pyamsoft.pydroid.ui.util.MarketLinker
 import kotlin.LazyThreadSafetyMode.NONE
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
-
-  internal lateinit var linker: Linker
 
   private var latestVersion: Int = 0
   private var currentVersion: Int = 0
@@ -41,9 +38,6 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
     require(currentVersion > 0)
     require(applicationName.isNotBlank())
 
-    PYDroid.obtain(requireContext())
-        .inject(this)
-
     val message = """|A new version of $applicationName is available!
                      |Current version: $currentVersion
                      |Latest verson: $latestVersion""".trimMargin()
@@ -52,7 +46,9 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
         .setMessage(message)
         .setPositiveButton("Update") { _, _ ->
           // Show on the Activity window because we may have dismissed at the resolution point.
-          linker.clickAppPage(requireActivity().window.decorView)
+          requireActivity().also {
+            MarketLinker.linkToMarketPage(it.packageName, it.window.decorView)
+          }
           dismiss()
         }
         .setNegativeButton("Later") { _, _ -> dismiss() }

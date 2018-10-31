@@ -20,9 +20,15 @@
 
   <string name="blank"/>
   <string name="no_thanks">No Thanks</string>
-  <string name="rate_application">Rate Application</string>
-  <string name="support_pyamsoft">Support pyamsoft</string>
+
   <string name="report_a_bug">Report a Bug</string>
+
+  <string name="support_pyamsoft">Support pyamsoft</string>
+  <string name="rate_application">Rate Application</string>
+
+  <string name="more_apps_from_pyamsoft">More apps from pyamsoft</string>
+  <string name="follow_pyamsoft_around_the_web">Follow pyamsoft around the web</string>
+
   <string name="visit_homepage">Visit Homepage</string>
   <string name="view_license">View License</string>
 

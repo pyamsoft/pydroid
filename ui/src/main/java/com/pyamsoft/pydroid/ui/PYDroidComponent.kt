@@ -18,19 +18,12 @@ package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
-import com.pyamsoft.pydroid.ui.social.SocialMediaPreference
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal interface PYDroidComponent {
-
-  fun inject(layout: SocialMediaPreference)
-
-  fun inject(versionUpgradeDialog: VersionUpgradeDialog)
 
   @CheckResult
   fun plusVersionCheckComponent(

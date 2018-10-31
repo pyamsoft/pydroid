@@ -24,6 +24,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
+import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
@@ -31,15 +32,27 @@ import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.social.Linker
+import com.pyamsoft.pydroid.ui.util.MarketLinker
+import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import com.pyamsoft.pydroid.util.hyperlink
+import com.pyamsoft.pydroid.util.tintWith
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
-  internal lateinit var linker: Linker
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
+
+  private lateinit var applicationSettings: Preference
+  private lateinit var upgradeInfo: Preference
+  private lateinit var clearAll: Preference
+  private lateinit var checkVersion: Preference
+  private lateinit var showAboutLicenses: Preference
+  private lateinit var rateApplication: Preference
+  private lateinit var moreApps: Preference
+  private lateinit var followSocialMedia: Preference
+  private lateinit var followBlog: Preference
 
   @CallSuper
   override fun onCreatePreferences(
@@ -63,55 +76,111 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
         .plusAppComponent(viewLifecycleOwner, versionedActivity.currentApplicationVersion)
         .inject(this)
 
-    val view = super.onCreateView(inflater, container, savedInstanceState)
-    val applicationSettings = findPreference("application_settings")
-    if (applicationSettings != null) {
-      applicationSettings.title = "$applicationName Settings"
+    val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
+    applicationSettings = findPreference("application_settings")
+    upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
+    clearAll = findPreference(getString(R.string.clear_all_key))
+    checkVersion = findPreference(getString(R.string.check_version_key))
+    showAboutLicenses = findPreference(getString(R.string.about_license_key))
+    rateApplication = findPreference(getString(R.string.rating_key))
+    moreApps = findPreference(getString(R.string.more_apps_key))
+    followSocialMedia = findPreference(getString(R.string.social_media_f_key))
+    followBlog = findPreference(getString(R.string.social_media_b_key))
+
+    setupApplicationTitle()
+    setupUpgradeInfo()
+    setupClearAll()
+    setupCheckVersion()
+    setupAboutLicenses()
+    setupRateApp(view)
+    setupMoreApps(view)
+    setupFollows(view)
+
+    if (isDarkTheme) {
+      adjustIconColorsForDarkTheme(view)
     }
 
-    val upgradeInfo: Preference? = findPreference(getString(R.string.upgrade_info_key))
-    if (upgradeInfo != null) {
-      if (hideUpgradeInformation) {
-        upgradeInfo.isVisible = false
-      } else {
-        upgradeInfo.setOnPreferenceClickListener {
-          onShowChangelogClicked()
-          return@setOnPreferenceClickListener true
-        }
+    return view
+  }
+
+  private fun adjustIconColorsForDarkTheme(view: View) {
+    val screen = preferenceScreen
+    val count = screen.preferenceCount
+    for (index in 0 until count) {
+      val preference = screen.getPreference(index)
+      val icon = preference.icon
+      if (icon != null) {
+        preference.icon = icon.tintWith(ContextCompat.getColor(view.context, R.color.white))
       }
     }
+  }
 
-    val clearAll: Preference? = findPreference(getString(R.string.clear_all_key))
-    if (clearAll != null) {
-      if (hideClearAll) {
-        clearAll.isVisible = false
-      } else {
-        clearAll.setOnPreferenceClickListener {
-          onClearAllClicked()
-          return@setOnPreferenceClickListener true
-        }
-      }
+  private fun setupMoreApps(view: View) {
+    moreApps.setOnPreferenceClickListener {
+      MarketLinker.linkToDeveloperPage(view)
+      return@setOnPreferenceClickListener true
     }
+  }
 
-    val checkVersion: Preference = findPreference(getString(R.string.check_version_key))
-    checkVersion.setOnPreferenceClickListener {
-      onCheckForUpdatesClicked(versionViewModel)
+  private fun setupFollows(view: View) {
+    followBlog.setOnPreferenceClickListener {
+      BLOG.hyperlink(view.context)
+          .navigate(view)
       return@setOnPreferenceClickListener true
     }
 
-    val showAboutLicenses: Preference = findPreference(getString(R.string.about_license_key))
+    followSocialMedia.setOnPreferenceClickListener {
+      FACEBOOK.hyperlink(view.context)
+          .navigate(view)
+      return@setOnPreferenceClickListener true
+    }
+  }
+
+  private fun setupRateApp(view: View) {
+    rateApplication.setOnPreferenceClickListener { _ ->
+      MarketLinker.linkToMarketPage(view.context.packageName, view)
+      return@setOnPreferenceClickListener true
+    }
+  }
+
+  private fun setupAboutLicenses() {
     showAboutLicenses.setOnPreferenceClickListener {
       onLicenseItemClicked()
       return@setOnPreferenceClickListener true
     }
+  }
 
-    val rateApplication: Preference = findPreference(getString(R.string.rating_key))
-    rateApplication.setOnPreferenceClickListener { _ ->
-      view?.also { linker.clickAppPage(it) }
+  private fun setupCheckVersion() {
+    checkVersion.setOnPreferenceClickListener {
+      onCheckForUpdatesClicked(versionViewModel)
       return@setOnPreferenceClickListener true
     }
+  }
 
-    return view
+  private fun setupClearAll() {
+    if (hideClearAll) {
+      clearAll.isVisible = false
+    } else {
+      clearAll.setOnPreferenceClickListener {
+        onClearAllClicked()
+        return@setOnPreferenceClickListener true
+      }
+    }
+  }
+
+  private fun setupUpgradeInfo() {
+    if (hideUpgradeInformation) {
+      upgradeInfo.isVisible = false
+    } else {
+      upgradeInfo.setOnPreferenceClickListener {
+        onShowChangelogClicked()
+        return@setOnPreferenceClickListener true
+      }
+    }
+  }
+
+  private fun setupApplicationTitle() {
+    applicationSettings.title = "$applicationName Settings"
   }
 
   /**
@@ -162,9 +231,18 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   protected open val hideClearAll: Boolean = false
 
+  @get:CheckResult
+  protected abstract val isDarkTheme: Boolean
+
   @get:[CheckResult IdRes]
   protected abstract val rootViewContainer: Int
 
   @get:CheckResult
   protected abstract val applicationName: String
+
+  companion object {
+
+    private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
+    private const val BLOG = "https://pyamsoft.blogspot.com/"
+  }
 }

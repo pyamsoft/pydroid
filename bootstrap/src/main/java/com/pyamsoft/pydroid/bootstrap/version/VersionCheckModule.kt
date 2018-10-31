@@ -34,6 +34,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
+import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(
@@ -51,9 +52,9 @@ class VersionCheckModule(
       .build()
 
   private val repo = newRepoBuilder<Int>()
-      .memoryCache(2, MINUTES)
+      .memoryCache(30, MINUTES)
       .persister(
-          30, MINUTES,
+          2, HOURS,
           File(context.cacheDir, "versioncache"),
           MoshiPersister.create(moshi, Int::class.javaObjectType)
       )

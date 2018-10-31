@@ -35,9 +35,6 @@ interface ModuleProvider {
   fun ratingModule(): RatingModule
 
   @CheckResult
-  fun uiModule(): UiModule
-
-  @CheckResult
   fun aboutLibrariesModule(): AboutLibrariesModule
 
   @CheckResult

@@ -19,11 +19,9 @@ package com.pyamsoft.pydroid.ui.rating
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.UiModule
 
 internal class RatingComponentImpl internal constructor(
   private val owner: LifecycleOwner,
-  private val uiModule: UiModule,
   private val ratingModule: RatingModule,
   private val loaderModule: LoaderModule,
   private val version: Int
@@ -37,6 +35,5 @@ internal class RatingComponentImpl internal constructor(
     dialog.viewModel = ratingModule.getViewModel(owner, version)
     dialog.imageLoader = loaderModule.provideImageLoader()
     dialog.errorPublisher = ratingModule.getPublisher()
-    dialog.linker = uiModule.provideLinker()
   }
 }

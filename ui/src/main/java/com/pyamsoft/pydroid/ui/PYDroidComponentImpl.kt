@@ -30,20 +30,17 @@ import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
-import com.pyamsoft.pydroid.ui.social.SocialMediaPreference
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
-import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
   debug: Boolean,
-  private val schedulerProvider: SchedulerProvider
+  schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
   private val enforcer = Enforcer(debug)
   private val loaderModule = LoaderModule()
-  private val uiModule = UiModule(application)
   private val aboutModule = AboutLibrariesModule(enforcer, schedulerProvider)
   private val versionModule =
     VersionCheckModule(application, enforcer, debug, schedulerProvider)
@@ -56,15 +53,6 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun enforcer(): Enforcer {
     return enforcer
-  }
-
-  override fun inject(layout: SocialMediaPreference) {
-    layout.imageLoader = loaderModule.provideImageLoader()
-    layout.linker = uiModule.provideLinker()
-  }
-
-  override fun inject(versionUpgradeDialog: VersionUpgradeDialog) {
-    versionUpgradeDialog.linker = uiModule.provideLinker()
   }
 
   override fun plusAboutComponent(owner: LifecycleOwner): AboutComponent {
@@ -81,15 +69,13 @@ internal class PYDroidComponentImpl internal constructor(
     owner: LifecycleOwner,
     currentVersion: Int
   ): AppComponent =
-    AppComponentImpl(
-        owner, uiModule, versionModule, ratingModule, currentVersion
-    )
+    AppComponentImpl(owner, versionModule, ratingModule, currentVersion)
 
   override fun plusRatingComponent(
     owner: LifecycleOwner,
     currentVersion: Int
   ): RatingComponent =
-    RatingComponentImpl(owner, uiModule, ratingModule, loaderModule, currentVersion)
+    RatingComponentImpl(owner, ratingModule, loaderModule, currentVersion)
 
   override fun loaderModule(): LoaderModule {
     return loaderModule
@@ -105,9 +91,5 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun versionCheckModule(): VersionCheckModule {
     return versionModule
-  }
-
-  override fun uiModule(): UiModule {
-    return uiModule
   }
 }

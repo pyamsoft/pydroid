@@ -31,5 +31,6 @@
 
   <string name="visit_homepage">Visit Homepage</string>
   <string name="view_license">View License</string>
+  <string name="open_externally">Open Externally</string>
 
 </resources>

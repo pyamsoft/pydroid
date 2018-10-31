@@ -193,7 +193,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   /**
    * Shows a page for Open Source licenses, override or extend to use unique implementation
    */
-  @CallSuper
   protected open fun onLicenseItemClicked() {
     activity?.also {
       Timber.d("Show about licenses fragment")

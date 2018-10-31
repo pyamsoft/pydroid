@@ -17,19 +17,21 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.ViewHolder
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
-import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.util.hyperlink
+import com.pyamsoft.pydroid.ui.util.show
 
-internal class AboutPagerAdapter(private val rootView: View) : RecyclerView.Adapter<ViewHolder>() {
+internal class AboutPagerAdapter(
+  private val activity: FragmentActivity,
+  private val isLightToolbar: Boolean
+) : RecyclerView.Adapter<ViewHolder>() {
 
   private val items: MutableList<OssLibrary> = ArrayList()
 
@@ -51,7 +53,7 @@ internal class AboutPagerAdapter(private val rootView: View) : RecyclerView.Adap
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     val binding = AdapterItemAboutBinding.inflate(inflater, parent, false)
-    return ViewHolder(binding, rootView)
+    return ViewHolder(binding, activity, isLightToolbar)
   }
 
   override fun getItemCount(): Int {
@@ -72,7 +74,8 @@ internal class AboutPagerAdapter(private val rootView: View) : RecyclerView.Adap
 
   internal class ViewHolder(
     private val binding: AdapterItemAboutBinding,
-    private val rootView: View
+    private val activity: FragmentActivity,
+    private val isLightToolbar: Boolean
   ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: OssLibrary) {
@@ -83,12 +86,13 @@ internal class AboutPagerAdapter(private val rootView: View) : RecyclerView.Adap
         aboutLibraryDescription.isVisible = model.description.isNotBlank()
 
         aboutLibraryVisitHomepage.setOnDebouncedClickListener {
-          model.libraryUrl.hyperlink(it.context)
-              .navigate(rootView)
+          ViewLicenseDialog.newInstance(model.libraryUrl, isLightToolbar)
+              .show(activity, ViewLicenseDialog.TAG)
         }
+
         aboutLibraryViewLicense.setOnDebouncedClickListener {
-          model.licenseUrl.hyperlink(it.context)
-              .navigate(rootView)
+          ViewLicenseDialog.newInstance(model.licenseUrl, isLightToolbar)
+              .show(activity, ViewLicenseDialog.TAG)
         }
       }
     }

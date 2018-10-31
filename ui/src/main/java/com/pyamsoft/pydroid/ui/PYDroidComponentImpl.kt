@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
+import com.pyamsoft.pydroid.ui.about.ViewLicenseDialog
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
@@ -53,6 +54,10 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun enforcer(): Enforcer {
     return enforcer
+  }
+
+  override fun inject(dialog: ViewLicenseDialog) {
+    dialog.imageLoader = loaderModule.provideImageLoader()
   }
 
   override fun plusAboutComponent(owner: LifecycleOwner): AboutComponent {

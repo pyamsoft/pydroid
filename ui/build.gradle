@@ -15,9 +15,6 @@
  */
 
 dependencies {
-
-  kapt "androidx.databinding:databinding-compiler:$plugin_version"
-
   // Android support library.
   api "androidx.recyclerview:recyclerview:$recyclerView"
   api "androidx.vectordrawable:vectordrawable:$vectorDrawable"

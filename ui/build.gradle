@@ -18,7 +18,6 @@ dependencies {
   // Android support library.
   api "androidx.recyclerview:recyclerview:$recyclerView"
   api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
-  api "androidx.coordinatorlayout:coordinatorlayout:$coordinatorLayout"
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
   api "com.google.android.material:material:$materialDesign"
 

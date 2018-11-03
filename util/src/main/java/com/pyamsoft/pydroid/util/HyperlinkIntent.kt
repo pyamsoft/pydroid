@@ -19,18 +19,25 @@ package com.pyamsoft.pydroid.util
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import timber.log.Timber
 
 data class HyperlinkIntent internal constructor(
   val context: Context,
   val intent: Intent
 ) {
 
-  inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit) {
+  inline fun navigate(): ActivityNotFoundException? {
     val appContext = context.applicationContext
     try {
       appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+      return null
     } catch (e: ActivityNotFoundException) {
-      onNavigateError(e)
+      Timber.e(e, "Error navigating to hyperlink: ${intent.dataString}")
+      return e
     }
+  }
+
+  inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit) {
+    navigate()?.also(onNavigateError)
   }
 }

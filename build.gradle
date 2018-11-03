@@ -39,7 +39,6 @@ buildscript {
     lifecycle = "2.0.0"
     materialDesign = "1.0.0"
     vectorDrawable = "1.0.0"
-    coordinatorLayout = "1.0.0"
     preference = "1.0.0"
     recyclerView = "1.0.0"
     appCompat = "1.0.0"
@@ -87,7 +86,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.1.6-SNAPSHOT-8"
+  final String POM_VERSION = "18.1.6-SNAPSHOT-9"
 
   group = POM_GROUP
   version = POM_VERSION

@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.databinding.DialogWebviewBinding
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.util.hyperlink
@@ -85,8 +86,16 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
           // If we are showing the webview and we've navigated off the url, close the dialog
           if (webview.isVisible && fixedUrl != link) {
-            Timber.w("Navigated away from page: $url - close dialog")
-            dismiss()
+            Timber.w("Navigated away from page: $url - close dialog, and open extenally")
+            val error = link.hyperlink(view.context)
+                .navigate()
+
+            if (error == null) {
+              dismiss()
+            } else {
+              Snackbreak.short(view, "No application can handle this URL")
+                  .show()
+            }
           }
         }
 

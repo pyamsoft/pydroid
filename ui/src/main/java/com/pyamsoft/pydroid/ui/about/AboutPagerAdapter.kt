@@ -18,25 +18,29 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.ViewHolder
+import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.AdapterItem.Fake
+import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.AdapterItem.Real
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
-import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.ui.util.show
 
-internal class AboutPagerAdapter(
+internal class AboutPagerAdapter internal constructor(
   private val activity: FragmentActivity
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-  private val items: MutableList<OssLibrary> = ArrayList()
+  private val items: MutableList<Any> = ArrayList()
 
   fun addAll(models: List<OssLibrary>) {
     val oldCount = itemCount
-    items.addAll(models)
+
+    if (items.isEmpty()) {
+      items.add(Fake)
+    }
+
+    val realItems = models.map { Real(it) }
+    items.addAll(realItems)
+
     notifyItemRangeInserted(oldCount, itemCount - 1)
   }
 
@@ -46,13 +50,25 @@ internal class AboutPagerAdapter(
     notifyItemRangeRemoved(0, size - 1)
   }
 
+  override fun getItemViewType(position: Int): Int {
+    if (position == 0) {
+      return VIEW_TYPE_SPACER
+    } else {
+      return VIEW_TYPE_REAL
+    }
+  }
+
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
   ): ViewHolder {
     val inflater = LayoutInflater.from(parent.context)
-    val binding = AdapterItemAboutBinding.inflate(inflater, parent, false)
-    return ViewHolder(binding, activity)
+    if (viewType == VIEW_TYPE_REAL) {
+      val binding = AdapterItemAboutBinding.inflate(inflater, parent, false)
+      return RealViewHolder(binding, activity)
+    } else {
+      return FakeViewHolder(parent)
+    }
   }
 
   override fun getItemCount(): Int {
@@ -63,7 +79,10 @@ internal class AboutPagerAdapter(
     holder: ViewHolder,
     position: Int
   ) {
-    holder.bind(items[position])
+    val item = items[position]
+    if (item is Real) {
+      holder.bind(item.library)
+    }
   }
 
   override fun onViewRecycled(holder: ViewHolder) {
@@ -71,42 +90,14 @@ internal class AboutPagerAdapter(
     holder.unbind()
   }
 
-  internal class ViewHolder(
-    private val binding: AdapterItemAboutBinding,
-    private val activity: FragmentActivity
-  ) : RecyclerView.ViewHolder(binding.root) {
+  internal sealed class AdapterItem {
+    data class Real(val library: OssLibrary) : AdapterItem()
+    object Fake : AdapterItem()
+  }
 
-    fun bind(model: OssLibrary) {
-      binding.apply {
-        aboutLibraryTitle.text = model.name
-        aboutLibraryLicense.text = "License: ${model.licenseName}"
-        aboutLibraryDescription.text = model.description
-        aboutLibraryDescription.isVisible = model.description.isNotBlank()
+  companion object {
 
-        aboutLibraryVisitHomepage.setOnDebouncedClickListener {
-          ViewLicenseDialog.newInstance(model.name, model.libraryUrl)
-              .show(activity, ViewLicenseDialog.TAG)
-        }
-
-        aboutLibraryViewLicense.setOnDebouncedClickListener {
-          ViewLicenseDialog.newInstance(model.name, model.licenseUrl)
-              .show(activity, ViewLicenseDialog.TAG)
-        }
-      }
-    }
-
-    fun unbind() {
-      binding.apply {
-        aboutLibraryTitle.text = null
-        aboutLibraryLicense.text = null
-        aboutLibraryDescription.text = null
-        aboutLibraryDescription.isGone = true
-        aboutLibraryVisitHomepage.setOnDebouncedClickListener(null)
-        aboutLibraryViewLicense.setOnDebouncedClickListener(null)
-
-        unbind()
-      }
-    }
-
+    private const val VIEW_TYPE_SPACER = 1
+    private const val VIEW_TYPE_REAL = 2
   }
 }

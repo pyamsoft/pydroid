@@ -32,44 +32,130 @@ object OssLibraries {
   var LOADER = false
 
   private fun addCoreLibraries() {
-    add("PYDroid", "https://github.com/pyamsoft/pydroid")
-    add("Android SDK", "https://source.android.com")
-    add("AndroidX Lifecycle", "https://source.android.com")
-    add("Dexcount Gradle Plugin", "https://github.com/KeepSafe/dexcount-gradle-plugin")
-    add("Gradle Versions Plugin", "https://github.com/ben-manes/gradle-versions-plugin")
-    add("Kotlin", "https://github.com/JetBrains/kotlin")
-    add("AndroidX KTX", "https://github.com/android/android-ktx")
-    add("Repo", "https://github.com/POPinNow/Repo")
-    add("RxJava", "https://github.com/ReactiveX/RxJava")
-    add("RxAndroid", "https://github.com/ReactiveX/RxAndroid")
-    add("Timber", "https://github.com/JakeWharton/timber")
+    add(
+        "PYDroid",
+        "https://github.com/pyamsoft/pydroid",
+        "The pyamsoft Android library. Standard on all pyamsoft applications."
+    )
+    add(
+        "Android SDK",
+        "https://source.android.com",
+        "The Android SDK, which powers everything about the devices we all love."
+    )
+    add(
+        "AndroidX Lifecycle",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
+        "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles."
+    )
+    add(
+        "Dexcount Gradle Plugin",
+        "https://github.com/KeepSafe/dexcount-gradle-plugin",
+        "A Gradle plugin to report the number of method references in your APK on every build."
+    )
+    add(
+        "Gradle Versions Plugin",
+        "https://github.com/ben-manes/gradle-versions-plugin",
+        "Gradle plugin to discover dependency updates."
+    )
+    add(
+        "Kotlin",
+        "https://github.com/JetBrains/kotlin",
+        "The Kotlin Programming Language."
+    )
+    add(
+        "AndroidX KTX",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
+        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code."
+    )
+    add(
+        "Repo",
+        "https://github.com/POPinNow/Repo",
+        "Simple Repository pattern for Android."
+    )
+    add(
+        "RxJava",
+        "https://github.com/ReactiveX/RxJava",
+        "Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM."
+    )
+    add(
+        "RxAndroid",
+        "https://github.com/ReactiveX/RxAndroid",
+        "RxJava bindings for Android."
+    )
+    add(
+        "Timber",
+        "https://github.com/JakeWharton/timber",
+        "A logger with a small, extensible API which provides utility on top of Android's normal Log class."
+    )
   }
 
   private fun addUtilLibraries() {
-    add("AndroidX AppCompat", "https://source.android.com")
+    add(
+        "AndroidX AppCompat",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/appcompat/",
+        "The AndroidX Jetpack AppCompat library. Degrade gracefully on older versions of Android."
+    )
   }
 
   private fun addBootstrapLibraries() {
-    add("AndroidX Preference", "https://source.android.com")
-    add("Retrofit", "https://square.github.io/retrofit/")
-    add("Moshi", "https://github.com/square/moshi")
-    add("OkHTTP", "https://github.com/square/okhttp")
+    add(
+        "AndroidX Preference",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
+        "The AndroidX Jetpack Preference library. Allow users to modify UI settings."
+    )
+    add(
+        "Retrofit",
+        "https://square.github.io/retrofit/",
+        "Type-safe HTTP client for Android and Java by Square, Inc."
+    )
+    add(
+
+        "Moshi",
+        "https://github.com/square/moshi",
+        "A modern JSON library for Android and Java."
+    )
+    add(
+        "OkHTTP",
+        "https://github.com/square/okhttp",
+        "An HTTP+HTTP/2 client for Android and Java applications."
+    )
   }
 
   private fun addUiLibraries() {
-    add("AndroidX DataBinding", "https://source.android.com")
-    add("AndroidX RecyclerView", "https://source.android.com")
-    add("AndroidX Coordinator Layout", "https://source.android.com")
-    add("AndroidX Constraint Layout", "https://source.android.com")
-    add("AndroidX Vector Drawable", "https://source.android.com")
+    add(
+        "AndroidX Data Binding",
+        "https://android.googlesource.com/platform/frameworks/data-binding/+/master",
+        "The AndroidX Jetpack Data Binding library. Declaratively bind observable data to UI elements."
+    )
+    add(
+        "AndroidX RecyclerView",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/recyclerview/",
+        "The AndroidX Jetpack RecyclerView library. Create efficient list views."
+    )
+    add(
+        "AndroidX Constraint Layout",
+        "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
+        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way."
+    )
+    add(
+        "AndroidX Vector Drawable",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/graphics/drawable/static/",
+        "The AndroidX Jetpack Vector Drawable Compat library. Create drawables based on XML vector graphics."
+    )
     add(
         "Material Components Android",
-        "https://github.com/material-components/material-components-android"
+        "https://github.com/material-components/material-components-android",
+        "Modular and customizable Material Design UI components for Android."
+
     )
   }
 
   private fun addLoaderLibraries() {
-    add("Glide", "https://github.com/bumptech/glide")
+    add(
+        "Glide",
+        "https://github.com/bumptech/glide",
+        "An image loading and caching library for Android focused on smooth scrolling."
+    )
   }
 
   @JvmOverloads
@@ -77,7 +163,7 @@ object OssLibraries {
   fun add(
     name: String,
     url: String,
-    description: String = "",
+    description: String,
     license: OssLicenses = OssLicenses.APACHE2
   ) {
     libraries.add(

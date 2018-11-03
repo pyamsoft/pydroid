@@ -87,7 +87,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
           // If we are showing the webview and we've navigated off the url, close the dialog
           if (webview.isVisible && fixedUrl != link) {
             Timber.w("Navigated away from page: $url - close dialog, and open extenally")
-            val error = link.hyperlink(view.context)
+            val error = fixedUrl.hyperlink(view.context)
                 .navigate()
 
             if (error == null) {

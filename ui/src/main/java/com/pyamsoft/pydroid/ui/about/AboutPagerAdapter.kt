@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.AdapterItem.Fake
 import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.AdapterItem.Real
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemSpacerBinding
 
 internal class AboutPagerAdapter internal constructor(
   private val activity: FragmentActivity
@@ -67,7 +68,8 @@ internal class AboutPagerAdapter internal constructor(
       val binding = AdapterItemAboutBinding.inflate(inflater, parent, false)
       return RealViewHolder(binding, activity)
     } else {
-      return FakeViewHolder(parent)
+      val binding = AdapterItemSpacerBinding.inflate(inflater, parent, false)
+      return FakeViewHolder(binding)
     }
   }
 

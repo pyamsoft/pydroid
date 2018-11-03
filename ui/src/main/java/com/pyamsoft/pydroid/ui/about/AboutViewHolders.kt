@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemSpacerBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.util.show
 
@@ -49,7 +50,7 @@ internal class RealViewHolder internal constructor(
 
 }
 
-internal class FakeViewHolder(itemView: View) : ViewHolder(itemView)
+internal class FakeViewHolder(binding: AdapterItemSpacerBinding) : ViewHolder(binding.root)
 
 internal abstract class ViewHolder internal constructor(
   itemView: View

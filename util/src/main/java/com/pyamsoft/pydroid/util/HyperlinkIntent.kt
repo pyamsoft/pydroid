@@ -26,7 +26,7 @@ data class HyperlinkIntent internal constructor(
   val intent: Intent
 ) {
 
-  inline fun navigate(): ActivityNotFoundException? {
+  fun navigate(): ActivityNotFoundException? {
     val appContext = context.applicationContext
     try {
       appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

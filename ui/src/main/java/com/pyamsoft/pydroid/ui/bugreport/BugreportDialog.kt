@@ -76,7 +76,7 @@ class BugreportDialog : ToolbarDialog() {
       val email = "pyam.soft+bugs@gmail.com"
       val intent: Intent = ShareCompat.IntentBuilder.from(it)
           .addEmailTo(email)
-          .setType("text/plain")
+          .setType("message/rfc822")
           .setSubject("Bug Report - $appName ($appVersion)")
           .setChooserTitle("Email Bug Report")
           .createChooserIntent()

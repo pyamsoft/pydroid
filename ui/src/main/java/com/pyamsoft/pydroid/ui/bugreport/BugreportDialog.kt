@@ -63,8 +63,6 @@ class BugreportDialog : ToolbarDialog() {
         .setPositiveButton("Okay") { _, _ ->
           if (sendEmailReport()) {
             Timber.d("Bug Report opened - out of our hands at this point")
-          } else {
-            // TODO: Bugreport could not open an email interface
           }
           dismiss()
         }

@@ -29,6 +29,7 @@ data class HyperlinkIntent internal constructor(
   fun navigate(): ActivityNotFoundException? {
     val appContext = context.applicationContext
     try {
+      Timber.d("Navigating to link: ${intent.dataString}")
       appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
       return null
     } catch (e: ActivityNotFoundException) {

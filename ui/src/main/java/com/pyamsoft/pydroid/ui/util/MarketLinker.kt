@@ -12,7 +12,13 @@ object MarketLinker {
     packageName: String,
     view: View
   ) {
-    "$BASE_MARKET$packageName".hyperlink(view.context)
+    val targetName: String
+    if (packageName.endsWith(".dev")) {
+      targetName = packageName.substringBefore(".dev")
+    } else {
+      targetName = packageName
+    }
+    "$BASE_MARKET$targetName".hyperlink(view.context)
         .navigate(view)
   }
 

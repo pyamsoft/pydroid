@@ -44,7 +44,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
 
-  private lateinit var applicationSettings: Preference
   private lateinit var upgradeInfo: Preference
   private lateinit var clearAll: Preference
   private lateinit var checkVersion: Preference
@@ -77,7 +76,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
         .inject(this)
 
     val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
-    applicationSettings = findPreference("application_settings")
     upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
     clearAll = findPreference(getString(R.string.clear_all_key))
     checkVersion = findPreference(getString(R.string.check_version_key))
@@ -102,7 +100,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun adjustIconTint(darkTheme: Boolean) {
-    applicationSettings.adjustTint(darkTheme)
     upgradeInfo.adjustTint(darkTheme)
     clearAll.adjustTint(darkTheme)
     checkVersion.adjustTint(darkTheme)
@@ -190,6 +187,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupApplicationTitle() {
+    val applicationSettings = findPreference("application_settings")
     applicationSettings.title = "$applicationName Settings"
   }
 

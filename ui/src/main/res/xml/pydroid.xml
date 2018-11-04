@@ -19,28 +19,24 @@
   <PreferenceCategory android:key="application_settings">
 
     <Preference
-        android:icon="@drawable/ic_library_24dp"
         android:key="@string/about_license_key"
         android:summary="@string/about_license_summary"
         android:title="@string/about_license_title"
         />
 
     <Preference
-        android:icon="@drawable/ic_code_24dp"
         android:key="@string/check_version_key"
         android:summary="@string/check_version_summary"
         android:title="@string/check_version_title"
         />
 
     <Preference
-        android:icon="@drawable/ic_whatshot_24dp"
         android:key="@string/upgrade_info_key"
         android:summary="@string/upgrade_info_summary"
         android:title="@string/upgrade_info_title"
         />
 
     <Preference
-        android:icon="@drawable/ic_warning_24dp"
         android:key="@string/clear_all_key"
         android:summary="@string/clear_all_summary"
         android:title="@string/clear_all_title"
@@ -51,7 +47,6 @@
   <PreferenceCategory android:title="@string/support_pyamsoft">
 
     <Preference
-        android:icon="@drawable/ic_star_24dp"
         android:key="@string/rating_key"
         android:summary="@string/rating_summary"
         android:title="@string/rating_title"
@@ -62,7 +57,6 @@
   <PreferenceCategory android:title="@string/more_apps_from_pyamsoft">
 
     <Preference
-        android:icon="@drawable/ic_get_app_24dp"
         android:key="@string/more_apps_key"
         android:summary="@string/more_apps_summary"
         android:title="@string/more_apps_title"
@@ -73,14 +67,12 @@
   <PreferenceCategory android:title="@string/follow_pyamsoft_around_the_web">
 
     <Preference
-        android:icon="@drawable/ic_f_logo_24dp"
         android:key="@string/social_media_f_key"
         android:summary="@string/social_media_f_summary"
         android:title="@string/social_media_f_title"
         />
 
     <Preference
-        android:icon="@drawable/ic_blog_24dp"
         android:key="@string/social_media_b_key"
         android:summary="@string/social_media_b_summary"
         android:title="@string/social_media_b_title"

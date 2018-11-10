@@ -36,6 +36,10 @@
   <string name="rating_title">Rate Application</string>
   <string name="rating_summary">Liking the App? Leave a Review!</string>
 
+  <string name="bugreport_key">bugreport</string>
+  <string name="bugreport_title">Submit a Bug Report</string>
+  <string name="bugreport_summary">Found an issue? Something not working right? Help me help you!</string>
+
   <string name="more_apps_key">more_apps</string>
   <string name="more_apps_title">@string/more_apps_from_pyamsoft</string>
   <string name="more_apps_summary">See more great Apps from pyamsoft!</string>

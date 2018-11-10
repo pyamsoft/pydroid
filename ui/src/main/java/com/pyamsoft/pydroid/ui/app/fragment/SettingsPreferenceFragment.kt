@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 import timber.log.Timber
@@ -49,6 +50,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   private lateinit var checkVersion: Preference
   private lateinit var showAboutLicenses: Preference
   private lateinit var rateApplication: Preference
+  private lateinit var bugreport: Preference
   private lateinit var moreApps: Preference
   private lateinit var followSocialMedia: Preference
   private lateinit var followBlog: Preference
@@ -81,6 +83,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     checkVersion = findPreference(getString(R.string.check_version_key))
     showAboutLicenses = findPreference(getString(R.string.about_license_key))
     rateApplication = findPreference(getString(R.string.rating_key))
+    bugreport = findPreference(getString(R.string.bugreport_key))
     moreApps = findPreference(getString(R.string.more_apps_key))
     followSocialMedia = findPreference(getString(R.string.social_media_f_key))
     followBlog = findPreference(getString(R.string.social_media_b_key))
@@ -91,6 +94,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     setupCheckVersion()
     setupAboutLicenses()
     setupRateApp(view)
+    setupBugreport(view, bugreportUrl.hyperlink(view.context))
     setupMoreApps(view)
     setupFollows(view)
 
@@ -105,6 +109,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     checkVersion.adjustTint(darkTheme)
     showAboutLicenses.adjustTint(darkTheme)
     rateApplication.adjustTint(darkTheme)
+    bugreport.adjustTint(darkTheme)
     moreApps.adjustTint(darkTheme)
     followSocialMedia.adjustTint(darkTheme)
     followBlog.adjustTint(darkTheme)
@@ -144,8 +149,18 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupRateApp(view: View) {
-    rateApplication.setOnPreferenceClickListener { _ ->
+    rateApplication.setOnPreferenceClickListener {
       MarketLinker.linkToMarketPage(view.context.packageName, view)
+      return@setOnPreferenceClickListener true
+    }
+  }
+
+  private fun setupBugreport(
+    view: View,
+    reportUrl: HyperlinkIntent
+  ) {
+    bugreport.setOnPreferenceClickListener {
+      reportUrl.navigate(view)
       return@setOnPreferenceClickListener true
     }
   }
@@ -247,6 +262,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   @get:CheckResult
   protected abstract val applicationName: String
+
+  @get:CheckResult
+  protected abstract val bugreportUrl: String
 
   companion object {
 

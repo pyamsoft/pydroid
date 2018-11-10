@@ -17,15 +17,28 @@
 package com.pyamsoft.pydroid.util
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.annotation.CheckResult
+import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 
 @CheckResult
 fun isConnected(c: Context): Boolean {
-  val connMan = c.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-  val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
-  return activeNetwork != null && activeNetwork.isConnected
+  val appContext = c.applicationContext
+  val connMan = requireNotNull(appContext.getSystemService<ConnectivityManager>())
+  val permissionCheck = ContextCompat.checkSelfPermission(
+      appContext,
+      android.Manifest.permission.ACCESS_NETWORK_STATE
+  )
+
+  if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+    val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
+    return activeNetwork != null && activeNetwork.isConnected
+  } else {
+    return false
+  }
 }
 
 object NoNetworkException : Exception("No Internet connection, please try again later")

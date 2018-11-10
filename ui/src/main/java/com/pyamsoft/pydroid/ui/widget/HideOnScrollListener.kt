@@ -66,7 +66,7 @@ class HideOnScrollListener private constructor(
 
   companion object {
 
-    const val DEFAULT_DISTANCE = 12
+    private const val DEFAULT_DISTANCE = 12
 
     @JvmStatic
     @CheckResult

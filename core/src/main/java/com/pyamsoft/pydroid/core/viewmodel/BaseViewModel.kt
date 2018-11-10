@@ -12,6 +12,10 @@ abstract class BaseViewModel(private val owner: LifecycleOwner) : LifecycleObser
   private val compositeDisposable = CompositeDisposable()
 
   init {
+    addObserver()
+  }
+
+  private fun addObserver() {
     owner.lifecycle.addObserver(this)
   }
 

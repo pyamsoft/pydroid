@@ -6,7 +6,6 @@ package com.pyamsoft.pydroid.ui.preference
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.ListPreference
-import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
 
 class ListPreferenceCompat : ListPreference {

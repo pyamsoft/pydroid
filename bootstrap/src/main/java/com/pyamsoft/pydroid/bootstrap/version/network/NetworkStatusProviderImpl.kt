@@ -20,8 +20,10 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import androidx.annotation.CheckResult
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import timber.log.Timber
 
 internal class NetworkStatusProviderImpl internal constructor(private val context: Context) :
     NetworkStatusProvider {
@@ -29,14 +31,49 @@ internal class NetworkStatusProviderImpl internal constructor(private val contex
   private val connMan by lazy { requireNotNull(context.getSystemService<ConnectivityManager>()) }
 
   override fun hasConnection(): Boolean {
-    val permissionCheck = ContextCompat.checkSelfPermission(
-        context, android.Manifest.permission.ACCESS_NETWORK_STATE
+    val permission = hasPermission()
+    val networkInfo = getNetworkInfo(permission)
+    when {
+      networkInfo == null -> {
+        Timber.w("Missing network info - unknown connection state")
+        return false
+      }
+      isMeteredNetwork(permission) -> {
+        Timber.w("Network connection is metered - treat as disconnected for all intents and purposes")
+        return false
+      }
+      else -> {
+        val isConnected = networkInfo.isConnected
+        Timber.d("Network is connected: $isConnected")
+        return isConnected
+      }
+    }
+  }
+
+  @CheckResult
+  private fun hasPermission(): Boolean {
+    val check = ContextCompat.checkSelfPermission(
+        context,
+        android.Manifest.permission.ACCESS_NETWORK_STATE
     )
-    if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-      val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
-      return activeNetwork != null && activeNetwork.isConnected
+    return check == PackageManager.PERMISSION_GRANTED
+  }
+
+  @CheckResult
+  private fun getNetworkInfo(permission: Boolean): NetworkInfo? {
+    if (permission) {
+      return connMan.activeNetworkInfo
     } else {
-      return false
+      return null
+    }
+  }
+
+  @CheckResult
+  private fun isMeteredNetwork(permission: Boolean): Boolean {
+    if (permission) {
+      return connMan.isActiveNetworkMetered
+    } else {
+      return true
     }
   }
 }

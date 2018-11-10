@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.bootstrap.version
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProvider
+import com.pyamsoft.pydroid.bootstrap.version.network.NoNetworkException
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.util.NoNetworkException
 import io.reactivex.Single
 
 internal class VersionCheckInteractorNetwork internal constructor(

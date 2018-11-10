@@ -17,12 +17,26 @@
 package com.pyamsoft.pydroid.bootstrap.version.network
 
 import android.content.Context
-import com.pyamsoft.pydroid.util.isConnected
+import android.content.pm.PackageManager
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 
 internal class NetworkStatusProviderImpl internal constructor(private val context: Context) :
     NetworkStatusProvider {
 
+  private val connMan by lazy { requireNotNull(context.getSystemService<ConnectivityManager>()) }
+
   override fun hasConnection(): Boolean {
-    return isConnected(context)
+    val permissionCheck = ContextCompat.checkSelfPermission(
+        context, android.Manifest.permission.ACCESS_NETWORK_STATE
+    )
+    if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+      val activeNetwork: NetworkInfo? = connMan.activeNetworkInfo
+      return activeNetwork != null && activeNetwork.isConnected
+    } else {
+      return false
+    }
   }
 }

@@ -31,13 +31,16 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   private var currentVersion: Int = 0
   private val applicationName by lazy(NONE) { requireArguments().getString(KEY_NAME, "") }
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
     currentVersion = requireArguments().getInt(KEY_CURRENT_VERSION, 0)
     require(latestVersion > 0)
     require(currentVersion > 0)
     require(applicationName.isNotBlank())
+  }
 
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val message = """|A new version of $applicationName is available!
                      |Current version: $currentVersion
                      |Latest verson: $latestVersion""".trimMargin()

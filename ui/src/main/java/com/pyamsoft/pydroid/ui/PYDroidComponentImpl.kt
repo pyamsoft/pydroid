@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 
@@ -41,6 +42,7 @@ internal class PYDroidComponentImpl internal constructor(
 ) : PYDroidComponent, ModuleProvider {
 
   private val enforcer = Enforcer(debug)
+  private val theming = Theming(application)
   private val loaderModule = LoaderModule()
   private val aboutModule = AboutLibrariesModule(enforcer, schedulerProvider)
   private val versionModule =
@@ -54,6 +56,10 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun enforcer(): Enforcer {
     return enforcer
+  }
+
+  override fun theming(): Theming {
+    return theming
   }
 
   override fun inject(dialog: ViewLicenseDialog) {
@@ -74,7 +80,7 @@ internal class PYDroidComponentImpl internal constructor(
     owner: LifecycleOwner,
     currentVersion: Int
   ): AppComponent =
-    AppComponentImpl(owner, versionModule, ratingModule, currentVersion)
+    AppComponentImpl(owner, theming, versionModule, ratingModule, currentVersion)
 
   override fun plusRatingComponent(
     owner: LifecycleOwner,

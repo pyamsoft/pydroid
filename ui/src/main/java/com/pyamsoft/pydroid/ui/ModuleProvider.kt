@@ -22,11 +22,15 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 interface ModuleProvider {
 
   @CheckResult
   fun enforcer(): Enforcer
+
+  @CheckResult
+  fun theming(): Theming
 
   @CheckResult
   fun loaderModule(): LoaderModule

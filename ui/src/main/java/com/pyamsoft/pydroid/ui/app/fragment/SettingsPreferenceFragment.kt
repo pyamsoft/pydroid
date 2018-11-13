@@ -26,16 +26,17 @@ import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
 import androidx.core.content.ContextCompat
 import androidx.preference.Preference
+import androidx.preference.PreferenceGroup
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
-import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 import timber.log.Timber
@@ -44,16 +45,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
-
-  private lateinit var upgradeInfo: Preference
-  private lateinit var clearAll: Preference
-  private lateinit var checkVersion: Preference
-  private lateinit var showAboutLicenses: Preference
-  private lateinit var rateApplication: Preference
-  private lateinit var bugreport: Preference
-  private lateinit var moreApps: Preference
-  private lateinit var followSocialMedia: Preference
-  private lateinit var followBlog: Preference
+  internal lateinit var theming: Theming
 
   @CallSuper
   override fun onCreatePreferences(
@@ -76,43 +68,41 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     PYDroid.obtain(requireContext())
         .plusAppComponent(viewLifecycleOwner, versionedActivity.currentApplicationVersion)
         .inject(this)
+    return requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
+  }
 
-    val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
-    upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
-    clearAll = findPreference(getString(R.string.clear_all_key))
-    checkVersion = findPreference(getString(R.string.check_version_key))
-    showAboutLicenses = findPreference(getString(R.string.about_license_key))
-    rateApplication = findPreference(getString(R.string.rating_key))
-    bugreport = findPreference(getString(R.string.bugreport_key))
-    moreApps = findPreference(getString(R.string.more_apps_key))
-    followSocialMedia = findPreference(getString(R.string.social_media_f_key))
-    followBlog = findPreference(getString(R.string.social_media_b_key))
-
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+    adjustIconTint()
     setupApplicationTitle()
     setupUpgradeInfo()
     setupClearAll()
     setupCheckVersion()
     setupAboutLicenses()
     setupRateApp(view)
-    setupBugreport(view, bugreportUrl.hyperlink(view.context))
+    setupBugreport(view)
     setupMoreApps(view)
     setupFollows(view)
-
-    adjustIconTint(isDarkTheme)
-
-    return view
   }
 
-  private fun adjustIconTint(darkTheme: Boolean) {
-    upgradeInfo.adjustTint(darkTheme)
-    clearAll.adjustTint(darkTheme)
-    checkVersion.adjustTint(darkTheme)
-    showAboutLicenses.adjustTint(darkTheme)
-    rateApplication.adjustTint(darkTheme)
-    bugreport.adjustTint(darkTheme)
-    moreApps.adjustTint(darkTheme)
-    followSocialMedia.adjustTint(darkTheme)
-    followBlog.adjustTint(darkTheme)
+  private fun adjustIconTint() {
+    val darkTheme = theming.isDarkTheme()
+    preferenceScreen.adjustTint(darkTheme)
+  }
+
+  private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {
+    val size = preferenceCount
+    for (i in 0 until size) {
+      val pref = getPreference(i)
+      if (pref is PreferenceGroup) {
+        adjustTint(darkTheme)
+      } else {
+        pref.adjustTint(darkTheme)
+      }
+    }
   }
 
   private fun Preference.adjustTint(darkTheme: Boolean) {
@@ -128,6 +118,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupMoreApps(view: View) {
+    val moreApps = findPreference(getString(R.string.more_apps_key))
     moreApps.setOnPreferenceClickListener {
       MarketLinker.linkToDeveloperPage(view)
       return@setOnPreferenceClickListener true
@@ -135,6 +126,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupFollows(view: View) {
+    val followSocialMedia = findPreference(getString(R.string.social_media_f_key))
+    val followBlog = findPreference(getString(R.string.social_media_b_key))
     followBlog.setOnPreferenceClickListener {
       BLOG.hyperlink(view.context)
           .navigate(view)
@@ -149,16 +142,16 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupRateApp(view: View) {
+    val rateApplication = findPreference(getString(R.string.rating_key))
     rateApplication.setOnPreferenceClickListener {
       MarketLinker.linkToMarketPage(view.context.packageName, view)
       return@setOnPreferenceClickListener true
     }
   }
 
-  private fun setupBugreport(
-    view: View,
-    reportUrl: HyperlinkIntent
-  ) {
+  private fun setupBugreport(view: View) {
+    val reportUrl = bugreportUrl.hyperlink(view.context)
+    val bugreport = findPreference(getString(R.string.bugreport_key))
     bugreport.setOnPreferenceClickListener {
       reportUrl.navigate(view)
       return@setOnPreferenceClickListener true
@@ -166,6 +159,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupAboutLicenses() {
+    val showAboutLicenses = findPreference(getString(R.string.about_license_key))
     showAboutLicenses.setOnPreferenceClickListener {
       onLicenseItemClicked()
       return@setOnPreferenceClickListener true
@@ -173,6 +167,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupCheckVersion() {
+    val checkVersion = findPreference(getString(R.string.check_version_key))
     checkVersion.setOnPreferenceClickListener {
       onCheckForUpdatesClicked(versionViewModel)
       return@setOnPreferenceClickListener true
@@ -180,6 +175,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupClearAll() {
+    val clearAll = findPreference(getString(R.string.clear_all_key))
     if (hideClearAll) {
       clearAll.isVisible = false
     } else {
@@ -191,6 +187,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   private fun setupUpgradeInfo() {
+    val upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
     if (hideUpgradeInformation) {
       upgradeInfo.isVisible = false
     } else {
@@ -253,9 +250,6 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   protected open val hideUpgradeInformation: Boolean = false
 
   protected open val hideClearAll: Boolean = false
-
-  @get:CheckResult
-  protected abstract val isDarkTheme: Boolean
 
   @get:[CheckResult IdRes]
   protected abstract val rootViewContainer: Int

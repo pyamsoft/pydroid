@@ -21,6 +21,14 @@
 
   <PreferenceCategory android:key="application_settings">
 
+    <com.pyamsoft.pydroid.ui.preference.SwitchPreferenceCompat
+        android:defaultValue="@bool/dark_mode_default"
+        android:key="@string/dark_mode_key"
+        android:summaryOff="@string/dark_mode_summary_off"
+        android:summaryOn="@string/dark_mode_summary_on"
+        android:title="@string/dark_mode_title"
+        app:iconCompat="@drawable/ic_warning_24dp"/>
+
     <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
         android:key="@string/about_license_key"
         android:summary="@string/about_license_summary"

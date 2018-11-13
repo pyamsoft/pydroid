@@ -50,13 +50,7 @@ internal class RatingDialog : ToolbarDialog() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     isCancelable = false
-  }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
     requireArguments().also {
       rateLink = it.getString(RATE_LINK, null)
       versionCode = it.getInt(VERSION_CODE, 0)
@@ -71,17 +65,28 @@ internal class RatingDialog : ToolbarDialog() {
     if (changeLogIcon == 0) {
       throw RuntimeException("Change Log Icon Id cannot be 0")
     }
+  }
 
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     PYDroid.obtain(requireContext())
         .plusRatingComponent(viewLifecycleOwner, versionCode)
         .inject(this)
 
     binding = DialogRatingBinding.inflate(inflater, container, false)
+    return binding.root
+  }
 
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
     initDialog()
     observeRatingSaved()
-
-    return binding.root
   }
 
   private fun observeRatingSaved() {

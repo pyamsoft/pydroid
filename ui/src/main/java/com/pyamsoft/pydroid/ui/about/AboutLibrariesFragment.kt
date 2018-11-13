@@ -51,22 +51,31 @@ class AboutLibrariesFragment : ToolbarFragment() {
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    requireArguments().also {
+      backStackCount = it.getInt(KEY_BACK_STACK, 0)
+    }
+  }
+
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
-
     PYDroid.obtain(requireContext())
         .plusAboutComponent(viewLifecycleOwner)
         .inject(this)
 
-    requireArguments().also {
-      backStackCount = it.getInt(KEY_BACK_STACK, 0)
-    }
+    binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
+    return binding.root
+  }
 
-
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
     refreshLatch = RefreshLatch.create(viewLifecycleOwner, delay = 150L) {
       binding.apply {
         if (it) {
@@ -89,7 +98,6 @@ class AboutLibrariesFragment : ToolbarFragment() {
     observeLicenses()
     viewModel.loadLicenses(false)
 
-    return binding.root
   }
 
   private fun observeLicenses() {

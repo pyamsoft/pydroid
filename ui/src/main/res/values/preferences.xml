@@ -52,4 +52,10 @@
   <string name="social_media_b_title">Blogs and Updated</string>
   <string name="social_media_b_summary">Follow the pyamsoft official blog for updates!</string>
 
+  <bool name="dark_mode_default">false</bool>
+  <string name="dark_mode_key">dark_mode</string>
+  <string name="dark_mode_title">Enable Dark Mode</string>
+  <string name="dark_mode_summary_on">Dark Mode</string>
+  <string name="dark_mode_summary_off">Light Mode</string>
+
 </resources>

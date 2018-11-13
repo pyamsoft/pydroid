@@ -98,7 +98,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     for (i in 0 until size) {
       val pref = getPreference(i)
       if (pref is PreferenceGroup) {
-        adjustTint(darkTheme)
+        pref.adjustTint(darkTheme)
       } else {
         pref.adjustTint(darkTheme)
       }

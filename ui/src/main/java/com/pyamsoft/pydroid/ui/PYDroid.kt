@@ -81,7 +81,6 @@ class PYDroid private constructor(
           StrictMode.VmPolicy.Builder()
               .detectAll()
               .penaltyLog()
-              .penaltyDeath()
               .build()
       )
     }

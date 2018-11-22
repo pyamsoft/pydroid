@@ -69,9 +69,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext())
-        .plusAppComponent(viewLifecycleOwner)
         .inject(this)
-    return requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
+
+    return super.onCreateView(inflater, container, savedInstanceState)
   }
 
   override fun onDestroyView() {

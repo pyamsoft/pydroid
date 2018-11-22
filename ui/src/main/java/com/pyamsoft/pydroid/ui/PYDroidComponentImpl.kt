@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
@@ -86,6 +87,12 @@ internal class PYDroidComponentImpl internal constructor(
     return theming
   }
 
+  override fun inject(fragment: SettingsPreferenceFragment) {
+    fragment.versionViewModel = versionModule.getViewModel()
+    fragment.ratingViewModel = ratingModule.getViewModel()
+    fragment.theming = theming
+  }
+
   override fun inject(activity: RatingActivity) {
     activity.ratingViewModel = ratingModule.getViewModel()
   }
@@ -128,7 +135,7 @@ internal class PYDroidComponentImpl internal constructor(
   )
 
   override fun plusAppComponent(owner: LifecycleOwner): AppComponent =
-    AppComponentImpl(theming, versionModule, ratingModule)
+    AppComponentImpl(owner, theming, versionModule, ratingModule)
 
   override fun loaderModule(): LoaderModule {
     return loaderModule

@@ -21,21 +21,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : ToolbarFragment() {
 
-  private lateinit var binding: FragmentAppSettingsBinding
+  internal lateinit var rootView: AppSettingsView
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
-    return binding.root
+    PYDroid.obtain(requireContext().applicationContext)
+        .plusAppComponent(viewLifecycleOwner)
+        .inject(this)
+    return rootView.root()
   }
 
   override fun onViewCreated(
@@ -44,11 +46,6 @@ abstract class AppSettingsFragment : ToolbarFragment() {
   ) {
     super.onViewCreated(view, savedInstanceState)
     showPreferenceFragment()
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    binding.unbind()
   }
 
   private fun showPreferenceFragment() {

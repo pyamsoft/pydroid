@@ -26,6 +26,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
@@ -33,6 +34,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 internal interface PYDroidComponent {
 
   fun inject(activity: RatingActivity)
+
+  fun inject(fragment: SettingsPreferenceFragment)
 
   @CheckResult
   fun plusVersionCheckComponent(): VersionCheckComponent

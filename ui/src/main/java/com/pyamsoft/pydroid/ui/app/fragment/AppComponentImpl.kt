@@ -16,19 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.ui.theme.Theming
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 
 internal class AppComponentImpl internal constructor(
-  private val theming: Theming,
-  private val versionCheckModule: VersionCheckModule,
-  private val ratingModule: RatingModule
+  owner: LifecycleOwner,
+  inflater: LayoutInflater,
+  container: ViewGroup?
 ) : AppComponent {
 
-  override fun inject(fragment: SettingsPreferenceFragment) {
-    fragment.versionViewModel = versionCheckModule.getViewModel()
-    fragment.ratingViewModel = ratingModule.getViewModel()
-    fragment.theming = theming
+  private val appSettingsView by lazy { AppSettingsViewImpl(owner, inflater, container) }
+
+  override fun inject(fragment: AppSettingsFragment) {
+    fragment.rootView = appSettingsView
   }
 }

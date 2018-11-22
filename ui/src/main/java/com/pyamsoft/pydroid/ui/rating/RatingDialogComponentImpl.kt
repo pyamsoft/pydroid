@@ -19,7 +19,8 @@ internal class RatingDialogComponentImpl internal constructor(
 
   private val dialogView by lazy {
     RatingDialogViewImpl(
-        inflater, container, loaderModule.provideImageLoader(), owner, changeLogIcon, changeLog
+        inflater, container, loaderModule.provideImageLoader(),
+        owner, changeLogIcon, changeLog
     )
   }
 

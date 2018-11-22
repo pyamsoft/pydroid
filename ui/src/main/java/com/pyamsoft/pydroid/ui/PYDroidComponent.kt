@@ -16,37 +16,55 @@
 
 package com.pyamsoft.pydroid.ui
 
+import android.os.Bundle
+import android.text.SpannedString
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.about.AboutComponent
-import com.pyamsoft.pydroid.ui.about.ViewLicenseDialog
+import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
-import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.rating.RatingActivity
+import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 
 internal interface PYDroidComponent {
 
-  fun inject(dialog: ViewLicenseDialog)
+  fun inject(activity: RatingActivity)
 
   @CheckResult
-  fun plusVersionCheckComponent(
+  fun plusVersionCheckComponent(): VersionCheckComponent
+
+  @CheckResult
+  fun plusAppComponent(owner: LifecycleOwner): AppComponent
+
+  @CheckResult
+  fun plusAboutComponent(
     owner: LifecycleOwner,
-    currentVersion: Int
-  ): VersionCheckComponent
+    activity: FragmentActivity,
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): AboutComponent
 
   @CheckResult
-  fun plusAppComponent(
+  fun plusViewLicenseComponent(
     owner: LifecycleOwner,
-    currentVersion: Int
-  ): AppComponent
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?,
+    link: String,
+    name: String
+  ): ViewLicenseComponent
 
   @CheckResult
-  fun plusRatingComponent(
+  fun plusRatingDialogComponent(
     owner: LifecycleOwner,
-    currentVersion: Int
-  ): RatingComponent
-
-  @CheckResult
-  fun plusAboutComponent(owner: LifecycleOwner): AboutComponent
-
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    changeLogIcon: Int,
+    changeLog: SpannedString
+  ): RatingDialogComponent
 }

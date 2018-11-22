@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.bootstrap.about
 
-internal interface RatingComponent {
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import io.reactivex.Single
 
-  fun inject(activity: RatingActivity)
+internal interface AboutInteractor {
 
-  fun inject(dialog: RatingDialog)
+  @CheckResult
+  fun loadLicenses(bypass: Boolean): Single<List<OssLibrary>>
 }

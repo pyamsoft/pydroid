@@ -23,9 +23,9 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Observable
 import io.reactivex.Single
 
-internal class AboutLibrariesInteractorImpl internal constructor(
+internal class AboutInteractorImpl internal constructor(
   private val enforcer: Enforcer
-) : AboutLibrariesInteractor {
+) : AboutInteractor {
 
   @CheckResult
   private fun createLicenseStream(): Single<Set<OssLibrary>> {

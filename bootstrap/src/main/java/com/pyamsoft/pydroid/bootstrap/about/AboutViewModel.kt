@@ -22,8 +22,8 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
-class AboutLibrariesViewModel internal constructor(
-  private val interactor: AboutLibrariesInteractor,
+class AboutViewModel internal constructor(
+  private val interactor: AboutInteractor,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
 ) {

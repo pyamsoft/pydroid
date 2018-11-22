@@ -28,9 +28,10 @@ import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
@@ -38,6 +39,10 @@ import timber.log.Timber
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
   internal lateinit var ratingViewModel: RatingViewModel
+
+  private var loadRatingDialogDisposable by singleDisposable()
+  private var showDialogDisposable by singleDisposable()
+  private var showErrorDialogDisposable by singleDisposable()
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -86,19 +91,19 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.obtain(this)
-        .plusRatingComponent(this, currentApplicationVersion)
         .inject(this)
 
-    observeShowRating()
+    showDialogDisposable = ratingViewModel.onShowRatingDialog { showRatingDialog() }
+    showErrorDialogDisposable = ratingViewModel.onShowErrorRatingDialog { error: Throwable ->
+      showRatingError(error)
+    }
   }
 
-  private fun observeShowRating() {
-    ratingViewModel.onRatingError { onRatingError(it) }
-
-    ratingViewModel.onRatingDialogLoaded { wrapper ->
-      wrapper.onSuccess { onShowRating() }
-      wrapper.onError { onShowRatingError(it) }
-    }
+  override fun onDestroy() {
+    super.onDestroy()
+    loadRatingDialogDisposable.tryDispose()
+    showDialogDisposable.tryDispose()
+    showErrorDialogDisposable.tryDispose()
   }
 
   @CallSuper
@@ -106,21 +111,22 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     super.onPostResume()
 
     // DialogFragment must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
-    ratingViewModel.loadRatingDialog(false)
+    loadRatingDialogDisposable = ratingViewModel.loadRatingDialog(
+        false,
+        onLoadBegin = {},
+        onLoadSuccess = { ratingViewModel.publishShowRatingDialog() },
+        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) },
+        onLoadComplete = {}
+    )
   }
 
-  private fun onShowRating() {
+  private fun showRatingDialog() {
     RatingDialog.newInstance(this)
         .show(this, RatingDialog.TAG)
   }
 
-  private fun onShowRatingError(throwable: Throwable) {
+  private fun showRatingError(throwable: Throwable) {
     Timber.e(throwable, "Could not load rating dialog")
-  }
-
-  private fun onRatingError(throwable: Throwable) {
-    Snackbreak.short(rootView, throwable.localizedMessage)
-        .show()
   }
 
   companion object {

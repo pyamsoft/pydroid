@@ -16,16 +16,13 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 
 internal class VersionCheckComponentImpl internal constructor(
-  private val owner: LifecycleOwner,
-  private val versionCheckModule: VersionCheckModule,
-  private val currentVersion: Int
+  private val versionCheckModule: VersionCheckModule
 ) : VersionCheckComponent {
 
   override fun inject(activity: VersionCheckActivity) {
-    activity.viewModel = versionCheckModule.getViewModel(owner, currentVersion)
+    activity.viewModel = versionCheckModule.getViewModel()
   }
 }

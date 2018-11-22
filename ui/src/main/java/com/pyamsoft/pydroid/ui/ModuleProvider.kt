@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
+import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.threads.Enforcer
@@ -39,7 +39,7 @@ interface ModuleProvider {
   fun ratingModule(): RatingModule
 
   @CheckResult
-  fun aboutLibrariesModule(): AboutLibrariesModule
+  fun aboutModule(): AboutModule
 
   @CheckResult
   fun versionCheckModule(): VersionCheckModule

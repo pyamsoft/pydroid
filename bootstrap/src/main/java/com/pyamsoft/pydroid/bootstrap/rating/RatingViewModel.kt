@@ -17,16 +17,48 @@
 package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class RatingViewModel internal constructor(
-  private val currentVersion: Int,
   private val interactor: RatingInteractor,
+  private val currentVersion: Int,
+  private val showRatingBus: EventBus<RatingEvents.ShowEvent>,
+  private val showErrorRatingBus: EventBus<RatingEvents.ShowErrorEvent>,
+  private val saveRatingErrorBus: EventBus<RatingEvents.SaveErrorEvent>,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
 ) {
+
+  @CheckResult
+  fun onShowRatingDialog(onShow: () -> Unit): Disposable {
+    return showRatingBus.listen()
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
+        .subscribe { onShow() }
+  }
+
+  @CheckResult
+  fun onShowErrorRatingDialog(onError: (error: Throwable) -> Unit): Disposable {
+    return showErrorRatingBus.listen()
+        .subscribeOn(backgroundScheduler)
+        .observeOn(foregroundScheduler)
+        .subscribe { onError(it.error) }
+  }
+
+  fun publishShowRatingDialog() {
+    showRatingBus.publish(RatingEvents.ShowEvent)
+  }
+
+  fun publishShowErrorRatingDialog(error: Throwable) {
+    showErrorRatingBus.publish(RatingEvents.ShowErrorEvent(error))
+  }
+
+  fun publishSaveRatingError(error: Throwable) {
+    saveRatingErrorBus.publish(RatingEvents.SaveErrorEvent(error))
+  }
 
   @CheckResult
   fun loadRatingDialog(
@@ -51,9 +83,8 @@ class RatingViewModel internal constructor(
 
   @CheckResult
   fun saveRating(
-    accept: Boolean,
     onSaveBegin: () -> Unit,
-    onSaveSuccess: (saved: Boolean) -> Unit,
+    onSaveSuccess: () -> Unit,
     onSaveError: (error: Throwable) -> Unit,
     onSaveComplete: () -> Unit
   ): Disposable {
@@ -64,7 +95,7 @@ class RatingViewModel internal constructor(
         .doAfterTerminate { onSaveComplete() }
         .subscribe({
           Timber.d("Saved current version code: %d", currentVersion)
-          onSaveSuccess(accept)
+          onSaveSuccess()
         }, {
           Timber.e(it, "Error saving rating dialog")
           onSaveError(it)

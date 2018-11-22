@@ -19,27 +19,28 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 
 class RatingModule(
   preferences: RatingPreferences,
   enforcer: Enforcer,
+  private val currentVersion: Int,
+  private val showRatingBus: EventBus<RatingEvents.ShowEvent>,
+  private val showErrorRatingBus: EventBus<RatingEvents.ShowErrorEvent>,
+  private val saveRatingErrorBus: EventBus<RatingEvents.SaveErrorEvent>,
   private val schedulerProvider: SchedulerProvider
 ) {
 
-  private val errorBus: EventBus<Throwable> = RxBus.create()
   private val interactor: RatingInteractor = RatingInteractorImpl(enforcer, preferences)
 
   @CheckResult
-  fun getPublisher(): Publisher<Throwable> = errorBus
-
-  @CheckResult
-  fun getViewModel(version: Int): RatingViewModel {
+  fun getViewModel(): RatingViewModel {
     return RatingViewModel(
-        version,
         interactor,
+        currentVersion,
+        showRatingBus,
+        showErrorRatingBus,
+        saveRatingErrorBus,
         schedulerProvider.foregroundScheduler,
         schedulerProvider.backgroundScheduler
     )

@@ -22,7 +22,4 @@ interface VersionCheckProvider {
 
   @get:CheckResult
   val applicationName: String
-
-  @get:CheckResult
-  val currentApplicationVersion: Int
 }

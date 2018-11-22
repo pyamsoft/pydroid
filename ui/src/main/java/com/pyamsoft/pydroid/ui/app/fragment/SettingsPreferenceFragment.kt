@@ -28,15 +28,15 @@ import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate
-import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 import timber.log.Timber
@@ -46,6 +46,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
   internal lateinit var theming: Theming
+
+  private var ratingDisposable by singleDisposable()
+  private var checkUpdatesDisposable by singleDisposable()
 
   @CallSuper
   override fun onCreatePreferences(
@@ -66,9 +69,15 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext())
-        .plusAppComponent(viewLifecycleOwner, versionedActivity.currentApplicationVersion)
+        .plusAppComponent(viewLifecycleOwner)
         .inject(this)
     return requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    ratingDisposable.tryDispose()
+    checkUpdatesDisposable.tryDispose()
   }
 
   override fun onViewCreated(
@@ -169,7 +178,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   private fun setupCheckVersion() {
     val checkVersion = findPreference(getString(R.string.check_version_key))
     checkVersion.setOnPreferenceClickListener {
-      onCheckForUpdatesClicked(versionViewModel)
+      onCheckForUpdatesClicked()
       return@setOnPreferenceClickListener true
     }
   }
@@ -217,7 +226,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   protected open fun onLicenseItemClicked() {
     activity?.also {
       Timber.d("Show about licenses fragment")
-      AboutLibrariesFragment.show(it, rootViewContainer)
+      AboutFragment.show(it, rootViewContainer)
     }
   }
 
@@ -225,25 +234,31 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
    * Shows the changelog, override or extend to use unique implementation
    */
   protected open fun onShowChangelogClicked() {
-    ratingViewModel.loadRatingDialog(true)
+    ratingDisposable = ratingViewModel.loadRatingDialog(
+        true,
+        onLoadBegin = {},
+        onLoadSuccess = { ratingViewModel.publishShowRatingDialog() },
+        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) },
+        onLoadComplete = {}
+    )
   }
 
   /**
    * Checks the server for updates, override to use a custom behavior
    */
-  protected open fun onCheckForUpdatesClicked(viewModel: VersionCheckViewModel) {
-    viewModel.checkForUpdates(true)
+  protected open fun onCheckForUpdatesClicked() {
+    checkUpdatesDisposable = versionViewModel.checkForUpdates(
+        true,
+        onCheckBegin = { forced: Boolean ->
+          versionViewModel.publishCheckingForUpdatesEvent(forced)
+        },
+        onCheckSuccess = { newVersion: Int ->
+          versionViewModel.publishUpdateFoundEvent(newVersion)
+        },
+        onCheckError = { error: Throwable -> versionViewModel.publishUpdateErrorEvent(error) },
+        onCheckComplete = {}
+    )
   }
-
-  private val versionedActivity: VersionCheckProvider
-    @CheckResult get() {
-      val activity = activity
-      if (activity is VersionCheckActivity) {
-        return activity
-      } else {
-        throw IllegalStateException("Activity is not VersionCheckActivity")
-      }
-    }
 
   protected open val preferenceXmlResId: Int = 0
 

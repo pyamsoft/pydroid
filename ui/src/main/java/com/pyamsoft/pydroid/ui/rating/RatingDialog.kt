@@ -24,28 +24,27 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
-import androidx.core.view.ViewCompat
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
-import com.pyamsoft.pydroid.ui.databinding.DialogRatingBinding
+import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.util.toDp
 
 internal class RatingDialog : ToolbarDialog() {
 
-  private lateinit var rateLink: String
-  private lateinit var binding: DialogRatingBinding
-  internal lateinit var imageLoader: ImageLoader
-  internal lateinit var viewModel: RatingViewModel
-  internal lateinit var errorPublisher: Publisher<Throwable>
   @DrawableRes private var changeLogIcon: Int = 0
-  private var versionCode: Int = 0
-  private var changelog: SpannedString? = null
+  private lateinit var rateLink: String
+  private lateinit var changelog: SpannedString
+
+  internal lateinit var imageLoader: ImageLoader
+  internal lateinit var rootView: RatingDialogView
+  internal lateinit var viewModel: RatingViewModel
+
+  private var ratingSaveDisposable by singleDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -53,13 +52,8 @@ internal class RatingDialog : ToolbarDialog() {
 
     requireArguments().also {
       rateLink = it.getString(RATE_LINK, null)
-      versionCode = it.getInt(VERSION_CODE, 0)
-      changelog = it.getCharSequence(CHANGE_LOG_TEXT, null) as SpannedString
       changeLogIcon = it.getInt(CHANGE_LOG_ICON, 0)
-    }
-
-    if (versionCode == 0) {
-      throw RuntimeException("Version code cannot be 0")
+      changelog = requireNotNull(it.getCharSequence(CHANGE_LOG_TEXT, null)) as SpannedString
     }
 
     if (changeLogIcon == 0) {
@@ -73,11 +67,11 @@ internal class RatingDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext())
-        .plusRatingComponent(viewLifecycleOwner, versionCode)
+        .plusRatingDialogComponent(
+            viewLifecycleOwner, inflater, container, changeLogIcon, changelog
+        )
         .inject(this)
-
-    binding = DialogRatingBinding.inflate(inflater, container, false)
-    return binding.root
+    return rootView.root()
   }
 
   override fun onViewCreated(
@@ -85,47 +79,30 @@ internal class RatingDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    initDialog()
-    observeRatingSaved()
+    rootView.onSaveRating { saveRating() }
+    rootView.onCancelRating { dismiss() }
   }
 
-  private fun observeRatingSaved() {
-    viewModel.onRatingSaved { wrapper ->
-      wrapper.onSuccess { onRatingSaved(it) }
-      wrapper.onError { onRatingSaveError(it) }
-      wrapper.onComplete { dismiss() }
-    }
+  override fun onDestroyView() {
+    super.onDestroyView()
+    ratingSaveDisposable.tryDispose()
   }
 
-  private fun onRatingSaved(accept: Boolean) {
-    if (accept) {
-      view?.also { MarketLinker.linkToMarketPage(it.context.packageName, it) }
-    }
-  }
-
-  private fun onRatingSaveError(throwable: Throwable) {
-    errorPublisher.publish(throwable)
-  }
-
-  private fun initDialog() {
-    ViewCompat.setElevation(
-        binding.ratingIcon,
-        8.toDp(binding.ratingIcon.context).toFloat()
+  private fun saveRating() {
+    ratingSaveDisposable = viewModel.saveRating(
+        onSaveBegin = {},
+        onSaveSuccess = { onRatingSaved() },
+        onSaveError = { error: Throwable -> onRatingSaveError(error) },
+        onSaveComplete = { dismiss() }
     )
+  }
 
-    imageLoader.load(changeLogIcon)
-        .into(binding.ratingIcon)
-        .bind(viewLifecycleOwner)
-    binding.ratingTextChange.text = changelog
+  private fun onRatingSaved() {
+    requireView().also { MarketLinker.linkToMarketPage(it.context.packageName, it) }
+  }
 
-    binding.apply {
-      ratingBtnNoThanks.setOnDebouncedClickListener {
-        viewModel.saveRating(false)
-      }
-      ratingBtnGoRate.setOnDebouncedClickListener {
-        viewModel.saveRating(true)
-      }
-    }
+  private fun onRatingSaveError(error: Throwable) {
+    viewModel.publishSaveRatingError(error)
   }
 
   override fun onResume() {
@@ -142,7 +119,6 @@ internal class RatingDialog : ToolbarDialog() {
     internal const val TAG = "RatingDialog"
     private const val CHANGE_LOG_TEXT = "change_log_text"
     private const val CHANGE_LOG_ICON = "change_log_icon"
-    private const val VERSION_CODE = "version_code"
     private const val RATE_LINK = "rate_link"
 
     @CheckResult
@@ -152,7 +128,6 @@ internal class RatingDialog : ToolbarDialog() {
         arguments = Bundle().apply {
           putString(RATE_LINK, provider.getPackageName())
           putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
-          putInt(VERSION_CODE, provider.currentApplicationVersion)
           putInt(CHANGE_LOG_ICON, provider.applicationIcon)
         }
       }

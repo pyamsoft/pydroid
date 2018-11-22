@@ -21,12 +21,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.AdapterItem.Fake
-import com.pyamsoft.pydroid.ui.about.AboutPagerAdapter.AdapterItem.Real
+import com.pyamsoft.pydroid.ui.about.AboutAdapter.AdapterItem.Fake
+import com.pyamsoft.pydroid.ui.about.AboutAdapter.AdapterItem.Real
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemSpacerBinding
 
-internal class AboutPagerAdapter internal constructor(
+internal class AboutAdapter internal constructor(
   private val activity: FragmentActivity
 ) : RecyclerView.Adapter<ViewHolder>() {
 

@@ -17,11 +17,22 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import io.reactivex.Single
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-internal interface AboutLibrariesInteractor {
+class AboutModule(
+  enforcer: Enforcer,
+  private val schedulerProvider: SchedulerProvider
+) {
+
+  private val interactor: AboutInteractor = AboutInteractorImpl(enforcer)
 
   @CheckResult
-  fun loadLicenses(bypass: Boolean): Single<List<OssLibrary>>
+  fun getViewModel(): AboutViewModel {
+    return AboutViewModel(
+        interactor,
+        schedulerProvider.foregroundScheduler,
+        schedulerProvider.backgroundScheduler
+    )
+  }
 }

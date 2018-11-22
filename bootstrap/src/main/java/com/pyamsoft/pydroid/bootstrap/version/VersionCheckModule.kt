@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -38,8 +39,11 @@ import java.util.concurrent.TimeUnit.MINUTES
 class VersionCheckModule(
   context: Context,
   enforcer: Enforcer,
-  currentVersion: Int,
   debug: Boolean,
+  private val currentVersion: Int,
+  private val versionCheckBeginBus: EventBus<VersionEvents.Begin>,
+  private val versionCheckFound: EventBus<VersionEvents.UpdateFound>,
+  private val versionCheckError: EventBus<VersionEvents.UpdateError>,
   private val schedulerProvider: SchedulerProvider
 ) {
 
@@ -106,8 +110,12 @@ class VersionCheckModule(
   @CheckResult
   fun getViewModel(): VersionCheckViewModel {
     return VersionCheckViewModel(
+        currentVersion,
         packageName,
         cachedInteractor,
+        versionCheckBeginBus,
+        versionCheckFound,
+        versionCheckError,
         schedulerProvider.foregroundScheduler,
         schedulerProvider.backgroundScheduler
     )

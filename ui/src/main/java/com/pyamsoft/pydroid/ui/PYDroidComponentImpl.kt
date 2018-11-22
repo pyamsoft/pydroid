@@ -17,43 +17,65 @@
 package com.pyamsoft.pydroid.ui
 
 import android.app.Application
+import android.os.Bundle
+import android.text.SpannedString
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesModule
+import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingEvents
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionEvents
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.ViewLicenseDialog
+import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
+import com.pyamsoft.pydroid.ui.about.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
-import com.pyamsoft.pydroid.ui.rating.RatingComponent
-import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
+import com.pyamsoft.pydroid.ui.rating.RatingActivity
+import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
+import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
-  currentVersion: Int,
+  private val currentVersion: Int,
   debug: Boolean,
   schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
+
+  private val showRatingBus = RxBus.create<RatingEvents.ShowEvent>()
+  private val showRatingErrorBus = RxBus.create<RatingEvents.ShowErrorEvent>()
+  private val ratingSaveErrorBus = RxBus.create<RatingEvents.SaveErrorEvent>()
+
+  private val versionCheckBeginBus = RxBus.create<VersionEvents.Begin>()
+  private val versionCheckFound = RxBus.create<VersionEvents.UpdateFound>()
+  private val versionCheckError = RxBus.create<VersionEvents.UpdateError>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
   private val theming by lazy { Theming(application) }
   private val loaderModule by lazy { LoaderModule() }
-  private val aboutModule by lazy { AboutLibrariesModule(enforcer, schedulerProvider) }
-  private val ratingModule by lazy { RatingModule(preferences, enforcer, schedulerProvider) }
-  private val versionModule by lazy {
-    VersionCheckModule(application, enforcer, currentVersion, debug, schedulerProvider)
+  private val aboutModule by lazy { AboutModule(enforcer, schedulerProvider) }
+  private val ratingModule by lazy {
+    RatingModule(
+        preferences, enforcer, currentVersion, showRatingBus,
+        showRatingErrorBus, ratingSaveErrorBus, schedulerProvider
+    )
   }
-
-  override fun inject(dialog: ViewLicenseDialog) {
-    dialog.imageLoader = loaderModule.provideImageLoader()
+  private val versionModule by lazy {
+    VersionCheckModule(
+        application, enforcer, debug, currentVersion,
+        versionCheckBeginBus, versionCheckFound, versionCheckError, schedulerProvider
+    )
   }
 
   override fun enforcer(): Enforcer {
@@ -64,27 +86,49 @@ internal class PYDroidComponentImpl internal constructor(
     return theming
   }
 
-  override fun plusAboutComponent(owner: LifecycleOwner): AboutComponent {
-    return AboutComponentImpl(owner, aboutModule, loaderModule)
+  override fun inject(activity: RatingActivity) {
+    activity.ratingViewModel = ratingModule.getViewModel()
   }
 
-  override fun plusVersionCheckComponent(
+  override fun plusAboutComponent(
     owner: LifecycleOwner,
-    currentVersion: Int
-  ): VersionCheckComponent =
-    VersionCheckComponentImpl(owner, versionModule, currentVersion)
+    activity: FragmentActivity,
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): AboutComponent = AboutComponentImpl(
+      aboutModule, loaderModule.provideImageLoader(),
+      owner, activity, inflater, container, savedInstanceState
+  )
 
-  override fun plusAppComponent(
+  override fun plusViewLicenseComponent(
     owner: LifecycleOwner,
-    currentVersion: Int
-  ): AppComponent =
-    AppComponentImpl(owner, theming, versionModule, ratingModule, currentVersion)
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?,
+    link: String,
+    name: String
+  ): ViewLicenseComponent {
+    return ViewLicenseComponentImpl(
+        inflater, container, owner, loaderModule.provideImageLoader(), link, name
+    )
+  }
 
-  override fun plusRatingComponent(
+  override fun plusVersionCheckComponent(): VersionCheckComponent =
+    VersionCheckComponentImpl(versionModule)
+
+  override fun plusRatingDialogComponent(
     owner: LifecycleOwner,
-    currentVersion: Int
-  ): RatingComponent =
-    RatingComponentImpl(owner, ratingModule, loaderModule, currentVersion)
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    changeLogIcon: Int,
+    changeLog: SpannedString
+  ): RatingDialogComponent = RatingDialogComponentImpl(
+      ratingModule, loaderModule, inflater, container, owner, changeLogIcon, changeLog
+  )
+
+  override fun plusAppComponent(owner: LifecycleOwner): AppComponent =
+    AppComponentImpl(theming, versionModule, ratingModule)
 
   override fun loaderModule(): LoaderModule {
     return loaderModule
@@ -94,7 +138,7 @@ internal class PYDroidComponentImpl internal constructor(
     return ratingModule
   }
 
-  override fun aboutLibrariesModule(): AboutLibrariesModule {
+  override fun aboutModule(): AboutModule {
     return aboutModule
   }
 

@@ -23,33 +23,28 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.pyamsoft.pydroid.bootstrap.about.AboutLibrariesViewModel
+import com.pyamsoft.pydroid.bootstrap.about.AboutViewModel
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
-import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
-import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesBinding
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
-import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 
-class AboutLibrariesFragment : ToolbarFragment() {
+class AboutFragment : ToolbarFragment() {
 
-  internal lateinit var viewModel: AboutLibrariesViewModel
-  internal lateinit var imageLoader: ImageLoader
-  private lateinit var pagerAdapter: AboutPagerAdapter
-  private lateinit var binding: FragmentAboutLibrariesBinding
-  private lateinit var refreshLatch: RefreshLatch
-  private var lastViewedItem: Int = 0
+  internal lateinit var rootView: AboutView
+  internal lateinit var viewModel: AboutViewModel
+
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
+
+  private var loadLicensesDisposable by singleDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -64,11 +59,12 @@ class AboutLibrariesFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext())
-        .plusAboutComponent(viewLifecycleOwner)
+        .plusAboutComponent(
+            viewLifecycleOwner, requireActivity(), inflater, container, savedInstanceState
+        )
         .inject(this)
 
-    binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
-    return binding.root
+    return rootView.root()
   }
 
   override fun onViewCreated(
@@ -76,76 +72,17 @@ class AboutLibrariesFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    refreshLatch = RefreshLatch.create(viewLifecycleOwner, delay = 150L) {
-      binding.apply {
-        if (it) {
-          progressSpinner.visibility = View.VISIBLE
-          aboutList.visibility = View.INVISIBLE
-        } else {
-          // Load complete
-          progressSpinner.visibility = View.GONE
-          aboutList.visibility = View.VISIBLE
-
-          val lastViewed = lastViewedItem
-          aboutList.scrollToPosition(lastViewed)
-        }
-      }
-    }
-
-    lastViewedItem = savedInstanceState?.getInt(KEY_PAGE) ?: 0
-    setupAboutList()
-
-    observeLicenses()
-    viewModel.loadLicenses(false)
-
+    loadLicensesDisposable = viewModel.loadLicenses(false,
+        onLoadBegin = { forced: Boolean -> rootView.onLoadBegin(forced) },
+        onLoadSuccess = { licenses: List<OssLibrary> -> rootView.onLoadSuccess(licenses) },
+        onLoadError = { error: Throwable -> rootView.onLoadError(error) },
+        onLoadComplete = { rootView.onLoadComplete() }
+    )
   }
 
-  private fun observeLicenses() {
-    viewModel.onLicensesLoaded { wrapper ->
-      wrapper.onLoading { onLicenseLoadBegin() }
-      wrapper.onSuccess { onLicenseLoaded(it) }
-      wrapper.onError { onLicenseLoadError(it) }
-      wrapper.onComplete { onLicenseLoadComplete() }
-    }
-  }
-
-  @CheckResult
-  private fun getCurrentPosition(): Int {
-    val manager = binding.aboutList.layoutManager
-    if (manager is LinearLayoutManager) {
-      return manager.findFirstVisibleItemPosition()
-    } else {
-      return 0
-    }
-  }
-
-  private fun onLicenseLoadBegin() {
-    refreshLatch.isRefreshing = true
-  }
-
-  private fun onLicenseLoaded(licenses: List<OssLibrary>) {
-    pagerAdapter.addAll(licenses)
-  }
-
-  private fun onLicenseLoadError(throwable: Throwable) {
-    Snackbreak.short(requireView(), throwable.localizedMessage)
-        .show()
-  }
-
-  private fun onLicenseLoadComplete() {
-    refreshLatch.isRefreshing = false
-  }
-
-  private fun setupAboutList() {
-    pagerAdapter = AboutPagerAdapter(requireActivity())
-    binding.apply {
-      aboutList.adapter = pagerAdapter
-      aboutList.layoutManager = LinearLayoutManager(requireActivity()).apply {
-        initialPrefetchItemCount = 3
-        isItemPrefetchEnabled = false
-      }
-    }
-    refreshLatch.isRefreshing = true
+  override fun onDestroyView() {
+    super.onDestroyView()
+    loadLicensesDisposable.tryDispose()
   }
 
   override fun onResume() {
@@ -174,26 +111,14 @@ class AboutLibrariesFragment : ToolbarFragment() {
     }
   }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    binding.apply {
-      aboutList.adapter = null
-      aboutList.clearOnScrollListeners()
-      pagerAdapter.clear()
-
-      unbind()
-    }
-  }
-
   override fun onSaveInstanceState(outState: Bundle) {
-    outState.putInt(KEY_PAGE, getCurrentPosition())
+    rootView.saveInstanceState(outState)
     super.onSaveInstanceState(outState)
   }
 
   companion object {
 
-    private const val TAG = "AboutLibrariesFragment"
-    private const val KEY_PAGE = "key_current_page"
+    private const val TAG = "AboutFragment"
     private const val KEY_BACK_STACK = "key_back_stack"
 
     @JvmStatic
@@ -225,8 +150,8 @@ class AboutLibrariesFragment : ToolbarFragment() {
 
     @JvmStatic
     @CheckResult
-    private fun newInstance(backStackCount: Int): AboutLibrariesFragment {
-      return AboutLibrariesFragment().apply {
+    private fun newInstance(backStackCount: Int): AboutFragment {
+      return AboutFragment().apply {
         arguments = Bundle().apply {
           putInt(KEY_BACK_STACK, backStackCount)
         }

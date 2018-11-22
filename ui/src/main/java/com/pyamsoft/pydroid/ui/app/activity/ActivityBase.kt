@@ -47,7 +47,7 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
     requireNotNull(capturedToolbar).let(func)
   }
 
-  protected fun setToolbar(toolbar: Toolbar?) {
+  fun setToolbar(toolbar: Toolbar?) {
     capturedToolbar = toolbar
   }
 }

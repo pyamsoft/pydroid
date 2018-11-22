@@ -16,52 +16,34 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
-import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
+import androidx.annotation.CheckResult
 import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class VersionCheckViewModel internal constructor(
-  owner: LifecycleOwner,
-  private val debug: Boolean,
-  private val currentVersionCode: Int,
-  private val updateBus: DataBus<Int>,
   private val packageName: String,
   private val interactor: VersionCheckInteractor,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
-) : BaseViewModel(owner) {
+) {
 
-  private var checkUpdateDisposable by singleDisposable()
-
-  override fun onCleared() {
-    super.onCleared()
-    checkUpdateDisposable.tryDispose()
-  }
-
-  fun onUpdateAvailable(func: (DataWrapper<Int>) -> Unit) {
-    dispose {
-      updateBus.listen()
-          .subscribeOn(backgroundScheduler)
-          .observeOn(foregroundScheduler)
-          .subscribe(func)
-    }
-  }
-
-  fun checkForUpdates(force: Boolean) {
-    checkUpdateDisposable = interactor.checkVersion(force, packageName)
+  @CheckResult
+  fun checkForUpdates(
+    force: Boolean,
+    onCheckBegin: (forced: Boolean) -> Unit,
+    onCheckSuccess: (newVersion: Int) -> Unit,
+    onCheckError: (error: Throwable) -> Unit,
+    onCheckComplete: () -> Unit
+  ): Disposable {
+    return interactor.checkVersion(force, packageName)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
-        .filter { currentVersionCode < it || (debug && force) }
-        .doOnSubscribe { updateBus.publishLoading(force) }
-        .doAfterTerminate { updateBus.publishComplete() }
-        .subscribe({ updateBus.publishSuccess(it) }, {
+        .doOnSubscribe { onCheckBegin(force) }
+        .doAfterTerminate { onCheckComplete() }
+        .subscribe({ onCheckSuccess(it) }, {
           Timber.e(it, "Error checking for latest version")
-          updateBus.publishError(it)
+          onCheckError(it)
         })
   }
 }

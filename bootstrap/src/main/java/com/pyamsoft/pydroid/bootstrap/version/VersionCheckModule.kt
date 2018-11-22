@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import android.content.Context
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.popinnow.android.repo.moshi.MoshiPersister
 import com.popinnow.android.repo.newRepoBuilder
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
@@ -26,7 +25,6 @@ import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -40,11 +38,11 @@ import java.util.concurrent.TimeUnit.MINUTES
 class VersionCheckModule(
   context: Context,
   enforcer: Enforcer,
-  private val debug: Boolean,
+  debug: Boolean,
+  currentVersion: Int,
   private val schedulerProvider: SchedulerProvider
 ) {
 
-  private val updateBus = DataBus<Int>()
   private val packageName: String = context.packageName
   private val cachedInteractor: VersionCheckInteractor
 
@@ -71,7 +69,7 @@ class VersionCheckModule(
           enforcer, minimumApiProvider,
           networkStatusProvider, versionCheckService
       )
-    cachedInteractor = VersionCheckInteractorImpl(enforcer, network, repo)
+    cachedInteractor = VersionCheckInteractorImpl(enforcer, currentVersion, debug, network, repo)
   }
 
   @CheckResult
@@ -106,15 +104,8 @@ class VersionCheckModule(
   }
 
   @CheckResult
-  fun getViewModel(
-    owner: LifecycleOwner,
-    currentVersion: Int
-  ): VersionCheckViewModel {
+  fun getViewModel(): VersionCheckViewModel {
     return VersionCheckViewModel(
-        owner,
-        debug,
-        currentVersion,
-        updateBus,
         packageName,
         cachedInteractor,
         schedulerProvider.foregroundScheduler,

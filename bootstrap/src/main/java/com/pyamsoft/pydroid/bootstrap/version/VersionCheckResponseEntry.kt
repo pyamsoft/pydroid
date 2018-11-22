@@ -49,5 +49,6 @@ internal data class VersionCheckResponseEntry internal constructor(
     }
   }
 
+  // Needed so we can generate a static adapter
   companion object
 }

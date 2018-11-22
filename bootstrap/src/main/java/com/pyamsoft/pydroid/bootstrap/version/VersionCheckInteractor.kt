@@ -17,13 +17,14 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 internal interface VersionCheckInteractor {
 
   @CheckResult
   fun checkVersion(
-    bypass: Boolean,
+    force: Boolean,
     packageName: String
-  ): Single<Int>
+  ): Maybe<Int>
 }

@@ -17,13 +17,11 @@
 package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
 
 class RatingModule(
   preferences: RatingPreferences,
@@ -33,24 +31,15 @@ class RatingModule(
 
   private val errorBus: EventBus<Throwable> = RxBus.create()
   private val interactor: RatingInteractor = RatingInteractorImpl(enforcer, preferences)
-  private val ratingBus = DataBus<Unit>()
-  private val ratingSaveBus = DataBus<Boolean>()
 
   @CheckResult
   fun getPublisher(): Publisher<Throwable> = errorBus
 
   @CheckResult
-  fun getViewModel(
-    owner: LifecycleOwner,
-    version: Int
-  ): RatingViewModel {
+  fun getViewModel(version: Int): RatingViewModel {
     return RatingViewModel(
-        owner,
-        ratingBus,
-        ratingSaveBus,
         version,
         interactor,
-        errorBus,
         schedulerProvider.foregroundScheduler,
         schedulerProvider.backgroundScheduler
     )

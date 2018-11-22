@@ -19,22 +19,27 @@ package com.pyamsoft.pydroid.bootstrap.version
 import com.popinnow.android.repo.Repo
 import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import io.reactivex.Single
+import io.reactivex.Maybe
 
 internal class VersionCheckInteractorImpl internal constructor(
   private val enforcer: Enforcer,
+  private val currentVersionCode: Int,
+  private val debug: Boolean,
   private val network: VersionCheckInteractor,
   private val repo: Repo<Int>
 ) : VersionCheckInteractor, Cache {
 
   override fun checkVersion(
-    bypass: Boolean,
+    force: Boolean,
     packageName: String
-  ): Single<Int> {
-    return repo.get(bypass) {
+  ): Maybe<Int> {
+    return repo.get(force) {
       enforcer.assertNotOnMainThread()
       return@get network.checkVersion(true, packageName)
+          // The actual network facing implementation should always return a valid Single wrapped as a Maybe
+          .toSingle()
     }
+        .filter { currentVersionCode < it || (debug && force) }
   }
 
   override fun clearCache() {

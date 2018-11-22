@@ -16,49 +16,34 @@
 
 package com.pyamsoft.pydroid.bootstrap.about
 
-import androidx.lifecycle.LifecycleOwner
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.core.viewmodel.BaseViewModel
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
-import com.pyamsoft.pydroid.core.viewmodel.DataWrapper
 import io.reactivex.Scheduler
+import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class AboutLibrariesViewModel internal constructor(
-  owner: LifecycleOwner,
-  private val licenseBus: DataBus<List<OssLibrary>>,
   private val interactor: AboutLibrariesInteractor,
   private val foregroundScheduler: Scheduler,
   private val backgroundScheduler: Scheduler
-) : BaseViewModel(owner) {
+) {
 
-  private var loadDisposable by singleDisposable()
-
-  override fun onCleared() {
-    super.onCleared()
-    loadDisposable.tryDispose()
-  }
-
-  fun onLicensesLoaded(func: (DataWrapper<List<OssLibrary>>) -> Unit) {
-    dispose {
-      licenseBus.listen()
-          .subscribeOn(backgroundScheduler)
-          .observeOn(foregroundScheduler)
-          .subscribe(func)
-    }
-  }
-
-  fun loadLicenses(force: Boolean) {
-    loadDisposable = interactor.loadLicenses(force)
+  @CheckResult
+  fun loadLicenses(
+    force: Boolean,
+    onLoadBegin: (forced: Boolean) -> Unit,
+    onLoadSuccess: (licenses: List<OssLibrary>) -> Unit,
+    onLoadError: (error: Throwable) -> Unit,
+    onLoadComplete: () -> Unit
+  ): Disposable {
+    return interactor.loadLicenses(force)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
-        .doOnSubscribe { licenseBus.publishLoading(force) }
-        .doAfterTerminate { licenseBus.publishComplete() }
-        .subscribe({ licenseBus.publishSuccess(it) }, {
+        .doOnSubscribe { onLoadBegin(force) }
+        .doAfterTerminate { onLoadComplete() }
+        .subscribe({ onLoadSuccess(it) }, {
           Timber.e(it, "Error loading licenses")
-          licenseBus.publishError(it)
+          onLoadError(it)
         })
   }
 }

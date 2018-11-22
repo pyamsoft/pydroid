@@ -17,29 +17,19 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.core.viewmodel.DataBus
 
 class AboutLibrariesModule(
   enforcer: Enforcer,
   private val schedulerProvider: SchedulerProvider
 ) {
 
-  private val interactor: AboutLibrariesInteractor
-  private val viewBus = DataBus<List<OssLibrary>>()
-
-  init {
-    interactor = AboutLibrariesInteractorImpl(enforcer)
-  }
+  private val interactor: AboutLibrariesInteractor = AboutLibrariesInteractorImpl(enforcer)
 
   @CheckResult
-  fun getViewModel(owner: LifecycleOwner): AboutLibrariesViewModel {
+  fun getViewModel(): AboutLibrariesViewModel {
     return AboutLibrariesViewModel(
-        owner,
-        viewBus,
         interactor,
         schedulerProvider.foregroundScheduler,
         schedulerProvider.backgroundScheduler

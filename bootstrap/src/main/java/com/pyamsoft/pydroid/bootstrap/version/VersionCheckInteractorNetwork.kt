@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.bootstrap.version.network.NoNetworkException
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 internal class VersionCheckInteractorNetwork internal constructor(
@@ -49,9 +50,9 @@ internal class VersionCheckInteractorNetwork internal constructor(
   }
 
   override fun checkVersion(
-    bypass: Boolean,
+    force: Boolean,
     packageName: String
-  ): Single<Int> {
+  ): Maybe<Int> {
     return Single.defer {
       enforcer.assertNotOnMainThread()
       if (!networkStatusProvider.hasConnection()) {
@@ -67,5 +68,6 @@ internal class VersionCheckInteractorNetwork internal constructor(
       }
     }
         .map { versionCodeForApi(it) }
+        .toMaybe()
   }
 }

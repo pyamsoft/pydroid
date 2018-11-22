@@ -41,6 +41,7 @@ buildscript {
     vectorDrawable = "1.0.1"
     preference = "1.0.0"
     recyclerView = "1.0.0"
+    fragment = "1.0.0"
     appCompat = "1.0.2"
 
     repo = "0.2.0"

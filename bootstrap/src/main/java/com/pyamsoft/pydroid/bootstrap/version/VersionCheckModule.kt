@@ -38,8 +38,8 @@ import java.util.concurrent.TimeUnit.MINUTES
 class VersionCheckModule(
   context: Context,
   enforcer: Enforcer,
-  debug: Boolean,
   currentVersion: Int,
+  debug: Boolean,
   private val schedulerProvider: SchedulerProvider
 ) {
 

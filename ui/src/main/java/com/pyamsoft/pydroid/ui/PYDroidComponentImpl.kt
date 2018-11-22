@@ -37,21 +37,23 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
+  currentVersion: Int,
   debug: Boolean,
   schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
-  private val enforcer = Enforcer(debug)
-  private val theming = Theming(application)
-  private val loaderModule = LoaderModule()
-  private val aboutModule = AboutLibrariesModule(enforcer, schedulerProvider)
-  private val versionModule =
-    VersionCheckModule(application, enforcer, debug, schedulerProvider)
-  private val ratingModule: RatingModule
+  private val preferences = PYDroidPreferencesImpl(application)
+  private val enforcer by lazy { Enforcer(debug) }
+  private val theming by lazy { Theming(application) }
+  private val loaderModule by lazy { LoaderModule() }
+  private val aboutModule by lazy { AboutLibrariesModule(enforcer, schedulerProvider) }
+  private val ratingModule by lazy { RatingModule(preferences, enforcer, schedulerProvider) }
+  private val versionModule by lazy {
+    VersionCheckModule(application, enforcer, currentVersion, debug, schedulerProvider)
+  }
 
-  init {
-    val preferences = PYDroidPreferencesImpl(application)
-    ratingModule = RatingModule(preferences, enforcer, schedulerProvider)
+  override fun inject(dialog: ViewLicenseDialog) {
+    dialog.imageLoader = loaderModule.provideImageLoader()
   }
 
   override fun enforcer(): Enforcer {
@@ -60,10 +62,6 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun theming(): Theming {
     return theming
-  }
-
-  override fun inject(dialog: ViewLicenseDialog) {
-    dialog.imageLoader = loaderModule.provideImageLoader()
   }
 
   override fun plusAboutComponent(owner: LifecycleOwner): AboutComponent {

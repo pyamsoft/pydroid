@@ -31,11 +31,12 @@ import timber.log.Timber
  */
 class PYDroid private constructor(
   application: Application,
+  currentVersion: Int,
   debug: Boolean,
-  schedulerProvider: SchedulerProvider = SchedulerProvider.Default
+  schedulerProvider: SchedulerProvider
 ) {
 
-  private val impl = PYDroidComponentImpl(application, debug, schedulerProvider)
+  private val impl by lazy { PYDroidComponentImpl(application, currentVersion, debug, schedulerProvider) }
 
   init {
     setupAsyncMainThreadScheduler()
@@ -120,16 +121,18 @@ class PYDroid private constructor(
      *
      * Track the Instance at the application level, such as:
      *
-     * PYDroid.init(this, this, DEBUG)
+     * PYDroid.init(this, this, DEBUG, VERSION_CODE)
      */
     @JvmStatic
     fun init(
-      application: Application,
       instance: Instance,
-      debug: Boolean
+      application: Application,
+      currentVersion: Int,
+      debug: Boolean,
+      schedulerProvider: SchedulerProvider = SchedulerProvider.DEFAULT
     ) {
       if (instance.getPydroid() == null) {
-        instance.setPydroid(PYDroid(application, debug))
+        instance.setPydroid(PYDroid(application, currentVersion, debug, schedulerProvider))
       }
     }
   }

@@ -13,7 +13,7 @@ interface SchedulerProvider {
   @get:CheckResult
   val foregroundScheduler: Scheduler
 
-  object Default : SchedulerProvider {
+  object DEFAULT : SchedulerProvider {
 
     override val backgroundScheduler: Scheduler = Schedulers.io()
 

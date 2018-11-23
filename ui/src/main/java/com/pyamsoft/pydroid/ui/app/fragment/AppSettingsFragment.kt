@@ -35,7 +35,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext().applicationContext)
-        .plusAppComponent(viewLifecycleOwner)
+        .plusAppComponent(viewLifecycleOwner, inflater, container)
         .inject(this)
     return rootView.root()
   }

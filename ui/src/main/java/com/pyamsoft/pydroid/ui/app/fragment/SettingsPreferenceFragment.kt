@@ -24,9 +24,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
-import androidx.core.content.ContextCompat
-import androidx.preference.Preference
-import androidx.preference.PreferenceGroup
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.core.singleDisposable
@@ -34,18 +31,16 @@ import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
-import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate
-import com.pyamsoft.pydroid.util.hyperlink
-import com.pyamsoft.pydroid.util.tintWith
+import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
-  internal lateinit var theming: Theming
+  internal lateinit var settingsPreferenceView: SettingsPreferenceView
 
   private var ratingDisposable by singleDisposable()
   private var checkUpdatesDisposable by singleDisposable()
@@ -69,15 +64,13 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext())
+        .plusSettingsComponent(
+            viewLifecycleOwner, preferenceScreen,
+            hideClearAll, hideUpgradeInformation
+        )
         .inject(this)
 
     return super.onCreateView(inflater, container, savedInstanceState)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    ratingDisposable.tryDispose()
-    checkUpdatesDisposable.tryDispose()
   }
 
   override fun onViewCreated(
@@ -85,131 +78,34 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    adjustIconTint()
-    setupApplicationTitle()
-    setupUpgradeInfo()
-    setupClearAll()
-    setupCheckVersion()
-    setupAboutLicenses()
-    setupRateApp(view)
-    setupBugreport(view)
-    setupMoreApps(view)
-    setupFollows(view)
-  }
+    settingsPreferenceView.onCheckVersionClicked { onCheckForUpdatesClicked() }
+    settingsPreferenceView.onLicensesClicked { onLicenseItemClicked() }
+    settingsPreferenceView.onMoreAppsClicked { MarketLinker.linkToDeveloperPage(requireView()) }
+    settingsPreferenceView.onUpgradeClicked { onShowChangelogClicked() }
+    settingsPreferenceView.onClearAllClicked { onClearAllClicked() }
 
-  private fun adjustIconTint() {
-    val darkTheme = theming.isDarkTheme()
-    preferenceScreen.adjustTint(darkTheme)
-  }
-
-  private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {
-    val size = preferenceCount
-    for (i in 0 until size) {
-      val pref = getPreference(i)
-      if (pref is PreferenceGroup) {
-        pref.adjustTint(darkTheme)
-      } else {
-        pref.adjustTint(darkTheme)
-      }
-    }
-  }
-
-  private fun Preference.adjustTint(darkTheme: Boolean) {
-    val icon = this.icon
-    if (icon != null) {
-      this.icon = icon.tintWith(
-          ContextCompat.getColor(
-              context,
-              if (darkTheme) R.color.white else R.color.black
-          )
-      )
-    }
-  }
-
-  private fun setupMoreApps(view: View) {
-    val moreApps = findPreference(getString(R.string.more_apps_key))
-    moreApps.setOnPreferenceClickListener {
-      MarketLinker.linkToDeveloperPage(view)
-      return@setOnPreferenceClickListener true
-    }
-  }
-
-  private fun setupFollows(view: View) {
-    val followSocialMedia = findPreference(getString(R.string.social_media_f_key))
-    val followBlog = findPreference(getString(R.string.social_media_b_key))
-    followBlog.setOnPreferenceClickListener {
-      BLOG.hyperlink(view.context)
-          .navigate(view)
-      return@setOnPreferenceClickListener true
+    settingsPreferenceView.onRateAppClicked {
+      MarketLinker.linkToMarketPage(requireContext().packageName, requireView())
     }
 
-    followSocialMedia.setOnPreferenceClickListener {
-      FACEBOOK.hyperlink(view.context)
-          .navigate(view)
-      return@setOnPreferenceClickListener true
+    settingsPreferenceView.onBugReportClicked { link: HyperlinkIntent ->
+      link.navigate(requireView())
     }
+
+    settingsPreferenceView.onFollowsClicked(
+        onBlogClicked = { link: HyperlinkIntent ->
+          link.navigate(requireView())
+        },
+        onSocialClicked = { link: HyperlinkIntent ->
+          link.navigate(requireView())
+        }
+    )
   }
 
-  private fun setupRateApp(view: View) {
-    val rateApplication = findPreference(getString(R.string.rating_key))
-    rateApplication.setOnPreferenceClickListener {
-      MarketLinker.linkToMarketPage(view.context.packageName, view)
-      return@setOnPreferenceClickListener true
-    }
-  }
-
-  private fun setupBugreport(view: View) {
-    val reportUrl = bugreportUrl.hyperlink(view.context)
-    val bugreport = findPreference(getString(R.string.bugreport_key))
-    bugreport.setOnPreferenceClickListener {
-      reportUrl.navigate(view)
-      return@setOnPreferenceClickListener true
-    }
-  }
-
-  private fun setupAboutLicenses() {
-    val showAboutLicenses = findPreference(getString(R.string.about_license_key))
-    showAboutLicenses.setOnPreferenceClickListener {
-      onLicenseItemClicked()
-      return@setOnPreferenceClickListener true
-    }
-  }
-
-  private fun setupCheckVersion() {
-    val checkVersion = findPreference(getString(R.string.check_version_key))
-    checkVersion.setOnPreferenceClickListener {
-      onCheckForUpdatesClicked()
-      return@setOnPreferenceClickListener true
-    }
-  }
-
-  private fun setupClearAll() {
-    val clearAll = findPreference(getString(R.string.clear_all_key))
-    if (hideClearAll) {
-      clearAll.isVisible = false
-    } else {
-      clearAll.setOnPreferenceClickListener {
-        onClearAllClicked()
-        return@setOnPreferenceClickListener true
-      }
-    }
-  }
-
-  private fun setupUpgradeInfo() {
-    val upgradeInfo = findPreference(getString(R.string.upgrade_info_key))
-    if (hideUpgradeInformation) {
-      upgradeInfo.isVisible = false
-    } else {
-      upgradeInfo.setOnPreferenceClickListener {
-        onShowChangelogClicked()
-        return@setOnPreferenceClickListener true
-      }
-    }
-  }
-
-  private fun setupApplicationTitle() {
-    val applicationSettings = findPreference("application_settings")
-    applicationSettings.title = "$applicationName Settings"
+  override fun onDestroyView() {
+    super.onDestroyView()
+    ratingDisposable.tryDispose()
+    checkUpdatesDisposable.tryDispose()
   }
 
   /**
@@ -268,16 +164,4 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   @get:[CheckResult IdRes]
   protected abstract val rootViewContainer: Int
-
-  @get:CheckResult
-  protected abstract val applicationName: String
-
-  @get:CheckResult
-  protected abstract val bugreportUrl: String
-
-  companion object {
-
-    private const val FACEBOOK = "https://www.facebook.com/pyamsoftware"
-    private const val BLOG = "https://pyamsoft.blogspot.com/"
-  }
 }

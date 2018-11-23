@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingEvents
@@ -38,7 +39,8 @@ import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceComponent
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
@@ -48,6 +50,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
 
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
+  private val applicationName: String,
+  private val bugreportUrl: String,
   private val currentVersion: Int,
   debug: Boolean,
   schedulerProvider: SchedulerProvider
@@ -87,15 +91,19 @@ internal class PYDroidComponentImpl internal constructor(
     return theming
   }
 
-  override fun inject(fragment: SettingsPreferenceFragment) {
-    fragment.versionViewModel = versionModule.getViewModel()
-    fragment.ratingViewModel = ratingModule.getViewModel()
-    fragment.theming = theming
-  }
-
   override fun inject(activity: RatingActivity) {
     activity.ratingViewModel = ratingModule.getViewModel()
   }
+
+  override fun plusSettingsComponent(
+    owner: LifecycleOwner,
+    preferenceScreen: PreferenceScreen,
+    hideClearAll: Boolean,
+    hideUpgradeInformation: Boolean
+  ): SettingsPreferenceComponent = SettingsPreferenceComponentImpl(
+      ratingModule, versionModule, owner, preferenceScreen, theming,
+      applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation
+  )
 
   override fun plusAboutComponent(
     owner: LifecycleOwner,
@@ -134,8 +142,11 @@ internal class PYDroidComponentImpl internal constructor(
       ratingModule, loaderModule, inflater, container, owner, changeLogIcon, changeLog
   )
 
-  override fun plusAppComponent(owner: LifecycleOwner): AppComponent =
-    AppComponentImpl(owner, theming, versionModule, ratingModule)
+  override fun plusAppComponent(
+    owner: LifecycleOwner,
+    inflater: LayoutInflater,
+    container: ViewGroup?
+  ): AppComponent = AppComponentImpl(owner, inflater, container)
 
   override fun loaderModule(): LoaderModule {
     return loaderModule

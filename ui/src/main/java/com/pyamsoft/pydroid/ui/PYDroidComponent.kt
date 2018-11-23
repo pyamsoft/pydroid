@@ -23,10 +23,11 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
@@ -35,13 +36,23 @@ internal interface PYDroidComponent {
 
   fun inject(activity: RatingActivity)
 
-  fun inject(fragment: SettingsPreferenceFragment)
-
   @CheckResult
   fun plusVersionCheckComponent(): VersionCheckComponent
 
   @CheckResult
-  fun plusAppComponent(owner: LifecycleOwner): AppComponent
+  fun plusAppComponent(
+    owner: LifecycleOwner,
+    inflater: LayoutInflater,
+    container: ViewGroup?
+  ): AppComponent
+
+  @CheckResult
+  fun plusSettingsComponent(
+    owner: LifecycleOwner,
+    preferenceScreen: PreferenceScreen,
+    hideClearAll: Boolean,
+    hideUpgradeInformation: Boolean
+  ): SettingsPreferenceComponent
 
   @CheckResult
   fun plusAboutComponent(

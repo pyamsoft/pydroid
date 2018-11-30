@@ -25,9 +25,9 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 internal class SettingsPreferenceComponentImpl internal constructor(
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
+  private val theming: Theming,
   owner: LifecycleOwner,
   preferenceScreen: PreferenceScreen,
-  theming: Theming,
   applicationName: String,
   bugreportUrl: String,
   hideClearAll: Boolean,
@@ -43,6 +43,7 @@ internal class SettingsPreferenceComponentImpl internal constructor(
   }
 
   override fun inject(fragment: SettingsPreferenceFragment) {
+    fragment.theming = theming
     fragment.ratingViewModel = ratingModule.getViewModel()
     fragment.versionViewModel = versionCheckModule.getViewModel()
     fragment.settingsPreferenceView = settingsPreferenceView

@@ -23,4 +23,6 @@ interface SettingsPreferenceView {
 
   fun onUpgradeClicked(onClick: () -> Unit)
 
+  fun onDarkThemeClicked(onClick: (dark: Boolean) -> Unit)
+
 }

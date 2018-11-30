@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.util.HyperlinkIntent
@@ -38,6 +39,7 @@ import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
+  internal lateinit var theming: Theming
   internal lateinit var versionViewModel: VersionCheckViewModel
   internal lateinit var ratingViewModel: RatingViewModel
   internal lateinit var settingsPreferenceView: SettingsPreferenceView
@@ -100,12 +102,22 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
           link.navigate(requireView())
         }
     )
+
+    settingsPreferenceView.onDarkThemeClicked { dark: Boolean ->
+      onDarkThemeClicked(dark)
+    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     ratingDisposable.tryDispose()
     checkUpdatesDisposable.tryDispose()
+  }
+
+  protected open fun onDarkThemeClicked(dark: Boolean) {
+    Timber.d("Dark theme set: $dark")
+    theming.setDarkTheme(dark)
+    requireActivity().recreate()
   }
 
   /**

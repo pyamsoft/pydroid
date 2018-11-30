@@ -101,7 +101,7 @@ internal class PYDroidComponentImpl internal constructor(
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): SettingsPreferenceComponent = SettingsPreferenceComponentImpl(
-      ratingModule, versionModule, owner, preferenceScreen, theming,
+      ratingModule, versionModule, theming, owner, preferenceScreen,
       applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation
   )
 

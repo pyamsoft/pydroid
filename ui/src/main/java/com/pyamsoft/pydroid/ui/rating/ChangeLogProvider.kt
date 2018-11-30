@@ -19,9 +19,8 @@ package com.pyamsoft.pydroid.ui.rating
 import android.text.SpannedString
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 
-interface ChangeLogProvider : VersionCheckProvider {
+interface ChangeLogProvider {
 
   @CheckResult
   fun getPackageName(): String

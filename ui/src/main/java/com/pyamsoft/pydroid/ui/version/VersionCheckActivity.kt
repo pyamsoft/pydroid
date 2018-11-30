@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
@@ -29,7 +28,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
-abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
+abstract class VersionCheckActivity : ActivityBase() {
 
   internal lateinit var viewModel: VersionCheckViewModel
   private var checkUpdatesDisposable by singleDisposable()
@@ -91,7 +90,7 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckProvider {
     updated: Int
   ) {
     Timber.d("Updated version found. %d => %d", current, updated)
-    VersionUpgradeDialog.newInstance(applicationName, current, updated)
+    VersionUpgradeDialog.newInstance(current, updated)
         .show(this, VersionUpgradeDialog.TAG)
   }
 

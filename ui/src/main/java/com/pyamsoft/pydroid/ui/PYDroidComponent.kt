@@ -31,10 +31,13 @@ import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal interface PYDroidComponent {
 
   fun inject(activity: RatingActivity)
+
+  fun inject(dialog: VersionUpgradeDialog)
 
   @CheckResult
   fun plusVersionCheckComponent(): VersionCheckComponent

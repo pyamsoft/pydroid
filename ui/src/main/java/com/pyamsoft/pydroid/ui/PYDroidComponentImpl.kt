@@ -47,6 +47,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
+import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
@@ -93,6 +94,10 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun inject(activity: RatingActivity) {
     activity.ratingViewModel = ratingModule.getViewModel()
+  }
+
+  override fun inject(dialog: VersionUpgradeDialog) {
+    dialog.applicationName = applicationName
   }
 
   override fun plusSettingsComponent(

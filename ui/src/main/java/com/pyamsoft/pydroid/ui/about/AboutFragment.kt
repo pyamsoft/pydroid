@@ -64,6 +64,7 @@ class AboutFragment : ToolbarFragment() {
         )
         .inject(this)
 
+    rootView.create()
     return rootView.root()
   }
 

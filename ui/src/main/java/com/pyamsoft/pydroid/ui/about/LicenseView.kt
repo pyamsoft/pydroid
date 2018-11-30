@@ -1,8 +1,8 @@
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.ui.app.BaseView
+import com.pyamsoft.pydroid.ui.app.BaseScreen
 
-interface LicenseView : BaseView {
+interface LicenseView : BaseScreen {
 
   fun loadView(onDismiss: () -> Unit)
 

@@ -12,17 +12,18 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.util.toDp
 
 internal class RatingDialogViewImpl internal constructor(
-  inflater: LayoutInflater,
-  container: ViewGroup?,
+  private val inflater: LayoutInflater,
+  private val container: ViewGroup?,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
   private val changeLogIcon: Int,
   private val changelog: SpannedString
 ) : RatingDialogView {
 
-  private val binding = DialogRatingBinding.inflate(inflater, container, false)
+  private lateinit var binding: DialogRatingBinding
 
-  init {
+  override fun create() {
+    binding = DialogRatingBinding.inflate(inflater, container, false)
     initDialog()
   }
 

@@ -2,9 +2,9 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.app.BaseView
+import com.pyamsoft.pydroid.ui.app.BaseScreen
 
-interface AboutView : BaseView {
+interface AboutView : BaseScreen {
 
   fun saveInstanceState(outState: Bundle)
 

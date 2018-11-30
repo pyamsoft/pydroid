@@ -37,6 +37,8 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     PYDroid.obtain(requireContext().applicationContext)
         .plusAppComponent(viewLifecycleOwner, inflater, container)
         .inject(this)
+
+    rootView.create()
     return rootView.root()
   }
 

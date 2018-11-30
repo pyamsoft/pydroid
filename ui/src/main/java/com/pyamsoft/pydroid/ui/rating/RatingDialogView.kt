@@ -1,8 +1,8 @@
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.ui.app.BaseView
+import com.pyamsoft.pydroid.ui.app.BaseScreen
 
-interface RatingDialogView : BaseView {
+interface RatingDialogView : BaseScreen {
 
   fun onSaveRating(onSave: () -> Unit)
 

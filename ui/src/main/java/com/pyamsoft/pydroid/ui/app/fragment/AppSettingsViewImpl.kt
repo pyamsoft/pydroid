@@ -11,14 +11,18 @@ import com.pyamsoft.pydroid.ui.databinding.FragmentAppSettingsBinding
 
 internal class AppSettingsViewImpl internal constructor(
   private val owner: LifecycleOwner,
-  inflater: LayoutInflater,
-  container: ViewGroup?
+  private val inflater: LayoutInflater,
+  private val container: ViewGroup?
 ) : AppSettingsView, LifecycleObserver {
 
-  private val binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
+  private lateinit var binding: FragmentAppSettingsBinding
 
   init {
     owner.lifecycle.addObserver(this)
+  }
+
+  override fun create() {
+    binding = FragmentAppSettingsBinding.inflate(inflater, container, false)
   }
 
   @Suppress("unused")

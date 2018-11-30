@@ -1,5 +1,5 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
-import com.pyamsoft.pydroid.ui.app.BaseView
+import com.pyamsoft.pydroid.ui.app.BaseScreen
 
-interface AppSettingsView : BaseView
+interface AppSettingsView : BaseScreen

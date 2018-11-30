@@ -72,6 +72,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
         )
         .inject(this)
 
+    settingsPreferenceView.create()
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 

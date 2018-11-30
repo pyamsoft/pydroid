@@ -28,7 +28,9 @@ internal class SettingsPreferenceViewImpl internal constructor(
 
   init {
     owner.lifecycle.addObserver(this)
+  }
 
+  override fun create() {
     adjustIconTint()
     setupApplicationTitle()
   }

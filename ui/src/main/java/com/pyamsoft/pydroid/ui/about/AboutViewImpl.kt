@@ -17,24 +17,20 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 
 internal class AboutViewImpl internal constructor(
-  inflater: LayoutInflater,
-  container: ViewGroup?,
-  savedInstanceState: Bundle?,
+  private val inflater: LayoutInflater,
+  private val container: ViewGroup?,
+  private val savedInstanceState: Bundle?,
   private val activity: FragmentActivity,
   private val owner: LifecycleOwner
 ) : AboutView, LifecycleObserver {
 
-  private val binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
+  private lateinit var binding: FragmentAboutLibrariesBinding
   private lateinit var adapter: AboutAdapter
   private lateinit var refreshLatch: RefreshLatch
   private var lastViewedItem: Int = 0
 
   init {
     owner.lifecycle.addObserver(this)
-
-    restoreLastViewedItem(savedInstanceState)
-    setupRefreshLatch()
-    setupAboutList()
   }
 
   @Suppress("unused")
@@ -48,6 +44,13 @@ internal class AboutViewImpl internal constructor(
       adapter.clear()
       unbind()
     }
+  }
+
+  override fun create() {
+    binding = FragmentAboutLibrariesBinding.inflate(inflater, container, false)
+    restoreLastViewedItem(savedInstanceState)
+    setupRefreshLatch()
+    setupAboutList()
   }
 
   override fun root(): View {

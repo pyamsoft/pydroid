@@ -71,6 +71,8 @@ internal class RatingDialog : ToolbarDialog() {
             viewLifecycleOwner, inflater, container, changeLogIcon, changelog
         )
         .inject(this)
+
+    rootView.create()
     return rootView.root()
   }
 

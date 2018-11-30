@@ -1,8 +1,9 @@
 package com.pyamsoft.pydroid.ui.app.fragment
 
+import com.pyamsoft.pydroid.ui.app.BaseView
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
-interface SettingsPreferenceView {
+interface SettingsPreferenceView : BaseView {
 
   fun onMoreAppsClicked(onClick: () -> Unit)
 

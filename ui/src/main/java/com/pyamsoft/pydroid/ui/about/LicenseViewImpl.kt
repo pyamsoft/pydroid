@@ -28,19 +28,22 @@ import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
 
 internal class LicenseViewImpl internal constructor(
-  inflater: LayoutInflater,
-  container: ViewGroup?,
+  private val inflater: LayoutInflater,
+  private val container: ViewGroup?,
   private val owner: LifecycleOwner,
   private val imageLoader: ImageLoader,
   private val link: String,
   private val name: String
 ) : LicenseView, LifecycleObserver {
 
-  private val binding = DialogWebviewBinding.inflate(inflater, container, false)
+  private lateinit var binding: DialogWebviewBinding
 
   init {
     owner.lifecycle.addObserver(this)
+  }
 
+  override fun create() {
+    binding = DialogWebviewBinding.inflate(inflater, container, false)
     inflateToolbarMenu()
     setupWebview()
   }

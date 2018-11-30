@@ -34,6 +34,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
             viewLifecycleOwner, inflater, container, savedInstanceState, link, name
         )
         .inject(this)
+
+    rootView.create()
     return rootView.root()
   }
 

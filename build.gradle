@@ -18,7 +18,7 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.3.10'
+    kotlin_version = '1.3.11'
     dokka_version = "0.9.17"
   }
   repositories {
@@ -44,12 +44,12 @@ buildscript {
     fragment = "1.0.0"
     appCompat = "1.0.2"
 
-    repo = "0.2.0"
+    repo = "0.2.1"
     timber = "4.7.1"
-    moshi = "1.7.0"
-    retrofit = "2.4.0"
-    retrofitLogging = "3.11.0"
-    rxjava = "2.2.3"
+    moshi = "1.8.0"
+    retrofit = "2.5.0"
+    retrofitLogging = "3.12.0"
+    rxjava = "2.2.4"
     rxandroid = "2.1.0"
     glide = "4.8.0"
   }
@@ -87,7 +87,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.2.0-SNAPSHOT"
+  final String POM_VERSION = "18.2.1-SNAPSHOT"
 
   group = POM_GROUP
   version = POM_VERSION
@@ -117,6 +117,20 @@ subprojects {
       option("-Xlint:unchecked")
       option("-Xlint:deprecation")
       option("-Xmaxerrs", 10000)
+    }
+  }
+
+  // Ignore non-release libraries
+  dependencyUpdates.resolutionStrategy {
+    componentSelection { rules ->
+      rules.all { ComponentSelection selection ->
+        boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview'].any { qualifier ->
+          selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+        }
+        if (rejected) {
+          selection.reject('Release candidate')
+        }
+      }
     }
   }
 

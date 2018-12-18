@@ -22,6 +22,9 @@ dependencies {
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
   api "com.google.android.material:material:$materialDesign"
 
+  // Fluid resise
+  api "com.popinnow.android.fluidresizer:fluidresizer:$fluidresizer"
+
   api project(':bootstrap')
   api project(':loader')
 }

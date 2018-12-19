@@ -25,6 +25,11 @@ import com.pyamsoft.pydroid.ui.app.fragment.BackPressDelegate
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
+  /**
+   * Edit to use a custom FluidResizer instance
+   */
+  protected open val applyFluidResizer: Boolean = true
+
   private var capturedToolbar: Toolbar? = null
 
   override fun onBackPressed() {
@@ -35,8 +40,10 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    
-    FluidResizer.listen(this)
+
+    if (applyFluidResizer) {
+      FluidResizer.listen(this)
+    }
   }
 
   @CallSuper

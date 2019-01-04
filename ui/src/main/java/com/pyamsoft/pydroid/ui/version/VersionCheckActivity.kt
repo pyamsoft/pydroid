@@ -74,8 +74,7 @@ abstract class VersionCheckActivity : ActivityBase() {
         false,
         onCheckBegin = { forced: Boolean -> viewModel.publishCheckingForUpdatesEvent(forced) },
         onCheckSuccess = { newVersion: Int -> viewModel.publishUpdateFoundEvent(newVersion) },
-        onCheckError = { error: Throwable -> viewModel.publishUpdateErrorEvent(error) },
-        onCheckComplete = {}
+        onCheckError = { error: Throwable -> viewModel.publishUpdateErrorEvent(error) }
     )
   }
 

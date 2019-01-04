@@ -75,14 +75,12 @@ class VersionCheckViewModel internal constructor(
     force: Boolean,
     onCheckBegin: (forced: Boolean) -> Unit,
     onCheckSuccess: (newVersion: Int) -> Unit,
-    onCheckError: (error: Throwable) -> Unit,
-    onCheckComplete: () -> Unit
+    onCheckError: (error: Throwable) -> Unit
   ): Disposable {
     return interactor.checkVersion(force, packageName)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
         .doOnSubscribe { onCheckBegin(force) }
-        .doAfterTerminate { onCheckComplete() }
         .subscribe({ onCheckSuccess(it) }, {
           Timber.e(it, "Error checking for latest version")
           onCheckError(it)

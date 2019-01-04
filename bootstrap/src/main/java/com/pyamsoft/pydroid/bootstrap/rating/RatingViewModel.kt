@@ -64,18 +64,14 @@ class RatingViewModel internal constructor(
   @CheckResult
   fun loadRatingDialog(
     force: Boolean,
-    onLoadBegin: (forced: Boolean) -> Unit,
     onLoadSuccess: () -> Unit,
-    onLoadError: (error: Throwable) -> Unit,
-    onLoadComplete: () -> Unit
+    onLoadError: (error: Throwable) -> Unit
   ): Disposable {
     return interactor.needsToViewRating(force, currentVersion)
         .filter { it }
         .map { Unit }
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
-        .doOnSubscribe { onLoadBegin(force) }
-        .doAfterTerminate { onLoadComplete() }
         .subscribe({ onLoadSuccess() }, {
           Timber.e(it, "Error loading rating dialog")
           onLoadError(it)
@@ -84,7 +80,6 @@ class RatingViewModel internal constructor(
 
   @CheckResult
   fun saveRating(
-    onSaveBegin: () -> Unit,
     onSaveSuccess: () -> Unit,
     onSaveError: (error: Throwable) -> Unit,
     onSaveComplete: () -> Unit
@@ -92,7 +87,6 @@ class RatingViewModel internal constructor(
     return interactor.saveRating(currentVersion)
         .subscribeOn(backgroundScheduler)
         .observeOn(foregroundScheduler)
-        .doOnSubscribe { onSaveBegin() }
         .doAfterTerminate { onSaveComplete() }
         .subscribe({
           Timber.d("Saved current version code: %d", currentVersion)

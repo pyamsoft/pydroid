@@ -114,10 +114,8 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     // DialogFragment must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
     loadRatingDialogDisposable = ratingViewModel.loadRatingDialog(
         false,
-        onLoadBegin = {},
         onLoadSuccess = { ratingViewModel.publishShowRatingDialog() },
-        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) },
-        onLoadComplete = {}
+        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) }
     )
   }
 

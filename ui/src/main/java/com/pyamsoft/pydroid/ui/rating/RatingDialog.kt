@@ -82,8 +82,8 @@ internal class RatingDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    rootView.onSaveRating { saveRating() }
-    rootView.onCancelRating { dismiss() }
+    rootView.onSaveRating { saveRating(true) }
+    rootView.onCancelRating { saveRating(false) }
   }
 
   override fun onDestroyView() {
@@ -91,10 +91,13 @@ internal class RatingDialog : ToolbarDialog() {
     ratingSaveDisposable.tryDispose()
   }
 
-  private fun saveRating() {
+  private fun saveRating(visitMarket: Boolean) {
     ratingSaveDisposable = viewModel.saveRating(
-        onSaveBegin = {},
-        onSaveSuccess = { onRatingSaved() },
+        onSaveSuccess = {
+          if (visitMarket) {
+            onRatingSaved()
+          }
+        },
         onSaveError = { error: Throwable -> onRatingSaveError(error) },
         onSaveComplete = { dismiss() }
     )

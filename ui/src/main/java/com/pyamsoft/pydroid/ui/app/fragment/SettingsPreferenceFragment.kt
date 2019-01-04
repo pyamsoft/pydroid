@@ -146,10 +146,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
   protected open fun onShowChangelogClicked() {
     ratingDisposable = ratingViewModel.loadRatingDialog(
         true,
-        onLoadBegin = {},
         onLoadSuccess = { ratingViewModel.publishShowRatingDialog() },
-        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) },
-        onLoadComplete = {}
+        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) }
     )
   }
 
@@ -165,8 +163,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
         onCheckSuccess = { newVersion: Int ->
           versionViewModel.publishUpdateFoundEvent(newVersion)
         },
-        onCheckError = { error: Throwable -> versionViewModel.publishUpdateErrorEvent(error) },
-        onCheckComplete = {}
+        onCheckError = { error: Throwable -> versionViewModel.publishUpdateErrorEvent(error) }
     )
   }
 

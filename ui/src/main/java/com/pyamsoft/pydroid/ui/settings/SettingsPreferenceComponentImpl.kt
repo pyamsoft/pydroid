@@ -54,10 +54,7 @@ internal class SettingsPreferenceComponentImpl internal constructor(
     fragment.ratingViewModel = ratingModule.getViewModel()
     fragment.settingsPreferenceView = settingsPreferenceView
     fragment.versionPresenter = VersionCheckPresenter(
-        versionCheckModule.interactor,
-        versionCheckBus,
-        schedulerProvider.foregroundScheduler,
-        schedulerProvider.backgroundScheduler
+        versionCheckModule.interactor, versionCheckBus, schedulerProvider
     )
   }
 }

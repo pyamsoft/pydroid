@@ -15,9 +15,11 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version
+package com.pyamsoft.pydroid.ui.version.upgrade
 
-internal interface VersionCheckComponent {
+sealed class VersionUpgradeViewEvents {
 
-  fun inject(activity: VersionCheckActivity)
+  object Upgrade : VersionUpgradeViewEvents()
+
+  object Cancel : VersionUpgradeViewEvents()
 }

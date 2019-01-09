@@ -18,35 +18,34 @@
 package com.pyamsoft.pydroid.ui.version
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.version.VersionEvents.Loading
 import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateError
 import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateFound
-import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class VersionCheckPresenter internal constructor(
   private val interactor: VersionCheckInteractor,
   private val versionCheckBus: EventBus<VersionEvents>,
-  private val foregroundScheduler: Scheduler,
-  private val backgroundScheduler: Scheduler
+  private val schedulerProvider: SchedulerProvider
 ) {
 
   @CheckResult
   fun onUpdateEvent(func: (payload: VersionEvents) -> Unit): Disposable {
     return versionCheckBus.listen()
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe(func)
   }
 
   @CheckResult
   fun checkForUpdates(force: Boolean): Disposable {
     return interactor.checkVersion(force)
-        .subscribeOn(backgroundScheduler)
-        .observeOn(foregroundScheduler)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
         .doOnSubscribe { versionCheckBus.publish(Loading(force)) }
         .subscribe({ versionCheckBus.publish(UpdateFound(it.currentVersion, it.newVersion)) }, {
           Timber.e(it, "Error checking for latest version")

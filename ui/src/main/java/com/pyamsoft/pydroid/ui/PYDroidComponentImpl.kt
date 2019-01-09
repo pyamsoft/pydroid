@@ -45,10 +45,12 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.ui.version.VersionEvents
-import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponentImpl
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents
 
 internal class PYDroidComponentImpl internal constructor(
   debug: Boolean,
@@ -64,6 +66,7 @@ internal class PYDroidComponentImpl internal constructor(
   private val ratingSaveErrorBus = RxBus.create<RatingEvents.SaveErrorEvent>()
 
   private val versionCheckBus = RxBus.create<VersionEvents>()
+  private val versionUpgradeBus = RxBus.create<VersionUpgradeViewEvents>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -92,9 +95,19 @@ internal class PYDroidComponentImpl internal constructor(
     activity.ratingViewModel = ratingModule.getViewModel()
   }
 
-  override fun inject(dialog: VersionUpgradeDialog) {
-    dialog.applicationName = applicationName
+  override fun inject(activity: VersionCheckActivity) {
+    activity.presenter = VersionCheckPresenter(
+        versionModule.interactor, versionCheckBus, schedulerProvider
+    )
   }
+
+  override fun plusVersionUpgradeComponent(
+    parent: ViewGroup,
+    newVersion: Int
+  ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
+      parent, applicationName, currentVersion, newVersion,
+      versionUpgradeBus, schedulerProvider
+  )
 
   override fun plusSettingsComponent(
     owner: LifecycleOwner,
@@ -132,9 +145,6 @@ internal class PYDroidComponentImpl internal constructor(
         inflater, container, owner, loaderModule.provideImageLoader(), link, name
     )
   }
-
-  override fun plusVersionCheckComponent(): VersionCheckComponent =
-    VersionCheckComponentImpl(versionModule, versionCheckBus, schedulerProvider)
 
   override fun plusRatingDialogComponent(
     owner: LifecycleOwner,

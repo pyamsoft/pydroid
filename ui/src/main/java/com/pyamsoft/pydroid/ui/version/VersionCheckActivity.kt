@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionEvents.Loading
 import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateError
 import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateFound
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import timber.log.Timber
 
 abstract class VersionCheckActivity : ActivityBase() {
@@ -43,7 +44,6 @@ abstract class VersionCheckActivity : ActivityBase() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     PYDroid.obtain(this)
-        .plusVersionCheckComponent()
         .inject(this)
 
     listenUpdatesDisposable = presenter.onUpdateEvent {
@@ -80,7 +80,7 @@ abstract class VersionCheckActivity : ActivityBase() {
     updated: Int
   ) {
     Timber.d("Updated version found. %d => %d", current, updated)
-    VersionUpgradeDialog.newInstance(current, updated)
+    VersionUpgradeDialog.newInstance(updated)
         .show(this, VersionUpgradeDialog.TAG)
   }
 

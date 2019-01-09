@@ -15,24 +15,24 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version
+package com.pyamsoft.pydroid.ui.version.upgrade
 
+import android.view.ViewGroup
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.bus.EventBus
 
-internal class VersionCheckComponentImpl internal constructor(
-  private val versionCheckModule: VersionCheckModule,
-  private val versionCheckBus: EventBus<VersionEvents>,
+internal class VersionUpgradeComponentImpl internal constructor(
+  private val parent: ViewGroup,
+  private val applicationName: String,
+  private val currentVersion: Int,
+  private val newVersion: Int,
+  private val bus: EventBus<VersionUpgradeViewEvents>,
   private val schedulerProvider: SchedulerProvider
-) : VersionCheckComponent {
+) : VersionUpgradeComponent {
 
-  override fun inject(activity: VersionCheckActivity) {
-    activity.presenter = VersionCheckPresenter(
-        versionCheckModule.interactor,
-        versionCheckBus,
-        schedulerProvider.foregroundScheduler,
-        schedulerProvider.backgroundScheduler
-    )
+  override fun inject(dialog: VersionUpgradeDialog) {
+    val controlView = VersionUpgradeControlView(parent, bus)
+    val contentView = VersionUpgradeContentView(parent, applicationName, currentVersion, newVersion)
+    dialog.component = VersionUpgradeUiComponent(controlView, contentView, bus, schedulerProvider)
   }
 }

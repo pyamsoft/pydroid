@@ -1,0 +1,104 @@
+/*
+ * Copyright 2019 Peter Kenji Yamanaka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package com.pyamsoft.pydroid.ui.version.upgrade
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
+import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
+import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
+import com.pyamsoft.pydroid.ui.util.MarketLinker
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents.Upgrade
+
+internal class VersionUpgradeDialog : ToolbarDialog() {
+
+  internal lateinit var component: VersionUpgradeUiComponent
+
+  private var latestVersion: Int = 0
+  private var uiEventDisposable by singleDisposable()
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
+    require(latestVersion > 0)
+  }
+
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
+
+    val parent = requireNotNull(container)
+    PYDroid.obtain(parent.context.applicationContext)
+        .plusVersionUpgradeComponent(parent, latestVersion)
+        .inject(this)
+
+    return binding.root
+  }
+
+  override fun onViewCreated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    super.onViewCreated(view, savedInstanceState)
+
+    component.create()
+    listenForUiEvents(view)
+  }
+
+  private fun listenForUiEvents(view: View) {
+    uiEventDisposable = component.onUiEvent()
+        .subscribe {
+          when (it) {
+            is Cancel -> dismiss()
+            is Upgrade -> MarketLinker.linkToMarketPage(view.context.packageName, view)
+          }
+        }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    uiEventDisposable.tryDispose()
+  }
+
+  companion object {
+
+    internal const val TAG = "VersionUpgradeDialog"
+    private const val KEY_LATEST_VERSION = "key_latest_version"
+
+    @JvmStatic
+    @CheckResult
+    fun newInstance(latestVersion: Int): VersionUpgradeDialog {
+      return VersionUpgradeDialog()
+          .apply {
+            arguments = Bundle().apply {
+              putInt(KEY_LATEST_VERSION, latestVersion)
+            }
+          }
+    }
+  }
+}

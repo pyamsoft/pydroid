@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.DialogVersionUpgradeControlsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -34,8 +33,7 @@ class VersionUpgradeControlView internal constructor(
   private lateinit var binding: DialogVersionUpgradeControlsBinding
 
   override fun inflate() {
-    val root = parent.inflate(R.layout.dialog_version_upgrade_controls)
-    binding = DialogVersionUpgradeControlsBinding.bind(root)
+    binding = DialogVersionUpgradeControlsBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
 
     bindPositiveClick()

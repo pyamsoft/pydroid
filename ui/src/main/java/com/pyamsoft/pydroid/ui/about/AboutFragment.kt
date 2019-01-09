@@ -24,9 +24,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
-import com.pyamsoft.pydroid.bootstrap.about.AboutViewModel
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -34,13 +32,14 @@ import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
+import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
 class AboutFragment : ToolbarFragment() {
 
-  internal lateinit var rootView: AboutView
-  internal lateinit var viewModel: AboutViewModel
+  internal lateinit var component: AboutUiComponent
+  internal lateinit var presenter: AboutPresenter
 
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
@@ -59,14 +58,16 @@ class AboutFragment : ToolbarFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    PYDroid.obtain(requireContext())
+
+    val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
+
+    PYDroid.obtain(binding.root.context.applicationContext)
         .plusAboutComponent(
             viewLifecycleOwner, requireActivity(), inflater, container, savedInstanceState
         )
         .inject(this)
 
-    rootView.create()
-    return rootView.root()
+    return binding.root
   }
 
   override fun onViewCreated(
@@ -74,12 +75,9 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    loadLicensesDisposable = viewModel.loadLicenses(false,
-        onLoadBegin = { forced: Boolean -> rootView.onLoadBegin(forced) },
-        onLoadSuccess = { licenses: List<OssLibrary> -> rootView.onLoadSuccess(licenses) },
-        onLoadError = { error: Throwable -> rootView.onLoadError(error) },
-        onLoadComplete = { rootView.onLoadComplete() }
-    )
+    component.create()
+
+    loadLicensesDisposable = presenter.loadLicenses(false)
   }
 
   override fun onDestroyView() {
@@ -111,11 +109,6 @@ class AboutFragment : ToolbarFragment() {
         }
       }
     }
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    rootView.saveInstanceState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   companion object {

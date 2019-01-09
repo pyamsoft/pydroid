@@ -34,8 +34,7 @@ class VersionUpgradeContentView internal constructor(
   private lateinit var binding: DialogVersionUpgradeContentBinding
 
   override fun inflate() {
-    val root = parent.inflate(R.layout.dialog_version_upgrade_content)
-    binding = DialogVersionUpgradeContentBinding.bind(root)
+    binding = DialogVersionUpgradeContentBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
 
     setApplicationMessage()

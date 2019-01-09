@@ -22,11 +22,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
+import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents.Cancel
@@ -37,7 +36,6 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   internal lateinit var component: VersionUpgradeUiComponent
 
   private var latestVersion: Int = 0
-  private var uiEventDisposable by singleDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -70,7 +68,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   }
 
   private fun listenForUiEvents(view: View) {
-    uiEventDisposable = component.onUiEvent()
+    component.onUiEvent()
         .subscribe {
           when (it) {
             is Cancel -> dismiss()
@@ -80,11 +78,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
             }
           }
         }
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    uiEventDisposable.tryDispose()
+        .destroy(viewLifecycleOwner)
   }
 
   override fun onResume() {

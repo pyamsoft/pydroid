@@ -21,6 +21,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import androidx.annotation.CheckResult
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -29,7 +30,7 @@ import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
 
 class RefreshLatch private constructor(
-  owner: LifecycleOwner,
+  lifecycle: Lifecycle,
   private val delay: Long = 300L,
   private val minShowTime: Long = 700L,
   private val onRefreshed: (Boolean) -> Unit
@@ -41,20 +42,21 @@ class RefreshLatch private constructor(
     Handler(Looper.getMainLooper())
   }
 
-  private var lifecycleOwner: LifecycleOwner? = null
+  private var lifecycle: Lifecycle? = null
   private var lastShownTime: Long = 0L
   private var refreshState: Boolean = false
 
   init {
-    owner.lifecycle.addObserver(this)
-    lifecycleOwner = owner
+    lifecycle.addObserver(this)
+    this.lifecycle = lifecycle
   }
 
+  @Suppress("unused")
   @OnLifecycleEvent(ON_DESTROY)
   internal fun onDestroy() {
     clearOldCommands()
-    lifecycleOwner?.lifecycle?.removeObserver(this)
-    lifecycleOwner = null
+    lifecycle?.removeObserver(this)
+    lifecycle = null
   }
 
   private fun show() {
@@ -120,7 +122,16 @@ class RefreshLatch private constructor(
       owner: LifecycleOwner,
       onRefreshed: (Boolean) -> Unit
     ): RefreshLatch {
-      return RefreshLatch(owner, onRefreshed = onRefreshed)
+      return create(owner.lifecycle, onRefreshed)
+    }
+
+    @JvmStatic
+    @CheckResult
+    fun create(
+      lifecycle: Lifecycle,
+      onRefreshed: (Boolean) -> Unit
+    ): RefreshLatch {
+      return RefreshLatch(lifecycle, onRefreshed = onRefreshed)
     }
 
     @JvmStatic
@@ -130,7 +141,17 @@ class RefreshLatch private constructor(
       delay: Long,
       onRefreshed: (Boolean) -> Unit
     ): RefreshLatch {
-      return RefreshLatch(owner, delay = delay, onRefreshed = onRefreshed)
+      return create(owner.lifecycle, delay = delay, onRefreshed = onRefreshed)
+    }
+
+    @JvmStatic
+    @CheckResult
+    fun create(
+      lifecycle: Lifecycle,
+      delay: Long,
+      onRefreshed: (Boolean) -> Unit
+    ): RefreshLatch {
+      return RefreshLatch(lifecycle, delay = delay, onRefreshed = onRefreshed)
     }
 
     @JvmStatic
@@ -141,7 +162,18 @@ class RefreshLatch private constructor(
       minShowTime: Long,
       onRefreshed: (Boolean) -> Unit
     ): RefreshLatch {
-      return RefreshLatch(owner, delay, minShowTime, onRefreshed)
+      return create(owner.lifecycle, delay, minShowTime, onRefreshed)
+    }
+
+    @JvmStatic
+    @CheckResult
+    fun create(
+      lifecycle: Lifecycle,
+      delay: Long,
+      minShowTime: Long,
+      onRefreshed: (Boolean) -> Unit
+    ): RefreshLatch {
+      return RefreshLatch(lifecycle, delay, minShowTime, onRefreshed)
     }
   }
 }

@@ -17,15 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import androidx.annotation.CheckResult
-import androidx.lifecycle.Lifecycle
-import io.reactivex.Observable
+interface UiToggleView : UiView {
 
-interface UiComponent<T : Any> {
+  fun show()
 
-  fun create(lifecycle: Lifecycle)
-
-  @CheckResult
-  fun onUiEvent(): Observable<T>
+  fun hide()
 
 }

@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
+import androidx.lifecycle.Lifecycle
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
@@ -29,7 +30,7 @@ class VersionUpgradeUiComponent internal constructor(
   private val schedulerProvider: SchedulerProvider
 ) : UiComponent<VersionUpgradeViewEvents> {
 
-  override fun create() {
+  override fun create(lifecycle: Lifecycle) {
     contentView.inflate()
     controlsView.inflate()
   }

@@ -15,17 +15,18 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.about
 
-import androidx.annotation.CheckResult
-import androidx.lifecycle.Lifecycle
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-interface UiComponent<T : Any> {
+sealed class AboutEvents {
 
-  fun create(lifecycle: Lifecycle)
+  object Loading : AboutEvents()
 
-  @CheckResult
-  fun onUiEvent(): Observable<T>
+  data class LicensesLoaded(val libraries: List<OssLibrary>) : AboutEvents()
+
+  data class LoadError(val error: Throwable) : AboutEvents()
+
+  object LoadComplete : AboutEvents()
 
 }

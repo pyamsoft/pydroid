@@ -18,17 +18,14 @@
 package com.pyamsoft.pydroid.ui.arch
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.annotation.LayoutRes
 
 interface UiView {
 
   @CheckResult
-  fun ViewGroup.inflate(@LayoutRes layout: Int): View {
-    val inflater = LayoutInflater.from(context)
-    return inflater.inflate(layout, this, false)
+  fun ViewGroup.inflater(): LayoutInflater {
+    return LayoutInflater.from(context)
   }
 
   fun inflate()

@@ -17,15 +17,29 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import androidx.annotation.CheckResult
 import androidx.lifecycle.Lifecycle
-import io.reactivex.Observable
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.core.tryDispose
+import io.reactivex.disposables.Disposable
 
-interface UiComponent<T : Any> {
+fun Disposable.destroy(owner: LifecycleOwner) {
+  destroy(owner.lifecycle)
+}
 
-  fun create(lifecycle: Lifecycle)
+fun Disposable.destroy(lifecycle: Lifecycle) {
+  val self = this
 
-  @CheckResult
-  fun onUiEvent(): Observable<T>
+  lifecycle.addObserver(object : LifecycleObserver {
 
+    @Suppress("unused")
+    @OnLifecycleEvent(ON_DESTROY)
+    fun onDestroy() {
+      lifecycle.removeObserver(this)
+      self.tryDispose()
+    }
+
+  })
 }

@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -32,6 +32,8 @@ import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarPreferenceFragment
+import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate

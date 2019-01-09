@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : ToolbarFragment() {

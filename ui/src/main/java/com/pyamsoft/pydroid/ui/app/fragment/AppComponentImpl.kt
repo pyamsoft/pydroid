@@ -20,6 +20,8 @@ package com.pyamsoft.pydroid.ui.app.fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.ui.settings.AppSettingsFragment
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewImpl
 
 internal class AppComponentImpl internal constructor(
   owner: LifecycleOwner,
@@ -27,7 +29,11 @@ internal class AppComponentImpl internal constructor(
   container: ViewGroup?
 ) : AppComponent {
 
-  private val appSettingsView by lazy { AppSettingsViewImpl(owner, inflater, container) }
+  private val appSettingsView by lazy {
+    AppSettingsViewImpl(
+        owner, inflater, container
+    )
+  }
 
   override fun inject(fragment: AppSettingsFragment) {
     fragment.rootView = appSettingsView

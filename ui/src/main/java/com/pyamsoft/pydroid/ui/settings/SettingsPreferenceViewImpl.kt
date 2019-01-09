@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.settings
 
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY

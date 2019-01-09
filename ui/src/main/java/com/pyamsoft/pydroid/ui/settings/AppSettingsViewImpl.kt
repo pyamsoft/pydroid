@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.settings
 
 import android.view.LayoutInflater
 import android.view.View

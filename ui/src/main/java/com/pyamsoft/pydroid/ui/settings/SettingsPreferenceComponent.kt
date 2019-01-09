@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.settings
 
 internal interface SettingsPreferenceComponent {
 

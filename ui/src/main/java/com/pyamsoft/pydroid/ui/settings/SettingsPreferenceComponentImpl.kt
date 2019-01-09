@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.settings
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen

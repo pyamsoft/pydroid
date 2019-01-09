@@ -28,7 +28,7 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceComponent
+import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent

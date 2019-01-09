@@ -40,8 +40,8 @@ import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceComponent
-import com.pyamsoft.pydroid.ui.app.fragment.SettingsPreferenceComponentImpl
+import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
+import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
@@ -106,10 +106,11 @@ internal class PYDroidComponentImpl internal constructor(
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
-  ): SettingsPreferenceComponent = SettingsPreferenceComponentImpl(
-      ratingModule, versionModule, theming, owner, preferenceScreen,
-      applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation
-  )
+  ): SettingsPreferenceComponent =
+    SettingsPreferenceComponentImpl(
+        ratingModule, versionModule, theming, owner, preferenceScreen,
+        applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation
+    )
 
   override fun plusAboutComponent(
     owner: LifecycleOwner,

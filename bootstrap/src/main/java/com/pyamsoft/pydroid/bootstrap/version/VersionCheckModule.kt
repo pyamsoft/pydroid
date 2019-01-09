@@ -21,11 +21,9 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.moshi.MoshiPersister
 import com.popinnow.android.repo.newRepoBuilder
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -41,40 +39,37 @@ class VersionCheckModule(
   context: Context,
   enforcer: Enforcer,
   debug: Boolean,
-  private val currentVersion: Int,
-  private val versionCheckBeginBus: EventBus<VersionEvents.Begin>,
-  private val versionCheckFound: EventBus<VersionEvents.UpdateFound>,
-  private val versionCheckError: EventBus<VersionEvents.UpdateError>,
-  private val schedulerProvider: SchedulerProvider
+  val currentVersion: Int
 ) {
 
-  private val packageName: String = context.packageName
-  private val cachedInteractor: VersionCheckInteractor
+  val interactor: VersionCheckInteractor
 
-  private val moshi = Moshi.Builder()
+  val moshi = Moshi.Builder()
       .build()
 
-  private val repo = newRepoBuilder<Int>()
+  private val repo = newRepoBuilder<UpdatePayload>()
       .memoryCache(30, MINUTES)
       .persister(
           2, HOURS,
           File(context.cacheDir, "versioncache"),
-          MoshiPersister.create(moshi, Int::class.javaObjectType)
+          MoshiPersister.create(moshi, UpdatePayload::class.java)
       )
       .build()
 
   init {
     val versionCheckApi = VersionCheckApi(provideRetrofit(provideOkHttpClient(debug)))
     val versionCheckService = versionCheckApi.create(VersionCheckService::class.java)
-    val networkStatusProvider = NetworkStatusProviderImpl(context.applicationContext)
+    val networkStatusProvider = NetworkStatusProviderImpl(context)
     val minimumApiProvider = MinimumApiProviderImpl()
 
-    val network =
-      VersionCheckInteractorNetwork(
-          enforcer, minimumApiProvider,
-          networkStatusProvider, versionCheckService
-      )
-    cachedInteractor = VersionCheckInteractorImpl(enforcer, currentVersion, debug, network, repo)
+    val network = VersionCheckInteractorNetwork(
+        currentVersion,
+        context.packageName,
+        enforcer, minimumApiProvider,
+        networkStatusProvider, versionCheckService
+    )
+
+    interactor = VersionCheckInteractorImpl(enforcer, debug, network, repo)
   }
 
   @CheckResult
@@ -101,25 +96,6 @@ class VersionCheckModule(
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
-  }
-
-  @CheckResult
-  fun getMoshi(): Moshi {
-    return moshi
-  }
-
-  @CheckResult
-  fun getViewModel(): VersionCheckViewModel {
-    return VersionCheckViewModel(
-        currentVersion,
-        packageName,
-        cachedInteractor,
-        versionCheckBeginBus,
-        versionCheckFound,
-        versionCheckError,
-        schedulerProvider.foregroundScheduler,
-        schedulerProvider.backgroundScheduler
-    )
   }
 
   companion object {

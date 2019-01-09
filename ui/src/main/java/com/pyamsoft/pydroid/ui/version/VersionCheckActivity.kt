@@ -20,22 +20,22 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.version.VersionEvents.Loading
+import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateError
+import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateFound
 import timber.log.Timber
 
 abstract class VersionCheckActivity : ActivityBase() {
 
-  internal lateinit var viewModel: VersionCheckViewModel
+  internal lateinit var presenter: VersionCheckPresenter
   private var checkUpdatesDisposable by singleDisposable()
-  private var beginUpdatesDisposable by singleDisposable()
-  private var foundUpdatesDisposable by singleDisposable()
-  private var errorUpdatesDisposable by singleDisposable()
+  private var listenUpdatesDisposable by singleDisposable()
 
   abstract val rootView: View
 
@@ -46,36 +46,26 @@ abstract class VersionCheckActivity : ActivityBase() {
         .plusVersionCheckComponent()
         .inject(this)
 
-    beginUpdatesDisposable = viewModel.onCheckingForUpdates { forced: Boolean ->
-      onCheckingForUpdates(forced)
+    listenUpdatesDisposable = presenter.onUpdateEvent {
+      when (it) {
+        is Loading -> onCheckingForUpdates(it.forced)
+        is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
+        is UpdateError -> onUpdatedVersionError(it.error)
+      }
     }
 
-    foundUpdatesDisposable = viewModel.onUpdateFound { currentVersion, newVersion ->
-      onUpdatedVersionFound(currentVersion, newVersion)
-    }
-
-    errorUpdatesDisposable = viewModel.onUpdateError { error: Throwable ->
-      onUpdatedVersionError(error)
-    }
   }
 
   override fun onDestroy() {
     super.onDestroy()
     checkUpdatesDisposable.tryDispose()
-    beginUpdatesDisposable.tryDispose()
-    foundUpdatesDisposable.tryDispose()
-    errorUpdatesDisposable.tryDispose()
+    listenUpdatesDisposable.tryDispose()
   }
 
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
-    checkUpdatesDisposable = viewModel.checkForUpdates(
-        false,
-        onCheckBegin = { forced: Boolean -> viewModel.publishCheckingForUpdatesEvent(forced) },
-        onCheckSuccess = { newVersion: Int -> viewModel.publishUpdateFoundEvent(newVersion) },
-        onCheckError = { error: Throwable -> viewModel.publishUpdateErrorEvent(error) }
-    )
+    checkUpdatesDisposable = presenter.checkForUpdates(false)
   }
 
   private fun onCheckingForUpdates(showSnackbar: Boolean) {

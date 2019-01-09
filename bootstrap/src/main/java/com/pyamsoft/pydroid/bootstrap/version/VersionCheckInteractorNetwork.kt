@@ -26,6 +26,8 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 
 internal class VersionCheckInteractorNetwork internal constructor(
+  private val currentVersion: Int,
+  private val packageName: String,
   private val enforcer: Enforcer,
   private val minimumApiProvider: MinimumApiProvider,
   private val networkStatusProvider: NetworkStatusProvider,
@@ -50,10 +52,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
     return versionCode
   }
 
-  override fun checkVersion(
-    force: Boolean,
-    packageName: String
-  ): Maybe<Int> {
+  override fun checkVersion(force: Boolean): Maybe<UpdatePayload> {
     return Single.defer {
       enforcer.assertNotOnMainThread()
       if (!networkStatusProvider.hasConnection()) {
@@ -69,6 +68,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
       }
     }
         .map { versionCodeForApi(it) }
+        .map { UpdatePayload(currentVersion, it) }
         .toMaybe()
   }
 }

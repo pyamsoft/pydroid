@@ -26,7 +26,6 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
 import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -37,13 +36,14 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
 abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var theming: Theming
-  internal lateinit var versionViewModel: VersionCheckViewModel
+  internal lateinit var versionPresenter: VersionCheckPresenter
   internal lateinit var ratingViewModel: RatingViewModel
   internal lateinit var settingsPreferenceView: SettingsPreferenceView
 
@@ -157,16 +157,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
    * Checks the server for updates, override to use a custom behavior
    */
   protected open fun onCheckForUpdatesClicked() {
-    checkUpdatesDisposable = versionViewModel.checkForUpdates(
-        true,
-        onCheckBegin = { forced: Boolean ->
-          versionViewModel.publishCheckingForUpdatesEvent(forced)
-        },
-        onCheckSuccess = { newVersion: Int ->
-          versionViewModel.publishUpdateFoundEvent(newVersion)
-        },
-        onCheckError = { error: Throwable -> versionViewModel.publishUpdateErrorEvent(error) }
-    )
+    checkUpdatesDisposable = versionPresenter.checkForUpdates(true)
   }
 
   protected open val preferenceXmlResId: Int = 0

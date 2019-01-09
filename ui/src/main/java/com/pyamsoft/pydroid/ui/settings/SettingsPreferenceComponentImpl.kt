@@ -19,14 +19,20 @@ package com.pyamsoft.pydroid.ui.settings
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.ui.version.VersionEvents
 
 internal class SettingsPreferenceComponentImpl internal constructor(
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
   private val theming: Theming,
+  private val versionCheckBus: EventBus<VersionEvents>,
+  private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner,
   preferenceScreen: PreferenceScreen,
   applicationName: String,
@@ -46,7 +52,12 @@ internal class SettingsPreferenceComponentImpl internal constructor(
   override fun inject(fragment: SettingsPreferenceFragment) {
     fragment.theming = theming
     fragment.ratingViewModel = ratingModule.getViewModel()
-    fragment.versionViewModel = versionCheckModule.getViewModel()
     fragment.settingsPreferenceView = settingsPreferenceView
+    fragment.versionPresenter = VersionCheckPresenter(
+        versionCheckModule.interactor,
+        versionCheckBus,
+        schedulerProvider.foregroundScheduler,
+        schedulerProvider.backgroundScheduler
+    )
   }
 }

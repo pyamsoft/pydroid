@@ -17,13 +17,22 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.core.bus.EventBus
 
 internal class VersionCheckComponentImpl internal constructor(
-  private val versionCheckModule: VersionCheckModule
+  private val versionCheckModule: VersionCheckModule,
+  private val versionCheckBus: EventBus<VersionEvents>,
+  private val schedulerProvider: SchedulerProvider
 ) : VersionCheckComponent {
 
   override fun inject(activity: VersionCheckActivity) {
-    activity.viewModel = versionCheckModule.getViewModel()
+    activity.presenter = VersionCheckPresenter(
+        versionCheckModule.interactor,
+        versionCheckBus,
+        schedulerProvider.foregroundScheduler,
+        schedulerProvider.backgroundScheduler
+    )
   }
 }

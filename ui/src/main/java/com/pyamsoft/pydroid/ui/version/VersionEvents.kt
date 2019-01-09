@@ -15,13 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.ui.version
 
-import androidx.annotation.CheckResult
-import io.reactivex.Maybe
+sealed class VersionEvents {
 
-interface VersionCheckInteractor {
+  data class Loading(val forced: Boolean) : VersionEvents()
 
-  @CheckResult
-  fun checkVersion(force: Boolean): Maybe<UpdatePayload>
+  data class UpdateFound(
+    val currentVersion: Int,
+    val newVersion: Int
+  ) : VersionEvents()
+
+  data class UpdateError(val error: Throwable) : VersionEvents()
+
 }

@@ -24,23 +24,21 @@ import io.reactivex.Maybe
 
 internal class VersionCheckInteractorImpl internal constructor(
   private val enforcer: Enforcer,
-  private val currentVersionCode: Int,
   private val debug: Boolean,
   private val network: VersionCheckInteractor,
-  private val repo: Repo<Int>
+  private val repo: Repo<UpdatePayload>
 ) : VersionCheckInteractor, Cache {
 
-  override fun checkVersion(
-    force: Boolean,
-    packageName: String
-  ): Maybe<Int> {
+  override fun checkVersion(force: Boolean): Maybe<UpdatePayload> {
     return repo.get(force) {
       enforcer.assertNotOnMainThread()
-      return@get network.checkVersion(true, packageName)
-          // The actual network facing implementation should always return a valid Single wrapped as a Maybe
+      // The actual network facing implementation should always
+      // return a valid Single wrapped as a Maybe
+      return@get network.checkVersion(true)
           .toSingle()
     }
-        .filter { currentVersionCode < it || (debug && force) }
+        .filter { it.currentVersion < it.newVersion || (debug && force) }
+
   }
 
   override fun clearCache() {

@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingEvents
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionEvents
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
@@ -40,32 +39,31 @@ import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
-import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
-import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
+import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
+import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckComponentImpl
+import com.pyamsoft.pydroid.ui.version.VersionEvents
 import com.pyamsoft.pydroid.ui.version.VersionUpgradeDialog
 
 internal class PYDroidComponentImpl internal constructor(
+  debug: Boolean,
   application: Application,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val currentVersion: Int,
-  debug: Boolean,
-  schedulerProvider: SchedulerProvider
+  private val schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
   private val showRatingBus = RxBus.create<RatingEvents.ShowEvent>()
   private val showRatingErrorBus = RxBus.create<RatingEvents.ShowErrorEvent>()
   private val ratingSaveErrorBus = RxBus.create<RatingEvents.SaveErrorEvent>()
 
-  private val versionCheckBeginBus = RxBus.create<VersionEvents.Begin>()
-  private val versionCheckFound = RxBus.create<VersionEvents.UpdateFound>()
-  private val versionCheckError = RxBus.create<VersionEvents.UpdateError>()
+  private val versionCheckBus = RxBus.create<VersionEvents>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -79,10 +77,7 @@ internal class PYDroidComponentImpl internal constructor(
     )
   }
   private val versionModule by lazy {
-    VersionCheckModule(
-        application, enforcer, debug, currentVersion,
-        versionCheckBeginBus, versionCheckFound, versionCheckError, schedulerProvider
-    )
+    VersionCheckModule(application, enforcer, debug, currentVersion)
   }
 
   override fun enforcer(): Enforcer {
@@ -108,8 +103,10 @@ internal class PYDroidComponentImpl internal constructor(
     hideUpgradeInformation: Boolean
   ): SettingsPreferenceComponent =
     SettingsPreferenceComponentImpl(
-        ratingModule, versionModule, theming, owner, preferenceScreen,
-        applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation
+        ratingModule, versionModule, theming,
+        versionCheckBus, schedulerProvider,
+        owner, preferenceScreen, applicationName,
+        bugreportUrl, hideClearAll, hideUpgradeInformation
     )
 
   override fun plusAboutComponent(
@@ -137,7 +134,7 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun plusVersionCheckComponent(): VersionCheckComponent =
-    VersionCheckComponentImpl(versionModule)
+    VersionCheckComponentImpl(versionModule, versionCheckBus, schedulerProvider)
 
   override fun plusRatingDialogComponent(
     owner: LifecycleOwner,

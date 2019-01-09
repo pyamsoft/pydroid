@@ -47,3 +47,4 @@ fun Fragment.requireView(): View {
 fun Fragment.requireArguments(): Bundle {
   return checkNotNull(arguments) { "Arguments are required and cannot be null." }
 }
+

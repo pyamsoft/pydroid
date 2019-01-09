@@ -23,6 +23,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.about.license.ViewLicenseDialog
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemSpacerBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener

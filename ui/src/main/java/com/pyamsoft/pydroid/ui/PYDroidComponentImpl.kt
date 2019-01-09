@@ -35,8 +35,8 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.ViewLicenseComponent
-import com.pyamsoft.pydroid.ui.about.ViewLicenseComponentImpl
+import com.pyamsoft.pydroid.ui.about.license.ViewLicenseComponent
+import com.pyamsoft.pydroid.ui.about.license.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingActivity

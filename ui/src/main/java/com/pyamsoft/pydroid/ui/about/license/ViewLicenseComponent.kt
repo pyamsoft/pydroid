@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.license
 
 internal interface ViewLicenseComponent {
 

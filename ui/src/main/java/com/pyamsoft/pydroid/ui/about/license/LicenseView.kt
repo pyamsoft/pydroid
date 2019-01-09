@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.license
 
 import com.pyamsoft.pydroid.ui.app.BaseScreen
 

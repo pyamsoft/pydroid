@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.license
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,7 +32,9 @@ internal class ViewLicenseComponentImpl internal constructor(
 ) : ViewLicenseComponent {
 
   private val licenseView by lazy {
-    LicenseViewImpl(inflater, container, owner, imageLoader, link, name)
+    LicenseViewImpl(
+        inflater, container, owner, imageLoader, link, name
+    )
   }
 
   override fun inject(dialog: ViewLicenseDialog) {

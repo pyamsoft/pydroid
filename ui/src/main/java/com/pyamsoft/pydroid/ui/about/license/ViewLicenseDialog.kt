@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.license
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -90,7 +90,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
       name: String,
       link: String
     ): ViewLicenseDialog {
-      return ViewLicenseDialog().apply {
+      return ViewLicenseDialog()
+          .apply {
         arguments = Bundle().apply {
           putString(NAME, name)
           putString(LINK, link)

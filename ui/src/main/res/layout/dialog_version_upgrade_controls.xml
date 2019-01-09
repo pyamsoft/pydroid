@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/upgrade"
-        style="?attr/buttonBarPositiveButtonStyle"
+        style="?attr/borderlessButtonStyle"
         />
 
     <Button
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/later"
-        style="?attr/buttonBarNegativeButtonStyle"
+        style="?attr/borderlessButtonStyle"
         />
 
   </LinearLayout>

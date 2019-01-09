@@ -52,9 +52,8 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   ): View? {
     val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
 
-    val parent = requireNotNull(container)
-    PYDroid.obtain(parent.context.applicationContext)
-        .plusVersionUpgradeComponent(parent, latestVersion)
+    PYDroid.obtain(binding.layoutRoot.context.applicationContext)
+        .plusVersionUpgradeComponent(binding.layoutRoot, latestVersion)
         .inject(this)
 
     return binding.root
@@ -75,7 +74,10 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
         .subscribe {
           when (it) {
             is Cancel -> dismiss()
-            is Upgrade -> MarketLinker.linkToMarketPage(view.context.packageName, view)
+            is Upgrade -> {
+              MarketLinker.linkToMarketPage(view.context.packageName, view)
+              dismiss()
+            }
           }
         }
   }
@@ -83,6 +85,14 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   override fun onDestroyView() {
     super.onDestroyView()
     uiEventDisposable.tryDispose()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    dialog.window?.setLayout(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.WRAP_CONTENT
+    )
   }
 
   companion object {

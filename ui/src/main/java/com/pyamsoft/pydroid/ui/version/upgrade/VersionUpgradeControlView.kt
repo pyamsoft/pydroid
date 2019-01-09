@@ -34,8 +34,9 @@ class VersionUpgradeControlView internal constructor(
   private lateinit var binding: DialogVersionUpgradeControlsBinding
 
   override fun inflate() {
-    val root = parent.inflateAndAdd(R.layout.dialog_version_upgrade_controls)
+    val root = parent.inflate(R.layout.dialog_version_upgrade_controls)
     binding = DialogVersionUpgradeControlsBinding.bind(root)
+    parent.addView(binding.root)
 
     bindPositiveClick()
     bindNegativeClick()

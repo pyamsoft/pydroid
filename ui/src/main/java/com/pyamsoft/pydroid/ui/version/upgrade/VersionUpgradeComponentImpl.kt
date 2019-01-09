@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 
 internal class VersionUpgradeComponentImpl internal constructor(
   private val parent: ViewGroup,
-  private val applicationName: String,
+  private val name: String,
   private val currentVersion: Int,
   private val newVersion: Int,
   private val bus: EventBus<VersionUpgradeViewEvents>,
@@ -32,7 +32,7 @@ internal class VersionUpgradeComponentImpl internal constructor(
 
   override fun inject(dialog: VersionUpgradeDialog) {
     val controlView = VersionUpgradeControlView(parent, bus)
-    val contentView = VersionUpgradeContentView(parent, applicationName, currentVersion, newVersion)
+    val contentView = VersionUpgradeContentView(parent, name, currentVersion, newVersion)
     dialog.component = VersionUpgradeUiComponent(controlView, contentView, bus, schedulerProvider)
   }
 }

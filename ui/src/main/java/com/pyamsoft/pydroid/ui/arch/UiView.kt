@@ -26,9 +26,9 @@ import androidx.annotation.LayoutRes
 interface UiView {
 
   @CheckResult
-  fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int): View {
+  fun ViewGroup.inflate(@LayoutRes layout: Int): View {
     val inflater = LayoutInflater.from(context)
-    return inflater.inflate(layout, this, true)
+    return inflater.inflate(layout, this, false)
   }
 
   fun inflate()

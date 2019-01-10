@@ -39,6 +39,7 @@ import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
+import com.pyamsoft.pydroid.ui.util.show
 
 class AboutFragment : ToolbarFragment() {
 
@@ -83,7 +84,9 @@ class AboutFragment : ToolbarFragment() {
         .subscribe {
           when (it) {
             is ViewLicense -> ViewLicenseDialog.newInstance(it.name, it.url)
+                .show(requireActivity(), ViewLicenseDialog.TAG)
             is VisitHomepage -> ViewLicenseDialog.newInstance(it.name, it.url)
+                .show(requireActivity(), ViewLicenseDialog.TAG)
           }
         }
         .destroy(this)

@@ -17,11 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Fake
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Real
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutSpaceBinding
 
 internal class AboutAdapter internal constructor() : RecyclerView.Adapter<BaseViewHolder>() {
 
@@ -58,10 +61,11 @@ internal class AboutAdapter internal constructor() : RecyclerView.Adapter<BaseVi
     parent: ViewGroup,
     viewType: Int
   ): BaseViewHolder {
+    val inflater = LayoutInflater.from(parent.context)
     if (viewType == VIEW_TYPE_REAL) {
-      return AboutViewHolder(parent)
+      return AboutViewHolder(AdapterItemAboutLicenseBinding.inflate(inflater, parent, false))
     } else {
-      return SpaceViewHolder(parent)
+      return SpaceViewHolder(AdapterItemAboutSpaceBinding.inflate(inflater, parent, false))
     }
   }
 

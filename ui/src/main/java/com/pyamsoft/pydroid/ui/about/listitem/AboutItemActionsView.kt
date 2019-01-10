@@ -48,19 +48,11 @@ internal class AboutItemActionsView internal constructor(
   override fun bind(model: OssLibrary) {
     binding.apply {
       aboutLibraryViewLicense.setOnDebouncedClickListener {
-        bus.publish(
-            ViewLicense(
-                model.name, model.licenseUrl
-            )
-        )
+        bus.publish(ViewLicense(model.name, model.licenseUrl))
       }
 
       aboutLibraryVisitHomepage.setOnDebouncedClickListener {
-        bus.publish(
-            VisitHomepage(
-                model.name, model.libraryUrl
-            )
-        )
+        bus.publish(VisitHomepage(model.name, model.libraryUrl))
       }
     }
   }

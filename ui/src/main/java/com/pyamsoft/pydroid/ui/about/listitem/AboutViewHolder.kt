@@ -17,25 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
 
 internal class AboutViewHolder internal constructor(
-  container: ViewGroup
-) : BaseViewHolder(
-    AdapterItemAboutLicenseBinding.inflate(
-        LayoutInflater.from(container.context), container, false
-    ).root
-) {
+  binding: AdapterItemAboutLicenseBinding
+) : BaseViewHolder(binding.root) {
 
   internal lateinit var component: AboutItemUiComponent
 
   init {
-    val binding = AdapterItemAboutLicenseBinding.bind(itemView)
-    PYDroid.obtain(container.context.applicationContext)
+    PYDroid.obtain(itemView.context.applicationContext)
         .plusAboutItemComponent(binding.listitemRoot)
         .inject(this)
 

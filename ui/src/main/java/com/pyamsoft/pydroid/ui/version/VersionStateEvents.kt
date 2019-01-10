@@ -17,15 +17,17 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-sealed class VersionEvents {
+sealed class VersionStateEvents {
 
-  data class Loading(val forced: Boolean) : VersionEvents()
+  data class Loading(val forced: Boolean) : VersionStateEvents()
 
   data class UpdateFound(
     val currentVersion: Int,
     val newVersion: Int
-  ) : VersionEvents()
+  ) : VersionStateEvents()
 
-  data class UpdateError(val error: Throwable) : VersionEvents()
+  data class UpdateError(val error: Throwable) : VersionStateEvents()
+
+  object UpdateComplete : VersionStateEvents()
 
 }

@@ -17,27 +17,31 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
+import android.os.Bundle
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.databinding.DialogVersionUpgradeControlsBinding
+import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeControlsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Upgrade
 
 class VersionUpgradeControlView internal constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<VersionUpgradeViewEvents>
+  private val bus: Publisher<VersionViewEvents>
 ) : UiView {
 
-  private lateinit var binding: DialogVersionUpgradeControlsBinding
+  private lateinit var binding: VersionUpgradeControlsBinding
 
-  override fun inflate() {
-    binding = DialogVersionUpgradeControlsBinding.inflate(parent.inflater(), parent, false)
+  override fun inflate(savedInstanceState: Bundle?) {
+    binding = VersionUpgradeControlsBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
 
     bindPositiveClick()
     bindNegativeClick()
+  }
+
+  override fun saveState(outState: Bundle) {
   }
 
   private fun bindPositiveClick() {

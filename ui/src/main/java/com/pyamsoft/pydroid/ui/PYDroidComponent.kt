@@ -22,11 +22,11 @@ import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.about.AboutComponent
-import com.pyamsoft.pydroid.ui.about.license.ViewLicenseComponent
+import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
@@ -47,6 +47,15 @@ internal interface PYDroidComponent {
   ): VersionUpgradeComponent
 
   @CheckResult
+  fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent
+
+  @CheckResult
+  fun plusAboutComponent(
+    parent: ViewGroup,
+    owner: LifecycleOwner
+  ): AboutComponent
+
+  @CheckResult
   fun plusAppComponent(
     owner: LifecycleOwner,
     inflater: LayoutInflater,
@@ -60,15 +69,6 @@ internal interface PYDroidComponent {
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): SettingsPreferenceComponent
-
-  @CheckResult
-  fun plusAboutComponent(
-    owner: LifecycleOwner,
-    activity: FragmentActivity,
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): AboutComponent
 
   @CheckResult
   fun plusViewLicenseComponent(

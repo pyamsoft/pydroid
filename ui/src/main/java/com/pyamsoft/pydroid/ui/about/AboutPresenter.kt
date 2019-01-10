@@ -21,16 +21,16 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.about.AboutEvents.LicensesLoaded
-import com.pyamsoft.pydroid.ui.about.AboutEvents.LoadComplete
-import com.pyamsoft.pydroid.ui.about.AboutEvents.LoadError
-import com.pyamsoft.pydroid.ui.about.AboutEvents.Loading
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LicensesLoaded
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadComplete
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadError
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.Loading
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 class AboutPresenter internal constructor(
   private val interactor: AboutInteractor,
-  private val bus: Publisher<AboutEvents>,
+  private val bus: Publisher<AboutStateEvents>,
   private val schedulerProvider: SchedulerProvider
 ) {
 

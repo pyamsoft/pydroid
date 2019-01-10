@@ -15,31 +15,26 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeContentBinding
+import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
-class VersionUpgradeContentView internal constructor(
-  private val parent: ViewGroup,
-  private val applicationName: String,
-  private val currentVersion: Int,
-  private val newVersion: Int
-) : UiView {
+internal class AboutItemTitleView internal constructor(
+  private val parent: ViewGroup
+) : UiView, BaseAboutItem {
 
-  private lateinit var binding: VersionUpgradeContentBinding
+  private lateinit var binding: AboutItemTitleBinding
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = VersionUpgradeContentBinding.inflate(parent.inflater(), parent, false)
+    binding = AboutItemTitleBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
-
-    setApplicationMessage()
-    setVersions()
   }
 
   override fun saveState(outState: Bundle) {
@@ -50,13 +45,19 @@ class VersionUpgradeContentView internal constructor(
     return binding.root.context.getString(id, *formatArgs)
   }
 
-  private fun setApplicationMessage() {
-    binding.upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
+  override fun bind(model: OssLibrary) {
+    binding.apply {
+      aboutLibraryTitle.text = model.name
+      aboutLibraryLicense.text = getString(R.string.license_name, model.licenseName)
+    }
   }
 
-  private fun setVersions() {
-    binding.upgradeCurrentValue.text = "$currentVersion"
-    binding.upgradeNewValue.text = "$newVersion"
+  override fun unbind() {
+    binding.apply {
+      aboutLibraryTitle.text = ""
+      aboutLibraryLicense.text = ""
+    }
   }
 
 }
+

@@ -15,21 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.annotation.CheckResult
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-interface UiView {
+internal abstract class BaseViewHolder internal constructor(
+  itemView: View
+) : RecyclerView.ViewHolder(itemView) {
 
-  @CheckResult
-  fun ViewGroup.inflater(): LayoutInflater {
-    return LayoutInflater.from(context)
+  open fun bind(model: OssLibrary) {
+
   }
 
-  fun inflate(savedInstanceState: Bundle?)
+  open fun unbind() {
 
-  fun saveState(outState: Bundle)
+  }
+
 }

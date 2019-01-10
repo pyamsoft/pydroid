@@ -26,7 +26,7 @@ internal class VersionUpgradeComponentImpl internal constructor(
   private val name: String,
   private val currentVersion: Int,
   private val newVersion: Int,
-  private val bus: EventBus<VersionUpgradeViewEvents>,
+  private val bus: EventBus<VersionViewEvents>,
   private val schedulerProvider: SchedulerProvider
 ) : VersionUpgradeComponent {
 

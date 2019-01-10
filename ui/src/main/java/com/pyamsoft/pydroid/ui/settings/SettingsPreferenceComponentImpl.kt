@@ -25,13 +25,13 @@ import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.ui.version.VersionEvents
+import com.pyamsoft.pydroid.ui.version.VersionStateEvents
 
 internal class SettingsPreferenceComponentImpl internal constructor(
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
   private val theming: Theming,
-  private val versionCheckBus: EventBus<VersionEvents>,
+  private val versionStateCheckBus: EventBus<VersionStateEvents>,
   private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner,
   preferenceScreen: PreferenceScreen,
@@ -54,7 +54,7 @@ internal class SettingsPreferenceComponentImpl internal constructor(
     fragment.ratingViewModel = ratingModule.getViewModel()
     fragment.settingsPreferenceView = settingsPreferenceView
     fragment.versionPresenter = VersionCheckPresenter(
-        versionCheckModule.interactor, versionCheckBus, schedulerProvider
+        versionCheckModule.interactor, versionStateCheckBus, schedulerProvider
     )
   }
 }

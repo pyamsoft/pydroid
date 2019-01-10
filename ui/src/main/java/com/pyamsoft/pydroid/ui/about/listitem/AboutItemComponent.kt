@@ -15,18 +15,10 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+internal interface AboutItemComponent {
 
-sealed class AboutEvents {
-
-  object Loading : AboutEvents()
-
-  data class LicensesLoaded(val libraries: List<OssLibrary>) : AboutEvents()
-
-  data class LoadError(val error: Throwable) : AboutEvents()
-
-  object LoadComplete : AboutEvents()
+  fun inject(viewHolder: AboutViewHolder)
 
 }

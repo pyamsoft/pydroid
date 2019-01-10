@@ -15,10 +15,18 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.license
+package com.pyamsoft.pydroid.ui.about
 
-internal interface ViewLicenseComponent {
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-  fun inject(dialog: ViewLicenseDialog)
+sealed class AboutStateEvents {
+
+  object Loading : AboutStateEvents()
+
+  data class LicensesLoaded(val libraries: List<OssLibrary>) : AboutStateEvents()
+
+  data class LoadError(val error: Throwable) : AboutStateEvents()
+
+  object LoadComplete : AboutStateEvents()
 
 }

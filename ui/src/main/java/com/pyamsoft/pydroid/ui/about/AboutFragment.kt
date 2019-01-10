@@ -28,10 +28,14 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.about.AboutViewEvents.ViewLicense
+import com.pyamsoft.pydroid.ui.about.AboutViewEvents.VisitHomepage
+import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseDialog
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
+import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
@@ -62,9 +66,7 @@ class AboutFragment : ToolbarFragment() {
     val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
 
     PYDroid.obtain(binding.root.context.applicationContext)
-        .plusAboutComponent(
-            viewLifecycleOwner, requireActivity(), inflater, container, savedInstanceState
-        )
+        .plusAboutComponent(binding.layoutRoot, viewLifecycleOwner)
         .inject(this)
 
     return binding.root
@@ -75,7 +77,16 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    component.create()
+    component.create(savedInstanceState)
+
+    component.onUiEvent()
+        .subscribe {
+          when (it) {
+            is ViewLicense -> ViewLicenseDialog.newInstance(it.name, it.url)
+            is VisitHomepage -> ViewLicenseDialog.newInstance(it.name, it.url)
+          }
+        }
+        .destroy(this)
 
     loadLicensesDisposable = presenter.loadLicenses(false)
   }
@@ -138,6 +149,7 @@ class AboutFragment : ToolbarFragment() {
       }
     }
 
+    @Suppress("unused")
     @JvmStatic
     @CheckResult
     fun isPresent(activity: FragmentActivity): Boolean =

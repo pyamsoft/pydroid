@@ -15,21 +15,15 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.AboutAdapter.AdapterItem.Fake
-import com.pyamsoft.pydroid.ui.about.AboutAdapter.AdapterItem.Real
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutBinding
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemSpacerBinding
+import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Fake
+import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Real
 
-internal class AboutAdapter internal constructor(
-  private val activity: FragmentActivity
-) : RecyclerView.Adapter<ViewHolder>() {
+internal class AboutAdapter internal constructor() : RecyclerView.Adapter<BaseViewHolder>() {
 
   private val items: MutableList<Any> = ArrayList()
 
@@ -63,14 +57,11 @@ internal class AboutAdapter internal constructor(
   override fun onCreateViewHolder(
     parent: ViewGroup,
     viewType: Int
-  ): ViewHolder {
-    val inflater = LayoutInflater.from(parent.context)
+  ): BaseViewHolder {
     if (viewType == VIEW_TYPE_REAL) {
-      val binding = AdapterItemAboutBinding.inflate(inflater, parent, false)
-      return RealViewHolder(binding, activity)
+      return AboutViewHolder(parent)
     } else {
-      val binding = AdapterItemSpacerBinding.inflate(inflater, parent, false)
-      return FakeViewHolder(binding)
+      return SpaceViewHolder(parent)
     }
   }
 
@@ -79,7 +70,7 @@ internal class AboutAdapter internal constructor(
   }
 
   override fun onBindViewHolder(
-    holder: ViewHolder,
+    holder: BaseViewHolder,
     position: Int
   ) {
     val item = items[position]
@@ -88,14 +79,14 @@ internal class AboutAdapter internal constructor(
     }
   }
 
-  override fun onViewRecycled(holder: ViewHolder) {
+  override fun onViewRecycled(holder: BaseViewHolder) {
     super.onViewRecycled(holder)
     holder.unbind()
   }
 
   internal sealed class AdapterItem {
-    data class Real(val library: OssLibrary) : AdapterItem()
-    object Fake : AdapterItem()
+    internal data class Real(val library: OssLibrary) : AdapterItem()
+    internal object Fake : AdapterItem()
   }
 
   companion object {

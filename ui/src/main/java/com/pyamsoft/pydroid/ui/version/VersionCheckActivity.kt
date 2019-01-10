@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -27,9 +28,10 @@ import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.version.VersionEvents.Loading
-import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateError
-import com.pyamsoft.pydroid.ui.version.VersionEvents.UpdateFound
+import com.pyamsoft.pydroid.ui.version.VersionStateEvents.Loading
+import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateComplete
+import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateError
+import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateFound
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import timber.log.Timber
 
@@ -37,6 +39,7 @@ abstract class VersionCheckActivity : ActivityBase() {
 
   internal lateinit var presenter: VersionCheckPresenter
   private var checkUpdatesDisposable by singleDisposable()
+  private var snackbar: Snackbar? = null
 
   abstract val rootView: View
 
@@ -51,6 +54,7 @@ abstract class VersionCheckActivity : ActivityBase() {
         is Loading -> onCheckingForUpdates(it.forced)
         is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
         is UpdateError -> onUpdatedVersionError(it.error)
+        is UpdateComplete -> dismissSnackbar()
       }
     }
         .destroy(this)
@@ -60,6 +64,12 @@ abstract class VersionCheckActivity : ActivityBase() {
   override fun onDestroy() {
     super.onDestroy()
     checkUpdatesDisposable.tryDispose()
+    dismissSnackbar()
+  }
+
+  private fun dismissSnackbar() {
+    snackbar?.dismiss()
+    snackbar = null
   }
 
   // Start in post resume in case dialog launches before resume() is complete for fragments
@@ -69,9 +79,12 @@ abstract class VersionCheckActivity : ActivityBase() {
   }
 
   private fun onCheckingForUpdates(showSnackbar: Boolean) {
+    dismissSnackbar()
+
     if (showSnackbar) {
-      Snackbreak.short(rootView, "Checking for updates...")
-          .show()
+      snackbar = Snackbreak
+          .short(rootView, "Checking for updates...")
+          .also { it.show() }
     }
   }
 

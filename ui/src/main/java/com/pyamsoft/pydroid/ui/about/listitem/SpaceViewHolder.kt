@@ -15,21 +15,16 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutSpaceBinding
 
-interface UiView {
-
-  @CheckResult
-  fun ViewGroup.inflater(): LayoutInflater {
-    return LayoutInflater.from(context)
-  }
-
-  fun inflate(savedInstanceState: Bundle?)
-
-  fun saveState(outState: Bundle)
-}
+internal class SpaceViewHolder internal constructor(
+  container: ViewGroup
+) : BaseViewHolder(
+    AdapterItemAboutSpaceBinding.inflate(
+        LayoutInflater.from(container.context), container, false
+    ).root
+)

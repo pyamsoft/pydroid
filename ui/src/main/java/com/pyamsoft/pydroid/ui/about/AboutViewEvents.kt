@@ -15,11 +15,18 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.about
 
-sealed class VersionUpgradeViewEvents {
+sealed class AboutViewEvents {
 
-  object Upgrade : VersionUpgradeViewEvents()
+  data class VisitHomepage(
+    val name: String,
+    val url: String
+  ) : AboutViewEvents()
 
-  object Cancel : VersionUpgradeViewEvents()
+  data class ViewLicense(
+    val name: String,
+    val url: String
+  ) : AboutViewEvents()
+
 }

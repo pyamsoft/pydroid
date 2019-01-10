@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
@@ -17,15 +16,14 @@
   ~
   -->
 
-<resources>
+<layout>
 
-  <string name="blank"/>
-  <string name="no_thanks">No Thanks</string>
+  <FrameLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/listitem_root"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      />
 
-  <string name="support_pyamsoft">Support pyamsoft</string>
-  <string name="rate_application">Rate Application</string>
+</layout>
 
-  <string name="more_apps_from_pyamsoft">More apps from pyamsoft</string>
-  <string name="follow_pyamsoft_around_the_web">Follow pyamsoft around the web</string>
-
-</resources>

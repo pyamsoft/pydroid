@@ -17,31 +17,35 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
-import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.Listener
 
 internal class AboutComponentImpl(
   private val aboutModule: AboutModule,
-  private val imageLoader: ImageLoader,
+  private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val activity: FragmentActivity,
-  private val inflater: LayoutInflater,
-  private val container: ViewGroup?,
-  savedInstanceState: Bundle?
+  private val controllerBus: EventBus<AboutStateEvents>,
+  private val uiBus: Listener<AboutViewEvents>,
+  private val schedulerProvider: SchedulerProvider
 ) : AboutComponent {
 
-  private val aboutView by lazy {
-    AboutViewImpl(inflater, container, savedInstanceState, activity, owner)
-  }
-
   override fun inject(fragment: AboutFragment) {
-    fragment.rootView = aboutView
-    fragment.viewModel = aboutModule.getViewModel()
+    val listView = AboutListView(parent)
+    val loadingView = AboutLoadingView(parent)
+    fragment.component = AboutUiComponent(
+        owner,
+        listView,
+        loadingView,
+        controllerBus,
+        uiBus,
+        schedulerProvider
+    )
+
+    fragment.presenter = AboutPresenter(aboutModule.interactor, controllerBus, schedulerProvider)
   }
 
 }

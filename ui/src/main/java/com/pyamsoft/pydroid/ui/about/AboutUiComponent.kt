@@ -17,35 +17,49 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import androidx.lifecycle.Lifecycle
+import android.os.Bundle
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.about.AboutEvents.LicensesLoaded
-import com.pyamsoft.pydroid.ui.about.AboutEvents.LoadComplete
-import com.pyamsoft.pydroid.ui.about.AboutEvents.LoadError
-import com.pyamsoft.pydroid.ui.about.AboutEvents.Loading
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LicensesLoaded
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadComplete
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadError
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents.Loading
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 import io.reactivex.Observable
 
 class AboutUiComponent internal constructor(
+  private val owner: LifecycleOwner,
   private val listView: AboutListView,
   private val loadingView: AboutLoadingView,
-  private val controllerBus: Listener<AboutEvents>
-) : UiComponent<Unit> {
+  private val controllerBus: Listener<AboutStateEvents>,
+  private val uiBus: Listener<AboutViewEvents>,
+  private val schedulerProvider: SchedulerProvider
+) : UiComponent<AboutViewEvents> {
 
   private lateinit var refreshLatch: RefreshLatch
 
-  override fun create(lifecycle: Lifecycle) {
-    listView.inflate()
-    loadingView.inflate()
+  override fun create(savedInstanceState: Bundle?) {
+    listView.inflate(savedInstanceState)
+    loadingView.inflate(savedInstanceState)
 
-    setupRefreshLatch(lifecycle)
-    listenForControllerEvents(lifecycle)
+    owner.runOnDestroy {
+      listView.teardown()
+    }
+
+    setupRefreshLatch()
+    listenForControllerEvents()
   }
 
-  private fun setupRefreshLatch(lifecycle: Lifecycle) {
-    refreshLatch = RefreshLatch.create(lifecycle, 150L) { loading ->
+  override fun saveState(outState: Bundle) {
+    listView.saveState(outState)
+    loadingView.saveState(outState)
+  }
+
+  private fun setupRefreshLatch() {
+    refreshLatch = RefreshLatch.create(owner, 150L) { loading ->
       if (loading) {
         listView.hide()
         loadingView.show()
@@ -56,7 +70,7 @@ class AboutUiComponent internal constructor(
     }
   }
 
-  private fun listenForControllerEvents(lifecycle: Lifecycle) {
+  private fun listenForControllerEvents() {
     controllerBus.listen()
         .subscribe {
           when (it) {
@@ -66,11 +80,13 @@ class AboutUiComponent internal constructor(
             is LoadComplete -> refreshLatch.isRefreshing = false
           }
         }
-        .destroy(lifecycle)
+        .destroy(owner)
   }
 
-  override fun onUiEvent(): Observable<Unit> {
-    return Observable.empty()
+  override fun onUiEvent(): Observable<AboutViewEvents> {
+    return uiBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

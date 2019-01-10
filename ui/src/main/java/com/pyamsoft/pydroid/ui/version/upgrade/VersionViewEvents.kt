@@ -15,21 +15,11 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.annotation.CheckResult
+sealed class VersionViewEvents {
 
-interface UiView {
+  object Upgrade : VersionViewEvents()
 
-  @CheckResult
-  fun ViewGroup.inflater(): LayoutInflater {
-    return LayoutInflater.from(context)
-  }
-
-  fun inflate(savedInstanceState: Bundle?)
-
-  fun saveState(outState: Bundle)
+  object Cancel : VersionViewEvents()
 }

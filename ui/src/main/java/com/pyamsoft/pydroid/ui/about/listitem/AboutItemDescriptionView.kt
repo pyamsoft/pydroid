@@ -15,34 +15,44 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesLoadingBinding
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
-class AboutLoadingView internal constructor(
+internal class AboutItemDescriptionView internal constructor(
   private val parent: ViewGroup
-) : UiToggleView {
+) : UiView, BaseAboutItem {
 
-  private lateinit var binding: FragmentAboutLibrariesLoadingBinding
+  private lateinit var binding: AboutItemDescriptionBinding
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = FragmentAboutLibrariesLoadingBinding.inflate(parent.inflater(), parent, false)
+    binding = AboutItemDescriptionBinding.inflate(
+        parent.inflater(), parent, false
+    )
     parent.addView(binding.root)
   }
 
   override fun saveState(outState: Bundle) {
   }
 
-  override fun show() {
-    binding.progressSpinner.isVisible = true
+  override fun bind(model: OssLibrary) {
+    binding.apply {
+      aboutLibraryDescription.text = model.description
+      aboutLibraryDescription.isVisible = model.description.isNotBlank()
+    }
   }
 
-  override fun hide() {
-    binding.progressSpinner.isVisible = false
+  override fun unbind() {
+    binding.apply {
+      aboutLibraryDescription.text = ""
+      aboutLibraryDescription.isGone = true
+    }
   }
 
 }

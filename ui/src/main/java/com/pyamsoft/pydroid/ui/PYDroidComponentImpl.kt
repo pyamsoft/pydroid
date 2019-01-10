@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
@@ -35,8 +34,12 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.license.ViewLicenseComponent
-import com.pyamsoft.pydroid.ui.about.license.ViewLicenseComponentImpl
+import com.pyamsoft.pydroid.ui.about.AboutStateEvents
+import com.pyamsoft.pydroid.ui.about.AboutViewEvents
+import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
+import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
@@ -47,10 +50,10 @@ import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.ui.version.VersionEvents
+import com.pyamsoft.pydroid.ui.version.VersionStateEvents
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponentImpl
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents
 
 internal class PYDroidComponentImpl internal constructor(
   debug: Boolean,
@@ -65,14 +68,16 @@ internal class PYDroidComponentImpl internal constructor(
   private val showRatingErrorBus = RxBus.create<RatingEvents.ShowErrorEvent>()
   private val ratingSaveErrorBus = RxBus.create<RatingEvents.SaveErrorEvent>()
 
-  private val versionCheckBus = RxBus.create<VersionEvents>()
-  private val versionUpgradeBus = RxBus.create<VersionUpgradeViewEvents>()
+  private val versionStateBus = RxBus.create<VersionStateEvents>()
+  private val versionUpgradeBus = RxBus.create<VersionViewEvents>()
+  private val aboutStateEventsBus = RxBus.create<AboutStateEvents>()
+  private val aboutViewEventsBus = RxBus.create<AboutViewEvents>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
   private val theming by lazy { Theming(application) }
   private val loaderModule by lazy { LoaderModule() }
-  private val aboutModule by lazy { AboutModule(enforcer, schedulerProvider) }
+  private val aboutModule by lazy { AboutModule(enforcer) }
   private val ratingModule by lazy {
     RatingModule(
         preferences, enforcer, currentVersion, showRatingBus,
@@ -97,9 +102,12 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun inject(activity: VersionCheckActivity) {
     activity.presenter = VersionCheckPresenter(
-        versionModule.interactor, versionCheckBus, schedulerProvider
+        versionModule.interactor, versionStateBus, schedulerProvider
     )
   }
+
+  override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent =
+    AboutItemComponentImpl(parent, aboutViewEventsBus)
 
   override fun plusVersionUpgradeComponent(
     parent: ViewGroup,
@@ -117,20 +125,16 @@ internal class PYDroidComponentImpl internal constructor(
   ): SettingsPreferenceComponent =
     SettingsPreferenceComponentImpl(
         ratingModule, versionModule, theming,
-        versionCheckBus, schedulerProvider,
+        versionStateBus, schedulerProvider,
         owner, preferenceScreen, applicationName,
         bugreportUrl, hideClearAll, hideUpgradeInformation
     )
 
   override fun plusAboutComponent(
-    owner: LifecycleOwner,
-    activity: FragmentActivity,
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
+    parent: ViewGroup,
+    owner: LifecycleOwner
   ): AboutComponent = AboutComponentImpl(
-      aboutModule, loaderModule.provideImageLoader(),
-      owner, activity, inflater, container, savedInstanceState
+      aboutModule, parent, owner, aboutStateEventsBus, aboutViewEventsBus, schedulerProvider
   )
 
   override fun plusViewLicenseComponent(

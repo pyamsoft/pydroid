@@ -28,8 +28,8 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvents.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Upgrade
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
@@ -63,7 +63,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    component.create()
+    component.create(savedInstanceState)
     listenForUiEvents(view)
   }
 

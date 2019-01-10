@@ -17,15 +17,33 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
+import android.os.Bundle
 import androidx.annotation.CheckResult
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
 
 interface UiComponent<T : Any> {
 
-  fun create(lifecycle: Lifecycle)
+  fun create(savedInstanceState: Bundle?)
+
+  fun saveState(outState: Bundle)
 
   @CheckResult
   fun onUiEvent(): Observable<T>
+
+  fun LifecycleOwner.runOnDestroy(func: () -> Unit) {
+    lifecycle.addObserver(object : LifecycleObserver {
+
+      @Suppress("unused")
+      @OnLifecycleEvent(ON_DESTROY)
+      fun onDestroy() {
+        lifecycle.removeObserver(this)
+        func()
+      }
+    })
+  }
 
 }

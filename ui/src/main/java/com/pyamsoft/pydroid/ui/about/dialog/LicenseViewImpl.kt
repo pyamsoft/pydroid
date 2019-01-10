@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.license
+package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable

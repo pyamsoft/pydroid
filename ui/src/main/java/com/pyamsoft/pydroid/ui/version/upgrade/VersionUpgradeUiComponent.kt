@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import androidx.lifecycle.Lifecycle
+import android.os.Bundle
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
@@ -26,16 +26,21 @@ import io.reactivex.Observable
 class VersionUpgradeUiComponent internal constructor(
   private val controlsView: VersionUpgradeControlView,
   private val contentView: VersionUpgradeContentView,
-  private val uiBus: Listener<VersionUpgradeViewEvents>,
+  private val uiBus: Listener<VersionViewEvents>,
   private val schedulerProvider: SchedulerProvider
-) : UiComponent<VersionUpgradeViewEvents> {
+) : UiComponent<VersionViewEvents> {
 
-  override fun create(lifecycle: Lifecycle) {
-    contentView.inflate()
-    controlsView.inflate()
+  override fun create(savedInstanceState: Bundle?) {
+    contentView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
   }
 
-  override fun onUiEvent(): Observable<VersionUpgradeViewEvents> {
+  override fun saveState(outState: Bundle) {
+    contentView.saveState(outState)
+    controlsView.saveState(outState)
+  }
+
+  override fun onUiEvent(): Observable<VersionViewEvents> {
     return uiBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)

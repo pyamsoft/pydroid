@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -38,7 +39,7 @@ class AboutListView internal constructor(
   private var lastViewedItem: Int = 0
 
   override fun id(): Int {
-    return View.NO_ID
+    return binding.aboutList.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
@@ -94,7 +95,7 @@ class AboutListView internal constructor(
   }
 
   override fun hide() {
-    binding.aboutList.isVisible = false
+    binding.aboutList.isInvisible = true
   }
 
   fun loadLicenses(libraries: List<OssLibrary>) {

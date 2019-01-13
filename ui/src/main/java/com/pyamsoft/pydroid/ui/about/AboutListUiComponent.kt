@@ -28,19 +28,15 @@ import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadError
 import com.pyamsoft.pydroid.ui.about.AboutStateEvents.Loading
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.widget.RefreshLatch
 import io.reactivex.Observable
 
-class AboutUiComponent internal constructor(
+class AboutListUiComponent internal constructor(
   private val owner: LifecycleOwner,
   private val listView: AboutListView,
-  private val loadingView: AboutLoadingView,
   private val controllerBus: Listener<AboutStateEvents>,
   private val uiBus: Listener<AboutViewEvents>,
   private val schedulerProvider: SchedulerProvider
 ) : UiComponent<AboutViewEvents> {
-
-  private lateinit var refreshLatch: RefreshLatch
 
   override fun id(): Int {
     return View.NO_ID
@@ -48,41 +44,26 @@ class AboutUiComponent internal constructor(
 
   override fun create(savedInstanceState: Bundle?) {
     listView.inflate(savedInstanceState)
-    loadingView.inflate(savedInstanceState)
 
     owner.runOnDestroy {
       listView.teardown()
     }
 
-    setupRefreshLatch()
     listenForControllerEvents()
   }
 
   override fun saveState(outState: Bundle) {
     listView.saveState(outState)
-    loadingView.saveState(outState)
-  }
-
-  private fun setupRefreshLatch() {
-    refreshLatch = RefreshLatch.create(owner, 150L) { loading ->
-      if (loading) {
-        listView.hide()
-        loadingView.show()
-      } else {
-        loadingView.hide()
-        listView.show()
-      }
-    }
   }
 
   private fun listenForControllerEvents() {
     controllerBus.listen()
         .subscribe {
           when (it) {
-            is Loading -> refreshLatch.isRefreshing = true
+            is Loading -> listView.hide()
             is LicensesLoaded -> listView.loadLicenses(it.libraries)
             is LoadError -> listView.showError(it.error)
-            is LoadComplete -> refreshLatch.isRefreshing = false
+            is LoadComplete -> listView.show()
           }
         }
         .destroy(owner)

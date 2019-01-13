@@ -22,6 +22,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class ViewLicenseComponentImpl internal constructor(
   private val parent: ViewGroup,
@@ -30,12 +33,20 @@ internal class ViewLicenseComponentImpl internal constructor(
   private val link: String,
   private val name: String,
   private val uiBus: EventBus<LicenseViewEvents>,
+  private val controllerBus: EventBus<LicenseStateEvents>,
   private val schedulerProvider: SchedulerProvider
 ) : ViewLicenseComponent {
 
   override fun inject(dialog: ViewLicenseDialog) {
-    val toolbarView = LicenseToolbarView(parent, name, imageLoader, owner, uiBus)
+    val toolbarView = LicenseToolbarView(parent, name, link, imageLoader, owner, uiBus)
+    val dropshadowView = DropshadowView(parent)
+    val spinnerView = SpinnerView(parent)
+    val webviewView = LicenseWebviewView(parent, link, controllerBus)
+    dialog.presenter = ViewLicensePresenter(controllerBus, schedulerProvider)
     dialog.toolbarComponent = LicenseToolbarUiComponent(toolbarView, uiBus, schedulerProvider)
+    dialog.dropshadowComponent = DropshadowUiComponent(dropshadowView)
+    dialog.loadingComponent = LicenseLoadingUiComponent(spinnerView, owner, controllerBus)
+    dialog.webviewComponent = LicenseWebviewUiComponent(webviewView, owner, controllerBus)
   }
 
 }

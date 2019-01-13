@@ -29,6 +29,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
 
+@Deprecated("Doesn't really fit in with a UI Component architecture")
 class RefreshLatch private constructor(
   lifecycle: Lifecycle,
   private val delay: Long = 300L,

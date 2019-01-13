@@ -34,7 +34,7 @@ internal class AboutItemTitleView internal constructor(
   private lateinit var binding: AboutItemTitleBinding
 
   override fun id(): Int {
-    return View.NO_ID
+    return binding.layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {

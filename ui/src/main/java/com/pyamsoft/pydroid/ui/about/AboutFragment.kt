@@ -36,14 +36,15 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
+import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 
 class AboutFragment : ToolbarFragment() {
 
-  internal lateinit var component: AboutUiComponent
+  internal lateinit var listComponent: AboutListUiComponent
+  internal lateinit var loadingComponent: AboutLoadingUiComponent
   internal lateinit var presenter: AboutPresenter
 
   private var backStackCount: Int = 0
@@ -64,7 +65,7 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ): View? {
 
-    val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
+    val binding = LayoutFrameBinding.inflate(inflater, container, false)
 
     PYDroid.obtain(binding.root.context.applicationContext)
         .plusAboutComponent(binding.layoutRoot, viewLifecycleOwner)
@@ -78,7 +79,7 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    component.onUiEvent()
+    listComponent.onUiEvent()
         .subscribe {
           when (it) {
             is ViewLicense -> ViewLicenseDialog.newInstance(it.name, it.url)
@@ -88,14 +89,17 @@ class AboutFragment : ToolbarFragment() {
           }
         }
         .destroy(this)
-    component.create(savedInstanceState)
+
+    listComponent.create(savedInstanceState)
+    loadingComponent.create(savedInstanceState)
 
     loadLicensesDisposable = presenter.loadLicenses(false)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    listComponent.saveState(outState)
+    loadingComponent.saveState(outState)
   }
 
   override fun onDestroyView() {

@@ -37,7 +37,7 @@ internal class AboutItemActionsView internal constructor(
   private lateinit var binding: AboutItemActionsBinding
 
   override fun id(): Int {
-    return View.NO_ID
+    return binding.layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {

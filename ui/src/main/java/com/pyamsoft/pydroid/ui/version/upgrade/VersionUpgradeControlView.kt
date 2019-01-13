@@ -35,7 +35,7 @@ class VersionUpgradeControlView internal constructor(
   private lateinit var binding: VersionUpgradeControlsBinding
 
   override fun id(): Int {
-    return View.NO_ID
+    return binding.layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {

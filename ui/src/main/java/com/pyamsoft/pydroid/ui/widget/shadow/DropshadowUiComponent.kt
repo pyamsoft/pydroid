@@ -15,15 +15,30 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.widget.shadow
 
-sealed class LicenseViewEvents {
+import android.os.Bundle
+import com.pyamsoft.pydroid.ui.arch.UiComponent
+import io.reactivex.Observable
 
-  object ToolbarNavClick : LicenseViewEvents()
+class DropshadowUiComponent(
+  private val dropshadowView: DropshadowView
+) : UiComponent<Unit> {
 
-  data class ToolbarMenuClick(
-    val itemId: Int,
-    val link: String
-  ) : LicenseViewEvents()
+  override fun id(): Int {
+    return dropshadowView.id()
+  }
+
+  override fun create(savedInstanceState: Bundle?) {
+    dropshadowView.inflate(savedInstanceState)
+  }
+
+  override fun saveState(outState: Bundle) {
+    dropshadowView.saveState(outState)
+  }
+
+  override fun onUiEvent(): Observable<Unit> {
+    return Observable.empty()
+  }
 
 }

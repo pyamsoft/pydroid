@@ -15,49 +15,29 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.listitem
+package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
+import com.pyamsoft.pydroid.ui.databinding.WidgetDropshadowBinding
 
-internal class AboutItemDescriptionView internal constructor(
+class DropshadowView(
   private val parent: ViewGroup
-) : UiView, BaseAboutItem {
+) : UiView {
 
-  private lateinit var binding: AboutItemDescriptionBinding
+  private lateinit var binding: WidgetDropshadowBinding
 
   override fun id(): Int {
-    return binding.aboutLibraryDescription.id
+    return binding.layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = AboutItemDescriptionBinding.inflate(
-        parent.inflater(), parent, false
-    )
+    binding = WidgetDropshadowBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
   }
 
   override fun saveState(outState: Bundle) {
-  }
-
-  override fun bind(model: OssLibrary) {
-    binding.apply {
-      aboutLibraryDescription.text = model.description
-      aboutLibraryDescription.isVisible = model.description.isNotBlank()
-    }
-  }
-
-  override fun unbind() {
-    binding.apply {
-      aboutLibraryDescription.text = ""
-      aboutLibraryDescription.isGone = true
-    }
   }
 
 }

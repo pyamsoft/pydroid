@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui
 
 import android.app.Application
-import android.os.Bundle
 import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -36,6 +35,7 @@ import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
 import com.pyamsoft.pydroid.ui.about.AboutStateEvents
 import com.pyamsoft.pydroid.ui.about.AboutViewEvents
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
@@ -71,9 +71,12 @@ internal class PYDroidComponentImpl internal constructor(
 
   private val versionStateBus = RxBus.create<VersionStateEvents>()
   private val versionUpgradeBus = RxBus.create<VersionViewEvents>()
+
   private val aboutStateEventsBus = RxBus.create<AboutStateEvents>()
   private val aboutViewEventsBus = RxBus.create<AboutViewEvents>()
+
   private val licenseViewBus = RxBus.create<LicenseViewEvents>()
+  private val licenseStateBus = RxBus.create<LicenseStateEvents>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -147,7 +150,7 @@ internal class PYDroidComponentImpl internal constructor(
   ): ViewLicenseComponent {
     return ViewLicenseComponentImpl(
         parent, owner, loaderModule.provideImageLoader(),
-        link, name, licenseViewBus, schedulerProvider
+        link, name, licenseViewBus, licenseStateBus, schedulerProvider
     )
   }
 

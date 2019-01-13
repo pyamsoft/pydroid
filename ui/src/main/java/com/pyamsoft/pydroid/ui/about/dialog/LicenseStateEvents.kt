@@ -17,13 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
-sealed class LicenseViewEvents {
+import android.content.ActivityNotFoundException
 
-  object ToolbarNavClick : LicenseViewEvents()
+sealed class LicenseStateEvents {
 
-  data class ToolbarMenuClick(
-    val itemId: Int,
-    val link: String
-  ) : LicenseViewEvents()
+  object Loading : LicenseStateEvents()
+
+  object Loaded : LicenseStateEvents()
+
+  data class PageError(val error: ActivityNotFoundException?) : LicenseStateEvents()
 
 }

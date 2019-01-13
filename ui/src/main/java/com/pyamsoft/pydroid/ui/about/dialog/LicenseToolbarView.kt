@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.LicenseToolbarBinding
@@ -35,6 +36,7 @@ import com.pyamsoft.pydroid.ui.util.setUpEnabled
 internal class LicenseToolbarView internal constructor(
   private val parent: ViewGroup,
   private val name: String,
+  private val link: String,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
   private val uiBus: Publisher<LicenseViewEvents>
@@ -64,6 +66,7 @@ internal class LicenseToolbarView internal constructor(
 
     loadNavIcon()
     setupOnClick()
+    setupMenuOnClick()
   }
 
   private fun loadNavIcon() {
@@ -100,6 +103,13 @@ internal class LicenseToolbarView internal constructor(
     binding.toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
       uiBus.publish(ToolbarNavClick)
     })
+  }
+
+  private fun setupMenuOnClick() {
+    binding.toolbar.setOnMenuItemClickListener {
+      uiBus.publish(ToolbarMenuClick(it.itemId, link))
+      return@setOnMenuItemClickListener true
+    }
   }
 
 }

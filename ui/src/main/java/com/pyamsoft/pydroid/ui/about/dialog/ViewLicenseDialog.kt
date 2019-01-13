@@ -26,17 +26,27 @@ import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
+import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
+import com.pyamsoft.pydroid.ui.util.navigate
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
+import com.pyamsoft.pydroid.util.hyperlink
 
 internal class ViewLicenseDialog : ToolbarDialog() {
 
   private lateinit var binding: LayoutConstraintBinding
 
+  internal lateinit var presenter: ViewLicensePresenter
   internal lateinit var toolbarComponent: LicenseToolbarUiComponent
+  internal lateinit var loadingComponent: LicenseLoadingUiComponent
+  internal lateinit var webviewComponent: LicenseWebviewUiComponent
+  internal lateinit var dropshadowComponent: DropshadowUiComponent
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -62,16 +72,39 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+
+    presenter.onLoadErrorEvent { dismiss() }
+        .destroy(viewLifecycleOwner)
+
     toolbarComponent.onUiEvent()
         .subscribe {
           when (it) {
             is ToolbarNavClick -> dismiss()
+            is ToolbarMenuClick -> onToolbarMenuItemClicked(it.itemId, it.link)
           }
         }
         .destroy(viewLifecycleOwner)
+
     toolbarComponent.create(savedInstanceState)
+    loadingComponent.create(savedInstanceState)
+    webviewComponent.create(savedInstanceState)
+    dropshadowComponent.create(savedInstanceState)
 
     applyConstraints(binding.layoutRoot)
+
+    presenter.loadUrl()
+  }
+
+  private fun onToolbarMenuItemClicked(
+    itemId: Int,
+    link: String
+  ) {
+    when (itemId) {
+      R.id.menu_item_view_license -> {
+        link.hyperlink(requireContext())
+            .navigate(requireView())
+      }
+    }
   }
 
   private fun applyConstraints(layoutRoot: ConstraintLayout) {
@@ -84,6 +117,26 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
       }
 
+      loadingComponent.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+      }
+
+      webviewComponent.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+      }
+
+      dropshadowComponent.also {
+        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+      }
+
       applyTo(layoutRoot)
     }
   }
@@ -91,6 +144,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     toolbarComponent.saveState(outState)
+    webviewComponent.saveState(outState)
+    loadingComponent.saveState(outState)
   }
 
   override fun onResume() {

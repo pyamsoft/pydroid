@@ -22,12 +22,16 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LicensesLoaded
 import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadError
 import com.pyamsoft.pydroid.ui.about.AboutStateEvents.Loading
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Hide
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Show
 import io.reactivex.Observable
 
 class AboutListUiComponent internal constructor(
@@ -35,6 +39,7 @@ class AboutListUiComponent internal constructor(
   private val listView: AboutListView,
   private val controllerBus: Listener<AboutStateEvents>,
   private val uiBus: Listener<AboutViewEvents>,
+  private val spinnerBus: Publisher<SpinnerStateEvents>,
   private val schedulerProvider: SchedulerProvider
 ) : UiComponent<AboutViewEvents> {
 
@@ -60,13 +65,33 @@ class AboutListUiComponent internal constructor(
     controllerBus.listen()
         .subscribe {
           when (it) {
-            is Loading -> listView.hide()
-            is LicensesLoaded -> listView.loadLicenses(it.libraries)
-            is LoadError -> listView.showError(it.error)
-            is LoadComplete -> listView.show()
+            is Loading -> {
+              startSpinner()
+              listView.hide()
+            }
+            is LicensesLoaded -> {
+              stopSpinner()
+              listView.loadLicenses(it.libraries)
+            }
+            is LoadError -> {
+              stopSpinner()
+              listView.showError(it.error)
+            }
+            is LoadComplete -> {
+              stopSpinner()
+              listView.show()
+            }
           }
         }
         .destroy(owner)
+  }
+
+  private fun startSpinner() {
+    spinnerBus.publish(Show)
+  }
+
+  private fun stopSpinner() {
+    spinnerBus.publish(Hide)
   }
 
   override fun onUiEvent(): Observable<AboutViewEvents> {

@@ -15,24 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.widget.spinner
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.Loaded
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.Loading
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.PageError
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Hide
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Show
 import io.reactivex.Observable
 
-internal class LicenseLoadingUiComponent internal constructor(
+class SpinnerUiComponent(
   private val spinnerView: SpinnerView,
   private val owner: LifecycleOwner,
-  private val controllerBus: Listener<LicenseStateEvents>
-) : UiComponent<LicenseViewEvents> {
+  private val controllerBus: Listener<SpinnerStateEvents>
+) : UiComponent<Unit> {
 
   override fun id(): Int {
     return spinnerView.id()
@@ -40,7 +38,6 @@ internal class LicenseLoadingUiComponent internal constructor(
 
   override fun create(savedInstanceState: Bundle?) {
     spinnerView.inflate(savedInstanceState)
-
     listenForControllerEvents()
   }
 
@@ -48,9 +45,8 @@ internal class LicenseLoadingUiComponent internal constructor(
     controllerBus.listen()
         .subscribe {
           when (it) {
-            is Loading -> spinnerView.show()
-            is Loaded -> spinnerView.hide()
-            is PageError -> spinnerView.hide()
+            is Show -> spinnerView.hide()
+            is Hide -> spinnerView.show()
           }
         }
         .destroy(owner)
@@ -60,7 +56,7 @@ internal class LicenseLoadingUiComponent internal constructor(
     spinnerView.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<LicenseViewEvents> {
+  override fun onUiEvent(): Observable<Unit> {
     return Observable.empty()
   }
 

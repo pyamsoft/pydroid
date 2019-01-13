@@ -21,9 +21,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class ViewLicenseComponentImpl internal constructor(
@@ -40,13 +43,16 @@ internal class ViewLicenseComponentImpl internal constructor(
   override fun inject(dialog: ViewLicenseDialog) {
     val toolbarView = LicenseToolbarView(parent, name, link, imageLoader, owner, uiBus)
     val dropshadowView = DropshadowView(parent)
-    val spinnerView = SpinnerView(parent)
     val webviewView = LicenseWebviewView(parent, link, controllerBus)
+    val spinnerView = SpinnerView(parent)
+    val spinnerBus = RxBus.create<SpinnerStateEvents>()
     dialog.presenter = ViewLicensePresenter(controllerBus, schedulerProvider)
     dialog.toolbarComponent = LicenseToolbarUiComponent(toolbarView, uiBus, schedulerProvider)
     dialog.dropshadowComponent = DropshadowUiComponent(dropshadowView)
-    dialog.loadingComponent = LicenseLoadingUiComponent(spinnerView, owner, controllerBus)
-    dialog.webviewComponent = LicenseWebviewUiComponent(webviewView, owner, controllerBus)
+    dialog.loadingComponent = SpinnerUiComponent(spinnerView, owner, spinnerBus)
+    dialog.webviewComponent = LicenseWebviewUiComponent(
+        webviewView, owner, controllerBus, spinnerBus
+    )
   }
 
 }

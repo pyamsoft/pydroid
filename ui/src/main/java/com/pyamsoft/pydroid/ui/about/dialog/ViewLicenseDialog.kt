@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 import com.pyamsoft.pydroid.ui.util.navigate
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class ViewLicenseDialog : ToolbarDialog() {
@@ -44,7 +45,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
   internal lateinit var presenter: ViewLicensePresenter
   internal lateinit var toolbarComponent: LicenseToolbarUiComponent
-  internal lateinit var loadingComponent: LicenseLoadingUiComponent
+  internal lateinit var loadingComponent: SpinnerUiComponent
   internal lateinit var webviewComponent: LicenseWebviewUiComponent
   internal lateinit var dropshadowComponent: DropshadowUiComponent
 
@@ -86,8 +87,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         .destroy(viewLifecycleOwner)
 
     toolbarComponent.create(savedInstanceState)
-    loadingComponent.create(savedInstanceState)
     webviewComponent.create(savedInstanceState)
+    loadingComponent.create(savedInstanceState)
     dropshadowComponent.create(savedInstanceState)
 
     applyConstraints(binding.layoutRoot)
@@ -117,14 +118,14 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
       }
 
-      loadingComponent.also {
+      webviewComponent.also {
         connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
         connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
       }
 
-      webviewComponent.also {
+      loadingComponent.also {
         connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)

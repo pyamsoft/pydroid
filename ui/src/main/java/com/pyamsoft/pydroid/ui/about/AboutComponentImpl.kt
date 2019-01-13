@@ -23,6 +23,9 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class AboutComponentImpl(
@@ -37,10 +40,11 @@ internal class AboutComponentImpl(
   override fun inject(fragment: AboutFragment) {
     val listView = AboutListView(parent)
     val spinnerView = SpinnerView(parent)
+    val spinnerBus = RxBus.create<SpinnerStateEvents>()
     fragment.presenter = AboutPresenter(aboutModule.interactor, controllerBus, schedulerProvider)
-    fragment.loadingComponent = AboutLoadingUiComponent(spinnerView, owner, controllerBus)
+    fragment.loadingComponent = SpinnerUiComponent(spinnerView, owner, spinnerBus)
     fragment.listComponent = AboutListUiComponent(
-        owner, listView, controllerBus, uiBus, schedulerProvider
+        owner, listView, controllerBus, uiBus, spinnerBus, schedulerProvider
     )
   }
 

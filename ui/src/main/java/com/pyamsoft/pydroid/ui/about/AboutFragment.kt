@@ -40,11 +40,12 @@ import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 
 class AboutFragment : ToolbarFragment() {
 
   internal lateinit var listComponent: AboutListUiComponent
-  internal lateinit var loadingComponent: AboutLoadingUiComponent
+  internal lateinit var loadingComponent: SpinnerUiComponent
   internal lateinit var presenter: AboutPresenter
 
   private var backStackCount: Int = 0

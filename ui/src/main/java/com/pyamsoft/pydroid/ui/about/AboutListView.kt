@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
@@ -25,19 +26,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesListBinding
+import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 class AboutListView internal constructor(
   private val parent: ViewGroup
 ) : UiToggleView {
 
-  private lateinit var binding: FragmentAboutLibrariesListBinding
+  private lateinit var binding: AboutLibrariesListBinding
   private lateinit var aboutAdapter: AboutAdapter
   private var lastViewedItem: Int = 0
 
+  override fun id(): Int {
+    return View.NO_ID
+  }
+
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = FragmentAboutLibrariesListBinding.inflate(parent.inflater(), parent, false)
+    binding = AboutLibrariesListBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
 
     restoreLastViewedItem(savedInstanceState)

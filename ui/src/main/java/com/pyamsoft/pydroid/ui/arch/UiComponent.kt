@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.arch
 
 import android.os.Bundle
 import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -26,6 +27,10 @@ import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
 
 interface UiComponent<T : Any> {
+
+  @CheckResult
+  @IdRes
+  fun id(): Int
 
   fun create(savedInstanceState: Bundle?)
 

@@ -63,8 +63,8 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    component.create(savedInstanceState)
     listenForUiEvents(view)
+    component.create(savedInstanceState)
   }
 
   private fun listenForUiEvents(view: View) {
@@ -87,6 +87,11 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT
     )
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    component.saveState(outState)
   }
 
   companion object {

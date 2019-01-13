@@ -78,8 +78,6 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    component.create(savedInstanceState)
-
     component.onUiEvent()
         .subscribe {
           when (it) {
@@ -90,8 +88,14 @@ class AboutFragment : ToolbarFragment() {
           }
         }
         .destroy(this)
+    component.create(savedInstanceState)
 
     loadLicensesDisposable = presenter.loadLicenses(false)
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    component.saveState(outState)
   }
 
   override fun onDestroyView() {

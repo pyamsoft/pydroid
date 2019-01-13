@@ -18,19 +18,24 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.databinding.FragmentAboutLibrariesLoadingBinding
+import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesLoadingBinding
 
 class AboutLoadingView internal constructor(
   private val parent: ViewGroup
 ) : UiToggleView {
 
-  private lateinit var binding: FragmentAboutLibrariesLoadingBinding
+  private lateinit var binding: AboutLibrariesLoadingBinding
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = FragmentAboutLibrariesLoadingBinding.inflate(parent.inflater(), parent, false)
+    binding = AboutLibrariesLoadingBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
   }
 

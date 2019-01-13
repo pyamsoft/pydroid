@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
@@ -31,6 +32,10 @@ internal class AboutItemTitleView internal constructor(
 ) : UiView, BaseAboutItem {
 
   private lateinit var binding: AboutItemTitleBinding
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun inflate(savedInstanceState: Bundle?) {
     binding = AboutItemTitleBinding.inflate(parent.inflater(), parent, false)

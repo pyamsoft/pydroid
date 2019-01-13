@@ -23,37 +23,38 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CheckResult
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
-import com.pyamsoft.pydroid.ui.util.navigate
-import com.pyamsoft.pydroid.util.hyperlink
+import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 
 internal class ViewLicenseDialog : ToolbarDialog() {
 
-  private lateinit var name: String
-  private lateinit var link: String
+  private lateinit var binding: LayoutConstraintBinding
 
-  internal lateinit var rootView: LicenseView
+  internal lateinit var toolbarComponent: LicenseToolbarUiComponent
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    requireArguments().also {
-      name = it.getString(NAME, "")
-      link = it.getString(LINK, "")
-    }
+    binding = LayoutConstraintBinding.inflate(inflater, container, false)
+
+    val name = requireArguments().getString(NAME, "")
+    val link = requireArguments().getString(LINK, "")
+    require(name.isNotBlank())
+    require(link.isNotBlank())
 
     PYDroid.obtain(requireContext())
-        .plusViewLicenseComponent(
-            viewLifecycleOwner, inflater, container, savedInstanceState, link, name
-        )
+        .plusViewLicenseComponent(binding.layoutRoot, viewLifecycleOwner, link, name)
         .inject(this)
 
-    rootView.create()
-    return rootView.root()
+    return binding.root
   }
 
   override fun onViewCreated(
@@ -61,12 +62,35 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    rootView.loadView { dismiss() }
+    toolbarComponent.onUiEvent()
+        .subscribe {
+          when (it) {
+            is ToolbarNavClick -> dismiss()
+          }
+        }
+        .destroy(viewLifecycleOwner)
+    toolbarComponent.create(savedInstanceState)
 
-    rootView.onMenuItemClick {
-      link.hyperlink(view.context)
-          .navigate(view)
+    applyConstraints(binding.layoutRoot)
+  }
+
+  private fun applyConstraints(layoutRoot: ConstraintLayout) {
+    ConstraintSet().apply {
+      clone(layoutRoot)
+
+      toolbarComponent.also {
+        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+      }
+
+      applyTo(layoutRoot)
     }
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    toolbarComponent.saveState(outState)
   }
 
   override fun onResume() {
@@ -90,8 +114,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
       name: String,
       link: String
     ): ViewLicenseDialog {
-      return ViewLicenseDialog()
-          .apply {
+      return ViewLicenseDialog().apply {
         arguments = Bundle().apply {
           putString(NAME, name)
           putString(LINK, link)

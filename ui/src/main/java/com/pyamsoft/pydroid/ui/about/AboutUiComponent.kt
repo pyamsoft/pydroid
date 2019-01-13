@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
@@ -40,6 +41,10 @@ class AboutUiComponent internal constructor(
 ) : UiComponent<AboutViewEvents> {
 
   private lateinit var refreshLatch: RefreshLatch
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun create(savedInstanceState: Bundle?) {
     listView.inflate(savedInstanceState)

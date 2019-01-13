@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
 import com.pyamsoft.pydroid.ui.about.AboutStateEvents
 import com.pyamsoft.pydroid.ui.about.AboutViewEvents
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
@@ -72,6 +73,7 @@ internal class PYDroidComponentImpl internal constructor(
   private val versionUpgradeBus = RxBus.create<VersionViewEvents>()
   private val aboutStateEventsBus = RxBus.create<AboutStateEvents>()
   private val aboutViewEventsBus = RxBus.create<AboutViewEvents>()
+  private val licenseViewBus = RxBus.create<LicenseViewEvents>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -138,15 +140,14 @@ internal class PYDroidComponentImpl internal constructor(
   )
 
   override fun plusViewLicenseComponent(
+    parent: ViewGroup,
     owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?,
     link: String,
     name: String
   ): ViewLicenseComponent {
     return ViewLicenseComponentImpl(
-        inflater, container, owner, loaderModule.provideImageLoader(), link, name
+        parent, owner, loaderModule.provideImageLoader(),
+        link, name, licenseViewBus, schedulerProvider
     )
   }
 

@@ -17,28 +17,25 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 
 internal class ViewLicenseComponentImpl internal constructor(
-  inflater: LayoutInflater,
-  container: ViewGroup?,
-  owner: LifecycleOwner,
-  imageLoader: ImageLoader,
-  link: String,
-  name: String
+  private val parent: ViewGroup,
+  private val owner: LifecycleOwner,
+  private val imageLoader: ImageLoader,
+  private val link: String,
+  private val name: String,
+  private val uiBus: EventBus<LicenseViewEvents>,
+  private val schedulerProvider: SchedulerProvider
 ) : ViewLicenseComponent {
 
-  private val licenseView by lazy {
-    LicenseViewImpl(
-        inflater, container, owner, imageLoader, link, name
-    )
-  }
-
   override fun inject(dialog: ViewLicenseDialog) {
-    dialog.rootView = licenseView
+    val toolbarView = LicenseToolbarView(parent, name, imageLoader, owner, uiBus)
+    dialog.toolbarComponent = LicenseToolbarUiComponent(toolbarView, uiBus, schedulerProvider)
   }
 
 }

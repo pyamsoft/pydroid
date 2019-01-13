@@ -15,26 +15,10 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.about.dialog
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
+sealed class LicenseViewEvents {
 
-interface UiView {
+  object ToolbarNavClick : LicenseViewEvents()
 
-  @CheckResult
-  fun ViewGroup.inflater(): LayoutInflater {
-    return LayoutInflater.from(context)
-  }
-
-  @CheckResult
-  @IdRes
-  fun id(): Int
-
-  fun inflate(savedInstanceState: Bundle?)
-
-  fun saveState(outState: Bundle)
 }

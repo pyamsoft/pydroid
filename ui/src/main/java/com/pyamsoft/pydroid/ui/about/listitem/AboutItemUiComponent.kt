@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
+import android.view.View
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import io.reactivex.Observable
@@ -27,6 +28,10 @@ internal class AboutItemUiComponent internal constructor(
   private val aboutActionsView: AboutItemActionsView,
   private val aboutDescriptionView: AboutItemDescriptionView
 ) : UiComponent<Unit>, BaseAboutItem {
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun create(savedInstanceState: Bundle?) {
     aboutTitleView.inflate(savedInstanceState)

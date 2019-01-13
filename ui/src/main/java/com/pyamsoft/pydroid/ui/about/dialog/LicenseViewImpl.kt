@@ -193,7 +193,6 @@ internal class LicenseViewImpl internal constructor(
           })
           .bind(owner)
     }
-
   }
 
   override fun onMenuItemClick(onClick: () -> Unit) {

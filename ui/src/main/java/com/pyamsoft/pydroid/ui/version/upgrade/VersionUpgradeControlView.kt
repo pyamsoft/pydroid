@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.arch.UiView
@@ -32,6 +33,10 @@ class VersionUpgradeControlView internal constructor(
 ) : UiView {
 
   private lateinit var binding: VersionUpgradeControlsBinding
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun inflate(savedInstanceState: Bundle?) {
     binding = VersionUpgradeControlsBinding.inflate(parent.inflater(), parent, false)

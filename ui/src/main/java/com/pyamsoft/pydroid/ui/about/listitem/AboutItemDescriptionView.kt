@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -30,6 +31,10 @@ internal class AboutItemDescriptionView internal constructor(
 ) : UiView, BaseAboutItem {
 
   private lateinit var binding: AboutItemDescriptionBinding
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun inflate(savedInstanceState: Bundle?) {
     binding = AboutItemDescriptionBinding.inflate(

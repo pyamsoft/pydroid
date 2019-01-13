@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.bus.Publisher
@@ -34,6 +35,10 @@ internal class AboutItemActionsView internal constructor(
 ) : UiView, BaseAboutItem {
 
   private lateinit var binding: AboutItemActionsBinding
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun inflate(savedInstanceState: Bundle?) {
     binding = AboutItemActionsBinding.inflate(

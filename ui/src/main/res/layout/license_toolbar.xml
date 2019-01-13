@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,30 +17,18 @@
   -->
 <layout>
 
-  <FrameLayout
+  <androidx.appcompat.widget.Toolbar
       xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
+      android:id="@+id/toolbar"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
+      android:layout_height="?attr/actionBarSize"
+      android:background="?attr/colorPrimary"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      tools:background="@color/blue700"
+      tools:layout_height="56dp"
+      tools:title="License"
+      />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/about_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible"
-        tools:listitem="@layout/adapter_item_about"
-        tools:visibility="visible"
-        />
-
-    <ProgressBar
-        android:id="@+id/progress_spinner"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        />
-
-  </FrameLayout>
 </layout>
+

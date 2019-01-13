@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
@@ -33,6 +34,10 @@ class VersionUpgradeContentView internal constructor(
 ) : UiView {
 
   private lateinit var binding: VersionUpgradeContentBinding
+
+  override fun id(): Int {
+    return View.NO_ID
+  }
 
   override fun inflate(savedInstanceState: Bundle?) {
     binding = VersionUpgradeContentBinding.inflate(parent.inflater(), parent, false)

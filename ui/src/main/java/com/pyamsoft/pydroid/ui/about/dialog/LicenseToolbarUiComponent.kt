@@ -15,37 +15,32 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.os.Bundle
-import android.view.View
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import io.reactivex.Observable
 
-class VersionUpgradeUiComponent internal constructor(
-  private val controlsView: VersionUpgradeControlView,
-  private val contentView: VersionUpgradeContentView,
-  private val uiBus: Listener<VersionViewEvents>,
+internal class LicenseToolbarUiComponent internal constructor(
+  private val toolbarView: LicenseToolbarView,
+  private val uiBus: Listener<LicenseViewEvents>,
   private val schedulerProvider: SchedulerProvider
-) : UiComponent<VersionViewEvents> {
+) : UiComponent<LicenseViewEvents> {
 
   override fun id(): Int {
-    return View.NO_ID
+    return toolbarView.id()
   }
 
   override fun create(savedInstanceState: Bundle?) {
-    contentView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
+    toolbarView.inflate(savedInstanceState)
   }
 
   override fun saveState(outState: Bundle) {
-    contentView.saveState(outState)
-    controlsView.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<VersionViewEvents> {
+  override fun onUiEvent(): Observable<LicenseViewEvents> {
     return uiBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)

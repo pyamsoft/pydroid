@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.os.Bundle
 import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -72,10 +71,8 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusViewLicenseComponent(
+    parent: ViewGroup,
     owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?,
     link: String,
     name: String
   ): ViewLicenseComponent

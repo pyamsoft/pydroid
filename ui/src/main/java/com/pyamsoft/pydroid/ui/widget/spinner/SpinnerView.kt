@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
 
-class SpinnerView internal constructor(
+class SpinnerView(
   private val parent: ViewGroup
 ) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
 

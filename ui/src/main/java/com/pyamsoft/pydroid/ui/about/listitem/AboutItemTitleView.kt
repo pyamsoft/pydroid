@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
@@ -26,11 +25,12 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
 internal class AboutItemTitleView internal constructor(
   private val parent: ViewGroup
-) : UiView<EMPTY>, BaseAboutItem {
+) : UiView<EMPTY>(EmptyPublisher), BaseAboutItem {
 
   private lateinit var binding: AboutItemTitleBinding
 

@@ -28,8 +28,8 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
 
 internal class VersionUpgradeControlView internal constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<VersionViewEvent>
-) : UiView<VersionViewEvent> {
+  bus: Publisher<VersionViewEvent>
+) : UiView<VersionViewEvent>(bus) {
 
   private lateinit var binding: VersionUpgradeControlsBinding
 
@@ -49,11 +49,11 @@ internal class VersionUpgradeControlView internal constructor(
   }
 
   private fun bindPositiveClick() {
-    binding.upgradeButton.setOnDebouncedClickListener { bus.publish(Upgrade) }
+    binding.upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
   }
 
   private fun bindNegativeClick() {
-    binding.laterButton.setOnDebouncedClickListener { bus.publish(Cancel) }
+    binding.laterButton.setOnDebouncedClickListener { publish(Cancel) }
   }
 
 }

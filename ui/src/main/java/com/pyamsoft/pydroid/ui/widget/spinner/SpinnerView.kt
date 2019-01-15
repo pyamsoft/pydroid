@@ -23,11 +23,12 @@ import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
 
 class SpinnerView internal constructor(
   private val parent: ViewGroup
-) : UiView<EMPTY>, UiToggleView<EMPTY> {
+) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
 
   private lateinit var binding: LoadingSpinnerBinding
 

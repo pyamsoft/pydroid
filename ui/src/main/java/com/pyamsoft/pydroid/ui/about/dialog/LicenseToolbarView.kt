@@ -39,8 +39,8 @@ internal class LicenseToolbarView internal constructor(
   private val link: String,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
-  private val uiBus: Publisher<LicenseViewEvent>
-) : UiView<LicenseViewEvent> {
+  uiBus: Publisher<LicenseViewEvent>
+) : UiView<LicenseViewEvent>(uiBus) {
 
   private lateinit var binding: LicenseToolbarBinding
 
@@ -101,13 +101,13 @@ internal class LicenseToolbarView internal constructor(
 
   private fun setupOnClick() {
     binding.toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
-      uiBus.publish(ToolbarNavClick)
+      publish(ToolbarNavClick)
     })
   }
 
   private fun setupMenuOnClick() {
     binding.toolbar.setOnMenuItemClickListener {
-      uiBus.publish(ToolbarMenuClick(it.itemId, link))
+      publish(ToolbarMenuClick(it.itemId, link))
       return@setOnMenuItemClickListener true
     }
   }

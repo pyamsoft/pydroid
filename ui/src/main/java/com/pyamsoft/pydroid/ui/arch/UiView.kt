@@ -22,21 +22,28 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import com.pyamsoft.pydroid.core.bus.Publisher
 
-interface UiView<T : ViewEvent> {
+abstract class UiView<T : ViewEvent> protected constructor(
+  private val bus: Publisher<T>
+) {
 
   @CheckResult
-  fun ViewGroup.inflater(): LayoutInflater {
+  protected fun ViewGroup.inflater(): LayoutInflater {
     return LayoutInflater.from(context)
+  }
+
+  protected fun publish(event: T) {
+    bus.publish(event)
   }
 
   @CheckResult
   @IdRes
-  fun id(): Int
+  abstract fun id(): Int
 
-  fun inflate(savedInstanceState: Bundle?)
+  abstract fun inflate(savedInstanceState: Bundle?)
 
-  fun saveState(outState: Bundle)
+  abstract fun saveState(outState: Bundle)
 
 }
 

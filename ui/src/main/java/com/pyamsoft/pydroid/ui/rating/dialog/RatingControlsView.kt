@@ -29,8 +29,8 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 internal class RatingControlsView internal constructor(
   private val parent: ViewGroup,
   private val rateLink: String,
-  private val uiBus: Publisher<RatingDialogViewEvent>
-) : UiView<RatingDialogViewEvent> {
+  uiBus: Publisher<RatingDialogViewEvent>
+) : UiView<RatingDialogViewEvent>(uiBus) {
 
   private lateinit var binding: RatingControlsBinding
 
@@ -47,8 +47,8 @@ internal class RatingControlsView internal constructor(
 
   private fun setupButtons() {
     binding.apply {
-      rateApplication.setOnDebouncedClickListener { uiBus.publish(VisitMarket(rateLink)) }
-      noThanks.setOnDebouncedClickListener { uiBus.publish(Cancel) }
+      rateApplication.setOnDebouncedClickListener { publish(VisitMarket(rateLink)) }
+      noThanks.setOnDebouncedClickListener { publish(Cancel) }
     }
   }
 

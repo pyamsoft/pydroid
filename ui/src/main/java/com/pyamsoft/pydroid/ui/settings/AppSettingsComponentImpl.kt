@@ -45,8 +45,8 @@ internal class AppSettingsComponentImpl internal constructor(
 
   override fun inject(fragment: AppSettingsPreferenceFragment) {
     val settingsView = AppSettingsView(
-        theming, settingsViewBus, preferenceScreen, applicationName,
-        bugreportUrl, hideClearAll, hideUpgradeInformation
+        theming, preferenceScreen, applicationName, bugreportUrl,
+        hideClearAll, hideUpgradeInformation, settingsViewBus
     )
     fragment.theming = theming
     fragment.versionWorker = VersionCheckWorker(

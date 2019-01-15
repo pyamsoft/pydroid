@@ -30,8 +30,8 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<AboutViewEvent>
-) : UiView<AboutViewEvent>, BaseAboutItem {
+  bus: Publisher<AboutViewEvent>
+) : UiView<AboutViewEvent>(bus), BaseAboutItem {
 
   private lateinit var binding: AboutItemActionsBinding
 
@@ -52,11 +52,11 @@ internal class AboutItemActionsView internal constructor(
   override fun bind(model: OssLibrary) {
     binding.apply {
       aboutLibraryViewLicense.setOnDebouncedClickListener {
-        bus.publish(ViewLicense(model.name, model.licenseUrl))
+        publish(ViewLicense(model.name, model.licenseUrl))
       }
 
       aboutLibraryVisitHomepage.setOnDebouncedClickListener {
-        bus.publish(VisitHomepage(model.name, model.libraryUrl))
+        publish(VisitHomepage(model.name, model.libraryUrl))
       }
     }
   }

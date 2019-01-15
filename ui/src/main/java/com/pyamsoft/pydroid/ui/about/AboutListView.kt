@@ -27,12 +27,13 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 class AboutListView internal constructor(
   private val parent: ViewGroup
-) : UiView<EMPTY>, UiToggleView<EMPTY> {
+) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
 
   private lateinit var binding: AboutLibrariesListBinding
   private lateinit var aboutAdapter: AboutAdapter

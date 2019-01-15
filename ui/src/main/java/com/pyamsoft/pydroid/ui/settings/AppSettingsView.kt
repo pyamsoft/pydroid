@@ -42,13 +42,13 @@ import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
   private val theming: Theming,
-  private val uiBus: Publisher<AppSettingsViewEvent>,
   private val preferenceScreen: PreferenceScreen,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val hideClearAll: Boolean,
-  private val hideUpgradeInformation: Boolean
-) : UiView<AppSettingsViewEvent> {
+  private val hideUpgradeInformation: Boolean,
+  uiBus: Publisher<AppSettingsViewEvent>
+) : UiView<AppSettingsViewEvent>(uiBus) {
 
   private val context = preferenceScreen.context
 
@@ -107,7 +107,7 @@ internal class AppSettingsView internal constructor(
   private fun setupMoreApps() {
     val moreApps = preferenceScreen.findPreference(context.getString(R.string.more_apps_key))
     moreApps.setOnPreferenceClickListener {
-      uiBus.publish(MoreAppsClicked)
+      publish(MoreAppsClicked)
       return@setOnPreferenceClickListener true
     }
   }
@@ -116,7 +116,7 @@ internal class AppSettingsView internal constructor(
     val social = preferenceScreen.findPreference(context.getString(R.string.social_media_f_key))
     val socialLink = FACEBOOK.hyperlink(context)
     social.setOnPreferenceClickListener {
-      uiBus.publish(FollowSocialClicked(socialLink))
+      publish(FollowSocialClicked(socialLink))
       return@setOnPreferenceClickListener true
     }
   }
@@ -125,7 +125,7 @@ internal class AppSettingsView internal constructor(
     val followBlog = preferenceScreen.findPreference(context.getString(R.string.social_media_b_key))
     val blogLink = BLOG.hyperlink(context)
     followBlog.setOnPreferenceClickListener {
-      uiBus.publish(FollowBlogClicked(blogLink))
+      publish(FollowBlogClicked(blogLink))
       return@setOnPreferenceClickListener true
     }
   }
@@ -133,7 +133,7 @@ internal class AppSettingsView internal constructor(
   private fun setupRateApp() {
     val rate = preferenceScreen.findPreference(context.getString(R.string.rating_key))
     rate.setOnPreferenceClickListener {
-      uiBus.publish(RateAppClicked)
+      publish(RateAppClicked)
       return@setOnPreferenceClickListener true
     }
   }
@@ -142,7 +142,7 @@ internal class AppSettingsView internal constructor(
     val bugreport = preferenceScreen.findPreference(context.getString(R.string.bugreport_key))
     val reportLink = bugreportUrl.hyperlink(context)
     bugreport.setOnPreferenceClickListener {
-      uiBus.publish(BugReportClicked(reportLink))
+      publish(BugReportClicked(reportLink))
       return@setOnPreferenceClickListener true
     }
   }
@@ -150,7 +150,7 @@ internal class AppSettingsView internal constructor(
   private fun setupLicenses() {
     val licenses = preferenceScreen.findPreference(context.getString(R.string.about_license_key))
     licenses.setOnPreferenceClickListener {
-      uiBus.publish(LicenseClicked)
+      publish(LicenseClicked)
       return@setOnPreferenceClickListener true
     }
   }
@@ -158,7 +158,7 @@ internal class AppSettingsView internal constructor(
   private fun setupCheckUpgrade() {
     val version = preferenceScreen.findPreference(context.getString(R.string.check_version_key))
     version.setOnPreferenceClickListener {
-      uiBus.publish(CheckUpgrade)
+      publish(CheckUpgrade)
       return@setOnPreferenceClickListener true
     }
   }
@@ -169,7 +169,7 @@ internal class AppSettingsView internal constructor(
       clearAll.isVisible = false
     } else {
       clearAll.setOnPreferenceClickListener {
-        uiBus.publish(ClearAppData)
+        publish(ClearAppData)
         return@setOnPreferenceClickListener true
       }
     }
@@ -181,7 +181,7 @@ internal class AppSettingsView internal constructor(
       upgradeInfo.isVisible = false
     } else {
       upgradeInfo.setOnPreferenceClickListener {
-        uiBus.publish(ShowUpgradeInfo)
+        publish(ShowUpgradeInfo)
         return@setOnPreferenceClickListener true
       }
     }
@@ -191,7 +191,7 @@ internal class AppSettingsView internal constructor(
     val theme = preferenceScreen.findPreference(context.getString(R.string.dark_mode_key))
     theme.setOnPreferenceChangeListener { _, newValue ->
       if (newValue is Boolean) {
-        uiBus.publish(DarkTheme(newValue))
+        publish(DarkTheme(newValue))
         return@setOnPreferenceChangeListener true
       }
       return@setOnPreferenceChangeListener false

@@ -23,6 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.databinding.RatingIconBinding
 
 internal class RatingIconView internal constructor(
@@ -30,7 +31,7 @@ internal class RatingIconView internal constructor(
   private val changelogIcon: Int,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner
-) : UiView<EMPTY> {
+) : UiView<EMPTY>(EmptyPublisher) {
 
   private lateinit var binding: RatingIconBinding
 

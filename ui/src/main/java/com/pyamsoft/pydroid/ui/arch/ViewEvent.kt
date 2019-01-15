@@ -17,7 +17,16 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
+import com.pyamsoft.pydroid.core.bus.Publisher
+
 interface ViewEvent {
 
   object EMPTY : ViewEvent
+
+  object EmptyPublisher : Publisher<EMPTY> {
+
+    override fun publish(event: EMPTY) {
+    }
+
+  }
 }

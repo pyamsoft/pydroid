@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.databinding.LicenseWebviewBinding
 import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
@@ -44,7 +45,7 @@ internal class LicenseWebviewView internal constructor(
   private val parent: ViewGroup,
   private val link: String,
   private val controllerBus: Publisher<LicenseStateEvent>
-) : UiView<EMPTY>, UiToggleView<EMPTY> {
+) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
 
   private lateinit var binding: LicenseWebviewBinding
   private var errorToast: Toast? = null

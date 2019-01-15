@@ -34,7 +34,7 @@ internal class RatingDialogComponentImpl internal constructor(
   private val rateLink: String,
   private val changelogIcon: Int,
   private val changelog: SpannedString,
-  private val uiBus: EventBus<RatingViewEvent>
+  private val uiBus: EventBus<RatingDialogViewEvent>
 ) : RatingDialogComponent {
 
   override fun inject(dialog: RatingDialog) {

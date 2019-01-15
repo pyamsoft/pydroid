@@ -22,14 +22,14 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.RatingControlsBinding
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent.VisitMarket
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class RatingControlsView internal constructor(
   private val parent: ViewGroup,
   private val rateLink: String,
-  private val uiBus: Publisher<RatingViewEvent>
+  private val uiBus: Publisher<RatingDialogViewEvent>
 ) : UiView {
 
   private lateinit var binding: RatingControlsBinding

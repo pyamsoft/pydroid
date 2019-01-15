@@ -47,7 +47,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingStateEvent
 import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -68,7 +68,7 @@ internal class PYDroidComponentImpl internal constructor(
 ) : PYDroidComponent, ModuleProvider {
 
   private val ratingStateBus = RxBus.create<RatingStateEvent>()
-  private val ratingViewBus = RxBus.create<RatingViewEvent>()
+  private val ratingViewBus = RxBus.create<RatingDialogViewEvent>()
 
   private val versionStateBus = RxBus.create<VersionStateEvent>()
   private val versionUpgradeBus = RxBus.create<VersionViewEvent>()

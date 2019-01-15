@@ -39,7 +39,7 @@ data class HyperlinkIntent internal constructor(
     }
   }
 
-  inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit) {
-    navigate()?.also(onNavigateError)
+  inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit): ActivityNotFoundException? {
+    return navigate()?.also(onNavigateError)
   }
 }

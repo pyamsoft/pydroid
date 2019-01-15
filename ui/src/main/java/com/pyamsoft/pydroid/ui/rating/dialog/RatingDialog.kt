@@ -24,8 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CheckResult
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -33,21 +32,21 @@ import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
+import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent.VisitMarket
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.MarketLinker
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class RatingDialog : ToolbarDialog() {
-
-  private lateinit var binding: LayoutConstraintBinding
 
   internal lateinit var iconComponent: RatingIconUiComponent
   internal lateinit var changelogComponent: RatingChangelogUiComponent
   internal lateinit var controlsComponent: RatingControlsUiComponent
   internal lateinit var worker: RatingDialogWorker
 
+  private var marketErrorSnackbar: Snackbar? = null
   private var ratingSaveDisposable by singleDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +59,7 @@ internal class RatingDialog : ToolbarDialog() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    binding = LayoutConstraintBinding.inflate(inflater, container, false)
+    val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
 
     val rateLink = requireArguments().getString(RATE_LINK, "")
     val changeLogIcon = requireArguments().getInt(CHANGE_LOG_ICON, 0)
@@ -91,8 +90,8 @@ internal class RatingDialog : ToolbarDialog() {
     controlsComponent.onUiEvent()
         .subscribe {
           when (it) {
-            is VisitMarket -> saveRating(it.packageName)
-            is Cancel -> saveRating()
+            is VisitMarket -> saveAndRate(it.packageName)
+            is Cancel -> saveAndCancel()
           }
         }
         .destroy(viewLifecycleOwner)
@@ -100,41 +99,6 @@ internal class RatingDialog : ToolbarDialog() {
     iconComponent.create(savedInstanceState)
     changelogComponent.create(savedInstanceState)
     controlsComponent.create(savedInstanceState)
-
-    applyConstraints(binding.layoutRoot)
-  }
-
-  private fun applyConstraints(layoutRoot: ConstraintLayout) {
-    ConstraintSet().apply {
-      clone(layoutRoot)
-
-      iconComponent.also {
-        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      controlsComponent.also {
-        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      changelogComponent.also {
-        connect(it.id(), ConstraintSet.TOP, iconComponent.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.BOTTOM, controlsComponent.id(), ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      applyTo(layoutRoot)
-    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -147,13 +111,35 @@ internal class RatingDialog : ToolbarDialog() {
   override fun onDestroyView() {
     super.onDestroyView()
     ratingSaveDisposable.tryDispose()
+    dismissSnackbar()
   }
 
-  private fun saveRating(packageName: String = "") {
+  private fun dismissSnackbar() {
+    marketErrorSnackbar?.dismiss()
+    marketErrorSnackbar = null
+  }
+
+  private fun saveAndRate(packageName: String) {
     ratingSaveDisposable = worker.saveRating {
-      if (packageName.isNotBlank()) {
-        MarketLinker.linkToMarketPage(packageName, requireView())
+      val error = MarketLinker.linkToMarketPage(requireContext(), packageName)
+
+      // If it errors out we show the view but otherwise we can close
+      if (error == null) {
+        dismiss()
+      } else {
+        dismissSnackbar()
+        marketErrorSnackbar = Snackbreak.short(
+            requireView(),
+            "No application is able to handle Store URLs."
+        )
+            .also { bar -> bar.show() }
       }
+    }
+  }
+
+  private fun saveAndCancel() {
+    ratingSaveDisposable = worker.saveRating {
+      dismiss()
     }
   }
 
@@ -162,7 +148,7 @@ internal class RatingDialog : ToolbarDialog() {
     // The dialog is super small for some reason. We have to set the size manually, in onResume
     dialog.window?.setLayout(
         WindowManager.LayoutParams.MATCH_PARENT,
-        WindowManager.LayoutParams.MATCH_PARENT
+        WindowManager.LayoutParams.WRAP_CONTENT
     )
   }
 

@@ -25,9 +25,9 @@ import io.reactivex.Observable
 
 internal class RatingControlsUiComponent internal constructor(
   private val controlsView: RatingControlsView,
-  private val uiBus: Listener<RatingViewEvent>,
+  private val uiBus: Listener<RatingDialogViewEvent>,
   private val schedulerProvider: SchedulerProvider
-) : UiComponent<RatingViewEvent> {
+) : UiComponent<RatingDialogViewEvent> {
 
   override fun id(): Int {
     return controlsView.id()
@@ -41,7 +41,7 @@ internal class RatingControlsUiComponent internal constructor(
     controlsView.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<RatingViewEvent> {
+  override fun onUiEvent(): Observable<RatingDialogViewEvent> {
     return uiBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)

@@ -25,6 +25,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -35,7 +36,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.navigate
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
@@ -49,6 +50,9 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   private var ratingDisposable by singleDisposable()
   private var checkUpdatesDisposable by singleDisposable()
+
+  private var marketSnackbar: Snackbar? = null
+  private var urlSnackbar: Snackbar? = null
 
   @CallSuper
   override fun onCreatePreferences(
@@ -79,6 +83,24 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
+  private fun showMarketSnackbar() {
+    marketSnackbar = dismissSnackbar(marketSnackbar)
+    marketSnackbar = Snackbreak.short(
+        requireView(),
+        "No application is able to handle Store URLs."
+    )
+        .also { bar -> bar.show() }
+  }
+
+  private fun showUrlSnackbar() {
+    urlSnackbar = dismissSnackbar(urlSnackbar)
+    urlSnackbar = Snackbreak.short(
+        requireView(),
+        "No application is able to handle http:// URLs."
+    )
+        .also { bar -> bar.show() }
+  }
+
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
@@ -86,36 +108,35 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     super.onViewCreated(view, savedInstanceState)
     settingsPreferenceView.onCheckVersionClicked { onCheckForUpdatesClicked() }
     settingsPreferenceView.onLicensesClicked { onLicenseItemClicked() }
-    settingsPreferenceView.onMoreAppsClicked { MarketLinker.linkToDeveloperPage(requireView()) }
     settingsPreferenceView.onUpgradeClicked { onShowChangelogClicked() }
     settingsPreferenceView.onClearAllClicked { onClearAllClicked() }
 
-    settingsPreferenceView.onRateAppClicked {
-      MarketLinker.linkToMarketPage(requireContext().packageName, requireView())
+    settingsPreferenceView.onMoreAppsClicked {
+      MarketLinker.linkToDeveloperPage(requireContext()) { showMarketSnackbar() }
     }
 
-    settingsPreferenceView.onBugReportClicked { link: HyperlinkIntent ->
-      link.navigate(requireView())
+    settingsPreferenceView.onRateAppClicked {
+      val link = requireContext().packageName
+      MarketLinker.linkToMarketPage(requireContext(), link) { showMarketSnackbar() }
     }
+
+    settingsPreferenceView.onBugReportClicked { it.navigate { showUrlSnackbar() } }
 
     settingsPreferenceView.onFollowsClicked(
-        onBlogClicked = { link: HyperlinkIntent ->
-          link.navigate(requireView())
-        },
-        onSocialClicked = { link: HyperlinkIntent ->
-          link.navigate(requireView())
-        }
+        onBlogClicked = { link: HyperlinkIntent -> link.navigate { showUrlSnackbar() } },
+        onSocialClicked = { link: HyperlinkIntent -> link.navigate { showUrlSnackbar() } }
     )
 
-    settingsPreferenceView.onDarkThemeClicked { dark: Boolean ->
-      onDarkThemeClicked(dark)
-    }
+    settingsPreferenceView.onDarkThemeClicked { onDarkThemeClicked(it) }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     ratingDisposable.tryDispose()
     checkUpdatesDisposable.tryDispose()
+
+    marketSnackbar = dismissSnackbar(marketSnackbar)
+    urlSnackbar = dismissSnackbar(urlSnackbar)
   }
 
   protected open fun onDarkThemeClicked(dark: Boolean) {
@@ -164,4 +185,15 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   @get:[CheckResult IdRes]
   protected abstract val rootViewContainer: Int
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    private fun dismissSnackbar(snackbar: Snackbar?): Snackbar? {
+      snackbar?.dismiss()
+      return null
+    }
+
+  }
 }

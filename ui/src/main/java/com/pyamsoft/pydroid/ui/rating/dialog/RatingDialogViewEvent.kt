@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-internal sealed class RatingViewEvent : ViewEvent {
+internal sealed class RatingDialogViewEvent : ViewEvent {
 
-  data class VisitMarket(val packageName: String) : RatingViewEvent()
+  data class VisitMarket(val packageName: String) : RatingDialogViewEvent()
 
-  object Cancel : RatingViewEvent()
+  object Cancel : RatingDialogViewEvent()
 }

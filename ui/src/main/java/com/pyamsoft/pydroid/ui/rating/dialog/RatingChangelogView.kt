@@ -42,7 +42,7 @@ internal class RatingChangelogView internal constructor(
   }
 
   private fun loadChangelog() {
-    binding.ratingTextChange.text = changelog
+    binding.changelog.text = changelog
   }
 
   override fun saveState(outState: Bundle) {

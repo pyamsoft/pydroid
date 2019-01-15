@@ -17,7 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.view.View
+import android.content.ActivityNotFoundException
+import android.content.Context
 import com.pyamsoft.pydroid.util.hyperlink
 
 object MarketLinker {
@@ -25,23 +26,40 @@ object MarketLinker {
   private const val BASE_MARKET = "market://details?id="
   private const val DEVELOPER_PAGE = "https://play.google.com/store/apps/dev?id=5257476342110165153"
 
+  @JvmStatic
+  @JvmOverloads
   fun linkToMarketPage(
+    context: Context,
     packageName: String,
-    view: View
-  ) {
+    onError: ((error: ActivityNotFoundException) -> Unit)? = null
+  ): ActivityNotFoundException? {
     val targetName: String
     if (packageName.endsWith(".dev")) {
       targetName = packageName.substringBefore(".dev")
     } else {
       targetName = packageName
     }
-    "$BASE_MARKET$targetName".hyperlink(view.context)
-        .navigate(view)
+
+    val hyperlink = "$BASE_MARKET$targetName".hyperlink(context)
+    if (onError == null) {
+      return hyperlink.navigate()
+    } else {
+      return hyperlink.navigate(requireNotNull(onError))
+    }
   }
 
-  fun linkToDeveloperPage(view: View) {
-    DEVELOPER_PAGE.hyperlink(view.context)
-        .navigate(view)
+  @JvmStatic
+  @JvmOverloads
+  fun linkToDeveloperPage(
+    context: Context,
+    onError: ((error: ActivityNotFoundException) -> Unit)? = null
+  ): ActivityNotFoundException? {
+    val hyperlink = DEVELOPER_PAGE.hyperlink(context)
+    if (onError == null) {
+      return hyperlink.navigate()
+    } else {
+      return hyperlink.navigate(requireNotNull(onError))
+    }
   }
 
 }

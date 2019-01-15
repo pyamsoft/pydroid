@@ -18,10 +18,8 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -95,7 +93,7 @@ class AboutListView internal constructor(
   }
 
   override fun hide() {
-    binding.aboutList.isInvisible = true
+    binding.aboutList.isVisible = false
   }
 
   fun loadLicenses(libraries: List<OssLibrary>) {

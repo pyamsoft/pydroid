@@ -89,8 +89,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         .destroy(viewLifecycleOwner)
 
     toolbarComponent.create(savedInstanceState)
-//    webviewComponent.create(savedInstanceState)
-//    loadingComponent.create(savedInstanceState)
+    webviewComponent.create(savedInstanceState)
+    loadingComponent.create(savedInstanceState)
     dropshadowComponent.create(savedInstanceState)
 
     applyConstraints(binding.layoutRoot)
@@ -121,27 +121,27 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
-//      webviewComponent.also {
-//        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
-//        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-//        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-//        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-//        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-//      }
-//
-//      loadingComponent.also {
-//        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
-//        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-//        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-//        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-//        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-//      }
-
       dropshadowComponent.also {
         connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      webviewComponent.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      loadingComponent.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       applyTo(layoutRoot)

@@ -28,7 +28,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
@@ -132,7 +131,7 @@ internal class LicenseWebviewView internal constructor(
   }
 
   override fun hide() {
-    binding.layoutRoot.isInvisible = true
+    binding.layoutRoot.isVisible = false
   }
 
   private fun dismissError() {

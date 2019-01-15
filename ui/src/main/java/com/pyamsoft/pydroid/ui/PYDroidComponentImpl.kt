@@ -33,10 +33,10 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.AboutStateEvents
-import com.pyamsoft.pydroid.ui.about.AboutViewEvents
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
@@ -50,11 +50,11 @@ import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents
+import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponentImpl
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent
 
 internal class PYDroidComponentImpl internal constructor(
   debug: Boolean,
@@ -69,14 +69,14 @@ internal class PYDroidComponentImpl internal constructor(
   private val showRatingErrorBus = RxBus.create<RatingEvents.ShowErrorEvent>()
   private val ratingSaveErrorBus = RxBus.create<RatingEvents.SaveErrorEvent>()
 
-  private val versionStateBus = RxBus.create<VersionStateEvents>()
-  private val versionUpgradeBus = RxBus.create<VersionViewEvents>()
+  private val versionStateBus = RxBus.create<VersionStateEvent>()
+  private val versionUpgradeBus = RxBus.create<VersionViewEvent>()
 
-  private val aboutStateEventsBus = RxBus.create<AboutStateEvents>()
-  private val aboutViewEventsBus = RxBus.create<AboutViewEvents>()
+  private val aboutStateEventsBus = RxBus.create<AboutStateEvent>()
+  private val aboutViewEventsBus = RxBus.create<AboutViewEvent>()
 
-  private val licenseViewBus = RxBus.create<LicenseViewEvents>()
-  private val licenseStateBus = RxBus.create<LicenseStateEvents>()
+  private val licenseViewBus = RxBus.create<LicenseViewEvent>()
+  private val licenseStateBus = RxBus.create<LicenseStateEvent>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -106,7 +106,7 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun inject(activity: VersionCheckActivity) {
-    activity.presenter = VersionCheckPresenter(
+    activity.worker = VersionCheckWorker(
         versionModule.interactor, versionStateBus, schedulerProvider
     )
   }

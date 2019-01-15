@@ -15,12 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.widget.spinner
+package com.pyamsoft.pydroid.ui.arch
 
-sealed class SpinnerStateEvents {
+interface ViewEvent {
 
-  object Show : SpinnerStateEvents()
-
-  object Hide : SpinnerStateEvents()
-
+  object EMPTY : ViewEvent
 }

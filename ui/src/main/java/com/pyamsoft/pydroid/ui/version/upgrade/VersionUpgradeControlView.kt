@@ -18,18 +18,17 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeControlsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
 
 class VersionUpgradeControlView internal constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<VersionViewEvents>
+  private val bus: Publisher<VersionViewEvent>
 ) : UiView {
 
   private lateinit var binding: VersionUpgradeControlsBinding

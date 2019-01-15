@@ -20,23 +20,18 @@ package com.pyamsoft.pydroid.ui.about.dialog
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.Loaded
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.Loading
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.PageError
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Hide
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Show
 import io.reactivex.Observable
 
 internal class LicenseWebviewUiComponent internal constructor(
   private val webviewView: LicenseWebviewView,
   private val owner: LifecycleOwner,
-  private val controllerBus: Listener<LicenseStateEvents>,
-  private val spinnerBus: Publisher<SpinnerStateEvents>
-) : UiComponent<LicenseViewEvents> {
+  private val controllerBus: Listener<LicenseStateEvent>
+) : UiComponent<LicenseViewEvent> {
 
   override fun id(): Int {
     return webviewView.id()
@@ -58,35 +53,20 @@ internal class LicenseWebviewUiComponent internal constructor(
           when (it) {
             is Loading -> {
               webviewView.hide()
-              startSpinner()
               webviewView.loadUrl()
             }
-            is Loaded -> {
-              stopSpinner()
-              webviewView.show()
-            }
-            is PageError -> {
-              stopSpinner()
-              webviewView.pageLoadError(it.error)
-            }
+            is Loaded -> webviewView.show()
+            is PageError -> webviewView.pageLoadError(it.error)
           }
         }
         .destroy(owner)
-  }
-
-  private fun startSpinner() {
-    spinnerBus.publish(Show)
-  }
-
-  private fun stopSpinner() {
-    spinnerBus.publish(Hide)
   }
 
   override fun saveState(outState: Bundle) {
     webviewView.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<LicenseViewEvents> {
+  override fun onUiEvent(): Observable<LicenseViewEvent> {
     return Observable.empty()
   }
 

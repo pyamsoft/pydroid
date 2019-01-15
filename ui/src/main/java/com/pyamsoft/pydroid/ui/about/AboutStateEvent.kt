@@ -15,13 +15,19 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.about
 
-interface UiToggleView : UiView {
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-  fun show()
+sealed class AboutStateEvent: StateEvent {
 
-  fun hide()
+  object Loading : AboutStateEvent()
+
+  data class LicensesLoaded(val libraries: List<OssLibrary>) : AboutStateEvent()
+
+  data class LoadError(val error: Throwable) : AboutStateEvent()
+
+  object LoadComplete : AboutStateEvent()
 
 }
-

@@ -15,31 +15,39 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.widget.shadow
+package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
-class DropshadowUiComponent (
-  private val dropshadowView: DropshadowView
-) : UiComponent<EMPTY> {
+internal class AboutItemDescriptionUiComponent internal constructor(
+  private val aboutDescriptionView: AboutItemDescriptionView
+) : UiComponent<EMPTY>, BaseAboutItem {
 
   override fun id(): Int {
-    return dropshadowView.id()
+    return aboutDescriptionView.id()
   }
 
   override fun create(savedInstanceState: Bundle?) {
-    dropshadowView.inflate(savedInstanceState)
+    aboutDescriptionView.inflate(savedInstanceState)
   }
 
   override fun saveState(outState: Bundle) {
-    dropshadowView.saveState(outState)
   }
 
   override fun onUiEvent(): Observable<EMPTY> {
     return Observable.empty()
+  }
+
+  override fun bind(model: OssLibrary) {
+    aboutDescriptionView.bind(model)
+  }
+
+  override fun unbind() {
+    aboutDescriptionView.unbind()
   }
 
 }

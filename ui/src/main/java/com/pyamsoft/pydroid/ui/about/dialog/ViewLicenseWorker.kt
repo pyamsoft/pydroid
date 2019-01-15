@@ -20,14 +20,15 @@ package com.pyamsoft.pydroid.ui.about.dialog
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.Loading
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.PageError
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
+import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.disposables.Disposable
 
-class ViewLicensePresenter internal constructor(
-  private val licenseStateBus: EventBus<LicenseStateEvents>,
+class ViewLicenseWorker internal constructor(
+  private val licenseStateBus: EventBus<LicenseStateEvent>,
   private val schedulerProvider: SchedulerProvider
-) {
+) :Worker<LicenseStateEvent> {
 
   @CheckResult
   fun onLoadErrorEvent(func: (payload: PageError) -> Unit): Disposable {

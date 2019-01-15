@@ -25,22 +25,30 @@ internal class AboutViewHolder internal constructor(
   binding: AdapterItemAboutLicenseBinding
 ) : BaseViewHolder(binding.root) {
 
-  internal lateinit var component: AboutItemUiComponent
+  internal lateinit var titleComponent: AboutItemTitleUiComponent
+  internal lateinit var actionsComponent: AboutItemActionsUiComponent
+  internal lateinit var descriptionComponent: AboutItemDescriptionUiComponent
 
   init {
     PYDroid.obtain(itemView.context.applicationContext)
         .plusAboutItemComponent(binding.listitemRoot)
         .inject(this)
 
-    component.create(null)
+    titleComponent.create(null)
+    actionsComponent.create(null)
+    descriptionComponent.create(null)
   }
 
   override fun bind(model: OssLibrary) {
-    component.bind(model)
+    titleComponent.bind(model)
+    actionsComponent.bind(model)
+    descriptionComponent.bind(model)
   }
 
   override fun unbind() {
-    component.unbind()
+    titleComponent.unbind()
+    actionsComponent.unbind()
+    descriptionComponent.unbind()
   }
 
 }

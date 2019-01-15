@@ -17,16 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-sealed class AboutViewEvents {
+import com.pyamsoft.pydroid.ui.arch.ViewEvent
+
+sealed class AboutViewEvent : ViewEvent {
 
   data class VisitHomepage(
     val name: String,
     val url: String
-  ) : AboutViewEvents()
+  ) : AboutViewEvent()
 
   data class ViewLicense(
     val name: String,
     val url: String
-  ) : AboutViewEvents()
+  ) : AboutViewEvent()
 
 }

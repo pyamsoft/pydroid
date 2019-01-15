@@ -21,21 +21,22 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.Loading
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateComplete
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateError
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateFound
+import com.pyamsoft.pydroid.ui.arch.Worker
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateComplete
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateError
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateFound
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
-class VersionCheckPresenter internal constructor(
+class VersionCheckWorker internal constructor(
   private val interactor: VersionCheckInteractor,
-  private val versionStateCheckBus: EventBus<VersionStateEvents>,
+  private val versionStateCheckBus: EventBus<VersionStateEvent>,
   private val schedulerProvider: SchedulerProvider
-) {
+) : Worker<VersionStateEvent> {
 
   @CheckResult
-  fun onUpdateEvent(func: (payload: VersionStateEvents) -> Unit): Disposable {
+  fun onUpdateEvent(func: (payload: VersionStateEvent) -> Unit): Disposable {
     return versionStateCheckBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
@@ -49,7 +50,8 @@ class VersionCheckPresenter internal constructor(
         .observeOn(schedulerProvider.foregroundScheduler)
         .doOnSubscribe { versionStateCheckBus.publish(Loading(force)) }
         .doAfterTerminate { versionStateCheckBus.publish(UpdateComplete) }
-        .subscribe({ versionStateCheckBus.publish(UpdateFound(it.currentVersion, it.newVersion)) }, {
+        .subscribe(
+            { versionStateCheckBus.publish(UpdateFound(it.currentVersion, it.newVersion)) }, {
           Timber.e(it, "Error checking for latest version")
           versionStateCheckBus.publish(UpdateError(it))
         })

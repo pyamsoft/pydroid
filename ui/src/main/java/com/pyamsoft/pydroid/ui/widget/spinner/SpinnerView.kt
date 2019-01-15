@@ -23,9 +23,7 @@ import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.databinding.WidgetSpinnerBinding
 
-class SpinnerView(
-  private val parent: ViewGroup
-) : UiToggleView {
+class SpinnerView internal constructor(private val parent: ViewGroup) : UiToggleView {
 
   private lateinit var binding: WidgetSpinnerBinding
 

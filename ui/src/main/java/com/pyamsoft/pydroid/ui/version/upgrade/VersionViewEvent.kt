@@ -15,13 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.version.upgrade
 
-interface UiToggleView : UiView {
+import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-  fun show()
+sealed class VersionViewEvent : ViewEvent {
 
-  fun hide()
+  object Upgrade : VersionViewEvent()
 
+  object Cancel : VersionViewEvent()
 }
-

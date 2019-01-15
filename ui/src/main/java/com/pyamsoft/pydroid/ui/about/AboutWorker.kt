@@ -21,18 +21,19 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LicensesLoaded
-import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadComplete
-import com.pyamsoft.pydroid.ui.about.AboutStateEvents.LoadError
-import com.pyamsoft.pydroid.ui.about.AboutStateEvents.Loading
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LicensesLoaded
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadError
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
+import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
-class AboutPresenter internal constructor(
+class AboutWorker internal constructor(
   private val interactor: AboutInteractor,
-  private val bus: Publisher<AboutStateEvents>,
+  private val bus: Publisher<AboutStateEvent>,
   private val schedulerProvider: SchedulerProvider
-) {
+) : Worker<AboutStateEvent> {
 
   @CheckResult
   fun loadLicenses(force: Boolean): Disposable {

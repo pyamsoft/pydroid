@@ -28,12 +28,13 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvents.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
-  internal lateinit var component: VersionUpgradeUiComponent
+  internal lateinit var controlsComponent: VersionUpgradeControlsUiComponent
+  internal lateinit var contentComponent: VersionUpgradeContentUiComponent
 
   private var latestVersion: Int = 0
 
@@ -64,11 +65,12 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
     super.onViewCreated(view, savedInstanceState)
 
     listenForUiEvents(view)
-    component.create(savedInstanceState)
+    contentComponent.create(savedInstanceState)
+    controlsComponent.create(savedInstanceState)
   }
 
   private fun listenForUiEvents(view: View) {
-    component.onUiEvent()
+    controlsComponent.onUiEvent()
         .subscribe {
           when (it) {
             is Cancel -> dismiss()
@@ -91,7 +93,8 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    contentComponent.saveState(outState)
+    controlsComponent.saveState(outState)
   }
 
   companion object {

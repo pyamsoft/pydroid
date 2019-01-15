@@ -25,9 +25,9 @@ import io.reactivex.Observable
 
 internal class LicenseToolbarUiComponent internal constructor(
   private val toolbarView: LicenseToolbarView,
-  private val uiBus: Listener<LicenseViewEvents>,
+  private val uiBus: Listener<LicenseViewEvent>,
   private val schedulerProvider: SchedulerProvider
-) : UiComponent<LicenseViewEvents> {
+) : UiComponent<LicenseViewEvent> {
 
   override fun id(): Int {
     return toolbarView.id()
@@ -40,7 +40,7 @@ internal class LicenseToolbarUiComponent internal constructor(
   override fun saveState(outState: Bundle) {
   }
 
-  override fun onUiEvent(): Observable<LicenseViewEvents> {
+  override fun onUiEvent(): Observable<LicenseViewEvent> {
     return uiBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)

@@ -15,15 +15,6 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.arch
 
-sealed class LicenseViewEvents {
-
-  object ToolbarNavClick : LicenseViewEvents()
-
-  data class ToolbarMenuClick(
-    val itemId: Int,
-    val link: String
-  ) : LicenseViewEvents()
-
-}
+interface Worker<T : StateEvent>

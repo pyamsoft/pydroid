@@ -21,11 +21,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
@@ -35,8 +33,8 @@ internal class ViewLicenseComponentImpl internal constructor(
   private val imageLoader: ImageLoader,
   private val link: String,
   private val name: String,
-  private val uiBus: EventBus<LicenseViewEvents>,
-  private val controllerBus: EventBus<LicenseStateEvents>,
+  private val uiBus: EventBus<LicenseViewEvent>,
+  private val controllerBus: EventBus<LicenseStateEvent>,
   private val schedulerProvider: SchedulerProvider
 ) : ViewLicenseComponent {
 
@@ -45,14 +43,11 @@ internal class ViewLicenseComponentImpl internal constructor(
     val dropshadowView = DropshadowView(parent)
     val webviewView = LicenseWebviewView(parent, link, controllerBus)
     val spinnerView = SpinnerView(parent)
-    val spinnerBus = RxBus.create<SpinnerStateEvents>()
-    dialog.presenter = ViewLicensePresenter(controllerBus, schedulerProvider)
+    dialog.worker = ViewLicenseWorker(controllerBus, schedulerProvider)
     dialog.toolbarComponent = LicenseToolbarUiComponent(toolbarView, uiBus, schedulerProvider)
     dialog.dropshadowComponent = DropshadowUiComponent(dropshadowView)
-    dialog.loadingComponent = SpinnerUiComponent(spinnerView, owner, spinnerBus)
-    dialog.webviewComponent = LicenseWebviewUiComponent(
-        webviewView, owner, controllerBus, spinnerBus
-    )
+    dialog.loadingComponent = SpinnerUiComponent.create(spinnerView, owner, controllerBus)
+    dialog.webviewComponent = LicenseWebviewUiComponent(webviewView, owner, controllerBus)
   }
 
 }

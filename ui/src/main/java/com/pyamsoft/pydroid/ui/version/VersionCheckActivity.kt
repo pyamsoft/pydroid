@@ -28,16 +28,16 @@ import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.Loading
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateComplete
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateError
-import com.pyamsoft.pydroid.ui.version.VersionStateEvents.UpdateFound
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateComplete
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateError
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateFound
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import timber.log.Timber
 
 abstract class VersionCheckActivity : ActivityBase() {
 
-  internal lateinit var presenter: VersionCheckPresenter
+  internal lateinit var worker: VersionCheckWorker
   private var checkUpdatesDisposable by singleDisposable()
   private var snackbar: Snackbar? = null
 
@@ -49,7 +49,7 @@ abstract class VersionCheckActivity : ActivityBase() {
     PYDroid.obtain(this)
         .inject(this)
 
-    presenter.onUpdateEvent {
+    worker.onUpdateEvent {
       when (it) {
         is Loading -> onCheckingForUpdates(it.forced)
         is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
@@ -75,7 +75,7 @@ abstract class VersionCheckActivity : ActivityBase() {
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
-    checkUpdatesDisposable = presenter.checkForUpdates(false)
+    checkUpdatesDisposable = worker.checkForUpdates(false)
   }
 
   private fun onCheckingForUpdates(showSnackbar: Boolean) {

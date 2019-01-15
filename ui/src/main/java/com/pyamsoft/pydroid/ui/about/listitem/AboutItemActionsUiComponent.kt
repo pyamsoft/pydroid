@@ -15,40 +15,40 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
 import android.view.View
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
-class VersionUpgradeUiComponent internal constructor(
-  private val controlsView: VersionUpgradeControlView,
-  private val contentView: VersionUpgradeContentView,
-  private val uiBus: Listener<VersionViewEvents>,
-  private val schedulerProvider: SchedulerProvider
-) : UiComponent<VersionViewEvents> {
+internal class AboutItemActionsUiComponent internal constructor(
+  private val aboutActionsView: AboutItemActionsView
+) : UiComponent<EMPTY>, BaseAboutItem {
 
   override fun id(): Int {
-    return View.NO_ID
+    return aboutActionsView.id()
   }
 
   override fun create(savedInstanceState: Bundle?) {
-    contentView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
+    aboutActionsView.inflate(savedInstanceState)
   }
 
   override fun saveState(outState: Bundle) {
-    contentView.saveState(outState)
-    controlsView.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<VersionViewEvents> {
-    return uiBus.listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+  override fun onUiEvent(): Observable<EMPTY> {
+    return Observable.empty()
+  }
+
+  override fun bind(model: OssLibrary) {
+    aboutActionsView.bind(model)
+  }
+
+  override fun unbind() {
+    aboutActionsView.unbind()
   }
 
 }

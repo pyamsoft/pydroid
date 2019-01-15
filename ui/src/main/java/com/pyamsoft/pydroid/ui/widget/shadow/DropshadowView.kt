@@ -22,9 +22,7 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.WidgetDropshadowBinding
 
-class DropshadowView(
-  private val parent: ViewGroup
-) : UiView {
+class DropshadowView internal constructor(private val parent: ViewGroup) : UiView {
 
   private lateinit var binding: WidgetDropshadowBinding
 

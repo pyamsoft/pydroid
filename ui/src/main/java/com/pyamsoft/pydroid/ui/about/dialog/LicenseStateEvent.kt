@@ -15,18 +15,19 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.dialog
 
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import android.content.ActivityNotFoundException
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-sealed class AboutStateEvents {
+sealed class LicenseStateEvent : StateEvent {
 
-  object Loading : AboutStateEvents()
+  object Loading : LicenseStateEvent()
 
-  data class LicensesLoaded(val libraries: List<OssLibrary>) : AboutStateEvents()
+  object Loaded : LicenseStateEvent()
 
-  data class LoadError(val error: Throwable) : AboutStateEvents()
+  data class PageError(val error: ActivityNotFoundException?) : LicenseStateEvent()
 
-  object LoadComplete : AboutStateEvents()
+  object Complete : LicenseStateEvent()
 
 }

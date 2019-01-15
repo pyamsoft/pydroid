@@ -19,22 +19,20 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.about.AboutViewEvents
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<AboutViewEvents>
+  private val bus: Publisher<AboutViewEvent>
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
     val aboutTitleView = AboutItemTitleView(parent)
     val aboutActionsView = AboutItemActionsView(parent, bus)
     val aboutDescriptionView = AboutItemDescriptionView(parent)
-    viewHolder.component = AboutItemUiComponent(
-        aboutTitleView,
-        aboutActionsView,
-        aboutDescriptionView
-    )
+    viewHolder.titleComponent = AboutItemTitleUiComponent(aboutTitleView)
+    viewHolder.actionsComponent = AboutItemActionsUiComponent(aboutActionsView)
+    viewHolder.descriptionComponent = AboutItemDescriptionUiComponent(aboutDescriptionView)
   }
 
 }

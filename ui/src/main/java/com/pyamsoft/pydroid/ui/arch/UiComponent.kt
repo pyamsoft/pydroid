@@ -26,7 +26,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
 
-interface UiComponent<T : Any> {
+interface UiComponent<T : ViewEvent> {
 
   @CheckResult
   @IdRes

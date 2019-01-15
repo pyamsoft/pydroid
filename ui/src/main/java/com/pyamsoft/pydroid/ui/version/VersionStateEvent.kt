@@ -15,13 +15,21 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.version
 
-interface UiToggleView : UiView {
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-  fun show()
+sealed class VersionStateEvent : StateEvent {
 
-  fun hide()
+  data class Loading(val forced: Boolean) : VersionStateEvent()
+
+  data class UpdateFound(
+    val currentVersion: Int,
+    val newVersion: Int
+  ) : VersionStateEvent()
+
+  data class UpdateError(val error: Throwable) : VersionStateEvent()
+
+  object UpdateComplete : VersionStateEvent()
 
 }
-

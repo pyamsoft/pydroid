@@ -20,17 +20,19 @@ package com.pyamsoft.pydroid.ui.widget.spinner
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Hide
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerStateEvents.Show
 import io.reactivex.Observable
 
-class SpinnerUiComponent(
+class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
   private val spinnerView: SpinnerView,
   private val owner: LifecycleOwner,
-  private val controllerBus: Listener<SpinnerStateEvents>
-) : UiComponent<Unit> {
+  private val controllerBus: Listener<T>,
+  private val showTypeClass: Class<Show>,
+  private val hideTypeClass: Class<Hide>
+) : UiComponent<EMPTY> {
 
   override fun id(): Int {
     return spinnerView.id()
@@ -44,9 +46,9 @@ class SpinnerUiComponent(
   private fun listenForControllerEvents() {
     controllerBus.listen()
         .subscribe {
-          when (it) {
-            is Show -> spinnerView.hide()
-            is Hide -> spinnerView.show()
+          when (it::class.java) {
+            showTypeClass -> spinnerView.show()
+            hideTypeClass -> spinnerView.hide()
           }
         }
         .destroy(owner)
@@ -56,8 +58,23 @@ class SpinnerUiComponent(
     spinnerView.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<Unit> {
+  override fun onUiEvent(): Observable<EMPTY> {
     return Observable.empty()
+  }
+
+  companion object {
+
+    @JvmStatic
+    inline fun <T : StateEvent, reified Show : T, reified Hide : T> create(
+      spinnerView: SpinnerView,
+      owner: LifecycleOwner,
+      controllerBus: Listener<T>
+    ): SpinnerUiComponent<T, Show, Hide> {
+      return SpinnerUiComponent(
+          spinnerView, owner, controllerBus,
+          Show::class.java, Hide::class.java
+      )
+    }
   }
 
 }

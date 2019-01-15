@@ -15,19 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version
+package com.pyamsoft.pydroid.ui.about.dialog
 
-sealed class VersionStateEvents {
+import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-  data class Loading(val forced: Boolean) : VersionStateEvents()
+sealed class LicenseViewEvent: ViewEvent {
 
-  data class UpdateFound(
-    val currentVersion: Int,
-    val newVersion: Int
-  ) : VersionStateEvents()
+  object ToolbarNavClick : LicenseViewEvent()
 
-  data class UpdateError(val error: Throwable) : VersionStateEvents()
-
-  object UpdateComplete : VersionStateEvents()
+  data class ToolbarMenuClick(
+    val itemId: Int,
+    val link: String
+  ) : LicenseViewEvent()
 
 }

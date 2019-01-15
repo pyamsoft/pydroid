@@ -15,31 +15,36 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.widget.shadow
+package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
-class DropshadowUiComponent (
-  private val dropshadowView: DropshadowView
-) : UiComponent<EMPTY> {
+class VersionUpgradeControlsUiComponent internal constructor(
+  private val controlsView: VersionUpgradeControlView,
+  private val uiBus: Listener<VersionViewEvent>,
+  private val schedulerProvider: SchedulerProvider
+) : UiComponent<VersionViewEvent> {
 
   override fun id(): Int {
-    return dropshadowView.id()
+    return controlsView.id()
   }
 
   override fun create(savedInstanceState: Bundle?) {
-    dropshadowView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
   }
 
   override fun saveState(outState: Bundle) {
-    dropshadowView.saveState(outState)
+    controlsView.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
+  override fun onUiEvent(): Observable<VersionViewEvent> {
+    return uiBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

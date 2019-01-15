@@ -28,8 +28,10 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.about.AboutViewEvents.ViewLicense
-import com.pyamsoft.pydroid.ui.about.AboutViewEvents.VisitHomepage
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseDialog
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
@@ -45,8 +47,8 @@ import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 class AboutFragment : ToolbarFragment() {
 
   internal lateinit var listComponent: AboutListUiComponent
-  internal lateinit var loadingComponent: SpinnerUiComponent
-  internal lateinit var presenter: AboutPresenter
+  internal lateinit var loadingComponent: SpinnerUiComponent<AboutStateEvent, Loading, LoadComplete>
+  internal lateinit var worker: AboutWorker
 
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
@@ -94,7 +96,7 @@ class AboutFragment : ToolbarFragment() {
     listComponent.create(savedInstanceState)
     loadingComponent.create(savedInstanceState)
 
-    loadLicensesDisposable = presenter.loadLicenses(false)
+    loadLicensesDisposable = worker.loadLicenses(false)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

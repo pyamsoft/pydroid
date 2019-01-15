@@ -31,8 +31,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.Loaded
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvents.PageError
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.databinding.LicenseWebviewBinding
 import com.pyamsoft.pydroid.util.hyperlink
@@ -41,7 +42,7 @@ import timber.log.Timber
 internal class LicenseWebviewView internal constructor(
   private val parent: ViewGroup,
   private val link: String,
-  private val controllerBus: Publisher<LicenseStateEvents>
+  private val controllerBus: Publisher<LicenseStateEvent>
 ) : UiToggleView {
 
   private lateinit var binding: LicenseWebviewBinding
@@ -80,6 +81,8 @@ internal class LicenseWebviewView internal constructor(
               .navigate()
           controllerBus.publish(PageError(error))
         }
+
+        controllerBus.publish(Complete)
       }
 
       @RequiresApi(VERSION_CODES.M)
@@ -93,6 +96,8 @@ internal class LicenseWebviewView internal constructor(
           Timber.e("Webview error: ${error.errorCode} ${error.description}")
           controllerBus.publish(Loaded)
         }
+
+        controllerBus.publish(Complete)
       }
 
       @Suppress("DEPRECATION", "OverridingDeprecatedMember")
@@ -107,6 +112,8 @@ internal class LicenseWebviewView internal constructor(
           Timber.e("Webview error: $errorCode $description")
           controllerBus.publish(Loaded)
         }
+
+        controllerBus.publish(Complete)
       }
 
     }

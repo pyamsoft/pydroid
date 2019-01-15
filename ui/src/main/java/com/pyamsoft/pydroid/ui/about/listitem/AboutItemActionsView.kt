@@ -18,20 +18,19 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.about.AboutViewEvents
-import com.pyamsoft.pydroid.ui.about.AboutViewEvents.ViewLicense
-import com.pyamsoft.pydroid.ui.about.AboutViewEvents.VisitHomepage
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.AboutItemActionsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<AboutViewEvents>
+  private val bus: Publisher<AboutViewEvent>
 ) : UiView, BaseAboutItem {
 
   private lateinit var binding: AboutItemActionsBinding

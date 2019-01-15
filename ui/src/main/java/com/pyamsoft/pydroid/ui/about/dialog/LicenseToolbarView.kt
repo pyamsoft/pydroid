@@ -26,8 +26,8 @@ import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents.ToolbarMenuClick
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvents.ToolbarNavClick
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.LicenseToolbarBinding
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
@@ -39,7 +39,7 @@ internal class LicenseToolbarView internal constructor(
   private val link: String,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
-  private val uiBus: Publisher<LicenseViewEvents>
+  private val uiBus: Publisher<LicenseViewEvent>
 ) : UiView {
 
   private lateinit var binding: LicenseToolbarBinding

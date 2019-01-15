@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
@@ -29,35 +28,33 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent
 
-internal class SettingsPreferenceComponentImpl internal constructor(
+internal class AppSettingsComponentImpl internal constructor(
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
   private val theming: Theming,
-  private val versionCheckStateBus: EventBus<VersionStateEvent>,
+  private val versionStateBus: EventBus<VersionStateEvent>,
   private val ratingStateBus: EventBus<RatingStateEvent>,
+  private val settingsViewBus: EventBus<AppSettingsViewEvent>,
   private val schedulerProvider: SchedulerProvider,
-  owner: LifecycleOwner,
-  preferenceScreen: PreferenceScreen,
-  applicationName: String,
-  bugreportUrl: String,
-  hideClearAll: Boolean,
-  hideUpgradeInformation: Boolean
-) : SettingsPreferenceComponent {
+  private val preferenceScreen: PreferenceScreen,
+  private val applicationName: String,
+  private val bugreportUrl: String,
+  private val hideClearAll: Boolean,
+  private val hideUpgradeInformation: Boolean
+) : AppSettingsComponent {
 
-  private val settingsPreferenceView by lazy {
-    SettingsPreferenceViewImpl(
-        owner, preferenceScreen, theming,
-        applicationName, bugreportUrl,
-        hideClearAll, hideUpgradeInformation
+  override fun inject(fragment: AppSettingsPreferenceFragment) {
+    val settingsView = AppSettingsView(
+        theming, settingsViewBus, preferenceScreen, applicationName,
+        bugreportUrl, hideClearAll, hideUpgradeInformation
     )
-  }
-
-  override fun inject(fragment: SettingsPreferenceFragment) {
     fragment.theming = theming
-    fragment.settingsPreferenceView = settingsPreferenceView
     fragment.versionWorker = VersionCheckWorker(
-        versionCheckModule.interactor, versionCheckStateBus, schedulerProvider
+        versionCheckModule.interactor, versionStateBus, schedulerProvider
     )
     fragment.ratingWorker = RatingWorker(ratingModule.interactor, ratingStateBus, schedulerProvider)
+    fragment.settingsComponent = AppSettingsUiComponent(
+        settingsView, settingsViewBus, schedulerProvider
+    )
   }
 }

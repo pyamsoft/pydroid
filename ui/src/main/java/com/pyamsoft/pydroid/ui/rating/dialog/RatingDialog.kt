@@ -89,7 +89,7 @@ internal class RatingDialog : ToolbarDialog() {
     super.onViewCreated(view, savedInstanceState)
     controlsComponent.onUiEvent()
         .subscribe {
-          when (it) {
+          return@subscribe when (it) {
             is VisitMarket -> saveAndRate(it.packageName)
             is Cancel -> saveAndCancel()
           }

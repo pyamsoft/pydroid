@@ -57,7 +57,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
   }
 
   @CheckResult
-  abstract fun provideSettingsFragment(): SettingsPreferenceFragment
+  abstract fun provideSettingsFragment(): AppSettingsPreferenceFragment
 
   @CheckResult
   abstract fun provideSettingsTag(): String

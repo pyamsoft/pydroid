@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-internal interface SettingsPreferenceComponent {
+internal interface AppSettingsComponent {
 
-  fun inject(fragment: SettingsPreferenceFragment)
+  fun inject(fragment: AppSettingsPreferenceFragment)
 }

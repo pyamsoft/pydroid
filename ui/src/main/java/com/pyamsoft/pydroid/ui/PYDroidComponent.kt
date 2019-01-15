@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui
 
 import android.text.SpannedString
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
@@ -28,7 +27,7 @@ import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
-import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
+import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 
@@ -55,11 +54,10 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusSettingsComponent(
-    owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
-  ): SettingsPreferenceComponent
+  ): AppSettingsComponent
 
   @CheckResult
   fun plusViewLicenseComponent(

@@ -50,7 +50,7 @@ abstract class VersionCheckActivity : ActivityBase() {
         .inject(this)
 
     versionWorker.onUpdateEvent {
-      when (it) {
+      return@onUpdateEvent when (it) {
         is Loading -> onCheckingForUpdates(it.forced)
         is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
         is UpdateError -> onUpdatedVersionError(it.error)

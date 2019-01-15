@@ -71,7 +71,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   private fun listenForUiEvents(view: View) {
     controlsComponent.onUiEvent()
         .subscribe {
-          when (it) {
+          return@subscribe when (it) {
             is Cancel -> dismiss()
             is Upgrade -> {
               val error = MarketLinker.linkToMarketPage(view.context, view.context.packageName)

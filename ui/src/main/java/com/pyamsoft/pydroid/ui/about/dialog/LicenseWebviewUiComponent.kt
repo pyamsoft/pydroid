@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.about.dialog
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
@@ -50,13 +51,14 @@ internal class LicenseWebviewUiComponent internal constructor(
   private fun listenForControllerEvents() {
     controllerBus.listen()
         .subscribe {
-          when (it) {
+          return@subscribe when (it) {
             is Loading -> {
               webviewView.hide()
               webviewView.loadUrl()
             }
             is Loaded -> webviewView.show()
             is PageError -> webviewView.pageLoadError(it.error)
+            is Complete -> Unit
           }
         }
         .destroy(owner)

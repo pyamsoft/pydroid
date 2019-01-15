@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.widget
+package com.pyamsoft.pydroid.ui.widget.scroll
 
 import android.view.View
 import androidx.annotation.CheckResult
@@ -75,7 +75,11 @@ class HideOnScrollListener private constructor(
       view: View,
       onVisibilityChanged: (Boolean) -> Unit
     ): HideOnScrollListener {
-      return withView(view, DEFAULT_DISTANCE, onVisibilityChanged)
+      return withView(
+          view,
+          DEFAULT_DISTANCE,
+          onVisibilityChanged
+      )
     }
 
     @JvmStatic
@@ -85,7 +89,9 @@ class HideOnScrollListener private constructor(
       distance: Int,
       onVisibilityChanged: (Boolean) -> Unit
     ): HideOnScrollListener {
-      return HideOnScrollListener(view, distance, onVisibilityChanged)
+      return HideOnScrollListener(
+          view, distance, onVisibilityChanged
+      )
     }
   }
 

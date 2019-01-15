@@ -45,10 +45,15 @@ class Theming internal constructor(context: Context) {
     return preferences.getBoolean(key, IS_DEFAULT_DARK_THEME)
   }
 
-  fun setDarkTheme(dark: Boolean) {
+  @JvmOverloads
+  fun setDarkTheme(
+    dark: Boolean,
+    onSet: (dark: Boolean) -> Unit = {}
+  ) {
     preferences.edit {
       Timber.d("Set dark theme: $dark")
       putBoolean(key, dark)
+      onSet(dark)
     }
   }
 

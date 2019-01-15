@@ -17,45 +17,70 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearAppData
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.DarkTheme
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.FollowBlogClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.FollowSocialClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.LicenseClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.MoreAppsClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateAppClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgradeInfo
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
-internal class SettingsPreferenceViewImpl internal constructor(
-  private val owner: LifecycleOwner,
-  private val preferenceScreen: PreferenceScreen,
+internal class AppSettingsView internal constructor(
   private val theming: Theming,
+  private val uiBus: Publisher<AppSettingsViewEvent>,
+  private val preferenceScreen: PreferenceScreen,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean
-) : SettingsPreferenceView, LifecycleObserver {
+) : UiView {
 
   private val context = preferenceScreen.context
 
-  init {
-    owner.lifecycle.addObserver(this)
+  override fun id(): Int {
+    throw RuntimeException(
+        """
+      |The Android View which powers this UiView is in turn powered
+      |by a PreferenceFragment from the AndroidX framework which
+      |is a strange beast and does not fit into the UiComponent
+      |architecture that the rest of the application has tried to
+      |establish. This view has no id(), and to attempt to use it
+      |is incorrect.
+    """.trimMargin()
+    )
   }
 
-  override fun create() {
+  override fun inflate(savedInstanceState: Bundle?) {
     adjustIconTint()
+
     setupApplicationTitle()
+    setupMoreApps()
+    setupBlog()
+    setupBugReport()
+    setupCheckUpgrade()
+    setupClearAppData()
+    setupDarkTheme()
+    setupLicenses()
+    setupRateApp()
+    setupShowUpgradeInfo()
+    setupSocial()
   }
 
-  @Suppress("unused")
-  @OnLifecycleEvent(ON_DESTROY)
-  internal fun destroy() {
-    owner.lifecycle.removeObserver(this)
+  override fun saveState(outState: Bundle) {
   }
 
   private fun adjustIconTint() {
@@ -87,98 +112,94 @@ internal class SettingsPreferenceViewImpl internal constructor(
     }
   }
 
-  override fun onMoreAppsClicked(onClick: () -> Unit) {
+  private fun setupMoreApps() {
     val moreApps = preferenceScreen.findPreference(context.getString(R.string.more_apps_key))
     moreApps.setOnPreferenceClickListener {
-      onClick()
+      uiBus.publish(MoreAppsClicked)
       return@setOnPreferenceClickListener true
     }
   }
 
-  override fun onFollowsClicked(
-    onBlogClicked: (blogLink: HyperlinkIntent) -> Unit,
-    onSocialClicked: (socialLink: HyperlinkIntent) -> Unit
-  ) {
+  private fun setupSocial() {
+    val social = preferenceScreen.findPreference(context.getString(R.string.social_media_f_key))
+    val socialLink = FACEBOOK.hyperlink(context)
+    social.setOnPreferenceClickListener {
+      uiBus.publish(FollowSocialClicked(socialLink))
+      return@setOnPreferenceClickListener true
+    }
+  }
+
+  private fun setupBlog() {
     val followBlog = preferenceScreen.findPreference(context.getString(R.string.social_media_b_key))
     val blogLink = BLOG.hyperlink(context)
     followBlog.setOnPreferenceClickListener {
-      onBlogClicked(blogLink)
-      return@setOnPreferenceClickListener true
-    }
-
-    val followSocialMedia =
-      preferenceScreen.findPreference(context.getString(R.string.social_media_f_key))
-    val socialLink = FACEBOOK.hyperlink(context)
-    followSocialMedia.setOnPreferenceClickListener {
-      onSocialClicked(socialLink)
+      uiBus.publish(FollowBlogClicked(blogLink))
       return@setOnPreferenceClickListener true
     }
   }
 
-  override fun onRateAppClicked(onClick: () -> Unit) {
-    val rateApplication = preferenceScreen.findPreference(context.getString(R.string.rating_key))
-    rateApplication.setOnPreferenceClickListener {
-      onClick()
+  private fun setupRateApp() {
+    val rate = preferenceScreen.findPreference(context.getString(R.string.rating_key))
+    rate.setOnPreferenceClickListener {
+      uiBus.publish(RateAppClicked)
       return@setOnPreferenceClickListener true
     }
   }
 
-  override fun onBugReportClicked(onClick: (report: HyperlinkIntent) -> Unit) {
-    val reportUrl = bugreportUrl.hyperlink(context)
+  private fun setupBugReport() {
     val bugreport = preferenceScreen.findPreference(context.getString(R.string.bugreport_key))
+    val reportLink = bugreportUrl.hyperlink(context)
     bugreport.setOnPreferenceClickListener {
-      onClick(reportUrl)
+      uiBus.publish(BugReportClicked(reportLink))
       return@setOnPreferenceClickListener true
     }
   }
 
-  override fun onLicensesClicked(onClick: () -> Unit) {
-    val showAboutLicenses =
-      preferenceScreen.findPreference(context.getString(R.string.about_license_key))
-    showAboutLicenses.setOnPreferenceClickListener {
-      onClick()
+  private fun setupLicenses() {
+    val licenses = preferenceScreen.findPreference(context.getString(R.string.about_license_key))
+    licenses.setOnPreferenceClickListener {
+      uiBus.publish(LicenseClicked)
       return@setOnPreferenceClickListener true
     }
   }
 
-  override fun onCheckVersionClicked(onClick: () -> Unit) {
-    val checkVersion =
-      preferenceScreen.findPreference(context.getString(R.string.check_version_key))
-    checkVersion.setOnPreferenceClickListener {
-      onClick()
+  private fun setupCheckUpgrade() {
+    val version = preferenceScreen.findPreference(context.getString(R.string.check_version_key))
+    version.setOnPreferenceClickListener {
+      uiBus.publish(CheckUpgrade)
       return@setOnPreferenceClickListener true
     }
   }
 
-  override fun onClearAllClicked(onClick: () -> Unit) {
+  private fun setupClearAppData() {
     val clearAll = preferenceScreen.findPreference(context.getString(R.string.clear_all_key))
     if (hideClearAll) {
       clearAll.isVisible = false
     } else {
       clearAll.setOnPreferenceClickListener {
-        onClick()
+        uiBus.publish(ClearAppData)
         return@setOnPreferenceClickListener true
       }
     }
   }
 
-  override fun onUpgradeClicked(onClick: () -> Unit) {
+  private fun setupShowUpgradeInfo() {
     val upgradeInfo = preferenceScreen.findPreference(context.getString(R.string.upgrade_info_key))
     if (hideUpgradeInformation) {
       upgradeInfo.isVisible = false
     } else {
       upgradeInfo.setOnPreferenceClickListener {
-        onClick()
+        uiBus.publish(ShowUpgradeInfo)
         return@setOnPreferenceClickListener true
       }
     }
   }
 
-  override fun onDarkThemeClicked(onClick: (dark: Boolean) -> Unit) {
+  private fun setupDarkTheme() {
     val theme = preferenceScreen.findPreference(context.getString(R.string.dark_mode_key))
     theme.setOnPreferenceChangeListener { _, newValue ->
       if (newValue is Boolean) {
-        onClick(newValue)
+        uiBus.publish(DarkTheme(newValue))
         return@setOnPreferenceChangeListener true
       }
       return@setOnPreferenceChangeListener false

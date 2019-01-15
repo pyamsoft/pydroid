@@ -84,7 +84,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
     toolbarComponent.onUiEvent()
         .subscribe {
-          when (it) {
+          return@subscribe when (it) {
             is ToolbarNavClick -> dismiss()
             is ToolbarMenuClick -> onToolbarMenuItemClicked(it.itemId, it.link)
           }
@@ -112,14 +112,16 @@ internal class ViewLicenseDialog : ToolbarDialog() {
   ) {
     when (itemId) {
       R.id.menu_item_view_license -> {
-        link.hyperlink(requireContext())
-            .navigate {
-              dismissSnackbar()
-              externalUrlSnackbar = Snackbreak.short(
-                  requireView(),
-                  "No application found that can handle http:// URLs"
-              ).also { bar -> bar.show() }
-            }
+        val error = link.hyperlink(requireContext())
+            .navigate()
+        if (error != null) {
+          dismissSnackbar()
+          externalUrlSnackbar = Snackbreak.short(
+              requireView(),
+              "No application found that can handle http:// URLs"
+          )
+              .also { bar -> bar.show() }
+        }
       }
     }
   }

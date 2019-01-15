@@ -45,8 +45,9 @@ import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent
-import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
-import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
+import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
+import com.pyamsoft.pydroid.ui.settings.AppSettingsComponentImpl
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
@@ -75,6 +76,8 @@ internal class PYDroidComponentImpl internal constructor(
 
   private val licenseViewBus = RxBus.create<LicenseViewEvent>()
   private val licenseStateBus = RxBus.create<LicenseStateEvent>()
+
+  private val settingsViewBus = RxBus.create<AppSettingsViewEvent>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -116,15 +119,14 @@ internal class PYDroidComponentImpl internal constructor(
   )
 
   override fun plusSettingsComponent(
-    owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
-  ): SettingsPreferenceComponent =
-    SettingsPreferenceComponentImpl(
+  ): AppSettingsComponent =
+    AppSettingsComponentImpl(
         ratingModule, versionModule, theming,
-        versionStateBus, ratingStateBus, schedulerProvider,
-        owner, preferenceScreen, applicationName,
+        versionStateBus, ratingStateBus, settingsViewBus,
+        schedulerProvider, preferenceScreen, applicationName,
         bugreportUrl, hideClearAll, hideUpgradeInformation
     )
 

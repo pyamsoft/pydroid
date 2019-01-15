@@ -84,7 +84,7 @@ class AboutFragment : ToolbarFragment() {
     super.onViewCreated(view, savedInstanceState)
     listComponent.onUiEvent()
         .subscribe {
-          when (it) {
+          return@subscribe when (it) {
             is ViewLicense -> ViewLicenseDialog.newInstance(it.name, it.url)
                 .show(requireActivity(), ViewLicenseDialog.TAG)
             is VisitHomepage -> ViewLicenseDialog.newInstance(it.name, it.url)

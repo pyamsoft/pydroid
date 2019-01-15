@@ -33,7 +33,18 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarPreferenceFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
+import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.RatingWorker
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearAppData
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.DarkTheme
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.FollowBlogClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.FollowSocialClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.LicenseClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.MoreAppsClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateAppClicked
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgradeInfo
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.Snackbreak
@@ -41,12 +52,12 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
-abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
+abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var theming: Theming
   internal lateinit var versionWorker: VersionCheckWorker
   internal lateinit var ratingWorker: RatingWorker
-  internal lateinit var settingsPreferenceView: SettingsPreferenceView
+  internal lateinit var settingsComponent: AppSettingsUiComponent
 
   private var ratingDisposable by singleDisposable()
   private var checkUpdatesDisposable by singleDisposable()
@@ -73,13 +84,8 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext())
-        .plusSettingsComponent(
-            viewLifecycleOwner, preferenceScreen,
-            hideClearAll, hideUpgradeInformation
-        )
+        .plusSettingsComponent(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
-
-    settingsPreferenceView.create()
     return super.onCreateView(inflater, container, savedInstanceState)
   }
 
@@ -106,28 +112,41 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    settingsPreferenceView.onCheckVersionClicked { onCheckForUpdatesClicked() }
-    settingsPreferenceView.onLicensesClicked { onLicenseItemClicked() }
-    settingsPreferenceView.onUpgradeClicked { onShowChangelogClicked() }
-    settingsPreferenceView.onClearAllClicked { onClearAllClicked() }
+    settingsComponent.onUiEvent()
+        .subscribe {
+          return@subscribe when (it) {
+            is ShowUpgradeInfo -> onShowChangelogClicked()
+            is RateAppClicked -> rateAppClicked()
+            is MoreAppsClicked -> moreAppsClicked()
+            is FollowSocialClicked -> navigateToUrl(it.link)
+            is FollowBlogClicked -> navigateToUrl(it.link)
+            is BugReportClicked -> navigateToUrl(it.link)
+            is LicenseClicked -> onLicenseItemClicked()
+            is CheckUpgrade -> onCheckForUpdatesClicked()
+            is ClearAppData -> onClearAllClicked()
+            is DarkTheme -> onDarkThemeClicked(it.dark)
+          }
+        }
+        .destroy(viewLifecycleOwner)
+    settingsComponent.create(savedInstanceState)
+  }
 
-    settingsPreferenceView.onMoreAppsClicked {
-      MarketLinker.linkToDeveloperPage(requireContext()) { showMarketSnackbar() }
-    }
+  private fun navigateToUrl(link: HyperlinkIntent) {
+    link.navigate { showUrlSnackbar() }
+  }
 
-    settingsPreferenceView.onRateAppClicked {
-      val link = requireContext().packageName
-      MarketLinker.linkToMarketPage(requireContext(), link) { showMarketSnackbar() }
-    }
+  private fun moreAppsClicked() {
+    MarketLinker.linkToDeveloperPage(requireContext()) { showMarketSnackbar() }
+  }
 
-    settingsPreferenceView.onBugReportClicked { it.navigate { showUrlSnackbar() } }
+  private fun rateAppClicked() {
+    val link = requireContext().packageName
+    MarketLinker.linkToMarketPage(requireContext(), link) { showMarketSnackbar() }
+  }
 
-    settingsPreferenceView.onFollowsClicked(
-        onBlogClicked = { link: HyperlinkIntent -> link.navigate { showUrlSnackbar() } },
-        onSocialClicked = { link: HyperlinkIntent -> link.navigate { showUrlSnackbar() } }
-    )
-
-    settingsPreferenceView.onDarkThemeClicked { onDarkThemeClicked(it) }
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    settingsComponent.saveState(outState)
   }
 
   override fun onDestroyView() {

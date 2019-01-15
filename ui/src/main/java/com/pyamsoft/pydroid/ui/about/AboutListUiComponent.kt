@@ -58,7 +58,7 @@ class AboutListUiComponent internal constructor(
   private fun listenForControllerEvents() {
     controllerBus.listen()
         .subscribe {
-          when (it) {
+          return@subscribe when (it) {
             is Loading -> listView.hide()
             is LicensesLoaded -> listView.loadLicenses(it.libraries)
             is LoadError -> listView.showError(it.error)

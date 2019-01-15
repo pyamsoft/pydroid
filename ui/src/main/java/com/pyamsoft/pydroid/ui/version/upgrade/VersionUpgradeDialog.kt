@@ -36,20 +36,15 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   internal lateinit var controlsComponent: VersionUpgradeControlsUiComponent
   internal lateinit var contentComponent: VersionUpgradeContentUiComponent
 
-  private var latestVersion: Int = 0
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
-    require(latestVersion > 0)
-  }
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
     val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
+
+    val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
+    require(latestVersion > 0)
 
     PYDroid.obtain(binding.layoutRoot.context.applicationContext)
         .plusVersionUpgradeComponent(binding.layoutRoot, latestVersion)

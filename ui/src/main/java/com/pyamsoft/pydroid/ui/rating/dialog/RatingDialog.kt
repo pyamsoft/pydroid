@@ -112,21 +112,23 @@ internal class RatingDialog : ToolbarDialog() {
         connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       controlsComponent.also {
         connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
         constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       changelogComponent.also {
         connect(it.id(), ConstraintSet.TOP, iconComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.BOTTOM, controlsComponent.id(), ConstraintSet.TOP)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, controlsComponent.id(), ConstraintSet.TOP)
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
@@ -160,7 +162,7 @@ internal class RatingDialog : ToolbarDialog() {
     // The dialog is super small for some reason. We have to set the size manually, in onResume
     dialog.window?.setLayout(
         WindowManager.LayoutParams.MATCH_PARENT,
-        WindowManager.LayoutParams.WRAP_CONTENT
+        WindowManager.LayoutParams.MATCH_PARENT
     )
   }
 

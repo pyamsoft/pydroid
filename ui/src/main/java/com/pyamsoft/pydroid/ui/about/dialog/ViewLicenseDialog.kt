@@ -45,11 +45,11 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
   private lateinit var binding: LayoutConstraintBinding
 
-  internal lateinit var worker: ViewLicenseWorker
   internal lateinit var toolbarComponent: LicenseToolbarUiComponent
   internal lateinit var loadingComponent: SpinnerUiComponent<LicenseStateEvent, Loading, Complete>
   internal lateinit var webviewComponent: LicenseWebviewUiComponent
   internal lateinit var dropshadowComponent: DropshadowUiComponent
+  internal lateinit var worker: ViewLicenseWorker
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -118,6 +118,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
@@ -125,6 +126,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
@@ -134,6 +136,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
         connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       loadingComponent.also {
@@ -142,6 +145,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
         connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       applyTo(layoutRoot)

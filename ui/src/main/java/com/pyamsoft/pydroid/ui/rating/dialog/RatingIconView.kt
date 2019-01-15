@@ -46,7 +46,7 @@ internal class RatingIconView internal constructor(
 
   private fun loadIcon() {
     imageLoader.load(changelogIcon)
-        .into(binding.layoutRoot)
+        .into(binding.icon)
         .bind(owner)
   }
 

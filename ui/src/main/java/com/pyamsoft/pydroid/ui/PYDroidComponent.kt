@@ -26,7 +26,6 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
-import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
@@ -53,13 +52,6 @@ internal interface PYDroidComponent {
     parent: ViewGroup,
     owner: LifecycleOwner
   ): AboutComponent
-
-  @CheckResult
-  fun plusAppComponent(
-    owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?
-  ): AppComponent
 
   @CheckResult
   fun plusSettingsComponent(

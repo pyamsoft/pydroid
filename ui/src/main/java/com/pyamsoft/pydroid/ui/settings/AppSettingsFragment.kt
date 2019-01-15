@@ -22,26 +22,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
+import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : ToolbarFragment() {
-
-  internal lateinit var rootView: AppSettingsView
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    PYDroid.obtain(requireContext().applicationContext)
-        .plusAppComponent(viewLifecycleOwner, inflater, container)
-        .inject(this)
-
-    rootView.create()
-    return rootView.root()
+    val binding = LayoutCoordinatorBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(
@@ -57,7 +51,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     val tag: String = provideSettingsTag()
     if (fragmentManager.findFragmentByTag(tag) == null) {
       fragmentManager.beginTransaction()
-          .add(R.id.app_settings_content, provideSettingsFragment(), tag)
+          .add(R.id.layout_root, provideSettingsFragment(), tag)
           .commit(viewLifecycleOwner)
     }
   }

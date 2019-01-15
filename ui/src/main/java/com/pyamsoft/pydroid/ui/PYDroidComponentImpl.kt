@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.text.SpannedString
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
@@ -40,8 +39,6 @@ import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
-import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
-import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingStateEvent
 import com.pyamsoft.pydroid.ui.rating.RatingWorker
@@ -161,12 +158,6 @@ internal class PYDroidComponentImpl internal constructor(
         ratingModule, loaderModule, schedulerProvider, parent,
         owner, rateLink, changelogIcon, changelog, ratingViewBus
     )
-
-  override fun plusAppComponent(
-    owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?
-  ): AppComponent = AppComponentImpl(owner, inflater, container)
 
   override fun loaderModule(): LoaderModule {
     return loaderModule

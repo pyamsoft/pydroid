@@ -17,26 +17,13 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
-
-interface UiView<T : ViewEvent> {
-
-  @CheckResult
-  fun ViewGroup.inflater(): LayoutInflater {
-    return LayoutInflater.from(context)
-  }
-
-  @CheckResult
-  @IdRes
-  fun id(): Int
-
-  fun inflate(savedInstanceState: Bundle?)
-
-  fun saveState(outState: Bundle)
-
-}
-
+object InvalidUiComponentIdException : RuntimeException(
+    """
+      |The View which powers this UiComponent is in turn powered
+      |by a PreferenceFragment from the AndroidX framework which
+      |is a strange beast and does not fit into the UiComponent
+      |architecture that the rest of the application has tried to
+      |establish. This view has no id(), and to attempt to use it
+      |is incorrect.
+    """.trimMargin()
+)

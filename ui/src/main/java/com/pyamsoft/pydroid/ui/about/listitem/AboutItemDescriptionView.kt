@@ -24,11 +24,12 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
 internal class AboutItemDescriptionView internal constructor(
   private val parent: ViewGroup
-) : UiView, BaseAboutItem {
+) : UiView<EMPTY>, BaseAboutItem {
 
   private lateinit var binding: AboutItemDescriptionBinding
 

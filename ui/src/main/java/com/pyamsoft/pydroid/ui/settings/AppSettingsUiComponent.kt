@@ -20,9 +20,9 @@ package com.pyamsoft.pydroid.ui.settings
 import android.os.Bundle
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import io.reactivex.Observable
-import java.lang.RuntimeException
 
 internal class AppSettingsUiComponent internal constructor(
   private val settingsView: AppSettingsView,
@@ -31,14 +31,7 @@ internal class AppSettingsUiComponent internal constructor(
 ) : UiComponent<AppSettingsViewEvent> {
 
   override fun id(): Int {
-    throw RuntimeException("""
-      |The View which powers this UiComponent is in turn powered
-      |by a PreferenceFragment from the AndroidX framework which
-      |is a strange beast and does not fit into the UiComponent
-      |architecture that the rest of the application has tried to
-      |establish. This view has no id(), and to attempt to use it
-      |is incorrect.
-    """.trimMargin())
+    throw InvalidUiComponentIdException
   }
 
   override fun create(savedInstanceState: Bundle?) {

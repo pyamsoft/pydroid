@@ -30,7 +30,7 @@ internal class RatingControlsView internal constructor(
   private val parent: ViewGroup,
   private val rateLink: String,
   private val uiBus: Publisher<RatingDialogViewEvent>
-) : UiView {
+) : UiView<RatingDialogViewEvent> {
 
   private lateinit var binding: RatingControlsBinding
 

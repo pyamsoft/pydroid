@@ -21,12 +21,13 @@ import android.os.Bundle
 import android.text.SpannedString
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.databinding.RatingChangelogBinding
 
 internal class RatingChangelogView internal constructor(
   private val parent: ViewGroup,
   private val changelog: SpannedString
-) : UiView {
+) : UiView<EMPTY> {
 
   private lateinit var binding: RatingChangelogBinding
 

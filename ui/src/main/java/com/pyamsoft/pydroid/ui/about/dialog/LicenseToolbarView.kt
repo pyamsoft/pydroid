@@ -40,7 +40,7 @@ internal class LicenseToolbarView internal constructor(
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
   private val uiBus: Publisher<LicenseViewEvent>
-) : UiView {
+) : UiView<LicenseViewEvent> {
 
   private lateinit var binding: LicenseToolbarBinding
 

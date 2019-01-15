@@ -17,11 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-interface UiToggleView : UiView {
+interface UiToggleView<T : ViewEvent> {
 
   fun show()
 
   fun hide()
 
 }
-

@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
 internal class VersionUpgradeControlView internal constructor(
   private val parent: ViewGroup,
   private val bus: Publisher<VersionViewEvent>
-) : UiView {
+) : UiView<VersionViewEvent> {
 
   private lateinit var binding: VersionUpgradeControlsBinding
 

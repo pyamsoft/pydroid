@@ -25,11 +25,12 @@ import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
 internal class AboutItemTitleView internal constructor(
   private val parent: ViewGroup
-) : UiView, BaseAboutItem {
+) : UiView<EMPTY>, BaseAboutItem {
 
   private lateinit var binding: AboutItemTitleBinding
 

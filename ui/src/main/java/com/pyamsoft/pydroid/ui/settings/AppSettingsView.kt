@@ -24,6 +24,7 @@ import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
@@ -47,21 +48,12 @@ internal class AppSettingsView internal constructor(
   private val bugreportUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean
-) : UiView {
+) : UiView<AppSettingsViewEvent> {
 
   private val context = preferenceScreen.context
 
   override fun id(): Int {
-    throw RuntimeException(
-        """
-      |The Android View which powers this UiView is in turn powered
-      |by a PreferenceFragment from the AndroidX framework which
-      |is a strange beast and does not fit into the UiComponent
-      |architecture that the rest of the application has tried to
-      |establish. This view has no id(), and to attempt to use it
-      |is incorrect.
-    """.trimMargin()
-    )
+    throw InvalidUiComponentIdException
   }
 
   override fun inflate(savedInstanceState: Bundle?) {

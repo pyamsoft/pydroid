@@ -24,6 +24,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeContentBinding
 
 internal class VersionUpgradeContentView internal constructor(
@@ -31,7 +32,7 @@ internal class VersionUpgradeContentView internal constructor(
   private val applicationName: String,
   private val currentVersion: Int,
   private val newVersion: Int
-) : UiView {
+) : UiView<EMPTY> {
 
   private lateinit var binding: VersionUpgradeContentBinding
 

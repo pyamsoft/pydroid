@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 internal class AboutItemActionsView internal constructor(
   private val parent: ViewGroup,
   private val bus: Publisher<AboutViewEvent>
-) : UiView, BaseAboutItem {
+) : UiView<AboutViewEvent>, BaseAboutItem {
 
   private lateinit var binding: AboutItemActionsBinding
 

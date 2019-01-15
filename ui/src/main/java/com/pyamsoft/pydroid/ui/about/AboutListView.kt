@@ -25,12 +25,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
+import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 class AboutListView internal constructor(
   private val parent: ViewGroup
-) : UiToggleView {
+) : UiView<EMPTY>, UiToggleView<EMPTY> {
 
   private lateinit var binding: AboutLibrariesListBinding
   private lateinit var aboutAdapter: AboutAdapter

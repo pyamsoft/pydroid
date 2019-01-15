@@ -124,9 +124,9 @@ object OssLibraries {
 
   private fun addUiLibraries() {
     add(
-        "AndroidX Data Binding",
-        "https://android.googlesource.com/platform/frameworks/data-binding/+/master",
-        "The AndroidX Jetpack Data Binding library. Declaratively bind observable data to UI elements."
+        "Butterknife",
+        "https://github.com/JakeWharton/butterknife",
+        "Field and method binding for Android views which uses annotation processing to generate boilerplate code for you."
     )
     add(
         "AndroidX RecyclerView",

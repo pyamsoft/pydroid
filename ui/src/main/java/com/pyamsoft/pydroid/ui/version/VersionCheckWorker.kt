@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateFound
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
-class VersionCheckWorker internal constructor(
+internal class VersionCheckWorker internal constructor(
   private val interactor: VersionCheckInteractor,
   private val versionStateCheckBus: EventBus<VersionStateEvent>,
   private val schedulerProvider: SchedulerProvider

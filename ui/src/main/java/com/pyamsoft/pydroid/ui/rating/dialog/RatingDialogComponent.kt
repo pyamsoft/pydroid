@@ -15,15 +15,10 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.ui.rating.dialog
 
-import com.pyamsoft.pydroid.core.threads.Enforcer
+internal interface RatingDialogComponent {
 
-class RatingModule(
-  preferences: RatingPreferences,
-  enforcer: Enforcer,
-  currentVersion: Int
-) {
+  fun inject(dialog: RatingDialog)
 
-  val interactor: RatingInteractor = RatingInteractorImpl(enforcer, preferences, currentVersion)
 }

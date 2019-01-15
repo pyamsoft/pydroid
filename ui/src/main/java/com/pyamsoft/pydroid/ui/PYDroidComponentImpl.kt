@@ -25,7 +25,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingEvents
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.bus.RxBus
@@ -44,8 +43,11 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponentImpl
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
-import com.pyamsoft.pydroid.ui.rating.RatingDialogComponentImpl
+import com.pyamsoft.pydroid.ui.rating.RatingStateEvent
+import com.pyamsoft.pydroid.ui.rating.RatingWorker
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -65,15 +67,14 @@ internal class PYDroidComponentImpl internal constructor(
   private val schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
-  private val showRatingBus = RxBus.create<RatingEvents.ShowEvent>()
-  private val showRatingErrorBus = RxBus.create<RatingEvents.ShowErrorEvent>()
-  private val ratingSaveErrorBus = RxBus.create<RatingEvents.SaveErrorEvent>()
+  private val ratingStateBus = RxBus.create<RatingStateEvent>()
+  private val ratingViewBus = RxBus.create<RatingViewEvent>()
 
   private val versionStateBus = RxBus.create<VersionStateEvent>()
   private val versionUpgradeBus = RxBus.create<VersionViewEvent>()
 
-  private val aboutStateEventsBus = RxBus.create<AboutStateEvent>()
-  private val aboutViewEventsBus = RxBus.create<AboutViewEvent>()
+  private val aboutStateBus = RxBus.create<AboutStateEvent>()
+  private val aboutViewBus = RxBus.create<AboutViewEvent>()
 
   private val licenseViewBus = RxBus.create<LicenseViewEvent>()
   private val licenseStateBus = RxBus.create<LicenseStateEvent>()
@@ -83,12 +84,7 @@ internal class PYDroidComponentImpl internal constructor(
   private val theming by lazy { Theming(application) }
   private val loaderModule by lazy { LoaderModule() }
   private val aboutModule by lazy { AboutModule(enforcer) }
-  private val ratingModule by lazy {
-    RatingModule(
-        preferences, enforcer, currentVersion, showRatingBus,
-        showRatingErrorBus, ratingSaveErrorBus, schedulerProvider
-    )
-  }
+  private val ratingModule by lazy { RatingModule(preferences, enforcer, currentVersion) }
   private val versionModule by lazy {
     VersionCheckModule(application, enforcer, debug, currentVersion)
   }
@@ -102,17 +98,17 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun inject(activity: RatingActivity) {
-    activity.ratingViewModel = ratingModule.getViewModel()
+    activity.ratingWorker = RatingWorker(ratingModule.interactor, ratingStateBus, schedulerProvider)
   }
 
   override fun inject(activity: VersionCheckActivity) {
-    activity.worker = VersionCheckWorker(
+    activity.versionWorker = VersionCheckWorker(
         versionModule.interactor, versionStateBus, schedulerProvider
     )
   }
 
   override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent =
-    AboutItemComponentImpl(parent, aboutViewEventsBus)
+    AboutItemComponentImpl(parent, aboutViewBus)
 
   override fun plusVersionUpgradeComponent(
     parent: ViewGroup,
@@ -130,7 +126,7 @@ internal class PYDroidComponentImpl internal constructor(
   ): SettingsPreferenceComponent =
     SettingsPreferenceComponentImpl(
         ratingModule, versionModule, theming,
-        versionStateBus, schedulerProvider,
+        versionStateBus, ratingStateBus, schedulerProvider,
         owner, preferenceScreen, applicationName,
         bugreportUrl, hideClearAll, hideUpgradeInformation
     )
@@ -139,7 +135,7 @@ internal class PYDroidComponentImpl internal constructor(
     parent: ViewGroup,
     owner: LifecycleOwner
   ): AboutComponent = AboutComponentImpl(
-      aboutModule, parent, owner, aboutStateEventsBus, aboutViewEventsBus, schedulerProvider
+      aboutModule, parent, owner, aboutStateBus, aboutViewBus, schedulerProvider
   )
 
   override fun plusViewLicenseComponent(
@@ -155,14 +151,16 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun plusRatingDialogComponent(
+    parent: ViewGroup,
     owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    changeLogIcon: Int,
-    changeLog: SpannedString
-  ): RatingDialogComponent = RatingDialogComponentImpl(
-      ratingModule, loaderModule, inflater, container, owner, changeLogIcon, changeLog
-  )
+    rateLink: String,
+    changelogIcon: Int,
+    changelog: SpannedString
+  ): RatingDialogComponent =
+    RatingDialogComponentImpl(
+        ratingModule, loaderModule, schedulerProvider, parent,
+        owner, rateLink, changelogIcon, changelog, ratingViewBus
+    )
 
   override fun plusAppComponent(
     owner: LifecycleOwner,

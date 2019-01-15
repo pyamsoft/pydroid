@@ -15,36 +15,39 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.text.SpannedString
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.LoaderModule
 
 internal class RatingDialogComponentImpl internal constructor(
   private val ratingModule: RatingModule,
   private val loaderModule: LoaderModule,
-  inflater: LayoutInflater,
-  container: ViewGroup?,
-  owner: LifecycleOwner,
-  changeLogIcon: Int,
-  changeLog: SpannedString
+  private val schedulerProvider: SchedulerProvider,
+  private val parent: ViewGroup,
+  private val owner: LifecycleOwner,
+  private val rateLink: String,
+  private val changelogIcon: Int,
+  private val changelog: SpannedString,
+  private val uiBus: EventBus<RatingViewEvent>
 ) : RatingDialogComponent {
 
-  private val dialogView by lazy {
-    RatingDialogViewImpl(
-        inflater, container, loaderModule.provideImageLoader(),
-        owner, changeLogIcon, changeLog
-    )
-  }
-
   override fun inject(dialog: RatingDialog) {
-    dialog.rootView = dialogView
-    dialog.viewModel = ratingModule.getViewModel()
-    dialog.imageLoader = loaderModule.provideImageLoader()
+    val iconView = RatingIconView(parent, changelogIcon, loaderModule.provideImageLoader(), owner)
+    dialog.iconComponent = RatingIconUiComponent(iconView)
+
+    dialog.worker = RatingDialogWorker(ratingModule.interactor, schedulerProvider)
+
+    val changelogView = RatingChangelogView(parent, changelog)
+    dialog.changelogComponent = RatingChangelogUiComponent(changelogView)
+
+    val controlsView = RatingControlsView(parent, rateLink, uiBus)
+    dialog.controlsComponent = RatingControlsUiComponent(controlsView, uiBus, schedulerProvider)
   }
 
 }

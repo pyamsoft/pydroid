@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeContentBinding
 
-class VersionUpgradeContentView internal constructor(
+internal class VersionUpgradeContentView internal constructor(
   private val parent: ViewGroup,
   private val applicationName: String,
   private val currentVersion: Int,

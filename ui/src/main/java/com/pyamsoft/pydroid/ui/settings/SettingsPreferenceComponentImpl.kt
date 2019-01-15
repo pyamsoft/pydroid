@@ -23,6 +23,8 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.rating.RatingStateEvent
+import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent
@@ -31,7 +33,8 @@ internal class SettingsPreferenceComponentImpl internal constructor(
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
   private val theming: Theming,
-  private val versionStateCheckBus: EventBus<VersionStateEvent>,
+  private val versionCheckStateBus: EventBus<VersionStateEvent>,
+  private val ratingStateBus: EventBus<RatingStateEvent>,
   private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner,
   preferenceScreen: PreferenceScreen,
@@ -51,10 +54,10 @@ internal class SettingsPreferenceComponentImpl internal constructor(
 
   override fun inject(fragment: SettingsPreferenceFragment) {
     fragment.theming = theming
-    fragment.ratingViewModel = ratingModule.getViewModel()
     fragment.settingsPreferenceView = settingsPreferenceView
     fragment.versionWorker = VersionCheckWorker(
-        versionCheckModule.interactor, versionStateCheckBus, schedulerProvider
+        versionCheckModule.interactor, versionCheckStateBus, schedulerProvider
     )
+    fragment.ratingWorker = RatingWorker(ratingModule.interactor, ratingStateBus, schedulerProvider)
   }
 }

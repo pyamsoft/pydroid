@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.version
 
 import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-sealed class VersionStateEvent : StateEvent {
+internal sealed class VersionStateEvent : StateEvent {
 
   data class Loading(val forced: Boolean) : VersionStateEvent()
 

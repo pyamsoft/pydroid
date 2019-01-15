@@ -21,14 +21,11 @@ import androidx.annotation.CheckResult
 import io.reactivex.Completable
 import io.reactivex.Single
 
-internal interface RatingInteractor {
+interface RatingInteractor {
 
   @CheckResult
-  fun needsToViewRating(
-    force: Boolean,
-    versionCode: Int
-  ): Single<Boolean>
+  fun needsToViewRating(force: Boolean): Single<Boolean>
 
   @CheckResult
-  fun saveRating(versionCode: Int): Completable
+  fun saveRating(): Completable
 }

@@ -15,15 +15,12 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-class RatingModule(
-  preferences: RatingPreferences,
-  enforcer: Enforcer,
-  currentVersion: Int
-) {
+internal sealed class RatingStateEvent : StateEvent {
 
-  val interactor: RatingInteractor = RatingInteractorImpl(enforcer, preferences, currentVersion)
+  object ShowEvent : RatingStateEvent()
+
 }

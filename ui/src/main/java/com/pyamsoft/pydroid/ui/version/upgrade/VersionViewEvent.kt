@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 
 import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-sealed class VersionViewEvent : ViewEvent {
+internal sealed class VersionViewEvent : ViewEvent {
 
   object Upgrade : VersionViewEvent()
 

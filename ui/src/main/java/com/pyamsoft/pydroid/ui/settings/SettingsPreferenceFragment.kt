@@ -25,7 +25,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
-import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -33,6 +32,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarPreferenceFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
+import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.navigate
@@ -44,7 +44,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var theming: Theming
   internal lateinit var versionWorker: VersionCheckWorker
-  internal lateinit var ratingViewModel: RatingViewModel
+  internal lateinit var ratingWorker: RatingWorker
   internal lateinit var settingsPreferenceView: SettingsPreferenceView
 
   private var ratingDisposable by singleDisposable()
@@ -146,11 +146,7 @@ abstract class SettingsPreferenceFragment : ToolbarPreferenceFragment() {
    * Shows the changelog, override or extend to use unique implementation
    */
   protected open fun onShowChangelogClicked() {
-    ratingDisposable = ratingViewModel.loadRatingDialog(
-        true,
-        onLoadSuccess = { ratingViewModel.publishShowRatingDialog() },
-        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) }
-    )
+    ratingDisposable = ratingWorker.loadRatingDialog(true)
   }
 
   /**

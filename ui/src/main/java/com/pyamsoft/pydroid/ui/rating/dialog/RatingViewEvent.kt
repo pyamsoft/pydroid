@@ -15,14 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.ui.rating.dialog
 
-import com.pyamsoft.pydroid.ui.app.BaseScreen
+import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-interface RatingDialogView : BaseScreen {
+internal sealed class RatingViewEvent : ViewEvent {
 
-  fun onSaveRating(onSave: () -> Unit)
+  data class VisitMarket(val packageName: String) : RatingViewEvent()
 
-  fun onCancelRating(onCancel: () -> Unit)
-
+  object Cancel : RatingViewEvent()
 }

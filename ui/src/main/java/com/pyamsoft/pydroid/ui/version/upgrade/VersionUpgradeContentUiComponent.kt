@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
-class VersionUpgradeContentUiComponent internal constructor(
+internal class VersionUpgradeContentUiComponent internal constructor(
   private val contentView: VersionUpgradeContentView
 ) : UiComponent<EMPTY> {
 

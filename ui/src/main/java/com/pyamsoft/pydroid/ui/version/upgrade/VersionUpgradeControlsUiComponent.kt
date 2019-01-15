@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import io.reactivex.Observable
 
-class VersionUpgradeControlsUiComponent internal constructor(
+internal class VersionUpgradeControlsUiComponent internal constructor(
   private val controlsView: VersionUpgradeControlView,
   private val uiBus: Listener<VersionViewEvent>,
   private val schedulerProvider: SchedulerProvider

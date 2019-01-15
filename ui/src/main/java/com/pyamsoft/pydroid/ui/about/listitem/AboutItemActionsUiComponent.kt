@@ -37,6 +37,7 @@ internal class AboutItemActionsUiComponent internal constructor(
   }
 
   override fun saveState(outState: Bundle) {
+    aboutActionsView.saveState(outState)
   }
 
   override fun onUiEvent(): Observable<EMPTY> {

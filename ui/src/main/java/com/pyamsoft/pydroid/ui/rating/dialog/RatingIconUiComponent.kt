@@ -15,40 +15,31 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.listitem
+package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
-internal class AboutItemTitleUiComponent internal constructor(
-  private val aboutTitleView: AboutItemTitleView
-) : UiComponent<EMPTY>, BaseAboutItem {
+internal class RatingIconUiComponent internal constructor(
+  private val iconView: RatingIconView
+) : UiComponent<EMPTY> {
 
   override fun id(): Int {
-    return aboutTitleView.id()
+    return iconView.id()
   }
 
   override fun create(savedInstanceState: Bundle?) {
-    aboutTitleView.inflate(savedInstanceState)
+    iconView.inflate(savedInstanceState)
   }
 
   override fun saveState(outState: Bundle) {
-    aboutTitleView.saveState(outState)
+    iconView.saveState(outState)
   }
 
   override fun onUiEvent(): Observable<EMPTY> {
     return Observable.empty()
-  }
-
-  override fun bind(model: OssLibrary) {
-    aboutTitleView.bind(model)
-  }
-
-  override fun unbind() {
-    aboutTitleView.unbind()
   }
 
 }

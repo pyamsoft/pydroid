@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.text.SpannedString
 import android.view.LayoutInflater

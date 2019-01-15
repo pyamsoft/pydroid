@@ -15,36 +15,24 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.arch.UiComponent
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
+import io.reactivex.disposables.Disposable
 
-internal class LicenseToolbarUiComponent internal constructor(
-  private val toolbarView: LicenseToolbarView,
-  private val uiBus: Listener<LicenseViewEvent>,
+internal class RatingDialogWorker internal constructor(
+  private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
-) : UiComponent<LicenseViewEvent> {
+) {
 
-  override fun id(): Int {
-    return toolbarView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    toolbarView.inflate(savedInstanceState)
-  }
-
-  override fun saveState(outState: Bundle) {
-    toolbarView.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<LicenseViewEvent> {
-    return uiBus.listen()
+  @CheckResult
+  fun saveRating(onSave: () -> Unit): Disposable {
+    return interactor.saveRating()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe { onSave() }
   }
 
 }

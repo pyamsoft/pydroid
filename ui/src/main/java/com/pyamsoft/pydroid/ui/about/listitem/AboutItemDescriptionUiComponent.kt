@@ -36,6 +36,7 @@ internal class AboutItemDescriptionUiComponent internal constructor(
   }
 
   override fun saveState(outState: Bundle) {
+    aboutDescriptionView.saveState(outState)
   }
 
   override fun onUiEvent(): Observable<EMPTY> {

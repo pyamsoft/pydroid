@@ -28,18 +28,19 @@ import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
-import com.pyamsoft.pydroid.bootstrap.rating.RatingViewModel
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
-  internal lateinit var ratingViewModel: RatingViewModel
+  internal lateinit var ratingWorker: RatingWorker
 
   private var loadRatingDialogDisposable by singleDisposable()
   private var showDialogDisposable by singleDisposable()
@@ -94,10 +95,8 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     PYDroid.obtain(this)
         .inject(this)
 
-    showDialogDisposable = ratingViewModel.onShowRatingDialog { showRatingDialog() }
-    showErrorDialogDisposable = ratingViewModel.onShowErrorRatingDialog { error: Throwable ->
-      showRatingError(error)
-    }
+    ratingWorker.onRatingDialogRequested { showRatingDialog() }
+        .destroy(this)
   }
 
   override fun onDestroy() {
@@ -111,21 +110,12 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
   override fun onPostResume() {
     super.onPostResume()
 
-    // DialogFragment must be shown in onPostResume, or it can crash if device UI performs lifecycle too slowly.
-    loadRatingDialogDisposable = ratingViewModel.loadRatingDialog(
-        false,
-        onLoadSuccess = { ratingViewModel.publishShowRatingDialog() },
-        onLoadError = { error: Throwable -> ratingViewModel.publishShowErrorRatingDialog(error) }
-    )
+    loadRatingDialogDisposable = ratingWorker.loadRatingDialog(false)
   }
 
   private fun showRatingDialog() {
     RatingDialog.newInstance(this)
         .show(this, RatingDialog.TAG)
-  }
-
-  private fun showRatingError(throwable: Throwable) {
-    Timber.e(throwable, "Could not load rating dialog")
   }
 
   companion object {

@@ -15,45 +15,44 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeControlsBinding
+import com.pyamsoft.pydroid.ui.databinding.RatingControlsBinding
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
 
-internal class VersionUpgradeControlView internal constructor(
+internal class RatingControlsView internal constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<VersionViewEvent>
+  private val rateLink: String,
+  private val uiBus: Publisher<RatingViewEvent>
 ) : UiView {
 
-  private lateinit var binding: VersionUpgradeControlsBinding
+  private lateinit var binding: RatingControlsBinding
 
   override fun id(): Int {
     return binding.layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = VersionUpgradeControlsBinding.inflate(parent.inflater(), parent, false)
+    binding = RatingControlsBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
 
-    bindPositiveClick()
-    bindNegativeClick()
+    setupButtons()
+  }
+
+  private fun setupButtons() {
+    binding.apply {
+      rateApplication.setOnDebouncedClickListener { uiBus.publish(VisitMarket(rateLink)) }
+      noThanks.setOnDebouncedClickListener { uiBus.publish(Cancel) }
+    }
   }
 
   override fun saveState(outState: Bundle) {
-  }
-
-  private fun bindPositiveClick() {
-    binding.upgradeButton.setOnDebouncedClickListener { bus.publish(Upgrade) }
-  }
-
-  private fun bindNegativeClick() {
-    binding.laterButton.setOnDebouncedClickListener { bus.publish(Cancel) }
   }
 
 }

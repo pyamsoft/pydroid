@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.app.fragment.AppComponent
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.rating.RatingDialogComponent
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.SettingsPreferenceComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
@@ -79,10 +79,10 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusRatingDialogComponent(
+    parent: ViewGroup,
     owner: LifecycleOwner,
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    changeLogIcon: Int,
-    changeLog: SpannedString
+    rateLink: String,
+    changelogIcon: Int,
+    changelog: SpannedString
   ): RatingDialogComponent
 }

@@ -15,10 +15,14 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.ui.rating.dialog
 
-internal interface RatingDialogComponent {
+import com.pyamsoft.pydroid.ui.app.BaseScreen
 
-  fun inject(dialog: RatingDialog)
+interface RatingDialogView : BaseScreen {
+
+  fun onSaveRating(onSave: () -> Unit)
+
+  fun onCancelRating(onCancel: () -> Unit)
 
 }

@@ -37,7 +37,7 @@ import timber.log.Timber
 
 abstract class VersionCheckActivity : ActivityBase() {
 
-  internal lateinit var worker: VersionCheckWorker
+  internal lateinit var versionWorker: VersionCheckWorker
   private var checkUpdatesDisposable by singleDisposable()
   private var snackbar: Snackbar? = null
 
@@ -49,7 +49,7 @@ abstract class VersionCheckActivity : ActivityBase() {
     PYDroid.obtain(this)
         .inject(this)
 
-    worker.onUpdateEvent {
+    versionWorker.onUpdateEvent {
       when (it) {
         is Loading -> onCheckingForUpdates(it.forced)
         is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
@@ -75,7 +75,7 @@ abstract class VersionCheckActivity : ActivityBase() {
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
-    checkUpdatesDisposable = worker.checkForUpdates(false)
+    checkUpdatesDisposable = versionWorker.checkForUpdates(false)
   }
 
   private fun onCheckingForUpdates(showSnackbar: Boolean) {

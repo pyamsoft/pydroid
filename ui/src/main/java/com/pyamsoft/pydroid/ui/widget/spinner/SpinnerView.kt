@@ -21,18 +21,18 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.databinding.WidgetSpinnerBinding
+import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
 
 class SpinnerView internal constructor(private val parent: ViewGroup) : UiToggleView {
 
-  private lateinit var binding: WidgetSpinnerBinding
+  private lateinit var binding: LoadingSpinnerBinding
 
   override fun id(): Int {
     return binding.progressSpinner.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = WidgetSpinnerBinding.inflate(parent.inflater(), parent, false)
+    binding = LoadingSpinnerBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
   }
 

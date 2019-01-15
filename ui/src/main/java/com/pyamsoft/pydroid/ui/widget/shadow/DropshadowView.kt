@@ -20,18 +20,18 @@ package com.pyamsoft.pydroid.ui.widget.shadow
 import android.os.Bundle
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.databinding.WidgetDropshadowBinding
+import com.pyamsoft.pydroid.ui.databinding.DropshadowBinding
 
 class DropshadowView internal constructor(private val parent: ViewGroup) : UiView {
 
-  private lateinit var binding: WidgetDropshadowBinding
+  private lateinit var binding: DropshadowBinding
 
   override fun id(): Int {
     return binding.layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = WidgetDropshadowBinding.inflate(parent.inflater(), parent, false)
+    binding = DropshadowBinding.inflate(parent.inflater(), parent, false)
     parent.addView(binding.root)
   }
 

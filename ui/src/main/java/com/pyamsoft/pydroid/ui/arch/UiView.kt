@@ -19,9 +19,11 @@ package com.pyamsoft.pydroid.ui.arch
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import com.pyamsoft.pydroid.core.bus.Publisher
 
 abstract class UiView<T : ViewEvent> protected constructor(
@@ -31,6 +33,12 @@ abstract class UiView<T : ViewEvent> protected constructor(
   @CheckResult
   protected fun ViewGroup.inflater(): LayoutInflater {
     return LayoutInflater.from(context)
+  }
+
+  protected fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int, findViews: View.() -> Unit) {
+    this.inflater()
+        .inflate(layout, this, true)
+        .run(findViews)
   }
 
   protected fun publish(event: T) {

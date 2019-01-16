@@ -35,6 +35,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
@@ -42,7 +43,6 @@ import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.LicenseWebviewBinding
 import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
 
@@ -53,16 +53,18 @@ internal class LicenseWebviewView internal constructor(
   private val controllerBus: Publisher<LicenseStateEvent>
 ) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY>, LifecycleObserver {
 
-  private lateinit var binding: LicenseWebviewBinding
+  private lateinit var webview: WebView
 
   private var errorToast: Toast? = null
 
   override fun id(): Int {
-    return binding.licenseWebview.id
+    return webview.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = LicenseWebviewBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.license_webview) {
+      webview = findViewById(R.id.license_webview)
+    }
 
     setupWebviewJavascript()
     setupWebview()
@@ -73,91 +75,89 @@ internal class LicenseWebviewView internal constructor(
   @Suppress("unused")
   @OnLifecycleEvent(ON_RESUME)
   internal fun onResume() {
-    binding.licenseWebview.onResume()
+    webview.onResume()
   }
 
   @Suppress("unused")
   @OnLifecycleEvent(ON_PAUSE)
   internal fun onPause() {
-    binding.licenseWebview.onPause()
+    webview.onPause()
   }
 
   private fun setupWebview() {
-    binding.apply {
-      licenseWebview.webViewClient = object : WebViewClient() {
+    webview.webViewClient = object : WebViewClient() {
 
-        override fun onPageFinished(
-          view: WebView,
-          url: String
-        ) {
-          super.onPageFinished(view, url)
-          Timber.d("Loaded url: $url")
-          val fixedUrl = url.trimEnd('/')
-          if (fixedUrl == link) {
-            Timber.d("Loaded target url: $url, show webview")
-            controllerBus.publish(Loaded)
-          }
-
-          // If we are showing the webview and we've navigated off the url, close the dialog
-          if (licenseWebview.isVisible && fixedUrl != link) {
-            Timber.w("Navigated away from page: $url - close dialog, and open extenally")
-            val error = fixedUrl.hyperlink(view.context)
-                .navigate()
-            controllerBus.publish(PageError(error))
-          }
-
-          controllerBus.publish(Complete)
+      override fun onPageFinished(
+        view: WebView,
+        url: String
+      ) {
+        super.onPageFinished(view, url)
+        Timber.d("Loaded url: $url")
+        val fixedUrl = url.trimEnd('/')
+        if (fixedUrl == link) {
+          Timber.d("Loaded target url: $url, show webview")
+          controllerBus.publish(Loaded)
         }
 
-        @RequiresApi(VERSION_CODES.M)
-        override fun onReceivedError(
-          view: WebView,
-          request: WebResourceRequest,
-          error: WebResourceError
-        ) {
-          super.onReceivedError(view, request, error)
-          Timber.e("Webview error: ${error.errorCode} ${error.description}")
-          if (request.url.toString() == link) {
-            controllerBus.publish(Loaded)
-          }
-
-          controllerBus.publish(Complete)
+        // If we are showing the webview and we've navigated off the url, close the dialog
+        if (webview.isVisible && fixedUrl != link) {
+          Timber.w("Navigated away from page: $url - close dialog, and open extenally")
+          val error = fixedUrl.hyperlink(view.context)
+              .navigate()
+          controllerBus.publish(PageError(error))
         }
 
-        @Suppress("DEPRECATION", "OverridingDeprecatedMember")
-        override fun onReceivedError(
-          view: WebView,
-          errorCode: Int,
-          description: String?,
-          failingUrl: String?
-        ) {
-          super.onReceivedError(view, errorCode, description, failingUrl)
-          Timber.e("Webview error: $errorCode $description")
-          if (failingUrl == link) {
-            controllerBus.publish(Loaded)
-          }
-
-          controllerBus.publish(Complete)
-        }
-
+        controllerBus.publish(Complete)
       }
+
+      @RequiresApi(VERSION_CODES.M)
+      override fun onReceivedError(
+        view: WebView,
+        request: WebResourceRequest,
+        error: WebResourceError
+      ) {
+        super.onReceivedError(view, request, error)
+        Timber.e("Webview error: ${error.errorCode} ${error.description}")
+        if (request.url.toString() == link) {
+          controllerBus.publish(Loaded)
+        }
+
+        controllerBus.publish(Complete)
+      }
+
+      @Suppress("DEPRECATION", "OverridingDeprecatedMember")
+      override fun onReceivedError(
+        view: WebView,
+        errorCode: Int,
+        description: String?,
+        failingUrl: String?
+      ) {
+        super.onReceivedError(view, errorCode, description, failingUrl)
+        Timber.e("Webview error: $errorCode $description")
+        if (failingUrl == link) {
+          controllerBus.publish(Loaded)
+        }
+
+        controllerBus.publish(Complete)
+      }
+
     }
   }
 
   @SuppressLint("SetJavaScriptEnabled")
   private fun setupWebviewJavascript() {
-    binding.licenseWebview.settings.javaScriptEnabled = true
+    webview.settings.javaScriptEnabled = true
   }
 
   override fun saveState(outState: Bundle) {
   }
 
   override fun show() {
-    binding.licenseWebview.isVisible = true
+    webview.isVisible = true
   }
 
   override fun hide() {
-    binding.licenseWebview.isVisible = false
+    webview.isVisible = false
   }
 
   private fun dismissError() {
@@ -168,14 +168,13 @@ internal class LicenseWebviewView internal constructor(
   override fun teardown() {
     dismissError()
     owner.lifecycle.removeObserver(this)
-    binding.unbind()
   }
 
   fun pageLoadError(error: ActivityNotFoundException?) {
     if (error != null) {
       dismissError()
       errorToast = Toast.makeText(
-          binding.licenseWebview.context.applicationContext,
+          webview.context.applicationContext,
           "No application can handle this URL",
           Toast.LENGTH_SHORT
       )
@@ -184,7 +183,7 @@ internal class LicenseWebviewView internal constructor(
   }
 
   fun loadUrl() {
-    binding.licenseWebview.loadUrl(link)
+    webview.loadUrl(link)
   }
 
 }

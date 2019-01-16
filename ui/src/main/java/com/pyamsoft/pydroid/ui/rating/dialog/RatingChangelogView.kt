@@ -20,34 +20,40 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.os.Bundle
 import android.text.SpannedString
 import android.view.ViewGroup
+import android.widget.ScrollView
+import android.widget.TextView
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.RatingChangelogBinding
 
 internal class RatingChangelogView internal constructor(
   private val parent: ViewGroup,
   private val changelog: SpannedString
 ) : UiView<EMPTY>(EmptyPublisher) {
 
-  private lateinit var binding: RatingChangelogBinding
+  private lateinit var layoutRoot: ScrollView
+  private lateinit var changelogText: TextView
 
   override fun id(): Int {
-    return binding.ratingChangelogScroll.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = RatingChangelogBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.rating_changelog) {
+      layoutRoot = findViewById(R.id.rating_changelog_scroll)
+      changelogText = findViewById(R.id.rating_changelog_text)
+    }
 
     loadChangelog()
   }
 
   override fun teardown() {
-    binding.unbind()
+    changelogText.text = ""
   }
 
   private fun loadChangelog() {
-    binding.ratingChangelogText.text = changelog
+    changelogText.text = changelog
   }
 
   override fun saveState(outState: Bundle) {

@@ -19,9 +19,10 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.Button
 import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeControlsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
@@ -31,32 +32,35 @@ internal class VersionUpgradeControlView internal constructor(
   bus: Publisher<VersionViewEvent>
 ) : UiView<VersionViewEvent>(bus) {
 
-  private lateinit var binding: VersionUpgradeControlsBinding
+  private lateinit var layoutRoot: ViewGroup
+  private lateinit var upgradeButton: Button
+  private lateinit var laterButton: Button
 
   override fun id(): Int {
-    return binding.versionControlRoot.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = VersionUpgradeControlsBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.version_upgrade_controls) {
+      layoutRoot = findViewById(R.id.version_control_root)
+      upgradeButton = findViewById(R.id.upgrade_button)
+      laterButton = findViewById(R.id.later_button)
+    }
 
-    bindPositiveClick()
-    bindNegativeClick()
+    bindButtons()
   }
 
   override fun teardown() {
-    binding.unbind()
+    upgradeButton.setOnClickListener(null)
+    laterButton.setOnClickListener(null)
   }
 
   override fun saveState(outState: Bundle) {
   }
 
-  private fun bindPositiveClick() {
-    binding.upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
-  }
-
-  private fun bindNegativeClick() {
-    binding.laterButton.setOnDebouncedClickListener { publish(Cancel) }
+  private fun bindButtons() {
+    upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
+    laterButton.setOnDebouncedClickListener { publish(Cancel) }
   }
 
 }

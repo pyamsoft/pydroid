@@ -16,21 +16,19 @@
   ~
   -->
 
-<layout>
 
-  <merge>
+<merge>
 
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/about_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        tools:text="This is a super special Android library which deals with the things that you would normally need a library to help you deal with, ya know"
-        />
+  <TextView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:id="@+id/about_description"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="8dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Small"
+      tools:text="This is a super special Android library which deals with the things that you would normally need a library to help you deal with, ya know"
+      />
 
-  </merge>
+</merge>
 
-</layout>

@@ -15,26 +15,24 @@
   ~
   -->
 
-<layout>
 
-  <merge>
+<merge>
 
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/rating_changelog_scroll"
+  <ScrollView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/rating_changelog_scroll"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="16dp"
+      >
+
+    <TextView
+        android:id="@+id/rating_changelog_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        >
+        />
 
-      <TextView
-          android:id="@+id/rating_changelog_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          />
+  </ScrollView>
 
-    </ScrollView>
+</merge>
 
-  </merge>
-
-</layout>

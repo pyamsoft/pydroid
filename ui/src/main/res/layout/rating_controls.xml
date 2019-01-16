@@ -15,41 +15,39 @@
   ~
   -->
 
-<layout>
 
-  <merge>
+<merge>
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/rating_control_root"
+  <LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/rating_control_root"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="16dp"
+      >
+
+    <Button
+        android:id="@+id/rate_application"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        >
+        android:layout_marginBottom="8dp"
+        android:text="@string/rate_application"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white"
+        style="@style/Widget.AppCompat.Button.Colored"
+        />
 
-      <Button
-          android:id="@+id/rate_application"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:text="@string/rate_application"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          android:textColor="@android:color/white"
-          style="@style/Widget.AppCompat.Button.Colored"
-          />
+    <TextView
+        android:id="@+id/no_thanks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_thanks"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        style="?attr/borderlessButtonStyle"
+        />
 
-      <TextView
-          android:id="@+id/no_thanks"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="@string/no_thanks"
-          android:textAppearance="?android:attr/textAppearanceSmall"
-          style="?attr/borderlessButtonStyle"
-          />
+  </LinearLayout>
 
-    </LinearLayout>
+</merge>
 
-  </merge>
-
-</layout>

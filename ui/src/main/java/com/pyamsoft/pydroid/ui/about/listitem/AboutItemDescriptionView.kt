@@ -19,44 +19,47 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
 internal class AboutItemDescriptionView internal constructor(
   private val parent: ViewGroup
 ) : UiView<EMPTY>(EmptyPublisher), BaseAboutItem {
 
-  private lateinit var binding: AboutItemDescriptionBinding
+  private lateinit var description: TextView
 
   override fun id(): Int {
-    return binding.aboutDescription.id
+    return description.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = AboutItemDescriptionBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.about_item_description) {
+      description = findViewById(R.id.about_description)
+    }
   }
 
   override fun teardown() {
-    binding.unbind()
+    unbind()
   }
 
   override fun saveState(outState: Bundle) {
   }
 
   override fun bind(model: OssLibrary) {
-    binding.aboutDescription.apply {
+    description.apply {
       text = model.description
       isVisible = model.description.isNotBlank()
     }
   }
 
   override fun unbind() {
-    binding.aboutDescription.apply {
+    description.apply {
       text = ""
       isGone = true
     }

@@ -18,25 +18,27 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
+import com.pyamsoft.pydroid.ui.R
 
 internal class AboutViewHolder private constructor(
   owner: LifecycleOwner,
-  binding: AdapterItemAboutLicenseBinding
-) : BaseViewHolder(binding.aboutListitemCard) {
+  view: View
+) : BaseViewHolder(view) {
 
   internal lateinit var titleComponent: AboutItemTitleUiComponent
   internal lateinit var actionsComponent: AboutItemActionsUiComponent
   internal lateinit var descriptionComponent: AboutItemDescriptionUiComponent
 
   init {
+    val root: ViewGroup = view.findViewById(R.id.about_listitem_root)
     PYDroid.obtain(itemView.context.applicationContext)
-        .plusAboutItemComponent(owner, binding.aboutListitemRoot)
+        .plusAboutItemComponent(owner, root)
         .inject(this)
 
     titleComponent.create(null)
@@ -65,8 +67,8 @@ internal class AboutViewHolder private constructor(
       inflater: LayoutInflater,
       container: ViewGroup
     ): AboutViewHolder {
-      val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
-      return AboutViewHolder(owner, binding)
+      val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
+      return AboutViewHolder(owner, view)
     }
   }
 

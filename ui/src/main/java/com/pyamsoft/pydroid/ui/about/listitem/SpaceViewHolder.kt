@@ -18,13 +18,12 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutSpaceBinding
+import com.pyamsoft.pydroid.ui.R
 
-internal class SpaceViewHolder private constructor(
-  binding: AdapterItemAboutSpaceBinding
-) : BaseViewHolder(binding.aboutListitemSpace) {
+internal class SpaceViewHolder private constructor(view: View) : BaseViewHolder(view) {
 
   companion object {
 
@@ -34,8 +33,8 @@ internal class SpaceViewHolder private constructor(
       inflater: LayoutInflater,
       container: ViewGroup
     ): SpaceViewHolder {
-      val binding = AdapterItemAboutSpaceBinding.inflate(inflater, container, false)
-      return SpaceViewHolder(binding)
+      val view = inflater.inflate(R.layout.adapter_item_about_space, container, false)
+      return SpaceViewHolder(view)
     }
   }
 }

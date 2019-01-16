@@ -23,13 +23,14 @@ import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 class AboutListView internal constructor(
@@ -37,27 +38,27 @@ class AboutListView internal constructor(
   private val parent: ViewGroup
 ) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
 
-  private lateinit var binding: AboutLibrariesListBinding
+  private lateinit var aboutList: RecyclerView
 
   private lateinit var aboutAdapter: AboutAdapter
   private var lastViewedItem: Int = 0
 
   override fun id(): Int {
-    return binding.aboutList.id
+    return aboutList.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = AboutLibrariesListBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.about_libraries_list) {
+      aboutList = findViewById(R.id.about_list)
+    }
 
     restoreLastViewedItem(savedInstanceState)
     setupListView()
   }
 
   override fun teardown() {
-    binding.aboutList.adapter = null
+    aboutList.adapter = null
     aboutAdapter.clear()
-
-    binding.unbind()
   }
 
   override fun saveState(outState: Bundle) {
@@ -70,7 +71,7 @@ class AboutListView internal constructor(
 
   @CheckResult
   private fun getCurrentPosition(): Int {
-    val manager = binding.aboutList.layoutManager
+    val manager = aboutList.layoutManager
     if (manager is LinearLayoutManager) {
       return manager.findFirstVisibleItemPosition()
     } else {
@@ -81,7 +82,7 @@ class AboutListView internal constructor(
   private fun setupListView() {
     aboutAdapter = AboutAdapter(owner)
 
-    binding.aboutList.apply {
+    aboutList.apply {
       adapter = aboutAdapter
       layoutManager = LinearLayoutManager(context).apply {
         initialPrefetchItemCount = 3
@@ -91,17 +92,17 @@ class AboutListView internal constructor(
   }
 
   override fun show() {
-    binding.aboutList.isVisible = true
+    aboutList.isVisible = true
 
     val lastViewed = lastViewedItem
     lastViewedItem = 0
     if (lastViewed > 0) {
-      binding.aboutList.scrollToPosition(lastViewed)
+      aboutList.scrollToPosition(lastViewed)
     }
   }
 
   override fun hide() {
-    binding.aboutList.isVisible = false
+    aboutList.isVisible = false
   }
 
   fun loadLicenses(libraries: List<OssLibrary>) {

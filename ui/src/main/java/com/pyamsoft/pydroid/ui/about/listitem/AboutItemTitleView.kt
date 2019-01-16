@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -26,24 +27,29 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
 internal class AboutItemTitleView internal constructor(
   private val parent: ViewGroup
 ) : UiView<EMPTY>(EmptyPublisher), BaseAboutItem {
 
-  private lateinit var binding: AboutItemTitleBinding
+  private lateinit var layoutRoot: ViewGroup
+  private lateinit var title: TextView
+  private lateinit var license: TextView
 
   override fun id(): Int {
-    return binding.aboutTitle.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = AboutItemTitleBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.about_item_title) {
+      layoutRoot = findViewById(R.id.about_title)
+      title = findViewById(R.id.title)
+      license = findViewById(R.id.license)
+    }
   }
 
   override fun teardown() {
-    binding.unbind()
+    unbind()
   }
 
   override fun saveState(outState: Bundle) {
@@ -51,21 +57,17 @@ internal class AboutItemTitleView internal constructor(
 
   @CheckResult
   private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
-    return binding.aboutTitle.context.getString(id, *formatArgs)
+    return layoutRoot.context.getString(id, *formatArgs)
   }
 
   override fun bind(model: OssLibrary) {
-    binding.apply {
-      title.text = model.name
-      license.text = getString(R.string.license_name, model.licenseName)
-    }
+    title.text = model.name
+    license.text = getString(R.string.license_name, model.licenseName)
   }
 
   override fun unbind() {
-    binding.apply {
-      title.text = ""
-      license.text = ""
-    }
+    title.text = ""
+    license.text = ""
   }
 
 }

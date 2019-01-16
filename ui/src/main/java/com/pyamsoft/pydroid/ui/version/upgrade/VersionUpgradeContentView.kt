@@ -19,13 +19,13 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeContentBinding
 
 internal class VersionUpgradeContentView internal constructor(
   private val parent: ViewGroup,
@@ -34,21 +34,31 @@ internal class VersionUpgradeContentView internal constructor(
   private val newVersion: Int
 ) : UiView<EMPTY>(EmptyPublisher) {
 
-  private lateinit var binding: VersionUpgradeContentBinding
+  private lateinit var layoutRoot: ViewGroup
+  private lateinit var upgradeMessage: TextView
+  private lateinit var currentValue: TextView
+  private lateinit var newValue: TextView
 
   override fun id(): Int {
-    return binding.versionContentRoot.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = VersionUpgradeContentBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.version_upgrade_content) {
+      layoutRoot = findViewById(R.id.version_content_root)
+      upgradeMessage = findViewById(R.id.upgrade_message)
+      currentValue = findViewById(R.id.upgrade_current_value)
+      newValue = findViewById(R.id.upgrade_new_value)
+    }
 
     setApplicationMessage()
     setVersions()
   }
 
   override fun teardown() {
-    binding.unbind()
+    upgradeMessage.text = ""
+    currentValue.text = ""
+    newValue.text = ""
   }
 
   override fun saveState(outState: Bundle) {
@@ -56,18 +66,16 @@ internal class VersionUpgradeContentView internal constructor(
 
   @CheckResult
   private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
-    return binding.versionContentRoot.context.getString(id, *formatArgs)
+    return layoutRoot.context.getString(id, *formatArgs)
   }
 
   private fun setApplicationMessage() {
-    binding.upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
+    upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
   }
 
   private fun setVersions() {
-    binding.apply {
-      upgradeCurrentValue.text = "$currentVersion"
-      upgradeNewValue.text = "$newVersion"
-    }
+    currentValue.text = "$currentVersion"
+    newValue.text = "$newVersion"
   }
 
 }

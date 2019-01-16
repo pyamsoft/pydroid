@@ -16,115 +16,113 @@
   ~
   -->
 
-<layout>
 
-  <merge>
+<merge>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/version_content_root"
-        android:layout_width="match_parent"
+  <androidx.constraintlayout.widget.ConstraintLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      android:id="@+id/version_content_root"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="16dp"
+      >
+
+    <TextView
+        android:id="@+id/upgrade_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        >
+        android:gravity="center"
+        android:text="@string/upgrade_available_title"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Upgrade Available"
+        />
 
-      <TextView
-          android:id="@+id/upgrade_title"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:gravity="center"
-          android:text="@string/upgrade_available_title"
-          android:textAppearance="?android:attr/textAppearanceLarge"
-          android:textStyle="bold"
-          app:layout_constrainedHeight="true"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          tools:text="Upgrade Available"
-          />
+    <TextView
+        android:id="@+id/upgrade_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upgrade_title"
+        tools:text="A new version of APPLICATION is available!"
+        />
 
-      <TextView
-          android:id="@+id/upgrade_message"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="16dp"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          app:layout_constrainedHeight="true"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/upgrade_title"
-          tools:text="A new version of APPLICATION is available!"
-          />
+    <TextView
+        android:id="@+id/upgrade_current_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/upgrade_available_current_version"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upgrade_message"
+        />
 
-      <TextView
-          android:id="@+id/upgrade_current_label"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="16dp"
-          android:text="@string/upgrade_available_current_version"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          app:layout_constrainedHeight="true"
-          app:layout_constrainedWidth="true"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/upgrade_message"
-          />
+    <Space
+        android:id="@+id/upgrade_guideline"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/upgrade_current_label"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-      <Space
-          android:id="@+id/upgrade_guideline"
-          android:layout_width="1dp"
-          android:layout_height="0dp"
-          android:layout_marginStart="3dp"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintStart_toEndOf="@+id/upgrade_current_label"
-          app:layout_constraintTop_toTopOf="parent"
-          />
+    <TextView
+        android:id="@+id/upgrade_current_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/upgrade_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/upgrade_message"
+        tools:text="69"
+        />
 
-      <TextView
-          android:id="@+id/upgrade_current_value"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="16dp"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          app:layout_constrainedHeight="true"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@+id/upgrade_guideline"
-          app:layout_constraintTop_toBottomOf="@+id/upgrade_message"
-          tools:text="69"
-          />
+    <TextView
+        android:id="@+id/upgrade_new_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/upgrade_available_new_version"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upgrade_current_label"
+        />
 
-      <TextView
-          android:id="@+id/upgrade_new_label"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:text="@string/upgrade_available_new_version"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          app:layout_constrainedHeight="true"
-          app:layout_constrainedWidth="true"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/upgrade_current_label"
-          />
+    <TextView
+        android:id="@+id/upgrade_new_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/upgrade_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/upgrade_current_label"
+        tools:text="70"
+        />
 
-      <TextView
-          android:id="@+id/upgrade_new_value"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:layout_marginTop="8dp"
-          android:textAppearance="?android:attr/textAppearanceMedium"
-          app:layout_constrainedHeight="true"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toEndOf="@+id/upgrade_guideline"
-          app:layout_constraintTop_toBottomOf="@+id/upgrade_current_label"
-          tools:text="70"
-          />
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</merge>
 
-  </merge>
-
-</layout>

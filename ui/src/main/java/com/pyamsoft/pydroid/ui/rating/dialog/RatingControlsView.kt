@@ -19,9 +19,10 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.Button
 import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.databinding.RatingControlsBinding
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -32,27 +33,32 @@ internal class RatingControlsView internal constructor(
   uiBus: Publisher<RatingDialogViewEvent>
 ) : UiView<RatingDialogViewEvent>(uiBus) {
 
-  private lateinit var binding: RatingControlsBinding
+  private lateinit var layoutRoot: ViewGroup
+  private lateinit var rateApplication: Button
+  private lateinit var noThanks: Button
 
   override fun id(): Int {
-    return binding.ratingControlRoot.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = RatingControlsBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.rating_controls) {
+      layoutRoot = findViewById(R.id.rating_control_root)
+      rateApplication = findViewById(R.id.rate_application)
+      noThanks = findViewById(R.id.no_thanks)
+    }
 
     setupButtons()
   }
 
   override fun teardown() {
-    binding.unbind()
+    rateApplication.setOnClickListener(null)
+    noThanks.setOnClickListener(null)
   }
 
   private fun setupButtons() {
-    binding.apply {
-      rateApplication.setOnDebouncedClickListener { publish(VisitMarket(rateLink)) }
-      noThanks.setOnDebouncedClickListener { publish(Cancel) }
-    }
+    rateApplication.setOnDebouncedClickListener { publish(VisitMarket(rateLink)) }
+    noThanks.setOnDebouncedClickListener { publish(Cancel) }
   }
 
   override fun saveState(outState: Bundle) {

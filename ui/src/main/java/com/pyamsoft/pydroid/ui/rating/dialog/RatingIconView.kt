@@ -19,12 +19,13 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.RatingIconBinding
 
 internal class RatingIconView internal constructor(
   private val parent: ViewGroup,
@@ -33,25 +34,28 @@ internal class RatingIconView internal constructor(
   private val owner: LifecycleOwner
 ) : UiView<EMPTY>(EmptyPublisher) {
 
-  private lateinit var binding: RatingIconBinding
+  private lateinit var layoutRoot: ViewGroup
+  private lateinit var icon: ImageView
 
   override fun id(): Int {
-    return binding.ratingIconRoot.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = RatingIconBinding.inflate(parent.inflater(), parent, true)
+    parent.inflateAndAdd(R.layout.rating_icon) {
+      layoutRoot = findViewById(R.id.rating_icon_root)
+      icon = findViewById(R.id.icon)
+    }
 
     loadIcon()
   }
 
   override fun teardown() {
-    binding.unbind()
   }
 
   private fun loadIcon() {
     imageLoader.load(changelogIcon)
-        .into(binding.icon)
+        .into(icon)
         .bind(owner)
   }
 

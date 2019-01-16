@@ -38,7 +38,7 @@
         style="@style/Widget.AppCompat.Button.Colored"
         />
 
-    <TextView
+    <Button
         android:id="@+id/no_thanks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

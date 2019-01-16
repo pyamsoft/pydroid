@@ -34,7 +34,7 @@ internal class RatingChangelogUiComponent internal constructor(
 
   override fun create(savedInstanceState: Bundle?) {
     changelogView.inflate(savedInstanceState)
-    owner.run { changelogView.teardown() }
+    owner.runOnDestroy { changelogView.teardown() }
   }
 
   override fun saveState(outState: Bundle) {

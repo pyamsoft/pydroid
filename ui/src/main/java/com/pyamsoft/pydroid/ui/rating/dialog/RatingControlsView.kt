@@ -19,15 +19,9 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.databinding.RatingControlsBinding
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -38,29 +32,27 @@ internal class RatingControlsView internal constructor(
   uiBus: Publisher<RatingDialogViewEvent>
 ) : UiView<RatingDialogViewEvent>(uiBus) {
 
-  private lateinit var unbinder: Unbinder
-  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: LinearLayout
-  @field:BindView(R2.id.rate_application) internal lateinit var rateApplication: Button
-  @field:BindView(R2.id.no_thanks) internal lateinit var noThanks: Button
+  private lateinit var binding: RatingControlsBinding
 
   override fun id(): Int {
-    return layoutRoot.id
+    return binding.ratingControlRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    val root = parent.inflateAndAdd(R.layout.rating_controls)
-    unbinder = ButterKnife.bind(this, root)
+    binding = RatingControlsBinding.inflate(parent.inflater(), parent, true)
 
     setupButtons()
   }
 
   override fun teardown() {
-    unbinder.unbind()
+    binding.unbind()
   }
 
   private fun setupButtons() {
-    rateApplication.setOnDebouncedClickListener { publish(VisitMarket(rateLink)) }
-    noThanks.setOnDebouncedClickListener { publish(Cancel) }
+    binding.apply {
+      rateApplication.setOnDebouncedClickListener { publish(VisitMarket(rateLink)) }
+      noThanks.setOnDebouncedClickListener { publish(Cancel) }
+    }
   }
 
   override fun saveState(outState: Bundle) {

@@ -21,19 +21,15 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LifecycleOwner
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.databinding.LicenseToolbarBinding
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
@@ -46,30 +42,29 @@ internal class LicenseToolbarView internal constructor(
   uiBus: Publisher<LicenseViewEvent>
 ) : UiView<LicenseViewEvent>(uiBus) {
 
-  private lateinit var unbinder: Unbinder
-  @field:BindView(R2.id.toolbar) internal lateinit var toolbar: Toolbar
+  private lateinit var binding: LicenseToolbarBinding
 
   override fun id(): Int {
-    return toolbar.id
+    return binding.licenseToolbar.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    val root = parent.inflateAndAdd(R.layout.license_toolbar)
-    unbinder = ButterKnife.bind(this, root)
-
+    binding = LicenseToolbarBinding.inflate(parent.inflater(), parent, true)
     setupToolbar()
   }
 
   override fun teardown() {
-    unbinder.unbind()
+    binding.unbind()
   }
 
   override fun saveState(outState: Bundle) {
   }
 
   private fun setupToolbar() {
-    toolbar.title = name
-    toolbar.inflateMenu(R.menu.oss_library_menu)
+    binding.apply {
+      licenseToolbar.title = name
+      licenseToolbar.inflateMenu(R.menu.oss_library_menu)
+    }
 
     loadNavIcon()
     setupOnClick()
@@ -77,41 +72,43 @@ internal class LicenseToolbarView internal constructor(
   }
 
   private fun loadNavIcon() {
-    imageLoader.load(R.drawable.ic_close_24dp)
-        .into(object : ImageTarget<Drawable> {
+    binding.apply {
+      imageLoader.load(R.drawable.ic_close_24dp)
+          .into(object : ImageTarget<Drawable> {
 
-          override fun view(): View {
-            return toolbar
-          }
+            override fun view(): View {
+              return licenseToolbar
+            }
 
-          override fun clear() {
-            toolbar.navigationIcon = null
-          }
+            override fun clear() {
+              licenseToolbar.navigationIcon = null
+            }
 
-          override fun setImage(image: Drawable) {
-            toolbar.setUpEnabled(true, image)
-          }
+            override fun setImage(image: Drawable) {
+              licenseToolbar.setUpEnabled(true, image)
+            }
 
-          override fun setError(error: Drawable?) {
-            toolbar.setUpEnabled(false)
-          }
+            override fun setError(error: Drawable?) {
+              licenseToolbar.setUpEnabled(false)
+            }
 
-          override fun setPlaceholder(placeholder: Drawable?) {
-            toolbar.setUpEnabled(false)
-          }
+            override fun setPlaceholder(placeholder: Drawable?) {
+              licenseToolbar.setUpEnabled(false)
+            }
 
-        })
-        .bind(owner)
+          })
+          .bind(owner)
+    }
   }
 
   private fun setupOnClick() {
-    toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
+    binding.licenseToolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
       publish(ToolbarNavClick)
     })
   }
 
   private fun setupMenuOnClick() {
-    toolbar.setOnMenuItemClickListener {
+    binding.licenseToolbar.setOnMenuItemClickListener {
       publish(ToolbarMenuClick(it.itemId, link))
       return@setOnMenuItemClickListener true
     }

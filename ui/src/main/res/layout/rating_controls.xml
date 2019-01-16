@@ -14,37 +14,42 @@
   ~ limitations under the License.
   ~
   -->
-<merge>
 
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/layout_root"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="16dp"
-      >
+<layout>
 
-    <Button
-        android:id="@+id/rate_application"
+  <merge>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rating_control_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/rate_application"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white"
-        style="@style/Widget.AppCompat.Button.Colored"
-        />
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
 
-    <TextView
-        android:id="@+id/no_thanks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/no_thanks"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        style="?attr/borderlessButtonStyle"
-        />
+      <Button
+          android:id="@+id/rate_application"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="8dp"
+          android:text="@string/rate_application"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@android:color/white"
+          style="@style/Widget.AppCompat.Button.Colored"
+          />
 
-  </LinearLayout>
+      <TextView
+          android:id="@+id/no_thanks"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/no_thanks"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          style="?attr/borderlessButtonStyle"
+          />
 
-</merge>
+    </LinearLayout>
+
+  </merge>
+
+</layout>

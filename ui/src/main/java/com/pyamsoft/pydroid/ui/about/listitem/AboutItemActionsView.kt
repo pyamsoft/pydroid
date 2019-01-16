@@ -19,19 +19,13 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.bus.Publisher
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.databinding.AboutItemActionsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
@@ -39,40 +33,40 @@ internal class AboutItemActionsView internal constructor(
   bus: Publisher<AboutViewEvent>
 ) : UiView<AboutViewEvent>(bus), BaseAboutItem {
 
-  private lateinit var unbinder: Unbinder
-  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: LinearLayout
-  @field:BindView(R2.id.about_library_view_license) internal lateinit var viewLicense: Button
-  @field:BindView(R2.id.about_library_visit_homepage) internal lateinit var visitHomepage: Button
+  private lateinit var binding: AboutItemActionsBinding
 
   override fun id(): Int {
-    return layoutRoot.id
+    return binding.aboutActions.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    val root = parent.inflateAndAdd(R.layout.about_item_actions)
-    unbinder = ButterKnife.bind(this, root)
+    binding = AboutItemActionsBinding.inflate(parent.inflater(), parent, true)
   }
 
   override fun teardown() {
-    unbinder.unbind()
+    binding.unbind()
   }
 
   override fun saveState(outState: Bundle) {
   }
 
   override fun bind(model: OssLibrary) {
-    viewLicense.setOnDebouncedClickListener {
-      publish(ViewLicense(model.name, model.licenseUrl))
-    }
+    binding.apply {
+      actionViewLicense.setOnDebouncedClickListener {
+        publish(ViewLicense(model.name, model.licenseUrl))
+      }
 
-    visitHomepage.setOnDebouncedClickListener {
-      publish(VisitHomepage(model.name, model.libraryUrl))
+      actionVisitHomepage.setOnDebouncedClickListener {
+        publish(VisitHomepage(model.name, model.libraryUrl))
+      }
     }
   }
 
   override fun unbind() {
-    viewLicense.setOnDebouncedClickListener(null)
-    visitHomepage.setOnDebouncedClickListener(null)
+    binding.apply {
+      actionViewLicense.setOnDebouncedClickListener(null)
+      actionVisitHomepage.setOnDebouncedClickListener(null)
+    }
   }
 
 }

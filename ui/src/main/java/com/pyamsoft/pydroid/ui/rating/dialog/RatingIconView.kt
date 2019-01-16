@@ -19,18 +19,12 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.ImageView
 import androidx.lifecycle.LifecycleOwner
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.databinding.RatingIconBinding
 
 internal class RatingIconView internal constructor(
   private val parent: ViewGroup,
@@ -39,28 +33,25 @@ internal class RatingIconView internal constructor(
   private val owner: LifecycleOwner
 ) : UiView<EMPTY>(EmptyPublisher) {
 
-  private lateinit var unbinder: Unbinder
-  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: FrameLayout
-  @field:BindView(R2.id.icon) internal lateinit var icon: ImageView
+  private lateinit var binding: RatingIconBinding
 
   override fun id(): Int {
-    return layoutRoot.id
+    return binding.ratingIconRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    val root = parent.inflateAndAdd(R.layout.rating_icon)
-    unbinder = ButterKnife.bind(this, root)
+    binding = RatingIconBinding.inflate(parent.inflater(), parent, true)
 
     loadIcon()
   }
 
   override fun teardown() {
-    unbinder.unbind()
+    binding.unbind()
   }
 
   private fun loadIcon() {
     imageLoader.load(changelogIcon)
-        .into(icon)
+        .into(binding.icon)
         .bind(owner)
   }
 

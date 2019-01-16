@@ -15,19 +15,24 @@
   ~ limitations under the License.
   ~
   -->
-<merge>
 
-  <androidx.appcompat.widget.Toolbar
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      android:id="@+id/toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
-      android:background="?attr/colorPrimary"
-      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-      tools:background="@color/blue700"
-      tools:layout_height="56dp"
-      tools:title="License"
-      />
+<layout>
 
-</merge>
+  <merge>
+
+    <androidx.appcompat.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/license_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        tools:background="@color/blue700"
+        tools:layout_height="56dp"
+        tools:title="License"
+        />
+
+  </merge>
+
+</layout>

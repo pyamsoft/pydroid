@@ -38,6 +38,7 @@ import timber.log.Timber
 abstract class VersionCheckActivity : ActivityBase() {
 
   internal lateinit var versionWorker: VersionCheckWorker
+
   private var checkUpdatesDisposable by singleDisposable()
   private var snackbar: Snackbar? = null
 

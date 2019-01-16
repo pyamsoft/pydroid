@@ -16,37 +16,42 @@
   ~
   -->
 
-<merge>
+<layout>
 
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/layout_root"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:padding="8dp"
-      style="?attr/buttonBarStyle"
-      >
+  <merge>
 
-    <Button
-        android:id="@+id/about_library_visit_homepage"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/about_actions"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/visit_homepage"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        style="?attr/buttonBarButtonStyle"
-        />
+        android:orientation="horizontal"
+        android:padding="8dp"
+        style="?attr/buttonBarStyle"
+        >
 
-    <Button
-        android:id="@+id/about_library_view_license"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/view_license"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        style="?attr/buttonBarButtonStyle"
-        />
+      <Button
+          android:id="@+id/action_visit_homepage"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/visit_homepage"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          style="?attr/buttonBarButtonStyle"
+          />
 
-  </LinearLayout>
+      <Button
+          android:id="@+id/action_view_license"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:text="@string/view_license"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          style="?attr/buttonBarButtonStyle"
+          />
 
-</merge>
+    </LinearLayout>
+
+  </merge>
+
+</layout>
+

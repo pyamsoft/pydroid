@@ -19,32 +19,24 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
 
-internal class AboutViewHolder internal constructor(
+internal class AboutViewHolder private constructor(
   owner: LifecycleOwner,
-  inflater: LayoutInflater,
-  container: ViewGroup
-) : BaseViewHolder(inflater.inflate(R.layout.adapter_item_about_license, container, false)) {
-
-  @field:BindView(R2.id.listitem_root) internal lateinit var layoutRoot: LinearLayout
+  binding: AdapterItemAboutLicenseBinding
+) : BaseViewHolder(binding.aboutListitemCard) {
 
   internal lateinit var titleComponent: AboutItemTitleUiComponent
   internal lateinit var actionsComponent: AboutItemActionsUiComponent
   internal lateinit var descriptionComponent: AboutItemDescriptionUiComponent
 
   init {
-    ButterKnife.bind(this, itemView)
-
     PYDroid.obtain(itemView.context.applicationContext)
-        .plusAboutItemComponent(owner, layoutRoot)
+        .plusAboutItemComponent(owner, binding.aboutListitemRoot)
         .inject(this)
 
     titleComponent.create(null)
@@ -62,6 +54,20 @@ internal class AboutViewHolder internal constructor(
     titleComponent.unbind()
     actionsComponent.unbind()
     descriptionComponent.unbind()
+  }
+
+  companion object {
+
+    @CheckResult
+    @JvmStatic
+    fun create(
+      owner: LifecycleOwner,
+      inflater: LayoutInflater,
+      container: ViewGroup
+    ): AboutViewHolder {
+      val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
+      return AboutViewHolder(owner, binding)
+    }
   }
 
 }

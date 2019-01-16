@@ -64,9 +64,9 @@ internal class AboutAdapter internal constructor(
   ): BaseViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     if (viewType == VIEW_TYPE_REAL) {
-      return AboutViewHolder(owner, inflater, parent)
+      return AboutViewHolder.create(owner, inflater, parent)
     } else {
-      return SpaceViewHolder(inflater, parent)
+      return SpaceViewHolder.create(inflater, parent)
     }
   }
 

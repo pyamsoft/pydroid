@@ -15,8 +15,6 @@
  *
  */
 
-apply plugin: 'com.jakewharton.butterknife'
-
 dependencies {
   // Android support library.
   api "androidx.recyclerview:recyclerview:$recyclerView"
@@ -27,10 +25,6 @@ dependencies {
 
   // Fluid resise
   api "com.popinnow.android.fluidresizer:fluidresizer:$fluidresizer"
-
-  // Butterknife
-  implementation "com.jakewharton:butterknife:$butterknife"
-  kapt "com.jakewharton:butterknife-compiler:$butterknife"
 
   api project(':bootstrap')
   api project(':loader')

@@ -21,17 +21,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.annotation.CheckResult
-import butterknife.BindView
-import butterknife.Unbinder
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
@@ -42,8 +38,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   internal lateinit var controlsComponent: VersionUpgradeControlsUiComponent
   internal lateinit var contentComponent: VersionUpgradeContentUiComponent
 
-  private lateinit var unbinder: Unbinder
-  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: LinearLayout
+  private lateinit var binding: LayoutLinearVerticalBinding
 
   private var marketSnackbar: Snackbar? = null
 
@@ -52,16 +47,16 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.layout_linear_vertical, container, false)
+    binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
 
     val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
     require(latestVersion > 0)
 
-    PYDroid.obtain(root.context.applicationContext)
-        .plusVersionUpgradeComponent(viewLifecycleOwner, layoutRoot, latestVersion)
+    PYDroid.obtain(binding.layoutLinearV.context.applicationContext)
+        .plusVersionUpgradeComponent(viewLifecycleOwner, binding.layoutLinearV, latestVersion)
         .inject(this)
 
-    return root
+    return binding.layoutLinearV
   }
 
   override fun onViewCreated(
@@ -110,7 +105,7 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   override fun onDestroyView() {
     super.onDestroyView()
     dismissSnackbar()
-    unbinder.unbind()
+    binding.unbind()
   }
 
   override fun onResume() {

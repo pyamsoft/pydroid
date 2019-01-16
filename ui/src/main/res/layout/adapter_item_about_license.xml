@@ -16,31 +16,36 @@
   ~
   -->
 
-<merge>
+<layout>
 
-  <!-- MaterialCardView renders all black -->
-  <androidx.cardview.widget.CardView
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/listitem_card"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginStart="8dp"
-      app:cardCornerRadius="4dp"
-      app:cardElevation="2dp"
-      app:cardMaxElevation="6dp"
-      >
+  <merge>
 
-    <LinearLayout
-        android:id="@+id/listitem_root"
+    <!-- MaterialCardView renders all black -->
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/about_listitem_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="2dp"
+        app:cardMaxElevation="6dp"
+        >
 
-  </androidx.cardview.widget.CardView>
+      <LinearLayout
+          android:id="@+id/about_listitem_root"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          />
 
-</merge>
+    </androidx.cardview.widget.CardView>
+
+  </merge>
+
+
+</layout>
 

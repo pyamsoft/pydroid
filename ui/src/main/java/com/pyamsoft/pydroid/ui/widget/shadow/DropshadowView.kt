@@ -18,33 +18,26 @@
 package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.databinding.DropshadowBinding
 
 class DropshadowView(private val parent: ViewGroup) : UiView<EMPTY>(EmptyPublisher) {
 
-  private lateinit var unbinder: Unbinder
-  @field:BindView(R2.id.dropshadow) internal lateinit var dropshadow: View
+  private lateinit var binding: DropshadowBinding
 
   override fun id(): Int {
-    return dropshadow.id
+    return binding.dropshadowView.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    val root = parent.inflateAndAdd(R.layout.dropshadow)
-    unbinder = ButterKnife.bind(this, root)
+    binding = DropshadowBinding.inflate(parent.inflater(), parent, true)
   }
 
   override fun teardown() {
-    unbinder.unbind()
+    binding.unbind()
   }
 
   override fun saveState(outState: Bundle) {

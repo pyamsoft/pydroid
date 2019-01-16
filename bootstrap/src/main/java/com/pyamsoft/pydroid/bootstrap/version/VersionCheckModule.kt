@@ -44,7 +44,7 @@ class VersionCheckModule(
 
   val interactor: VersionCheckInteractor
 
-  val moshi = Moshi.Builder()
+  val moshi: Moshi = Moshi.Builder()
       .build()
 
   private val repo = newRepoBuilder<UpdatePayload>()

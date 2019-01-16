@@ -16,35 +16,40 @@
   ~
   -->
 
-<merge>
+<layout>
 
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      android:id="@+id/layout_root"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="8dp"
-      >
+  <merge>
 
-    <TextView
-        android:id="@+id/about_library_title"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/about_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textStyle="bold"
-        tools:text="Android SDK Library Guy"
-        />
+        android:orientation="vertical"
+        android:padding="8dp"
+        >
 
-    <TextView
-        android:id="@+id/about_library_license"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        tools:text="License: Apache v2"
-        />
+      <TextView
+          android:id="@+id/title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          android:textStyle="bold"
+          tools:text="Android SDK Library Guy"
+          />
 
-  </LinearLayout>
+      <TextView
+          android:id="@+id/license"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          tools:text="License: Apache v2"
+          />
 
-</merge>
+    </LinearLayout>
+
+  </merge>
+
+</layout>
+

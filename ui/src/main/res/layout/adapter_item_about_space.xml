@@ -14,12 +14,18 @@
   ~ limitations under the License.
   ~
   -->
-<merge>
 
-  <Space
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="match_parent"
-      android:layout_height="8dp"
-      />
+<layout>
 
-</merge>
+  <merge>
+
+    <Space
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/about_listitem_space"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        />
+
+  </merge>
+
+</layout>

@@ -19,10 +19,24 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.ui.R
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutSpaceBinding
 
-internal class SpaceViewHolder internal constructor(
-  inflater: LayoutInflater,
-  container: ViewGroup
-) : BaseViewHolder(inflater.inflate(R.layout.adapter_item_about_space, container, false))
+internal class SpaceViewHolder private constructor(
+  binding: AdapterItemAboutSpaceBinding
+) : BaseViewHolder(binding.aboutListitemSpace) {
+
+  companion object {
+
+    @CheckResult
+    @JvmStatic
+    fun create(
+      inflater: LayoutInflater,
+      container: ViewGroup
+    ): SpaceViewHolder {
+      val binding = AdapterItemAboutSpaceBinding.inflate(inflater, container, false)
+      return SpaceViewHolder(binding)
+    }
+  }
+}
 

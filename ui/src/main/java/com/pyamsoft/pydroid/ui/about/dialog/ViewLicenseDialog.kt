@@ -25,13 +25,9 @@ import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
@@ -40,6 +36,7 @@ import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
@@ -47,8 +44,7 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 internal class ViewLicenseDialog : ToolbarDialog() {
 
-  private lateinit var unbinder: Unbinder
-  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: ConstraintLayout
+  private lateinit var binding: LayoutConstraintBinding
 
   internal lateinit var toolbarComponent: LicenseToolbarUiComponent
   internal lateinit var loadingComponent: SpinnerUiComponent<LicenseStateEvent, Loading, Complete>
@@ -69,14 +65,13 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     require(name.isNotBlank())
     require(link.isNotBlank())
 
-    val root = inflater.inflate(R.layout.layout_constraint, container, false)
-    unbinder = ButterKnife.bind(this, root)
+    binding = LayoutConstraintBinding.inflate(inflater, container, false)
 
     PYDroid.obtain(requireContext())
-        .plusViewLicenseComponent(viewLifecycleOwner, layoutRoot, link, name)
+        .plusViewLicenseComponent(viewLifecycleOwner, binding.layoutConstraint, link, name)
         .inject(this)
 
-    return layoutRoot
+    return binding.layoutConstraint
   }
 
   override fun onViewCreated(
@@ -102,7 +97,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     loadingComponent.create(savedInstanceState)
     dropshadowComponent.create(savedInstanceState)
 
-    applyConstraints(layoutRoot)
+    applyConstraints(binding.layoutConstraint)
 
     worker.loadUrl()
   }
@@ -193,6 +188,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
   override fun onDestroyView() {
     super.onDestroyView()
     dismissSnackbar()
+    binding.unbind()
   }
 
   companion object {

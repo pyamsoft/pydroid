@@ -48,7 +48,6 @@ buildscript {
     repo = "0.2.2-SNAPSHOT"
     fluidresizer = "0.0.2-SNAPSHOT"
 
-    butterknife = "10.0.0"
     timber = "4.7.1"
     moshi = "1.8.0"
     retrofit = "2.5.0"
@@ -76,9 +75,6 @@ buildscript {
 
     // Dokka
     classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
-
-    // Butterknife
-    classpath "com.jakewharton:butterknife-gradle-plugin:$butterknife"
   }
 }
 
@@ -176,6 +172,15 @@ subprojects {
         shrinkResources false
         proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
       }
+    }
+
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_1_8
+      targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+      enabled true
     }
   }
 

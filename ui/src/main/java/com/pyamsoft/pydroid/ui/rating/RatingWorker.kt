@@ -27,13 +27,13 @@ import io.reactivex.disposables.Disposable
 
 internal class RatingWorker internal constructor(
   private val interactor: RatingInteractor,
-  private val bus: EventBus<RatingStateEvent>,
-  private val schedulerProvider: SchedulerProvider
-) : Worker<RatingStateEvent> {
+  private val schedulerProvider: SchedulerProvider,
+  bus: EventBus<RatingStateEvent>
+) : Worker<RatingStateEvent>(bus) {
 
   @CheckResult
   fun onRatingDialogRequested(func: () -> Unit): Disposable {
-    return bus.listen()
+    return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .ofType(ShowEvent::class.java)
@@ -47,7 +47,7 @@ internal class RatingWorker internal constructor(
         .map { Unit }
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { bus.publish(ShowEvent) }
+        .subscribe { publish(ShowEvent) }
   }
 
 }

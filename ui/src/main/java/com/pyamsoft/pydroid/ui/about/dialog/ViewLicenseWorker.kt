@@ -26,13 +26,13 @@ import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.disposables.Disposable
 
 class ViewLicenseWorker internal constructor(
-  private val licenseStateBus: EventBus<LicenseStateEvent>,
+  licenseStateBus: EventBus<LicenseStateEvent>,
   private val schedulerProvider: SchedulerProvider
-) : Worker<LicenseStateEvent> {
+) : Worker<LicenseStateEvent>(licenseStateBus) {
 
   @CheckResult
   fun onLoadErrorEvent(func: (payload: PageError) -> Unit): Disposable {
-    return licenseStateBus.listen()
+    return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .ofType(PageError::class.java)
@@ -40,7 +40,7 @@ class ViewLicenseWorker internal constructor(
   }
 
   fun loadUrl() {
-    licenseStateBus.publish(Loading)
+    publish(Loading)
   }
 
 }

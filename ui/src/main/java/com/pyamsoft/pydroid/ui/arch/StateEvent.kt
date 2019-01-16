@@ -17,8 +17,22 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
+import com.pyamsoft.pydroid.core.bus.EventBus
+import io.reactivex.Observable
+
 interface StateEvent {
 
   object EMPTY : StateEvent
+
+  object EmptyBus : EventBus<EMPTY> {
+
+    override fun publish(event: EMPTY) {
+    }
+
+    override fun listen(): Observable<EMPTY> {
+      return Observable.empty()
+    }
+
+  }
 
 }

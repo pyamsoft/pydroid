@@ -17,4 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-interface Worker<T : StateEvent>
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.bus.EventBus
+import io.reactivex.Observable
+
+abstract class Worker<T : StateEvent> protected constructor(private val bus: EventBus<T>) {
+
+  @CheckResult
+  protected fun listen(): Observable<T> {
+    return bus.listen()
+  }
+
+  protected fun publish(event: T) {
+    bus.publish(event)
+  }
+}

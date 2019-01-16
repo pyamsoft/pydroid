@@ -31,13 +31,13 @@ import timber.log.Timber
 
 internal class VersionCheckWorker internal constructor(
   private val interactor: VersionCheckInteractor,
-  private val versionStateCheckBus: EventBus<VersionStateEvent>,
-  private val schedulerProvider: SchedulerProvider
-) : Worker<VersionStateEvent> {
+  private val schedulerProvider: SchedulerProvider,
+  versionStateCheckBus: EventBus<VersionStateEvent>
+) : Worker<VersionStateEvent>(versionStateCheckBus) {
 
   @CheckResult
   fun onUpdateEvent(func: (payload: VersionStateEvent) -> Unit): Disposable {
-    return versionStateCheckBus.listen()
+    return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe(func)
@@ -48,12 +48,11 @@ internal class VersionCheckWorker internal constructor(
     return interactor.checkVersion(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .doOnSubscribe { versionStateCheckBus.publish(Loading(force)) }
-        .doAfterTerminate { versionStateCheckBus.publish(UpdateComplete) }
-        .subscribe(
-            { versionStateCheckBus.publish(UpdateFound(it.currentVersion, it.newVersion)) }, {
+        .doOnSubscribe { publish(Loading(force)) }
+        .doAfterTerminate { publish(UpdateComplete) }
+        .subscribe({ publish(UpdateFound(it.currentVersion, it.newVersion)) }, {
           Timber.e(it, "Error checking for latest version")
-          versionStateCheckBus.publish(UpdateError(it))
+          publish(UpdateError(it))
         })
   }
 }

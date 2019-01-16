@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.ui.about
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LicensesLoaded
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadError
@@ -31,20 +31,20 @@ import timber.log.Timber
 
 class AboutWorker internal constructor(
   private val interactor: AboutInteractor,
-  private val bus: Publisher<AboutStateEvent>,
-  private val schedulerProvider: SchedulerProvider
-) : Worker<AboutStateEvent> {
+  private val schedulerProvider: SchedulerProvider,
+  bus: EventBus<AboutStateEvent>
+) : Worker<AboutStateEvent>(bus) {
 
   @CheckResult
   fun loadLicenses(force: Boolean): Disposable {
     return interactor.loadLicenses(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .doOnSubscribe { bus.publish(Loading) }
-        .doAfterTerminate { bus.publish(LoadComplete) }
-        .subscribe({ bus.publish(LicensesLoaded(it)) }, {
+        .doOnSubscribe { publish(Loading) }
+        .doAfterTerminate { publish(LoadComplete) }
+        .subscribe({ publish(LicensesLoaded(it)) }, {
           Timber.e(it, "Error loading licenses")
-          bus.publish(LoadError(it))
+          publish(LoadError(it))
         })
   }
 }

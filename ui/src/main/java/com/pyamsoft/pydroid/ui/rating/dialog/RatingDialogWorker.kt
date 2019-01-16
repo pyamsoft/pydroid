@@ -21,13 +21,14 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.arch.StateEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.StateEvent.EmptyBus
 import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.disposables.Disposable
 
 internal class RatingDialogWorker internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
-) : Worker<EMPTY> {
+) : Worker<EMPTY>(EmptyBus) {
 
   @CheckResult
   fun saveRating(onSave: () -> Unit): Disposable {

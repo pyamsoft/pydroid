@@ -98,12 +98,12 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun inject(activity: RatingActivity) {
-    activity.ratingWorker = RatingWorker(ratingModule.interactor, ratingStateBus, schedulerProvider)
+    activity.ratingWorker = RatingWorker(ratingModule.interactor, schedulerProvider, ratingStateBus)
   }
 
   override fun inject(activity: VersionCheckActivity) {
     activity.versionWorker = VersionCheckWorker(
-        versionModule.interactor, versionStateBus, schedulerProvider
+        versionModule.interactor, schedulerProvider, versionStateBus
     )
   }
 

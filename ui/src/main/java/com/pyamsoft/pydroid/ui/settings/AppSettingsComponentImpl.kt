@@ -52,9 +52,9 @@ internal class AppSettingsComponentImpl internal constructor(
     )
     fragment.theming = theming
     fragment.versionWorker = VersionCheckWorker(
-        versionCheckModule.interactor, versionStateBus, schedulerProvider
+        versionCheckModule.interactor, schedulerProvider, versionStateBus
     )
-    fragment.ratingWorker = RatingWorker(ratingModule.interactor, ratingStateBus, schedulerProvider)
+    fragment.ratingWorker = RatingWorker(ratingModule.interactor, schedulerProvider, ratingStateBus)
     fragment.settingsComponent = AppSettingsUiComponent(
         settingsView, settingsViewBus, schedulerProvider, owner
     )

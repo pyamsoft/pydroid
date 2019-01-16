@@ -181,7 +181,7 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
   protected open fun onLicenseItemClicked() {
     activity?.also {
       Timber.d("Show about licenses fragment")
-      AboutFragment.show(it, rootViewContainer)
+      AboutFragment.show(it, fragmentContainerId)
     }
   }
 
@@ -206,7 +206,7 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
   protected open val hideClearAll: Boolean = false
 
   @get:[CheckResult IdRes]
-  protected abstract val rootViewContainer: Int
+  protected abstract val fragmentContainerId: Int
 
   companion object {
 

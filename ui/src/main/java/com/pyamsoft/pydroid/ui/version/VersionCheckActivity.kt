@@ -42,7 +42,7 @@ abstract class VersionCheckActivity : ActivityBase() {
   private var checkUpdatesDisposable by singleDisposable()
   private var snackbar: Snackbar? = null
 
-  abstract val rootView: View
+  protected abstract val snackbarRoot: View
 
   @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +84,7 @@ abstract class VersionCheckActivity : ActivityBase() {
 
     if (showSnackbar) {
       snackbar = Snackbreak
-          .short(rootView, "Checking for updates...")
+          .short(snackbarRoot, "Checking for updates...")
           .also { it.show() }
     }
   }

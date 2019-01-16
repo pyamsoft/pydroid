@@ -22,21 +22,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
-import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : ToolbarFragment() {
 
-  private lateinit var binding: LayoutCoordinatorBinding
+  private lateinit var coordinatorLayout: CoordinatorLayout
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    binding = LayoutCoordinatorBinding.inflate(inflater, container, false)
-    return binding.layoutCoordinator
+    return inflater.inflate(R.layout.layout_coordinator, container, false)
   }
 
   override fun onViewCreated(
@@ -44,6 +44,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+    coordinatorLayout = view.findViewById(R.id.layout_coordinator)
     showPreferenceFragment()
   }
 
@@ -52,7 +53,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     val tag: String = provideSettingsTag()
     if (fragmentManager.findFragmentByTag(tag) == null) {
       fragmentManager.beginTransaction()
-          .add(binding.layoutCoordinator.id, provideSettingsFragment(), tag)
+          .add(coordinatorLayout.id, provideSettingsFragment(), tag)
           .commit(viewLifecycleOwner)
     }
   }

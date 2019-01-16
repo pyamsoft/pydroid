@@ -24,10 +24,10 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
@@ -38,8 +38,6 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   internal lateinit var controlsComponent: VersionUpgradeControlsUiComponent
   internal lateinit var contentComponent: VersionUpgradeContentUiComponent
 
-  private lateinit var binding: LayoutLinearVerticalBinding
-
   private var marketSnackbar: Snackbar? = null
 
   override fun onCreateView(
@@ -47,16 +45,16 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
+    val root = inflater.inflate(R.layout.layout_linear_vertical, container, false)
 
     val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
     require(latestVersion > 0)
 
-    PYDroid.obtain(binding.layoutLinearV.context.applicationContext)
-        .plusVersionUpgradeComponent(viewLifecycleOwner, binding.layoutLinearV, latestVersion)
+    PYDroid.obtain(root.context.applicationContext)
+        .plusVersionUpgradeComponent(viewLifecycleOwner, root as ViewGroup, latestVersion)
         .inject(this)
 
-    return binding.layoutLinearV
+    return root
   }
 
   override fun onViewCreated(
@@ -105,7 +103,6 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   override fun onDestroyView() {
     super.onDestroyView()
     dismissSnackbar()
-    binding.unbind()
   }
 
   override fun onResume() {

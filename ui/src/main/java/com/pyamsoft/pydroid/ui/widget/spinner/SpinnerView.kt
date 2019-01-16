@@ -33,7 +33,7 @@ class SpinnerView(
   private lateinit var binding: LoadingSpinnerBinding
 
   override fun id(): Int {
-    return binding.spinner.id
+    return binding.spinnerRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {

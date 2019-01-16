@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
@@ -38,7 +39,6 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
@@ -49,8 +49,6 @@ class AboutFragment : ToolbarFragment() {
   internal lateinit var listComponent: AboutListUiComponent
   internal lateinit var loadingComponent: SpinnerUiComponent<AboutStateEvent, Loading, LoadComplete>
   internal lateinit var worker: AboutWorker
-
-  private lateinit var binding: LayoutFrameBinding
 
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
@@ -68,14 +66,13 @@ class AboutFragment : ToolbarFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    val root = inflater.inflate(R.layout.layout_frame, container, false)
 
-    binding = LayoutFrameBinding.inflate(inflater, container, false)
-
-    PYDroid.obtain(binding.layoutFrame.context.applicationContext)
-        .plusAboutComponent(viewLifecycleOwner, binding.layoutFrame)
+    PYDroid.obtain(root.context.applicationContext)
+        .plusAboutComponent(viewLifecycleOwner, root as ViewGroup)
         .inject(this)
 
-    return binding.layoutFrame
+    return root
   }
 
   override fun onViewCreated(
@@ -109,7 +106,6 @@ class AboutFragment : ToolbarFragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     loadLicensesDisposable.tryDispose()
-    binding.unbind()
   }
 
   override fun onResume() {
@@ -146,7 +142,7 @@ class AboutFragment : ToolbarFragment() {
     @JvmStatic
     fun show(
       activity: FragmentActivity,
-      @IdRes rootViewContainer: Int
+      @IdRes container: Int
     ) {
       // If you're using this function, all of these are available
       OssLibraries.CORE = true
@@ -159,7 +155,7 @@ class AboutFragment : ToolbarFragment() {
       val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {
         fragmentManager.beginTransaction()
-            .replace(rootViewContainer, newInstance(backStackCount), TAG)
+            .replace(container, newInstance(backStackCount), TAG)
             .addToBackStack(null)
             .commit(activity)
       }

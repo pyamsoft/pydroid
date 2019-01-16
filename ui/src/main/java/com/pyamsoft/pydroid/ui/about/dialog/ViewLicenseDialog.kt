@@ -36,15 +36,12 @@ import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class ViewLicenseDialog : ToolbarDialog() {
-
-  private lateinit var binding: LayoutConstraintBinding
 
   internal lateinit var toolbarComponent: LicenseToolbarUiComponent
   internal lateinit var loadingComponent: SpinnerUiComponent<LicenseStateEvent, Loading, Complete>
@@ -59,19 +56,18 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-
     val name = requireArguments().getString(NAME, "")
     val link = requireArguments().getString(LINK, "")
     require(name.isNotBlank())
     require(link.isNotBlank())
 
-    binding = LayoutConstraintBinding.inflate(inflater, container, false)
+    val root = inflater.inflate(R.layout.layout_constraint, container, false)
 
     PYDroid.obtain(requireContext())
-        .plusViewLicenseComponent(viewLifecycleOwner, binding.layoutConstraint, link, name)
+        .plusViewLicenseComponent(viewLifecycleOwner, root as ViewGroup, link, name)
         .inject(this)
 
-    return binding.layoutConstraint
+    return root
   }
 
   override fun onViewCreated(
@@ -97,7 +93,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     loadingComponent.create(savedInstanceState)
     dropshadowComponent.create(savedInstanceState)
 
-    applyConstraints(binding.layoutConstraint)
+    applyConstraints(view as ConstraintLayout)
 
     worker.loadUrl()
   }
@@ -132,35 +128,33 @@ internal class ViewLicenseDialog : ToolbarDialog() {
       clone(layoutRoot)
 
       toolbarComponent.also {
-        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+        connect(it.id(), ConstraintSet.TOP, layoutRoot.id, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       dropshadowComponent.also {
         connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       webviewComponent.also {
         connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       loadingComponent.also {
         connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
@@ -188,7 +182,6 @@ internal class ViewLicenseDialog : ToolbarDialog() {
   override fun onDestroyView() {
     super.onDestroyView()
     dismissSnackbar()
-    binding.unbind()
   }
 
   companion object {

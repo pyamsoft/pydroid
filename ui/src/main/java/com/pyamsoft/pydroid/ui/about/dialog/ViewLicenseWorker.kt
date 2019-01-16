@@ -28,7 +28,7 @@ import io.reactivex.disposables.Disposable
 class ViewLicenseWorker internal constructor(
   private val licenseStateBus: EventBus<LicenseStateEvent>,
   private val schedulerProvider: SchedulerProvider
-) :Worker<LicenseStateEvent> {
+) : Worker<LicenseStateEvent> {
 
   @CheckResult
   fun onLoadErrorEvent(func: (payload: PageError) -> Unit): Disposable {

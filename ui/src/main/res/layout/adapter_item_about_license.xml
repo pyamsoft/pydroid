@@ -16,7 +16,7 @@
   ~
   -->
 
-<layout>
+<merge>
 
   <!-- MaterialCardView renders all black -->
   <androidx.cardview.widget.CardView
@@ -42,5 +42,5 @@
 
   </androidx.cardview.widget.CardView>
 
-</layout>
+</merge>
 

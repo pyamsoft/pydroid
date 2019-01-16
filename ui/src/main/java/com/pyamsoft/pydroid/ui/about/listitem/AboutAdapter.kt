@@ -19,14 +19,15 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Fake
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Real
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutSpaceBinding
 
-internal class AboutAdapter internal constructor() : RecyclerView.Adapter<BaseViewHolder>() {
+internal class AboutAdapter internal constructor(
+  private val owner: LifecycleOwner
+) : RecyclerView.Adapter<BaseViewHolder>() {
 
   private val items: MutableList<Any> = ArrayList()
 
@@ -63,9 +64,9 @@ internal class AboutAdapter internal constructor() : RecyclerView.Adapter<BaseVi
   ): BaseViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     if (viewType == VIEW_TYPE_REAL) {
-      return AboutViewHolder(AdapterItemAboutLicenseBinding.inflate(inflater, parent, false))
+      return AboutViewHolder(owner, inflater, parent)
     } else {
-      return SpaceViewHolder(AdapterItemAboutSpaceBinding.inflate(inflater, parent, false))
+      return SpaceViewHolder(inflater, parent)
     }
   }
 

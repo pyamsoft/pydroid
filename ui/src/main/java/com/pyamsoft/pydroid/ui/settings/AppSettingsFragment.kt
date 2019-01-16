@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
-import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : ToolbarFragment() {
@@ -34,8 +33,7 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val binding = LayoutCoordinatorBinding.inflate(inflater, container, false)
-    return binding.root
+    return inflater.inflate(R.layout.layout_coordinator, container, false)
   }
 
   override fun onViewCreated(

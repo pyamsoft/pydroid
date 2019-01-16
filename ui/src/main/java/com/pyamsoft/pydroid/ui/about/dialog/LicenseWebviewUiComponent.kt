@@ -30,9 +30,9 @@ import io.reactivex.Observable
 
 internal class LicenseWebviewUiComponent internal constructor(
   private val webviewView: LicenseWebviewView,
-  private val owner: LifecycleOwner,
-  private val controllerBus: Listener<LicenseStateEvent>
-) : UiComponent<LicenseViewEvent> {
+  private val controllerBus: Listener<LicenseStateEvent>,
+  owner: LifecycleOwner
+) : UiComponent<LicenseViewEvent>(owner) {
 
   override fun id(): Int {
     return webviewView.id()
@@ -40,10 +40,7 @@ internal class LicenseWebviewUiComponent internal constructor(
 
   override fun create(savedInstanceState: Bundle?) {
     webviewView.inflate(savedInstanceState)
-
-    owner.runOnDestroy {
-      webviewView.teardown()
-    }
+    owner.runOnDestroy { webviewView.teardown() }
 
     listenForControllerEvents()
   }

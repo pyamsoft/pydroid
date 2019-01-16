@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
@@ -29,6 +30,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent
 
 internal class AppSettingsComponentImpl internal constructor(
+  private val owner: LifecycleOwner,
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
   private val theming: Theming,
@@ -54,7 +56,7 @@ internal class AppSettingsComponentImpl internal constructor(
     )
     fragment.ratingWorker = RatingWorker(ratingModule.interactor, ratingStateBus, schedulerProvider)
     fragment.settingsComponent = AppSettingsUiComponent(
-        settingsView, settingsViewBus, schedulerProvider
+        settingsView, settingsViewBus, schedulerProvider, owner
     )
   }
 }

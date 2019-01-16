@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.ui.about
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-sealed class AboutStateEvent: StateEvent {
+sealed class AboutStateEvent : StateEvent {
 
   object Loading : AboutStateEvent()
 

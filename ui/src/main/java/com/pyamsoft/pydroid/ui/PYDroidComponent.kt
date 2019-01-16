@@ -39,21 +39,26 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusVersionUpgradeComponent(
+    owner: LifecycleOwner,
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent
 
   @CheckResult
-  fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent
+  fun plusAboutItemComponent(
+    owner: LifecycleOwner,
+    parent: ViewGroup
+  ): AboutItemComponent
 
   @CheckResult
   fun plusAboutComponent(
-    parent: ViewGroup,
-    owner: LifecycleOwner
+    owner: LifecycleOwner,
+    parent: ViewGroup
   ): AboutComponent
 
   @CheckResult
   fun plusSettingsComponent(
+    owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
@@ -61,16 +66,16 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusViewLicenseComponent(
-    parent: ViewGroup,
     owner: LifecycleOwner,
+    parent: ViewGroup,
     link: String,
     name: String
   ): ViewLicenseComponent
 
   @CheckResult
   fun plusRatingDialogComponent(
-    parent: ViewGroup,
     owner: LifecycleOwner,
+    parent: ViewGroup,
     rateLink: String,
     changelogIcon: Int,
     changelog: SpannedString

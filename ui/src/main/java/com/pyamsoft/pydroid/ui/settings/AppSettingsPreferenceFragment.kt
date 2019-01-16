@@ -84,7 +84,10 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ): View? {
     PYDroid.obtain(requireContext())
-        .plusSettingsComponent(preferenceScreen, hideClearAll, hideUpgradeInformation)
+        .plusSettingsComponent(
+            viewLifecycleOwner, preferenceScreen,
+            hideClearAll, hideUpgradeInformation
+        )
         .inject(this)
     return super.onCreateView(inflater, container, savedInstanceState)
   }

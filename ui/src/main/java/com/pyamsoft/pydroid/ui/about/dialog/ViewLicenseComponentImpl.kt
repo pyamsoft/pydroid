@@ -44,10 +44,11 @@ internal class ViewLicenseComponentImpl internal constructor(
     val webviewView = LicenseWebviewView(parent, link, controllerBus)
     val spinnerView = SpinnerView(parent)
     dialog.worker = ViewLicenseWorker(controllerBus, schedulerProvider)
-    dialog.toolbarComponent = LicenseToolbarUiComponent(toolbarView, uiBus, schedulerProvider)
-    dialog.dropshadowComponent = DropshadowUiComponent(dropshadowView)
-    dialog.loadingComponent = SpinnerUiComponent.create(spinnerView, owner, controllerBus)
-    dialog.webviewComponent = LicenseWebviewUiComponent(webviewView, owner, controllerBus)
+    dialog.toolbarComponent =
+        LicenseToolbarUiComponent(toolbarView, uiBus, schedulerProvider, owner)
+    dialog.dropshadowComponent = DropshadowUiComponent(dropshadowView, owner)
+    dialog.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
+    dialog.webviewComponent = LicenseWebviewUiComponent(webviewView, controllerBus, owner)
   }
 
 }

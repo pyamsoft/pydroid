@@ -18,14 +18,16 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
 internal class AboutItemDescriptionUiComponent internal constructor(
-  private val aboutDescriptionView: AboutItemDescriptionView
-) : UiComponent<EMPTY>, BaseAboutItem {
+  private val aboutDescriptionView: AboutItemDescriptionView,
+  owner: LifecycleOwner
+) : UiComponent<EMPTY>(owner), BaseAboutItem {
 
   override fun id(): Int {
     return aboutDescriptionView.id()
@@ -33,6 +35,7 @@ internal class AboutItemDescriptionUiComponent internal constructor(
 
   override fun create(savedInstanceState: Bundle?) {
     aboutDescriptionView.inflate(savedInstanceState)
+    owner.runOnDestroy { aboutDescriptionView.teardown() }
   }
 
   override fun saveState(outState: Bundle) {

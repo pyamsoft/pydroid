@@ -23,16 +23,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.LinearLayout
 import androidx.annotation.CheckResult
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
@@ -45,6 +50,9 @@ internal class RatingDialog : ToolbarDialog() {
   internal lateinit var changelogComponent: RatingChangelogUiComponent
   internal lateinit var controlsComponent: RatingControlsUiComponent
   internal lateinit var worker: RatingDialogWorker
+
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: LinearLayout
 
   private var marketErrorSnackbar: Snackbar? = null
   private var ratingSaveDisposable by singleDisposable()
@@ -59,7 +67,8 @@ internal class RatingDialog : ToolbarDialog() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val binding = LayoutLinearVerticalBinding.inflate(inflater, container, false)
+    val root = inflater.inflate(R.layout.layout_linear_vertical, container, false)
+    unbinder = ButterKnife.bind(this, root)
 
     val rateLink = requireArguments().getString(RATE_LINK, "")
     val changeLogIcon = requireArguments().getInt(CHANGE_LOG_ICON, 0)
@@ -73,13 +82,13 @@ internal class RatingDialog : ToolbarDialog() {
     require(changelog.isNotBlank())
 
 
-    PYDroid.obtain(binding.root.context.applicationContext)
+    PYDroid.obtain(root.context.applicationContext)
         .plusRatingDialogComponent(
-            binding.layoutRoot, viewLifecycleOwner, rateLink, changeLogIcon, changelog
+            viewLifecycleOwner, layoutRoot, rateLink, changeLogIcon, changelog
         )
         .inject(this)
 
-    return binding.root
+    return root
   }
 
   override fun onViewCreated(
@@ -110,8 +119,9 @@ internal class RatingDialog : ToolbarDialog() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    ratingSaveDisposable.tryDispose()
     dismissSnackbar()
+    ratingSaveDisposable.tryDispose()
+    unbinder.unbind()
   }
 
   private fun dismissSnackbar() {

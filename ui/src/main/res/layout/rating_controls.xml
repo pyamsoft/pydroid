@@ -14,7 +14,7 @@
   ~ limitations under the License.
   ~
   -->
-<layout>
+<merge>
 
   <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
@@ -47,4 +47,4 @@
 
   </LinearLayout>
 
-</layout>
+</merge>

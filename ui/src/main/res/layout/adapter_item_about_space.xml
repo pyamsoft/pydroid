@@ -14,7 +14,7 @@
   ~ limitations under the License.
   ~
   -->
-<layout>
+<merge>
 
   <Space
       xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,4 +22,4 @@
       android:layout_height="8dp"
       />
 
-</layout>
+</merge>

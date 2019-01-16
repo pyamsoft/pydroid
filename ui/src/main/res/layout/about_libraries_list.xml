@@ -14,7 +14,7 @@
   ~ limitations under the License.
   ~
   -->
-<layout>
+<merge>
 
   <androidx.recyclerview.widget.RecyclerView
       xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,4 +26,4 @@
       tools:visibility="visible"
       />
 
-</layout>
+</merge>

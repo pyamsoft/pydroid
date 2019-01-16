@@ -21,13 +21,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentActivity
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
@@ -38,7 +44,6 @@ import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
@@ -50,9 +55,11 @@ class AboutFragment : ToolbarFragment() {
   internal lateinit var loadingComponent: SpinnerUiComponent<AboutStateEvent, Loading, LoadComplete>
   internal lateinit var worker: AboutWorker
 
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: FrameLayout
+
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
-
   private var loadLicensesDisposable by singleDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,13 +75,14 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ): View? {
 
-    val binding = LayoutFrameBinding.inflate(inflater, container, false)
+    val root = inflater.inflate(R.layout.layout_frame, container, false)
+    unbinder = ButterKnife.bind(this, root)
 
-    PYDroid.obtain(binding.root.context.applicationContext)
-        .plusAboutComponent(binding.layoutRoot, viewLifecycleOwner)
+    PYDroid.obtain(root.context.applicationContext)
+        .plusAboutComponent(viewLifecycleOwner, layoutRoot)
         .inject(this)
 
-    return binding.root
+    return root
   }
 
   override fun onViewCreated(
@@ -107,6 +115,7 @@ class AboutFragment : ToolbarFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
+    unbinder.unbind()
     loadLicensesDisposable.tryDispose()
   }
 

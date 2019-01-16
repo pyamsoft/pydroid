@@ -18,11 +18,13 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,
+  private val owner: LifecycleOwner,
   private val bus: Publisher<AboutViewEvent>
 ) : AboutItemComponent {
 
@@ -30,9 +32,9 @@ internal class AboutItemComponentImpl internal constructor(
     val aboutTitleView = AboutItemTitleView(parent)
     val aboutActionsView = AboutItemActionsView(parent, bus)
     val aboutDescriptionView = AboutItemDescriptionView(parent)
-    viewHolder.titleComponent = AboutItemTitleUiComponent(aboutTitleView)
-    viewHolder.actionsComponent = AboutItemActionsUiComponent(aboutActionsView)
-    viewHolder.descriptionComponent = AboutItemDescriptionUiComponent(aboutDescriptionView)
+    viewHolder.titleComponent = AboutItemTitleUiComponent(aboutTitleView, owner)
+    viewHolder.actionsComponent = AboutItemActionsUiComponent(aboutActionsView, owner)
+    viewHolder.descriptionComponent = AboutItemDescriptionUiComponent(aboutDescriptionView, owner)
   }
 
 }

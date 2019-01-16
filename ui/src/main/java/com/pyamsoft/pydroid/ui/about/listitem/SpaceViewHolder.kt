@@ -17,8 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutSpaceBinding
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.pyamsoft.pydroid.ui.R
 
 internal class SpaceViewHolder internal constructor(
-  binding: AdapterItemAboutSpaceBinding
-) : BaseViewHolder(binding.root)
+  inflater: LayoutInflater,
+  container: ViewGroup
+) : BaseViewHolder(inflater.inflate(R.layout.adapter_item_about_space, container, false))
+

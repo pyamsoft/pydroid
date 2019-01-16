@@ -26,20 +26,22 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
 
-interface UiComponent<T : ViewEvent> {
+abstract class UiComponent<T : ViewEvent> protected constructor(
+  protected val owner: LifecycleOwner
+) {
 
   @CheckResult
   @IdRes
-  fun id(): Int
+  abstract fun id(): Int
 
-  fun create(savedInstanceState: Bundle?)
+  abstract fun create(savedInstanceState: Bundle?)
 
-  fun saveState(outState: Bundle)
+  abstract fun saveState(outState: Bundle)
 
   @CheckResult
-  fun onUiEvent(): Observable<T>
+  abstract fun onUiEvent(): Observable<T>
 
-  fun LifecycleOwner.runOnDestroy(func: () -> Unit) {
+  protected fun LifecycleOwner.runOnDestroy(func: () -> Unit) {
     lifecycle.addObserver(object : LifecycleObserver {
 
       @Suppress("unused")

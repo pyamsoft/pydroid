@@ -18,48 +18,52 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
 internal class AboutItemDescriptionView internal constructor(
   private val parent: ViewGroup
 ) : UiView<EMPTY>(EmptyPublisher), BaseAboutItem {
 
-  private lateinit var binding: AboutItemDescriptionBinding
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.about_library_description)
+  internal lateinit var aboutLibraryDescription: TextView
 
   override fun id(): Int {
-    return binding.aboutLibraryDescription.id
+    return aboutLibraryDescription.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = AboutItemDescriptionBinding.inflate(
-        parent.inflater(), parent, false
-    )
-    parent.addView(binding.root)
+    val root = parent.inflateAndAdd(R.layout.about_item_description)
+    unbinder = ButterKnife.bind(this, root)
+  }
+
+  override fun teardown() {
+    unbinder.unbind()
   }
 
   override fun saveState(outState: Bundle) {
   }
 
   override fun bind(model: OssLibrary) {
-    binding.apply {
-      aboutLibraryDescription.text = model.description
-      aboutLibraryDescription.isVisible = model.description.isNotBlank()
-    }
+    aboutLibraryDescription.text = model.description
+    aboutLibraryDescription.isVisible = model.description.isNotBlank()
   }
 
   override fun unbind() {
-    binding.apply {
-      aboutLibraryDescription.text = ""
-      aboutLibraryDescription.isGone = true
-    }
+    aboutLibraryDescription.text = ""
+    aboutLibraryDescription.isGone = true
   }
 
 }

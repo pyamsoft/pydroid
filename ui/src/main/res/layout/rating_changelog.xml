@@ -14,7 +14,7 @@
   ~ limitations under the License.
   ~
   -->
-<layout>
+<merge>
 
   <ScrollView
       xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,4 +32,4 @@
 
   </ScrollView>
 
-</layout>
+</merge>

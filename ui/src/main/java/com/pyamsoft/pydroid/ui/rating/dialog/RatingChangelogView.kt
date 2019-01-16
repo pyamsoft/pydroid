@@ -20,31 +20,42 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.os.Bundle
 import android.text.SpannedString
 import android.view.ViewGroup
+import android.widget.ScrollView
+import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.RatingChangelogBinding
 
 internal class RatingChangelogView internal constructor(
   private val parent: ViewGroup,
   private val changelog: SpannedString
 ) : UiView<EMPTY>(EmptyPublisher) {
 
-  private lateinit var binding: RatingChangelogBinding
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: ScrollView
+  @field:BindView(R2.id.changelog) internal lateinit var changelogView: TextView
 
   override fun id(): Int {
-    return binding.layoutRoot.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = RatingChangelogBinding.inflate(parent.inflater(), parent, false)
-    parent.addView(binding.root)
-
+    val root = parent.inflateAndAdd(R.layout.rating_changelog)
+    unbinder = ButterKnife.bind(this, root)
     loadChangelog()
   }
 
+  override fun teardown() {
+    unbinder.unbind()
+  }
+
   private fun loadChangelog() {
-    binding.changelog.text = changelog
+    changelogView.text = changelog
   }
 
   override fun saveState(outState: Bundle) {

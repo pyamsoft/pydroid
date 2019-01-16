@@ -19,28 +19,40 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
 internal class AboutItemTitleView internal constructor(
   private val parent: ViewGroup
 ) : UiView<EMPTY>(EmptyPublisher), BaseAboutItem {
 
-  private lateinit var binding: AboutItemTitleBinding
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: LinearLayout
+  @field:BindView(R2.id.about_library_title) internal lateinit var title: TextView
+  @field:BindView(R2.id.about_library_license) internal lateinit var license: TextView
 
   override fun id(): Int {
-    return binding.layoutRoot.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = AboutItemTitleBinding.inflate(parent.inflater(), parent, false)
-    parent.addView(binding.root)
+    val root = parent.inflateAndAdd(R.layout.about_item_title)
+    unbinder = ButterKnife.bind(this, root)
+  }
+
+  override fun teardown() {
+    unbinder.unbind()
   }
 
   override fun saveState(outState: Bundle) {
@@ -48,21 +60,17 @@ internal class AboutItemTitleView internal constructor(
 
   @CheckResult
   private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
-    return binding.root.context.getString(id, *formatArgs)
+    return layoutRoot.context.getString(id, *formatArgs)
   }
 
   override fun bind(model: OssLibrary) {
-    binding.apply {
-      aboutLibraryTitle.text = model.name
-      aboutLibraryLicense.text = getString(R.string.license_name, model.licenseName)
-    }
+    title.text = model.name
+    license.text = getString(R.string.license_name, model.licenseName)
   }
 
   override fun unbind() {
-    binding.apply {
-      aboutLibraryTitle.text = ""
-      aboutLibraryLicense.text = ""
-    }
+    title.text = ""
+    license.text = ""
   }
 
 }

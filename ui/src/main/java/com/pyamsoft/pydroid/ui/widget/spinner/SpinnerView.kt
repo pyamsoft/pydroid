@@ -19,37 +19,47 @@ package com.pyamsoft.pydroid.ui.widget.spinner
 
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.core.view.isVisible
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
 
 class SpinnerView(
   private val parent: ViewGroup
 ) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
 
-  private lateinit var binding: LoadingSpinnerBinding
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.spinner) internal lateinit var spinner: ProgressBar
 
   override fun id(): Int {
-    return binding.progressSpinner.id
+    return spinner.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = LoadingSpinnerBinding.inflate(parent.inflater(), parent, false)
-    parent.addView(binding.root)
+    val root = parent.inflateAndAdd(R.layout.loading_spinner)
+    unbinder = ButterKnife.bind(this, root)
+  }
+
+  override fun teardown() {
+    unbinder.unbind()
   }
 
   override fun saveState(outState: Bundle) {
   }
 
   override fun show() {
-    binding.progressSpinner.isVisible = true
+    spinner.isVisible = true
   }
 
   override fun hide() {
-    binding.progressSpinner.isVisible = false
+    spinner.isVisible = false
   }
 
 }

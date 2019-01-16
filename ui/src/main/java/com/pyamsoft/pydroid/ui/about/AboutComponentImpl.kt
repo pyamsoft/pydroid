@@ -36,12 +36,12 @@ internal class AboutComponentImpl(
 ) : AboutComponent {
 
   override fun inject(fragment: AboutFragment) {
-    val listView = AboutListView(parent)
+    val listView = AboutListView(owner, parent)
     val spinnerView = SpinnerView(parent)
     fragment.worker = AboutWorker(aboutModule.interactor, controllerBus, schedulerProvider)
-    fragment.loadingComponent = SpinnerUiComponent.create(spinnerView, owner, controllerBus)
+    fragment.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
     fragment.listComponent = AboutListUiComponent(
-        owner, listView, controllerBus, uiBus, schedulerProvider
+        listView, controllerBus, uiBus, schedulerProvider, owner
     )
   }
 

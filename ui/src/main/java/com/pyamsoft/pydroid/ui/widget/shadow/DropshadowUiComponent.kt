@@ -18,13 +18,15 @@
 package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.os.Bundle
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
-class DropshadowUiComponent (
-  private val dropshadowView: DropshadowView
-) : UiComponent<EMPTY> {
+class DropshadowUiComponent(
+  private val dropshadowView: DropshadowView,
+  owner: LifecycleOwner
+) : UiComponent<EMPTY>(owner) {
 
   override fun id(): Int {
     return dropshadowView.id()
@@ -32,6 +34,7 @@ class DropshadowUiComponent (
 
   override fun create(savedInstanceState: Bundle?) {
     dropshadowView.inflate(savedInstanceState)
+    owner.runOnDestroy { dropshadowView.teardown() }
   }
 
   override fun saveState(outState: Bundle) {

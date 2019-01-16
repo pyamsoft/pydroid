@@ -75,6 +75,9 @@ internal class AppSettingsView internal constructor(
   override fun saveState(outState: Bundle) {
   }
 
+  override fun teardown() {
+  }
+
   private fun adjustIconTint() {
     val darkTheme = theming.isDarkTheme()
     preferenceScreen.adjustTint(darkTheme)

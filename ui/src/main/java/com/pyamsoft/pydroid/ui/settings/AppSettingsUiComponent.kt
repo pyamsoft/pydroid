@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import android.os.Bundle
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
@@ -27,8 +28,9 @@ import io.reactivex.Observable
 internal class AppSettingsUiComponent internal constructor(
   private val settingsView: AppSettingsView,
   private val uiBus: Listener<AppSettingsViewEvent>,
-  private val schedulerProvider: SchedulerProvider
-) : UiComponent<AppSettingsViewEvent> {
+  private val schedulerProvider: SchedulerProvider,
+  owner: LifecycleOwner
+) : UiComponent<AppSettingsViewEvent>(owner) {
 
   override fun id(): Int {
     throw InvalidUiComponentIdException
@@ -36,6 +38,7 @@ internal class AppSettingsUiComponent internal constructor(
 
   override fun create(savedInstanceState: Bundle?) {
     settingsView.inflate(savedInstanceState)
+    owner.runOnDestroy { settingsView.teardown() }
   }
 
   override fun saveState(outState: Bundle) {

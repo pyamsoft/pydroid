@@ -30,12 +30,12 @@ import com.pyamsoft.pydroid.ui.arch.destroy
 import io.reactivex.Observable
 
 class AboutListUiComponent internal constructor(
-  private val owner: LifecycleOwner,
   private val listView: AboutListView,
   private val controllerBus: Listener<AboutStateEvent>,
   private val uiBus: Listener<AboutViewEvent>,
-  private val schedulerProvider: SchedulerProvider
-) : UiComponent<AboutViewEvent> {
+  private val schedulerProvider: SchedulerProvider,
+  owner: LifecycleOwner
+) : UiComponent<AboutViewEvent>(owner) {
 
   override fun id(): Int {
     return listView.id()
@@ -43,10 +43,7 @@ class AboutListUiComponent internal constructor(
 
   override fun create(savedInstanceState: Bundle?) {
     listView.inflate(savedInstanceState)
-
-    owner.runOnDestroy {
-      listView.teardown()
-    }
+    owner.runOnDestroy { listView.teardown() }
 
     listenForControllerEvents()
   }

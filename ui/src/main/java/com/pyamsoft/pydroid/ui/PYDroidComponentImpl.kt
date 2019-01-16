@@ -107,39 +107,44 @@ internal class PYDroidComponentImpl internal constructor(
     )
   }
 
-  override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent =
-    AboutItemComponentImpl(parent, aboutViewBus)
+  override fun plusAboutItemComponent(
+    owner: LifecycleOwner,
+    parent: ViewGroup
+  ): AboutItemComponent =
+    AboutItemComponentImpl(parent, owner, aboutViewBus)
 
   override fun plusVersionUpgradeComponent(
+    owner: LifecycleOwner,
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
-      parent, applicationName, currentVersion, newVersion,
-      versionUpgradeBus, schedulerProvider
+      owner, parent, applicationName, currentVersion,
+      newVersion, versionUpgradeBus, schedulerProvider
   )
 
   override fun plusSettingsComponent(
+    owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): AppSettingsComponent =
     AppSettingsComponentImpl(
-        ratingModule, versionModule, theming,
+        owner, ratingModule, versionModule, theming,
         versionStateBus, ratingStateBus, settingsViewBus,
         schedulerProvider, preferenceScreen, applicationName,
         bugreportUrl, hideClearAll, hideUpgradeInformation
     )
 
   override fun plusAboutComponent(
-    parent: ViewGroup,
-    owner: LifecycleOwner
+    owner: LifecycleOwner,
+    parent: ViewGroup
   ): AboutComponent = AboutComponentImpl(
       aboutModule, parent, owner, aboutStateBus, aboutViewBus, schedulerProvider
   )
 
   override fun plusViewLicenseComponent(
-    parent: ViewGroup,
     owner: LifecycleOwner,
+    parent: ViewGroup,
     link: String,
     name: String
   ): ViewLicenseComponent {
@@ -150,8 +155,8 @@ internal class PYDroidComponentImpl internal constructor(
   }
 
   override fun plusRatingDialogComponent(
-    parent: ViewGroup,
     owner: LifecycleOwner,
+    parent: ViewGroup,
     rateLink: String,
     changelogIcon: Int,
     changelog: SpannedString

@@ -29,11 +29,11 @@ import timber.log.Timber
 
 class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
   private val spinnerView: SpinnerView,
-  private val owner: LifecycleOwner,
   private val controllerBus: Listener<T>,
   private val showTypeClass: Class<Show>,
-  private val hideTypeClass: Class<Hide>
-) : UiComponent<EMPTY> {
+  private val hideTypeClass: Class<Hide>,
+  owner: LifecycleOwner
+) : UiComponent<EMPTY>(owner) {
 
   override fun id(): Int {
     return spinnerView.id()
@@ -41,6 +41,8 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
 
   override fun create(savedInstanceState: Bundle?) {
     spinnerView.inflate(savedInstanceState)
+    owner.runOnDestroy { spinnerView.teardown() }
+
     listenForControllerEvents()
   }
 
@@ -68,13 +70,14 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
 
     @JvmStatic
     inline fun <T : StateEvent, reified Show : T, reified Hide : T> create(
-      spinnerView: SpinnerView,
       owner: LifecycleOwner,
+      spinnerView: SpinnerView,
       controllerBus: Listener<T>
     ): SpinnerUiComponent<T, Show, Hide> {
       return SpinnerUiComponent(
-          spinnerView, owner, controllerBus,
-          Show::class.java, Hide::class.java
+          spinnerView, controllerBus,
+          Show::class.java, Hide::class.java,
+          owner
       )
     }
   }

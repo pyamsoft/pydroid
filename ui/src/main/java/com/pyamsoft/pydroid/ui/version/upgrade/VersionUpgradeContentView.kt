@@ -18,15 +18,19 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
+import androidx.constraintlayout.widget.ConstraintLayout
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeContentBinding
 
 internal class VersionUpgradeContentView internal constructor(
   private val parent: ViewGroup,
@@ -35,18 +39,26 @@ internal class VersionUpgradeContentView internal constructor(
   private val newVersion: Int
 ) : UiView<EMPTY>(EmptyPublisher) {
 
-  private lateinit var binding: VersionUpgradeContentBinding
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.layout_root) internal lateinit var layoutRoot: ConstraintLayout
+  @field:BindView(R2.id.upgrade_message) internal lateinit var message: TextView
+  @field:BindView(R2.id.upgrade_current_value) internal lateinit var currentValue: TextView
+  @field:BindView(R2.id.upgrade_new_value) internal lateinit var newValue: TextView
 
   override fun id(): Int {
-    return binding.layoutRoot.id
+    return layoutRoot.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = VersionUpgradeContentBinding.inflate(parent.inflater(), parent, false)
-    parent.addView(binding.root)
+    val root = parent.inflateAndAdd(R.layout.version_upgrade_content)
+    unbinder = ButterKnife.bind(this, root)
 
     setApplicationMessage()
     setVersions()
+  }
+
+  override fun teardown() {
+    unbinder.unbind()
   }
 
   override fun saveState(outState: Bundle) {
@@ -54,16 +66,16 @@ internal class VersionUpgradeContentView internal constructor(
 
   @CheckResult
   private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
-    return binding.root.context.getString(id, *formatArgs)
+    return layoutRoot.context.getString(id, *formatArgs)
   }
 
   private fun setApplicationMessage() {
-    binding.upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
+    message.text = getString(R.string.upgrade_available_message, applicationName)
   }
 
   private fun setVersions() {
-    binding.upgradeCurrentValue.text = "$currentVersion"
-    binding.upgradeNewValue.text = "$newVersion"
+    currentValue.text = "$currentVersion"
+    newValue.text = "$newVersion"
   }
 
 }

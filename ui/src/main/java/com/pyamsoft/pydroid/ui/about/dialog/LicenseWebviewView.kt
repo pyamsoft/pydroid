@@ -29,7 +29,12 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
@@ -37,7 +42,6 @@ import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
-import com.pyamsoft.pydroid.ui.databinding.LicenseWebviewBinding
 import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
 
@@ -47,23 +51,25 @@ internal class LicenseWebviewView internal constructor(
   private val controllerBus: Publisher<LicenseStateEvent>
 ) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
 
-  private lateinit var binding: LicenseWebviewBinding
+  private lateinit var unbinder: Unbinder
+  @field:BindView(R2.id.webview) internal lateinit var webview: WebView
+
   private var errorToast: Toast? = null
 
   override fun id(): Int {
-    return binding.layoutRoot.id
+    return webview.id
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
-    binding = LicenseWebviewBinding.inflate(parent.inflater(), parent, false)
-    parent.addView(binding.root)
+    val root = parent.inflateAndAdd(R.layout.license_webview)
+    unbinder = ButterKnife.bind(this, root)
 
     setupWebviewJavascript()
     setupWebview()
   }
 
   private fun setupWebview() {
-    binding.layoutRoot.webViewClient = object : WebViewClient() {
+    webview.webViewClient = object : WebViewClient() {
 
       override fun onPageFinished(
         view: WebView,
@@ -77,7 +83,7 @@ internal class LicenseWebviewView internal constructor(
         }
 
         // If we are showing the webview and we've navigated off the url, close the dialog
-        if (binding.layoutRoot.isVisible && fixedUrl != link) {
+        if (webview.isVisible && fixedUrl != link) {
           Timber.w("Navigated away from page: $url - close dialog, and open extenally")
           val error = fixedUrl.hyperlink(view.context)
               .navigate()
@@ -123,18 +129,18 @@ internal class LicenseWebviewView internal constructor(
 
   @SuppressLint("SetJavaScriptEnabled")
   private fun setupWebviewJavascript() {
-    binding.layoutRoot.settings.javaScriptEnabled = true
+    webview.settings.javaScriptEnabled = true
   }
 
   override fun saveState(outState: Bundle) {
   }
 
   override fun show() {
-    binding.layoutRoot.isVisible = true
+    webview.isVisible = true
   }
 
   override fun hide() {
-    binding.layoutRoot.isVisible = false
+    webview.isVisible = false
   }
 
   private fun dismissError() {
@@ -142,15 +148,16 @@ internal class LicenseWebviewView internal constructor(
     errorToast = null
   }
 
-  fun teardown() {
+  override fun teardown() {
     dismissError()
+    unbinder.unbind()
   }
 
   fun pageLoadError(error: ActivityNotFoundException?) {
     if (error != null) {
       dismissError()
       errorToast = Toast.makeText(
-          binding.layoutRoot.context.applicationContext,
+          webview.context.applicationContext,
           "No application can handle this URL",
           Toast.LENGTH_SHORT
       )
@@ -159,7 +166,7 @@ internal class LicenseWebviewView internal constructor(
   }
 
   fun loadUrl() {
-    binding.layoutRoot.loadUrl(link)
+    webview.loadUrl(link)
   }
 
 }

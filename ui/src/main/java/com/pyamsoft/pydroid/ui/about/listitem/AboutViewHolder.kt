@@ -17,21 +17,34 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.lifecycle.LifecycleOwner
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
+import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R2
 
 internal class AboutViewHolder internal constructor(
-  binding: AdapterItemAboutLicenseBinding
-) : BaseViewHolder(binding.root) {
+  owner: LifecycleOwner,
+  inflater: LayoutInflater,
+  container: ViewGroup
+) : BaseViewHolder(inflater.inflate(R.layout.adapter_item_about_license, container, false)) {
+
+  @field:BindView(R2.id.listitem_root) internal lateinit var layoutRoot: LinearLayout
 
   internal lateinit var titleComponent: AboutItemTitleUiComponent
   internal lateinit var actionsComponent: AboutItemActionsUiComponent
   internal lateinit var descriptionComponent: AboutItemDescriptionUiComponent
 
   init {
+    ButterKnife.bind(this, itemView)
+
     PYDroid.obtain(itemView.context.applicationContext)
-        .plusAboutItemComponent(binding.listitemRoot)
+        .plusAboutItemComponent(owner, layoutRoot)
         .inject(this)
 
     titleComponent.create(null)

@@ -31,6 +31,11 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
    */
   protected open val applyFluidResizer: Boolean = true
 
+  /**
+   * The main view container for all page level fragment transactions
+   */
+  abstract val fragmentContainerId: Int
+
   private var capturedToolbar: Toolbar? = null
 
   override fun onBackPressed() {

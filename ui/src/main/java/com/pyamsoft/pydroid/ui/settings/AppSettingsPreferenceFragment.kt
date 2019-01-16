@@ -23,7 +23,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
 import androidx.annotation.XmlRes
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.singleDisposable
@@ -31,6 +30,7 @@ import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
+import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarPreferenceFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
@@ -48,6 +48,7 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgradeInfo
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
@@ -161,12 +162,6 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
     urlSnackbar = dismissSnackbar(urlSnackbar)
   }
 
-  protected open fun onDarkThemeClicked(dark: Boolean) {
-    Timber.d("Dark theme set: $dark")
-    theming.setDarkTheme(dark)
-    requireActivity().recreate()
-  }
-
   /**
    * Logs when the Clear All option is clicked, override to use unique implementation
    */
@@ -175,26 +170,39 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
   }
 
   /**
+   * Toggles dark theme, override or extend to use unique implementation
+   */
+  @CallSuper
+  protected open fun onDarkThemeClicked(dark: Boolean) {
+    Timber.d("Dark theme set: $dark")
+    theming.setDarkTheme(dark)
+    requireActivity().recreate()
+  }
+
+  /**
    * Shows a page for Open Source licenses, override or extend to use unique implementation
    */
   @CallSuper
   protected open fun onLicenseItemClicked() {
-    activity?.also {
+    val a = requireActivity()
+    if (a is ActivityBase) {
       Timber.d("Show about licenses fragment")
-      AboutFragment.show(it, fragmentContainerId)
+      AboutFragment.show(a, a.fragmentContainerId)
     }
   }
 
   /**
    * Shows the changelog, override or extend to use unique implementation
    */
+  @CallSuper
   protected open fun onShowChangelogClicked() {
     ratingDisposable = ratingWorker.loadRatingDialog(true)
   }
 
   /**
-   * Checks the server for updates, override to use a custom behavior
+   * Checks the server for updates, override or extend to use unique implementation
    */
+  @CallSuper
   protected open fun onCheckForUpdatesClicked() {
     checkUpdatesDisposable = versionWorker.checkForUpdates(true)
   }
@@ -204,9 +212,6 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
   protected open val hideUpgradeInformation: Boolean = false
 
   protected open val hideClearAll: Boolean = false
-
-  @get:[CheckResult IdRes]
-  protected abstract val fragmentContainerId: Int
 
   companion object {
 

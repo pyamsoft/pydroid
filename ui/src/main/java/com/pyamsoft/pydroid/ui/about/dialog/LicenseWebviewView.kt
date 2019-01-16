@@ -29,6 +29,11 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
+import androidx.lifecycle.Lifecycle.Event.ON_RESUME
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
@@ -42,10 +47,11 @@ import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
 
 internal class LicenseWebviewView internal constructor(
+  private val owner: LifecycleOwner,
   private val parent: ViewGroup,
   private val link: String,
   private val controllerBus: Publisher<LicenseStateEvent>
-) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
+) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY>, LifecycleObserver {
 
   private lateinit var binding: LicenseWebviewBinding
 
@@ -60,6 +66,20 @@ internal class LicenseWebviewView internal constructor(
 
     setupWebviewJavascript()
     setupWebview()
+
+    owner.lifecycle.addObserver(this)
+  }
+
+  @Suppress("unused")
+  @OnLifecycleEvent(ON_RESUME)
+  internal fun onResume() {
+    binding.licenseWebview.onResume()
+  }
+
+  @Suppress("unused")
+  @OnLifecycleEvent(ON_PAUSE)
+  internal fun onPause() {
+    binding.licenseWebview.onPause()
   }
 
   private fun setupWebview() {
@@ -71,9 +91,10 @@ internal class LicenseWebviewView internal constructor(
           url: String
         ) {
           super.onPageFinished(view, url)
+          Timber.d("Loaded url: $url")
           val fixedUrl = url.trimEnd('/')
           if (fixedUrl == link) {
-            Timber.d("Loaded url: $url, show webview")
+            Timber.d("Loaded target url: $url, show webview")
             controllerBus.publish(Loaded)
           }
 
@@ -95,8 +116,8 @@ internal class LicenseWebviewView internal constructor(
           error: WebResourceError
         ) {
           super.onReceivedError(view, request, error)
+          Timber.e("Webview error: ${error.errorCode} ${error.description}")
           if (request.url.toString() == link) {
-            Timber.e("Webview error: ${error.errorCode} ${error.description}")
             controllerBus.publish(Loaded)
           }
 
@@ -111,8 +132,8 @@ internal class LicenseWebviewView internal constructor(
           failingUrl: String?
         ) {
           super.onReceivedError(view, errorCode, description, failingUrl)
+          Timber.e("Webview error: $errorCode $description")
           if (failingUrl == link) {
-            Timber.e("Webview error: $errorCode $description")
             controllerBus.publish(Loaded)
           }
 
@@ -146,6 +167,7 @@ internal class LicenseWebviewView internal constructor(
 
   override fun teardown() {
     dismissError()
+    owner.lifecycle.removeObserver(this)
     binding.unbind()
   }
 

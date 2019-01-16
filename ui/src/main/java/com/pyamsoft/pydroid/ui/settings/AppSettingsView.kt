@@ -52,6 +52,18 @@ internal class AppSettingsView internal constructor(
 
   private val context = preferenceScreen.context
 
+  private lateinit var moreApps: Preference
+  private lateinit var social: Preference
+  private lateinit var followBlog: Preference
+  private lateinit var rate: Preference
+  private lateinit var bugReport: Preference
+  private lateinit var licenses: Preference
+  private lateinit var version: Preference
+  private lateinit var clearAll: Preference
+  private lateinit var upgradeInfo: Preference
+  private lateinit var theme: Preference
+  private lateinit var applicationSettings: Preference
+
   override fun id(): Int {
     throw InvalidUiComponentIdException
   }
@@ -76,6 +88,17 @@ internal class AppSettingsView internal constructor(
   }
 
   override fun teardown() {
+    moreApps.onPreferenceClickListener = null
+    social.onPreferenceClickListener = null
+    followBlog.onPreferenceClickListener = null
+    rate.onPreferenceClickListener = null
+    bugReport.onPreferenceClickListener = null
+    licenses.onPreferenceClickListener = null
+    version.onPreferenceClickListener = null
+    clearAll.onPreferenceClickListener = null
+    upgradeInfo.onPreferenceClickListener = null
+    theme.onPreferenceClickListener = null
+    applicationSettings.title = ""
   }
 
   private fun adjustIconTint() {
@@ -108,7 +131,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupMoreApps() {
-    val moreApps = preferenceScreen.findPreference(context.getString(R.string.more_apps_key))
+    moreApps = preferenceScreen.findPreference(context.getString(R.string.more_apps_key))
     moreApps.setOnPreferenceClickListener {
       publish(MoreAppsClicked)
       return@setOnPreferenceClickListener true
@@ -116,7 +139,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupSocial() {
-    val social = preferenceScreen.findPreference(context.getString(R.string.social_media_f_key))
+    social = preferenceScreen.findPreference(context.getString(R.string.social_media_f_key))
     val socialLink = FACEBOOK.hyperlink(context)
     social.setOnPreferenceClickListener {
       publish(FollowSocialClicked(socialLink))
@@ -125,7 +148,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBlog() {
-    val followBlog = preferenceScreen.findPreference(context.getString(R.string.social_media_b_key))
+    followBlog = preferenceScreen.findPreference(context.getString(R.string.social_media_b_key))
     val blogLink = BLOG.hyperlink(context)
     followBlog.setOnPreferenceClickListener {
       publish(FollowBlogClicked(blogLink))
@@ -134,7 +157,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupRateApp() {
-    val rate = preferenceScreen.findPreference(context.getString(R.string.rating_key))
+    rate = preferenceScreen.findPreference(context.getString(R.string.rating_key))
     rate.setOnPreferenceClickListener {
       publish(RateAppClicked)
       return@setOnPreferenceClickListener true
@@ -142,16 +165,16 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBugReport() {
-    val bugreport = preferenceScreen.findPreference(context.getString(R.string.bugreport_key))
+    bugReport = preferenceScreen.findPreference(context.getString(R.string.bugreport_key))
     val reportLink = bugreportUrl.hyperlink(context)
-    bugreport.setOnPreferenceClickListener {
+    bugReport.setOnPreferenceClickListener {
       publish(BugReportClicked(reportLink))
       return@setOnPreferenceClickListener true
     }
   }
 
   private fun setupLicenses() {
-    val licenses = preferenceScreen.findPreference(context.getString(R.string.about_license_key))
+    licenses = preferenceScreen.findPreference(context.getString(R.string.about_license_key))
     licenses.setOnPreferenceClickListener {
       publish(LicenseClicked)
       return@setOnPreferenceClickListener true
@@ -159,7 +182,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupCheckUpgrade() {
-    val version = preferenceScreen.findPreference(context.getString(R.string.check_version_key))
+    version = preferenceScreen.findPreference(context.getString(R.string.check_version_key))
     version.setOnPreferenceClickListener {
       publish(CheckUpgrade)
       return@setOnPreferenceClickListener true
@@ -167,7 +190,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupClearAppData() {
-    val clearAll = preferenceScreen.findPreference(context.getString(R.string.clear_all_key))
+    clearAll = preferenceScreen.findPreference(context.getString(R.string.clear_all_key))
     if (hideClearAll) {
       clearAll.isVisible = false
     } else {
@@ -179,7 +202,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupShowUpgradeInfo() {
-    val upgradeInfo = preferenceScreen.findPreference(context.getString(R.string.upgrade_info_key))
+    upgradeInfo = preferenceScreen.findPreference(context.getString(R.string.upgrade_info_key))
     if (hideUpgradeInformation) {
       upgradeInfo.isVisible = false
     } else {
@@ -191,7 +214,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupDarkTheme() {
-    val theme = preferenceScreen.findPreference(context.getString(R.string.dark_mode_key))
+    theme = preferenceScreen.findPreference(context.getString(R.string.dark_mode_key))
     theme.setOnPreferenceChangeListener { _, newValue ->
       if (newValue is Boolean) {
         publish(DarkTheme(newValue))
@@ -202,7 +225,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupApplicationTitle() {
-    val applicationSettings = preferenceScreen.findPreference("application_settings")
+    applicationSettings = preferenceScreen.findPreference("application_settings")
     applicationSettings.title = "$applicationName Settings"
   }
 

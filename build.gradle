@@ -45,8 +45,8 @@ buildscript {
     fragment = "1.0.0"
     appCompat = "1.0.2"
 
-    repo = "0.2.2-SNAPSHOT"
-    fluidresizer = "0.0.2-SNAPSHOT"
+    repo = "0.3.0"
+    fluidresizer = "0.0.2"
 
     timber = "4.7.1"
     moshi = "1.8.0"

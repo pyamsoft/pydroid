@@ -42,6 +42,6 @@ internal class VersionCheckInteractorImpl internal constructor(
   }
 
   override fun clearCache() {
-    repo.clearAll()
+    repo.clear()
   }
 }

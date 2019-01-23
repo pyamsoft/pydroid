@@ -17,73 +17,36 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.graphics.drawable.GradientDrawable
-import android.view.View
-import android.view.ViewGroup
+import android.content.Context
+import android.widget.Toast
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.google.android.material.snackbar.Snackbar
-import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.util.toDp
 
-object Snackbreak {
-
-  private fun Snackbar.setMargin() {
-    val params = view.layoutParams as? ViewGroup.MarginLayoutParams
-    if (params != null) {
-      val margin = 8.toDp(context)
-      params.setMargins(margin, margin, margin, margin)
-      view.layoutParams = params
-    }
-  }
-
-  private fun Snackbar.setBackground() {
-    val drawable = GradientDrawable().mutate() as GradientDrawable
-
-    val background = drawable.apply {
-      shape = GradientDrawable.RECTANGLE
-      setColor(ContextCompat.getColor(context, R.color.snackbar))
-
-      cornerRadius = 4.toDp(context)
-          .toFloat()
-    }
-
-    view.background = background
-  }
-
-  private fun Snackbar.materialDesign() {
-    setMargin()
-    setBackground()
-    ViewCompat.setElevation(view, 6.toDp(context).toFloat())
-  }
+object Toaster {
 
   @JvmStatic
   @CheckResult
   private fun make(
-    view: View,
+    context: Context,
     @StringRes resId: Int,
     duration: Int
-  ): Snackbar {
-    return Snackbar.make(view, resId, duration)
-        .also { it.materialDesign() }
+  ): Toast {
+    return Toast.makeText(context.applicationContext, resId, duration)
   }
 
   @JvmStatic
   @CheckResult
   private fun make(
-    view: View,
+    context: Context,
     message: CharSequence,
     duration: Int
-  ): Snackbar {
-    return Snackbar.make(view, message, duration)
-        .also { it.materialDesign() }
+  ): Toast {
+    return Toast.makeText(context.applicationContext, message, duration)
   }
 
   private val cache: MutableMap<Lifecycle, Instance> by lazy {
@@ -127,7 +90,7 @@ object Snackbreak {
   class Instance internal constructor() {
 
     private var alive = true
-    private var snackbar: Snackbar? = null
+    private var toast: Toast? = null
 
     internal fun onDestroy() {
       dismiss()
@@ -135,72 +98,52 @@ object Snackbreak {
     }
 
     private fun dismiss() {
-      snackbar?.dismiss()
-      snackbar = null
+      toast?.cancel()
+      toast = null
     }
 
     private fun requireStillAlive() {
-      require(alive) { "This Snackbreak.${Instance::class.java.simpleName} is Dead" }
+      require(alive) { "This Toaster.${Instance::class.java.simpleName} is Dead" }
     }
 
     @CheckResult
     fun short(
-      view: View,
+      context: Context,
       message: CharSequence
-    ): Snackbar {
+    ): Toast {
       requireStillAlive()
       dismiss()
-      return make(view, message, Snackbar.LENGTH_SHORT).also { snackbar = it }
+      return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
     }
 
     @CheckResult
     fun short(
-      view: View,
+      context: Context,
       @StringRes message: Int
-    ): Snackbar {
+    ): Toast {
       requireStillAlive()
       dismiss()
-      return make(view, message, Snackbar.LENGTH_SHORT).also { snackbar = it }
+      return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
     }
 
     @CheckResult
     fun long(
-      view: View,
+      context: Context,
       message: CharSequence
-    ): Snackbar {
+    ): Toast {
       requireStillAlive()
       dismiss()
-      return make(view, message, Snackbar.LENGTH_LONG).also { snackbar = it }
+      return make(context, message, Toast.LENGTH_LONG).also { toast = it }
     }
 
     @CheckResult
     fun long(
-      view: View,
+      context: Context,
       @StringRes message: Int
-    ): Snackbar {
+    ): Toast {
       requireStillAlive()
       dismiss()
-      return make(view, message, Snackbar.LENGTH_LONG).also { snackbar = it }
-    }
-
-    @CheckResult
-    fun indefinite(
-      view: View,
-      message: CharSequence
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_INDEFINITE).also { snackbar = it }
-    }
-
-    @CheckResult
-    fun indefinite(
-      view: View,
-      @StringRes message: Int
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_INDEFINITE).also { snackbar = it }
+      return make(context, message, Toast.LENGTH_LONG).also { toast = it }
     }
 
   }

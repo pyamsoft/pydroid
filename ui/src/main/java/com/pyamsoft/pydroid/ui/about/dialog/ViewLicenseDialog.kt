@@ -25,7 +25,6 @@ import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
@@ -34,9 +33,7 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
-import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.util.hyperlink
@@ -48,8 +45,6 @@ internal class ViewLicenseDialog : ToolbarDialog() {
   internal lateinit var webviewComponent: LicenseWebviewUiComponent
   internal lateinit var dropshadowComponent: DropshadowUiComponent
   internal lateinit var worker: ViewLicenseWorker
-
-  private var externalUrlSnackbar: Snackbar? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -98,11 +93,6 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     worker.loadUrl()
   }
 
-  private fun dismissSnackbar() {
-    externalUrlSnackbar?.dismiss()
-    externalUrlSnackbar = null
-  }
-
   private fun onToolbarMenuItemClicked(
     itemId: Int,
     link: String
@@ -112,12 +102,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         val error = link.hyperlink(requireContext())
             .navigate()
         if (error != null) {
-          dismissSnackbar()
-          externalUrlSnackbar = Snackbreak.short(
-              requireView(),
-              "No application found that can handle http:// URLs"
-          )
-              .also { bar -> bar.show() }
+          worker.failedViewExternal(error)
+          dismiss()
         }
       }
     }
@@ -177,11 +163,6 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.MATCH_PARENT
     )
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    dismissSnackbar()
   }
 
   companion object {

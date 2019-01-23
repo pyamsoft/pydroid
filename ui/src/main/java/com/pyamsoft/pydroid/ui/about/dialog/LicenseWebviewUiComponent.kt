@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import io.reactivex.Observable
+import timber.log.Timber
 
 internal class LicenseWebviewUiComponent internal constructor(
   private val webviewView: LicenseWebviewView,
@@ -56,6 +57,7 @@ internal class LicenseWebviewUiComponent internal constructor(
             is Loaded -> webviewView.show()
             is PageError -> webviewView.pageLoadError(it.error)
             is Complete -> Unit
+            else -> Timber.d("Unhandled event: $it")
           }
         }
         .destroy(owner)

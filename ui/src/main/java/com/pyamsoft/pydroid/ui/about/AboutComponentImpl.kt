@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
@@ -31,6 +32,7 @@ internal class AboutComponentImpl(
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
   private val controllerBus: EventBus<AboutStateEvent>,
+  private val licenseBus: Listener<LicenseStateEvent>,
   private val uiBus: Listener<AboutViewEvent>,
   private val schedulerProvider: SchedulerProvider
 ) : AboutComponent {
@@ -41,7 +43,7 @@ internal class AboutComponentImpl(
     fragment.worker = AboutWorker(aboutModule.interactor, schedulerProvider, controllerBus)
     fragment.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
     fragment.listComponent = AboutListUiComponent(
-        listView, controllerBus, uiBus, schedulerProvider, owner
+        listView, controllerBus, licenseBus, uiBus, schedulerProvider, owner
     )
   }
 

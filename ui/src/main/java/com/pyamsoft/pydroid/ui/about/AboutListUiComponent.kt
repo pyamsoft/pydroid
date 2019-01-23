@@ -25,13 +25,17 @@ import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LicensesLoaded
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadError
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.FailedViewLicenseExternal
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import io.reactivex.Observable
+import timber.log.Timber
 
 class AboutListUiComponent internal constructor(
   private val listView: AboutListView,
   private val controllerBus: Listener<AboutStateEvent>,
+  private val viewLicenseBus: Listener<LicenseStateEvent>,
   private val uiBus: Listener<AboutViewEvent>,
   private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner
@@ -54,12 +58,25 @@ class AboutListUiComponent internal constructor(
 
   private fun listenForControllerEvents() {
     controllerBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is Loading -> listView.hide()
             is LicensesLoaded -> listView.loadLicenses(it.libraries)
             is LoadError -> listView.showError(it.error)
             is LoadComplete -> listView.show()
+          }
+        }
+        .destroy(owner)
+
+    viewLicenseBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it) {
+            is FailedViewLicenseExternal -> listView.showError(it.error)
+            else -> Timber.d("Ignored event: $it")
           }
         }
         .destroy(owner)

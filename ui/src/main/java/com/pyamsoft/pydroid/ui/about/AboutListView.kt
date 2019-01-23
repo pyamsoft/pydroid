@@ -110,7 +110,8 @@ class AboutListView internal constructor(
   }
 
   fun showError(error: Throwable) {
-    Snackbreak.short(parent, error.localizedMessage)
+    Snackbreak.bindTo(owner)
+        .short(parent, error.message ?: "An unexpected error occurred.")
         .show()
   }
 

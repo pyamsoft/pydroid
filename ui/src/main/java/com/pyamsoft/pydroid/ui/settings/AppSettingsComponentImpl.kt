@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
@@ -30,6 +31,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent
 
 internal class AppSettingsComponentImpl internal constructor(
+  private val view: View,
   private val owner: LifecycleOwner,
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
@@ -37,6 +39,7 @@ internal class AppSettingsComponentImpl internal constructor(
   private val versionStateBus: EventBus<VersionStateEvent>,
   private val ratingStateBus: EventBus<RatingStateEvent>,
   private val settingsViewBus: EventBus<AppSettingsViewEvent>,
+  private val settingsStateBus: EventBus<AppSettingsStateEvent>,
   private val schedulerProvider: SchedulerProvider,
   private val preferenceScreen: PreferenceScreen,
   private val applicationName: String,
@@ -47,8 +50,8 @@ internal class AppSettingsComponentImpl internal constructor(
 
   override fun inject(fragment: AppSettingsPreferenceFragment) {
     val settingsView = AppSettingsView(
-        theming, preferenceScreen, applicationName, bugreportUrl,
-        hideClearAll, hideUpgradeInformation, settingsViewBus
+        view, theming, preferenceScreen, applicationName, bugreportUrl,
+        hideClearAll, hideUpgradeInformation, owner, settingsViewBus
     )
     fragment.theming = theming
     fragment.versionWorker = VersionCheckWorker(
@@ -56,7 +59,9 @@ internal class AppSettingsComponentImpl internal constructor(
     )
     fragment.ratingWorker = RatingWorker(ratingModule.interactor, schedulerProvider, ratingStateBus)
     fragment.settingsComponent = AppSettingsUiComponent(
-        settingsView, settingsViewBus, schedulerProvider, owner
+        settingsView, settingsViewBus, settingsStateBus, schedulerProvider, owner
     )
+
+    fragment.settingsWorker = AppSettingsWorker(settingsStateBus)
   }
 }

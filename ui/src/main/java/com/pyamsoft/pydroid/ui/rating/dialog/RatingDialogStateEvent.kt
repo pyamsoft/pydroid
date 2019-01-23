@@ -15,21 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-sealed class LicenseStateEvent : StateEvent {
+internal sealed class RatingDialogStateEvent : StateEvent {
 
-  object Loading : LicenseStateEvent()
-
-  object Loaded : LicenseStateEvent()
-
-  data class PageError(val error: ActivityNotFoundException?) : LicenseStateEvent()
-
-  object Complete : LicenseStateEvent()
-
-  data class FailedViewLicenseExternal(val error: ActivityNotFoundException) : LicenseStateEvent()
+  data class FailedMarketLink(val error: ActivityNotFoundException) : RatingDialogStateEvent()
 
 }

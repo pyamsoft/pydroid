@@ -41,6 +41,7 @@ import timber.log.Timber
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
   internal lateinit var ratingWorker: RatingWorker
+  internal lateinit var ratingUiComponent: RatingUiComponent
 
   private var loadRatingDialogDisposable by singleDisposable()
   private var showDialogDisposable by singleDisposable()
@@ -90,13 +91,16 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     }
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+  override fun onPostCreate(savedInstanceState: Bundle?) {
+    super.onPostCreate(savedInstanceState)
     PYDroid.obtain(this)
+        .plusRatingComponent(this, snackbarRoot)
         .inject(this)
 
     ratingWorker.onRatingDialogRequested { showRatingDialog() }
         .destroy(this)
+
+    ratingUiComponent.create(savedInstanceState)
   }
 
   override fun onDestroy() {
@@ -111,6 +115,11 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     super.onPostResume()
 
     loadRatingDialogDisposable = ratingWorker.loadRatingDialog(false)
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    ratingUiComponent.saveState(outState)
   }
 
   private fun showRatingDialog() {

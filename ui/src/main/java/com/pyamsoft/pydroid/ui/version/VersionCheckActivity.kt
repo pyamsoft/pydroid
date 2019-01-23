@@ -19,17 +19,12 @@ package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.CallSuper
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
-import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateComplete
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateError
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateFound
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
@@ -38,55 +33,42 @@ import timber.log.Timber
 abstract class VersionCheckActivity : ActivityBase() {
 
   internal lateinit var versionWorker: VersionCheckWorker
+  internal lateinit var versionUiComponent: VersionUiComponent
 
   private var checkUpdatesDisposable by singleDisposable()
-  private var snackbar: Snackbar? = null
 
-  protected abstract val snackbarRoot: View
-
-  @CallSuper
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+  override fun onPostCreate(savedInstanceState: Bundle?) {
+    super.onPostCreate(savedInstanceState)
     PYDroid.obtain(this)
+        .plusVersionComponent(this, snackbarRoot)
         .inject(this)
 
     versionWorker.onUpdateEvent {
       return@onUpdateEvent when (it) {
-        is Loading -> onCheckingForUpdates(it.forced)
         is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
         is UpdateError -> onUpdatedVersionError(it.error)
-        is UpdateComplete -> dismissSnackbar()
+        else -> Timber.d("Unhandled event: $it")
       }
     }
         .destroy(this)
 
+    versionUiComponent.create(savedInstanceState)
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    versionUiComponent.saveState(outState)
   }
 
   override fun onDestroy() {
     super.onDestroy()
     checkUpdatesDisposable.tryDispose()
-    dismissSnackbar()
-  }
-
-  private fun dismissSnackbar() {
-    snackbar?.dismiss()
-    snackbar = null
   }
 
   // Start in post resume in case dialog launches before resume() is complete for fragments
   override fun onPostResume() {
     super.onPostResume()
     checkUpdatesDisposable = versionWorker.checkForUpdates(false)
-  }
-
-  private fun onCheckingForUpdates(showSnackbar: Boolean) {
-    dismissSnackbar()
-
-    if (showSnackbar) {
-      snackbar = Snackbreak
-          .short(snackbarRoot, "Checking for updates...")
-          .also { it.show() }
-    }
   }
 
   private fun onUpdatedVersionFound(
@@ -102,4 +84,6 @@ abstract class VersionCheckActivity : ActivityBase() {
     // Silently drop version check errors
     Timber.e(throwable, "Error checking for latest version")
   }
+
+  protected abstract val snackbarRoot: View
 }

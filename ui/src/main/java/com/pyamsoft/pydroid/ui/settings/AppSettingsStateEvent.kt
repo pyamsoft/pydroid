@@ -15,21 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.settings
 
 import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-sealed class LicenseStateEvent : StateEvent {
+internal sealed class AppSettingsStateEvent : StateEvent {
 
-  object Loading : LicenseStateEvent()
-
-  object Loaded : LicenseStateEvent()
-
-  data class PageError(val error: ActivityNotFoundException?) : LicenseStateEvent()
-
-  object Complete : LicenseStateEvent()
-
-  data class FailedViewLicenseExternal(val error: ActivityNotFoundException) : LicenseStateEvent()
+  data class FailedLink(val error: ActivityNotFoundException) : AppSettingsStateEvent()
 
 }

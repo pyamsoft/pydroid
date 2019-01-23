@@ -17,8 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
+import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
@@ -37,16 +40,19 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.MoreAppsClicked
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateAppClicked
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgradeInfo
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
+  private val view: View,
   private val theming: Theming,
   private val preferenceScreen: PreferenceScreen,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean,
+  private val owner: LifecycleOwner,
   uiBus: Publisher<AppSettingsViewEvent>
 ) : UiView<AppSettingsViewEvent>(uiBus) {
 
@@ -227,6 +233,13 @@ internal class AppSettingsView internal constructor(
   private fun setupApplicationTitle() {
     applicationSettings = preferenceScreen.findPreference("application_settings")
     applicationSettings.title = "$applicationName Settings"
+  }
+
+  fun showError(error: ActivityNotFoundException) {
+    Snackbreak.bindTo(owner)
+        .short(view, error.message ?: "No activity can handle this URL")
+        .show()
+
   }
 
   companion object {

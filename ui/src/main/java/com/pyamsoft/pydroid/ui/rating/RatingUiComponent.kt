@@ -15,39 +15,51 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.rating
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent.FailedMarketLink
 import io.reactivex.Observable
 
-internal class VersionUpgradeControlsUiComponent internal constructor(
-  private val controlsView: VersionUpgradeControlView,
-  private val uiBus: Listener<VersionUpgradeViewEvent>,
+internal class RatingUiComponent internal constructor(
+  private val view: RatingView,
+  private val dialogControllerBus: Listener<RatingDialogStateEvent>,
   private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner
-) : UiComponent<VersionUpgradeViewEvent>(owner) {
+) : UiComponent<EMPTY>(owner) {
 
   override fun id(): Int {
-    return controlsView.id()
+    return view.id()
   }
 
   override fun create(savedInstanceState: Bundle?) {
-    controlsView.inflate(savedInstanceState)
-    owner.runOnDestroy { controlsView.teardown() }
+    view.inflate(savedInstanceState)
+    owner.runOnDestroy { view.teardown() }
+
+    dialogControllerBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when(it) {
+            is FailedMarketLink -> view.showError(it.error)
+          }
+        }
+        .destroy(owner)
   }
 
   override fun saveState(outState: Bundle) {
-    controlsView.saveState(outState)
+    view.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<VersionUpgradeViewEvent> {
-    return uiBus.listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+  override fun onUiEvent(): Observable<EMPTY> {
+    return Observable.empty()
   }
 
 }

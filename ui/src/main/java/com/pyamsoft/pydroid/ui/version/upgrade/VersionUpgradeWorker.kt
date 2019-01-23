@@ -15,33 +15,18 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating.dialog
+package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.content.ActivityNotFoundException
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.arch.Worker
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent.FailedMarketLink
-import io.reactivex.disposables.Disposable
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeStateEvent.FailedMarketLink
 
-internal class RatingDialogWorker internal constructor(
-  private val interactor: RatingInteractor,
-  private val schedulerProvider: SchedulerProvider,
-  bus: EventBus<RatingDialogStateEvent>
-) : Worker<RatingDialogStateEvent>(bus) {
-
-  @CheckResult
-  fun saveRating(onSave: () -> Unit): Disposable {
-    return interactor.saveRating()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { onSave() }
-  }
+internal class VersionUpgradeWorker internal constructor(
+  versionStateCheckBus: EventBus<VersionUpgradeStateEvent>
+) : Worker<VersionUpgradeStateEvent>(versionStateCheckBus) {
 
   fun failedMarketLink(error: ActivityNotFoundException) {
     publish(FailedMarketLink(error))
   }
-
 }

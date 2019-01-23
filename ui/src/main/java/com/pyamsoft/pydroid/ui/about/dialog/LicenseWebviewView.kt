@@ -167,6 +167,7 @@ internal class LicenseWebviewView internal constructor(
 
   override fun teardown() {
     dismissError()
+    webview.destroy()
     owner.lifecycle.removeObserver(this)
   }
 

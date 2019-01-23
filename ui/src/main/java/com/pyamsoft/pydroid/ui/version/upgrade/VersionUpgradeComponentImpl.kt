@@ -28,16 +28,18 @@ internal class VersionUpgradeComponentImpl internal constructor(
   private val name: String,
   private val currentVersion: Int,
   private val newVersion: Int,
-  private val bus: EventBus<VersionViewEvent>,
+  private val viewBus: EventBus<VersionUpgradeViewEvent>,
+  private val stateBus: EventBus<VersionUpgradeStateEvent>,
   private val schedulerProvider: SchedulerProvider
 ) : VersionUpgradeComponent {
 
   override fun inject(dialog: VersionUpgradeDialog) {
-    val controls = VersionUpgradeControlView(parent, bus)
+    val controls = VersionUpgradeControlView(parent, viewBus)
     val content = VersionUpgradeContentView(parent, name, currentVersion, newVersion)
     dialog.contentComponent = VersionUpgradeContentUiComponent(content, owner)
     dialog.controlsComponent = VersionUpgradeControlsUiComponent(
-        controls, bus, schedulerProvider, owner
+        controls, viewBus, schedulerProvider, owner
     )
+    dialog.worker = VersionUpgradeWorker(stateBus)
   }
 }

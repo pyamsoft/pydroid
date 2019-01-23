@@ -15,21 +15,10 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.version
 
-import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.ui.arch.StateEvent
+internal interface VersionComponent {
 
-sealed class LicenseStateEvent : StateEvent {
-
-  object Loading : LicenseStateEvent()
-
-  object Loaded : LicenseStateEvent()
-
-  data class PageError(val error: ActivityNotFoundException?) : LicenseStateEvent()
-
-  object Complete : LicenseStateEvent()
-
-  data class FailedViewLicenseExternal(val error: ActivityNotFoundException) : LicenseStateEvent()
+  fun inject(activity: VersionCheckActivity)
 
 }

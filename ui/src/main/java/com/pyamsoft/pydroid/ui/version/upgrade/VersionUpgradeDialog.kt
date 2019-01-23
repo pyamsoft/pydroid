@@ -22,23 +22,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeDialog : ToolbarDialog() {
 
   internal lateinit var controlsComponent: VersionUpgradeControlsUiComponent
   internal lateinit var contentComponent: VersionUpgradeContentUiComponent
-
-  private var marketSnackbar: Snackbar? = null
+  internal lateinit var worker: VersionUpgradeWorker
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -75,34 +72,18 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
             is Cancel -> dismiss()
             is Upgrade -> {
               val error = MarketLinker.linkToMarketPage(view.context, view.context.packageName)
-              if (error == null) {
-                dismiss()
-              } else {
-                showMarketSnackbar(view)
+              dismiss()
+
+              if (error != null) {
+                worker.failedMarketLink(error)
               }
+
+              // Need this I guess
+              return@subscribe
             }
           }
         }
         .destroy(viewLifecycleOwner)
-  }
-
-  private fun showMarketSnackbar(view: View) {
-    dismissSnackbar()
-    marketSnackbar = Snackbreak.short(
-        view,
-        "No application is able to handle Store URLs."
-    )
-        .also { bar -> bar.show() }
-  }
-
-  private fun dismissSnackbar() {
-    marketSnackbar?.dismiss()
-    marketSnackbar = null
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    dismissSnackbar()
   }
 
   override fun onResume() {

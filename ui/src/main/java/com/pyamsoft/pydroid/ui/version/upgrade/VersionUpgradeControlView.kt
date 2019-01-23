@@ -24,13 +24,13 @@ import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionViewEvent.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeControlView internal constructor(
   private val parent: ViewGroup,
-  bus: Publisher<VersionViewEvent>
-) : UiView<VersionViewEvent>(bus) {
+  bus: Publisher<VersionUpgradeViewEvent>
+) : UiView<VersionUpgradeViewEvent>(bus) {
 
   private lateinit var layoutRoot: ViewGroup
   private lateinit var upgradeButton: Button

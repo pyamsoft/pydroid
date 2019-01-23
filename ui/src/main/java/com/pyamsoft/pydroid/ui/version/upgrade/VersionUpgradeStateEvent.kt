@@ -17,11 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
+import android.content.ActivityNotFoundException
+import com.pyamsoft.pydroid.ui.arch.StateEvent
 
-internal sealed class VersionViewEvent : ViewEvent {
+internal sealed class VersionUpgradeStateEvent : StateEvent {
 
-  object Upgrade : VersionViewEvent()
+  data class FailedMarketLink(val error: ActivityNotFoundException) : VersionUpgradeStateEvent()
 
-  object Cancel : VersionViewEvent()
 }

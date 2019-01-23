@@ -97,13 +97,13 @@ object Toaster {
       alive = false
     }
 
-    private fun dismiss() {
-      toast?.cancel()
-      toast = null
-    }
-
     private fun requireStillAlive() {
       require(alive) { "This Toaster.${Instance::class.java.simpleName} is Dead" }
+    }
+
+    fun dismiss() {
+      toast?.cancel()
+      toast = null
     }
 
     @CheckResult

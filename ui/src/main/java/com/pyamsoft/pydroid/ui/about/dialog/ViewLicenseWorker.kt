@@ -17,9 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
+import android.content.ActivityNotFoundException
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.FailedViewLicenseExternal
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
 import com.pyamsoft.pydroid.ui.arch.Worker
@@ -41,6 +43,10 @@ class ViewLicenseWorker internal constructor(
 
   fun loadUrl() {
     publish(Loading)
+  }
+
+  fun failedViewExternal(error: ActivityNotFoundException) {
+    publish(FailedViewLicenseExternal(error))
   }
 
 }

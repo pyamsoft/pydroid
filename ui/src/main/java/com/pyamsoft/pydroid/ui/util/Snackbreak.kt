@@ -134,13 +134,13 @@ object Snackbreak {
       alive = false
     }
 
-    private fun dismiss() {
-      snackbar?.dismiss()
-      snackbar = null
-    }
-
     private fun requireStillAlive() {
       require(alive) { "This Snackbreak.${Instance::class.java.simpleName} is Dead" }
+    }
+
+    fun dismiss() {
+      snackbar?.dismiss()
+      snackbar = null
     }
 
     @CheckResult

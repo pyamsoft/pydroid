@@ -24,20 +24,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CheckResult
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
-import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class RatingDialog : ToolbarDialog() {
 
@@ -46,7 +43,6 @@ internal class RatingDialog : ToolbarDialog() {
   internal lateinit var controlsComponent: RatingControlsUiComponent
   internal lateinit var worker: RatingDialogWorker
 
-  private var marketErrorSnackbar: Snackbar? = null
   private var ratingSaveDisposable by singleDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,37 +105,22 @@ internal class RatingDialog : ToolbarDialog() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-    dismissSnackbar()
     ratingSaveDisposable.tryDispose()
-  }
-
-  private fun dismissSnackbar() {
-    marketErrorSnackbar?.dismiss()
-    marketErrorSnackbar = null
   }
 
   private fun saveAndRate(packageName: String) {
     ratingSaveDisposable = worker.saveRating {
       val error = MarketLinker.linkToMarketPage(requireContext(), packageName)
 
-      // If it errors out we show the view but otherwise we can close
-      if (error == null) {
-        dismiss()
-      } else {
-        dismissSnackbar()
-        marketErrorSnackbar = Snackbreak.short(
-            requireView(),
-            "No application is able to handle Store URLs."
-        )
-            .also { bar -> bar.show() }
+      dismiss()
+      if (error != null) {
+        worker.failedMarketLink(error)
       }
     }
   }
 
   private fun saveAndCancel() {
-    ratingSaveDisposable = worker.saveRating {
-      dismiss()
-    }
+    ratingSaveDisposable = worker.saveRating { dismiss() }
   }
 
   override fun onResume() {

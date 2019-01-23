@@ -15,53 +15,67 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
 import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent.FailedLink
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateComplete
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeStateEvent
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeStateEvent.FailedMarketLink
 import io.reactivex.Observable
+import timber.log.Timber
 
-internal class AppSettingsUiComponent internal constructor(
-  private val settingsView: AppSettingsView,
-  private val uiBus: Listener<AppSettingsViewEvent>,
-  private val controllerBus: Listener<AppSettingsStateEvent>,
+internal class VersionUiComponent internal constructor(
+  private val view: VersionView,
+  private val controllerBus: Listener<VersionStateEvent>,
+  private val dialogControllerBus: Listener<VersionUpgradeStateEvent>,
   private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner
-) : UiComponent<AppSettingsViewEvent>(owner) {
+) : UiComponent<EMPTY>(owner) {
 
   override fun id(): Int {
-    throw InvalidUiComponentIdException
+    return view.id()
   }
 
   override fun create(savedInstanceState: Bundle?) {
-    settingsView.inflate(savedInstanceState)
-    owner.runOnDestroy { settingsView.teardown() }
+    view.inflate(savedInstanceState)
+    owner.runOnDestroy { view.teardown() }
 
     controllerBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
-            is FailedLink -> settingsView.showError(it.error)
+            is Loading -> view.showUpdating()
+            UpdateComplete -> view.dismissUpdating()
+            else -> Timber.d("Unhandled event: $it")
+          }
+        }
+        .destroy(owner)
+
+    dialogControllerBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it) {
+            is FailedMarketLink -> view.showError(it.error)
           }
         }
         .destroy(owner)
   }
 
   override fun saveState(outState: Bundle) {
-    settingsView.saveState(outState)
+    view.saveState(outState)
   }
 
-  override fun onUiEvent(): Observable<AppSettingsViewEvent> {
-    return uiBus.listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+  override fun onUiEvent(): Observable<EMPTY> {
+    return Observable.empty()
   }
 
 }

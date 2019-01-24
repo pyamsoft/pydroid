@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
@@ -32,6 +33,7 @@ import timber.log.Timber
 internal class LicenseWebviewUiComponent internal constructor(
   private val webviewView: LicenseWebviewView,
   private val controllerBus: Listener<LicenseStateEvent>,
+  private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner
 ) : UiComponent<LicenseViewEvent>(owner) {
 
@@ -48,6 +50,8 @@ internal class LicenseWebviewUiComponent internal constructor(
 
   private fun listenForControllerEvents() {
     controllerBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is Loading -> {

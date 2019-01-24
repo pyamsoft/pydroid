@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.widget.spinner
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.StateEvent
 import com.pyamsoft.pydroid.ui.arch.UiComponent
@@ -29,6 +30,7 @@ import timber.log.Timber
 
 class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
   private val spinnerView: SpinnerView,
+  private val schedulerProvider: SchedulerProvider,
   private val controllerBus: Listener<T>,
   private val showTypeClass: Class<Show>,
   private val hideTypeClass: Class<Hide>,
@@ -48,6 +50,8 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
 
   private fun listenForControllerEvents() {
     controllerBus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it::class.java) {
             showTypeClass -> spinnerView.show()
@@ -72,10 +76,11 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
     inline fun <T : StateEvent, reified Show : T, reified Hide : T> create(
       owner: LifecycleOwner,
       spinnerView: SpinnerView,
-      controllerBus: Listener<T>
+      controllerBus: Listener<T>,
+      schedulerProvider: SchedulerProvider = SchedulerProvider.DEFAULT
     ): SpinnerUiComponent<T, Show, Hide> {
       return SpinnerUiComponent(
-          spinnerView, controllerBus,
+          spinnerView, schedulerProvider, controllerBus,
           Show::class.java, Hide::class.java,
           owner
       )

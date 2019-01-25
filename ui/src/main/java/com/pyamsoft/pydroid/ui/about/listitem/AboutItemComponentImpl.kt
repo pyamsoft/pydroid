@@ -21,24 +21,27 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val bus: EventBus<AboutViewEvent>,
+  private val uiBus: EventBus<AboutViewEvent>,
+  private val controllerBus: EventBus<AboutStateEvent>,
   private val schedulerProvider: SchedulerProvider
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
     val aboutTitleView = AboutItemTitleView(parent)
-    val aboutActionsView = AboutItemActionsView(parent, bus)
+    val aboutActionsView = AboutItemActionsView(parent, uiBus)
     val aboutDescriptionView = AboutItemDescriptionView(parent)
     viewHolder.titleComponent = AboutItemTitleUiComponent(aboutTitleView, owner)
     viewHolder.actionsComponent = AboutItemActionsUiComponent(
-        schedulerProvider, aboutActionsView, bus, owner
+        schedulerProvider, aboutActionsView, uiBus, owner
     )
     viewHolder.descriptionComponent = AboutItemDescriptionUiComponent(aboutDescriptionView, owner)
+    viewHolder.worker = AboutItemWorker(controllerBus)
   }
 
 }

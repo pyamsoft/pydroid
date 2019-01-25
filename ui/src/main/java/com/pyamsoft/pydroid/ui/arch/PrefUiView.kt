@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
+import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
@@ -31,6 +32,19 @@ abstract class PrefUiView<T : ViewEvent> protected constructor(
 ) : UiView {
 
   private val lazyPrefInitializer = { parent }
+
+  final override fun id(): Int {
+    throw InvalidUiComponentIdException
+  }
+
+  override fun inflate(savedInstanceState: Bundle?) {
+  }
+
+  override fun saveState(outState: Bundle) {
+  }
+
+  override fun teardown() {
+  }
 
   protected fun publish(event: T) {
     bus.publish(event)
@@ -69,13 +83,13 @@ abstract class PrefUiView<T : ViewEvent> protected constructor(
       if (foundView == null) {
         val rootPref = initializer()
         when {
-          id == 0 -> {
-            @Suppress("UNCHECKED_CAST")
-            foundView = rootPref.findPreference(rootPref.context.getString(id)) as T
-          }
-          key.isNotBlank() -> {
+          id == 0 && key.isNotBlank() -> {
             @Suppress("UNCHECKED_CAST")
             foundView = rootPref.findPreference(key) as T
+          }
+          id > 0 && key.isBlank() -> {
+            @Suppress("UNCHECKED_CAST")
+            foundView = rootPref.findPreference(rootPref.context.getString(id)) as T
           }
           else -> throw IllegalStateException("LazyFindPref must have either an id or a key")
         }

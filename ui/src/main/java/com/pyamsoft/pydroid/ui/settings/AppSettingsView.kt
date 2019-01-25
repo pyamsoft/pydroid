@@ -70,10 +70,6 @@ internal class AppSettingsView internal constructor(
   private val theme by lazyPref<Preference>(R.string.dark_mode_key)
   private val applicationSettings by lazyPref<Preference>("application_settings")
 
-  override fun id(): Int {
-    throw InvalidUiComponentIdException
-  }
-
   override fun inflate(savedInstanceState: Bundle?) {
     adjustIconTint()
 
@@ -88,9 +84,6 @@ internal class AppSettingsView internal constructor(
     setupRateApp()
     setupShowUpgradeInfo()
     setupSocial()
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   override fun teardown() {

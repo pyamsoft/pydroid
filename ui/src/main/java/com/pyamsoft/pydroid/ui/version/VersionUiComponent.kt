@@ -47,7 +47,7 @@ internal class VersionUiComponent internal constructor(
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
-            is Loading -> view.showUpdating()
+            is Loading -> showUpdating(it.forced)
             is UpdateComplete -> view.dismissUpdating()
             is UpdateFound, is UpdateError -> Timber.d("Ignoring event: $it")
           }
@@ -63,6 +63,12 @@ internal class VersionUiComponent internal constructor(
           }
         }
         .destroy(owner)
+  }
+
+  private fun showUpdating(forced: Boolean) {
+    if (forced) {
+      view.showUpdating()
+    }
   }
 
 }

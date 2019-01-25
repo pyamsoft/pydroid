@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
@@ -25,29 +24,15 @@ import com.pyamsoft.pydroid.ui.arch.UiComponent
 import io.reactivex.Observable
 
 internal class RatingControlsUiComponent internal constructor(
-  private val controlsView: RatingControlsView,
-  private val uiBus: Listener<RatingDialogViewEvent>,
   private val schedulerProvider: SchedulerProvider,
+  view: RatingControlsView,
+  uiBus: Listener<RatingDialogViewEvent>,
   owner: LifecycleOwner
-) : UiComponent<RatingDialogViewEvent>(owner) {
-
-  override fun id(): Int {
-    return controlsView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    controlsView.inflate(savedInstanceState)
-    owner.runOnDestroy { controlsView.teardown() }
-  }
-
-  override fun saveState(outState: Bundle) {
-    controlsView.saveState(outState)
-  }
+) : UiComponent<RatingDialogViewEvent, RatingControlsView>(view, uiBus, owner) {
 
   override fun onUiEvent(): Observable<RatingDialogViewEvent> {
-    return uiBus.listen()
+    return super.onUiEvent()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
   }
-
 }

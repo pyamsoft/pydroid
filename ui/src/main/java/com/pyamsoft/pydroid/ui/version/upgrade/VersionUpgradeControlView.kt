@@ -55,9 +55,6 @@ internal class VersionUpgradeControlView internal constructor(
     laterButton.setOnClickListener(null)
   }
 
-  override fun saveState(outState: Bundle) {
-  }
-
   private fun bindButtons() {
     upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
     laterButton.setOnDebouncedClickListener { publish(Cancel) }

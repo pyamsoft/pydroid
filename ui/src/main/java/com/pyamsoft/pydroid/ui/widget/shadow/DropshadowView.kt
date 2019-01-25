@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.widget.shadow
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.R
@@ -33,18 +32,6 @@ class DropshadowView(parent: ViewGroup) : BaseUiView<EMPTY>(parent, EmptyPublish
 
   override fun id(): Int {
     return shadow.id
-  }
-
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-  }
-
-  override fun teardown() {
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
 }

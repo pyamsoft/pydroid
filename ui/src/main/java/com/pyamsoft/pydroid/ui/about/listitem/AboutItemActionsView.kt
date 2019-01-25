@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -26,35 +26,26 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
-  private val parent: ViewGroup,
+  parent: ViewGroup,
   bus: Publisher<AboutViewEvent>
-) : UiView<AboutViewEvent>(bus), BaseAboutItem {
+) : BaseUiView<AboutViewEvent>(parent, bus), BaseAboutItem {
 
-  private lateinit var layoutRoot: ViewGroup
-  private lateinit var viewLicense: Button
-  private lateinit var visitHomepage: Button
+  private val layoutRoot by lazyView<View>(R.id.about_actions)
+  private val viewLicense by lazyView<Button>(R.id.action_view_license)
+  private val visitHomepage by lazyView<Button>(R.id.action_visit_homepage)
+
+  override val layout: Int = R.layout.about_item_actions
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.about_item_actions) {
-      layoutRoot = findViewById(R.id.about_actions)
-      viewLicense = findViewById(R.id.action_view_license)
-      visitHomepage = findViewById(R.id.action_visit_homepage)
-    }
-  }
-
   override fun teardown() {
     unbind()
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   override fun bind(model: OssLibrary) {

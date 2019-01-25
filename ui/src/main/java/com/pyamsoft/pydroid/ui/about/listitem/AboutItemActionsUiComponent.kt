@@ -17,41 +17,33 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 import com.pyamsoft.pydroid.ui.arch.UiComponent
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import io.reactivex.Observable
 
 internal class AboutItemActionsUiComponent internal constructor(
-  private val aboutActionsView: AboutItemActionsView,
+  private val schedulerProvider: SchedulerProvider,
+  view: AboutItemActionsView,
+  uiBus: Listener<AboutViewEvent>,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner), BaseAboutItem {
-
-  override fun id(): Int {
-    return aboutActionsView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    aboutActionsView.inflate(savedInstanceState)
-    owner.runOnDestroy { aboutActionsView.teardown() }
-  }
-
-  override fun saveState(outState: Bundle) {
-    aboutActionsView.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
-  }
+) : UiComponent<AboutViewEvent, AboutItemActionsView>(view, uiBus, owner), BaseAboutItem {
 
   override fun bind(model: OssLibrary) {
-    aboutActionsView.bind(model)
+    view.bind(model)
   }
 
   override fun unbind() {
-    aboutActionsView.unbind()
+    view.unbind()
+  }
+
+  override fun onUiEvent(): Observable<AboutViewEvent> {
+    return super.onUiEvent()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

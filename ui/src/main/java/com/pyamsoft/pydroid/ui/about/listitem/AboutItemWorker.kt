@@ -15,25 +15,25 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastViewLicense
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastVisitHomepage
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
-import com.pyamsoft.pydroid.ui.arch.StateEvent
+import com.pyamsoft.pydroid.ui.arch.Worker
 
-sealed class AboutStateEvent : StateEvent {
+class AboutItemWorker internal constructor(
+  bus: EventBus<AboutStateEvent>
+) : Worker<AboutStateEvent>(bus) {
 
-  object Loading : AboutStateEvent()
+  fun broadcast(event: VisitHomepage) {
+    publish(BroadcastVisitHomepage(event))
+  }
 
-  data class LicensesLoaded(val libraries: List<OssLibrary>) : AboutStateEvent()
-
-  data class LoadError(val error: Throwable) : AboutStateEvent()
-
-  object LoadComplete : AboutStateEvent()
-
-  data class BroadcastVisitHomepage(val event: VisitHomepage) : AboutStateEvent()
-
-  data class BroadcastViewLicense(val event: ViewLicense) : AboutStateEvent()
-
+  fun broadcast(event: ViewLicense) {
+    publish(BroadcastViewLicense(event))
+  }
 }

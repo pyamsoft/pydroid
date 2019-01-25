@@ -17,32 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 
 internal class RatingIconUiComponent internal constructor(
-  private val iconView: RatingIconView,
+  view: RatingIconView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner) {
-
-  override fun id(): Int {
-    return iconView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    iconView.inflate(savedInstanceState)
-    owner.runOnDestroy { iconView.teardown() }
-  }
-
-  override fun saveState(outState: Bundle) {
-    iconView.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
-  }
-
-}
+) : UiComponent<EMPTY, RatingIconView>(view, EmptyListener, owner)

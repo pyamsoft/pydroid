@@ -60,9 +60,6 @@ internal class VersionUpgradeContentView internal constructor(
     newValue.text = ""
   }
 
-  override fun saveState(outState: Bundle) {
-  }
-
   @CheckResult
   private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
     return layoutRoot.context.getString(id, *formatArgs)

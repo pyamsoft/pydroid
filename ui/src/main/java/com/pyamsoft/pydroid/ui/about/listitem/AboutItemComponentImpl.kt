@@ -19,13 +19,15 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val bus: Publisher<AboutViewEvent>
+  private val bus: EventBus<AboutViewEvent>,
+  private val schedulerProvider: SchedulerProvider
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
@@ -33,7 +35,9 @@ internal class AboutItemComponentImpl internal constructor(
     val aboutActionsView = AboutItemActionsView(parent, bus)
     val aboutDescriptionView = AboutItemDescriptionView(parent)
     viewHolder.titleComponent = AboutItemTitleUiComponent(aboutTitleView, owner)
-    viewHolder.actionsComponent = AboutItemActionsUiComponent(aboutActionsView, owner)
+    viewHolder.actionsComponent = AboutItemActionsUiComponent(
+        schedulerProvider, aboutActionsView, bus, owner
+    )
     viewHolder.descriptionComponent = AboutItemDescriptionUiComponent(aboutDescriptionView, owner)
   }
 

@@ -21,6 +21,8 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastViewLicense
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastVisitHomepage
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LicensesLoaded
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadError
@@ -34,6 +36,24 @@ class AboutWorker internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<AboutStateEvent>
 ) : Worker<AboutStateEvent>(bus) {
+
+  @CheckResult
+  fun onViewLicenseEvent(func: (payload: BroadcastViewLicense) -> Unit): Disposable {
+    return listen()
+        .ofType(BroadcastViewLicense::class.java)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe(func)
+  }
+
+  @CheckResult
+  fun onVisitHomepageEvent(func: (payload: BroadcastVisitHomepage) -> Unit): Disposable {
+    return listen()
+        .ofType(BroadcastVisitHomepage::class.java)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe(func)
+  }
 
   @CheckResult
   fun loadLicenses(force: Boolean): Disposable {

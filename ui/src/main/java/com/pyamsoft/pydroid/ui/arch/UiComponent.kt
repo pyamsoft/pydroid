@@ -40,7 +40,7 @@ abstract class UiComponent<T : ViewEvent, V : UiView> protected constructor(
   }
 
   @CheckResult
-  fun onUiEvent(): Observable<T> {
+  open fun onUiEvent(): Observable<T> {
     return uiBus.listen()
   }
 

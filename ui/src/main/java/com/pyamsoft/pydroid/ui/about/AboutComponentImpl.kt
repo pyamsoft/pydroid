@@ -43,7 +43,7 @@ internal class AboutComponentImpl(
     fragment.worker = AboutWorker(aboutModule.interactor, schedulerProvider, controllerBus)
     fragment.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
     fragment.listComponent = AboutListUiComponent(
-        listView, controllerBus, licenseBus, uiBus, schedulerProvider, owner
+        controllerBus, licenseBus, schedulerProvider, listView, owner
     )
   }
 

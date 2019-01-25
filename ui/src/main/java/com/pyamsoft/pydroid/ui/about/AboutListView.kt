@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
@@ -27,31 +28,32 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 class AboutListView internal constructor(
   private val owner: LifecycleOwner,
-  private val parent: ViewGroup
-) : UiView<EMPTY>(EmptyPublisher), UiToggleView {
+  parent: ViewGroup
+) : BaseUiView<EMPTY>(parent, EmptyPublisher), UiToggleView {
 
-  private lateinit var aboutList: RecyclerView
+  private val aboutList by lazyView<RecyclerView>(R.id.about_list)
 
   private lateinit var aboutAdapter: AboutAdapter
   private var lastViewedItem: Int = 0
+
+  override val layout: Int = R.layout.about_libraries_list
 
   override fun id(): Int {
     return aboutList.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.about_libraries_list) {
-      aboutList = findViewById(R.id.about_list)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     restoreLastViewedItem(savedInstanceState)
     setupListView()
   }
@@ -111,7 +113,7 @@ class AboutListView internal constructor(
 
   fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
-        .short(parent, error.message ?: "An unexpected error occurred.")
+        .short(aboutList, error.message ?: "An unexpected error occurred.")
         .show()
   }
 

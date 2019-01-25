@@ -43,10 +43,18 @@ abstract class BaseUiView<T : ViewEvent> protected constructor(
     }
   }
 
-  protected abstract fun onInflated(
+  protected open fun onInflated(
     view: View,
     savedInstanceState: Bundle?
-  )
+  ) {
+
+  }
+
+  override fun saveState(outState: Bundle) {
+  }
+
+  override fun teardown() {
+  }
 
   protected fun publish(event: T) {
     bus.publish(event)

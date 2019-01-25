@@ -41,16 +41,16 @@ internal class ViewLicenseComponentImpl internal constructor(
   override fun inject(dialog: ViewLicenseDialog) {
     val toolbarView = LicenseToolbarView(parent, name, link, imageLoader, owner, uiBus)
     val dropshadowView = DropshadowView(parent)
-    val webviewView = LicenseWebviewView(owner, parent, link, controllerBus)
+    val webviewView = LicenseWebviewView(parent, owner, link, controllerBus)
     val spinnerView = SpinnerView(parent)
     dialog.worker = ViewLicenseWorker(controllerBus, schedulerProvider)
     dialog.dropshadowComponent = DropshadowUiComponent(dropshadowView, owner)
     dialog.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
     dialog.webviewComponent = LicenseWebviewUiComponent(
-        webviewView, controllerBus, schedulerProvider, owner
+        controllerBus, schedulerProvider, webviewView, uiBus, owner
     )
     dialog.toolbarComponent = LicenseToolbarUiComponent(
-        toolbarView, uiBus, schedulerProvider, owner
+        schedulerProvider, toolbarView, uiBus, owner
     )
   }
 

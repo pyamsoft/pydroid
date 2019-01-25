@@ -21,5 +21,7 @@ import androidx.lifecycle.LifecycleOwner
 
 interface Loaded {
 
+  fun dispose()
+
   fun bind(owner: LifecycleOwner)
 }

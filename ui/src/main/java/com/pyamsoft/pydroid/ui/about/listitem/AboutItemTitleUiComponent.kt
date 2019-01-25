@@ -17,41 +17,23 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 
 internal class AboutItemTitleUiComponent internal constructor(
-  private val aboutTitleView: AboutItemTitleView,
+  view: AboutItemTitleView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner), BaseAboutItem {
-
-  override fun id(): Int {
-    return aboutTitleView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    aboutTitleView.inflate(savedInstanceState)
-    owner.runOnDestroy { aboutTitleView.teardown() }
-  }
-
-  override fun saveState(outState: Bundle) {
-    aboutTitleView.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
-  }
+) : UiComponent<EMPTY, AboutItemTitleView>(view, EmptyListener, owner), BaseAboutItem {
 
   override fun bind(model: OssLibrary) {
-    aboutTitleView.bind(model)
+    view.bind(model)
   }
 
   override fun unbind() {
-    aboutTitleView.unbind()
+    view.unbind()
   }
 
 }

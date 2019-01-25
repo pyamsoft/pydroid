@@ -19,32 +19,33 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
 import android.text.SpannedString
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 
 internal class RatingChangelogView internal constructor(
-  private val parent: ViewGroup,
-  private val changelog: SpannedString
-) : UiView<EMPTY>(EmptyPublisher) {
+  private val changelog: SpannedString,
+  parent: ViewGroup
+) : BaseUiView<EMPTY>(parent, EmptyPublisher) {
 
-  private lateinit var layoutRoot: ScrollView
-  private lateinit var changelogText: TextView
+  private val layoutRoot by lazyView<ScrollView>(R.id.rating_changelog_scroll)
+  private val changelogText by lazyView<TextView>(R.id.rating_changelog_text)
+
+  override val layout: Int = R.layout.rating_changelog
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.rating_changelog) {
-      layoutRoot = findViewById(R.id.rating_changelog_scroll)
-      changelogText = findViewById(R.id.rating_changelog_text)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     loadChangelog()
   }
 
@@ -54,9 +55,6 @@ internal class RatingChangelogView internal constructor(
 
   private fun loadChangelog() {
     changelogText.text = changelog
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
 }

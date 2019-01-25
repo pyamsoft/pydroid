@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent.FailedLink
+import io.reactivex.Observable
 
 internal class AppSettingsUiComponent internal constructor(
   private val schedulerProvider: SchedulerProvider,
@@ -43,6 +44,12 @@ internal class AppSettingsUiComponent internal constructor(
           }
         }
         .destroy(owner)
+  }
+
+  override fun onUiEvent(): Observable<AppSettingsViewEvent> {
+    return super.onUiEvent()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

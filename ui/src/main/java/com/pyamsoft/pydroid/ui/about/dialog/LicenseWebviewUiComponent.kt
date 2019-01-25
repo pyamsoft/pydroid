@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.FailedViewLicenseExternal
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
@@ -31,48 +32,36 @@ import io.reactivex.Observable
 import timber.log.Timber
 
 internal class LicenseWebviewUiComponent internal constructor(
-  private val webviewView: LicenseWebviewView,
   private val controllerBus: Listener<LicenseStateEvent>,
   private val schedulerProvider: SchedulerProvider,
+  view: LicenseWebviewView,
+  uiBus: Listener<LicenseViewEvent>,
   owner: LifecycleOwner
-) : UiComponent<LicenseViewEvent>(owner) {
+) : UiComponent<LicenseViewEvent, LicenseWebviewView>(view, uiBus, owner) {
 
-  override fun id(): Int {
-    return webviewView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    webviewView.inflate(savedInstanceState)
-    owner.runOnDestroy { webviewView.teardown() }
-
-    listenForControllerEvents()
-  }
-
-  private fun listenForControllerEvents() {
+  override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is Loading -> {
-              webviewView.hide()
-              webviewView.loadUrl()
+              view.hide()
+              view.loadUrl()
             }
-            is Loaded -> webviewView.show()
-            is PageError -> webviewView.pageLoadError(it.error)
+            is Loaded -> view.show()
+            is PageError -> view.pageLoadError(it.error)
             is Complete -> Unit
-            else -> Timber.d("Unhandled event: $it")
+            is FailedViewLicenseExternal -> Timber.d("Ignoring event: $it")
           }
         }
         .destroy(owner)
   }
 
-  override fun saveState(outState: Bundle) {
-    webviewView.saveState(outState)
-  }
-
   override fun onUiEvent(): Observable<LicenseViewEvent> {
-    return Observable.empty()
+    return super.onUiEvent()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

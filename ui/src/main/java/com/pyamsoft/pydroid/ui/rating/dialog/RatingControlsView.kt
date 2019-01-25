@@ -18,42 +18,37 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class RatingControlsView internal constructor(
-  private val parent: ViewGroup,
   private val rateLink: String,
+  parent: ViewGroup,
   uiBus: Publisher<RatingDialogViewEvent>
-) : UiView<RatingDialogViewEvent>(uiBus) {
+) : BaseUiView<RatingDialogViewEvent>(parent, uiBus) {
 
-  private lateinit var layoutRoot: ViewGroup
-  private lateinit var rateApplication: Button
-  private lateinit var noThanks: Button
+  private val layoutRoot by lazyView<View>(R.id.rating_control_root)
+  private val rateApplication by lazyView<Button>(R.id.rate_application)
+  private val noThanks by lazyView<Button>(R.id.no_thanks)
+
+  override val layout: Int = R.layout.rating_controls
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.rating_controls) {
-      layoutRoot = findViewById(R.id.rating_control_root)
-      rateApplication = findViewById(R.id.rate_application)
-      noThanks = findViewById(R.id.no_thanks)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     setupButtons()
-  }
-
-  override fun teardown() {
-    rateApplication.setOnClickListener(null)
-    noThanks.setOnClickListener(null)
   }
 
   private fun setupButtons() {
@@ -61,7 +56,9 @@ internal class RatingControlsView internal constructor(
     noThanks.setOnDebouncedClickListener { publish(Cancel) }
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun teardown() {
+    rateApplication.setOnClickListener(null)
+    noThanks.setOnClickListener(null)
   }
 
 }

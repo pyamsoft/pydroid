@@ -39,14 +39,14 @@ internal class RatingDialogComponentImpl internal constructor(
 ) : RatingDialogComponent {
 
   override fun inject(dialog: RatingDialog) {
-    val iconView = RatingIconView(parent, changelogIcon, loaderModule.provideImageLoader(), owner)
-    val changelogView = RatingChangelogView(parent, changelog)
-    val controlsView = RatingControlsView(parent, rateLink, uiBus)
+    val iconView = RatingIconView(changelogIcon, loaderModule.provideImageLoader(), owner, parent)
+    val changelogView = RatingChangelogView(changelog, parent)
+    val controlsView = RatingControlsView(rateLink, parent, uiBus)
     dialog.worker = RatingDialogWorker(ratingModule.interactor, schedulerProvider, controllerBus)
     dialog.iconComponent = RatingIconUiComponent(iconView, owner)
     dialog.changelogComponent = RatingChangelogUiComponent(changelogView, owner)
     dialog.controlsComponent = RatingControlsUiComponent(
-        controlsView, uiBus, schedulerProvider, owner
+        schedulerProvider, controlsView, uiBus, owner
     )
   }
 

@@ -118,14 +118,14 @@ internal class PYDroidComponentImpl internal constructor(
     owner: LifecycleOwner,
     parent: ViewGroup
   ): AboutItemComponent =
-    AboutItemComponentImpl(parent, owner, aboutViewBus)
+    AboutItemComponentImpl(parent, owner, aboutViewBus, schedulerProvider)
 
   override fun plusVersionUpgradeComponent(
     owner: LifecycleOwner,
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
-      owner, parent, applicationName, currentVersion,
+      schedulerProvider, owner, parent, applicationName, currentVersion,
       newVersion, versionUpgradeViewBus, versionUpgradeStateBus
   )
 

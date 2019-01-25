@@ -35,7 +35,7 @@ internal class RatingComponentImpl internal constructor(
 
   override fun inject(activity: RatingActivity) {
     val ratingView = RatingView(view, owner)
-    activity.ratingUiComponent = RatingUiComponent(ratingView, dialogBus, schedulerProvider, owner)
+    activity.ratingUiComponent = RatingUiComponent(dialogBus, schedulerProvider, ratingView, owner)
     activity.ratingWorker = RatingWorker(interactor, schedulerProvider, bus)
   }
 

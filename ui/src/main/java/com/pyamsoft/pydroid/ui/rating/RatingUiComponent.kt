@@ -23,43 +23,28 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent.FailedMarketLink
-import io.reactivex.Observable
 
 internal class RatingUiComponent internal constructor(
-  private val view: RatingView,
   private val dialogControllerBus: Listener<RatingDialogStateEvent>,
   private val schedulerProvider: SchedulerProvider,
+  view: RatingView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner) {
+) : UiComponent<EMPTY, RatingView>(view, EmptyListener, owner) {
 
-  override fun id(): Int {
-    return view.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    view.inflate(savedInstanceState)
-    owner.runOnDestroy { view.teardown() }
-
+  override fun onCreate(savedInstanceState: Bundle?) {
     dialogControllerBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
-          return@subscribe when(it) {
+          return@subscribe when (it) {
             is FailedMarketLink -> view.showError(it.error)
           }
         }
         .destroy(owner)
-  }
-
-  override fun saveState(outState: Bundle) {
-    view.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
   }
 
 }

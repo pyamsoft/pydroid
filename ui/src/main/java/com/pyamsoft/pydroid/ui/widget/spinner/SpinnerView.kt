@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.widget.spinner
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -30,26 +29,17 @@ import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 
 class SpinnerView(parent: ViewGroup) : BaseUiView<EMPTY>(parent, EmptyPublisher), UiToggleView {
 
-  override val layout: Int = R.layout.loading_spinner
-
   private val layoutRoot by lazyView<View>(R.id.spinner_root)
   private val spinner by lazyView<ProgressBar>(R.id.spinner)
+
+  override val layout: Int = R.layout.loading_spinner
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-  }
-
   override fun teardown() {
     spinner.isVisible = false
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   override fun show() {

@@ -31,8 +31,6 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseDialog
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
@@ -80,16 +78,20 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    listComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is ViewLicense -> ViewLicenseDialog.newInstance(it.name, it.url)
-                .show(requireActivity(), ViewLicenseDialog.TAG)
-            is VisitHomepage -> ViewLicenseDialog.newInstance(it.name, it.url)
-                .show(requireActivity(), ViewLicenseDialog.TAG)
-          }
-        }
-        .destroy(this)
+
+    worker.onViewLicenseEvent {
+      val event = it.event
+      ViewLicenseDialog.newInstance(event.name, event.url)
+          .show(requireActivity(), ViewLicenseDialog.TAG)
+    }
+        .destroy(viewLifecycleOwner)
+
+    worker.onVisitHomepageEvent {
+      val event = it.event
+      ViewLicenseDialog.newInstance(event.name, event.url)
+          .show(requireActivity(), ViewLicenseDialog.TAG)
+    }
+        .destroy(viewLifecycleOwner)
 
     listComponent.create(savedInstanceState)
     loadingComponent.create(savedInstanceState)

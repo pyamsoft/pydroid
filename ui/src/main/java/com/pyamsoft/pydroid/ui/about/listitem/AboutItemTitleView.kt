@@ -17,42 +17,33 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 
 internal class AboutItemTitleView internal constructor(
-  private val parent: ViewGroup
-) : UiView<EMPTY>(EmptyPublisher), BaseAboutItem {
+  parent: ViewGroup
+) : BaseUiView<EMPTY>(parent, EmptyPublisher), BaseAboutItem {
 
-  private lateinit var layoutRoot: ViewGroup
-  private lateinit var title: TextView
-  private lateinit var license: TextView
+  private val layoutRoot by lazyView<View>(R.id.about_title)
+  private val title by lazyView<TextView>(R.id.title)
+  private val license by lazyView<TextView>(R.id.license)
+
+  override val layout: Int = R.layout.about_item_title
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.about_item_title) {
-      layoutRoot = findViewById(R.id.about_title)
-      title = findViewById(R.id.title)
-      license = findViewById(R.id.license)
-    }
-  }
-
   override fun teardown() {
     unbind()
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   @CheckResult

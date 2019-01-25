@@ -29,38 +29,37 @@ import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
 internal class LicenseToolbarView internal constructor(
-  private val parent: ViewGroup,
+  parent: ViewGroup,
   private val name: String,
   private val link: String,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
   uiBus: Publisher<LicenseViewEvent>
-) : UiView<LicenseViewEvent>(uiBus) {
+) : BaseUiView<LicenseViewEvent>(parent, uiBus) {
 
-  private lateinit var toolbar: Toolbar
+  private val toolbar by lazyView<Toolbar>(R.id.license_toolbar)
+
+  override val layout: Int = R.layout.license_toolbar
 
   override fun id(): Int {
     return toolbar.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.license_toolbar) {
-      toolbar = findViewById(R.id.license_toolbar)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     setupToolbar()
   }
 
   override fun teardown() {
     toolbar.setNavigationOnClickListener(null)
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
   private fun setupToolbar() {

@@ -23,14 +23,12 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class RatingView internal constructor(
   private val view: View,
   private val owner: LifecycleOwner
-) : UiView<EMPTY>(EmptyPublisher) {
+) : UiView {
 
   override fun id(): Int {
     throw InvalidUiComponentIdException

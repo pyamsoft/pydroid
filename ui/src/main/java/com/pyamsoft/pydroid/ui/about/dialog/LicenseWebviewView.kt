@@ -21,12 +21,12 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
@@ -39,37 +39,37 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.util.Toaster
 import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
 
 internal class LicenseWebviewView internal constructor(
+  parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val parent: ViewGroup,
   private val link: String,
   private val controllerBus: Publisher<LicenseStateEvent>
-) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY>, LifecycleObserver {
+) : BaseUiView<EMPTY>(parent, EmptyPublisher), UiToggleView, LifecycleObserver {
 
-  private lateinit var webview: WebView
+  private val webview by lazyView<WebView>(R.id.license_webview)
 
-  private var errorToast: Toast? = null
+  override val layout: Int = R.layout.license_webview
 
   override fun id(): Int {
     return webview.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.license_webview) {
-      webview = findViewById(R.id.license_webview)
-    }
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    owner.lifecycle.addObserver(this)
 
     setupWebviewJavascript()
     setupWebview()
-
-    owner.lifecycle.addObserver(this)
   }
 
   @Suppress("unused")
@@ -160,26 +160,16 @@ internal class LicenseWebviewView internal constructor(
     webview.isVisible = false
   }
 
-  private fun dismissError() {
-    errorToast?.cancel()
-    errorToast = null
-  }
-
   override fun teardown() {
-    dismissError()
     webview.destroy()
     owner.lifecycle.removeObserver(this)
   }
 
   fun pageLoadError(error: ActivityNotFoundException?) {
     if (error != null) {
-      dismissError()
-      errorToast = Toast.makeText(
-          webview.context.applicationContext,
-          "No application can handle this URL",
-          Toast.LENGTH_SHORT
-      )
-          .also { it.show() }
+      Toaster.bindTo(owner)
+          .short(webview.context, "No application can handle this URL")
+          .show()
     }
   }
 

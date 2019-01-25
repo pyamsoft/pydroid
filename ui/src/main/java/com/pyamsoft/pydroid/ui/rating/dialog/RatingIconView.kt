@@ -18,48 +18,43 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 
 internal class RatingIconView internal constructor(
-  private val parent: ViewGroup,
   private val changelogIcon: Int,
   private val imageLoader: ImageLoader,
-  private val owner: LifecycleOwner
-) : UiView<EMPTY>(EmptyPublisher) {
+  private val owner: LifecycleOwner,
+  parent: ViewGroup
+) : BaseUiView<EMPTY>(parent, EmptyPublisher) {
 
-  private lateinit var layoutRoot: ViewGroup
-  private lateinit var icon: ImageView
+  private val layoutRoot by lazyView<View>(R.id.rating_icon_root)
+  private val icon by lazyView<ImageView>(R.id.icon)
+
+  override val layout: Int = R.layout.rating_icon
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.rating_icon) {
-      layoutRoot = findViewById(R.id.rating_icon_root)
-      icon = findViewById(R.id.icon)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     loadIcon()
-  }
-
-  override fun teardown() {
   }
 
   private fun loadIcon() {
     imageLoader.load(changelogIcon)
         .into(icon)
         .bind(owner)
-  }
-
-  override fun saveState(outState: Bundle) {
   }
 
 }

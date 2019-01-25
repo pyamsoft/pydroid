@@ -36,12 +36,16 @@ class GlideLoaded(
     lifeCycleOwner = owner
   }
 
+  @Suppress("unused")
   @OnLifecycleEvent(ON_DESTROY)
   internal fun unbindOnDestroy() {
     Timber.d("Unbind on destroy")
     lifeCycleOwner?.lifecycle?.removeObserver(this)
     lifeCycleOwner = null
+    dispose()
+  }
 
+  override fun dispose() {
     val view = target.view()
     Glide.with(view.context.applicationContext)
         .clear(view)

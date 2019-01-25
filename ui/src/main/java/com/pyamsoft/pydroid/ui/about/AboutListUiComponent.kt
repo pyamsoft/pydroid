@@ -21,51 +21,44 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastViewLicense
+import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastVisitHomepage
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LicensesLoaded
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadError
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.FailedViewLicenseExternal
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
+import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
 import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
-import io.reactivex.Observable
 import timber.log.Timber
 
 class AboutListUiComponent internal constructor(
-  private val listView: AboutListView,
   private val controllerBus: Listener<AboutStateEvent>,
   private val viewLicenseBus: Listener<LicenseStateEvent>,
-  private val uiBus: Listener<AboutViewEvent>,
   private val schedulerProvider: SchedulerProvider,
+  view: AboutListView,
   owner: LifecycleOwner
-) : UiComponent<AboutViewEvent>(owner) {
+) : UiComponent<EMPTY, AboutListView>(view, EmptyListener, owner) {
 
-  override fun id(): Int {
-    return listView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    listView.inflate(savedInstanceState)
-    owner.runOnDestroy { listView.teardown() }
-
-    listenForControllerEvents()
-  }
-
-  override fun saveState(outState: Bundle) {
-    listView.saveState(outState)
-  }
-
-  private fun listenForControllerEvents() {
+  override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
-            is Loading -> listView.hide()
-            is LicensesLoaded -> listView.loadLicenses(it.libraries)
-            is LoadError -> listView.showError(it.error)
-            is LoadComplete -> listView.show()
+            is Loading -> view.hide()
+            is LicensesLoaded -> view.loadLicenses(it.libraries)
+            is LoadError -> view.showError(it.error)
+            is LoadComplete -> view.show()
+            is BroadcastVisitHomepage, is BroadcastViewLicense -> {
+              Timber.d("Ignoring event: $it")
+            }
           }
         }
         .destroy(owner)
@@ -75,17 +68,13 @@ class AboutListUiComponent internal constructor(
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
-            is FailedViewLicenseExternal -> listView.showError(it.error)
-            else -> Timber.d("Ignored event: $it")
+            is FailedViewLicenseExternal -> view.showError(it.error)
+            is LicenseStateEvent.Loading, is Loaded, is PageError, is Complete -> {
+              Timber.d("Ignoring event: $it")
+            }
           }
         }
         .destroy(owner)
-  }
-
-  override fun onUiEvent(): Observable<AboutViewEvent> {
-    return uiBus.listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

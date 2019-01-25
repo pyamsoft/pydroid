@@ -24,24 +24,54 @@ import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.core.bus.Listener
 import io.reactivex.Observable
 
-abstract class UiComponent<T : ViewEvent> protected constructor(
+abstract class UiComponent<T : ViewEvent, V : UiView> protected constructor(
+  protected val view: V,
+  private val uiBus: Listener<T>,
   protected val owner: LifecycleOwner
 ) {
 
   @CheckResult
   @IdRes
-  abstract fun id(): Int
-
-  abstract fun create(savedInstanceState: Bundle?)
-
-  abstract fun saveState(outState: Bundle)
+  fun id(): Int {
+    return view.id()
+  }
 
   @CheckResult
-  abstract fun onUiEvent(): Observable<T>
+  fun onUiEvent(): Observable<T> {
+    return uiBus.listen()
+  }
 
-  protected fun LifecycleOwner.runOnDestroy(func: () -> Unit) {
+  fun create(savedInstanceState: Bundle?) {
+    view.inflate(savedInstanceState)
+    owner.runOnDestroy { destroy() }
+    onCreate(savedInstanceState)
+  }
+
+  protected open fun onCreate(savedInstanceState: Bundle?) {
+
+  }
+
+  fun saveState(outState: Bundle) {
+    view.saveState(outState)
+    onSaveState(outState)
+  }
+
+  protected open fun onSaveState(outState: Bundle) {
+
+  }
+
+  private fun destroy() {
+    view.teardown()
+    onDestroy()
+  }
+
+  protected open fun onDestroy() {
+  }
+
+  private fun LifecycleOwner.runOnDestroy(func: () -> Unit) {
     lifecycle.addObserver(object : LifecycleObserver {
 
       @Suppress("unused")
@@ -50,7 +80,7 @@ abstract class UiComponent<T : ViewEvent> protected constructor(
         lifecycle.removeObserver(this)
         func()
       }
+
     })
   }
-
 }

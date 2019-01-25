@@ -24,50 +24,31 @@ import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.StateEvent
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
-import io.reactivex.Observable
 import timber.log.Timber
 
 class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
-  private val spinnerView: SpinnerView,
   private val schedulerProvider: SchedulerProvider,
   private val controllerBus: Listener<T>,
   private val showTypeClass: Class<Show>,
   private val hideTypeClass: Class<Hide>,
+  view: SpinnerView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner) {
+) : UiComponent<EMPTY, SpinnerView>(view, EmptyListener, owner) {
 
-  override fun id(): Int {
-    return spinnerView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    spinnerView.inflate(savedInstanceState)
-    owner.runOnDestroy { spinnerView.teardown() }
-
-    listenForControllerEvents()
-  }
-
-  private fun listenForControllerEvents() {
+  override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it::class.java) {
-            showTypeClass -> spinnerView.show()
-            hideTypeClass -> spinnerView.hide()
-            else -> Timber.d("Unknown event class found: ${it::class.java}")
+            showTypeClass -> view.show()
+            hideTypeClass -> view.hide()
+            else -> Timber.d("Unhandled event: $it")
           }
         }
         .destroy(owner)
-  }
-
-  override fun saveState(outState: Bundle) {
-    spinnerView.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
   }
 
   companion object {
@@ -80,9 +61,9 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
       schedulerProvider: SchedulerProvider = SchedulerProvider.DEFAULT
     ): SpinnerUiComponent<T, Show, Hide> {
       return SpinnerUiComponent(
-          spinnerView, schedulerProvider, controllerBus,
+          schedulerProvider, controllerBus,
           Show::class.java, Hide::class.java,
-          owner
+          spinnerView, owner
       )
     }
   }

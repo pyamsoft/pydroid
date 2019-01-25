@@ -18,39 +18,38 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 
 internal class VersionUpgradeContentView internal constructor(
-  private val parent: ViewGroup,
   private val applicationName: String,
   private val currentVersion: Int,
-  private val newVersion: Int
-) : UiView<EMPTY>(EmptyPublisher) {
+  private val newVersion: Int,
+  parent: ViewGroup
+) : BaseUiView<EMPTY>(parent, EmptyPublisher) {
 
-  private lateinit var layoutRoot: ViewGroup
-  private lateinit var upgradeMessage: TextView
-  private lateinit var currentValue: TextView
-  private lateinit var newValue: TextView
+  private val layoutRoot by lazyView<View>(R.id.version_content_root)
+  private val upgradeMessage by lazyView<TextView>(R.id.upgrade_message)
+  private val currentValue by lazyView<TextView>(R.id.upgrade_current_value)
+  private val newValue by lazyView<TextView>(R.id.upgrade_new_value)
+
+  override val layout: Int = R.layout.version_upgrade_content
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.version_upgrade_content) {
-      layoutRoot = findViewById(R.id.version_content_root)
-      upgradeMessage = findViewById(R.id.upgrade_message)
-      currentValue = findViewById(R.id.upgrade_current_value)
-      newValue = findViewById(R.id.upgrade_new_value)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     setApplicationMessage()
     setVersions()
   }

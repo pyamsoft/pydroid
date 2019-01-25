@@ -17,32 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 
 internal class VersionUpgradeContentUiComponent internal constructor(
-  private val contentView: VersionUpgradeContentView,
+  view: VersionUpgradeContentView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner) {
-
-  override fun id(): Int {
-    return contentView.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    contentView.inflate(savedInstanceState)
-    owner.runOnDestroy { contentView.teardown() }
-  }
-
-  override fun saveState(outState: Bundle) {
-    contentView.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
-  }
-
-}
+) : UiComponent<EMPTY, VersionUpgradeContentView>(view, EmptyListener, owner)

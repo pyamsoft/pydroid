@@ -126,7 +126,7 @@ internal class PYDroidComponentImpl internal constructor(
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
       owner, parent, applicationName, currentVersion,
-      newVersion, versionUpgradeViewBus, versionUpgradeStateBus, schedulerProvider
+      newVersion, versionUpgradeViewBus, versionUpgradeStateBus
   )
 
   override fun plusSettingsComponent(

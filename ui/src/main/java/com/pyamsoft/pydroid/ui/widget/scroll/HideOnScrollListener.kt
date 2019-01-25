@@ -26,17 +26,12 @@ import androidx.recyclerview.widget.RecyclerView
  * Floating Action Button behavior which hides button after scroll distance is passed
  */
 class HideOnScrollListener private constructor(
-  private val view: View,
+  private var visible: Boolean,
   private val distanceThreshold: Int,
   private val onVisibilityChanged: (Boolean) -> Unit
 ) : RecyclerView.OnScrollListener() {
 
-  private var visible: Boolean = view.isVisible
   private var distanceScrolled: Int = 0
-
-  fun syncVisibilityState() {
-    visible = view.isVisible
-  }
 
   override fun onScrolled(
     recyclerView: RecyclerView,
@@ -70,28 +65,25 @@ class HideOnScrollListener private constructor(
     private const val DEFAULT_DISTANCE = 12
 
     @JvmStatic
+    @JvmOverloads
     @CheckResult
-    fun withView(
-      view: View,
+    fun create(
+      startVisible: Boolean,
+      distance: Int = DEFAULT_DISTANCE,
       onVisibilityChanged: (Boolean) -> Unit
     ): HideOnScrollListener {
-      return withView(
-          view,
-          DEFAULT_DISTANCE,
-          onVisibilityChanged
-      )
+      return HideOnScrollListener(startVisible, distance, onVisibilityChanged)
     }
 
     @JvmStatic
+    @JvmOverloads
     @CheckResult
     fun withView(
       view: View,
-      distance: Int,
+      distance: Int = DEFAULT_DISTANCE,
       onVisibilityChanged: (Boolean) -> Unit
     ): HideOnScrollListener {
-      return HideOnScrollListener(
-          view, distance, onVisibilityChanged
-      )
+      return HideOnScrollListener(view.isVisible, distance, onVisibilityChanged)
     }
   }
 

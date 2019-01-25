@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 
 internal class VersionUpgradeComponentImpl internal constructor(
@@ -29,17 +28,14 @@ internal class VersionUpgradeComponentImpl internal constructor(
   private val currentVersion: Int,
   private val newVersion: Int,
   private val viewBus: EventBus<VersionUpgradeViewEvent>,
-  private val stateBus: EventBus<VersionUpgradeStateEvent>,
-  private val schedulerProvider: SchedulerProvider
+  private val stateBus: EventBus<VersionUpgradeStateEvent>
 ) : VersionUpgradeComponent {
 
   override fun inject(dialog: VersionUpgradeDialog) {
     val controls = VersionUpgradeControlView(parent, viewBus)
-    val content = VersionUpgradeContentView(parent, name, currentVersion, newVersion)
+    val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
     dialog.contentComponent = VersionUpgradeContentUiComponent(content, owner)
-    dialog.controlsComponent = VersionUpgradeControlsUiComponent(
-        controls, viewBus, schedulerProvider, owner
-    )
+    dialog.controlsComponent = VersionUpgradeControlsUiComponent(viewBus, controls, owner)
     dialog.worker = VersionUpgradeWorker(stateBus)
   }
 }

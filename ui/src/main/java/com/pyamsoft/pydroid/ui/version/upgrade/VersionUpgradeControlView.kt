@@ -18,35 +18,35 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeControlView internal constructor(
-  private val parent: ViewGroup,
+  parent: ViewGroup,
   bus: Publisher<VersionUpgradeViewEvent>
-) : UiView<VersionUpgradeViewEvent>(bus) {
+) : BaseUiView<VersionUpgradeViewEvent>(parent, bus) {
 
-  private lateinit var layoutRoot: ViewGroup
-  private lateinit var upgradeButton: Button
-  private lateinit var laterButton: Button
+  private val layoutRoot by lazyView<View>(R.id.version_control_root)
+  private val upgradeButton by lazyView<Button>(R.id.upgrade_button)
+  private val laterButton by lazyView<Button>(R.id.later_button)
+
+  override val layout: Int = R.layout.version_upgrade_controls
 
   override fun id(): Int {
     return layoutRoot.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.version_upgrade_controls) {
-      layoutRoot = findViewById(R.id.version_control_root)
-      upgradeButton = findViewById(R.id.upgrade_button)
-      laterButton = findViewById(R.id.later_button)
-    }
-
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     bindButtons()
   }
 

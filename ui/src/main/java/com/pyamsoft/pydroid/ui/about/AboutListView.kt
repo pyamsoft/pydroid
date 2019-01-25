@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 class AboutListView internal constructor(
   private val owner: LifecycleOwner,
   private val parent: ViewGroup
-) : UiView<EMPTY>(EmptyPublisher), UiToggleView<EMPTY> {
+) : UiView<EMPTY>(EmptyPublisher), UiToggleView {
 
   private lateinit var aboutList: RecyclerView
 

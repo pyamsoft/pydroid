@@ -70,20 +70,21 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
         .subscribe {
           return@subscribe when (it) {
             is Cancel -> dismiss()
-            is Upgrade -> {
-              val error = MarketLinker.linkToMarketPage(view.context, view.context.packageName)
-              dismiss()
-
-              if (error != null) {
-                worker.failedMarketLink(error)
-              }
-
-              // Need this I guess
-              return@subscribe
-            }
+            is Upgrade -> onUpgradeClicked(view)
           }
         }
         .destroy(viewLifecycleOwner)
+  }
+
+  private fun onUpgradeClicked(view: View) {
+    view.context.also {
+      val error = MarketLinker.linkToMarketPage(it, it.packageName)
+
+      dismiss()
+      if (error != null) {
+        worker.failedMarketLink(error)
+      }
+    }
   }
 
   override fun onResume() {

@@ -25,6 +25,8 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateComplete
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateError
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateFound
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
@@ -47,7 +49,7 @@ abstract class VersionCheckActivity : ActivityBase() {
       return@onUpdateEvent when (it) {
         is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
         is UpdateError -> onUpdatedVersionError(it.error)
-        else -> Timber.d("Unhandled event: $it")
+        is Loading, is UpdateComplete -> Timber.d("Unhandled event: $it")
       }
     }
         .destroy(this)

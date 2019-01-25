@@ -23,38 +23,33 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateComplete
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateError
+import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateFound
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeStateEvent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeStateEvent.FailedMarketLink
-import io.reactivex.Observable
 import timber.log.Timber
 
 internal class VersionUiComponent internal constructor(
-  private val view: VersionView,
   private val controllerBus: Listener<VersionStateEvent>,
   private val dialogControllerBus: Listener<VersionUpgradeStateEvent>,
   private val schedulerProvider: SchedulerProvider,
+  view: VersionView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY>(owner) {
+) : UiComponent<EMPTY, VersionView>(view, EmptyListener, owner) {
 
-  override fun id(): Int {
-    return view.id()
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    view.inflate(savedInstanceState)
-    owner.runOnDestroy { view.teardown() }
-
+  override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is Loading -> view.showUpdating()
-            UpdateComplete -> view.dismissUpdating()
-            else -> Timber.d("Unhandled event: $it")
+            is UpdateComplete -> view.dismissUpdating()
+            is UpdateFound, is UpdateError -> Timber.d("Ignoring event: $it")
           }
         }
         .destroy(owner)
@@ -68,14 +63,6 @@ internal class VersionUiComponent internal constructor(
           }
         }
         .destroy(owner)
-  }
-
-  override fun saveState(outState: Bundle) {
-    view.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
   }
 
 }

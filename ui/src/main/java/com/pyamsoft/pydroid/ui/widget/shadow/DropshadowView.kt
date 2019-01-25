@@ -21,22 +21,24 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
 
-class DropshadowView(private val parent: ViewGroup) : UiView<EMPTY>(EmptyPublisher) {
+class DropshadowView(parent: ViewGroup) : BaseUiView<EMPTY>(parent, EmptyPublisher) {
 
-  private lateinit var shadow: View
+  private val shadow by lazyView<View>(R.id.dropshadow_view)
+
+  override val layout: Int = R.layout.dropshadow
 
   override fun id(): Int {
     return shadow.id
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(R.layout.dropshadow) {
-      shadow = findViewById(R.id.dropshadow_view)
-    }
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
   }
 
   override fun teardown() {

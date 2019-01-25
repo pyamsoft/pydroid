@@ -18,23 +18,20 @@
 package com.pyamsoft.pydroid.ui
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 
 internal class PYDroidPreferencesImpl internal constructor(context: Context) : PYDroidPreferences {
 
-  private val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(
-      context.applicationContext
-  )
+  private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
   override var ratingAcceptedVersion: Int
-    get() = preferences.getInt(
+    get() = prefs.getInt(
         RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
     )
     set(value) {
-      preferences.edit {
+      prefs.edit {
         putInt(RATING_ACCEPTED_VERSION, value)
       }
     }

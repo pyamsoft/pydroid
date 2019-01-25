@@ -28,7 +28,7 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.core.bus.Publisher
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
-import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearAppData
@@ -47,28 +47,28 @@ import com.pyamsoft.pydroid.util.tintWith
 internal class AppSettingsView internal constructor(
   private val view: View,
   private val theming: Theming,
-  private val preferenceScreen: PreferenceScreen,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean,
   private val owner: LifecycleOwner,
+  preferenceScreen: PreferenceScreen,
   uiBus: Publisher<AppSettingsViewEvent>
-) : UiView<AppSettingsViewEvent>(uiBus) {
+) : PrefUiView<AppSettingsViewEvent>(preferenceScreen, uiBus) {
 
   private val context = preferenceScreen.context
 
-  private lateinit var moreApps: Preference
-  private lateinit var social: Preference
-  private lateinit var followBlog: Preference
-  private lateinit var rate: Preference
-  private lateinit var bugReport: Preference
-  private lateinit var licenses: Preference
-  private lateinit var version: Preference
-  private lateinit var clearAll: Preference
-  private lateinit var upgradeInfo: Preference
-  private lateinit var theme: Preference
-  private lateinit var applicationSettings: Preference
+  private val moreApps by lazyPref<Preference>(R.string.more_apps_key)
+  private val social by lazyPref<Preference>(R.string.social_media_f_key)
+  private val followBlog by lazyPref<Preference>(R.string.social_media_b_key)
+  private val rate by lazyPref<Preference>(R.string.rating_key)
+  private val bugReport by lazyPref<Preference>(R.string.bugreport_key)
+  private val licenses by lazyPref<Preference>(R.string.about_license_key)
+  private val version by lazyPref<Preference>(R.string.check_version_key)
+  private val clearAll by lazyPref<Preference>(R.string.clear_all_key)
+  private val upgradeInfo by lazyPref<Preference>(R.string.upgrade_info_key)
+  private val theme by lazyPref<Preference>(R.string.dark_mode_key)
+  private val applicationSettings by lazyPref<Preference>("application_settings")
 
   override fun id(): Int {
     throw InvalidUiComponentIdException
@@ -109,7 +109,7 @@ internal class AppSettingsView internal constructor(
 
   private fun adjustIconTint() {
     val darkTheme = theming.isDarkTheme()
-    preferenceScreen.adjustTint(darkTheme)
+    parent.adjustTint(darkTheme)
   }
 
   private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {
@@ -137,7 +137,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupMoreApps() {
-    moreApps = preferenceScreen.findPreference(context.getString(R.string.more_apps_key))
     moreApps.setOnPreferenceClickListener {
       publish(MoreAppsClicked)
       return@setOnPreferenceClickListener true
@@ -145,7 +144,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupSocial() {
-    social = preferenceScreen.findPreference(context.getString(R.string.social_media_f_key))
     val socialLink = FACEBOOK.hyperlink(context)
     social.setOnPreferenceClickListener {
       publish(FollowSocialClicked(socialLink))
@@ -154,7 +152,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBlog() {
-    followBlog = preferenceScreen.findPreference(context.getString(R.string.social_media_b_key))
     val blogLink = BLOG.hyperlink(context)
     followBlog.setOnPreferenceClickListener {
       publish(FollowBlogClicked(blogLink))
@@ -163,7 +160,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupRateApp() {
-    rate = preferenceScreen.findPreference(context.getString(R.string.rating_key))
     rate.setOnPreferenceClickListener {
       publish(RateAppClicked)
       return@setOnPreferenceClickListener true
@@ -171,7 +167,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBugReport() {
-    bugReport = preferenceScreen.findPreference(context.getString(R.string.bugreport_key))
     val reportLink = bugreportUrl.hyperlink(context)
     bugReport.setOnPreferenceClickListener {
       publish(BugReportClicked(reportLink))
@@ -180,7 +175,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupLicenses() {
-    licenses = preferenceScreen.findPreference(context.getString(R.string.about_license_key))
     licenses.setOnPreferenceClickListener {
       publish(LicenseClicked)
       return@setOnPreferenceClickListener true
@@ -188,7 +182,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupCheckUpgrade() {
-    version = preferenceScreen.findPreference(context.getString(R.string.check_version_key))
     version.setOnPreferenceClickListener {
       publish(CheckUpgrade)
       return@setOnPreferenceClickListener true
@@ -196,7 +189,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupClearAppData() {
-    clearAll = preferenceScreen.findPreference(context.getString(R.string.clear_all_key))
     if (hideClearAll) {
       clearAll.isVisible = false
     } else {
@@ -208,7 +200,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupShowUpgradeInfo() {
-    upgradeInfo = preferenceScreen.findPreference(context.getString(R.string.upgrade_info_key))
     if (hideUpgradeInformation) {
       upgradeInfo.isVisible = false
     } else {
@@ -220,7 +211,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupDarkTheme() {
-    theme = preferenceScreen.findPreference(context.getString(R.string.dark_mode_key))
     theme.setOnPreferenceChangeListener { _, newValue ->
       if (newValue is Boolean) {
         publish(DarkTheme(newValue))
@@ -231,7 +221,6 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupApplicationTitle() {
-    applicationSettings = preferenceScreen.findPreference("application_settings")
     applicationSettings.title = "$applicationName Settings"
   }
 

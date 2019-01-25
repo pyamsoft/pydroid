@@ -21,47 +21,28 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent.FailedLink
-import io.reactivex.Observable
 
 internal class AppSettingsUiComponent internal constructor(
-  private val settingsView: AppSettingsView,
-  private val uiBus: Listener<AppSettingsViewEvent>,
-  private val controllerBus: Listener<AppSettingsStateEvent>,
   private val schedulerProvider: SchedulerProvider,
+  private val controllerBus: Listener<AppSettingsStateEvent>,
+  view: AppSettingsView,
+  uiBus: Listener<AppSettingsViewEvent>,
   owner: LifecycleOwner
-) : UiComponent<AppSettingsViewEvent>(owner) {
+) : UiComponent<AppSettingsViewEvent, AppSettingsView>(view, uiBus, owner) {
 
-  override fun id(): Int {
-    throw InvalidUiComponentIdException
-  }
-
-  override fun create(savedInstanceState: Bundle?) {
-    settingsView.inflate(savedInstanceState)
-    owner.runOnDestroy { settingsView.teardown() }
-
+  override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
-            is FailedLink -> settingsView.showError(it.error)
+            is FailedLink -> view.showError(it.error)
           }
         }
         .destroy(owner)
-  }
-
-  override fun saveState(outState: Bundle) {
-    settingsView.saveState(outState)
-  }
-
-  override fun onUiEvent(): Observable<AppSettingsViewEvent> {
-    return uiBus.listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

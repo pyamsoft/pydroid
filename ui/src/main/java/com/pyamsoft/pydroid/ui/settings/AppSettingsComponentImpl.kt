@@ -50,8 +50,8 @@ internal class AppSettingsComponentImpl internal constructor(
 
   override fun inject(fragment: AppSettingsPreferenceFragment) {
     val settingsView = AppSettingsView(
-        view, theming, preferenceScreen, applicationName, bugreportUrl,
-        hideClearAll, hideUpgradeInformation, owner, settingsViewBus
+        view, theming, applicationName, bugreportUrl, hideClearAll,
+        hideUpgradeInformation, owner, preferenceScreen, settingsViewBus
     )
     fragment.theming = theming
     fragment.versionWorker = VersionCheckWorker(
@@ -59,7 +59,7 @@ internal class AppSettingsComponentImpl internal constructor(
     )
     fragment.ratingWorker = RatingWorker(ratingModule.interactor, schedulerProvider, ratingStateBus)
     fragment.settingsComponent = AppSettingsUiComponent(
-        settingsView, settingsViewBus, settingsStateBus, schedulerProvider, owner
+        schedulerProvider, settingsStateBus, settingsView, settingsViewBus, owner
     )
 
     fragment.settingsWorker = AppSettingsWorker(settingsStateBus)

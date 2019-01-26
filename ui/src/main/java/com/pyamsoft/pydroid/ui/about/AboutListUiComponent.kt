@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.FailedViewLicenseExternal
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
@@ -41,10 +41,10 @@ import timber.log.Timber
 class AboutListUiComponent internal constructor(
   private val controllerBus: Listener<AboutStateEvent>,
   private val viewLicenseBus: Listener<LicenseStateEvent>,
-  private val schedulerProvider: SchedulerProvider,
+  schedulerProvider: SchedulerProvider,
   view: AboutListView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY, AboutListView>(view, EmptyListener, owner) {
+) : BaseUiComponent<EMPTY, AboutListView>(view, EmptyListener, owner, schedulerProvider) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()

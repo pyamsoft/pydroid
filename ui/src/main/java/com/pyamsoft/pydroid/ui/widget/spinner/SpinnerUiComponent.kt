@@ -21,22 +21,21 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.StateEvent
-import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
-import io.reactivex.Observable
 import timber.log.Timber
 
 class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
-  private val schedulerProvider: SchedulerProvider,
   private val controllerBus: Listener<T>,
   private val showTypeClass: Class<Show>,
   private val hideTypeClass: Class<Hide>,
   view: SpinnerView,
-  owner: LifecycleOwner
-) : UiComponent<EMPTY, SpinnerView>(view, EmptyListener, owner) {
+  owner: LifecycleOwner,
+  schedulerProvider: SchedulerProvider
+) : BaseUiComponent<EMPTY, SpinnerView>(view, EmptyListener, owner, schedulerProvider) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
@@ -62,9 +61,9 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
       schedulerProvider: SchedulerProvider = SchedulerProvider.DEFAULT
     ): SpinnerUiComponent<T, Show, Hide> {
       return SpinnerUiComponent(
-          schedulerProvider, controllerBus,
-          Show::class.java, Hide::class.java,
-          spinnerView, owner
+          controllerBus, Show::class.java,
+          Hide::class.java, spinnerView,
+          owner, schedulerProvider
       )
     }
   }

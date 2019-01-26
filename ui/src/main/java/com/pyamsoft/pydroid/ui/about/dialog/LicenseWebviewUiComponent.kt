@@ -26,18 +26,17 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.FailedViewLicenseE
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
-import io.reactivex.Observable
 import timber.log.Timber
 
 internal class LicenseWebviewUiComponent internal constructor(
   private val controllerBus: Listener<LicenseStateEvent>,
-  private val schedulerProvider: SchedulerProvider,
+  schedulerProvider: SchedulerProvider,
   view: LicenseWebviewView,
   uiBus: Listener<LicenseViewEvent>,
   owner: LifecycleOwner
-) : UiComponent<LicenseViewEvent, LicenseWebviewView>(view, uiBus, owner) {
+) : BaseUiComponent<LicenseViewEvent, LicenseWebviewView>(view, uiBus, owner, schedulerProvider) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
@@ -56,12 +55,6 @@ internal class LicenseWebviewUiComponent internal constructor(
           }
         }
         .destroy(owner)
-  }
-
-  override fun onUiEvent(): Observable<LicenseViewEvent> {
-    return super.onUiEvent()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

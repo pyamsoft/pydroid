@@ -21,18 +21,17 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent.FailedLink
-import io.reactivex.Observable
 
 internal class AppSettingsUiComponent internal constructor(
-  private val schedulerProvider: SchedulerProvider,
   private val controllerBus: Listener<AppSettingsStateEvent>,
+  schedulerProvider: SchedulerProvider,
   view: AppSettingsView,
   uiBus: Listener<AppSettingsViewEvent>,
   owner: LifecycleOwner
-) : UiComponent<AppSettingsViewEvent, AppSettingsView>(view, uiBus, owner) {
+) : BaseUiComponent<AppSettingsViewEvent, AppSettingsView>(view, uiBus, owner, schedulerProvider) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
@@ -44,12 +43,6 @@ internal class AppSettingsUiComponent internal constructor(
           }
         }
         .destroy(owner)
-  }
-
-  override fun onUiEvent(): Observable<AppSettingsViewEvent> {
-    return super.onUiEvent()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

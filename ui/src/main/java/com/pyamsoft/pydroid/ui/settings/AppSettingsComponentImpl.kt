@@ -59,7 +59,7 @@ internal class AppSettingsComponentImpl internal constructor(
     )
     fragment.ratingWorker = RatingWorker(ratingModule.interactor, schedulerProvider, ratingStateBus)
     fragment.settingsComponent = AppSettingsUiComponent(
-        schedulerProvider, settingsStateBus, settingsView, settingsViewBus, owner
+        settingsStateBus, schedulerProvider, settingsView, settingsViewBus, owner
     )
 
     fragment.settingsWorker = AppSettingsWorker(settingsStateBus)

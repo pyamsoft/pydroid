@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.widget.shadow
 
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
@@ -25,4 +26,4 @@ import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 class DropshadowUiComponent(
   view: DropshadowView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY, DropshadowView>(view, EmptyListener, owner)
+) : BaseUiComponent<EMPTY, DropshadowView>(view, EmptyListener, owner)

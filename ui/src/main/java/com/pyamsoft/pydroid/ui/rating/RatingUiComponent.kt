@@ -21,7 +21,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
@@ -30,10 +30,10 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent.FailedMarket
 
 internal class RatingUiComponent internal constructor(
   private val dialogControllerBus: Listener<RatingDialogStateEvent>,
-  private val schedulerProvider: SchedulerProvider,
+  schedulerProvider: SchedulerProvider,
   view: RatingView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY, RatingView>(view, EmptyListener, owner) {
+) : BaseUiComponent<EMPTY, RatingView>(view, EmptyListener, owner, schedulerProvider) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     dialogControllerBus.listen()

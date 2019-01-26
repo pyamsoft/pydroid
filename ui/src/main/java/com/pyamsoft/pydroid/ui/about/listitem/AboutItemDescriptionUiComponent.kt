@@ -19,14 +19,14 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 
 internal class AboutItemDescriptionUiComponent internal constructor(
   view: AboutItemDescriptionView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY, AboutItemDescriptionView>(view, EmptyListener, owner), BaseAboutItem {
+) : BaseUiComponent<EMPTY, AboutItemDescriptionView>(view, EmptyListener, owner), BaseAboutItem {
 
   override fun bind(model: OssLibrary) {
     view.bind(model)

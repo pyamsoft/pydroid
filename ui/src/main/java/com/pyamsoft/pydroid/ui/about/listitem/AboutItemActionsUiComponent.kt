@@ -22,15 +22,15 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
-import com.pyamsoft.pydroid.ui.arch.UiComponent
-import io.reactivex.Observable
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 
 internal class AboutItemActionsUiComponent internal constructor(
-  private val schedulerProvider: SchedulerProvider,
+  schedulerProvider: SchedulerProvider,
   view: AboutItemActionsView,
   uiBus: Listener<AboutViewEvent>,
   owner: LifecycleOwner
-) : UiComponent<AboutViewEvent, AboutItemActionsView>(view, uiBus, owner), BaseAboutItem {
+) : BaseUiComponent<AboutViewEvent, AboutItemActionsView>(view, uiBus, owner, schedulerProvider),
+    BaseAboutItem {
 
   override fun bind(model: OssLibrary) {
     view.bind(model)
@@ -38,12 +38,6 @@ internal class AboutItemActionsUiComponent internal constructor(
 
   override fun unbind() {
     view.unbind()
-  }
-
-  override fun onUiEvent(): Observable<AboutViewEvent> {
-    return super.onUiEvent()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
   }
 
 }

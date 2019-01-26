@@ -18,11 +18,11 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 
 internal class VersionUpgradeContentUiComponent internal constructor(
   view: VersionUpgradeContentView,
   owner: LifecycleOwner
-) : UiComponent<EMPTY, VersionUpgradeContentView>(view, EmptyListener, owner)
+) : BaseUiComponent<EMPTY, VersionUpgradeContentView>(view, EmptyListener, owner)

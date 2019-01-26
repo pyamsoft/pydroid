@@ -32,6 +32,8 @@ import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
@@ -41,7 +43,7 @@ import timber.log.Timber
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
   internal lateinit var ratingWorker: RatingWorker
-  internal lateinit var ratingUiComponent: RatingUiComponent
+  internal lateinit var ratingUiComponent: UiComponent<EMPTY, RatingView>
 
   private var loadRatingDialogDisposable by singleDisposable()
   private var showDialogDisposable by singleDisposable()

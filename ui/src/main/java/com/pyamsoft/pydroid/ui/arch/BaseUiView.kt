@@ -25,15 +25,12 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import com.pyamsoft.pydroid.core.bus.Publisher
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class BaseUiView<T : ViewEvent> protected constructor(
   private val parent: ViewGroup,
   private val bus: Publisher<T>
 ) : UiView {
-
-  private val lazyViewInitializer = { parent }
 
   protected abstract val layout: Int
 
@@ -66,34 +63,9 @@ abstract class BaseUiView<T : ViewEvent> protected constructor(
         .run(findViews)
   }
 
-  @JvmOverloads
   @CheckResult
-  protected fun <T : View> lazyView(
-    @IdRes id: Int,
-    initializer: () -> View = lazyViewInitializer
-  ): LazyFindView<T> {
-    return LazyFindView(id, initializer)
-  }
-
-  protected class LazyFindView<T : View> internal constructor(
-    @IdRes private val id: Int,
-    private val initializer: () -> View
-  ) : ReadOnlyProperty<Any?, T> {
-
-    private var foundView: T? = null
-
-    override fun getValue(
-      thisRef: Any?,
-      property: KProperty<*>
-    ): T {
-      if (foundView == null) {
-        val rootView = initializer()
-        foundView = rootView.findViewById(id)
-      }
-
-      return requireNotNull(foundView)
-    }
-
+  protected fun <T : View> lazyView(@IdRes id: Int): Lazy<T> {
+    return lazy(NONE) { parent.findViewById<T>(id) }
   }
 
 }

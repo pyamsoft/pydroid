@@ -23,8 +23,7 @@ import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.core.bus.Publisher
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class PrefUiView<T : ViewEvent> protected constructor(
   protected val parent: PreferenceScreen,
@@ -50,54 +49,20 @@ abstract class PrefUiView<T : ViewEvent> protected constructor(
     bus.publish(event)
   }
 
-  @JvmOverloads
   @CheckResult
-  protected fun <T : Preference> lazyPref(
-    @StringRes id: Int,
-    initializer: () -> PreferenceScreen = lazyPrefInitializer
-  ): LazyFindPref<T> {
-    return LazyFindPref(id, "", initializer)
-  }
-
-  @JvmOverloads
-  @CheckResult
-  protected fun <T : Preference> lazyPref(
-    key: String,
-    initializer: () -> PreferenceScreen = lazyPrefInitializer
-  ): LazyFindPref<T> {
-    return LazyFindPref(0, key, initializer)
-  }
-
-  protected class LazyFindPref<T : Preference> internal constructor(
-    @StringRes private val id: Int,
-    private val key: String,
-    private val initializer: () -> PreferenceScreen
-  ) : ReadOnlyProperty<Any?, T> {
-
-    private var foundView: T? = null
-
-    override fun getValue(
-      thisRef: Any?,
-      property: KProperty<*>
-    ): T {
-      if (foundView == null) {
-        val rootPref = initializer()
-        when {
-          id == 0 && key.isNotBlank() -> {
-            @Suppress("UNCHECKED_CAST")
-            foundView = rootPref.findPreference(key) as T
-          }
-          id > 0 && key.isBlank() -> {
-            @Suppress("UNCHECKED_CAST")
-            foundView = rootPref.findPreference(rootPref.context.getString(id)) as T
-          }
-          else -> throw IllegalStateException("LazyFindPref must have either an id or a key")
-        }
-      }
-
-      return requireNotNull(foundView)
+  protected fun <T : Preference> lazyPref(key: String): Lazy<T> {
+    return lazy(NONE) {
+      @Suppress("UNCHECKED_CAST")
+      return@lazy parent.findPreference(key) as T
     }
+  }
 
+  @CheckResult
+  protected fun <T : Preference> lazyPref(@StringRes id: Int): Lazy<T> {
+    return lazy(NONE) {
+      @Suppress("UNCHECKED_CAST")
+      return@lazy parent.findPreference(parent.context.getString(id)) as T
+    }
   }
 
 }

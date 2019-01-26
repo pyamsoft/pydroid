@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarPreferenceFragment
+import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
@@ -53,8 +54,8 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
   internal lateinit var theming: Theming
   internal lateinit var versionWorker: VersionCheckWorker
   internal lateinit var ratingWorker: RatingWorker
-  internal lateinit var settingsComponent: AppSettingsUiComponent
   internal lateinit var settingsWorker: AppSettingsWorker
+  internal lateinit var settingsComponent: UiComponent<AppSettingsViewEvent, AppSettingsView>
 
   private var ratingDisposable by singleDisposable()
   private var checkUpdatesDisposable by singleDisposable()

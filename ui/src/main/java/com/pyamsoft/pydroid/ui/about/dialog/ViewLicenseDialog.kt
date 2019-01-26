@@ -33,17 +33,19 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
+import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class ViewLicenseDialog : ToolbarDialog() {
 
-  internal lateinit var toolbarComponent: LicenseToolbarUiComponent
+  internal lateinit var toolbarComponent: UiComponent<LicenseViewEvent, LicenseToolbarView>
   internal lateinit var loadingComponent: SpinnerUiComponent<LicenseStateEvent, Loading, Complete>
-  internal lateinit var webviewComponent: LicenseWebviewUiComponent
-  internal lateinit var dropshadowComponent: DropshadowUiComponent
+  internal lateinit var webviewComponent: UiComponent<LicenseViewEvent, LicenseWebviewView>
+  internal lateinit var dropshadowComponent: UiComponent<EMPTY, DropshadowView>
   internal lateinit var worker: ViewLicenseWorker
 
   override fun onCreateView(

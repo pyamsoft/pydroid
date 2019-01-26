@@ -30,7 +30,7 @@ internal class AboutItemActionsUiComponent internal constructor(
   uiBus: Listener<AboutViewEvent>,
   owner: LifecycleOwner
 ) : BaseUiComponent<AboutViewEvent, AboutItemActionsView>(view, uiBus, owner, schedulerProvider),
-    BaseAboutItem {
+    AboutUiComponent<AboutViewEvent, AboutItemActionsView> {
 
   override fun bind(model: OssLibrary) {
     view.bind(model)

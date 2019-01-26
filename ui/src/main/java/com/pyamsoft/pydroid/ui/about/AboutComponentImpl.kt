@@ -33,7 +33,6 @@ internal class AboutComponentImpl(
   private val owner: LifecycleOwner,
   private val controllerBus: EventBus<AboutStateEvent>,
   private val licenseBus: Listener<LicenseStateEvent>,
-  private val uiBus: Listener<AboutViewEvent>,
   private val schedulerProvider: SchedulerProvider
 ) : AboutComponent {
 

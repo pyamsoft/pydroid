@@ -181,7 +181,7 @@ subprojects {
         PYDroid(MavenPublication) {
           artifact bundleReleaseAar
           artifact androidSourcesJar
-//          artifact androidJavadocsJar
+          artifact androidJavadocsJar
           groupId POM_GROUP
           artifactId project.name
           version POM_VERSION

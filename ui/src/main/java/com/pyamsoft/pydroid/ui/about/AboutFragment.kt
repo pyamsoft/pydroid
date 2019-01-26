@@ -36,6 +36,8 @@ import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.app.fragment.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.fragment.toolbarActivity
+import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
@@ -44,7 +46,7 @@ import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 
 class AboutFragment : ToolbarFragment() {
 
-  internal lateinit var listComponent: AboutListUiComponent
+  internal lateinit var listComponent: UiComponent<EMPTY, AboutListView>
   internal lateinit var loadingComponent: SpinnerUiComponent<AboutStateEvent, Loading, LoadComplete>
   internal lateinit var worker: AboutWorker
 

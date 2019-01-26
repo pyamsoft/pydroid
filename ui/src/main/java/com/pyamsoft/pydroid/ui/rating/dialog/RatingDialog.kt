@@ -30,6 +30,8 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
+import com.pyamsoft.pydroid.ui.arch.UiComponent
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
@@ -38,9 +40,9 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 internal class RatingDialog : ToolbarDialog() {
 
-  internal lateinit var iconComponent: RatingIconUiComponent
-  internal lateinit var changelogComponent: RatingChangelogUiComponent
-  internal lateinit var controlsComponent: RatingControlsUiComponent
+  internal lateinit var iconComponent: UiComponent<EMPTY, RatingIconView>
+  internal lateinit var changelogComponent: UiComponent<EMPTY, RatingChangelogView>
+  internal lateinit var controlsComponent: UiComponent<RatingDialogViewEvent, RatingControlsView>
   internal lateinit var worker: RatingDialogWorker
 
   private var ratingSaveDisposable by singleDisposable()

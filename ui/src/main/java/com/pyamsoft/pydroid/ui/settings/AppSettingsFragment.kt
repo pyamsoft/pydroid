@@ -25,11 +25,15 @@ import androidx.annotation.CheckResult
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
+import com.pyamsoft.pydroid.ui.app.fragment.requireView
 import com.pyamsoft.pydroid.ui.util.commit
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class AppSettingsFragment : ToolbarFragment() {
 
-  private lateinit var coordinatorLayout: CoordinatorLayout
+  private val coordinatorLayout by lazy(NONE) {
+    requireView().findViewById<CoordinatorLayout>(R.id.layout_coordinator)
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -44,7 +48,6 @@ abstract class AppSettingsFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    coordinatorLayout = view.findViewById(R.id.layout_coordinator)
     showPreferenceFragment()
   }
 

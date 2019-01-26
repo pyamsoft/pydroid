@@ -146,7 +146,7 @@ internal class PYDroidComponentImpl internal constructor(
     owner: LifecycleOwner,
     parent: ViewGroup
   ): AboutComponent = AboutComponentImpl(
-      aboutModule, parent, owner, aboutStateBus, licenseStateBus, aboutViewBus, schedulerProvider
+      aboutModule, parent, owner, aboutStateBus, licenseStateBus, schedulerProvider
   )
 
   override fun plusViewLicenseComponent(

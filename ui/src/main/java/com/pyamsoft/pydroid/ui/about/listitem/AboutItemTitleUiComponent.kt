@@ -26,7 +26,8 @@ import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 internal class AboutItemTitleUiComponent internal constructor(
   view: AboutItemTitleView,
   owner: LifecycleOwner
-) : BaseUiComponent<EMPTY, AboutItemTitleView>(view, EmptyListener, owner), BaseAboutItem {
+) : BaseUiComponent<EMPTY, AboutItemTitleView>(view, EmptyListener, owner),
+    AboutUiComponent<EMPTY, AboutItemTitleView> {
 
   override fun bind(model: OssLibrary) {
     view.bind(model)

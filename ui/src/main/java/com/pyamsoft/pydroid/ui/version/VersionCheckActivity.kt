@@ -49,7 +49,7 @@ abstract class VersionCheckActivity : ActivityBase() {
       return@onUpdateEvent when (it) {
         is UpdateFound -> onUpdatedVersionFound(it.currentVersion, it.newVersion)
         is UpdateError -> onUpdatedVersionError(it.error)
-        is Loading, is UpdateComplete -> Timber.d("Unhandled event: $it")
+        is Loading, is UpdateComplete -> Timber.d("Ignoring event: $it")
       }
     }
         .destroy(this)

@@ -17,13 +17,36 @@
 
 package com.pyamsoft.pydroid.ui.widget.shadow
 
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
-import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 
-class DropshadowUiComponent(
+class DropshadowUiComponent private constructor(
   view: DropshadowView,
   owner: LifecycleOwner
-) : BaseUiComponent<EMPTY, DropshadowView>(view, EmptyListener, owner)
+) : BaseUiComponent<EMPTY, DropshadowView>(view, owner) {
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun create(
+      parent: ViewGroup,
+      owner: LifecycleOwner
+    ): DropshadowUiComponent {
+      val view = DropshadowView(parent)
+      return create(view, owner)
+    }
+
+    @JvmStatic
+    @CheckResult
+    fun create(
+      view: DropshadowView,
+      owner: LifecycleOwner
+    ): DropshadowUiComponent {
+      return DropshadowUiComponent(view, owner)
+    }
+  }
+}

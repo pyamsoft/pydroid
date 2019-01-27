@@ -84,13 +84,12 @@ internal class RatingDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    controlsComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is VisitMarket -> saveAndRate(it.packageName)
-            is Cancel -> saveAndCancel()
-          }
-        }
+    controlsComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        is VisitMarket -> saveAndRate(it.packageName)
+        is Cancel -> saveAndCancel()
+      }
+    }
         .destroy(viewLifecycleOwner)
 
     iconComponent.create(savedInstanceState)

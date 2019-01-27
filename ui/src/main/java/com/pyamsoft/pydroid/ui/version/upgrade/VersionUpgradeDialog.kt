@@ -68,13 +68,12 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   }
 
   private fun listenForUiEvents(view: View) {
-    controlsComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is Cancel -> dismiss()
-            is Upgrade -> onUpgradeClicked(view)
-          }
-        }
+    controlsComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        is Cancel -> dismiss()
+        is Upgrade -> onUpgradeClicked(view)
+      }
+    }
         .destroy(viewLifecycleOwner)
   }
 

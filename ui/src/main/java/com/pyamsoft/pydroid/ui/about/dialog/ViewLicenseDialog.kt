@@ -44,7 +44,7 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
   internal lateinit var toolbarComponent: UiComponent<LicenseViewEvent, LicenseToolbarView>
   internal lateinit var loadingComponent: SpinnerUiComponent<LicenseStateEvent, Loading, Complete>
-  internal lateinit var webviewComponent: UiComponent<LicenseViewEvent, LicenseWebviewView>
+  internal lateinit var webviewComponent: UiComponent<EMPTY, LicenseWebviewView>
   internal lateinit var dropshadowComponent: UiComponent<EMPTY, DropshadowView>
   internal lateinit var worker: ViewLicenseWorker
 
@@ -76,13 +76,12 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     worker.onLoadErrorEvent { dismiss() }
         .destroy(viewLifecycleOwner)
 
-    toolbarComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is ToolbarNavClick -> dismiss()
-            is ToolbarMenuClick -> onToolbarMenuItemClicked(it.itemId, it.link)
-          }
-        }
+    toolbarComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        is ToolbarNavClick -> dismiss()
+        is ToolbarMenuClick -> onToolbarMenuItemClicked(it.itemId, it.link)
+      }
+    }
         .destroy(viewLifecycleOwner)
 
     toolbarComponent.create(savedInstanceState)

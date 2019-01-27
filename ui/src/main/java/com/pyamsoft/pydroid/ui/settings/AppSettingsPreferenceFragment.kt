@@ -93,22 +93,22 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    settingsComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is ShowUpgradeInfo -> onShowChangelogClicked()
-            is RateAppClicked -> rateAppClicked()
-            is MoreAppsClicked -> moreAppsClicked()
-            is FollowSocialClicked -> navigateToUrl(it.link)
-            is FollowBlogClicked -> navigateToUrl(it.link)
-            is BugReportClicked -> navigateToUrl(it.link)
-            is LicenseClicked -> onLicenseItemClicked()
-            is CheckUpgrade -> onCheckForUpdatesClicked()
-            is ClearAppData -> onClearAllClicked()
-            is DarkTheme -> onDarkThemeClicked(it.dark)
-          }
-        }
+    settingsComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        is ShowUpgradeInfo -> onShowChangelogClicked()
+        is RateAppClicked -> rateAppClicked()
+        is MoreAppsClicked -> moreAppsClicked()
+        is FollowSocialClicked -> navigateToUrl(it.link)
+        is FollowBlogClicked -> navigateToUrl(it.link)
+        is BugReportClicked -> navigateToUrl(it.link)
+        is LicenseClicked -> onLicenseItemClicked()
+        is CheckUpgrade -> onCheckForUpdatesClicked()
+        is ClearAppData -> onClearAllClicked()
+        is DarkTheme -> onDarkThemeClicked(it.dark)
+      }
+    }
         .destroy(viewLifecycleOwner)
+
     settingsComponent.create(savedInstanceState)
   }
 

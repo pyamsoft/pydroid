@@ -20,17 +20,24 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
+import io.reactivex.ObservableTransformer
 
 internal class AboutItemActionsUiComponent internal constructor(
-  schedulerProvider: SchedulerProvider,
+  private val schedulerProvider: SchedulerProvider,
   view: AboutItemActionsView,
-  uiBus: Listener<AboutViewEvent>,
   owner: LifecycleOwner
-) : BaseUiComponent<AboutViewEvent, AboutItemActionsView>(view, uiBus, owner, schedulerProvider),
+) : BaseUiComponent<AboutViewEvent, AboutItemActionsView>(view, owner),
     AboutUiComponent<AboutViewEvent, AboutItemActionsView> {
+
+  override fun onUiEvent(): ObservableTransformer<in AboutViewEvent, out AboutViewEvent>? {
+    return ObservableTransformer {
+      return@ObservableTransformer it
+          .subscribeOn(schedulerProvider.backgroundScheduler)
+          .observeOn(schedulerProvider.foregroundScheduler)
+    }
+  }
 
   override fun bind(model: OssLibrary) {
     view.bind(model)

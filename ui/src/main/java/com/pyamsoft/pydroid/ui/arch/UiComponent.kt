@@ -20,16 +20,16 @@ package com.pyamsoft.pydroid.ui.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 
-interface UiComponent<T : ViewEvent, V : UiView> {
+interface UiComponent<T : ViewEvent, V : UiView<T>> {
 
   @IdRes
   @CheckResult
   fun id(): Int
 
   @CheckResult
-  fun onUiEvent(): Observable<T>
+  fun onUiEvent(onUiEvent: (event: T) -> Unit): Disposable
 
   fun create(savedInstanceState: Bundle?)
 

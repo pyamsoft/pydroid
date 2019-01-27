@@ -37,9 +37,8 @@ internal class AboutItemComponentImpl internal constructor(
     val aboutActionsView = AboutItemActionsView(parent, uiBus)
     val aboutDescriptionView = AboutItemDescriptionView(parent)
     viewHolder.titleComponent = AboutItemTitleUiComponent(aboutTitleView, owner)
-    viewHolder.actionsComponent = AboutItemActionsUiComponent(
-        schedulerProvider, aboutActionsView, uiBus, owner
-    )
+    viewHolder.actionsComponent =
+      AboutItemActionsUiComponent(schedulerProvider, aboutActionsView, owner)
     viewHolder.descriptionComponent = AboutItemDescriptionUiComponent(aboutDescriptionView, owner)
     viewHolder.worker = AboutItemWorker(controllerBus)
   }

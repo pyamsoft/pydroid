@@ -19,14 +19,20 @@ package com.pyamsoft.pydroid.ui.about.dialog
 
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
+import io.reactivex.ObservableTransformer
 
 internal class LicenseToolbarUiComponent internal constructor(
-  schedulerProvider: SchedulerProvider,
+  private val schedulerProvider: SchedulerProvider,
   toolbarView: LicenseToolbarView,
-  uiBus: Listener<LicenseViewEvent>,
   owner: LifecycleOwner
-) : BaseUiComponent<LicenseViewEvent, LicenseToolbarView>(
-    toolbarView, uiBus, owner, schedulerProvider
-)
+) : BaseUiComponent<LicenseViewEvent, LicenseToolbarView>(toolbarView, owner) {
+
+  override fun onUiEvent(): ObservableTransformer<in LicenseViewEvent, out LicenseViewEvent>? {
+    return ObservableTransformer {
+      return@ObservableTransformer it
+          .subscribeOn(schedulerProvider.backgroundScheduler)
+          .observeOn(schedulerProvider.foregroundScheduler)
+    }
+  }
+}

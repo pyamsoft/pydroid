@@ -19,14 +19,21 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
+import io.reactivex.ObservableTransformer
 
 internal class RatingControlsUiComponent internal constructor(
-  schedulerProvider: SchedulerProvider,
+  private val schedulerProvider: SchedulerProvider,
   view: RatingControlsView,
-  uiBus: Listener<RatingDialogViewEvent>,
   owner: LifecycleOwner
-) : BaseUiComponent<RatingDialogViewEvent, RatingControlsView>(
-    view, uiBus, owner, schedulerProvider
-)
+) : BaseUiComponent<RatingDialogViewEvent, RatingControlsView>(view, owner) {
+
+  override fun onUiEvent(): ObservableTransformer<in RatingDialogViewEvent, out RatingDialogViewEvent>? {
+    return ObservableTransformer {
+      return@ObservableTransformer it
+          .subscribeOn(schedulerProvider.backgroundScheduler)
+          .observeOn(schedulerProvider.foregroundScheduler)
+    }
+  }
+
+}

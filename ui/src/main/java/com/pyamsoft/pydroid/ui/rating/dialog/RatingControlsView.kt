@@ -21,7 +21,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 internal class RatingControlsView internal constructor(
   private val rateLink: String,
   parent: ViewGroup,
-  uiBus: Publisher<RatingDialogViewEvent>
+  uiBus: EventBus<RatingDialogViewEvent>
 ) : BaseUiView<RatingDialogViewEvent>(parent, uiBus) {
 
   private val layoutRoot by lazyView<View>(R.id.rating_control_root)

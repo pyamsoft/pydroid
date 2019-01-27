@@ -39,7 +39,7 @@ internal class VersionComponentImpl internal constructor(
 
     val versionView = VersionView(view, owner)
     activity.versionUiComponent = VersionUiComponent(
-        bus, upgradeBus, versionView, owner, schedulerProvider
+        bus, upgradeBus, schedulerProvider, versionView, owner
     )
   }
 

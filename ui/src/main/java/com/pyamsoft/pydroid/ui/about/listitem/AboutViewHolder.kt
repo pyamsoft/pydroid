@@ -47,13 +47,12 @@ internal class AboutViewHolder private constructor(
         .plusAboutItemComponent(owner, root)
         .inject(this)
 
-    actionsComponent.onUiEvent()
-        .subscribe {
-          return@subscribe when (it) {
-            is VisitHomepage -> worker.broadcast(it)
-            is ViewLicense -> worker.broadcast(it)
-          }
-        }
+    actionsComponent.onUiEvent {
+      return@onUiEvent when (it) {
+        is VisitHomepage -> worker.broadcast(it)
+        is ViewLicense -> worker.broadcast(it)
+      }
+    }
         .destroy(owner)
 
     titleComponent.create(null)

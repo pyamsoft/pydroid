@@ -45,9 +45,7 @@ internal class RatingDialogComponentImpl internal constructor(
     dialog.worker = RatingDialogWorker(ratingModule.interactor, schedulerProvider, controllerBus)
     dialog.iconComponent = RatingIconUiComponent(iconView, owner)
     dialog.changelogComponent = RatingChangelogUiComponent(changelogView, owner)
-    dialog.controlsComponent = RatingControlsUiComponent(
-        schedulerProvider, controlsView, uiBus, owner
-    )
+    dialog.controlsComponent = RatingControlsUiComponent(schedulerProvider, controlsView, owner)
   }
 
 }

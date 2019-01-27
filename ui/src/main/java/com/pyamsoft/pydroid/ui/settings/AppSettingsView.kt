@@ -25,9 +25,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
@@ -53,7 +52,7 @@ internal class AppSettingsView internal constructor(
   private val hideUpgradeInformation: Boolean,
   private val owner: LifecycleOwner,
   preferenceScreen: PreferenceScreen,
-  uiBus: Publisher<AppSettingsViewEvent>
+  uiBus: EventBus<AppSettingsViewEvent>
 ) : PrefUiView<AppSettingsViewEvent>(preferenceScreen, uiBus) {
 
   private val context = preferenceScreen.context

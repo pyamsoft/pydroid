@@ -24,14 +24,14 @@ import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent.FailedLink
+import io.reactivex.ObservableTransformer
 
 internal class AppSettingsUiComponent internal constructor(
   private val controllerBus: Listener<AppSettingsStateEvent>,
-  schedulerProvider: SchedulerProvider,
+  private val schedulerProvider: SchedulerProvider,
   view: AppSettingsView,
-  uiBus: Listener<AppSettingsViewEvent>,
   owner: LifecycleOwner
-) : BaseUiComponent<AppSettingsViewEvent, AppSettingsView>(view, uiBus, owner, schedulerProvider) {
+) : BaseUiComponent<AppSettingsViewEvent, AppSettingsView>(view, owner) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
@@ -43,6 +43,14 @@ internal class AppSettingsUiComponent internal constructor(
           }
         }
         .destroy(owner)
+  }
+
+  override fun onUiEvent(): ObservableTransformer<in AppSettingsViewEvent, out AppSettingsViewEvent>? {
+    return ObservableTransformer {
+      return@ObservableTransformer it
+          .subscribeOn(schedulerProvider.backgroundScheduler)
+          .observeOn(schedulerProvider.foregroundScheduler)
+    }
   }
 
 }

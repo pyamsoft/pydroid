@@ -37,9 +37,7 @@ internal class VersionUpgradeComponentImpl internal constructor(
     val controls = VersionUpgradeControlView(parent, viewBus)
     val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
     dialog.contentComponent = VersionUpgradeContentUiComponent(content, owner)
-    dialog.controlsComponent = VersionUpgradeControlsUiComponent(
-        schedulerProvider, viewBus, controls, owner
-    )
+    dialog.controlsComponent = VersionUpgradeControlsUiComponent(schedulerProvider, controls, owner)
     dialog.worker = VersionUpgradeWorker(stateBus)
   }
 }

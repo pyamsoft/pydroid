@@ -31,13 +31,13 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 class AboutListView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : BaseUiView<EMPTY>(parent, EmptyPublisher), UiToggleView {
+) : BaseUiView<EMPTY>(parent, EmptyBus), UiToggleView {
 
   private val aboutList by lazyView<RecyclerView>(R.id.about_list)
 

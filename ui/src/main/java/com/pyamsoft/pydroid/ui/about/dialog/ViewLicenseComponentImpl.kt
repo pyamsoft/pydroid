@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowUiComponent
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
@@ -40,18 +39,15 @@ internal class ViewLicenseComponentImpl internal constructor(
 
   override fun inject(dialog: ViewLicenseDialog) {
     val toolbarView = LicenseToolbarView(parent, name, link, imageLoader, owner, uiBus)
-    val dropshadowView = DropshadowView(parent)
-    val webviewView = LicenseWebviewView(parent, owner, link, controllerBus)
+    val webviewView = LicenseWebviewView(owner, link, controllerBus, parent)
     val spinnerView = SpinnerView(parent)
     dialog.worker = ViewLicenseWorker(controllerBus, schedulerProvider)
-    dialog.dropshadowComponent = DropshadowUiComponent(dropshadowView, owner)
+    dialog.dropshadowComponent = DropshadowUiComponent.create(parent, owner)
     dialog.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
     dialog.webviewComponent = LicenseWebviewUiComponent(
-        controllerBus, schedulerProvider, webviewView, uiBus, owner
+        controllerBus, schedulerProvider, webviewView, owner
     )
-    dialog.toolbarComponent = LicenseToolbarUiComponent(
-        schedulerProvider, toolbarView, uiBus, owner
-    )
+    dialog.toolbarComponent = LicenseToolbarUiComponent(schedulerProvider, toolbarView, owner)
   }
 
 }

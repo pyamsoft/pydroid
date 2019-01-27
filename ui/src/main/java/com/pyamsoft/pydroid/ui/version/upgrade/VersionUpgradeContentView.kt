@@ -26,14 +26,14 @@ import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
 internal class VersionUpgradeContentView internal constructor(
   private val applicationName: String,
   private val currentVersion: Int,
   private val newVersion: Int,
   parent: ViewGroup
-) : BaseUiView<EMPTY>(parent, EmptyPublisher) {
+) : BaseUiView<EMPTY>(parent, EmptyBus) {
 
   private val layoutRoot by lazyView<View>(R.id.version_content_root)
   private val upgradeMessage by lazyView<TextView>(R.id.upgrade_message)

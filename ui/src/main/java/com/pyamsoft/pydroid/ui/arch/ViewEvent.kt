@@ -17,25 +17,20 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.Observable
 
 interface ViewEvent {
 
   object EMPTY : ViewEvent
 
-  object EmptyPublisher : Publisher<EMPTY> {
-
-    override fun publish(event: EMPTY) {
-    }
-
-  }
-
-  object EmptyListener : Listener<EMPTY> {
+  object EmptyBus : EventBus<EMPTY> {
 
     override fun listen(): Observable<EMPTY> {
       return Observable.empty()
+    }
+
+    override fun publish(event: EMPTY) {
     }
 
   }

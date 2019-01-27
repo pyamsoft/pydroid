@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.UpdateComplete
@@ -36,10 +35,10 @@ import timber.log.Timber
 internal class VersionUiComponent internal constructor(
   private val controllerBus: Listener<VersionStateEvent>,
   private val dialogControllerBus: Listener<VersionUpgradeStateEvent>,
+  private val schedulerProvider: SchedulerProvider,
   view: VersionView,
-  owner: LifecycleOwner,
-  schedulerProvider: SchedulerProvider
-) : BaseUiComponent<EMPTY, VersionView>(view, EmptyListener, owner, schedulerProvider) {
+  owner: LifecycleOwner
+) : BaseUiComponent<EMPTY, VersionView>(view, owner) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()

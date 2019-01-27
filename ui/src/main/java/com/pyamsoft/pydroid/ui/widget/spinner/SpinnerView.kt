@@ -25,9 +25,9 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
-class SpinnerView(parent: ViewGroup) : BaseUiView<EMPTY>(parent, EmptyPublisher), UiToggleView {
+class SpinnerView(parent: ViewGroup) : BaseUiView<EMPTY>(parent, EmptyBus), UiToggleView {
 
   private val layoutRoot by lazyView<View>(R.id.spinner_root)
   private val spinner by lazyView<ProgressBar>(R.id.spinner)

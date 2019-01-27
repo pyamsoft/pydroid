@@ -22,13 +22,14 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
+import io.reactivex.Observable
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class PrefUiView<T : ViewEvent> protected constructor(
   protected val parent: PreferenceScreen,
-  private val bus: Publisher<T>
-) : UiView {
+  private val bus: EventBus<T>
+) : UiView<T> {
 
   private val lazyPrefInitializer = { parent }
 
@@ -43,6 +44,10 @@ abstract class PrefUiView<T : ViewEvent> protected constructor(
   }
 
   override fun teardown() {
+  }
+
+  override fun onUiEvent(): Observable<T> {
+    return bus.listen()
   }
 
   protected fun publish(event: T) {

@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.StateEvent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyListener
 import com.pyamsoft.pydroid.ui.arch.destroy
 import timber.log.Timber
 
@@ -32,10 +31,10 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
   private val controllerBus: Listener<T>,
   private val showTypeClass: Class<Show>,
   private val hideTypeClass: Class<Hide>,
+  private val schedulerProvider: SchedulerProvider,
   view: SpinnerView,
-  owner: LifecycleOwner,
-  schedulerProvider: SchedulerProvider
-) : BaseUiComponent<EMPTY, SpinnerView>(view, EmptyListener, owner, schedulerProvider) {
+  owner: LifecycleOwner
+) : BaseUiComponent<EMPTY, SpinnerView>(view, owner) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     controllerBus.listen()
@@ -62,8 +61,8 @@ class SpinnerUiComponent<T : StateEvent, Show : T, Hide : T>(
     ): SpinnerUiComponent<T, Show, Hide> {
       return SpinnerUiComponent(
           controllerBus, Show::class.java,
-          Hide::class.java, spinnerView,
-          owner, schedulerProvider
+          Hide::class.java, schedulerProvider,
+          spinnerView, owner
       )
     }
   }

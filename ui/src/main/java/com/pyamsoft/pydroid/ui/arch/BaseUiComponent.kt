@@ -24,15 +24,13 @@ import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.Listener
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
+import io.reactivex.disposables.Disposable
 
-abstract class BaseUiComponent<T : ViewEvent, V : UiView> @JvmOverloads protected constructor(
+abstract class BaseUiComponent<T : ViewEvent, V : UiView<T>> protected constructor(
   protected val view: V,
-  private val uiBus: Listener<T>,
-  protected val owner: LifecycleOwner,
-  protected val schedulerProvider: SchedulerProvider = SchedulerProvider.DEFAULT
+  protected val owner: LifecycleOwner
 ) : UiComponent<T, V> {
 
   @IdRes
@@ -41,11 +39,23 @@ abstract class BaseUiComponent<T : ViewEvent, V : UiView> @JvmOverloads protecte
     return view.id()
   }
 
+  final override fun onUiEvent(onUiEvent: (event: T) -> Unit): Disposable {
+    val listen = view.onUiEvent()
+    val transformer = onUiEvent()
+
+    val stream: Observable<T>
+    if (transformer != null) {
+      stream = listen.compose(transformer)
+    } else {
+      stream = listen
+    }
+
+    return stream.subscribe(onUiEvent)
+  }
+
   @CheckResult
-  final override fun onUiEvent(): Observable<T> {
-    return uiBus.listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+  protected open fun onUiEvent(): ObservableTransformer<in T, out T>? {
+    return null
   }
 
   final override fun create(savedInstanceState: Bundle?) {

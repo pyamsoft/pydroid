@@ -23,12 +23,14 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
 import com.pyamsoft.pydroid.ui.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import io.reactivex.Observable
 
 internal class RatingView internal constructor(
   private val view: View,
   private val owner: LifecycleOwner
-) : UiView {
+) : UiView<EMPTY> {
 
   override fun id(): Int {
     throw InvalidUiComponentIdException
@@ -41,6 +43,10 @@ internal class RatingView internal constructor(
   }
 
   override fun saveState(outState: Bundle) {
+  }
+
+  override fun onUiEvent(): Observable<EMPTY> {
+    return Observable.empty()
   }
 
   fun showError(error: ActivityNotFoundException) {

@@ -23,14 +23,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.arch.UiView
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
@@ -40,8 +39,8 @@ internal class LicenseToolbarView internal constructor(
   private val link: String,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
-  uiBus: Publisher<LicenseViewEvent>
-) : BaseUiView<LicenseViewEvent>(parent, uiBus) {
+  bus: EventBus<LicenseViewEvent>
+) : BaseUiView<LicenseViewEvent>(parent, bus) {
 
   private val toolbar by lazyView<Toolbar>(R.id.license_toolbar)
 

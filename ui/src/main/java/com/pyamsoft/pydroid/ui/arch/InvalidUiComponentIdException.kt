@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.arch
 
 object InvalidUiComponentIdException : RuntimeException(
     """
-      |The View which powers this UiComponent is in turn powered
+      |The UiView which powers this UiComponent is in turn powered
       |by a PreferenceFragment from the AndroidX framework which
       |is a strange beast and does not fit into the UiComponent
       |architecture that the rest of the application has tried to

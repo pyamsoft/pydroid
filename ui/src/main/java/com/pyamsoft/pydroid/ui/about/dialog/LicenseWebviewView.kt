@@ -34,7 +34,7 @@ import androidx.lifecycle.Lifecycle.Event.ON_RESUME
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
@@ -42,17 +42,17 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyPublisher
+import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 import com.pyamsoft.pydroid.ui.util.Toaster
 import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
 
 internal class LicenseWebviewView internal constructor(
-  parent: ViewGroup,
   private val owner: LifecycleOwner,
   private val link: String,
-  private val controllerBus: Publisher<LicenseStateEvent>
-) : BaseUiView<EMPTY>(parent, EmptyPublisher), UiToggleView, LifecycleObserver {
+  private val controllerBus: EventBus<LicenseStateEvent>,
+  parent: ViewGroup
+) : BaseUiView<EMPTY>(parent, EmptyBus), UiToggleView, LifecycleObserver {
 
   private val webview by lazyView<WebView>(R.id.license_webview)
 

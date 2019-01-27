@@ -21,7 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
   parent: ViewGroup,
-  bus: Publisher<AboutViewEvent>
+  bus: EventBus<AboutViewEvent>
 ) : BaseUiView<AboutViewEvent>(parent, bus), BaseAboutItem {
 
   private val layoutRoot by lazyView<View>(R.id.about_actions)

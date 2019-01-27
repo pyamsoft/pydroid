@@ -24,13 +24,14 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
-import com.pyamsoft.pydroid.core.bus.Publisher
+import com.pyamsoft.pydroid.core.bus.EventBus
+import io.reactivex.Observable
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class BaseUiView<T : ViewEvent> protected constructor(
   private val parent: ViewGroup,
-  private val bus: Publisher<T>
-) : UiView {
+  private val bus: EventBus<T>
+) : UiView<T> {
 
   protected abstract val layout: Int
 
@@ -51,6 +52,10 @@ abstract class BaseUiView<T : ViewEvent> protected constructor(
   }
 
   override fun teardown() {
+  }
+
+  final override fun onUiEvent(): Observable<T> {
+    return bus.listen()
   }
 
   protected fun publish(event: T) {

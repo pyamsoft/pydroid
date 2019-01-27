@@ -23,8 +23,6 @@ import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
-import com.pyamsoft.pydroid.ui.arch.UiComponent
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionStateEvent.Loading
@@ -37,7 +35,7 @@ import timber.log.Timber
 abstract class VersionCheckActivity : ActivityBase() {
 
   internal lateinit var versionWorker: VersionCheckWorker
-  internal lateinit var versionUiComponent: UiComponent<EMPTY, VersionView>
+  internal lateinit var versionUiComponent: VersionUiComponent
 
   private var checkUpdatesDisposable by singleDisposable()
 

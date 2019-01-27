@@ -25,10 +25,8 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.arch.destroy
 
 internal class AboutViewHolder private constructor(
@@ -37,9 +35,9 @@ internal class AboutViewHolder private constructor(
 ) : BaseViewHolder(view) {
 
   internal lateinit var worker: AboutItemWorker
-  internal lateinit var titleComponent: AboutUiComponent<EMPTY, AboutItemTitleView>
-  internal lateinit var actionsComponent: AboutUiComponent<AboutViewEvent, AboutItemActionsView>
-  internal lateinit var descriptionComponent: AboutUiComponent<EMPTY, AboutItemDescriptionView>
+  internal lateinit var titleComponent: AboutItemTitleUiComponent
+  internal lateinit var actionsComponent: AboutItemActionsUiComponent
+  internal lateinit var descriptionComponent: AboutItemDescriptionUiComponent
 
   init {
     val root: ViewGroup = view.findViewById(R.id.about_listitem_root)

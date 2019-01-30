@@ -15,11 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.network
+package com.pyamsoft.pydroid.bootstrap.version.api
 
 import androidx.annotation.CheckResult
+import retrofit2.Retrofit
 
-interface NetworkStatusProvider {
+internal class VersionCheckApi internal constructor(private val client: Retrofit) {
 
-  @CheckResult fun hasConnection(): Boolean
+  @CheckResult
+  fun <T> create(serviceClass: Class<T>): T = client.create(serviceClass)
 }

@@ -15,13 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.version.api
 
 import androidx.annotation.CheckResult
-import retrofit2.Retrofit
+import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
+import io.reactivex.Single
+import retrofit2.http.GET
+import retrofit2.http.Url
 
-internal class VersionCheckApi internal constructor(private val client: Retrofit) {
+internal interface VersionCheckService {
 
   @CheckResult
-  fun <T> create(serviceClass: Class<T>): T = client.create(serviceClass)
+  @GET
+  fun checkVersion(@Url packageName: String): Single<VersionCheckResponse>
 }

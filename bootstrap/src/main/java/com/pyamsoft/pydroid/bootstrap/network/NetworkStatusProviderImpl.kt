@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.network
+package com.pyamsoft.pydroid.bootstrap.network
 
 import android.content.Context
 import android.content.pm.PackageManager

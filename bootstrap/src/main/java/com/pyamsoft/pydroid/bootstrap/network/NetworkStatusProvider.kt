@@ -15,9 +15,11 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.network
 
-data class UpdatePayload internal constructor(
-  val currentVersion: Int,
-  val newVersion: Int
-)
+import androidx.annotation.CheckResult
+
+interface NetworkStatusProvider {
+
+  @CheckResult fun hasConnection(): Boolean
+}

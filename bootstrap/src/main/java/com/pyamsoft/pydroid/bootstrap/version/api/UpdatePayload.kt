@@ -15,6 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.network
+package com.pyamsoft.pydroid.bootstrap.version.api
 
-object NoNetworkException : Exception("No Internet connection, please try again later")
+data class UpdatePayload internal constructor(
+  val currentVersion: Int,
+  val newVersion: Int
+)

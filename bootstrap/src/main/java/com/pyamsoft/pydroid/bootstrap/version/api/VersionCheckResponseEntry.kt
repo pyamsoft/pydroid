@@ -15,31 +15,41 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.version
+package com.pyamsoft.pydroid.bootstrap.version.api
 
 import androidx.annotation.CheckResult
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.util.Collections
 
 @JsonClass(generateAdapter = true)
-internal data class VersionCheckResponse internal constructor(
-  @field:Json(name = "response_objects")
-  internal val responseObjects: List<VersionCheckResponseEntry>?
+internal data class VersionCheckResponseEntry internal constructor(
+  @field:Json(name = "min_api")
+  internal val minApi: Int,
+  internal val version: Int
 ) {
 
   @CheckResult
-  fun responseObjects(): List<VersionCheckResponseEntry> {
-    return responseObjects.let {
-      if (it == null) {
-        throw RuntimeException("VersionCheckResponse: responseObjects was null")
+  fun minApi(): Int {
+    return minApi.let {
+      if (it == 0) {
+        throw RuntimeException("ResponseObject: minApi was 0")
       } else {
-        return@let Collections.unmodifiableList(it)
+        return@let it
+      }
+    }
+  }
+
+  @CheckResult
+  fun version(): Int {
+    return version.let {
+      if (it == 0) {
+        throw RuntimeException("ResponseObject: version was 0")
+      } else {
+        return@let it
       }
     }
   }
 
   // Needed so we can generate a static adapter
   companion object
-
 }

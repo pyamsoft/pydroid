@@ -21,9 +21,12 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.popinnow.android.repo.moshi.MoshiPersister
 import com.popinnow.android.repo.newRepoBuilder
+import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProviderImpl
+import com.pyamsoft.pydroid.bootstrap.network.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
-import com.pyamsoft.pydroid.bootstrap.version.network.NetworkStatusProviderImpl
-import com.pyamsoft.pydroid.bootstrap.version.socket.DelegatingSocketFactory
+import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
+import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckApi
+import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient

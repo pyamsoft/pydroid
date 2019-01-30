@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import com.popinnow.android.repo.Repo
+import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Maybe

@@ -31,7 +31,7 @@ internal class AboutItemActionsUiComponent internal constructor(
 ) : BaseUiComponent<AboutViewEvent, AboutItemActionsView>(view, owner),
     AboutUiComponent<AboutViewEvent, AboutItemActionsView> {
 
-  override fun onUiEvent(): ObservableTransformer<in AboutViewEvent, out AboutViewEvent>? {
+  override fun onUiEvent(): ObservableTransformer<in AboutViewEvent, out AboutViewEvent> {
     return ObservableTransformer {
       return@ObservableTransformer it
           .subscribeOn(schedulerProvider.backgroundScheduler)

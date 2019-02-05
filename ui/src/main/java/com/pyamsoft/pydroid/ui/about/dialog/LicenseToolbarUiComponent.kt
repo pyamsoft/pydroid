@@ -28,7 +28,7 @@ internal class LicenseToolbarUiComponent internal constructor(
   owner: LifecycleOwner
 ) : BaseUiComponent<LicenseViewEvent, LicenseToolbarView>(toolbarView, owner) {
 
-  override fun onUiEvent(): ObservableTransformer<in LicenseViewEvent, out LicenseViewEvent>? {
+  override fun onUiEvent(): ObservableTransformer<in LicenseViewEvent, out LicenseViewEvent> {
     return ObservableTransformer {
       return@ObservableTransformer it
           .subscribeOn(schedulerProvider.backgroundScheduler)

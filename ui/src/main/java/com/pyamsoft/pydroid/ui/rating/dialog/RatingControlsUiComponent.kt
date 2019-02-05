@@ -28,7 +28,7 @@ internal class RatingControlsUiComponent internal constructor(
   owner: LifecycleOwner
 ) : BaseUiComponent<RatingDialogViewEvent, RatingControlsView>(view, owner) {
 
-  override fun onUiEvent(): ObservableTransformer<in RatingDialogViewEvent, out RatingDialogViewEvent>? {
+  override fun onUiEvent(): ObservableTransformer<in RatingDialogViewEvent, out RatingDialogViewEvent> {
     return ObservableTransformer {
       return@ObservableTransformer it
           .subscribeOn(schedulerProvider.backgroundScheduler)

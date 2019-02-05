@@ -25,6 +25,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
 
@@ -42,20 +43,13 @@ abstract class BaseUiComponent<T : ViewEvent, V : UiView<T>> protected construct
   final override fun onUiEvent(onUiEvent: (event: T) -> Unit): Disposable {
     val listen = view.onUiEvent()
     val transformer = onUiEvent()
-
-    val stream: Observable<T>
-    if (transformer != null) {
-      stream = listen.compose(transformer)
-    } else {
-      stream = listen
-    }
-
-    return stream.subscribe(onUiEvent)
+    return listen.compose(transformer)
+        .subscribe(onUiEvent)
   }
 
   @CheckResult
-  protected open fun onUiEvent(): ObservableTransformer<in T, out T>? {
-    return null
+  protected open fun onUiEvent(): ObservableTransformer<in T, out T> {
+    return NoopTransformer.typedInstance()
   }
 
   final override fun create(savedInstanceState: Bundle?) {
@@ -96,5 +90,19 @@ abstract class BaseUiComponent<T : ViewEvent, V : UiView<T>> protected construct
       }
 
     })
+  }
+
+  private object NoopTransformer : ObservableTransformer<Any, Any> {
+
+    override fun apply(upstream: Observable<Any>): ObservableSource<Any> {
+      return upstream
+    }
+
+    @CheckResult
+    internal fun <T : Any> typedInstance(): ObservableTransformer<in T, out T> {
+      @Suppress("UNCHECKED_CAST")
+      return this as ObservableTransformer<in T, out T>
+    }
+
   }
 }

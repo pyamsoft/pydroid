@@ -28,7 +28,7 @@ internal class VersionUpgradeControlsUiComponent internal constructor(
   owner: LifecycleOwner
 ) : BaseUiComponent<VersionUpgradeViewEvent, VersionUpgradeControlView>(view, owner) {
 
-  override fun onUiEvent(): ObservableTransformer<in VersionUpgradeViewEvent, out VersionUpgradeViewEvent>? {
+  override fun onUiEvent(): ObservableTransformer<in VersionUpgradeViewEvent, out VersionUpgradeViewEvent> {
     return ObservableTransformer {
       return@ObservableTransformer it
           .subscribeOn(schedulerProvider.backgroundScheduler)

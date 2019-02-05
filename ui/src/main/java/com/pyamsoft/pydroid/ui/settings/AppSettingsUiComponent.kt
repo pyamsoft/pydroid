@@ -45,7 +45,7 @@ internal class AppSettingsUiComponent internal constructor(
         .destroy(owner)
   }
 
-  override fun onUiEvent(): ObservableTransformer<in AppSettingsViewEvent, out AppSettingsViewEvent>? {
+  override fun onUiEvent(): ObservableTransformer<in AppSettingsViewEvent, out AppSettingsViewEvent> {
     return ObservableTransformer {
       return@ObservableTransformer it
           .subscribeOn(schedulerProvider.backgroundScheduler)

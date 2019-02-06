@@ -15,12 +15,8 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating.dialog
+package com.pyamsoft.pydroid.ui.navigation
 
 import android.content.ActivityNotFoundException
 
-internal sealed class RatingDialogStateEvent : StateEvent {
-
-  data class FailedMarketLink(val error: ActivityNotFoundException) : RatingDialogStateEvent()
-
-}
+data class FailedNavigationEvent(val error: ActivityNotFoundException)

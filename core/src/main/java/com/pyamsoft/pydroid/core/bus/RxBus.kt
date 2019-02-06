@@ -53,11 +53,17 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
 
   companion object {
 
+    private val EMPTY = RxBus.create<Unit>()
+
     /**
      * Create a new local viewBus instance to use
      */
     @JvmStatic
     @CheckResult
     fun <T : Any> create(): EventBus<T> = RxBus()
+
+    @JvmStatic
+    @CheckResult
+    fun empty(): EventBus<Unit> = EMPTY
   }
 }

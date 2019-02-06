@@ -15,12 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.rating
 
-import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-internal interface BackPressHandler {
+internal interface RatingPresenter : Presenter<RatingPresenter.Callback> {
 
-  @CheckResult
-  fun onBackPressed(): Boolean
+  fun load(force: Boolean)
+
+  interface Callback {
+
+    fun onShowRating()
+  }
+
 }

@@ -15,13 +15,12 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.app
 
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
-import com.pyamsoft.pydroid.ui.app.activity.ToolbarActivity
 
 val Fragment.toolbarActivity: ToolbarActivity?
   @get:CheckResult get() {

@@ -31,8 +31,6 @@ import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
-import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
 import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.util.hyperlink
 

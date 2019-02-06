@@ -22,6 +22,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.Callback
 
 internal interface VersionCheckPresenter : Presenter<Callback> {
 
+  fun checkForUpdates(force: Boolean)
+
   interface Callback {
 
     fun onVersionCheckBegin(forced: Boolean)

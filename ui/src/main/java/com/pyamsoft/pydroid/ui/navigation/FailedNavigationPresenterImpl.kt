@@ -15,18 +15,30 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.navigation
 
 import android.content.ActivityNotFoundException
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent.FailedLink
+import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.ui.arch.destroy
 
-internal class AppSettingsWorker internal constructor(
-  bus: EventBus<AppSettingsStateEvent>
-) : Worker<AppSettingsStateEvent>(bus) {
+class FailedNavigationPresenterImpl(
+  owner: LifecycleOwner,
+  bus: EventBus<FailedNavigationEvent>
+) : BasePresenter<FailedNavigationEvent, FailedNavigationPresenter.Callback>(owner, bus),
+    FailedNavigationPresenter {
 
-  fun failedLinkUrl(error: ActivityNotFoundException) {
-    publish(FailedLink(error))
+  override fun onBind() {
+    listen().subscribe { callback.onFailedNavigation(it.error) }
+        .destroy(owner)
+  }
+
+  override fun onUnbind() {
+  }
+
+  override fun failedNavigation(error: ActivityNotFoundException) {
+    publish(FailedNavigationEvent(error))
   }
 
 }

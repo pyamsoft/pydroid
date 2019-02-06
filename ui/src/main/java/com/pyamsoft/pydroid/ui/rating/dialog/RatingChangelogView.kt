@@ -25,13 +25,11 @@ import android.widget.ScrollView
 import android.widget.TextView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
 internal class RatingChangelogView internal constructor(
   private val changelog: SpannedString,
   parent: ViewGroup
-) : BaseUiView<EMPTY>(parent, EmptyBus) {
+) : BaseUiView<Unit>(parent, Unit) {
 
   private val layoutRoot by lazyView<ScrollView>(R.id.rating_changelog_scroll)
   private val changelogText by lazyView<TextView>(R.id.rating_changelog_text)

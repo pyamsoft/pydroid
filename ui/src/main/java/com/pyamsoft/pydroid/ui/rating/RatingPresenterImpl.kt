@@ -17,36 +17,45 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.rating.RatingStateEvent.ShowEvent
-import io.reactivex.disposables.Disposable
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.ui.arch.destroy
 
-internal class RatingWorker internal constructor(
+internal class RatingPresenterImpl internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider,
-  bus: EventBus<RatingStateEvent>
-) : Worker<RatingStateEvent>(bus) {
+  owner: LifecycleOwner,
+  bus: EventBus<ShowRating>
+) : BasePresenter<ShowRating, RatingPresenter.Callback>(owner, bus), RatingPresenter {
 
-  @CheckResult
-  fun onRatingDialogRequested(func: () -> Unit): Disposable {
-    return listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .ofType(ShowEvent::class.java)
-        .subscribe { func() }
+  private var loadDisposable by singleDisposable()
+
+  override fun onBind() {
+    listenForDialogRequests()
   }
 
-  @CheckResult
-  fun loadRatingDialog(force: Boolean): Disposable {
-    return interactor.needsToViewRating(force)
-        .filter { it }
-        .map { Unit }
+  override fun onUnbind() {
+    loadDisposable.tryDispose()
+  }
+
+  private fun listenForDialogRequests() {
+    listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { publish(ShowEvent) }
+        .subscribe { callback.onShowRating() }
+        .destroy(owner)
+  }
+
+  override fun load(force: Boolean) {
+    loadDisposable = interactor.needsToViewRating(force)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe { publish(ShowRating) }
   }
 
 }

@@ -40,17 +40,15 @@ import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
-import com.pyamsoft.pydroid.ui.rating.RatingStateEvent
+import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingSavedEvent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponentImpl
-import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckState
 import com.pyamsoft.pydroid.ui.version.VersionComponent
@@ -67,10 +65,11 @@ internal class PYDroidComponentImpl internal constructor(
   private val schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
-  private val ratingStateBus = RxBus.create<RatingStateEvent>()
-  private val ratingViewBus = RxBus.create<RatingDialogViewEvent>()
+  private val failedNavBus = RxBus.create<FailedNavigationEvent>()
 
-  private val ratingDialogStateBus = RxBus.create<RatingDialogStateEvent>()
+  private val ratingStateBus = RxBus.create<ShowRating>()
+
+  private val ratingDialogStateBus = RxBus.create<RatingSavedEvent>()
 
   private val versionStateBus = RxBus.create<VersionCheckState>()
 
@@ -79,9 +78,6 @@ internal class PYDroidComponentImpl internal constructor(
 
   private val licenseViewBus = RxBus.create<LicenseViewEvent>()
   private val licenseStateBus = RxBus.create<LicenseStateEvent>()
-
-  private val settingsViewBus = RxBus.create<AppSettingsViewEvent>()
-  private val settingsStateBus = RxBus.create<AppSettingsStateEvent>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -105,7 +101,7 @@ internal class PYDroidComponentImpl internal constructor(
     owner: LifecycleOwner,
     view: View
   ): VersionComponent = VersionComponentImpl(
-      owner, view, versionStateBus, versionModule.interactor, schedulerProvider
+      owner, view, versionStateBus, versionModule.interactor, schedulerProvider, failedNavBus
   )
 
   override fun plusAboutItemComponent(
@@ -119,7 +115,7 @@ internal class PYDroidComponentImpl internal constructor(
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
-      owner, parent, applicationName, currentVersion, newVersion, versionStateBus
+      owner, parent, applicationName, currentVersion, newVersion, failedNavBus
   )
 
   override fun plusSettingsComponent(
@@ -129,10 +125,9 @@ internal class PYDroidComponentImpl internal constructor(
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): AppSettingsComponent = AppSettingsComponentImpl(
-      view, owner, ratingModule, versionModule, theming,
-      versionStateBus, ratingStateBus, settingsViewBus, settingsStateBus,
-      schedulerProvider, preferenceScreen, applicationName,
-      bugreportUrl, hideClearAll, hideUpgradeInformation
+      view, owner, ratingModule, versionModule, theming, versionStateBus,
+      ratingStateBus, schedulerProvider, preferenceScreen, applicationName,
+      bugreportUrl, hideClearAll, hideUpgradeInformation, failedNavBus
   )
 
   override fun plusAboutComponent(
@@ -161,7 +156,7 @@ internal class PYDroidComponentImpl internal constructor(
   ): RatingDialogComponent = RatingDialogComponentImpl(
       ratingModule, loaderModule, schedulerProvider,
       parent, owner, rateLink, changelogIcon, changelog,
-      ratingViewBus, ratingDialogStateBus
+      ratingDialogStateBus, failedNavBus
   )
 
   override fun plusRatingComponent(

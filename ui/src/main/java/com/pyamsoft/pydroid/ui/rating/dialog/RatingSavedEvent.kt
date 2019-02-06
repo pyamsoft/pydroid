@@ -15,16 +15,6 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.rating.dialog
 
-import androidx.annotation.CallSuper
-import androidx.preference.PreferenceFragmentCompat
-
-abstract class ToolbarPreferenceFragment : PreferenceFragmentCompat(), BackPressHandler {
-
-  @CallSuper
-  override fun onBackPressed(): Boolean {
-    return BackPressDelegate.onBackPressed(childFragmentManager)
-  }
-
-}
+data class RatingSavedEvent(val rateApplication: Boolean, val packageName: String)

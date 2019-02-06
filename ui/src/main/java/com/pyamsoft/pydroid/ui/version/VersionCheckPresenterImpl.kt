@@ -35,8 +35,7 @@ internal class VersionCheckPresenterImpl internal constructor(
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider,
   owner: LifecycleOwner,
-  bus: EventBus<VersionCheckState>,
-  private val forceCheck: Boolean
+  bus: EventBus<VersionCheckState>
 ) : BasePresenter<VersionCheckState, VersionCheckPresenter.Callback>(owner, bus),
     VersionCheckPresenter {
 
@@ -44,7 +43,6 @@ internal class VersionCheckPresenterImpl internal constructor(
 
   override fun onBind() {
     listenForVersionCheckEvents()
-    checkForUpdates()
   }
 
   private fun listenForVersionCheckEvents() {
@@ -62,11 +60,11 @@ internal class VersionCheckPresenterImpl internal constructor(
         .destroy(owner)
   }
 
-  private fun checkForUpdates() {
-    checkUpdatesDisposable = interactor.checkVersion(forceCheck)
+  override fun checkForUpdates(force: Boolean) {
+    checkUpdatesDisposable = interactor.checkVersion(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .doOnSubscribe { publish(VersionCheckState.Begin(forceCheck)) }
+        .doOnSubscribe { publish(VersionCheckState.Begin(force)) }
         .doAfterTerminate { publish(VersionCheckState.Complete) }
         .subscribe({ publish(VersionCheckState.Found(it.currentVersion, it.newVersion)) }, {
           Timber.e(it, "Error checking for latest version")

@@ -15,12 +15,19 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating.dialog
+package com.pyamsoft.pydroid.ui.navigation
 
-import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import android.content.ActivityNotFoundException
+import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter.Callback
 
-internal class RatingIconUiComponent internal constructor(
-  view: RatingIconView,
-  owner: LifecycleOwner
-) : BaseUiComponent<EMPTY, RatingIconView>(view, owner)
+interface FailedNavigationPresenter : Presenter<Callback> {
+
+  fun failedNavigation(error: ActivityNotFoundException)
+
+  interface Callback {
+
+    fun onFailedNavigation(error: ActivityNotFoundException)
+
+  }
+}

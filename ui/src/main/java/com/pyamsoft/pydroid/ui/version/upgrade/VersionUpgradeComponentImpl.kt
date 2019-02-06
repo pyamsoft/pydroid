@@ -20,7 +20,8 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.version.VersionCheckState
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 
 internal class VersionUpgradeComponentImpl internal constructor(
   private val owner: LifecycleOwner,
@@ -28,15 +29,16 @@ internal class VersionUpgradeComponentImpl internal constructor(
   private val name: String,
   private val currentVersion: Int,
   private val newVersion: Int,
-  private val bus: EventBus<VersionCheckState>
+  private val failedNavBus: EventBus<FailedNavigationEvent>
 ) : VersionUpgradeComponent {
 
   override fun inject(dialog: VersionUpgradeDialog) {
-    val presenter = VersionUpgradePresenterImpl(owner, bus)
+    val presenter = VersionUpgradePresenterImpl(owner)
     val controls = VersionUpgradeControlView(parent, presenter)
     val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
 
     dialog.apply {
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(owner, failedNavBus)
       this.contentView = content
       this.controlsView = controls
       this.presenter = presenter

@@ -25,21 +25,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearAppData
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.DarkTheme
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.FollowBlogClicked
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.FollowSocialClicked
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.LicenseClicked
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.MoreAppsClicked
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateAppClicked
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgradeInfo
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
@@ -52,8 +42,8 @@ internal class AppSettingsView internal constructor(
   private val hideUpgradeInformation: Boolean,
   private val owner: LifecycleOwner,
   preferenceScreen: PreferenceScreen,
-  uiBus: EventBus<AppSettingsViewEvent>
-) : PrefUiView<AppSettingsViewEvent>(preferenceScreen, uiBus) {
+  callback: AppSettingsView.Callback
+) : PrefUiView<AppSettingsView.Callback>(preferenceScreen, callback) {
 
   private val context = preferenceScreen.context
 
@@ -130,7 +120,7 @@ internal class AppSettingsView internal constructor(
 
   private fun setupMoreApps() {
     moreApps.setOnPreferenceClickListener {
-      publish(MoreAppsClicked)
+      callback.onMoreAppsClicked()
       return@setOnPreferenceClickListener true
     }
   }
@@ -138,7 +128,7 @@ internal class AppSettingsView internal constructor(
   private fun setupSocial() {
     val socialLink = FACEBOOK.hyperlink(context)
     social.setOnPreferenceClickListener {
-      publish(FollowSocialClicked(socialLink))
+      callback.onFollowSocialClicked(socialLink)
       return@setOnPreferenceClickListener true
     }
   }
@@ -146,14 +136,14 @@ internal class AppSettingsView internal constructor(
   private fun setupBlog() {
     val blogLink = BLOG.hyperlink(context)
     followBlog.setOnPreferenceClickListener {
-      publish(FollowBlogClicked(blogLink))
+      callback.onFollowBlogClicked(blogLink)
       return@setOnPreferenceClickListener true
     }
   }
 
   private fun setupRateApp() {
     rate.setOnPreferenceClickListener {
-      publish(RateAppClicked)
+      callback.onRateAppClicked()
       return@setOnPreferenceClickListener true
     }
   }
@@ -161,21 +151,21 @@ internal class AppSettingsView internal constructor(
   private fun setupBugReport() {
     val reportLink = bugreportUrl.hyperlink(context)
     bugReport.setOnPreferenceClickListener {
-      publish(BugReportClicked(reportLink))
+      callback.onBugReportClicked(reportLink)
       return@setOnPreferenceClickListener true
     }
   }
 
   private fun setupLicenses() {
     licenses.setOnPreferenceClickListener {
-      publish(LicenseClicked)
+      callback.onViewLicensesClicked()
       return@setOnPreferenceClickListener true
     }
   }
 
   private fun setupCheckUpgrade() {
     version.setOnPreferenceClickListener {
-      publish(CheckUpgrade)
+      callback.onCheckUpgradeClicked()
       return@setOnPreferenceClickListener true
     }
   }
@@ -185,7 +175,7 @@ internal class AppSettingsView internal constructor(
       clearAll.isVisible = false
     } else {
       clearAll.setOnPreferenceClickListener {
-        publish(ClearAppData)
+        callback.onClearAppDataClicked()
         return@setOnPreferenceClickListener true
       }
     }
@@ -196,7 +186,7 @@ internal class AppSettingsView internal constructor(
       upgradeInfo.isVisible = false
     } else {
       upgradeInfo.setOnPreferenceClickListener {
-        publish(ShowUpgradeInfo)
+        callback.onShowUpgradeInfoClicked()
         return@setOnPreferenceClickListener true
       }
     }
@@ -205,7 +195,7 @@ internal class AppSettingsView internal constructor(
   private fun setupDarkTheme() {
     theme.setOnPreferenceChangeListener { _, newValue ->
       if (newValue is Boolean) {
-        publish(DarkTheme(newValue))
+        callback.onDarkThemeToggled(newValue)
         return@setOnPreferenceChangeListener true
       }
       return@setOnPreferenceChangeListener false
@@ -216,10 +206,27 @@ internal class AppSettingsView internal constructor(
     applicationSettings.title = "$applicationName Settings"
   }
 
-  fun showError(error: ActivityNotFoundException) {
-    Snackbreak.bindTo(owner)
-        .short(view, error.message ?: "No activity can handle this URL")
-        .show()
+  interface Callback {
+
+    fun onMoreAppsClicked()
+
+    fun onShowUpgradeInfoClicked()
+
+    fun onDarkThemeToggled(dark: Boolean)
+
+    fun onFollowSocialClicked(link: HyperlinkIntent)
+
+    fun onClearAppDataClicked()
+
+    fun onCheckUpgradeClicked()
+
+    fun onViewLicensesClicked()
+
+    fun onBugReportClicked(link: HyperlinkIntent)
+
+    fun onRateAppClicked()
+
+    fun onFollowBlogClicked(link: HyperlinkIntent)
 
   }
 

@@ -25,15 +25,13 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
 internal class RatingIconView internal constructor(
   private val changelogIcon: Int,
   private val imageLoader: ImageLoader,
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : BaseUiView<EMPTY>(parent, EmptyBus) {
+) : BaseUiView<Unit>(parent, Unit) {
 
   private val layoutRoot by lazyView<View>(R.id.rating_icon_root)
   private val icon by lazyView<ImageView>(R.id.icon)

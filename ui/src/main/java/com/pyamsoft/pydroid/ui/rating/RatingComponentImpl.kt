@@ -22,7 +22,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogStateEvent
 
 internal class RatingComponentImpl internal constructor(
   private val owner: LifecycleOwner,
@@ -36,7 +35,7 @@ internal class RatingComponentImpl internal constructor(
   override fun inject(activity: RatingActivity) {
     val ratingView = RatingView(view, owner)
     activity.ratingUiComponent = RatingUiComponent(dialogBus, schedulerProvider, ratingView, owner)
-    activity.ratingWorker = RatingWorker(interactor, schedulerProvider, bus)
+    activity.ratingPresenter = RatingPresenter(interactor, schedulerProvider, bus)
   }
 
 }

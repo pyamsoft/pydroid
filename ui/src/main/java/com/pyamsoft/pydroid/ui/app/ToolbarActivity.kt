@@ -15,14 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.app
 
-import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.Toolbar
 
-abstract class ToolbarFragment : Fragment(), BackPressHandler {
+interface ToolbarActivity {
 
-  override fun onBackPressed(): Boolean {
-    return BackPressDelegate.onBackPressed(childFragmentManager)
-  }
+  fun withToolbar(func: (Toolbar) -> Unit)
 
+  fun requireToolbar(func: (Toolbar) -> Unit)
 }

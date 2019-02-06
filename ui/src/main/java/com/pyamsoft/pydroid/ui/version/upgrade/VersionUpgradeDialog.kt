@@ -17,23 +17,32 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
-import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
+import com.pyamsoft.pydroid.ui.app.noTitle
+import com.pyamsoft.pydroid.ui.app.requireArguments
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradePresenter.Callback
 
-internal class VersionUpgradeDialog : ToolbarDialog(), Callback {
+internal class VersionUpgradeDialog : DialogFragment(), Callback {
 
   internal lateinit var controlsView: VersionUpgradeControlView
   internal lateinit var contentView: VersionUpgradeContentView
+  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
   internal lateinit var presenter: VersionUpgradePresenter
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return super.onCreateDialog(savedInstanceState)
+        .noTitle()
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -49,6 +58,9 @@ internal class VersionUpgradeDialog : ToolbarDialog(), Callback {
         .plusVersionUpgradeComponent(viewLifecycleOwner, root as ViewGroup, latestVersion)
         .inject(this)
 
+    contentView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
+
     return root
   }
 
@@ -57,9 +69,6 @@ internal class VersionUpgradeDialog : ToolbarDialog(), Callback {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-
-    contentView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
     presenter.bind(this)
   }
 
@@ -86,7 +95,7 @@ internal class VersionUpgradeDialog : ToolbarDialog(), Callback {
   override fun onUpgradeBegin() {
     val error = MarketLinker.linkToMarketPage(requireContext(), requireContext().packageName)
     if (error != null) {
-      presenter.marketLinkFailedNavigation(error)
+      failedNavigationPresenter.failedNavigation(error)
     }
   }
 
@@ -102,12 +111,11 @@ internal class VersionUpgradeDialog : ToolbarDialog(), Callback {
     @JvmStatic
     @CheckResult
     fun newInstance(latestVersion: Int): VersionUpgradeDialog {
-      return VersionUpgradeDialog()
-          .apply {
-            arguments = Bundle().apply {
-              putInt(KEY_LATEST_VERSION, latestVersion)
-            }
-          }
+      return VersionUpgradeDialog().apply {
+        arguments = Bundle().apply {
+          putInt(KEY_LATEST_VERSION, latestVersion)
+        }
+      }
     }
   }
 }

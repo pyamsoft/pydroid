@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 
 internal class RatingDialogComponentImpl internal constructor(
   private val ratingModule: RatingModule,
@@ -34,18 +36,26 @@ internal class RatingDialogComponentImpl internal constructor(
   private val rateLink: String,
   private val changelogIcon: Int,
   private val changelog: SpannedString,
-  private val uiBus: EventBus<RatingDialogViewEvent>,
-  private val controllerBus: EventBus<RatingDialogStateEvent>
+  private val ratingStateBus: EventBus<RatingSavedEvent>,
+  private val failedNavBus: EventBus<FailedNavigationEvent>
 ) : RatingDialogComponent {
 
   override fun inject(dialog: RatingDialog) {
+    val failedPresenter = FailedNavigationPresenterImpl(owner, failedNavBus)
+    val presenter = RatingDialogPresenterImpl(
+        ratingModule.interactor, schedulerProvider, owner, ratingStateBus
+    )
+    val controlsView = RatingControlsView(rateLink, parent, presenter)
     val iconView = RatingIconView(changelogIcon, loaderModule.provideImageLoader(), owner, parent)
     val changelogView = RatingChangelogView(changelog, parent)
-    val controlsView = RatingControlsView(rateLink, parent, uiBus)
-    dialog.worker = RatingDialogWorker(ratingModule.interactor, schedulerProvider, controllerBus)
-    dialog.iconComponent = RatingIconUiComponent(iconView, owner)
-    dialog.changelogComponent = RatingChangelogUiComponent(changelogView, owner)
-    dialog.controlsComponent = RatingControlsUiComponent(schedulerProvider, controlsView, owner)
+
+    dialog.apply {
+      this.changelogView = changelogView
+      this.controlsView = controlsView
+      this.iconView = iconView
+      this.presenter = presenter
+      this.failedNavigationPresenter = failedPresenter
+    }
   }
 
 }

@@ -24,10 +24,13 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.rating.RatingStateEvent
-import com.pyamsoft.pydroid.ui.rating.RatingWorker
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
+import com.pyamsoft.pydroid.ui.rating.RatingPresenterImpl
+import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenterImpl
+import com.pyamsoft.pydroid.ui.version.VersionCheckState
 
 internal class AppSettingsComponentImpl internal constructor(
   private val view: View,
@@ -35,32 +38,34 @@ internal class AppSettingsComponentImpl internal constructor(
   private val ratingModule: RatingModule,
   private val versionCheckModule: VersionCheckModule,
   private val theming: Theming,
-  private val versionStateBus: EventBus<VersionStateEvent>,
-  private val ratingStateBus: EventBus<RatingStateEvent>,
-  private val settingsViewBus: EventBus<AppSettingsViewEvent>,
-  private val settingsStateBus: EventBus<AppSettingsStateEvent>,
+  private val versionCheckBus: EventBus<VersionCheckState>,
+  private val ratingStateBus: EventBus<ShowRating>,
   private val schedulerProvider: SchedulerProvider,
   private val preferenceScreen: PreferenceScreen,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val hideClearAll: Boolean,
-  private val hideUpgradeInformation: Boolean
+  private val hideUpgradeInformation: Boolean,
+  private val failedNavBus: EventBus<FailedNavigationEvent>
 ) : AppSettingsComponent {
 
   override fun inject(fragment: AppSettingsPreferenceFragment) {
+    val presenter = AppSettingsPresenterImpl(theming, owner)
     val settingsView = AppSettingsView(
         view, theming, applicationName, bugreportUrl, hideClearAll,
-        hideUpgradeInformation, owner, preferenceScreen, settingsViewBus
-    )
-    fragment.theming = theming
-    fragment.versionPresenter = VersionCheckPresenter(
-        versionCheckModule.interactor, schedulerProvider, versionStateBus
-    )
-    fragment.ratingWorker = RatingWorker(ratingModule.interactor, schedulerProvider, ratingStateBus)
-    fragment.settingsComponent = AppSettingsUiComponent(
-        settingsStateBus, schedulerProvider, settingsView, owner
+        hideUpgradeInformation, owner, preferenceScreen, presenter
     )
 
-    fragment.settingsWorker = AppSettingsWorker(settingsStateBus)
+    fragment.apply {
+      this.failedNavPresenter = FailedNavigationPresenterImpl(owner, failedNavBus)
+      this.settingsView = settingsView
+      this.settingsPresenter = presenter
+      this.versionPresenter = VersionCheckPresenterImpl(
+          versionCheckModule.interactor, schedulerProvider, owner, versionCheckBus
+      )
+      this.ratingPresenter = RatingPresenterImpl(
+          ratingModule.interactor, schedulerProvider, owner, ratingStateBus
+      )
+    }
   }
 }

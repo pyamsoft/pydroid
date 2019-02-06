@@ -15,24 +15,15 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.fragment
+package com.pyamsoft.pydroid.ui.app
 
 import android.app.Dialog
-import android.os.Bundle
 import android.view.Window
-import androidx.fragment.app.DialogFragment
+import androidx.annotation.CheckResult
 
-abstract class ToolbarDialog : DialogFragment() {
-
-  protected open val hasTitle: Boolean = false
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = super.onCreateDialog(savedInstanceState)
-    if (!hasTitle) {
-      dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-    }
-
-    return dialog
-  }
-
+@CheckResult
+fun Dialog.noTitle(): Dialog {
+  requestWindowFeature(Window.FEATURE_NO_TITLE)
+  return this
 }
+

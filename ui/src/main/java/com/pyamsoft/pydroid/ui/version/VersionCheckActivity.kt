@@ -20,20 +20,24 @@ package com.pyamsoft.pydroid.ui.version
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.CallSuper
 import com.pyamsoft.pydroid.ui.PYDroid
-import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
+import com.pyamsoft.pydroid.ui.app.ActivityBase
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.Callback
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import timber.log.Timber
 
-abstract class VersionCheckActivity : ActivityBase(), Callback {
+abstract class VersionCheckActivity : ActivityBase(), Callback, FailedNavigationPresenter.Callback {
 
   protected abstract val snackbarRoot: View
 
+  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
   internal lateinit var versionPresenter: VersionCheckPresenter
   internal lateinit var versionView: VersionView
 
+  @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
 
@@ -44,26 +48,32 @@ abstract class VersionCheckActivity : ActivityBase(), Callback {
         .inject(this)
 
     versionView.inflate(savedInstanceState)
+
+    failedNavigationPresenter.bind(this)
+
     versionPresenter.bind(this)
+    versionPresenter.checkForUpdates(false)
   }
 
+  @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     versionView.saveState(outState)
   }
 
+  @CallSuper
   override fun onDestroy() {
     super.onDestroy()
     versionView.teardown()
   }
 
-  override fun onVersionCheckBegin(forced: Boolean) {
+  final override fun onVersionCheckBegin(forced: Boolean) {
     if (forced) {
       versionView.showUpdating()
     }
   }
 
-  override fun onVersionCheckFound(
+  final override fun onVersionCheckFound(
     currentVersion: Int,
     newVersion: Int
   ) {
@@ -72,15 +82,15 @@ abstract class VersionCheckActivity : ActivityBase(), Callback {
         .show(this, VersionUpgradeDialog.TAG)
   }
 
-  override fun onVersionCheckError(throwable: Throwable) {
-    if (throwable is ActivityNotFoundException) {
-      versionView.showError(throwable)
-    } else {
-      Timber.e(throwable, "Error checking for latest version")
-    }
+  final override fun onVersionCheckError(throwable: Throwable) {
+    Timber.e(throwable, "Error checking for latest version")
   }
 
-  override fun onVersionCheckComplete() {
+  final override fun onVersionCheckComplete() {
     versionView.dismissUpdating()
+  }
+
+  final override fun onFailedNavigation(error: ActivityNotFoundException) {
+    versionView.showError(error)
   }
 }

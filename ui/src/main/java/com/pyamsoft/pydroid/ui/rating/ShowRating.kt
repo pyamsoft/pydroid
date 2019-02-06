@@ -15,12 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.rating
 
-import android.content.ActivityNotFoundException
-
-internal sealed class AppSettingsStateEvent : StateEvent {
-
-  data class FailedLink(val error: ActivityNotFoundException) : AppSettingsStateEvent()
-
+object ShowRating {
 }

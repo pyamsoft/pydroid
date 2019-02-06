@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
+import android.app.Dialog
 import android.os.Bundle
 import android.text.SpannedString
 import android.view.LayoutInflater
@@ -24,30 +25,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
+import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
-import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.app.noTitle
+import com.pyamsoft.pydroid.ui.app.requireArguments
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogPresenter.Callback
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 
-internal class RatingDialog : ToolbarDialog() {
+internal class RatingDialog : DialogFragment(), Callback {
 
-  internal lateinit var iconComponent: RatingIconUiComponent
-  internal lateinit var changelogComponent: RatingChangelogUiComponent
-  internal lateinit var controlsComponent: RatingControlsUiComponent
-  internal lateinit var worker: RatingDialogWorker
-
-  private var ratingSaveDisposable by singleDisposable()
+  internal lateinit var presenter: RatingDialogPresenter
+  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
+  internal lateinit var iconView: RatingIconView
+  internal lateinit var changelogView: RatingChangelogView
+  internal lateinit var controlsView: RatingControlsView
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     isCancelable = false
+  }
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return super.onCreateDialog(savedInstanceState)
+        .noTitle()
   }
 
   override fun onCreateView(
@@ -82,44 +85,26 @@ internal class RatingDialog : ToolbarDialog() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-    controlsComponent.onUiEvent {
-      return@onUiEvent when (it) {
-        is VisitMarket -> saveAndRate(it.packageName)
-        is Cancel -> saveAndCancel()
-      }
-    }
-        .destroy(viewLifecycleOwner)
 
-    iconComponent.create(savedInstanceState)
-    changelogComponent.create(savedInstanceState)
-    controlsComponent.create(savedInstanceState)
+    iconView.inflate(savedInstanceState)
+    changelogView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
+
+    presenter.bind(this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    iconComponent.saveState(outState)
-    changelogComponent.saveState(outState)
-    controlsComponent.saveState(outState)
+    iconView.saveState(outState)
+    changelogView.saveState(outState)
+    controlsView.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    ratingSaveDisposable.tryDispose()
-  }
-
-  private fun saveAndRate(packageName: String) {
-    ratingSaveDisposable = worker.saveRating {
-      val error = MarketLinker.linkToMarketPage(requireContext(), packageName)
-
-      dismiss()
-      if (error != null) {
-        worker.failedMarketLink(error)
-      }
-    }
-  }
-
-  private fun saveAndCancel() {
-    ratingSaveDisposable = worker.saveRating { dismiss() }
+    iconView.teardown()
+    changelogView.teardown()
+    controlsView.teardown()
   }
 
   override fun onResume() {
@@ -129,6 +114,19 @@ internal class RatingDialog : ToolbarDialog() {
         WindowManager.LayoutParams.MATCH_PARENT,
         WindowManager.LayoutParams.WRAP_CONTENT
     )
+  }
+
+  override fun onVisitApplicationPageToRate(packageName: String) {
+    val error = MarketLinker.linkToMarketPage(requireContext(), packageName)
+    dismiss()
+
+    if (error != null) {
+      failedNavigationPresenter.failedNavigation(error)
+    }
+  }
+
+  override fun onDidNotRate() {
+    dismiss()
   }
 
   companion object {
@@ -141,14 +139,13 @@ internal class RatingDialog : ToolbarDialog() {
     @CheckResult
     @JvmStatic
     fun newInstance(provider: ChangeLogProvider): RatingDialog {
-      return RatingDialog()
-          .apply {
-            arguments = Bundle().apply {
-              putString(RATE_LINK, provider.getPackageName())
-              putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
-              putInt(CHANGE_LOG_ICON, provider.applicationIcon)
-            }
-          }
+      return RatingDialog().apply {
+        arguments = Bundle().apply {
+          putString(RATE_LINK, provider.getPackageName())
+          putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
+          putInt(CHANGE_LOG_ICON, provider.applicationIcon)
+        }
+      }
     }
   }
 }

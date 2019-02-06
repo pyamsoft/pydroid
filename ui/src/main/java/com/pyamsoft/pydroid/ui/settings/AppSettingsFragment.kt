@@ -23,13 +23,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.fragment.ToolbarFragment
-import com.pyamsoft.pydroid.ui.app.fragment.requireView
+import com.pyamsoft.pydroid.ui.app.requireView
 import com.pyamsoft.pydroid.ui.util.commit
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class AppSettingsFragment : ToolbarFragment() {
+abstract class AppSettingsFragment : Fragment() {
 
   private val coordinatorLayout by lazy(NONE) {
     requireView().findViewById<CoordinatorLayout>(R.id.layout_coordinator)

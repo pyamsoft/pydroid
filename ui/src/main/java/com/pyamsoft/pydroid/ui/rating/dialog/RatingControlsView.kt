@@ -21,18 +21,15 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.VisitMarket
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class RatingControlsView internal constructor(
   private val rateLink: String,
   parent: ViewGroup,
-  uiBus: EventBus<RatingDialogViewEvent>
-) : BaseUiView<RatingDialogViewEvent>(parent, uiBus) {
+  callback: RatingControlsView.Callback
+) : BaseUiView<RatingControlsView.Callback>(parent, callback) {
 
   private val layoutRoot by lazyView<View>(R.id.rating_control_root)
   private val rateApplication by lazyView<Button>(R.id.rate_application)
@@ -52,13 +49,21 @@ internal class RatingControlsView internal constructor(
   }
 
   private fun setupButtons() {
-    rateApplication.setOnDebouncedClickListener { publish(VisitMarket(rateLink)) }
-    noThanks.setOnDebouncedClickListener { publish(Cancel) }
+    rateApplication.setOnDebouncedClickListener { callback.onRateApplicationClicked(rateLink) }
+    noThanks.setOnDebouncedClickListener { callback.onNotRatingApplication() }
   }
 
   override fun teardown() {
     rateApplication.setOnClickListener(null)
     noThanks.setOnClickListener(null)
+  }
+
+  interface Callback {
+
+    fun onRateApplicationClicked(link: String)
+
+    fun onNotRatingApplication()
+
   }
 
 }

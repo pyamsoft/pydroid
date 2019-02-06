@@ -15,13 +15,34 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.app.activity
+package com.pyamsoft.pydroid.ui.settings
 
-import androidx.appcompat.widget.Toolbar
+import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.util.HyperlinkIntent
 
-interface ToolbarActivity {
+internal interface AppSettingsPresenter : Presenter<AppSettingsPresenter.Callback> {
 
-  fun withToolbar(func: (Toolbar) -> Unit)
+  interface Callback {
 
-  fun requireToolbar(func: (Toolbar) -> Unit)
+    fun onViewMorePyamsoftApps()
+
+    fun onShowUpgradeInfo()
+
+    fun onDarkThemeChanged(dark: Boolean)
+
+    fun onShowSocialMedia(link: HyperlinkIntent)
+
+    fun onClearAppData()
+
+    fun onCheckUpgrade()
+
+    fun onViewLicenses()
+
+    fun onOpenBugReport(link: HyperlinkIntent)
+
+    fun onRateApp()
+
+    fun onShowBlog(link: HyperlinkIntent)
+  }
+
 }

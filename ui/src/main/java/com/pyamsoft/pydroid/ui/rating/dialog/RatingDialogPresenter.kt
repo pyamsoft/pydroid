@@ -17,10 +17,15 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-internal class RatingChangelogUiComponent internal constructor(
-  view: RatingChangelogView,
-  owner: LifecycleOwner
-) : BaseUiComponent<EMPTY, RatingChangelogView>(view, owner)
+internal interface RatingDialogPresenter : Presenter<RatingDialogPresenter.Callback> {
+
+  interface Callback {
+
+    fun onVisitApplicationPageToRate(packageName: String)
+
+    fun onDidNotRate()
+  }
+
+}

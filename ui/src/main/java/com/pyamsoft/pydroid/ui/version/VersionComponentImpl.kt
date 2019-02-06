@@ -22,19 +22,23 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 
 internal class VersionComponentImpl internal constructor(
   private val owner: LifecycleOwner,
   private val view: View,
   private val bus: EventBus<VersionCheckState>,
   private val interactor: VersionCheckInteractor,
-  private val schedulerProvider: SchedulerProvider
+  private val schedulerProvider: SchedulerProvider,
+  private val failedNavBus: EventBus<FailedNavigationEvent>
 ) : VersionComponent {
 
   override fun inject(activity: VersionCheckActivity) {
-    val presenter = VersionCheckPresenterImpl(interactor, schedulerProvider, owner, bus, false)
+    val presenter = VersionCheckPresenterImpl(interactor, schedulerProvider, owner, bus)
     val view = VersionView(view, owner)
     activity.apply {
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(owner, failedNavBus)
       this.versionPresenter = presenter
       this.versionView = view
     }

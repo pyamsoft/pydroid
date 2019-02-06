@@ -17,26 +17,19 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.content.ActivityNotFoundException
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.arch.BasePresenter
-import com.pyamsoft.pydroid.ui.version.VersionCheckState
 
 internal class VersionUpgradePresenterImpl internal constructor(
-  owner: LifecycleOwner,
-  bus: EventBus<VersionCheckState>
-) : BasePresenter<VersionCheckState, VersionUpgradePresenter.Callback>(owner, bus),
+  owner: LifecycleOwner
+) : BasePresenter<Unit, VersionUpgradePresenter.Callback>(owner, RxBus.empty()),
     VersionUpgradePresenter, VersionUpgradeControlView.Callback {
 
   override fun onBind() {
   }
 
   override fun onUnbind() {
-  }
-
-  override fun marketLinkFailedNavigation(error: ActivityNotFoundException) {
-    publish(VersionCheckState.Error(error))
   }
 
   override fun onUpgradeClicked() {

@@ -17,12 +17,9 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.ui.arch.Presenter
 
 internal interface VersionUpgradePresenter : Presenter<VersionUpgradePresenter.Callback> {
-
-  fun marketLinkFailedNavigation(error: ActivityNotFoundException)
 
   interface Callback {
 

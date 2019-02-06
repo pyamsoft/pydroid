@@ -28,24 +28,18 @@ import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
+abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider, Callback {
 
-  internal lateinit var ratingWorker: RatingWorker
-  internal lateinit var ratingUiComponent: RatingUiComponent
-
-  private var loadRatingDialogDisposable by singleDisposable()
-  private var showDialogDisposable by singleDisposable()
-  private var showErrorDialogDisposable by singleDisposable()
+  internal lateinit var ratingPresenter: RatingPresenter
+  internal lateinit var ratingView: RatingView
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -91,38 +85,35 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     }
   }
 
+  @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
+
+    // Need to do this in onPostCreate because the snackbarRoot will not be available until
+    // after subclass onCreate
     PYDroid.obtain(this)
         .plusRatingComponent(this, snackbarRoot)
         .inject(this)
 
-    ratingWorker.onRatingDialogRequested { showRatingDialog() }
-        .destroy(this)
+    ratingView.inflate(savedInstanceState)
 
-    ratingUiComponent.create(savedInstanceState)
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    loadRatingDialogDisposable.tryDispose()
-    showDialogDisposable.tryDispose()
-    showErrorDialogDisposable.tryDispose()
+    ratingPresenter.bind(this)
+    ratingPresenter.load(false)
   }
 
   @CallSuper
-  override fun onPostResume() {
-    super.onPostResume()
-
-    loadRatingDialogDisposable = ratingWorker.loadRatingDialog(false)
+  override fun onDestroy() {
+    super.onDestroy()
+    ratingView.teardown()
   }
 
+  @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    ratingUiComponent.saveState(outState)
+    ratingView.saveState(outState)
   }
 
-  private fun showRatingDialog() {
+  final override fun onShowRating() {
     RatingDialog.newInstance(this)
         .show(this, RatingDialog.TAG)
   }

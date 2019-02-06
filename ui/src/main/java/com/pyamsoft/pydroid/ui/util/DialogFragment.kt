@@ -19,12 +19,15 @@ package com.pyamsoft.pydroid.ui.util
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import com.pyamsoft.pydroid.util.runWhenReady
+import com.pyamsoft.pydroid.util.runAfterReady
 import timber.log.Timber
 
 /**
  * Using the fragment manager to handle transactions, this guarantees that any old
  * versions of the dialog fragment are removed before a new one is added.
+ *
+ * Because of runAfterReady this also guarantees that any children fragments are also
+ * ready
  */
 fun DialogFragment.show(
   activity: FragmentActivity,
@@ -34,7 +37,7 @@ fun DialogFragment.show(
     throw IllegalArgumentException("Cannot use EMPTY tag")
   }
 
-  runWhenReady(activity) {
+  runAfterReady(activity) {
     val fragmentManager = activity.supportFragmentManager
     val transaction = fragmentManager.beginTransaction()
     val prev = fragmentManager.findFragmentByTag(tag)

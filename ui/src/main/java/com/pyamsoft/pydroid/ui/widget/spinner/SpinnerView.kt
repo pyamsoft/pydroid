@@ -24,10 +24,8 @@ import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
-class SpinnerView(parent: ViewGroup) : BaseUiView<EMPTY>(parent, EmptyBus), UiToggleView {
+class SpinnerView(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit), UiToggleView {
 
   private val layoutRoot by lazyView<View>(R.id.spinner_root)
   private val spinner by lazyView<ProgressBar>(R.id.spinner)

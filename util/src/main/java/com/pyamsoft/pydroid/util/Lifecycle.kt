@@ -29,6 +29,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.OnLifecycleEvent
 
+/**
+ * Execute func() on ON_START
+ */
 inline fun runWhenReady(
   owner: LifecycleOwner,
   crossinline func: () -> Unit
@@ -36,6 +39,9 @@ inline fun runWhenReady(
   runWhenReady(owner.lifecycle, func)
 }
 
+/**
+ * Execute func() on ON_START
+ */
 inline fun runWhenReady(
   lifecycle: Lifecycle,
   crossinline func: () -> Unit
@@ -44,6 +50,37 @@ inline fun runWhenReady(
 
     @Suppress("unused")
     @OnLifecycleEvent(ON_START)
+    fun onReady() {
+      lifecycle.removeObserver(this)
+      func()
+    }
+
+  }
+
+  lifecycle.addObserver(observer)
+}
+
+/**
+ * Execute func() on ON_RESUME
+ */
+inline fun runAfterReady(
+  owner: LifecycleOwner,
+  crossinline func: () -> Unit
+) {
+  runAfterReady(owner.lifecycle, func)
+}
+
+/**
+ * Execute func() on ON_RESUME
+ */
+inline fun runAfterReady(
+  lifecycle: Lifecycle,
+  crossinline func: () -> Unit
+) {
+  val observer = object : LifecycleObserver {
+
+    @Suppress("unused")
+    @OnLifecycleEvent(ON_RESUME)
     fun onReady() {
       lifecycle.removeObserver(this)
       func()

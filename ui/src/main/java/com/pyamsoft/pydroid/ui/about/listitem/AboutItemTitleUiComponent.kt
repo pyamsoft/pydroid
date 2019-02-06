@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 
 internal class AboutItemTitleUiComponent internal constructor(

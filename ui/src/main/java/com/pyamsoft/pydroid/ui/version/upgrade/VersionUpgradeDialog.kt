@@ -26,16 +26,14 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarDialog
 import com.pyamsoft.pydroid.ui.app.fragment.requireArguments
-import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradePresenter.Callback
 
-internal class VersionUpgradeDialog : ToolbarDialog() {
+internal class VersionUpgradeDialog : ToolbarDialog(), Callback {
 
-  internal lateinit var controlsComponent: VersionUpgradeControlsUiComponent
-  internal lateinit var contentComponent: VersionUpgradeContentUiComponent
-  internal lateinit var worker: VersionUpgradeWorker
+  internal lateinit var controlsView: VersionUpgradeControlView
+  internal lateinit var contentView: VersionUpgradeContentView
+  internal lateinit var presenter: VersionUpgradePresenter
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -60,30 +58,9 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    listenForUiEvents(view)
-    contentComponent.create(savedInstanceState)
-    controlsComponent.create(savedInstanceState)
-  }
-
-  private fun listenForUiEvents(view: View) {
-    controlsComponent.onUiEvent {
-      return@onUiEvent when (it) {
-        is Cancel -> dismiss()
-        is Upgrade -> onUpgradeClicked(view)
-      }
-    }
-        .destroy(viewLifecycleOwner)
-  }
-
-  private fun onUpgradeClicked(view: View) {
-    view.context.also {
-      val error = MarketLinker.linkToMarketPage(it, it.packageName)
-
-      dismiss()
-      if (error != null) {
-        worker.failedMarketLink(error)
-      }
-    }
+    contentView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
+    presenter.bind(this)
   }
 
   override fun onResume() {
@@ -94,10 +71,27 @@ internal class VersionUpgradeDialog : ToolbarDialog() {
     )
   }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    contentView.teardown()
+    controlsView.teardown()
+  }
+
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    contentComponent.saveState(outState)
-    controlsComponent.saveState(outState)
+    contentView.saveState(outState)
+    controlsView.saveState(outState)
+  }
+
+  override fun onUpgradeBegin() {
+    val error = MarketLinker.linkToMarketPage(requireContext(), requireContext().packageName)
+    if (error != null) {
+      presenter.marketLinkFailedNavigation(error)
+    }
+  }
+
+  override fun onUpgradeCancel() {
+    dismiss()
   }
 
   companion object {

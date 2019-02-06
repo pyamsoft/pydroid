@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 internal sealed class AppSettingsViewEvent : ViewEvent {

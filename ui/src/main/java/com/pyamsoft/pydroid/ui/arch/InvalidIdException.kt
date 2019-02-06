@@ -15,21 +15,15 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version
+package com.pyamsoft.pydroid.ui.arch
 
-import com.pyamsoft.pydroid.ui.arch.StateEvent
-
-internal sealed class VersionStateEvent : StateEvent {
-
-  data class Loading(val forced: Boolean) : VersionStateEvent()
-
-  data class UpdateFound(
-    val currentVersion: Int,
-    val newVersion: Int
-  ) : VersionStateEvent()
-
-  data class UpdateError(val error: Throwable) : VersionStateEvent()
-
-  object UpdateComplete : VersionStateEvent()
-
-}
+object InvalidIdException : RuntimeException(
+    """
+      |The UiView which powers this UiComponent is in turn powered
+      |by a PreferenceFragment from the AndroidX framework which
+      |is a strange beast and does not fit into the UiComponent
+      |architecture that the rest of the application has tried to
+      |establish. This view has no id(), and to attempt to use it
+      |is incorrect.
+    """.trimMargin()
+)

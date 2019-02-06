@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.ui.arch.UiComponent
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
 
-internal interface AboutUiComponent<T : ViewEvent, V : UiView<T>> : UiComponent<T, V>, BaseAboutItem
+internal interface AboutUiComponent<T : ViewEvent, V : UiView> : UiComponent<T, V>, BaseAboutItem

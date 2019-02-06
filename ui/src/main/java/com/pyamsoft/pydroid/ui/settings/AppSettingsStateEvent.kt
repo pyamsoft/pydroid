@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.ui.arch.StateEvent
 
 internal sealed class AppSettingsStateEvent : StateEvent {
 

@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastVisitHomepage
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
-import com.pyamsoft.pydroid.ui.arch.Worker
 
 class AboutItemWorker internal constructor(
   bus: EventBus<AboutStateEvent>

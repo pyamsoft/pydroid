@@ -22,14 +22,11 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import io.reactivex.Observable
 
-interface UiView<T : ViewEvent> {
+interface UiView {
 
   @IdRes
   @CheckResult
   fun id(): Int
-
-  @CheckResult
-  fun onUiEvent(): Observable<T>
 
   fun inflate(savedInstanceState: Bundle?)
 

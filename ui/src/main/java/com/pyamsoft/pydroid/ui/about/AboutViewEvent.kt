@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
-
 sealed class AboutViewEvent : ViewEvent {
 
   data class VisitHomepage(

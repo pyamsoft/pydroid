@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.FailedViewLicenseExternal
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
-import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.disposables.Disposable
 
 class ViewLicenseWorker internal constructor(

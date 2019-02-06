@@ -21,17 +21,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeControlView internal constructor(
   parent: ViewGroup,
-  bus: EventBus<VersionUpgradeViewEvent>
-) : BaseUiView<VersionUpgradeViewEvent>(parent, bus) {
+  callback: VersionUpgradeControlView.Callback
+) : BaseUiView<VersionUpgradeControlView.Callback>(parent, callback) {
 
   private val layoutRoot by lazyView<View>(R.id.version_control_root)
   private val upgradeButton by lazyView<Button>(R.id.upgrade_button)
@@ -56,8 +53,14 @@ internal class VersionUpgradeControlView internal constructor(
   }
 
   private fun bindButtons() {
-    upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
-    laterButton.setOnDebouncedClickListener { publish(Cancel) }
+    upgradeButton.setOnDebouncedClickListener { callback.onUpgradeClicked() }
+    laterButton.setOnDebouncedClickListener { callback.onCancelClicked() }
   }
 
+  interface Callback {
+
+    fun onUpgradeClicked()
+
+    fun onCancelClicked()
+  }
 }

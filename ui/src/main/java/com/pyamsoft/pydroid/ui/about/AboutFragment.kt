@@ -40,7 +40,6 @@ import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerUiComponent
 
 class AboutFragment : ToolbarFragment() {
 

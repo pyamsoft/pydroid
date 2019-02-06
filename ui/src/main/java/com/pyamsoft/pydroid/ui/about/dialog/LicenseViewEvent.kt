@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
-import com.pyamsoft.pydroid.ui.arch.ViewEvent
-
 sealed class LicenseViewEvent : ViewEvent {
 
   object ToolbarNavClick : LicenseViewEvent()

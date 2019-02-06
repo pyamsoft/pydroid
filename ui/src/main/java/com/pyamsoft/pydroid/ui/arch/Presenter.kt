@@ -17,22 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import android.os.Bundle
-import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
-import io.reactivex.disposables.Disposable
+interface Presenter<C : Any> {
 
-interface UiComponent<T : ViewEvent, V : UiView<T>> {
-
-  @IdRes
-  @CheckResult
-  fun id(): Int
-
-  @CheckResult
-  fun onUiEvent(onUiEvent: (event: T) -> Unit): Disposable
-
-  fun create(savedInstanceState: Bundle?)
-
-  fun saveState(outState: Bundle)
-
+  fun bind(callback: C)
 }
+

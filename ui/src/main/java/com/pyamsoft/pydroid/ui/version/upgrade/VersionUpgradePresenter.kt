@@ -15,20 +15,20 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.version.upgrade
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.bus.EventBus
-import io.reactivex.Observable
+import android.content.ActivityNotFoundException
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-abstract class Worker<T : StateEvent> protected constructor(private val bus: EventBus<T>) {
+internal interface VersionUpgradePresenter : Presenter<VersionUpgradePresenter.Callback> {
 
-  @CheckResult
-  protected fun listen(): Observable<T> {
-    return bus.listen()
-  }
+  fun marketLinkFailedNavigation(error: ActivityNotFoundException)
 
-  protected fun publish(event: T) {
-    bus.publish(event)
+  interface Callback {
+
+    fun onUpgradeBegin()
+
+    fun onUpgradeCancel()
+
   }
 }

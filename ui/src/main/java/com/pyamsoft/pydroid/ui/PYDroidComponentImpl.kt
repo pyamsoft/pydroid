@@ -52,13 +52,11 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsComponentImpl
 import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.version.VersionCheckState
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.VersionComponentImpl
-import com.pyamsoft.pydroid.ui.version.VersionStateEvent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponentImpl
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeStateEvent
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent
 
 internal class PYDroidComponentImpl internal constructor(
   debug: Boolean,
@@ -74,10 +72,7 @@ internal class PYDroidComponentImpl internal constructor(
 
   private val ratingDialogStateBus = RxBus.create<RatingDialogStateEvent>()
 
-  private val versionStateBus = RxBus.create<VersionStateEvent>()
-
-  private val versionUpgradeViewBus = RxBus.create<VersionUpgradeViewEvent>()
-  private val versionUpgradeStateBus = RxBus.create<VersionUpgradeStateEvent>()
+  private val versionStateBus = RxBus.create<VersionCheckState>()
 
   private val aboutStateBus = RxBus.create<AboutStateEvent>()
   private val aboutViewBus = RxBus.create<AboutViewEvent>()
@@ -110,8 +105,7 @@ internal class PYDroidComponentImpl internal constructor(
     owner: LifecycleOwner,
     view: View
   ): VersionComponent = VersionComponentImpl(
-      owner, view, versionStateBus, versionUpgradeStateBus,
-      versionModule.interactor, schedulerProvider
+      owner, view, versionStateBus, versionModule.interactor, schedulerProvider
   )
 
   override fun plusAboutItemComponent(
@@ -125,8 +119,7 @@ internal class PYDroidComponentImpl internal constructor(
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
-      schedulerProvider, owner, parent, applicationName, currentVersion,
-      newVersion, versionUpgradeViewBus, versionUpgradeStateBus
+      owner, parent, applicationName, currentVersion, newVersion, versionStateBus
   )
 
   override fun plusSettingsComponent(

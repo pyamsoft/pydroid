@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LicensesLoaded
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadError
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
-import com.pyamsoft.pydroid.ui.arch.Worker
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 

@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.settings
 
 import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.arch.Worker
 import com.pyamsoft.pydroid.ui.settings.AppSettingsStateEvent.FailedLink
 
 internal class AppSettingsWorker internal constructor(

@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.activity.ActivityBase
 import com.pyamsoft.pydroid.ui.app.fragment.ToolbarPreferenceFragment
-import com.pyamsoft.pydroid.ui.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.BugReportClicked
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
@@ -44,14 +43,14 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateAppClicked
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgradeInfo
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
 abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
 
   internal lateinit var theming: Theming
-  internal lateinit var versionWorker: VersionCheckWorker
+  internal lateinit var versionPresenter: VersionCheckPresenter
   internal lateinit var ratingWorker: RatingWorker
   internal lateinit var settingsWorker: AppSettingsWorker
   internal lateinit var settingsComponent: AppSettingsUiComponent
@@ -177,7 +176,7 @@ abstract class AppSettingsPreferenceFragment : ToolbarPreferenceFragment() {
    */
   @CallSuper
   protected open fun onCheckForUpdatesClicked() {
-    checkUpdatesDisposable = versionWorker.checkForUpdates(true)
+    checkUpdatesDisposable = versionPresenter.checkForUpdates(true)
   }
 
   protected open val preferenceXmlResId: Int = 0

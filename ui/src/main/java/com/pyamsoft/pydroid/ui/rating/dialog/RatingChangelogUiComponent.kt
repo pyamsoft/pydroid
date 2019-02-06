@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 
 internal class RatingChangelogUiComponent internal constructor(

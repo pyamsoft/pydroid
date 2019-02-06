@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.ui.arch.StateEvent
-
 internal sealed class RatingStateEvent : StateEvent {
 
   object ShowEvent : RatingStateEvent()

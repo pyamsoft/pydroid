@@ -27,8 +27,7 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.rating.RatingStateEvent
 import com.pyamsoft.pydroid.ui.rating.RatingWorker
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckWorker
-import com.pyamsoft.pydroid.ui.version.VersionStateEvent
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 
 internal class AppSettingsComponentImpl internal constructor(
   private val view: View,
@@ -54,7 +53,7 @@ internal class AppSettingsComponentImpl internal constructor(
         hideUpgradeInformation, owner, preferenceScreen, settingsViewBus
     )
     fragment.theming = theming
-    fragment.versionWorker = VersionCheckWorker(
+    fragment.versionPresenter = VersionCheckPresenter(
         versionCheckModule.interactor, schedulerProvider, versionStateBus
     )
     fragment.ratingWorker = RatingWorker(ratingModule.interactor, schedulerProvider, ratingStateBus)

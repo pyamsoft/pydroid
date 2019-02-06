@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.ui.arch.StateEvent
 
 sealed class LicenseStateEvent : StateEvent {
 

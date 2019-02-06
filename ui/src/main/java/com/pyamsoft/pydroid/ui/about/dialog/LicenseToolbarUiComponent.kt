@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.about.dialog
 
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.ui.arch.BaseUiComponent
 import io.reactivex.ObservableTransformer
 
 internal class LicenseToolbarUiComponent internal constructor(

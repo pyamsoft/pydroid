@@ -24,14 +24,12 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
-import com.pyamsoft.pydroid.core.bus.EventBus
-import io.reactivex.Observable
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class BaseUiView<T : ViewEvent> protected constructor(
+abstract class BaseUiView<T : Any> protected constructor(
   private val parent: ViewGroup,
-  private val bus: EventBus<T>
-) : UiView<T> {
+  protected val callback: T
+) : UiView {
 
   protected abstract val layout: Int
 
@@ -54,15 +52,7 @@ abstract class BaseUiView<T : ViewEvent> protected constructor(
   override fun teardown() {
   }
 
-  final override fun onUiEvent(): Observable<T> {
-    return bus.listen()
-  }
-
-  protected fun publish(event: T) {
-    bus.publish(event)
-  }
-
-  private inline fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int, findViews: View.() -> Unit = {}) {
+  private inline fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int, findViews: View.() -> Unit) {
     LayoutInflater.from(context)
         .inflate(layout, this, true)
         .run(findViews)
@@ -72,6 +62,5 @@ abstract class BaseUiView<T : ViewEvent> protected constructor(
   protected fun <T : View> lazyView(@IdRes id: Int): Lazy<T> {
     return lazy(NONE) { parent.findViewById<T>(id) }
   }
-
 }
 

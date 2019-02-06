@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.ui.arch.StateEvent
 
 internal sealed class RatingDialogStateEvent : StateEvent {
 

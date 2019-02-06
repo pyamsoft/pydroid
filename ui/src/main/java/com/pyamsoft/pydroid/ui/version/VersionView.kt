@@ -21,19 +21,17 @@ import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.InvalidUiComponentIdException
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.arch.UiView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import io.reactivex.Observable
 
 internal class VersionView internal constructor(
   private val view: View,
   private val owner: LifecycleOwner
-) : UiView<EMPTY> {
+) : UiView {
 
   override fun id(): Int {
-    throw InvalidUiComponentIdException
+    throw InvalidIdException
   }
 
   override fun inflate(savedInstanceState: Bundle?) {
@@ -43,10 +41,6 @@ internal class VersionView internal constructor(
   }
 
   override fun saveState(outState: Bundle) {
-  }
-
-  override fun onUiEvent(): Observable<EMPTY> {
-    return Observable.empty()
   }
 
   fun showUpdating() {
@@ -65,5 +59,4 @@ internal class VersionView internal constructor(
         .short(view, error.message ?: "No activity found that can handle this URL")
         .show()
   }
-
 }

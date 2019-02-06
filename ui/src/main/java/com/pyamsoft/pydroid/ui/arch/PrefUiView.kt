@@ -29,12 +29,12 @@ import kotlin.LazyThreadSafetyMode.NONE
 abstract class PrefUiView<T : ViewEvent> protected constructor(
   protected val parent: PreferenceScreen,
   private val bus: EventBus<T>
-) : UiView<T> {
+) : UiView {
 
   private val lazyPrefInitializer = { parent }
 
   final override fun id(): Int {
-    throw InvalidUiComponentIdException
+    throw InvalidIdException
   }
 
   override fun inflate(savedInstanceState: Bundle?) {

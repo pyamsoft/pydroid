@@ -15,13 +15,24 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.version
 
-import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.ui.arch.StateEvent
+import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.Callback
 
-internal sealed class VersionUpgradeStateEvent : StateEvent {
+internal interface VersionCheckPresenter : Presenter<Callback> {
 
-  data class FailedMarketLink(val error: ActivityNotFoundException) : VersionUpgradeStateEvent()
+  interface Callback {
 
+    fun onVersionCheckBegin(forced: Boolean)
+
+    fun onVersionCheckFound(
+      currentVersion: Int,
+      newVersion: Int
+    )
+
+    fun onVersionCheckError(throwable: Throwable)
+
+    fun onVersionCheckComplete()
+  }
 }

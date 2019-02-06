@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-interface UiToggleView {
+interface UiToggleView : UiView {
 
   fun show()
 

@@ -22,25 +22,22 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeStateEvent
 
 internal class VersionComponentImpl internal constructor(
   private val owner: LifecycleOwner,
   private val view: View,
-  private val bus: EventBus<VersionStateEvent>,
-  private val upgradeBus: Listener<VersionUpgradeStateEvent>,
+  private val bus: EventBus<VersionCheckState>,
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider
 ) : VersionComponent {
 
   override fun inject(activity: VersionCheckActivity) {
-    activity.versionWorker = VersionCheckWorker(interactor, schedulerProvider, bus)
-
-    val versionView = VersionView(view, owner)
-    activity.versionUiComponent = VersionUiComponent(
-        bus, upgradeBus, schedulerProvider, versionView, owner
-    )
+    val presenter = VersionCheckPresenterImpl(interactor, schedulerProvider, owner, bus, false)
+    val view = VersionView(view, owner)
+    activity.apply {
+      this.versionPresenter = presenter
+      this.versionView = view
+    }
   }
 
 }

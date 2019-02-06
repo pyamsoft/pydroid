@@ -15,15 +15,18 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.version
 
-object InvalidUiComponentIdException : RuntimeException(
-    """
-      |The UiView which powers this UiComponent is in turn powered
-      |by a PreferenceFragment from the AndroidX framework which
-      |is a strange beast and does not fit into the UiComponent
-      |architecture that the rest of the application has tried to
-      |establish. This view has no id(), and to attempt to use it
-      |is incorrect.
-    """.trimMargin()
-)
+sealed class VersionCheckState {
+
+  data class Begin(val forced: Boolean) : VersionCheckState()
+
+  data class Found(
+    val currentVersion: Int,
+    val newVersion: Int
+  ) : VersionCheckState()
+
+  data class Error(val throwable: Throwable) : VersionCheckState()
+
+  object Complete : VersionCheckState()
+}

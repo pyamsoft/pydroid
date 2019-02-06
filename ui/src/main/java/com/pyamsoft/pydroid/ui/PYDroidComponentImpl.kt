@@ -32,10 +32,6 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.AboutStateEvent
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
 import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
@@ -125,9 +121,9 @@ internal class PYDroidComponentImpl internal constructor(
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): AppSettingsComponent = AppSettingsComponentImpl(
-      view, owner, ratingModule, versionModule, theming, versionStateBus,
-      ratingStateBus, schedulerProvider, preferenceScreen, applicationName,
-      bugreportUrl, hideClearAll, hideUpgradeInformation, failedNavBus
+      view, owner, ratingModule.interactor, versionModule.interactor, theming,
+      versionStateBus, ratingStateBus, schedulerProvider, preferenceScreen,
+      applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation, failedNavBus
   )
 
   override fun plusAboutComponent(
@@ -154,7 +150,7 @@ internal class PYDroidComponentImpl internal constructor(
     changelogIcon: Int,
     changelog: SpannedString
   ): RatingDialogComponent = RatingDialogComponentImpl(
-      ratingModule, loaderModule, schedulerProvider,
+      ratingModule.interactor, loaderModule.provideImageLoader(), schedulerProvider,
       parent, owner, rateLink, changelogIcon, changelog,
       ratingDialogStateBus, failedNavBus
   )
@@ -163,8 +159,7 @@ internal class PYDroidComponentImpl internal constructor(
     owner: LifecycleOwner,
     view: View
   ): RatingComponent = RatingComponentImpl(
-      owner, view, ratingStateBus, ratingDialogStateBus,
-      ratingModule.interactor, schedulerProvider
+      owner, view, ratingStateBus, ratingModule.interactor, schedulerProvider
   )
 
   override fun loaderModule(): LoaderModule {

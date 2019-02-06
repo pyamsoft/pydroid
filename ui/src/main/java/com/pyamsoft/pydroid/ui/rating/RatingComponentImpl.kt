@@ -26,16 +26,17 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 internal class RatingComponentImpl internal constructor(
   private val owner: LifecycleOwner,
   private val view: View,
-  private val bus: EventBus<RatingStateEvent>,
-  private val dialogBus: EventBus<RatingDialogStateEvent>,
+  private val bus: EventBus<ShowRating>,
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
 ) : RatingComponent {
 
   override fun inject(activity: RatingActivity) {
     val ratingView = RatingView(view, owner)
-    activity.ratingUiComponent = RatingUiComponent(dialogBus, schedulerProvider, ratingView, owner)
-    activity.ratingPresenter = RatingPresenter(interactor, schedulerProvider, bus)
+    activity.apply {
+      this.ratingView = ratingView
+      this.ratingPresenter = RatingPresenterImpl(interactor, schedulerProvider, owner, bus)
+    }
   }
 
 }

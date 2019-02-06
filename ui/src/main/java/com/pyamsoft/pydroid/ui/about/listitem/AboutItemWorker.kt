@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.about.AboutStateEvent
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastVisitHomepage
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense

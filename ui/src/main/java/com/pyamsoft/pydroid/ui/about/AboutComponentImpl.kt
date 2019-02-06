@@ -20,14 +20,13 @@ package com.pyamsoft.pydroid.ui.about
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.Listener
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class AboutComponentImpl(
-  private val aboutModule: AboutModule,
+  private val interactor: AboutInteractor,
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
   private val controllerBus: EventBus<AboutStateEvent>,
@@ -38,11 +37,6 @@ internal class AboutComponentImpl(
   override fun inject(fragment: AboutFragment) {
     val listView = AboutListView(owner, parent)
     val spinnerView = SpinnerView(parent)
-    fragment.worker = AboutWorker(aboutModule.interactor, schedulerProvider, controllerBus)
-    fragment.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
-    fragment.listComponent = AboutListUiComponent(
-        controllerBus, licenseBus, schedulerProvider, listView, owner
-    )
   }
 
 }

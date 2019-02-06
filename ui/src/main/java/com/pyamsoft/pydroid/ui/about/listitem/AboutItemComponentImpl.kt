@@ -21,8 +21,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.about.AboutStateEvent
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,

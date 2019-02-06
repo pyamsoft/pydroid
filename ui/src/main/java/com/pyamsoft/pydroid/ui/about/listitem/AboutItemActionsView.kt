@@ -23,7 +23,6 @@ import android.widget.Button
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
 import com.pyamsoft.pydroid.ui.arch.BaseUiView

@@ -21,8 +21,8 @@ import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
@@ -35,8 +35,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckState
 internal class AppSettingsComponentImpl internal constructor(
   private val view: View,
   private val owner: LifecycleOwner,
-  private val ratingModule: RatingModule,
-  private val versionCheckModule: VersionCheckModule,
+  private val ratingInteractor: RatingInteractor,
+  private val versionCheckInteractor: VersionCheckInteractor,
   private val theming: Theming,
   private val versionCheckBus: EventBus<VersionCheckState>,
   private val ratingStateBus: EventBus<ShowRating>,
@@ -61,10 +61,10 @@ internal class AppSettingsComponentImpl internal constructor(
       this.settingsView = settingsView
       this.settingsPresenter = presenter
       this.versionPresenter = VersionCheckPresenterImpl(
-          versionCheckModule.interactor, schedulerProvider, owner, versionCheckBus
+          versionCheckInteractor, schedulerProvider, owner, versionCheckBus
       )
       this.ratingPresenter = RatingPresenterImpl(
-          ratingModule.interactor, schedulerProvider, owner, ratingStateBus
+          ratingInteractor, schedulerProvider, owner, ratingStateBus
       )
     }
   }

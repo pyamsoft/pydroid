@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,22 +26,29 @@ import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loading
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarMenuClick
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseViewEvent.ToolbarNavClick
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.app.noTitle
+import com.pyamsoft.pydroid.ui.app.requireArguments
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 import com.pyamsoft.pydroid.util.hyperlink
 
-internal class ViewLicenseDialog : ToolbarDialog() {
+class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
 
-  internal lateinit var toolbarComponent: LicenseToolbarUiComponent
-  internal lateinit var webviewComponent: LicenseWebviewUiComponent
-  internal lateinit var dropshadowComponent: DropshadowUiComponent
-  internal lateinit var loadingComponent: SpinnerUiComponent<LicenseStateEvent, Loading, Complete>
-  internal lateinit var worker: ViewLicenseWorker
+  internal lateinit var toolbar: UrlToolbarView
+  internal lateinit var webview: UrlWebviewView
+  internal lateinit var dropshadow: DropshadowView
+  internal lateinit var spinner: SpinnerView
+  internal lateinit var presenter: UrlPresenter
+  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return super.onCreateDialog(savedInstanceState)
+        .noTitle()
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -67,63 +75,40 @@ internal class ViewLicenseDialog : ToolbarDialog() {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
-    worker.onLoadErrorEvent { dismiss() }
-        .destroy(viewLifecycleOwner)
+    toolbar.inflate(savedInstanceState)
+    webview.inflate(savedInstanceState)
+    spinner.inflate(savedInstanceState)
+    dropshadow.inflate(savedInstanceState)
 
-    toolbarComponent.onUiEvent {
-      return@onUiEvent when (it) {
-        is ToolbarNavClick -> dismiss()
-        is ToolbarMenuClick -> onToolbarMenuItemClicked(it.itemId, it.link)
-      }
-    }
-        .destroy(viewLifecycleOwner)
-
-    toolbarComponent.create(savedInstanceState)
-    webviewComponent.create(savedInstanceState)
-    loadingComponent.create(savedInstanceState)
-    dropshadowComponent.create(savedInstanceState)
+    presenter.bind(this)
 
     applyConstraints(view as ConstraintLayout)
 
-    worker.loadUrl()
-  }
-
-  private fun onToolbarMenuItemClicked(
-    itemId: Int,
-    link: String
-  ) {
-    when (itemId) {
-      R.id.menu_item_view_license -> {
-        val error = link.hyperlink(requireContext())
-            .navigate()
-        if (error != null) {
-          worker.failedViewExternal(error)
-          dismiss()
-        }
-      }
-    }
+    // TODO Better arch
+    // This looks weird because the webview is the state controller and the view...
+    webview.loadUrl()
   }
 
   private fun applyConstraints(layoutRoot: ConstraintLayout) {
     ConstraintSet().apply {
       clone(layoutRoot)
 
-      toolbarComponent.also {
+      toolbar.also {
         connect(it.id(), ConstraintSet.TOP, layoutRoot.id, ConstraintSet.TOP)
         connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
-      dropshadowComponent.also {
-        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+      dropshadow.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
-      webviewComponent.also {
-        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+      webview.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
@@ -131,8 +116,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
-      loadingComponent.also {
-        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+      spinner.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
         connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
         connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
         connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
@@ -146,9 +131,10 @@ internal class ViewLicenseDialog : ToolbarDialog() {
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbarComponent.saveState(outState)
-    webviewComponent.saveState(outState)
-    loadingComponent.saveState(outState)
+    toolbar.saveState(outState)
+    webview.saveState(outState)
+    dropshadow.saveState(outState)
+    spinner.saveState(outState)
   }
 
   override fun onResume() {
@@ -160,9 +146,61 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     )
   }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    toolbar.teardown()
+    webview.teardown()
+    dropshadow.teardown()
+    spinner.teardown()
+  }
+
+  override fun onWebviewBegin() {
+    webview.hide()
+    spinner.show()
+  }
+
+  override fun onWebviewOtherPageLoaded(url: String) {
+    webview.hide()
+    spinner.show()
+  }
+
+  override fun onWebviewTargetPageLoaded(url: String) {
+    webview.hide()
+    spinner.show()
+  }
+
+  override fun onWebviewExternalNavigationEvent(url: String) {
+    navigateAway(url)
+  }
+
+  override fun onToolbarNavigateEvent() {
+    dismiss()
+  }
+
+  override fun onToolbarMenuItemEvent(
+    itemId: Int,
+    url: String
+  ) {
+    when (itemId) {
+      R.id.menu_item_view_license -> {
+        navigateAway(url)
+      }
+    }
+  }
+
+  private fun navigateAway(url: String) {
+    val error = url.hyperlink(requireContext())
+        .navigate()
+
+    dismiss()
+    if (error != null) {
+      failedNavigationPresenter.failedNavigation(error)
+    }
+  }
+
   companion object {
 
-    internal const val TAG = "ViewLicenseDialog"
+    internal const val TAG = "ViewUrlDialog"
     private const val NAME = "name"
     private const val LINK = "link"
 
@@ -171,8 +209,8 @@ internal class ViewLicenseDialog : ToolbarDialog() {
     fun newInstance(
       name: String,
       link: String
-    ): ViewLicenseDialog {
-      return ViewLicenseDialog().apply {
+    ): ViewUrlDialog {
+      return ViewUrlDialog().apply {
         arguments = Bundle().apply {
           putString(NAME, name)
           putString(LINK, link)

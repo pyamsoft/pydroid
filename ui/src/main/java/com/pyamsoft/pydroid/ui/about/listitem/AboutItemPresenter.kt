@@ -15,10 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.about.listitem
 
-internal interface ViewLicenseComponent {
+import com.pyamsoft.pydroid.ui.arch.Presenter
 
-  fun inject(dialog: ViewLicenseDialog)
+internal interface AboutItemPresenter : Presenter<AboutItemPresenter.Callback> {
 
+  interface Callback {
+
+    fun onViewLicense(
+      name: String,
+      licenseUrl: String
+    )
+
+    fun onVisitHomepage(
+      name: String,
+      homepageUrl: String
+    )
+  }
 }

@@ -58,9 +58,6 @@ internal class VersionUpgradeDialog : DialogFragment(), Callback {
         .plusVersionUpgradeComponent(viewLifecycleOwner, root as ViewGroup, latestVersion)
         .inject(this)
 
-    contentView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
-
     return root
   }
 
@@ -69,6 +66,8 @@ internal class VersionUpgradeDialog : DialogFragment(), Callback {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+    contentView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
     presenter.bind(this)
   }
 

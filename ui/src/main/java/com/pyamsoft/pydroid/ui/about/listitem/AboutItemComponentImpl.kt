@@ -19,26 +19,29 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val uiBus: EventBus<AboutViewEvent>,
-  private val controllerBus: EventBus<AboutStateEvent>,
-  private val schedulerProvider: SchedulerProvider
+  private val failedNavigationBus: EventBus<FailedNavigationEvent>
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
+    val presenter = AboutItemPresenterImpl(owner)
     val aboutTitleView = AboutItemTitleView(parent)
-    val aboutActionsView = AboutItemActionsView(parent, uiBus)
+    val aboutActionsView = AboutItemActionsView(parent, presenter)
     val aboutDescriptionView = AboutItemDescriptionView(parent)
-    viewHolder.titleComponent = AboutItemTitleUiComponent(aboutTitleView, owner)
-    viewHolder.actionsComponent =
-      AboutItemActionsUiComponent(schedulerProvider, aboutActionsView, owner)
-    viewHolder.descriptionComponent = AboutItemDescriptionUiComponent(aboutDescriptionView, owner)
-    viewHolder.worker = AboutItemWorker(controllerBus)
+
+    viewHolder.apply {
+      this.titleView = aboutTitleView
+      this.actionsView = aboutActionsView
+      this.descriptionView = aboutDescriptionView
+      this.presenter = presenter
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(owner, failedNavigationBus)
+    }
   }
 
 }

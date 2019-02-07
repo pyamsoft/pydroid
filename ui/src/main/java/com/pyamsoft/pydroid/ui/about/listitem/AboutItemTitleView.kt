@@ -25,12 +25,10 @@ import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
 internal class AboutItemTitleView internal constructor(
   parent: ViewGroup
-) : BaseUiView<EMPTY>(parent, EmptyBus), BaseAboutItem {
+) : BaseUiView<Unit>(parent, Unit), BaseAboutItem {
 
   private val layoutRoot by lazyView<View>(R.id.about_title)
   private val title by lazyView<TextView>(R.id.title)

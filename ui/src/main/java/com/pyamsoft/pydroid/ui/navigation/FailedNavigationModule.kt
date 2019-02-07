@@ -15,23 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.listitem
+package com.pyamsoft.pydroid.ui.navigation
 
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastViewLicense
-import com.pyamsoft.pydroid.ui.about.AboutStateEvent.BroadcastVisitHomepage
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
+import com.pyamsoft.pydroid.core.bus.RxBus
 
-class AboutItemWorker internal constructor(
-  bus: EventBus<AboutStateEvent>
-) : Worker<AboutStateEvent>(bus) {
+class FailedNavigationModule {
 
-  fun broadcast(event: VisitHomepage) {
-    publish(BroadcastVisitHomepage(event))
-  }
+  val bus: EventBus<FailedNavigationEvent> = RxBus.create<FailedNavigationEvent>()
 
-  fun broadcast(event: ViewLicense) {
-    publish(BroadcastViewLicense(event))
-  }
 }

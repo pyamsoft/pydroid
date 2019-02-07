@@ -22,30 +22,36 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
+import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
-internal class ViewLicenseComponentImpl internal constructor(
+internal class UrlComponentImpl internal constructor(
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
   private val imageLoader: ImageLoader,
   private val link: String,
   private val name: String,
-  private val uiBus: EventBus<LicenseViewEvent>,
-  private val controllerBus: EventBus<LicenseStateEvent>,
-  private val schedulerProvider: SchedulerProvider
-) : ViewLicenseComponent {
+  private val schedulerProvider: SchedulerProvider,
+  private val bus: EventBus<UrlWebviewState>,
+  private val failedNavigationBus: EventBus<FailedNavigationEvent>
+) : UrlComponent {
 
-  override fun inject(dialog: ViewLicenseDialog) {
-    val toolbarView = LicenseToolbarView(parent, name, link, imageLoader, owner, uiBus)
-    val webviewView = LicenseWebviewView(owner, link, controllerBus, parent)
+  override fun inject(dialog: ViewUrlDialog) {
+    val presenter = UrlPresenterImpl(schedulerProvider, owner, bus)
+    val toolbarView = UrlToolbarView(parent, name, link, imageLoader, owner, presenter)
+    val webviewView = UrlWebviewView(owner, link, bus, parent)
     val spinnerView = SpinnerView(parent)
-    dialog.worker = ViewLicenseWorker(controllerBus, schedulerProvider)
-    dialog.dropshadowComponent = DropshadowUiComponent.create(parent, owner)
-    dialog.loadingComponent = SpinnerUiComponent.create(owner, spinnerView, controllerBus)
-    dialog.webviewComponent = LicenseWebviewUiComponent(
-        controllerBus, schedulerProvider, webviewView, owner
-    )
-    dialog.toolbarComponent = LicenseToolbarUiComponent(schedulerProvider, toolbarView, owner)
+
+    dialog.apply {
+      this.dropshadow = DropshadowView(parent)
+      this.spinner = spinnerView
+      this.toolbar = toolbarView
+      this.webview = webviewView
+      this.presenter = presenter
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(owner, failedNavigationBus)
+    }
   }
 
 }

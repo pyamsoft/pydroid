@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Fake
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Real
 
 internal class AboutAdapter internal constructor(
+  private val callback: AboutItemPresenter.Callback,
   private val owner: LifecycleOwner
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
@@ -64,7 +65,7 @@ internal class AboutAdapter internal constructor(
   ): BaseViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     if (viewType == VIEW_TYPE_REAL) {
-      return AboutViewHolder.create(owner, inflater, parent)
+      return AboutViewHolder.create(callback, owner, inflater, parent)
     } else {
       return SpaceViewHolder.create(inflater, parent)
     }

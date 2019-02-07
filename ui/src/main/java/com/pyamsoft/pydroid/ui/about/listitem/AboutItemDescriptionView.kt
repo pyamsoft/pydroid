@@ -24,12 +24,10 @@ import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
 
 internal class AboutItemDescriptionView internal constructor(
   parent: ViewGroup
-) : BaseUiView<EMPTY>(parent, EmptyBus), BaseAboutItem {
+) : BaseUiView<Unit>(parent, Unit), BaseAboutItem {
 
   private val description by lazyView<TextView>(R.id.about_description)
 

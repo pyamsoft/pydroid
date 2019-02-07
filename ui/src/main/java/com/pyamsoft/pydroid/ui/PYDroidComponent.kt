@@ -24,7 +24,7 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.about.AboutComponent
-import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
+import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
@@ -74,7 +74,7 @@ internal interface PYDroidComponent {
     parent: ViewGroup,
     link: String,
     name: String
-  ): ViewLicenseComponent
+  ): UrlComponent
 
   @CheckResult
   fun plusRatingComponent(

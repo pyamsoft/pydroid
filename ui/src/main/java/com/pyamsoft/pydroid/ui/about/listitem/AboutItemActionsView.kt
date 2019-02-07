@@ -21,17 +21,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent.ViewLicense
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent.VisitHomepage
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
   parent: ViewGroup,
-  bus: EventBus<AboutViewEvent>
-) : BaseUiView<AboutViewEvent>(parent, bus), BaseAboutItem {
+  callback: AboutItemActionsView.Callback
+) : BaseUiView<AboutItemActionsView.Callback>(parent, callback), BaseAboutItem {
 
   private val layoutRoot by lazyView<View>(R.id.about_actions)
   private val viewLicense by lazyView<Button>(R.id.action_view_license)
@@ -49,17 +46,31 @@ internal class AboutItemActionsView internal constructor(
 
   override fun bind(model: OssLibrary) {
     viewLicense.setOnDebouncedClickListener {
-      publish(ViewLicense(model.name, model.licenseUrl))
+      callback.onViewLicenseClicked(model.name, model.licenseUrl)
     }
 
     visitHomepage.setOnDebouncedClickListener {
-      publish(VisitHomepage(model.name, model.libraryUrl))
+      callback.onVisitHomepageClicked(model.name, model.libraryUrl)
     }
   }
 
   override fun unbind() {
     viewLicense.setOnDebouncedClickListener(null)
     visitHomepage.setOnDebouncedClickListener(null)
+  }
+
+  interface Callback {
+
+    fun onViewLicenseClicked(
+      name: String,
+      licenseUrl: String
+    )
+
+    fun onVisitHomepageClicked(
+      name: String,
+      homepageUrl: String
+    )
+
   }
 
 }

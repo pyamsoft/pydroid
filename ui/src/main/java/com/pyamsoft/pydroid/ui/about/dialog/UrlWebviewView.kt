@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.View
@@ -36,23 +35,19 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Complete
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.Loaded
-import com.pyamsoft.pydroid.ui.about.dialog.LicenseStateEvent.PageError
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.arch.UiToggleView
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EMPTY
-import com.pyamsoft.pydroid.ui.arch.ViewEvent.EmptyBus
-import com.pyamsoft.pydroid.ui.util.Toaster
-import com.pyamsoft.pydroid.util.hyperlink
 import timber.log.Timber
 
-internal class LicenseWebviewView internal constructor(
+internal class UrlWebviewView internal constructor(
   private val owner: LifecycleOwner,
   private val link: String,
-  private val controllerBus: EventBus<LicenseStateEvent>,
+  private val bus: EventBus<UrlWebviewState>,
   parent: ViewGroup
-) : BaseUiView<EMPTY>(parent, EmptyBus), UiToggleView, LifecycleObserver {
+) : BaseUiView<Unit>(parent, Unit), UiToggleView, LifecycleObserver {
 
   private val webview by lazyView<WebView>(R.id.license_webview)
 
@@ -95,19 +90,15 @@ internal class LicenseWebviewView internal constructor(
         Timber.d("Loaded url: $url")
         val fixedUrl = url.trimEnd('/')
         if (fixedUrl == link) {
-          Timber.d("Loaded target url: $url, show webview")
-          controllerBus.publish(Loaded)
+          Timber.d("Loaded target url: $fixedUrl, show webview")
+          bus.publish(PageLoaded(fixedUrl, true))
         }
 
         // If we are showing the webview and we've navigated off the url, close the dialog
         if (webview.isVisible && fixedUrl != link) {
-          Timber.w("Navigated away from page: $url - close dialog, and open extenally")
-          val error = fixedUrl.hyperlink(view.context)
-              .navigate()
-          controllerBus.publish(PageError(error))
+          Timber.w("Navigated away from page: $fixedUrl - close dialog, and open browser")
+          bus.publish(ExternalNavigation(fixedUrl))
         }
-
-        controllerBus.publish(Complete)
       }
 
       @RequiresApi(VERSION_CODES.M)
@@ -118,11 +109,14 @@ internal class LicenseWebviewView internal constructor(
       ) {
         super.onReceivedError(view, request, error)
         Timber.e("Webview error: ${error.errorCode} ${error.description}")
-        if (request.url.toString() == link) {
-          controllerBus.publish(Loaded)
-        }
+        val pageUrl = request.url.toString()
 
-        controllerBus.publish(Complete)
+        val fixedUrl = pageUrl.trimEnd('/')
+        val isTarget = (fixedUrl == link)
+        if (isTarget) {
+          Timber.w("Webview error occurred but target page still reached.")
+        }
+        bus.publish(PageLoaded(fixedUrl, isTarget))
       }
 
       @Suppress("DEPRECATION", "OverridingDeprecatedMember")
@@ -134,11 +128,13 @@ internal class LicenseWebviewView internal constructor(
       ) {
         super.onReceivedError(view, errorCode, description, failingUrl)
         Timber.e("Webview error: $errorCode $description")
-        if (failingUrl == link) {
-          controllerBus.publish(Loaded)
-        }
 
-        controllerBus.publish(Complete)
+        val fixedUrl = failingUrl?.trimEnd('/') ?: ""
+        val isTarget = (link == fixedUrl)
+        if (isTarget) {
+          Timber.w("Webview error occurred but target page still reached.")
+        }
+        bus.publish(PageLoaded(fixedUrl, isTarget))
       }
 
     }
@@ -165,15 +161,8 @@ internal class LicenseWebviewView internal constructor(
     owner.lifecycle.removeObserver(this)
   }
 
-  fun pageLoadError(error: ActivityNotFoundException?) {
-    if (error != null) {
-      Toaster.bindTo(owner)
-          .short(webview.context, "No application can handle this URL")
-          .show()
-    }
-  }
-
   fun loadUrl() {
+    bus.publish(Loading)
     webview.loadUrl(link)
   }
 

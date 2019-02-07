@@ -37,12 +37,7 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
 
   private var capturedToolbar: Toolbar? = null
 
-  override fun onBackPressed() {
-    if (!BackPressDelegate.onBackPressed(supportFragmentManager)) {
-      super.onBackPressed()
-    }
-  }
-
+  @CallSuper
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -59,11 +54,11 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
     capturedToolbar = null
   }
 
-  override fun withToolbar(func: (Toolbar) -> Unit) {
+  final override fun withToolbar(func: (Toolbar) -> Unit) {
     capturedToolbar?.let(func)
   }
 
-  override fun requireToolbar(func: (Toolbar) -> Unit) {
+  final override fun requireToolbar(func: (Toolbar) -> Unit) {
     requireNotNull(capturedToolbar).let(func)
   }
 

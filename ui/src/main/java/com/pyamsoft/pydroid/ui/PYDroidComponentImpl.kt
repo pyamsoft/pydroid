@@ -32,11 +32,13 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponent
-import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseComponentImpl
+import com.pyamsoft.pydroid.ui.about.LicenseLoadState
+import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
+import com.pyamsoft.pydroid.ui.about.dialog.UrlComponentImpl
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
 import com.pyamsoft.pydroid.ui.rating.ShowRating
@@ -61,19 +63,15 @@ internal class PYDroidComponentImpl internal constructor(
   private val schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
 
-  private val failedNavBus = RxBus.create<FailedNavigationEvent>()
-
   private val ratingStateBus = RxBus.create<ShowRating>()
 
   private val ratingDialogStateBus = RxBus.create<RatingSavedEvent>()
 
   private val versionStateBus = RxBus.create<VersionCheckState>()
 
-  private val aboutStateBus = RxBus.create<AboutStateEvent>()
-  private val aboutViewBus = RxBus.create<AboutViewEvent>()
+  private val aboutStateBus = RxBus.create<LicenseLoadState>()
 
-  private val licenseViewBus = RxBus.create<LicenseViewEvent>()
-  private val licenseStateBus = RxBus.create<LicenseStateEvent>()
+  private val webviewStateBus = RxBus.create<UrlWebviewState>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -84,34 +82,27 @@ internal class PYDroidComponentImpl internal constructor(
   private val versionModule by lazy {
     VersionCheckModule(application, enforcer, debug, currentVersion)
   }
-
-  override fun enforcer(): Enforcer {
-    return enforcer
-  }
-
-  override fun theming(): Theming {
-    return theming
-  }
+  private val navigationModule by lazy { FailedNavigationModule() }
 
   override fun plusVersionComponent(
     owner: LifecycleOwner,
     view: View
   ): VersionComponent = VersionComponentImpl(
-      owner, view, versionStateBus, versionModule.interactor, schedulerProvider, failedNavBus
+      owner, view, versionStateBus, versionModule.interactor, schedulerProvider,
+      navigationModule.bus
   )
 
   override fun plusAboutItemComponent(
     owner: LifecycleOwner,
     parent: ViewGroup
-  ): AboutItemComponent =
-    AboutItemComponentImpl(parent, owner, aboutViewBus, aboutStateBus, schedulerProvider)
+  ): AboutItemComponent = AboutItemComponentImpl(parent, owner, navigationModule.bus)
 
   override fun plusVersionUpgradeComponent(
     owner: LifecycleOwner,
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
-      owner, parent, applicationName, currentVersion, newVersion, failedNavBus
+      owner, parent, applicationName, currentVersion, newVersion, navigationModule.bus
   )
 
   override fun plusSettingsComponent(
@@ -123,14 +114,14 @@ internal class PYDroidComponentImpl internal constructor(
   ): AppSettingsComponent = AppSettingsComponentImpl(
       view, owner, ratingModule.interactor, versionModule.interactor, theming,
       versionStateBus, ratingStateBus, schedulerProvider, preferenceScreen,
-      applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation, failedNavBus
+      applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation, navigationModule.bus
   )
 
   override fun plusAboutComponent(
     owner: LifecycleOwner,
     parent: ViewGroup
   ): AboutComponent = AboutComponentImpl(
-      aboutModule, parent, owner, aboutStateBus, licenseStateBus, schedulerProvider
+      aboutModule.interactor, parent, owner, aboutStateBus, schedulerProvider
   )
 
   override fun plusViewLicenseComponent(
@@ -138,9 +129,9 @@ internal class PYDroidComponentImpl internal constructor(
     parent: ViewGroup,
     link: String,
     name: String
-  ): ViewLicenseComponent = ViewLicenseComponentImpl(
+  ): UrlComponent = UrlComponentImpl(
       parent, owner, loaderModule.provideImageLoader(),
-      link, name, licenseViewBus, licenseStateBus, schedulerProvider
+      link, name, schedulerProvider, webviewStateBus, navigationModule.bus
   )
 
   override fun plusRatingDialogComponent(
@@ -152,7 +143,7 @@ internal class PYDroidComponentImpl internal constructor(
   ): RatingDialogComponent = RatingDialogComponentImpl(
       ratingModule.interactor, loaderModule.provideImageLoader(), schedulerProvider,
       parent, owner, rateLink, changelogIcon, changelog,
-      ratingDialogStateBus, failedNavBus
+      ratingDialogStateBus, navigationModule.bus
   )
 
   override fun plusRatingComponent(
@@ -161,6 +152,14 @@ internal class PYDroidComponentImpl internal constructor(
   ): RatingComponent = RatingComponentImpl(
       owner, view, ratingStateBus, ratingModule.interactor, schedulerProvider
   )
+
+  override fun enforcer(): Enforcer {
+    return enforcer
+  }
+
+  override fun theming(): Theming {
+    return theming
+  }
 
   override fun loaderModule(): LoaderModule {
     return loaderModule
@@ -176,5 +175,9 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun versionCheckModule(): VersionCheckModule {
     return versionModule
+  }
+
+  override fun failedNavigationModule(): FailedNavigationModule {
+    return navigationModule
   }
 }

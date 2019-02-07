@@ -23,27 +23,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutStateEvent.LoadComplete
-import com.pyamsoft.pydroid.ui.about.AboutStateEvent.Loading
-import com.pyamsoft.pydroid.ui.about.dialog.ViewLicenseDialog
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.ui.about.dialog.ViewUrlDialog
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemPresenter
+import com.pyamsoft.pydroid.ui.app.requireArguments
+import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
+import com.pyamsoft.pydroid.ui.app.toolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
+import com.pyamsoft.pydroid.ui.util.setUpEnabled
+import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
-class AboutFragment : ToolbarFragment() {
+class AboutFragment : Fragment(), AboutPresenter.Callback, AboutItemPresenter.Callback {
 
-  internal lateinit var listComponent: AboutListUiComponent
-  internal lateinit var loadingComponent: SpinnerUiComponent<AboutStateEvent, Loading, LoadComplete>
-  internal lateinit var worker: AboutWorker
+  internal lateinit var listView: AboutListView
+  internal lateinit var spinner: SpinnerView
+  internal lateinit var presenter: AboutPresenter
 
   private var backStackCount: Int = 0
   private var oldTitle: CharSequence? = null
-  private var loadLicensesDisposable by singleDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -71,36 +74,21 @@ class AboutFragment : ToolbarFragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
-
-    worker.onViewLicenseEvent {
-      val event = it.event
-      ViewLicenseDialog.newInstance(event.name, event.url)
-          .show(requireActivity(), ViewLicenseDialog.TAG)
-    }
-        .destroy(viewLifecycleOwner)
-
-    worker.onVisitHomepageEvent {
-      val event = it.event
-      ViewLicenseDialog.newInstance(event.name, event.url)
-          .show(requireActivity(), ViewLicenseDialog.TAG)
-    }
-        .destroy(viewLifecycleOwner)
-
-    listComponent.create(savedInstanceState)
-    loadingComponent.create(savedInstanceState)
-
-    loadLicensesDisposable = worker.loadLicenses(false)
+    listView.inflate(savedInstanceState)
+    spinner.inflate(savedInstanceState)
+    presenter.bind(this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    listComponent.saveState(outState)
-    loadingComponent.saveState(outState)
+    listView.saveState(outState)
+    spinner.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    loadLicensesDisposable.tryDispose()
+    listView.teardown()
+    spinner.teardown()
   }
 
   override fun onResume() {
@@ -127,6 +115,40 @@ class AboutFragment : ToolbarFragment() {
         }
       }
     }
+  }
+
+  override fun onLicenseLoadBegin() {
+    listView.hide()
+    spinner.show()
+  }
+
+  override fun onLicensesLoaded(licenses: List<OssLibrary>) {
+    listView.loadLicenses(licenses)
+  }
+
+  override fun onLicenseLoadError(throwable: Throwable) {
+    listView.showError(throwable)
+  }
+
+  override fun onLicenseLoadComplete() {
+    spinner.hide()
+    listView.show()
+  }
+
+  override fun onViewLicense(
+    name: String,
+    licenseUrl: String
+  ) {
+    ViewUrlDialog.newInstance(name, link = licenseUrl)
+        .show(requireActivity(), ViewUrlDialog.TAG)
+  }
+
+  override fun onVisitHomepage(
+    name: String,
+    homepageUrl: String
+  ) {
+    ViewUrlDialog.newInstance(name, link = homepageUrl)
+        .show(requireActivity(), ViewUrlDialog.TAG)
   }
 
   companion object {

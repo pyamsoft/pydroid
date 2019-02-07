@@ -70,6 +70,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
     savedInstanceState: Bundle?
   ): View? {
     val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
+
     PYDroid.obtain(requireContext())
         .plusSettingsComponent(
             view, viewLifecycleOwner, preferenceScreen,
@@ -77,7 +78,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
         )
         .inject(this)
 
-    settingsView.inflate(savedInstanceState)
     return view
   }
 
@@ -87,6 +87,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+    settingsView.inflate(savedInstanceState)
     versionPresenter.bind(this)
     settingsPresenter.bind(this)
   }

@@ -22,21 +22,25 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.Listener
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class AboutComponentImpl(
   private val interactor: AboutInteractor,
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val controllerBus: EventBus<AboutStateEvent>,
-  private val licenseBus: Listener<LicenseStateEvent>,
+  private val bus: EventBus<LicenseLoadState>,
   private val schedulerProvider: SchedulerProvider
 ) : AboutComponent {
 
   override fun inject(fragment: AboutFragment) {
-    val listView = AboutListView(owner, parent)
+    val listView = AboutListView(owner, parent, fragment)
     val spinnerView = SpinnerView(parent)
+
+    fragment.apply {
+      this.listView = listView
+      this.spinner = spinnerView
+      this.presenter = AboutPresenterImpl(interactor, schedulerProvider, owner, bus)
+    }
   }
 
 }

@@ -106,13 +106,12 @@ internal class PYDroidComponentImpl internal constructor(
   )
 
   override fun plusSettingsComponent(
-    view: View,
     owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): AppSettingsComponent = AppSettingsComponentImpl(
-      view, owner, ratingModule.interactor, versionModule.interactor, theming,
+      owner, ratingModule.interactor, versionModule.interactor, theming,
       versionStateBus, ratingStateBus, schedulerProvider, preferenceScreen,
       applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation, navigationModule.bus
   )

@@ -23,7 +23,7 @@ import androidx.annotation.DrawableRes
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 
-internal class GlideResourceLoader(
+internal class GlideResourceLoader internal constructor(
   @DrawableRes private val resId: Int
 ) : GlideLoader<Drawable>() {
 

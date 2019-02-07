@@ -73,7 +73,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
 
     PYDroid.obtain(requireContext())
         .plusSettingsComponent(
-            view, viewLifecycleOwner, preferenceScreen,
+            viewLifecycleOwner, preferenceScreen,
             hideClearAll, hideUpgradeInformation
         )
         .inject(this)

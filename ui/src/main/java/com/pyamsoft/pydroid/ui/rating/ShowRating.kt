@@ -17,5 +17,4 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-object ShowRating {
-}
+object ShowRating

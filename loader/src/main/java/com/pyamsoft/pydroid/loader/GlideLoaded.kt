@@ -24,7 +24,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.bumptech.glide.Glide
 import timber.log.Timber
 
-class GlideLoaded(
+class GlideLoaded internal constructor(
   private val target: ImageTarget<*>
 ) : Loaded, LifecycleObserver {
 

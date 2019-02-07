@@ -35,7 +35,7 @@ import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogPresenter.Callback
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 
-internal class RatingDialog : DialogFragment(), Callback {
+class RatingDialog : DialogFragment(), Callback {
 
   internal lateinit var presenter: RatingDialogPresenter
   internal lateinit var failedNavigationPresenter: FailedNavigationPresenter

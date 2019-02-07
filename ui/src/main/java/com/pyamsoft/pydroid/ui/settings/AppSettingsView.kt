@@ -17,30 +17,24 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
-  private val view: View,
   private val theming: Theming,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean,
-  private val owner: LifecycleOwner,
   preferenceScreen: PreferenceScreen,
   callback: AppSettingsView.Callback
 ) : PrefUiView<AppSettingsView.Callback>(preferenceScreen, callback) {

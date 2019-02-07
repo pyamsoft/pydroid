@@ -22,9 +22,13 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 
-internal class PYDroidPreferencesImpl internal constructor(context: Context) : PYDroidPreferences {
+internal class PYDroidPreferencesImpl internal constructor(
+  context: Context
+) : PYDroidPreferences {
 
-  private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+  private val prefs by lazy {
+    PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+  }
 
   override var ratingAcceptedVersion: Int
     get() = prefs.getInt(

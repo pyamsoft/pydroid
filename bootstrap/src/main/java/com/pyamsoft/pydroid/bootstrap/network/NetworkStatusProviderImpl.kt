@@ -26,8 +26,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import timber.log.Timber
 
-internal class NetworkStatusProviderImpl internal constructor(private val context: Context) :
-    NetworkStatusProvider {
+internal class NetworkStatusProviderImpl internal constructor(
+  private val context: Context
+) : NetworkStatusProvider {
 
   private val connMan by lazy { requireNotNull(context.getSystemService<ConnectivityManager>()) }
 
@@ -40,7 +41,9 @@ internal class NetworkStatusProviderImpl internal constructor(private val contex
         return false
       }
       isMeteredNetwork(permission) -> {
-        Timber.w("Network connection is metered - treat as disconnected for all intents and purposes")
+        Timber.w(
+            "Network connection is metered - treat as disconnected for all intents and purposes"
+        )
         return false
       }
       else -> {

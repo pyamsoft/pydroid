@@ -29,7 +29,6 @@ interface ChangeLogProvider {
   @get:CheckResult
   val changelog: SpannedString
 
-  @get:DrawableRes
-  @get:CheckResult
+  @get:[DrawableRes CheckResult]
   val applicationIcon: Int
 }

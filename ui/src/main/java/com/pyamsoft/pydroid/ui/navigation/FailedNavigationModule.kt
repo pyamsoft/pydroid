@@ -20,8 +20,8 @@ package com.pyamsoft.pydroid.ui.navigation
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.RxBus
 
-class FailedNavigationModule {
+class FailedNavigationModule internal constructor() {
 
-  val bus: EventBus<FailedNavigationEvent> = RxBus.create<FailedNavigationEvent>()
+  val bus: EventBus<FailedNavigationEvent> = RxBus.create()
 
 }

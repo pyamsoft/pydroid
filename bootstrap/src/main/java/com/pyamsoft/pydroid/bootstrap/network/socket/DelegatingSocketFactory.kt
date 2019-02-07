@@ -23,16 +23,16 @@ import java.net.InetAddress
 import java.net.Socket
 import javax.net.SocketFactory
 
-open class DelegatingSocketFactory private constructor(
+open class DelegatingSocketFactory protected constructor(
   private val delegate: SocketFactory
 ) : SocketFactory() {
 
-  override fun createSocket(): Socket {
+  final override fun createSocket(): Socket {
     return delegate.createSocket()
         .also { configureSocket(it) }
   }
 
-  override fun createSocket(
+  final override fun createSocket(
     host: String?,
     port: Int
   ): Socket {
@@ -40,7 +40,7 @@ open class DelegatingSocketFactory private constructor(
         .also { configureSocket(it) }
   }
 
-  override fun createSocket(
+  final override fun createSocket(
     host: String?,
     port: Int,
     localAddress: InetAddress?,
@@ -50,7 +50,7 @@ open class DelegatingSocketFactory private constructor(
         .also { configureSocket(it) }
   }
 
-  override fun createSocket(
+  final override fun createSocket(
     host: InetAddress?,
     port: Int
   ): Socket {
@@ -58,7 +58,7 @@ open class DelegatingSocketFactory private constructor(
         .also { configureSocket(it) }
   }
 
-  override fun createSocket(
+  final override fun createSocket(
     host: InetAddress?,
     port: Int,
     localAddress: InetAddress?,

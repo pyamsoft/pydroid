@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradePresenter.Callback
 
-internal class VersionUpgradeDialog : DialogFragment(), Callback {
+class VersionUpgradeDialog : DialogFragment(), Callback {
 
   internal lateinit var controlsView: VersionUpgradeControlView
   internal lateinit var contentView: VersionUpgradeContentView

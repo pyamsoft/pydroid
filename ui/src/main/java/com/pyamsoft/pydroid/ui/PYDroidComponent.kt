@@ -61,7 +61,6 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusSettingsComponent(
-    view: View,
     owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,

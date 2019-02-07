@@ -18,9 +18,9 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.bootstrap.network.NoNetworkException
+import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService

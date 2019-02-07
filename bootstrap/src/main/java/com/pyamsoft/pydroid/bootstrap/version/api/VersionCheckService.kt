@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.bootstrap.version.api
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Url

@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import io.reactivex.Observable
 
 interface UiView {
 

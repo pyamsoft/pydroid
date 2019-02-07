@@ -17,4 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-data class RatingSavedEvent(val rateApplication: Boolean, val packageName: String)
+data class RatingSavedEvent(
+  val rateApplication: Boolean,
+  val packageName: String
+)

@@ -31,7 +31,7 @@ buildscript {
 
   ext {
 
-    minSdk = 16
+    minSdk = 22
     maxSdk = 28
 
     // AndroidX
@@ -90,7 +90,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "18.3.0-SNAPSHOT"
+  final String POM_VERSION = "19.0.0-SNAPSHOT"
 
   group = POM_GROUP
   version = POM_VERSION
@@ -158,6 +158,11 @@ subprojects {
           // Fix kapt
           includeCompileClasspath = true
         }
+      }
+
+      compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
       }
     }
 

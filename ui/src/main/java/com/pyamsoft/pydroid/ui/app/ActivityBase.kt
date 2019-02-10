@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.popinnow.android.fluidresizer.FluidResizer
 
-abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
+abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
 
   /**
    * Edit to use a custom FluidResizer instance
@@ -62,7 +62,7 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity {
     requireNotNull(capturedToolbar).let(func)
   }
 
-  fun setToolbar(toolbar: Toolbar?) {
+  final override fun setToolbar(toolbar: Toolbar?) {
     capturedToolbar = toolbar
   }
 }

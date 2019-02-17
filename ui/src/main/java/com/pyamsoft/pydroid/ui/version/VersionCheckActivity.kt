@@ -49,10 +49,8 @@ abstract class VersionCheckActivity : ActivityBase(), Callback, FailedNavigation
 
     versionView.inflate(savedInstanceState)
 
-    failedNavigationPresenter.bind(this)
-
-    versionPresenter.bind(this)
-    versionPresenter.checkForUpdates(false)
+    failedNavigationPresenter.bind(this, this)
+    versionPresenter.bind(this, this)
   }
 
   @CallSuper

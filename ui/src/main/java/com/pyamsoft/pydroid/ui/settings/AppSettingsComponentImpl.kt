@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
@@ -32,7 +31,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckPresenterImpl
 import com.pyamsoft.pydroid.ui.version.VersionCheckState
 
 internal class AppSettingsComponentImpl internal constructor(
-  private val owner: LifecycleOwner,
   private val ratingInteractor: RatingInteractor,
   private val versionCheckInteractor: VersionCheckInteractor,
   private val theming: Theming,
@@ -48,21 +46,21 @@ internal class AppSettingsComponentImpl internal constructor(
 ) : AppSettingsComponent {
 
   override fun inject(fragment: AppSettingsPreferenceFragment) {
-    val presenter = AppSettingsPresenterImpl(theming, owner)
+    val presenter = AppSettingsPresenterImpl(theming)
     val settingsView = AppSettingsView(
         theming, applicationName, bugreportUrl, hideClearAll,
         hideUpgradeInformation, preferenceScreen, presenter
     )
 
     fragment.apply {
-      this.failedNavPresenter = FailedNavigationPresenterImpl(owner, failedNavBus)
+      this.failedNavPresenter = FailedNavigationPresenterImpl(failedNavBus)
       this.settingsView = settingsView
       this.settingsPresenter = presenter
       this.versionPresenter = VersionCheckPresenterImpl(
-          versionCheckInteractor, schedulerProvider, owner, versionCheckBus
+          versionCheckInteractor, schedulerProvider, versionCheckBus
       )
       this.ratingPresenter = RatingPresenterImpl(
-          ratingInteractor, schedulerProvider, owner, ratingStateBus
+          ratingInteractor, schedulerProvider, ratingStateBus
       )
     }
   }

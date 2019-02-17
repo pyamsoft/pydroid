@@ -72,10 +72,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
     val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
 
     PYDroid.obtain(requireContext())
-        .plusSettingsComponent(
-            viewLifecycleOwner, preferenceScreen,
-            hideClearAll, hideUpgradeInformation
-        )
+        .plusSettingsComponent(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
 
     return view
@@ -88,8 +85,8 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
   ) {
     super.onViewCreated(view, savedInstanceState)
     settingsView.inflate(savedInstanceState)
-    versionPresenter.bind(this)
-    settingsPresenter.bind(this)
+    versionPresenter.bind(viewLifecycleOwner, this)
+    settingsPresenter.bind(viewLifecycleOwner, this)
   }
 
   final override fun onVersionCheckBegin(forced: Boolean) {

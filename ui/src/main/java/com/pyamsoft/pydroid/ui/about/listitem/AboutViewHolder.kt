@@ -42,14 +42,14 @@ internal class AboutViewHolder private constructor(
   init {
     val root: ViewGroup = view.findViewById(R.id.about_listitem_root)
     PYDroid.obtain(itemView.context.applicationContext)
-        .plusAboutItemComponent(owner, root)
+        .plusAboutItemComponent(root)
         .inject(this)
 
     titleView.inflate(null)
     actionsView.inflate(null)
     descriptionView.inflate(null)
 
-    presenter.bind(this)
+    presenter.bind(owner, this)
   }
 
   override fun bind(model: OssLibrary) {

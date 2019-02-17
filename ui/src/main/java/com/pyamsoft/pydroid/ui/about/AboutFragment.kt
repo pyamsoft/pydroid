@@ -76,7 +76,7 @@ class AboutFragment : Fragment(), AboutPresenter.Callback, AboutItemPresenter.Ca
     super.onViewCreated(view, savedInstanceState)
     listView.inflate(savedInstanceState)
     spinner.inflate(savedInstanceState)
-    presenter.bind(this)
+    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

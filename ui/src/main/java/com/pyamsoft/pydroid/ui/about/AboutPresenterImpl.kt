@@ -34,9 +34,8 @@ import timber.log.Timber
 internal class AboutPresenterImpl internal constructor(
   private val interactor: AboutInteractor,
   private val schedulerProvider: SchedulerProvider,
-  owner: LifecycleOwner,
   bus: EventBus<LicenseLoadState>
-) : BasePresenter<LicenseLoadState, AboutPresenter.Callback>(owner, bus),
+) : BasePresenter<LicenseLoadState, AboutPresenter.Callback>(bus),
     AboutPresenter {
 
   private var licenseDisposable by singleDisposable()

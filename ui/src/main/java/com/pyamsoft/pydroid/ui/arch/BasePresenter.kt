@@ -26,31 +26,45 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.Observable
 
 abstract class BasePresenter<T : Any, C : Any>(
-  protected val owner: LifecycleOwner,
   private val bus: EventBus<T>
 ) : Presenter<C> {
 
-  private var callbackReference: C? = null
+  private var bound: Boolean
+
+  private var _callback: C? = null
   protected val callback: C
-    get() = requireNotNull(callbackReference)
+    get() = requireNotNull(_callback)
+
+  private var _owner: LifecycleOwner? = null
+  protected val owner: LifecycleOwner
+    get() = requireNotNull(_owner)
 
   init {
-    owner.lifecycle.addObserver(object : LifecycleObserver {
-
-      @Suppress("unused")
-      @OnLifecycleEvent(ON_DESTROY)
-      fun onDestroy() {
-        owner.lifecycle.removeObserver(this)
-        unbind()
-      }
-
-    })
+    bound = false
   }
 
-  final override fun bind(callback: C) {
+  final override fun bind(
+    owner: LifecycleOwner,
+    callback: C
+  ) {
     // We should not need to synchronize since this should always be called on the main thread
-    if (callbackReference == null) {
-      callbackReference = callback
+    if (!bound) {
+      bound = true
+
+      owner.lifecycle.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_DESTROY)
+        fun onDestroy() {
+          owner.lifecycle.removeObserver(this)
+          unbind()
+        }
+
+      })
+
+      _owner = owner
+      _callback = callback
+
       onBind()
     }
   }
@@ -58,8 +72,12 @@ abstract class BasePresenter<T : Any, C : Any>(
   protected abstract fun onBind()
 
   private fun unbind() {
-    if (callbackReference != null) {
-      callbackReference = null
+    if (bound) {
+      bound = false
+
+      _callback = null
+      _owner = null
+
       onUnbind()
     }
   }

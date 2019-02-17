@@ -34,15 +34,15 @@ import timber.log.Timber
 internal class VersionCheckPresenterImpl internal constructor(
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider,
-  owner: LifecycleOwner,
   bus: EventBus<VersionCheckState>
-) : BasePresenter<VersionCheckState, VersionCheckPresenter.Callback>(owner, bus),
+) : BasePresenter<VersionCheckState, VersionCheckPresenter.Callback>(bus),
     VersionCheckPresenter {
 
   private var checkUpdatesDisposable by singleDisposable()
 
   override fun onBind() {
     listenForVersionCheckEvents()
+    checkForUpdates(false)
   }
 
   private fun listenForVersionCheckEvents() {

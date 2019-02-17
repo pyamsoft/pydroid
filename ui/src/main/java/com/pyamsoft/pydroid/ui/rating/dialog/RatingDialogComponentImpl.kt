@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.text.SpannedString
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -32,7 +31,6 @@ internal class RatingDialogComponentImpl internal constructor(
   private val imageLoader: ImageLoader,
   private val schedulerProvider: SchedulerProvider,
   private val parent: ViewGroup,
-  private val owner: LifecycleOwner,
   private val rateLink: String,
   private val changelogIcon: Int,
   private val changelog: SpannedString,
@@ -41,10 +39,10 @@ internal class RatingDialogComponentImpl internal constructor(
 ) : RatingDialogComponent {
 
   override fun inject(dialog: RatingDialog) {
-    val failedPresenter = FailedNavigationPresenterImpl(owner, failedNavBus)
-    val presenter = RatingDialogPresenterImpl(interactor, schedulerProvider, owner, ratingStateBus)
+    val failedPresenter = FailedNavigationPresenterImpl(failedNavBus)
+    val presenter = RatingDialogPresenterImpl(interactor, schedulerProvider, ratingStateBus)
     val controlsView = RatingControlsView(rateLink, parent, presenter)
-    val iconView = RatingIconView(changelogIcon, imageLoader, owner, parent)
+    val iconView = RatingIconView(changelogIcon, imageLoader, parent)
     val changelogView = RatingChangelogView(changelog, parent)
 
     dialog.apply {

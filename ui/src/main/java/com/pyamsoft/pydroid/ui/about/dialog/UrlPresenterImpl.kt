@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
@@ -28,9 +27,8 @@ import com.pyamsoft.pydroid.ui.arch.destroy
 
 internal class UrlPresenterImpl internal constructor(
   private val schedulerProvider: SchedulerProvider,
-  owner: LifecycleOwner,
   bus: EventBus<UrlWebviewState>
-) : BasePresenter<UrlWebviewState, UrlPresenter.Callback>(owner, bus),
+) : BasePresenter<UrlWebviewState, UrlPresenter.Callback>(bus),
     UrlToolbarView.Callback,
     UrlPresenter {
 

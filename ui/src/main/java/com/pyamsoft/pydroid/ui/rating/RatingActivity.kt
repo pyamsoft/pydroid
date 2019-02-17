@@ -39,7 +39,6 @@ import timber.log.Timber
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider, Callback {
 
   internal lateinit var ratingPresenter: RatingPresenter
-  internal lateinit var ratingView: RatingView
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -92,25 +91,9 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider, Callb
     // Need to do this in onPostCreate because the snackbarRoot will not be available until
     // after subclass onCreate
     PYDroid.obtain(this)
-        .plusRatingComponent(this, snackbarRoot)
         .inject(this)
 
-    ratingView.inflate(savedInstanceState)
-
-    ratingPresenter.bind(this)
-    ratingPresenter.load(false)
-  }
-
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    ratingView.teardown()
-  }
-
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    ratingView.saveState(outState)
+    ratingPresenter.bind(this, this)
   }
 
   final override fun onShowRating() {

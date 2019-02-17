@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.arch.BasePresenter
 
 internal class AboutItemPresenterImpl internal constructor(
-  owner: LifecycleOwner
-) : BasePresenter<Unit, AboutItemPresenter.Callback>(owner, RxBus.empty()),
+) : BasePresenter<Unit, AboutItemPresenter.Callback>(RxBus.empty()),
     AboutItemPresenter, AboutItemActionsView.Callback {
 
   override fun onBind() {

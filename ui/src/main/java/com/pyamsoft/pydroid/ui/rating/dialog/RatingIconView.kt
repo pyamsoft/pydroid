@@ -21,20 +21,21 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 
 internal class RatingIconView internal constructor(
   private val changelogIcon: Int,
   private val imageLoader: ImageLoader,
-  private val owner: LifecycleOwner,
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
   private val layoutRoot by lazyView<View>(R.id.rating_icon_root)
   private val icon by lazyView<ImageView>(R.id.icon)
+
+  private var iconLoaded: Loaded? = null
 
   override val layout: Int = R.layout.rating_icon
 
@@ -49,10 +50,14 @@ internal class RatingIconView internal constructor(
     loadIcon()
   }
 
+  override fun teardown() {
+    iconLoaded?.dispose()
+  }
+
   private fun loadIcon() {
-    imageLoader.load(changelogIcon)
+    iconLoaded?.dispose()
+    iconLoaded = imageLoader.load(changelogIcon)
         .into(icon)
-        .bind(owner)
   }
 
 }

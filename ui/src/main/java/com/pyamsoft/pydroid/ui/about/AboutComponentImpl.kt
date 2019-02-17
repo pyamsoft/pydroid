@@ -39,7 +39,7 @@ internal class AboutComponentImpl(
     fragment.apply {
       this.listView = listView
       this.spinner = spinnerView
-      this.presenter = AboutPresenterImpl(interactor, schedulerProvider, owner, bus)
+      this.presenter = AboutPresenterImpl(interactor, schedulerProvider, bus)
     }
   }
 

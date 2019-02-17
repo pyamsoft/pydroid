@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -29,14 +28,14 @@ import com.pyamsoft.pydroid.ui.arch.destroy
 internal class RatingPresenterImpl internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider,
-  owner: LifecycleOwner,
   bus: EventBus<ShowRating>
-) : BasePresenter<ShowRating, RatingPresenter.Callback>(owner, bus), RatingPresenter {
+) : BasePresenter<ShowRating, RatingPresenter.Callback>(bus), RatingPresenter {
 
   private var loadDisposable by singleDisposable()
 
   override fun onBind() {
     listenForDialogRequests()
+    load(false)
   }
 
   override fun onUnbind() {

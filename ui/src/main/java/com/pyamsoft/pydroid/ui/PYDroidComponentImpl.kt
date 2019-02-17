@@ -39,8 +39,8 @@ import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
-import com.pyamsoft.pydroid.ui.rating.RatingComponent
-import com.pyamsoft.pydroid.ui.rating.RatingComponentImpl
+import com.pyamsoft.pydroid.ui.rating.RatingActivity
+import com.pyamsoft.pydroid.ui.rating.RatingPresenterImpl
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
@@ -84,6 +84,14 @@ internal class PYDroidComponentImpl internal constructor(
   }
   private val navigationModule by lazy { FailedNavigationModule() }
 
+  override fun inject(activity: RatingActivity) {
+    val presenter = RatingPresenterImpl(ratingModule.interactor, schedulerProvider, ratingStateBus)
+
+    activity.apply {
+      this.ratingPresenter = presenter
+    }
+  }
+
   override fun plusVersionComponent(
     owner: LifecycleOwner,
     view: View
@@ -92,26 +100,22 @@ internal class PYDroidComponentImpl internal constructor(
       navigationModule.bus
   )
 
-  override fun plusAboutItemComponent(
-    owner: LifecycleOwner,
-    parent: ViewGroup
-  ): AboutItemComponent = AboutItemComponentImpl(parent, owner, navigationModule.bus)
+  override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent
+      = AboutItemComponentImpl(parent, navigationModule.bus)
 
   override fun plusVersionUpgradeComponent(
-    owner: LifecycleOwner,
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
-      owner, parent, applicationName, currentVersion, newVersion, navigationModule.bus
+      parent, applicationName, currentVersion, newVersion, navigationModule.bus
   )
 
   override fun plusSettingsComponent(
-    owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): AppSettingsComponent = AppSettingsComponentImpl(
-      owner, ratingModule.interactor, versionModule.interactor, theming,
+      ratingModule.interactor, versionModule.interactor, theming,
       versionStateBus, ratingStateBus, schedulerProvider, preferenceScreen,
       applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation, navigationModule.bus
   )
@@ -134,22 +138,14 @@ internal class PYDroidComponentImpl internal constructor(
   )
 
   override fun plusRatingDialogComponent(
-    owner: LifecycleOwner,
     parent: ViewGroup,
     rateLink: String,
     changelogIcon: Int,
     changelog: SpannedString
   ): RatingDialogComponent = RatingDialogComponentImpl(
       ratingModule.interactor, loaderModule.provideImageLoader(), schedulerProvider,
-      parent, owner, rateLink, changelogIcon, changelog,
+      parent, rateLink, changelogIcon, changelog,
       ratingDialogStateBus, navigationModule.bus
-  )
-
-  override fun plusRatingComponent(
-    owner: LifecycleOwner,
-    view: View
-  ): RatingComponent = RatingComponentImpl(
-      owner, view, ratingStateBus, ratingModule.interactor, schedulerProvider
   )
 
   override fun enforcer(): Enforcer {

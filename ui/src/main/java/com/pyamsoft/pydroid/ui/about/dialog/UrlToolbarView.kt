@@ -22,9 +22,9 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
+import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
@@ -35,11 +35,12 @@ internal class UrlToolbarView internal constructor(
   private val name: String,
   private val link: String,
   private val imageLoader: ImageLoader,
-  private val owner: LifecycleOwner,
   callback: UrlToolbarView.Callback
 ) : BaseUiView<UrlToolbarView.Callback>(parent, callback) {
 
   private val toolbar by lazyView<Toolbar>(R.id.license_toolbar)
+
+  private var navIconLoaded: Loaded? = null
 
   override val layout: Int = R.layout.license_toolbar
 
@@ -56,6 +57,7 @@ internal class UrlToolbarView internal constructor(
 
   override fun teardown() {
     toolbar.setNavigationOnClickListener(null)
+    navIconLoaded?.dispose()
   }
 
   private fun setupToolbar() {
@@ -68,7 +70,8 @@ internal class UrlToolbarView internal constructor(
   }
 
   private fun loadNavIcon() {
-    imageLoader.load(R.drawable.ic_close_24dp)
+    navIconLoaded?.dispose()
+    navIconLoaded = imageLoader.load(R.drawable.ic_close_24dp)
         .into(object : ImageTarget<Drawable> {
 
           override fun view(): View {
@@ -92,7 +95,6 @@ internal class UrlToolbarView internal constructor(
           }
 
         })
-        .bind(owner)
   }
 
   private fun setupOnClick() {

@@ -18,15 +18,13 @@
 package com.pyamsoft.pydroid.ui.navigation
 
 import android.content.ActivityNotFoundException
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.arch.BasePresenter
 import com.pyamsoft.pydroid.ui.arch.destroy
 
 class FailedNavigationPresenterImpl(
-  owner: LifecycleOwner,
   bus: EventBus<FailedNavigationEvent>
-) : BasePresenter<FailedNavigationEvent, FailedNavigationPresenter.Callback>(owner, bus),
+) : BasePresenter<FailedNavigationEvent, FailedNavigationPresenter.Callback>(bus),
     FailedNavigationPresenter {
 
   override fun onBind() {

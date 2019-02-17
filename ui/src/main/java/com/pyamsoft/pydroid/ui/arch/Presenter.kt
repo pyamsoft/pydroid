@@ -17,8 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
+import androidx.lifecycle.LifecycleOwner
+
 interface Presenter<C : Any> {
 
-  fun bind(callback: C)
+  fun bind(
+    owner: LifecycleOwner,
+    callback: C
+  )
+
 }
 

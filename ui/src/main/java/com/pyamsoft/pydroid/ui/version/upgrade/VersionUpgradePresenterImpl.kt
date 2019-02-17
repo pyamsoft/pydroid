@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.arch.BasePresenter
 
 internal class VersionUpgradePresenterImpl internal constructor(
-  owner: LifecycleOwner
-) : BasePresenter<Unit, VersionUpgradePresenter.Callback>(owner, RxBus.empty()),
+) : BasePresenter<Unit, VersionUpgradePresenter.Callback>(RxBus.empty()),
     VersionUpgradePresenter, VersionUpgradeControlView.Callback {
 
   override fun onBind() {

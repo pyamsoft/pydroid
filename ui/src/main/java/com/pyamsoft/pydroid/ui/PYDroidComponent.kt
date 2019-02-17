@@ -26,13 +26,15 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
-import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 
 internal interface PYDroidComponent {
+
+  fun inject(activity: RatingActivity)
 
   @CheckResult
   fun plusVersionComponent(
@@ -42,16 +44,12 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusVersionUpgradeComponent(
-    owner: LifecycleOwner,
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent
 
   @CheckResult
-  fun plusAboutItemComponent(
-    owner: LifecycleOwner,
-    parent: ViewGroup
-  ): AboutItemComponent
+  fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent
 
   @CheckResult
   fun plusAboutComponent(
@@ -61,7 +59,6 @@ internal interface PYDroidComponent {
 
   @CheckResult
   fun plusSettingsComponent(
-    owner: LifecycleOwner,
     preferenceScreen: PreferenceScreen,
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
@@ -76,14 +73,7 @@ internal interface PYDroidComponent {
   ): UrlComponent
 
   @CheckResult
-  fun plusRatingComponent(
-    owner: LifecycleOwner,
-    view: View
-  ): RatingComponent
-
-  @CheckResult
   fun plusRatingDialogComponent(
-    owner: LifecycleOwner,
     parent: ViewGroup,
     rateLink: String,
     changelogIcon: Int,

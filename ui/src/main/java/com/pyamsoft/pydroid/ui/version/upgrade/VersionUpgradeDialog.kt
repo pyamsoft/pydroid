@@ -55,7 +55,7 @@ class VersionUpgradeDialog : DialogFragment(), Callback {
     require(latestVersion > 0)
 
     PYDroid.obtain(root.context.applicationContext)
-        .plusVersionUpgradeComponent(viewLifecycleOwner, root as ViewGroup, latestVersion)
+        .plusVersionUpgradeComponent(root as ViewGroup, latestVersion)
         .inject(this)
 
     return root
@@ -68,7 +68,7 @@ class VersionUpgradeDialog : DialogFragment(), Callback {
     super.onViewCreated(view, savedInstanceState)
     contentView.inflate(savedInstanceState)
     controlsView.inflate(savedInstanceState)
-    presenter.bind(this)
+    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onResume() {

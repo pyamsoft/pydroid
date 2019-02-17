@@ -25,12 +25,11 @@ import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,
-  private val owner: LifecycleOwner,
   private val failedNavigationBus: EventBus<FailedNavigationEvent>
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
-    val presenter = AboutItemPresenterImpl(owner)
+    val presenter = AboutItemPresenterImpl()
     val aboutTitleView = AboutItemTitleView(parent)
     val aboutActionsView = AboutItemActionsView(parent, presenter)
     val aboutDescriptionView = AboutItemDescriptionView(parent)
@@ -40,7 +39,7 @@ internal class AboutItemComponentImpl internal constructor(
       this.actionsView = aboutActionsView
       this.descriptionView = aboutDescriptionView
       this.presenter = presenter
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(owner, failedNavigationBus)
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(failedNavigationBus)
     }
   }
 

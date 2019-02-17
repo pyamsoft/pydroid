@@ -80,7 +80,7 @@ class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
     spinner.inflate(savedInstanceState)
     dropshadow.inflate(savedInstanceState)
 
-    presenter.bind(this)
+    presenter.bind(viewLifecycleOwner, this)
 
     applyConstraints(view as ConstraintLayout)
 

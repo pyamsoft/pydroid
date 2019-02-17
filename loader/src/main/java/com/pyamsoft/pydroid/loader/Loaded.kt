@@ -17,11 +17,9 @@
 
 package com.pyamsoft.pydroid.loader
 
-import androidx.lifecycle.LifecycleOwner
-
 interface Loaded {
 
   fun dispose()
 
-  fun bind(owner: LifecycleOwner)
 }
+

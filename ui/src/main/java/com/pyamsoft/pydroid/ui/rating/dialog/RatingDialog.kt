@@ -72,9 +72,7 @@ class RatingDialog : DialogFragment(), Callback {
     require(changelog.isNotBlank())
 
     PYDroid.obtain(root.context.applicationContext)
-        .plusRatingDialogComponent(
-            viewLifecycleOwner, root as ViewGroup, rateLink, changeLogIcon, changelog
-        )
+        .plusRatingDialogComponent(root as ViewGroup, rateLink, changeLogIcon, changelog)
         .inject(this)
 
     return root
@@ -90,7 +88,7 @@ class RatingDialog : DialogFragment(), Callback {
     changelogView.inflate(savedInstanceState)
     controlsView.inflate(savedInstanceState)
 
-    presenter.bind(this)
+    presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

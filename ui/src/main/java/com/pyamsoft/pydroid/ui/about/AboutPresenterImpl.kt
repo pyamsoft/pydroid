@@ -53,6 +53,8 @@ internal class AboutPresenterImpl internal constructor(
           }
         }
         .destroy(owner)
+
+    loadLicenses(false)
   }
 
   override fun onUnbind() {

@@ -20,12 +20,16 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.about.AboutListView
 
 internal abstract class BaseViewHolder internal constructor(
   itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
-  open fun bind(model: OssLibrary) {
+  open fun bind(
+    model: OssLibrary,
+    callback: AboutListView.Callback
+  ) {
 
   }
 

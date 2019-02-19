@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.ViewUrlDialog
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemPresenter
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.app.toolbarActivity
@@ -39,7 +38,7 @@ import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
-class AboutFragment : Fragment(), AboutPresenter.Callback, AboutItemPresenter.Callback {
+class AboutFragment : Fragment(), AboutPresenter.Callback {
 
   internal lateinit var listView: AboutListView
   internal lateinit var spinner: SpinnerView

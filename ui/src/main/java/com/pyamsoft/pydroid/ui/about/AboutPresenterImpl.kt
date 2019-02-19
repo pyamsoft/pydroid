@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -36,6 +35,7 @@ internal class AboutPresenterImpl internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<LicenseLoadState>
 ) : BasePresenter<LicenseLoadState, AboutPresenter.Callback>(bus),
+    AboutListView.Callback,
     AboutPresenter {
 
   private var licenseDisposable by singleDisposable()
@@ -61,7 +61,21 @@ internal class AboutPresenterImpl internal constructor(
     licenseDisposable.tryDispose()
   }
 
-  fun loadLicenses(force: Boolean) {
+  override fun onViewLicenseClicked(
+    name: String,
+    licenseUrl: String
+  ) {
+    callback.onViewLicense(name, licenseUrl)
+  }
+
+  override fun onVisitHomepageClicked(
+    name: String,
+    homepageUrl: String
+  ) {
+    callback.onVisitHomepage(name, homepageUrl)
+  }
+
+  private fun loadLicenses(force: Boolean) {
     licenseDisposable = interactor.loadLicenses(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)

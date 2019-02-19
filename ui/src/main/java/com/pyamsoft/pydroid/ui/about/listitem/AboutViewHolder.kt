@@ -21,17 +21,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.about.AboutListView
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
+import com.pyamsoft.pydroid.util.fakeBind
+import com.pyamsoft.pydroid.util.fakeUnbind
 
 internal class AboutViewHolder private constructor(
-  owner: LifecycleOwner,
-  view: View,
-  private val callback: AboutItemPresenter.Callback
-) : BaseViewHolder(view), AboutItemPresenter.Callback {
+  view: View
+) : BaseViewHolder(view), LifecycleOwner {
+
+  private val registry = LifecycleRegistry(this)
 
   internal lateinit var titleView: AboutItemTitleView
   internal lateinit var actionsView: AboutItemActionsView
@@ -48,34 +53,47 @@ internal class AboutViewHolder private constructor(
     titleView.inflate(null)
     actionsView.inflate(null)
     descriptionView.inflate(null)
-
-    presenter.bind(owner, this)
   }
 
-  override fun bind(model: OssLibrary) {
+  override fun getLifecycle(): Lifecycle {
+    return registry
+  }
+
+  override fun bind(
+    model: OssLibrary,
+    callback: AboutListView.Callback
+  ) {
     titleView.bind(model)
     actionsView.bind(model)
     descriptionView.bind(model)
+
+    presenter.bind(this, object : AboutItemPresenter.Callback {
+
+      override fun onViewLicense(
+        name: String,
+        licenseUrl: String
+      ) {
+        callback.onViewLicenseClicked(name, licenseUrl)
+      }
+
+      override fun onVisitHomepage(
+        name: String,
+        homepageUrl: String
+      ) {
+        callback.onVisitHomepageClicked(name, homepageUrl)
+      }
+
+    })
+
+    registry.fakeBind()
   }
 
   override fun unbind() {
     titleView.unbind()
     actionsView.unbind()
     descriptionView.unbind()
-  }
 
-  override fun onViewLicense(
-    name: String,
-    licenseUrl: String
-  ) {
-    callback.onViewLicense(name, licenseUrl)
-  }
-
-  override fun onVisitHomepage(
-    name: String,
-    homepageUrl: String
-  ) {
-    callback.onVisitHomepage(name, homepageUrl)
+    registry.fakeUnbind()
   }
 
   companion object {
@@ -83,13 +101,11 @@ internal class AboutViewHolder private constructor(
     @CheckResult
     @JvmStatic
     fun create(
-      callback: AboutItemPresenter.Callback,
-      owner: LifecycleOwner,
       inflater: LayoutInflater,
       container: ViewGroup
     ): AboutViewHolder {
       val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
-      return AboutViewHolder(owner, view, callback)
+      return AboutViewHolder(view)
     }
   }
 

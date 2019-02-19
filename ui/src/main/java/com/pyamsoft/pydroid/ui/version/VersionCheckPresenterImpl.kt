@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus

@@ -24,6 +24,16 @@ internal interface AboutPresenter : Presenter<AboutPresenter.Callback> {
 
   interface Callback {
 
+    fun onViewLicense(
+      name: String,
+      licenseUrl: String
+    )
+
+    fun onVisitHomepage(
+      name: String,
+      homepageUrl: String
+    )
+
     fun onLicenseLoadBegin()
 
     fun onLicensesLoaded(licenses: List<OssLibrary>)

@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.about.AboutListView.Callback
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemPresenter
 import com.pyamsoft.pydroid.ui.arch.BaseUiView
@@ -36,8 +37,8 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class AboutListView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup,
-  callback: AboutItemPresenter.Callback
-) : BaseUiView<AboutItemPresenter.Callback>(parent, callback), UiToggleView {
+  callback: Callback
+) : BaseUiView<Callback>(parent, callback), UiToggleView {
 
   private val aboutList by lazyView<RecyclerView>(R.id.about_list)
 
@@ -82,7 +83,7 @@ internal class AboutListView internal constructor(
   }
 
   private fun setupListView() {
-    aboutAdapter = AboutAdapter(callback, owner)
+    aboutAdapter = AboutAdapter(callback)
 
     aboutList.apply {
       adapter = aboutAdapter
@@ -115,6 +116,19 @@ internal class AboutListView internal constructor(
     Snackbreak.bindTo(owner)
         .short(aboutList, error.message ?: "An unexpected error occurred.")
         .show()
+  }
+
+  interface Callback {
+
+    fun onViewLicenseClicked(
+      name: String,
+      licenseUrl: String
+    )
+
+    fun onVisitHomepageClicked(
+      name: String,
+      homepageUrl: String
+    )
   }
 
   companion object {

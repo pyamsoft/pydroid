@@ -33,13 +33,14 @@ internal class AboutComponentImpl(
 ) : AboutComponent {
 
   override fun inject(fragment: AboutFragment) {
-    val listView = AboutListView(owner, parent, fragment)
+    val presenter = AboutPresenterImpl(interactor, schedulerProvider, bus)
+    val listView = AboutListView(owner, parent, presenter)
     val spinnerView = SpinnerView(parent)
 
     fragment.apply {
       this.listView = listView
       this.spinner = spinnerView
-      this.presenter = AboutPresenterImpl(interactor, schedulerProvider, bus)
+      this.presenter = presenter
     }
   }
 

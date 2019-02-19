@@ -42,7 +42,7 @@ internal class AppSettingsPresenterImpl internal constructor(
   }
 
   override fun onDarkThemeToggled(dark: Boolean) {
-    theming.setDarkTheme(dark)
+    theming.setDarkTheme(dark) { callback.onDarkThemeChanged(it) }
   }
 
   override fun onFollowSocialClicked(link: HyperlinkIntent) {

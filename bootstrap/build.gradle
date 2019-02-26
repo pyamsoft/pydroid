@@ -30,9 +30,6 @@ dependencies {
   implementation "com.popinnow.android.repo:repo:$repo"
   implementation "com.popinnow.android.repo:repo-persister-moshi:$repo"
 
-  // RxAndroid
-  api "io.reactivex.rxjava2:rxandroid:$rxandroid"
-
   api project(':util')
 }
 

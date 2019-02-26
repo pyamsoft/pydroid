@@ -73,6 +73,11 @@ object OssLibraries {
         "https://github.com/JakeWharton/timber",
         "A logger with a small, extensible API which provides utility on top of Android's normal Log class."
     )
+    add(
+        "RxAndroid",
+        "https://github.com/ReactiveX/RxAndroid",
+        "RxJava bindings for Android."
+    )
   }
 
   private fun addUtilLibraries() {
@@ -84,11 +89,6 @@ object OssLibraries {
   }
 
   private fun addBootstrapLibraries() {
-    add(
-        "RxAndroid",
-        "https://github.com/ReactiveX/RxAndroid",
-        "RxJava bindings for Android."
-    )
     add(
         "Retrofit",
         "https://square.github.io/retrofit/",

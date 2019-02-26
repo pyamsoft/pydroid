@@ -15,12 +15,23 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.arch
 
-interface UiToggleView : UiView {
+import android.os.Bundle
+import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
 
-  fun show()
+interface UiView {
 
-  fun hide()
+  @IdRes
+  @CheckResult
+  fun id(): Int
+
+  fun inflate(savedInstanceState: Bundle?)
+
+  fun saveState(outState: Bundle)
+
+  fun teardown()
 
 }
+

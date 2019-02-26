@@ -24,6 +24,7 @@ import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
+import com.pyamsoft.pydroid.ui.settings.AppSettingsView.Callback
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
@@ -37,7 +38,7 @@ internal class AppSettingsView internal constructor(
   private val hideUpgradeInformation: Boolean,
   preferenceScreen: PreferenceScreen,
   callback: AppSettingsView.Callback
-) : PrefUiView<AppSettingsView.Callback>(preferenceScreen, callback) {
+) : PrefUiView<Callback>(preferenceScreen, callback) {
 
   private val context = preferenceScreen.context
 

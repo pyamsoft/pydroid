@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.Callback
 
 internal interface VersionCheckPresenter : Presenter<Callback> {

@@ -24,7 +24,7 @@ import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 
 internal class RatingIconView internal constructor(
   private val changelogIcon: Int,

@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.ui.widget.shadow
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 
 class DropshadowView(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit) {
 

@@ -161,9 +161,9 @@ class AboutFragment : Fragment(), AboutPresenter.Callback {
       @IdRes container: Int
     ) {
       // If you're using this function, all of these are available
-      OssLibraries.CORE = true
       OssLibraries.BOOTSTRAP = true
       OssLibraries.UTIL = true
+      OssLibraries.ARCH = true
       OssLibraries.LOADER = true
       OssLibraries.UI = true
 

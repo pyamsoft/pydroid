@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.navigation
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter.Callback
 
 interface FailedNavigationPresenter : Presenter<Callback> {

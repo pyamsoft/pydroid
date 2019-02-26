@@ -24,11 +24,11 @@ object OssLibraries {
 
   private val libraries: MutableSet<OssLibrary> = LinkedHashSet()
 
-  var CORE = true
   var UTIL = true
   var BOOTSTRAP = true
 
   // These libraries are disabled by default and should be enabled at runtime
+  var ARCH = false
   var UI = false
   var LOADER = false
 
@@ -64,24 +64,9 @@ object OssLibraries {
         "The Kotlin Programming Language."
     )
     add(
-        "AndroidX KTX",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
-        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code."
-    )
-    add(
-        "Repo",
-        "https://github.com/POPinNow/Repo",
-        "Simple Repository pattern for Android."
-    )
-    add(
         "RxJava",
         "https://github.com/ReactiveX/RxJava",
         "Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM."
-    )
-    add(
-        "RxAndroid",
-        "https://github.com/ReactiveX/RxAndroid",
-        "RxJava bindings for Android."
     )
     add(
         "Timber",
@@ -92,17 +77,17 @@ object OssLibraries {
 
   private fun addUtilLibraries() {
     add(
-        "AndroidX AppCompat",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/appcompat/",
-        "The AndroidX Jetpack AppCompat library. Degrade gracefully on older versions of Android."
+        "AndroidX Core",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
+        "The AndroidX Jetpack Core library. Degrade gracefully on older versions of Android."
     )
   }
 
   private fun addBootstrapLibraries() {
     add(
-        "AndroidX Preference",
-        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
-        "The AndroidX Jetpack Preference library. Allow users to modify UI settings."
+        "RxAndroid",
+        "https://github.com/ReactiveX/RxAndroid",
+        "RxJava bindings for Android."
     )
     add(
         "Retrofit",
@@ -120,13 +105,18 @@ object OssLibraries {
         "https://github.com/square/okhttp",
         "An HTTP+HTTP/2 client for Android and Java applications."
     )
+    add(
+        "Repo",
+        "https://github.com/POPinNow/Repo",
+        "Simple Repository pattern for Android."
+    )
   }
 
   private fun addUiLibraries() {
     add(
-        "AndroidX Data Binding",
-        "https://android.googlesource.com/platform/frameworks/data-binding/+/master",
-        "The AndroidX Jetpack Data Binding library. Declaratively bind observable data to UI elements."
+        "AndroidX KTX",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
+        "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code."
     )
     add(
         "AndroidX RecyclerView",
@@ -147,7 +137,16 @@ object OssLibraries {
         "Material Components Android",
         "https://github.com/material-components/material-components-android",
         "Modular and customizable Material Design UI components for Android."
-
+    )
+    add(
+        "AndroidX Preference",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
+        "The AndroidX Jetpack Preference library. Allow users to modify UI settings."
+    )
+    add(
+        "FluidResizer",
+        "https://github.com/POPinNow/FluidResizer",
+        "Fluid and smooth animation for reacting to keyboard visibility changes"
     )
   }
 
@@ -181,9 +180,9 @@ object OssLibraries {
   @JvmStatic
   @CheckResult
   fun libraries(): Set<OssLibrary> {
-    if (CORE) {
-      addCoreLibraries()
-    }
+    // Core is always added if you're using any PYDroid
+    addCoreLibraries()
+
     if (UTIL) {
       addUtilLibraries()
     }

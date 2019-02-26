@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 
 internal class RatingChangelogView internal constructor(
   private val changelog: SpannedString,

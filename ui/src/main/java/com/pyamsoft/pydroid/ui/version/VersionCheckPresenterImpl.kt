@@ -22,8 +22,9 @@ import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.arch.BasePresenter
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.Callback
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Begin
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Complete
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Error
@@ -34,7 +35,7 @@ internal class VersionCheckPresenterImpl internal constructor(
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<VersionCheckState>
-) : BasePresenter<VersionCheckState, VersionCheckPresenter.Callback>(bus),
+) : BasePresenter<VersionCheckState, Callback>(bus),
     VersionCheckPresenter {
 
   private var checkUpdatesDisposable by singleDisposable()

@@ -24,7 +24,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 
 internal class AboutItemTitleView internal constructor(
   parent: ViewGroup

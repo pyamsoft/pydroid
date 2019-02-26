@@ -15,4 +15,4 @@
  *
  */
 
-include ':core', ':ui', ':loader', ':util', ':bootstrap'
+include ':core', ':ui', ':loader', ':util', ':bootstrap', ':arch'

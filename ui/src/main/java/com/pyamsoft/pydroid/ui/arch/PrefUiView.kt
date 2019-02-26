@@ -22,6 +22,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.arch.UiView
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class PrefUiView<T : Any> protected constructor(

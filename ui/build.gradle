@@ -17,15 +17,18 @@
 
 dependencies {
   // Android support library.
+  api "androidx.core:core-ktx:$ktx"
   api "androidx.recyclerview:recyclerview:$recyclerView"
   api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
   api "androidx.fragment:fragment:$fragment"
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
   api "com.google.android.material:material:$materialDesign"
+  api "androidx.preference:preference:$preference"
 
-  // Fluid resise
-  api "com.popinnow.android.fluidresizer:fluidresizer:$fluidresizer"
+  // Fluid resize
+  implementation "com.popinnow.android.fluidresizer:fluidresizer:$fluidresizer"
 
+  api project(':arch')
   api project(':bootstrap')
   api project(':loader')
 }

@@ -22,13 +22,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemActionsView.Callback
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
   parent: ViewGroup,
   callback: AboutItemActionsView.Callback
-) : BaseUiView<AboutItemActionsView.Callback>(parent, callback), BaseAboutItem {
+) : BaseUiView<Callback>(parent, callback), BaseAboutItem {
 
   private val layoutRoot by lazyView<View>(R.id.about_actions)
   private val viewLicense by lazyView<Button>(R.id.action_view_license)

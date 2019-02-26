@@ -17,16 +17,39 @@
 
 package com.pyamsoft.pydroid.util
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.annotation.CheckResult
-import androidx.core.net.toUri
 
 @CheckResult
 fun String.hyperlink(c: Context): HyperlinkIntent {
   val intent = Intent(Intent.ACTION_VIEW).also {
-    it.data = this.toUri()
+    it.data = Uri.parse(this)
   }
 
   return HyperlinkIntent(c.applicationContext, intent)
+
 }
+
+data class HyperlinkIntent internal constructor(
+  val context: Context,
+  val intent: Intent
+) {
+
+  fun navigate(): ActivityNotFoundException? {
+    val appContext = context.applicationContext
+    try {
+      appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+      return null
+    } catch (e: ActivityNotFoundException) {
+      return e
+    }
+  }
+
+  inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit): ActivityNotFoundException? {
+    return navigate()?.also(onNavigateError)
+  }
+}
+

@@ -38,8 +38,8 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.arch.UiToggleView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiToggleView
 import timber.log.Timber
 
 internal class UrlWebviewView internal constructor(
@@ -47,7 +47,8 @@ internal class UrlWebviewView internal constructor(
   private val link: String,
   private val bus: EventBus<UrlWebviewState>,
   parent: ViewGroup
-) : BaseUiView<Unit>(parent, Unit), UiToggleView, LifecycleObserver {
+) : BaseUiView<Unit>(parent, Unit),
+    UiToggleView, LifecycleObserver {
 
   private val webview by lazyView<WebView>(R.id.license_webview)
 

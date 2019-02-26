@@ -22,13 +22,14 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
-import com.pyamsoft.pydroid.ui.arch.BasePresenter
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
+import com.pyamsoft.pydroid.ui.about.dialog.UrlPresenter.Callback
 
 internal class UrlPresenterImpl internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<UrlWebviewState>
-) : BasePresenter<UrlWebviewState, UrlPresenter.Callback>(bus),
+) : BasePresenter<UrlWebviewState, Callback>(bus),
     UrlToolbarView.Callback,
     UrlPresenter {
 

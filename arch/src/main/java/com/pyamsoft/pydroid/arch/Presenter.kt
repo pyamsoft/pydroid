@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.arch
 
 import androidx.lifecycle.LifecycleOwner
 

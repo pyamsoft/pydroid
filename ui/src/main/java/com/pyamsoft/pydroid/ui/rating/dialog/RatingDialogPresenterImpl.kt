@@ -22,14 +22,15 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.arch.BasePresenter
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogPresenter.Callback
 
 internal class RatingDialogPresenterImpl internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<RatingSavedEvent>
-) : BasePresenter<RatingSavedEvent, RatingDialogPresenter.Callback>(bus),
+) : BasePresenter<RatingSavedEvent, Callback>(bus),
     RatingDialogPresenter, RatingControlsView.Callback {
 
   private var saveDisposable by singleDisposable()

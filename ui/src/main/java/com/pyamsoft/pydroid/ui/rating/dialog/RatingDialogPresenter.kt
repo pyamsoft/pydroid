@@ -17,9 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogPresenter.Callback
 
-internal interface RatingDialogPresenter : Presenter<RatingDialogPresenter.Callback> {
+internal interface RatingDialogPresenter : Presenter<Callback> {
 
   interface Callback {
 

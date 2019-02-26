@@ -16,9 +16,6 @@
  */
 
 dependencies {
-  // Android support library.
-  api "androidx.preference:preference:$preference"
-
   // Moshi
   implementation "com.squareup.moshi:moshi:$moshi"
   kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
@@ -28,6 +25,13 @@ dependencies {
   implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
   implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
   implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
+
+  // Repo
+  implementation "com.popinnow.android.repo:repo:$repo"
+  implementation "com.popinnow.android.repo:repo-persister-moshi:$repo"
+
+  // RxAndroid
+  api "io.reactivex.rxjava2:rxandroid:$rxandroid"
 
   api project(':util')
 }

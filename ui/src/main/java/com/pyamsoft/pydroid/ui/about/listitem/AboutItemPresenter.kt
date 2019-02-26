@@ -17,9 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemPresenter.Callback
 
-internal interface AboutItemPresenter : Presenter<AboutItemPresenter.Callback> {
+internal interface AboutItemPresenter : Presenter<Callback> {
 
   interface Callback {
 

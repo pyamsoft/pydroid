@@ -17,9 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradePresenter.Callback
 
-internal interface VersionUpgradePresenter : Presenter<VersionUpgradePresenter.Callback> {
+internal interface VersionUpgradePresenter : Presenter<Callback> {
 
   interface Callback {
 

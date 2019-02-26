@@ -23,7 +23,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 
 internal class AboutItemDescriptionView internal constructor(
   parent: ViewGroup

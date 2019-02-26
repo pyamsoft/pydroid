@@ -22,14 +22,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingControlsView.Callback
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class RatingControlsView internal constructor(
   private val rateLink: String,
   parent: ViewGroup,
   callback: RatingControlsView.Callback
-) : BaseUiView<RatingControlsView.Callback>(parent, callback) {
+) : BaseUiView<Callback>(parent, callback) {
 
   private val layoutRoot by lazyView<View>(R.id.rating_control_root)
   private val rateApplication by lazyView<Button>(R.id.rate_application)

@@ -15,28 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
-
-import com.pyamsoft.pydroid.arch.Presenter
-import com.pyamsoft.pydroid.ui.about.dialog.UrlPresenter.Callback
-
-internal interface UrlPresenter : Presenter<Callback> {
-
-  interface Callback {
-
-    fun onWebviewBegin()
-
-    fun onWebviewOtherPageLoaded(url: String)
-
-    fun onWebviewTargetPageLoaded(url: String)
-
-    fun onWebviewExternalNavigationEvent(url: String)
-
-    fun onToolbarNavigateEvent()
-
-    fun onToolbarMenuItemEvent(
-      itemId: Int,
-      url: String
-    )
-  }
+dependencies {
+  api project(':core')
 }
+

@@ -18,9 +18,10 @@
 package com.pyamsoft.pydroid.ui.about
 
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.about.AboutPresenter.Callback
 
-internal interface AboutPresenter : Presenter<AboutPresenter.Callback> {
+internal interface AboutPresenter : Presenter<Callback> {
 
   interface Callback {
 

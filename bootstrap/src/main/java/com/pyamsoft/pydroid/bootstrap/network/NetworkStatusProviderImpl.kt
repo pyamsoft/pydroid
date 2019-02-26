@@ -23,14 +23,15 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.annotation.CheckResult
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import timber.log.Timber
 
 internal class NetworkStatusProviderImpl internal constructor(
   private val context: Context
 ) : NetworkStatusProvider {
 
-  private val connMan by lazy { requireNotNull(context.getSystemService<ConnectivityManager>()) }
+  private val connMan by lazy {
+    context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  }
 
   override fun hasConnection(): Boolean {
     val permission = hasPermission()

@@ -18,13 +18,14 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPresenter.Callback
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 internal class AppSettingsPresenterImpl internal constructor(
   private val theming: Theming
-) : BasePresenter<Unit, AppSettingsPresenter.Callback>(RxBus.empty()),
+) : BasePresenter<Unit, Callback>(RxBus.empty()),
     AppSettingsPresenter, AppSettingsView.Callback {
 
   override fun onBind() {

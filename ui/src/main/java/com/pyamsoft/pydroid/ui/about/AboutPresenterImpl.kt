@@ -26,15 +26,16 @@ import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Begin
 import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Complete
 import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Error
 import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Loaded
-import com.pyamsoft.pydroid.ui.arch.BasePresenter
-import com.pyamsoft.pydroid.ui.arch.destroy
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
+import com.pyamsoft.pydroid.ui.about.AboutPresenter.Callback
 import timber.log.Timber
 
 internal class AboutPresenterImpl internal constructor(
   private val interactor: AboutInteractor,
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<LicenseLoadState>
-) : BasePresenter<LicenseLoadState, AboutPresenter.Callback>(bus),
+) : BasePresenter<LicenseLoadState, Callback>(bus),
     AboutListView.Callback,
     AboutPresenter {
 

@@ -22,13 +22,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControlView.Callback
 
 internal class VersionUpgradeControlView internal constructor(
   parent: ViewGroup,
   callback: VersionUpgradeControlView.Callback
-) : BaseUiView<VersionUpgradeControlView.Callback>(parent, callback) {
+) : BaseUiView<Callback>(parent, callback) {
 
   private val layoutRoot by lazyView<View>(R.id.version_control_root)
   private val upgradeButton by lazyView<Button>(R.id.upgrade_button)

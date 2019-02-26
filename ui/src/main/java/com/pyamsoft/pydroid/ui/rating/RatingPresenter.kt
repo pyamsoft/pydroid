@@ -17,9 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
 
-internal interface RatingPresenter : Presenter<RatingPresenter.Callback> {
+internal interface RatingPresenter : Presenter<Callback> {
 
   fun load(force: Boolean)
 

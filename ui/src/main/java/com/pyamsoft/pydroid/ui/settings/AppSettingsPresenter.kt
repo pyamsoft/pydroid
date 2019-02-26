@@ -17,10 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import com.pyamsoft.pydroid.ui.arch.Presenter
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPresenter.Callback
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
-internal interface AppSettingsPresenter : Presenter<AppSettingsPresenter.Callback> {
+internal interface AppSettingsPresenter : Presenter<Callback> {
 
   interface Callback {
 

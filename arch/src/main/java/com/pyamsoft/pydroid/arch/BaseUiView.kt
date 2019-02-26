@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import android.view.LayoutInflater

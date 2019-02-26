@@ -18,10 +18,11 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.ui.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemPresenter.Callback
 
 internal class AboutItemPresenterImpl internal constructor(
-) : BasePresenter<Unit, AboutItemPresenter.Callback>(RxBus.empty()),
+) : BasePresenter<Unit, Callback>(RxBus.empty()),
     AboutItemPresenter, AboutItemActionsView.Callback {
 
   override fun onBind() {

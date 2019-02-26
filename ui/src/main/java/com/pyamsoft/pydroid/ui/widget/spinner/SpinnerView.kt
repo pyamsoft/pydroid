@@ -22,10 +22,11 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.arch.UiToggleView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiToggleView
 
-class SpinnerView(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit), UiToggleView {
+class SpinnerView(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit),
+    UiToggleView {
 
   private val layoutRoot by lazyView<View>(R.id.spinner_root)
   private val spinner by lazyView<ProgressBar>(R.id.spinner)

@@ -26,7 +26,8 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.about.dialog.UrlToolbarView.Callback
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
@@ -36,7 +37,7 @@ internal class UrlToolbarView internal constructor(
   private val link: String,
   private val imageLoader: ImageLoader,
   callback: UrlToolbarView.Callback
-) : BaseUiView<UrlToolbarView.Callback>(parent, callback) {
+) : BaseUiView<Callback>(parent, callback) {
 
   private val toolbar by lazyView<Toolbar>(R.id.license_toolbar)
 

@@ -16,9 +16,6 @@
  */
 
 dependencies {
-  // KTX
-  api "androidx.core:core-ktx:$ktx"
-
   // AndroidX Lifecycle
   api "androidx.lifecycle:lifecycle-runtime:$lifecycle"
 
@@ -27,11 +24,6 @@ dependencies {
 
   // RxJava
   api "io.reactivex.rxjava2:rxjava:$rxjava"
-  api "io.reactivex.rxjava2:rxandroid:$rxandroid"
-
-  // Repo
-  api "com.popinnow.android.repo:repo:$repo"
-  api "com.popinnow.android.repo:repo-persister-moshi:$repo"
 
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

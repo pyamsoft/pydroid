@@ -17,13 +17,13 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.Callback
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Begin
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Complete
@@ -46,17 +46,14 @@ internal class VersionCheckPresenterImpl internal constructor(
   }
 
   private fun listenForVersionCheckEvents() {
-    listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe {
-          return@subscribe when (it) {
-            is Begin -> callback.onVersionCheckBegin(it.forced)
-            is Found -> callback.onVersionCheckFound(it.currentVersion, it.newVersion)
-            is Error -> callback.onVersionCheckError(it.throwable)
-            is Complete -> callback.onVersionCheckComplete()
-          }
-        }
+    listen().subscribe {
+      return@subscribe when (it) {
+        is Begin -> callback.onVersionCheckBegin(it.forced)
+        is Found -> callback.onVersionCheckFound(it.currentVersion, it.newVersion)
+        is Error -> callback.onVersionCheckError(it.throwable)
+        is Complete -> callback.onVersionCheckComplete()
+      }
+    }
         .destroy(owner)
   }
 

@@ -17,18 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.about.AboutPresenter.Callback
 import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Begin
 import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Complete
 import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Error
 import com.pyamsoft.pydroid.ui.about.LicenseLoadState.Loaded
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
-import com.pyamsoft.pydroid.ui.about.AboutPresenter.Callback
 import timber.log.Timber
 
 internal class AboutPresenterImpl internal constructor(
@@ -42,17 +42,14 @@ internal class AboutPresenterImpl internal constructor(
   private var licenseDisposable by singleDisposable()
 
   override fun onBind() {
-    listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe {
-          return@subscribe when (it) {
-            is Begin -> callback.onLicenseLoadBegin()
-            is Loaded -> callback.onLicensesLoaded(it.licenses)
-            is Error -> callback.onLicenseLoadError(it.error)
-            is Complete -> callback.onLicenseLoadComplete()
-          }
-        }
+    listen().subscribe {
+      return@subscribe when (it) {
+        is Begin -> callback.onLicenseLoadBegin()
+        is Loaded -> callback.onLicensesLoaded(it.licenses)
+        is Error -> callback.onLicenseLoadError(it.error)
+        is Complete -> callback.onLicenseLoadComplete()
+      }
+    }
         .destroy(owner)
 
     loadLicenses(false)

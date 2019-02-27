@@ -33,13 +33,12 @@ internal class UrlComponentImpl internal constructor(
   private val imageLoader: ImageLoader,
   private val link: String,
   private val name: String,
-  private val schedulerProvider: SchedulerProvider,
   private val bus: EventBus<UrlWebviewState>,
   private val failedNavigationBus: EventBus<FailedNavigationEvent>
 ) : UrlComponent {
 
   override fun inject(dialog: ViewUrlDialog) {
-    val presenter = UrlPresenterImpl(schedulerProvider, bus)
+    val presenter = UrlPresenterImpl(bus)
     val toolbarView = UrlToolbarView(parent, name, link, imageLoader, presenter)
     val webviewView = UrlWebviewView(owner, link, bus, parent)
     val spinnerView = SpinnerView(parent)

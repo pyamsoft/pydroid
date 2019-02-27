@@ -18,42 +18,32 @@
 package com.pyamsoft.pydroid.core.bus
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.bus.RxBus.Event.Empty
-import com.pyamsoft.pydroid.core.bus.RxBus.Event.Wrapper
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import timber.log.Timber
 
 class RxBus<T : Any> private constructor() : EventBus<T> {
 
-  private val bus: Subject<Event<T>>  by lazy {
-    PublishSubject.create<Event<T>>()
+  private val bus by lazy {
+    PublishSubject.create<T>()
         .toSerialized()
   }
 
   override fun publish(event: T) {
-    if (bus.hasObservers()) {
-      bus.onNext(Wrapper(event))
-    } else {
-      Timber.w("No observers on viewBus, ignore publish event: %s", event)
+    if (!bus.hasObservers()) {
+      Timber.w("No observers on bus, may ignore event: $event")
     }
+
+    bus.onNext(event)
   }
 
-  override fun listen(): Observable<T> = bus
-      .onErrorReturnItem(Empty())
-      .filter { it !is Empty }
-      .map { it as Wrapper }
-      .map { it.data }
-
-  internal sealed class Event<T : Any> {
-    internal class Empty<T : Any> : Event<T>()
-    internal data class Wrapper<T : Any>(val data: T) : Event<T>()
+  override fun listen(): Observable<T> {
+    return bus
   }
 
   companion object {
 
-    private val EMPTY = RxBus.create<Unit>()
+    private val EMPTY by lazy { RxBus.create<Unit>() }
 
     /**
      * Create a new local viewBus instance to use

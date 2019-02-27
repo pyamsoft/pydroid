@@ -100,8 +100,8 @@ internal class PYDroidComponentImpl internal constructor(
       navigationModule.bus
   )
 
-  override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent
-      = AboutItemComponentImpl(parent, navigationModule.bus)
+  override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent =
+    AboutItemComponentImpl(parent, navigationModule.bus)
 
   override fun plusVersionUpgradeComponent(
     parent: ViewGroup,
@@ -134,7 +134,7 @@ internal class PYDroidComponentImpl internal constructor(
     name: String
   ): UrlComponent = UrlComponentImpl(
       parent, owner, loaderModule.provideImageLoader(),
-      link, name, schedulerProvider, webviewStateBus, navigationModule.bus
+      link, name, webviewStateBus, navigationModule.bus
   )
 
   override fun plusRatingDialogComponent(

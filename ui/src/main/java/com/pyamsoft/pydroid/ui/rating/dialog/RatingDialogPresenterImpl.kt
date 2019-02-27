@@ -17,13 +17,13 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogPresenter.Callback
 
 internal class RatingDialogPresenterImpl internal constructor(
@@ -36,15 +36,12 @@ internal class RatingDialogPresenterImpl internal constructor(
   private var saveDisposable by singleDisposable()
 
   override fun onBind() {
-    listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe {
-          return@subscribe when (it.rateApplication) {
-            true -> callback.onVisitApplicationPageToRate(it.packageName)
-            false -> callback.onDidNotRate()
-          }
-        }
+    listen().subscribe {
+      return@subscribe when (it.rateApplication) {
+        true -> callback.onVisitApplicationPageToRate(it.packageName)
+        false -> callback.onDidNotRate()
+      }
+    }
         .destroy(owner)
   }
 

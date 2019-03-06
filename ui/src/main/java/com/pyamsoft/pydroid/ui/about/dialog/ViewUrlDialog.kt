@@ -29,6 +29,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
@@ -55,18 +56,7 @@ class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val name = requireArguments().getString(NAME, "")
-    val link = requireArguments().getString(LINK, "")
-    require(name.isNotBlank())
-    require(link.isNotBlank())
-
-    val root = inflater.inflate(R.layout.layout_constraint, container, false)
-
-    PYDroid.obtain(requireContext())
-        .plusViewLicenseComponent(viewLifecycleOwner, root as ViewGroup, link, name)
-        .inject(this)
-
-    return root
+    return inflater.inflate(layout.layout_constraint, container, false)
   }
 
   override fun onViewCreated(
@@ -74,6 +64,15 @@ class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+
+    val name = requireArguments().getString(NAME, "")
+    val link = requireArguments().getString(LINK, "")
+    require(name.isNotBlank())
+    require(link.isNotBlank())
+    val layoutRoot = view.findViewById<ConstraintLayout>(R.id.layout_constraint)
+    PYDroid.obtain(view.context.applicationContext)
+        .plusViewLicenseComponent(viewLifecycleOwner, layoutRoot as ViewGroup, link, name)
+        .inject(this)
 
     toolbar.inflate(savedInstanceState)
     webview.inflate(savedInstanceState)

@@ -22,10 +22,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
@@ -49,16 +51,7 @@ class VersionUpgradeDialog : DialogFragment(), Callback {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.layout_linear_vertical, container, false)
-
-    val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
-    require(latestVersion > 0)
-
-    PYDroid.obtain(root.context.applicationContext)
-        .plusVersionUpgradeComponent(root as ViewGroup, latestVersion)
-        .inject(this)
-
-    return root
+    return inflater.inflate(layout.layout_linear_vertical, container, false)
   }
 
   override fun onViewCreated(
@@ -66,6 +59,14 @@ class VersionUpgradeDialog : DialogFragment(), Callback {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+
+    val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
+    require(latestVersion > 0)
+    val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
+    PYDroid.obtain(view.context.applicationContext)
+        .plusVersionUpgradeComponent(layoutRoot, latestVersion)
+        .inject(this)
+
     contentView.inflate(savedInstanceState)
     controlsView.inflate(savedInstanceState)
     presenter.bind(viewLifecycleOwner, this)

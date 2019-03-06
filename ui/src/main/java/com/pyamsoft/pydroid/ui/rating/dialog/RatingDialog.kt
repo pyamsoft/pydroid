@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.PYDroid
@@ -58,24 +59,7 @@ class RatingDialog : DialogFragment(), Callback {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.layout_linear_vertical, container, false)
-
-    val rateLink = requireArguments().getString(RATE_LINK, "")
-    val changeLogIcon = requireArguments().getInt(CHANGE_LOG_ICON, 0)
-    val changelog = requireArguments().getCharSequence(CHANGE_LOG_TEXT, "") as? SpannedString
-
-    requireNotNull(rateLink)
-    requireNotNull(changelog)
-
-    require(rateLink.isNotBlank())
-    require(changeLogIcon > 0)
-    require(changelog.isNotBlank())
-
-    PYDroid.obtain(root.context.applicationContext)
-        .plusRatingDialogComponent(root as ViewGroup, rateLink, changeLogIcon, changelog)
-        .inject(this)
-
-    return root
+    return inflater.inflate(R.layout.layout_linear_vertical, container, false)
   }
 
   override fun onViewCreated(
@@ -83,6 +67,20 @@ class RatingDialog : DialogFragment(), Callback {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+
+    val rateLink = requireArguments().getString(RATE_LINK, "")
+    val changeLogIcon = requireArguments().getInt(CHANGE_LOG_ICON, 0)
+    val changelog = requireArguments().getCharSequence(CHANGE_LOG_TEXT, "") as? SpannedString
+    requireNotNull(rateLink)
+    requireNotNull(changelog)
+    require(rateLink.isNotBlank())
+    require(changeLogIcon > 0)
+    require(changelog.isNotBlank())
+
+    val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
+    PYDroid.obtain(view.context.applicationContext)
+        .plusRatingDialogComponent(layoutRoot, rateLink, changeLogIcon, changelog)
+        .inject(this)
 
     iconView.inflate(savedInstanceState)
     changelogView.inflate(savedInstanceState)

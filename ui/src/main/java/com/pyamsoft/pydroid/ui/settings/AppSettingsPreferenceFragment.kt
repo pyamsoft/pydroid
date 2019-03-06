@@ -18,9 +18,7 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
 import androidx.preference.PreferenceFragmentCompat
@@ -64,26 +62,16 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
   }
 
   @CallSuper
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    val view = requireNotNull(super.onCreateView(inflater, container, savedInstanceState))
-
-    PYDroid.obtain(requireContext())
-        .plusSettingsComponent(preferenceScreen, hideClearAll, hideUpgradeInformation)
-        .inject(this)
-
-    return view
-  }
-
-  @CallSuper
   override fun onViewCreated(
     view: View,
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+
+    PYDroid.obtain(view.context.applicationContext)
+        .plusSettingsComponent(preferenceScreen, hideClearAll, hideUpgradeInformation)
+        .inject(this)
+
     settingsView.inflate(savedInstanceState)
     versionPresenter.bind(viewLifecycleOwner, this)
     settingsPresenter.bind(viewLifecycleOwner, this)

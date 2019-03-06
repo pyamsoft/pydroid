@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -59,13 +60,7 @@ class AboutFragment : Fragment(), AboutPresenter.Callback {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.layout_frame, container, false)
-
-    PYDroid.obtain(root.context.applicationContext)
-        .plusAboutComponent(viewLifecycleOwner, root as ViewGroup)
-        .inject(this)
-
-    return root
+    return inflater.inflate(R.layout.layout_frame, container, false)
   }
 
   override fun onViewCreated(
@@ -73,6 +68,12 @@ class AboutFragment : Fragment(), AboutPresenter.Callback {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+
+    val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
+    PYDroid.obtain(view.context.applicationContext)
+        .plusAboutComponent(viewLifecycleOwner, layoutRoot)
+        .inject(this)
+
     listView.inflate(savedInstanceState)
     spinner.inflate(savedInstanceState)
     presenter.bind(viewLifecycleOwner, this)

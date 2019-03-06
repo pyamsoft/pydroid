@@ -22,11 +22,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.about.dialog.UrlToolbarView.Callback
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
@@ -106,17 +106,16 @@ internal class UrlToolbarView internal constructor(
 
   private fun setupMenuOnClick() {
     toolbar.setOnMenuItemClickListener {
-      callback.onToolbarMenuItemclicked(it.itemId, url = link)
+      if (it.itemId == R.id.menu_item_view_license) {
+        callback.onViewLicenseExternal(link)
+      }
       return@setOnMenuItemClickListener true
     }
   }
 
   interface Callback {
 
-    fun onToolbarMenuItemclicked(
-      itemId: Int,
-      url: String
-    )
+    fun onViewLicenseExternal(url: String)
 
     fun onToolbarNavClicked()
   }

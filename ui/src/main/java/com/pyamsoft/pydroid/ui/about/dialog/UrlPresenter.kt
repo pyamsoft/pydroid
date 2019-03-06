@@ -32,11 +32,8 @@ internal interface UrlPresenter : Presenter<Callback> {
 
     fun onWebviewExternalNavigationEvent(url: String)
 
-    fun onToolbarNavigateEvent()
+    fun onNavigateEvent()
 
-    fun onToolbarMenuItemEvent(
-      itemId: Int,
-      url: String
-    )
+    fun onViewLicenseExternal(url: String)
   }
 }

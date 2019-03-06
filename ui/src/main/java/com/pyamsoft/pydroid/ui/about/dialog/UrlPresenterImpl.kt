@@ -61,15 +61,12 @@ internal class UrlPresenterImpl internal constructor(
   override fun onUnbind() {
   }
 
-  override fun onToolbarMenuItemclicked(
-    itemId: Int,
-    url: String
-  ) {
-    callback.onToolbarMenuItemEvent(itemId, url)
+  override fun onViewLicenseExternal(url: String) {
+    callback.onViewLicenseExternal(url)
   }
 
   override fun onToolbarNavClicked() {
-    callback.onToolbarNavigateEvent()
+    callback.onNavigateEvent()
   }
 
 }

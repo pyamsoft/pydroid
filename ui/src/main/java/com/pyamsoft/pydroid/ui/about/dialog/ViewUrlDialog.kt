@@ -172,19 +172,12 @@ class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
     navigateAway(url)
   }
 
-  override fun onToolbarNavigateEvent() {
+  override fun onNavigateEvent() {
     dismiss()
   }
 
-  override fun onToolbarMenuItemEvent(
-    itemId: Int,
-    url: String
-  ) {
-    when (itemId) {
-      R.id.menu_item_view_license -> {
-        navigateAway(url)
-      }
-    }
+  override fun onViewLicenseExternal(url: String) {
+    navigateAway(url)
   }
 
   private fun navigateAway(url: String) {

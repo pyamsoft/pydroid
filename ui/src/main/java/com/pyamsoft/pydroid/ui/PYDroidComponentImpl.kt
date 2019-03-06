@@ -152,6 +152,10 @@ internal class PYDroidComponentImpl internal constructor(
       ratingDialogStateBus, navigationModule.bus
   )
 
+  override fun schedulerProvider(): SchedulerProvider {
+    return schedulerProvider
+  }
+
   override fun enforcer(): Enforcer {
     return enforcer
   }

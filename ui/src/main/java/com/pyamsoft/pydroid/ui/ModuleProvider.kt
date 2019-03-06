@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
@@ -27,6 +28,9 @@ import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 interface ModuleProvider {
+
+  @CheckResult
+  fun schedulerProvider(): SchedulerProvider
 
   @CheckResult
   fun enforcer(): Enforcer

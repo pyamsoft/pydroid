@@ -42,5 +42,7 @@ internal interface AboutPresenter : Presenter<Callback> {
     fun onLicenseLoadError(throwable: Throwable)
 
     fun onLicenseLoadComplete()
+
+    fun onNavigationEvent()
   }
 }

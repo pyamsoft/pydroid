@@ -33,9 +33,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.ViewUrlDialog
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
-import com.pyamsoft.pydroid.ui.app.toolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
@@ -43,17 +41,8 @@ class AboutFragment : Fragment(), AboutPresenter.Callback {
 
   internal lateinit var listView: AboutListView
   internal lateinit var spinner: SpinnerView
+  internal lateinit var toolbar: AboutToolbarView
   internal lateinit var presenter: AboutPresenter
-
-  private var backStackCount: Int = 0
-  private var oldTitle: CharSequence? = null
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    requireArguments().also {
-      backStackCount = it.getInt(KEY_BACK_STACK, 0)
-    }
-  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -69,52 +58,33 @@ class AboutFragment : Fragment(), AboutPresenter.Callback {
   ) {
     super.onViewCreated(view, savedInstanceState)
 
+    val backstackCount = requireArguments().getInt(KEY_BACK_STACK, 0)
     val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
     PYDroid.obtain(view.context.applicationContext)
-        .plusAboutComponent(viewLifecycleOwner, layoutRoot)
+        .plusAboutComponent(
+            viewLifecycleOwner, requireToolbarActivity(), backstackCount, layoutRoot
+        )
         .inject(this)
 
+    toolbar.inflate(savedInstanceState)
     listView.inflate(savedInstanceState)
     spinner.inflate(savedInstanceState)
+
     presenter.bind(viewLifecycleOwner, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
+    toolbar.saveState(outState)
     listView.saveState(outState)
     spinner.saveState(outState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+    toolbar.teardown()
     listView.teardown()
     spinner.teardown()
-  }
-
-  override fun onResume() {
-    super.onResume()
-    requireToolbarActivity().withToolbar {
-      if (oldTitle == null) {
-        oldTitle = it.title
-      }
-      it.title = "Open Source Libraries"
-      it.setUpEnabled(true)
-    }
-  }
-
-  override fun onPause() {
-    super.onPause()
-    if (isRemoving) {
-      toolbarActivity?.withToolbar {
-        // Set title back to original
-        it.title = oldTitle ?: it.title
-
-        // If this page was last on the back stack, set up false
-        if (backStackCount == 0) {
-          it.setUpEnabled(false)
-        }
-      }
-    }
   }
 
   override fun onLicenseLoadBegin() {
@@ -149,6 +119,10 @@ class AboutFragment : Fragment(), AboutPresenter.Callback {
   ) {
     ViewUrlDialog.newInstance(name, link = homepageUrl)
         .show(requireActivity(), ViewUrlDialog.TAG)
+  }
+
+  override fun onNavigationEvent() {
+    requireActivity().onBackPressed()
   }
 
   companion object {

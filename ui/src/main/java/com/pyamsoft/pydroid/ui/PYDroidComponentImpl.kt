@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.ui.about.dialog.UrlComponentImpl
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
+import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingPresenterImpl
@@ -122,9 +123,12 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun plusAboutComponent(
     owner: LifecycleOwner,
+    toolbarActivity: ToolbarActivity,
+    backstackCount: Int,
     parent: ViewGroup
   ): AboutComponent = AboutComponentImpl(
-      aboutModule.interactor, parent, owner, aboutStateBus, schedulerProvider
+      aboutModule.interactor, toolbarActivity, backstackCount, parent, owner, aboutStateBus,
+      schedulerProvider
   )
 
   override fun plusViewLicenseComponent(

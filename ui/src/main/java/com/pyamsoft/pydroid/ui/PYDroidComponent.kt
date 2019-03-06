@@ -26,6 +26,7 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
+import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
@@ -54,6 +55,8 @@ internal interface PYDroidComponent {
   @CheckResult
   fun plusAboutComponent(
     owner: LifecycleOwner,
+    toolbarActivity: ToolbarActivity,
+    backstackCount: Int,
     parent: ViewGroup
   ): AboutComponent
 

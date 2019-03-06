@@ -18,13 +18,14 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 
 internal class AboutItemComponentImpl internal constructor(
   private val parent: ViewGroup,
+  private val schedulerProvider: SchedulerProvider,
   private val failedNavigationBus: EventBus<FailedNavigationEvent>
 ) : AboutItemComponent {
 
@@ -39,7 +40,9 @@ internal class AboutItemComponentImpl internal constructor(
       this.actionsView = aboutActionsView
       this.descriptionView = aboutDescriptionView
       this.presenter = presenter
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(failedNavigationBus)
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(
+          schedulerProvider, failedNavigationBus
+      )
     }
   }
 

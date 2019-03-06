@@ -36,12 +36,15 @@ internal class RatingDialogPresenterImpl internal constructor(
   private var saveDisposable by singleDisposable()
 
   override fun onBind() {
-    listen().subscribe {
-      return@subscribe when (it.rateApplication) {
-        true -> callback.onVisitApplicationPageToRate(it.packageName)
-        false -> callback.onDidNotRate()
-      }
-    }
+    listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it.rateApplication) {
+            true -> callback.onVisitApplicationPageToRate(it.packageName)
+            false -> callback.onDidNotRate()
+          }
+        }
         .destroy(owner)
   }
 

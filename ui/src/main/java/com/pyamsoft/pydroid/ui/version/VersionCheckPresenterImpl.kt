@@ -46,14 +46,17 @@ internal class VersionCheckPresenterImpl internal constructor(
   }
 
   private fun listenForVersionCheckEvents() {
-    listen().subscribe {
-      return@subscribe when (it) {
-        is Begin -> callback.onVersionCheckBegin(it.forced)
-        is Found -> callback.onVersionCheckFound(it.currentVersion, it.newVersion)
-        is Error -> callback.onVersionCheckError(it.throwable)
-        is Complete -> callback.onVersionCheckComplete()
-      }
-    }
+    listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it) {
+            is Begin -> callback.onVersionCheckBegin(it.forced)
+            is Found -> callback.onVersionCheckFound(it.currentVersion, it.newVersion)
+            is Error -> callback.onVersionCheckError(it.throwable)
+            is Complete -> callback.onVersionCheckComplete()
+          }
+        }
         .destroy(owner)
   }
 

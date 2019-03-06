@@ -44,7 +44,10 @@ internal class RatingPresenterImpl internal constructor(
   }
 
   private fun listenForDialogRequests() {
-    listen().subscribe { callback.onShowRating() }
+    listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe { callback.onShowRating() }
         .destroy(owner)
   }
 

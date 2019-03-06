@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.about.dialog
 
 import com.pyamsoft.pydroid.arch.BasePresenter
 import com.pyamsoft.pydroid.arch.destroy
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.dialog.UrlPresenter.Callback
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
@@ -26,19 +27,23 @@ import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
 
 internal class UrlPresenterImpl internal constructor(
+  private val schedulerProvider: SchedulerProvider,
   bus: EventBus<UrlWebviewState>
 ) : BasePresenter<UrlWebviewState, Callback>(bus),
     UrlToolbarView.Callback,
     UrlPresenter {
 
   override fun onBind() {
-    listen().subscribe {
-      return@subscribe when (it) {
-        is Loading -> callback.onWebviewBegin()
-        is PageLoaded -> onPageLoaded(it.url, it.targetPage)
-        is ExternalNavigation -> callback.onWebviewExternalNavigationEvent(it.url)
-      }
-    }
+    listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it) {
+            is Loading -> callback.onWebviewBegin()
+            is PageLoaded -> onPageLoaded(it.url, it.targetPage)
+            is ExternalNavigation -> callback.onWebviewExternalNavigationEvent(it.url)
+          }
+        }
         .destroy(owner)
   }
 

@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.view.ViewGroup
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
@@ -27,6 +28,7 @@ internal class VersionUpgradeComponentImpl internal constructor(
   private val name: String,
   private val currentVersion: Int,
   private val newVersion: Int,
+  private val schedulerProvider: SchedulerProvider,
   private val failedNavBus: EventBus<FailedNavigationEvent>
 ) : VersionUpgradeComponent {
 
@@ -36,7 +38,9 @@ internal class VersionUpgradeComponentImpl internal constructor(
     val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
 
     dialog.apply {
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(failedNavBus)
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(
+          schedulerProvider, failedNavBus
+      )
       this.contentView = content
       this.controlsView = controls
       this.presenter = presenter

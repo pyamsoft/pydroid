@@ -38,7 +38,9 @@ internal class VersionComponentImpl internal constructor(
     val presenter = VersionCheckPresenterImpl(interactor, schedulerProvider, bus)
     val view = VersionView(view, owner)
     activity.apply {
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(failedNavBus)
+      this.failedNavigationPresenter = FailedNavigationPresenterImpl(
+          schedulerProvider, failedNavBus
+      )
       this.versionPresenter = presenter
       this.versionView = view
     }

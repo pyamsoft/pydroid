@@ -39,7 +39,7 @@ internal class RatingDialogComponentImpl internal constructor(
 ) : RatingDialogComponent {
 
   override fun inject(dialog: RatingDialog) {
-    val failedPresenter = FailedNavigationPresenterImpl(failedNavBus)
+    val failedPresenter = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
     val presenter = RatingDialogPresenterImpl(interactor, schedulerProvider, ratingStateBus)
     val controlsView = RatingControlsView(rateLink, parent, presenter)
     val iconView = RatingIconView(changelogIcon, imageLoader, parent)

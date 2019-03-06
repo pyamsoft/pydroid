@@ -53,7 +53,7 @@ internal class AppSettingsComponentImpl internal constructor(
     )
 
     fragment.apply {
-      this.failedNavPresenter = FailedNavigationPresenterImpl(failedNavBus)
+      this.failedNavPresenter = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
       this.settingsView = settingsView
       this.settingsPresenter = presenter
       this.versionPresenter = VersionCheckPresenterImpl(

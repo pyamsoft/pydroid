@@ -42,14 +42,17 @@ internal class AboutPresenterImpl internal constructor(
   private var licenseDisposable by singleDisposable()
 
   override fun onBind() {
-    listen().subscribe {
-      return@subscribe when (it) {
-        is Begin -> callback.onLicenseLoadBegin()
-        is Loaded -> callback.onLicensesLoaded(it.licenses)
-        is Error -> callback.onLicenseLoadError(it.error)
-        is Complete -> callback.onLicenseLoadComplete()
-      }
-    }
+    listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it) {
+            is Begin -> callback.onLicenseLoadBegin()
+            is Loaded -> callback.onLicensesLoaded(it.licenses)
+            is Error -> callback.onLicenseLoadError(it.error)
+            is Complete -> callback.onLicenseLoadComplete()
+          }
+        }
         .destroy(owner)
 
     loadLicenses(false)

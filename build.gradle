@@ -59,7 +59,7 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.android.tools.build:gradle:3.3.1"
+    classpath "com.android.tools.build:gradle:3.3.2"
 
     // Dex count
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.5'

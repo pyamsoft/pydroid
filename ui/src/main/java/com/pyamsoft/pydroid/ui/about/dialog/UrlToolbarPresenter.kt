@@ -17,23 +17,16 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
-import android.content.ActivityNotFoundException
-import androidx.constraintlayout.widget.ConstraintLayout
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.about.dialog.UrlToolbarPresenter.Callback
 
-internal interface UrlUiComponent : UiComponent<UrlUiComponent.Callback> {
-
-  fun layout(
-    constraintLayout: ConstraintLayout,
-    aboveId: Int
-  )
-
-  fun navigationFailed(error: ActivityNotFoundException)
+internal interface UrlToolbarPresenter : Presenter<Callback> {
 
   interface Callback {
 
-    fun onNavigateToExternalUrl(url: String)
+    fun onNavigationEvent()
+
+    fun onViewLicenseExternal(url: String)
 
   }
-
 }

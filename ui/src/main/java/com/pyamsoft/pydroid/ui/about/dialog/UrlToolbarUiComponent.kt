@@ -17,20 +17,22 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
-import android.content.ActivityNotFoundException
+import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.pyamsoft.pydroid.arch.UiComponent
 
-internal interface UrlUiComponent : UiComponent<UrlUiComponent.Callback> {
+internal interface UrlToolbarUiComponent : UiComponent<UrlToolbarUiComponent.Callback> {
 
-  fun layout(
-    constraintLayout: ConstraintLayout,
-    aboveId: Int
-  )
+  @CheckResult
+  @IdRes
+  fun id(): Int
 
-  fun navigationFailed(error: ActivityNotFoundException)
+  fun layout(constraintLayout: ConstraintLayout)
 
   interface Callback {
+
+    fun onCancelViewing()
 
     fun onNavigateToExternalUrl(url: String)
 

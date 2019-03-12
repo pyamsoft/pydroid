@@ -26,14 +26,10 @@ import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.about.dialog.UrlUiComponent.Callback
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class UrlUiComponentImpl internal constructor(
-  private val rootView: ConstraintLayout,
-  private val toolbar: UrlToolbarView,
   private val webview: UrlWebviewView,
-  private val dropshadow: DropshadowView,
   private val spinner: SpinnerView,
   private val presenter: UrlPresenter,
   private val failedNavigationPresenter: FailedNavigationPresenter
@@ -47,69 +43,50 @@ internal class UrlUiComponentImpl internal constructor(
     callback: Callback
   ) {
     owner.doOnDestroy {
-      toolbar.teardown()
       webview.teardown()
       spinner.teardown()
-      dropshadow.teardown()
       presenter.unbind()
     }
 
-    toolbar.inflate(savedInstanceState)
     webview.inflate(savedInstanceState)
     spinner.inflate(savedInstanceState)
-    dropshadow.inflate(savedInstanceState)
     presenter.bind(this)
-
-    applyConstraints(rootView)
 
     // This looks weird because the webview is the state controller and the view...
     webview.loadUrl()
   }
 
-  private fun applyConstraints(layoutRoot: ConstraintLayout) {
+  override fun layout(
+    constraintLayout: ConstraintLayout,
+    aboveId: Int
+  ) {
     ConstraintSet().apply {
-      clone(layoutRoot)
-
-      toolbar.also {
-        connect(it.id(), ConstraintSet.TOP, layoutRoot.id, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      dropshadow.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
+      clone(constraintLayout)
 
       webview.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.TOP, aboveId, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, constraintLayout.id, ConstraintSet.BOTTOM)
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
       spinner.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.TOP, aboveId, ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, constraintLayout.id, ConstraintSet.BOTTOM)
         constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
         constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
       }
 
-      applyTo(layoutRoot)
+      applyTo(constraintLayout)
     }
   }
 
   override fun saveState(outState: Bundle) {
-    toolbar.saveState(outState)
     webview.saveState(outState)
-    dropshadow.saveState(outState)
     spinner.saveState(outState)
   }
 
@@ -129,14 +106,6 @@ internal class UrlUiComponentImpl internal constructor(
   }
 
   override fun onWebviewExternalNavigationEvent(url: String) {
-    callback.onNavigateToExternalUrl(url)
-  }
-
-  override fun onNavigateEvent() {
-    callback.onCancelViewing()
-  }
-
-  override fun onViewLicenseExternal(url: String) {
     callback.onNavigateToExternalUrl(url)
   }
 

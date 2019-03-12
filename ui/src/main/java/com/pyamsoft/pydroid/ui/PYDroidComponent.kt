@@ -71,7 +71,7 @@ internal interface PYDroidComponent {
   @CheckResult
   fun plusViewLicenseComponent(
     owner: LifecycleOwner,
-    parent: ConstraintLayout,
+    parent: ViewGroup,
     link: String,
     name: String
   ): UrlComponent

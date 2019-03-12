@@ -33,8 +33,9 @@ import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.util.hyperlink
 
-class ViewUrlDialog : DialogFragment(), UrlUiComponent.Callback {
+class ViewUrlDialog : DialogFragment(), UrlUiComponent.Callback, UrlToolbarUiComponent.Callback {
 
+  internal lateinit var toolbarComponent: UrlToolbarUiComponent
   internal lateinit var component: UrlUiComponent
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -66,11 +67,16 @@ class ViewUrlDialog : DialogFragment(), UrlUiComponent.Callback {
         .plusViewLicenseComponent(viewLifecycleOwner, layoutRoot, link, name)
         .inject(this)
 
+    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
     component.bind(viewLifecycleOwner, savedInstanceState, this)
+
+    toolbarComponent.layout(layoutRoot)
+    component.layout(layoutRoot, toolbarComponent.id())
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
+    toolbarComponent.saveState(outState)
     component.saveState(outState)
   }
 

@@ -29,7 +29,6 @@ internal class UrlPresenterImpl internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<UrlWebviewState>
 ) : BasePresenter<UrlWebviewState, Callback>(bus),
-    UrlToolbarView.Callback,
     UrlPresenter {
 
   override fun onBind() {
@@ -58,14 +57,6 @@ internal class UrlPresenterImpl internal constructor(
   }
 
   override fun onUnbind() {
-  }
-
-  override fun onViewLicenseExternal(url: String) {
-    callback.onViewLicenseExternal(url)
-  }
-
-  override fun onToolbarNavClicked() {
-    callback.onNavigateEvent()
   }
 
 }

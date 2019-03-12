@@ -31,9 +31,5 @@ internal interface UrlPresenter : Presenter<Callback> {
     fun onWebviewTargetPageLoaded(url: String)
 
     fun onWebviewExternalNavigationEvent(url: String)
-
-    fun onNavigateEvent()
-
-    fun onViewLicenseExternal(url: String)
   }
 }

@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.version
 
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -57,7 +56,7 @@ internal class VersionCheckPresenterImpl internal constructor(
             is Complete -> callback.onVersionCheckComplete()
           }
         }
-        .destroy(owner)
+        .destroy()
   }
 
   override fun checkForUpdates(force: Boolean) {

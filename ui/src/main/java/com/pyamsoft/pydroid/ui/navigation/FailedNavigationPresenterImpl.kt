@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.navigation
 
 import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter.Callback
@@ -35,7 +34,7 @@ class FailedNavigationPresenterImpl(
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe { callback.onFailedNavigation(it.error) }
-        .destroy(owner)
+        .destroy()
   }
 
   override fun onUnbind() {

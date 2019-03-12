@@ -46,19 +46,19 @@ internal class UrlUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: Callback
   ) {
-    toolbar.inflate(savedInstanceState)
-    webview.inflate(savedInstanceState)
-    spinner.inflate(savedInstanceState)
-    dropshadow.inflate(savedInstanceState)
-
     owner.doOnDestroy {
       toolbar.teardown()
       webview.teardown()
       spinner.teardown()
       dropshadow.teardown()
+      presenter.unbind()
     }
 
-    presenter.bind(owner, this)
+    toolbar.inflate(savedInstanceState)
+    webview.inflate(savedInstanceState)
+    spinner.inflate(savedInstanceState)
+    dropshadow.inflate(savedInstanceState)
+    presenter.bind(this)
 
     applyConstraints(rootView)
 

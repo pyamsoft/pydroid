@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -45,7 +44,7 @@ internal class RatingDialogPresenterImpl internal constructor(
             false -> callback.onDidNotRate()
           }
         }
-        .destroy(owner)
+        .destroy()
   }
 
   override fun onUnbind() {

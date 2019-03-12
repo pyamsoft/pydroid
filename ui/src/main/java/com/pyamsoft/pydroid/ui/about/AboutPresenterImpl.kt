@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about
 
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -54,7 +53,7 @@ internal class AboutPresenterImpl internal constructor(
             is Complete -> callback.onLicenseLoadComplete()
           }
         }
-        .destroy(owner)
+        .destroy()
 
     loadLicenses(false)
   }

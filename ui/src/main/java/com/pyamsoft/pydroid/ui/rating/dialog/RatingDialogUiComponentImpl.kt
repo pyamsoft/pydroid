@@ -40,17 +40,17 @@ internal class RatingDialogUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: Callback
   ) {
-    iconView.inflate(savedInstanceState)
-    changelogView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
-
     owner.doOnDestroy {
       iconView.teardown()
       changelogView.teardown()
       controlsView.teardown()
+      presenter.unbind()
     }
 
-    presenter.bind(owner, this)
+    iconView.inflate(savedInstanceState)
+    changelogView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
+    presenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {

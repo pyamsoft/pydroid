@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.rating
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
+import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.rating.RatingUiComponent.Callback
 
 internal class RatingUiComponentImpl internal constructor(
@@ -33,7 +34,11 @@ internal class RatingUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: Callback
   ) {
-    presenter.bind(owner, this)
+    owner.doOnDestroy {
+      presenter.unbind()
+    }
+
+    presenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {

@@ -49,17 +49,17 @@ internal class AboutViewHolderUiComponentImpl internal constructor(
     owner: LifecycleOwner,
     model: OssLibrary
   ) {
-    titleView.bind(model)
-    actionsView.bind(model)
-    descriptionView.bind(model)
-
     owner.doOnDestroy {
       titleView.unbind()
       actionsView.unbind()
       descriptionView.unbind()
+      presenter.unbind()
     }
 
-    presenter.bind(owner, this)
+    titleView.bind(model)
+    actionsView.bind(model)
+    descriptionView.bind(model)
+    presenter.bind(this)
   }
 
   override fun onViewLicense(

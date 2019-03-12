@@ -39,15 +39,15 @@ internal class VersionUpgradeUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: Callback
   ) {
-    contentView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
-
     owner.doOnDestroy {
       contentView.teardown()
       controlsView.teardown()
+      presenter.unbind()
     }
 
-    presenter.bind(owner, this)
+    contentView.inflate(savedInstanceState)
+    controlsView.inflate(savedInstanceState)
+    presenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {

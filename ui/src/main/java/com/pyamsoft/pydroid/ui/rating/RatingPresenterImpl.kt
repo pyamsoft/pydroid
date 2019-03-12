@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -48,7 +47,7 @@ internal class RatingPresenterImpl internal constructor(
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe { callback.onShowRating() }
-        .destroy(owner)
+        .destroy()
   }
 
   override fun load(force: Boolean) {

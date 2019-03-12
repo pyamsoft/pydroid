@@ -18,9 +18,10 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
 abstract class BasePresenter<T : Any, C : Any>(
   private val bus: EventBus<T>
@@ -28,43 +29,36 @@ abstract class BasePresenter<T : Any, C : Any>(
 
   private var bound: Boolean
 
+  private val disposables = CompositeDisposable()
+
   private var _callback: C? = null
   protected val callback: C
     get() = requireNotNull(_callback)
-
-  private var _owner: LifecycleOwner? = null
-  protected val owner: LifecycleOwner
-    get() = requireNotNull(_owner)
 
   init {
     bound = false
   }
 
-  final override fun bind(
-    owner: LifecycleOwner,
-    callback: C
-  ) {
+  protected fun Disposable.destroy() {
+    disposables.add(this)
+  }
+
+  final override fun bind(callback: C) {
     // We should not need to synchronize since this should always be called on the main thread
     if (!bound) {
       bound = true
-
-      owner.doOnDestroy { unbind() }
-      _owner = owner
       _callback = callback
-
       onBind()
     }
   }
 
   protected abstract fun onBind()
 
-  private fun unbind() {
+  final override fun unbind() {
     if (bound) {
       bound = false
-
       _callback = null
-      _owner = null
-
+      disposables.clear()
       onUnbind()
     }
   }

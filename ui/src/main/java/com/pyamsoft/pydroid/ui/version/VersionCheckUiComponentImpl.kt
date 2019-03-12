@@ -40,12 +40,15 @@ internal class VersionCheckUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: Callback
   ) {
+    owner.doOnDestroy {
+      versionView.teardown()
+      failedNavigationPresenter.unbind()
+      versionPresenter.unbind()
+    }
+
     versionView.inflate(savedInstanceState)
-
-    owner.doOnDestroy { versionView.teardown() }
-
-    failedNavigationPresenter.bind(owner, this)
-    versionPresenter.bind(owner, this)
+    failedNavigationPresenter.bind(this)
+    versionPresenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {

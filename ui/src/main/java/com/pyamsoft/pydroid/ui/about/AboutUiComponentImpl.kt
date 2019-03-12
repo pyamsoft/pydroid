@@ -39,17 +39,17 @@ internal class AboutUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: Callback
   ) {
-    toolbar.inflate(savedInstanceState)
-    listView.inflate(savedInstanceState)
-    spinner.inflate(savedInstanceState)
-
     owner.doOnDestroy {
       toolbar.teardown()
       listView.teardown()
       spinner.teardown()
+      presenter.unbind()
     }
 
-    presenter.bind(owner, this)
+    toolbar.inflate(savedInstanceState)
+    listView.inflate(savedInstanceState)
+    spinner.inflate(savedInstanceState)
+    presenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {

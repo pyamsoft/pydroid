@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.arch.destroy
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.dialog.UrlPresenter.Callback
@@ -44,7 +43,7 @@ internal class UrlPresenterImpl internal constructor(
             is ExternalNavigation -> callback.onWebviewExternalNavigationEvent(it.url)
           }
         }
-        .destroy(owner)
+        .destroy()
   }
 
   private fun onPageLoaded(

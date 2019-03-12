@@ -44,10 +44,15 @@ internal class AppSettingsUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: AppSettingsUiComponent.Callback
   ) {
+    owner.doOnDestroy {
+      settingsView.teardown()
+      versionPresenter.unbind()
+      settingsPresenter.unbind()
+    }
+
     settingsView.inflate(savedInstanceState)
-    owner.doOnDestroy { settingsView.teardown() }
-    versionPresenter.bind(owner, this)
-    settingsPresenter.bind(owner, this)
+    versionPresenter.bind(this)
+    settingsPresenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {

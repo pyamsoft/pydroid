@@ -21,6 +21,7 @@ import android.app.Application
 import android.text.SpannedString
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
@@ -133,7 +134,7 @@ internal class PYDroidComponentImpl internal constructor(
 
   override fun plusViewLicenseComponent(
     owner: LifecycleOwner,
-    parent: ViewGroup,
+    parent: ConstraintLayout,
     link: String,
     name: String
   ): UrlComponent = UrlComponentImpl(

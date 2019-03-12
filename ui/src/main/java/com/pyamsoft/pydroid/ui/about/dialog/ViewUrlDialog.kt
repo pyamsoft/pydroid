@@ -25,26 +25,17 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
-import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 import com.pyamsoft.pydroid.util.hyperlink
 
-class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
+class ViewUrlDialog : DialogFragment(), UrlUiComponent.Callback {
 
-  internal lateinit var toolbar: UrlToolbarView
-  internal lateinit var webview: UrlWebviewView
-  internal lateinit var dropshadow: DropshadowView
-  internal lateinit var spinner: SpinnerView
-  internal lateinit var presenter: UrlPresenter
-  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
+  internal lateinit var component: UrlUiComponent
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState)
@@ -69,71 +60,18 @@ class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
     val link = requireArguments().getString(LINK, "")
     require(name.isNotBlank())
     require(link.isNotBlank())
+
     val layoutRoot = view.findViewById<ConstraintLayout>(R.id.layout_constraint)
     PYDroid.obtain(view.context.applicationContext)
-        .plusViewLicenseComponent(viewLifecycleOwner, layoutRoot as ViewGroup, link, name)
+        .plusViewLicenseComponent(viewLifecycleOwner, layoutRoot, link, name)
         .inject(this)
 
-    toolbar.inflate(savedInstanceState)
-    webview.inflate(savedInstanceState)
-    spinner.inflate(savedInstanceState)
-    dropshadow.inflate(savedInstanceState)
-
-    presenter.bind(viewLifecycleOwner, this)
-
-    applyConstraints(view as ConstraintLayout)
-
-    // TODO Better arch
-    // This looks weird because the webview is the state controller and the view...
-    webview.loadUrl()
-  }
-
-  private fun applyConstraints(layoutRoot: ConstraintLayout) {
-    ConstraintSet().apply {
-      clone(layoutRoot)
-
-      toolbar.also {
-        connect(it.id(), ConstraintSet.TOP, layoutRoot.id, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      dropshadow.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      webview.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      spinner.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, layoutRoot.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, layoutRoot.id, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, layoutRoot.id, ConstraintSet.BOTTOM)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      applyTo(layoutRoot)
-    }
+    component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbar.saveState(outState)
-    webview.saveState(outState)
-    dropshadow.saveState(outState)
-    spinner.saveState(outState)
+    component.saveState(outState)
   }
 
   override fun onResume() {
@@ -145,49 +83,20 @@ class ViewUrlDialog : DialogFragment(), UrlPresenter.Callback {
     )
   }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    toolbar.teardown()
-    webview.teardown()
-    dropshadow.teardown()
-    spinner.teardown()
-  }
-
-  override fun onWebviewBegin() {
-    webview.hide()
-    spinner.show()
-  }
-
-  override fun onWebviewOtherPageLoaded(url: String) {
-    webview.hide()
-    spinner.show()
-  }
-
-  override fun onWebviewTargetPageLoaded(url: String) {
-    webview.hide()
-    spinner.show()
-  }
-
-  override fun onWebviewExternalNavigationEvent(url: String) {
-    navigateAway(url)
-  }
-
-  override fun onNavigateEvent() {
+  override fun onCancelViewing() {
     dismiss()
   }
 
-  override fun onViewLicenseExternal(url: String) {
-    navigateAway(url)
-  }
-
-  private fun navigateAway(url: String) {
+  override fun onNavigateToExternalUrl(url: String) {
     val error = url.hyperlink(requireContext())
         .navigate()
 
-    dismiss()
     if (error != null) {
-      failedNavigationPresenter.failedNavigation(error)
+      component.navigationFailed(error)
     }
+
+    // Dismiss the dialog
+    dismiss()
   }
 
   companion object {

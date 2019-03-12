@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about.dialog
 
-import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class UrlComponentImpl internal constructor(
-  private val parent: ViewGroup,
+  private val parent: ConstraintLayout,
   private val owner: LifecycleOwner,
   private val imageLoader: ImageLoader,
   private val link: String,
@@ -43,15 +43,12 @@ internal class UrlComponentImpl internal constructor(
     val toolbarView = UrlToolbarView(parent, name, link, imageLoader, presenter)
     val webviewView = UrlWebviewView(owner, link, bus, parent)
     val spinnerView = SpinnerView(parent)
+    val failed = FailedNavigationPresenterImpl(schedulerProvider, failedNavigationBus)
+    val dropshadow = DropshadowView(parent)
 
     dialog.apply {
-      this.dropshadow = DropshadowView(parent)
-      this.spinner = spinnerView
-      this.toolbar = toolbarView
-      this.webview = webviewView
-      this.presenter = presenter
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(
-          schedulerProvider, failedNavigationBus
+      this.component = UrlUiComponentImpl(
+          parent, toolbarView, webviewView, dropshadow, spinnerView, presenter, failed
       )
     }
   }

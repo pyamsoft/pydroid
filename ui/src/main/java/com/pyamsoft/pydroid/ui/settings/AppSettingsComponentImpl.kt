@@ -51,16 +51,17 @@ internal class AppSettingsComponentImpl internal constructor(
         theming, applicationName, bugreportUrl, hideClearAll,
         hideUpgradeInformation, preferenceScreen, presenter
     )
+    val failed = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
+    val versionPresenter = VersionCheckPresenterImpl(
+        versionCheckInteractor, schedulerProvider, versionCheckBus
+    )
+    val ratingPresenter = RatingPresenterImpl(
+        ratingInteractor, schedulerProvider, ratingStateBus
+    )
 
     fragment.apply {
-      this.failedNavPresenter = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
-      this.settingsView = settingsView
-      this.settingsPresenter = presenter
-      this.versionPresenter = VersionCheckPresenterImpl(
-          versionCheckInteractor, schedulerProvider, versionCheckBus
-      )
-      this.ratingPresenter = RatingPresenterImpl(
-          ratingInteractor, schedulerProvider, ratingStateBus
+      this.component = AppSettingsUiComponentImpl(
+          settingsView, versionPresenter, ratingPresenter, presenter, failed
       )
     }
   }

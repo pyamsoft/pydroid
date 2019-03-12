@@ -26,16 +26,12 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.ActivityBase
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
-import com.pyamsoft.pydroid.ui.rating.RatingPresenter
-import com.pyamsoft.pydroid.ui.settings.AppSettingsPresenter.Callback
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
-abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callback,
-    VersionCheckPresenter.Callback {
+abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
+    AppSettingsUiComponent.Callback {
 
   protected open val preferenceXmlResId: Int = 0
 
@@ -43,11 +39,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
 
   protected open val hideClearAll: Boolean = false
 
-  internal lateinit var settingsView: AppSettingsView
-  internal lateinit var versionPresenter: VersionCheckPresenter
-  internal lateinit var ratingPresenter: RatingPresenter
-  internal lateinit var settingsPresenter: AppSettingsPresenter
-  internal lateinit var failedNavPresenter: FailedNavigationPresenter
+  internal lateinit var component: AppSettingsUiComponent
 
   @CallSuper
   override fun onCreatePreferences(
@@ -72,87 +64,49 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
         .plusSettingsComponent(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
 
-    settingsView.inflate(savedInstanceState)
-    versionPresenter.bind(viewLifecycleOwner, this)
-    settingsPresenter.bind(viewLifecycleOwner, this)
-  }
-
-  final override fun onVersionCheckBegin(forced: Boolean) {
-    Timber.d("onVersionCheckBegin handled by VersionActivity")
-  }
-
-  final override fun onVersionCheckFound(
-    currentVersion: Int,
-    newVersion: Int
-  ) {
-    Timber.d("onVersionCheckFound handled by VersionActivity")
-  }
-
-  final override fun onVersionCheckError(throwable: Throwable) {
-    Timber.d("onVersionCheckError handled by VersionActivity")
-  }
-
-  final override fun onVersionCheckComplete() {
-    Timber.d("onVersionCheckComplete handled by VersionActivity")
+    component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   final override fun onViewMorePyamsoftApps() {
-    MarketLinker.linkToDeveloperPage(requireContext()) { failedNavPresenter.failedNavigation(it) }
-  }
-
-  final override fun onShowUpgradeInfo() {
-    onShowChangelogClicked()
+    val error = MarketLinker.linkToDeveloperPage(requireContext())
+    if (error != null) {
+      component.failedNavigation(error)
+    }
   }
 
   final override fun onDarkThemeChanged(dark: Boolean) {
     onDarkThemeClicked(dark)
   }
 
-  final override fun onShowSocialMedia(link: HyperlinkIntent) {
-    navigateToUrl(link)
-  }
-
   final override fun onClearAppData() {
     onClearAllClicked()
-  }
-
-  final override fun onCheckUpgrade() {
-    onCheckForUpdatesClicked()
   }
 
   final override fun onViewLicenses() {
     onLicenseItemClicked()
   }
 
-  final override fun onOpenBugReport(link: HyperlinkIntent) {
-    navigateToUrl(link)
-  }
-
   final override fun onRateApp() {
     requireContext().also { c ->
       val link = c.packageName
-      MarketLinker.linkToMarketPage(c, link) { failedNavPresenter.failedNavigation(it) }
+      val error = MarketLinker.linkToMarketPage(c, link)
+      if (error != null) {
+        component.failedNavigation(error)
+      }
     }
   }
 
-  final override fun onShowBlog(link: HyperlinkIntent) {
-    navigateToUrl(link)
-  }
-
-  private fun navigateToUrl(link: HyperlinkIntent) {
-    link.navigate { failedNavPresenter.failedNavigation(it) }
+  final override fun onNavigateToLink(link: HyperlinkIntent) {
+    val error = link.navigate()
+    if (error != null) {
+      component.failedNavigation(error)
+    }
   }
 
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    settingsView.saveState(outState)
-  }
-
-  @CallSuper
-  override fun onDestroyView() {
-    super.onDestroyView()
-    settingsView.teardown()
+    component.saveState(outState)
   }
 
   /**
@@ -182,21 +136,5 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(), Callb
       Timber.d("Show about licenses fragment")
       AboutFragment.show(a, a.fragmentContainerId)
     }
-  }
-
-  /**
-   * Shows the changelog, override or extend to use unique implementation
-   */
-  @CallSuper
-  protected open fun onShowChangelogClicked() {
-    ratingPresenter.load(true)
-  }
-
-  /**
-   * Checks the server for updates, override or extend to use unique implementation
-   */
-  @CallSuper
-  protected open fun onCheckForUpdatesClicked() {
-    versionPresenter.checkForUpdates(true)
   }
 }

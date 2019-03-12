@@ -30,16 +30,11 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradePresenter.Callback
 
-class VersionUpgradeDialog : DialogFragment(), Callback {
+class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callback {
 
-  internal lateinit var controlsView: VersionUpgradeControlView
-  internal lateinit var contentView: VersionUpgradeContentView
-  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
-  internal lateinit var presenter: VersionUpgradePresenter
+  internal lateinit var component: VersionUpgradeUiComponent
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState)
@@ -67,9 +62,7 @@ class VersionUpgradeDialog : DialogFragment(), Callback {
         .plusVersionUpgradeComponent(layoutRoot, latestVersion)
         .inject(this)
 
-    contentView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
-    presenter.bind(viewLifecycleOwner, this)
+    component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onResume() {
@@ -80,26 +73,19 @@ class VersionUpgradeDialog : DialogFragment(), Callback {
     )
   }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    contentView.teardown()
-    controlsView.teardown()
-  }
-
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    contentView.saveState(outState)
-    controlsView.saveState(outState)
+    component.saveState(outState)
   }
 
-  override fun onUpgradeBegin() {
+  override fun onNavigateToMarket() {
     val error = MarketLinker.linkToMarketPage(requireContext(), requireContext().packageName)
     if (error != null) {
-      failedNavigationPresenter.failedNavigation(error)
+      component.navigationFailed(error)
     }
   }
 
-  override fun onUpgradeCancel() {
+  override fun onCancelUpgrade() {
     dismiss()
   }
 

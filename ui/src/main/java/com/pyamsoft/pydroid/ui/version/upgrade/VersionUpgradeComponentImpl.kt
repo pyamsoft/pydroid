@@ -36,14 +36,10 @@ internal class VersionUpgradeComponentImpl internal constructor(
     val presenter = VersionUpgradePresenterImpl()
     val controls = VersionUpgradeControlView(parent, presenter)
     val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
+    val failed = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
 
     dialog.apply {
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(
-          schedulerProvider, failedNavBus
-      )
-      this.contentView = content
-      this.controlsView = controls
-      this.presenter = presenter
+      this.component = VersionUpgradeUiComponentImpl(controls, content, failed, presenter)
     }
   }
 }

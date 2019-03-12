@@ -21,8 +21,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingControlsView.Callback
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
@@ -32,29 +32,22 @@ internal class RatingControlsView internal constructor(
   callback: RatingControlsView.Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
-  private val layoutRoot by lazyView<View>(R.id.rating_control_root)
   private val rateApplication by lazyView<Button>(R.id.rate_application)
   private val noThanks by lazyView<Button>(R.id.no_thanks)
 
   override val layout: Int = R.layout.rating_controls
 
-  override fun id(): Int {
-    return layoutRoot.id
-  }
+  override val layoutRoot by lazyView<View>(R.id.rating_control_root)
 
   override fun onInflated(
     view: View,
     savedInstanceState: Bundle?
   ) {
-    setupButtons()
-  }
-
-  private fun setupButtons() {
     rateApplication.setOnDebouncedClickListener { callback.onRateApplicationClicked(rateLink) }
     noThanks.setOnDebouncedClickListener { callback.onNotRatingApplication() }
   }
 
-  override fun teardown() {
+  override fun onTeardown() {
     rateApplication.setOnClickListener(null)
     noThanks.setOnClickListener(null)
   }

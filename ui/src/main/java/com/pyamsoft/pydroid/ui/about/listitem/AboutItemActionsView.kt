@@ -20,9 +20,9 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemActionsView.Callback
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
@@ -31,17 +31,14 @@ internal class AboutItemActionsView internal constructor(
   callback: AboutItemActionsView.Callback
 ) : BaseUiView<Callback>(parent, callback), BaseAboutItem {
 
-  private val layoutRoot by lazyView<View>(R.id.about_actions)
   private val viewLicense by lazyView<Button>(R.id.action_view_license)
   private val visitHomepage by lazyView<Button>(R.id.action_visit_homepage)
 
   override val layout: Int = R.layout.about_item_actions
 
-  override fun id(): Int {
-    return layoutRoot.id
-  }
+  override val layoutRoot by lazyView<View>(R.id.about_actions)
 
-  override fun teardown() {
+  override fun onTeardown() {
     unbind()
   }
 

@@ -21,10 +21,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.arch.BaseUiView
 
 internal class RatingIconView internal constructor(
   private val changelogIcon: Int,
@@ -32,32 +32,25 @@ internal class RatingIconView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
-  private val layoutRoot by lazyView<View>(R.id.rating_icon_root)
   private val icon by lazyView<ImageView>(R.id.icon)
 
   private var iconLoaded: Loaded? = null
 
   override val layout: Int = R.layout.rating_icon
 
-  override fun id(): Int {
-    return layoutRoot.id
-  }
+  override val layoutRoot by lazyView<View>(R.id.rating_icon_root)
 
   override fun onInflated(
     view: View,
     savedInstanceState: Bundle?
   ) {
-    loadIcon()
-  }
-
-  override fun teardown() {
-    iconLoaded?.dispose()
-  }
-
-  private fun loadIcon() {
     iconLoaded?.dispose()
     iconLoaded = imageLoader.load(changelogIcon)
         .into(icon)
+  }
+
+  override fun onTeardown() {
+    iconLoaded?.dispose()
   }
 
 }

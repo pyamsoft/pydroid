@@ -40,16 +40,12 @@ internal class AboutListView internal constructor(
   callback: Callback
 ) : BaseUiView<Callback>(parent, callback), UiToggleView {
 
-  private val aboutList by lazyView<RecyclerView>(R.id.about_list)
-
   private lateinit var aboutAdapter: AboutAdapter
   private var lastViewedItem: Int = 0
 
   override val layout: Int = R.layout.about_libraries_list
 
-  override fun id(): Int {
-    return aboutList.id
-  }
+  override val layoutRoot by lazyView<RecyclerView>(R.id.about_list)
 
   override fun onInflated(
     view: View,
@@ -59,12 +55,13 @@ internal class AboutListView internal constructor(
     setupListView()
   }
 
-  override fun teardown() {
-    aboutList.adapter = null
+  override fun onTeardown() {
+    super.onTeardown()
+    layoutRoot.adapter = null
     aboutAdapter.clear()
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     outState.putInt(KEY_CURRENT, getCurrentPosition())
   }
 
@@ -74,7 +71,7 @@ internal class AboutListView internal constructor(
 
   @CheckResult
   private fun getCurrentPosition(): Int {
-    val manager = aboutList.layoutManager
+    val manager = layoutRoot.layoutManager
     if (manager is LinearLayoutManager) {
       return manager.findFirstVisibleItemPosition()
     } else {
@@ -101,7 +98,7 @@ internal class AboutListView internal constructor(
 
     })
 
-    aboutList.apply {
+    layoutRoot.apply {
       adapter = aboutAdapter
       layoutManager = LinearLayoutManager(context).apply {
         initialPrefetchItemCount = 3
@@ -111,17 +108,17 @@ internal class AboutListView internal constructor(
   }
 
   override fun show() {
-    aboutList.isVisible = true
+    layoutRoot.isVisible = true
 
     val lastViewed = lastViewedItem
     lastViewedItem = 0
     if (lastViewed > 0) {
-      aboutList.scrollToPosition(lastViewed)
+      layoutRoot.scrollToPosition(lastViewed)
     }
   }
 
   override fun hide() {
-    aboutList.isVisible = false
+    layoutRoot.isVisible = false
   }
 
   fun loadLicenses(libraries: List<OssLibrary>) {
@@ -130,7 +127,7 @@ internal class AboutListView internal constructor(
 
   fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
-        .short(aboutList, error.message ?: "An unexpected error occurred.")
+        .short(layoutRoot, error.message ?: "An unexpected error occurred.")
         .show()
   }
 

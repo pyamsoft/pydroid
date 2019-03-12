@@ -52,10 +52,17 @@ internal class AppSettingsView internal constructor(
   private val clearAll by lazyPref<Preference>(R.string.clear_all_key)
   private val upgradeInfo by lazyPref<Preference>(R.string.upgrade_info_key)
   private val theme by lazyPref<Preference>(R.string.dark_mode_key)
-  private val applicationSettings by lazyPref<Preference>("application_settings")
 
-  override fun inflate(savedInstanceState: Bundle?) {
-    adjustIconTint()
+  private val applicationGroup by lazyPref<Preference>("application_settings")
+  private val supportGroup by lazyPref<Preference>(R.string.support_pyamsoft)
+  private val moreAppsGroup by lazyPref<Preference>(R.string.more_apps_from_pyamsoft)
+  private val followGroup by lazyPref<Preference>(R.string.follow_pyamsoft_around_the_web)
+
+  override fun onInflated(
+    preferenceScreen: PreferenceScreen,
+    savedInstanceState: Bundle?
+  ) {
+    adjustIconTint(preferenceScreen)
 
     setupApplicationTitle()
     setupMoreApps()
@@ -70,7 +77,7 @@ internal class AppSettingsView internal constructor(
     setupSocial()
   }
 
-  override fun teardown() {
+  override fun onTeardown() {
     moreApps.onPreferenceClickListener = null
     social.onPreferenceClickListener = null
     followBlog.onPreferenceClickListener = null
@@ -81,12 +88,18 @@ internal class AppSettingsView internal constructor(
     clearAll.onPreferenceClickListener = null
     upgradeInfo.onPreferenceClickListener = null
     theme.onPreferenceClickListener = null
-    applicationSettings.title = ""
+
+    applicationGroup.title = ""
+
+    removePreference(applicationGroup)
+    removePreference(supportGroup)
+    removePreference(moreAppsGroup)
+    removePreference(followGroup)
   }
 
-  private fun adjustIconTint() {
+  private fun adjustIconTint(preferenceScreen: PreferenceScreen) {
     val darkTheme = theming.isDarkTheme()
-    parent.adjustTint(darkTheme)
+    preferenceScreen.adjustTint(darkTheme)
   }
 
   private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {
@@ -198,7 +211,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupApplicationTitle() {
-    applicationSettings.title = "$applicationName Settings"
+    applicationGroup.title = "$applicationName Settings"
   }
 
   interface Callback {

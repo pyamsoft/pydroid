@@ -31,7 +31,13 @@ abstract class BaseUiView<T : Any> protected constructor(
   protected val callback: T
 ) : UiView {
 
+  protected abstract val layoutRoot: View
+
   protected abstract val layout: Int
+
+  final override fun id(): Int {
+    return layoutRoot.id
+  }
 
   final override fun inflate(savedInstanceState: Bundle?) {
     parent.inflateAndAdd(layout) {
@@ -46,10 +52,21 @@ abstract class BaseUiView<T : Any> protected constructor(
 
   }
 
-  override fun saveState(outState: Bundle) {
+  final override fun saveState(outState: Bundle) {
+    onSaveState(outState)
   }
 
-  override fun teardown() {
+  protected open fun onSaveState(outState: Bundle) {
+
+  }
+
+  final override fun teardown() {
+    onTeardown()
+    parent.removeView(layoutRoot)
+  }
+
+  protected open fun onTeardown() {
+
   }
 
   private inline fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int, findViews: View.() -> Unit) {

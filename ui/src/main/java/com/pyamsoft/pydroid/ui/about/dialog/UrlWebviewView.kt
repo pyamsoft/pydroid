@@ -50,13 +50,9 @@ internal class UrlWebviewView internal constructor(
 ) : BaseUiView<Unit>(parent, Unit),
     UiToggleView, LifecycleObserver {
 
-  private val webview by lazyView<WebView>(R.id.license_webview)
-
   override val layout: Int = R.layout.license_webview
 
-  override fun id(): Int {
-    return webview.id
-  }
+  override val layoutRoot by lazyView<WebView>(R.id.license_webview)
 
   override fun onInflated(
     view: View,
@@ -71,17 +67,17 @@ internal class UrlWebviewView internal constructor(
   @Suppress("unused")
   @OnLifecycleEvent(ON_RESUME)
   internal fun onResume() {
-    webview.onResume()
+    layoutRoot.onResume()
   }
 
   @Suppress("unused")
   @OnLifecycleEvent(ON_PAUSE)
   internal fun onPause() {
-    webview.onPause()
+    layoutRoot.onPause()
   }
 
   private fun setupWebview() {
-    webview.webViewClient = object : WebViewClient() {
+    layoutRoot.webViewClient = object : WebViewClient() {
 
       override fun onPageFinished(
         view: WebView,
@@ -92,12 +88,12 @@ internal class UrlWebviewView internal constructor(
         val fixedUrl = url.trimEnd('/')
         val isTarget = (fixedUrl == link) || (url == link)
         if (isTarget) {
-          Timber.d("Loaded target url: $fixedUrl, show webview")
+          Timber.d("Loaded target url: $fixedUrl, show layoutRoot")
           bus.publish(PageLoaded(fixedUrl, true))
         }
 
-        // If we are showing the webview and we've navigated off the url, close the dialog
-        if (webview.isVisible && fixedUrl != link) {
+        // If we are showing the layoutRoot and we've navigated off the url, close the dialog
+        if (layoutRoot.isVisible && fixedUrl != link) {
           Timber.w("Navigated away from page: $fixedUrl - close dialog, and open browser")
           bus.publish(ExternalNavigation(fixedUrl))
         }
@@ -144,28 +140,25 @@ internal class UrlWebviewView internal constructor(
 
   @SuppressLint("SetJavaScriptEnabled")
   private fun setupWebviewJavascript() {
-    webview.settings.javaScriptEnabled = true
-  }
-
-  override fun saveState(outState: Bundle) {
+    layoutRoot.settings.javaScriptEnabled = true
   }
 
   override fun show() {
-    webview.isVisible = true
+    layoutRoot.isVisible = true
   }
 
   override fun hide() {
-    webview.isVisible = false
+    layoutRoot.isVisible = false
   }
 
-  override fun teardown() {
-    webview.destroy()
+  override fun onTeardown() {
     owner.lifecycle.removeObserver(this)
+    layoutRoot.destroy()
   }
 
   fun loadUrl() {
     bus.publish(Loading)
-    webview.loadUrl(link)
+    layoutRoot.loadUrl(link)
   }
 
 }

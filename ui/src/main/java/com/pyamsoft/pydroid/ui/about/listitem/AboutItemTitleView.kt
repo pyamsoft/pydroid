@@ -22,25 +22,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.arch.BaseUiView
 
 internal class AboutItemTitleView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit), BaseAboutItem {
 
-  private val layoutRoot by lazyView<View>(R.id.about_title)
   private val title by lazyView<TextView>(R.id.title)
   private val license by lazyView<TextView>(R.id.license)
 
   override val layout: Int = R.layout.about_item_title
 
-  override fun id(): Int {
-    return layoutRoot.id
-  }
+  override val layoutRoot by lazyView<View>(R.id.about_title)
 
-  override fun teardown() {
+  override fun onTeardown() {
     unbind()
   }
 

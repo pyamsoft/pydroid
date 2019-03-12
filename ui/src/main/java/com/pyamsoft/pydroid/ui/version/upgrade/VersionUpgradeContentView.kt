@@ -23,8 +23,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
   private val applicationName: String,
@@ -33,16 +33,13 @@ internal class VersionUpgradeContentView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
-  private val layoutRoot by lazyView<View>(R.id.version_content_root)
   private val upgradeMessage by lazyView<TextView>(R.id.upgrade_message)
   private val currentValue by lazyView<TextView>(R.id.upgrade_current_value)
   private val newValue by lazyView<TextView>(R.id.upgrade_new_value)
 
   override val layout: Int = R.layout.version_upgrade_content
 
-  override fun id(): Int {
-    return layoutRoot.id
-  }
+  override val layoutRoot by lazyView<View>(R.id.version_content_root)
 
   override fun onInflated(
     view: View,
@@ -52,7 +49,7 @@ internal class VersionUpgradeContentView internal constructor(
     setVersions()
   }
 
-  override fun teardown() {
+  override fun onTeardown() {
     upgradeMessage.text = ""
     currentValue.text = ""
     newValue.text = ""

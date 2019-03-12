@@ -21,8 +21,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControlView.Callback
 
@@ -31,31 +31,24 @@ internal class VersionUpgradeControlView internal constructor(
   callback: VersionUpgradeControlView.Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
-  private val layoutRoot by lazyView<View>(R.id.version_control_root)
   private val upgradeButton by lazyView<Button>(R.id.upgrade_button)
   private val laterButton by lazyView<Button>(R.id.later_button)
 
   override val layout: Int = R.layout.version_upgrade_controls
 
-  override fun id(): Int {
-    return layoutRoot.id
-  }
+  override val layoutRoot by lazyView<View>(R.id.version_control_root)
 
   override fun onInflated(
     view: View,
     savedInstanceState: Bundle?
   ) {
-    bindButtons()
-  }
-
-  override fun teardown() {
-    upgradeButton.setOnClickListener(null)
-    laterButton.setOnClickListener(null)
-  }
-
-  private fun bindButtons() {
     upgradeButton.setOnDebouncedClickListener { callback.onUpgradeClicked() }
     laterButton.setOnDebouncedClickListener { callback.onCancelClicked() }
+  }
+
+  override fun onTeardown() {
+    upgradeButton.setOnClickListener(null)
+    laterButton.setOnClickListener(null)
   }
 
   interface Callback {

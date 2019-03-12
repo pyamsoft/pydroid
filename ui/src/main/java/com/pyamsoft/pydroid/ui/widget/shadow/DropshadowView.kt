@@ -19,17 +19,13 @@ package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.R
 
 class DropshadowView(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit) {
 
-  private val shadow by lazyView<View>(R.id.dropshadow_view)
-
   override val layout: Int = R.layout.dropshadow
 
-  override fun id(): Int {
-    return shadow.id
-  }
+  override val layoutRoot by lazyView<View>(R.id.dropshadow_view)
 
 }

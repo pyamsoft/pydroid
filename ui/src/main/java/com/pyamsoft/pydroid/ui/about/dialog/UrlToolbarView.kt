@@ -39,15 +39,11 @@ internal class UrlToolbarView internal constructor(
   callback: UrlToolbarView.Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
-  private val toolbar by lazyView<Toolbar>(R.id.license_toolbar)
-
   private var navIconLoaded: Loaded? = null
 
   override val layout: Int = R.layout.license_toolbar
 
-  override fun id(): Int {
-    return toolbar.id
-  }
+  override val layoutRoot by lazyView<Toolbar>(R.id.license_toolbar)
 
   override fun onInflated(
     view: View,
@@ -56,15 +52,15 @@ internal class UrlToolbarView internal constructor(
     setupToolbar()
   }
 
-  override fun teardown() {
-    toolbar.setNavigationOnClickListener(null)
-    toolbar.setOnMenuItemClickListener(null)
+  override fun onTeardown() {
+    layoutRoot.setNavigationOnClickListener(null)
+    layoutRoot.setOnMenuItemClickListener(null)
     navIconLoaded?.dispose()
   }
 
   private fun setupToolbar() {
-    toolbar.title = name
-    toolbar.inflateMenu(R.menu.oss_library_menu)
+    layoutRoot.title = name
+    layoutRoot.inflateMenu(R.menu.oss_library_menu)
 
     loadNavIcon()
     setupOnClick()
@@ -77,36 +73,36 @@ internal class UrlToolbarView internal constructor(
         .into(object : ImageTarget<Drawable> {
 
           override fun view(): View {
-            return toolbar
+            return layoutRoot
           }
 
           override fun clear() {
-            toolbar.navigationIcon = null
+            layoutRoot.navigationIcon = null
           }
 
           override fun setImage(image: Drawable) {
-            toolbar.setUpEnabled(true, image)
+            layoutRoot.setUpEnabled(true, image)
           }
 
           override fun setError(error: Drawable?) {
-            toolbar.setUpEnabled(false)
+            layoutRoot.setUpEnabled(false)
           }
 
           override fun setPlaceholder(placeholder: Drawable?) {
-            toolbar.setUpEnabled(false)
+            layoutRoot.setUpEnabled(false)
           }
 
         })
   }
 
   private fun setupOnClick() {
-    toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
+    layoutRoot.setNavigationOnClickListener(DebouncedOnClickListener.create {
       callback.onToolbarNavClicked()
     })
   }
 
   private fun setupMenuOnClick() {
-    toolbar.setOnMenuItemClickListener {
+    layoutRoot.setOnMenuItemClickListener {
       if (it.itemId == R.id.menu_item_view_license) {
         callback.onViewLicenseExternal(link)
       }

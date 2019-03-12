@@ -60,7 +60,9 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/support_pyamsoft">
+  <PreferenceCategory
+      android:key="@string/support_pyamsoft"
+      android:title="@string/support_pyamsoft">
 
     <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
         android:key="@string/rating_key"
@@ -78,7 +80,9 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/more_apps_from_pyamsoft">
+  <PreferenceCategory
+      android:key="@string/more_apps_from_pyamsoft"
+      android:title="@string/more_apps_from_pyamsoft">
 
     <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
         android:key="@string/more_apps_key"
@@ -89,7 +93,9 @@
 
   </PreferenceCategory>
 
-  <PreferenceCategory android:title="@string/follow_pyamsoft_around_the_web">
+  <PreferenceCategory
+      android:key="@string/follow_pyamsoft_around_the_web"
+      android:title="@string/follow_pyamsoft_around_the_web">
 
     <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
         android:key="@string/social_media_f_key"

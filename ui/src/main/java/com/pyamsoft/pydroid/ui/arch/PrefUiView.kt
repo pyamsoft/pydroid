@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.arch.UiView
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class PrefUiView<T : Any> protected constructor(
-  protected val parent: PreferenceScreen,
+  private val parent: PreferenceScreen,
   protected val callback: T
 ) : UiView {
 
@@ -36,13 +36,35 @@ abstract class PrefUiView<T : Any> protected constructor(
     throw InvalidIdException
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
+  final override fun inflate(savedInstanceState: Bundle?) {
+    onInflated(parent, savedInstanceState)
   }
 
-  override fun saveState(outState: Bundle) {
+  protected open fun onInflated(
+    preferenceScreen: PreferenceScreen,
+    savedInstanceState: Bundle?
+  ) {
+
   }
 
-  override fun teardown() {
+  final override fun saveState(outState: Bundle) {
+    onSaveState(outState)
+  }
+
+  protected open fun onSaveState(outState: Bundle) {
+
+  }
+
+  final override fun teardown() {
+    onTeardown()
+  }
+
+  protected open fun onTeardown() {
+
+  }
+
+  protected fun removePreference(preference: Preference) {
+    parent.removePreference(preference)
   }
 
   @CheckResult

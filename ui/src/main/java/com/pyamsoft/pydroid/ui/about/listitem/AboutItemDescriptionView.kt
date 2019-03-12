@@ -21,35 +21,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.arch.BaseUiView
 
 internal class AboutItemDescriptionView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit), BaseAboutItem {
 
-  private val description by lazyView<TextView>(R.id.about_description)
-
   override val layout: Int = R.layout.about_item_description
 
-  override fun id(): Int {
-    return description.id
-  }
+  override val layoutRoot by lazyView<TextView>(R.id.about_description)
 
-  override fun teardown() {
+  override fun onTeardown() {
     unbind()
   }
 
   override fun bind(model: OssLibrary) {
-    description.apply {
+    layoutRoot.apply {
       text = model.description
       isVisible = model.description.isNotBlank()
     }
   }
 
   override fun unbind() {
-    description.apply {
+    layoutRoot.apply {
       text = ""
       isGone = true
     }

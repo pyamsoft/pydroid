@@ -23,22 +23,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
   private val changelog: SpannedString,
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
-  private val layoutRoot by lazyView<ScrollView>(R.id.rating_changelog_scroll)
   private val changelogText by lazyView<TextView>(R.id.rating_changelog_text)
 
   override val layout: Int = R.layout.rating_changelog
 
-  override fun id(): Int {
-    return layoutRoot.id
-  }
+  override val layoutRoot by lazyView<ScrollView>(R.id.rating_changelog_scroll)
 
   override fun onInflated(
     view: View,
@@ -47,7 +44,7 @@ internal class RatingChangelogView internal constructor(
     loadChangelog()
   }
 
-  override fun teardown() {
+  override fun onTeardown() {
     changelogText.text = ""
   }
 

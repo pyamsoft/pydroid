@@ -101,8 +101,8 @@ internal class UrlUiComponentImpl internal constructor(
   }
 
   override fun onWebviewTargetPageLoaded(url: String) {
-    webview.hide()
-    spinner.show()
+    spinner.hide()
+    webview.show()
   }
 
   override fun onWebviewExternalNavigationEvent(url: String) {

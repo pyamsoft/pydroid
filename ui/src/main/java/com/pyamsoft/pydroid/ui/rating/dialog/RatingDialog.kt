@@ -31,18 +31,12 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogPresenter.Callback
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 
-class RatingDialog : DialogFragment(), Callback {
+class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
 
-  internal lateinit var presenter: RatingDialogPresenter
-  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
-  internal lateinit var iconView: RatingIconView
-  internal lateinit var changelogView: RatingChangelogView
-  internal lateinit var controlsView: RatingControlsView
+  internal lateinit var component: RatingDialogUiComponent
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -82,25 +76,12 @@ class RatingDialog : DialogFragment(), Callback {
         .plusRatingDialogComponent(layoutRoot, rateLink, changeLogIcon, changelog)
         .inject(this)
 
-    iconView.inflate(savedInstanceState)
-    changelogView.inflate(savedInstanceState)
-    controlsView.inflate(savedInstanceState)
-
-    presenter.bind(viewLifecycleOwner, this)
+    component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    iconView.saveState(outState)
-    changelogView.saveState(outState)
-    controlsView.saveState(outState)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    iconView.teardown()
-    changelogView.teardown()
-    controlsView.teardown()
+    component.saveState(outState)
   }
 
   override fun onResume() {
@@ -112,16 +93,17 @@ class RatingDialog : DialogFragment(), Callback {
     )
   }
 
-  override fun onVisitApplicationPageToRate(packageName: String) {
+  override fun onNavigateToApplicationPage(packageName: String) {
     val error = MarketLinker.linkToMarketPage(requireContext(), packageName)
-    dismiss()
 
     if (error != null) {
-      failedNavigationPresenter.failedNavigation(error)
+      component.navigationFailed(error)
     }
+
+    dismiss()
   }
 
-  override fun onDidNotRate() {
+  override fun onCancelRating() {
     dismiss()
   }
 

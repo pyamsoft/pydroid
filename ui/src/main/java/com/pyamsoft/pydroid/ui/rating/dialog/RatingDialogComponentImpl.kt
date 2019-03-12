@@ -46,11 +46,9 @@ internal class RatingDialogComponentImpl internal constructor(
     val changelogView = RatingChangelogView(changelog, parent)
 
     dialog.apply {
-      this.changelogView = changelogView
-      this.controlsView = controlsView
-      this.iconView = iconView
-      this.presenter = presenter
-      this.failedNavigationPresenter = failedPresenter
+      this.component = RatingDialogUiComponentImpl(
+          presenter, iconView, changelogView, controlsView, failedPresenter
+      )
     }
   }
 

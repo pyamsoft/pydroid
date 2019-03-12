@@ -30,7 +30,9 @@ internal class AboutUiComponentImpl internal constructor(
   private val spinner: SpinnerView,
   private val toolbar: AboutToolbarView,
   private val presenter: AboutPresenter
-) : BaseUiComponent<AboutUiComponent.Callback>(), AboutUiComponent, AboutPresenter.Callback {
+) : BaseUiComponent<AboutUiComponent.Callback>(),
+    AboutUiComponent,
+    AboutPresenter.Callback {
 
   override fun onBind(
     owner: LifecycleOwner,

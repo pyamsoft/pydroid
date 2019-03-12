@@ -40,10 +40,9 @@ internal class AboutComponentImpl(
     val listView = AboutListView(owner, parent, presenter)
     val spinnerView = SpinnerView(parent)
     val toolbarView = AboutToolbarView(toolbarActivity, backstackCount, presenter)
-    val component = AboutUiComponentImpl(listView, spinnerView, toolbarView, presenter)
 
     fragment.apply {
-      this.component = component
+      this.component = AboutUiComponentImpl(listView, spinnerView, toolbarView, presenter)
     }
   }
 

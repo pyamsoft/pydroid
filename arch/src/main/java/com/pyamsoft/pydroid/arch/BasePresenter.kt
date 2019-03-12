@@ -18,10 +18,7 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.Observable
 
@@ -51,17 +48,7 @@ abstract class BasePresenter<T : Any, C : Any>(
     if (!bound) {
       bound = true
 
-      owner.lifecycle.addObserver(object : LifecycleObserver {
-
-        @Suppress("unused")
-        @OnLifecycleEvent(ON_DESTROY)
-        fun onDestroy() {
-          owner.lifecycle.removeObserver(this)
-          unbind()
-        }
-
-      })
-
+      owner.doOnDestroy { unbind() }
       _owner = owner
       _callback = callback
 

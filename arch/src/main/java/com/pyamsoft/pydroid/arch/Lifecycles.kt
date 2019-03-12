@@ -18,14 +18,25 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.tryDispose
-import io.reactivex.disposables.Disposable
+import androidx.lifecycle.OnLifecycleEvent
 
-fun Disposable.destroy(owner: LifecycleOwner) {
-  destroy(owner.lifecycle)
+inline fun LifecycleOwner.doOnDestroy(crossinline func: () -> Unit) {
+  lifecycle.doOnDestroy(func)
 }
 
-fun Disposable.destroy(lifecycle: Lifecycle) {
-  lifecycle.doOnDestroy { tryDispose() }
+inline fun Lifecycle.doOnDestroy(crossinline func: () -> Unit) {
+  val self = this
+  self.addObserver(object : LifecycleObserver {
+
+    @Suppress("unused")
+    @OnLifecycleEvent(ON_DESTROY)
+    fun onDestroy() {
+      self.removeObserver(this)
+      func()
+    }
+
+  })
 }

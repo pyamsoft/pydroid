@@ -17,15 +17,16 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.lifecycle.Lifecycle
+import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.core.tryDispose
-import io.reactivex.disposables.Disposable
 
-fun Disposable.destroy(owner: LifecycleOwner) {
-  destroy(owner.lifecycle)
-}
+interface UiComponent<C : Any> {
 
-fun Disposable.destroy(lifecycle: Lifecycle) {
-  lifecycle.doOnDestroy { tryDispose() }
+  fun bind(
+    owner: LifecycleOwner,
+    savedInstanceState: Bundle?,
+    callback: C
+  )
+
+  fun saveState(outState: Bundle)
 }

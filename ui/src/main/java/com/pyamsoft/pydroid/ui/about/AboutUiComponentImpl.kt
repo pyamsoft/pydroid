@@ -28,7 +28,6 @@ import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 internal class AboutUiComponentImpl internal constructor(
   private val listView: AboutListView,
   private val spinner: SpinnerView,
-  private val toolbar: AboutToolbarView,
   private val presenter: AboutPresenter
 ) : BaseUiComponent<AboutUiComponent.Callback>(),
     AboutUiComponent,
@@ -40,20 +39,17 @@ internal class AboutUiComponentImpl internal constructor(
     callback: Callback
   ) {
     owner.doOnDestroy {
-      toolbar.teardown()
       listView.teardown()
       spinner.teardown()
       presenter.unbind()
     }
 
-    toolbar.inflate(savedInstanceState)
     listView.inflate(savedInstanceState)
     spinner.inflate(savedInstanceState)
     presenter.bind(this)
   }
 
   override fun saveState(outState: Bundle) {
-    toolbar.saveState(outState)
     listView.saveState(outState)
     spinner.saveState(outState)
   }
@@ -74,10 +70,6 @@ internal class AboutUiComponentImpl internal constructor(
   override fun onLicenseLoadComplete() {
     spinner.hide()
     listView.show()
-  }
-
-  override fun onNavigationEvent() {
-    callback.close()
   }
 
   override fun onViewLicense(

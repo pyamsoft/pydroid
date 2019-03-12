@@ -17,8 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutPresenter.Callback
 
 internal interface AboutPresenter : Presenter<Callback> {
@@ -42,7 +42,5 @@ internal interface AboutPresenter : Presenter<Callback> {
     fun onLicenseLoadError(throwable: Throwable)
 
     fun onLicenseLoadComplete()
-
-    fun onNavigationEvent()
   }
 }

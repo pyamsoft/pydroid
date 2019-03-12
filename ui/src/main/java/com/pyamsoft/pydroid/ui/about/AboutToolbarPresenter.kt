@@ -17,20 +17,13 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.ui.about.AboutToolbarPresenter.Callback
 
-internal interface AboutUiComponent : UiComponent<AboutUiComponent.Callback> {
+internal interface AboutToolbarPresenter : Presenter<Callback> {
 
   interface Callback {
 
-    fun showLicense(
-      name: String,
-      licenseUrl: String
-    )
-
-    fun navigateToHomepage(
-      name: String,
-      homepageUrl: String
-    )
+    fun onNavigationEvent()
   }
 }

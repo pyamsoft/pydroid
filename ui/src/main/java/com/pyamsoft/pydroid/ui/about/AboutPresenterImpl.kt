@@ -35,7 +35,6 @@ internal class AboutPresenterImpl internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<LicenseLoadState>
 ) : BasePresenter<LicenseLoadState, Callback>(bus),
-    AboutToolbarView.Callback,
     AboutListView.Callback,
     AboutPresenter {
 
@@ -74,10 +73,6 @@ internal class AboutPresenterImpl internal constructor(
     homepageUrl: String
   ) {
     callback.onVisitHomepage(name, homepageUrl)
-  }
-
-  override fun onToolbarNavClicked() {
-    callback.onNavigationEvent()
   }
 
   private fun loadLicenses(force: Boolean) {

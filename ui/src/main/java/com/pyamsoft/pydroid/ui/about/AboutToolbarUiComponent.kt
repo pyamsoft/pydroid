@@ -19,18 +19,10 @@ package com.pyamsoft.pydroid.ui.about
 
 import com.pyamsoft.pydroid.arch.UiComponent
 
-internal interface AboutUiComponent : UiComponent<AboutUiComponent.Callback> {
+internal interface AboutToolbarUiComponent : UiComponent<AboutToolbarUiComponent.Callback> {
 
   interface Callback {
 
-    fun showLicense(
-      name: String,
-      licenseUrl: String
-    )
-
-    fun navigateToHomepage(
-      name: String,
-      homepageUrl: String
-    )
+    fun close()
   }
 }

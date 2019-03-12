@@ -17,20 +17,22 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.ui.about.AboutToolbarPresenter.Callback
 
-internal interface AboutUiComponent : UiComponent<AboutUiComponent.Callback> {
+internal class AboutToolbarPresenterImpl internal constructor(
+) : BasePresenter<Unit, Callback>(RxBus.empty()),
+    AboutToolbarView.Callback,
+    AboutToolbarPresenter {
 
-  interface Callback {
+  override fun onBind() {
+  }
 
-    fun showLicense(
-      name: String,
-      licenseUrl: String
-    )
+  override fun onUnbind() {
+  }
 
-    fun navigateToHomepage(
-      name: String,
-      homepageUrl: String
-    )
+  override fun onToolbarNavClicked() {
+    callback.onNavigationEvent()
   }
 }

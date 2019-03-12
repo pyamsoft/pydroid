@@ -35,8 +35,9 @@ import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.show
 
-class AboutFragment : Fragment(), AboutUiComponent.Callback {
+class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiComponent.Callback {
 
+  internal lateinit var toolbarComponent: AboutToolbarUiComponent
   internal lateinit var component: AboutUiComponent
 
   override fun onCreateView(
@@ -59,11 +60,13 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback {
         .plusAboutComponent(viewLifecycleOwner, requireToolbarActivity(), backstack, layoutRoot)
         .inject(this)
 
+    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
     component.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
+    toolbarComponent.saveState(outState)
     component.saveState(outState)
   }
 

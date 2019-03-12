@@ -63,10 +63,6 @@ abstract class PrefUiView<T : Any> protected constructor(
 
   }
 
-  protected fun removePreference(preference: Preference) {
-    parent.removePreference(preference)
-  }
-
   @CheckResult
   protected fun <T : Preference> lazyPref(key: String): Lazy<T> {
     return lazy(NONE) {

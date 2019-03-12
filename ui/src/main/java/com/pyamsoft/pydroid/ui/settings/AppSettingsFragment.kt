@@ -25,15 +25,11 @@ import androidx.annotation.CheckResult
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.requireView
 import com.pyamsoft.pydroid.ui.util.commit
-import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class AppSettingsFragment : Fragment() {
 
-  private val coordinatorLayout by lazy(NONE) {
-    requireView().findViewById<CoordinatorLayout>(R.id.layout_coordinator)
-  }
+  private var coordinatorLayout: CoordinatorLayout? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -48,6 +44,7 @@ abstract class AppSettingsFragment : Fragment() {
     savedInstanceState: Bundle?
   ) {
     super.onViewCreated(view, savedInstanceState)
+    coordinatorLayout = view.findViewById(R.id.layout_coordinator)
     showPreferenceFragment()
   }
 
@@ -56,9 +53,14 @@ abstract class AppSettingsFragment : Fragment() {
     val tag: String = provideSettingsTag()
     if (fragmentManager.findFragmentByTag(tag) == null) {
       fragmentManager.beginTransaction()
-          .add(coordinatorLayout.id, provideSettingsFragment(), tag)
+          .add(requireNotNull(coordinatorLayout).id, provideSettingsFragment(), tag)
           .commit(viewLifecycleOwner)
     }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    coordinatorLayout = null
   }
 
   @CheckResult

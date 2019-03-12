@@ -58,6 +58,7 @@ internal class UrlToolbarView internal constructor(
 
   override fun teardown() {
     toolbar.setNavigationOnClickListener(null)
+    toolbar.setOnMenuItemClickListener(null)
     navIconLoaded?.dispose()
   }
 

@@ -33,13 +33,13 @@ import androidx.lifecycle.Lifecycle.Event.ON_RESUME
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiToggleView
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiToggleView
 import timber.log.Timber
 
 internal class UrlWebviewView internal constructor(
@@ -88,9 +88,10 @@ internal class UrlWebviewView internal constructor(
         url: String
       ) {
         super.onPageFinished(view, url)
-        Timber.d("Loaded url: $url")
+        Timber.d("Loaded url: $url, looking for $link")
         val fixedUrl = url.trimEnd('/')
-        if (fixedUrl == link) {
+        val isTarget = (fixedUrl == link) || (url == link)
+        if (isTarget) {
           Timber.d("Loaded target url: $fixedUrl, show webview")
           bus.publish(PageLoaded(fixedUrl, true))
         }
@@ -113,7 +114,7 @@ internal class UrlWebviewView internal constructor(
         val pageUrl = request.url.toString()
 
         val fixedUrl = pageUrl.trimEnd('/')
-        val isTarget = (fixedUrl == link)
+        val isTarget = (fixedUrl == link) || (pageUrl == link)
         if (isTarget) {
           Timber.w("Webview error occurred but target page still reached.")
         }
@@ -131,7 +132,7 @@ internal class UrlWebviewView internal constructor(
         Timber.e("Webview error: $errorCode $description")
 
         val fixedUrl = failingUrl?.trimEnd('/') ?: ""
-        val isTarget = (link == fixedUrl)
+        val isTarget = (fixedUrl == link) || (failingUrl == link)
         if (isTarget) {
           Timber.w("Webview error occurred but target page still reached.")
         }

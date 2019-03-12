@@ -25,20 +25,19 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiToggleView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutListView.Callback
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class AboutListView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup,
   callback: Callback
-) : BaseUiView<Callback>(parent, callback),
-    UiToggleView {
+) : BaseUiView<Callback>(parent, callback), UiToggleView {
 
   private val aboutList by lazyView<RecyclerView>(R.id.about_list)
 

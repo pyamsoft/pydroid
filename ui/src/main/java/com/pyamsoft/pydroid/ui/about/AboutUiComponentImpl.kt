@@ -77,21 +77,21 @@ internal class AboutUiComponentImpl internal constructor(
   }
 
   override fun onNavigationEvent() {
-    callback.onNavigationEvent()
+    callback.close()
   }
 
   override fun onViewLicense(
     name: String,
     licenseUrl: String
   ) {
-    callback.onViewLicense(name, licenseUrl)
+    callback.showLicense(name, licenseUrl)
   }
 
   override fun onVisitHomepage(
     name: String,
     homepageUrl: String
   ) {
-    callback.onVisitHomepage(name, homepageUrl)
+    callback.navigateToHomepage(name, homepageUrl)
   }
 
 }

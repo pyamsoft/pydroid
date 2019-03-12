@@ -102,7 +102,7 @@ internal class PYDroidComponentImpl internal constructor(
   )
 
   override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent =
-    AboutItemComponentImpl(parent, schedulerProvider, navigationModule.bus)
+    AboutItemComponentImpl(parent)
 
   override fun plusVersionUpgradeComponent(
     parent: ViewGroup,

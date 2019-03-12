@@ -67,7 +67,7 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback {
     component.saveState(outState)
   }
 
-  override fun onViewLicense(
+  override fun showLicense(
     name: String,
     licenseUrl: String
   ) {
@@ -75,7 +75,7 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback {
         .show(requireActivity(), ViewUrlDialog.TAG)
   }
 
-  override fun onVisitHomepage(
+  override fun navigateToHomepage(
     name: String,
     homepageUrl: String
   ) {
@@ -83,7 +83,7 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback {
         .show(requireActivity(), ViewUrlDialog.TAG)
   }
 
-  override fun onNavigationEvent() {
+  override fun close() {
     requireActivity().onBackPressed()
   }
 

@@ -27,22 +27,17 @@ import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutListView
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.util.fakeBind
 import com.pyamsoft.pydroid.util.fakeUnbind
 
 internal class AboutViewHolder private constructor(
-  view: View
+  view: View,
+  callback: AboutViewHolderUiComponent.Callback
 ) : BaseViewHolder(view), LifecycleOwner {
 
   private val registry = LifecycleRegistry(this)
 
-  internal lateinit var titleView: AboutItemTitleView
-  internal lateinit var actionsView: AboutItemActionsView
-  internal lateinit var descriptionView: AboutItemDescriptionView
-  internal lateinit var presenter: AboutItemPresenter
-  internal lateinit var failedNavigationPresenter: FailedNavigationPresenter
+  internal lateinit var component: AboutViewHolderUiComponent
 
   init {
     val root: ViewGroup = view.findViewById(R.id.about_listitem_root)
@@ -50,49 +45,19 @@ internal class AboutViewHolder private constructor(
         .plusAboutItemComponent(root)
         .inject(this)
 
-    titleView.inflate(null)
-    actionsView.inflate(null)
-    descriptionView.inflate(null)
+    component.bind(this, null, callback)
   }
 
   override fun getLifecycle(): Lifecycle {
     return registry
   }
 
-  override fun bind(
-    model: OssLibrary,
-    callback: AboutListView.Callback
-  ) {
-    titleView.bind(model)
-    actionsView.bind(model)
-    descriptionView.bind(model)
-
-    presenter.bind(this, object : AboutItemPresenter.Callback {
-
-      override fun onViewLicense(
-        name: String,
-        licenseUrl: String
-      ) {
-        callback.onViewLicenseClicked(name, licenseUrl)
-      }
-
-      override fun onVisitHomepage(
-        name: String,
-        homepageUrl: String
-      ) {
-        callback.onVisitHomepageClicked(name, homepageUrl)
-      }
-
-    })
-
+  override fun bind(model: OssLibrary) {
+    component.bind(this, model)
     registry.fakeBind()
   }
 
   override fun unbind() {
-    titleView.unbind()
-    actionsView.unbind()
-    descriptionView.unbind()
-
     registry.fakeUnbind()
   }
 
@@ -102,10 +67,11 @@ internal class AboutViewHolder private constructor(
     @JvmStatic
     fun create(
       inflater: LayoutInflater,
-      container: ViewGroup
+      container: ViewGroup,
+      callback: AboutViewHolderUiComponent.Callback
     ): AboutViewHolder {
       val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
-      return AboutViewHolder(view)
+      return AboutViewHolder(view, callback)
     }
   }
 

@@ -23,16 +23,16 @@ internal interface AboutUiComponent : UiComponent<AboutUiComponent.Callback> {
 
   interface Callback {
 
-    fun onViewLicense(
+    fun showLicense(
       name: String,
       licenseUrl: String
     )
 
-    fun onVisitHomepage(
+    fun navigateToHomepage(
       name: String,
       homepageUrl: String
     )
 
-    fun onNavigationEvent()
+    fun close()
   }
 }

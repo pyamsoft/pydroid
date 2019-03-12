@@ -18,15 +18,9 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
 
 internal class AboutItemComponentImpl internal constructor(
-  private val parent: ViewGroup,
-  private val schedulerProvider: SchedulerProvider,
-  private val failedNavigationBus: EventBus<FailedNavigationEvent>
+  private val parent: ViewGroup
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
@@ -36,12 +30,8 @@ internal class AboutItemComponentImpl internal constructor(
     val aboutDescriptionView = AboutItemDescriptionView(parent)
 
     viewHolder.apply {
-      this.titleView = aboutTitleView
-      this.actionsView = aboutActionsView
-      this.descriptionView = aboutDescriptionView
-      this.presenter = presenter
-      this.failedNavigationPresenter = FailedNavigationPresenterImpl(
-          schedulerProvider, failedNavigationBus
+      this.component = AboutViewHolderUiComponentImpl(
+          aboutTitleView, aboutActionsView, aboutDescriptionView, presenter
       )
     }
   }

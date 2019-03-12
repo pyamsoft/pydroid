@@ -17,16 +17,29 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-internal abstract class BaseViewHolder internal constructor(
-  itemView: View
-) : RecyclerView.ViewHolder(itemView) {
+internal interface AboutViewHolderUiComponent : UiComponent<AboutViewHolderUiComponent.Callback> {
 
-  abstract fun bind(model: OssLibrary)
+  fun bind(
+    owner: LifecycleOwner,
+    model: OssLibrary
+  )
 
-  abstract fun unbind()
+  interface Callback {
+
+    fun showLicense(
+      name: String,
+      licenseUrl: String
+    )
+
+    fun showHomepage(
+      name: String,
+      homepageUrl: String
+    )
+
+  }
 
 }

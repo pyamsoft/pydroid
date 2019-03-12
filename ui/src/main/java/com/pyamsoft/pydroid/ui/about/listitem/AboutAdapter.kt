@@ -21,12 +21,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.AboutListView
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Fake
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Real
 
 internal class AboutAdapter internal constructor(
-  private val callback: AboutListView.Callback
+  private val callback: AboutViewHolderUiComponent.Callback
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
   private val items: MutableList<Any> = ArrayList()
@@ -64,7 +63,7 @@ internal class AboutAdapter internal constructor(
   ): BaseViewHolder {
     val inflater = LayoutInflater.from(parent.context)
     if (viewType == VIEW_TYPE_REAL) {
-      return AboutViewHolder.create(inflater, parent)
+      return AboutViewHolder.create(inflater, parent, callback)
     } else {
       return SpaceViewHolder.create(inflater, parent)
     }
@@ -80,7 +79,7 @@ internal class AboutAdapter internal constructor(
   ) {
     val item = items[position]
     if (item is Real) {
-      holder.bind(item.library, callback)
+      holder.bind(item.library)
     }
   }
 

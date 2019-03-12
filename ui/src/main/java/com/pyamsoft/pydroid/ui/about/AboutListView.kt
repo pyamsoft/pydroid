@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutListView.Callback
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
+import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class AboutListView internal constructor(
@@ -82,7 +83,23 @@ internal class AboutListView internal constructor(
   }
 
   private fun setupListView() {
-    aboutAdapter = AboutAdapter(callback)
+    aboutAdapter = AboutAdapter(object : AboutViewHolderUiComponent.Callback {
+
+      override fun showLicense(
+        name: String,
+        licenseUrl: String
+      ) {
+        callback.onViewLicenseClicked(name, licenseUrl)
+      }
+
+      override fun showHomepage(
+        name: String,
+        homepageUrl: String
+      ) {
+        callback.onVisitHomepageClicked(name, homepageUrl)
+      }
+
+    })
 
     aboutList.apply {
       adapter = aboutAdapter

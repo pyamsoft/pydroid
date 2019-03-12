@@ -40,7 +40,7 @@ internal class VersionComponentImpl internal constructor(
     val failed = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
 
     activity.apply {
-      this.component = VersionCheckUiComponentImpl(failed, presenter, view)
+      this.versionComponent = VersionCheckUiComponentImpl(failed, presenter, view)
     }
   }
 

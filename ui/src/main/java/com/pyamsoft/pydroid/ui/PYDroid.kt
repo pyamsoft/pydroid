@@ -111,7 +111,7 @@ class PYDroid private constructor(
     }
 
     /**
-     * Access point for library component graph
+     * Access point for library versionComponent graph
      *
      * PYDroid internal
      */

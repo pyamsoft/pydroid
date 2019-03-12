@@ -43,6 +43,7 @@ import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingPresenterImpl
+import com.pyamsoft.pydroid.ui.rating.RatingUiComponentImpl
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
@@ -90,7 +91,7 @@ internal class PYDroidComponentImpl internal constructor(
     val presenter = RatingPresenterImpl(ratingModule.interactor, schedulerProvider, ratingStateBus)
 
     activity.apply {
-      this.ratingPresenter = presenter
+      this.ratingComponent = RatingUiComponentImpl(presenter)
     }
   }
 

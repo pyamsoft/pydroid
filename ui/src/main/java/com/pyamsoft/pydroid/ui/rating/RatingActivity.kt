@@ -30,15 +30,16 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider, Callback {
+abstract class RatingActivity : VersionCheckActivity(),
+    ChangeLogProvider,
+    RatingUiComponent.Callback {
 
-  internal lateinit var ratingPresenter: RatingPresenter
+  internal lateinit var ratingComponent: RatingUiComponent
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -93,7 +94,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider, Callb
     PYDroid.obtain(this)
         .inject(this)
 
-    ratingPresenter.bind(this, this)
+    ratingComponent.bind(this, savedInstanceState, this)
   }
 
   final override fun onShowRating() {

@@ -29,7 +29,7 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Ca
 
   protected abstract val snackbarRoot: View
 
-  internal lateinit var component: VersionCheckUiComponent
+  internal lateinit var versionComponent: VersionCheckUiComponent
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -41,16 +41,16 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Ca
         .plusVersionComponent(this, snackbarRoot)
         .inject(this)
 
-    component.bind(this, savedInstanceState, this)
+    versionComponent.bind(this, savedInstanceState, this)
   }
 
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    versionComponent.saveState(outState)
   }
 
-  override fun onShowVersionUpgrade(newVersion: Int) {
+  final override fun onShowVersionUpgrade(newVersion: Int) {
     VersionUpgradeDialog.newInstance(newVersion)
         .show(this, VersionUpgradeDialog.TAG)
   }

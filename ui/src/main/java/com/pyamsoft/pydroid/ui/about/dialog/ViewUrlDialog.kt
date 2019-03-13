@@ -67,8 +67,8 @@ class ViewUrlDialog : DialogFragment(), UrlUiComponent.Callback, UrlToolbarUiCom
         .plusViewLicenseComponent(viewLifecycleOwner, layoutRoot, link, name)
         .inject(this)
 
-    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
     component.bind(viewLifecycleOwner, savedInstanceState, this)
+    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
 
     toolbarComponent.layout(layoutRoot)
     component.layout(layoutRoot, toolbarComponent.id())

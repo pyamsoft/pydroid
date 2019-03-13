@@ -60,8 +60,8 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiCompo
         .plusAboutComponent(viewLifecycleOwner, requireToolbarActivity(), backstack, layoutRoot)
         .inject(this)
 
-    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
     component.bind(viewLifecycleOwner, savedInstanceState, this)
+    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

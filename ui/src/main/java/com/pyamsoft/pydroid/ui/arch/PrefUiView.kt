@@ -30,8 +30,6 @@ abstract class PrefUiView<T : Any> protected constructor(
   protected val callback: T
 ) : UiView {
 
-  private val lazyPrefInitializer = { parent }
-
   final override fun id(): Int {
     throw InvalidIdException
   }

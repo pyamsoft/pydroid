@@ -25,17 +25,28 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.arch.UiView
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class PrefUiView<T : Any> protected constructor(
-  private val parent: PreferenceScreen,
-  protected val callback: T
+abstract class PrefUiView<C : Any> protected constructor(
+  parent: PreferenceScreen,
+  callback: C
 ) : UiView {
+
+  private var _parent: PreferenceScreen? = parent
+
+  private var _callback: C? = callback
+  protected val callback: C
+    get() = requireNotNull(_callback)
+
+  @CheckResult
+  private fun parent(): PreferenceScreen {
+    return requireNotNull(_parent)
+  }
 
   final override fun id(): Int {
     throw InvalidIdException
   }
 
   final override fun inflate(savedInstanceState: Bundle?) {
-    onInflated(parent, savedInstanceState)
+    onInflated(parent(), savedInstanceState)
   }
 
   protected open fun onInflated(
@@ -55,6 +66,9 @@ abstract class PrefUiView<T : Any> protected constructor(
 
   final override fun teardown() {
     onTeardown()
+
+    _parent = null
+    _callback = null
   }
 
   protected open fun onTeardown() {
@@ -63,18 +77,18 @@ abstract class PrefUiView<T : Any> protected constructor(
 
   @CheckResult
   protected fun <T : Preference> lazyPref(key: String): Lazy<T> {
-    return lazy(NONE) {
-      @Suppress("UNCHECKED_CAST")
-      return@lazy parent.findPreference(key) as T
-    }
+    return lazy(NONE) { findPref<T>(key) }
   }
 
   @CheckResult
   protected fun <T : Preference> lazyPref(@StringRes id: Int): Lazy<T> {
-    return lazy(NONE) {
-      @Suppress("UNCHECKED_CAST")
-      return@lazy parent.findPreference(parent.context.getString(id)) as T
-    }
+    return lazy(NONE) { findPref<T>(parent().context.getString(id)) }
+  }
+
+  @CheckResult
+  private fun <T : Preference> findPref(key: String): T {
+    @Suppress("UNCHECKED_CAST")
+    return parent().findPreference(key) as T
   }
 
 }

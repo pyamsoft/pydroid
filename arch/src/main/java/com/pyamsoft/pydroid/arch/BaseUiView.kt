@@ -26,21 +26,32 @@ import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class BaseUiView<T : Any> protected constructor(
-  private val parent: ViewGroup,
-  protected val callback: T
+abstract class BaseUiView<C : Any> protected constructor(
+  parent: ViewGroup,
+  callback: C
 ) : UiView {
 
   protected abstract val layoutRoot: View
 
   protected abstract val layout: Int
 
+  private var _parent: ViewGroup? = parent
+
+  private var _callback: C? = callback
+  protected val callback: C
+    get() = requireNotNull(_callback)
+
   final override fun id(): Int {
     return layoutRoot.id
   }
 
+  @CheckResult
+  private fun parent(): ViewGroup {
+    return requireNotNull(_parent)
+  }
+
   final override fun inflate(savedInstanceState: Bundle?) {
-    parent.inflateAndAdd(layout) {
+    parent().inflateAndAdd(layout) {
       onInflated(this, savedInstanceState)
     }
   }
@@ -62,7 +73,10 @@ abstract class BaseUiView<T : Any> protected constructor(
 
   final override fun teardown() {
     onTeardown()
-    parent.removeView(layoutRoot)
+
+    parent().removeView(layoutRoot)
+    _parent = null
+    _callback = null
   }
 
   protected open fun onTeardown() {
@@ -77,7 +91,7 @@ abstract class BaseUiView<T : Any> protected constructor(
 
   @CheckResult
   protected fun <T : View> lazyView(@IdRes id: Int): Lazy<T> {
-    return lazy(NONE) { parent.findViewById<T>(id) }
+    return lazy(NONE) { parent().findViewById<T>(id) }
   }
 }
 

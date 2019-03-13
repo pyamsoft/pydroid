@@ -17,8 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPresenter.Callback
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent

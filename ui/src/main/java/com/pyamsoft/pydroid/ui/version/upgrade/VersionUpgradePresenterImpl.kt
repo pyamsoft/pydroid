@@ -17,8 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradePresenter.Callback
 
 internal class VersionUpgradePresenterImpl internal constructor(

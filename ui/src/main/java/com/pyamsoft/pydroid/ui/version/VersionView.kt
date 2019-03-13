@@ -21,8 +21,8 @@ import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class VersionView internal constructor(

@@ -28,7 +28,7 @@
         android:summaryOff="@string/dark_mode_summary_off"
         android:summaryOn="@string/dark_mode_summary_on"
         android:title="@string/dark_mode_title"
-        app:iconCompat="@drawable/ic_warning_24dp"/>
+        app:iconCompat="@drawable/ic_visibility_24dp"/>
 
     <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
         android:key="@string/about_license_key"

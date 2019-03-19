@@ -18,6 +18,8 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
 
 abstract class BaseUiComponent<C : Any> protected constructor() : UiComponent<C> {
@@ -31,10 +33,29 @@ abstract class BaseUiComponent<C : Any> protected constructor() : UiComponent<C>
     savedInstanceState: Bundle?,
     callback: C
   ) {
+    realBind(null, owner, savedInstanceState, callback)
+  }
+
+  final override fun bind(
+    layout: ConstraintLayout,
+    owner: LifecycleOwner,
+    savedInstanceState: Bundle?,
+    callback: C
+  ) {
+    realBind(layout, owner, savedInstanceState, callback)
+  }
+
+  private fun realBind(
+    layout: ConstraintLayout?,
+    owner: LifecycleOwner,
+    savedInstanceState: Bundle?,
+    callback: C
+  ) {
     this._callback = callback
     owner.doOnDestroy { this._callback = null }
-
     onBind(owner, savedInstanceState, callback)
+
+    layout?.layout { onLayout(this) }
   }
 
   protected abstract fun onBind(
@@ -42,5 +63,15 @@ abstract class BaseUiComponent<C : Any> protected constructor() : UiComponent<C>
     savedInstanceState: Bundle?,
     callback: C
   )
+
+  protected open fun onLayout(set: ConstraintSet) {
+
+  }
+
+  final override fun saveState(outState: Bundle) {
+    onSaveState(outState)
+  }
+
+  protected abstract fun onSaveState(outState: Bundle)
 
 }

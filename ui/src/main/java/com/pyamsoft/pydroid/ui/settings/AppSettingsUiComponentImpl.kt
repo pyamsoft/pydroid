@@ -22,6 +22,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.rating.RatingPresenter
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
@@ -39,6 +40,10 @@ internal class AppSettingsUiComponentImpl internal constructor(
     AppSettingsPresenter.Callback,
     VersionCheckPresenter.Callback {
 
+  override fun id(): Int {
+    throw InvalidIdException
+  }
+
   override fun onBind(
     owner: LifecycleOwner,
     savedInstanceState: Bundle?,
@@ -55,7 +60,7 @@ internal class AppSettingsUiComponentImpl internal constructor(
     settingsPresenter.bind(this)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     settingsView.saveState(outState)
   }
 

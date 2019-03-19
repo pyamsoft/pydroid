@@ -22,6 +22,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.version.VersionCheckUiComponent.Callback
 import timber.log.Timber
@@ -34,6 +35,10 @@ internal class VersionCheckUiComponentImpl internal constructor(
     VersionCheckUiComponent,
     VersionCheckPresenter.Callback,
     FailedNavigationPresenter.Callback {
+
+  override fun id(): Int {
+    throw InvalidIdException
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -51,7 +56,7 @@ internal class VersionCheckUiComponentImpl internal constructor(
     versionPresenter.bind(this)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     versionView.saveState(outState)
   }
 

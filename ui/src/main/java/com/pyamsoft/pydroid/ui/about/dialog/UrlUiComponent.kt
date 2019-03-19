@@ -18,15 +18,9 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.content.ActivityNotFoundException
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.pyamsoft.pydroid.arch.UiComponent
 
 internal interface UrlUiComponent : UiComponent<UrlUiComponent.Callback> {
-
-  fun layout(
-    constraintLayout: ConstraintLayout,
-    aboveId: Int
-  )
 
   fun navigationFailed(error: ActivityNotFoundException)
 

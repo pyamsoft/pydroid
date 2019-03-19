@@ -15,18 +15,14 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.arch
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 
-internal interface UrlToolbarUiComponent : UiComponent<UrlToolbarUiComponent.Callback> {
-
-  interface Callback {
-
-    fun onCancelViewing()
-
-    fun onNavigateToExternalUrl(url: String)
-
-  }
-
+fun ConstraintLayout.layout(func: ConstraintSet.() -> Unit) {
+  val set = ConstraintSet()
+  set.clone(this)
+  func(set)
+  set.applyTo(this)
 }

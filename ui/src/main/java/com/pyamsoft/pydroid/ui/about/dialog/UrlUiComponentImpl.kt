@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.content.ActivityNotFoundException
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
@@ -36,6 +35,10 @@ internal class UrlUiComponentImpl internal constructor(
 ) : BaseUiComponent<UrlUiComponent.Callback>(),
     UrlUiComponent,
     UrlPresenter.Callback {
+
+  override fun id(): Int {
+    return webview.id()
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -56,36 +59,18 @@ internal class UrlUiComponentImpl internal constructor(
     webview.loadUrl()
   }
 
-  override fun layout(
-    constraintLayout: ConstraintLayout,
-    aboveId: Int
-  ) {
-    ConstraintSet().apply {
-      clone(constraintLayout)
-
-      webview.also {
-        connect(it.id(), ConstraintSet.TOP, aboveId, ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, constraintLayout.id, ConstraintSet.BOTTOM)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      spinner.also {
-        connect(it.id(), ConstraintSet.TOP, aboveId, ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
-        connect(it.id(), ConstraintSet.BOTTOM, constraintLayout.id, ConstraintSet.BOTTOM)
-        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      applyTo(constraintLayout)
+  override fun onLayout(set: ConstraintSet) {
+    spinner.also {
+      set.connect(it.id(), ConstraintSet.TOP, webview.id(), ConstraintSet.BOTTOM)
+      set.connect(it.id(), ConstraintSet.START, webview.id(), ConstraintSet.START)
+      set.connect(it.id(), ConstraintSet.END, webview.id(), ConstraintSet.END)
+      set.connect(it.id(), ConstraintSet.BOTTOM, webview.id(), ConstraintSet.BOTTOM)
+      set.constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      set.constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
     }
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     webview.saveState(outState)
     spinner.saveState(outState)
   }

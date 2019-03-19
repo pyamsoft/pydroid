@@ -21,7 +21,6 @@ dependencies {
   api "androidx.recyclerview:recyclerview:$recyclerView"
   api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
   api "androidx.fragment:fragment:$fragment"
-  api "androidx.constraintlayout:constraintlayout:$constraintLayout"
   api "com.google.android.material:material:$materialDesign"
   api "androidx.preference:preference:$preference"
 

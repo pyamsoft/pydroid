@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class AboutUiComponentImpl internal constructor(
@@ -32,6 +33,10 @@ internal class AboutUiComponentImpl internal constructor(
 ) : BaseUiComponent<AboutUiComponent.Callback>(),
     AboutUiComponent,
     AboutPresenter.Callback {
+
+  override fun id(): Int {
+    throw InvalidIdException
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -49,7 +54,7 @@ internal class AboutUiComponentImpl internal constructor(
     presenter.bind(this)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     listView.saveState(outState)
     spinner.saveState(outState)
   }

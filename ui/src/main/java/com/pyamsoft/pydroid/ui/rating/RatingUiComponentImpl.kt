@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.rating.RatingUiComponent.Callback
 
 internal class RatingUiComponentImpl internal constructor(
@@ -28,6 +29,10 @@ internal class RatingUiComponentImpl internal constructor(
 ) : BaseUiComponent<RatingUiComponent.Callback>(),
     RatingUiComponent,
     RatingPresenter.Callback {
+
+  override fun id(): Int {
+    throw InvalidIdException
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -41,7 +46,7 @@ internal class RatingUiComponentImpl internal constructor(
     presenter.bind(this)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
   }
 
   override fun onShowRating() {

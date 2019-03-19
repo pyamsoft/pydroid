@@ -25,7 +25,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.DialogFragment
+import com.pyamsoft.pydroid.arch.layout
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
@@ -67,11 +69,26 @@ class ViewUrlDialog : DialogFragment(), UrlUiComponent.Callback, UrlToolbarUiCom
         .plusViewLicenseComponent(viewLifecycleOwner, layoutRoot, link, name)
         .inject(this)
 
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
-    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
+    component.bind(layoutRoot, viewLifecycleOwner, savedInstanceState, this)
+    toolbarComponent.bind(layoutRoot, viewLifecycleOwner, savedInstanceState, this)
 
-    toolbarComponent.layout(layoutRoot)
-    component.layout(layoutRoot, toolbarComponent.id())
+    layoutRoot.layout {
+      toolbarComponent.also {
+        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+
+      component.also {
+        connect(it.id(), ConstraintSet.TOP, toolbarComponent.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
+    }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

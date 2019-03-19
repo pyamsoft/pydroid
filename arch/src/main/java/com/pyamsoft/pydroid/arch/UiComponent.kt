@@ -18,11 +18,25 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 
 interface UiComponent<C : Any> {
 
+  @IdRes
+  @CheckResult
+  fun id(): Int
+
   fun bind(
+    owner: LifecycleOwner,
+    savedInstanceState: Bundle?,
+    callback: C
+  )
+
+  fun bind(
+    layout: ConstraintLayout,
     owner: LifecycleOwner,
     savedInstanceState: Bundle?,
     callback: C

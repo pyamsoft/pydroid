@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
@@ -54,29 +53,16 @@ internal class UrlToolbarUiComponentImpl internal constructor(
     presenter.bind(this)
   }
 
-  override fun layout(constraintLayout: ConstraintLayout) {
-    ConstraintSet().apply {
-      clone(constraintLayout)
-
-      toolbar.also {
-        connect(it.id(), ConstraintSet.TOP, constraintLayout.id, ConstraintSet.TOP)
-        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      dropshadow.also {
-        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-        connect(it.id(), ConstraintSet.START, constraintLayout.id, ConstraintSet.START)
-        connect(it.id(), ConstraintSet.END, constraintLayout.id, ConstraintSet.END)
-        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-      }
-
-      applyTo(constraintLayout)
+  override fun onLayout(set: ConstraintSet) {
+    dropshadow.also {
+      set.connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
+      set.connect(it.id(), ConstraintSet.START, toolbar.id(), ConstraintSet.START)
+      set.connect(it.id(), ConstraintSet.END, toolbar.id(), ConstraintSet.END)
+      set.constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
     }
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     toolbar.saveState(outState)
     dropshadow.saveState(outState)
   }

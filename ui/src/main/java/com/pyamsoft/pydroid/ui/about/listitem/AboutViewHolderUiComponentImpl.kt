@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent.Callback
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 
 internal class AboutViewHolderUiComponentImpl internal constructor(
   private val titleView: AboutItemTitleView,
@@ -32,6 +33,10 @@ internal class AboutViewHolderUiComponentImpl internal constructor(
 ) : BaseUiComponent<AboutViewHolderUiComponent.Callback>(),
     AboutViewHolderUiComponent,
     AboutItemPresenter.Callback {
+
+  override fun id(): Int {
+    throw InvalidIdException
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -76,7 +81,7 @@ internal class AboutViewHolderUiComponentImpl internal constructor(
     callback.showHomepage(name, homepageUrl)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     titleView.saveState(outState)
     actionsView.saveState(outState)
     descriptionView.saveState(outState)

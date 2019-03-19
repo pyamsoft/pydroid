@@ -22,6 +22,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogUiComponent.Callback
 
@@ -34,6 +35,10 @@ internal class RatingDialogUiComponentImpl internal constructor(
 ) : BaseUiComponent<RatingDialogUiComponent.Callback>(),
     RatingDialogUiComponent,
     RatingDialogPresenter.Callback {
+
+  override fun id(): Int {
+    throw InvalidIdException
+  }
 
   override fun onBind(
     owner: LifecycleOwner,
@@ -53,7 +58,7 @@ internal class RatingDialogUiComponentImpl internal constructor(
     presenter.bind(this)
   }
 
-  override fun saveState(outState: Bundle) {
+  override fun onSaveState(outState: Bundle) {
     iconView.saveState(outState)
     changelogView.saveState(outState)
     controlsView.saveState(outState)

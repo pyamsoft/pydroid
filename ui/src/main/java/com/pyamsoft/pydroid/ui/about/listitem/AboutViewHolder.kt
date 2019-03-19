@@ -27,8 +27,6 @@ import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.util.fakeBind
-import com.pyamsoft.pydroid.util.fakeUnbind
 
 internal class AboutViewHolder private constructor(
   view: View,
@@ -36,7 +34,7 @@ internal class AboutViewHolder private constructor(
 ) : BaseViewHolder(view), LifecycleOwner {
 
   private val registry = LifecycleRegistry(this)
-
+  private var bindLifecycle: AboutItemLifecycle? = null
   internal lateinit var component: AboutViewHolderUiComponent
 
   init {
@@ -53,12 +51,15 @@ internal class AboutViewHolder private constructor(
   }
 
   override fun bind(model: OssLibrary) {
-    component.bind(this, model)
-    registry.fakeBind()
+    bindLifecycle?.unbind()
+    val owner = AboutItemLifecycle()
+    component.bind(owner, model)
+    bindLifecycle = owner
   }
 
   override fun unbind() {
-    registry.fakeUnbind()
+    bindLifecycle?.unbind()
+    bindLifecycle = null
   }
 
   companion object {

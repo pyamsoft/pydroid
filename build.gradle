@@ -47,7 +47,7 @@ buildscript {
     appCompat = "1.0.2"
 
     repo = "0.4.0"
-    fluidresizer = "0.0.3"
+    fluidresizer = "0.0.4"
 
     timber = "4.7.1"
     moshi = "1.8.0"

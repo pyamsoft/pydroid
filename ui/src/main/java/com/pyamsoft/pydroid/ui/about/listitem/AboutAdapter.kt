@@ -23,21 +23,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Fake
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Real
+import java.util.UUID
 
 internal class AboutAdapter internal constructor(
   private val callback: AboutViewHolderUiComponent.Callback
 ) : RecyclerView.Adapter<BaseViewHolder>() {
 
-  private val items: MutableList<Any> = ArrayList()
+  private val items: MutableList<AdapterItem> = ArrayList()
+
+  init {
+    setHasStableIds(true)
+  }
 
   fun addAll(models: List<OssLibrary>) {
     val oldCount = itemCount
 
     if (items.isEmpty()) {
-      items.add(Fake)
+      items.add(Fake(UUID.randomUUID().toString()))
     }
 
-    val realItems = models.map { Real(it) }
+    val realItems = models.map { Real(UUID.randomUUID().toString(), it) }
     items.addAll(realItems)
 
     notifyItemRangeInserted(oldCount, itemCount - 1)
@@ -47,6 +52,11 @@ internal class AboutAdapter internal constructor(
     val size = itemCount
     items.clear()
     notifyItemRangeRemoved(0, size - 1)
+  }
+
+  override fun getItemId(position: Int): Long {
+    return items[position].id.hashCode()
+        .toLong()
   }
 
   override fun getItemViewType(position: Int): Int {
@@ -88,9 +98,14 @@ internal class AboutAdapter internal constructor(
     holder.unbind()
   }
 
-  internal sealed class AdapterItem {
-    internal data class Real(val library: OssLibrary) : AdapterItem()
-    internal object Fake : AdapterItem()
+  internal sealed class AdapterItem(open val id: String) {
+
+    internal data class Real(
+      override val id: String,
+      val library: OssLibrary
+    ) : AdapterItem(id)
+
+    internal data class Fake(override val id: String) : AdapterItem(id)
   }
 
   companion object {

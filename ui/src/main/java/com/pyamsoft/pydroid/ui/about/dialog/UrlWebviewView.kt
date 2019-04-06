@@ -39,6 +39,7 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageError
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
 import timber.log.Timber
 
@@ -89,7 +90,7 @@ internal class UrlWebviewView internal constructor(
         val isTarget = (fixedUrl == link) || (url == link)
         if (isTarget) {
           Timber.d("Loaded target url: $fixedUrl, show layoutRoot")
-          bus.publish(PageLoaded(fixedUrl, true))
+          bus.publish(PageLoaded(fixedUrl))
         }
 
         // If we are showing the layoutRoot and we've navigated off the url, close the dialog
@@ -114,7 +115,7 @@ internal class UrlWebviewView internal constructor(
         if (isTarget) {
           Timber.w("Webview error occurred but target page still reached.")
         }
-        bus.publish(PageLoaded(fixedUrl, isTarget))
+        bus.publish(PageError(fixedUrl))
       }
 
       @Suppress("DEPRECATION", "OverridingDeprecatedMember")
@@ -132,7 +133,7 @@ internal class UrlWebviewView internal constructor(
         if (isTarget) {
           Timber.w("Webview error occurred but target page still reached.")
         }
-        bus.publish(PageLoaded(fixedUrl, isTarget))
+        bus.publish(PageError(fixedUrl))
       }
 
     }

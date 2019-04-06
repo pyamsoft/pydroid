@@ -18,23 +18,110 @@
 package com.pyamsoft.pydroid.ui.version
 
 import com.pyamsoft.pydroid.arch.Presenter
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.Callback
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState.Loading
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState.UpgradePayload
+import com.pyamsoft.pydroid.ui.version.VersionCheckState.Begin
+import com.pyamsoft.pydroid.ui.version.VersionCheckState.Complete
+import com.pyamsoft.pydroid.ui.version.VersionCheckState.Error
+import com.pyamsoft.pydroid.ui.version.VersionCheckState.Found
+import timber.log.Timber
 
-internal interface VersionCheckPresenter : Presenter<Callback> {
+internal class VersionCheckPresenter internal constructor(
+  private val interactor: VersionCheckInteractor,
+  private val schedulerProvider: SchedulerProvider,
+  private val bus: EventBus<VersionCheckState>
+) : Presenter<VersionState, VersionCheckPresenter.Callback>() {
 
-  fun checkForUpdates(force: Boolean)
+  private var checkUpdatesDisposable by singleDisposable()
 
-  interface Callback {
-
-    fun onVersionCheckBegin(forced: Boolean)
-
-    fun onVersionCheckFound(
-      currentVersion: Int,
-      newVersion: Int
-    )
-
-    fun onVersionCheckError(throwable: Throwable)
-
-    fun onVersionCheckComplete()
+  override fun initialState(): VersionState {
+    return VersionState(isLoading = null, throwable = null, upgrade = null)
   }
+
+  override fun onBind() {
+    listenForVersionCheckEvents()
+    checkForUpdates(false)
+  }
+
+  override fun onUnbind() {
+    checkUpdatesDisposable.tryDispose()
+  }
+
+  private fun listenForVersionCheckEvents() {
+    bus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it) {
+            is Begin -> handleVersionCheckBegin(it.forced)
+            is Found -> handleVersionCheckFound(it.currentVersion, it.newVersion)
+            is Error -> handleVersionCheckError(it.throwable)
+            is Complete -> handleVersionCheckComplete()
+          }
+        }
+        .destroy()
+  }
+
+  private fun handleVersionCheckBegin(forced: Boolean) {
+    setState {
+      this.isLoading = Loading(forced)
+    }
+  }
+
+  private fun handleVersionCheckFound(
+    currentVersion: Int,
+    newVersion: Int
+  ) {
+    setState {
+      this.upgrade = UpgradePayload(currentVersion, newVersion)
+      this.throwable = null
+    }
+  }
+
+  private fun handleVersionCheckError(throwable: Throwable) {
+    setState {
+      this.upgrade = null
+      this.throwable = throwable
+    }
+  }
+
+  private fun handleVersionCheckComplete() {
+    setState {
+      this.isLoading = null
+    }
+  }
+
+  fun checkForUpdates(force: Boolean) {
+    checkUpdatesDisposable = interactor.checkVersion(force)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .doOnSubscribe { bus.publish(VersionCheckState.Begin(force)) }
+        .doAfterTerminate { bus.publish(VersionCheckState.Complete) }
+        .subscribe({ bus.publish(VersionCheckState.Found(it.currentVersion, it.newVersion)) }, {
+          Timber.e(it, "Error checking for latest version")
+          bus.publish(VersionCheckState.Error(it))
+        })
+  }
+
+  data class VersionState(
+    var isLoading: Loading?,
+    var throwable: Throwable?,
+    var upgrade: UpgradePayload?
+  ) {
+
+    data class Loading(val forced: Boolean)
+
+    data class UpgradePayload(
+      val currentVersion: Int,
+      val newVersion: Int
+    )
+  }
+
+  interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<VersionState>
 }

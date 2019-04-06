@@ -17,13 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemPresenter.Callback
+import com.pyamsoft.pydroid.arch.UiBinder
 
-internal class AboutItemPresenterImpl internal constructor(
-) : BasePresenter<Unit, Callback>(RxBus.empty()),
-    AboutItemPresenter, AboutItemActionsView.Callback {
+internal class AboutItemBinder internal constructor(
+) : UiBinder<AboutItemBinder.Callback>(),
+    AboutItemActionsView.Callback {
 
   override fun onBind() {
   }
@@ -35,13 +33,26 @@ internal class AboutItemPresenterImpl internal constructor(
     name: String,
     licenseUrl: String
   ) {
-    callback.onViewLicense(name, licenseUrl)
+    callback.handleViewLicense(name, licenseUrl)
   }
 
   override fun onVisitHomepageClicked(
     name: String,
     homepageUrl: String
   ) {
-    callback.onVisitHomepage(name, homepageUrl)
+    callback.handleVisitHomepage(name, homepageUrl)
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun handleViewLicense(
+      name: String,
+      licenseUrl: String
+    )
+
+    fun handleVisitHomepage(
+      name: String,
+      homepageUrl: String
+    )
   }
 }

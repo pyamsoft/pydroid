@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
@@ -50,7 +51,10 @@ internal interface PYDroidComponent {
   ): VersionUpgradeComponent
 
   @CheckResult
-  fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent
+  fun plusAboutItemComponent(
+    parent: ViewGroup,
+    model: OssLibrary
+  ): AboutItemComponent
 
   @CheckResult
   fun plusAboutComponent(

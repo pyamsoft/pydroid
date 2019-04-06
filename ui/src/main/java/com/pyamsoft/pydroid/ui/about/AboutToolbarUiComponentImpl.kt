@@ -25,10 +25,10 @@ import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 
 internal class AboutToolbarUiComponentImpl internal constructor(
   private val toolbar: AboutToolbarView,
-  private val presenter: AboutToolbarPresenter
+  private val binder: AboutToolbarBinder
 ) : BaseUiComponent<AboutToolbarUiComponent.Callback>(),
     AboutToolbarUiComponent,
-    AboutToolbarPresenter.Callback {
+    AboutToolbarBinder.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -41,11 +41,11 @@ internal class AboutToolbarUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       toolbar.teardown()
-      presenter.unbind()
+      binder.unbind()
     }
 
     toolbar.inflate(savedInstanceState)
-    presenter.bind(this)
+    binder.bind(this)
   }
 
   override fun onSaveState(outState: Bundle) {

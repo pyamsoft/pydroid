@@ -15,15 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.about.dialog
 
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradePresenter.Callback
+import com.pyamsoft.pydroid.arch.UiBinder
 
-internal class VersionUpgradePresenterImpl internal constructor(
-) : BasePresenter<Unit, Callback>(RxBus.empty()),
-    VersionUpgradePresenter, VersionUpgradeControlView.Callback {
+internal class UrlToolbarBinder internal constructor(
+) : UiBinder<UrlToolbarBinder.Callback>(),
+    UrlToolbarView.Callback {
 
   override fun onBind() {
   }
@@ -31,11 +29,19 @@ internal class VersionUpgradePresenterImpl internal constructor(
   override fun onUnbind() {
   }
 
-  override fun onUpgradeClicked() {
-    callback.onUpgradeBegin()
+  override fun onViewLicenseExternal(url: String) {
+    callback.handleViewLicenseExternal(url)
   }
 
-  override fun onCancelClicked() {
-    callback.onUpgradeCancel()
+  override fun onToolbarNavClicked() {
+    callback.handleNavigationEvent()
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun handleNavigationEvent()
+
+    fun handleViewLicenseExternal(url: String)
+
   }
 }

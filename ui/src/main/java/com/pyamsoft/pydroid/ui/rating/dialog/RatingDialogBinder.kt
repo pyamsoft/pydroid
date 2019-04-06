@@ -15,46 +15,56 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.ui.rating.dialog
 
-import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.UiBinder
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.rating.RatingPresenter.Callback
 
-internal class RatingPresenterImpl internal constructor(
+internal class RatingDialogBinder internal constructor(
   private val interactor: RatingInteractor,
-  private val schedulerProvider: SchedulerProvider,
-  bus: EventBus<ShowRating>
-) : BasePresenter<ShowRating, Callback>(bus), RatingPresenter {
+  private val schedulerProvider: SchedulerProvider
+) : UiBinder<RatingDialogBinder.Callback>(),
+    RatingControlsView.Callback {
 
-  private var loadDisposable by singleDisposable()
+  private var saveDisposable by singleDisposable()
 
   override fun onBind() {
-    listenForDialogRequests()
-    load(false)
   }
 
   override fun onUnbind() {
-    loadDisposable.tryDispose()
+    saveDisposable.tryDispose()
   }
 
-  private fun listenForDialogRequests() {
-    listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { callback.onShowRating() }
-        .destroy()
+  override fun onRateApplicationClicked(link: String) {
+    save(link)
   }
 
-  override fun load(force: Boolean) {
-    loadDisposable = interactor.needsToViewRating(force)
+  override fun onNotRatingApplication() {
+    save("")
+  }
+
+  private fun save(link: String) {
+    saveDisposable = interactor.saveRating()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { publish(ShowRating) }
+        .subscribe {
+          val rate = link.isNotBlank()
+          if (rate) {
+            callback.handleVisitApplicationPageToRate(link)
+          } else {
+            callback.handleDidNotRate()
+          }
+        }
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun handleVisitApplicationPageToRate(packageName: String)
+
+    fun handleDidNotRate()
   }
 
 }

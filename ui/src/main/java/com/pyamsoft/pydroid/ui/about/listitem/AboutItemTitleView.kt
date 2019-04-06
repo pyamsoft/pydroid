@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -27,8 +28,9 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
+  private val model: OssLibrary,
   parent: ViewGroup
-) : BaseUiView<Unit>(parent, Unit), BaseAboutItem {
+) : BaseUiView<Unit>(parent, Unit) {
 
   private val title by lazyView<TextView>(R.id.title)
   private val license by lazyView<TextView>(R.id.license)
@@ -37,23 +39,22 @@ internal class AboutItemTitleView internal constructor(
 
   override val layoutRoot by lazyView<View>(R.id.about_title)
 
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
+    title.text = model.name
+    license.text = getString(R.string.license_name, model.licenseName)
+  }
+
   override fun onTeardown() {
-    unbind()
+    title.text = ""
+    license.text = ""
   }
 
   @CheckResult
   private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
     return layoutRoot.context.getString(id, *formatArgs)
-  }
-
-  override fun bind(model: OssLibrary) {
-    title.text = model.name
-    license.text = getString(R.string.license_name, model.licenseName)
-  }
-
-  override fun unbind() {
-    title.text = ""
-    license.text = ""
   }
 
 }

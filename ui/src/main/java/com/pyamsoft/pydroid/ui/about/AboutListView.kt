@@ -131,6 +131,15 @@ internal class AboutListView internal constructor(
         .show()
   }
 
+  fun clearError() {
+    Snackbreak.bindTo(owner)
+        .dismiss()
+  }
+
+  fun clearLicenses() {
+    aboutAdapter.clear()
+  }
+
   interface Callback {
 
     fun onViewLicenseClicked(

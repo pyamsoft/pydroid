@@ -18,18 +18,73 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import com.pyamsoft.pydroid.arch.Presenter
-import com.pyamsoft.pydroid.ui.about.dialog.UrlPresenter.Callback
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.about.dialog.UrlPresenter.UrlState
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageError
+import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
 
-internal interface UrlPresenter : Presenter<Callback> {
+internal class UrlPresenter internal constructor(
+  private val schedulerProvider: SchedulerProvider,
+  private val bus: EventBus<UrlWebviewState>
+) : Presenter<UrlState, UrlPresenter.Callback>() {
 
-  interface Callback {
-
-    fun onWebviewBegin()
-
-    fun onWebviewOtherPageLoaded(url: String)
-
-    fun onWebviewTargetPageLoaded(url: String)
-
-    fun onWebviewExternalNavigationEvent(url: String)
+  override fun initialState(): UrlState {
+    return UrlState(isLoading = false, reachedTargetPage = false, url = "")
   }
+
+  override fun onBind() {
+    bus.listen()
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe {
+          return@subscribe when (it) {
+            is Loading -> handleWebviewBegin()
+            is PageLoaded -> handlePageLoaded(it.url)
+            is PageError -> handlePageError(it.url)
+            is ExternalNavigation -> callback.handleWebviewExternalNavigationEvent(it.url)
+          }
+        }
+        .destroy()
+  }
+
+  override fun onUnbind() {
+  }
+
+  private fun handleWebviewBegin() {
+    setState {
+      this.isLoading = true
+    }
+  }
+
+  private fun handlePageLoaded(url: String) {
+    setState {
+      this.isLoading = false
+      this.reachedTargetPage = true
+      this.url = url
+    }
+  }
+
+  private fun handlePageError(url: String) {
+    setState {
+      this.isLoading = false
+      this.reachedTargetPage = false
+      this.url = url
+    }
+  }
+
+  data class UrlState(
+    var isLoading: Boolean,
+    var reachedTargetPage: Boolean,
+    var url: String
+  )
+
+  interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<UrlState> {
+
+    fun handleWebviewExternalNavigationEvent(url: String)
+
+  }
+
 }

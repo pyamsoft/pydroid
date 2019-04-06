@@ -18,29 +18,104 @@
 package com.pyamsoft.pydroid.ui.about
 
 import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.AboutPresenter.Callback
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.about.AboutPresenter.AboutState
+import timber.log.Timber
 
-internal interface AboutPresenter : Presenter<Callback> {
+internal class AboutPresenter internal constructor(
+  private val interactor: AboutInteractor,
+  private val schedulerProvider: SchedulerProvider
+) : Presenter<AboutState, AboutPresenter.Callback>(),
+    AboutListView.Callback {
 
-  interface Callback {
+  private var licenseDisposable by singleDisposable()
 
-    fun onViewLicense(
+  override fun initialState(): AboutState {
+    return AboutState(isLoading = false, throwable = null, licenses = emptyList())
+  }
+
+  override fun onBind() {
+    loadLicenses(false)
+  }
+
+  override fun onUnbind() {
+    licenseDisposable.tryDispose()
+  }
+
+  private fun loadLicenses(force: Boolean) {
+    licenseDisposable = interactor.loadLicenses(force)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .doOnSubscribe { handleLicenseLoadBegin() }
+        .doAfterTerminate { handleLicenseLoadComplete() }
+        .subscribe({ handleLicensesLoaded(it) }, {
+          Timber.e(it, "Error loading licenses")
+          handleLicenseLoadError(it)
+        })
+  }
+
+  private fun handleLicenseLoadBegin() {
+    setState {
+      this.isLoading = true
+    }
+  }
+
+  private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
+    setState {
+      this.licenses = licenses
+      this.throwable = null
+    }
+
+  }
+
+  private fun handleLicenseLoadError(throwable: Throwable) {
+    setState {
+      this.licenses = emptyList()
+      this.throwable = throwable
+    }
+
+  }
+
+  private fun handleLicenseLoadComplete() {
+    setState {
+      this.isLoading = false
+    }
+  }
+
+  override fun onViewLicenseClicked(
+    name: String,
+    licenseUrl: String
+  ) {
+    callback.handleViewLicense(name, licenseUrl)
+  }
+
+  override fun onVisitHomepageClicked(
+    name: String,
+    homepageUrl: String
+  ) {
+    callback.handleVisitHomepage(name, homepageUrl)
+  }
+
+  data class AboutState(
+    var isLoading: Boolean,
+    var throwable: Throwable?,
+    var licenses: List<OssLibrary>
+  )
+
+  interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<AboutState> {
+
+    fun handleViewLicense(
       name: String,
       licenseUrl: String
     )
 
-    fun onVisitHomepage(
+    fun handleVisitHomepage(
       name: String,
       homepageUrl: String
     )
-
-    fun onLicenseLoadBegin()
-
-    fun onLicensesLoaded(licenses: List<OssLibrary>)
-
-    fun onLicenseLoadError(throwable: Throwable)
-
-    fun onLicenseLoadComplete()
   }
 }

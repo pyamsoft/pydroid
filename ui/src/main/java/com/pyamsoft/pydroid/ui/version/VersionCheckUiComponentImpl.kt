@@ -23,18 +23,19 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
 import com.pyamsoft.pydroid.ui.version.VersionCheckUiComponent.Callback
 import timber.log.Timber
 
 internal class VersionCheckUiComponentImpl internal constructor(
-  private val failedNavigationPresenter: FailedNavigationPresenter,
+  private val failedNavigationBinder: FailedNavigationBinder,
   private val versionPresenter: VersionCheckPresenter,
   private val versionView: VersionView
 ) : BaseUiComponent<VersionCheckUiComponent.Callback>(),
     VersionCheckUiComponent,
     VersionCheckPresenter.Callback,
-    FailedNavigationPresenter.Callback {
+    FailedNavigationBinder.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -47,12 +48,12 @@ internal class VersionCheckUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       versionView.teardown()
-      failedNavigationPresenter.unbind()
+      failedNavigationBinder.unbind()
       versionPresenter.unbind()
     }
 
     versionView.inflate(savedInstanceState)
-    failedNavigationPresenter.bind(this)
+    failedNavigationBinder.bind(this)
     versionPresenter.bind(this)
   }
 
@@ -60,29 +61,61 @@ internal class VersionCheckUiComponentImpl internal constructor(
     versionView.saveState(outState)
   }
 
-  override fun onVersionCheckBegin(forced: Boolean) {
-    if (forced) {
-      versionView.showUpdating()
+  override fun onRender(
+    state: VersionState,
+    oldState: VersionState?
+  ) {
+    renderLoading(state, oldState)
+    renderUpgrade(state, oldState)
+    renderError(state, oldState)
+  }
+
+  private fun renderLoading(
+    state: VersionState,
+    oldState: VersionState?
+  ) {
+    state.isLoading.let { loading ->
+      if (oldState == null || loading != oldState.isLoading) {
+        if (loading == null) {
+          versionView.dismissUpdating()
+        } else {
+          if (loading.forced) {
+            versionView.showUpdating()
+          }
+        }
+      }
     }
   }
 
-  override fun onVersionCheckFound(
-    currentVersion: Int,
-    newVersion: Int
+  private fun renderUpgrade(
+    state: VersionState,
+    oldState: VersionState?
   ) {
-    Timber.d("Updated version found. %d => %d", currentVersion, newVersion)
-    callback.onShowVersionUpgrade(newVersion)
+    state.upgrade.let { upgrade ->
+      if (oldState == null || upgrade != oldState.upgrade) {
+        if (upgrade != null) {
+          val (currentVersion, newVersion) = upgrade
+          Timber.d("Updated version found. %d => %d", currentVersion, newVersion)
+          callback.onShowVersionUpgrade(newVersion)
+        }
+      }
+    }
   }
 
-  override fun onVersionCheckError(throwable: Throwable) {
-    Timber.e(throwable, "Error checking for latest version")
+  private fun renderError(
+    state: VersionState,
+    oldState: VersionState?
+  ) {
+    state.throwable.let { throwable ->
+      if (oldState == null || throwable != oldState.throwable) {
+        if (throwable != null) {
+          Timber.e(throwable, "Error checking for latest version")
+        }
+      }
+    }
   }
 
-  override fun onVersionCheckComplete() {
-    versionView.dismissUpdating()
-  }
-
-  override fun onFailedNavigation(error: ActivityNotFoundException) {
+  override fun handleFailedNavigation(error: ActivityNotFoundException) {
     versionView.showError(error)
   }
 

@@ -18,30 +18,34 @@
 package com.pyamsoft.pydroid.ui.navigation
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.UiBinder
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter.Callback
 
-class FailedNavigationPresenterImpl(
+class FailedNavigationBinder(
   private val schedulerProvider: SchedulerProvider,
-  bus: EventBus<FailedNavigationEvent>
-) : BasePresenter<FailedNavigationEvent, Callback>(bus),
-    FailedNavigationPresenter {
+  private val bus: EventBus<FailedNavigationEvent>
+) : UiBinder<FailedNavigationBinder.Callback>() {
 
   override fun onBind() {
-    listen()
+    bus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { callback.onFailedNavigation(it.error) }
+        .subscribe { callback.handleFailedNavigation(it.error) }
         .destroy()
   }
 
   override fun onUnbind() {
   }
 
-  override fun failedNavigation(error: ActivityNotFoundException) {
-    publish(FailedNavigationEvent(error))
+  fun failedNavigation(error: ActivityNotFoundException) {
+    bus.publish(FailedNavigationEvent(error))
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun handleFailedNavigation(error: ActivityNotFoundException)
+
   }
 
 }

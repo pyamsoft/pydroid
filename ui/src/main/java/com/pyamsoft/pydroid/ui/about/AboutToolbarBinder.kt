@@ -15,16 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.ui.about.dialog.UrlToolbarPresenter.Callback
+import com.pyamsoft.pydroid.arch.UiBinder
 
-internal class UrlToolbarPresenterImpl internal constructor(
-) : BasePresenter<Unit, Callback>(RxBus.empty()),
-    UrlToolbarView.Callback,
-    UrlToolbarPresenter {
+internal class AboutToolbarBinder internal constructor(
+) : UiBinder<AboutToolbarBinder.Callback>(),
+    AboutToolbarView.Callback {
 
   override fun onBind() {
   }
@@ -32,12 +29,12 @@ internal class UrlToolbarPresenterImpl internal constructor(
   override fun onUnbind() {
   }
 
-  override fun onViewLicenseExternal(url: String) {
-    callback.onViewLicenseExternal(url)
-  }
-
   override fun onToolbarNavClicked() {
     callback.onNavigationEvent()
   }
 
+  interface Callback : UiBinder.Callback {
+
+    fun onNavigationEvent()
+  }
 }

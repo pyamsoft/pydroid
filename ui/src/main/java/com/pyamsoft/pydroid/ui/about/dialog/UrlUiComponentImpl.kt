@@ -23,15 +23,16 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.about.dialog.UrlPresenter.UrlState
 import com.pyamsoft.pydroid.ui.about.dialog.UrlUiComponent.Callback
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class UrlUiComponentImpl internal constructor(
   private val webview: UrlWebviewView,
   private val spinner: SpinnerView,
   private val presenter: UrlPresenter,
-  private val failedNavigationPresenter: FailedNavigationPresenter
+  private val failedNavigationBinder: FailedNavigationBinder
 ) : BaseUiComponent<UrlUiComponent.Callback>(),
     UrlUiComponent,
     UrlPresenter.Callback {
@@ -75,27 +76,36 @@ internal class UrlUiComponentImpl internal constructor(
     spinner.saveState(outState)
   }
 
-  override fun onWebviewBegin() {
-    webview.hide()
-    spinner.show()
+  override fun onRender(
+    state: UrlState,
+    oldState: UrlState?
+  ) {
+    renderLoading(state, oldState)
   }
 
-  override fun onWebviewOtherPageLoaded(url: String) {
-    webview.hide()
-    spinner.show()
+  private fun renderLoading(
+    state: UrlPresenter.UrlState,
+    oldState: UrlPresenter.UrlState?
+  ) {
+    state.isLoading.let { loading ->
+      if (oldState == null || loading != oldState.isLoading) {
+        if (loading) {
+          webview.hide()
+          spinner.show()
+        } else {
+          spinner.hide()
+          webview.show()
+        }
+      }
+    }
   }
 
-  override fun onWebviewTargetPageLoaded(url: String) {
-    spinner.hide()
-    webview.show()
-  }
-
-  override fun onWebviewExternalNavigationEvent(url: String) {
+  override fun handleWebviewExternalNavigationEvent(url: String) {
     callback.onNavigateToExternalUrl(url)
   }
 
   override fun navigationFailed(error: ActivityNotFoundException) {
-    failedNavigationPresenter.failedNavigation(error)
+    failedNavigationBinder.failedNavigation(error)
   }
 
 }

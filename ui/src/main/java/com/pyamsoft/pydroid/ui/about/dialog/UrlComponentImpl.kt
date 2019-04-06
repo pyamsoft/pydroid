@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
@@ -39,12 +39,12 @@ internal class UrlComponentImpl internal constructor(
 ) : UrlComponent {
 
   override fun inject(dialog: ViewUrlDialog) {
-    val presenter = UrlPresenterImpl(schedulerProvider, bus)
+    val presenter = UrlPresenter(schedulerProvider, bus)
     val webviewView = UrlWebviewView(owner, link, bus, parent)
     val spinnerView = SpinnerView(parent)
-    val failed = FailedNavigationPresenterImpl(schedulerProvider, failedNavigationBus)
+    val failed = FailedNavigationBinder(schedulerProvider, failedNavigationBus)
 
-    val toolbarPresenter = UrlToolbarPresenterImpl()
+    val toolbarPresenter = UrlToolbarBinder()
     val toolbarView = UrlToolbarView(parent, name, link, imageLoader, toolbarPresenter)
     val dropshadow = DropshadowView(parent)
 

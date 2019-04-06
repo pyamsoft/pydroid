@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
@@ -31,13 +30,12 @@ internal class AboutComponentImpl(
   private val backstackCount: Int,
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
-  private val bus: EventBus<LicenseLoadState>,
   private val schedulerProvider: SchedulerProvider
 ) : AboutComponent {
 
   override fun inject(fragment: AboutFragment) {
-    val presenter = AboutPresenterImpl(interactor, schedulerProvider, bus)
-    val toolbarPresenter = AboutToolbarPresenterImpl()
+    val presenter = AboutPresenter(interactor, schedulerProvider)
+    val toolbarPresenter = AboutToolbarBinder()
     val listView = AboutListView(owner, parent, presenter)
     val spinnerView = SpinnerView(parent)
     val toolbar = AboutToolbarView(toolbarActivity, backstackCount, toolbarPresenter)

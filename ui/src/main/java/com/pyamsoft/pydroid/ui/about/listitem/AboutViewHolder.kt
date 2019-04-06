@@ -21,40 +21,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
 
 internal class AboutViewHolder private constructor(
   view: View,
-  callback: AboutViewHolderUiComponent.Callback
-) : BaseViewHolder(view), LifecycleOwner {
+  private val callback: AboutViewHolderUiComponent.Callback
+) : BaseViewHolder(view) {
 
-  private val registry = LifecycleRegistry(this)
-  private var bindLifecycle: AboutItemLifecycle? = null
+  private var bindLifecycle: ListItemLifecycle? = null
   internal lateinit var component: AboutViewHolderUiComponent
 
-  init {
-    val root: ViewGroup = view.findViewById(R.id.about_listitem_root)
-    PYDroid.obtain(itemView.context.applicationContext)
-        .plusAboutItemComponent(root)
-        .inject(this)
-
-    component.bind(this, null, callback)
-  }
-
-  override fun getLifecycle(): Lifecycle {
-    return registry
-  }
+  private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
 
   override fun bind(model: OssLibrary) {
     bindLifecycle?.unbind()
-    val owner = AboutItemLifecycle()
-    component.bind(owner, model)
+
+    PYDroid.obtain(itemView.context.applicationContext)
+        .plusAboutItemComponent(parent, model)
+        .inject(this)
+
+    val owner = ListItemLifecycle()
     bindLifecycle = owner
+
+    component.bind(owner, null, callback)
   }
 
   override fun unbind() {

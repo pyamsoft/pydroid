@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -27,9 +28,10 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemActionsView.Callback
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionsView internal constructor(
+  private val model: OssLibrary,
   parent: ViewGroup,
   callback: AboutItemActionsView.Callback
-) : BaseUiView<Callback>(parent, callback), BaseAboutItem {
+) : BaseUiView<Callback>(parent, callback) {
 
   private val viewLicense by lazyView<Button>(R.id.action_view_license)
   private val visitHomepage by lazyView<Button>(R.id.action_visit_homepage)
@@ -38,11 +40,10 @@ internal class AboutItemActionsView internal constructor(
 
   override val layoutRoot by lazyView<View>(R.id.about_actions)
 
-  override fun onTeardown() {
-    unbind()
-  }
-
-  override fun bind(model: OssLibrary) {
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     viewLicense.setOnDebouncedClickListener {
       callback.onViewLicenseClicked(model.name, model.licenseUrl)
     }
@@ -52,7 +53,7 @@ internal class AboutItemActionsView internal constructor(
     }
   }
 
-  override fun unbind() {
+  override fun onTeardown() {
     viewLicense.setOnDebouncedClickListener(null)
     visitHomepage.setOnDebouncedClickListener(null)
   }

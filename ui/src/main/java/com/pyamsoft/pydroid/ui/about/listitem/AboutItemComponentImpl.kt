@@ -18,16 +18,18 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal class AboutItemComponentImpl internal constructor(
-  private val parent: ViewGroup
+  private val parent: ViewGroup,
+  private val model: OssLibrary
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
-    val presenter = AboutItemPresenterImpl()
-    val aboutTitleView = AboutItemTitleView(parent)
-    val aboutActionsView = AboutItemActionsView(parent, presenter)
-    val aboutDescriptionView = AboutItemDescriptionView(parent)
+    val presenter = AboutItemBinder()
+    val aboutTitleView = AboutItemTitleView(model, parent)
+    val aboutActionsView = AboutItemActionsView(model, parent, presenter)
+    val aboutDescriptionView = AboutItemDescriptionView(model, parent)
 
     viewHolder.apply {
       this.component = AboutViewHolderUiComponentImpl(

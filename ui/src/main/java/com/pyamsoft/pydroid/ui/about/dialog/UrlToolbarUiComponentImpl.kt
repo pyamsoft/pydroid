@@ -28,10 +28,10 @@ import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 internal class UrlToolbarUiComponentImpl internal constructor(
   private val toolbar: UrlToolbarView,
   private val dropshadow: DropshadowView,
-  private val presenter: UrlToolbarPresenter
+  private val binder: UrlToolbarBinder
 ) : BaseUiComponent<UrlToolbarUiComponent.Callback>(),
     UrlToolbarUiComponent,
-    UrlToolbarPresenter.Callback {
+    UrlToolbarBinder.Callback {
 
   override fun id(): Int {
     return toolbar.id()
@@ -45,12 +45,12 @@ internal class UrlToolbarUiComponentImpl internal constructor(
     owner.doOnDestroy {
       toolbar.teardown()
       dropshadow.teardown()
-      presenter.unbind()
+      binder.unbind()
     }
 
     toolbar.inflate(savedInstanceState)
     dropshadow.inflate(savedInstanceState)
-    presenter.bind(this)
+    binder.bind(this)
   }
 
   override fun onLayout(set: ConstraintSet) {
@@ -67,11 +67,11 @@ internal class UrlToolbarUiComponentImpl internal constructor(
     dropshadow.saveState(outState)
   }
 
-  override fun onNavigationEvent() {
+  override fun handleNavigationEvent() {
     callback.onCancelViewing()
   }
 
-  override fun onViewLicenseExternal(url: String) {
+  override fun handleViewLicenseExternal(url: String) {
     callback.onNavigateToExternalUrl(url)
   }
 

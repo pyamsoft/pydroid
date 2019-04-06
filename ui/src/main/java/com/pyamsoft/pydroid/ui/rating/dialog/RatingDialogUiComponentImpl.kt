@@ -23,18 +23,18 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogUiComponent.Callback
 
 internal class RatingDialogUiComponentImpl internal constructor(
-  private val presenter: RatingDialogPresenter,
+  private val binder: RatingDialogBinder,
   private val iconView: RatingIconView,
   private val changelogView: RatingChangelogView,
   private val controlsView: RatingControlsView,
-  private val failedNavigationPresenter: FailedNavigationPresenter
+  private val failedNavigationBinder: FailedNavigationBinder
 ) : BaseUiComponent<RatingDialogUiComponent.Callback>(),
     RatingDialogUiComponent,
-    RatingDialogPresenter.Callback {
+    RatingDialogBinder.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -49,13 +49,13 @@ internal class RatingDialogUiComponentImpl internal constructor(
       iconView.teardown()
       changelogView.teardown()
       controlsView.teardown()
-      presenter.unbind()
+      binder.unbind()
     }
 
     iconView.inflate(savedInstanceState)
     changelogView.inflate(savedInstanceState)
     controlsView.inflate(savedInstanceState)
-    presenter.bind(this)
+    binder.bind(this)
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -65,14 +65,14 @@ internal class RatingDialogUiComponentImpl internal constructor(
   }
 
   override fun navigationFailed(error: ActivityNotFoundException) {
-    failedNavigationPresenter.failedNavigation(error)
+    failedNavigationBinder.failedNavigation(error)
   }
 
-  override fun onVisitApplicationPageToRate(packageName: String) {
+  override fun handleVisitApplicationPageToRate(packageName: String) {
     callback.onNavigateToApplicationPage(packageName)
   }
 
-  override fun onDidNotRate() {
+  override fun handleDidNotRate() {
     callback.onCancelRating()
   }
 

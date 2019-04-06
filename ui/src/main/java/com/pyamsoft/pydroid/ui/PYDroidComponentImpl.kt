@@ -25,6 +25,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.bus.RxBus
@@ -32,7 +33,6 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.LicenseLoadState
 import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
 import com.pyamsoft.pydroid.ui.about.dialog.UrlComponentImpl
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState
@@ -41,12 +41,11 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.rating.RatingPresenterImpl
+import com.pyamsoft.pydroid.ui.rating.RatingBinder
 import com.pyamsoft.pydroid.ui.rating.RatingUiComponentImpl
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingSavedEvent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponentImpl
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -67,11 +66,7 @@ internal class PYDroidComponentImpl internal constructor(
 
   private val ratingStateBus = RxBus.create<ShowRating>()
 
-  private val ratingDialogStateBus = RxBus.create<RatingSavedEvent>()
-
   private val versionStateBus = RxBus.create<VersionCheckState>()
-
-  private val aboutStateBus = RxBus.create<LicenseLoadState>()
 
   private val webviewStateBus = RxBus.create<UrlWebviewState>()
 
@@ -87,7 +82,7 @@ internal class PYDroidComponentImpl internal constructor(
   private val navigationModule by lazy { FailedNavigationModule() }
 
   override fun inject(activity: RatingActivity) {
-    val presenter = RatingPresenterImpl(ratingModule.interactor, schedulerProvider, ratingStateBus)
+    val presenter = RatingBinder(ratingModule.interactor, schedulerProvider, ratingStateBus)
 
     activity.apply {
       this.ratingComponent = RatingUiComponentImpl(presenter)
@@ -102,8 +97,11 @@ internal class PYDroidComponentImpl internal constructor(
       navigationModule.bus
   )
 
-  override fun plusAboutItemComponent(parent: ViewGroup): AboutItemComponent =
-    AboutItemComponentImpl(parent)
+  override fun plusAboutItemComponent(
+    parent: ViewGroup,
+    model: OssLibrary
+  ): AboutItemComponent =
+    AboutItemComponentImpl(parent, model)
 
   override fun plusVersionUpgradeComponent(
     parent: ViewGroup,
@@ -128,8 +126,7 @@ internal class PYDroidComponentImpl internal constructor(
     backstackCount: Int,
     parent: ViewGroup
   ): AboutComponent = AboutComponentImpl(
-      aboutModule.interactor, toolbarActivity, backstackCount, parent, owner, aboutStateBus,
-      schedulerProvider
+      aboutModule.interactor, toolbarActivity, backstackCount, parent, owner, schedulerProvider
   )
 
   override fun plusViewLicenseComponent(
@@ -150,7 +147,7 @@ internal class PYDroidComponentImpl internal constructor(
   ): RatingDialogComponent = RatingDialogComponentImpl(
       ratingModule.interactor, loaderModule.provideImageLoader(), schedulerProvider,
       parent, rateLink, changelogIcon, changelog,
-      ratingDialogStateBus, navigationModule.bus
+      navigationModule.bus
   )
 
   override fun schedulerProvider(): SchedulerProvider {

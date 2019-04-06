@@ -15,18 +15,33 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.dialog
+package com.pyamsoft.pydroid.ui.version.upgrade
 
-import com.pyamsoft.pydroid.arch.Presenter
-import com.pyamsoft.pydroid.ui.about.dialog.UrlToolbarPresenter.Callback
+import com.pyamsoft.pydroid.arch.UiBinder
 
-internal interface UrlToolbarPresenter : Presenter<Callback> {
+internal class VersionUpgradeBinder internal constructor(
+) : UiBinder<VersionUpgradeBinder.Callback>(),
+    VersionUpgradeControlView.Callback {
 
-  interface Callback {
+  override fun onBind() {
+  }
 
-    fun onNavigationEvent()
+  override fun onUnbind() {
+  }
 
-    fun onViewLicenseExternal(url: String)
+  override fun onUpgradeClicked() {
+    callback.handleUpgradeBegin()
+  }
+
+  override fun onCancelClicked() {
+    callback.handleUpgradeCancel()
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun handleUpgradeBegin()
+
+    fun handleUpgradeCancel()
 
   }
 }

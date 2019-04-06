@@ -21,10 +21,9 @@ sealed class UrlWebviewState {
 
   object Loading : UrlWebviewState()
 
-  data class PageLoaded(
-    val url: String,
-    val targetPage: Boolean
-  ) : UrlWebviewState()
+  data class PageLoaded(val url: String) : UrlWebviewState()
+
+  data class PageError(val url: String) : UrlWebviewState()
 
   data class ExternalNavigation(val url: String) : UrlWebviewState()
 

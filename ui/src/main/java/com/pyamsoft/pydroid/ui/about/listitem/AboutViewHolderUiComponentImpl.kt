@@ -21,7 +21,6 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent.Callback
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 
@@ -29,10 +28,10 @@ internal class AboutViewHolderUiComponentImpl internal constructor(
   private val titleView: AboutItemTitleView,
   private val actionsView: AboutItemActionsView,
   private val descriptionView: AboutItemDescriptionView,
-  private val presenter: AboutItemPresenter
+  private val binder: AboutItemBinder
 ) : BaseUiComponent<AboutViewHolderUiComponent.Callback>(),
     AboutViewHolderUiComponent,
-    AboutItemPresenter.Callback {
+    AboutItemBinder.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -43,38 +42,27 @@ internal class AboutViewHolderUiComponentImpl internal constructor(
     savedInstanceState: Bundle?,
     callback: Callback
   ) {
+    owner.doOnDestroy {
+      titleView.teardown()
+      actionsView.teardown()
+      descriptionView.teardown()
+      binder.unbind()
+    }
+
     titleView.inflate(savedInstanceState)
     actionsView.inflate(savedInstanceState)
     descriptionView.inflate(savedInstanceState)
-
-    // Do not call teardown, this lifecycle is controlled by bind() unbind()
+    binder.bind(this)
   }
 
-  override fun bind(
-    owner: LifecycleOwner,
-    model: OssLibrary
-  ) {
-    owner.doOnDestroy {
-      titleView.unbind()
-      actionsView.unbind()
-      descriptionView.unbind()
-      presenter.unbind()
-    }
-
-    titleView.bind(model)
-    actionsView.bind(model)
-    descriptionView.bind(model)
-    presenter.bind(this)
-  }
-
-  override fun onViewLicense(
+  override fun handleViewLicense(
     name: String,
     licenseUrl: String
   ) {
     callback.showLicense(name, licenseUrl)
   }
 
-  override fun onVisitHomepage(
+  override fun handleVisitHomepage(
     name: String,
     homepageUrl: String
   ) {

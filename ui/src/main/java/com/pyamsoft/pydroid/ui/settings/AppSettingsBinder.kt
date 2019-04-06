@@ -17,16 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import com.pyamsoft.pydroid.arch.BasePresenter
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.ui.settings.AppSettingsPresenter.Callback
+import com.pyamsoft.pydroid.arch.UiBinder
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
-internal class AppSettingsPresenterImpl internal constructor(
+internal class AppSettingsBinder internal constructor(
   private val theming: Theming
-) : BasePresenter<Unit, Callback>(RxBus.empty()),
-    AppSettingsPresenter, AppSettingsView.Callback {
+) : UiBinder<AppSettingsBinder.Callback>(),
+    AppSettingsView.Callback {
 
   override fun onBind() {
   }
@@ -35,43 +33,66 @@ internal class AppSettingsPresenterImpl internal constructor(
   }
 
   override fun onMoreAppsClicked() {
-    callback.onViewMorePyamsoftApps()
+    callback.handleViewMorePyamsoftApps()
   }
 
   override fun onShowUpgradeInfoClicked() {
-    callback.onShowUpgradeInfo()
+    callback.handleShowUpgradeInfo()
   }
 
   override fun onDarkThemeToggled(dark: Boolean) {
-    theming.setDarkTheme(dark) { callback.onDarkThemeChanged(it) }
+    theming.setDarkTheme(dark) { callback.handleDarkThemeChanged(it) }
   }
 
   override fun onFollowSocialClicked(link: HyperlinkIntent) {
-    callback.onShowSocialMedia(link)
+    callback.handleShowSocialMedia(link)
   }
 
   override fun onClearAppDataClicked() {
-    callback.onClearAppData()
+    callback.handleClearAppData()
   }
 
   override fun onCheckUpgradeClicked() {
-    callback.onCheckUpgrade()
+    callback.handleCheckUpgrade()
   }
 
   override fun onViewLicensesClicked() {
-    callback.onViewLicenses()
+    callback.handleViewLicenses()
   }
 
   override fun onBugReportClicked(link: HyperlinkIntent) {
-    callback.onOpenBugReport(link)
+    callback.handleOpenBugReport(link)
   }
 
   override fun onRateAppClicked() {
-    callback.onRateApp()
+    callback.handleRateApp()
   }
 
   override fun onFollowBlogClicked(link: HyperlinkIntent) {
-    callback.onShowBlog(link)
+    callback.handleShowBlog(link)
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun handleViewMorePyamsoftApps()
+
+    fun handleShowUpgradeInfo()
+
+    fun handleDarkThemeChanged(dark: Boolean)
+
+    fun handleShowSocialMedia(link: HyperlinkIntent)
+
+    fun handleClearAppData()
+
+    fun handleCheckUpgrade()
+
+    fun handleViewLicenses()
+
+    fun handleOpenBugReport(link: HyperlinkIntent)
+
+    fun handleRateApp()
+
+    fun handleShowBlog(link: HyperlinkIntent)
   }
 
 }

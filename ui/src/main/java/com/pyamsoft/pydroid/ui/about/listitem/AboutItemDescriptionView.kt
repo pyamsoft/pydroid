@@ -17,6 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
@@ -26,25 +28,25 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
+  private val model: OssLibrary,
   parent: ViewGroup
-) : BaseUiView<Unit>(parent, Unit), BaseAboutItem {
+) : BaseUiView<Unit>(parent, Unit) {
 
   override val layout: Int = R.layout.about_item_description
 
   override val layoutRoot by lazyView<TextView>(R.id.about_description)
 
-  override fun onTeardown() {
-    unbind()
-  }
-
-  override fun bind(model: OssLibrary) {
+  override fun onInflated(
+    view: View,
+    savedInstanceState: Bundle?
+  ) {
     layoutRoot.apply {
       text = model.description
       isVisible = model.description.isNotBlank()
     }
   }
 
-  override fun unbind() {
+  override fun onTeardown() {
     layoutRoot.apply {
       text = ""
       isGone = true

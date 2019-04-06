@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
 
 internal class VersionComponentImpl internal constructor(
   private val owner: LifecycleOwner,
@@ -35,9 +35,9 @@ internal class VersionComponentImpl internal constructor(
 ) : VersionComponent {
 
   override fun inject(activity: VersionCheckActivity) {
-    val presenter = VersionCheckPresenterImpl(interactor, schedulerProvider, bus)
+    val presenter = VersionCheckPresenter(interactor, schedulerProvider, bus)
     val view = VersionView(view, owner)
-    val failed = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
+    val failed = FailedNavigationBinder(schedulerProvider, failedNavBus)
 
     activity.apply {
       this.versionComponent = VersionCheckUiComponentImpl(failed, presenter, view)

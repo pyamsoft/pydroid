@@ -23,17 +23,17 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeUiComponent.Callback
 
 internal class VersionUpgradeUiComponentImpl internal constructor(
   private val controlsView: VersionUpgradeControlView,
   private val contentView: VersionUpgradeContentView,
-  private val failedNavigationPresenter: FailedNavigationPresenter,
-  private val presenter: VersionUpgradePresenter
+  private val failedNavigationBinder: FailedNavigationBinder,
+  private val binder: VersionUpgradeBinder
 ) : BaseUiComponent<VersionUpgradeUiComponent.Callback>(),
     VersionUpgradeUiComponent,
-    VersionUpgradePresenter.Callback {
+    VersionUpgradeBinder.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -47,12 +47,12 @@ internal class VersionUpgradeUiComponentImpl internal constructor(
     owner.doOnDestroy {
       contentView.teardown()
       controlsView.teardown()
-      presenter.unbind()
+      binder.unbind()
     }
 
     contentView.inflate(savedInstanceState)
     controlsView.inflate(savedInstanceState)
-    presenter.bind(this)
+    binder.bind(this)
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -60,16 +60,16 @@ internal class VersionUpgradeUiComponentImpl internal constructor(
     controlsView.saveState(outState)
   }
 
-  override fun onUpgradeBegin() {
+  override fun handleUpgradeBegin() {
     callback.onNavigateToMarket()
   }
 
-  override fun onUpgradeCancel() {
+  override fun handleUpgradeCancel() {
     callback.onCancelUpgrade()
   }
 
   override fun navigationFailed(error: ActivityNotFoundException) {
-    failedNavigationPresenter.failedNavigation(error)
+    failedNavigationBinder.failedNavigation(error)
   }
 
 }

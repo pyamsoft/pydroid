@@ -17,11 +17,41 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface Presenter<C : Any> {
+import androidx.annotation.CheckResult
 
-  fun bind(callback: C)
+abstract class Presenter<T : Any, C : Presenter.Callback<T>> protected constructor(
 
-  fun unbind()
+) : UiBinder<C>() {
 
+  private var state: ViewState<T>? = null
+
+  @CheckResult
+  protected abstract fun initialState(): T
+
+  protected fun setState(func: T.() -> Unit) {
+    val oldState = state
+    val newState = nonNullState(oldState).state.apply(func)
+    state = ViewState(newState)
+    callback.onRender(newState, oldState?.state)
+  }
+
+  @CheckResult
+  private fun nonNullState(state: ViewState<T>?): ViewState<T> {
+    if (state == null) {
+      return ViewState(initialState())
+    } else {
+      return state.copy()
+    }
+  }
+
+  interface Callback<T : Any> : UiBinder.Callback {
+
+    fun onRender(
+      state: T,
+      oldState: T?
+    )
+
+  }
+
+  private data class ViewState<M : Any>(val state: M)
 }
-

@@ -23,21 +23,22 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter
-import com.pyamsoft.pydroid.ui.rating.RatingPresenter
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.rating.RatingBinder
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
 internal class AppSettingsUiComponentImpl internal constructor(
   private val settingsView: AppSettingsView,
   private val versionPresenter: VersionCheckPresenter,
-  private val ratingPresenter: RatingPresenter,
-  private val settingsPresenter: AppSettingsPresenter,
-  private val failedNavPresenter: FailedNavigationPresenter
+  private val ratingBinder: RatingBinder,
+  private val settingsBinder: AppSettingsBinder,
+  private val failedNavBinder: FailedNavigationBinder
 ) : BaseUiComponent<AppSettingsUiComponent.Callback>(),
     AppSettingsUiComponent,
-    AppSettingsPresenter.Callback,
+    AppSettingsBinder.Callback,
     VersionCheckPresenter.Callback {
 
   override fun id(): Int {
@@ -52,12 +53,12 @@ internal class AppSettingsUiComponentImpl internal constructor(
     owner.doOnDestroy {
       settingsView.teardown()
       versionPresenter.unbind()
-      settingsPresenter.unbind()
+      settingsBinder.unbind()
     }
 
     settingsView.inflate(savedInstanceState)
     versionPresenter.bind(this)
-    settingsPresenter.bind(this)
+    settingsBinder.bind(this)
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -65,66 +66,54 @@ internal class AppSettingsUiComponentImpl internal constructor(
   }
 
   override fun failedNavigation(error: ActivityNotFoundException) {
-    failedNavPresenter.failedNavigation(error)
+    failedNavBinder.failedNavigation(error)
   }
 
-  override fun onViewMorePyamsoftApps() {
+  override fun handleViewMorePyamsoftApps() {
     callback.onViewMorePyamsoftApps()
   }
 
-  override fun onShowUpgradeInfo() {
-    ratingPresenter.load(true)
+  override fun handleShowUpgradeInfo() {
+    ratingBinder.load(true)
   }
 
-  override fun onDarkThemeChanged(dark: Boolean) {
+  override fun handleDarkThemeChanged(dark: Boolean) {
     callback.onDarkThemeChanged(dark)
   }
 
-  override fun onShowSocialMedia(link: HyperlinkIntent) {
+  override fun handleShowSocialMedia(link: HyperlinkIntent) {
     callback.onNavigateToLink(link)
   }
 
-  override fun onClearAppData() {
+  override fun handleClearAppData() {
     callback.onClearAppData()
   }
 
-  override fun onCheckUpgrade() {
+  override fun handleCheckUpgrade() {
     versionPresenter.checkForUpdates(true)
   }
 
-  override fun onViewLicenses() {
+  override fun handleViewLicenses() {
     callback.onViewLicenses()
   }
 
-  override fun onOpenBugReport(link: HyperlinkIntent) {
+  override fun handleOpenBugReport(link: HyperlinkIntent) {
     callback.onNavigateToLink(link)
   }
 
-  override fun onRateApp() {
+  override fun handleRateApp() {
     callback.onRateApp()
   }
 
-  override fun onShowBlog(link: HyperlinkIntent) {
+  override fun handleShowBlog(link: HyperlinkIntent) {
     callback.onNavigateToLink(link)
   }
 
-  override fun onVersionCheckBegin(forced: Boolean) {
-    Timber.d("onVersionCheckBegin handled by VersionActivity")
-  }
-
-  override fun onVersionCheckFound(
-    currentVersion: Int,
-    newVersion: Int
+  override fun onRender(
+    state: VersionState,
+    oldState: VersionState?
   ) {
-    Timber.d("onVersionCheckFound handled by VersionActivity")
-  }
-
-  override fun onVersionCheckError(throwable: Throwable) {
-    Timber.d("onVersionCheckError handled by VersionActivity")
-  }
-
-  override fun onVersionCheckComplete() {
-    Timber.d("onVersionCheckComplete handled by VersionActivity")
+    Timber.d("VersionState onRender handled by VersionCheckActivity")
   }
 
 }

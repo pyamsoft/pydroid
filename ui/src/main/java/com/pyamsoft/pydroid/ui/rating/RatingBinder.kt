@@ -15,55 +15,50 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating.dialog
+package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.arch.BasePresenter
+import com.pyamsoft.pydroid.arch.UiBinder
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogPresenter.Callback
 
-internal class RatingDialogPresenterImpl internal constructor(
+internal class RatingBinder internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider,
-  bus: EventBus<RatingSavedEvent>
-) : BasePresenter<RatingSavedEvent, Callback>(bus),
-    RatingDialogPresenter, RatingControlsView.Callback {
+  private val bus: EventBus<ShowRating>
+) : UiBinder<RatingBinder.Callback>() {
 
-  private var saveDisposable by singleDisposable()
+  private var loadDisposable by singleDisposable()
 
   override fun onBind() {
-    listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe {
-          return@subscribe when (it.rateApplication) {
-            true -> callback.onVisitApplicationPageToRate(it.packageName)
-            false -> callback.onDidNotRate()
-          }
-        }
-        .destroy()
+    listenForDialogRequests()
+    load(false)
   }
 
   override fun onUnbind() {
-    saveDisposable.tryDispose()
+    loadDisposable.tryDispose()
   }
 
-  override fun onRateApplicationClicked(link: String) {
-    save(link)
-  }
-
-  override fun onNotRatingApplication() {
-    save("")
-  }
-
-  private fun save(link: String) {
-    saveDisposable = interactor.saveRating()
+  private fun listenForDialogRequests() {
+    bus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { publish(RatingSavedEvent(link.isNotBlank(), link)) }
+        .subscribe { callback.handleShowRating() }
+        .destroy()
+  }
+
+  fun load(force: Boolean) {
+    loadDisposable = interactor.needsToViewRating(force)
+        .subscribeOn(schedulerProvider.backgroundScheduler)
+        .observeOn(schedulerProvider.foregroundScheduler)
+        .subscribe { bus.publish(ShowRating) }
+  }
+
+  interface Callback : UiBinder.Callback {
+
+    fun handleShowRating()
   }
 
 }

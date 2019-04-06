@@ -25,10 +25,10 @@ import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.rating.RatingUiComponent.Callback
 
 internal class RatingUiComponentImpl internal constructor(
-  private val presenter: RatingPresenter
+  private val binder: RatingBinder
 ) : BaseUiComponent<RatingUiComponent.Callback>(),
     RatingUiComponent,
-    RatingPresenter.Callback {
+    RatingBinder.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -40,16 +40,16 @@ internal class RatingUiComponentImpl internal constructor(
     callback: Callback
   ) {
     owner.doOnDestroy {
-      presenter.unbind()
+      binder.unbind()
     }
 
-    presenter.bind(this)
+    binder.bind(this)
   }
 
   override fun onSaveState(outState: Bundle) {
   }
 
-  override fun onShowRating() {
+  override fun handleShowRating() {
     callback.onShowRating()
   }
 

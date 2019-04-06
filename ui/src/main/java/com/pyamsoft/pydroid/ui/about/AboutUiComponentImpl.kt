@@ -21,7 +21,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.about.AboutPresenter.AboutState
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
@@ -59,32 +59,70 @@ internal class AboutUiComponentImpl internal constructor(
     spinner.saveState(outState)
   }
 
-  override fun onLicenseLoadBegin() {
-    listView.hide()
-    spinner.show()
+  override fun onRender(
+    state: AboutState,
+    oldState: AboutState?
+  ) {
+    renderLoading(state, oldState)
+    renderList(state, oldState)
+    renderError(state, oldState)
   }
 
-  override fun onLicensesLoaded(licenses: List<OssLibrary>) {
-    listView.loadLicenses(licenses)
+  private fun renderLoading(
+    state: AboutState,
+    oldState: AboutState?
+  ) {
+    state.isLoading.let { loading ->
+      if (oldState == null || loading != oldState.isLoading) {
+        if (loading) {
+          listView.hide()
+          spinner.show()
+        } else {
+          spinner.hide()
+          listView.show()
+        }
+      }
+    }
   }
 
-  override fun onLicenseLoadError(throwable: Throwable) {
-    listView.showError(throwable)
+  private fun renderList(
+    state: AboutState,
+    oldState: AboutState?
+  ) {
+    state.licenses.let { licenses ->
+      if (oldState == null || licenses != oldState.licenses) {
+        if (licenses.isEmpty()) {
+          listView.clearLicenses()
+        } else {
+          listView.loadLicenses(licenses)
+        }
+      }
+    }
   }
 
-  override fun onLicenseLoadComplete() {
-    spinner.hide()
-    listView.show()
+  private fun renderError(
+    state: AboutState,
+    oldState: AboutState?
+  ) {
+    state.throwable.let { throwable ->
+      if (oldState == null || throwable != oldState.throwable) {
+        if (throwable == null) {
+          listView.clearError()
+        } else {
+          listView.showError(throwable)
+        }
+      }
+    }
   }
 
-  override fun onViewLicense(
+  override fun handleViewLicense(
     name: String,
     licenseUrl: String
   ) {
     callback.showLicense(name, licenseUrl)
   }
 
-  override fun onVisitHomepage(
+  override fun handleVisitHomepage(
     name: String,
     homepageUrl: String
   ) {

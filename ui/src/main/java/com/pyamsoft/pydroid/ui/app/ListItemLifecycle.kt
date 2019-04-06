@@ -15,19 +15,28 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.navigation
+package com.pyamsoft.pydroid.ui.app
 
-import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.Presenter
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenter.Callback
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import com.pyamsoft.pydroid.util.fakeBind
+import com.pyamsoft.pydroid.util.fakeUnbind
 
-interface FailedNavigationPresenter : Presenter<Callback> {
+internal class ListItemLifecycle internal constructor() : LifecycleOwner {
 
-  fun failedNavigation(error: ActivityNotFoundException)
+  private val registry = LifecycleRegistry(this)
 
-  interface Callback {
-
-    fun onFailedNavigation(error: ActivityNotFoundException)
-
+  override fun getLifecycle(): Lifecycle {
+    return registry
   }
+
+  fun bind() {
+    registry.fakeBind()
+  }
+
+  fun unbind() {
+    registry.fakeUnbind()
+  }
+
 }

@@ -23,11 +23,11 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationPresenterImpl
-import com.pyamsoft.pydroid.ui.rating.RatingPresenterImpl
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.rating.RatingBinder
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenterImpl
+import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.ui.version.VersionCheckState
 
 internal class AppSettingsComponentImpl internal constructor(
@@ -46,16 +46,16 @@ internal class AppSettingsComponentImpl internal constructor(
 ) : AppSettingsComponent {
 
   override fun inject(fragment: AppSettingsPreferenceFragment) {
-    val presenter = AppSettingsPresenterImpl(theming)
+    val presenter = AppSettingsBinder(theming)
     val settingsView = AppSettingsView(
         theming, applicationName, bugreportUrl, hideClearAll,
         hideUpgradeInformation, preferenceScreen, presenter
     )
-    val failed = FailedNavigationPresenterImpl(schedulerProvider, failedNavBus)
-    val versionPresenter = VersionCheckPresenterImpl(
+    val failed = FailedNavigationBinder(schedulerProvider, failedNavBus)
+    val versionPresenter = VersionCheckPresenter(
         versionCheckInteractor, schedulerProvider, versionCheckBus
     )
-    val ratingPresenter = RatingPresenterImpl(
+    val ratingPresenter = RatingBinder(
         ratingInteractor, schedulerProvider, ratingStateBus
     )
 

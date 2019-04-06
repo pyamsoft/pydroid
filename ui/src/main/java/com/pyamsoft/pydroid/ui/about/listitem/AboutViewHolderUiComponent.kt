@@ -17,16 +17,9 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UiComponent
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal interface AboutViewHolderUiComponent : UiComponent<AboutViewHolderUiComponent.Callback> {
-
-  fun bind(
-    owner: LifecycleOwner,
-    model: OssLibrary
-  )
 
   interface Callback {
 

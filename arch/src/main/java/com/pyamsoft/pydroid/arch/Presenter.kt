@@ -23,25 +23,21 @@ abstract class Presenter<T : Any, C : Presenter.Callback<T>> protected construct
 
 ) : UiBinder<C>() {
 
-  private var state: ViewState<T>? = null
+  private var state: T? = null
 
   @CheckResult
   protected abstract fun initialState(): T
 
-  protected fun setState(func: T.() -> Unit) {
+  protected fun setState(func: T.() -> T) {
     val oldState = state
-    val newState = nonNullState(oldState).state.apply(func)
-    state = ViewState(newState)
-    callback.onRender(newState, oldState?.state)
+    val newState = nonNullState(oldState).run(func)
+    state = newState
+    callback.onRender(newState, oldState)
   }
 
   @CheckResult
-  private fun nonNullState(state: ViewState<T>?): ViewState<T> {
-    if (state == null) {
-      return ViewState(initialState())
-    } else {
-      return state.copy()
-    }
+  private fun nonNullState(state: T?): T {
+    return state ?: initialState()
   }
 
   interface Callback<T : Any> : UiBinder.Callback {
@@ -52,6 +48,4 @@ abstract class Presenter<T : Any, C : Presenter.Callback<T>> protected construct
     )
 
   }
-
-  private data class ViewState<M : Any>(val state: M)
 }

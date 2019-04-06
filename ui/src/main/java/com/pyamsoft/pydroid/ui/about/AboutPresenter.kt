@@ -60,29 +60,27 @@ internal class AboutPresenter internal constructor(
 
   private fun handleLicenseLoadBegin() {
     setState {
-      this.isLoading = true
+      copy(isLoading = true)
     }
   }
 
   private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
     setState {
-      this.licenses = licenses
-      this.throwable = null
+      copy(licenses = licenses, throwable = null)
     }
 
   }
 
   private fun handleLicenseLoadError(throwable: Throwable) {
     setState {
-      this.licenses = emptyList()
-      this.throwable = throwable
+      copy(licenses = emptyList(), throwable = throwable)
     }
 
   }
 
   private fun handleLicenseLoadComplete() {
     setState {
-      this.isLoading = false
+      copy(isLoading = false)
     }
   }
 
@@ -101,9 +99,9 @@ internal class AboutPresenter internal constructor(
   }
 
   data class AboutState(
-    var isLoading: Boolean,
-    var throwable: Throwable?,
-    var licenses: List<OssLibrary>
+    val isLoading: Boolean,
+    val throwable: Throwable?,
+    val licenses: List<OssLibrary>
   )
 
   interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<AboutState> {

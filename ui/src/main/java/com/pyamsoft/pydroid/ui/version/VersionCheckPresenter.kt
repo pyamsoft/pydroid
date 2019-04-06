@@ -70,7 +70,7 @@ internal class VersionCheckPresenter internal constructor(
 
   private fun handleVersionCheckBegin(forced: Boolean) {
     setState {
-      this.isLoading = Loading(forced)
+      copy(isLoading = Loading(forced))
     }
   }
 
@@ -79,21 +79,19 @@ internal class VersionCheckPresenter internal constructor(
     newVersion: Int
   ) {
     setState {
-      this.upgrade = UpgradePayload(currentVersion, newVersion)
-      this.throwable = null
+      copy(upgrade = UpgradePayload(currentVersion, newVersion), throwable = null)
     }
   }
 
   private fun handleVersionCheckError(throwable: Throwable) {
     setState {
-      this.upgrade = null
-      this.throwable = throwable
+      copy(upgrade = null, throwable = throwable)
     }
   }
 
   private fun handleVersionCheckComplete() {
     setState {
-      this.isLoading = null
+      copy(isLoading = null)
     }
   }
 
@@ -110,9 +108,9 @@ internal class VersionCheckPresenter internal constructor(
   }
 
   data class VersionState(
-    var isLoading: Loading?,
-    var throwable: Throwable?,
-    var upgrade: UpgradePayload?
+    val isLoading: Loading?,
+    val throwable: Throwable?,
+    val upgrade: UpgradePayload?
   ) {
 
     data class Loading(val forced: Boolean)

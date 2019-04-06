@@ -55,30 +55,26 @@ internal class UrlPresenter internal constructor(
 
   private fun handleWebviewBegin() {
     setState {
-      this.isLoading = true
+      copy(isLoading = true)
     }
   }
 
   private fun handlePageLoaded(url: String) {
     setState {
-      this.isLoading = false
-      this.reachedTargetPage = true
-      this.url = url
+      copy(isLoading = false, reachedTargetPage = true, url = url)
     }
   }
 
   private fun handlePageError(url: String) {
     setState {
-      this.isLoading = false
-      this.reachedTargetPage = false
-      this.url = url
+      copy(isLoading = false, reachedTargetPage = false, url = url)
     }
   }
 
   data class UrlState(
-    var isLoading: Boolean,
-    var reachedTargetPage: Boolean,
-    var url: String
+    val isLoading: Boolean,
+    val reachedTargetPage: Boolean,
+    val url: String
   )
 
   interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<UrlState> {

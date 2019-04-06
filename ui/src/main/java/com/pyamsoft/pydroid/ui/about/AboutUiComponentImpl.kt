@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.ui.about.AboutPresenter.AboutState
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
+import timber.log.Timber
 
 internal class AboutUiComponentImpl internal constructor(
   private val listView: AboutListView,

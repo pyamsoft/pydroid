@@ -34,9 +34,9 @@ object OssLibraries {
 
   private fun addCoreLibraries() {
     add(
-        "PYDroid",
+        "PYDroid Core",
         "https://github.com/pyamsoft/pydroid",
-        "The pyamsoft Android library. Standard on all pyamsoft applications."
+        "The core PYDroid library, providing the building blocks for extension libraries"
     )
     add(
         "Android SDK",
@@ -82,6 +82,11 @@ object OssLibraries {
 
   private fun addUtilLibraries() {
     add(
+        "PYDroid Util",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid util extensions for easier data manipulation"
+    )
+    add(
         "AndroidX Core",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/",
         "The AndroidX Jetpack Core library. Degrade gracefully on older versions of Android."
@@ -89,6 +94,11 @@ object OssLibraries {
   }
 
   private fun addBootstrapLibraries() {
+    add(
+        "PYDroid Bootstrap",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid bootstrap extensions for quickly spinning up new applications"
+    )
     add(
         "Retrofit",
         "https://square.github.io/retrofit/",
@@ -114,6 +124,11 @@ object OssLibraries {
 
   private fun addUiLibraries() {
     add(
+        "PYDroid UI",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid reference implementation for various UI components"
+    )
+    add(
         "AndroidX KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
         "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code."
@@ -122,11 +137,6 @@ object OssLibraries {
         "AndroidX RecyclerView",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/recyclerview/",
         "The AndroidX Jetpack RecyclerView library. Create efficient list views."
-    )
-    add(
-        "AndroidX Constraint Layout",
-        "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
-        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way."
     )
     add(
         "AndroidX Vector Drawable",
@@ -152,9 +162,27 @@ object OssLibraries {
 
   private fun addLoaderLibraries() {
     add(
+        "PYDroid Loader",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid image loader abstraction library"
+    )
+    add(
         "Glide",
         "https://github.com/bumptech/glide",
         "An image loading and caching library for Android focused on smooth scrolling."
+    )
+  }
+
+  private fun addArchLibraries() {
+    add(
+        "PYDroid Arch",
+        "https://github.com/pyamsoft/pydroid",
+        "PYDroid standard architecture for a UiComponent based, Presenter driven, reactive MVI UI design pattern"
+    )
+    add(
+        "AndroidX Constraint Layout",
+        "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
+        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way."
     )
   }
 
@@ -191,6 +219,9 @@ object OssLibraries {
     }
     if (UI) {
       addUiLibraries()
+    }
+    if (ARCH) {
+      addArchLibraries()
     }
     if (LOADER) {
       addLoaderLibraries()

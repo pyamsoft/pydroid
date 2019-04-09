@@ -1,4 +1,4 @@
-# pydroidui
+# pydroid-ui
 PYDroid reference UI implementation
 
 ## What is this

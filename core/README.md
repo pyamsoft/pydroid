@@ -1,7 +1,7 @@
-# pydroid
-PYDroid library for pyamsoft applications
+# pydroid-core
+Core PYDroid library
 
 ## What is this
 
-This is the logic and data implementation of the pydroid library components.
+This is the core that all other PYDroid libraries are built on.
 

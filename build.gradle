@@ -45,6 +45,7 @@ buildscript {
     recyclerView = "1.0.0"
     fragment = "1.0.0"
     appCompat = "1.0.2"
+    webview = "1.0.0"
 
     repo = "0.4.0"
     fluidresizer = "0.0.4"

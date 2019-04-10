@@ -48,6 +48,7 @@ internal class UrlWebViewClient internal constructor(
         .orEmpty()
     val isTarget = (fixedUrl == link) || (url == link)
     if (isTarget) {
+      Timber.d("Started loading target.")
       bus.publish(Loading)
     }
   }

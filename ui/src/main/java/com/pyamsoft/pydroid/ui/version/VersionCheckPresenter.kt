@@ -121,5 +121,5 @@ internal class VersionCheckPresenter internal constructor(
     )
   }
 
-  interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<VersionState>
+  interface Callback : Presenter.Callback<VersionState>
 }

@@ -77,7 +77,7 @@ internal class UrlPresenter internal constructor(
     val url: String
   )
 
-  interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<UrlState> {
+  interface Callback : Presenter.Callback<UrlState> {
 
     fun handleWebviewExternalNavigationEvent(url: String)
 

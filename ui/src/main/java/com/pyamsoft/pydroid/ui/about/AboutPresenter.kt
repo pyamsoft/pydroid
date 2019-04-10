@@ -104,7 +104,7 @@ internal class AboutPresenter internal constructor(
     val licenses: List<OssLibrary>
   )
 
-  interface Callback : com.pyamsoft.pydroid.arch.Presenter.Callback<AboutState> {
+  interface Callback : Presenter.Callback<AboutState> {
 
     fun handleViewLicense(
       name: String,

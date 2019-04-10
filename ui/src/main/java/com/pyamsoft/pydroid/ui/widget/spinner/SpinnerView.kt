@@ -28,11 +28,11 @@ import com.pyamsoft.pydroid.ui.R
 class SpinnerView(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit),
     UiToggleView {
 
-  private val spinner by lazyView<ProgressBar>(R.id.spinner)
-
   override val layout: Int = R.layout.loading_spinner
 
   override val layoutRoot by lazyView<View>(R.id.spinner_root)
+
+  private val spinner by lazyView<ProgressBar>(R.id.spinner)
 
   override fun onTeardown() {
     spinner.isVisible = false

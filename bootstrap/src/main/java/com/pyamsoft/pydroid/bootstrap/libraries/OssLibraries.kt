@@ -129,6 +129,11 @@ object OssLibraries {
         "PYDroid reference implementation for various UI components"
     )
     add(
+        "AndroidX WebKit",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/webkit/",
+        "The AndroidX Jetpack WebKit library. Webkit compatibility library."
+    )
+    add(
         "AndroidX KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
         "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code."

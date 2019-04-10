@@ -55,9 +55,6 @@ internal class UrlUiComponentImpl internal constructor(
     webview.inflate(savedInstanceState)
     spinner.inflate(savedInstanceState)
     presenter.bind(this)
-
-    // This looks weird because the webview is the state controller and the view...
-    webview.loadUrl()
   }
 
   override fun onLayout(set: ConstraintSet) {

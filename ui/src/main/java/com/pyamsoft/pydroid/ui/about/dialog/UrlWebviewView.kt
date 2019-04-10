@@ -18,15 +18,10 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.annotation.SuppressLint
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle.Event.ON_PAUSE
 import androidx.lifecycle.Lifecycle.Event.ON_RESUME
@@ -37,11 +32,7 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiToggleView
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
-import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageError
-import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
-import timber.log.Timber
 
 internal class UrlWebviewView internal constructor(
   private val owner: LifecycleOwner,
@@ -78,65 +69,8 @@ internal class UrlWebviewView internal constructor(
   }
 
   private fun setupWebview() {
-    layoutRoot.webViewClient = object : WebViewClient() {
-
-      override fun onPageFinished(
-        view: WebView,
-        url: String
-      ) {
-        super.onPageFinished(view, url)
-        Timber.d("Loaded url: $url, looking for $link")
-        val fixedUrl = url.trimEnd('/')
-        val isTarget = (fixedUrl == link) || (url == link)
-        if (isTarget) {
-          Timber.d("Loaded target url: $fixedUrl, show layoutRoot")
-          bus.publish(PageLoaded(fixedUrl))
-        }
-
-        // If we are showing the layoutRoot and we've navigated off the url, close the dialog
-        if (layoutRoot.isVisible && fixedUrl != link) {
-          Timber.w("Navigated away from page: $fixedUrl - close dialog, and open browser")
-          bus.publish(ExternalNavigation(fixedUrl))
-        }
-      }
-
-      @RequiresApi(VERSION_CODES.M)
-      override fun onReceivedError(
-        view: WebView,
-        request: WebResourceRequest,
-        error: WebResourceError
-      ) {
-        super.onReceivedError(view, request, error)
-        Timber.e("Webview error: ${error.errorCode} ${error.description}")
-        val pageUrl = request.url.toString()
-
-        val fixedUrl = pageUrl.trimEnd('/')
-        val isTarget = (fixedUrl == link) || (pageUrl == link)
-        if (isTarget) {
-          Timber.w("Webview error occurred but target page still reached.")
-        }
-        bus.publish(PageError(fixedUrl))
-      }
-
-      @Suppress("DEPRECATION", "OverridingDeprecatedMember")
-      override fun onReceivedError(
-        view: WebView,
-        errorCode: Int,
-        description: String?,
-        failingUrl: String?
-      ) {
-        super.onReceivedError(view, errorCode, description, failingUrl)
-        Timber.e("Webview error: $errorCode $description")
-
-        val fixedUrl = failingUrl?.trimEnd('/') ?: ""
-        val isTarget = (fixedUrl == link) || (failingUrl == link)
-        if (isTarget) {
-          Timber.w("Webview error occurred but target page still reached.")
-        }
-        bus.publish(PageError(fixedUrl))
-      }
-
-    }
+    layoutRoot.webViewClient = UrlWebViewClient(link, bus) { layoutRoot.isVisible }
+    layoutRoot.loadUrl(link)
   }
 
   @SuppressLint("SetJavaScriptEnabled")
@@ -155,11 +89,6 @@ internal class UrlWebviewView internal constructor(
   override fun onTeardown() {
     owner.lifecycle.removeObserver(this)
     layoutRoot.destroy()
-  }
-
-  fun loadUrl() {
-    bus.publish(Loading)
-    layoutRoot.loadUrl(link)
   }
 
 }

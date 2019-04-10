@@ -101,14 +101,12 @@
         android:key="@string/social_media_f_key"
         android:summary="@string/social_media_f_summary"
         android:title="@string/social_media_f_title"
-        app:iconCompat="@drawable/ic_f_logo_24dp"
         />
 
     <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
         android:key="@string/social_media_b_key"
         android:summary="@string/social_media_b_summary"
         android:title="@string/social_media_b_title"
-        app:iconCompat="@drawable/ic_blog_24dp"
         />
 
   </PreferenceCategory>

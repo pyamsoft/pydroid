@@ -59,7 +59,7 @@ internal class UrlUiComponentImpl internal constructor(
 
   override fun onLayout(set: ConstraintSet) {
     spinner.also {
-      set.connect(it.id(), ConstraintSet.TOP, webview.id(), ConstraintSet.BOTTOM)
+      set.connect(it.id(), ConstraintSet.TOP, webview.id(), ConstraintSet.TOP)
       set.connect(it.id(), ConstraintSet.START, webview.id(), ConstraintSet.START)
       set.connect(it.id(), ConstraintSet.END, webview.id(), ConstraintSet.END)
       set.connect(it.id(), ConstraintSet.BOTTOM, webview.id(), ConstraintSet.BOTTOM)

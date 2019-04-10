@@ -32,10 +32,10 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiToggleView
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
 
 internal class UrlWebviewView internal constructor(
   private val owner: LifecycleOwner,
+  private val debug: Boolean,
   private val link: String,
   private val bus: EventBus<UrlWebviewState>,
   parent: ViewGroup
@@ -69,7 +69,7 @@ internal class UrlWebviewView internal constructor(
   }
 
   private fun setupWebview() {
-    layoutRoot.webViewClient = UrlWebViewClient(link, bus) { layoutRoot.isVisible }
+    layoutRoot.webViewClient = UrlWebViewClient(debug, link, bus) { layoutRoot.isVisible }
     layoutRoot.loadUrl(link)
   }
 

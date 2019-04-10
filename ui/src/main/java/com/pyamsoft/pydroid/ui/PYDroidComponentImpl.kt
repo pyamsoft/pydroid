@@ -56,8 +56,8 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponentImpl
 
 internal class PYDroidComponentImpl internal constructor(
-  debug: Boolean,
   application: Application,
+  private val debug: Boolean,
   private val applicationName: String,
   private val bugreportUrl: String,
   private val currentVersion: Int,
@@ -135,7 +135,7 @@ internal class PYDroidComponentImpl internal constructor(
     link: String,
     name: String
   ): UrlComponent = UrlComponentImpl(
-      parent, owner, loaderModule.provideImageLoader(),
+      parent, owner, debug, loaderModule.provideImageLoader(),
       link, name, webviewStateBus, schedulerProvider, navigationModule.bus
   )
 

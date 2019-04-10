@@ -22,14 +22,15 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class UrlComponentImpl internal constructor(
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
+  private val debug: Boolean,
   private val imageLoader: ImageLoader,
   private val link: String,
   private val name: String,
@@ -40,7 +41,7 @@ internal class UrlComponentImpl internal constructor(
 
   override fun inject(dialog: ViewUrlDialog) {
     val presenter = UrlPresenter(schedulerProvider, bus)
-    val webviewView = UrlWebviewView(owner, link, bus, parent)
+    val webviewView = UrlWebviewView(owner, debug, link, bus, parent)
     val spinnerView = SpinnerView(parent)
     val failed = FailedNavigationBinder(schedulerProvider, failedNavigationBus)
 

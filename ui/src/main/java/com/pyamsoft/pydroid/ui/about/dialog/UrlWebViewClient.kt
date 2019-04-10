@@ -18,12 +18,11 @@
 package com.pyamsoft.pydroid.ui.about.dialog
 
 import android.graphics.Bitmap
-import android.os.Build.VERSION_CODES
-import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.annotation.RequiresApi
+import androidx.webkit.WebResourceErrorCompat
+import androidx.webkit.WebViewClientCompat
+import androidx.webkit.WebViewFeature
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.ExternalNavigation
 import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.Loading
@@ -32,10 +31,11 @@ import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState.PageLoaded
 import timber.log.Timber
 
 internal class UrlWebViewClient internal constructor(
+  private val debug: Boolean,
   private val link: String,
   private val bus: EventBus<UrlWebviewState>,
   private val isVisible: () -> Boolean
-) : WebViewClient() {
+) : WebViewClientCompat() {
 
   override fun onPageStarted(
     view: WebView?,
@@ -72,14 +72,15 @@ internal class UrlWebViewClient internal constructor(
     }
   }
 
-  @RequiresApi(VERSION_CODES.M)
   override fun onReceivedError(
     view: WebView,
     request: WebResourceRequest,
-    error: WebResourceError
+    error: WebResourceErrorCompat
   ) {
     super.onReceivedError(view, request, error)
-    Timber.e("Webview error: ${error.errorCode} ${error.description}")
+    if (debug) {
+      logWebviewError(error)
+    }
     val pageUrl = request.url.toString()
 
     val fixedUrl = pageUrl.trimEnd('/')
@@ -90,22 +91,20 @@ internal class UrlWebViewClient internal constructor(
     bus.publish(PageError(fixedUrl))
   }
 
-  @Suppress("DEPRECATION", "OverridingDeprecatedMember")
-  override fun onReceivedError(
-    view: WebView,
-    errorCode: Int,
-    description: String?,
-    failingUrl: String?
-  ) {
-    super.onReceivedError(view, errorCode, description, failingUrl)
-    Timber.e("Webview error: $errorCode $description")
-
-    val fixedUrl = failingUrl?.trimEnd('/') ?: ""
-    val isTarget = (fixedUrl == link) || (failingUrl == link)
-    if (isTarget) {
-      Timber.w("Webview error occurred but target page still reached.")
+  private fun logWebviewError(error: WebResourceErrorCompat) {
+    val errorCode: Int
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_RESOURCE_ERROR_GET_CODE)) {
+      errorCode = error.errorCode
+    } else {
+      errorCode = -1
     }
-    bus.publish(PageError(fixedUrl))
+    val errorDescription: CharSequence
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_RESOURCE_ERROR_GET_DESCRIPTION)) {
+      errorDescription = error.description
+    } else {
+      errorDescription = "(null)"
+    }
+    Timber.e("Webview error [$errorCode]: $errorDescription")
   }
 
 }

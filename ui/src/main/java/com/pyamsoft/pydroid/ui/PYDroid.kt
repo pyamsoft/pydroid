@@ -41,8 +41,8 @@ class PYDroid private constructor(
 
   private val impl by lazy {
     PYDroidComponentImpl(
-        debug,
         application,
+        debug,
         applicationName,
         bugreportUrl,
         currentVersion,

@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.arch
 
+import androidx.annotation.CallSuper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -38,6 +39,7 @@ abstract class UiBinder<C : UiBinder.Callback> protected constructor() {
     if (!bound) {
       bound = true
       _callback = callback
+      internalOnBind()
       onBind()
     }
   }
@@ -47,6 +49,7 @@ abstract class UiBinder<C : UiBinder.Callback> protected constructor() {
       bound = false
       _callback = null
       disposables.clear()
+      internalOnUnbind()
       onUnbind()
     }
   }
@@ -58,6 +61,14 @@ abstract class UiBinder<C : UiBinder.Callback> protected constructor() {
   protected abstract fun onBind()
 
   protected abstract fun onUnbind()
+
+  internal open fun internalOnBind() {
+
+  }
+
+  internal open fun internalOnUnbind() {
+
+  }
 
   interface Callback
 }

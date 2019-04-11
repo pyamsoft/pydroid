@@ -18,27 +18,58 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.tryDispose
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.Executors
 
 abstract class Presenter<T : Any, C : Presenter.Callback<T>> protected constructor(
-
 ) : UiBinder<C>() {
 
+  private val lock = Any()
+  private val executor by lazy { Executors.newSingleThreadExecutor() }
+  private val stateBus = RxBus.create<T.() -> T>()
+  private var stateDisposable by singleDisposable()
   private var state: T? = null
 
   @CheckResult
   protected abstract fun initialState(): T
 
+  final override fun internalOnBind() {
+    stateDisposable = stateBus.listen()
+        .map { func ->
+          synchronized(lock) {
+            val oldState = state
+            val newState = nonNullState(oldState).run(func)
+            state = newState
+            return@map newState to oldState
+          }
+        }
+        .subscribeOn(Schedulers.from(executor))
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { callback.onRender(it.first, it.second) }
+  }
+
+  final override fun internalOnUnbind() {
+    stateDisposable.tryDispose()
+    executor.shutdown()
+  }
+
   protected fun setState(func: T.() -> T) {
-    val oldState = state
-    val newState = nonNullState(oldState).run(func)
-    state = newState
-    callback.onRender(newState, oldState)
+    stateBus.publish(func)
   }
 
   @CheckResult
   private fun nonNullState(state: T?): T {
     return state ?: initialState()
   }
+
+  private data class PayLoad<T : Any>(
+    val state: T,
+    val oldState: T?
+  )
 
   interface Callback<T : Any> : UiBinder.Callback {
 

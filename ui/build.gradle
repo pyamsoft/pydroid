@@ -23,7 +23,6 @@ dependencies {
   api "androidx.fragment:fragment:$fragment"
   api "com.google.android.material:material:$materialDesign"
   api "androidx.preference:preference:$preference"
-  api "androidx.webkit:webkit:$webview"
 
   // Fluid resize
   implementation "com.popinnow.android.fluidresizer:fluidresizer:$fluidresizer"

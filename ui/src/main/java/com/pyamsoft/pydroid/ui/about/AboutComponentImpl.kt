@@ -21,7 +21,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
+import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class AboutComponentImpl(
@@ -30,6 +33,7 @@ internal class AboutComponentImpl(
   private val backstackCount: Int,
   private val parent: ViewGroup,
   private val owner: LifecycleOwner,
+  private val failedBus: EventBus<FailedNavigationEvent>,
   private val schedulerProvider: SchedulerProvider
 ) : AboutComponent {
 
@@ -39,10 +43,11 @@ internal class AboutComponentImpl(
     val listView = AboutListView(owner, parent, presenter)
     val spinnerView = SpinnerView(parent)
     val toolbar = AboutToolbarView(toolbarActivity, backstackCount, toolbarPresenter)
+    val failed = FailedNavigationBinder(schedulerProvider, failedBus)
 
     fragment.apply {
       this.toolbarComponent = AboutToolbarUiComponentImpl(toolbar, toolbarPresenter)
-      this.component = AboutUiComponentImpl(listView, spinnerView, presenter)
+      this.component = AboutUiComponentImpl(listView, spinnerView, presenter, failed)
     }
   }
 

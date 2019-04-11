@@ -33,9 +33,6 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutComponentImpl
-import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
-import com.pyamsoft.pydroid.ui.about.dialog.UrlComponentImpl
-import com.pyamsoft.pydroid.ui.about.dialog.UrlWebviewState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
@@ -67,8 +64,6 @@ internal class PYDroidComponentImpl internal constructor(
   private val ratingStateBus = RxBus.create<ShowRating>()
 
   private val versionStateBus = RxBus.create<VersionCheckState>()
-
-  private val webviewStateBus = RxBus.create<UrlWebviewState>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -126,17 +121,8 @@ internal class PYDroidComponentImpl internal constructor(
     backstackCount: Int,
     parent: ViewGroup
   ): AboutComponent = AboutComponentImpl(
-      aboutModule.interactor, toolbarActivity, backstackCount, parent, owner, schedulerProvider
-  )
-
-  override fun plusViewLicenseComponent(
-    owner: LifecycleOwner,
-    parent: ViewGroup,
-    link: String,
-    name: String
-  ): UrlComponent = UrlComponentImpl(
-      parent, owner, debug, loaderModule.provideImageLoader(),
-      link, name, webviewStateBus, schedulerProvider, navigationModule.bus
+      aboutModule.interactor, toolbarActivity, backstackCount, parent, owner,
+      navigationModule.bus, schedulerProvider
   )
 
   override fun plusRatingDialogComponent(

@@ -25,7 +25,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutComponent
-import com.pyamsoft.pydroid.ui.about.dialog.UrlComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
@@ -70,14 +69,6 @@ internal interface PYDroidComponent {
     hideClearAll: Boolean,
     hideUpgradeInformation: Boolean
   ): AppSettingsComponent
-
-  @CheckResult
-  fun plusViewLicenseComponent(
-    owner: LifecycleOwner,
-    parent: ViewGroup,
-    link: String,
-    name: String
-  ): UrlComponent
 
   @CheckResult
   fun plusRatingDialogComponent(

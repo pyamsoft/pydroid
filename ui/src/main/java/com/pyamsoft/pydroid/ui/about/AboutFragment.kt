@@ -29,11 +29,10 @@ import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.dialog.ViewUrlDialog
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
-import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.util.hyperlink
 
 class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiComponent.Callback {
 
@@ -74,16 +73,22 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiCompo
     name: String,
     licenseUrl: String
   ) {
-    ViewUrlDialog.newInstance(name, link = licenseUrl)
-        .show(requireActivity(), ViewUrlDialog.TAG)
+    openLink(licenseUrl)
   }
 
   override fun navigateToHomepage(
     name: String,
     homepageUrl: String
   ) {
-    ViewUrlDialog.newInstance(name, link = homepageUrl)
-        .show(requireActivity(), ViewUrlDialog.TAG)
+    openLink(homepageUrl)
+  }
+
+  private fun openLink(url: String) {
+    val error = url.hyperlink(requireActivity())
+        .navigate()
+    if (error != null) {
+      component.failedNavigation(error)
+    }
   }
 
   override fun close() {

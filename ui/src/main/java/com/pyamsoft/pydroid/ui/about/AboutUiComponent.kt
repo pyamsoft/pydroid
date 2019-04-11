@@ -17,9 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.arch.UiComponent
 
 internal interface AboutUiComponent : UiComponent<AboutUiComponent.Callback> {
+
+  fun failedNavigation(error: ActivityNotFoundException)
 
   interface Callback {
 

@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
@@ -24,13 +25,14 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.about.AboutPresenter.AboutState
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
-import timber.log.Timber
 
 internal class AboutUiComponentImpl internal constructor(
   private val listView: AboutListView,
   private val spinner: SpinnerView,
-  private val presenter: AboutPresenter
+  private val presenter: AboutPresenter,
+  private val failedNavigationBinder: FailedNavigationBinder
 ) : BaseUiComponent<AboutUiComponent.Callback>(),
     AboutUiComponent,
     AboutPresenter.Callback {
@@ -128,6 +130,10 @@ internal class AboutUiComponentImpl internal constructor(
     homepageUrl: String
   ) {
     callback.navigateToHomepage(name, homepageUrl)
+  }
+
+  override fun failedNavigation(error: ActivityNotFoundException) {
+    failedNavigationBinder.failedNavigation(error)
   }
 
 }

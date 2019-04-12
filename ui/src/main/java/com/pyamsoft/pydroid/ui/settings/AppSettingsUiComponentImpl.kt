@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
-import com.pyamsoft.pydroid.ui.rating.RatingBinder
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
 import com.pyamsoft.pydroid.util.HyperlinkIntent
@@ -33,7 +33,7 @@ import timber.log.Timber
 internal class AppSettingsUiComponentImpl internal constructor(
   private val settingsView: AppSettingsView,
   private val versionPresenter: VersionCheckPresenter,
-  private val ratingBinder: RatingBinder,
+  private val ratingViewModel: RatingViewModel,
   private val settingsBinder: AppSettingsBinder,
   private val navViewModel: NavigationViewModel
 ) : BaseUiComponent<AppSettingsUiComponent.Callback>(),
@@ -74,7 +74,7 @@ internal class AppSettingsUiComponentImpl internal constructor(
   }
 
   override fun handleShowUpgradeInfo() {
-    ratingBinder.load(true)
+    ratingViewModel.load(true)
   }
 
   override fun handleDarkThemeChanged(dark: Boolean) {

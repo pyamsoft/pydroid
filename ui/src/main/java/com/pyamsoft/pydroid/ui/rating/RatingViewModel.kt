@@ -17,18 +17,22 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.arch.UiBinder
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel.RatingState
 
-internal class RatingBinder internal constructor(
+internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider,
   private val bus: EventBus<ShowRating>
-) : UiBinder<RatingBinder.Callback>() {
+) : UiViewModel<RatingState>(
+    initialState = RatingState(showRating = false)
+) {
 
   private var loadDisposable by singleDisposable()
 
@@ -45,8 +49,12 @@ internal class RatingBinder internal constructor(
     bus.listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { callback.handleShowRating() }
+        .subscribe { handleShowRating() }
         .destroy()
+  }
+
+  private fun handleShowRating() {
+    setUniqueState(true, old = { it.showRating }) { state, value -> state.copy(showRating = value) }
   }
 
   fun load(force: Boolean) {
@@ -56,9 +64,6 @@ internal class RatingBinder internal constructor(
         .subscribe { bus.publish(ShowRating) }
   }
 
-  interface Callback : UiBinder.Callback {
-
-    fun handleShowRating()
-  }
+  data class RatingState(val showRating: Boolean) : UiState
 
 }

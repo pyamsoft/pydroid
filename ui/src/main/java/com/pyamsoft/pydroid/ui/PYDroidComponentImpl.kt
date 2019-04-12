@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.rating.RatingBinder
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingUiComponentImpl
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
@@ -77,7 +77,7 @@ internal class PYDroidComponentImpl internal constructor(
   private val navigationModule by lazy { FailedNavigationModule() }
 
   override fun inject(activity: RatingActivity) {
-    val presenter = RatingBinder(ratingModule.interactor, schedulerProvider, ratingStateBus)
+    val presenter = RatingViewModel(ratingModule.interactor, schedulerProvider, ratingStateBus)
 
     activity.apply {
       this.ratingComponent = RatingUiComponentImpl(presenter)

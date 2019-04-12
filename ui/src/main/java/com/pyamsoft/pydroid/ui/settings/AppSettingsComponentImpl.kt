@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
-import com.pyamsoft.pydroid.ui.rating.RatingBinder
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
@@ -55,7 +55,7 @@ internal class AppSettingsComponentImpl internal constructor(
     val versionPresenter = VersionCheckPresenter(
         versionCheckInteractor, schedulerProvider, versionCheckBus
     )
-    val ratingPresenter = RatingBinder(
+    val ratingPresenter = RatingViewModel(
         ratingInteractor, schedulerProvider, ratingStateBus
     )
 

@@ -27,8 +27,8 @@ import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckState
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 
 internal class AppSettingsComponentImpl internal constructor(
   private val ratingInteractor: RatingInteractor,
@@ -51,17 +51,14 @@ internal class AppSettingsComponentImpl internal constructor(
         theming, applicationName, bugreportUrl, hideClearAll,
         hideUpgradeInformation, preferenceScreen, presenter
     )
-    val failed = NavigationViewModel(schedulerProvider, failedNavBus)
-    val versionPresenter = VersionCheckViewModel(
-        versionCheckInteractor, schedulerProvider, versionCheckBus
-    )
-    val ratingPresenter = RatingViewModel(
-        ratingInteractor, schedulerProvider, ratingStateBus
-    )
+    val versionViewModel =
+      VersionCheckViewModel(versionCheckInteractor, schedulerProvider, versionCheckBus)
+    val navigationViewModel = NavigationViewModel(schedulerProvider, failedNavBus)
+    val ratingViewModel = RatingViewModel(ratingInteractor, schedulerProvider, ratingStateBus)
 
     fragment.apply {
       this.component = AppSettingsUiComponentImpl(
-          settingsView, versionPresenter, ratingPresenter, presenter, failed
+          settingsView, versionViewModel, ratingViewModel, presenter, navigationViewModel
       )
     }
   }

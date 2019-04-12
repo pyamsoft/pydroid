@@ -39,14 +39,14 @@ internal class AboutComponentImpl(
 
   override fun inject(fragment: AboutFragment) {
     val presenter = AboutViewModel(interactor, schedulerProvider)
-    val toolbarPresenter = AboutToolbarViewModel()
+    val toolbarViewModel = AboutToolbarViewModel()
     val listView = AboutListView(owner, parent, presenter)
     val spinnerView = SpinnerView(parent)
-    val toolbar = AboutToolbarView(toolbarActivity, backstackCount, toolbarPresenter)
+    val toolbar = AboutToolbarView(toolbarActivity, backstackCount, toolbarViewModel)
     val failed = NavigationViewModel(schedulerProvider, failedBus)
 
     fragment.apply {
-      this.toolbarComponent = AboutToolbarUiComponentImpl(toolbar, toolbarPresenter)
+      this.toolbarComponent = AboutToolbarUiComponentImpl(toolbar, toolbarViewModel)
       this.component = AboutUiComponentImpl(listView, spinnerView, presenter, failed)
     }
   }

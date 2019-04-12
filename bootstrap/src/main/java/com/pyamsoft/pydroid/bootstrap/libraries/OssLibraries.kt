@@ -177,7 +177,7 @@ object OssLibraries {
     add(
         "PYDroid Arch",
         "https://github.com/pyamsoft/pydroid",
-        "PYDroid standard architecture for a UiComponent based, Presenter driven, reactive MVI UI design pattern"
+        "PYDroid standard architecture for a UiComponent based, ViewModel driven, reactive MVI UI design pattern"
     )
     add(
         "AndroidX Constraint Layout",

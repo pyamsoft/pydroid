@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
 import com.pyamsoft.pydroid.util.HyperlinkIntent
@@ -34,11 +35,10 @@ internal class AppSettingsUiComponentImpl internal constructor(
   private val settingsView: AppSettingsView,
   private val versionPresenter: VersionCheckPresenter,
   private val ratingViewModel: RatingViewModel,
-  private val settingsBinder: AppSettingsBinder,
-  private val navViewModel: NavigationViewModel
+  private val settingsViewModel: AppSettingsViewModel,
+  private val navigationViewModel: NavigationViewModel
 ) : BaseUiComponent<AppSettingsUiComponent.Callback>(),
     AppSettingsUiComponent,
-    AppSettingsBinder.Callback,
     VersionCheckPresenter.Callback {
 
   override fun id(): Int {
@@ -53,12 +53,21 @@ internal class AppSettingsUiComponentImpl internal constructor(
     owner.doOnDestroy {
       settingsView.teardown()
       versionPresenter.unbind()
-      settingsBinder.unbind()
+      settingsViewModel.unbind()
     }
 
     settingsView.inflate(savedInstanceState)
     versionPresenter.bind(this)
-    settingsBinder.bind(this)
+    settingsViewModel.bind { state, oldState ->
+      renderMoreApps(state, oldState)
+      renderShowUpgrade(state, oldState)
+      renderDarkTheme(state, oldState)
+      renderNavigationLinks(state, oldState)
+      renderClearData(state, oldState)
+      renderCheckForUpdates(state, oldState)
+      renderShowLicenses(state, oldState)
+      renderRate(state, oldState)
+    }
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -66,47 +75,101 @@ internal class AppSettingsUiComponentImpl internal constructor(
   }
 
   override fun failedNavigation(error: ActivityNotFoundException) {
-    navViewModel.failedNavigation(error)
+    navigationViewModel.failedNavigation(error)
   }
 
-  override fun handleViewMorePyamsoftApps() {
-    callback.onViewMorePyamsoftApps()
+  private fun renderMoreApps(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    state.renderOnChange(oldState, value = { it.navigateMoreApps }) { navigate ->
+      if (navigate) {
+        callback.onViewMorePyamsoftApps()
+      }
+    }
   }
 
-  override fun handleShowUpgradeInfo() {
-    ratingViewModel.load(true)
+  private fun renderShowUpgrade(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    state.renderOnChange(oldState, value = { it.showUpgradeInfo }) { show ->
+      if (show) {
+        ratingViewModel.load(true)
+      }
+    }
   }
 
-  override fun handleDarkThemeChanged(dark: Boolean) {
-    callback.onDarkThemeChanged(dark)
+  private fun renderDarkTheme(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    state.renderOnChange(oldState, value = { it.darkTheme }) { callback.onDarkThemeChanged(it) }
   }
 
-  override fun handleShowSocialMedia(link: HyperlinkIntent) {
-    callback.onNavigateToLink(link)
+  private fun renderNavigationLinks(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    renderLink(state, oldState) { it.socialMediaLink }
+    renderLink(state, oldState) { it.blogLink }
+    renderLink(state, oldState) { it.bugReportLink }
   }
 
-  override fun handleClearAppData() {
-    callback.onClearAppData()
+  private inline fun renderLink(
+    state: SettingsState,
+    oldState: SettingsState?,
+    crossinline value: (state: SettingsState) -> HyperlinkIntent?
+  ) {
+    state.renderOnChange(oldState, value) { link ->
+      if (link != null) {
+        callback.onNavigateToLink(link)
+      }
+    }
   }
 
-  override fun handleCheckUpgrade() {
-    versionPresenter.checkForUpdates(true)
+  private fun renderClearData(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    state.renderOnChange(oldState, value = { it.clearAppData }) { clear ->
+      if (clear) {
+        callback.onClearAppData()
+      }
+    }
   }
 
-  override fun handleViewLicenses() {
-    callback.onViewLicenses()
+  private fun renderCheckForUpdates(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    state.renderOnChange(oldState, value = { it.checkForUpdate }) { check ->
+      if (check) {
+        versionPresenter.checkForUpdates(true)
+      }
+    }
   }
 
-  override fun handleOpenBugReport(link: HyperlinkIntent) {
-    callback.onNavigateToLink(link)
+  private fun renderShowLicenses(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    state.renderOnChange(oldState, value = { it.showLicenses }) { show ->
+      if (show) {
+        callback.onViewLicenses()
+      }
+    }
   }
 
-  override fun handleRateApp() {
-    callback.onRateApp()
-  }
-
-  override fun handleShowBlog(link: HyperlinkIntent) {
-    callback.onNavigateToLink(link)
+  private fun renderRate(
+    state: SettingsState,
+    oldState: SettingsState?
+  ) {
+    state.renderOnChange(oldState, value = { it.navigateRateApp }) { rate ->
+      if (rate) {
+        callback.onRateApp()
+      }
+    }
   }
 
   override fun onRender(

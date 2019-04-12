@@ -46,7 +46,7 @@ internal class AppSettingsComponentImpl internal constructor(
 ) : AppSettingsComponent {
 
   override fun inject(fragment: AppSettingsPreferenceFragment) {
-    val presenter = AppSettingsBinder(theming)
+    val presenter = AppSettingsViewModel(theming)
     val settingsView = AppSettingsView(
         theming, applicationName, bugreportUrl, hideClearAll,
         hideUpgradeInformation, preferenceScreen, presenter

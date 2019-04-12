@@ -39,7 +39,7 @@ internal class AppSettingsComponentImpl internal constructor(
   private val schedulerProvider: SchedulerProvider,
   private val preferenceScreen: PreferenceScreen,
   private val applicationName: String,
-  private val bugreportUrl: String,
+  private val bugReportUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean,
   private val failedNavBus: EventBus<FailedNavigationEvent>
@@ -48,7 +48,7 @@ internal class AppSettingsComponentImpl internal constructor(
   override fun inject(fragment: AppSettingsPreferenceFragment) {
     val presenter = AppSettingsViewModel(theming)
     val settingsView = AppSettingsView(
-        theming, applicationName, bugreportUrl, hideClearAll,
+        theming, applicationName, bugReportUrl, hideClearAll,
         hideUpgradeInformation, preferenceScreen, presenter
     )
     val versionViewModel =

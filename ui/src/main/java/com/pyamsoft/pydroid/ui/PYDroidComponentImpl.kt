@@ -56,7 +56,7 @@ internal class PYDroidComponentImpl internal constructor(
   application: Application,
   private val debug: Boolean,
   private val applicationName: String,
-  private val bugreportUrl: String,
+  private val bugReportUrl: String,
   private val currentVersion: Int,
   private val schedulerProvider: SchedulerProvider
 ) : PYDroidComponent, ModuleProvider {
@@ -112,7 +112,7 @@ internal class PYDroidComponentImpl internal constructor(
   ): AppSettingsComponent = AppSettingsComponentImpl(
       ratingModule.interactor, versionModule.interactor, theming,
       versionStateBus, ratingStateBus, schedulerProvider, preferenceScreen,
-      applicationName, bugreportUrl, hideClearAll, hideUpgradeInformation, navigationModule.bus
+      applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation, navigationModule.bus
   )
 
   override fun plusAboutComponent(

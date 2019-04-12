@@ -33,7 +33,7 @@ import timber.log.Timber
 class PYDroid private constructor(
   application: Application,
   applicationName: String,
-  bugreportUrl: String,
+  bugReportUrl: String,
   currentVersion: Int,
   debug: Boolean,
   schedulerProvider: SchedulerProvider
@@ -44,7 +44,7 @@ class PYDroid private constructor(
         application,
         debug,
         applicationName,
-        bugreportUrl,
+        bugReportUrl,
         currentVersion,
         schedulerProvider
     )
@@ -147,7 +147,7 @@ class PYDroid private constructor(
       instance: Instance,
       application: Application,
       applicationName: String,
-      bugreportUrl: String,
+      bugReportUrl: String,
       currentVersion: Int,
       debug: Boolean,
       schedulerProvider: SchedulerProvider = SchedulerProvider.DEFAULT
@@ -155,7 +155,7 @@ class PYDroid private constructor(
       if (instance.getPydroid() == null) {
         instance.setPydroid(
             PYDroid(
-                application, applicationName, bugreportUrl, currentVersion, debug, schedulerProvider
+                application, applicationName, bugReportUrl, currentVersion, debug, schedulerProvider
             )
         )
       }

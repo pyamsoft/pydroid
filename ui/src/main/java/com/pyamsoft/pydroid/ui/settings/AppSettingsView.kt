@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.util.tintWith
 internal class AppSettingsView internal constructor(
   private val theming: Theming,
   private val applicationName: String,
-  private val bugreportUrl: String,
+  private val bugReportUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean,
   preferenceScreen: PreferenceScreen,
@@ -149,7 +149,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBugReport() {
-    val reportLink = bugreportUrl.hyperlink(context)
+    val reportLink = bugReportUrl.hyperlink(context)
     bugReport.setOnPreferenceClickListener {
       callback.onBugReportClicked(reportLink)
       return@setOnPreferenceClickListener true

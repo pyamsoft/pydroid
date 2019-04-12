@@ -38,7 +38,7 @@ internal class AboutComponentImpl(
 ) : AboutComponent {
 
   override fun inject(fragment: AboutFragment) {
-    val presenter = AboutPresenter(interactor, schedulerProvider)
+    val presenter = AboutViewModel(interactor, schedulerProvider)
     val toolbarPresenter = AboutToolbarBinder()
     val listView = AboutListView(owner, parent, presenter)
     val spinnerView = SpinnerView(parent)

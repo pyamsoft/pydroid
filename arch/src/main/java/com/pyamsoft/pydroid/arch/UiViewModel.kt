@@ -104,6 +104,27 @@ abstract class UiViewModel<T : UiState> protected constructor(
     stateBus.publish(func)
   }
 
+  /**
+   * For an operation which is always called with the same data, in order to be caught correctly
+   * by the onRender callback we generally need to first set the value of whatever field back to
+   * its initial state, and then immediately update it to the proper value.
+   */
+  protected fun <M : Any> setUniqueState(
+    value: M,
+    old: (state: T) -> M,
+    applyValue: (state: T, value: M) -> T
+  ) {
+    setState {
+      if (old(this) == value) {
+        applyValue(this, old(initialState)).also {
+          setUniqueState(value, old, applyValue)
+        }
+      } else {
+        applyValue(this, value)
+      }
+    }
+  }
+
   protected fun Disposable.destroy() {
     disposables.add(this)
   }

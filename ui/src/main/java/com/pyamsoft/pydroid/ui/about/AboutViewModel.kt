@@ -17,26 +17,29 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.about.AboutPresenter.AboutState
+import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
 import timber.log.Timber
 
-internal class AboutPresenter internal constructor(
+internal class AboutViewModel internal constructor(
   private val interactor: AboutInteractor,
   private val schedulerProvider: SchedulerProvider
-) : Presenter<AboutState, AboutPresenter.Callback>(),
-    AboutListView.Callback {
+) : UiViewModel<AboutState>(
+    initialState = AboutState(
+        isLoading = false,
+        throwable = null,
+        licenses = emptyList(),
+        url = ""
+    )
+), AboutListView.Callback {
 
   private var licenseDisposable by singleDisposable()
-
-  override fun initialState(): AboutState {
-    return AboutState(isLoading = false, throwable = null, licenses = emptyList())
-  }
 
   override fun onBind() {
     loadLicenses(false)
@@ -88,32 +91,25 @@ internal class AboutPresenter internal constructor(
     name: String,
     licenseUrl: String
   ) {
-    callback.handleViewLicense(name, licenseUrl)
+    handleUrl(licenseUrl)
   }
 
   override fun onVisitHomepageClicked(
     name: String,
     homepageUrl: String
   ) {
-    callback.handleVisitHomepage(name, homepageUrl)
+    handleUrl(homepageUrl)
+  }
+
+  private fun handleUrl(url: String) {
+    setUniqueState(url, old = { it.url }) { state, value -> state.copy(url = value) }
   }
 
   data class AboutState(
     val isLoading: Boolean,
     val throwable: Throwable?,
-    val licenses: List<OssLibrary>
-  )
+    val licenses: List<OssLibrary>,
+    val url: String
+  ) : UiState
 
-  interface Callback : Presenter.Callback<AboutState> {
-
-    fun handleViewLicense(
-      name: String,
-      licenseUrl: String
-    )
-
-    fun handleVisitHomepage(
-      name: String,
-      homepageUrl: String
-    )
-  }
 }

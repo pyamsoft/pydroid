@@ -69,21 +69,7 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiCompo
     component.saveState(outState)
   }
 
-  override fun showLicense(
-    name: String,
-    licenseUrl: String
-  ) {
-    openLink(licenseUrl)
-  }
-
-  override fun navigateToHomepage(
-    name: String,
-    homepageUrl: String
-  ) {
-    openLink(homepageUrl)
-  }
-
-  private fun openLink(url: String) {
+  override fun onNavigateExternalUrl(url: String) {
     val error = url.hyperlink(requireActivity())
         .navigate()
     if (error != null) {

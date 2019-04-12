@@ -26,14 +26,6 @@ internal interface AboutUiComponent : UiComponent<AboutUiComponent.Callback> {
 
   interface Callback {
 
-    fun showLicense(
-      name: String,
-      licenseUrl: String
-    )
-
-    fun navigateToHomepage(
-      name: String,
-      homepageUrl: String
-    )
+    fun onNavigateExternalUrl(url: String)
   }
 }

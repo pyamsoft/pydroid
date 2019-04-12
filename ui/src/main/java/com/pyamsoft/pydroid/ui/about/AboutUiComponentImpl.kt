@@ -22,8 +22,8 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
-import com.pyamsoft.pydroid.ui.about.AboutPresenter.AboutState
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
+import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
@@ -31,11 +31,10 @@ import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 internal class AboutUiComponentImpl internal constructor(
   private val listView: AboutListView,
   private val spinner: SpinnerView,
-  private val presenter: AboutPresenter,
+  private val viewModel: AboutViewModel,
   private val failedNavigationBinder: FailedNavigationBinder
 ) : BaseUiComponent<AboutUiComponent.Callback>(),
-    AboutUiComponent,
-    AboutPresenter.Callback {
+    AboutUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -49,12 +48,17 @@ internal class AboutUiComponentImpl internal constructor(
     owner.doOnDestroy {
       listView.teardown()
       spinner.teardown()
-      presenter.unbind()
+      viewModel.unbind()
     }
 
     listView.inflate(savedInstanceState)
     spinner.inflate(savedInstanceState)
-    presenter.bind(this)
+    viewModel.bind { state, oldState ->
+      renderLoading(state, oldState)
+      renderList(state, oldState)
+      renderError(state, oldState)
+      renderUrl(state, oldState)
+    }
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -62,28 +66,17 @@ internal class AboutUiComponentImpl internal constructor(
     spinner.saveState(outState)
   }
 
-  override fun onRender(
-    state: AboutState,
-    oldState: AboutState?
-  ) {
-    renderLoading(state, oldState)
-    renderList(state, oldState)
-    renderError(state, oldState)
-  }
-
   private fun renderLoading(
     state: AboutState,
     oldState: AboutState?
   ) {
-    state.isLoading.let { loading ->
-      if (oldState == null || loading != oldState.isLoading) {
-        if (loading) {
-          listView.hide()
-          spinner.show()
-        } else {
-          spinner.hide()
-          listView.show()
-        }
+    state.renderOnChange(oldState, value = { it.isLoading }) { loading ->
+      if (loading) {
+        listView.hide()
+        spinner.show()
+      } else {
+        spinner.hide()
+        listView.show()
       }
     }
   }
@@ -92,13 +85,11 @@ internal class AboutUiComponentImpl internal constructor(
     state: AboutState,
     oldState: AboutState?
   ) {
-    state.licenses.let { licenses ->
-      if (oldState == null || licenses != oldState.licenses) {
-        if (licenses.isEmpty()) {
-          listView.clearLicenses()
-        } else {
-          listView.loadLicenses(licenses)
-        }
+    state.renderOnChange(oldState, value = { it.licenses }) { licenses ->
+      if (licenses.isEmpty()) {
+        listView.clearLicenses()
+      } else {
+        listView.loadLicenses(licenses)
       }
     }
   }
@@ -107,29 +98,24 @@ internal class AboutUiComponentImpl internal constructor(
     state: AboutState,
     oldState: AboutState?
   ) {
-    state.throwable.let { throwable ->
-      if (oldState == null || throwable != oldState.throwable) {
-        if (throwable == null) {
-          listView.clearError()
-        } else {
-          listView.showError(throwable)
-        }
+    state.renderOnChange(oldState, value = { it.throwable }) { throwable ->
+      if (throwable == null) {
+        listView.clearError()
+      } else {
+        listView.showError(throwable)
       }
     }
   }
 
-  override fun handleViewLicense(
-    name: String,
-    licenseUrl: String
+  private fun renderUrl(
+    state: AboutState,
+    oldState: AboutState?
   ) {
-    callback.showLicense(name, licenseUrl)
-  }
-
-  override fun handleVisitHomepage(
-    name: String,
-    homepageUrl: String
-  ) {
-    callback.navigateToHomepage(name, homepageUrl)
+    state.renderOnChange(oldState, value = { it.url }) { url ->
+      if (url.isNotBlank()) {
+        callback.onNavigateExternalUrl(url)
+      }
+    }
   }
 
   override fun failedNavigation(error: ActivityNotFoundException) {

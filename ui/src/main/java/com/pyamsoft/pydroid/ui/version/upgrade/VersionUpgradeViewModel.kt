@@ -17,11 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import com.pyamsoft.pydroid.arch.UiBinder
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState
 
-internal class VersionUpgradeBinder internal constructor(
-) : UiBinder<VersionUpgradeBinder.Callback>(),
-    VersionUpgradeControlView.Callback {
+internal class VersionUpgradeViewModel internal constructor(
+) : UiViewModel<VersionState>(
+    initialState = VersionState(upgrade = null)
+), VersionUpgradeControlView.Callback {
 
   override fun onBind() {
   }
@@ -30,18 +33,13 @@ internal class VersionUpgradeBinder internal constructor(
   }
 
   override fun onUpgradeClicked() {
-    callback.handleUpgradeBegin()
+    setState { copy(upgrade = true) }
   }
 
   override fun onCancelClicked() {
-    callback.handleUpgradeCancel()
+    setState { copy(upgrade = false) }
   }
 
-  interface Callback : UiBinder.Callback {
-
-    fun handleUpgradeBegin()
-
-    fun handleUpgradeCancel()
-
-  }
+  // Nullable boolean, kind of weird.
+  data class VersionState(val upgrade: Boolean?) : UiState
 }

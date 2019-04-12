@@ -33,7 +33,7 @@ internal class VersionUpgradeComponentImpl internal constructor(
 ) : VersionUpgradeComponent {
 
   override fun inject(dialog: VersionUpgradeDialog) {
-    val presenter = VersionUpgradeBinder()
+    val presenter = VersionUpgradeViewModel()
     val controls = VersionUpgradeControlView(parent, presenter)
     val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
     val failed = NavigationViewModel(schedulerProvider, failedNavBus)

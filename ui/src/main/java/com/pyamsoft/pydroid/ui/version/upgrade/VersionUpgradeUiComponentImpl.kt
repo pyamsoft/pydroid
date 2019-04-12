@@ -25,15 +25,15 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeUiComponent.Callback
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState
 
 internal class VersionUpgradeUiComponentImpl internal constructor(
   private val controlsView: VersionUpgradeControlView,
   private val contentView: VersionUpgradeContentView,
   private val navigationViewModel: NavigationViewModel,
-  private val binder: VersionUpgradeBinder
+  private val viewModel: VersionUpgradeViewModel
 ) : BaseUiComponent<VersionUpgradeUiComponent.Callback>(),
-    VersionUpgradeUiComponent,
-    VersionUpgradeBinder.Callback {
+    VersionUpgradeUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -47,25 +47,34 @@ internal class VersionUpgradeUiComponentImpl internal constructor(
     owner.doOnDestroy {
       contentView.teardown()
       controlsView.teardown()
-      binder.unbind()
+      viewModel.unbind()
     }
 
     contentView.inflate(savedInstanceState)
     controlsView.inflate(savedInstanceState)
-    binder.bind(this)
+    viewModel.bind { state, oldState ->
+      renderUpgrade(state, oldState)
+    }
+  }
+
+  private fun renderUpgrade(
+    state: VersionState,
+    oldState: VersionState?
+  ) {
+    state.renderOnChange(oldState, value = { it.upgrade }) { upgrade ->
+      if (upgrade != null) {
+        if (upgrade) {
+          callback.onNavigateToMarket()
+        } else {
+          callback.onCancelUpgrade()
+        }
+      }
+    }
   }
 
   override fun onSaveState(outState: Bundle) {
     contentView.saveState(outState)
     controlsView.saveState(outState)
-  }
-
-  override fun handleUpgradeBegin() {
-    callback.onNavigateToMarket()
-  }
-
-  override fun handleUpgradeCancel() {
-    callback.onCancelUpgrade()
   }
 
   override fun navigationFailed(error: ActivityNotFoundException) {

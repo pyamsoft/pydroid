@@ -17,11 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.UiBinder
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel.AboutState
 
-internal class AboutToolbarBinder internal constructor(
-) : UiBinder<AboutToolbarBinder.Callback>(),
-    AboutToolbarView.Callback {
+internal class AboutToolbarViewModel internal constructor(
+) : UiViewModel<AboutState>(
+    initialState = AboutState(navigate = false)
+), AboutToolbarView.Callback {
 
   override fun onBind() {
   }
@@ -30,11 +33,8 @@ internal class AboutToolbarBinder internal constructor(
   }
 
   override fun onToolbarNavClicked() {
-    callback.onNavigationEvent()
+    setUniqueState(true, old = { it.navigate }) { state, value -> state.copy(navigate = value) }
   }
 
-  interface Callback : UiBinder.Callback {
-
-    fun onNavigationEvent()
-  }
+  data class AboutState(val navigate: Boolean) : UiState
 }

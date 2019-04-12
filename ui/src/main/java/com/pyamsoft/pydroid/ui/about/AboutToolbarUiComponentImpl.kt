@@ -21,14 +21,14 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel.AboutState
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 
 internal class AboutToolbarUiComponentImpl internal constructor(
   private val toolbar: AboutToolbarView,
-  private val binder: AboutToolbarBinder
+  private val viewModel: AboutToolbarViewModel
 ) : BaseUiComponent<AboutToolbarUiComponent.Callback>(),
-    AboutToolbarUiComponent,
-    AboutToolbarBinder.Callback {
+    AboutToolbarUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -41,19 +41,28 @@ internal class AboutToolbarUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       toolbar.teardown()
-      binder.unbind()
+      viewModel.unbind()
     }
 
     toolbar.inflate(savedInstanceState)
-    binder.bind(this)
+    viewModel.bind { state, oldState ->
+      renderNavigate(state, oldState)
+    }
+  }
+
+  private fun renderNavigate(
+    state: AboutState,
+    oldState: AboutState?
+  ) {
+    state.renderOnChange(oldState, value = { it.navigate }) { navigate ->
+      if (navigate) {
+        callback.close()
+      }
+    }
   }
 
   override fun onSaveState(outState: Bundle) {
     toolbar.saveState(outState)
-  }
-
-  override fun onNavigationEvent() {
-    callback.close()
   }
 
 }

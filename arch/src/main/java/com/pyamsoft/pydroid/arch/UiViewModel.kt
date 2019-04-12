@@ -109,7 +109,7 @@ abstract class UiViewModel<T : UiState> protected constructor(
    * by the onRender callback we generally need to first set the value of whatever field back to
    * its initial state, and then immediately update it to the proper value.
    */
-  protected fun <M : Any> setUniqueState(
+  protected fun <M : Any?> setUniqueState(
     value: M,
     old: (state: T) -> M,
     applyValue: (state: T, value: M) -> T

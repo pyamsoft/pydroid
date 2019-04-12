@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel.AboutItemState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent.Callback
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 
@@ -28,10 +29,9 @@ internal class AboutViewHolderUiComponentImpl internal constructor(
   private val titleView: AboutItemTitleView,
   private val actionsView: AboutItemActionsView,
   private val descriptionView: AboutItemDescriptionView,
-  private val binder: AboutItemBinder
+  private val viewModel: AboutItemViewModel
 ) : BaseUiComponent<AboutViewHolderUiComponent.Callback>(),
-    AboutViewHolderUiComponent,
-    AboutItemBinder.Callback {
+    AboutViewHolderUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -46,27 +46,26 @@ internal class AboutViewHolderUiComponentImpl internal constructor(
       titleView.teardown()
       actionsView.teardown()
       descriptionView.teardown()
-      binder.unbind()
+      viewModel.unbind()
     }
 
     titleView.inflate(savedInstanceState)
     actionsView.inflate(savedInstanceState)
     descriptionView.inflate(savedInstanceState)
-    binder.bind(this)
+    viewModel.bind { state, oldState ->
+      renderUrl(state, oldState)
+    }
   }
 
-  override fun handleViewLicense(
-    name: String,
-    licenseUrl: String
+  private fun renderUrl(
+    state: AboutItemState,
+    oldState: AboutItemState?
   ) {
-    callback.showLicense(name, licenseUrl)
-  }
-
-  override fun handleVisitHomepage(
-    name: String,
-    homepageUrl: String
-  ) {
-    callback.showHomepage(name, homepageUrl)
+    state.renderOnChange(oldState, value = { it.url }) { url ->
+      if (url.isNotBlank()) {
+        callback.onNavigateExternalUrl(url)
+      }
+    }
   }
 
   override fun onSaveState(outState: Bundle) {

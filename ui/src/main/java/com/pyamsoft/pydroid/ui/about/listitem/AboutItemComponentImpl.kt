@@ -26,14 +26,14 @@ internal class AboutItemComponentImpl internal constructor(
 ) : AboutItemComponent {
 
   override fun inject(viewHolder: AboutViewHolder) {
-    val presenter = AboutItemBinder()
+    val viewModel = AboutItemViewModel()
     val aboutTitleView = AboutItemTitleView(model, parent)
-    val aboutActionsView = AboutItemActionsView(model, parent, presenter)
+    val aboutActionsView = AboutItemActionsView(model, parent, viewModel)
     val aboutDescriptionView = AboutItemDescriptionView(model, parent)
 
     viewHolder.apply {
       this.component = AboutViewHolderUiComponentImpl(
-          aboutTitleView, aboutActionsView, aboutDescriptionView, presenter
+          aboutTitleView, aboutActionsView, aboutDescriptionView, viewModel
       )
     }
   }

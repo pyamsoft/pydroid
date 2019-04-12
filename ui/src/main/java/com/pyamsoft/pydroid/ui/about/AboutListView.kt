@@ -82,18 +82,8 @@ internal class AboutListView internal constructor(
   private fun setupListView() {
     aboutAdapter = AboutAdapter(object : AboutViewHolderUiComponent.Callback {
 
-      override fun showLicense(
-        name: String,
-        licenseUrl: String
-      ) {
-        callback.onViewLicenseClicked(name, licenseUrl)
-      }
-
-      override fun showHomepage(
-        name: String,
-        homepageUrl: String
-      ) {
-        callback.onVisitHomepageClicked(name, homepageUrl)
+      override fun onNavigateExternalUrl(url: String) {
+        callback.onNavigateExternalUrl(url)
       }
 
     })
@@ -142,15 +132,8 @@ internal class AboutListView internal constructor(
 
   interface Callback {
 
-    fun onViewLicenseClicked(
-      name: String,
-      licenseUrl: String
-    )
+    fun onNavigateExternalUrl(url: String)
 
-    fun onVisitHomepageClicked(
-      name: String,
-      homepageUrl: String
-    )
   }
 
   companion object {

@@ -23,15 +23,7 @@ internal interface AboutViewHolderUiComponent : UiComponent<AboutViewHolderUiCom
 
   interface Callback {
 
-    fun showLicense(
-      name: String,
-      licenseUrl: String
-    )
-
-    fun showHomepage(
-      name: String,
-      homepageUrl: String
-    )
+    fun onNavigateExternalUrl(url: String)
 
   }
 

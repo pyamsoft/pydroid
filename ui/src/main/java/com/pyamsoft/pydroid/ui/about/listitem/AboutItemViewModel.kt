@@ -17,11 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.arch.UiBinder
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel.AboutItemState
 
-internal class AboutItemBinder internal constructor(
-) : UiBinder<AboutItemBinder.Callback>(),
-    AboutItemActionsView.Callback {
+internal class AboutItemViewModel internal constructor(
+) : UiViewModel<AboutItemState>(
+    initialState = AboutItemState(url = "")
+), AboutItemActionsView.Callback {
 
   override fun onBind() {
   }
@@ -33,26 +36,20 @@ internal class AboutItemBinder internal constructor(
     name: String,
     licenseUrl: String
   ) {
-    callback.handleViewLicense(name, licenseUrl)
+    handleUrl(licenseUrl)
   }
 
   override fun onVisitHomepageClicked(
     name: String,
     homepageUrl: String
   ) {
-    callback.handleVisitHomepage(name, homepageUrl)
+    handleUrl(homepageUrl)
   }
 
-  interface Callback : UiBinder.Callback {
-
-    fun handleViewLicense(
-      name: String,
-      licenseUrl: String
-    )
-
-    fun handleVisitHomepage(
-      name: String,
-      homepageUrl: String
-    )
+  private fun handleUrl(url: String) {
+    setUniqueState(url, old = { it.url }) { state, value -> state.copy(url = value) }
   }
+
+  data class AboutItemState(val url: String) : UiState
 }
+

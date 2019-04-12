@@ -87,21 +87,7 @@ internal class AboutViewModel internal constructor(
     }
   }
 
-  override fun onViewLicenseClicked(
-    name: String,
-    licenseUrl: String
-  ) {
-    handleUrl(licenseUrl)
-  }
-
-  override fun onVisitHomepageClicked(
-    name: String,
-    homepageUrl: String
-  ) {
-    handleUrl(homepageUrl)
-  }
-
-  private fun handleUrl(url: String) {
+  override fun onNavigateExternalUrl(url: String) {
     setUniqueState(url, old = { it.url }) { state, value -> state.copy(url = value) }
   }
 

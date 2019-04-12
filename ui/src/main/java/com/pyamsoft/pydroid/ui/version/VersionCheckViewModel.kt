@@ -17,32 +17,31 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import com.pyamsoft.pydroid.arch.Presenter
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState.Loading
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState.UpgradePayload
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.Loading
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.UpgradePayload
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Begin
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Complete
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Error
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Found
 import timber.log.Timber
 
-internal class VersionCheckPresenter internal constructor(
+internal class VersionCheckViewModel internal constructor(
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider,
   private val bus: EventBus<VersionCheckState>
-) : Presenter<VersionState, VersionCheckPresenter.Callback>() {
+) : UiViewModel<VersionState>(
+    initialState = VersionState(isLoading = null, throwable = null, upgrade = null)
+) {
 
   private var checkUpdatesDisposable by singleDisposable()
-
-  override fun initialState(): VersionState {
-    return VersionState(isLoading = null, throwable = null, upgrade = null)
-  }
 
   override fun onBind() {
     listenForVersionCheckEvents()
@@ -111,7 +110,7 @@ internal class VersionCheckPresenter internal constructor(
     val isLoading: Loading?,
     val throwable: Throwable?,
     val upgrade: UpgradePayload?
-  ) {
+  ) : UiState {
 
     data class Loading(val forced: Boolean)
 
@@ -120,6 +119,4 @@ internal class VersionCheckPresenter internal constructor(
       val newVersion: Int
     )
   }
-
-  interface Callback : Presenter.Callback<VersionState>
 }

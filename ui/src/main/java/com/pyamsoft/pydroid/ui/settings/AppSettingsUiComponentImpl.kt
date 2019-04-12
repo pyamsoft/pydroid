@@ -26,20 +26,18 @@ import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
 internal class AppSettingsUiComponentImpl internal constructor(
   private val settingsView: AppSettingsView,
-  private val versionPresenter: VersionCheckPresenter,
+  private val versionViewModel: VersionCheckViewModel,
   private val ratingViewModel: RatingViewModel,
   private val settingsViewModel: AppSettingsViewModel,
   private val navigationViewModel: NavigationViewModel
 ) : BaseUiComponent<AppSettingsUiComponent.Callback>(),
-    AppSettingsUiComponent,
-    VersionCheckPresenter.Callback {
+    AppSettingsUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -52,12 +50,11 @@ internal class AppSettingsUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       settingsView.teardown()
-      versionPresenter.unbind()
+      versionViewModel.unbind()
       settingsViewModel.unbind()
     }
 
     settingsView.inflate(savedInstanceState)
-    versionPresenter.bind(this)
     settingsViewModel.bind { state, oldState ->
       renderMoreApps(state, oldState)
       renderShowUpgrade(state, oldState)
@@ -67,6 +64,9 @@ internal class AppSettingsUiComponentImpl internal constructor(
       renderCheckForUpdates(state, oldState)
       renderShowLicenses(state, oldState)
       renderRate(state, oldState)
+    }
+    versionViewModel.bind { _, _ ->
+      Timber.d("VersionState render handled by VersionCheckActivity")
     }
   }
 
@@ -145,7 +145,7 @@ internal class AppSettingsUiComponentImpl internal constructor(
   ) {
     state.renderOnChange(oldState, value = { it.checkForUpdate }) { check ->
       if (check) {
-        versionPresenter.checkForUpdates(true)
+        versionViewModel.checkForUpdates(true)
       }
     }
   }
@@ -170,13 +170,6 @@ internal class AppSettingsUiComponentImpl internal constructor(
         callback.onRateApp()
       }
     }
-  }
-
-  override fun onRender(
-    state: VersionState,
-    oldState: VersionState?
-  ) {
-    Timber.d("VersionState onRender handled by VersionCheckActivity")
   }
 
 }

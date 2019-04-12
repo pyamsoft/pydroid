@@ -35,7 +35,7 @@ internal class VersionComponentImpl internal constructor(
 ) : VersionComponent {
 
   override fun inject(activity: VersionCheckActivity) {
-    val presenter = VersionCheckPresenter(interactor, schedulerProvider, bus)
+    val presenter = VersionCheckViewModel(interactor, schedulerProvider, bus)
     val view = VersionView(view, owner)
     val failed = NavigationViewModel(schedulerProvider, failedNavBus)
 

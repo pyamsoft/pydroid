@@ -24,17 +24,16 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel.NavigationState
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
 import com.pyamsoft.pydroid.ui.version.VersionCheckUiComponent.Callback
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState
 import timber.log.Timber
 
 internal class VersionCheckUiComponentImpl internal constructor(
   private val navigationViewModel: NavigationViewModel,
-  private val versionPresenter: VersionCheckPresenter,
+  private val versionViewModel: VersionCheckViewModel,
   private val versionView: VersionView
 ) : BaseUiComponent<VersionCheckUiComponent.Callback>(),
-    VersionCheckUiComponent,
-    VersionCheckPresenter.Callback {
+    VersionCheckUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -48,13 +47,17 @@ internal class VersionCheckUiComponentImpl internal constructor(
     owner.doOnDestroy {
       versionView.teardown()
       navigationViewModel.unbind()
-      versionPresenter.unbind()
+      versionViewModel.unbind()
     }
 
     versionView.inflate(savedInstanceState)
-    versionPresenter.bind(this)
     navigationViewModel.bind { state, oldState ->
       renderNavigationError(state, oldState)
+    }
+    versionViewModel.bind { state, oldState ->
+      renderLoading(state, oldState)
+      renderUpgrade(state, oldState)
+      renderError(state, oldState)
     }
   }
 
@@ -73,27 +76,16 @@ internal class VersionCheckUiComponentImpl internal constructor(
     versionView.saveState(outState)
   }
 
-  override fun onRender(
-    state: VersionState,
-    oldState: VersionState?
-  ) {
-    renderLoading(state, oldState)
-    renderUpgrade(state, oldState)
-    renderError(state, oldState)
-  }
-
   private fun renderLoading(
     state: VersionState,
     oldState: VersionState?
   ) {
-    state.isLoading.let { loading ->
-      if (oldState == null || loading != oldState.isLoading) {
-        if (loading == null) {
-          versionView.dismissUpdating()
-        } else {
-          if (loading.forced) {
-            versionView.showUpdating()
-          }
+    state.renderOnChange(oldState, value = { it.isLoading }) { loading ->
+      if (loading == null) {
+        versionView.dismissUpdating()
+      } else {
+        if (loading.forced) {
+          versionView.showUpdating()
         }
       }
     }
@@ -103,13 +95,11 @@ internal class VersionCheckUiComponentImpl internal constructor(
     state: VersionState,
     oldState: VersionState?
   ) {
-    state.upgrade.let { upgrade ->
-      if (oldState == null || upgrade != oldState.upgrade) {
-        if (upgrade != null) {
-          val (currentVersion, newVersion) = upgrade
-          Timber.d("Updated version found. %d => %d", currentVersion, newVersion)
-          callback.onShowVersionUpgrade(newVersion)
-        }
+    state.renderOnChange(oldState, value = { it.upgrade }) { upgrade ->
+      if (upgrade != null) {
+        val (currentVersion, newVersion) = upgrade
+        Timber.d("Updated version found. %d => %d", currentVersion, newVersion)
+        callback.onShowVersionUpgrade(newVersion)
       }
     }
   }
@@ -118,11 +108,9 @@ internal class VersionCheckUiComponentImpl internal constructor(
     state: VersionState,
     oldState: VersionState?
   ) {
-    state.throwable.let { throwable ->
-      if (oldState == null || throwable != oldState.throwable) {
-        if (throwable != null) {
-          Timber.e(throwable, "Error checking for latest version")
-        }
+    state.renderOnChange(oldState, value = { it.throwable }) { throwable ->
+      if (throwable != null) {
+        Timber.e(throwable, "Error checking for latest version")
       }
     }
   }

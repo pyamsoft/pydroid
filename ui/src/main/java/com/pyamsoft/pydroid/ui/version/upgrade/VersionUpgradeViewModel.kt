@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState.Upgrade
 
 internal class VersionUpgradeViewModel internal constructor(
 ) : UiViewModel<VersionState>(
@@ -33,13 +34,16 @@ internal class VersionUpgradeViewModel internal constructor(
   }
 
   override fun onUpgradeClicked() {
-    setState { copy(upgrade = true) }
+    setState { copy(upgrade = Upgrade(true)) }
   }
 
   override fun onCancelClicked() {
-    setState { copy(upgrade = false) }
+    setState { copy(upgrade = Upgrade(false)) }
   }
 
-  // Nullable boolean, kind of weird.
-  data class VersionState(val upgrade: Boolean?) : UiState
+  data class VersionState(val upgrade: Upgrade?) : UiState {
+
+    data class Upgrade(val upgrade: Boolean)
+
+  }
 }

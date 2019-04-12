@@ -63,7 +63,7 @@ internal class VersionUpgradeUiComponentImpl internal constructor(
   ) {
     state.renderOnChange(oldState, value = { it.upgrade }) { upgrade ->
       if (upgrade != null) {
-        if (upgrade) {
+        if (upgrade.upgrade) {
           callback.onNavigateToMarket()
         } else {
           callback.onCancelUpgrade()

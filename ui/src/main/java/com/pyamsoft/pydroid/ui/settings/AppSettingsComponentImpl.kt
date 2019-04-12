@@ -27,7 +27,7 @@ import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckState
 
 internal class AppSettingsComponentImpl internal constructor(
@@ -52,7 +52,7 @@ internal class AppSettingsComponentImpl internal constructor(
         hideUpgradeInformation, preferenceScreen, presenter
     )
     val failed = NavigationViewModel(schedulerProvider, failedNavBus)
-    val versionPresenter = VersionCheckPresenter(
+    val versionPresenter = VersionCheckViewModel(
         versionCheckInteractor, schedulerProvider, versionCheckBus
     )
     val ratingPresenter = RatingViewModel(

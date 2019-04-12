@@ -17,17 +17,20 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import com.pyamsoft.pydroid.arch.UiBinder
+import com.pyamsoft.pydroid.arch.UiState
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel.RatingState
 
-internal class RatingDialogBinder internal constructor(
+internal class RatingDialogViewModel internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
-) : UiBinder<RatingDialogBinder.Callback>(),
-    RatingControlsView.Callback {
+) : UiViewModel<RatingState>(
+    initialState = RatingState(rateLink = "")
+), RatingControlsView.Callback {
 
   private var saveDisposable by singleDisposable()
 
@@ -50,21 +53,13 @@ internal class RatingDialogBinder internal constructor(
     saveDisposable = interactor.saveRating()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe {
-          val rate = link.isNotBlank()
-          if (rate) {
-            callback.handleVisitApplicationPageToRate(link)
-          } else {
-            callback.handleDidNotRate()
-          }
-        }
+        .subscribe { handleRate(link) }
   }
 
-  interface Callback : UiBinder.Callback {
-
-    fun handleVisitApplicationPageToRate(packageName: String)
-
-    fun handleDidNotRate()
+  private fun handleRate(link: String) {
+    setState { copy(rateLink = link) }
   }
+
+  data class RatingState(val rateLink: String) : UiState
 
 }

@@ -25,16 +25,16 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogUiComponent.Callback
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel.RatingState
 
 internal class RatingDialogUiComponentImpl internal constructor(
-  private val binder: RatingDialogBinder,
+  private val viewModel: RatingDialogViewModel,
   private val iconView: RatingIconView,
   private val changelogView: RatingChangelogView,
   private val controlsView: RatingControlsView,
   private val navigationViewModel: NavigationViewModel
 ) : BaseUiComponent<RatingDialogUiComponent.Callback>(),
-    RatingDialogUiComponent,
-    RatingDialogBinder.Callback {
+    RatingDialogUiComponent {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -49,13 +49,28 @@ internal class RatingDialogUiComponentImpl internal constructor(
       iconView.teardown()
       changelogView.teardown()
       controlsView.teardown()
-      binder.unbind()
+      viewModel.unbind()
     }
 
     iconView.inflate(savedInstanceState)
     changelogView.inflate(savedInstanceState)
     controlsView.inflate(savedInstanceState)
-    binder.bind(this)
+    viewModel.bind { state, oldState ->
+      renderRateLink(state, oldState)
+    }
+  }
+
+  private fun renderRateLink(
+    state: RatingState,
+    oldState: RatingState?
+  ) {
+    state.renderOnChange(oldState, value = { it.rateLink }) { link ->
+      if (link.isBlank()) {
+        callback.onCancelRating()
+      } else {
+        callback.onNavigateToApplicationPage(link)
+      }
+    }
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -66,14 +81,6 @@ internal class RatingDialogUiComponentImpl internal constructor(
 
   override fun navigationFailed(error: ActivityNotFoundException) {
     navigationViewModel.failedNavigation(error)
-  }
-
-  override fun handleVisitApplicationPageToRate(packageName: String) {
-    callback.onNavigateToApplicationPage(packageName)
-  }
-
-  override fun handleDidNotRate() {
-    callback.onCancelRating()
   }
 
 }

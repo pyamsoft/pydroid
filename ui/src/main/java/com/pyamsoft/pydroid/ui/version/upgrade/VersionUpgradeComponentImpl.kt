@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 
 internal class VersionUpgradeComponentImpl internal constructor(
   private val parent: ViewGroup,
@@ -36,7 +36,7 @@ internal class VersionUpgradeComponentImpl internal constructor(
     val presenter = VersionUpgradeBinder()
     val controls = VersionUpgradeControlView(parent, presenter)
     val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
-    val failed = FailedNavigationBinder(schedulerProvider, failedNavBus)
+    val failed = NavigationViewModel(schedulerProvider, failedNavBus)
 
     dialog.apply {
       this.component = VersionUpgradeUiComponentImpl(controls, content, failed, presenter)

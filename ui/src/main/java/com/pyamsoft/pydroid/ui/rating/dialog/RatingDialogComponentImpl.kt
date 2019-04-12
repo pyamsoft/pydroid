@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 
 internal class RatingDialogComponentImpl internal constructor(
   private val interactor: RatingInteractor,
@@ -38,7 +38,7 @@ internal class RatingDialogComponentImpl internal constructor(
 ) : RatingDialogComponent {
 
   override fun inject(dialog: RatingDialog) {
-    val failedPresenter = FailedNavigationBinder(schedulerProvider, failedNavBus)
+    val failedPresenter = NavigationViewModel(schedulerProvider, failedNavBus)
     val presenter = RatingDialogBinder(interactor, schedulerProvider)
     val controlsView = RatingControlsView(rateLink, parent, presenter)
     val iconView = RatingIconView(changelogIcon, imageLoader, parent)

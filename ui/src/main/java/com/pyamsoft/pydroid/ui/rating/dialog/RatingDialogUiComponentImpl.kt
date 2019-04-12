@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogUiComponent.Callback
 
 internal class RatingDialogUiComponentImpl internal constructor(
@@ -31,7 +31,7 @@ internal class RatingDialogUiComponentImpl internal constructor(
   private val iconView: RatingIconView,
   private val changelogView: RatingChangelogView,
   private val controlsView: RatingControlsView,
-  private val failedNavigationBinder: FailedNavigationBinder
+  private val navigationViewModel: NavigationViewModel
 ) : BaseUiComponent<RatingDialogUiComponent.Callback>(),
     RatingDialogUiComponent,
     RatingDialogBinder.Callback {
@@ -65,7 +65,7 @@ internal class RatingDialogUiComponentImpl internal constructor(
   }
 
   override fun navigationFailed(error: ActivityNotFoundException) {
-    failedNavigationBinder.failedNavigation(error)
+    navigationViewModel.failedNavigation(error)
   }
 
   override fun handleVisitApplicationPageToRate(packageName: String) {

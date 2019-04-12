@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingBinder
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
@@ -35,7 +35,7 @@ internal class AppSettingsUiComponentImpl internal constructor(
   private val versionPresenter: VersionCheckPresenter,
   private val ratingBinder: RatingBinder,
   private val settingsBinder: AppSettingsBinder,
-  private val failedNavBinder: FailedNavigationBinder
+  private val navViewModel: NavigationViewModel
 ) : BaseUiComponent<AppSettingsUiComponent.Callback>(),
     AppSettingsUiComponent,
     AppSettingsBinder.Callback,
@@ -66,7 +66,7 @@ internal class AppSettingsUiComponentImpl internal constructor(
   }
 
   override fun failedNavigation(error: ActivityNotFoundException) {
-    failedNavBinder.failedNavigation(error)
+    navViewModel.failedNavigation(error)
   }
 
   override fun handleViewMorePyamsoftApps() {

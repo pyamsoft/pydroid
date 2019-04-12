@@ -23,13 +23,13 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeUiComponent.Callback
 
 internal class VersionUpgradeUiComponentImpl internal constructor(
   private val controlsView: VersionUpgradeControlView,
   private val contentView: VersionUpgradeContentView,
-  private val failedNavigationBinder: FailedNavigationBinder,
+  private val navigationViewModel: NavigationViewModel,
   private val binder: VersionUpgradeBinder
 ) : BaseUiComponent<VersionUpgradeUiComponent.Callback>(),
     VersionUpgradeUiComponent,
@@ -69,7 +69,7 @@ internal class VersionUpgradeUiComponentImpl internal constructor(
   }
 
   override fun navigationFailed(error: ActivityNotFoundException) {
-    failedNavigationBinder.failedNavigation(error)
+    navigationViewModel.failedNavigation(error)
   }
 
 }

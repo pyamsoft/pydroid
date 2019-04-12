@@ -17,25 +17,24 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import android.content.ActivityNotFoundException
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel.NavigationState
 import com.pyamsoft.pydroid.ui.version.VersionCheckPresenter.VersionState
 import com.pyamsoft.pydroid.ui.version.VersionCheckUiComponent.Callback
 import timber.log.Timber
 
 internal class VersionCheckUiComponentImpl internal constructor(
-  private val failedNavigationBinder: FailedNavigationBinder,
+  private val navigationViewModel: NavigationViewModel,
   private val versionPresenter: VersionCheckPresenter,
   private val versionView: VersionView
 ) : BaseUiComponent<VersionCheckUiComponent.Callback>(),
     VersionCheckUiComponent,
-    VersionCheckPresenter.Callback,
-    FailedNavigationBinder.Callback {
+    VersionCheckPresenter.Callback {
 
   override fun id(): Int {
     throw InvalidIdException
@@ -48,13 +47,26 @@ internal class VersionCheckUiComponentImpl internal constructor(
   ) {
     owner.doOnDestroy {
       versionView.teardown()
-      failedNavigationBinder.unbind()
+      navigationViewModel.unbind()
       versionPresenter.unbind()
     }
 
     versionView.inflate(savedInstanceState)
-    failedNavigationBinder.bind(this)
     versionPresenter.bind(this)
+    navigationViewModel.bind { state, oldState ->
+      renderNavigationError(state, oldState)
+    }
+  }
+
+  private fun renderNavigationError(
+    state: NavigationState,
+    oldState: NavigationState?
+  ) {
+    state.renderOnChange(oldState, value = { it.throwable }) { throwable ->
+      if (throwable != null) {
+        versionView.showError(throwable)
+      }
+    }
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -113,10 +125,6 @@ internal class VersionCheckUiComponentImpl internal constructor(
         }
       }
     }
-  }
-
-  override fun handleFailedNavigation(error: ActivityNotFoundException) {
-    versionView.showError(error)
   }
 
 }

@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingBinder
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -51,7 +51,7 @@ internal class AppSettingsComponentImpl internal constructor(
         theming, applicationName, bugreportUrl, hideClearAll,
         hideUpgradeInformation, preferenceScreen, presenter
     )
-    val failed = FailedNavigationBinder(schedulerProvider, failedNavBus)
+    val failed = NavigationViewModel(schedulerProvider, failedNavBus)
     val versionPresenter = VersionCheckPresenter(
         versionCheckInteractor, schedulerProvider, versionCheckBus
     )

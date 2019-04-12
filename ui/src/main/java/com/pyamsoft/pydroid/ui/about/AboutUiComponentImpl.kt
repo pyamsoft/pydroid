@@ -25,14 +25,14 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
 import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationBinder
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal class AboutUiComponentImpl internal constructor(
   private val listView: AboutListView,
   private val spinner: SpinnerView,
   private val viewModel: AboutViewModel,
-  private val failedNavigationBinder: FailedNavigationBinder
+  private val navigationViewModel: NavigationViewModel
 ) : BaseUiComponent<AboutUiComponent.Callback>(),
     AboutUiComponent {
 
@@ -119,7 +119,7 @@ internal class AboutUiComponentImpl internal constructor(
   }
 
   override fun failedNavigation(error: ActivityNotFoundException) {
-    failedNavigationBinder.failedNavigation(error)
+    navigationViewModel.failedNavigation(error)
   }
 
 }

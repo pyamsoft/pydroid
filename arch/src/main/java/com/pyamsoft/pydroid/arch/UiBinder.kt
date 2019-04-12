@@ -17,10 +17,10 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CallSuper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
+@Deprecated("Use UiViewModel")
 abstract class UiBinder<C : UiBinder.Callback> protected constructor() {
 
   private var bound: Boolean

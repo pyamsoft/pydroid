@@ -25,6 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executors
 
+@Deprecated("Use UiViewModel")
 abstract class Presenter<T : Any, C : Presenter.Callback<T>> protected constructor(
 ) : UiBinder<C>() {
 

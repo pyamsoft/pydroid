@@ -23,11 +23,14 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionSt
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState.Upgrade
 
 internal class VersionUpgradeViewModel internal constructor(
+  private val handler: VersionUpgradeHandler
 ) : UiViewModel<VersionState>(
     initialState = VersionState(upgrade = null)
 ), VersionUpgradeControlView.Callback {
 
   override fun onBind() {
+    handler.handle(this)
+        .destroy()
   }
 
   override fun onUnbind() {

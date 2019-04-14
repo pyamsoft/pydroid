@@ -38,8 +38,8 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponentImpl
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingUiComponentImpl
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponentImpl
@@ -51,6 +51,7 @@ import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.VersionComponentImpl
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponentImpl
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
 
 internal class PYDroidComponentImpl internal constructor(
   application: Application,
@@ -62,8 +63,8 @@ internal class PYDroidComponentImpl internal constructor(
 ) : PYDroidComponent, ModuleProvider {
 
   private val ratingStateBus = RxBus.create<ShowRating>()
-
   private val versionStateBus = RxBus.create<VersionCheckState>()
+  private val versionHandlerBus = RxBus.create<VersionHandlerEvent>()
 
   private val preferences = PYDroidPreferencesImpl(application)
   private val enforcer by lazy { Enforcer(debug) }
@@ -102,7 +103,8 @@ internal class PYDroidComponentImpl internal constructor(
     parent: ViewGroup,
     newVersion: Int
   ): VersionUpgradeComponent = VersionUpgradeComponentImpl(
-      parent, applicationName, currentVersion, newVersion, schedulerProvider, navigationModule.bus
+      parent, applicationName, currentVersion, newVersion, schedulerProvider,
+      navigationModule.bus, versionHandlerBus
   )
 
   override fun plusSettingsComponent(

@@ -27,6 +27,10 @@ dependencies {
   // Fluid resize
   implementation "com.popinnow.android.fluidresizer:fluidresizer:$fluidresizer"
 
+  // Dagger
+  implementation "com.google.dagger:dagger:$dagger"
+  kapt "com.google.dagger:dagger-compiler:$dagger"
+
   api project(':arch')
   api project(':bootstrap')
   api project(':loader')

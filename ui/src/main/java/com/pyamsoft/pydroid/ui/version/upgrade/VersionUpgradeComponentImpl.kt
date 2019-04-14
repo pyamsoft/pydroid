@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
 
 internal class VersionUpgradeComponentImpl internal constructor(
   private val parent: ViewGroup,
@@ -29,12 +30,14 @@ internal class VersionUpgradeComponentImpl internal constructor(
   private val currentVersion: Int,
   private val newVersion: Int,
   private val schedulerProvider: SchedulerProvider,
-  private val failedNavBus: EventBus<FailedNavigationEvent>
+  private val failedNavBus: EventBus<FailedNavigationEvent>,
+  private val uiBus: EventBus<VersionHandlerEvent>
 ) : VersionUpgradeComponent {
 
   override fun inject(dialog: VersionUpgradeDialog) {
-    val presenter = VersionUpgradeViewModel()
-    val controls = VersionUpgradeControlView(parent, presenter)
+    val handler = VersionUpgradeHandler(schedulerProvider, uiBus)
+    val presenter = VersionUpgradeViewModel(handler)
+    val controls = VersionUpgradeControlView(parent, handler)
     val content = VersionUpgradeContentView(name, currentVersion, newVersion, parent)
     val failed = NavigationViewModel(schedulerProvider, failedNavBus)
 

@@ -50,7 +50,7 @@
   <string name="social_media_f_summary">Follow pyamsoft on social media!</string>
 
   <string name="social_media_b_key">social_media_b</string>
-  <string name="social_media_b_title">Blogs and Updated</string>
+  <string name="social_media_b_title">Blogs and Updates</string>
   <string name="social_media_b_summary">Follow the pyamsoft official blog for updates!</string>
 
   <!-- In most cases this will be overridden by a call to Theming.IS_DEFAULT_DARK_THEME -->

@@ -19,16 +19,21 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.popinnow.android.repo.Repo
 import com.popinnow.android.repo.moshi.MoshiPersister
 import com.popinnow.android.repo.newRepoBuilder
+import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.network.socket.DelegatingSocketFactory
+import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
-import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckApi
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.cache.Cache
 import com.squareup.moshi.Moshi
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -37,74 +42,108 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
+import javax.inject.Named
+import javax.inject.Singleton
 
-class VersionCheckModule(
-  context: Context,
-  enforcer: Enforcer,
-  debug: Boolean,
-  val currentVersion: Int
-) {
+@Module
+abstract class VersionCheckModule {
 
-  val interactor: VersionCheckInteractor
-
-  val moshi: Moshi = Moshi.Builder()
-      .build()
-
-  private val repo = newRepoBuilder<UpdatePayload>()
-      .memoryCache(30, MINUTES)
-      .persister(
-          2, HOURS,
-          File(context.cacheDir, "versioncache"),
-          MoshiPersister.create(moshi, UpdatePayload::class.java)
-      )
-      .build()
-
-  init {
-    val versionCheckApi = VersionCheckApi(provideRetrofit(provideOkHttpClient(debug)))
-    val versionCheckService = versionCheckApi.create(VersionCheckService::class.java)
-    val networkStatusProvider = NetworkStatusProviderImpl(context)
-    val minimumApiProvider = MinimumApiProviderImpl()
-
-    val network = VersionCheckInteractorNetwork(
-        currentVersion,
-        context.packageName,
-        enforcer, minimumApiProvider,
-        networkStatusProvider, versionCheckService
-    )
-
-    interactor = VersionCheckInteractorImpl(enforcer, debug, network, repo)
-  }
-
+  @Binds
   @CheckResult
-  private fun provideOkHttpClient(debug: Boolean): OkHttpClient {
-    return OkHttpClient.Builder()
-        .socketFactory(DelegatingSocketFactory.create())
-        .also {
-          if (debug) {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
-            it.addInterceptor(logging)
-          }
-        }
-        .build()
-  }
+  @Named("version_check_network")
+  internal abstract fun bindNetwork(impl: VersionCheckInteractorNetwork): VersionCheckInteractor
 
+  @Binds
   @CheckResult
-  private fun provideRetrofit(
-    okHttpClient: OkHttpClient
-  ): Retrofit {
-    return Retrofit.Builder()
-        .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-        .client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build()
-  }
+  @Named("cache_version")
+  internal abstract fun bindCache(impl: VersionCheckInteractorImpl): Cache
 
+  @Binds
+  @CheckResult
+  internal abstract fun bindInteractor(impl: VersionCheckInteractorImpl): VersionCheckInteractor
+
+  @Binds
+  @CheckResult
+  internal abstract fun bindNetworkStatus(impl: NetworkStatusProviderImpl): NetworkStatusProvider
+
+  @Binds
+  @CheckResult
+  internal abstract fun bindMinimumApi(impl: MinimumApiProviderImpl): MinimumApiProvider
+
+  @Module
   companion object {
 
     private const val GITHUB_URL = "raw.githubusercontent.com"
     private const val CURRENT_VERSION_REPO_BASE_URL =
       "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
+
+    @JvmStatic
+    @CheckResult
+    @Provides
+    @Singleton
+    internal fun provideService(retrofit: Retrofit): VersionCheckService {
+      return retrofit.create(VersionCheckService::class.java)
+    }
+
+    @JvmStatic
+    @CheckResult
+    @Provides
+    @Singleton
+    internal fun provideMoshi(): Moshi {
+      return Moshi.Builder()
+          .build()
+    }
+
+    @JvmStatic
+    @CheckResult
+    @Provides
+    @Singleton
+    internal fun provideRepo(
+      context: Context,
+      moshi: Moshi
+    ): Repo<UpdatePayload> {
+      return newRepoBuilder<UpdatePayload>()
+          .memoryCache(30, MINUTES)
+          .persister(
+              2, HOURS,
+              File(context.cacheDir, "versioncache"),
+              MoshiPersister.create(moshi, UpdatePayload::class.java)
+          )
+          .build()
+    }
+
+    @JvmStatic
+    @CheckResult
+    @Provides
+    @Singleton
+    internal fun provideOkHttpClient(@Named("debug") debug: Boolean): OkHttpClient {
+      return OkHttpClient.Builder()
+          .socketFactory(DelegatingSocketFactory.create())
+          .also {
+            if (debug) {
+              val logging = HttpLoggingInterceptor()
+              logging.level = HttpLoggingInterceptor.Level.BODY
+              it.addInterceptor(logging)
+            }
+          }
+          .build()
+    }
+
+    @JvmStatic
+    @CheckResult
+    @Provides
+    @Singleton
+    internal fun provideRetrofit(
+      okHttpClient: OkHttpClient,
+      moshi: Moshi
+    ): Retrofit {
+      return Retrofit.Builder()
+          .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
+          .client(okHttpClient)
+          .addConverterFactory(MoshiConverterFactory.create(moshi))
+          .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+          .build()
+    }
+
   }
 }

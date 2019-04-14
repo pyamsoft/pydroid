@@ -34,12 +34,13 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
+import javax.inject.Inject
 
 abstract class RatingActivity : VersionCheckActivity(),
     ChangeLogProvider,
     RatingUiComponent.Callback {
 
-  internal lateinit var ratingComponent: RatingUiComponent
+  @field:Inject internal lateinit var ratingComponent: RatingUiComponent
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -92,6 +93,10 @@ abstract class RatingActivity : VersionCheckActivity(),
     // Need to do this in onPostCreate because the snackbarRoot will not be available until
     // after subclass onCreate
     PYDroid.obtain(this)
+        .plusVersion()
+        .create(this, snackbarRoot)
+        .plusRating()
+        .create()
         .inject(this)
 
     ratingComponent.bind(this, savedInstanceState, this)

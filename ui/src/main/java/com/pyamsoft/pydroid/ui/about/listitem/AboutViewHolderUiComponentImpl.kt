@@ -24,13 +24,14 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel.AboutItemState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent.Callback
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
+import javax.inject.Inject
 
-internal class AboutViewHolderUiComponentImpl internal constructor(
+internal class AboutViewHolderUiComponentImpl @Inject internal constructor(
   private val titleView: AboutItemTitleView,
   private val actionsView: AboutItemActionsView,
   private val descriptionView: AboutItemDescriptionView,
   private val viewModel: AboutItemViewModel
-) : BaseUiComponent<AboutViewHolderUiComponent.Callback>(),
+) : BaseUiComponent<Callback>(),
     AboutViewHolderUiComponent {
 
   override fun id(): Int {

@@ -15,48 +15,41 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.about
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.UiEventHandler
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent.Upgrade
+import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
+import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent.ExternalUrl
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-internal class VersionUpgradeHandler @Inject internal constructor(
+internal class AboutHandler @Inject internal constructor(
   private val schedulerProvider: SchedulerProvider,
-  bus: EventBus<VersionHandlerEvent>
-) : UiEventHandler<VersionHandlerEvent, VersionUpgradeControlView.Callback>(bus),
-    VersionUpgradeControlView.Callback {
+  bus: EventBus<AboutHandlerEvent>
+) : UiEventHandler<AboutHandlerEvent, AboutListView.Callback>(bus),
+    AboutListView.Callback {
 
-  override fun onUpgradeClicked() {
-    publish(Upgrade)
-  }
-
-  override fun onCancelClicked() {
-    publish(Cancel)
+  override fun onNavigateExternalUrl(url: String) {
+    publish(ExternalUrl(url))
   }
 
   @CheckResult
-  override fun handle(delegate: VersionUpgradeControlView.Callback): Disposable {
+  override fun handle(delegate: AboutListView.Callback): Disposable {
     return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
-            is Upgrade -> delegate.onUpgradeClicked()
-            is Cancel -> delegate.onCancelClicked()
+            is ExternalUrl -> delegate.onNavigateExternalUrl(it.url)
           }
         }
   }
 
-  sealed class VersionHandlerEvent {
-    object Upgrade : VersionHandlerEvent()
-    object Cancel : VersionHandlerEvent()
+  sealed class AboutHandlerEvent {
+    data class ExternalUrl(val url: String) : AboutHandlerEvent()
   }
 
 }

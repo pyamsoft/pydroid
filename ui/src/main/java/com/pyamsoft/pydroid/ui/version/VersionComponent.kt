@@ -17,8 +17,42 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import android.view.View
+import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import com.pyamsoft.pydroid.ui.version.VersionComponent.VersionModule
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
+import dagger.Subcomponent
+
+@Subcomponent(modules = [VersionModule::class])
 internal interface VersionComponent {
 
-  fun inject(activity: VersionCheckActivity)
+  @CheckResult
+  fun plusRating(): RatingComponent.Factory
 
+  fun inject(fragment: VersionCheckActivity)
+
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance owner: LifecycleOwner,
+      @BindsInstance snackbarRoot: View
+    ): VersionComponent
+
+  }
+
+  @Module
+  abstract class VersionModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiComponent(impl: VersionCheckUiComponentImpl): VersionCheckUiComponent
+
+  }
 }
+

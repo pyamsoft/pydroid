@@ -23,8 +23,9 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel.NavigationState
+import javax.inject.Inject
 
-class NavigationViewModel(
+class NavigationViewModel @Inject internal constructor(
   private val schedulerProvider: SchedulerProvider,
   private val bus: EventBus<FailedNavigationEvent>
 ) : UiViewModel<NavigationState>(

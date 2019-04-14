@@ -26,8 +26,10 @@ import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
 import timber.log.Timber
+import javax.inject.Inject
 
-internal class AboutViewModel internal constructor(
+internal class AboutViewModel @Inject internal constructor(
+  private val handler: AboutHandler,
   private val interactor: AboutInteractor,
   private val schedulerProvider: SchedulerProvider
 ) : UiViewModel<AboutState>(
@@ -42,6 +44,8 @@ internal class AboutViewModel internal constructor(
   private var licenseDisposable by singleDisposable()
 
   override fun onBind() {
+    handler.handle(this).destroy()
+
     loadLicenses(false)
   }
 

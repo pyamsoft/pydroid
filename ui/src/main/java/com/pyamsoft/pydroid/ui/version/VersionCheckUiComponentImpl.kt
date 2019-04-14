@@ -27,12 +27,13 @@ import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel.NavigationState
 import com.pyamsoft.pydroid.ui.version.VersionCheckUiComponent.Callback
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState
 import timber.log.Timber
+import javax.inject.Inject
 
-internal class VersionCheckUiComponentImpl internal constructor(
+internal class VersionCheckUiComponentImpl @Inject internal constructor(
   private val navigationViewModel: NavigationViewModel,
   private val versionViewModel: VersionCheckViewModel,
   private val versionView: VersionView
-) : BaseUiComponent<VersionCheckUiComponent.Callback>(),
+) : BaseUiComponent<Callback>(),
     VersionCheckUiComponent {
 
   override fun id(): Int {

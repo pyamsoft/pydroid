@@ -20,10 +20,13 @@ package com.pyamsoft.pydroid.ui.settings
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState.DarkTheme
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
+import javax.inject.Inject
 
-internal class AppSettingsViewModel internal constructor(
+internal class AppSettingsViewModel @Inject internal constructor(
+  private val handler: AppSettingsHandler,
   private val theming: Theming
 ) : UiViewModel<SettingsState>(
     initialState = SettingsState(
@@ -36,11 +39,13 @@ internal class AppSettingsViewModel internal constructor(
         clearAppData = false,
         showLicenses = false,
         showUpgradeInfo = false,
-        darkTheme = theming.isDarkTheme()
+        darkTheme = null
     )
 ), AppSettingsView.Callback {
 
   override fun onBind() {
+    handler.handle(this)
+        .destroy()
   }
 
   override fun onUnbind() {
@@ -60,7 +65,7 @@ internal class AppSettingsViewModel internal constructor(
 
   override fun onDarkThemeToggled(dark: Boolean) {
     theming.setDarkTheme(dark) { value ->
-      setState { copy(darkTheme = value) }
+      setState { copy(darkTheme = DarkTheme(value)) }
     }
   }
 
@@ -109,14 +114,16 @@ internal class AppSettingsViewModel internal constructor(
   data class SettingsState(
     val navigateMoreApps: Boolean,
     val showUpgradeInfo: Boolean,
-    val darkTheme: Boolean,
     val clearAppData: Boolean,
     val checkForUpdate: Boolean,
     val showLicenses: Boolean,
     val navigateRateApp: Boolean,
     val bugReportLink: HyperlinkIntent?,
     val blogLink: HyperlinkIntent?,
-    val socialMediaLink: HyperlinkIntent?
-  ) : UiState
+    val socialMediaLink: HyperlinkIntent?,
+    val darkTheme: DarkTheme?
+  ) : UiState {
+    data class DarkTheme(val dark: Boolean)
+  }
 
 }

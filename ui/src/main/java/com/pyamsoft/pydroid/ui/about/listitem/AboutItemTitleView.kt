@@ -26,8 +26,9 @@ import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
+import javax.inject.Inject
 
-internal class AboutItemTitleView internal constructor(
+internal class AboutItemTitleView @Inject internal constructor(
   private val model: OssLibrary,
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {

@@ -23,8 +23,9 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Observable
 import io.reactivex.Single
+import javax.inject.Inject
 
-internal class AboutInteractorImpl internal constructor(
+internal class AboutInteractorImpl @Inject internal constructor(
   private val enforcer: Enforcer
 ) : AboutInteractor {
 

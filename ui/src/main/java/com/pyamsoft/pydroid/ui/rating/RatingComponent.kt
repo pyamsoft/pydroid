@@ -15,13 +15,33 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.navigation
+package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.core.bus.RxBus
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.rating.RatingComponent.RatingModule
+import dagger.Binds
+import dagger.Module
+import dagger.Subcomponent
 
-class FailedNavigationModule internal constructor() {
+@Subcomponent(modules = [RatingModule::class])
+internal interface RatingComponent {
 
-  val bus: EventBus<FailedNavigationEvent> = RxBus.create()
+  fun inject(fragment: RatingActivity)
 
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(): RatingComponent
+
+  }
+
+  @Module
+  abstract class RatingModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiComponent(impl: RatingUiComponentImpl): RatingUiComponent
+
+  }
 }

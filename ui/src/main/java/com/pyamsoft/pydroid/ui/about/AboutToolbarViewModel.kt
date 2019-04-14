@@ -20,13 +20,17 @@ package com.pyamsoft.pydroid.ui.about
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel.AboutState
+import javax.inject.Inject
 
-internal class AboutToolbarViewModel internal constructor(
+internal class AboutToolbarViewModel @Inject internal constructor(
+  private val handler: AboutToolbarHandler
 ) : UiViewModel<AboutState>(
     initialState = AboutState(navigate = false)
 ), AboutToolbarView.Callback {
 
   override fun onBind() {
+    handler.handle(this)
+        .destroy()
   }
 
   override fun onUnbind() {

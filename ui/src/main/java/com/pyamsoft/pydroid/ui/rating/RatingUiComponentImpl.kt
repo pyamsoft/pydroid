@@ -24,10 +24,11 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.rating.RatingUiComponent.Callback
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel.RatingState
+import javax.inject.Inject
 
-internal class RatingUiComponentImpl internal constructor(
+internal class RatingUiComponentImpl @Inject internal constructor(
   private val viewModel: RatingViewModel
-) : BaseUiComponent<RatingUiComponent.Callback>(),
+) : BaseUiComponent<Callback>(),
     RatingUiComponent {
 
   override fun id(): Int {

@@ -82,7 +82,7 @@ open class DelegatingSocketFactory protected constructor(
     @JvmStatic
     @CheckResult
     @JvmOverloads
-    fun create(factory: SocketFactory = SocketFactory.getDefault()): SocketFactory {
+    fun create(factory: SocketFactory = getDefault()): SocketFactory {
       return DelegatingSocketFactory(factory)
     }
   }

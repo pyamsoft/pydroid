@@ -24,12 +24,13 @@ import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
+import javax.inject.Inject
 
 abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Callback {
 
   protected abstract val snackbarRoot: View
 
-  internal lateinit var versionComponent: VersionCheckUiComponent
+  @field:Inject internal lateinit var versionComponent: VersionCheckUiComponent
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -38,7 +39,8 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Ca
     // Need to do this in onPostCreate because the snackbarRoot will not be available until
     // after subclass onCreate
     PYDroid.obtain(this)
-        .plusVersionComponent(this, snackbarRoot)
+        .plusVersion()
+        .create(this, snackbarRoot)
         .inject(this)
 
     versionComponent.bind(this, savedInstanceState, this)

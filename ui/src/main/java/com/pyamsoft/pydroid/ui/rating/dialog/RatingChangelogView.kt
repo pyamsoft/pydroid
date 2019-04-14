@@ -25,9 +25,11 @@ import android.widget.ScrollView
 import android.widget.TextView
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
+import javax.inject.Inject
+import javax.inject.Named
 
-internal class RatingChangelogView internal constructor(
-  private val changelog: SpannedString,
+internal class RatingChangelogView @Inject internal constructor(
+  @Named("change_log") private val changelog: SpannedString,
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 

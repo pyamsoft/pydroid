@@ -25,10 +25,11 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControlView.Callback
+import javax.inject.Inject
 
-internal class VersionUpgradeControlView internal constructor(
+internal class VersionUpgradeControlView @Inject internal constructor(
   parent: ViewGroup,
-  callback: VersionUpgradeControlView.Callback
+  callback: Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
   private val upgradeButton by lazyView<Button>(R.id.upgrade_button)

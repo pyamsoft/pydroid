@@ -24,16 +24,17 @@ import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState
-import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.Loading
-import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.UpgradePayload
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Begin
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Complete
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Error
 import com.pyamsoft.pydroid.ui.version.VersionCheckState.Found
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.Loading
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.UpgradePayload
 import timber.log.Timber
+import javax.inject.Inject
 
-internal class VersionCheckViewModel internal constructor(
+internal class VersionCheckViewModel @Inject internal constructor(
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider,
   private val bus: EventBus<VersionCheckState>
@@ -77,8 +78,9 @@ internal class VersionCheckViewModel internal constructor(
     currentVersion: Int,
     newVersion: Int
   ) {
-    setState {
-      copy(upgrade = UpgradePayload(currentVersion, newVersion), throwable = null)
+    setUniqueState(
+        UpgradePayload(currentVersion, newVersion), old = { it.upgrade }) { state, value ->
+      state.copy(upgrade = value)
     }
   }
 
@@ -98,11 +100,11 @@ internal class VersionCheckViewModel internal constructor(
     checkUpdatesDisposable = interactor.checkVersion(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .doOnSubscribe { bus.publish(VersionCheckState.Begin(force)) }
-        .doAfterTerminate { bus.publish(VersionCheckState.Complete) }
-        .subscribe({ bus.publish(VersionCheckState.Found(it.currentVersion, it.newVersion)) }, {
+        .doOnSubscribe { bus.publish(Begin(force)) }
+        .doAfterTerminate { bus.publish(Complete) }
+        .subscribe({ bus.publish(Found(it.currentVersion, it.newVersion)) }, {
           Timber.e(it, "Error checking for latest version")
-          bus.publish(VersionCheckState.Error(it))
+          bus.publish(Error(it))
         })
   }
 

@@ -21,10 +21,11 @@ import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import javax.inject.Inject
 
-internal class PYDroidPreferencesImpl internal constructor(
+internal class PYDroidPreferencesImpl @Inject internal constructor(
   context: Context
-) : PYDroidPreferences {
+) : RatingPreferences {
 
   private val prefs by lazy {
     PreferenceManager.getDefaultSharedPreferences(context.applicationContext)

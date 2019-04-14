@@ -20,13 +20,17 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel.AboutItemState
+import javax.inject.Inject
 
-internal class AboutItemViewModel internal constructor(
+internal class AboutItemViewModel @Inject internal constructor(
+  private val handler: AboutItemHandler
 ) : UiViewModel<AboutItemState>(
     initialState = AboutItemState(url = "")
 ), AboutItemActionsView.Callback {
 
   override fun onBind() {
+    handler.handle(this)
+        .destroy()
   }
 
   override fun onUnbind() {

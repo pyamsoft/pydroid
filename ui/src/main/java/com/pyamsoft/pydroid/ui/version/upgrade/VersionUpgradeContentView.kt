@@ -25,11 +25,13 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
+import javax.inject.Inject
+import javax.inject.Named
 
-internal class VersionUpgradeContentView internal constructor(
-  private val applicationName: String,
-  private val currentVersion: Int,
-  private val newVersion: Int,
+internal class VersionUpgradeContentView @Inject internal constructor(
+  @Named("application_name") private val applicationName: String,
+  @Named("current_version") private val currentVersion: Int,
+  @Named("new_version") private val newVersion: Int,
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 

@@ -17,8 +17,41 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent.AboutModule
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
+import dagger.Subcomponent
+
+@Subcomponent(modules = [AboutModule::class])
 internal interface AboutItemComponent {
 
   fun inject(viewHolder: AboutViewHolder)
+
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance parent: ViewGroup,
+      @BindsInstance model: OssLibrary
+    ): AboutItemComponent
+
+  }
+
+  @Module
+  abstract class AboutModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiComponent(impl: AboutViewHolderUiComponentImpl): AboutViewHolderUiComponent
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiCallback(impl: AboutItemHandler): AboutItemActionsView.Callback
+  }
 
 }

@@ -24,8 +24,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import javax.inject.Inject
 
-internal class VersionView internal constructor(
+internal class VersionView @Inject internal constructor(
   private val view: View,
   private val owner: LifecycleOwner
 ) : UiView {

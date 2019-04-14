@@ -25,22 +25,24 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
+import javax.inject.Inject
 
 internal class AboutViewHolder private constructor(
   view: View,
   private val callback: AboutViewHolderUiComponent.Callback
 ) : BaseViewHolder(view) {
 
-  private var bindLifecycle: ListItemLifecycle? = null
-  internal lateinit var component: AboutViewHolderUiComponent
+  @field:Inject internal lateinit var component: AboutViewHolderUiComponent
 
   private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
+  private var bindLifecycle: ListItemLifecycle? = null
 
   override fun bind(model: OssLibrary) {
     bindLifecycle?.unbind()
 
     PYDroid.obtain(itemView.context.applicationContext)
-        .plusAboutItemComponent(parent, model)
+        .plusAboutItem()
+        .create(parent, model)
         .inject(this)
 
     val owner = ListItemLifecycle()

@@ -15,48 +15,41 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version.upgrade
+package com.pyamsoft.pydroid.ui.about
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.UiEventHandler
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent.Cancel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent.Upgrade
+import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent
+import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent.Navigate
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-internal class VersionUpgradeHandler @Inject internal constructor(
+internal class AboutToolbarHandler @Inject internal constructor(
   private val schedulerProvider: SchedulerProvider,
-  bus: EventBus<VersionHandlerEvent>
-) : UiEventHandler<VersionHandlerEvent, VersionUpgradeControlView.Callback>(bus),
-    VersionUpgradeControlView.Callback {
+  bus: EventBus<ToolbarHandlerEvent>
+) : UiEventHandler<ToolbarHandlerEvent, AboutToolbarView.Callback>(bus),
+    AboutToolbarView.Callback {
 
-  override fun onUpgradeClicked() {
-    publish(Upgrade)
-  }
-
-  override fun onCancelClicked() {
-    publish(Cancel)
+  override fun onToolbarNavClicked() {
+    publish(Navigate)
   }
 
   @CheckResult
-  override fun handle(delegate: VersionUpgradeControlView.Callback): Disposable {
+  override fun handle(delegate: AboutToolbarView.Callback): Disposable {
     return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe {
           return@subscribe when (it) {
-            is Upgrade -> delegate.onUpgradeClicked()
-            is Cancel -> delegate.onCancelClicked()
+            is Navigate -> delegate.onToolbarNavClicked()
           }
         }
   }
 
-  sealed class VersionHandlerEvent {
-    object Upgrade : VersionHandlerEvent()
-    object Cancel : VersionHandlerEvent()
+  sealed class ToolbarHandlerEvent {
+    object Navigate : ToolbarHandlerEvent()
   }
 
 }

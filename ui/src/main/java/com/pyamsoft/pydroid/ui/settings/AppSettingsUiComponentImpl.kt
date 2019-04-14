@@ -29,8 +29,9 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
+import javax.inject.Inject
 
-internal class AppSettingsUiComponentImpl internal constructor(
+internal class AppSettingsUiComponentImpl @Inject internal constructor(
   private val settingsView: AppSettingsView,
   private val versionViewModel: VersionCheckViewModel,
   private val ratingViewModel: RatingViewModel,
@@ -104,7 +105,11 @@ internal class AppSettingsUiComponentImpl internal constructor(
     state: SettingsState,
     oldState: SettingsState?
   ) {
-    state.renderOnChange(oldState, value = { it.darkTheme }) { callback.onDarkThemeChanged(it) }
+    state.renderOnChange(oldState, value = { it.darkTheme }) { dark ->
+      if (dark != null) {
+        callback.onDarkThemeChanged(dark.dark)
+      }
+    }
   }
 
   private fun renderNavigationLinks(

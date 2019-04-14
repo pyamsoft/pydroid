@@ -24,8 +24,10 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel.RatingState
+import javax.inject.Inject
 
-internal class RatingDialogViewModel internal constructor(
+internal class RatingDialogViewModel @Inject internal constructor(
+  private val handler: RatingDialogHandler,
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
 ) : UiViewModel<RatingState>(
@@ -35,6 +37,8 @@ internal class RatingDialogViewModel internal constructor(
   private var saveDisposable by singleDisposable()
 
   override fun onBind() {
+    handler.handle(this)
+        .destroy()
   }
 
   override fun onUnbind() {

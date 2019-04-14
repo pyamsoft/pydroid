@@ -26,11 +26,12 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemActionsView.Callback
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import javax.inject.Inject
 
-internal class AboutItemActionsView internal constructor(
+internal class AboutItemActionsView @Inject internal constructor(
   private val model: OssLibrary,
   parent: ViewGroup,
-  callback: AboutItemActionsView.Callback
+  callback: Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
   private val viewLicense by lazyView<Button>(R.id.action_view_license)

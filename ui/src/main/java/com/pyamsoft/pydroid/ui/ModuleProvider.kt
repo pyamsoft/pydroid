@@ -19,38 +19,27 @@ package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.about.AboutModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationModule
+import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.squareup.moshi.Moshi
+import javax.inject.Provider
 
 interface ModuleProvider {
 
   @CheckResult
-  fun schedulerProvider(): SchedulerProvider
+  fun schedulerProvider(): Provider<SchedulerProvider>
 
   @CheckResult
-  fun enforcer(): Enforcer
+  fun enforcer(): Provider<Enforcer>
 
   @CheckResult
-  fun theming(): Theming
+  fun theming(): Provider<Theming>
 
   @CheckResult
-  fun loaderModule(): LoaderModule
+  fun imageLoader(): Provider<ImageLoader>
 
   @CheckResult
-  fun ratingModule(): RatingModule
-
-  @CheckResult
-  fun aboutModule(): AboutModule
-
-  @CheckResult
-  fun versionCheckModule(): VersionCheckModule
-
-  @CheckResult
-  fun failedNavigationModule(): FailedNavigationModule
+  fun moshi(): Provider<Moshi>
 
 }

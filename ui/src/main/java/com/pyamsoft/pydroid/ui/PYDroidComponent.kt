@@ -17,64 +17,198 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.text.SpannedString
-import android.view.View
-import android.view.ViewGroup
+import android.app.Application
+import android.content.Context
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
-import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.ui.PYDroidComponent.PYDroidModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
+import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
+import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
-import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import com.pyamsoft.pydroid.ui.rating.RatingActivity
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
+import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent
+import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.version.VersionCheckState
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
+import dagger.Provides
+import javax.inject.Named
+import javax.inject.Singleton
 
-internal interface PYDroidComponent {
-
-  fun inject(activity: RatingActivity)
-
-  @CheckResult
-  fun plusVersionComponent(
-    owner: LifecycleOwner,
-    view: View
-  ): VersionComponent
-
-  @CheckResult
-  fun plusVersionUpgradeComponent(
-    parent: ViewGroup,
-    newVersion: Int
-  ): VersionUpgradeComponent
-
-  @CheckResult
-  fun plusAboutItemComponent(
-    parent: ViewGroup,
-    model: OssLibrary
-  ): AboutItemComponent
+@Singleton
+@Component(
+    modules = [
+      AboutModule::class,
+      VersionCheckModule::class,
+      RatingModule::class,
+      LoaderModule::class,
+      PYDroidModule::class
+    ]
+)
+internal interface PYDroidComponent : ModuleProvider {
 
   @CheckResult
-  fun plusAboutComponent(
-    owner: LifecycleOwner,
-    toolbarActivity: ToolbarActivity,
-    backstackCount: Int,
-    parent: ViewGroup
-  ): AboutComponent
+  fun plusAbout(): AboutComponent.Factory
 
   @CheckResult
-  fun plusSettingsComponent(
-    preferenceScreen: PreferenceScreen,
-    hideClearAll: Boolean,
-    hideUpgradeInformation: Boolean
-  ): AppSettingsComponent
+  fun plusAboutItem(): AboutItemComponent.Factory
 
   @CheckResult
-  fun plusRatingDialogComponent(
-    parent: ViewGroup,
-    rateLink: String,
-    changelogIcon: Int,
-    changelog: SpannedString
-  ): RatingDialogComponent
+  fun plusRatingDialog(): RatingDialogComponent.Factory
+
+  @CheckResult
+  fun plusVersion(): VersionComponent.Factory
+
+  @CheckResult
+  fun plusUpgrade(): VersionUpgradeComponent.Factory
+
+  @CheckResult
+  fun plusSettingsComponent(): AppSettingsComponent.Factory
+
+  @Component.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance application: Application,
+      @BindsInstance @Named("debug") debug: Boolean,
+      @BindsInstance @Named("application_name") applicationName: String,
+      @BindsInstance @Named("bug_report_url") bugReportUrl: String,
+      @BindsInstance @Named("current_version") currentVersion: Int,
+      @BindsInstance schedulerProvider: SchedulerProvider
+    ): PYDroidComponent
+
+  }
+
+  @Module
+  abstract class PYDroidModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindContext(application: Application): Context
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindRatingPreferences(impl: PYDroidPreferencesImpl): RatingPreferences
+
+    @Module
+    companion object {
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Named("package_name")
+      internal fun providePackageName(context: Context): String {
+        return context.packageName
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideEnforcer(@Named("debug") debug: Boolean): Enforcer {
+        return Enforcer(debug)
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideTheming(context: Context): Theming {
+        return Theming(context)
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideNavigationBus(): EventBus<FailedNavigationEvent> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideShowRatingBus(): EventBus<ShowRating> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideVersionCheckBus(): EventBus<VersionCheckState> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideVersionHandlerBus(): EventBus<VersionHandlerEvent> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideAboutHandlerBus(): EventBus<AboutHandlerEvent> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideAboutItemHandlerBus(): EventBus<AboutItemHandlerEvent> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideRatingHandlerBus(): EventBus<RatingEvent> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideToolbarHandlerBus(): EventBus<ToolbarHandlerEvent> {
+        return RxBus.create()
+      }
+
+      @JvmStatic
+      @CheckResult
+      @Provides
+      @Singleton
+      internal fun provideAppSettingsHandlerBus(): EventBus<AppSettingsEvent> {
+        return RxBus.create()
+      }
+
+    }
+  }
 }

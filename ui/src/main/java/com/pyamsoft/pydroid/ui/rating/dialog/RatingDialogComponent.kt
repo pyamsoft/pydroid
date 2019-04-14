@@ -17,8 +17,44 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
+import android.text.SpannedString
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent.RatingModule
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
+import dagger.Subcomponent
+import javax.inject.Named
+
+@Subcomponent(modules = [RatingModule::class])
 internal interface RatingDialogComponent {
 
-  fun inject(dialog: RatingDialog)
+  fun inject(fragment: RatingDialog)
 
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance @Named("rate_link") rateLink: String,
+      @BindsInstance @Named("change_log_icon") changeLogIcon: Int,
+      @BindsInstance @Named("change_log") changeLog: SpannedString,
+      @BindsInstance parent: ViewGroup
+    ): RatingDialogComponent
+
+  }
+
+  @Module
+  abstract class RatingModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiComponent(impl: RatingDialogUiComponentImpl): RatingDialogUiComponent
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiCallback(impl: RatingDialogHandler): RatingControlsView.Callback
+
+  }
 }

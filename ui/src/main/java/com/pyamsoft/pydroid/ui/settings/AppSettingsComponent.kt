@@ -17,7 +17,44 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import androidx.annotation.CheckResult
+import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent.AppSettingsModule
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
+import dagger.Subcomponent
+import javax.inject.Named
+
+@Subcomponent(modules = [AppSettingsModule::class])
 internal interface AppSettingsComponent {
 
   fun inject(fragment: AppSettingsPreferenceFragment)
+
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance preferenceScreen: PreferenceScreen,
+      @BindsInstance @Named("hide_clear_all") hideClearAll: Boolean,
+      @BindsInstance @Named("hide_upgrade_info") hideUpgradeInformation: Boolean
+    ): AppSettingsComponent
+
+  }
+
+  @Module
+  abstract class AppSettingsModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiComponent(impl: AppSettingsUiComponentImpl): AppSettingsUiComponent
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiCallback(impl: AppSettingsHandler): AppSettingsView.Callback
+
+  }
 }
+
+

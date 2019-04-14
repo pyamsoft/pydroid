@@ -43,7 +43,7 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
 
   companion object {
 
-    private val EMPTY by lazy { RxBus.create<Unit>() }
+    private val EMPTY by lazy { create<Unit>() }
 
     /**
      * Create a new local viewBus instance to use

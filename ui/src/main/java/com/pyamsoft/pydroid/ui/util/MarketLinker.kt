@@ -44,7 +44,7 @@ object MarketLinker {
     if (onError == null) {
       return hyperlink.navigate()
     } else {
-      return hyperlink.navigate(requireNotNull(onError))
+      return hyperlink.navigate(onError)
     }
   }
 
@@ -58,7 +58,7 @@ object MarketLinker {
     if (onError == null) {
       return hyperlink.navigate()
     } else {
-      return hyperlink.navigate(requireNotNull(onError))
+      return hyperlink.navigate(onError)
     }
   }
 

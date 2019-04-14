@@ -27,13 +27,14 @@ import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
+import javax.inject.Inject
 
-internal class AboutUiComponentImpl internal constructor(
+internal class AboutUiComponentImpl @Inject internal constructor(
   private val listView: AboutListView,
   private val spinner: SpinnerView,
   private val viewModel: AboutViewModel,
   private val navigationViewModel: NavigationViewModel
-) : BaseUiComponent<AboutUiComponent.Callback>(),
+) : BaseUiComponent<Callback>(),
     AboutUiComponent {
 
   override fun id(): Int {

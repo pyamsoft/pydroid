@@ -33,10 +33,11 @@ import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.util.MarketLinker
+import javax.inject.Inject
 
 class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
 
-  internal lateinit var component: RatingDialogUiComponent
+  @field:Inject internal lateinit var component: RatingDialogUiComponent
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -73,7 +74,8 @@ class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
 
     val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
     PYDroid.obtain(view.context.applicationContext)
-        .plusRatingDialogComponent(layoutRoot, rateLink, changeLogIcon, changelog)
+        .plusRatingDialog()
+        .create(rateLink, changeLogIcon, changelog, layoutRoot)
         .inject(this)
 
     component.bind(viewLifecycleOwner, savedInstanceState, this)

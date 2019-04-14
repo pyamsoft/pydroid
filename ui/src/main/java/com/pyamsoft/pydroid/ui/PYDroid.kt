@@ -40,14 +40,15 @@ class PYDroid private constructor(
 ) {
 
   private val impl by lazy {
-    PYDroidComponentImpl(
-        application,
-        debug,
-        applicationName,
-        bugReportUrl,
-        currentVersion,
-        schedulerProvider
-    )
+    DaggerPYDroidComponent.factory()
+        .create(
+            application,
+            debug,
+            applicationName,
+            bugReportUrl,
+            currentVersion,
+            schedulerProvider
+        )
   }
 
   init {
@@ -119,7 +120,7 @@ class PYDroid private constructor(
     @CheckResult
     internal fun obtain(context: Context): PYDroidComponent {
       val app = context.applicationContext
-      if (app is PYDroid.Instance) {
+      if (app is Instance) {
         return checkNotNull(app.getPydroid()?.impl) {
           "PYDroid not initialized. call PYDroid.init(Application, PYDroid.Instance, Boolean)"
         }

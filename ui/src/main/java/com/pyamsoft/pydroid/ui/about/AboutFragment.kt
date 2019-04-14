@@ -33,11 +33,12 @@ import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
+import javax.inject.Inject
 
 class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiComponent.Callback {
 
-  internal lateinit var toolbarComponent: AboutToolbarUiComponent
-  internal lateinit var component: AboutUiComponent
+  @field:Inject internal lateinit var toolbarComponent: AboutToolbarUiComponent
+  @field:Inject internal lateinit var component: AboutUiComponent
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -56,7 +57,8 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiCompo
     val backstack = requireArguments().getInt(KEY_BACK_STACK, 0)
     val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
     PYDroid.obtain(view.context.applicationContext)
-        .plusAboutComponent(viewLifecycleOwner, requireToolbarActivity(), backstack, layoutRoot)
+        .plusAbout()
+        .create(viewLifecycleOwner, requireToolbarActivity(), backstack, layoutRoot)
         .inject(this)
 
     component.bind(viewLifecycleOwner, savedInstanceState, this)

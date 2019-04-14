@@ -25,9 +25,11 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
+import javax.inject.Inject
+import javax.inject.Named
 
-internal class RatingIconView internal constructor(
-  private val changelogIcon: Int,
+internal class RatingIconView @Inject internal constructor(
+  @Named("change_log_icon") private val changelogIcon: Int,
   private val imageLoader: ImageLoader,
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {

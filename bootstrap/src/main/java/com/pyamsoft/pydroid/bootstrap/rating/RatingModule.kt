@@ -17,13 +17,14 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import androidx.annotation.CheckResult
+import dagger.Binds
+import dagger.Module
 
-class RatingModule(
-  preferences: RatingPreferences,
-  enforcer: Enforcer,
-  currentVersion: Int
-) {
+@Module
+abstract class RatingModule {
 
-  val interactor: RatingInteractor = RatingInteractorImpl(enforcer, preferences, currentVersion)
+  @Binds
+  @CheckResult
+  internal abstract fun bindInteractor(impl: RatingInteractorImpl): RatingInteractor
 }

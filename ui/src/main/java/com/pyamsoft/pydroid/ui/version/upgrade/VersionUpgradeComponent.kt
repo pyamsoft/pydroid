@@ -17,7 +17,41 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent.VersionModule
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
+import dagger.Subcomponent
+import javax.inject.Named
+
+@Subcomponent(modules = [VersionModule::class])
 internal interface VersionUpgradeComponent {
 
   fun inject(dialog: VersionUpgradeDialog)
+
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance parent: ViewGroup,
+      @BindsInstance @Named("new_version") newVersion: Int
+    ): VersionUpgradeComponent
+
+  }
+
+  @Module
+  abstract class VersionModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiComponent(impl: VersionUpgradeUiComponentImpl): VersionUpgradeUiComponent
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiCallback(impl: VersionUpgradeHandler): VersionUpgradeControlView.Callback
+
+  }
 }

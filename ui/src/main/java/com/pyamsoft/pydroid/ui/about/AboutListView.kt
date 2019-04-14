@@ -33,8 +33,9 @@ import com.pyamsoft.pydroid.ui.about.AboutListView.Callback
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import javax.inject.Inject
 
-internal class AboutListView internal constructor(
+internal class AboutListView @Inject internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup,
   callback: Callback

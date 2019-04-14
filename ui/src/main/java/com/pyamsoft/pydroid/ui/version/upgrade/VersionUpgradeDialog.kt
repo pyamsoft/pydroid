@@ -31,10 +31,11 @@ import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.util.MarketLinker
+import javax.inject.Inject
 
 class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callback {
 
-  internal lateinit var component: VersionUpgradeUiComponent
+  @field:Inject internal lateinit var component: VersionUpgradeUiComponent
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState)
@@ -59,7 +60,8 @@ class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callbac
     require(latestVersion > 0)
     val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
     PYDroid.obtain(view.context.applicationContext)
-        .plusVersionUpgradeComponent(layoutRoot, latestVersion)
+        .plusUpgrade()
+        .create(layoutRoot, latestVersion)
         .inject(this)
 
     component.bind(viewLifecycleOwner, savedInstanceState, this)

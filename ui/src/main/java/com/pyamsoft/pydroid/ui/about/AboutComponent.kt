@@ -17,8 +17,52 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.ui.about.AboutComponent.AboutModule
+import com.pyamsoft.pydroid.ui.app.ToolbarActivity
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
+import dagger.Subcomponent
+import javax.inject.Named
+
+@Subcomponent(modules = [AboutModule::class])
 internal interface AboutComponent {
 
   fun inject(fragment: AboutFragment)
 
+  @Subcomponent.Factory
+  interface Factory {
+
+    @CheckResult
+    fun create(
+      @BindsInstance owner: LifecycleOwner,
+      @BindsInstance toolbarActivity: ToolbarActivity,
+      @BindsInstance @Named("backstack") backstack: Int,
+      @BindsInstance parent: ViewGroup
+    ): AboutComponent
+
+  }
+
+  @Module
+  abstract class AboutModule {
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiComponent(impl: AboutUiComponentImpl): AboutUiComponent
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindUiCallback(impl: AboutHandler): AboutListView.Callback
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindToolbarComponent(impl: AboutToolbarUiComponentImpl): AboutToolbarUiComponent
+
+    @Binds
+    @CheckResult
+    internal abstract fun bindToolbarCallback(impl: AboutToolbarHandler): AboutToolbarView.Callback
+  }
 }

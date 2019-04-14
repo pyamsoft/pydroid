@@ -25,11 +25,13 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingControlsView.Callback
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import javax.inject.Inject
+import javax.inject.Named
 
-internal class RatingControlsView internal constructor(
-  private val rateLink: String,
+internal class RatingControlsView @Inject internal constructor(
+  @Named("rate_link") private val rateLink: String,
   parent: ViewGroup,
-  callback: RatingControlsView.Callback
+  callback: Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
   private val rateApplication by lazyView<Button>(R.id.rate_application)

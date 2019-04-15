@@ -24,9 +24,8 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent
 import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent.Navigate
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-internal class AboutToolbarHandler @Inject internal constructor(
+internal class AboutToolbarHandler internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<ToolbarHandlerEvent>
 ) : UiEventHandler<ToolbarHandlerEvent, AboutToolbarView.Callback>(bus),

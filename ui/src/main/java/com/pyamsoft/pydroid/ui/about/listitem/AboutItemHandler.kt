@@ -25,9 +25,8 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerE
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent.VisitHomepage
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-internal class AboutItemHandler @Inject internal constructor(
+internal class AboutItemHandler internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<AboutItemHandlerEvent>
 ) : UiEventHandler<AboutItemHandlerEvent, AboutItemActionsView.Callback>(bus),

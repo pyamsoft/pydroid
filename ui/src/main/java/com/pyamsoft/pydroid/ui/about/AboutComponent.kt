@@ -20,49 +20,82 @@ package com.pyamsoft.pydroid.ui.about
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.about.AboutComponent.AboutModule
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
+import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import dagger.Binds
-import dagger.BindsInstance
-import dagger.Module
-import dagger.Subcomponent
-import javax.inject.Named
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
+import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
-@Subcomponent(modules = [AboutModule::class])
 internal interface AboutComponent {
 
   fun inject(fragment: AboutFragment)
 
-  @Subcomponent.Factory
   interface Factory {
 
     @CheckResult
     fun create(
-      @BindsInstance owner: LifecycleOwner,
-      @BindsInstance toolbarActivity: ToolbarActivity,
-      @BindsInstance @Named("backstack") backstack: Int,
-      @BindsInstance parent: ViewGroup
+      owner: LifecycleOwner,
+      toolbarActivity: ToolbarActivity,
+      backstack: Int,
+      parent: ViewGroup
     ): AboutComponent
 
   }
 
-  @Module
-  abstract class AboutModule {
+  class Impl private constructor(
+    private val owner: LifecycleOwner,
+    private val parent: ViewGroup,
+    private val backstack: Int,
+    private val toolbarActivity: ToolbarActivity,
+    private val schedulerProvider: SchedulerProvider,
+    private val bus: EventBus<AboutHandlerEvent>,
+    private val toolbarBus: EventBus<ToolbarHandlerEvent>,
+    private val navigationBus: EventBus<FailedNavigationEvent>,
+    private val module: AboutModule
+  ) : AboutComponent {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiComponent(impl: AboutUiComponentImpl): AboutUiComponent
+    override fun inject(fragment: AboutFragment) {
+      val handler = AboutHandler(schedulerProvider, bus)
+      val listView = AboutListView(owner, parent, handler)
+      val viewModel = AboutViewModel(handler, module.provideInteractor(), schedulerProvider)
+      val spinner = SpinnerView(parent)
+      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
+      val component = AboutUiComponentImpl(listView, spinner, viewModel, navigationViewModel)
+      fragment.component = component
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiCallback(impl: AboutHandler): AboutListView.Callback
+      val toolbarHandler = AboutToolbarHandler(schedulerProvider, toolbarBus)
+      val toolbarViewModel = AboutToolbarViewModel(toolbarHandler)
+      val toolbar = AboutToolbarView(backstack, toolbarActivity, toolbarHandler)
+      val toolbarComponent = AboutToolbarUiComponentImpl(toolbar, toolbarViewModel)
+      fragment.toolbarComponent = toolbarComponent
+    }
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindToolbarComponent(impl: AboutToolbarUiComponentImpl): AboutToolbarUiComponent
+    class FactoryImpl internal constructor(
+      private val schedulerProvider: SchedulerProvider,
+      private val bus: EventBus<AboutHandlerEvent>,
+      private val toolbarBus: EventBus<ToolbarHandlerEvent>,
+      private val navigationBus: EventBus<FailedNavigationEvent>,
+      private val module: AboutModule
+    ) : Factory {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindToolbarCallback(impl: AboutToolbarHandler): AboutToolbarView.Callback
+      override fun create(
+        owner: LifecycleOwner,
+        toolbarActivity: ToolbarActivity,
+        backstack: Int,
+        parent: ViewGroup
+      ): AboutComponent {
+        return Impl(
+            owner, parent, backstack,
+            toolbarActivity, schedulerProvider, bus,
+            toolbarBus, navigationBus, module
+        )
+      }
+
+    }
+
   }
 }

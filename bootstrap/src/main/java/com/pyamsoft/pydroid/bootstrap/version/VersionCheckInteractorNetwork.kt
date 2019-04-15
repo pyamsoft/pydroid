@@ -27,12 +27,10 @@ import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Maybe
 import io.reactivex.Single
-import javax.inject.Inject
-import javax.inject.Named
 
-internal class VersionCheckInteractorNetwork @Inject internal constructor(
-  @Named("current_version") private val currentVersion: Int,
-  @Named("package_name") private val packageName: String,
+internal class VersionCheckInteractorNetwork internal constructor(
+  private val currentVersion: Int,
+  private val packageName: String,
   private val enforcer: Enforcer,
   private val minimumApiProvider: MinimumApiProvider,
   private val networkStatusProvider: NetworkStatusProvider,

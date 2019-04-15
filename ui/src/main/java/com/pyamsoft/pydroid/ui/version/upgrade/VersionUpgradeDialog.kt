@@ -32,11 +32,10 @@ import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import javax.inject.Inject
 
 class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callback {
 
-  @field:Inject internal lateinit var component: VersionUpgradeUiComponent
+  internal lateinit var component: VersionUpgradeUiComponent
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState)

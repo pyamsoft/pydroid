@@ -20,38 +20,78 @@ package com.pyamsoft.pydroid.ui.version
 import android.view.View
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
-import com.pyamsoft.pydroid.ui.version.VersionComponent.VersionModule
-import dagger.Binds
-import dagger.BindsInstance
-import dagger.Module
-import dagger.Subcomponent
+import com.pyamsoft.pydroid.ui.rating.ShowRating
 
-@Subcomponent(modules = [VersionModule::class])
 internal interface VersionComponent {
 
   @CheckResult
   fun plusRating(): RatingComponent.Factory
 
-  fun inject(fragment: VersionCheckActivity)
+  fun inject(activity: VersionCheckActivity)
 
-  @Subcomponent.Factory
   interface Factory {
 
     @CheckResult
     fun create(
-      @BindsInstance owner: LifecycleOwner,
-      @BindsInstance snackbarRoot: View
+      owner: LifecycleOwner,
+      snackbarRoot: View
     ): VersionComponent
 
   }
 
-  @Module
-  abstract class VersionModule {
+  class Impl private constructor(
+    private val owner: LifecycleOwner,
+    private val snackbarRoot: View,
+    private val navigationBus: EventBus<FailedNavigationEvent>,
+    private val schedulerProvider: SchedulerProvider,
+    private val bus: EventBus<ShowRating>,
+    private val networkBus: EventBus<VersionCheckState>,
+    private val ratingModule: RatingModule,
+    private val versionModule: VersionCheckModule
+  ) : VersionComponent {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiComponent(impl: VersionCheckUiComponentImpl): VersionCheckUiComponent
+    override fun plusRating(): RatingComponent.Factory {
+      return RatingComponent.Impl.FactoryImpl(schedulerProvider, bus, ratingModule)
+    }
+
+    override fun inject(activity: VersionCheckActivity) {
+      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
+      val versionViewModel =
+        VersionCheckViewModel(versionModule.provideInteractor(), schedulerProvider, networkBus)
+      val versionView = VersionView(snackbarRoot, owner)
+      val component =
+        VersionCheckUiComponentImpl(navigationViewModel, versionViewModel, versionView)
+      activity.versionComponent = component
+    }
+
+    internal class FactoryImpl internal constructor(
+      private val navigationBus: EventBus<FailedNavigationEvent>,
+      private val schedulerProvider: SchedulerProvider,
+      private val bus: EventBus<ShowRating>,
+      private val networkBus: EventBus<VersionCheckState>,
+      private val ratingModule: RatingModule,
+      private val versionModule: VersionCheckModule
+    ) : Factory {
+
+      override fun create(
+        owner: LifecycleOwner,
+        snackbarRoot: View
+      ): VersionComponent {
+        return Impl(
+            owner, snackbarRoot, navigationBus,
+            schedulerProvider, bus, networkBus,
+            ratingModule, versionModule
+        )
+      }
+
+    }
 
   }
 }

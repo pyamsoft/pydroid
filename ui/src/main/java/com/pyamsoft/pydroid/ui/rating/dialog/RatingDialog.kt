@@ -34,11 +34,10 @@ import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.util.MarketLinker
-import javax.inject.Inject
 
 class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
 
-  @field:Inject internal lateinit var component: RatingDialogUiComponent
+  internal lateinit var component: RatingDialogUiComponent
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

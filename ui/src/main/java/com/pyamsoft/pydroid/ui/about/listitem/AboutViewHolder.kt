@@ -26,14 +26,13 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
-import javax.inject.Inject
 
 internal class AboutViewHolder private constructor(
   view: View,
   private val callback: AboutViewHolderUiComponent.Callback
 ) : BaseViewHolder(view) {
 
-  @field:Inject internal lateinit var component: AboutViewHolderUiComponent
+  internal lateinit var component: AboutViewHolderUiComponent
 
   private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
   private var bindLifecycle: ListItemLifecycle? = null

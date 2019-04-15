@@ -18,18 +18,15 @@
 package com.pyamsoft.pydroid.ui
 
 import android.app.Application
-import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.PYDroidComponent.PYDroidModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
 import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent
@@ -41,29 +38,14 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckState
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
-import dagger.Binds
-import dagger.BindsInstance
-import dagger.Component
-import dagger.Module
-import dagger.Provides
-import javax.inject.Named
-import javax.inject.Singleton
+import com.squareup.moshi.Moshi
 
-@Singleton
-@Component(
-    modules = [
-      AboutModule::class,
-      VersionCheckModule::class,
-      RatingModule::class,
-      LoaderModule::class,
-      PYDroidModule::class
-    ]
-)
-internal interface PYDroidComponent : ModuleProvider {
+internal interface PYDroidComponent {
 
   @CheckResult
   fun plusAbout(): AboutComponent.Factory
@@ -83,123 +65,134 @@ internal interface PYDroidComponent : ModuleProvider {
   @CheckResult
   fun plusSettingsComponent(): AppSettingsComponent.Factory
 
-  @Component.Factory
   interface Factory {
 
     @CheckResult
     fun create(
-      @BindsInstance application: Application,
-      @BindsInstance @Named("debug") debug: Boolean,
-      @BindsInstance @Named("application_name") applicationName: String,
-      @BindsInstance @Named("bug_report_url") bugReportUrl: String,
-      @BindsInstance @Named("current_version") currentVersion: Int,
-      @BindsInstance schedulerProvider: SchedulerProvider
-    ): PYDroidComponent
+      application: Application,
+      debug: Boolean,
+      applicationName: String,
+      bugReportUrl: String,
+      currentVersion: Int,
+      schedulerProvider: SchedulerProvider
+    ): ComponentImpl
 
   }
 
-  @Module
-  abstract class PYDroidModule {
+  class ComponentImpl private constructor(
+    private val application: Application,
+    private val debug: Boolean,
+    private val applicationName: String,
+    private val bugReportUrl: String,
+    private val currentVersion: Int,
+    private val schedulerProvider: SchedulerProvider
+  ) : PYDroidComponent, ModuleProvider {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindContext(application: Application): Context
+    private val context = application
+    private val enforcer = Enforcer(debug)
+    private val theming = Theming(context)
+    private val preferences = PYDroidPreferencesImpl(context)
+    private val packageName = context.packageName
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindRatingPreferences(impl: PYDroidPreferencesImpl): RatingPreferences
+    private val aboutModule = AboutModule(enforcer)
+    private val loaderModule = LoaderModule()
+    private val ratingModule = RatingModule(currentVersion, enforcer, preferences)
+    private val versionCheckModule = VersionCheckModule(
+        context,
+        debug,
+        currentVersion,
+        packageName,
+        enforcer
+    )
 
-    @Module
-    companion object {
+    private val navigationBus = RxBus.create<FailedNavigationEvent>()
+    private val showRatingBus = RxBus.create<ShowRating>()
+    private val versionCheckBus = RxBus.create<VersionCheckState>()
+    private val versionHandlerBus = RxBus.create<VersionHandlerEvent>()
+    private val aboutHandlerBus = RxBus.create<AboutHandlerEvent>()
+    private val aboutItemHandlerBus = RxBus.create<AboutItemHandlerEvent>()
+    private val ratingHandlerBus = RxBus.create<RatingEvent>()
+    private val toolbarHandlerBus = RxBus.create<ToolbarHandlerEvent>()
+    private val appSettingsHandlerBus = RxBus.create<AppSettingsEvent>()
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Named("package_name")
-      internal fun providePackageName(context: Context): String {
-        return context.packageName
-      }
+    override fun plusAbout(): AboutComponent.Factory {
+      return AboutComponent.Impl.FactoryImpl(
+          schedulerProvider, aboutHandlerBus, toolbarHandlerBus,
+          navigationBus, aboutModule
+      )
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideEnforcer(@Named("debug") debug: Boolean): Enforcer {
-        return Enforcer(debug)
-      }
+    override fun plusAboutItem(): AboutItemComponent.Factory {
+      return AboutItemComponent.Impl.FactoryImpl(schedulerProvider, aboutItemHandlerBus)
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideNavigationBus(): EventBus<FailedNavigationEvent> {
-        return RxBus.create()
-      }
+    override fun plusRatingDialog(): RatingDialogComponent.Factory {
+      return RatingDialogComponent.Impl.FactoryImpl(
+          schedulerProvider, ratingHandlerBus, navigationBus,
+          loaderModule, ratingModule
+      )
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideShowRatingBus(): EventBus<ShowRating> {
-        return RxBus.create()
-      }
+    override fun plusVersion(): VersionComponent.Factory {
+      return VersionComponent.Impl.FactoryImpl(
+          navigationBus, schedulerProvider, showRatingBus,
+          versionCheckBus, ratingModule, versionCheckModule
+      )
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideVersionCheckBus(): EventBus<VersionCheckState> {
-        return RxBus.create()
-      }
+    override fun plusUpgrade(): VersionUpgradeComponent.Factory {
+      return VersionUpgradeComponent.Impl.FactoryImpl(
+          applicationName, currentVersion, schedulerProvider, versionHandlerBus, navigationBus
+      )
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideVersionHandlerBus(): EventBus<VersionHandlerEvent> {
-        return RxBus.create()
-      }
+    override fun plusSettingsComponent(): AppSettingsComponent.Factory {
+      return AppSettingsComponent.Impl.FactoryImpl(
+          applicationName, bugReportUrl, theming,
+          schedulerProvider, appSettingsHandlerBus,
+          versionCheckBus, showRatingBus, navigationBus,
+          versionCheckModule, ratingModule
+      )
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideAboutHandlerBus(): EventBus<AboutHandlerEvent> {
-        return RxBus.create()
-      }
+    override fun schedulerProvider(): SchedulerProvider {
+      return schedulerProvider
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideAboutItemHandlerBus(): EventBus<AboutItemHandlerEvent> {
-        return RxBus.create()
-      }
+    override fun enforcer(): Enforcer {
+      return enforcer
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideRatingHandlerBus(): EventBus<RatingEvent> {
-        return RxBus.create()
-      }
+    override fun theming(): Theming {
+      return theming
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideToolbarHandlerBus(): EventBus<ToolbarHandlerEvent> {
-        return RxBus.create()
-      }
+    override fun imageLoader(): ImageLoader {
+      return loaderModule.provideLoader()
+    }
 
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
-      internal fun provideAppSettingsHandlerBus(): EventBus<AppSettingsEvent> {
-        return RxBus.create()
+    override fun moshi(): Moshi {
+      return versionCheckModule.provideMoshi()
+    }
+
+    class FactoryImpl internal constructor() : Factory {
+
+      override fun create(
+        application: Application,
+        debug: Boolean,
+        applicationName: String,
+        bugReportUrl: String,
+        currentVersion: Int,
+        schedulerProvider: SchedulerProvider
+      ): ComponentImpl {
+        return ComponentImpl(
+            application, debug,
+            applicationName, bugReportUrl,
+            currentVersion, schedulerProvider
+        )
       }
 
     }
+
   }
 }

@@ -20,41 +20,79 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.text.SpannedString
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent.RatingModule
-import dagger.Binds
-import dagger.BindsInstance
-import dagger.Module
-import dagger.Subcomponent
-import javax.inject.Named
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
 
-@Subcomponent(modules = [RatingModule::class])
 internal interface RatingDialogComponent {
 
-  fun inject(fragment: RatingDialog)
+  fun inject(dialog: RatingDialog)
 
-  @Subcomponent.Factory
   interface Factory {
 
     @CheckResult
     fun create(
-      @BindsInstance @Named("rate_link") rateLink: String,
-      @BindsInstance @Named("change_log_icon") changeLogIcon: Int,
-      @BindsInstance @Named("change_log") changeLog: SpannedString,
-      @BindsInstance parent: ViewGroup
+      rateLink: String,
+      changeLogIcon: Int,
+      changeLog: SpannedString,
+      parent: ViewGroup
     ): RatingDialogComponent
 
   }
 
-  @Module
-  abstract class RatingModule {
+  class Impl private constructor(
+    private val changeLogIcon: Int,
+    private val rateLink: String,
+    private val changeLog: SpannedString,
+    private val parent: ViewGroup,
+    private val schedulerProvider: SchedulerProvider,
+    private val bus: EventBus<RatingEvent>,
+    private val navigationBus: EventBus<FailedNavigationEvent>,
+    private val loaderModule: LoaderModule,
+    private val ratingModule: RatingModule
+  ) : RatingDialogComponent {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiComponent(impl: RatingDialogUiComponentImpl): RatingDialogUiComponent
+    override fun inject(dialog: RatingDialog) {
+      val handler = RatingDialogHandler(schedulerProvider, bus)
+      val viewModel =
+        RatingDialogViewModel(handler, ratingModule.provideInteractor(), schedulerProvider)
+      val icon = RatingIconView(changeLogIcon, loaderModule.provideLoader(), parent)
+      val changelog = RatingChangelogView(changeLog, parent)
+      val controls = RatingControlsView(rateLink, parent, handler)
+      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
+      val component = RatingDialogUiComponentImpl(
+          viewModel, icon, changelog,
+          controls, navigationViewModel
+      )
+      dialog.component = component
+    }
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiCallback(impl: RatingDialogHandler): RatingControlsView.Callback
+    internal class FactoryImpl internal constructor(
+      private val schedulerProvider: SchedulerProvider,
+      private val bus: EventBus<RatingEvent>,
+      private val navigationBus: EventBus<FailedNavigationEvent>,
+      private val loaderModule: LoaderModule,
+      private val ratingModule: RatingModule
+    ) : Factory {
+
+      override fun create(
+        rateLink: String,
+        changeLogIcon: Int,
+        changeLog: SpannedString,
+        parent: ViewGroup
+      ): RatingDialogComponent {
+        return Impl(
+            changeLogIcon, rateLink, changeLog,
+            parent, schedulerProvider, bus,
+            navigationBus, loaderModule, ratingModule
+        )
+      }
+
+    }
 
   }
 }

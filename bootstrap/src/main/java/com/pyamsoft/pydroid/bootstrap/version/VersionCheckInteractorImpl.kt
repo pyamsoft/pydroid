@@ -22,12 +22,10 @@ import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Maybe
-import javax.inject.Inject
-import javax.inject.Named
 
-internal class VersionCheckInteractorImpl @Inject internal constructor(
-  @Named("debug") private val debug: Boolean,
-  @Named("version_check_network") private val network: VersionCheckInteractor,
+internal class VersionCheckInteractorImpl internal constructor(
+  private val debug: Boolean,
+  private val network: VersionCheckInteractor,
   private val enforcer: Enforcer,
   private val repo: Repo<UpdatePayload>
 ) : VersionCheckInteractor, Cache {

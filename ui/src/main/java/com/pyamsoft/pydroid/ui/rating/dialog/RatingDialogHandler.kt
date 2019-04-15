@@ -25,9 +25,8 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent.Ignore
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent.Rate
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-internal class RatingDialogHandler @Inject internal constructor(
+internal class RatingDialogHandler internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<RatingEvent>
 ) : UiEventHandler<RatingEvent, RatingControlsView.Callback>(bus),

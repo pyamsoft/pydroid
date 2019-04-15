@@ -25,9 +25,8 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHand
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent.Upgrade
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-internal class VersionUpgradeHandler @Inject internal constructor(
+internal class VersionUpgradeHandler internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<VersionHandlerEvent>
 ) : UiEventHandler<VersionHandlerEvent, VersionUpgradeControlView.Callback>(bus),

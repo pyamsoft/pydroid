@@ -21,9 +21,8 @@ import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState.Upgrade
-import javax.inject.Inject
 
-internal class VersionUpgradeViewModel @Inject internal constructor(
+internal class VersionUpgradeViewModel internal constructor(
   private val handler: VersionUpgradeHandler
 ) : UiViewModel<VersionState>(
     initialState = VersionState(upgrade = null)

@@ -31,10 +31,6 @@ dependencies {
   api "com.popinnow.android.repo:repo:$repo"
   implementation "com.popinnow.android.repo:repo-persister-moshi:$repo"
 
-  // Dagger
-  implementation "com.google.dagger:dagger:$dagger"
-  kapt "com.google.dagger:dagger-compiler:$dagger"
-
   api project(':util')
 }
 

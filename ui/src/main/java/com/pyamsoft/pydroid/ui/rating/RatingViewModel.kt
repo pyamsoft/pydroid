@@ -25,9 +25,8 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel.RatingState
-import javax.inject.Inject
 
-internal class RatingViewModel @Inject internal constructor(
+internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider,
   private val bus: EventBus<ShowRating>

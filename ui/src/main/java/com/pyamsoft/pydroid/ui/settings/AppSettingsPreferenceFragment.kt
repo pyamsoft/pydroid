@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
-import javax.inject.Inject
 
 abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
     AppSettingsUiComponent.Callback {
@@ -41,7 +40,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
 
   protected open val hideClearAll: Boolean = false
 
-  @field:Inject internal lateinit var component: AppSettingsUiComponent
+  internal lateinit var component: AppSettingsUiComponent
 
   @CallSuper
   override fun onCreatePreferences(

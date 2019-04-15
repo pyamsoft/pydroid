@@ -25,9 +25,8 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControlView.Callback
-import javax.inject.Inject
 
-internal class VersionUpgradeControlView @Inject internal constructor(
+internal class VersionUpgradeControlView internal constructor(
   parent: ViewGroup,
   callback: Callback
 ) : BaseUiView<Callback>(parent, callback) {

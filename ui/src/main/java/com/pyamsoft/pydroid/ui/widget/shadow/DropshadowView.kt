@@ -21,9 +21,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
-import javax.inject.Inject
 
-class DropshadowView @Inject constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit) {
+class DropshadowView constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit) {
 
   override val layout: Int = R.layout.dropshadow
 

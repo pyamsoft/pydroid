@@ -23,9 +23,8 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState.DarkTheme
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
-import javax.inject.Inject
 
-internal class AppSettingsViewModel @Inject internal constructor(
+internal class AppSettingsViewModel internal constructor(
   private val handler: AppSettingsHandler,
   private val theming: Theming
 ) : UiViewModel<SettingsState>(

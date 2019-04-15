@@ -24,9 +24,8 @@ import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiToggleView
 import com.pyamsoft.pydroid.ui.R
-import javax.inject.Inject
 
-class SpinnerView @Inject constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit),
+class SpinnerView constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit),
     UiToggleView {
 
   override val layout: Int = R.layout.loading_spinner

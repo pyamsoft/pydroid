@@ -18,17 +18,14 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.rating.RatingComponent.RatingModule
-import dagger.Binds
-import dagger.Module
-import dagger.Subcomponent
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.core.bus.EventBus
 
-@Subcomponent(modules = [RatingModule::class])
 internal interface RatingComponent {
 
   fun inject(fragment: RatingActivity)
 
-  @Subcomponent.Factory
   interface Factory {
 
     @CheckResult
@@ -36,12 +33,29 @@ internal interface RatingComponent {
 
   }
 
-  @Module
-  abstract class RatingModule {
+  class Impl private constructor(
+    private val schedulerProvider: SchedulerProvider,
+    private val bus: EventBus<ShowRating>,
+    private val module: RatingModule
+  ) : RatingComponent {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiComponent(impl: RatingUiComponentImpl): RatingUiComponent
+    override fun inject(fragment: RatingActivity) {
+      val viewModel = RatingViewModel(module.provideInteractor(), schedulerProvider, bus)
+      val component = RatingUiComponentImpl(viewModel)
+      fragment.ratingComponent = component
+    }
+
+    internal class FactoryImpl internal constructor(
+      private val schedulerProvider: SchedulerProvider,
+      private val bus: EventBus<ShowRating>,
+      private val module: RatingModule
+    ) : Factory {
+
+      override fun create(): RatingComponent {
+        return Impl(schedulerProvider, bus, module)
+      }
+
+    }
 
   }
 }

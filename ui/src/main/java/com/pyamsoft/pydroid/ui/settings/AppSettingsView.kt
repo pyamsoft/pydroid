@@ -29,14 +29,12 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
-import javax.inject.Inject
-import javax.inject.Named
 
-internal class AppSettingsView @Inject internal constructor(
-  @Named("application_name") private val applicationName: String,
-  @Named("bug_report_url") private val bugReportUrl: String,
-  @Named("hide_clear_all") private val hideClearAll: Boolean,
-  @Named("hide_upgrade_info") private val hideUpgradeInformation: Boolean,
+internal class AppSettingsView internal constructor(
+  private val applicationName: String,
+  private val bugReportUrl: String,
+  private val hideClearAll: Boolean,
+  private val hideUpgradeInformation: Boolean,
   private val theming: Theming,
   preferenceScreen: PreferenceScreen,
   callback: Callback

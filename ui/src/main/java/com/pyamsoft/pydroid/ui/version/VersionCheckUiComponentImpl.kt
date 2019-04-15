@@ -27,9 +27,8 @@ import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel.NavigationState
 import com.pyamsoft.pydroid.ui.version.VersionCheckUiComponent.Callback
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState
 import timber.log.Timber
-import javax.inject.Inject
 
-internal class VersionCheckUiComponentImpl @Inject internal constructor(
+internal class VersionCheckUiComponentImpl internal constructor(
   private val navigationViewModel: NavigationViewModel,
   private val versionViewModel: VersionCheckViewModel,
   private val versionView: VersionView

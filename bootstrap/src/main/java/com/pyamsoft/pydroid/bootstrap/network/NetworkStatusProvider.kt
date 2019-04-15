@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.network
 
 import androidx.annotation.CheckResult
 
-interface NetworkStatusProvider {
+internal interface NetworkStatusProvider {
 
   @CheckResult fun hasConnection(): Boolean
 }

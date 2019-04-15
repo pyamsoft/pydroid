@@ -60,8 +60,6 @@ buildscript {
     rxandroid = "2.1.1"
 
     glide = "4.9.0"
-
-    dagger = "2.22.1"
   }
 
   dependencies {

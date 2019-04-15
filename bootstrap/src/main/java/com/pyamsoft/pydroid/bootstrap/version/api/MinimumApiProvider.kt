@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version.api
 
 import androidx.annotation.CheckResult
 
-interface MinimumApiProvider {
+internal interface MinimumApiProvider {
 
   @CheckResult fun minApi(): Int
 }

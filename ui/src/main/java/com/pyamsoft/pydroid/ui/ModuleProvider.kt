@@ -23,23 +23,22 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.squareup.moshi.Moshi
-import javax.inject.Provider
 
 interface ModuleProvider {
 
   @CheckResult
-  fun schedulerProvider(): Provider<SchedulerProvider>
+  fun schedulerProvider(): SchedulerProvider
 
   @CheckResult
-  fun enforcer(): Provider<Enforcer>
+  fun enforcer(): Enforcer
 
   @CheckResult
-  fun theming(): Provider<Theming>
+  fun theming(): Theming
 
   @CheckResult
-  fun imageLoader(): Provider<ImageLoader>
+  fun imageLoader(): ImageLoader
 
   @CheckResult
-  fun moshi(): Provider<Moshi>
+  fun moshi(): Moshi
 
 }

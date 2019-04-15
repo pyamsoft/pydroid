@@ -24,9 +24,8 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel.RatingState
-import javax.inject.Inject
 
-internal class RatingDialogViewModel @Inject internal constructor(
+internal class RatingDialogViewModel internal constructor(
   private val handler: RatingDialogHandler,
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider

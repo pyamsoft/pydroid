@@ -26,9 +26,8 @@ import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeUiComponent.Callback
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState
-import javax.inject.Inject
 
-internal class VersionUpgradeUiComponentImpl @Inject internal constructor(
+internal class VersionUpgradeUiComponentImpl internal constructor(
   private val controlsView: VersionUpgradeControlView,
   private val contentView: VersionUpgradeContentView,
   private val navigationViewModel: NavigationViewModel,

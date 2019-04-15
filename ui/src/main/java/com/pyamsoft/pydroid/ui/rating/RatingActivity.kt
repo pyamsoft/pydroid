@@ -35,13 +35,12 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
-import javax.inject.Inject
 
 abstract class RatingActivity : VersionCheckActivity(),
     ChangeLogProvider,
     RatingUiComponent.Callback {
 
-  @field:Inject internal lateinit var ratingComponent: RatingUiComponent
+  internal lateinit var ratingComponent: RatingUiComponent
 
   protected abstract val changeLogLines: ChangeLogBuilder
 

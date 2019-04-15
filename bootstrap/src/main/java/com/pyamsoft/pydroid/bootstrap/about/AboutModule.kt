@@ -18,14 +18,15 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
-import dagger.Binds
-import dagger.Module
+import com.pyamsoft.pydroid.core.threads.Enforcer
 
-@Module
-abstract class AboutModule {
+class AboutModule(enforcer: Enforcer) {
 
-  @Binds
+  private val impl = AboutInteractorImpl(enforcer)
+
   @CheckResult
-  internal abstract fun bindInteractor(impl: AboutInteractorImpl): AboutInteractor
+  fun provideInteractor(): AboutInteractor {
+    return impl
+  }
 
 }

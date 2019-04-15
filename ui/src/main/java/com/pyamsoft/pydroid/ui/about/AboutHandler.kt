@@ -24,9 +24,8 @@ import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
 import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent.ExternalUrl
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-internal class AboutHandler @Inject internal constructor(
+internal class AboutHandler internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<AboutHandlerEvent>
 ) : UiEventHandler<AboutHandlerEvent, AboutListView.Callback>(bus),

@@ -23,9 +23,8 @@ import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel.AboutState
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
-import javax.inject.Inject
 
-internal class AboutToolbarUiComponentImpl @Inject internal constructor(
+internal class AboutToolbarUiComponentImpl internal constructor(
   private val toolbar: AboutToolbarView,
   private val viewModel: AboutToolbarViewModel
 ) : BaseUiComponent<AboutToolbarUiComponent.Callback>(),

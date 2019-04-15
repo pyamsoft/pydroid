@@ -18,13 +18,13 @@
 package com.pyamsoft.pydroid.loader
 
 import androidx.annotation.CheckResult
-import dagger.Binds
-import dagger.Module
 
-@Module
-abstract class LoaderModule {
+class LoaderModule {
 
-  @Binds
+  private val impl = ImageLoaderImpl()
+
   @CheckResult
-  internal abstract fun bindLoader(impl: ImageLoaderImpl): ImageLoader
+  fun provideLoader(): ImageLoader {
+    return impl
+  }
 }

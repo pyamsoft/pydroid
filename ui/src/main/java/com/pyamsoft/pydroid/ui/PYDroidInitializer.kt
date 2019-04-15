@@ -35,6 +35,7 @@ internal class PYDroidInitializer internal constructor(
 ) {
 
   internal val component: PYDroidComponent
+  internal val moduleProvider: ModuleProvider
 
   init {
     setupAsyncMainThreadScheduler()
@@ -44,8 +45,7 @@ internal class PYDroidInitializer internal constructor(
       setStrictMode()
     }
 
-    component = DaggerPYDroidComponent
-        .factory()
+    val impl = PYDroidComponent.ComponentImpl.FactoryImpl()
         .create(
             application,
             debug,
@@ -54,6 +54,8 @@ internal class PYDroidInitializer internal constructor(
             currentVersion,
             schedulerProvider
         )
+    component = impl
+    moduleProvider = impl
   }
 
   companion object {

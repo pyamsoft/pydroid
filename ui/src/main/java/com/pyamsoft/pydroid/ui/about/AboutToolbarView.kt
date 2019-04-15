@@ -23,11 +23,9 @@ import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
-import javax.inject.Inject
-import javax.inject.Named
 
-internal class AboutToolbarView @Inject internal constructor(
-  @Named("backstack") private val backstackCount: Int,
+internal class AboutToolbarView internal constructor(
+  private val backstackCount: Int,
   private val toolbarActivity: ToolbarActivity,
   private val callback: Callback
 ) : UiView {

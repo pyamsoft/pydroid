@@ -24,9 +24,8 @@ import android.net.NetworkInfo
 import androidx.annotation.CheckResult
 import androidx.core.content.ContextCompat
 import timber.log.Timber
-import javax.inject.Inject
 
-internal class NetworkStatusProviderImpl @Inject internal constructor(
+internal class NetworkStatusProviderImpl internal constructor(
   private val context: Context
 ) : NetworkStatusProvider {
 

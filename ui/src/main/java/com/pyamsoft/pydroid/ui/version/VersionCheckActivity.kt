@@ -25,13 +25,12 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
-import javax.inject.Inject
 
 abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Callback {
 
   protected abstract val snackbarRoot: View
 
-  @field:Inject internal lateinit var versionComponent: VersionCheckUiComponent
+  internal lateinit var versionComponent: VersionCheckUiComponent
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {

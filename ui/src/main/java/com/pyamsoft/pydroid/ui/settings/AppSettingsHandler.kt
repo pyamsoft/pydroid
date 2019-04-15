@@ -34,9 +34,8 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent.Show
 import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent.ViewLicenses
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-internal class AppSettingsHandler @Inject internal constructor(
+internal class AppSettingsHandler internal constructor(
   private val schedulerProvider: SchedulerProvider,
   bus: EventBus<AppSettingsEvent>
 ) : UiEventHandler<AppSettingsEvent, AppSettingsView.Callback>(bus),

@@ -22,18 +22,14 @@ import androidx.annotation.CheckResult
 import com.popinnow.android.repo.Repo
 import com.popinnow.android.repo.moshi.MoshiPersister
 import com.popinnow.android.repo.newRepoBuilder
-import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProvider
 import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProviderImpl
 import com.pyamsoft.pydroid.bootstrap.network.socket.DelegatingSocketFactory
-import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.cache.Cache
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.squareup.moshi.Moshi
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -42,35 +38,53 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
-import javax.inject.Named
-import javax.inject.Singleton
 
-@Module
-abstract class VersionCheckModule {
+class VersionCheckModule(
+  context: Context,
+  debug: Boolean,
+  currentVersion: Int,
+  packageName: String,
+  enforcer: Enforcer
+) {
 
-  @Binds
+  private val impl: VersionCheckInteractorImpl
+  private val moshi = provideMoshi()
+
+  init {
+    val okHttpClient = provideOkHttpClient(debug)
+    val retrofit = provideRetrofit(okHttpClient, moshi)
+    val repo = provideRepo(context, moshi)
+    val versionCheckService = retrofit.create(VersionCheckService::class.java)
+    val minimumApiProvider = MinimumApiProviderImpl()
+    val networkStatusProvider = NetworkStatusProviderImpl(context)
+
+    val network = VersionCheckInteractorNetwork(
+        currentVersion,
+        packageName,
+        enforcer,
+        minimumApiProvider,
+        networkStatusProvider,
+        versionCheckService
+    )
+
+    impl = VersionCheckInteractorImpl(debug, network, enforcer, repo)
+  }
+
   @CheckResult
-  @Named("version_check_network")
-  internal abstract fun bindNetwork(impl: VersionCheckInteractorNetwork): VersionCheckInteractor
+  fun provideCache(): Cache {
+    return impl
+  }
 
-  @Binds
   @CheckResult
-  @Named("cache_version")
-  internal abstract fun bindCache(impl: VersionCheckInteractorImpl): Cache
+  fun provideInteractor(): VersionCheckInteractor {
+    return impl
+  }
 
-  @Binds
   @CheckResult
-  internal abstract fun bindInteractor(impl: VersionCheckInteractorImpl): VersionCheckInteractor
+  fun provideMoshi(): Moshi {
+    return moshi
+  }
 
-  @Binds
-  @CheckResult
-  internal abstract fun bindNetworkStatus(impl: NetworkStatusProviderImpl): NetworkStatusProvider
-
-  @Binds
-  @CheckResult
-  internal abstract fun bindMinimumApi(impl: MinimumApiProviderImpl): MinimumApiProvider
-
-  @Module
   companion object {
 
     private const val GITHUB_URL = "raw.githubusercontent.com"
@@ -79,16 +93,12 @@ abstract class VersionCheckModule {
 
     @JvmStatic
     @CheckResult
-    @Provides
-    @Singleton
     internal fun provideService(retrofit: Retrofit): VersionCheckService {
       return retrofit.create(VersionCheckService::class.java)
     }
 
     @JvmStatic
     @CheckResult
-    @Provides
-    @Singleton
     internal fun provideMoshi(): Moshi {
       return Moshi.Builder()
           .build()
@@ -96,8 +106,6 @@ abstract class VersionCheckModule {
 
     @JvmStatic
     @CheckResult
-    @Provides
-    @Singleton
     internal fun provideRepo(
       context: Context,
       moshi: Moshi
@@ -114,9 +122,7 @@ abstract class VersionCheckModule {
 
     @JvmStatic
     @CheckResult
-    @Provides
-    @Singleton
-    internal fun provideOkHttpClient(@Named("debug") debug: Boolean): OkHttpClient {
+    internal fun provideOkHttpClient(debug: Boolean): OkHttpClient {
       return OkHttpClient.Builder()
           .socketFactory(DelegatingSocketFactory.create())
           .also {
@@ -131,8 +137,6 @@ abstract class VersionCheckModule {
 
     @JvmStatic
     @CheckResult
-    @Provides
-    @Singleton
     internal fun provideRetrofit(
       okHttpClient: OkHttpClient,
       moshi: Moshi

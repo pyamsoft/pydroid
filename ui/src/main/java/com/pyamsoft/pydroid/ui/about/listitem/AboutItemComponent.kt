@@ -19,39 +19,56 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent.AboutModule
-import dagger.Binds
-import dagger.BindsInstance
-import dagger.Module
-import dagger.Subcomponent
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent
 
-@Subcomponent(modules = [AboutModule::class])
 internal interface AboutItemComponent {
 
   fun inject(viewHolder: AboutViewHolder)
 
-  @Subcomponent.Factory
   interface Factory {
 
     @CheckResult
     fun create(
-      @BindsInstance parent: ViewGroup,
-      @BindsInstance model: OssLibrary
+      parent: ViewGroup,
+      model: OssLibrary
     ): AboutItemComponent
 
   }
 
-  @Module
-  abstract class AboutModule {
+  class Impl private constructor(
+    private val parent: ViewGroup,
+    private val model: OssLibrary,
+    private val schedulerProvider: SchedulerProvider,
+    private val bus: EventBus<AboutItemHandlerEvent>
+  ) : AboutItemComponent {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiComponent(impl: AboutViewHolderUiComponentImpl): AboutViewHolderUiComponent
+    override fun inject(viewHolder: AboutViewHolder) {
+      val handler = AboutItemHandler(schedulerProvider, bus)
+      val viewModel = AboutItemViewModel(handler)
+      val title = AboutItemTitleView(model, parent)
+      val actions = AboutItemActionsView(model, parent, handler)
+      val description = AboutItemDescriptionView(model, parent)
+      val component = AboutViewHolderUiComponentImpl(title, actions, description, viewModel)
+      viewHolder.component = component
+    }
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiCallback(impl: AboutItemHandler): AboutItemActionsView.Callback
+    class FactoryImpl internal constructor(
+      private val schedulerProvider: SchedulerProvider,
+      private val bus: EventBus<AboutItemHandlerEvent>
+    ) : Factory {
+
+      override fun create(
+        parent: ViewGroup,
+        model: OssLibrary
+      ): AboutItemComponent {
+        return Impl(parent, model, schedulerProvider, bus)
+      }
+
+    }
+
   }
 
 }

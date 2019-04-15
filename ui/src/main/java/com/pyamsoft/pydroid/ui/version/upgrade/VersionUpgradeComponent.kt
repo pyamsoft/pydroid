@@ -19,39 +19,72 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent.VersionModule
-import dagger.Binds
-import dagger.BindsInstance
-import dagger.Module
-import dagger.Subcomponent
-import javax.inject.Named
+import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
+import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
 
-@Subcomponent(modules = [VersionModule::class])
 internal interface VersionUpgradeComponent {
 
   fun inject(dialog: VersionUpgradeDialog)
 
-  @Subcomponent.Factory
   interface Factory {
 
     @CheckResult
     fun create(
-      @BindsInstance parent: ViewGroup,
-      @BindsInstance @Named("new_version") newVersion: Int
+      parent: ViewGroup,
+      newVersion: Int
     ): VersionUpgradeComponent
 
   }
 
-  @Module
-  abstract class VersionModule {
+  class Impl private constructor(
+    private val parent: ViewGroup,
+    private val applicationName: String,
+    private val currentVersion: Int,
+    private val newVersion: Int,
+    private val schedulerProvider: SchedulerProvider,
+    private val bus: EventBus<VersionHandlerEvent>,
+    private val navigationBus: EventBus<FailedNavigationEvent>
+  ) : VersionUpgradeComponent {
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiComponent(impl: VersionUpgradeUiComponentImpl): VersionUpgradeUiComponent
+    override fun inject(dialog: VersionUpgradeDialog) {
+      val handler = VersionUpgradeHandler(schedulerProvider, bus)
+      val viewModel = VersionUpgradeViewModel(handler)
+      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
+      val contentView = VersionUpgradeContentView(
+          applicationName, currentVersion,
+          newVersion, parent
+      )
+      val controlsView = VersionUpgradeControlView(parent, handler)
+      val component = VersionUpgradeUiComponentImpl(
+          controlsView, contentView,
+          navigationViewModel, viewModel
+      )
+      dialog.component = component
+    }
 
-    @Binds
-    @CheckResult
-    internal abstract fun bindUiCallback(impl: VersionUpgradeHandler): VersionUpgradeControlView.Callback
+    internal class FactoryImpl internal constructor(
+      private val applicationName: String,
+      private val currentVersion: Int,
+      private val schedulerProvider: SchedulerProvider,
+      private val bus: EventBus<VersionHandlerEvent>,
+      private val navigationBus: EventBus<FailedNavigationEvent>
+    ) : Factory {
+
+      override fun create(
+        parent: ViewGroup,
+        newVersion: Int
+      ): VersionUpgradeComponent {
+        return Impl(
+            parent, applicationName, currentVersion,
+            newVersion, schedulerProvider, bus,
+            navigationBus
+        )
+      }
+
+    }
 
   }
 }

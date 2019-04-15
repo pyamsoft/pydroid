@@ -19,9 +19,8 @@ package com.pyamsoft.pydroid.loader
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
-import javax.inject.Inject
 
-internal class ImageLoaderImpl @Inject internal constructor(
+internal class ImageLoaderImpl internal constructor(
 ) : ImageLoader {
 
   override fun load(@DrawableRes resource: Int): Loader<Drawable> {

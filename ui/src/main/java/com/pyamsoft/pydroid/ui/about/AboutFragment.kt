@@ -34,12 +34,11 @@ import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
-import javax.inject.Inject
 
 class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiComponent.Callback {
 
-  @field:Inject internal lateinit var toolbarComponent: AboutToolbarUiComponent
-  @field:Inject internal lateinit var component: AboutUiComponent
+  internal lateinit var toolbarComponent: AboutToolbarUiComponent
+  internal lateinit var component: AboutUiComponent
 
   override fun onCreateView(
     inflater: LayoutInflater,

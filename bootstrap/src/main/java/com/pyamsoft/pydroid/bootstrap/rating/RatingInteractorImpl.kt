@@ -21,11 +21,9 @@ import com.pyamsoft.pydroid.core.threads.Enforcer
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Named
 
-internal class RatingInteractorImpl @Inject internal constructor(
-  @Named("current_version") private val currentVersion: Int,
+internal class RatingInteractorImpl internal constructor(
+  private val currentVersion: Int,
   private val enforcer: Enforcer,
   private val preferences: RatingPreferences
 ) : RatingInteractor {

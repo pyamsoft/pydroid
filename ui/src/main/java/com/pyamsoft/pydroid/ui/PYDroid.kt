@@ -79,7 +79,7 @@ object PYDroid {
               schedulerProvider
           )
           instance = pydroid
-          onInit(pydroid.component)
+          onInit(pydroid.moduleProvider)
         }
       }
     }
@@ -92,7 +92,7 @@ object PYDroid {
   @CheckResult
   fun getSystemService(name: String): Any? {
     return when (name) {
-      Injector.THEMING -> instance().component.theming().get()
+      Injector.THEMING -> instance().moduleProvider.theming()
       Injector.NAME -> instance().component
       else -> null
     }

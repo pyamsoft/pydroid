@@ -32,9 +32,8 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel.VersionState.UpgradePayload
 import timber.log.Timber
-import javax.inject.Inject
 
-internal class VersionCheckViewModel @Inject internal constructor(
+internal class VersionCheckViewModel internal constructor(
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider,
   private val bus: EventBus<VersionCheckState>

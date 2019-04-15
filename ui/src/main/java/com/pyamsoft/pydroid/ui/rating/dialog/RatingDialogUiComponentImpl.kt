@@ -26,9 +26,8 @@ import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogUiComponent.Callback
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel.RatingState
-import javax.inject.Inject
 
-internal class RatingDialogUiComponentImpl @Inject internal constructor(
+internal class RatingDialogUiComponentImpl internal constructor(
   private val viewModel: RatingDialogViewModel,
   private val iconView: RatingIconView,
   private val changelogView: RatingChangelogView,

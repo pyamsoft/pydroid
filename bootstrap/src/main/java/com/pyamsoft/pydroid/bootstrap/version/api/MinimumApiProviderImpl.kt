@@ -18,9 +18,8 @@
 package com.pyamsoft.pydroid.bootstrap.version.api
 
 import android.os.Build
-import javax.inject.Inject
 
-internal class MinimumApiProviderImpl @Inject internal constructor() : MinimumApiProvider {
+internal class MinimumApiProviderImpl internal constructor() : MinimumApiProvider {
 
   override fun minApi(): Int {
     return Build.VERSION.SDK_INT

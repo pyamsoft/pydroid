@@ -29,9 +29,8 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
-import javax.inject.Inject
 
-internal class AppSettingsUiComponentImpl @Inject internal constructor(
+internal class AppSettingsUiComponentImpl internal constructor(
   private val settingsView: AppSettingsView,
   private val versionViewModel: VersionCheckViewModel,
   private val ratingViewModel: RatingViewModel,

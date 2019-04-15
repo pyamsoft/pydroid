@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import com.pyamsoft.pydroid.ui.Injector
-import com.pyamsoft.pydroid.ui.PYDroid
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show

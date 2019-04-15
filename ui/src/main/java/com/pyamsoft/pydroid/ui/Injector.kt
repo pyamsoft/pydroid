@@ -22,7 +22,7 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.theme.Theming
 
-internal object Injector {
+object Injector {
 
   internal const val NAME = "com.pyamsoft.pydroid.INJECTOR"
   internal const val THEMING = "com.pyamsoft.pydroid.THEMING_INJECTOR"

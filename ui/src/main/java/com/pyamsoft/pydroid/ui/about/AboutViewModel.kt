@@ -44,7 +44,8 @@ internal class AboutViewModel @Inject internal constructor(
   private var licenseDisposable by singleDisposable()
 
   override fun onBind() {
-    handler.handle(this).destroy()
+    handler.handle(this)
+        .destroy()
 
     loadLicenses(false)
   }

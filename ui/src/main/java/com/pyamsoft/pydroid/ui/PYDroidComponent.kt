@@ -133,14 +133,6 @@ internal interface PYDroidComponent : ModuleProvider {
       @CheckResult
       @Provides
       @Singleton
-      internal fun provideTheming(context: Context): Theming {
-        return Theming(context)
-      }
-
-      @JvmStatic
-      @CheckResult
-      @Provides
-      @Singleton
       internal fun provideNavigationBus(): EventBus<FailedNavigationEvent> {
         return RxBus.create()
       }

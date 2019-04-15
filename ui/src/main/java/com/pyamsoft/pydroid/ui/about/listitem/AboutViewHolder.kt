@@ -22,7 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
 import javax.inject.Inject
@@ -40,7 +41,7 @@ internal class AboutViewHolder private constructor(
   override fun bind(model: OssLibrary) {
     bindLifecycle?.unbind()
 
-    PYDroid.obtain(itemView.context.applicationContext)
+    Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
         .plusAboutItem()
         .create(parent, model)
         .inject(this)

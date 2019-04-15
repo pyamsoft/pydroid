@@ -24,8 +24,11 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.ui.R
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class Theming internal constructor(context: Context) {
+@Singleton
+class Theming @Inject internal constructor(context: Context) {
 
   private val preferences: SharedPreferences
   private val key: String

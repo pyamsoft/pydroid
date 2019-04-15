@@ -15,26 +15,43 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.theme
+package com.pyamsoft.pydroid.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.theme.Theming
 
-object ThemeInjector {
+internal object Injector {
 
-  const val name: String = "com.pyamsoft.pydroid.THEME_INJECTOR"
+  internal const val NAME = "com.pyamsoft.pydroid.INJECTOR"
+  internal const val THEMING = "com.pyamsoft.pydroid.THEMING_INJECTOR"
 
-  @SuppressLint("WrongConstant")
-  @CheckResult
   @JvmStatic
-  fun obtain(context: Context): Theming {
+  @CheckResult
+  @SuppressLint("WrongConstant")
+  private fun <T : Any> obtain(
+    context: Context,
+    name: String
+  ): T {
     val service: Any? = context.getSystemService(name)
     if (service == null) {
-      throw IllegalStateException("Unable to find Theming singleton")
+      throw IllegalStateException("Unable to locate service: $name")
     } else {
       @Suppress("UNCHECKED_CAST")
-      return service as Theming
+      return service as T
     }
+  }
+
+  @JvmStatic
+  @CheckResult
+  fun <T : Any> obtain(context: Context): T {
+    return obtain(context, NAME)
+  }
+
+  @JvmStatic
+  @CheckResult
+  fun obtainTheming(context: Context): Theming {
+    return obtain(context, THEMING)
   }
 }

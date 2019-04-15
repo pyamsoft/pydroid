@@ -27,7 +27,8 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
-import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
@@ -73,7 +74,7 @@ class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
     require(changelog.isNotBlank())
 
     val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
-    PYDroid.obtain(view.context.applicationContext)
+    Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusRatingDialog()
         .create(rateLink, changeLogIcon, changelog, layoutRoot)
         .inject(this)

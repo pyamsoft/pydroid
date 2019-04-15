@@ -20,7 +20,9 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
+import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
@@ -38,7 +40,7 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Ca
 
     // Need to do this in onPostCreate because the snackbarRoot will not be available until
     // after subclass onCreate
-    PYDroid.obtain(this)
+    Injector.obtain<PYDroidComponent>(applicationContext)
         .plusVersion()
         .create(this, snackbarRoot)
         .inject(this)

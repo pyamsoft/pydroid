@@ -25,7 +25,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
+import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
@@ -59,7 +61,7 @@ class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callbac
     val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
     require(latestVersion > 0)
     val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
-    PYDroid.obtain(view.context.applicationContext)
+    Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusUpgrade()
         .create(layoutRoot, latestVersion)
         .inject(this)

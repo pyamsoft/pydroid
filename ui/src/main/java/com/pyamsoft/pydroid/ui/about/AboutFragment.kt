@@ -27,7 +27,8 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
-import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.Injector
+import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
@@ -56,7 +57,7 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiCompo
 
     val backstack = requireArguments().getInt(KEY_BACK_STACK, 0)
     val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
-    PYDroid.obtain(view.context.applicationContext)
+    Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusAbout()
         .create(viewLifecycleOwner, requireToolbarActivity(), backstack, layoutRoot)
         .inject(this)

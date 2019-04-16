@@ -48,12 +48,13 @@ class VersionCheckModule(
 ) {
 
   private val impl: VersionCheckInteractorImpl
-  private val moshi = provideMoshi()
+  private val moshi: Moshi
 
   init {
-    val okHttpClient = provideOkHttpClient(debug)
-    val retrofit = provideRetrofit(okHttpClient, moshi)
-    val repo = provideRepo(context, moshi)
+    moshi = createMoshi()
+    val okHttpClient = createOkHttpClient(debug)
+    val retrofit = createRetrofit(okHttpClient, moshi)
+    val repo = createRepo(context, moshi)
     val versionCheckService = retrofit.create(VersionCheckService::class.java)
     val minimumApiProvider = MinimumApiProviderImpl()
     val networkStatusProvider = NetworkStatusProviderImpl(context)
@@ -93,20 +94,20 @@ class VersionCheckModule(
 
     @JvmStatic
     @CheckResult
-    internal fun provideService(retrofit: Retrofit): VersionCheckService {
+    private fun createService(retrofit: Retrofit): VersionCheckService {
       return retrofit.create(VersionCheckService::class.java)
     }
 
     @JvmStatic
     @CheckResult
-    internal fun provideMoshi(): Moshi {
+    private fun createMoshi(): Moshi {
       return Moshi.Builder()
           .build()
     }
 
     @JvmStatic
     @CheckResult
-    internal fun provideRepo(
+    private fun createRepo(
       context: Context,
       moshi: Moshi
     ): Repo<UpdatePayload> {
@@ -122,7 +123,7 @@ class VersionCheckModule(
 
     @JvmStatic
     @CheckResult
-    internal fun provideOkHttpClient(debug: Boolean): OkHttpClient {
+    private fun createOkHttpClient(debug: Boolean): OkHttpClient {
       return OkHttpClient.Builder()
           .socketFactory(DelegatingSocketFactory.create())
           .also {
@@ -137,7 +138,7 @@ class VersionCheckModule(
 
     @JvmStatic
     @CheckResult
-    internal fun provideRetrofit(
+    private fun createRetrofit(
       okHttpClient: OkHttpClient,
       moshi: Moshi
     ): Retrofit {

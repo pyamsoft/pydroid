@@ -20,38 +20,30 @@ package com.pyamsoft.pydroid.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.theme.Theming
 
 object Injector {
-
-  internal const val NAME = "com.pyamsoft.pydroid.INJECTOR"
-  internal const val THEMING = "com.pyamsoft.pydroid.THEMING_INJECTOR"
 
   @JvmStatic
   @CheckResult
   @SuppressLint("WrongConstant")
-  private fun <T : Any> obtain(
+  inline fun <reified T : Any> obtain(context: Context): T {
+    return obtain(context, T::class.java)
+  }
+
+  @JvmStatic
+  @CheckResult
+  @SuppressLint("WrongConstant")
+  fun <T : Any> obtain(
     context: Context,
-    name: String
+    targetClass: Class<T>
   ): T {
-    val service: Any? = context.getSystemService(name)
-    if (service == null) {
-      throw IllegalStateException("Unable to locate service: $name")
-    } else {
-      @Suppress("UNCHECKED_CAST")
-      return service as T
-    }
+    val name = targetClass.name
+    val service: Any = context.getSystemService(name) ?: throw ServiceLookupException(name)
+
+    @Suppress("UNCHECKED_CAST")
+    return service as T
   }
 
-  @JvmStatic
-  @CheckResult
-  fun <T : Any> obtain(context: Context): T {
-    return obtain(context, NAME)
-  }
-
-  @JvmStatic
-  @CheckResult
-  fun obtainTheming(context: Context): Theming {
-    return obtain(context, THEMING)
-  }
+  class ServiceLookupException(name: String) :
+      IllegalStateException("Unable to location service: $name")
 }

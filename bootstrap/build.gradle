@@ -18,17 +18,17 @@
 dependencies {
 
   // Moshi
-  api "com.squareup.moshi:moshi:$moshi"
+  implementation "com.squareup.moshi:moshi:$moshi"
   kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
   // Retrofit
-  api "com.squareup.retrofit2:retrofit:$retrofit"
+  implementation "com.squareup.retrofit2:retrofit:$retrofit"
   implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
   implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
   implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 
   // Repo
-  api "com.popinnow.android.repo:repo:$repo"
+  implementation "com.popinnow.android.repo:repo:$repo"
   implementation "com.popinnow.android.repo:repo-persister-moshi:$repo"
 
   api project(':util')

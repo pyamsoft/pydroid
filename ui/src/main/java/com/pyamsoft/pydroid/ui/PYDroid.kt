@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 /**
  * PYDroid library entry point
@@ -92,8 +93,8 @@ object PYDroid {
   @CheckResult
   fun getSystemService(name: String): Any? {
     return when (name) {
-      Injector.THEMING -> instance().moduleProvider.theming()
-      Injector.NAME -> instance().component
+      Theming::class.java.name -> instance().moduleProvider.theming()
+      PYDroidComponent::class.java.name -> instance().component
       else -> null
     }
   }

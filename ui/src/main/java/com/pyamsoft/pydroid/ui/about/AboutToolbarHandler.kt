@@ -39,7 +39,7 @@ internal class AboutToolbarHandler internal constructor(
   override fun handle(delegate: AboutToolbarView.Callback): Disposable {
     return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+        .observeOn(schedulerProvider.backgroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is Navigate -> delegate.onToolbarNavClicked()

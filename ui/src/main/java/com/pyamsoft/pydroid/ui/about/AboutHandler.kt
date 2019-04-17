@@ -39,7 +39,7 @@ internal class AboutHandler internal constructor(
   override fun handle(delegate: AboutListView.Callback): Disposable {
     return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+        .observeOn(schedulerProvider.backgroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is ExternalUrl -> delegate.onNavigateExternalUrl(it.url)

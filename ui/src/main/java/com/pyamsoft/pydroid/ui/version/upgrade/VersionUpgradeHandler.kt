@@ -44,7 +44,7 @@ internal class VersionUpgradeHandler internal constructor(
   override fun handle(delegate: VersionUpgradeControlView.Callback): Disposable {
     return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+        .observeOn(schedulerProvider.backgroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is Upgrade -> delegate.onUpgradeClicked()

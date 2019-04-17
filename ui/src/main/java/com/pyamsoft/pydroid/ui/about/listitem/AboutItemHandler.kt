@@ -50,7 +50,7 @@ internal class AboutItemHandler internal constructor(
   override fun handle(delegate: AboutItemActionsView.Callback): Disposable {
     return listen()
         .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
+        .observeOn(schedulerProvider.backgroundScheduler)
         .subscribe {
           return@subscribe when (it) {
             is ViewLicense -> delegate.onViewLicenseClicked(it.name, it.url)

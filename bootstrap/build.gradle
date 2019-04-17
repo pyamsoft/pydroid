@@ -18,7 +18,7 @@
 dependencies {
 
   // Moshi
-  api "com.squareup.moshi:moshi:$moshi"
+  implementation "com.squareup.moshi:moshi:$moshi"
   kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
   // Retrofit

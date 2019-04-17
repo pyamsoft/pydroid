@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.bootstrap.network.socket.DelegatingSocketFactory
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
-import com.pyamsoft.pydroid.core.cache.Cache
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -55,7 +54,7 @@ class VersionCheckModule(
     val okHttpClient = createOkHttpClient(debug)
     val retrofit = createRetrofit(okHttpClient, moshi)
     val repo = createRepo(context, moshi)
-    val versionCheckService = retrofit.create(VersionCheckService::class.java)
+    val versionCheckService = createService(retrofit)
     val minimumApiProvider = MinimumApiProviderImpl()
     val networkStatusProvider = NetworkStatusProviderImpl(context)
 
@@ -72,18 +71,8 @@ class VersionCheckModule(
   }
 
   @CheckResult
-  fun provideCache(): Cache {
-    return impl
-  }
-
-  @CheckResult
   fun provideInteractor(): VersionCheckInteractor {
     return impl
-  }
-
-  @CheckResult
-  fun provideMoshi(): Moshi {
-    return moshi
   }
 
   companion object {

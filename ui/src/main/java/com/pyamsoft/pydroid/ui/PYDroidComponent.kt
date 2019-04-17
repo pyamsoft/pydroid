@@ -43,7 +43,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckState
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
-import com.squareup.moshi.Moshi
 
 internal interface PYDroidComponent {
 
@@ -80,8 +79,8 @@ internal interface PYDroidComponent {
   }
 
   class ComponentImpl private constructor(
-    private val application: Application,
-    private val debug: Boolean,
+    application: Application,
+    debug: Boolean,
     private val applicationName: String,
     private val bugReportUrl: String,
     private val currentVersion: Int,
@@ -169,10 +168,6 @@ internal interface PYDroidComponent {
 
     override fun imageLoader(): ImageLoader {
       return loaderModule.provideLoader()
-    }
-
-    override fun moshi(): Moshi {
-      return versionCheckModule.provideMoshi()
     }
 
     class FactoryImpl internal constructor() : Factory {

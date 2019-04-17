@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.squareup.moshi.Moshi
 
 interface ModuleProvider {
 
@@ -37,8 +36,5 @@ interface ModuleProvider {
 
   @CheckResult
   fun imageLoader(): ImageLoader
-
-  @CheckResult
-  fun moshi(): Moshi
 
 }

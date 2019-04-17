@@ -24,6 +24,7 @@ import com.popinnow.android.refresh.RefreshLatch
 import com.popinnow.android.refresh.newRefreshLatch
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.arch.renderOnChange
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
 import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException

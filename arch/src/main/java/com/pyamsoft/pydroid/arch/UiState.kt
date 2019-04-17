@@ -18,3 +18,15 @@
 package com.pyamsoft.pydroid.arch
 
 interface UiState
+
+inline fun <T : UiState, M : Any?> T.renderOnChange(
+  oldState: T?,
+  crossinline value: (state: T) -> M,
+  crossinline onChange: (value: M) -> Unit
+) {
+  val newValue = value(this)
+  if (oldState == null || newValue != value(oldState)) {
+    onChange(newValue)
+  }
+}
+

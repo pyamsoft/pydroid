@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.arch.renderOnChange
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel.AboutItemState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent.Callback
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException

@@ -19,4 +19,4 @@ package com.pyamsoft.pydroid.ui.navigation
 
 import android.content.ActivityNotFoundException
 
-data class FailedNavigationEvent(val error: ActivityNotFoundException)
+internal data class FailedNavigationEvent(val error: ActivityNotFoundException)

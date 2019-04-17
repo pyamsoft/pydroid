@@ -20,6 +20,8 @@ package com.pyamsoft.pydroid.ui.about
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
+import com.popinnow.android.refresh.RefreshLatch
+import com.popinnow.android.refresh.newRefreshLatch
 import com.pyamsoft.pydroid.arch.BaseUiComponent
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.about.AboutUiComponent.Callback
@@ -36,6 +38,8 @@ internal class AboutUiComponentImpl internal constructor(
 ) : BaseUiComponent<Callback>(),
     AboutUiComponent {
 
+  private lateinit var refreshLatch: RefreshLatch
+
   override fun id(): Int {
     throw InvalidIdException
   }
@@ -49,6 +53,16 @@ internal class AboutUiComponentImpl internal constructor(
       listView.teardown()
       spinner.teardown()
       viewModel.unbind()
+    }
+
+    refreshLatch = newRefreshLatch(owner) { refreshing ->
+      if (refreshing) {
+        listView.hide()
+        spinner.show()
+      } else {
+        spinner.hide()
+        listView.show()
+      }
     }
 
     listView.inflate(savedInstanceState)
@@ -71,13 +85,7 @@ internal class AboutUiComponentImpl internal constructor(
     oldState: AboutState?
   ) {
     state.renderOnChange(oldState, value = { it.isLoading }) { loading ->
-      if (loading) {
-        listView.hide()
-        spinner.show()
-      } else {
-        spinner.hide()
-        listView.show()
-      }
+      refreshLatch.isRefreshing = loading
     }
   }
 

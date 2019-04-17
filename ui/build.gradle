@@ -24,8 +24,8 @@ dependencies {
   api "com.google.android.material:material:$materialDesign"
   api "androidx.preference:preference:$preference"
 
-  // Fluid resize
   implementation "com.popinnow.android.fluidresizer:fluidresizer:$fluidresizer"
+  implementation "com.popinnow.android.refresh:refresh-latch:$refreshLatch"
 
   api project(':arch')
   api project(':bootstrap')

@@ -48,6 +48,7 @@ buildscript {
 
     repo = "0.4.0"
     fluidresizer = "0.0.4"
+    refreshLatch = "0.0.1"
 
     timber = "4.7.1"
 

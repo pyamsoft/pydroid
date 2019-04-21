@@ -68,7 +68,7 @@ internal interface RatingDialogComponent {
           viewModel, icon, changelog,
           controls, navigationViewModel
       )
-      dialog._component = component
+      dialog.component = component
     }
 
     internal class FactoryImpl internal constructor(

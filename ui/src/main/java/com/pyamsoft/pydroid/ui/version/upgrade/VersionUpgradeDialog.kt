@@ -35,9 +35,7 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callback {
 
-  internal var _component: VersionUpgradeUiComponent? = null
-  private val component: VersionUpgradeUiComponent
-    get() = requireNotNull(_component)
+  internal var component: VersionUpgradeUiComponent? = null
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState)
@@ -66,12 +64,12 @@ class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callbac
         .create(layoutRoot, latestVersion)
         .inject(this)
 
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    _component = null
+    component = null
   }
 
   override fun onResume() {
@@ -84,13 +82,13 @@ class VersionUpgradeDialog : DialogFragment(), VersionUpgradeUiComponent.Callbac
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    component?.saveState(outState)
   }
 
   override fun onNavigateToMarket() {
     val error = MarketLinker.linkToMarketPage(requireContext(), requireContext().packageName)
     if (error != null) {
-      component.navigationFailed(error)
+      requireNotNull(component).navigationFailed(error)
     }
   }
 

@@ -68,7 +68,7 @@ internal interface VersionComponent {
       val versionView = VersionView(snackbarRoot, owner)
       val component =
         VersionCheckUiComponentImpl(navigationViewModel, versionViewModel, versionView)
-      activity._versionComponent = component
+      activity.versionComponent = component
     }
 
     internal class FactoryImpl internal constructor(

@@ -52,7 +52,7 @@ internal interface AboutItemComponent {
       val actions = AboutItemActionsView(model, parent, handler)
       val description = AboutItemDescriptionView(model, parent)
       val component = AboutViewHolderUiComponentImpl(title, actions, description, viewModel)
-      viewHolder._component = component
+      viewHolder.component = component
     }
 
     class FactoryImpl internal constructor(

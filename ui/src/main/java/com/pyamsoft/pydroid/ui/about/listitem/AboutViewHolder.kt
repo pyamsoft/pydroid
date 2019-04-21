@@ -32,9 +32,7 @@ internal class AboutViewHolder private constructor(
   private val callback: AboutViewHolderUiComponent.Callback
 ) : BaseViewHolder(view) {
 
-  internal var _component: AboutViewHolderUiComponent? = null
-  private val component: AboutViewHolderUiComponent
-    get() = requireNotNull(_component)
+  internal var component: AboutViewHolderUiComponent? = null
 
   private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
   private var bindLifecycle: ListItemLifecycle? = null
@@ -50,14 +48,14 @@ internal class AboutViewHolder private constructor(
     val owner = ListItemLifecycle()
     bindLifecycle = owner
 
-    component.bind(owner, null, callback)
+    requireNotNull(component).bind(owner, null, callback)
   }
 
   override fun unbind() {
     bindLifecycle?.unbind()
     bindLifecycle = null
 
-    _component = null
+    component = null
   }
 
   companion object {

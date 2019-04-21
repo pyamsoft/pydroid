@@ -62,7 +62,7 @@ internal interface VersionUpgradeComponent {
           controlsView, contentView,
           navigationViewModel, viewModel
       )
-      dialog._component = component
+      dialog.component = component
     }
 
     internal class FactoryImpl internal constructor(

@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
@@ -40,9 +41,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
 
   protected open val hideClearAll: Boolean = false
 
-  internal var _component: AppSettingsUiComponent? = null
-  private val component: AppSettingsUiComponent
-    get() = requireNotNull(_component)
+  internal var component: AppSettingsUiComponent? = null
 
   @CallSuper
   override fun onCreatePreferences(
@@ -68,18 +67,22 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
         .create(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
 
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    _component = null
+    component = null
+  }
+
+  private fun failedNavigation(error: ActivityNotFoundException) {
+    requireNotNull(component).failedNavigation(error)
   }
 
   final override fun onViewMorePyamsoftApps() {
     val error = MarketLinker.linkToDeveloperPage(requireContext())
     if (error != null) {
-      component.failedNavigation(error)
+      failedNavigation(error)
     }
   }
 
@@ -100,7 +103,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
       val link = c.packageName
       val error = MarketLinker.linkToMarketPage(c, link)
       if (error != null) {
-        component.failedNavigation(error)
+        failedNavigation(error)
       }
     }
   }
@@ -108,14 +111,14 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
   final override fun onNavigateToLink(link: HyperlinkIntent) {
     val error = link.navigate()
     if (error != null) {
-      component.failedNavigation(error)
+      failedNavigation(error)
     }
   }
 
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    component?.saveState(outState)
   }
 
   /**

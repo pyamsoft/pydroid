@@ -81,7 +81,7 @@ internal interface AppSettingsComponent {
           ratingViewModel, settingsViewModel,
           navigationViewModel
       )
-      fragment.component = component
+      fragment._component = component
     }
 
     internal class FactoryImpl internal constructor(

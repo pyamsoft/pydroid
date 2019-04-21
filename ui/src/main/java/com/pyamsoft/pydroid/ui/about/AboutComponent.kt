@@ -65,13 +65,13 @@ internal interface AboutComponent {
       val spinner = SpinnerView(parent)
       val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
       val component = AboutUiComponentImpl(listView, spinner, viewModel, navigationViewModel)
-      fragment.component = component
+      fragment._component = component
 
       val toolbarHandler = AboutToolbarHandler(schedulerProvider, toolbarBus)
       val toolbarViewModel = AboutToolbarViewModel(toolbarHandler)
       val toolbar = AboutToolbarView(backstack, toolbarActivity, toolbarHandler)
       val toolbarComponent = AboutToolbarUiComponentImpl(toolbar, toolbarViewModel)
-      fragment.toolbarComponent = toolbarComponent
+      fragment._toolbarComponent = toolbarComponent
     }
 
     class FactoryImpl internal constructor(

@@ -30,7 +30,9 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Ca
 
   protected abstract val snackbarRoot: View
 
-  internal var versionComponent: VersionCheckUiComponent? = null
+  internal var _versionComponent: VersionCheckUiComponent? = null
+  private val versionComponent: VersionCheckUiComponent
+    get() = requireNotNull(_versionComponent)
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -43,19 +45,19 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Ca
         .create(this, snackbarRoot)
         .inject(this)
 
-    requireNotNull(versionComponent).bind(this, savedInstanceState, this)
+    versionComponent.bind(this, savedInstanceState, this)
   }
 
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    requireNotNull(versionComponent).saveState(outState)
+    versionComponent.saveState(outState)
   }
 
   @CallSuper
   override fun onDestroy() {
     super.onDestroy()
-    versionComponent = null
+    _versionComponent = null
   }
 
   final override fun onShowVersionUpgrade(newVersion: Int) {

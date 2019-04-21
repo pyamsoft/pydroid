@@ -23,7 +23,7 @@ import androidx.lifecycle.LifecycleRegistry
 import com.pyamsoft.pydroid.util.fakeBind
 import com.pyamsoft.pydroid.util.fakeUnbind
 
-internal class ListItemLifecycle internal constructor() : LifecycleOwner {
+class ListItemLifecycle : LifecycleOwner {
 
   private val registry = LifecycleRegistry(this)
 

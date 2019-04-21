@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
 
-  internal lateinit var component: RatingDialogUiComponent
+  internal var component: RatingDialogUiComponent? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -78,12 +78,17 @@ class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
         .create(rateLink, changeLogIcon, changelog, layoutRoot)
         .inject(this)
 
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    component = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    requireNotNull(component).saveState(outState)
   }
 
   override fun onResume() {
@@ -99,7 +104,7 @@ class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
     val error = MarketLinker.linkToMarketPage(requireContext(), packageName)
 
     if (error != null) {
-      component.navigationFailed(error)
+      requireNotNull(component).navigationFailed(error)
     }
 
     dismiss()

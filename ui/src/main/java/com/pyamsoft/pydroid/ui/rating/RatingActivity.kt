@@ -40,7 +40,7 @@ abstract class RatingActivity : VersionCheckActivity(),
     ChangeLogProvider,
     RatingUiComponent.Callback {
 
-  internal lateinit var ratingComponent: RatingUiComponent
+  internal var ratingComponent: RatingUiComponent? = null
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -99,7 +99,19 @@ abstract class RatingActivity : VersionCheckActivity(),
         .create()
         .inject(this)
 
-    ratingComponent.bind(this, savedInstanceState, this)
+    requireNotNull(ratingComponent).bind(this, savedInstanceState, this)
+  }
+
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    ratingComponent = null
+  }
+
+  @CallSuper
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    requireNotNull(ratingComponent).saveState(outState)
   }
 
   final override fun onShowRating() {

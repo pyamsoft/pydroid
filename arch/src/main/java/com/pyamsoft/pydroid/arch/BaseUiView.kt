@@ -39,18 +39,30 @@ abstract class BaseUiView<C : Any> protected constructor(
 
   private var _callback: C? = callback
   protected val callback: C
-    get() = requireNotNull(_callback)
+    get() = _callback ?: die()
 
   final override fun id(): Int {
     return layoutRoot.id
   }
 
+  private fun die(): Nothing {
+    throw IllegalStateException("Cannot call UiView methods after it has been torn down")
+  }
+
   @CheckResult
   private fun parent(): ViewGroup {
-    return requireNotNull(_parent)
+    return _parent ?: die()
+  }
+
+  private fun assertValidState() {
+    if (_parent == null || _callback == null) {
+      die()
+    }
   }
 
   final override fun inflate(savedInstanceState: Bundle?) {
+    assertValidState()
+
     parent().inflateAndAdd(layout) {
       onInflated(this, savedInstanceState)
     }
@@ -64,6 +76,8 @@ abstract class BaseUiView<C : Any> protected constructor(
   }
 
   final override fun saveState(outState: Bundle) {
+    assertValidState()
+
     onSaveState(outState)
   }
 
@@ -72,6 +86,8 @@ abstract class BaseUiView<C : Any> protected constructor(
   }
 
   final override fun teardown() {
+    assertValidState()
+
     onTeardown()
 
     parent().removeView(layoutRoot)
@@ -91,6 +107,8 @@ abstract class BaseUiView<C : Any> protected constructor(
 
   @CheckResult
   protected fun <T : View> lazyView(@IdRes id: Int): Lazy<T> {
+    assertValidState()
+
     return lazy(NONE) { parent().findViewById<T>(id) }
   }
 }

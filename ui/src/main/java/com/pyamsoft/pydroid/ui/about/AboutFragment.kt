@@ -37,8 +37,8 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiComponent.Callback {
 
-  internal lateinit var toolbarComponent: AboutToolbarUiComponent
-  internal lateinit var component: AboutUiComponent
+  internal var toolbarComponent: AboutToolbarUiComponent? = null
+  internal var component: AboutUiComponent? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -61,21 +61,27 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiCompo
         .create(viewLifecycleOwner, requireToolbarActivity(), backstack, layoutRoot)
         .inject(this)
 
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
-    toolbarComponent.bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(toolbarComponent).bind(viewLifecycleOwner, savedInstanceState, this)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    component = null
+    toolbarComponent = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbarComponent.saveState(outState)
-    component.saveState(outState)
+    requireNotNull(toolbarComponent).saveState(outState)
+    requireNotNull(component).saveState(outState)
   }
 
   override fun onNavigateExternalUrl(url: String) {
     val error = url.hyperlink(requireActivity())
         .navigate()
     if (error != null) {
-      component.failedNavigation(error)
+      requireNotNull(component).failedNavigation(error)
     }
   }
 

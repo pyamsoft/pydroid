@@ -26,7 +26,17 @@ abstract class BaseUiComponent<C : Any> protected constructor() : UiComponent<C>
 
   private var _callback: C? = null
   protected val callback: C
-    get() = requireNotNull(_callback)
+    get() = _callback ?: die()
+
+  private fun die(): Nothing {
+    throw IllegalStateException("Cannot call UiComponent methods after it has been torn down")
+  }
+
+  private fun assertValidState() {
+    if (_callback == null) {
+      die()
+    }
+  }
 
   final override fun bind(
     owner: LifecycleOwner,
@@ -52,9 +62,10 @@ abstract class BaseUiComponent<C : Any> protected constructor() : UiComponent<C>
     callback: C
   ) {
     this._callback = callback
+    assertValidState()
+
     owner.doOnDestroy { this._callback = null }
     onBind(owner, savedInstanceState, callback)
-
     layout?.layout { onLayout(this) }
   }
 
@@ -69,6 +80,8 @@ abstract class BaseUiComponent<C : Any> protected constructor() : UiComponent<C>
   }
 
   final override fun saveState(outState: Bundle) {
+    assertValidState()
+
     onSaveState(outState)
   }
 

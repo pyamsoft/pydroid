@@ -40,7 +40,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
 
   protected open val hideClearAll: Boolean = false
 
-  internal lateinit var component: AppSettingsUiComponent
+  internal var component: AppSettingsUiComponent? = null
 
   @CallSuper
   override fun onCreatePreferences(
@@ -66,13 +66,18 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
         .create(preferenceScreen, hideClearAll, hideUpgradeInformation)
         .inject(this)
 
-    component.bind(viewLifecycleOwner, savedInstanceState, this)
+    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    component = null
   }
 
   final override fun onViewMorePyamsoftApps() {
     val error = MarketLinker.linkToDeveloperPage(requireContext())
     if (error != null) {
-      component.failedNavigation(error)
+      requireNotNull(component).failedNavigation(error)
     }
   }
 
@@ -93,7 +98,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
       val link = c.packageName
       val error = MarketLinker.linkToMarketPage(c, link)
       if (error != null) {
-        component.failedNavigation(error)
+        requireNotNull(component).failedNavigation(error)
       }
     }
   }
@@ -101,14 +106,14 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat(),
   final override fun onNavigateToLink(link: HyperlinkIntent) {
     val error = link.navigate()
     if (error != null) {
-      component.failedNavigation(error)
+      requireNotNull(component).failedNavigation(error)
     }
   }
 
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component.saveState(outState)
+    requireNotNull(component).saveState(outState)
   }
 
   /**

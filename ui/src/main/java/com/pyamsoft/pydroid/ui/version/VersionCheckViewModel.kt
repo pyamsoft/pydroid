@@ -64,7 +64,7 @@ internal class VersionCheckViewModel internal constructor(
             is Complete -> handleVersionCheckComplete()
           }
         }
-        .destroy()
+        .disposeOnDestroy()
   }
 
   private fun handleVersionCheckBegin(forced: Boolean) {

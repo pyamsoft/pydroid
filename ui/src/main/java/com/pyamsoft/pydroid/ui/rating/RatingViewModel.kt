@@ -50,7 +50,7 @@ internal class RatingViewModel internal constructor(
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe { handleShowRating() }
-        .destroy()
+        .disposeOnDestroy()
   }
 
   private fun handleShowRating() {

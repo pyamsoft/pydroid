@@ -36,7 +36,7 @@ internal class NavigationViewModel internal constructor(
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .subscribe { handleFailedNavigation(it.error) }
-        .destroy()
+        .disposeOnDestroy()
   }
 
   private fun handleFailedNavigation(error: ActivityNotFoundException) {

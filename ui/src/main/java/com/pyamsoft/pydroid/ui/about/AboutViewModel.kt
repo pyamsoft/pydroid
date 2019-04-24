@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import com.pyamsoft.pydroid.arch.UiEventHandler
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
@@ -24,11 +25,12 @@ import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
 import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
 import timber.log.Timber
 
 internal class AboutViewModel internal constructor(
-  private val handler: AboutHandler,
+  private val handler: UiEventHandler<AboutHandlerEvent, AboutListView.Callback>,
   private val interactor: AboutInteractor,
   private val schedulerProvider: SchedulerProvider
 ) : UiViewModel<AboutState>(
@@ -44,7 +46,7 @@ internal class AboutViewModel internal constructor(
 
   override fun onBind() {
     handler.handle(this)
-        .destroy()
+        .disposeOnDestroy()
 
     loadLicenses(false)
   }

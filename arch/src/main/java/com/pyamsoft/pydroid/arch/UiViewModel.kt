@@ -125,7 +125,15 @@ abstract class UiViewModel<T : UiState> protected constructor(
     }
   }
 
+  @Deprecated(
+      message = "Use disposeOnDestroy()",
+      replaceWith = ReplaceWith(expression = "disposeOnDestroy()")
+  )
   protected fun Disposable.destroy() {
+    disposables.add(this)
+  }
+
+  protected fun Disposable.disposeOnDestroy() {
     disposables.add(this)
   }
 

@@ -44,7 +44,7 @@ internal class AppSettingsViewModel internal constructor(
 
   override fun onBind() {
     handler.handle(this)
-        .destroy()
+        .disposeOnDestroy()
   }
 
   override fun onUnbind() {

@@ -29,7 +29,7 @@ internal class AboutToolbarViewModel internal constructor(
 
   override fun onBind() {
     handler.handle(this)
-        .destroy()
+        .disposeOnDestroy()
   }
 
   override fun onUnbind() {

@@ -32,12 +32,12 @@ internal class RatingControlsView internal constructor(
   callback: Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
-  private val rateApplication by lazyView<Button>(R.id.rate_application)
-  private val noThanks by lazyView<Button>(R.id.no_thanks)
+  private val rateApplication by boundView<Button>(R.id.rate_application)
+  private val noThanks by boundView<Button>(R.id.no_thanks)
 
   override val layout: Int = R.layout.rating_controls
 
-  override val layoutRoot by lazyView<View>(R.id.rating_control_root)
+  override val layoutRoot by boundView<View>(R.id.rating_control_root)
 
   override fun onInflated(
     view: View,

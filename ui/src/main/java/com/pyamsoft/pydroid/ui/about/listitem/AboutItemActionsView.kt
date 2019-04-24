@@ -33,12 +33,12 @@ internal class AboutItemActionsView internal constructor(
   callback: Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
-  private val viewLicense by lazyView<Button>(R.id.action_view_license)
-  private val visitHomepage by lazyView<Button>(R.id.action_visit_homepage)
+  private val viewLicense by boundView<Button>(R.id.action_view_license)
+  private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
 
   override val layout: Int = R.layout.about_item_actions
 
-  override val layoutRoot by lazyView<View>(R.id.about_actions)
+  override val layoutRoot by boundView<View>(R.id.about_actions)
 
   override fun onInflated(
     view: View,

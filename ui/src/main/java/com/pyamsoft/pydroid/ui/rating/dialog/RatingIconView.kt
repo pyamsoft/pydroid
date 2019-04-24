@@ -32,13 +32,13 @@ internal class RatingIconView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
-  private val icon by lazyView<ImageView>(R.id.icon)
+  private val icon by boundView<ImageView>(R.id.icon)
 
   private var iconLoaded: Loaded? = null
 
   override val layout: Int = R.layout.rating_icon
 
-  override val layoutRoot by lazyView<View>(R.id.rating_icon_root)
+  override val layoutRoot by boundView<View>(R.id.rating_icon_root)
 
   override fun onInflated(
     view: View,

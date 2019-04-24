@@ -32,12 +32,12 @@ internal class AboutItemTitleView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
-  private val title by lazyView<TextView>(R.id.title)
-  private val license by lazyView<TextView>(R.id.license)
+  private val title by boundView<TextView>(R.id.title)
+  private val license by boundView<TextView>(R.id.license)
 
   override val layout: Int = R.layout.about_item_title
 
-  override val layoutRoot by lazyView<View>(R.id.about_title)
+  override val layoutRoot by boundView<View>(R.id.about_title)
 
   override fun onInflated(
     view: View,

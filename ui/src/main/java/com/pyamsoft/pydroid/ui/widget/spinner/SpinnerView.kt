@@ -30,9 +30,9 @@ class SpinnerView constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit
 
   override val layout: Int = R.layout.loading_spinner
 
-  override val layoutRoot by lazyView<View>(R.id.spinner_root)
+  override val layoutRoot by boundView<View>(R.id.spinner_root)
 
-  private val spinner by lazyView<ProgressBar>(R.id.spinner)
+  private val spinner by boundView<ProgressBar>(R.id.spinner)
 
   override fun onTeardown() {
     spinner.isVisible = false

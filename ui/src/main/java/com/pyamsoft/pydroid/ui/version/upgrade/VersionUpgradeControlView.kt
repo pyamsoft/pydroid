@@ -31,12 +31,12 @@ internal class VersionUpgradeControlView internal constructor(
   callback: Callback
 ) : BaseUiView<Callback>(parent, callback) {
 
-  private val upgradeButton by lazyView<Button>(R.id.upgrade_button)
-  private val laterButton by lazyView<Button>(R.id.later_button)
+  private val upgradeButton by boundView<Button>(R.id.upgrade_button)
+  private val laterButton by boundView<Button>(R.id.later_button)
 
   override val layout: Int = R.layout.version_upgrade_controls
 
-  override val layoutRoot by lazyView<View>(R.id.version_control_root)
+  override val layoutRoot by boundView<View>(R.id.version_control_root)
 
   override fun onInflated(
     view: View,

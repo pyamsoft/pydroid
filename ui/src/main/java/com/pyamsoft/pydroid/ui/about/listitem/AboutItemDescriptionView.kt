@@ -34,7 +34,7 @@ internal class AboutItemDescriptionView internal constructor(
 
   override val layout: Int = R.layout.about_item_description
 
-  override val layoutRoot by lazyView<TextView>(R.id.about_description)
+  override val layoutRoot by boundView<TextView>(R.id.about_description)
 
   override fun onInflated(
     view: View,

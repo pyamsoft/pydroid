@@ -33,13 +33,13 @@ internal class VersionUpgradeContentView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
-  private val upgradeMessage by lazyView<TextView>(R.id.upgrade_message)
-  private val currentValue by lazyView<TextView>(R.id.upgrade_current_value)
-  private val newValue by lazyView<TextView>(R.id.upgrade_new_value)
+  private val upgradeMessage by boundView<TextView>(R.id.upgrade_message)
+  private val currentValue by boundView<TextView>(R.id.upgrade_current_value)
+  private val newValue by boundView<TextView>(R.id.upgrade_new_value)
 
   override val layout: Int = R.layout.version_upgrade_content
 
-  override val layoutRoot by lazyView<View>(R.id.version_content_root)
+  override val layoutRoot by boundView<View>(R.id.version_content_root)
 
   override fun onInflated(
     view: View,

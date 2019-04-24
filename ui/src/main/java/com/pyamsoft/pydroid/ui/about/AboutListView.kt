@@ -45,7 +45,7 @@ internal class AboutListView internal constructor(
 
   override val layout: Int = R.layout.about_libraries_list
 
-  override val layoutRoot by lazyView<RecyclerView>(R.id.about_list)
+  override val layoutRoot by boundView<RecyclerView>(R.id.about_list)
 
   override fun onInflated(
     view: View,

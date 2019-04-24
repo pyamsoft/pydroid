@@ -31,11 +31,11 @@ internal class RatingChangelogView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<Unit>(parent, Unit) {
 
-  private val changelogText by lazyView<TextView>(R.id.rating_changelog_text)
+  private val changelogText by boundView<TextView>(R.id.rating_changelog_text)
 
   override val layout: Int = R.layout.rating_changelog
 
-  override val layoutRoot by lazyView<ScrollView>(R.id.rating_changelog_scroll)
+  override val layoutRoot by boundView<ScrollView>(R.id.rating_changelog_scroll)
 
   override fun onInflated(
     view: View,

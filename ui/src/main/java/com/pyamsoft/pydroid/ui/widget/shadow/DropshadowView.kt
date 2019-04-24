@@ -26,6 +26,6 @@ class DropshadowView constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, U
 
   override val layout: Int = R.layout.dropshadow
 
-  override val layoutRoot by lazyView<View>(R.id.dropshadow_view)
+  override val layoutRoot by boundView<View>(R.id.dropshadow_view)
 
 }

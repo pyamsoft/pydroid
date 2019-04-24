@@ -17,16 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
+import com.pyamsoft.pydroid.arch.UiEventHandler
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel.RatingState
 
 internal class RatingDialogViewModel internal constructor(
-  private val handler: RatingDialogHandler,
+  private val handler: UiEventHandler<RatingEvent, RatingControlsView.Callback>,
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
 ) : UiViewModel<RatingState>(

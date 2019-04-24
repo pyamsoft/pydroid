@@ -17,13 +17,15 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
+import com.pyamsoft.pydroid.arch.UiEventHandler
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState.Upgrade
 
 internal class VersionUpgradeViewModel internal constructor(
-  private val handler: VersionUpgradeHandler
+  private val handler: UiEventHandler<VersionHandlerEvent, VersionUpgradeControlView.Callback>
 ) : UiViewModel<VersionState>(
     initialState = VersionState(upgrade = null)
 ), VersionUpgradeControlView.Callback {

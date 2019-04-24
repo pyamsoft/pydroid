@@ -17,12 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import com.pyamsoft.pydroid.arch.UiEventHandler
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel.AboutItemState
 
 internal class AboutItemViewModel internal constructor(
-  private val handler: AboutItemHandler
+  private val handler: UiEventHandler<AboutItemHandlerEvent, AboutItemActionsView.Callback>
 ) : UiViewModel<AboutItemState>(
     initialState = AboutItemState(url = "")
 ), AboutItemActionsView.Callback {

@@ -17,15 +17,17 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import com.pyamsoft.pydroid.arch.UiEventHandler
 import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState.DarkTheme
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 internal class AppSettingsViewModel internal constructor(
-  private val handler: AppSettingsHandler,
+  private val handler: UiEventHandler<AppSettingsEvent, AppSettingsView.Callback>,
   private val theming: Theming
 ) : UiViewModel<SettingsState>(
     initialState = SettingsState(

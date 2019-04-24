@@ -40,8 +40,8 @@ internal class AboutListView internal constructor(
   callback: Callback
 ) : BaseUiView<Callback>(parent, callback), UiToggleView {
 
-  private lateinit var aboutAdapter: AboutAdapter
   private var lastViewedItem: Int = 0
+  private var aboutAdapter: AboutAdapter? = null
 
   override val layout: Int = R.layout.about_libraries_list
 
@@ -58,7 +58,8 @@ internal class AboutListView internal constructor(
   override fun onTeardown() {
     super.onTeardown()
     layoutRoot.adapter = null
-    aboutAdapter.clear()
+    aboutAdapter?.clear()
+    aboutAdapter = null
   }
 
   override fun onSaveState(outState: Bundle) {
@@ -112,7 +113,7 @@ internal class AboutListView internal constructor(
   }
 
   fun loadLicenses(libraries: List<OssLibrary>) {
-    aboutAdapter.addAll(libraries)
+    requireNotNull(aboutAdapter).addAll(libraries)
   }
 
   fun showError(error: Throwable) {
@@ -127,7 +128,7 @@ internal class AboutListView internal constructor(
   }
 
   fun clearLicenses() {
-    aboutAdapter.clear()
+    requireNotNull(aboutAdapter).clear()
   }
 
   interface Callback {

@@ -39,7 +39,7 @@ internal class AboutUiComponentImpl internal constructor(
 ) : BaseUiComponent<Callback>(),
     AboutUiComponent {
 
-  private lateinit var refreshLatch: RefreshLatch
+  private var refreshLatch: RefreshLatch? = null
 
   override fun id(): Int {
     throw InvalidIdException
@@ -54,6 +54,7 @@ internal class AboutUiComponentImpl internal constructor(
       listView.teardown()
       spinner.teardown()
       viewModel.unbind()
+      refreshLatch = null
     }
 
     refreshLatch = newRefreshLatch(owner) { refreshing ->
@@ -86,7 +87,7 @@ internal class AboutUiComponentImpl internal constructor(
     oldState: AboutState?
   ) {
     state.renderOnChange(oldState, value = { it.isLoading }) { loading ->
-      refreshLatch.isRefreshing = loading
+      requireNotNull(refreshLatch).isRefreshing = loading
     }
   }
 

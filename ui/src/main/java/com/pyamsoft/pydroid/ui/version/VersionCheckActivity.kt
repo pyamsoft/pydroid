@@ -18,19 +18,22 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
-import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 
-abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Callback {
+abstract class VersionCheckActivity : ActivityBase() {
 
-  protected abstract val snackbarRoot: View
+  protected abstract val snackbarRoot: ViewGroup
 
-  internal var versionComponent: VersionCheckUiComponent? = null
+  internal var versionView: VersionView? = null
+  internal var versionViewModel: VersionCheckViewModel? = null
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -43,22 +46,31 @@ abstract class VersionCheckActivity : ActivityBase(), VersionCheckUiComponent.Ca
         .create(this, snackbarRoot)
         .inject(this)
 
-    requireNotNull(versionComponent).bind(this, savedInstanceState, this)
+    createComponent(
+        savedInstanceState, this,
+        requireNotNull(versionViewModel),
+        requireNotNull(versionView)
+    ) {
+      return@createComponent when (it) {
+        is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
+      }
+    }
   }
 
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    versionComponent?.saveState(outState)
+    versionView?.saveState(outState)
   }
 
   @CallSuper
   override fun onDestroy() {
     super.onDestroy()
-    versionComponent = null
+    versionView = null
+    versionViewModel = null
   }
 
-  final override fun onShowVersionUpgrade(newVersion: Int) {
+  private fun showVersionUpgrade(newVersion: Int) {
     VersionUpgradeDialog.newInstance(newVersion)
         .show(this, VersionUpgradeDialog.TAG)
   }

@@ -16,7 +16,6 @@
  */
 
 dependencies {
-  api "androidx.constraintlayout:constraintlayout:$constraintLayout"
   api project(':core')
 }
 

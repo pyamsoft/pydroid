@@ -15,18 +15,19 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.widget.spinner
+package com.pyamsoft.pydroid.ui.about
 
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiToggleView
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.R
 
-class SpinnerView constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit),
-    UiToggleView {
+internal class AboutSpinnerView internal constructor(
+  parent: ViewGroup
+) : UiViewImpl<AboutListState, AboutListViewEvent>(parent) {
 
   override val layout: Int = R.layout.loading_spinner
 
@@ -34,15 +35,16 @@ class SpinnerView constructor(parent: ViewGroup) : BaseUiView<Unit>(parent, Unit
 
   private val spinner by boundView<ProgressBar>(R.id.spinner)
 
+  override fun onRender(
+    state: AboutListState,
+    oldState: AboutListState?
+  ) {
+    state.onChange(oldState, field = { it.isLoading }) { loading ->
+      spinner.isVisible = loading
+    }
+  }
+
   override fun onTeardown() {
-    spinner.isVisible = false
-  }
-
-  override fun show() {
-    spinner.isVisible = true
-  }
-
-  override fun hide() {
     spinner.isVisible = false
   }
 

@@ -17,44 +17,21 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.arch.UiEventHandler
-import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel.AboutItemState
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 
 internal class AboutItemViewModel internal constructor(
-  private val handler: UiEventHandler<AboutItemHandlerEvent, AboutItemActionsView.Callback>
-) : UiViewModel<AboutItemState>(
-    initialState = AboutItemState(url = "")
-), AboutItemActionsView.Callback {
+  library: OssLibrary
+) : UiViewModel<AboutItemState, AboutItemViewEvent, AboutItemControllerEvent>(
+    initialState = AboutItemState(library = library)
+) {
 
-  override fun onBind() {
-    handler.handle(this)
-        .disposeOnDestroy()
+  override fun handleViewEvent(event: AboutItemViewEvent) {
+    return when (event) {
+      is OpenUrl -> publish(AboutItemControllerEvent.ExternalUrl(event.url))
+    }
   }
 
-  override fun onUnbind() {
-  }
-
-  override fun onViewLicenseClicked(
-    name: String,
-    licenseUrl: String
-  ) {
-    handleUrl(licenseUrl)
-  }
-
-  override fun onVisitHomepageClicked(
-    name: String,
-    homepageUrl: String
-  ) {
-    handleUrl(homepageUrl)
-  }
-
-  private fun handleUrl(url: String) {
-    setUniqueState(url, old = { it.url }) { state, value -> state.copy(url = value) }
-  }
-
-  data class AboutItemState(val url: String) : UiState
 }
 

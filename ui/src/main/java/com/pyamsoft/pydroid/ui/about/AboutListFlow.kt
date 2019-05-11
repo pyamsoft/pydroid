@@ -17,12 +17,25 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-internal interface AboutToolbarUiComponent : UiComponent<AboutToolbarUiComponent.Callback> {
+data class AboutListState(
+  val isLoading: Boolean,
+  val throwable: Throwable?,
+  val licenses: List<OssLibrary>
+) : UiViewState
 
-  interface Callback {
+sealed class AboutListViewEvent : UiViewEvent {
 
-    fun close()
-  }
+  data class OpenUrl(val url: String) : AboutListViewEvent()
+
+}
+
+sealed class AboutListControllerEvent : UiControllerEvent {
+
+  data class ExternalUrl(val url: String) : AboutListControllerEvent()
+
 }

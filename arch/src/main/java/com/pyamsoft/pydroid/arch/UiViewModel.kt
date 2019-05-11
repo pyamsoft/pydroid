@@ -19,74 +19,74 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
+import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.Executors
 
-abstract class UiViewModel<T : UiState> protected constructor(
-  private val initialState: T
+abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
+  private val initialState: S
 ) {
 
-  // Lifecycle
-  private var bound: Boolean
-  private val disposables = CompositeDisposable()
+  private val controllerEventBus = RxBus.create<C>()
 
-  private var callback: ((state: T, oldState: T?) -> Unit)? = null
-
-  // State handling
   private val lock = Any()
-  private val executor by lazy { Executors.newSingleThreadExecutor() }
-  private val stateBus = RxBus.create<T.() -> T>()
-  private var stateDisposable by singleDisposable()
-  private var state: T? = null
+  private val stateBus = RxBus.create<S.() -> S>()
+  private var state: S? = null
 
-  init {
-    bound = false
-  }
+  @CheckResult
+  fun render(
+    vararg views: UiView<S, V>,
+    onControllerEvent: (event: C) -> Unit
+  ): Disposable {
+    val executor = Executors.newSingleThreadExecutor()
+    val scheduler = Schedulers.from(executor)
 
-  protected abstract fun onBind()
+    var viewDisposable: Disposable? = null
+    var controllerDisposable: Disposable? = null
 
-  protected abstract fun onUnbind()
-
-  fun bind(onRender: (state: T, oldState: T?) -> Unit) {
-    // We should not need to synchronize since this should always be called on the main thread
-    if (!bound) {
-      bound = true
-      callback = onRender
-      register()
-      onBind()
-    }
-  }
-
-  fun unbind() {
-    if (bound) {
-      bound = false
-      callback = null
-      disposables.clear()
-      shutdown()
-      onUnbind()
-    }
-  }
-
-  private fun register() {
-    stateDisposable = stateBus.listen()
+    return stateBus.listen()
+        .distinctUntilChanged()
+        .startWith { initialState }
         .map { changeState(it) }
-        .subscribeOn(Schedulers.from(executor))
+        .subscribeOn(scheduler)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { requireNotNull(callback).invoke(it.state, it.oldState) }
+        .doOnSubscribe {
+          onBind()
+
+          viewDisposable = bindViewEvents(scheduler, *views)
+          controllerDisposable = bindControllerEvents(scheduler, onControllerEvent)
+        }
+        .doAfterTerminate {
+          onUnbind()
+
+          viewDisposable?.tryDispose()
+          controllerDisposable?.tryDispose()
+
+          executor.shutdown()
+          scheduler.shutdown()
+        }
+        .subscribe { change -> views.forEach { it.render(change.state, change.oldState) } }
+  }
+
+  private fun controllerEvents(): Observable<C> {
+    return controllerEventBus.listen()
+  }
+
+  protected fun publish(event: C) {
+    controllerEventBus.publish(event)
   }
 
   @CheckResult
-  private fun nonNullState(state: T?): T {
+  private fun nonNullState(state: S?): S {
     return state ?: initialState
   }
 
   @CheckResult
-  private fun changeState(stateChange: T.() -> T): StateChange<T> {
+  private fun changeState(stateChange: S.() -> S): StateChange<S> {
     synchronized(lock) {
       val oldState = state
       val newState = nonNullState(oldState).run(stateChange)
@@ -95,46 +95,38 @@ abstract class UiViewModel<T : UiState> protected constructor(
     }
   }
 
-  private fun shutdown() {
-    stateDisposable.tryDispose()
-    executor.shutdown()
+  @CheckResult
+  private fun bindViewEvents(
+    scheduler: Scheduler,
+    vararg views: UiView<S, V>
+  ): Disposable {
+    return Observable.merge(views.map { it.viewEvents() })
+        .subscribeOn(scheduler)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { handleViewEvent(it) }
   }
 
-  protected fun setState(func: T.() -> T) {
+  @CheckResult
+  private inline fun bindControllerEvents(
+    scheduler: Scheduler,
+    crossinline onControllerEvent: (event: C) -> Unit
+  ): Disposable {
+    return controllerEvents()
+        .subscribeOn(scheduler)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { onControllerEvent(it) }
+  }
+
+  protected abstract fun handleViewEvent(event: V)
+
+  protected open fun onBind() {
+  }
+
+  protected open fun onUnbind() {
+  }
+
+  protected fun setState(func: S.() -> S) {
     stateBus.publish(func)
-  }
-
-  /**
-   * For an operation which is always called with the same data, in order to be caught correctly
-   * by the onRender callback we generally need to first set the value of whatever field back to
-   * its initial state, and then immediately update it to the proper value.
-   */
-  protected fun <M : Any?> setUniqueState(
-    value: M,
-    old: (state: T) -> M,
-    applyValue: (state: T, value: M) -> T
-  ) {
-    setState {
-      if (old(this) == value) {
-        applyValue(this, old(initialState)).also {
-          setUniqueState(value, old, applyValue)
-        }
-      } else {
-        applyValue(this, value)
-      }
-    }
-  }
-
-  @Deprecated(
-      message = "Use disposeOnDestroy",
-      replaceWith = ReplaceWith(expression = "disposeOnDestroy()")
-  )
-  protected fun Disposable.destroy() {
-    disposables.add(this)
-  }
-
-  protected fun Disposable.disposeOnDestroy() {
-    disposables.add(this)
   }
 
   private data class StateChange<T : Any>(

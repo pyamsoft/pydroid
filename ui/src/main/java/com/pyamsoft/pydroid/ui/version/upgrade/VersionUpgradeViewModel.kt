@@ -17,38 +17,35 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import com.pyamsoft.pydroid.arch.UiEventHandler
-import com.pyamsoft.pydroid.arch.UiState
+import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel.VersionState.Upgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeViewModel internal constructor(
-  private val handler: UiEventHandler<VersionHandlerEvent, VersionUpgradeControlView.Callback>
-) : UiViewModel<VersionState>(
-    initialState = VersionState(upgrade = null)
-), VersionUpgradeControlView.Callback {
+  applicationName: String,
+  currentVersion: Int,
+  newVersion: Int
+) : UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
+    initialState = VersionUpgradeViewState(
+        applicationName = applicationName,
+        currentVersion = currentVersion,
+        newVersion = newVersion,
+        throwable = null
+    )
+) {
 
-  override fun onBind() {
-    handler.handle(this)
-        .disposeOnDestroy()
+  override fun handleViewEvent(event: VersionUpgradeViewEvent) {
+    return when (event) {
+      Upgrade -> publish(OpenMarket)
+      Cancel -> publish(CancelDialog)
+    }
   }
 
-  override fun onUnbind() {
+  fun navigationFailed(error: ActivityNotFoundException) {
+    setState { copy(throwable = error) }
   }
 
-  override fun onUpgradeClicked() {
-    setState { copy(upgrade = Upgrade(true)) }
-  }
-
-  override fun onCancelClicked() {
-    setState { copy(upgrade = Upgrade(false)) }
-  }
-
-  data class VersionState(val upgrade: Upgrade?) : UiState {
-
-    data class Upgrade(val upgrade: Boolean)
-
-  }
 }

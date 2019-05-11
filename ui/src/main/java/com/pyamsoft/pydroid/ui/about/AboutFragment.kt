@@ -26,19 +26,26 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
+import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
 
-class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiComponent.Callback {
+class AboutFragment : Fragment() {
 
-  internal var component: AboutUiComponent? = null
-  internal var toolbarComponent: AboutToolbarUiComponent? = null
+  internal var listView: AboutListView? = null
+  internal var spinnerView: AboutSpinnerView? = null
+  internal var listViewModel: AboutListViewModel? = null
+
+  internal var toolbar: AboutToolbarView? = null
+  internal var toolbarViewModel: AboutToolbarViewModel? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -58,34 +65,54 @@ class AboutFragment : Fragment(), AboutUiComponent.Callback, AboutToolbarUiCompo
     val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
     Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusAbout()
-        .create(viewLifecycleOwner, requireToolbarActivity(), backstack, layoutRoot)
+        .create(layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack)
         .inject(this)
 
-    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
-    requireNotNull(toolbarComponent).bind(viewLifecycleOwner, savedInstanceState, this)
+    createComponent(
+        savedInstanceState, viewLifecycleOwner,
+        requireNotNull(listViewModel),
+        requireNotNull(listView),
+        requireNotNull(spinnerView)
+    ) {
+      return@createComponent when (it) {
+        is ExternalUrl -> navigateToExternalUrl(it.url)
+      }
+    }
+
+    createComponent(
+        savedInstanceState, viewLifecycleOwner,
+        requireNotNull(toolbarViewModel),
+        requireNotNull(toolbar)
+    ) {
+      return@createComponent when (it) {
+        is Navigation -> close()
+      }
+    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    component = null
-    toolbarComponent = null
+    listView = null
+    listViewModel = null
+    toolbar = null
+    toolbarViewModel = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    toolbarComponent?.saveState(outState)
-    component?.saveState(outState)
+    listView?.saveState(outState)
+    toolbar?.saveState(outState)
   }
 
-  override fun onNavigateExternalUrl(url: String) {
+  private fun navigateToExternalUrl(url: String) {
     val error = url.hyperlink(requireActivity())
         .navigate()
     if (error != null) {
-      requireNotNull(component).failedNavigation(error)
+      requireNotNull(listViewModel).navigationFailed(error)
     }
   }
 
-  override fun close() {
+  private fun close() {
     requireActivity().onBackPressed()
   }
 

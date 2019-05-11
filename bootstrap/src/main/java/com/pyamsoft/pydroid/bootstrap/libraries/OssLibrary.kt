@@ -23,4 +23,10 @@ data class OssLibrary(
   val libraryUrl: String,
   val licenseName: String,
   val licenseUrl: String
-)
+) {
+  companion object {
+
+    @JvmStatic
+    val EMPTY = OssLibrary("", "", "", "", "")
+  }
+}

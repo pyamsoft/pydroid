@@ -22,13 +22,7 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
-import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
-import com.pyamsoft.pydroid.ui.widget.spinner.SpinnerView
 
 internal interface AboutComponent {
 
@@ -38,61 +32,50 @@ internal interface AboutComponent {
 
     @CheckResult
     fun create(
+      parent: ViewGroup,
       owner: LifecycleOwner,
       toolbarActivity: ToolbarActivity,
-      backstack: Int,
-      parent: ViewGroup
+      backstack: Int
     ): AboutComponent
 
   }
 
   class Impl private constructor(
-    private val owner: LifecycleOwner,
     private val parent: ViewGroup,
+    private val owner: LifecycleOwner,
     private val backstack: Int,
     private val toolbarActivity: ToolbarActivity,
     private val schedulerProvider: SchedulerProvider,
-    private val bus: EventBus<AboutHandlerEvent>,
-    private val toolbarBus: EventBus<ToolbarHandlerEvent>,
-    private val navigationBus: EventBus<FailedNavigationEvent>,
     private val module: AboutModule
   ) : AboutComponent {
 
     override fun inject(fragment: AboutFragment) {
-      val handler = AboutHandler(schedulerProvider, bus)
-      val listView = AboutListView(owner, parent, handler)
-      val viewModel = AboutViewModel(handler, module.provideInteractor(), schedulerProvider)
-      val spinner = SpinnerView(parent)
-      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
-      val component = AboutUiComponentImpl(listView, spinner, viewModel, navigationViewModel)
-      fragment.component = component
+      val listViewModel = AboutListViewModel(module.provideInteractor(), schedulerProvider)
+      val listView = AboutListView(owner, parent)
+      val spinnerView = AboutSpinnerView(parent)
 
-      val toolbarHandler = AboutToolbarHandler(schedulerProvider, toolbarBus)
-      val toolbarViewModel = AboutToolbarViewModel(toolbarHandler)
-      val toolbar = AboutToolbarView(backstack, toolbarActivity, toolbarHandler)
-      val toolbarComponent = AboutToolbarUiComponentImpl(toolbar, toolbarViewModel)
-      fragment.toolbarComponent = toolbarComponent
+      val toolbar = AboutToolbarView(backstack, toolbarActivity)
+      val toolbarViewModel = AboutToolbarViewModel()
+
+      fragment.listView = listView
+      fragment.listViewModel = listViewModel
+      fragment.spinnerView = spinnerView
+      fragment.toolbar = toolbar
+      fragment.toolbarViewModel = toolbarViewModel
     }
 
     class FactoryImpl internal constructor(
       private val schedulerProvider: SchedulerProvider,
-      private val bus: EventBus<AboutHandlerEvent>,
-      private val toolbarBus: EventBus<ToolbarHandlerEvent>,
-      private val navigationBus: EventBus<FailedNavigationEvent>,
       private val module: AboutModule
     ) : Factory {
 
       override fun create(
+        parent: ViewGroup,
         owner: LifecycleOwner,
         toolbarActivity: ToolbarActivity,
-        backstack: Int,
-        parent: ViewGroup
+        backstack: Int
       ): AboutComponent {
-        return Impl(
-            owner, parent, backstack,
-            toolbarActivity, schedulerProvider, bus,
-            toolbarBus, navigationBus, module
-        )
+        return Impl(parent, owner, backstack, toolbarActivity, schedulerProvider, module)
       }
 
     }

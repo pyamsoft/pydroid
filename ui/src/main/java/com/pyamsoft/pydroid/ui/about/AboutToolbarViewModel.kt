@@ -17,27 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel.AboutState
+import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
+import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 
 internal class AboutToolbarViewModel internal constructor(
-  private val handler: AboutToolbarHandler
-) : UiViewModel<AboutState>(
-    initialState = AboutState(navigate = false)
-), AboutToolbarView.Callback {
+) : UiViewModel<AboutToolbarState, AboutToolbarViewEvent, AboutToolbarControllerEvent>(
+    initialState = AboutToolbarState(title = "Open Source Licenses")
+) {
 
-  override fun onBind() {
-    handler.handle(this)
-        .disposeOnDestroy()
+  override fun handleViewEvent(event: AboutToolbarViewEvent) {
+    return when (event) {
+      is UpNavigate -> publish(Navigation)
+    }
   }
-
-  override fun onUnbind() {
-  }
-
-  override fun onToolbarNavClicked() {
-    setUniqueState(true, old = { it.navigate }) { state, value -> state.copy(navigate = value) }
-  }
-
-  data class AboutState(val navigate: Boolean) : UiState
 }

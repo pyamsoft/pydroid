@@ -23,26 +23,16 @@ import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
-import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
-import com.pyamsoft.pydroid.ui.about.AboutToolbarHandler.ToolbarHandlerEvent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.rating.ShowRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
-import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckState
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
 
 internal interface PYDroidComponent {
 
@@ -104,53 +94,30 @@ internal interface PYDroidComponent {
         enforcer
     )
 
-    private val navigationBus = RxBus.create<FailedNavigationEvent>()
-    private val showRatingBus = RxBus.create<ShowRating>()
-    private val versionCheckBus = RxBus.create<VersionCheckState>()
-    private val versionHandlerBus = RxBus.create<VersionHandlerEvent>()
-    private val aboutHandlerBus = RxBus.create<AboutHandlerEvent>()
-    private val aboutItemHandlerBus = RxBus.create<AboutItemHandlerEvent>()
-    private val ratingHandlerBus = RxBus.create<RatingEvent>()
-    private val toolbarHandlerBus = RxBus.create<ToolbarHandlerEvent>()
-    private val appSettingsHandlerBus = RxBus.create<AppSettingsEvent>()
-
     override fun plusAbout(): AboutComponent.Factory {
-      return AboutComponent.Impl.FactoryImpl(
-          schedulerProvider, aboutHandlerBus, toolbarHandlerBus,
-          navigationBus, aboutModule
-      )
+      return AboutComponent.Impl.FactoryImpl(schedulerProvider, aboutModule)
     }
 
     override fun plusAboutItem(): AboutItemComponent.Factory {
-      return AboutItemComponent.Impl.FactoryImpl(schedulerProvider, aboutItemHandlerBus)
+      return AboutItemComponent.Impl.FactoryImpl()
     }
 
     override fun plusRatingDialog(): RatingDialogComponent.Factory {
-      return RatingDialogComponent.Impl.FactoryImpl(
-          schedulerProvider, ratingHandlerBus, navigationBus,
-          loaderModule, ratingModule
-      )
+      return RatingDialogComponent.Impl.FactoryImpl(schedulerProvider, loaderModule, ratingModule)
     }
 
     override fun plusVersion(): VersionComponent.Factory {
-      return VersionComponent.Impl.FactoryImpl(
-          navigationBus, schedulerProvider, showRatingBus,
-          versionCheckBus, ratingModule, versionCheckModule
-      )
+      return VersionComponent.Impl.FactoryImpl(schedulerProvider, ratingModule, versionCheckModule)
     }
 
     override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-      return VersionUpgradeComponent.Impl.FactoryImpl(
-          applicationName, currentVersion, schedulerProvider, versionHandlerBus, navigationBus
-      )
+      return VersionUpgradeComponent.Impl.FactoryImpl(applicationName, currentVersion)
     }
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
       return AppSettingsComponent.Impl.FactoryImpl(
           applicationName, bugReportUrl, theming,
-          schedulerProvider, appSettingsHandlerBus,
-          versionCheckBus, showRatingBus, navigationBus,
-          versionCheckModule, ratingModule
+          schedulerProvider, versionCheckModule, ratingModule
       )
     }
 

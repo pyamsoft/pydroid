@@ -158,6 +158,11 @@ object OssLibraries {
         "https://github.com/POPinNow/FluidResizer",
         "Fluid and smooth animation for reacting to keyboard visibility changes"
     )
+    add(
+        "AndroidX Constraint Layout",
+        "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
+        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way."
+    )
   }
 
   private fun addLoaderLibraries() {
@@ -178,11 +183,6 @@ object OssLibraries {
         "PYDroid Arch",
         "https://github.com/pyamsoft/pydroid",
         "PYDroid standard architecture for a UiComponent based, ViewModel driven, reactive MVI UI design pattern"
-    )
-    add(
-        "AndroidX Constraint Layout",
-        "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
-        "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way."
     )
   }
 

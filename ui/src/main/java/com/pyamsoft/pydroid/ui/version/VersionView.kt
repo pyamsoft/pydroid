@@ -17,18 +17,21 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import android.content.ActivityNotFoundException
 import android.os.Bundle
-import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class VersionView internal constructor(
-  private val view: View,
-  private val owner: LifecycleOwner
-) : UiView {
+  private val owner: LifecycleOwner,
+  parent: ViewGroup
+) : BaseUiView<VersionViewState, UnitViewEvent>() {
+
+  private var parent: ViewGroup? = parent
 
   override fun id(): Int {
     throw InvalidIdException
@@ -37,26 +40,59 @@ internal class VersionView internal constructor(
   override fun inflate(savedInstanceState: Bundle?) {
   }
 
+  override fun render(
+    state: VersionViewState,
+    oldState: VersionViewState?
+  ) {
+    state.onChange(oldState, field = { it.isLoading }) { loading ->
+      if (loading != null) {
+        if (loading.isLoading) {
+          showUpdating()
+        } else {
+          dismissUpdating()
+        }
+      }
+    }
+
+    state.onChange(oldState, field = { it.throwable }) { throwable ->
+      if (throwable == null) {
+        clearError()
+      } else {
+        showError(throwable)
+      }
+    }
+  }
+
   override fun teardown() {
+    parent = null
+    clearError()
   }
 
   override fun saveState(outState: Bundle) {
   }
 
-  fun showUpdating() {
+  private fun showUpdating() {
     Snackbreak.bindTo(owner)
-        .short(view, "Checking for updates")
+        .short(requireNotNull(parent), "Checking for updates")
         .show()
   }
 
-  fun dismissUpdating() {
+  private fun dismissUpdating() {
     Snackbreak.bindTo(owner)
         .dismiss()
   }
 
-  fun showError(error: ActivityNotFoundException) {
+  private fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
-        .short(view, error.message ?: "No activity found that can handle this URL")
+        .short(
+            requireNotNull(parent),
+            error.message ?: "No activity found that can handle this URL"
+        )
         .show()
+  }
+
+  private fun clearError() {
+    Snackbreak.bindTo(owner)
+        .dismiss()
   }
 }

@@ -17,22 +17,21 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingIconView internal constructor(
-  private val changelogIcon: Int,
   private val imageLoader: ImageLoader,
   parent: ViewGroup
-) : BaseUiView<Unit>(parent, Unit) {
+) : UiViewImpl<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
-  private val icon by boundView<ImageView>(R.id.icon)
+  private val iconView by boundView<ImageView>(R.id.icon)
 
   private var iconLoaded: Loaded? = null
 
@@ -40,13 +39,15 @@ internal class RatingIconView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.rating_icon_root)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
+  override fun onRender(
+    state: RatingDialogViewState,
+    oldState: RatingDialogViewState?
   ) {
-    iconLoaded?.dispose()
-    iconLoaded = imageLoader.load(changelogIcon)
-        .into(icon)
+    state.onChange(oldState, field = { it.changelogIcon }) { icon ->
+      iconLoaded?.dispose()
+      iconLoaded = imageLoader.load(icon)
+          .into(iconView)
+    }
   }
 
   override fun onTeardown() {

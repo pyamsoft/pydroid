@@ -15,33 +15,36 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.annotation.StringRes
-import androidx.preference.Preference
-import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.arch.UiViewState
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructor(
-  parent: PreferenceScreen
+abstract class UiViewImpl<S : UiViewState, V : UiViewEvent> protected constructor(
+  parent: ViewGroup
 ) : BaseUiView<S, V>() {
 
-  private var _parent: PreferenceScreen? = parent
-  private var boundPrefs: MutableSet<BoundPref<*>>? = null
+  protected abstract val layoutRoot: View
 
-  @CheckResult
-  private fun parent(): PreferenceScreen {
-    return requireNotNull(_parent)
-  }
+  protected abstract val layout: Int
+
+  private var _parent: ViewGroup? = parent
+  private var boundViews: MutableSet<BoundView<*>>? = null
 
   private fun die(): Nothing {
     throw IllegalStateException("Cannot call UiView methods after it has been torn down")
+  }
+
+  @CheckResult
+  private fun parent(): ViewGroup {
+    return _parent ?: die()
   }
 
   private fun assertValidState() {
@@ -51,18 +54,21 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
   }
 
   final override fun id(): Int {
-    throw InvalidIdException
+    return layoutRoot.id
   }
 
   final override fun inflate(savedInstanceState: Bundle?) {
-    onInflated(parent(), savedInstanceState)
+    assertValidState()
+
+    parent().inflateAndAdd(layout) {
+      onInflated(this, savedInstanceState)
+    }
   }
 
   protected open fun onInflated(
-    preferenceScreen: PreferenceScreen,
+    view: View,
     savedInstanceState: Bundle?
   ) {
-
   }
 
   final override fun render(
@@ -90,34 +96,35 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     assertValidState()
     onTeardown()
 
-    boundPrefs?.forEach { it.teardown() }
-    boundPrefs?.clear()
+    parent().removeView(layoutRoot)
+    boundViews?.forEach { it.teardown() }
+    boundViews?.clear()
 
-    boundPrefs = null
+    boundViews = null
     _parent = null
   }
 
   protected open fun onTeardown() {
+  }
 
+  private inline fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int, findViews: View.() -> Unit) {
+    LayoutInflater.from(context)
+        .inflate(layout, this, true)
+        .run(findViews)
   }
 
   @CheckResult
-  protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {
-    return boundPref(parent().context.getString(id))
-  }
-
-  @CheckResult
-  protected fun <V : Preference> boundPref(key: String): BoundPref<V> {
+  protected fun <V : View> boundView(@IdRes id: Int): BoundView<V> {
     assertValidState()
 
-    return BoundPref<V>(parent(), key).also { v ->
+    return BoundView<V>(parent(), id).also { v ->
       assertValidState()
 
-      val bv: MutableSet<BoundPref<*>>? = boundPrefs
-      val mutateMe: MutableSet<BoundPref<*>>
+      val bv: MutableSet<BoundView<*>>? = boundViews
+      val mutateMe: MutableSet<BoundView<*>>
       if (bv == null) {
-        val bound = LinkedHashSet<BoundPref<*>>()
-        boundPrefs = bound
+        val bound = LinkedHashSet<BoundView<*>>()
+        boundViews = bound
         mutateMe = bound
       } else {
         mutateMe = bv
@@ -127,20 +134,20 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
   }
 
-  protected class BoundPref<V : Preference> internal constructor(
-    parent: PreferenceScreen,
-    private val key: String
+  protected class BoundView<V : View> internal constructor(
+    parent: ViewGroup,
+    @IdRes private val id: Int
   ) : ReadOnlyProperty<Any, V> {
 
-    private var parent: PreferenceScreen? = parent
+    private var parent: ViewGroup? = parent
     private var view: V? = null
 
     private fun die(): Nothing {
-      throw IllegalStateException("Cannot call BoundPref methods after it has been torn down")
+      throw IllegalStateException("Cannot call BoundView methods after it has been torn down")
     }
 
     @CheckResult
-    private fun parent(): PreferenceScreen {
+    private fun parent(): ViewGroup {
       return parent ?: die()
     }
 
@@ -159,8 +166,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
       val v: V? = view
       val result: V
       if (v == null) {
-        @Suppress("UNCHECKED_CAST")
-        val bound = requireNotNull(parent().findPreference(key)) as V
+        val bound = requireNotNull(parent().findViewById<V>(id))
         view = bound
         result = bound
       } else {
@@ -178,6 +184,5 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
   }
-
 }
 

@@ -17,20 +17,17 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
-import com.pyamsoft.pydroid.ui.rating.ShowRating
-import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckState
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.ui.version.VersionView
 
 internal interface AppSettingsComponent {
 
@@ -40,6 +37,8 @@ internal interface AppSettingsComponent {
 
     @CheckResult
     fun create(
+      parent: ViewGroup,
+      owner: LifecycleOwner,
       preferenceScreen: PreferenceScreen,
       hideClearAll: Boolean,
       hideUpgradeInformation: Boolean
@@ -48,6 +47,8 @@ internal interface AppSettingsComponent {
   }
 
   class Impl private constructor(
+    private val parent: ViewGroup,
+    private val owner: LifecycleOwner,
     private val applicationName: String,
     private val bugReportUrl: String,
     private val hideClearAll: Boolean,
@@ -55,33 +56,27 @@ internal interface AppSettingsComponent {
     private val preferenceScreen: PreferenceScreen,
     private val theming: Theming,
     private val schedulerProvider: SchedulerProvider,
-    private val settingsBus: EventBus<AppSettingsEvent>,
-    private val versionCheckBus: EventBus<VersionCheckState>,
-    private val ratingBus: EventBus<ShowRating>,
-    private val navigationBus: EventBus<FailedNavigationEvent>,
     private val versionCheckModule: VersionCheckModule,
     private val ratingModule: RatingModule
   ) : AppSettingsComponent {
 
     override fun inject(fragment: AppSettingsPreferenceFragment) {
-      val ratingViewModel =
-        RatingViewModel(ratingModule.provideInteractor(), schedulerProvider, ratingBus)
-      val versionViewModel = VersionCheckViewModel(
-          versionCheckModule.provideInteractor(), schedulerProvider, versionCheckBus
+      val ratingViewModel = RatingViewModel(ratingModule.provideInteractor(), schedulerProvider)
+      val versionViewModel =
+        VersionCheckViewModel(versionCheckModule.provideInteractor(), schedulerProvider)
+      val versionView = VersionView(owner, parent)
+      val settingsViewModel = AppSettingsViewModel(
+          applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation, theming
       )
-      val handler = AppSettingsHandler(schedulerProvider, settingsBus)
-      val settingsViewModel = AppSettingsViewModel(handler, theming)
-      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
-      val settingsView = AppSettingsView(
-          applicationName, bugReportUrl, hideClearAll,
-          hideUpgradeInformation, theming, preferenceScreen, handler
-      )
-      val component = AppSettingsUiComponentImpl(
-          settingsView, versionViewModel,
-          ratingViewModel, settingsViewModel,
-          navigationViewModel
-      )
-      fragment.component = component
+      val settingsView = AppSettingsView(preferenceScreen)
+
+      fragment.versionView = versionView
+      fragment.versionViewModel = versionViewModel
+
+      fragment.ratingViewModel = ratingViewModel
+
+      fragment.appSettingsView = settingsView
+      fragment.appSettingsViewModel = settingsViewModel
     }
 
     internal class FactoryImpl internal constructor(
@@ -89,25 +84,20 @@ internal interface AppSettingsComponent {
       private val bugReportUrl: String,
       private val theming: Theming,
       private val schedulerProvider: SchedulerProvider,
-      private val settingsBus: EventBus<AppSettingsEvent>,
-      private val versionCheckBus: EventBus<VersionCheckState>,
-      private val ratingBus: EventBus<ShowRating>,
-      private val navigationBus: EventBus<FailedNavigationEvent>,
       private val versionCheckModule: VersionCheckModule,
       private val ratingModule: RatingModule
     ) : Factory {
 
       override fun create(
+        parent: ViewGroup,
+        owner: LifecycleOwner,
         preferenceScreen: PreferenceScreen,
         hideClearAll: Boolean,
         hideUpgradeInformation: Boolean
       ): AppSettingsComponent {
         return Impl(
-            applicationName, bugReportUrl, hideClearAll,
-            hideUpgradeInformation, preferenceScreen,
-            theming, schedulerProvider, settingsBus,
-            versionCheckBus, ratingBus, navigationBus,
-            versionCheckModule, ratingModule
+            parent, owner, applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation,
+            preferenceScreen, theming, schedulerProvider, versionCheckModule, ratingModule
         )
       }
 

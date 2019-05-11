@@ -17,42 +17,38 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.UiEventHandler
-import com.pyamsoft.pydroid.arch.UiState
+import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.about.AboutHandler.AboutHandlerEvent
-import com.pyamsoft.pydroid.ui.about.AboutViewModel.AboutState
+import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
+import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import timber.log.Timber
 
-internal class AboutViewModel internal constructor(
-  private val handler: UiEventHandler<AboutHandlerEvent, AboutListView.Callback>,
+internal class AboutListViewModel internal constructor(
   private val interactor: AboutInteractor,
   private val schedulerProvider: SchedulerProvider
-) : UiViewModel<AboutState>(
-    initialState = AboutState(
+) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
+    initialState = AboutListState(
         isLoading = false,
         throwable = null,
-        licenses = emptyList(),
-        url = ""
+        licenses = emptyList()
     )
-), AboutListView.Callback {
+) {
 
   private var licenseDisposable by singleDisposable()
 
   override fun onBind() {
-    handler.handle(this)
-        .disposeOnDestroy()
-
     loadLicenses(false)
   }
 
-  override fun onUnbind() {
-    licenseDisposable.tryDispose()
+  override fun handleViewEvent(event: AboutListViewEvent) {
+    return when (event) {
+      is OpenUrl -> publish(ExternalUrl(event.url))
+    }
   }
 
   private fun loadLicenses(force: Boolean) {
@@ -61,6 +57,7 @@ internal class AboutViewModel internal constructor(
         .observeOn(schedulerProvider.foregroundScheduler)
         .doOnSubscribe { handleLicenseLoadBegin() }
         .doAfterTerminate { handleLicenseLoadComplete() }
+        .doAfterTerminate { licenseDisposable.tryDispose() }
         .subscribe({ handleLicensesLoaded(it) }, {
           Timber.e(it, "Error loading licenses")
           handleLicenseLoadError(it)
@@ -68,40 +65,22 @@ internal class AboutViewModel internal constructor(
   }
 
   private fun handleLicenseLoadBegin() {
-    setState {
-      copy(isLoading = true)
-    }
+    setState { copy(isLoading = true) }
   }
 
   private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
-    setState {
-      copy(licenses = licenses, throwable = null)
-    }
-
+    setState { copy(licenses = licenses, throwable = null) }
   }
 
   private fun handleLicenseLoadError(throwable: Throwable) {
-    setState {
-      copy(licenses = emptyList(), throwable = throwable)
-    }
-
+    setState { copy(licenses = emptyList(), throwable = throwable) }
   }
 
   private fun handleLicenseLoadComplete() {
-    setState {
-      copy(isLoading = false)
-    }
+    setState { copy(isLoading = false) }
   }
 
-  override fun onNavigateExternalUrl(url: String) {
-    setUniqueState(url, old = { it.url }) { state, value -> state.copy(url = value) }
+  fun navigationFailed(throwable: ActivityNotFoundException) {
+    setState { copy(throwable = throwable) }
   }
-
-  data class AboutState(
-    val isLoading: Boolean,
-    val throwable: Throwable?,
-    val licenses: List<OssLibrary>,
-    val url: String
-  ) : UiState
-
 }

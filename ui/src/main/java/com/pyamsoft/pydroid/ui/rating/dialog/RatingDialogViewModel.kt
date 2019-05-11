@@ -17,54 +17,60 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import com.pyamsoft.pydroid.arch.UiEventHandler
-import com.pyamsoft.pydroid.arch.UiState
+import android.content.ActivityNotFoundException
+import android.text.SpannedString
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel.RatingState
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 
 internal class RatingDialogViewModel internal constructor(
-  private val handler: UiEventHandler<RatingEvent, RatingControlsView.Callback>,
+  changelog: SpannedString,
+  rateLink: String,
+  changelogIcon: Int,
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
-) : UiViewModel<RatingState>(
-    initialState = RatingState(rateLink = "")
-), RatingControlsView.Callback {
+) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
+    initialState = RatingDialogViewState(
+        changelog = changelog,
+        rateLink = rateLink,
+        changelogIcon = changelogIcon,
+        throwable = null
+    )
+) {
 
   private var saveDisposable by singleDisposable()
 
-  override fun onBind() {
-    handler.handle(this)
-        .disposeOnDestroy()
-  }
-
-  override fun onUnbind() {
-    saveDisposable.tryDispose()
-  }
-
-  override fun onRateApplicationClicked(link: String) {
-    save(link)
-  }
-
-  override fun onNotRatingApplication() {
-    save("")
+  override fun handleViewEvent(event: RatingDialogViewEvent) {
+    return when (event) {
+      is Rate -> save(event.link)
+      is Cancel -> save("")
+    }
   }
 
   private fun save(link: String) {
     saveDisposable = interactor.saveRating()
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
+        .doAfterTerminate { saveDisposable.tryDispose() }
         .subscribe { handleRate(link) }
   }
 
   private fun handleRate(link: String) {
-    setState { copy(rateLink = link) }
+    if (link.isBlank()) {
+      publish(CancelDialog)
+    } else {
+      publish(NavigateRating(link))
+    }
   }
 
-  data class RatingState(val rateLink: String) : UiState
+  fun navigationFailed(error: ActivityNotFoundException) {
+    setState { copy(throwable = error) }
+  }
 
 }

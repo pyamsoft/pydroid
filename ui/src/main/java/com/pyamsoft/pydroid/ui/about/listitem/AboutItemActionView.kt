@@ -17,21 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemActionsView.Callback
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal class AboutItemActionsView internal constructor(
-  private val model: OssLibrary,
-  parent: ViewGroup,
-  callback: Callback
-) : BaseUiView<Callback>(parent, callback) {
+internal class AboutItemActionView internal constructor(
+  parent: ViewGroup
+) : UiViewImpl<AboutItemState, AboutItemViewEvent>(parent) {
 
   private val viewLicense by boundView<Button>(R.id.action_view_license)
   private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
@@ -40,36 +37,24 @@ internal class AboutItemActionsView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.about_actions)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
+  override fun onRender(
+    state: AboutItemState,
+    oldState: AboutItemState?
   ) {
-    viewLicense.setOnDebouncedClickListener {
-      callback.onViewLicenseClicked(model.name, model.licenseUrl)
-    }
+    state.onChange(oldState, field = { it.library }) { library ->
+      viewLicense.setOnDebouncedClickListener {
+        publish(OpenUrl(library.licenseUrl))
+      }
 
-    visitHomepage.setOnDebouncedClickListener {
-      callback.onVisitHomepageClicked(model.name, model.libraryUrl)
+      visitHomepage.setOnDebouncedClickListener {
+        publish(OpenUrl(library.libraryUrl))
+      }
     }
   }
 
   override fun onTeardown() {
     viewLicense.setOnDebouncedClickListener(null)
     visitHomepage.setOnDebouncedClickListener(null)
-  }
-
-  interface Callback {
-
-    fun onViewLicenseClicked(
-      name: String,
-      licenseUrl: String
-    )
-
-    fun onVisitHomepageClicked(
-      name: String,
-      homepageUrl: String
-    )
-
   }
 
 }

@@ -17,53 +17,35 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.arch.UiState
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.rating.RatingViewModel.RatingState
+import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.ShowDialog
 
 internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor,
-  private val schedulerProvider: SchedulerProvider,
-  private val bus: EventBus<ShowRating>
-) : UiViewModel<RatingState>(
-    initialState = RatingState(showRating = false)
-) {
+  private val schedulerProvider: SchedulerProvider
+) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
 
   private var loadDisposable by singleDisposable()
 
   override fun onBind() {
-    listenForDialogRequests()
     load(false)
   }
 
-  override fun onUnbind() {
-    loadDisposable.tryDispose()
+  override fun handleViewEvent(event: UnitViewEvent) {
   }
 
-  private fun listenForDialogRequests() {
-    bus.listen()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { handleShowRating() }
-        .disposeOnDestroy()
-  }
-
-  private fun handleShowRating() {
-    setUniqueState(true, old = { it.showRating }) { state, value -> state.copy(showRating = value) }
-  }
-
-  fun load(force: Boolean) {
+  internal fun load(force: Boolean) {
     loadDisposable = interactor.needsToViewRating(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
-        .subscribe { bus.publish(ShowRating) }
+        .doAfterTerminate { loadDisposable.tryDispose() }
+        .subscribe { publish(ShowDialog) }
   }
-
-  data class RatingState(val showRating: Boolean) : UiState
 
 }

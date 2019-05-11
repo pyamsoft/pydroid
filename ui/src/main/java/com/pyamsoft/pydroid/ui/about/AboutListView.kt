@@ -25,20 +25,19 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiToggleView
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutListView.Callback
+import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
-import com.pyamsoft.pydroid.ui.about.listitem.AboutViewHolderUiComponent
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class AboutListView internal constructor(
   private val owner: LifecycleOwner,
-  parent: ViewGroup,
-  callback: Callback
-) : BaseUiView<Callback>(parent, callback), UiToggleView {
+  parent: ViewGroup
+) : UiViewImpl<AboutListState, AboutListViewEvent>(parent) {
 
   private var lastViewedItem: Int = 0
   private var aboutAdapter: AboutAdapter? = null
@@ -58,7 +57,8 @@ internal class AboutListView internal constructor(
   override fun onTeardown() {
     super.onTeardown()
     layoutRoot.adapter = null
-    aboutAdapter?.clear()
+    clearLicenses()
+    clearError()
     aboutAdapter = null
   }
 
@@ -81,13 +81,11 @@ internal class AboutListView internal constructor(
   }
 
   private fun setupListView() {
-    aboutAdapter = AboutAdapter(object : AboutViewHolderUiComponent.Callback {
-
-      override fun onNavigateExternalUrl(url: String) {
-        callback.onNavigateExternalUrl(url)
+    aboutAdapter = AboutAdapter {
+      return@AboutAdapter when (it) {
+        is AboutItemControllerEvent.ExternalUrl -> publish(OpenUrl(it.url))
       }
-
-    })
+    }
 
     layoutRoot.apply {
       adapter = aboutAdapter
@@ -98,7 +96,36 @@ internal class AboutListView internal constructor(
     }
   }
 
-  override fun show() {
+  override fun onRender(
+    state: AboutListState,
+    oldState: AboutListState?
+  ) {
+    state.onChange(oldState, field = { it.isLoading }) { loading ->
+      if (loading) {
+        hide()
+      } else {
+        show()
+      }
+    }
+
+    state.onChange(oldState, field = { it.licenses }) { licenses ->
+      if (licenses.isEmpty()) {
+        clearLicenses()
+      } else {
+        loadLicenses(licenses)
+      }
+    }
+
+    state.onChange(oldState, field = { it.throwable }) { throwable ->
+      if (throwable == null) {
+        clearError()
+      } else {
+        showError(throwable)
+      }
+    }
+  }
+
+  private fun show() {
     layoutRoot.isVisible = true
 
     val lastViewed = lastViewedItem
@@ -108,33 +135,27 @@ internal class AboutListView internal constructor(
     }
   }
 
-  override fun hide() {
+  private fun hide() {
     layoutRoot.isVisible = false
   }
 
-  fun loadLicenses(libraries: List<OssLibrary>) {
-    requireNotNull(aboutAdapter).addAll(libraries)
+  private fun loadLicenses(libraries: List<OssLibrary>) {
+    requireNotNull(aboutAdapter).submitList(libraries)
   }
 
-  fun showError(error: Throwable) {
+  private fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
         .short(layoutRoot, error.message ?: "An unexpected error occurred.")
         .show()
   }
 
-  fun clearError() {
+  private fun clearError() {
     Snackbreak.bindTo(owner)
         .dismiss()
   }
 
-  fun clearLicenses() {
-    requireNotNull(aboutAdapter).clear()
-  }
-
-  interface Callback {
-
-    fun onNavigateExternalUrl(url: String)
-
+  private fun clearLicenses() {
+    requireNotNull(aboutAdapter).submitList(null)
   }
 
   companion object {

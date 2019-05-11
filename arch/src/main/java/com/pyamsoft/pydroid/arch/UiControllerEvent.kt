@@ -15,17 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.arch
 
-import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.UiComponent
+interface UiControllerEvent
 
-internal interface AboutUiComponent : UiComponent<AboutUiComponent.Callback> {
+object UnitControllerEvent : UiControllerEvent
 
-  fun failedNavigation(error: ActivityNotFoundException)
-
-  interface Callback {
-
-    fun onNavigateExternalUrl(url: String)
-  }
-}

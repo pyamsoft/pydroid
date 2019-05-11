@@ -19,11 +19,7 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeHandler.VersionHandlerEvent
+import androidx.lifecycle.LifecycleOwner
 
 internal interface VersionUpgradeComponent {
 
@@ -34,6 +30,7 @@ internal interface VersionUpgradeComponent {
     @CheckResult
     fun create(
       parent: ViewGroup,
+      owner: LifecycleOwner,
       newVersion: Int
     ): VersionUpgradeComponent
 
@@ -41,47 +38,33 @@ internal interface VersionUpgradeComponent {
 
   class Impl private constructor(
     private val parent: ViewGroup,
+    private val owner: LifecycleOwner,
     private val applicationName: String,
     private val currentVersion: Int,
-    private val newVersion: Int,
-    private val schedulerProvider: SchedulerProvider,
-    private val bus: EventBus<VersionHandlerEvent>,
-    private val navigationBus: EventBus<FailedNavigationEvent>
+    private val newVersion: Int
   ) : VersionUpgradeComponent {
 
     override fun inject(dialog: VersionUpgradeDialog) {
-      val handler = VersionUpgradeHandler(schedulerProvider, bus)
-      val viewModel = VersionUpgradeViewModel(handler)
-      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
-      val contentView = VersionUpgradeContentView(
-          applicationName, currentVersion,
-          newVersion, parent
-      )
-      val controlsView = VersionUpgradeControlView(parent, handler)
-      val component = VersionUpgradeUiComponentImpl(
-          controlsView, contentView,
-          navigationViewModel, viewModel
-      )
-      dialog.component = component
+      val viewModel = VersionUpgradeViewModel(applicationName, currentVersion, newVersion)
+      val contentView = VersionUpgradeContentView(parent)
+      val controlsView = VersionUpgradeControlView(owner, parent)
+
+      dialog.viewModel = viewModel
+      dialog.control = controlsView
+      dialog.content = contentView
     }
 
     internal class FactoryImpl internal constructor(
       private val applicationName: String,
-      private val currentVersion: Int,
-      private val schedulerProvider: SchedulerProvider,
-      private val bus: EventBus<VersionHandlerEvent>,
-      private val navigationBus: EventBus<FailedNavigationEvent>
+      private val currentVersion: Int
     ) : Factory {
 
       override fun create(
         parent: ViewGroup,
+        owner: LifecycleOwner,
         newVersion: Int
       ): VersionUpgradeComponent {
-        return Impl(
-            parent, applicationName, currentVersion,
-            newVersion, schedulerProvider, bus,
-            navigationBus
-        )
+        return Impl(parent, owner, applicationName, currentVersion, newVersion)
       }
 
     }

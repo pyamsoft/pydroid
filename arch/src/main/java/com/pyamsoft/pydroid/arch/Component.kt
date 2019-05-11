@@ -17,10 +17,22 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface UiToggleView : UiView {
+import android.os.Bundle
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.core.tryDispose
 
-  fun show()
-
-  fun hide()
-
+inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
+  savedInstanceState: Bundle?,
+  owner: LifecycleOwner,
+  viewModel: UiViewModel<S, V, C>,
+  vararg views: UiView<S, V>,
+  crossinline onControllerEvent: (event: C) -> Unit
+) {
+  views.forEach { it.inflate(savedInstanceState) }
+  val viewModelBinding = viewModel.render(*views) { onControllerEvent(it) }
+  owner.doOnDestroy {
+    views.forEach { it.teardown() }
+    viewModelBinding.tryDispose()
+  }
 }
+

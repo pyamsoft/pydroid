@@ -15,6 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating
+package com.pyamsoft.pydroid.arch
 
-object ShowRating
+interface UiViewEvent
+
+object UnitViewEvent : UiViewEvent
+

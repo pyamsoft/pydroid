@@ -17,20 +17,22 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.arch.BaseUiView
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingControlsView.Callback
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class RatingControlsView internal constructor(
-  private val rateLink: String,
-  parent: ViewGroup,
-  callback: Callback
-) : BaseUiView<Callback>(parent, callback) {
+  private val owner: LifecycleOwner,
+  parent: ViewGroup
+) : UiViewImpl<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
   private val rateApplication by boundView<Button>(R.id.rate_application)
   private val noThanks by boundView<Button>(R.id.no_thanks)
@@ -39,25 +41,39 @@ internal class RatingControlsView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.rating_control_root)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
+  override fun onRender(
+    state: RatingDialogViewState,
+    oldState: RatingDialogViewState?
   ) {
-    rateApplication.setOnDebouncedClickListener { callback.onRateApplicationClicked(rateLink) }
-    noThanks.setOnDebouncedClickListener { callback.onNotRatingApplication() }
+    state.onChange(oldState, field = { it.rateLink }) { link ->
+      rateApplication.setOnDebouncedClickListener { publish(Rate(link)) }
+      noThanks.setOnDebouncedClickListener { publish(Cancel) }
+    }
+
+    state.onChange(oldState, field = { it.throwable }) { throwable ->
+      if (throwable == null) {
+        clearError()
+      } else {
+        showError(throwable)
+      }
+    }
+  }
+
+  private fun showError(error: Throwable) {
+    Snackbreak.bindTo(owner)
+        .short(layoutRoot, error.message ?: "An unexpected error occurred.")
+        .show()
+  }
+
+  private fun clearError() {
+    Snackbreak.bindTo(owner)
+        .dismiss()
   }
 
   override fun onTeardown() {
     rateApplication.setOnClickListener(null)
     noThanks.setOnClickListener(null)
-  }
-
-  interface Callback {
-
-    fun onRateApplicationClicked(link: String)
-
-    fun onNotRatingApplication()
-
+    clearError()
   }
 
 }

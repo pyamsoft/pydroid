@@ -17,20 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
-  private val model: OssLibrary,
   parent: ViewGroup
-) : BaseUiView<Unit>(parent, Unit) {
+) : UiViewImpl<AboutItemState, AboutItemViewEvent>(parent) {
 
   private val title by boundView<TextView>(R.id.title)
   private val license by boundView<TextView>(R.id.license)
@@ -39,12 +37,14 @@ internal class AboutItemTitleView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.about_title)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
+  override fun onRender(
+    state: AboutItemState,
+    oldState: AboutItemState?
   ) {
-    title.text = model.name
-    license.text = getString(R.string.license_name, model.licenseName)
+    state.onChange(oldState, field = { it.library }) { library ->
+      title.text = library.name
+      license.text = getString(R.string.license_name, library.licenseName)
+    }
   }
 
   override fun onTeardown() {

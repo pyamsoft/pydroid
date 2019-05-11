@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -29,10 +30,13 @@ import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
 
 internal class AboutViewHolder private constructor(
   view: View,
-  private val callback: AboutViewHolderUiComponent.Callback
+  private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : BaseViewHolder(view) {
 
-  internal var component: AboutViewHolderUiComponent? = null
+  internal var viewModel: AboutItemViewModel? = null
+  internal var titleView: AboutItemTitleView? = null
+  internal var descriptionView: AboutItemDescriptionView? = null
+  internal var actionView: AboutItemActionView? = null
 
   private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
   private var bindLifecycle: ListItemLifecycle? = null
@@ -48,14 +52,23 @@ internal class AboutViewHolder private constructor(
     val owner = ListItemLifecycle()
     bindLifecycle = owner
 
-    requireNotNull(component).bind(owner, null, callback)
+    createComponent(
+        null, owner,
+        requireNotNull(viewModel),
+        requireNotNull(titleView),
+        requireNotNull(actionView),
+        requireNotNull(descriptionView)
+    ) { callback(it) }
   }
 
   override fun unbind() {
     bindLifecycle?.unbind()
     bindLifecycle = null
 
-    component = null
+    viewModel = null
+    titleView = null
+    descriptionView = null
+    actionView = null
   }
 
   companion object {
@@ -65,7 +78,7 @@ internal class AboutViewHolder private constructor(
     fun create(
       inflater: LayoutInflater,
       container: ViewGroup,
-      callback: AboutViewHolderUiComponent.Callback
+      callback: (event: AboutItemControllerEvent) -> Unit
     ): AboutViewHolder {
       val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
       return AboutViewHolder(view, callback)

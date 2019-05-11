@@ -27,17 +27,23 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 
-class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
+class RatingDialog : DialogFragment() {
 
-  internal var component: RatingDialogUiComponent? = null
+  internal var viewModel: RatingDialogViewModel? = null
+  internal var changelogView: RatingChangelogView? = null
+  internal var controlsView: RatingControlsView? = null
+  internal var iconView: RatingIconView? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -75,20 +81,37 @@ class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
     val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
     Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusRatingDialog()
-        .create(rateLink, changeLogIcon, changelog, layoutRoot)
+        .create(layoutRoot, viewLifecycleOwner, rateLink, changeLogIcon, changelog)
         .inject(this)
 
-    requireNotNull(component).bind(viewLifecycleOwner, savedInstanceState, this)
+    createComponent(
+        savedInstanceState, viewLifecycleOwner,
+        requireNotNull(viewModel),
+        requireNotNull(iconView),
+        requireNotNull(changelogView),
+        requireNotNull(controlsView)
+    ) {
+      return@createComponent when (it) {
+        is NavigateRating -> navigateToApplicationPage(it.link)
+        is CancelDialog -> dismiss()
+      }
+    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    component = null
+
+    viewModel = null
+    changelogView = null
+    controlsView = null
+    iconView = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    component?.saveState(outState)
+    changelogView?.saveState(outState)
+    controlsView?.saveState(outState)
+    iconView?.saveState(outState)
   }
 
   override fun onResume() {
@@ -100,18 +123,14 @@ class RatingDialog : DialogFragment(), RatingDialogUiComponent.Callback {
     )
   }
 
-  override fun onNavigateToApplicationPage(packageName: String) {
-    val error = MarketLinker.linkToMarketPage(requireContext(), packageName)
+  private fun navigateToApplicationPage(link: String) {
+    val error = MarketLinker.linkToMarketPage(requireContext(), link)
 
     if (error != null) {
-      requireNotNull(component).navigationFailed(error)
+      requireNotNull(viewModel).navigationFailed(error)
+    } else {
+      dismiss()
     }
-
-    dismiss()
-  }
-
-  override fun onCancelRating() {
-    dismiss()
   }
 
   companion object {

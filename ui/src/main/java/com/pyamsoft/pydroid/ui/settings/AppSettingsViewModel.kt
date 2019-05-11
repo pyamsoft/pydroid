@@ -17,114 +17,58 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import com.pyamsoft.pydroid.arch.UiEventHandler
-import com.pyamsoft.pydroid.arch.UiState
+import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.ui.settings.AppSettingsHandler.AppSettingsEvent
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel.SettingsState.DarkTheme
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ChangeDarkTheme
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateHyperlink
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateMoreApps
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateRateApp
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.OpenShowUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ShowLicense
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearData
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.Hyperlink
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.MoreApps
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateApp
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 internal class AppSettingsViewModel internal constructor(
-  private val handler: UiEventHandler<AppSettingsEvent, AppSettingsView.Callback>,
-  private val theming: Theming
-) : UiViewModel<SettingsState>(
-    initialState = SettingsState(
-        blogLink = null,
-        bugReportLink = null,
-        navigateMoreApps = false,
-        navigateRateApp = false,
-        socialMediaLink = null,
-        checkForUpdate = false,
-        clearAppData = false,
-        showLicenses = false,
-        showUpgradeInfo = false,
-        darkTheme = null
+  applicationName: String,
+  bugReportUrl: String,
+  hideClearAll: Boolean,
+  hideUpgradeInformation: Boolean,
+  theming: Theming
+) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
+    initialState = AppSettingsViewState(
+        applicationName = applicationName,
+        bugReportUrl = bugReportUrl,
+        hideClearAll = hideClearAll,
+        hideUpgradeInformation = hideUpgradeInformation,
+        isDarkTheme = theming.isDarkTheme(),
+        throwable = null
     )
-), AppSettingsView.Callback {
+) {
 
-  override fun onBind() {
-    handler.handle(this)
-        .disposeOnDestroy()
-  }
-
-  override fun onUnbind() {
-  }
-
-  override fun onMoreAppsClicked() {
-    setUniqueState(true, old = { it.navigateMoreApps }) { state, value ->
-      state.copy(navigateMoreApps = value)
+  override fun handleViewEvent(event: AppSettingsViewEvent) {
+    return when (event) {
+      is MoreApps -> publish(NavigateMoreApps)
+      is Hyperlink -> publish(NavigateHyperlink(event.hyperlinkIntent))
+      is RateApp -> publish(NavigateRateApp)
+      is ViewLicense -> publish(ShowLicense)
+      is CheckUpgrade -> publish(AttemptCheckUpgrade)
+      is ClearData -> publish(AttemptClearData)
+      is ShowUpgrade -> publish(OpenShowUpgrade)
+      is ToggleDarkTheme -> publish(ChangeDarkTheme(event.isDark))
     }
   }
 
-  override fun onShowUpgradeInfoClicked() {
-    setUniqueState(true, old = { it.showUpgradeInfo }) { state, value ->
-      state.copy(showUpgradeInfo = value)
-    }
-  }
-
-  override fun onDarkThemeToggled(dark: Boolean) {
-    theming.setDarkTheme(dark) { value ->
-      setState { copy(darkTheme = DarkTheme(value)) }
-    }
-  }
-
-  override fun onFollowSocialClicked(link: HyperlinkIntent) {
-    setUniqueState(link, old = { it.socialMediaLink }) { state, value ->
-      state.copy(socialMediaLink = value)
-    }
-  }
-
-  override fun onClearAppDataClicked() {
-    setUniqueState(true, old = { it.clearAppData }) { state, value ->
-      state.copy(clearAppData = value)
-    }
-  }
-
-  override fun onCheckUpgradeClicked() {
-    setUniqueState(true, old = { it.checkForUpdate }) { state, value ->
-      state.copy(checkForUpdate = value)
-    }
-  }
-
-  override fun onViewLicensesClicked() {
-    setUniqueState(true, old = { it.showLicenses }) { state, value ->
-      state.copy(showLicenses = value)
-    }
-  }
-
-  override fun onBugReportClicked(link: HyperlinkIntent) {
-    setUniqueState(link, old = { it.bugReportLink }) { state, value ->
-      state.copy(bugReportLink = value)
-    }
-  }
-
-  override fun onRateAppClicked() {
-    setUniqueState(true, old = { it.navigateRateApp }) { state, value ->
-      state.copy(navigateRateApp = value)
-    }
-  }
-
-  override fun onFollowBlogClicked(link: HyperlinkIntent) {
-    setUniqueState(link, old = { it.blogLink }) { state, value ->
-      state.copy(blogLink = value)
-    }
-  }
-
-  data class SettingsState(
-    val navigateMoreApps: Boolean,
-    val showUpgradeInfo: Boolean,
-    val clearAppData: Boolean,
-    val checkForUpdate: Boolean,
-    val showLicenses: Boolean,
-    val navigateRateApp: Boolean,
-    val bugReportLink: HyperlinkIntent?,
-    val blogLink: HyperlinkIntent?,
-    val socialMediaLink: HyperlinkIntent?,
-    val darkTheme: DarkTheme?
-  ) : UiState {
-    data class DarkTheme(val dark: Boolean)
+  fun navigationFailed(error: ActivityNotFoundException) {
+    setState { copy(throwable = error) }
   }
 
 }

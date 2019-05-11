@@ -15,20 +15,23 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating.dialog
+package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-internal interface RatingDialogUiComponent : UiComponent<RatingDialogUiComponent.Callback> {
+data class AboutItemState(val library: OssLibrary) : UiViewState
 
-  fun navigationFailed(error: ActivityNotFoundException)
+sealed class AboutItemViewEvent : UiViewEvent {
 
-  interface Callback {
+  data class OpenUrl(val url: String) : AboutItemViewEvent()
 
-    fun onNavigateToApplicationPage(packageName: String)
+}
 
-    fun onCancelRating()
+sealed class AboutItemControllerEvent : UiControllerEvent {
 
-  }
+  data class ExternalUrl(val url: String) : AboutItemControllerEvent()
+
 }

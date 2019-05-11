@@ -18,10 +18,12 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import io.reactivex.Observable
 
-interface UiView {
+interface UiView<S : UiViewState, V : UiViewEvent> {
 
   @IdRes
   @CheckResult
@@ -29,9 +31,17 @@ interface UiView {
 
   fun inflate(savedInstanceState: Bundle?)
 
-  fun saveState(outState: Bundle)
+  fun render(
+    state: S,
+    oldState: S?
+  )
 
   fun teardown()
+
+  fun saveState(outState: Bundle)
+
+  @CheckResult
+  fun viewEvents(): Observable<V>
 
 }
 

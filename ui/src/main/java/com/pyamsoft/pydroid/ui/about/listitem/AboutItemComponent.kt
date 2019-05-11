@@ -19,10 +19,7 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.bus.EventBus
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemHandler.AboutItemHandlerEvent
 
 internal interface AboutItemComponent {
 
@@ -33,38 +30,36 @@ internal interface AboutItemComponent {
     @CheckResult
     fun create(
       parent: ViewGroup,
-      model: OssLibrary
+      library: OssLibrary
     ): AboutItemComponent
 
   }
 
   class Impl private constructor(
     private val parent: ViewGroup,
-    private val model: OssLibrary,
-    private val schedulerProvider: SchedulerProvider,
-    private val bus: EventBus<AboutItemHandlerEvent>
+    private val library: OssLibrary
   ) : AboutItemComponent {
 
     override fun inject(viewHolder: AboutViewHolder) {
-      val handler = AboutItemHandler(schedulerProvider, bus)
-      val viewModel = AboutItemViewModel(handler)
-      val title = AboutItemTitleView(model, parent)
-      val actions = AboutItemActionsView(model, parent, handler)
-      val description = AboutItemDescriptionView(model, parent)
-      val component = AboutViewHolderUiComponentImpl(title, actions, description, viewModel)
-      viewHolder.component = component
+      val viewModel = AboutItemViewModel(library)
+      val title = AboutItemTitleView(parent)
+      val description = AboutItemDescriptionView(parent)
+      val action = AboutItemActionView(parent)
+
+      viewHolder.viewModel = viewModel
+      viewHolder.titleView = title
+      viewHolder.descriptionView = description
+      viewHolder.actionView = action
     }
 
     class FactoryImpl internal constructor(
-      private val schedulerProvider: SchedulerProvider,
-      private val bus: EventBus<AboutItemHandlerEvent>
     ) : Factory {
 
       override fun create(
         parent: ViewGroup,
-        model: OssLibrary
+        library: OssLibrary
       ): AboutItemComponent {
-        return Impl(parent, model, schedulerProvider, bus)
+        return Impl(parent, library)
       }
 
     }

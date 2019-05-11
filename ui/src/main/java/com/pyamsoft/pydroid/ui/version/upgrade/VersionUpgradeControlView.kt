@@ -21,15 +21,19 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.arch.BaseUiView
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControlView.Callback
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeControlView internal constructor(
-  parent: ViewGroup,
-  callback: Callback
-) : BaseUiView<Callback>(parent, callback) {
+  private val owner: LifecycleOwner,
+  parent: ViewGroup
+) : UiViewImpl<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 
   private val upgradeButton by boundView<Button>(R.id.upgrade_button)
   private val laterButton by boundView<Button>(R.id.later_button)
@@ -42,19 +46,37 @@ internal class VersionUpgradeControlView internal constructor(
     view: View,
     savedInstanceState: Bundle?
   ) {
-    upgradeButton.setOnDebouncedClickListener { callback.onUpgradeClicked() }
-    laterButton.setOnDebouncedClickListener { callback.onCancelClicked() }
+    upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
+    laterButton.setOnDebouncedClickListener { publish(Cancel) }
+  }
+
+  override fun onRender(
+    state: VersionUpgradeViewState,
+    oldState: VersionUpgradeViewState?
+  ) {
+    state.onChange(oldState, field = { it.throwable }) { throwable ->
+      if (throwable == null) {
+        clearError()
+      } else {
+        showError(throwable)
+      }
+    }
+  }
+
+  private fun showError(error: Throwable) {
+    Snackbreak.bindTo(owner)
+        .short(layoutRoot, error.message ?: "An unexpected error occurred.")
+        .show()
+  }
+
+  private fun clearError() {
+    Snackbreak.bindTo(owner)
+        .dismiss()
   }
 
   override fun onTeardown() {
     upgradeButton.setOnClickListener(null)
     laterButton.setOnClickListener(null)
-  }
-
-  interface Callback {
-
-    fun onUpgradeClicked()
-
-    fun onCancelClicked()
+    clearError()
   }
 }

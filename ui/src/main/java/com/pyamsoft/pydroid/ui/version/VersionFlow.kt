@@ -15,18 +15,28 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.ui.version
 
-interface UiState
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
 
-inline fun <T : UiState, M : Any?> T.renderOnChange(
-  oldState: T?,
-  crossinline value: (state: T) -> M,
-  crossinline onChange: (value: M) -> Unit
-) {
-  val newValue = value(this)
-  if (oldState == null || newValue != value(oldState)) {
-    onChange(newValue)
-  }
+data class VersionViewState(
+  val isLoading: Loading?,
+  val throwable: Throwable?
+) : UiViewState {
+
+  data class Loading(val isLoading: Boolean)
+
+  data class UpgradePayload(
+    val currentVersion: Int,
+    val newVersion: Int
+  )
+
 }
 
+sealed class VersionControllerEvent : UiControllerEvent {
+
+  data class ShowUpgrade(val payload: UpgradePayload) : VersionControllerEvent()
+
+}

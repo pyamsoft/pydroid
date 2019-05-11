@@ -22,56 +22,75 @@ import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
-import com.pyamsoft.pydroid.ui.settings.AppSettingsView.Callback
-import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.util.HyperlinkIntent
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearData
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.Hyperlink
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.MoreApps
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateApp
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
-  private val applicationName: String,
-  private val bugReportUrl: String,
-  private val hideClearAll: Boolean,
-  private val hideUpgradeInformation: Boolean,
-  private val theming: Theming,
-  preferenceScreen: PreferenceScreen,
-  callback: Callback
-) : PrefUiView<Callback>(preferenceScreen, callback) {
+  preferenceScreen: PreferenceScreen
+) : PrefUiView<AppSettingsViewState, AppSettingsViewEvent>(preferenceScreen) {
 
+  private var preferenceScreen: PreferenceScreen? = preferenceScreen
   private val context = preferenceScreen.context
 
-  private val moreApps by lazyPref<Preference>(R.string.more_apps_key)
-  private val social by lazyPref<Preference>(R.string.social_media_f_key)
-  private val followBlog by lazyPref<Preference>(R.string.social_media_b_key)
-  private val rate by lazyPref<Preference>(R.string.rating_key)
-  private val bugReport by lazyPref<Preference>(R.string.bugreport_key)
-  private val licenses by lazyPref<Preference>(R.string.about_license_key)
-  private val version by lazyPref<Preference>(R.string.check_version_key)
-  private val clearAll by lazyPref<Preference>(R.string.clear_all_key)
-  private val upgradeInfo by lazyPref<Preference>(R.string.upgrade_info_key)
-  private val theme by lazyPref<Preference>(R.string.dark_mode_key)
-
-  private val applicationGroup by lazyPref<Preference>("application_settings")
+  private val moreApps by boundPref<Preference>(R.string.more_apps_key)
+  private val social by boundPref<Preference>(R.string.social_media_f_key)
+  private val followBlog by boundPref<Preference>(R.string.social_media_b_key)
+  private val rate by boundPref<Preference>(R.string.rating_key)
+  private val bugReport by boundPref<Preference>(R.string.bugreport_key)
+  private val licenses by boundPref<Preference>(R.string.about_license_key)
+  private val version by boundPref<Preference>(R.string.check_version_key)
+  private val clearAll by boundPref<Preference>(R.string.clear_all_key)
+  private val upgradeInfo by boundPref<Preference>(R.string.upgrade_info_key)
+  private val theme by boundPref<Preference>(R.string.dark_mode_key)
+  private val applicationGroup by boundPref<Preference>("application_settings")
 
   override fun onInflated(
     preferenceScreen: PreferenceScreen,
     savedInstanceState: Bundle?
   ) {
-    adjustIconTint(preferenceScreen)
-
-    setupApplicationTitle()
     setupMoreApps()
     setupBlog()
-    setupBugReport()
     setupCheckUpgrade()
-    setupClearAppData()
     setupDarkTheme()
     setupLicenses()
     setupRateApp()
-    setupShowUpgradeInfo()
     setupSocial()
+  }
+
+  override fun onRender(
+    state: AppSettingsViewState,
+    oldState: AppSettingsViewState?
+  ) {
+    state.onChange(oldState, field = { it.isDarkTheme }) { darkTheme ->
+      requireNotNull(preferenceScreen).adjustTint(darkTheme)
+    }
+
+    state.onChange(oldState, field = { it.applicationName }) { name ->
+      setupApplicationTitle(name)
+    }
+
+    state.onChange(oldState, field = { it.bugReportUrl }) { bugReportUrl ->
+      setupBugReport(bugReportUrl)
+    }
+
+    state.onChange(oldState, field = { it.hideClearAll }) { hideClearAll ->
+      setupClearAppData(hideClearAll)
+    }
+
+    state.onChange(oldState, field = { it.hideUpgradeInformation }) { hideUpgradeInfo ->
+      setupShowUpgradeInfo(hideUpgradeInfo)
+    }
   }
 
   override fun onTeardown() {
@@ -85,13 +104,7 @@ internal class AppSettingsView internal constructor(
     clearAll.onPreferenceClickListener = null
     upgradeInfo.onPreferenceClickListener = null
     theme.onPreferenceClickListener = null
-
-    applicationGroup.title = ""
-  }
-
-  private fun adjustIconTint(preferenceScreen: PreferenceScreen) {
-    val darkTheme = theming.isDarkTheme()
-    preferenceScreen.adjustTint(darkTheme)
+    preferenceScreen = null
   }
 
   private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {
@@ -120,7 +133,7 @@ internal class AppSettingsView internal constructor(
 
   private fun setupMoreApps() {
     moreApps.setOnPreferenceClickListener {
-      callback.onMoreAppsClicked()
+      publish(MoreApps)
       return@setOnPreferenceClickListener true
     }
   }
@@ -128,7 +141,7 @@ internal class AppSettingsView internal constructor(
   private fun setupSocial() {
     val socialLink = FACEBOOK.hyperlink(context)
     social.setOnPreferenceClickListener {
-      callback.onFollowSocialClicked(socialLink)
+      publish(Hyperlink(socialLink))
       return@setOnPreferenceClickListener true
     }
   }
@@ -136,57 +149,57 @@ internal class AppSettingsView internal constructor(
   private fun setupBlog() {
     val blogLink = BLOG.hyperlink(context)
     followBlog.setOnPreferenceClickListener {
-      callback.onFollowBlogClicked(blogLink)
+      publish(Hyperlink(blogLink))
       return@setOnPreferenceClickListener true
     }
   }
 
   private fun setupRateApp() {
     rate.setOnPreferenceClickListener {
-      callback.onRateAppClicked()
+      publish(RateApp)
       return@setOnPreferenceClickListener true
     }
   }
 
-  private fun setupBugReport() {
+  private fun setupBugReport(bugReportUrl: String) {
     val reportLink = bugReportUrl.hyperlink(context)
     bugReport.setOnPreferenceClickListener {
-      callback.onBugReportClicked(reportLink)
+      publish(Hyperlink(reportLink))
       return@setOnPreferenceClickListener true
     }
   }
 
   private fun setupLicenses() {
     licenses.setOnPreferenceClickListener {
-      callback.onViewLicensesClicked()
+      publish(ViewLicense)
       return@setOnPreferenceClickListener true
     }
   }
 
   private fun setupCheckUpgrade() {
     version.setOnPreferenceClickListener {
-      callback.onCheckUpgradeClicked()
+      publish(CheckUpgrade)
       return@setOnPreferenceClickListener true
     }
   }
 
-  private fun setupClearAppData() {
+  private fun setupClearAppData(hideClearAll: Boolean) {
     if (hideClearAll) {
       clearAll.isVisible = false
     } else {
       clearAll.setOnPreferenceClickListener {
-        callback.onClearAppDataClicked()
+        publish(ClearData)
         return@setOnPreferenceClickListener true
       }
     }
   }
 
-  private fun setupShowUpgradeInfo() {
+  private fun setupShowUpgradeInfo(hideUpgradeInformation: Boolean) {
     if (hideUpgradeInformation) {
       upgradeInfo.isVisible = false
     } else {
       upgradeInfo.setOnPreferenceClickListener {
-        callback.onShowUpgradeInfoClicked()
+        publish(ShowUpgrade)
         return@setOnPreferenceClickListener true
       }
     }
@@ -195,39 +208,15 @@ internal class AppSettingsView internal constructor(
   private fun setupDarkTheme() {
     theme.setOnPreferenceChangeListener { _, newValue ->
       if (newValue is Boolean) {
-        callback.onDarkThemeToggled(newValue)
+        publish(ToggleDarkTheme(newValue))
         return@setOnPreferenceChangeListener true
       }
       return@setOnPreferenceChangeListener false
     }
   }
 
-  private fun setupApplicationTitle() {
+  private fun setupApplicationTitle(applicationName: String) {
     applicationGroup.title = "$applicationName Settings"
-  }
-
-  interface Callback {
-
-    fun onMoreAppsClicked()
-
-    fun onShowUpgradeInfoClicked()
-
-    fun onDarkThemeToggled(dark: Boolean)
-
-    fun onFollowSocialClicked(link: HyperlinkIntent)
-
-    fun onClearAppDataClicked()
-
-    fun onCheckUpgradeClicked()
-
-    fun onViewLicensesClicked()
-
-    fun onBugReportClicked(link: HyperlinkIntent)
-
-    fun onRateAppClicked()
-
-    fun onFollowBlogClicked(link: HyperlinkIntent)
-
   }
 
   companion object {

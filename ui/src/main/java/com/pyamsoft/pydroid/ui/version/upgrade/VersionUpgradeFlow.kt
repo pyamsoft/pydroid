@@ -17,19 +17,29 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 
-internal interface VersionUpgradeUiComponent : UiComponent<VersionUpgradeUiComponent.Callback> {
+data class VersionUpgradeViewState(
+  val applicationName: String,
+  val currentVersion: Int,
+  val newVersion: Int,
+  val throwable: Throwable?
+) : UiViewState
 
-  fun navigationFailed(error: ActivityNotFoundException)
+sealed class VersionUpgradeViewEvent : UiViewEvent {
 
-  interface Callback {
+  object Upgrade : VersionUpgradeViewEvent()
 
-    fun onNavigateToMarket()
+  object Cancel : VersionUpgradeViewEvent()
 
-    fun onCancelUpgrade()
+}
 
-  }
+sealed class VersionUpgradeControllerEvent : UiControllerEvent {
+
+  object OpenMarket : VersionUpgradeControllerEvent()
+
+  object CancelDialog : VersionUpgradeControllerEvent()
 
 }

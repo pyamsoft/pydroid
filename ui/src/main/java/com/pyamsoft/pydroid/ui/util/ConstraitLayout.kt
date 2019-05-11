@@ -15,29 +15,14 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.util
 
-import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.UiComponent
-import com.pyamsoft.pydroid.util.HyperlinkIntent
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 
-internal interface AppSettingsUiComponent : UiComponent<AppSettingsUiComponent.Callback> {
-
-  fun failedNavigation(error: ActivityNotFoundException)
-
-  interface Callback {
-
-    fun onViewMorePyamsoftApps()
-
-    fun onDarkThemeChanged(dark: Boolean)
-
-    fun onClearAppData()
-
-    fun onViewLicenses()
-
-    fun onRateApp()
-
-    fun onNavigateToLink(link: HyperlinkIntent)
-  }
-
+fun ConstraintLayout.layout(func: ConstraintSet.() -> Unit) {
+  val set = ConstraintSet()
+  set.clone(this)
+  func(set)
+  set.applyTo(this)
 }

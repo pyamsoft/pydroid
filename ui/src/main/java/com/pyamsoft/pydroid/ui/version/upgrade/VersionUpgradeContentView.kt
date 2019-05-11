@@ -17,21 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiViewImpl
+import com.pyamsoft.pydroid.arch.onChange
 import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
-  private val applicationName: String,
-  private val currentVersion: Int,
-  private val newVersion: Int,
   parent: ViewGroup
-) : BaseUiView<Unit>(parent, Unit) {
+) : UiViewImpl<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 
   private val upgradeMessage by boundView<TextView>(R.id.upgrade_message)
   private val currentValue by boundView<TextView>(R.id.upgrade_current_value)
@@ -41,12 +38,21 @@ internal class VersionUpgradeContentView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.version_content_root)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
+  override fun onRender(
+    state: VersionUpgradeViewState,
+    oldState: VersionUpgradeViewState?
   ) {
-    setApplicationMessage()
-    setVersions()
+    state.onChange(oldState, field = { it.applicationName }) { name ->
+      upgradeMessage.text = getString(R.string.upgrade_available_message, name)
+    }
+
+    state.onChange(oldState, field = { it.currentVersion }) { version ->
+      currentValue.text = "$version"
+    }
+
+    state.onChange(oldState, field = { it.newVersion }) { version ->
+      newValue.text = "$version"
+    }
   }
 
   override fun onTeardown() {
@@ -58,15 +64,6 @@ internal class VersionUpgradeContentView internal constructor(
   @CheckResult
   private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
     return layoutRoot.context.getString(id, *formatArgs)
-  }
-
-  private fun setApplicationMessage() {
-    upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
-  }
-
-  private fun setVersions() {
-    currentValue.text = "$currentVersion"
-    newValue.text = "$newVersion"
   }
 
 }

@@ -20,13 +20,10 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.text.SpannedString
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.core.bus.EventBus
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.navigation.FailedNavigationEvent
-import com.pyamsoft.pydroid.ui.navigation.NavigationViewModel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogHandler.RatingEvent
 
 internal interface RatingDialogComponent {
 
@@ -36,59 +33,58 @@ internal interface RatingDialogComponent {
 
     @CheckResult
     fun create(
+      parent: ViewGroup,
+      owner: LifecycleOwner,
       rateLink: String,
       changeLogIcon: Int,
-      changeLog: SpannedString,
-      parent: ViewGroup
+      changeLog: SpannedString
     ): RatingDialogComponent
 
   }
 
   class Impl private constructor(
+    private val parent: ViewGroup,
     private val changeLogIcon: Int,
     private val rateLink: String,
     private val changeLog: SpannedString,
-    private val parent: ViewGroup,
+    private val owner: LifecycleOwner,
     private val schedulerProvider: SchedulerProvider,
-    private val bus: EventBus<RatingEvent>,
-    private val navigationBus: EventBus<FailedNavigationEvent>,
     private val loaderModule: LoaderModule,
     private val ratingModule: RatingModule
   ) : RatingDialogComponent {
 
     override fun inject(dialog: RatingDialog) {
-      val handler = RatingDialogHandler(schedulerProvider, bus)
-      val viewModel =
-        RatingDialogViewModel(handler, ratingModule.provideInteractor(), schedulerProvider)
-      val icon = RatingIconView(changeLogIcon, loaderModule.provideLoader(), parent)
-      val changelog = RatingChangelogView(changeLog, parent)
-      val controls = RatingControlsView(rateLink, parent, handler)
-      val navigationViewModel = NavigationViewModel(schedulerProvider, navigationBus)
-      val component = RatingDialogUiComponentImpl(
-          viewModel, icon, changelog,
-          controls, navigationViewModel
+      val viewModel = RatingDialogViewModel(
+          changeLog, rateLink, changeLogIcon,
+          ratingModule.provideInteractor(), schedulerProvider
       )
-      dialog.component = component
+      val icon = RatingIconView(loaderModule.provideLoader(), parent)
+      val changelog = RatingChangelogView(parent)
+      val controls = RatingControlsView(owner, parent)
+
+      dialog.viewModel = viewModel
+      dialog.iconView = icon
+      dialog.changelogView = changelog
+      dialog.controlsView = controls
     }
 
     internal class FactoryImpl internal constructor(
       private val schedulerProvider: SchedulerProvider,
-      private val bus: EventBus<RatingEvent>,
-      private val navigationBus: EventBus<FailedNavigationEvent>,
       private val loaderModule: LoaderModule,
       private val ratingModule: RatingModule
     ) : Factory {
 
       override fun create(
+        parent: ViewGroup,
+        owner: LifecycleOwner,
         rateLink: String,
         changeLogIcon: Int,
-        changeLog: SpannedString,
-        parent: ViewGroup
+        changeLog: SpannedString
       ): RatingDialogComponent {
         return Impl(
-            changeLogIcon, rateLink, changeLog,
-            parent, schedulerProvider, bus,
-            navigationBus, loaderModule, ratingModule
+            parent, changeLogIcon, rateLink, changeLog,
+            owner, schedulerProvider,
+            loaderModule, ratingModule
         )
       }
 

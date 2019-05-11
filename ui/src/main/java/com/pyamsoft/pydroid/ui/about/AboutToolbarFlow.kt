@@ -15,18 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version
+package com.pyamsoft.pydroid.ui.about
 
-sealed class VersionCheckState {
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 
-  data class Begin(val forced: Boolean) : VersionCheckState()
+data class AboutToolbarState(val title: String) : UiViewState
 
-  data class Found(
-    val currentVersion: Int,
-    val newVersion: Int
-  ) : VersionCheckState()
+sealed class AboutToolbarViewEvent : UiViewEvent {
 
-  data class Error(val throwable: Throwable) : VersionCheckState()
+  object UpNavigate : AboutToolbarViewEvent()
 
-  object Complete : VersionCheckState()
+}
+
+sealed class AboutToolbarControllerEvent : UiControllerEvent {
+
+  object Navigation : AboutToolbarControllerEvent()
+
 }

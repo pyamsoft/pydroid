@@ -18,7 +18,8 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
-import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
@@ -26,9 +27,8 @@ import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
 internal class AboutToolbarView internal constructor(
   private val backstackCount: Int,
-  private val toolbarActivity: ToolbarActivity,
-  private val callback: Callback
-) : UiView {
+  private val toolbarActivity: ToolbarActivity
+) : BaseUiView<AboutToolbarState, AboutToolbarViewEvent>() {
 
   private var oldTitle: CharSequence? = null
 
@@ -46,12 +46,17 @@ internal class AboutToolbarView internal constructor(
         oldTitle = toolbar.title
       }
 
-      toolbar.title = "Open Source Libraries"
       toolbar.setUpEnabled(true)
+      toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create { publish(UpNavigate) })
+    }
+  }
 
-      toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
-        callback.onToolbarNavClicked()
-      })
+  override fun render(
+    state: AboutToolbarState,
+    oldState: AboutToolbarState?
+  ) {
+    toolbarActivity.withToolbar { toolbar ->
+      toolbar.title = state.title
     }
   }
 
@@ -71,12 +76,6 @@ internal class AboutToolbarView internal constructor(
 
   override fun saveState(outState: Bundle) {
     outState.putCharSequence(KEY_OLD_TITLE, oldTitle)
-  }
-
-  interface Callback {
-
-    fun onToolbarNavClicked()
-
   }
 
   companion object {

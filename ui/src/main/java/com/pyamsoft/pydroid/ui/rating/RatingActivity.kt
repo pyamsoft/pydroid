@@ -28,19 +28,20 @@ import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import com.pyamsoft.pydroid.arch.doOnDestroy
+import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.ShowDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity(),
-    ChangeLogProvider,
-    RatingUiComponent.Callback {
+abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
-  internal var ratingComponent: RatingUiComponent? = null
+  internal var ratingViewModel: RatingViewModel? = null
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -99,22 +100,24 @@ abstract class RatingActivity : VersionCheckActivity(),
         .create()
         .inject(this)
 
-    requireNotNull(ratingComponent).bind(this, savedInstanceState, this)
+    val disposable = requireNotNull(ratingViewModel).render {
+      return@render when (it) {
+        is ShowDialog -> showRating()
+      }
+    }
+
+    this.doOnDestroy {
+      disposable.tryDispose()
+    }
   }
 
   @CallSuper
   override fun onDestroy() {
     super.onDestroy()
-    ratingComponent = null
+    ratingViewModel = null
   }
 
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    ratingComponent?.saveState(outState)
-  }
-
-  final override fun onShowRating() {
+  private fun showRating() {
     RatingDialog.newInstance(this)
         .show(this, RatingDialog.TAG)
   }

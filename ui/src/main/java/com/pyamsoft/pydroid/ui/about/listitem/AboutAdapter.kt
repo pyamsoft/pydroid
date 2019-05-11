@@ -19,48 +19,40 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Fake
-import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter.AdapterItem.Real
-import java.util.UUID
 
 internal class AboutAdapter internal constructor(
-  private val callback: AboutViewHolderUiComponent.Callback
-) : RecyclerView.Adapter<BaseViewHolder>() {
+  private val callback: (event: AboutItemControllerEvent) -> Unit
+) : ListAdapter<OssLibrary, BaseViewHolder>(object : DiffUtil.ItemCallback<OssLibrary>() {
+  override fun areItemsTheSame(
+    oldItem: OssLibrary,
+    newItem: OssLibrary
+  ): Boolean {
+    return oldItem.libraryUrl == newItem.libraryUrl
+  }
 
-  private val items: MutableList<AdapterItem> = ArrayList()
+  override fun areContentsTheSame(
+    oldItem: OssLibrary,
+    newItem: OssLibrary
+  ): Boolean {
+    return oldItem == newItem
+  }
+
+}) {
 
   init {
     setHasStableIds(true)
   }
 
-  fun addAll(models: List<OssLibrary>) {
-    val oldCount = itemCount
-
-    if (items.isEmpty()) {
-      items.add(Fake(UUID.randomUUID().toString()))
-    }
-
-    val realItems = models.map { Real(UUID.randomUUID().toString(), it) }
-    items.addAll(realItems)
-
-    notifyItemRangeInserted(oldCount, itemCount - 1)
-  }
-
-  fun clear() {
-    val size = itemCount
-    items.clear()
-    notifyItemRangeRemoved(0, size - 1)
-  }
-
   override fun getItemId(position: Int): Long {
-    return items[position].id.hashCode()
+    return getItem(position).libraryUrl.hashCode()
         .toLong()
   }
 
   override fun getItemViewType(position: Int): Int {
-    if (position == 0) {
+    if (getItem(position).name.isBlank()) {
       return VIEW_TYPE_SPACER
     } else {
       return VIEW_TYPE_REAL
@@ -79,33 +71,16 @@ internal class AboutAdapter internal constructor(
     }
   }
 
-  override fun getItemCount(): Int {
-    return items.size
-  }
-
   override fun onBindViewHolder(
     holder: BaseViewHolder,
     position: Int
   ) {
-    val item = items[position]
-    if (item is Real) {
-      holder.bind(item.library)
-    }
+    holder.bind(getItem(position))
   }
 
   override fun onViewRecycled(holder: BaseViewHolder) {
     super.onViewRecycled(holder)
     holder.unbind()
-  }
-
-  internal sealed class AdapterItem(open val id: String) {
-
-    internal data class Real(
-      override val id: String,
-      val library: OssLibrary
-    ) : AdapterItem(id)
-
-    internal data class Fake(override val id: String) : AdapterItem(id)
   }
 
   companion object {

@@ -17,12 +17,18 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
+interface UiViewState
 
-fun ConstraintLayout.layout(func: ConstraintSet.() -> Unit) {
-  val set = ConstraintSet()
-  set.clone(this)
-  func(set)
-  set.applyTo(this)
+object UnitViewState : UiViewState
+
+inline fun <S : UiViewState, T : Any?> S.onChange(
+  oldState: S?,
+  field: (state: S) -> T,
+  onChange: (field: T) -> Unit
+) {
+  val newValue = field(this)
+  if (oldState == null || newValue != field(oldState)) {
+    onChange(newValue)
+  }
 }
+

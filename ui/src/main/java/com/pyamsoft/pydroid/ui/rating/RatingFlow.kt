@@ -15,16 +15,12 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.listitem
+package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.arch.UiComponent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
 
-internal interface AboutViewHolderUiComponent : UiComponent<AboutViewHolderUiComponent.Callback> {
+sealed class RatingControllerEvent : UiControllerEvent {
 
-  interface Callback {
-
-    fun onNavigateExternalUrl(url: String)
-
-  }
+  object ShowDialog : RatingControllerEvent()
 
 }

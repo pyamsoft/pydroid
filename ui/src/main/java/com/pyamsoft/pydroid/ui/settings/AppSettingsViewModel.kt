@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ChangeDarkTheme
@@ -43,7 +43,7 @@ internal class AppSettingsViewModel internal constructor(
   hideClearAll: Boolean,
   hideUpgradeInformation: Boolean,
   theming: Theming
-) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
+) : BaseUiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
     initialState = AppSettingsViewState(
         applicationName = applicationName,
         bugReportUrl = bugReportUrl,

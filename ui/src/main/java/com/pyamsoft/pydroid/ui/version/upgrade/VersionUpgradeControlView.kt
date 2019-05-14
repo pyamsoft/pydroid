@@ -22,8 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 internal class VersionUpgradeControlView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : UiViewImpl<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
+) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 
   private val upgradeButton by boundView<Button>(R.id.upgrade_button)
   private val laterButton by boundView<Button>(R.id.later_button)

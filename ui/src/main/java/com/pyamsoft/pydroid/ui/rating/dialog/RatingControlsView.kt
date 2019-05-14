@@ -21,8 +21,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 internal class RatingControlsView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : UiViewImpl<RatingDialogViewState, RatingDialogViewEvent>(parent) {
+) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
   private val rateApplication by boundView<Button>(R.id.rate_application)
   private val noThanks by boundView<Button>(R.id.no_thanks)

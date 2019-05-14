@@ -17,8 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
+import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
@@ -31,7 +31,7 @@ import timber.log.Timber
 internal class VersionCheckViewModel internal constructor(
   private val interactor: VersionCheckInteractor,
   private val schedulerProvider: SchedulerProvider
-) : UiViewModel<VersionViewState, UnitViewEvent, VersionControllerEvent>(
+) : BaseUiViewModel<VersionViewState, UnitViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
         isLoading = null,
         throwable = null

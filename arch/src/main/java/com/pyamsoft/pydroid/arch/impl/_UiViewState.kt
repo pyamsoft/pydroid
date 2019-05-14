@@ -15,17 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.core.optional
+package com.pyamsoft.pydroid.arch.impl
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.optional.Optional.Absent
-import com.pyamsoft.pydroid.core.optional.Optional.Present
+import com.pyamsoft.pydroid.arch.UiViewState
 
-@CheckResult
-fun <T : Any> T?.asOptional(): Optional<T> {
-  if (this == null) {
-    return Absent
-  } else {
-    return Present(this)
+inline fun <S : UiViewState, T : Any?> S.onChange(
+  oldState: S?,
+  field: (state: S) -> T,
+  onChange: (field: T) -> Unit
+) {
+  val newValue = field(this)
+  if (oldState == null || newValue != field(oldState)) {
+    onChange(newValue)
   }
 }

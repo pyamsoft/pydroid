@@ -15,25 +15,8 @@
  *
  */
 
-package com.pyamsoft.pydroid.core.optional
+package com.pyamsoft.pydroid.arch.impl
 
-import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.UiViewState
 
-/**
- * A simple Optional API
- *
- * Keep the unused T here for better casting
- */
-sealed class Optional<out T : Any> {
-
-  data class Present<out T : Any> constructor(val value: T) : Optional<T>()
-
-  object Absent : Optional<Nothing>()
-
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    fun <T : Any> ofNullable(source: T?): Optional<T> = source.asOptional()
-  }
-}
+object UnitViewState : UiViewState

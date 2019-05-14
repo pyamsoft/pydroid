@@ -20,16 +20,16 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.AbstractUiView
+import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class VersionView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : BaseUiView<VersionViewState, UnitViewEvent>() {
+) : AbstractUiView<VersionViewState, UnitViewEvent>() {
 
   private var parent: ViewGroup? = parent
 

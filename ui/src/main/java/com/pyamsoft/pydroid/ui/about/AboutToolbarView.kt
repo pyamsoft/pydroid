@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.AbstractUiView
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.ui.util.setUpEnabled
 internal class AboutToolbarView internal constructor(
   private val backstackCount: Int,
   private val toolbarActivity: ToolbarActivity
-) : BaseUiView<AboutToolbarState, AboutToolbarViewEvent>() {
+) : AbstractUiView<AboutToolbarState, AboutToolbarViewEvent>() {
 
   private var oldTitle: CharSequence? = null
 

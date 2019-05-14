@@ -19,5 +19,3 @@ package com.pyamsoft.pydroid.arch
 
 interface UiViewEvent
 
-object UnitViewEvent : UiViewEvent
-

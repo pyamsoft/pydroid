@@ -15,16 +15,20 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.arch.impl
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.core.tryDispose
 
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
   savedInstanceState: Bundle?,
   owner: LifecycleOwner,
-  viewModel: UiViewModel<S, V, C>,
+  viewModel: BaseUiViewModel<S, V, C>,
   vararg views: UiView<S, V>,
   crossinline onControllerEvent: (event: C) -> Unit
 ) {

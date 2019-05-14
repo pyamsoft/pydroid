@@ -15,7 +15,8 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.arch.impl
 
-interface UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
 
+object UnitViewEvent : UiViewEvent

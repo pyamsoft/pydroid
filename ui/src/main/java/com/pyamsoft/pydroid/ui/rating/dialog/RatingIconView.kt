@@ -20,8 +20,8 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.R
 internal class RatingIconView internal constructor(
   private val imageLoader: ImageLoader,
   parent: ViewGroup
-) : UiViewImpl<RatingDialogViewState, RatingDialogViewEvent>(parent) {
+) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
   private val iconView by boundView<ImageView>(R.id.icon)
 

@@ -25,8 +25,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class AboutListView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : UiViewImpl<AboutListState, AboutListViewEvent>(parent) {
+) : BaseUiView<AboutListState, AboutListViewEvent>(parent) {
 
   private var lastViewedItem: Int = 0
   private var aboutAdapter: AboutAdapter? = null

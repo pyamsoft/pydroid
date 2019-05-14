@@ -15,7 +15,26 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.arch.impl
 
-interface UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.core.bus.RxBus
+import io.reactivex.Observable
+
+abstract class AbstractUiView<S : UiViewState, V : UiViewEvent> protected constructor(
+) : UiView<S, V> {
+
+  private val viewEventBus = RxBus.create<V>()
+
+  final override fun viewEvents(): Observable<V> {
+    return viewEventBus.listen()
+  }
+
+  protected fun publish(event: V) {
+    viewEventBus.publish(event)
+  }
+
+}
 

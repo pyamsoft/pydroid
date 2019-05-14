@@ -21,13 +21,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutSpinnerView internal constructor(
   parent: ViewGroup
-) : UiViewImpl<AboutListState, AboutListViewEvent>(parent) {
+) : BaseUiView<AboutListState, AboutListViewEvent>(parent) {
 
   override val layout: Int = R.layout.loading_spinner
 

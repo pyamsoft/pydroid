@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -31,7 +31,7 @@ import timber.log.Timber
 internal class AboutListViewModel internal constructor(
   private val interactor: AboutInteractor,
   private val schedulerProvider: SchedulerProvider
-) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
+) : BaseUiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
     initialState = AboutListState(
         isLoading = false,
         throwable = null,

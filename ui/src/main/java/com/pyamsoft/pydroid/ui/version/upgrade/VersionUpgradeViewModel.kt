@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.content.ActivityNotFoundException
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
@@ -28,7 +28,7 @@ internal class VersionUpgradeViewModel internal constructor(
   applicationName: String,
   currentVersion: Int,
   newVersion: Int
-) : UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
+) : BaseUiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
     initialState = VersionUpgradeViewState(
         applicationName = applicationName,
         currentVersion = currentVersion,

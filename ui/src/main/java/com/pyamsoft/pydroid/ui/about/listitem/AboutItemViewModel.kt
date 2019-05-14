@@ -17,13 +17,13 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 
 internal class AboutItemViewModel internal constructor(
   library: OssLibrary
-) : UiViewModel<AboutItemState, AboutItemViewEvent, AboutItemControllerEvent>(
+) : BaseUiViewModel<AboutItemState, AboutItemViewEvent, AboutItemControllerEvent>(
     initialState = AboutItemState(library = library)
 ) {
 

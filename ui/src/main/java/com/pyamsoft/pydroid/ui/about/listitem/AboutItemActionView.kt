@@ -20,15 +20,15 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
   parent: ViewGroup
-) : UiViewImpl<AboutItemState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemState, AboutItemViewEvent>(parent) {
 
   private val viewLicense by boundView<Button>(R.id.action_view_license)
   private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)

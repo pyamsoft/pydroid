@@ -19,14 +19,14 @@ package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
+import com.pyamsoft.pydroid.arch.impl.UnitViewState
 import com.pyamsoft.pydroid.ui.R
 
 class DropshadowView constructor(
   parent: ViewGroup
-) : UiViewImpl<UnitViewState, UnitViewEvent>(parent) {
+) : BaseUiView<UnitViewState, UnitViewEvent>(parent) {
 
   override val layout: Int = R.layout.dropshadow
 

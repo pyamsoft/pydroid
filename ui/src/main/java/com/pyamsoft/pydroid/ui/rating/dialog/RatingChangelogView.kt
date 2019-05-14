@@ -20,13 +20,13 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
   parent: ViewGroup
-) : UiViewImpl<RatingDialogViewState, RatingDialogViewEvent>(parent) {
+) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
   private val changelogText by boundView<TextView>(R.id.rating_changelog_text)
 

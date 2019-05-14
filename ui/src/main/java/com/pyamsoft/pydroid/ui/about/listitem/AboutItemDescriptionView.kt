@@ -21,13 +21,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
   parent: ViewGroup
-) : UiViewImpl<AboutItemState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemState, AboutItemViewEvent>(parent) {
 
   override val layout: Int = R.layout.about_item_description
 

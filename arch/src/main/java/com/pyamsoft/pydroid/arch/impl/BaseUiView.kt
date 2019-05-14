@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.arch.impl
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,12 +24,14 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-abstract class UiViewImpl<S : UiViewState, V : UiViewEvent> protected constructor(
+abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructor(
   parent: ViewGroup
-) : BaseUiView<S, V>() {
+) : AbstractUiView<S, V>() {
 
   protected abstract val layoutRoot: View
 
@@ -117,7 +119,8 @@ abstract class UiViewImpl<S : UiViewState, V : UiViewEvent> protected constructo
   protected fun <V : View> boundView(@IdRes id: Int): BoundView<V> {
     assertValidState()
 
-    return BoundView<V>(parent(), id).also { v ->
+    return BoundView<V>(parent(), id)
+        .also { v ->
       assertValidState()
 
       val bv: MutableSet<BoundView<*>>? = boundViews

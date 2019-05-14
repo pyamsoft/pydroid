@@ -22,13 +22,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.UiViewImpl
-import com.pyamsoft.pydroid.arch.onChange
+import com.pyamsoft.pydroid.arch.impl.BaseUiView
+import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
   parent: ViewGroup
-) : UiViewImpl<AboutItemState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemState, AboutItemViewEvent>(parent) {
 
   private val title by boundView<TextView>(R.id.title)
   private val license by boundView<TextView>(R.id.license)

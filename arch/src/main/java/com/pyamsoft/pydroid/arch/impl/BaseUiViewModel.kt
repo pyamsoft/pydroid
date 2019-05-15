@@ -65,7 +65,7 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
           viewDisposable = bindViewEvents(scheduler, *views)
           controllerDisposable = bindControllerEvents(scheduler, onControllerEvent)
         }
-        .doAfterTerminate {
+        .doOnTerminate {
           onUnbind()
 
           viewDisposable?.tryDispose()

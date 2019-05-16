@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
 import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import timber.log.Timber
 
 internal class VersionView internal constructor(
   private val owner: LifecycleOwner,
@@ -55,17 +56,14 @@ internal class VersionView internal constructor(
     }
 
     state.onChange(oldState, field = { it.throwable }) { throwable ->
-      if (throwable == null) {
-        clearError()
-      } else {
-        showError(throwable)
+      if (throwable != null) {
+        Timber.e(throwable, "Error checking for updated version")
       }
     }
   }
 
   override fun teardown() {
     parent = null
-    clearError()
   }
 
   override fun saveState(outState: Bundle) {
@@ -78,20 +76,6 @@ internal class VersionView internal constructor(
   }
 
   private fun dismissUpdating() {
-    Snackbreak.bindTo(owner)
-        .dismiss()
-  }
-
-  private fun showError(error: Throwable) {
-    Snackbreak.bindTo(owner)
-        .short(
-            requireNotNull(parent),
-            error.message ?: "No activity found that can handle this URL"
-        )
-        .show()
-  }
-
-  private fun clearError() {
     Snackbreak.bindTo(owner)
         .dismiss()
   }

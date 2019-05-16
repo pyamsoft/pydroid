@@ -35,8 +35,8 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
   views.forEach { it.inflate(savedInstanceState) }
   val viewModelBinding = viewModel.render(*views) { onControllerEvent(it) }
   owner.doOnDestroy {
-    views.forEach { it.teardown() }
     viewModelBinding.tryDispose()
+    views.forEach { it.teardown() }
   }
 }
 

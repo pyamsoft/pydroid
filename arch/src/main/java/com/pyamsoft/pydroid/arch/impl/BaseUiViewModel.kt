@@ -37,11 +37,13 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
   private val initialState: S
 ) : UiViewModel<S, V, C> {
 
-  private val controllerEventBus = RxBus.create<C>()
-
   private val lock = Any()
+
+  private val controllerEventBus = RxBus.create<C>()
   private val stateBus = RxBus.create<S.() -> S>()
-  private var state: S? = null
+
+  @Volatile private var state: S? = null
+  @Volatile private var boundCount = 0
 
   @CheckResult
   final override fun render(
@@ -62,13 +64,27 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe {
           synchronized(lock) {
-            onBind()
-            viewDisposable = bindViewEvents(scheduler, *views)
+            if (boundCount == 0) {
+              onBind()
+            }
+            ++boundCount
+
             controllerDisposable = bindControllerEvents(scheduler, onControllerEvent)
+            viewDisposable = bindViewEvents(scheduler, *views)
           }
         }
-        .doOnTerminate { cleanup(viewDisposable, controllerDisposable, executor, scheduler) }
-        .doOnDispose { cleanup(viewDisposable, controllerDisposable, executor, scheduler) }
+        .doOnDispose {
+          synchronized(lock) {
+            boundCount = Math.min(boundCount - 1, 0)
+            if (boundCount == 0) {
+              onUnbind()
+            }
+
+            cleanup(viewDisposable, controllerDisposable, executor, scheduler)
+            viewDisposable = null
+            controllerDisposable = null
+          }
+        }
         .subscribe { change -> views.forEach { it.render(change.state, change.oldState) } }
   }
 
@@ -78,15 +94,11 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
     executor: ExecutorService,
     scheduler: Scheduler
   ) {
-    synchronized(lock) {
-      onUnbind()
+    viewDisposable?.tryDispose()
+    controllerDisposable?.tryDispose()
 
-      viewDisposable?.tryDispose()
-      controllerDisposable?.tryDispose()
-
-      executor.shutdown()
-      scheduler.shutdown()
-    }
+    executor.shutdown()
+    scheduler.shutdown()
   }
 
   private fun controllerEvents(): Observable<C> {

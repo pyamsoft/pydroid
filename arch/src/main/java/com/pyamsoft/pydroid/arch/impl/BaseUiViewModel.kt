@@ -30,6 +30,7 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
@@ -60,21 +61,32 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
         .subscribeOn(scheduler)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe {
-          onBind()
-
-          viewDisposable = bindViewEvents(scheduler, *views)
-          controllerDisposable = bindControllerEvents(scheduler, onControllerEvent)
+          synchronized(lock) {
+            onBind()
+            viewDisposable = bindViewEvents(scheduler, *views)
+            controllerDisposable = bindControllerEvents(scheduler, onControllerEvent)
+          }
         }
-        .doOnTerminate {
-          onUnbind()
-
-          viewDisposable?.tryDispose()
-          controllerDisposable?.tryDispose()
-
-          executor.shutdown()
-          scheduler.shutdown()
-        }
+        .doOnTerminate { cleanup(viewDisposable, controllerDisposable, executor, scheduler) }
+        .doOnDispose { cleanup(viewDisposable, controllerDisposable, executor, scheduler) }
         .subscribe { change -> views.forEach { it.render(change.state, change.oldState) } }
+  }
+
+  private fun cleanup(
+    viewDisposable: Disposable?,
+    controllerDisposable: Disposable?,
+    executor: ExecutorService,
+    scheduler: Scheduler
+  ) {
+    synchronized(lock) {
+      onUnbind()
+
+      viewDisposable?.tryDispose()
+      controllerDisposable?.tryDispose()
+
+      executor.shutdown()
+      scheduler.shutdown()
+    }
   }
 
   private fun controllerEvents(): Observable<C> {

@@ -41,17 +41,13 @@ internal class AboutListViewModel internal constructor(
 
   private var licenseDisposable by singleDisposable()
 
-  override fun onBind() {
-    loadLicenses(false)
-  }
-
   override fun handleViewEvent(event: AboutListViewEvent) {
     return when (event) {
       is OpenUrl -> publish(ExternalUrl(event.url))
     }
   }
 
-  private fun loadLicenses(force: Boolean) {
+  internal fun loadLicenses(force: Boolean) {
     licenseDisposable = interactor.loadLicenses(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)

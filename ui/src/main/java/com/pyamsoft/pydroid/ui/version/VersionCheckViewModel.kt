@@ -40,10 +40,6 @@ internal class VersionCheckViewModel internal constructor(
 
   private var checkUpdatesDisposable by singleDisposable()
 
-  override fun onBind() {
-    checkForUpdates(false)
-  }
-
   override fun handleViewEvent(event: UnitViewEvent) {
   }
 

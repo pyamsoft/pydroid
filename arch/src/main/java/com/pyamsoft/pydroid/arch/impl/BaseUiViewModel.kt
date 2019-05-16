@@ -43,7 +43,8 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
   private val stateBus = RxBus.create<S.() -> S>()
 
   @Volatile private var state: S? = null
-  @Volatile private var boundCount = 0
+
+  protected abstract fun handleViewEvent(event: V)
 
   @CheckResult
   final override fun render(
@@ -64,22 +65,12 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe {
           synchronized(lock) {
-            if (boundCount == 0) {
-              onBind()
-            }
-            ++boundCount
-
             controllerDisposable = bindControllerEvents(scheduler, onControllerEvent)
             viewDisposable = bindViewEvents(scheduler, *views)
           }
         }
         .doOnDispose {
           synchronized(lock) {
-            boundCount = Math.min(boundCount - 1, 0)
-            if (boundCount == 0) {
-              onUnbind()
-            }
-
             cleanup(viewDisposable, controllerDisposable, executor, scheduler)
             viewDisposable = null
             controllerDisposable = null
@@ -144,14 +135,6 @@ abstract class BaseUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControlle
         .subscribeOn(scheduler)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { onControllerEvent(it) }
-  }
-
-  protected abstract fun handleViewEvent(event: V)
-
-  protected open fun onBind() {
-  }
-
-  protected open fun onUnbind() {
   }
 
   protected fun setState(func: S.() -> S) {

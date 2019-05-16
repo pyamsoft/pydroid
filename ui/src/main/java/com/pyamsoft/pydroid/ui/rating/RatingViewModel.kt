@@ -29,13 +29,11 @@ import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.ShowDialog
 internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
-) : BaseUiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
+) : BaseUiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(
+    initialState = UnitViewState
+) {
 
   private var loadDisposable by singleDisposable()
-
-  override fun onBind() {
-    load(false)
-  }
 
   override fun handleViewEvent(event: UnitViewEvent) {
   }

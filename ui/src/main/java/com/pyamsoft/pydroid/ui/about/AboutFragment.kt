@@ -78,6 +78,7 @@ class AboutFragment : Fragment() {
         is ExternalUrl -> navigateToExternalUrl(it.url)
       }
     }
+    requireNotNull(listViewModel).loadLicenses(false)
 
     createComponent(
         savedInstanceState, viewLifecycleOwner,

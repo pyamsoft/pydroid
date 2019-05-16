@@ -55,6 +55,8 @@ abstract class VersionCheckActivity : ActivityBase() {
         is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
       }
     }
+
+    requireNotNull(versionViewModel).checkForUpdates(false)
   }
 
   @CallSuper

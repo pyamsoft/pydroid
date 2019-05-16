@@ -17,27 +17,43 @@
 
 package com.pyamsoft.pydroid.arch.impl
 
-import android.os.Bundle
+import androidx.lifecycle.Lifecycle.Event.ON_CREATE
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.core.tryDispose
 
-inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
-  savedInstanceState: Bundle?,
+abstract class BoundUiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
   owner: LifecycleOwner,
-  viewModel: UiViewModel<S, V, C>,
-  vararg views: UiView<S, V>,
-  crossinline onControllerEvent: (event: C) -> Unit
-) {
-  views.forEach { it.inflate(savedInstanceState) }
-  val viewModelBinding = viewModel.render(*views) { onControllerEvent(it) }
-  owner.doOnDestroy {
-    viewModelBinding.tryDispose()
-    views.forEach { it.teardown() }
-  }
-}
+  initialState: S
+) : BaseUiViewModel<S, V, C>(initialState) {
 
+  private val lifecycle = owner.lifecycle
+
+  init {
+    lifecycle.addObserver(object : LifecycleObserver {
+
+      @Suppress("unused")
+      @OnLifecycleEvent(ON_CREATE)
+      fun onCreate() {
+        onBind()
+      }
+
+      @Suppress("unused")
+      @OnLifecycleEvent(ON_DESTROY)
+      fun onDestroy() {
+        lifecycle.removeObserver(this)
+        onUnbind()
+      }
+
+    })
+  }
+
+  protected abstract fun onBind()
+
+  protected abstract fun onUnbind()
+
+}

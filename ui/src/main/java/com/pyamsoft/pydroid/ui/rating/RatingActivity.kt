@@ -105,6 +105,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
         is ShowDialog -> showRating()
       }
     }
+    requireNotNull(ratingViewModel).load(false)
 
     this.doOnDestroy {
       disposable.tryDispose()

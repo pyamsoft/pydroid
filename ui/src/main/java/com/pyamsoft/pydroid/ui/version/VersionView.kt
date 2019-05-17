@@ -46,11 +46,11 @@ internal class VersionView internal constructor(
   ) {
     state.isLoading.let { loading ->
       if (loading != null) {
-        if (loading.isLoading) {
+        if (loading.forced) {
           showUpdating()
-        } else {
-          dismissUpdating()
         }
+      } else {
+        dismissUpdating()
       }
     }
 

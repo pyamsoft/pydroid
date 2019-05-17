@@ -26,7 +26,7 @@ data class VersionViewState(
   val throwable: Throwable?
 ) : UiViewState {
 
-  data class Loading(val isLoading: Boolean)
+  data class Loading(val forced: Boolean)
 
   data class UpgradePayload(
     val currentVersion: Int,

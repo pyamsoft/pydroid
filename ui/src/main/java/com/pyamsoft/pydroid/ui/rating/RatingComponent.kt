@@ -38,8 +38,8 @@ internal interface RatingComponent {
   ) : RatingComponent {
 
     override fun inject(fragment: RatingActivity) {
-      val viewModel = RatingViewModel(module.provideInteractor(), schedulerProvider)
-      fragment.ratingViewModel = viewModel
+      val viewModel = RatingLoader(module.provideInteractor(), schedulerProvider)
+      fragment.ratingLoader = viewModel
     }
 
     internal class FactoryImpl internal constructor(

@@ -24,15 +24,13 @@ import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.bindViewModel
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.ShowDialog
-import com.pyamsoft.pydroid.ui.rating.RatingViewModel
+import com.pyamsoft.pydroid.ui.rating.RatingLoader
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
@@ -62,7 +60,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
   internal var appSettingsViewModel: AppSettingsViewModel? = null
   internal var appSettingsView: AppSettingsView? = null
 
-  internal var ratingViewModel: RatingViewModel? = null
+  internal var ratingLoader: RatingLoader? = null
 
   internal var versionView: VersionView? = null
   internal var versionViewModel: VersionCheckViewModel? = null
@@ -120,12 +118,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
       }
     }
-
-    bindViewModel(viewLifecycleOwner, requireNotNull(ratingViewModel)) {
-      return@bindViewModel when (it) {
-        is ShowDialog -> openUpdateInfo()
-      }
-    }
   }
 
   private fun forceUpgradeCheck() {
@@ -133,17 +125,19 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
   }
 
   private fun forceInfoShow() {
-    requireNotNull(ratingViewModel).load(true)
-  }
-
-  private fun showVersionUpgrade(newVersion: Int) {
-    VersionUpgradeDialog.newInstance(newVersion)
-        .show(requireActivity(), VersionUpgradeDialog.TAG)
+    requireNotNull(ratingLoader).load(true) {
+      openUpdateInfo()
+    }
   }
 
   private fun openUpdateInfo() {
     RatingDialog.newInstance(requireActivity() as ChangeLogProvider)
         .show(requireActivity(), RatingDialog.TAG)
+  }
+
+  private fun showVersionUpgrade(newVersion: Int) {
+    VersionUpgradeDialog.newInstance(newVersion)
+        .show(requireActivity(), VersionUpgradeDialog.TAG)
   }
 
   override fun onDestroyView() {

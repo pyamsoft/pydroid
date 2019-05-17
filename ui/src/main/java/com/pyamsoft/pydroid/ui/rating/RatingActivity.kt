@@ -28,11 +28,9 @@ import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
-import com.pyamsoft.pydroid.arch.bindViewModel
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.ShowDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -40,7 +38,7 @@ import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
-  internal var ratingViewModel: RatingViewModel? = null
+  internal var ratingLoader: RatingLoader? = null
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -99,18 +97,15 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
         .create()
         .inject(this)
 
-    bindViewModel(this, requireNotNull(ratingViewModel)) {
-      return@bindViewModel when (it) {
-        is ShowDialog -> showRating()
-      }
+    requireNotNull(ratingLoader).load(false) {
+      showRating()
     }
-    requireNotNull(ratingViewModel).load(false)
   }
 
   @CallSuper
   override fun onDestroy() {
     super.onDestroy()
-    ratingViewModel = null
+    ratingLoader = null
   }
 
   private fun showRating() {

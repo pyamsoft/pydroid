@@ -24,7 +24,7 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.ui.rating.RatingViewModel
+import com.pyamsoft.pydroid.ui.rating.RatingLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionView
@@ -61,7 +61,7 @@ internal interface AppSettingsComponent {
   ) : AppSettingsComponent {
 
     override fun inject(fragment: AppSettingsPreferenceFragment) {
-      val ratingViewModel = RatingViewModel(ratingModule.provideInteractor(), schedulerProvider)
+      val ratingViewModel = RatingLoader(ratingModule.provideInteractor(), schedulerProvider)
       val versionViewModel =
         VersionCheckViewModel(versionCheckModule.provideInteractor(), schedulerProvider)
       val versionView = VersionView(owner, parent)
@@ -73,7 +73,7 @@ internal interface AppSettingsComponent {
       fragment.versionView = versionView
       fragment.versionViewModel = versionViewModel
 
-      fragment.ratingViewModel = ratingViewModel
+      fragment.ratingLoader = ratingViewModel
 
       fragment.appSettingsView = settingsView
       fragment.appSettingsViewModel = settingsViewModel

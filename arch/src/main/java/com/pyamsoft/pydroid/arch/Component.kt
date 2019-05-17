@@ -36,14 +36,3 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
   }
 }
 
-inline fun <C : UiControllerEvent> bindViewModel(
-  owner: LifecycleOwner,
-  viewModel: UiViewModel<*, *, C>,
-  crossinline onControllerEvent: (event: C) -> Unit
-) {
-  val viewModelBinding = viewModel.render { onControllerEvent(it) }
-  owner.doOnDestroy {
-    viewModelBinding.tryDispose()
-  }
-}
-

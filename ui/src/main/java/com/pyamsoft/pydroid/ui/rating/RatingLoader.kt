@@ -17,33 +17,27 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
-import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.ShowDialog
 
-internal class RatingViewModel internal constructor(
+internal class RatingLoader internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
-) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(
-    initialState = UnitViewState
 ) {
 
   private var loadDisposable by singleDisposable()
 
-  override fun handleViewEvent(event: UnitViewEvent) {
-  }
-
-  internal fun load(force: Boolean) {
+  internal inline fun load(
+    force: Boolean,
+    crossinline onLoaded: () -> Unit
+  ) {
     loadDisposable = interactor.needsToViewRating(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
         .doAfterTerminate { loadDisposable.tryDispose() }
-        .subscribe { publish(ShowDialog) }
+        .subscribe { onLoaded() }
   }
 
 }

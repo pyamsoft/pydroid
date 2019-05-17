@@ -28,8 +28,7 @@ import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
-import com.pyamsoft.pydroid.arch.impl.doOnDestroy
-import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.arch.bindViewModel
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -100,16 +99,12 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
         .create()
         .inject(this)
 
-    val disposable = requireNotNull(ratingViewModel).render {
-      return@render when (it) {
+    bindViewModel(this, requireNotNull(ratingViewModel)) {
+      return@bindViewModel when (it) {
         is ShowDialog -> showRating()
       }
     }
     requireNotNull(ratingViewModel).load(false)
-
-    this.doOnDestroy {
-      disposable.tryDispose()
-    }
   }
 
   @CallSuper

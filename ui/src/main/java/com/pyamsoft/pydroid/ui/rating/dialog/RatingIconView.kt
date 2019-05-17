@@ -20,8 +20,7 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
@@ -43,7 +42,7 @@ internal class RatingIconView internal constructor(
     state: RatingDialogViewState,
     oldState: RatingDialogViewState?
   ) {
-    state.onChange(oldState, field = { it.changelogIcon }) { icon ->
+    state.changelogIcon.let { icon ->
       iconLoaded?.dispose()
       iconLoaded = imageLoader.load(icon)
           .into(iconView)

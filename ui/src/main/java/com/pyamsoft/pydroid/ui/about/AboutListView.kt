@@ -25,8 +25,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
@@ -100,7 +99,7 @@ internal class AboutListView internal constructor(
     state: AboutListState,
     oldState: AboutListState?
   ) {
-    state.onChange(oldState, field = { it.isLoading }) { loading ->
+    state.isLoading.let { loading ->
       if (loading) {
         hide()
       } else {
@@ -108,7 +107,7 @@ internal class AboutListView internal constructor(
       }
     }
 
-    state.onChange(oldState, field = { it.licenses }) { licenses ->
+    state.licenses.let { licenses ->
       if (licenses.isEmpty()) {
         clearLicenses()
       } else {
@@ -116,7 +115,7 @@ internal class AboutListView internal constructor(
       }
     }
 
-    state.onChange(oldState, field = { it.throwable }) { throwable ->
+    state.throwable.let { throwable ->
       if (throwable == null) {
         clearError()
       } else {

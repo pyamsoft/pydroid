@@ -15,8 +15,8 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch.impl
+package com.pyamsoft.pydroid.arch
 
-import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.arch.UiViewEvent
 
-object UnitViewState : UiViewState
+object UnitViewEvent : UiViewEvent

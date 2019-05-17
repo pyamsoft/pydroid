@@ -23,9 +23,8 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
 import androidx.preference.PreferenceFragmentCompat
-import com.pyamsoft.pydroid.arch.impl.createComponent
-import com.pyamsoft.pydroid.arch.impl.doOnDestroy
-import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindViewModel
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -122,14 +121,10 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
       }
     }
 
-    val disposable = requireNotNull(ratingViewModel).render {
-      return@render when (it) {
+    bindViewModel(viewLifecycleOwner, requireNotNull(ratingViewModel)) {
+      return@bindViewModel when (it) {
         is ShowDialog -> openUpdateInfo()
       }
-    }
-
-    viewLifecycleOwner.doOnDestroy {
-      disposable.tryDispose()
     }
   }
 

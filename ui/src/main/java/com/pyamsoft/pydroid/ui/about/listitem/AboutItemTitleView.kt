@@ -22,8 +22,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
@@ -41,7 +40,7 @@ internal class AboutItemTitleView internal constructor(
     state: AboutItemState,
     oldState: AboutItemState?
   ) {
-    state.onChange(oldState, field = { it.library }) { library ->
+    state.library.let { library ->
       title.text = library.name
       license.text = getString(R.string.license_name, library.licenseName)
     }

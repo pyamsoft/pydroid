@@ -27,7 +27,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
-import com.pyamsoft.pydroid.arch.impl.createComponent
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R

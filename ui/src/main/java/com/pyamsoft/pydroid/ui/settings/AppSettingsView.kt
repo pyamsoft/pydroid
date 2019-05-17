@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.arch.impl.onChange
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
@@ -72,25 +71,11 @@ internal class AppSettingsView internal constructor(
     state: AppSettingsViewState,
     oldState: AppSettingsViewState?
   ) {
-    state.onChange(oldState, field = { it.isDarkTheme }) { darkTheme ->
-      requireNotNull(preferenceScreen).adjustTint(darkTheme)
-    }
-
-    state.onChange(oldState, field = { it.applicationName }) { name ->
-      setupApplicationTitle(name)
-    }
-
-    state.onChange(oldState, field = { it.bugReportUrl }) { bugReportUrl ->
-      setupBugReport(bugReportUrl)
-    }
-
-    state.onChange(oldState, field = { it.hideClearAll }) { hideClearAll ->
-      setupClearAppData(hideClearAll)
-    }
-
-    state.onChange(oldState, field = { it.hideUpgradeInformation }) { hideUpgradeInfo ->
-      setupShowUpgradeInfo(hideUpgradeInfo)
-    }
+    requireNotNull(preferenceScreen).adjustTint(state.isDarkTheme)
+    setupApplicationTitle(state.applicationName)
+    setupBugReport(state.bugReportUrl)
+    setupClearAppData(state.hideClearAll)
+    setupShowUpgradeInfo(state.hideUpgradeInformation)
   }
 
   override fun onTeardown() {

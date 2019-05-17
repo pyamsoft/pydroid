@@ -17,12 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
+import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 
 internal class AboutToolbarViewModel internal constructor(
-) : BaseUiViewModel<AboutToolbarState, AboutToolbarViewEvent, AboutToolbarControllerEvent>(
+) : UiViewModel<AboutToolbarState, AboutToolbarViewEvent, AboutToolbarControllerEvent>(
     initialState = AboutToolbarState(title = "Open Source Licenses")
 ) {
 

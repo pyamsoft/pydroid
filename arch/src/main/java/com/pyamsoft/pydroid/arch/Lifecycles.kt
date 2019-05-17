@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch.impl
+package com.pyamsoft.pydroid.arch
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY

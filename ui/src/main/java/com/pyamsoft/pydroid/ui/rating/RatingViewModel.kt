@@ -17,9 +17,9 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
-import com.pyamsoft.pydroid.arch.impl.BaseUiViewModel
-import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
-import com.pyamsoft.pydroid.arch.impl.UnitViewState
+import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.ShowDialog
 internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
-) : BaseUiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(
+) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(
     initialState = UnitViewState
 ) {
 

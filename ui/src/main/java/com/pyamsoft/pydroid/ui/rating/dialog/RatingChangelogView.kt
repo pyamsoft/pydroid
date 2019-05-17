@@ -20,8 +20,7 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
@@ -38,7 +37,7 @@ internal class RatingChangelogView internal constructor(
     state: RatingDialogViewState,
     oldState: RatingDialogViewState?
   ) {
-    state.onChange(oldState, field = { it.changelog }) { changelog ->
+    state.changelog.let { changelog ->
       changelogText.text = changelog
     }
   }

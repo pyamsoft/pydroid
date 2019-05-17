@@ -15,15 +15,10 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch.impl
+package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiView
-import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.core.tryDispose
 
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
@@ -38,6 +33,17 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
   owner.doOnDestroy {
     viewModelBinding.tryDispose()
     views.forEach { it.teardown() }
+  }
+}
+
+inline fun <C : UiControllerEvent> bindViewModel(
+  owner: LifecycleOwner,
+  viewModel: UiViewModel<*, *, C>,
+  crossinline onControllerEvent: (event: C) -> Unit
+) {
+  val viewModelBinding = viewModel.render { onControllerEvent(it) }
+  owner.doOnDestroy {
+    viewModelBinding.tryDispose()
   }
 }
 

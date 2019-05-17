@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch.impl
+package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,14 +24,12 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
-import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.arch.UiViewState
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructor(
   parent: ViewGroup
-) : AbstractUiView<S, V>() {
+) : UiView<S, V>() {
 
   protected abstract val layoutRoot: View
 

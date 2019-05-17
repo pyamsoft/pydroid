@@ -21,8 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutSpinnerView internal constructor(
@@ -39,7 +38,7 @@ internal class AboutSpinnerView internal constructor(
     state: AboutListState,
     oldState: AboutListState?
   ) {
-    state.onChange(oldState, field = { it.isLoading }) { loading ->
+    state.isLoading.let { loading ->
       spinner.isVisible = loading
     }
   }

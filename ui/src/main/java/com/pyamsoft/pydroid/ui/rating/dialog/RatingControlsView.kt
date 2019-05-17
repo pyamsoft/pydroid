@@ -21,8 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
@@ -45,12 +44,12 @@ internal class RatingControlsView internal constructor(
     state: RatingDialogViewState,
     oldState: RatingDialogViewState?
   ) {
-    state.onChange(oldState, field = { it.rateLink }) { link ->
+    state.rateLink.let { link ->
       rateApplication.setOnDebouncedClickListener { publish(Rate(link)) }
       noThanks.setOnDebouncedClickListener { publish(Cancel) }
     }
 
-    state.onChange(oldState, field = { it.throwable }) { throwable ->
+    state.throwable.let { throwable ->
       if (throwable == null) {
         clearError()
       } else {

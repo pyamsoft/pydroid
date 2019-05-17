@@ -15,17 +15,8 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch.impl
+package com.pyamsoft.pydroid.arch
 
-import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.arch.UiControllerEvent
 
-inline fun <S : UiViewState, T : Any?> S.onChange(
-  oldState: S?,
-  field: (state: S) -> T,
-  onChange: (field: T) -> Unit
-) {
-  val newValue = field(this)
-  if (oldState == null || newValue != field(oldState)) {
-    onChange(newValue)
-  }
-}
+object UnitControllerEvent : UiControllerEvent

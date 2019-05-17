@@ -22,8 +22,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
@@ -42,15 +41,15 @@ internal class VersionUpgradeContentView internal constructor(
     state: VersionUpgradeViewState,
     oldState: VersionUpgradeViewState?
   ) {
-    state.onChange(oldState, field = { it.applicationName }) { name ->
+    state.applicationName.let { name ->
       upgradeMessage.text = getString(R.string.upgrade_available_message, name)
     }
 
-    state.onChange(oldState, field = { it.currentVersion }) { version ->
+    state.currentVersion.let { version ->
       currentValue.text = "$version"
     }
 
-    state.onChange(oldState, field = { it.newVersion }) { version ->
+    state.newVersion.let { version ->
       newValue.text = "$version"
     }
   }

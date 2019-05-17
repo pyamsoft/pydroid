@@ -20,8 +20,7 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -41,7 +40,7 @@ internal class AboutItemActionView internal constructor(
     state: AboutItemState,
     oldState: AboutItemState?
   ) {
-    state.onChange(oldState, field = { it.library }) { library ->
+    state.library.let { library ->
       viewLicense.setOnDebouncedClickListener {
         publish(OpenUrl(library.licenseUrl))
       }

@@ -22,8 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.impl.BaseUiView
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -54,7 +53,7 @@ internal class VersionUpgradeControlView internal constructor(
     state: VersionUpgradeViewState,
     oldState: VersionUpgradeViewState?
   ) {
-    state.onChange(oldState, field = { it.throwable }) { throwable ->
+    state.throwable.let { throwable ->
       if (throwable == null) {
         clearError()
       } else {

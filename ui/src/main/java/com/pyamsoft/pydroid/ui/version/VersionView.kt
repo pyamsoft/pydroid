@@ -20,9 +20,8 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.impl.AbstractUiView
-import com.pyamsoft.pydroid.arch.impl.UnitViewEvent
-import com.pyamsoft.pydroid.arch.impl.onChange
+import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import timber.log.Timber
@@ -30,7 +29,7 @@ import timber.log.Timber
 internal class VersionView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : AbstractUiView<VersionViewState, UnitViewEvent>() {
+) : UiView<VersionViewState, UnitViewEvent>() {
 
   private var parent: ViewGroup? = parent
 
@@ -45,7 +44,7 @@ internal class VersionView internal constructor(
     state: VersionViewState,
     oldState: VersionViewState?
   ) {
-    state.onChange(oldState, field = { it.isLoading }) { loading ->
+    state.isLoading.let { loading ->
       if (loading != null) {
         if (loading.isLoading) {
           showUpdating()
@@ -55,7 +54,7 @@ internal class VersionView internal constructor(
       }
     }
 
-    state.onChange(oldState, field = { it.throwable }) { throwable ->
+    state.throwable.let { throwable ->
       if (throwable != null) {
         Timber.e(throwable, "Error checking for updated version")
       }

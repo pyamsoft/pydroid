@@ -54,7 +54,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     return stateBus.listen()
         .distinctUntilChanged()
-        .startWith { initialState }
+        .startWith { nonNullState(state) }
         .map { changeState(it) }
         .subscribeOn(scheduler)
         .observeOn(AndroidSchedulers.mainThread())

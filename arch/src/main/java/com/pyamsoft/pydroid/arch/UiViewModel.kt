@@ -25,7 +25,7 @@ import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.ExecutorService
+import java.util.LinkedList
 import java.util.concurrent.Executors
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
@@ -34,8 +34,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
   private val lock = Any()
   private val controllerEventBus = RxBus.create<C>()
-  private val stateBus = RxBus.create<S.() -> S>()
+  private val stateBus = RxBus.create<S>()
+  private val flushQueueBus = RxBus.create<Unit>()
 
+  @Volatile private var stateQueue = LinkedList<S.() -> S>()
   @Volatile private var state: S? = null
 
   protected abstract fun handleViewEvent(event: V)
@@ -46,47 +48,52 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     vararg views: UiView<S, V>,
     onControllerEvent: (event: C) -> Unit
   ): Disposable {
-    val executor = Executors.newSingleThreadExecutor()
-    val scheduler = Schedulers.from(executor)
 
+    val stateChangeExecutor = Executors.newSingleThreadExecutor()
+    val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
+    val stateChangeDisposable = flushQueueBus.listen()
+        .subscribeOn(stateChangeScheduler)
+        .observeOn(stateChangeScheduler)
+        .subscribe { flushQueue() }
+
+    val stateExecutor = Executors.newSingleThreadExecutor()
+    val stateScheduler = Schedulers.from(stateExecutor)
     var viewDisposable: Disposable? = null
     var controllerDisposable: Disposable? = null
-
-    return stateBus.listen()
-        .distinctUntilChanged()
-        .startWith { nonNullState(state) }
-        .map { changeState(it) }
-        .subscribeOn(scheduler)
+    val stateDisposable = stateBus.listen()
+        .startWith(latestState())
+        .subscribeOn(stateScheduler)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe {
-          synchronized(lock) {
-            controllerDisposable = bindControllerEvents(scheduler, onControllerEvent)
-            viewDisposable = bindViewEvents(scheduler, *views)
-          }
+          controllerDisposable = bindControllerEvents(stateScheduler, onControllerEvent)
+          viewDisposable = bindViewEvents(stateScheduler, *views)
         }
         .doOnDispose {
-          synchronized(lock) {
-            cleanup(viewDisposable, controllerDisposable, executor, scheduler)
-            viewDisposable = null
-            controllerDisposable = null
-          }
+          viewDisposable?.tryDispose()
+          controllerDisposable?.tryDispose()
+          viewDisposable = null
+          controllerDisposable = null
         }
-        .subscribe { change -> views.forEach { it.render(change.state, change.oldState) } }
-  }
+        .subscribe { s -> views.forEach { it.render(s) } }
 
-  private fun cleanup(
-    viewDisposable: Disposable?,
-    controllerDisposable: Disposable?,
-    executor: ExecutorService,
-    scheduler: Scheduler
-  ) {
-    onCleared()
+    return object : Disposable {
+      override fun isDisposed(): Boolean {
+        return stateDisposable.isDisposed && stateChangeDisposable.isDisposed
+      }
 
-    viewDisposable?.tryDispose()
-    controllerDisposable?.tryDispose()
+      override fun dispose() {
+        stateDisposable.tryDispose()
+        stateChangeDisposable.tryDispose()
 
-    executor.shutdown()
-    scheduler.shutdown()
+        onCleared()
+
+        stateExecutor.shutdown()
+        stateScheduler.shutdown()
+        stateChangeExecutor.shutdown()
+        stateChangeScheduler.shutdown()
+      }
+
+    }
   }
 
   protected open fun onCleared() {
@@ -101,18 +108,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   }
 
   @CheckResult
-  private fun nonNullState(state: S?): S {
+  private fun latestState(): S {
     return state ?: initialState
-  }
-
-  @CheckResult
-  private fun changeState(stateChange: S.() -> S): StateChange<S> {
-    synchronized(lock) {
-      val oldState = state
-      val newState = nonNullState(oldState).run(stateChange)
-      state = newState
-      return StateChange(newState, oldState)
-    }
   }
 
   @CheckResult
@@ -138,11 +135,39 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   }
 
   protected fun setState(func: S.() -> S) {
-    stateBus.publish(func)
+    synchronized(lock) {
+      stateQueue.add(func)
+    }
+    flushQueueBus.publish(Unit)
   }
 
-  private data class StateChange<T : Any>(
-    val state: T,
-    val oldState: T?
-  )
+  @CheckResult
+  private fun dequeueAllPendingStateChanges(): List<S.() -> S> {
+    synchronized(lock) {
+      if (stateQueue.isEmpty()) {
+        return emptyList()
+      }
+
+      val queue = stateQueue
+      stateQueue = LinkedList()
+      return queue
+    }
+  }
+
+  private fun flushQueue() {
+    val stateChanges = dequeueAllPendingStateChanges()
+    if (stateChanges.isEmpty()) {
+      return
+    }
+
+    for (stateChange in stateChanges) {
+      val newState = latestState().stateChange()
+      if (newState != state) {
+        synchronized(lock) {
+          state = newState
+        }
+        stateBus.publish(newState)
+      }
+    }
+  }
 }

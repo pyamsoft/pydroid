@@ -37,8 +37,7 @@ internal class AboutItemTitleView internal constructor(
   override val layoutRoot by boundView<View>(R.id.about_title)
 
   override fun onRender(
-    state: AboutItemState,
-    oldState: AboutItemState?
+    state: AboutItemState
   ) {
     state.library.let { library ->
       title.text = library.name

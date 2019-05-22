@@ -96,8 +96,7 @@ internal class AboutListView internal constructor(
   }
 
   override fun onRender(
-    state: AboutListState,
-    oldState: AboutListState?
+    state: AboutListState
   ) {
     state.isLoading.let { loading ->
       if (loading) {

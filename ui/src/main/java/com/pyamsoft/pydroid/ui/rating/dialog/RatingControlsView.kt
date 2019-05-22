@@ -41,8 +41,7 @@ internal class RatingControlsView internal constructor(
   override val layoutRoot by boundView<View>(R.id.rating_control_root)
 
   override fun onRender(
-    state: RatingDialogViewState,
-    oldState: RatingDialogViewState?
+    state: RatingDialogViewState
   ) {
     state.rateLink.let { link ->
       rateApplication.setOnDebouncedClickListener { publish(Rate(link)) }

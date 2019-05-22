@@ -41,8 +41,7 @@ internal class VersionView internal constructor(
   }
 
   override fun render(
-    state: VersionViewState,
-    oldState: VersionViewState?
+    state: VersionViewState
   ) {
     state.isLoading.let { loading ->
       if (loading != null) {

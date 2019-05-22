@@ -39,8 +39,7 @@ internal class RatingIconView internal constructor(
   override val layoutRoot by boundView<View>(R.id.rating_icon_root)
 
   override fun onRender(
-    state: RatingDialogViewState,
-    oldState: RatingDialogViewState?
+    state: RatingDialogViewState
   ) {
     state.changelogIcon.let { icon ->
       iconLoaded?.dispose()

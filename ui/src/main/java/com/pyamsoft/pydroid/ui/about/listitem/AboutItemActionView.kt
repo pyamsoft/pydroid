@@ -37,8 +37,7 @@ internal class AboutItemActionView internal constructor(
   override val layoutRoot by boundView<View>(R.id.about_actions)
 
   override fun onRender(
-    state: AboutItemState,
-    oldState: AboutItemState?
+    state: AboutItemState
   ) {
     state.library.let { library ->
       viewLicense.setOnDebouncedClickListener {

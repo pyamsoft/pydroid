@@ -65,18 +65,12 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
   }
 
-  final override fun render(
-    state: S,
-    oldState: S?
-  ) {
+  final override fun render(state: S) {
     assertValidState()
-    onRender(state, oldState)
+    onRender(state)
   }
 
-  protected abstract fun onRender(
-    state: S,
-    oldState: S?
-  )
+  protected abstract fun onRender(state: S)
 
   final override fun saveState(outState: Bundle) {
     assertValidState()

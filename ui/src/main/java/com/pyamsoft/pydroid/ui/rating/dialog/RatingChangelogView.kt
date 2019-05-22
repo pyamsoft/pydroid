@@ -34,8 +34,7 @@ internal class RatingChangelogView internal constructor(
   override val layoutRoot by boundView<ScrollView>(R.id.rating_changelog_scroll)
 
   override fun onRender(
-    state: RatingDialogViewState,
-    oldState: RatingDialogViewState?
+    state: RatingDialogViewState
   ) {
     state.changelog.let { changelog ->
       changelogText.text = changelog

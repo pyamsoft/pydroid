@@ -38,8 +38,7 @@ internal class VersionUpgradeContentView internal constructor(
   override val layoutRoot by boundView<View>(R.id.version_content_root)
 
   override fun onRender(
-    state: VersionUpgradeViewState,
-    oldState: VersionUpgradeViewState?
+    state: VersionUpgradeViewState
   ) {
     state.applicationName.let { name ->
       upgradeMessage.text = getString(R.string.upgrade_available_message, name)

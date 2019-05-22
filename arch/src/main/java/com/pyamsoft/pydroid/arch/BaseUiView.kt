@@ -71,18 +71,12 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
   ) {
   }
 
-  final override fun render(
-    state: S,
-    oldState: S?
-  ) {
+  final override fun render(state: S) {
     assertValidState()
-    onRender(state, oldState)
+    onRender(state)
   }
 
-  protected abstract fun onRender(
-    state: S,
-    oldState: S?
-  )
+  protected abstract fun onRender(state: S)
 
   final override fun saveState(outState: Bundle) {
     assertValidState()
@@ -119,20 +113,20 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
     return BoundView<V>(parent(), id)
         .also { v ->
-      assertValidState()
+          assertValidState()
 
-      val bv: MutableSet<BoundView<*>>? = boundViews
-      val mutateMe: MutableSet<BoundView<*>>
-      if (bv == null) {
-        val bound = LinkedHashSet<BoundView<*>>()
-        boundViews = bound
-        mutateMe = bound
-      } else {
-        mutateMe = bv
-      }
+          val bv: MutableSet<BoundView<*>>? = boundViews
+          val mutateMe: MutableSet<BoundView<*>>
+          if (bv == null) {
+            val bound = LinkedHashSet<BoundView<*>>()
+            boundViews = bound
+            mutateMe = bound
+          } else {
+            mutateMe = bv
+          }
 
-      mutateMe.add(v)
-    }
+          mutateMe.add(v)
+        }
   }
 
   protected class BoundView<V : View> internal constructor(

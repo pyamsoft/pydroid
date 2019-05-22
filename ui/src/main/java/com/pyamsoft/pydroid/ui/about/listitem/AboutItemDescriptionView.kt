@@ -33,8 +33,7 @@ internal class AboutItemDescriptionView internal constructor(
   override val layoutRoot by boundView<TextView>(R.id.about_description)
 
   override fun onRender(
-    state: AboutItemState,
-    oldState: AboutItemState?
+    state: AboutItemState
   ) {
     state.library.let { library ->
       layoutRoot.text = library.description

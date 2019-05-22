@@ -52,8 +52,7 @@ internal class AboutToolbarView internal constructor(
   }
 
   override fun render(
-    state: AboutToolbarState,
-    oldState: AboutToolbarState?
+    state: AboutToolbarState
   ) {
     toolbarActivity.withToolbar { toolbar ->
       toolbar.title = state.title

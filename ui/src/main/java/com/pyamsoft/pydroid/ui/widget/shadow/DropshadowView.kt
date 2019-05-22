@@ -33,8 +33,7 @@ class DropshadowView constructor(
   override val layoutRoot by boundView<View>(R.id.dropshadow_view)
 
   override fun onRender(
-    state: UnitViewState,
-    oldState: UnitViewState?
+    state: UnitViewState
   ) {
   }
 

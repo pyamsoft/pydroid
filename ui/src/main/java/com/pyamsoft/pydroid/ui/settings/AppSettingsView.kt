@@ -68,8 +68,7 @@ internal class AppSettingsView internal constructor(
   }
 
   override fun onRender(
-    state: AppSettingsViewState,
-    oldState: AppSettingsViewState?
+    state: AppSettingsViewState
   ) {
     requireNotNull(preferenceScreen).adjustTint(state.isDarkTheme)
     setupApplicationTitle(state.applicationName)

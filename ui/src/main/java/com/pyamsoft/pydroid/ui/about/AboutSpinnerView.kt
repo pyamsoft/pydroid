@@ -35,8 +35,7 @@ internal class AboutSpinnerView internal constructor(
   private val spinner by boundView<ProgressBar>(R.id.spinner)
 
   override fun onRender(
-    state: AboutListState,
-    oldState: AboutListState?
+    state: AboutListState
   ) {
     state.isLoading.let { loading ->
       spinner.isVisible = loading

@@ -35,10 +35,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
   open fun inflate(savedInstanceState: Bundle?) {
   }
 
-  abstract fun render(
-    state: S,
-    oldState: S?
-  )
+  abstract fun render(state: S)
 
   open fun teardown() {
   }

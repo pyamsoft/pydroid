@@ -38,7 +38,6 @@ internal class AboutListView internal constructor(
   parent: ViewGroup
 ) : BaseUiView<AboutListState, AboutListViewEvent>(parent) {
 
-  private var lastViewedItem: Int = 0
   private var aboutAdapter: AboutAdapter? = null
 
   override val layout: Int = R.layout.about_libraries_list
@@ -49,7 +48,6 @@ internal class AboutListView internal constructor(
     view: View,
     savedInstanceState: Bundle?
   ) {
-    restoreLastViewedItem(savedInstanceState)
     setupListView()
   }
 
@@ -63,10 +61,6 @@ internal class AboutListView internal constructor(
 
   override fun onSaveState(outState: Bundle) {
     outState.putInt(KEY_CURRENT, getCurrentPosition())
-  }
-
-  private fun restoreLastViewedItem(savedInstanceState: Bundle?) {
-    lastViewedItem = savedInstanceState?.getInt(KEY_CURRENT) ?: 0
   }
 
   @CheckResult
@@ -122,16 +116,21 @@ internal class AboutListView internal constructor(
         show()
       }
     }
+
+    scrollToLastViewedItem(savedInstanceState)
+  }
+
+  private fun scrollToLastViewedItem(savedInstanceState: Bundle?) {
+    if (savedInstanceState != null) {
+      val lastViewed = savedInstanceState.getInt(KEY_CURRENT)
+      if (lastViewed > 0) {
+        layoutRoot.scrollToPosition(lastViewed)
+      }
+    }
   }
 
   private fun show() {
     layoutRoot.isVisible = true
-
-    val lastViewed = lastViewedItem
-    lastViewedItem = 0
-    if (lastViewed > 0) {
-      layoutRoot.scrollToPosition(lastViewed)
-    }
   }
 
   private fun hide() {

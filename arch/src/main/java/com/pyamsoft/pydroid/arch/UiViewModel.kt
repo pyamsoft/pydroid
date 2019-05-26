@@ -22,7 +22,6 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.tryDispose
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -50,63 +49,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     vararg views: UiView<S, V>,
     onControllerEvent: (event: C) -> Unit
   ): Disposable {
-
-    val stateChangeExecutor = Executors.newSingleThreadExecutor()
-    val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
-    val stateChangeDisposable = flushQueueBus.listen()
-        .subscribeOn(stateChangeScheduler)
-        .observeOn(stateChangeScheduler)
-        .subscribe { flushQueue() }
-
-    val stateExecutor = Executors.newSingleThreadExecutor()
-    val stateScheduler = Schedulers.from(stateExecutor)
-    var viewDisposable: Disposable? = null
-    var controllerDisposable: Disposable? = null
-    var savedState: Bundle? = savedInstanceState
-    val stateDisposable = stateBus.listen()
-        .startWith(latestState())
-        .map { combineWithSavedState(it, savedState) }
-        .doAfterNext { savedState = null }
-        .subscribeOn(stateScheduler)
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe {
-          controllerDisposable = bindControllerEvents(stateScheduler, onControllerEvent)
-          viewDisposable = bindViewEvents(stateScheduler, *views)
-        }
-        .doOnDispose {
-          viewDisposable?.tryDispose()
-          controllerDisposable?.tryDispose()
-          viewDisposable = null
-          controllerDisposable = null
-        }
-        .subscribe { emitted -> views.forEach { it.render(emitted.state, emitted.savedState) } }
-
-    return object : Disposable {
-      override fun isDisposed(): Boolean {
-        return stateDisposable.isDisposed && stateChangeDisposable.isDisposed
-      }
-
-      override fun dispose() {
-        stateDisposable.tryDispose()
-        stateChangeDisposable.tryDispose()
-
-        onCleared()
-
-        stateExecutor.shutdown()
-        stateScheduler.shutdown()
-        stateChangeExecutor.shutdown()
-        stateChangeScheduler.shutdown()
-      }
-
-    }
-  }
-
-  @CheckResult
-  private fun combineWithSavedState(
-    state: S,
-    savedState: Bundle?
-  ): StateWithSavedState<S> {
-    return StateWithSavedState(state, savedState)
+    return ViewModelStream(savedInstanceState, views, onControllerEvent).render()
   }
 
   protected open fun onCleared() {
@@ -123,28 +66,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   @CheckResult
   private fun latestState(): S {
     return state ?: initialState
-  }
-
-  @CheckResult
-  private fun bindViewEvents(
-    scheduler: Scheduler,
-    vararg views: UiView<S, V>
-  ): Disposable {
-    return Observable.merge(views.map { it.viewEvents() })
-        .subscribeOn(scheduler)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { handleViewEvent(it) }
-  }
-
-  @CheckResult
-  private inline fun bindControllerEvents(
-    scheduler: Scheduler,
-    crossinline onControllerEvent: (event: C) -> Unit
-  ): Disposable {
-    return controllerEvents()
-        .subscribeOn(scheduler)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { onControllerEvent(it) }
   }
 
   protected fun setState(func: S.() -> S) {
@@ -184,8 +105,100 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
   }
 
+  private inner class ViewModelStream internal constructor(
+    savedInstanceState: Bundle?,
+    views: Array<out UiView<S, V>>,
+    onControllerEvent: (event: C) -> Unit
+  ) {
+
+    private var savedState: Bundle? = savedInstanceState
+    private var views: Array<out UiView<S, V>>? = views
+    private var onControllerEvent: ((event: C) -> Unit)? = onControllerEvent
+
+    private val stateChangeExecutor = Executors.newSingleThreadExecutor()
+    private val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
+    private val stateExecutor = Executors.newSingleThreadExecutor()
+    private val stateScheduler = Schedulers.from(stateExecutor)
+
+    private var viewDisposable: Disposable? = null
+    private var controllerDisposable: Disposable? = null
+
+    @CheckResult
+    internal fun render(
+    ): Disposable {
+      val stateChangeDisposable = flushQueueBus.listen()
+          .subscribeOn(stateChangeScheduler)
+          .observeOn(stateChangeScheduler)
+          .subscribe { flushQueue() }
+
+      val stateDisposable = stateBus.listen()
+          .startWith(latestState())
+          .map { combineWithSavedState(it) }
+          .doAfterNext { savedState = null }
+          .subscribeOn(stateScheduler)
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnSubscribe {
+            controllerDisposable = bindEvents(requireNotNull(onControllerEvent))
+            viewDisposable = bindEvents(requireNotNull(views))
+          }
+          .doOnDispose {
+            viewDisposable?.tryDispose()
+            controllerDisposable?.tryDispose()
+          }
+          .subscribe { e -> requireNotNull(views).forEach { it.render(e.state, e.savedState) } }
+
+      return object : Disposable {
+        override fun isDisposed(): Boolean {
+          return stateDisposable.isDisposed && stateChangeDisposable.isDisposed
+        }
+
+        override fun dispose() {
+          stateDisposable.tryDispose()
+          stateChangeDisposable.tryDispose()
+
+          onCleared()
+
+          stateExecutor.shutdown()
+          stateScheduler.shutdown()
+          stateChangeExecutor.shutdown()
+          stateChangeScheduler.shutdown()
+
+          viewDisposable = null
+          controllerDisposable = null
+          savedState = null
+          views = null
+          onControllerEvent = null
+        }
+
+      }
+    }
+
+    @CheckResult
+    private fun combineWithSavedState(state: S): StateWithSavedState<S> {
+      return StateWithSavedState(state, savedState)
+    }
+
+    @CheckResult
+    private fun bindEvents(views: Array<out UiView<S, V>>): Disposable {
+      return Observable.merge(views.map { it.viewEvents() })
+          .subscribeOn(stateScheduler)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe { handleViewEvent(it) }
+    }
+
+    @CheckResult
+    private inline fun bindEvents(crossinline onControllerEvent: (event: C) -> Unit): Disposable {
+      return controllerEvents()
+          .subscribeOn(stateScheduler)
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe { onControllerEvent(it) }
+    }
+
+  }
+
   private data class StateWithSavedState<S : UiViewState>(
     val state: S,
     val savedState: Bundle?
   )
+
 }

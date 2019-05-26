@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -38,7 +39,8 @@ internal class VersionUpgradeContentView internal constructor(
   override val layoutRoot by boundView<View>(R.id.version_content_root)
 
   override fun onRender(
-    state: VersionUpgradeViewState
+    state: VersionUpgradeViewState,
+    savedInstanceState: Bundle?
   ) {
     state.applicationName.let { name ->
       upgradeMessage.text = getString(R.string.upgrade_available_message, name)

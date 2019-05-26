@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -41,7 +42,8 @@ internal class RatingControlsView internal constructor(
   override val layoutRoot by boundView<View>(R.id.rating_control_root)
 
   override fun onRender(
-    state: RatingDialogViewState
+    state: RatingDialogViewState,
+    savedInstanceState: Bundle?
   ) {
     state.rateLink.let { link ->
       rateApplication.setOnDebouncedClickListener { publish(Rate(link)) }

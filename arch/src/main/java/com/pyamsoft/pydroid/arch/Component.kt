@@ -29,7 +29,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
   crossinline onControllerEvent: (event: C) -> Unit
 ) {
   views.forEach { it.inflate(savedInstanceState) }
-  val viewModelBinding = viewModel.render(*views) { onControllerEvent(it) }
+  val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
   owner.doOnDestroy {
     viewModelBinding.tryDispose()
     views.forEach { it.teardown() }

@@ -71,12 +71,18 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
   ) {
   }
 
-  final override fun render(state: S) {
+  final override fun render(
+    state: S,
+    savedInstanceState: Bundle?
+  ) {
     assertValidState()
-    onRender(state)
+    onRender(state, savedInstanceState)
   }
 
-  protected abstract fun onRender(state: S)
+  protected abstract fun onRender(
+    state: S,
+    savedInstanceState: Bundle?
+  )
 
   final override fun saveState(outState: Bundle) {
     assertValidState()

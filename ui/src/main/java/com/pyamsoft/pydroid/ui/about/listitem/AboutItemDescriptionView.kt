@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
@@ -33,7 +34,8 @@ internal class AboutItemDescriptionView internal constructor(
   override val layoutRoot by boundView<TextView>(R.id.about_description)
 
   override fun onRender(
-    state: AboutItemState
+    state: AboutItemState,
+    savedInstanceState: Bundle?
   ) {
     state.library.let { library ->
       layoutRoot.text = library.description

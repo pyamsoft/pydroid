@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -37,7 +38,8 @@ internal class AboutItemTitleView internal constructor(
   override val layoutRoot by boundView<View>(R.id.about_title)
 
   override fun onRender(
-    state: AboutItemState
+    state: AboutItemState,
+    savedInstanceState: Bundle?
   ) {
     state.library.let { library ->
       title.text = library.name

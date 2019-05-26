@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
+import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 /**
@@ -95,6 +96,8 @@ object PYDroid {
     return when (name) {
       Theming::class.java.name -> instance().moduleProvider.theming()
       PYDroidComponent::class.java.name -> instance().component
+      Enforcer::class.java.name -> instance().moduleProvider.enforcer()
+      SchedulerProvider::class.java.name -> instance().moduleProvider.schedulerProvider()
       else -> null
     }
   }

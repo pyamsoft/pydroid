@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.tryDispose
@@ -45,6 +46,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   @PublishedApi
   @CheckResult
   internal fun render(
+    savedInstanceState: Bundle?,
     vararg views: UiView<S, V>,
     onControllerEvent: (event: C) -> Unit
   ): Disposable {
@@ -60,8 +62,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     val stateScheduler = Schedulers.from(stateExecutor)
     var viewDisposable: Disposable? = null
     var controllerDisposable: Disposable? = null
+    var savedState: Bundle? = savedInstanceState
     val stateDisposable = stateBus.listen()
         .startWith(latestState())
+        .map { combineWithSavedState(it, savedState) }
+        .doAfterNext { savedState = null }
         .subscribeOn(stateScheduler)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnSubscribe {
@@ -74,7 +79,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
           viewDisposable = null
           controllerDisposable = null
         }
-        .subscribe { s -> views.forEach { it.render(s) } }
+        .subscribe { emitted -> views.forEach { it.render(emitted.state, emitted.savedState) } }
 
     return object : Disposable {
       override fun isDisposed(): Boolean {
@@ -94,6 +99,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
       }
 
     }
+  }
+
+  @CheckResult
+  private fun combineWithSavedState(
+    state: S,
+    savedState: Bundle?
+  ): StateWithSavedState<S> {
+    return StateWithSavedState(state, savedState)
   }
 
   protected open fun onCleared() {
@@ -170,4 +183,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
       }
     }
   }
+
+  private data class StateWithSavedState<S : UiViewState>(
+    val state: S,
+    val savedState: Bundle?
+  )
 }

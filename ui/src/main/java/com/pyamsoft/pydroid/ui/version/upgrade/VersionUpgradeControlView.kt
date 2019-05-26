@@ -50,7 +50,8 @@ internal class VersionUpgradeControlView internal constructor(
   }
 
   override fun onRender(
-    state: VersionUpgradeViewState
+    state: VersionUpgradeViewState,
+    savedInstanceState: Bundle?
   ) {
     state.throwable.let { throwable ->
       if (throwable == null) {

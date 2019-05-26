@@ -96,16 +96,9 @@ internal class AboutListView internal constructor(
   }
 
   override fun onRender(
-    state: AboutListState
+    state: AboutListState,
+    savedInstanceState: Bundle?
   ) {
-    state.isLoading.let { loading ->
-      if (loading) {
-        hide()
-      } else {
-        show()
-      }
-    }
-
     state.licenses.let { licenses ->
       if (licenses.isEmpty()) {
         clearLicenses()
@@ -119,6 +112,14 @@ internal class AboutListView internal constructor(
         clearError()
       } else {
         showError(throwable)
+      }
+    }
+
+    state.isLoading.let { loading ->
+      if (loading) {
+        hide()
+      } else {
+        show()
       }
     }
   }

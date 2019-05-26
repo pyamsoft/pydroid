@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
@@ -35,7 +36,8 @@ internal class AboutSpinnerView internal constructor(
   private val spinner by boundView<ProgressBar>(R.id.spinner)
 
   override fun onRender(
-    state: AboutListState
+    state: AboutListState,
+    savedInstanceState: Bundle?
   ) {
     state.isLoading.let { loading ->
       spinner.isVisible = loading

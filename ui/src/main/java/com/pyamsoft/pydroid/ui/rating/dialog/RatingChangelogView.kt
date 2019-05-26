@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
+import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
@@ -34,7 +35,8 @@ internal class RatingChangelogView internal constructor(
   override val layoutRoot by boundView<ScrollView>(R.id.rating_changelog_scroll)
 
   override fun onRender(
-    state: RatingDialogViewState
+    state: RatingDialogViewState,
+    savedInstanceState: Bundle?
   ) {
     state.changelog.let { changelog ->
       changelogText.text = changelog

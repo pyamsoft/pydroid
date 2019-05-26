@@ -29,3 +29,11 @@ fun FragmentTransaction.commit(owner: LifecycleOwner) {
 fun FragmentTransaction.commit(lifecycle: Lifecycle) {
   runWhenReady(lifecycle) { commit() }
 }
+
+fun FragmentTransaction.commitNow(owner: LifecycleOwner) {
+  commitNow(owner.lifecycle)
+}
+
+fun FragmentTransaction.commitNow(lifecycle: Lifecycle) {
+  runWhenReady(lifecycle) { commitNow() }
+}

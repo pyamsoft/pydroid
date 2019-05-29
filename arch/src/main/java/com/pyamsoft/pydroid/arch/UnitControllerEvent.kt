@@ -17,6 +17,4 @@
 
 package com.pyamsoft.pydroid.arch
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
-
 object UnitControllerEvent : UiControllerEvent

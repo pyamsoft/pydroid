@@ -17,6 +17,4 @@
 
 package com.pyamsoft.pydroid.arch
 
-import com.pyamsoft.pydroid.arch.UiViewEvent
-
 object UnitViewEvent : UiViewEvent

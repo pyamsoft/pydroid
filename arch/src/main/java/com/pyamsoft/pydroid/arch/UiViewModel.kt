@@ -43,6 +43,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private val stateChangeExecutor = Executors.newSingleThreadExecutor()
   private val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
 
+  private val stateExecutor = Executors.newSingleThreadExecutor()
+  private val stateScheduler = Schedulers.from(stateExecutor)
+
   @Volatile private var stateQueue = LinkedList<S.() -> S>()
   @Volatile private var state: S? = null
 
@@ -69,6 +72,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     stateChangeDisposable.tryDispose()
     stateChangeExecutor.shutdown()
     stateChangeScheduler.shutdown()
+    stateExecutor.shutdown()
+    stateScheduler.shutdown()
     onTeardown()
   }
 
@@ -136,9 +141,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private var views: Array<out UiView<S, V>>? = views
     private var onControllerEvent: ((event: C) -> Unit)? = onControllerEvent
 
-    private val stateExecutor = Executors.newSingleThreadExecutor()
-    private val stateScheduler = Schedulers.from(stateExecutor)
-
     private var viewDisposable: Disposable? = null
     private var controllerDisposable: Disposable? = null
 
@@ -157,6 +159,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
           .doOnDispose {
             viewDisposable?.tryDispose()
             controllerDisposable?.tryDispose()
+            viewDisposable = null
+            controllerDisposable = null
           }
           .subscribe { e -> requireNotNull(views).forEach { it.render(e.state, e.savedState) } }
 
@@ -168,13 +172,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         override fun dispose() {
           stateDisposable.tryDispose()
 
-          onCleared()
-
-          stateExecutor.shutdown()
-          stateScheduler.shutdown()
-
-          viewDisposable = null
-          controllerDisposable = null
           savedState = null
           views = null
           onControllerEvent = null

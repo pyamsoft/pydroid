@@ -39,13 +39,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private val stateBus = RxBus.create<S>()
   private val flushQueueBus = RxBus.create<Unit>()
 
-  private var stateChangeDisposable by singleDisposable()
   private val stateChangeExecutor = Executors.newSingleThreadExecutor()
   private val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
-
   private val stateExecutor = Executors.newSingleThreadExecutor()
   private val stateScheduler = Schedulers.from(stateExecutor)
 
+  private var stateChangeDisposable by singleDisposable()
   @Volatile private var stateQueue = LinkedList<S.() -> S>()
   @Volatile private var state: S? = null
 

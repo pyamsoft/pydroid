@@ -93,16 +93,20 @@ internal interface PYDroidComponent {
         packageName,
         enforcer
     )
-    private val factory = PYDroidViewModelFactory(
-        ratingModule.provideInteractor(),
-        aboutModule.provideInteractor(),
-        versionCheckModule.provideInteractor(),
-        theming,
-        schedulerProvider
-    )
+
+    @CheckResult
+    private fun viewModelFactory(): PYDroidViewModelFactory {
+      return PYDroidViewModelFactory(
+          ratingModule.provideInteractor(),
+          aboutModule.provideInteractor(),
+          versionCheckModule.provideInteractor(),
+          theming,
+          schedulerProvider
+      )
+    }
 
     override fun plusAbout(): AboutComponent.Factory {
-      return AboutComponent.Impl.FactoryImpl(factory)
+      return AboutComponent.Impl.FactoryImpl(viewModelFactory())
     }
 
     override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -110,20 +114,22 @@ internal interface PYDroidComponent {
     }
 
     override fun plusRatingDialog(): RatingDialogComponent.Factory {
-      return RatingDialogComponent.Impl.FactoryImpl(factory, loaderModule)
+      return RatingDialogComponent.Impl.FactoryImpl(viewModelFactory(), loaderModule)
     }
 
     override fun plusVersion(): VersionComponent.Factory {
-      return VersionComponent.Impl.FactoryImpl(schedulerProvider, ratingModule, factory)
+      return VersionComponent.Impl.FactoryImpl(schedulerProvider, ratingModule, viewModelFactory())
     }
 
     override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-      return VersionUpgradeComponent.Impl.FactoryImpl(applicationName, currentVersion, factory)
+      return VersionUpgradeComponent.Impl.FactoryImpl(
+          applicationName, currentVersion, viewModelFactory()
+      )
     }
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
       return AppSettingsComponent.Impl.FactoryImpl(
-          applicationName, bugReportUrl, factory, ratingModule, schedulerProvider
+          applicationName, bugReportUrl, viewModelFactory(), ratingModule, schedulerProvider
       )
     }
 

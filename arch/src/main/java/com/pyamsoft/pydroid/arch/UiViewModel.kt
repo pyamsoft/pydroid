@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,10 +39,21 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private val stateBus = RxBus.create<S>()
   private val flushQueueBus = RxBus.create<Unit>()
 
+  private var stateChangeDisposable by singleDisposable()
+  private val stateChangeExecutor = Executors.newSingleThreadExecutor()
+  private val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
+
   @Volatile private var stateQueue = LinkedList<S.() -> S>()
   @Volatile private var state: S? = null
 
   protected abstract fun handleViewEvent(event: V)
+
+  init {
+    stateChangeDisposable = flushQueueBus.listen()
+        .subscribeOn(stateChangeScheduler)
+        .observeOn(stateChangeScheduler)
+        .subscribe { flushQueue() }
+  }
 
   @PublishedApi
   @CheckResult
@@ -53,8 +65,15 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     return ViewModelStream(savedInstanceState, views, onControllerEvent).render()
   }
 
-  override fun onCleared() {
-    // Override here for your own custom UiViewModel clean up
+  final override fun onCleared() {
+    stateChangeDisposable.tryDispose()
+    stateChangeExecutor.shutdown()
+    stateChangeScheduler.shutdown()
+    onTeardown()
+  }
+
+  protected open fun onTeardown() {
+
   }
 
   private fun controllerEvents(): Observable<C> {
@@ -117,8 +136,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private var views: Array<out UiView<S, V>>? = views
     private var onControllerEvent: ((event: C) -> Unit)? = onControllerEvent
 
-    private val stateChangeExecutor = Executors.newSingleThreadExecutor()
-    private val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
     private val stateExecutor = Executors.newSingleThreadExecutor()
     private val stateScheduler = Schedulers.from(stateExecutor)
 
@@ -128,11 +145,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @CheckResult
     internal fun render(
     ): Disposable {
-      val stateChangeDisposable = flushQueueBus.listen()
-          .subscribeOn(stateChangeScheduler)
-          .observeOn(stateChangeScheduler)
-          .subscribe { flushQueue() }
-
       val stateDisposable = stateBus.listen()
           .startWith(latestState())
           .map { combineWithSavedState(it) }
@@ -150,19 +162,16 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
       return object : Disposable {
         override fun isDisposed(): Boolean {
-          return stateDisposable.isDisposed && stateChangeDisposable.isDisposed
+          return stateDisposable.isDisposed
         }
 
         override fun dispose() {
           stateDisposable.tryDispose()
-          stateChangeDisposable.tryDispose()
 
           onCleared()
 
           stateExecutor.shutdown()
           stateScheduler.shutdown()
-          stateChangeExecutor.shutdown()
-          stateChangeScheduler.shutdown()
 
           viewDisposable = null
           controllerDisposable = null

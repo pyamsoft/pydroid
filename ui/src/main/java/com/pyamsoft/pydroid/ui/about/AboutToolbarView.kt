@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
@@ -53,7 +54,7 @@ internal class AboutToolbarView internal constructor(
 
   override fun render(
     state: AboutToolbarState,
-    savedInstanceState: Bundle?
+    savedState: UiSavedState
   ) {
     toolbarActivity.withToolbar { toolbar ->
       toolbar.title = state.title

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import androidx.annotation.CheckResult
+import androidx.lifecycle.ViewModel
 import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.tryDispose
 import io.reactivex.Observable
@@ -30,7 +31,7 @@ import java.util.concurrent.Executors
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
   private val initialState: S
-) {
+) : ViewModel() {
 
   private val lock = Any()
   private val controllerEventBus = RxBus.create<C>()
@@ -52,7 +53,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     return ViewModelStream(savedInstanceState, views, onControllerEvent).render()
   }
 
-  protected open fun onCleared() {
+  override fun onCleared() {
+    // Override here for your own custom UiViewModel clean up
   }
 
   private fun controllerEvents(): Observable<C> {
@@ -111,7 +113,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     onControllerEvent: (event: C) -> Unit
   ) {
 
-    private var savedState: Bundle? = savedInstanceState
+    private var savedState: UiSavedState? = UiSavedState(savedInstanceState)
     private var views: Array<out UiView<S, V>>? = views
     private var onControllerEvent: ((event: C) -> Unit)? = onControllerEvent
 
@@ -134,7 +136,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
       val stateDisposable = stateBus.listen()
           .startWith(latestState())
           .map { combineWithSavedState(it) }
-          .doAfterNext { savedState = null }
           .subscribeOn(stateScheduler)
           .observeOn(AndroidSchedulers.mainThread())
           .doOnSubscribe {
@@ -175,7 +176,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     @CheckResult
     private fun combineWithSavedState(state: S): StateWithSavedState<S> {
-      return StateWithSavedState(state, savedState)
+      return StateWithSavedState(state, requireNotNull(savedState))
     }
 
     @CheckResult
@@ -198,7 +199,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
   private data class StateWithSavedState<S : UiViewState>(
     val state: S,
-    val savedState: Bundle?
+    val savedState: UiSavedState
   )
 
 }

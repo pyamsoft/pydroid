@@ -37,7 +37,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 
   abstract fun render(
     state: S,
-    savedInstanceState: Bundle?
+    savedState: UiSavedState
   )
 
   open fun teardown() {

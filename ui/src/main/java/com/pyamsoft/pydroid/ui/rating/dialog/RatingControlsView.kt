@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
@@ -30,6 +31,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class RatingControlsView internal constructor(
+  private val rateLink: String,
   private val owner: LifecycleOwner,
   parent: ViewGroup
 ) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
@@ -41,14 +43,18 @@ internal class RatingControlsView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.rating_control_root)
 
-  override fun onRender(
-    state: RatingDialogViewState,
+  override fun onInflated(
+    view: View,
     savedInstanceState: Bundle?
   ) {
-    state.rateLink.let { link ->
-      rateApplication.setOnDebouncedClickListener { publish(Rate(link)) }
-      noThanks.setOnDebouncedClickListener { publish(Cancel) }
-    }
+    rateApplication.setOnDebouncedClickListener { publish(Rate(rateLink)) }
+    noThanks.setOnDebouncedClickListener { publish(Cancel) }
+  }
+
+  override fun onRender(
+    state: RatingDialogViewState,
+    savedState: UiSavedState
+  ) {
 
     state.throwable.let { throwable ->
       if (throwable == null) {

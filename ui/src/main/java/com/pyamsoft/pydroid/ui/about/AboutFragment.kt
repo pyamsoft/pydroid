@@ -26,6 +26,8 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.Injector
@@ -40,12 +42,14 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 class AboutFragment : Fragment() {
 
+  internal var aboutViewModelFactory: ViewModelProvider.Factory? = null
+
   internal var listView: AboutListView? = null
   internal var spinnerView: AboutSpinnerView? = null
-  internal var listViewModel: AboutListViewModel? = null
+  private var listViewModel: AboutListViewModel? = null
 
   internal var toolbar: AboutToolbarView? = null
-  internal var toolbarViewModel: AboutToolbarViewModel? = null
+  private var toolbarViewModel: AboutToolbarViewModel? = null
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -68,6 +72,12 @@ class AboutFragment : Fragment() {
         .create(layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack)
         .inject(this)
 
+    ViewModelProviders.of(this, aboutViewModelFactory)
+        .let { factory ->
+          listViewModel = factory.get(AboutListViewModel::class.java)
+          toolbarViewModel = factory.get(AboutToolbarViewModel::class.java)
+        }
+
     createComponent(
         savedInstanceState, viewLifecycleOwner,
         requireNotNull(listViewModel),
@@ -78,7 +88,6 @@ class AboutFragment : Fragment() {
         is ExternalUrl -> navigateToExternalUrl(it.url)
       }
     }
-    requireNotNull(listViewModel).loadLicenses(false)
 
     createComponent(
         savedInstanceState, viewLifecycleOwner,
@@ -97,6 +106,7 @@ class AboutFragment : Fragment() {
     listViewModel = null
     toolbar = null
     toolbarViewModel = null
+    aboutViewModelFactory = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

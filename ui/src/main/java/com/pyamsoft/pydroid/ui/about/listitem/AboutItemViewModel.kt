@@ -18,18 +18,18 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 
 internal class AboutItemViewModel internal constructor(
-  library: OssLibrary
-) : UiViewModel<AboutItemState, AboutItemViewEvent, AboutItemControllerEvent>(
-    initialState = AboutItemState(library = library)
+) : UiViewModel<UnitViewState, AboutItemViewEvent, AboutItemControllerEvent>(
+    initialState = UnitViewState
 ) {
 
   override fun handleViewEvent(event: AboutItemViewEvent) {
     return when (event) {
-      is OpenUrl -> publish(AboutItemControllerEvent.ExternalUrl(event.url))
+      is OpenUrl -> publish(ExternalUrl(event.url))
     }
   }
 

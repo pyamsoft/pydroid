@@ -22,6 +22,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
@@ -57,13 +59,14 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
   protected open val hideClearAll: Boolean = false
 
-  internal var appSettingsViewModel: AppSettingsViewModel? = null
+  internal var appSettingsViewModelFactory: ViewModelProvider.Factory? = null
   internal var appSettingsView: AppSettingsView? = null
+  private var appSettingsViewModel: AppSettingsViewModel? = null
 
   internal var ratingLoader: RatingLoader? = null
 
   internal var versionView: VersionView? = null
-  internal var versionViewModel: VersionCheckViewModel? = null
+  private var versionViewModel: VersionCheckViewModel? = null
 
   @CallSuper
   override fun onCreatePreferences(
@@ -91,6 +94,12 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             hideClearAll, hideUpgradeInformation
         )
         .inject(this)
+
+    ViewModelProviders.of(this, appSettingsViewModelFactory)
+        .let { factory ->
+          appSettingsViewModel = factory.get(AppSettingsViewModel::class.java)
+          versionViewModel = factory.get(VersionCheckViewModel::class.java)
+        }
 
     createComponent(
         savedInstanceState, viewLifecycleOwner,
@@ -145,6 +154,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
     appSettingsViewModel = null
     appSettingsView = null
+    appSettingsViewModelFactory = null
   }
 
   private fun failedNavigation(error: ActivityNotFoundException?) {

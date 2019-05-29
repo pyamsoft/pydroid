@@ -20,6 +20,8 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -32,8 +34,9 @@ abstract class VersionCheckActivity : ActivityBase() {
 
   protected abstract val snackbarRoot: ViewGroup
 
+  internal var versionViewModelFactory: ViewModelProvider.Factory? = null
   internal var versionView: VersionView? = null
-  internal var versionViewModel: VersionCheckViewModel? = null
+  private var versionViewModel: VersionCheckViewModel? = null
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -46,6 +49,11 @@ abstract class VersionCheckActivity : ActivityBase() {
         .create(this, snackbarRoot)
         .inject(this)
 
+    ViewModelProviders.of(this, versionViewModelFactory)
+        .let { factory ->
+          versionViewModel = factory.get(VersionCheckViewModel::class.java)
+        }
+
     createComponent(
         savedInstanceState, this,
         requireNotNull(versionViewModel),
@@ -55,8 +63,6 @@ abstract class VersionCheckActivity : ActivityBase() {
         is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
       }
     }
-
-    requireNotNull(versionViewModel).checkForUpdates(false)
   }
 
   @CallSuper
@@ -70,6 +76,7 @@ abstract class VersionCheckActivity : ActivityBase() {
     super.onDestroy()
     versionView = null
     versionViewModel = null
+    versionViewModelFactory = null
   }
 
   private fun showVersionUpgrade(newVersion: Int) {

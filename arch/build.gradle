@@ -16,6 +16,7 @@
  */
 
 dependencies {
+  api "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
   api project(':core')
 }
 

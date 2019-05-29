@@ -38,20 +38,9 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal class AppSettingsViewModel internal constructor(
-  applicationName: String,
-  bugReportUrl: String,
-  hideClearAll: Boolean,
-  hideUpgradeInformation: Boolean,
   theming: Theming
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
-    initialState = AppSettingsViewState(
-        applicationName = applicationName,
-        bugReportUrl = bugReportUrl,
-        hideClearAll = hideClearAll,
-        hideUpgradeInformation = hideUpgradeInformation,
-        isDarkTheme = theming.isDarkTheme(),
-        throwable = null
-    )
+    initialState = AppSettingsViewState(isDarkTheme = theming.isDarkTheme(), throwable = null)
 ) {
 
   override fun handleViewEvent(event: AppSettingsViewEvent) {

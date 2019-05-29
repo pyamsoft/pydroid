@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
@@ -36,6 +37,10 @@ import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
+  private val applicationName: String,
+  private val bugReportUrl: String,
+  private val hideClearAll: Boolean,
+  private val hideUpgradeInformation: Boolean,
   preferenceScreen: PreferenceScreen
 ) : PrefUiView<AppSettingsViewState, AppSettingsViewEvent>(preferenceScreen) {
 
@@ -58,6 +63,10 @@ internal class AppSettingsView internal constructor(
     preferenceScreen: PreferenceScreen,
     savedInstanceState: Bundle?
   ) {
+    setupApplicationTitle(applicationName)
+    setupBugReport(bugReportUrl)
+    setupClearAppData(hideClearAll)
+    setupShowUpgradeInfo(hideUpgradeInformation)
     setupMoreApps()
     setupBlog()
     setupCheckUpgrade()
@@ -68,13 +77,10 @@ internal class AppSettingsView internal constructor(
   }
 
   override fun onRender(
-    state: AppSettingsViewState
+    state: AppSettingsViewState,
+    savedState: UiSavedState
   ) {
     requireNotNull(preferenceScreen).adjustTint(state.isDarkTheme)
-    setupApplicationTitle(state.applicationName)
-    setupBugReport(state.bugReportUrl)
-    setupClearAppData(state.hideClearAll)
-    setupShowUpgradeInfo(state.hideUpgradeInformation)
   }
 
   override fun onTeardown() {

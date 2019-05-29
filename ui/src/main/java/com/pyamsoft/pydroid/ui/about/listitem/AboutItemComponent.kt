@@ -41,10 +41,10 @@ internal interface AboutItemComponent {
   ) : AboutItemComponent {
 
     override fun inject(viewHolder: AboutViewHolder) {
-      val viewModel = AboutItemViewModel(library)
-      val title = AboutItemTitleView(parent)
-      val description = AboutItemDescriptionView(parent)
-      val action = AboutItemActionView(parent)
+      val viewModel = AboutItemViewModel()
+      val title = AboutItemTitleView(library, parent)
+      val description = AboutItemDescriptionView(library, parent)
+      val action = AboutItemActionView(library, parent)
 
       viewHolder.viewModel = viewModel
       viewHolder.titleView = title

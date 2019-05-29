@@ -21,9 +21,8 @@ import android.text.SpannedString
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.loader.LoaderModule
+import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface RatingDialogComponent {
 
@@ -48,30 +47,24 @@ internal interface RatingDialogComponent {
     private val rateLink: String,
     private val changeLog: SpannedString,
     private val owner: LifecycleOwner,
-    private val schedulerProvider: SchedulerProvider,
     private val loaderModule: LoaderModule,
-    private val ratingModule: RatingModule
+    private val factory: PYDroidViewModelFactory
   ) : RatingDialogComponent {
 
     override fun inject(dialog: RatingDialog) {
-      val viewModel = RatingDialogViewModel(
-          changeLog, rateLink, changeLogIcon,
-          ratingModule.provideInteractor(), schedulerProvider
-      )
-      val icon = RatingIconView(loaderModule.provideLoader(), parent)
-      val changelog = RatingChangelogView(parent)
-      val controls = RatingControlsView(owner, parent)
+      val icon = RatingIconView(changeLogIcon, loaderModule.provideLoader(), parent)
+      val changelog = RatingChangelogView(changeLog, parent)
+      val controls = RatingControlsView(rateLink, owner, parent)
 
-      dialog.viewModel = viewModel
+      dialog.viewModelFactory = factory
       dialog.iconView = icon
       dialog.changelogView = changelog
       dialog.controlsView = controls
     }
 
     internal class FactoryImpl internal constructor(
-      private val schedulerProvider: SchedulerProvider,
-      private val loaderModule: LoaderModule,
-      private val ratingModule: RatingModule
+      private val factory: PYDroidViewModelFactory,
+      private val loaderModule: LoaderModule
     ) : Factory {
 
       override fun create(
@@ -83,8 +76,7 @@ internal interface RatingDialogComponent {
       ): RatingDialogComponent {
         return Impl(
             parent, changeLogIcon, rateLink, changeLog,
-            owner, schedulerProvider,
-            loaderModule, ratingModule
+            owner, loaderModule, factory
         )
       }
 

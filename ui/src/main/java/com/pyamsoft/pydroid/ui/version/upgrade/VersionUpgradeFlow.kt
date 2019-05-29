@@ -21,12 +21,7 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-data class VersionUpgradeViewState(
-  val applicationName: String,
-  val currentVersion: Int,
-  val newVersion: Int,
-  val throwable: Throwable?
-) : UiViewState
+data class VersionUpgradeViewState(val throwable: Throwable?) : UiViewState
 
 sealed class VersionUpgradeViewEvent : UiViewEvent {
 

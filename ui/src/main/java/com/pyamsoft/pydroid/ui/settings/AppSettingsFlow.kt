@@ -23,10 +23,6 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 data class AppSettingsViewState(
-  val applicationName: String,
-  val bugReportUrl: String,
-  val hideClearAll: Boolean,
-  val hideUpgradeInformation: Boolean,
   val isDarkTheme: Boolean,
   val throwable: Throwable?
 ) : UiViewState

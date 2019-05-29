@@ -41,13 +41,17 @@ internal class AboutListViewModel internal constructor(
 
   private var licenseDisposable by singleDisposable()
 
+  init {
+    loadLicenses(false)
+  }
+
   override fun handleViewEvent(event: AboutListViewEvent) {
     return when (event) {
       is OpenUrl -> publish(ExternalUrl(event.url))
     }
   }
 
-  internal fun loadLicenses(force: Boolean) {
+  private fun loadLicenses(force: Boolean) {
     licenseDisposable = interactor.loadLicenses(force)
         .subscribeOn(schedulerProvider.backgroundScheduler)
         .observeOn(schedulerProvider.foregroundScheduler)
@@ -65,7 +69,7 @@ internal class AboutListViewModel internal constructor(
   }
 
   private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
-    setState { copy(licenses = licenses, throwable = null) }
+    setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses, throwable = null) }
   }
 
   private fun handleLicenseLoadError(throwable: Throwable) {

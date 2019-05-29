@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface VersionUpgradeComponent {
 
@@ -41,22 +42,24 @@ internal interface VersionUpgradeComponent {
     private val owner: LifecycleOwner,
     private val applicationName: String,
     private val currentVersion: Int,
-    private val newVersion: Int
+    private val newVersion: Int,
+    private val factory: PYDroidViewModelFactory
   ) : VersionUpgradeComponent {
 
     override fun inject(dialog: VersionUpgradeDialog) {
-      val viewModel = VersionUpgradeViewModel(applicationName, currentVersion, newVersion)
-      val contentView = VersionUpgradeContentView(parent)
+      val contentView =
+        VersionUpgradeContentView(applicationName, currentVersion, newVersion, parent)
       val controlsView = VersionUpgradeControlView(owner, parent)
 
-      dialog.viewModel = viewModel
+      dialog.factory = factory
       dialog.control = controlsView
       dialog.content = contentView
     }
 
     internal class FactoryImpl internal constructor(
       private val applicationName: String,
-      private val currentVersion: Int
+      private val currentVersion: Int,
+      private val factory: PYDroidViewModelFactory
     ) : Factory {
 
       override fun create(
@@ -64,7 +67,7 @@ internal interface VersionUpgradeComponent {
         owner: LifecycleOwner,
         newVersion: Int
       ): VersionUpgradeComponent {
-        return Impl(parent, owner, applicationName, currentVersion, newVersion)
+        return Impl(parent, owner, applicationName, currentVersion, newVersion, factory)
       }
 
     }

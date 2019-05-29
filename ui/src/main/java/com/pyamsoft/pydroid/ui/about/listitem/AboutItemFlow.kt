@@ -22,8 +22,6 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-data class AboutItemState(val library: OssLibrary) : UiViewState
-
 sealed class AboutItemViewEvent : UiViewEvent {
 
   data class OpenUrl(val url: String) : AboutItemViewEvent()

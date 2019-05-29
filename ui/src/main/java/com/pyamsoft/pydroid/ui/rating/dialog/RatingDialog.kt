@@ -27,6 +27,8 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -40,10 +42,11 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 class RatingDialog : DialogFragment() {
 
-  internal var viewModel: RatingDialogViewModel? = null
+  internal var viewModelFactory: ViewModelProvider.Factory? = null
   internal var changelogView: RatingChangelogView? = null
   internal var controlsView: RatingControlsView? = null
   internal var iconView: RatingIconView? = null
+  private var viewModel: RatingDialogViewModel? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -84,6 +87,11 @@ class RatingDialog : DialogFragment() {
         .create(layoutRoot, viewLifecycleOwner, rateLink, changeLogIcon, changelog)
         .inject(this)
 
+    ViewModelProviders.of(this, viewModelFactory)
+        .let { factory ->
+          viewModel = factory.get(RatingDialogViewModel::class.java)
+        }
+
     createComponent(
         savedInstanceState, viewLifecycleOwner,
         requireNotNull(viewModel),
@@ -105,6 +113,7 @@ class RatingDialog : DialogFragment() {
     changelogView = null
     controlsView = null
     iconView = null
+    viewModelFactory = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

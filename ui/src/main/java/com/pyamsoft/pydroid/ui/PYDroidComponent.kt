@@ -93,9 +93,16 @@ internal interface PYDroidComponent {
         packageName,
         enforcer
     )
+    private val factory = PYDroidViewModelFactory(
+        ratingModule.provideInteractor(),
+        aboutModule.provideInteractor(),
+        versionCheckModule.provideInteractor(),
+        theming,
+        schedulerProvider
+    )
 
     override fun plusAbout(): AboutComponent.Factory {
-      return AboutComponent.Impl.FactoryImpl(schedulerProvider, aboutModule)
+      return AboutComponent.Impl.FactoryImpl(factory)
     }
 
     override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -103,21 +110,20 @@ internal interface PYDroidComponent {
     }
 
     override fun plusRatingDialog(): RatingDialogComponent.Factory {
-      return RatingDialogComponent.Impl.FactoryImpl(schedulerProvider, loaderModule, ratingModule)
+      return RatingDialogComponent.Impl.FactoryImpl(factory, loaderModule)
     }
 
     override fun plusVersion(): VersionComponent.Factory {
-      return VersionComponent.Impl.FactoryImpl(schedulerProvider, ratingModule, versionCheckModule)
+      return VersionComponent.Impl.FactoryImpl(schedulerProvider, ratingModule, factory)
     }
 
     override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-      return VersionUpgradeComponent.Impl.FactoryImpl(applicationName, currentVersion)
+      return VersionUpgradeComponent.Impl.FactoryImpl(applicationName, currentVersion, factory)
     }
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
       return AppSettingsComponent.Impl.FactoryImpl(
-          applicationName, bugReportUrl, theming,
-          schedulerProvider, versionCheckModule, ratingModule
+          applicationName, bugReportUrl, factory, ratingModule, schedulerProvider
       )
     }
 

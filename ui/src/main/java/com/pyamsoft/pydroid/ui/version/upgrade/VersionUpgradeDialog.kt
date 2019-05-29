@@ -25,6 +25,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -38,9 +40,10 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.Ope
 
 class VersionUpgradeDialog : DialogFragment() {
 
-  internal var viewModel: VersionUpgradeViewModel? = null
+  internal var factory: ViewModelProvider.Factory? = null
   internal var content: VersionUpgradeContentView? = null
   internal var control: VersionUpgradeControlView? = null
+  private var viewModel: VersionUpgradeViewModel? = null
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState)
@@ -68,6 +71,11 @@ class VersionUpgradeDialog : DialogFragment() {
         .plusUpgrade()
         .create(layoutRoot, viewLifecycleOwner, latestVersion)
         .inject(this)
+
+    ViewModelProviders.of(this, factory)
+        .let { factory ->
+          viewModel = factory.get(VersionUpgradeViewModel::class.java)
+        }
 
     createComponent(
         savedInstanceState, viewLifecycleOwner,

@@ -20,8 +20,7 @@ package com.pyamsoft.pydroid.ui.about
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
-import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 
 internal interface AboutComponent {
@@ -45,28 +44,23 @@ internal interface AboutComponent {
     private val owner: LifecycleOwner,
     private val backstack: Int,
     private val toolbarActivity: ToolbarActivity,
-    private val schedulerProvider: SchedulerProvider,
-    private val module: AboutModule
+    private val factory: PYDroidViewModelFactory
   ) : AboutComponent {
 
     override fun inject(fragment: AboutFragment) {
-      val listViewModel = AboutListViewModel(module.provideInteractor(), schedulerProvider)
       val listView = AboutListView(owner, parent)
       val spinnerView = AboutSpinnerView(parent)
 
       val toolbar = AboutToolbarView(backstack, toolbarActivity)
-      val toolbarViewModel = AboutToolbarViewModel()
 
+      fragment.aboutViewModelFactory = factory
       fragment.listView = listView
-      fragment.listViewModel = listViewModel
       fragment.spinnerView = spinnerView
       fragment.toolbar = toolbar
-      fragment.toolbarViewModel = toolbarViewModel
     }
 
     class FactoryImpl internal constructor(
-      private val schedulerProvider: SchedulerProvider,
-      private val module: AboutModule
+      private val factory: PYDroidViewModelFactory
     ) : Factory {
 
       override fun create(
@@ -75,7 +69,7 @@ internal interface AboutComponent {
         toolbarActivity: ToolbarActivity,
         backstack: Int
       ): AboutComponent {
-        return Impl(parent, owner, backstack, toolbarActivity, schedulerProvider, module)
+        return Impl(parent, owner, backstack, toolbarActivity, factory)
       }
 
     }

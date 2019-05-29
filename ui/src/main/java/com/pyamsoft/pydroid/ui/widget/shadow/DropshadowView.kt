@@ -17,10 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.widget.shadow
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.R
@@ -35,7 +35,7 @@ class DropshadowView constructor(
 
   override fun onRender(
     state: UnitViewState,
-    savedInstanceState: Bundle?
+    savedState: UiSavedState
   ) {
   }
 

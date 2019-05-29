@@ -26,6 +26,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
@@ -91,13 +92,13 @@ internal class AboutListView internal constructor(
 
   override fun onRender(
     state: AboutListState,
-    savedInstanceState: Bundle?
+    savedState: UiSavedState
   ) {
     state.licenses.let { licenses ->
       if (licenses.isEmpty()) {
         clearLicenses()
       } else {
-        loadLicenses(licenses)
+        loadLicenses(licenses, savedState)
       }
     }
 
@@ -116,13 +117,10 @@ internal class AboutListView internal constructor(
         show()
       }
     }
-
-    scrollToLastViewedItem(savedInstanceState)
   }
 
-  private fun scrollToLastViewedItem(savedInstanceState: Bundle?) {
-    if (savedInstanceState != null) {
-      val lastViewed = savedInstanceState.getInt(KEY_CURRENT)
+  private fun scrollToLastViewedItem(savedState: UiSavedState) {
+    savedState.consume(KEY_CURRENT, 0) { lastViewed ->
       if (lastViewed > 0) {
         layoutRoot.scrollToPosition(lastViewed)
       }
@@ -137,8 +135,12 @@ internal class AboutListView internal constructor(
     layoutRoot.isVisible = false
   }
 
-  private fun loadLicenses(libraries: List<OssLibrary>) {
+  private fun loadLicenses(
+    libraries: List<OssLibrary>,
+    savedState: UiSavedState
+  ) {
     requireNotNull(aboutAdapter).submitList(libraries)
+    scrollToLastViewedItem(savedState)
   }
 
   private fun showError(error: Throwable) {

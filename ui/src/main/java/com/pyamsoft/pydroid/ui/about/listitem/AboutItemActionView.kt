@@ -22,13 +22,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
+  private val library: OssLibrary,
   parent: ViewGroup
-) : BaseUiView<AboutItemState, AboutItemViewEvent>(parent) {
+) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
 
   private val viewLicense by boundView<Button>(R.id.action_view_license)
   private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
@@ -37,19 +41,23 @@ internal class AboutItemActionView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.about_actions)
 
-  override fun onRender(
-    state: AboutItemState,
+  override fun onInflated(
+    view: View,
     savedInstanceState: Bundle?
   ) {
-    state.library.let { library ->
-      viewLicense.setOnDebouncedClickListener {
-        publish(OpenUrl(library.licenseUrl))
-      }
-
-      visitHomepage.setOnDebouncedClickListener {
-        publish(OpenUrl(library.libraryUrl))
-      }
+    viewLicense.setOnDebouncedClickListener {
+      publish(OpenUrl(library.licenseUrl))
     }
+
+    visitHomepage.setOnDebouncedClickListener {
+      publish(OpenUrl(library.libraryUrl))
+    }
+  }
+
+  override fun onRender(
+    state: UnitViewState,
+    savedState: UiSavedState
+  ) {
   }
 
   override fun onTeardown() {

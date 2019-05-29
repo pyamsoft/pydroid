@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.content.ActivityNotFoundException
-import android.text.SpannedString
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
@@ -30,18 +29,10 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 
 internal class RatingDialogViewModel internal constructor(
-  changelog: SpannedString,
-  rateLink: String,
-  changelogIcon: Int,
   private val interactor: RatingInteractor,
   private val schedulerProvider: SchedulerProvider
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
-    initialState = RatingDialogViewState(
-        changelog = changelog,
-        rateLink = rateLink,
-        changelogIcon = changelogIcon,
-        throwable = null
-    )
+    initialState = RatingDialogViewState(throwable = null)
 ) {
 
   private var saveDisposable by singleDisposable()

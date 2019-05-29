@@ -22,6 +22,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
@@ -67,13 +68,16 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
   final override fun render(
     state: S,
-    savedInstanceState: Bundle?
+    savedState: UiSavedState
   ) {
     assertValidState()
-    onRender(state)
+    onRender(state, savedState)
   }
 
-  protected abstract fun onRender(state: S)
+  protected abstract fun onRender(
+    state: S,
+    savedState: UiSavedState
+  )
 
   final override fun saveState(outState: Bundle) {
     assertValidState()

@@ -23,10 +23,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingLoader
-import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionView
 
 internal interface AppSettingsComponent {
@@ -54,38 +52,29 @@ internal interface AppSettingsComponent {
     private val hideClearAll: Boolean,
     private val hideUpgradeInformation: Boolean,
     private val preferenceScreen: PreferenceScreen,
-    private val theming: Theming,
+    private val ratingModule: RatingModule,
     private val schedulerProvider: SchedulerProvider,
-    private val versionCheckModule: VersionCheckModule,
-    private val ratingModule: RatingModule
+    private val factory: PYDroidViewModelFactory
   ) : AppSettingsComponent {
 
     override fun inject(fragment: AppSettingsPreferenceFragment) {
-      val ratingViewModel = RatingLoader(ratingModule.provideInteractor(), schedulerProvider)
-      val versionViewModel =
-        VersionCheckViewModel(versionCheckModule.provideInteractor(), schedulerProvider)
       val versionView = VersionView(owner, parent)
-      val settingsViewModel = AppSettingsViewModel(
-          applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation, theming
+      val settingsView = AppSettingsView(
+          applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation, preferenceScreen
       )
-      val settingsView = AppSettingsView(preferenceScreen)
 
       fragment.versionView = versionView
-      fragment.versionViewModel = versionViewModel
-
-      fragment.ratingLoader = ratingViewModel
-
       fragment.appSettingsView = settingsView
-      fragment.appSettingsViewModel = settingsViewModel
+      fragment.ratingLoader = RatingLoader(ratingModule.provideInteractor(), schedulerProvider)
+      fragment.appSettingsViewModelFactory = factory
     }
 
     internal class FactoryImpl internal constructor(
       private val applicationName: String,
       private val bugReportUrl: String,
-      private val theming: Theming,
-      private val schedulerProvider: SchedulerProvider,
-      private val versionCheckModule: VersionCheckModule,
-      private val ratingModule: RatingModule
+      private val factory: PYDroidViewModelFactory,
+      private val ratingModule: RatingModule,
+      private val schedulerProvider: SchedulerProvider
     ) : Factory {
 
       override fun create(
@@ -97,7 +86,7 @@ internal interface AppSettingsComponent {
       ): AppSettingsComponent {
         return Impl(
             parent, owner, applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation,
-            preferenceScreen, theming, schedulerProvider, versionCheckModule, ratingModule
+            preferenceScreen, ratingModule, schedulerProvider, factory
         )
       }
 

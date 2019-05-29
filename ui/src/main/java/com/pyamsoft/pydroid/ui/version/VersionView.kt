@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
@@ -42,7 +43,7 @@ internal class VersionView internal constructor(
 
   override fun render(
     state: VersionViewState,
-    savedInstanceState: Bundle?
+    savedState: UiSavedState
   ) {
     state.isLoading.let { loading ->
       if (loading != null) {

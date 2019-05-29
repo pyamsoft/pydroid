@@ -18,29 +18,39 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
+  private val library: OssLibrary,
   parent: ViewGroup
-) : BaseUiView<AboutItemState, AboutItemViewEvent>(parent) {
+) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
 
   override val layout: Int = R.layout.about_item_description
 
   override val layoutRoot by boundView<TextView>(R.id.about_description)
 
-  override fun onRender(
-    state: AboutItemState,
+  override fun onInflated(
+    view: View,
     savedInstanceState: Bundle?
   ) {
-    state.library.let { library ->
-      layoutRoot.text = library.description
-      layoutRoot.isVisible = library.description.isNotBlank()
-    }
+    super.onInflated(view, savedInstanceState)
+    layoutRoot.text = library.description
+    layoutRoot.isVisible = library.description.isNotBlank()
+  }
+
+  override fun onRender(
+    state: UnitViewState,
+    savedState: UiSavedState
+  ) {
   }
 
   override fun onTeardown() {

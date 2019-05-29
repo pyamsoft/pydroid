@@ -24,9 +24,13 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
+  private val applicationName: String,
+  private val currentVersion: Int,
+  private val newVersion: Int,
   parent: ViewGroup
 ) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 
@@ -38,21 +42,20 @@ internal class VersionUpgradeContentView internal constructor(
 
   override val layoutRoot by boundView<View>(R.id.version_content_root)
 
-  override fun onRender(
-    state: VersionUpgradeViewState,
+  override fun onInflated(
+    view: View,
     savedInstanceState: Bundle?
   ) {
-    state.applicationName.let { name ->
-      upgradeMessage.text = getString(R.string.upgrade_available_message, name)
-    }
+    super.onInflated(view, savedInstanceState)
+    upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
+    currentValue.text = "$currentVersion"
+    newValue.text = "$newVersion"
+  }
 
-    state.currentVersion.let { version ->
-      currentValue.text = "$version"
-    }
-
-    state.newVersion.let { version ->
-      newValue.text = "$version"
-    }
+  override fun onRender(
+    state: VersionUpgradeViewState,
+    savedState: UiSavedState
+  ) {
   }
 
   override fun onTeardown() {

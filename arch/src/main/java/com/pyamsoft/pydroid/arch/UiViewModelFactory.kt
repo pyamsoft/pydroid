@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kotlin.reflect.KClass
 
 abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
@@ -29,7 +30,7 @@ abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Fa
       val viewModelClass = modelClass as Class<out UiViewModel<*, *, *>>
 
       @Suppress("UNCHECKED_CAST")
-      return viewModel(viewModelClass) as T
+      return viewModel(viewModelClass.kotlin) as T
     } else {
       fail()
     }
@@ -40,6 +41,6 @@ abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Fa
   }
 
   @CheckResult
-  protected abstract fun <T : UiViewModel<*, *, *>> viewModel(modelClass: Class<T>): UiViewModel<*, *, *>
+  protected abstract fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *>
 
 }

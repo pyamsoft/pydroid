@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
+import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
   private val ratingInteractor: RatingInteractor,
@@ -39,14 +40,14 @@ internal class PYDroidViewModelFactory internal constructor(
   private val scheduler: SchedulerProvider
 ) : UiViewModelFactory() {
 
-  override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: Class<T>): UiViewModel<*, *, *> {
+  override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
     return when (modelClass) {
-      AboutToolbarViewModel::class.java -> AboutToolbarViewModel()
-      AboutListViewModel::class.java -> AboutListViewModel(aboutInteractor, scheduler)
-      RatingDialogViewModel::class.java -> RatingDialogViewModel(ratingInteractor, scheduler)
-      AppSettingsViewModel::class.java -> AppSettingsViewModel(theming)
-      VersionCheckViewModel::class.java -> VersionCheckViewModel(versionInteractor, scheduler)
-      VersionUpgradeViewModel::class.java -> VersionUpgradeViewModel()
+      AboutToolbarViewModel::class -> AboutToolbarViewModel()
+      AboutListViewModel::class -> AboutListViewModel(aboutInteractor, scheduler)
+      RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor, scheduler)
+      AppSettingsViewModel::class -> AppSettingsViewModel(theming)
+      VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor, scheduler)
+      VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
       else -> fail()
     }
   }

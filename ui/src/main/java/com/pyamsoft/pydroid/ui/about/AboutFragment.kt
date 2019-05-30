@@ -147,10 +147,10 @@ class AboutFragment : Fragment() {
       val fragmentManager = activity.supportFragmentManager
       val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {
-        fragmentManager.beginTransaction()
-            .replace(container, newInstance(backStackCount), TAG)
-            .addToBackStack(null)
-            .commit(activity)
+        fragmentManager.commit(activity) {
+          replace(container, newInstance(backStackCount), TAG)
+          addToBackStack(null)
+        }
       }
     }
 

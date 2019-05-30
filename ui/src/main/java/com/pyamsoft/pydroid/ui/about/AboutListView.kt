@@ -146,7 +146,6 @@ internal class AboutListView internal constructor(
   private fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
         .short(layoutRoot, error.message ?: "An unexpected error occurred.")
-        .show()
   }
 
   private fun clearError() {

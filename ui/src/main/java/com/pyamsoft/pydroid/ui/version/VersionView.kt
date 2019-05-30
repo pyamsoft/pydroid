@@ -72,7 +72,6 @@ internal class VersionView internal constructor(
   private fun showUpdating() {
     Snackbreak.bindTo(owner)
         .short(requireNotNull(parent), "Checking for updates")
-        .show()
   }
 
   private fun dismissUpdating() {

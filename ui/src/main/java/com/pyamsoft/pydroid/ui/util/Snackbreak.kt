@@ -144,63 +144,86 @@ object Snackbreak {
     }
 
     @CheckResult
+    private fun canShowNewSnackbar(force: Boolean): Boolean {
+      if (force) {
+        return true
+      } else {
+        return snackbar.let { if (it == null) true else !it.isShownOrQueued }
+      }
+    }
+
+    private inline fun snack(
+      force: Boolean,
+      builder: Snackbar.() -> Snackbar,
+      snack: () -> Snackbar
+    ) {
+      requireStillAlive()
+      if (canShowNewSnackbar(force)) {
+        dismiss()
+        snackbar = snack()
+            .run(builder)
+            .also { it.show() }
+      }
+    }
+
+    @JvmOverloads
     fun short(
       view: View,
-      message: CharSequence
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_SHORT).also { snackbar = it }
+      message: CharSequence,
+      force: Boolean = false,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(force, builder) { make(view, message, Snackbar.LENGTH_SHORT) }
     }
 
-    @CheckResult
+    @JvmOverloads
     fun short(
       view: View,
-      @StringRes message: Int
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_SHORT).also { snackbar = it }
+      @StringRes message: Int,
+      force: Boolean = false,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(force, builder) { make(view, message, Snackbar.LENGTH_SHORT) }
     }
 
-    @CheckResult
+    @JvmOverloads
     fun long(
       view: View,
-      message: CharSequence
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_LONG).also { snackbar = it }
+      message: CharSequence,
+      force: Boolean = false,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(force, builder) { make(view, message, Snackbar.LENGTH_LONG) }
     }
 
-    @CheckResult
+    @JvmOverloads
     fun long(
       view: View,
-      @StringRes message: Int
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_LONG).also { snackbar = it }
+      @StringRes message: Int,
+      force: Boolean = false,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(force, builder) { make(view, message, Snackbar.LENGTH_LONG) }
     }
 
-    @CheckResult
+    @JvmOverloads
     fun indefinite(
       view: View,
-      message: CharSequence
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_INDEFINITE).also { snackbar = it }
+      message: CharSequence,
+      force: Boolean = false,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(force, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
     }
 
-    @CheckResult
+    @JvmOverloads
     fun indefinite(
       view: View,
-      @StringRes message: Int
-    ): Snackbar {
-      requireStillAlive()
-      dismiss()
-      return make(view, message, Snackbar.LENGTH_INDEFINITE).also { snackbar = it }
+      @StringRes message: Int,
+      force: Boolean = false,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(force, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
     }
 
   }

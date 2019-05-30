@@ -52,9 +52,9 @@ abstract class AppSettingsFragment : Fragment() {
     val fragmentManager = childFragmentManager
     val tag: String = provideSettingsTag()
     if (fragmentManager.findFragmentByTag(tag) == null) {
-      fragmentManager.beginTransaction()
-          .add(requireNotNull(coordinatorLayout).id, provideSettingsFragment(), tag)
-          .commit(viewLifecycleOwner)
+      fragmentManager.commit(viewLifecycleOwner) {
+        add(requireNotNull(coordinatorLayout).id, provideSettingsFragment(), tag)
+      }
     }
   }
 

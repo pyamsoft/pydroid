@@ -19,24 +19,42 @@ package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.R
 
-class DropshadowView constructor(
+class DropshadowView<S : UiViewState, E : UiViewEvent> private constructor(
   parent: ViewGroup
-) : BaseUiView<UnitViewState, UnitViewEvent>(parent) {
+) : BaseUiView<S, E>(parent) {
 
   override val layout: Int = R.layout.dropshadow
 
   override val layoutRoot by boundView<View>(R.id.dropshadow_view)
 
   override fun onRender(
-    state: UnitViewState,
+    state: S,
     savedState: UiSavedState
   ) {
+  }
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    fun create(parent: ViewGroup): DropshadowView<UnitViewState, UnitViewEvent> {
+      return createTyped(parent)
+    }
+
+    @JvmStatic
+    @CheckResult
+    fun <S : UiViewState, E : UiViewEvent> createTyped(parent: ViewGroup): DropshadowView<S, E> {
+      return DropshadowView(parent)
+    }
   }
 
 }

@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui
 
+import android.app.Activity
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
@@ -74,13 +75,13 @@ internal interface PYDroidComponent {
     private val applicationName: String,
     private val bugReportUrl: String,
     private val currentVersion: Int,
-    private val schedulerProvider: SchedulerProvider
+    private val schedulers: SchedulerProvider
   ) : PYDroidComponent, ModuleProvider {
 
     private val context = application
     private val enforcer = Enforcer(debug)
-    private val theming = Theming(context)
     private val preferences = PYDroidPreferencesImpl(context)
+    private val theming = Theming(preferences)
     private val packageName = context.packageName
 
     private val aboutModule = AboutModule(enforcer)
@@ -95,18 +96,19 @@ internal interface PYDroidComponent {
     )
 
     @CheckResult
-    private fun viewModelFactory(): PYDroidViewModelFactory {
+    private fun viewModelFactory(activity: Activity): PYDroidViewModelFactory {
       return PYDroidViewModelFactory(
+          activity,
           ratingModule.provideInteractor(),
           aboutModule.provideInteractor(),
           versionCheckModule.provideInteractor(),
           theming,
-          schedulerProvider
+          schedulers
       )
     }
 
     override fun plusAbout(): AboutComponent.Factory {
-      return AboutComponent.Impl.FactoryImpl(viewModelFactory())
+      return AboutComponent.Impl.FactoryImpl { viewModelFactory(it) }
     }
 
     override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -114,27 +116,27 @@ internal interface PYDroidComponent {
     }
 
     override fun plusRatingDialog(): RatingDialogComponent.Factory {
-      return RatingDialogComponent.Impl.FactoryImpl(viewModelFactory(), loaderModule)
+      return RatingDialogComponent.Impl.FactoryImpl(loaderModule) { viewModelFactory(it) }
     }
 
     override fun plusVersion(): VersionComponent.Factory {
-      return VersionComponent.Impl.FactoryImpl(schedulerProvider, ratingModule, viewModelFactory())
+      return VersionComponent.Impl.FactoryImpl(schedulers, ratingModule) { viewModelFactory(it) }
     }
 
     override fun plusUpgrade(): VersionUpgradeComponent.Factory {
       return VersionUpgradeComponent.Impl.FactoryImpl(
-          applicationName, currentVersion, viewModelFactory()
-      )
+          applicationName, currentVersion
+      ) { viewModelFactory(it) }
     }
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
       return AppSettingsComponent.Impl.FactoryImpl(
-          applicationName, bugReportUrl, viewModelFactory(), ratingModule, schedulerProvider
-      )
+          applicationName, bugReportUrl, ratingModule, schedulers
+      ) { viewModelFactory(it) }
     }
 
     override fun schedulerProvider(): SchedulerProvider {
-      return schedulerProvider
+      return schedulers
     }
 
     override fun enforcer(): Enforcer {
@@ -160,9 +162,9 @@ internal interface PYDroidComponent {
         schedulerProvider: SchedulerProvider
       ): ComponentImpl {
         return ComponentImpl(
-            application, debug,
-            applicationName, bugReportUrl,
-            currentVersion, schedulerProvider
+            application, debug, applicationName,
+            bugReportUrl, currentVersion,
+            schedulerProvider
         )
       }
 

@@ -84,7 +84,9 @@ class RatingDialog : DialogFragment() {
     val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
     Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusRatingDialog()
-        .create(layoutRoot, viewLifecycleOwner, rateLink, changeLogIcon, changelog)
+        .create(
+            requireActivity(), layoutRoot, viewLifecycleOwner, rateLink, changeLogIcon, changelog
+        )
         .inject(this)
 
     ViewModelProviders.of(this, viewModelFactory)

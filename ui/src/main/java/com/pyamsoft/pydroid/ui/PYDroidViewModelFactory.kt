@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui
 
+import android.app.Activity
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
@@ -33,6 +34,7 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
+  private val activity: Activity,
   private val ratingInteractor: RatingInteractor,
   private val aboutInteractor: AboutInteractor,
   private val versionInteractor: VersionCheckInteractor,
@@ -45,7 +47,7 @@ internal class PYDroidViewModelFactory internal constructor(
       AboutToolbarViewModel::class -> AboutToolbarViewModel()
       AboutListViewModel::class -> AboutListViewModel(aboutInteractor, scheduler)
       RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor, scheduler)
-      AppSettingsViewModel::class -> AppSettingsViewModel(theming)
+      AppSettingsViewModel::class -> AppSettingsViewModel(activity, theming)
       VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor, scheduler)
       VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
       else -> fail()

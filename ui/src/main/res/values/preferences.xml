@@ -53,12 +53,22 @@
   <string name="social_media_b_title">Blogs and Updates</string>
   <string name="social_media_b_summary">Follow the pyamsoft official blog for updates!</string>
 
-  <!-- In most cases this will be overridden by a call to Theming.IS_DEFAULT_DARK_THEME -->
-  <bool name="dark_mode_default">false</bool>
+  <string name="dark_mode_key">dark_mode_v2</string>
+  <string name="dark_mode_title">Theme</string>
+  <string name="dark_mode_summary">Apply either a Light or Dark theme!</string>
 
-  <string name="dark_mode_key">dark_mode_v1</string>
-  <string name="dark_mode_title">Enable Dark Mode</string>
-  <string name="dark_mode_summary_on">Dark Mode</string>
-  <string name="dark_mode_summary_off">Light Mode</string>
+  <string-array name="dark_mode_names_v1">
+    <item name="light">Light Theme</item>
+    <item name="dark">Dark Theme</item>
+    <item name="battery">Set by Battery Saver</item>
+    <item name="system">System Default</item>
+  </string-array>
+
+  <string-array name="dark_mode_values_v1">
+    <item name="light">light</item>
+    <item name="dark">dark</item>
+    <item name="battery">battery</item>
+    <item name="system">system</item>
+  </string-array>
 
 </resources>

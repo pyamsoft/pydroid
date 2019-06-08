@@ -69,7 +69,7 @@ class VersionUpgradeDialog : DialogFragment() {
     val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
     Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusUpgrade()
-        .create(layoutRoot, viewLifecycleOwner, latestVersion)
+        .create(requireActivity(), layoutRoot, viewLifecycleOwner, latestVersion)
         .inject(this)
 
     ViewModelProviders.of(this, factory)

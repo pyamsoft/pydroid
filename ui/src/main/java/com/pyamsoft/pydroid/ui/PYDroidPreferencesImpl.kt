@@ -21,14 +21,17 @@ import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import com.pyamsoft.pydroid.ui.theme.Theming.Mode
+import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
+import com.pyamsoft.pydroid.ui.theme.ThemingPreferences
+import com.pyamsoft.pydroid.ui.theme.toMode
 
 internal class PYDroidPreferencesImpl internal constructor(
   context: Context
-) : RatingPreferences {
+) : RatingPreferences, ThemingPreferences {
 
-  private val prefs by lazy {
-    PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-  }
+  private val darkModeKey = context.getString(R.string.dark_mode_key)
+  private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
   override var ratingAcceptedVersion: Int
     get() = prefs.getInt(
@@ -39,6 +42,18 @@ internal class PYDroidPreferencesImpl internal constructor(
         putInt(RATING_ACCEPTED_VERSION, value)
       }
     }
+
+  override fun initializeDarkMode(onInit: (mode: Mode) -> Unit) {
+    if (!prefs.contains(darkModeKey)) {
+      val mode = SYSTEM
+      prefs.edit { putString(darkModeKey, mode.toRawString()) }
+      onInit(mode)
+    }
+  }
+
+  override fun getDarkMode(): Mode {
+    return requireNotNull(prefs.getString(darkModeKey, SYSTEM.toRawString())).toMode()
+  }
 
   companion object {
 

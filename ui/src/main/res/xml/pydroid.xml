@@ -22,11 +22,12 @@
 
   <PreferenceCategory android:key="application_settings">
 
-    <com.pyamsoft.pydroid.ui.preference.SwitchPreferenceCompat
-        android:defaultValue="@bool/dark_mode_default"
+    <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
+        android:dialogTitle="@string/dark_mode_title"
+        android:entries="@array/dark_mode_names_v1"
+        android:entryValues="@array/dark_mode_values_v1"
         android:key="@string/dark_mode_key"
-        android:summaryOff="@string/dark_mode_summary_off"
-        android:summaryOn="@string/dark_mode_summary_on"
+        android:summary="@string/dark_mode_summary"
         android:title="@string/dark_mode_title"
         app:iconCompat="@drawable/ic_visibility_24dp"/>
 

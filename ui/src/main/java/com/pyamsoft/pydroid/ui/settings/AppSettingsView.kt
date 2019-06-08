@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.settings
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
@@ -56,7 +57,7 @@ internal class AppSettingsView internal constructor(
   private val version by boundPref<Preference>(R.string.check_version_key)
   private val clearAll by boundPref<Preference>(R.string.clear_all_key)
   private val upgradeInfo by boundPref<Preference>(R.string.upgrade_info_key)
-  private val theme by boundPref<Preference>(R.string.dark_mode_key)
+  private val theme by boundPref<ListPreference>(R.string.dark_mode_key)
   private val applicationGroup by boundPref<Preference>("application_settings")
 
   override fun onInflated(
@@ -197,7 +198,7 @@ internal class AppSettingsView internal constructor(
 
   private fun setupDarkTheme() {
     theme.setOnPreferenceChangeListener { _, newValue ->
-      if (newValue is Boolean) {
+      if (newValue is String) {
         publish(ToggleDarkTheme(newValue))
         return@setOnPreferenceChangeListener true
       }

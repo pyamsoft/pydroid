@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
@@ -47,7 +48,7 @@ internal interface VersionComponent {
     private val owner: LifecycleOwner,
     private val schedulerProvider: SchedulerProvider,
     private val ratingModule: RatingModule,
-    private val factory: PYDroidViewModelFactory
+    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
   ) : VersionComponent {
 
     override fun plusRating(): RatingComponent.Factory {
@@ -57,21 +58,21 @@ internal interface VersionComponent {
     override fun inject(activity: VersionCheckActivity) {
       val versionView = VersionView(owner, parent)
 
-      activity.versionViewModelFactory = factory
+      activity.versionViewModelFactory = factoryProvider(activity)
       activity.versionView = versionView
     }
 
     internal class FactoryImpl internal constructor(
       private val schedulerProvider: SchedulerProvider,
       private val ratingModule: RatingModule,
-      private val factory: PYDroidViewModelFactory
+      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
 
       override fun create(
         owner: LifecycleOwner,
         parent: ViewGroup
       ): VersionComponent {
-        return Impl(parent, owner, schedulerProvider, ratingModule, factory)
+        return Impl(parent, owner, schedulerProvider, ratingModule, factoryProvider)
       }
 
     }

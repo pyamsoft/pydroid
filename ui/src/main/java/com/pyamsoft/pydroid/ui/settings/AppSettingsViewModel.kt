@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
@@ -36,11 +37,15 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.theme.toMode
 
 internal class AppSettingsViewModel internal constructor(
-  theming: Theming
+  activity: Activity,
+  private val theming: Theming
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
-    initialState = AppSettingsViewState(isDarkTheme = theming.isDarkTheme(), throwable = null)
+    initialState = AppSettingsViewState(
+        isDarkTheme = theming.isDarkTheme(activity), throwable = null
+    )
 ) {
 
   override fun handleViewEvent(event: AppSettingsViewEvent) {
@@ -52,8 +57,12 @@ internal class AppSettingsViewModel internal constructor(
       is CheckUpgrade -> publish(AttemptCheckUpgrade)
       is ClearData -> publish(AttemptClearData)
       is ShowUpgrade -> publish(OpenShowUpgrade)
-      is ToggleDarkTheme -> publish(ChangeDarkTheme(event.isDark))
+      is ToggleDarkTheme -> changeDarkMode(event.mode)
     }
+  }
+
+  private fun changeDarkMode(mode: String) {
+    theming.setDarkTheme(mode.toMode()) { publish(ChangeDarkTheme(it)) }
   }
 
   fun navigationFailed(error: ActivityNotFoundException) {

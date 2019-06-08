@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
+import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
@@ -30,6 +31,7 @@ internal interface VersionUpgradeComponent {
 
     @CheckResult
     fun create(
+      activity: Activity,
       parent: ViewGroup,
       owner: LifecycleOwner,
       newVersion: Int
@@ -38,12 +40,13 @@ internal interface VersionUpgradeComponent {
   }
 
   class Impl private constructor(
+    private val activity: Activity,
     private val parent: ViewGroup,
     private val owner: LifecycleOwner,
     private val applicationName: String,
     private val currentVersion: Int,
     private val newVersion: Int,
-    private val factory: PYDroidViewModelFactory
+    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
   ) : VersionUpgradeComponent {
 
     override fun inject(dialog: VersionUpgradeDialog) {
@@ -51,7 +54,7 @@ internal interface VersionUpgradeComponent {
         VersionUpgradeContentView(applicationName, currentVersion, newVersion, parent)
       val controlsView = VersionUpgradeControlView(owner, parent)
 
-      dialog.factory = factory
+      dialog.factory = factoryProvider(activity)
       dialog.control = controlsView
       dialog.content = contentView
     }
@@ -59,15 +62,18 @@ internal interface VersionUpgradeComponent {
     internal class FactoryImpl internal constructor(
       private val applicationName: String,
       private val currentVersion: Int,
-      private val factory: PYDroidViewModelFactory
+      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
 
       override fun create(
+        activity: Activity,
         parent: ViewGroup,
         owner: LifecycleOwner,
         newVersion: Int
       ): VersionUpgradeComponent {
-        return Impl(parent, owner, applicationName, currentVersion, newVersion, factory)
+        return Impl(
+            activity, parent, owner, applicationName, currentVersion, newVersion, factoryProvider
+        )
       }
 
     }

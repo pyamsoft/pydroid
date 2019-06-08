@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
@@ -35,6 +36,7 @@ internal interface AppSettingsComponent {
 
     @CheckResult
     fun create(
+      activity: Activity,
       parent: ViewGroup,
       owner: LifecycleOwner,
       preferenceScreen: PreferenceScreen,
@@ -45,6 +47,7 @@ internal interface AppSettingsComponent {
   }
 
   class Impl private constructor(
+    private val activity: Activity,
     private val parent: ViewGroup,
     private val owner: LifecycleOwner,
     private val applicationName: String,
@@ -54,7 +57,7 @@ internal interface AppSettingsComponent {
     private val preferenceScreen: PreferenceScreen,
     private val ratingModule: RatingModule,
     private val schedulerProvider: SchedulerProvider,
-    private val factory: PYDroidViewModelFactory
+    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
   ) : AppSettingsComponent {
 
     override fun inject(fragment: AppSettingsPreferenceFragment) {
@@ -66,18 +69,19 @@ internal interface AppSettingsComponent {
       fragment.versionView = versionView
       fragment.appSettingsView = settingsView
       fragment.ratingLoader = RatingLoader(ratingModule.provideInteractor(), schedulerProvider)
-      fragment.appSettingsViewModelFactory = factory
+      fragment.appSettingsViewModelFactory = factoryProvider(activity)
     }
 
     internal class FactoryImpl internal constructor(
       private val applicationName: String,
       private val bugReportUrl: String,
-      private val factory: PYDroidViewModelFactory,
       private val ratingModule: RatingModule,
-      private val schedulerProvider: SchedulerProvider
+      private val schedulerProvider: SchedulerProvider,
+      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
 
       override fun create(
+        activity: Activity,
         parent: ViewGroup,
         owner: LifecycleOwner,
         preferenceScreen: PreferenceScreen,
@@ -85,8 +89,9 @@ internal interface AppSettingsComponent {
         hideUpgradeInformation: Boolean
       ): AppSettingsComponent {
         return Impl(
-            parent, owner, applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation,
-            preferenceScreen, ratingModule, schedulerProvider, factory
+            activity, parent, owner, applicationName, bugReportUrl,
+            hideClearAll, hideUpgradeInformation, preferenceScreen,
+            ratingModule, schedulerProvider, factoryProvider
         )
       }
 

@@ -42,6 +42,7 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateMoreA
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateRateApp
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.OpenShowUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ShowLicense
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
@@ -90,7 +91,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusSettingsComponent()
         .create(
-            listView, viewLifecycleOwner, preferenceScreen,
+            requireActivity(), listView, viewLifecycleOwner, preferenceScreen,
             hideClearAll, hideUpgradeInformation
         )
         .inject(this)
@@ -114,7 +115,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         is AttemptCheckUpgrade -> forceUpgradeCheck()
         is AttemptClearData -> openClearDataDialog()
         is OpenShowUpgrade -> forceInfoShow()
-        is ChangeDarkTheme -> darkThemeChanged(it.isDark)
+        is ChangeDarkTheme -> darkThemeChanged(it.newMode)
       }
     }
 
@@ -168,8 +169,8 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     failedNavigation(error)
   }
 
-  private fun darkThemeChanged(dark: Boolean) {
-    onDarkThemeClicked(dark)
+  private fun darkThemeChanged(mode: Theming.Mode) {
+    onDarkThemeClicked(mode)
   }
 
   private fun openClearDataDialog() {
@@ -211,8 +212,8 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
    * Toggles dark theme, override or extend to use unique implementation
    */
   @CallSuper
-  protected open fun onDarkThemeClicked(dark: Boolean) {
-    Timber.d("Dark theme set: $dark")
+  protected open fun onDarkThemeClicked(mode: Theming.Mode) {
+    Timber.d("Dark theme set: $mode")
     requireActivity().recreate()
   }
 

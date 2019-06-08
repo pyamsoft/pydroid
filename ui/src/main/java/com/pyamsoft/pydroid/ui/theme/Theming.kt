@@ -17,49 +17,74 @@
 
 package com.pyamsoft.pydroid.ui.theme
 
-import android.content.Context
-import android.content.SharedPreferences
+import android.app.Activity
+import android.content.res.Configuration
+import android.os.Build
 import androidx.annotation.CheckResult
-import androidx.core.content.edit
-import androidx.preference.PreferenceManager
-import com.pyamsoft.pydroid.ui.R
+import androidx.appcompat.app.AppCompatDelegate
 import timber.log.Timber
 
-class Theming internal constructor(context: Context) {
-
-  private val preferences: SharedPreferences
-  private val key: String
+class Theming internal constructor(preferences: ThemingPreferences) {
 
   init {
-    val appContext = context.applicationContext
-    preferences = PreferenceManager.getDefaultSharedPreferences(appContext)
-    key = appContext.getString(R.string.dark_mode_key)
-
-    if (!preferences.contains(key)) {
-      setDarkTheme(IS_DEFAULT_DARK_THEME)
+    preferences.initializeDarkMode { mode ->
+      setDarkTheme(mode) { newMode ->
+        Timber.d("Theming initialized mode: $newMode")
+      }
     }
+
+    val mode = preferences.getDarkMode()
+    setDarkTheme(mode)
   }
 
   @CheckResult
-  fun isDarkTheme(): Boolean {
-    return preferences.getBoolean(key, IS_DEFAULT_DARK_THEME)
+  fun isDarkTheme(activity: Activity): Boolean {
+    val uiMode = activity.resources.configuration.uiMode
+    return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
   }
 
   @JvmOverloads
   fun setDarkTheme(
-    dark: Boolean,
-    onSet: (dark: Boolean) -> Unit = {}
+    mode: Mode,
+    onSet: (mode: Mode) -> Unit = DEFAULT_ON_SET_CALLBACK
   ) {
-    preferences.edit {
-      Timber.d("Set dark theme: $dark")
-      putBoolean(key, dark)
-      onSet(dark)
+    AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
+    onSet(mode)
+  }
+
+  enum class Mode {
+    LIGHT,
+    DARK,
+    BATTERY,
+    SYSTEM;
+
+    @CheckResult
+    fun toRawString(): String {
+      return name.toLowerCase()
+    }
+
+    @CheckResult
+    fun toAppCompatMode(): Int {
+      return when (this) {
+        LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+        DARK -> AppCompatDelegate.MODE_NIGHT_YES
+//        BATTERY ->AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
+        else -> when {
+          supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+          else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
+      }
+    }
+
+    @CheckResult
+    private fun supportsFollowSystem(): Boolean {
+      return Build.VERSION.SDK_INT >= 28
     }
   }
 
   companion object {
 
-    @JvmField
-    var IS_DEFAULT_DARK_THEME = false
+    private val DEFAULT_ON_SET_CALLBACK: (mode: Mode) -> Unit = {}
   }
+
 }

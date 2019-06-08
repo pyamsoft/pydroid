@@ -63,7 +63,9 @@ internal interface AppSettingsComponent {
     override fun inject(fragment: AppSettingsPreferenceFragment) {
       val versionView = VersionView(owner, parent)
       val settingsView = AppSettingsView(
-          applicationName, bugReportUrl, hideClearAll, hideUpgradeInformation, preferenceScreen
+          activity, applicationName, bugReportUrl,
+          hideClearAll, hideUpgradeInformation,
+          preferenceScreen
       )
 
       fragment.versionView = versionView

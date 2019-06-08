@@ -128,6 +128,8 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
       }
     }
+
+    requireNotNull(appSettingsViewModel).initDarkThemeState(requireActivity())
   }
 
   private fun forceUpgradeCheck() {

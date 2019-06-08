@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.preference.ListPreference
@@ -36,8 +37,10 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
+import timber.log.Timber
 
 internal class AppSettingsView internal constructor(
+  private val activity: Activity,
   private val applicationName: String,
   private val bugReportUrl: String,
   private val hideClearAll: Boolean,
@@ -46,7 +49,6 @@ internal class AppSettingsView internal constructor(
 ) : PrefUiView<AppSettingsViewState, AppSettingsViewEvent>(preferenceScreen) {
 
   private var preferenceScreen: PreferenceScreen? = preferenceScreen
-  private val context = preferenceScreen.context
 
   private val moreApps by boundPref<Preference>(R.string.more_apps_key)
   private val social by boundPref<Preference>(R.string.social_media_f_key)
@@ -130,7 +132,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupSocial() {
-    val socialLink = FACEBOOK.hyperlink(context)
+    val socialLink = FACEBOOK.hyperlink(activity)
     social.setOnPreferenceClickListener {
       publish(Hyperlink(socialLink))
       return@setOnPreferenceClickListener true
@@ -138,7 +140,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBlog() {
-    val blogLink = BLOG.hyperlink(context)
+    val blogLink = BLOG.hyperlink(activity)
     followBlog.setOnPreferenceClickListener {
       publish(Hyperlink(blogLink))
       return@setOnPreferenceClickListener true
@@ -153,7 +155,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBugReport(bugReportUrl: String) {
-    val reportLink = bugReportUrl.hyperlink(context)
+    val reportLink = bugReportUrl.hyperlink(activity)
     bugReport.setOnPreferenceClickListener {
       publish(Hyperlink(reportLink))
       return@setOnPreferenceClickListener true
@@ -199,7 +201,7 @@ internal class AppSettingsView internal constructor(
   private fun setupDarkTheme() {
     theme.setOnPreferenceChangeListener { _, newValue ->
       if (newValue is String) {
-        publish(ToggleDarkTheme(newValue))
+        publish(ToggleDarkTheme(activity, newValue))
         return@setOnPreferenceChangeListener true
       }
       return@setOnPreferenceChangeListener false

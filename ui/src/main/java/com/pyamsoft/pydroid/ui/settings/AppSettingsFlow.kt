@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.app.Activity
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
@@ -44,7 +45,10 @@ sealed class AppSettingsViewEvent : UiViewEvent {
 
   object ShowUpgrade : AppSettingsViewEvent()
 
-  data class ToggleDarkTheme(val mode: String) : AppSettingsViewEvent()
+  data class ToggleDarkTheme(
+    val activity: Activity,
+    val mode: String
+  ) : AppSettingsViewEvent()
 
 }
 

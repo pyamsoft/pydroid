@@ -61,8 +61,16 @@ internal class AppSettingsViewModel internal constructor(
     }
   }
 
-  private fun changeDarkMode(mode: String) {
-    theming.setDarkTheme(mode.toMode()) { publish(ChangeDarkTheme(it)) }
+  fun initDarkThemeState(activity: Activity) {
+    setState { copy(isDarkTheme = theming.isDarkTheme(activity)) }
+  }
+
+  private fun changeDarkMode(
+    mode: String
+  ) {
+    theming.setDarkTheme(mode.toMode()) {
+      publish(ChangeDarkTheme(it))
+    }
   }
 
   fun navigationFailed(error: ActivityNotFoundException) {

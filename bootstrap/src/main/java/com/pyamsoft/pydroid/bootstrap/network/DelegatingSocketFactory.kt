@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap.network.socket
+package com.pyamsoft.pydroid.bootstrap.network
 
 import android.net.TrafficStats
 import androidx.annotation.CheckResult

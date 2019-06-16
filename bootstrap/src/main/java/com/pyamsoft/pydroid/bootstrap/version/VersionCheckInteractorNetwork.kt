@@ -18,8 +18,6 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProvider
-import com.pyamsoft.pydroid.bootstrap.network.NoNetworkException
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
@@ -33,7 +31,6 @@ internal class VersionCheckInteractorNetwork internal constructor(
   private val packageName: String,
   private val enforcer: Enforcer,
   private val minimumApiProvider: MinimumApiProvider,
-  private val networkStatusProvider: NetworkStatusProvider,
   private val versionCheckService: VersionCheckService
 ) : VersionCheckInteractor {
 
@@ -58,17 +55,13 @@ internal class VersionCheckInteractorNetwork internal constructor(
   override fun checkVersion(force: Boolean): Maybe<UpdatePayload> {
     return Single.defer {
       enforcer.assertNotOnMainThread()
-      if (!networkStatusProvider.hasConnection()) {
-        throw NoNetworkException
+      val targetName: String
+      if (packageName.endsWith(".dev")) {
+        targetName = packageName.substringBefore(".dev")
       } else {
-        val targetName: String
-        if (packageName.endsWith(".dev")) {
-          targetName = packageName.substringBefore(".dev")
-        } else {
-          targetName = packageName
-        }
-        return@defer versionCheckService.checkVersion(targetName)
+        targetName = packageName
       }
+      return@defer versionCheckService.checkVersion(targetName)
     }
         .map { versionCodeForApi(it) }
         .map { UpdatePayload(currentVersion, it) }

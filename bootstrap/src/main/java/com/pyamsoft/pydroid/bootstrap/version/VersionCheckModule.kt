@@ -22,8 +22,7 @@ import androidx.annotation.CheckResult
 import com.popinnow.android.repo.Repo
 import com.popinnow.android.repo.moshi.MoshiPersister
 import com.popinnow.android.repo.newRepoBuilder
-import com.pyamsoft.pydroid.bootstrap.network.NetworkStatusProviderImpl
-import com.pyamsoft.pydroid.bootstrap.network.socket.DelegatingSocketFactory
+import com.pyamsoft.pydroid.bootstrap.network.DelegatingSocketFactory
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
@@ -56,14 +55,12 @@ class VersionCheckModule(
     val repo = createRepo(context, moshi)
     val versionCheckService = createService(retrofit)
     val minimumApiProvider = MinimumApiProviderImpl()
-    val networkStatusProvider = NetworkStatusProviderImpl(context)
 
     val network = VersionCheckInteractorNetwork(
         currentVersion,
         packageName,
         enforcer,
         minimumApiProvider,
-        networkStatusProvider,
         versionCheckService
     )
 

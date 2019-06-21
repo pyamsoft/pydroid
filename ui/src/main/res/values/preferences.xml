@@ -60,14 +60,12 @@
   <string-array name="dark_mode_names_v1">
     <item name="light">Light Theme</item>
     <item name="dark">Dark Theme</item>
-    <item name="battery">Set by Battery Saver</item>
     <item name="system">System Default</item>
   </string-array>
 
   <string-array name="dark_mode_values_v1">
     <item name="light">light</item>
     <item name="dark">dark</item>
-    <item name="battery">battery</item>
     <item name="system">system</item>
   </string-array>
 

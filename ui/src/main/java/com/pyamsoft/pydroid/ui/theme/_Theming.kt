@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.theme
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
-import com.pyamsoft.pydroid.ui.theme.Theming.Mode.BATTERY
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.DARK
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
@@ -29,7 +28,6 @@ fun String.toMode(): Mode {
   return when (this) {
     "light" -> LIGHT
     "dark" -> DARK
-    "battery" -> BATTERY
     "system" -> SYSTEM
     else -> SYSTEM
   }

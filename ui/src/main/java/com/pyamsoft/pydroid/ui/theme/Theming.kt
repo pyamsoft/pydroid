@@ -55,7 +55,6 @@ class Theming internal constructor(preferences: ThemingPreferences) {
   enum class Mode {
     LIGHT,
     DARK,
-    BATTERY,
     SYSTEM;
 
     @CheckResult
@@ -68,7 +67,6 @@ class Theming internal constructor(preferences: ThemingPreferences) {
       return when (this) {
         LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
         DARK -> AppCompatDelegate.MODE_NIGHT_YES
-//        BATTERY ->AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY
         else -> when {
           supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
           else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM

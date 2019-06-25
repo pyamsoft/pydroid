@@ -17,5 +17,27 @@
 
 package com.pyamsoft.pydroid.core.bus
 
-interface EventBus<T : Any> : Publisher<T>, Listener<T>
+import androidx.annotation.CheckResult
+import io.reactivex.Observable
+import kotlinx.coroutines.CoroutineScope
+
+interface EventBus<T : Any> {
+
+  // TODO: Once we are coroutine ready we will migrate this to a ReceiveChannel<T>
+  @CheckResult
+  fun listen(): Observable<T>
+
+  fun publish(event: T)
+
+  companion object {
+
+    @CheckResult
+    fun <T : Any> create(scope: CoroutineScope): EventBus<T> = RealBus.create(scope)
+
+    @CheckResult
+    fun empty(): EventBus<Unit> = RealBus.empty()
+
+  }
+
+}
 

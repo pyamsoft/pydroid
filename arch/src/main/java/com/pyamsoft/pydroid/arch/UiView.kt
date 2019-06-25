@@ -20,17 +20,26 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import com.pyamsoft.pydroid.core.bus.RxBus
+import com.pyamsoft.pydroid.core.bus.EventBus
 import io.reactivex.Observable
+import kotlinx.coroutines.CoroutineScope
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) {
 
-  private val viewEventBus = RxBus.create<V>()
+  private var viewEventBus: EventBus<V>? = null
 
   @IdRes
   @CheckResult
   abstract fun id(): Int
+
+  fun inflate(
+    scope: CoroutineScope,
+    savedInstanceState: Bundle?
+  ) {
+    viewEventBus = EventBus.create(scope)
+    inflate(savedInstanceState)
+  }
 
   open fun inflate(savedInstanceState: Bundle?) {
   }
@@ -48,11 +57,11 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 
   @CheckResult
   fun viewEvents(): Observable<V> {
-    return viewEventBus.listen()
+    return requireNotNull(viewEventBus).listen()
   }
 
   protected fun publish(event: V) {
-    viewEventBus.publish(event)
+    requireNotNull(viewEventBus).publish(event)
   }
 
 }

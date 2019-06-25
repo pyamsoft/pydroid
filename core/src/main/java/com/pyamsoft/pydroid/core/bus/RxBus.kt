@@ -18,42 +18,18 @@
 package com.pyamsoft.pydroid.core.bus
 
 import androidx.annotation.CheckResult
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
+import kotlinx.coroutines.GlobalScope
 
-class RxBus<T : Any> private constructor() : EventBus<T> {
+object RxBus {
 
-  private val bus by lazy {
-    PublishSubject.create<T>()
-        .toSerialized()
-  }
+  /**
+   * Create a new local viewBus instance to use
+   */
+  @JvmStatic
+  @CheckResult
+  fun <T : Any> create(): EventBus<T> = EventBus.create(GlobalScope)
 
-  override fun publish(event: T) {
-    if (!bus.hasObservers()) {
-      Timber.w("No observers on bus, may ignore event: $event")
-    }
-
-    bus.onNext(event)
-  }
-
-  override fun listen(): Observable<T> {
-    return bus
-  }
-
-  companion object {
-
-    private val EMPTY by lazy { create<Unit>() }
-
-    /**
-     * Create a new local viewBus instance to use
-     */
-    @JvmStatic
-    @CheckResult
-    fun <T : Any> create(): EventBus<T> = RxBus()
-
-    @JvmStatic
-    @CheckResult
-    fun empty(): EventBus<Unit> = EMPTY
-  }
+  @JvmStatic
+  @CheckResult
+  fun empty(): EventBus<Unit> = EventBus.empty()
 }

@@ -21,6 +21,7 @@ import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.threads.Enforcer
 import com.pyamsoft.pydroid.ui.theme.Theming
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * PYDroid library entry point
@@ -29,8 +30,7 @@ object PYDroid {
 
   private val DEFAULT_INIT_CALLBACK: (provider: ModuleProvider) -> Unit = {}
 
-  private val lock = Any()
-  @Volatile private var instance: PYDroidInitializer? = null
+  private val instance = AtomicReference<PYDroidInitializer?>(null)
 
   /**
    * Access point for library versionComponent graph
@@ -40,7 +40,7 @@ object PYDroid {
   @JvmStatic
   @CheckResult
   private fun instance(): PYDroidInitializer {
-    return requireNotNull(instance) { "PYDroid not initialized, call PYDroid.init()" }
+    return requireNotNull(instance.get()) { "PYDroid not initialized, call PYDroid.init()" }
   }
 
   /**
@@ -67,19 +67,16 @@ object PYDroid {
     debug: Boolean,
     onInit: (provider: ModuleProvider) -> Unit = DEFAULT_INIT_CALLBACK
   ) {
-    if (instance == null) {
-      synchronized(lock) {
-        if (instance == null) {
-          val pydroid = PYDroidInitializer(
-              application,
-              applicationName,
-              bugReportUrl,
-              currentVersion,
-              debug
-          )
-          instance = pydroid
-          onInit(pydroid.moduleProvider)
-        }
+    if (instance.get() == null) {
+      val pydroid = PYDroidInitializer(
+          application,
+          applicationName,
+          bugReportUrl,
+          currentVersion,
+          debug
+      )
+      if (instance.compareAndSet(null, pydroid)) {
+        onInit(pydroid.moduleProvider)
       }
     }
   }

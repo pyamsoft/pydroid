@@ -22,6 +22,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable
+import kotlinx.coroutines.CoroutineScope
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) {
@@ -32,7 +33,15 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
   @CheckResult
   abstract fun id(): Int
 
-  open fun inflate(savedInstanceState: Bundle?) {
+  @PublishedApi
+  internal fun inflate(
+    scope: CoroutineScope,
+    savedInstanceState: Bundle?
+  ) {
+    inflate(savedInstanceState)
+  }
+
+  protected open fun inflate(savedInstanceState: Bundle?) {
   }
 
   abstract fun render(

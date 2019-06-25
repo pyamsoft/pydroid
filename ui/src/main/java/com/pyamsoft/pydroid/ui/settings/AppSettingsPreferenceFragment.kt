@@ -32,7 +32,8 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.rating.RatingLoader
+import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
@@ -64,7 +65,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
   internal var appSettingsView: AppSettingsView? = null
   private var appSettingsViewModel: AppSettingsViewModel? = null
 
-  internal var ratingLoader: RatingLoader? = null
+  internal var ratingViewModel: RatingViewModel? = null
 
   internal var versionView: VersionView? = null
   private var versionViewModel: VersionCheckViewModel? = null
@@ -114,13 +115,13 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         is ShowLicense -> openLicensesPage()
         is AttemptCheckUpgrade -> forceUpgradeCheck()
         is AttemptClearData -> openClearDataDialog()
-        is OpenShowUpgrade -> forceInfoShow()
+        is OpenShowUpgrade -> openUpdateInfo()
         is ChangeDarkTheme -> darkThemeChanged(it.newMode)
       }
     }
 
     createComponent(
-        savedInstanceState, this,
+        savedInstanceState, viewLifecycleOwner,
         requireNotNull(versionViewModel),
         requireNotNull(versionView)
     ) {
@@ -129,17 +130,20 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
       }
     }
 
+    createComponent(
+        savedInstanceState, viewLifecycleOwner,
+        requireNotNull(ratingViewModel)
+    ) {
+      return@createComponent when (it) {
+        is LoadRating -> openUpdateInfo()
+      }
+    }
+
     requireNotNull(appSettingsViewModel).initDarkThemeState(requireActivity())
   }
 
   private fun forceUpgradeCheck() {
     requireNotNull(versionViewModel).checkForUpdates(true)
-  }
-
-  private fun forceInfoShow() {
-    requireNotNull(ratingLoader).load(true) {
-      openUpdateInfo()
-    }
   }
 
   private fun openUpdateInfo() {

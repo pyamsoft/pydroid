@@ -28,9 +28,11 @@ import androidx.annotation.CheckResult
 import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -38,7 +40,7 @@ import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
-  internal var ratingLoader: RatingLoader? = null
+  internal var ratingViewModel: RatingViewModel? = null
 
   protected abstract val changeLogLines: ChangeLogBuilder
 
@@ -97,15 +99,20 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
         .create()
         .inject(this)
 
-    requireNotNull(ratingLoader).load(false) {
-      showRating()
+    createComponent(
+        savedInstanceState, this,
+        requireNotNull(ratingViewModel)
+    ) {
+      return@createComponent when (it) {
+        is LoadRating -> showRating()
+      }
     }
   }
 
   @CallSuper
   override fun onDestroy() {
     super.onDestroy()
-    ratingLoader = null
+    ratingViewModel = null
   }
 
   private fun showRating() {

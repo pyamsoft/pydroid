@@ -28,7 +28,6 @@ dependencies {
 
   // Cachify
   api "com.pyamsoft.cachify:cachify:$cachify"
-  api "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines"
 
   api project(':util')
 }

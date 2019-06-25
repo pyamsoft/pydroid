@@ -18,24 +18,29 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.content.ActivityNotFoundException
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.core.singleJob
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal class RatingDialogViewModel internal constructor(
-  private val interactor: RatingInteractor,
-  private val schedulerProvider: SchedulerProvider
+  private val interactor: RatingInteractor
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
     initialState = RatingDialogViewState(throwable = null)
 ) {
 
-  private var saveDisposable by singleDisposable()
+  private var saveJob by singleJob()
+
+  override fun onTeardown() {
+    saveJob.cancel()
+  }
 
   override fun handleViewEvent(event: RatingDialogViewEvent) {
     return when (event) {
@@ -45,11 +50,10 @@ internal class RatingDialogViewModel internal constructor(
   }
 
   private fun save(link: String) {
-    saveDisposable = interactor.saveRating()
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .doAfterTerminate { saveDisposable.tryDispose() }
-        .subscribe { handleRate(link) }
+    saveJob = viewModelScope.launch {
+      withContext(Dispatchers.Default) { interactor.saveRating() }
+      handleRate(link)
+    }
   }
 
   private fun handleRate(link: String) {

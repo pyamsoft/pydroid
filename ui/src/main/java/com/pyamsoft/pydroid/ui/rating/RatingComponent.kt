@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 
 internal interface RatingComponent {
@@ -33,22 +32,20 @@ internal interface RatingComponent {
   }
 
   class Impl private constructor(
-    private val schedulerProvider: SchedulerProvider,
     private val module: RatingModule
   ) : RatingComponent {
 
     override fun inject(fragment: RatingActivity) {
-      val viewModel = RatingLoader(module.provideInteractor(), schedulerProvider)
-      fragment.ratingLoader = viewModel
+      val viewModel = RatingViewModel(module.provideInteractor())
+      fragment.ratingViewModel = viewModel
     }
 
     internal class FactoryImpl internal constructor(
-      private val schedulerProvider: SchedulerProvider,
       private val module: RatingModule
     ) : Factory {
 
       override fun create(): RatingComponent {
-        return Impl(schedulerProvider, module)
+        return Impl(module)
       }
 
     }

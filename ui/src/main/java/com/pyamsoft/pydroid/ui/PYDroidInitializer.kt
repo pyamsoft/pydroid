@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import android.os.Looper
 import android.os.StrictMode
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
@@ -30,8 +29,7 @@ internal class PYDroidInitializer internal constructor(
   applicationName: String,
   bugReportUrl: String,
   currentVersion: Int,
-  debug: Boolean,
-  schedulerProvider: SchedulerProvider
+  debug: Boolean
 ) {
 
   internal val component: PYDroidComponent
@@ -51,8 +49,7 @@ internal class PYDroidInitializer internal constructor(
             debug,
             applicationName,
             bugReportUrl,
-            currentVersion,
-            schedulerProvider
+            currentVersion
         )
     component = impl
     moduleProvider = impl

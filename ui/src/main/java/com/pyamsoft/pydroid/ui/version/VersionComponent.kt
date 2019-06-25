@@ -21,7 +21,6 @@ import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
@@ -46,13 +45,12 @@ internal interface VersionComponent {
   class Impl private constructor(
     private val parent: ViewGroup,
     private val owner: LifecycleOwner,
-    private val schedulerProvider: SchedulerProvider,
     private val ratingModule: RatingModule,
     private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
   ) : VersionComponent {
 
     override fun plusRating(): RatingComponent.Factory {
-      return RatingComponent.Impl.FactoryImpl(schedulerProvider, ratingModule)
+      return RatingComponent.Impl.FactoryImpl(ratingModule)
     }
 
     override fun inject(activity: VersionCheckActivity) {
@@ -63,7 +61,6 @@ internal interface VersionComponent {
     }
 
     internal class FactoryImpl internal constructor(
-      private val schedulerProvider: SchedulerProvider,
       private val ratingModule: RatingModule,
       private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
@@ -72,7 +69,7 @@ internal interface VersionComponent {
         owner: LifecycleOwner,
         parent: ViewGroup
       ): VersionComponent {
-        return Impl(parent, owner, schedulerProvider, ratingModule, factoryProvider)
+        return Impl(parent, owner, ratingModule, factoryProvider)
       }
 
     }

@@ -22,10 +22,9 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
-import com.pyamsoft.pydroid.ui.rating.RatingLoader
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionView
 
 internal interface AppSettingsComponent {
@@ -56,7 +55,6 @@ internal interface AppSettingsComponent {
     private val hideUpgradeInformation: Boolean,
     private val preferenceScreen: PreferenceScreen,
     private val ratingModule: RatingModule,
-    private val schedulerProvider: SchedulerProvider,
     private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
   ) : AppSettingsComponent {
 
@@ -70,7 +68,7 @@ internal interface AppSettingsComponent {
 
       fragment.versionView = versionView
       fragment.appSettingsView = settingsView
-      fragment.ratingLoader = RatingLoader(ratingModule.provideInteractor(), schedulerProvider)
+      fragment.ratingViewModel = RatingViewModel(ratingModule.provideInteractor())
       fragment.appSettingsViewModelFactory = factoryProvider(activity)
     }
 
@@ -78,7 +76,6 @@ internal interface AppSettingsComponent {
       private val applicationName: String,
       private val bugReportUrl: String,
       private val ratingModule: RatingModule,
-      private val schedulerProvider: SchedulerProvider,
       private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
 
@@ -93,7 +90,7 @@ internal interface AppSettingsComponent {
         return Impl(
             activity, parent, owner, applicationName, bugReportUrl,
             hideClearAll, hideUpgradeInformation, preferenceScreen,
-            ratingModule, schedulerProvider, factoryProvider
+            ratingModule, factoryProvider
         )
       }
 

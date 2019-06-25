@@ -20,12 +20,12 @@ package com.pyamsoft.pydroid.ui
 import android.app.Activity
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.about.AboutListViewModel
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel
+import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -38,17 +38,17 @@ internal class PYDroidViewModelFactory internal constructor(
   private val ratingInteractor: RatingInteractor,
   private val aboutInteractor: AboutInteractor,
   private val versionInteractor: VersionCheckInteractor,
-  private val theming: Theming,
-  private val scheduler: SchedulerProvider
+  private val theming: Theming
 ) : UiViewModelFactory() {
 
   override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
     return when (modelClass) {
       AboutToolbarViewModel::class -> AboutToolbarViewModel()
-      AboutListViewModel::class -> AboutListViewModel(aboutInteractor, scheduler)
-      RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor, scheduler)
+      AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
+      RatingViewModel::class -> RatingViewModel(ratingInteractor)
+      RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
       AppSettingsViewModel::class -> AppSettingsViewModel(activity, theming)
-      VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor, scheduler)
+      VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
       VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
       else -> fail()
     }

@@ -20,21 +20,19 @@ package com.pyamsoft.pydroid.ui.about
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.singleJob
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.rx2.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class AboutListViewModel internal constructor(
-  private val interactor: AboutInteractor,
-  private val schedulerProvider: SchedulerProvider
+  private val interactor: AboutInteractor
 ) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
     initialState = AboutListState(
         isLoading = false,
@@ -49,6 +47,10 @@ internal class AboutListViewModel internal constructor(
     loadLicenses(false)
   }
 
+  override fun onTeardown() {
+    licenseJob.cancel()
+  }
+
   override fun handleViewEvent(event: AboutListViewEvent) {
     return when (event) {
       is OpenUrl -> publish(ExternalUrl(event.url))
@@ -57,11 +59,10 @@ internal class AboutListViewModel internal constructor(
 
   private fun loadLicenses(force: Boolean) {
     licenseJob = viewModelScope.launch {
-      val bgDispatcher = schedulerProvider.backgroundScheduler.asCoroutineDispatcher()
 
       handleLicenseLoadBegin()
       try {
-        val licenses = withContext(bgDispatcher) { interactor.loadLicenses(force) }
+        val licenses = withContext(Dispatchers.Default) { interactor.loadLicenses(force) }
         handleLicensesLoaded(licenses)
       } catch (e: Throwable) {
         if (e !is CancellationException) {

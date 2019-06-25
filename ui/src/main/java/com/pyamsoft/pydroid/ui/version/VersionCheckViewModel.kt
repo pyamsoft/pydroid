@@ -20,21 +20,19 @@ package com.pyamsoft.pydroid.ui.version
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.singleJob
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.rx2.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
-  private val interactor: VersionCheckInteractor,
-  private val schedulerProvider: SchedulerProvider
+  private val interactor: VersionCheckInteractor
 ) : UiViewModel<VersionViewState, UnitViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
         isLoading = null,
@@ -77,11 +75,9 @@ internal class VersionCheckViewModel internal constructor(
 
   internal fun checkForUpdates(force: Boolean) {
     checkUpdateJob = viewModelScope.launch {
-      val bgDispatcher = schedulerProvider.backgroundScheduler.asCoroutineDispatcher()
-
       handleVersionCheckBegin(force)
       try {
-        val version = withContext(bgDispatcher) { interactor.checkVersion(force) }
+        val version = withContext(Dispatchers.Default) { interactor.checkVersion(force) }
         if (version != null) {
           handleVersionCheckFound(version.currentVersion, version.newVersion)
         }

@@ -15,26 +15,12 @@
  *
  */
 
-package com.pyamsoft.pydroid.bootstrap
+package com.pyamsoft.pydroid.ui.rating
 
-import androidx.annotation.CheckResult
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.pyamsoft.pydroid.arch.UiControllerEvent
 
-interface SchedulerProvider {
+sealed class RatingControllerEvent : UiControllerEvent {
 
-  @get:CheckResult
-  val backgroundScheduler: Scheduler
+  object LoadRating : RatingControllerEvent()
 
-  @get:CheckResult
-  val foregroundScheduler: Scheduler
-
-  object DEFAULT : SchedulerProvider {
-
-    override val backgroundScheduler: Scheduler = Schedulers.io()
-
-    override val foregroundScheduler: Scheduler = AndroidSchedulers.mainThread()
-
-  }
 }

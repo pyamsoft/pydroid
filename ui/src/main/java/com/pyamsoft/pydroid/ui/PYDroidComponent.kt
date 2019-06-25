@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui
 import android.app.Activity
 import android.app.Application
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
@@ -63,8 +62,7 @@ internal interface PYDroidComponent {
       debug: Boolean,
       applicationName: String,
       bugReportUrl: String,
-      currentVersion: Int,
-      schedulerProvider: SchedulerProvider
+      currentVersion: Int
     ): ComponentImpl
 
   }
@@ -74,8 +72,7 @@ internal interface PYDroidComponent {
     debug: Boolean,
     private val applicationName: String,
     private val bugReportUrl: String,
-    private val currentVersion: Int,
-    private val schedulers: SchedulerProvider
+    private val currentVersion: Int
   ) : PYDroidComponent, ModuleProvider {
 
     private val context = application
@@ -97,8 +94,7 @@ internal interface PYDroidComponent {
           ratingModule.provideInteractor(),
           aboutModule.provideInteractor(),
           versionCheckModule.provideInteractor(),
-          theming,
-          schedulers
+          theming
       )
     }
 
@@ -115,7 +111,7 @@ internal interface PYDroidComponent {
     }
 
     override fun plusVersion(): VersionComponent.Factory {
-      return VersionComponent.Impl.FactoryImpl(schedulers, ratingModule) { viewModelFactory(it) }
+      return VersionComponent.Impl.FactoryImpl(ratingModule) { viewModelFactory(it) }
     }
 
     override fun plusUpgrade(): VersionUpgradeComponent.Factory {
@@ -126,12 +122,8 @@ internal interface PYDroidComponent {
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
       return AppSettingsComponent.Impl.FactoryImpl(
-          applicationName, bugReportUrl, ratingModule, schedulers
+          applicationName, bugReportUrl, ratingModule
       ) { viewModelFactory(it) }
-    }
-
-    override fun schedulerProvider(): SchedulerProvider {
-      return schedulers
     }
 
     override fun enforcer(): Enforcer {
@@ -153,13 +145,11 @@ internal interface PYDroidComponent {
         debug: Boolean,
         applicationName: String,
         bugReportUrl: String,
-        currentVersion: Int,
-        schedulerProvider: SchedulerProvider
+        currentVersion: Int
       ): ComponentImpl {
         return ComponentImpl(
             application, debug, applicationName,
-            bugReportUrl, currentVersion,
-            schedulerProvider
+            bugReportUrl, currentVersion
         )
       }
 

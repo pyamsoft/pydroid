@@ -18,14 +18,11 @@
 package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
-import io.reactivex.Completable
-import io.reactivex.Maybe
 
 interface RatingInteractor {
 
   @CheckResult
-  fun needsToViewRating(force: Boolean): Maybe<Unit>
+  suspend fun needsToViewRating(force: Boolean): Boolean
 
-  @CheckResult
-  fun saveRating(): Completable
+  suspend fun saveRating()
 }

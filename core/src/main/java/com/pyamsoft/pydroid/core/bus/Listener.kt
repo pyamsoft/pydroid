@@ -15,45 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.core.bus
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
-import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
-) {
+interface Listener<T : Any> {
 
-  private val viewEventBus = RxBus.create<V>()
-
-  @IdRes
+  /**
+   * Listen for Bus events
+   *
+   */
   @CheckResult
-  abstract fun id(): Int
-
-  open fun inflate(savedInstanceState: Bundle?) {
-  }
-
-  abstract fun render(
-    state: S,
-    savedState: UiSavedState
-  )
-
-  open fun teardown() {
-  }
-
-  open fun saveState(outState: Bundle) {
-  }
-
-  @CheckResult
-  fun viewEvents(): Observable<V> {
-    return viewEventBus.listen()
-  }
-
-  protected fun publish(event: V) {
-    viewEventBus.publish(event)
-  }
-
+  fun listen(): Observable<T>
 }
-

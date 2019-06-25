@@ -15,20 +15,16 @@
  *
  */
 
-dependencies {
-  // AndroidX Lifecycle
-  api "androidx.lifecycle:lifecycle-runtime:$lifecycle"
+package com.pyamsoft.pydroid.core.bus
 
-  // Timber logging
-  api "com.jakewharton.timber:timber:$timber"
+interface Publisher<T : Any> {
 
-  // RxJava
-  api "io.reactivex.rxjava2:rxjava:$rxjava"
-  api "io.reactivex.rxjava2:rxandroid:$rxandroid"
-
-  api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
-
-  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+  /**
+   * Publish an event to a registered Receiver class
+   *
+   * The viewBus does not make any restrictions on what type an DataWrapper should be. While events can be
+   * mutable, it is recommended to make your DataWrapper object immutable as the viewBus makes no guarantees
+   * about the state of the data
+   */
+  fun publish(event: T)
 }
-

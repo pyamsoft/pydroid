@@ -20,8 +20,7 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.core.bus.EventBus
+import com.pyamsoft.pydroid.core.bus.RxBus
 import com.pyamsoft.pydroid.core.singleDisposable
 import com.pyamsoft.pydroid.core.tryDispose
 import io.reactivex.Observable
@@ -36,9 +35,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 ) : ViewModel() {
 
   private val lock = Any()
-  private val controllerEventBus = EventBus.create<C>(viewModelScope)
-  private val stateBus = EventBus.create<S>(viewModelScope)
-  private val flushQueueBus = EventBus.create<Unit>(viewModelScope)
+  private val controllerEventBus = RxBus.create<C>()
+  private val stateBus = RxBus.create<S>()
+  private val flushQueueBus = RxBus.create<Unit>()
 
   private val stateChangeExecutor = Executors.newSingleThreadExecutor()
   private val stateChangeScheduler = Schedulers.from(stateChangeExecutor)

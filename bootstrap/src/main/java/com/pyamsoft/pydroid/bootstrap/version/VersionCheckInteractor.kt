@@ -19,10 +19,9 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
-import io.reactivex.Maybe
 
 interface VersionCheckInteractor {
 
   @CheckResult
-  fun checkVersion(force: Boolean): Maybe<UpdatePayload>
+  suspend fun checkVersion(force: Boolean): UpdatePayload?
 }

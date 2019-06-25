@@ -34,11 +34,13 @@ buildscript {
     minSdk = 22
     maxSdk = 29
 
+    coroutines = "1.2.2"
+
     // AndroidX
     core = "1.0.2"
     ktx = "1.0.2"
     constraintLayout = "1.1.3"
-    lifecycle = "2.0.0"
+    lifecycle = "2.1.0-beta01"
     materialDesign = "1.0.0"
     vectorDrawable = "1.0.1"
     preference = "1.0.0"
@@ -46,8 +48,7 @@ buildscript {
     fragment = "1.0.0"
     appCompat = "1.0.2"
 
-    repo = "0.4.0"
-    fluidresizer = "0.0.4"
+    cachify = "0.0.1-SNAPSHOT"
     refreshLatch = "0.0.1"
 
     timber = "4.7.1"

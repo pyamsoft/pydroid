@@ -87,13 +87,8 @@ internal interface PYDroidComponent {
     private val aboutModule = AboutModule(enforcer)
     private val loaderModule = LoaderModule()
     private val ratingModule = RatingModule(currentVersion, enforcer, preferences)
-    private val versionCheckModule = VersionCheckModule(
-        context,
-        debug,
-        currentVersion,
-        packageName,
-        enforcer
-    )
+    private val versionCheckModule =
+      VersionCheckModule(debug, currentVersion, packageName, enforcer)
 
     @CheckResult
     private fun viewModelFactory(activity: Activity): PYDroidViewModelFactory {

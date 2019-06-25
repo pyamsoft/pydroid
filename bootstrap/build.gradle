@@ -24,12 +24,11 @@ dependencies {
   // Retrofit
   implementation "com.squareup.retrofit2:retrofit:$retrofit"
   implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
-  implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
   implementation "com.squareup.okhttp3:logging-interceptor:$retrofitLogging"
 
-  // Repo
-  implementation "com.popinnow.android.repo:repo:$repo"
-  implementation "com.popinnow.android.repo:repo-persister-moshi:$repo"
+  // Cachify
+  api "com.pyamsoft.cachify:cachify:$cachify"
+  api "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$coroutines"
 
   api project(':util')
 }

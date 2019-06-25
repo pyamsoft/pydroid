@@ -17,15 +17,19 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.asCoroutineDispatcher
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
@@ -68,16 +72,23 @@ internal class VersionCheckViewModel internal constructor(
   }
 
   internal fun checkForUpdates(force: Boolean) {
-    checkUpdatesDisposable = interactor.checkVersion(force)
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .doOnSubscribe { handleVersionCheckBegin(force) }
-        .doAfterTerminate { handleVersionCheckComplete() }
-        .doAfterTerminate { checkUpdatesDisposable.tryDispose() }
-        .subscribe({ handleVersionCheckFound(it.currentVersion, it.newVersion) }, {
-          Timber.e(it, "Error checking for latest version")
-          handleVersionCheckError(it)
-        })
+    val bgDispatcher = schedulerProvider.backgroundScheduler.asCoroutineDispatcher()
+    viewModelScope.launch {
+      handleVersionCheckBegin(force)
+      try {
+        val version = withContext(bgDispatcher) { interactor.checkVersion(force) }
+        if (version != null) {
+          handleVersionCheckFound(version.currentVersion, version.newVersion)
+        }
+      } catch (e: Throwable) {
+        if (e !is CancellationException) {
+          Timber.e(e, "Error checking for latest version")
+          handleVersionCheckError(e)
+        }
+      } finally {
+        handleVersionCheckComplete()
+      }
+    }
   }
 
 }

@@ -17,11 +17,9 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import android.content.Context
 import androidx.annotation.CheckResult
-import com.popinnow.android.repo.Repo
-import com.popinnow.android.repo.moshi.MoshiPersister
-import com.popinnow.android.repo.newRepoBuilder
+import com.pyamsoft.cachify.Cached
+import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.network.DelegatingSocketFactory
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
@@ -31,14 +29,9 @@ import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.File
-import java.util.concurrent.TimeUnit.HOURS
-import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(
-  context: Context,
   debug: Boolean,
   currentVersion: Int,
   packageName: String,
@@ -52,7 +45,6 @@ class VersionCheckModule(
     moshi = createMoshi()
     val okHttpClient = createOkHttpClient(debug)
     val retrofit = createRetrofit(okHttpClient, moshi)
-    val repo = createRepo(context, moshi)
     val versionCheckService = createService(retrofit)
     val minimumApiProvider = MinimumApiProviderImpl()
 
@@ -64,7 +56,7 @@ class VersionCheckModule(
         versionCheckService
     )
 
-    impl = VersionCheckInteractorImpl(debug, network, enforcer, repo)
+    impl = VersionCheckInteractorImpl(debug, enforcer, createCache(network))
   }
 
   @CheckResult
@@ -93,18 +85,10 @@ class VersionCheckModule(
 
     @JvmStatic
     @CheckResult
-    private fun createRepo(
-      context: Context,
-      moshi: Moshi
-    ): Repo<UpdatePayload> {
-      return newRepoBuilder<UpdatePayload>()
-          .memoryCache(30, MINUTES)
-          .persister(
-              2, HOURS,
-              File(context.cacheDir, "versioncache"),
-              MoshiPersister.create(moshi, UpdatePayload::class.java)
-          )
-          .build()
+    private fun createCache(
+      network: VersionCheckInteractor
+    ): Cached<UpdatePayload> {
+      return cachify<UpdatePayload> { requireNotNull(network.checkVersion(true)) }
     }
 
     @JvmStatic
@@ -132,7 +116,6 @@ class VersionCheckModule(
           .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
           .client(okHttpClient)
           .addConverterFactory(MoshiConverterFactory.create(moshi))
-          .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
           .build()
     }
 

@@ -23,8 +23,6 @@ import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import io.reactivex.Maybe
-import io.reactivex.Single
 
 internal class VersionCheckInteractorNetwork internal constructor(
   private val currentVersion: Int,
@@ -52,19 +50,15 @@ internal class VersionCheckInteractorNetwork internal constructor(
     return versionCode
   }
 
-  override fun checkVersion(force: Boolean): Maybe<UpdatePayload> {
-    return Single.defer {
-      enforcer.assertNotOnMainThread()
-      val targetName: String
-      if (packageName.endsWith(".dev")) {
-        targetName = packageName.substringBefore(".dev")
-      } else {
-        targetName = packageName
-      }
-      return@defer versionCheckService.checkVersion(targetName)
+  override suspend fun checkVersion(force: Boolean): UpdatePayload {
+    enforcer.assertNotOnMainThread()
+    val targetName: String
+    if (packageName.endsWith(".dev")) {
+      targetName = packageName.substringBefore(".dev")
+    } else {
+      targetName = packageName
     }
-        .map { versionCodeForApi(it) }
-        .map { UpdatePayload(currentVersion, it) }
-        .toMaybe()
+    val result = versionCheckService.checkVersion(targetName)
+    return UpdatePayload(currentVersion, versionCodeForApi(result))
   }
 }

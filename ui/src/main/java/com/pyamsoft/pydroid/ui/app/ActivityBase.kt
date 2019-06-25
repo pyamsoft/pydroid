@@ -17,18 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.app
 
-import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.popinnow.android.fluidresizer.FluidResizer
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
-
-  /**
-   * Edit to use a custom FluidResizer instance
-   */
-  protected open val applyFluidResizer: Boolean = true
 
   /**
    * The main view container for all page level fragment transactions
@@ -36,15 +29,6 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
   abstract val fragmentContainerId: Int
 
   private var capturedToolbar: Toolbar? = null
-
-  @CallSuper
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    if (applyFluidResizer) {
-      FluidResizer.listen(this)
-    }
-  }
 
   @CallSuper
   override fun onDestroy() {

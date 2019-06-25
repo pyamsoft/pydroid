@@ -56,7 +56,7 @@ class VersionCheckModule(
         versionCheckService
     )
 
-    impl = VersionCheckInteractorImpl(debug, enforcer, createCache(network))
+    impl = VersionCheckInteractorImpl(debug, enforcer, createCache(debug, network))
   }
 
   @CheckResult
@@ -86,9 +86,10 @@ class VersionCheckModule(
     @JvmStatic
     @CheckResult
     private fun createCache(
+      debug: Boolean,
       network: VersionCheckInteractor
     ): Cached<UpdatePayload> {
-      return cachify<UpdatePayload> { requireNotNull(network.checkVersion(true)) }
+      return cachify<UpdatePayload>(debug = debug) { requireNotNull(network.checkVersion(true)) }
     }
 
     @JvmStatic

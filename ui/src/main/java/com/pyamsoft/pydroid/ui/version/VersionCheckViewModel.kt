@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
-import com.pyamsoft.pydroid.core.singleDisposable
+import com.pyamsoft.pydroid.core.singleJob
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
@@ -42,10 +42,14 @@ internal class VersionCheckViewModel internal constructor(
     )
 ) {
 
-  private var checkUpdatesDisposable by singleDisposable()
+  private var checkUpdateJob by singleJob()
 
   init {
     checkForUpdates(false)
+  }
+
+  override fun onTeardown() {
+    checkUpdateJob.cancel()
   }
 
   override fun handleViewEvent(event: UnitViewEvent) {
@@ -73,7 +77,7 @@ internal class VersionCheckViewModel internal constructor(
 
   internal fun checkForUpdates(force: Boolean) {
     val bgDispatcher = schedulerProvider.backgroundScheduler.asCoroutineDispatcher()
-    viewModelScope.launch {
+    checkUpdateJob = viewModelScope.launch {
       handleVersionCheckBegin(force)
       try {
         val version = withContext(bgDispatcher) { interactor.checkVersion(force) }

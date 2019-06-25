@@ -76,8 +76,9 @@ internal class VersionCheckViewModel internal constructor(
   }
 
   internal fun checkForUpdates(force: Boolean) {
-    val bgDispatcher = schedulerProvider.backgroundScheduler.asCoroutineDispatcher()
     checkUpdateJob = viewModelScope.launch {
+      val bgDispatcher = schedulerProvider.backgroundScheduler.asCoroutineDispatcher()
+
       handleVersionCheckBegin(force)
       try {
         val version = withContext(bgDispatcher) { interactor.checkVersion(force) }

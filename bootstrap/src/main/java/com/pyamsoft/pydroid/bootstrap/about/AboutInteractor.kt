@@ -19,10 +19,9 @@ package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import io.reactivex.Single
 
 interface AboutInteractor {
 
   @CheckResult
-  fun loadLicenses(bypass: Boolean): Single<List<OssLibrary>>
+  suspend fun loadLicenses(bypass: Boolean): List<OssLibrary>
 }

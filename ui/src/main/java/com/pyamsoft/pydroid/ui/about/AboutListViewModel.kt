@@ -18,14 +18,18 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.content.ActivityNotFoundException
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.SchedulerProvider
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
+import com.pyamsoft.pydroid.core.singleJob
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.rx2.asCoroutineDispatcher
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class AboutListViewModel internal constructor(
@@ -39,7 +43,7 @@ internal class AboutListViewModel internal constructor(
     )
 ) {
 
-  private var licenseDisposable by singleDisposable()
+  private var licenseJob by singleJob()
 
   init {
     loadLicenses(false)
@@ -52,16 +56,22 @@ internal class AboutListViewModel internal constructor(
   }
 
   private fun loadLicenses(force: Boolean) {
-    licenseDisposable = interactor.loadLicenses(force)
-        .subscribeOn(schedulerProvider.backgroundScheduler)
-        .observeOn(schedulerProvider.foregroundScheduler)
-        .doOnSubscribe { handleLicenseLoadBegin() }
-        .doAfterTerminate { handleLicenseLoadComplete() }
-        .doAfterTerminate { licenseDisposable.tryDispose() }
-        .subscribe({ handleLicensesLoaded(it) }, {
-          Timber.e(it, "Error loading licenses")
-          handleLicenseLoadError(it)
-        })
+    licenseJob = viewModelScope.launch {
+      val bgDispatcher = schedulerProvider.backgroundScheduler.asCoroutineDispatcher()
+
+      handleLicenseLoadBegin()
+      try {
+        val licenses = withContext(bgDispatcher) { interactor.loadLicenses(force) }
+        handleLicensesLoaded(licenses)
+      } catch (e: Throwable) {
+        if (e !is CancellationException) {
+          Timber.e(e, "Error loading licenses")
+          handleLicenseLoadError(e)
+        }
+      } finally {
+        handleLicenseLoadComplete()
+      }
+    }
   }
 
   private fun handleLicenseLoadBegin() {

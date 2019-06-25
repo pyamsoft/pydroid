@@ -21,30 +21,18 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.threads.Enforcer
-import io.reactivex.Observable
-import io.reactivex.Single
 
 internal class AboutInteractorImpl internal constructor(
   private val enforcer: Enforcer
 ) : AboutInteractor {
 
   @CheckResult
-  private fun createLicenseStream(): Single<Set<OssLibrary>> {
-    return Single.fromCallable {
-      enforcer.assertNotOnMainThread()
-      return@fromCallable OssLibraries.libraries()
-    }
+  private fun createLicenseStream(): Set<OssLibrary> {
+    enforcer.assertNotOnMainThread()
+    return OssLibraries.libraries()
   }
 
-  override fun loadLicenses(bypass: Boolean): Single<List<OssLibrary>> {
-    return createLicenseStream()
-        .flatMapObservable {
-          enforcer.assertNotOnMainThread()
-          return@flatMapObservable Observable.fromIterable(it)
-        }
-        .toSortedList { o1, o2 ->
-          enforcer.assertNotOnMainThread()
-          return@toSortedList o1.name.compareTo(o2.name, ignoreCase = true)
-        }
+  override suspend fun loadLicenses(bypass: Boolean): List<OssLibrary> {
+    return createLicenseStream().sortedBy { it.name.toLowerCase() }
   }
 }

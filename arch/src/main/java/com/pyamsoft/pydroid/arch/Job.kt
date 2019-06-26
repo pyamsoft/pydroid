@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.core
+package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 import kotlinx.coroutines.Job

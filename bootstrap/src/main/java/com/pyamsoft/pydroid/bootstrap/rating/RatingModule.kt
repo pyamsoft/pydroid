@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 
 class RatingModule(
   currentVersion: Int,

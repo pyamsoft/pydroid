@@ -18,10 +18,7 @@
 package com.pyamsoft.pydroid.ui
 
 import android.app.Application
-import android.os.Looper
 import android.os.StrictMode
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 
 internal class PYDroidInitializer internal constructor(
@@ -36,8 +33,6 @@ internal class PYDroidInitializer internal constructor(
   internal val moduleProvider: ModuleProvider
 
   init {
-    setupAsyncMainThreadScheduler()
-
     if (debug) {
       Timber.plant(Timber.DebugTree())
       setStrictMode()
@@ -73,18 +68,5 @@ internal class PYDroidInitializer internal constructor(
               .build()
       )
     }
-
-    // Async main thread scheduler
-    // https://medium.com/@sweers/rxandroids-new-async-api-4ab5b3ad3e93
-    @JvmStatic
-    private fun setupAsyncMainThreadScheduler() {
-      RxAndroidPlugins.setInitMainThreadSchedulerHandler {
-        AndroidSchedulers.from(Looper.getMainLooper(), true)
-      }
-
-      val async = AndroidSchedulers.from(Looper.getMainLooper(), true)
-      RxAndroidPlugins.setMainThreadSchedulerHandler { async }
-    }
-
   }
 }

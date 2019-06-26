@@ -22,12 +22,6 @@ dependencies {
   // Timber logging
   api "com.jakewharton.timber:timber:$timber"
 
-  // RxJava
-  api "io.reactivex.rxjava2:rxjava:$rxjava"
-  api "io.reactivex.rxjava2:rxandroid:$rxandroid"
-
-  api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
-
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }

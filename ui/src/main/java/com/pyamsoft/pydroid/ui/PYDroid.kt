@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
 

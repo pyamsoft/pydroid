@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.core.singleJob
+import com.pyamsoft.pydroid.arch.singleJob
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

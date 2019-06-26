@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 

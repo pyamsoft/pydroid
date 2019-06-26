@@ -23,7 +23,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent

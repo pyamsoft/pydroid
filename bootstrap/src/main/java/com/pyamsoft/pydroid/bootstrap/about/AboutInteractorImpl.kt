@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.bootstrap.about
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 
 internal class AboutInteractorImpl internal constructor(
   private val enforcer: Enforcer

@@ -15,21 +15,21 @@
  *
  */
 
-package com.pyamsoft.pydroid.core.bus
+package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 
-class RxBus<T : Any> private constructor() : EventBus<T> {
+class EventBus<T : Any> private constructor() {
 
   private val bus by lazy {
     PublishSubject.create<T>()
         .toSerialized()
   }
 
-  override fun publish(event: T) {
+  fun publish(event: T) {
     if (!bus.hasObservers()) {
       Timber.w("No observers on bus, may ignore event: $event")
     }
@@ -37,7 +37,8 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
     bus.onNext(event)
   }
 
-  override fun listen(): Observable<T> {
+  @CheckResult
+  internal fun listen(): Observable<T> {
     return bus
   }
 
@@ -50,7 +51,7 @@ class RxBus<T : Any> private constructor() : EventBus<T> {
      */
     @JvmStatic
     @CheckResult
-    fun <T : Any> create(): EventBus<T> = RxBus()
+    fun <T : Any> create(): EventBus<T> = EventBus()
 
     @JvmStatic
     @CheckResult

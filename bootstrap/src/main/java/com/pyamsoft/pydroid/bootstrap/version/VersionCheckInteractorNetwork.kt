@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 
 internal class VersionCheckInteractorNetwork internal constructor(
   private val currentVersion: Int,

@@ -22,7 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.core.singleJob
+import com.pyamsoft.pydroid.arch.singleJob
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import kotlinx.coroutines.CancellationException

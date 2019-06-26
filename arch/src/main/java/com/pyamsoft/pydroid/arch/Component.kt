@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.core.tryDispose
 
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
   savedInstanceState: Bundle?,
@@ -32,7 +31,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
   views.forEach { it.inflate(viewModel.viewModelScope, savedInstanceState) }
   val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
   owner.doOnDestroy {
-    viewModelBinding.tryDispose()
+    viewModelBinding.dispose()
     views.forEach { it.teardown() }
   }
 }

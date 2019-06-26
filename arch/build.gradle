@@ -18,6 +18,13 @@
 dependencies {
   api "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
   api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+
+  // RxJava
+  implementation "io.reactivex.rxjava2:rxjava:$rxjava"
+  implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
+
+  api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+
   api project(':core')
 }
 

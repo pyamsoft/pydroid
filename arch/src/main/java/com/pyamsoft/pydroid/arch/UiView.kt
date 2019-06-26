@@ -20,14 +20,13 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import com.pyamsoft.pydroid.core.bus.RxBus
 import io.reactivex.Observable
 import kotlinx.coroutines.CoroutineScope
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) {
 
-  private val viewEventBus = RxBus.create<V>()
+  private val viewEventBus = EventBus.create<V>()
 
   @IdRes
   @CheckResult
@@ -56,7 +55,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
   }
 
   @CheckResult
-  fun viewEvents(): Observable<V> {
+  internal fun viewEvents(): Observable<V> {
     return viewEventBus.listen()
   }
 

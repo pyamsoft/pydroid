@@ -20,11 +20,9 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
-import com.pyamsoft.pydroid.core.bus.RxBus
-import com.pyamsoft.pydroid.core.singleDisposable
-import com.pyamsoft.pydroid.core.tryDispose
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.LinkedList
@@ -35,20 +33,19 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 ) : ViewModel() {
 
   private val lock = Any()
-  private val controllerEventBus = RxBus.create<C>()
-  private val stateBus = RxBus.create<S>()
-  private val flushQueueBus = RxBus.create<Unit>()
+  private val controllerEventBus = EventBus.create<C>()
+  private val stateBus = EventBus.create<S>()
+  private val flushQueueBus = EventBus.create<Unit>()
 
   private val stateChangeExecutor = Executors.newSingleThreadExecutor()
   private val stateChangeScheduler = Schedulers.from(stateChangeExecutor)
   private val stateExecutor = Executors.newSingleThreadExecutor()
   private val stateScheduler = Schedulers.from(stateExecutor)
 
-  private var stateChangeDisposable by singleDisposable()
+  private val compositeDisposable = CompositeDisposable()
+  private val stateChangeDisposable: Disposable
   @Volatile private var stateQueue = LinkedList<S.() -> S>()
   @Volatile private var state: S? = null
-
-  protected abstract fun handleViewEvent(event: V)
 
   init {
     stateChangeDisposable = flushQueueBus.listen()
@@ -56,6 +53,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         .observeOn(stateChangeScheduler)
         .subscribe { flushQueue() }
   }
+
+  protected abstract fun handleViewEvent(event: V)
 
   @PublishedApi
   @CheckResult
@@ -68,16 +67,25 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   }
 
   final override fun onCleared() {
-    stateChangeDisposable.tryDispose()
+    stateChangeDisposable.dispose()
     stateChangeExecutor.shutdown()
     stateChangeScheduler.shutdown()
     stateExecutor.shutdown()
     stateScheduler.shutdown()
+    compositeDisposable.dispose()
     onTeardown()
   }
 
   protected open fun onTeardown() {
 
+  }
+
+  protected fun <E : Any> EventBus<E>.onEvent(func: (event: E) -> Unit) {
+    compositeDisposable.add(
+        this.listen().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(func)
+    )
   }
 
   private fun controllerEvents(): Observable<C> {
@@ -140,12 +148,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private var views: Array<out UiView<S, V>>? = views
     private var onControllerEvent: ((event: C) -> Unit)? = onControllerEvent
 
-    private var viewDisposable: Disposable? = null
-    private var controllerDisposable: Disposable? = null
-
     @CheckResult
     internal fun render(
     ): Disposable {
+      var viewDisposable: Disposable? = null
+      var controllerDisposable: Disposable? = null
       val stateDisposable = stateBus.listen()
           .startWith(latestState())
           .map { combineWithSavedState(it) }
@@ -156,8 +163,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             viewDisposable = bindEvents(requireNotNull(views))
           }
           .doOnDispose {
-            viewDisposable?.tryDispose()
-            controllerDisposable?.tryDispose()
+            viewDisposable?.dispose()
+            controllerDisposable?.dispose()
             viewDisposable = null
             controllerDisposable = null
           }
@@ -169,8 +176,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
 
         override fun dispose() {
-          stateDisposable.tryDispose()
-
+          stateDisposable.dispose()
           savedState = null
           views = null
           onControllerEvent = null

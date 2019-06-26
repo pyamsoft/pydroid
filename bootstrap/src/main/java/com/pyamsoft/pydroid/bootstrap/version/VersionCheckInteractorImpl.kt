@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.bootstrap.version
 import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 
 internal class VersionCheckInteractorImpl internal constructor(
   private val debug: Boolean,

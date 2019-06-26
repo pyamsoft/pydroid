@@ -17,7 +17,7 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
-import com.pyamsoft.pydroid.core.threads.Enforcer
+import com.pyamsoft.pydroid.core.Enforcer
 import timber.log.Timber
 
 internal class RatingInteractorImpl internal constructor(

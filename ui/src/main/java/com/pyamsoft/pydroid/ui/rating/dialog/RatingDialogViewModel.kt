@@ -21,7 +21,7 @@ import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.core.singleJob
+import com.pyamsoft.pydroid.arch.singleJob
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel

@@ -19,8 +19,9 @@ package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
   savedInstanceState: Bundle?,
   owner: LifecycleOwner,
@@ -28,10 +29,10 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
   vararg views: UiView<S, V>,
   crossinline onControllerEvent: (event: C) -> Unit
 ) {
-  views.forEach { it.inflate(viewModel.viewModelScope, savedInstanceState) }
+  views.forEach { it.inflate(savedInstanceState) }
   val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
   owner.doOnDestroy {
-    viewModelBinding.dispose()
+    viewModelBinding.cancel()
     views.forEach { it.teardown() }
   }
 }

@@ -20,8 +20,10 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.reflect.KClass
 
+@ExperimentalCoroutinesApi
 abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
   final override fun <T : ViewModel?> create(modelClass: Class<T>): T {

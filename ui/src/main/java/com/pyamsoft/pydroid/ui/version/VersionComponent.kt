@@ -24,7 +24,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 internal interface VersionComponent {
 
   @CheckResult

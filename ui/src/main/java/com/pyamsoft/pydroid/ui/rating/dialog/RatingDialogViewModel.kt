@@ -20,16 +20,18 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.arch.singleJob
+import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+@ExperimentalCoroutinesApi
 internal class RatingDialogViewModel internal constructor(
   private val interactor: RatingInteractor
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
@@ -51,7 +53,8 @@ internal class RatingDialogViewModel internal constructor(
 
   private fun save(link: String) {
     saveJob = viewModelScope.launch {
-      withContext(Dispatchers.Default) { interactor.saveRating() }
+      val runner = async(Dispatchers.Default) { interactor.saveRating() }
+      runner.await()
       handleRate(link)
     }
   }

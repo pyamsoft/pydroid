@@ -25,7 +25,9 @@ import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 internal class AboutToolbarView internal constructor(
   private val backstackCount: Int,
   private val toolbarActivity: ToolbarActivity
@@ -37,7 +39,7 @@ internal class AboutToolbarView internal constructor(
     throw InvalidIdException
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
+  override fun doInflate(savedInstanceState: Bundle?) {
     if (savedInstanceState != null) {
       oldTitle = savedInstanceState.getCharSequence(KEY_OLD_TITLE)
     }
@@ -61,7 +63,7 @@ internal class AboutToolbarView internal constructor(
     }
   }
 
-  override fun teardown() {
+  override fun doTeardown() {
     toolbarActivity.withToolbar { toolbar ->
       // Set title back to original
       toolbar.title = oldTitle ?: toolbar.title

@@ -20,9 +20,9 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import io.reactivex.Observable
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) {
 
@@ -33,14 +33,11 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
   abstract fun id(): Int
 
   @PublishedApi
-  internal fun inflate(
-    scope: CoroutineScope,
-    savedInstanceState: Bundle?
-  ) {
-    inflate(savedInstanceState)
+  internal fun inflate(savedInstanceState: Bundle?) {
+    doInflate(savedInstanceState)
   }
 
-  protected open fun inflate(savedInstanceState: Bundle?) {
+  protected open fun doInflate(savedInstanceState: Bundle?) {
   }
 
   abstract fun render(
@@ -48,17 +45,24 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
     savedState: UiSavedState
   )
 
-  open fun teardown() {
+  @PublishedApi
+  internal fun teardown() {
+    doTeardown()
+  }
+
+  protected open fun doTeardown() {
+
   }
 
   open fun saveState(outState: Bundle) {
   }
 
-  @CheckResult
-  internal fun viewEvents(): Observable<V> {
-    return viewEventBus.listen()
+  @ExperimentalCoroutinesApi
+  internal suspend fun onViewEvent(func: (event: V) -> Unit) {
+    viewEventBus.onEvent(func)
   }
 
+  @ExperimentalCoroutinesApi
   protected fun publish(event: V) {
     viewEventBus.publish(event)
   }

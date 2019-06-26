@@ -25,8 +25,10 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 internal class VersionView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
@@ -38,7 +40,7 @@ internal class VersionView internal constructor(
     throw InvalidIdException
   }
 
-  override fun inflate(savedInstanceState: Bundle?) {
+  override fun doInflate(savedInstanceState: Bundle?) {
   }
 
   override fun render(
@@ -62,7 +64,7 @@ internal class VersionView internal constructor(
     }
   }
 
-  override fun teardown() {
+  override fun doTeardown() {
     parent = null
   }
 

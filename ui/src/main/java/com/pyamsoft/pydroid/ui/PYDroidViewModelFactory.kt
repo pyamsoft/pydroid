@@ -31,8 +31,10 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.reflect.KClass
 
+@ExperimentalCoroutinesApi
 internal class PYDroidViewModelFactory internal constructor(
   private val activity: Activity,
   private val ratingInteractor: RatingInteractor,

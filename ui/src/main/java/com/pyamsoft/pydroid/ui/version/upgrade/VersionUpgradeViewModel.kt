@@ -23,7 +23,9 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.Can
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 internal class VersionUpgradeViewModel internal constructor(
 ) : UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
     initialState = VersionUpgradeViewState(throwable = null)

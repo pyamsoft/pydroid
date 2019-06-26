@@ -26,9 +26,11 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+@ExperimentalCoroutinesApi
 abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructor(
   parent: PreferenceScreen
 ) : UiView<S, V>() {
@@ -55,7 +57,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     throw InvalidIdException
   }
 
-  final override fun inflate(savedInstanceState: Bundle?) {
+  final override fun doInflate(savedInstanceState: Bundle?) {
     onInflated(parent(), savedInstanceState)
   }
 
@@ -87,7 +89,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
   protected open fun onSaveState(outState: Bundle) {
   }
 
-  final override fun teardown() {
+  final override fun doTeardown() {
     assertValidState()
     onTeardown()
 

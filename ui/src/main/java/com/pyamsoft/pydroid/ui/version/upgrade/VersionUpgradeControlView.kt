@@ -29,7 +29,9 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 internal class VersionUpgradeControlView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup

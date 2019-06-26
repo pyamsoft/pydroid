@@ -20,17 +20,19 @@ package com.pyamsoft.pydroid.ui.about
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.singleJob
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.arch.singleJob
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 internal class AboutListViewModel internal constructor(
   private val interactor: AboutInteractor
 ) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
@@ -62,8 +64,8 @@ internal class AboutListViewModel internal constructor(
 
       handleLicenseLoadBegin()
       try {
-        val licenses = withContext(Dispatchers.Default) { interactor.loadLicenses(force) }
-        handleLicensesLoaded(licenses)
+        val licenses = async(Dispatchers.Default) { interactor.loadLicenses(force) }
+        handleLicensesLoaded(licenses.await())
       } catch (e: Throwable) {
         if (e !is CancellationException) {
           Timber.e(e, "Error loading licenses")

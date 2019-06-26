@@ -18,37 +18,31 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.consumeEach
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 class EventBus<T : Any> private constructor() {
 
-  private val bus by lazy {
-    PublishSubject.create<T>()
-        .toSerialized()
-  }
+  private val bus = BroadcastChannel<T>(1)
 
   fun publish(event: T) {
-    if (!bus.hasObservers()) {
-      Timber.w("No observers on bus, may ignore event: $event")
+    if (!bus.offer(event)) {
+      Timber.w("Failed to offer event onto bus: $event")
     }
-
-    bus.onNext(event)
   }
 
-  @CheckResult
-  internal fun listen(): Observable<T> {
-    return bus
+  internal suspend inline fun onEvent(crossinline func: (event: T) -> Unit) {
+    bus.openSubscription()
+        .consumeEach(func)
   }
 
   companion object {
 
     private val EMPTY by lazy { create<Unit>() }
 
-    /**
-     * Create a new local viewBus instance to use
-     */
     @JvmStatic
     @CheckResult
     fun <T : Any> create(): EventBus<T> = EventBus()

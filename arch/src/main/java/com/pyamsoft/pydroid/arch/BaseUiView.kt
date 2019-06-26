@@ -57,7 +57,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     return layoutRoot.id
   }
 
-  final override fun inflate(savedInstanceState: Bundle?) {
+  final override fun doInflate(savedInstanceState: Bundle?) {
     assertValidState()
 
     parent().inflateAndAdd(layout) {
@@ -92,7 +92,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
   protected open fun onSaveState(outState: Bundle) {
   }
 
-  final override fun teardown() {
+  final override fun doTeardown() {
     assertValidState()
     onTeardown()
 

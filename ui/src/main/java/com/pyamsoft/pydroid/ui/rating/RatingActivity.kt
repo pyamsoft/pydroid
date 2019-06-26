@@ -36,8 +36,10 @@ import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
   internal var ratingViewModel: RatingViewModel? = null

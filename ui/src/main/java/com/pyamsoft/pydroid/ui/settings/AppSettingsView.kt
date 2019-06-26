@@ -37,8 +37,9 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
-import timber.log.Timber
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 internal class AppSettingsView internal constructor(
   private val activity: Activity,
   private val applicationName: String,

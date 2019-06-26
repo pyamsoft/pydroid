@@ -26,7 +26,9 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.util.commit
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 abstract class AppSettingsFragment : Fragment() {
 
   private var coordinatorLayout: CoordinatorLayout? = null

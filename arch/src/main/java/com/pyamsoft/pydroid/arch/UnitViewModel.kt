@@ -18,7 +18,9 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class UnitViewModel private constructor() : UiViewModel<UnitViewState, UnitViewEvent, UnitControllerEvent>(
     initialState = UnitViewState
 ) {

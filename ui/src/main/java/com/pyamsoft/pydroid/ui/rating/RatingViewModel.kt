@@ -21,18 +21,24 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.arch.singleJob
+import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
+@ExperimentalCoroutinesApi
 internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor
 ) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
 
   private var loadJob by singleJob()
+
+  init {
+    load(false)
+  }
 
   override fun onTeardown() {
     loadJob.cancel()
@@ -43,8 +49,8 @@ internal class RatingViewModel internal constructor(
 
   internal fun load(force: Boolean) {
     loadJob = viewModelScope.launch {
-      val show = withContext(Dispatchers.Default) { interactor.needsToViewRating(force) }
-      if (show) {
+      val show = async(Dispatchers.Default) { interactor.needsToViewRating(force) }
+      if (show.await()) {
         publish(LoadRating)
       }
     }

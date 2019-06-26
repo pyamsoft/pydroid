@@ -19,8 +19,10 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
 internal class PYDroidInitializer internal constructor(
   application: Application,
   applicationName: String,
@@ -35,7 +37,6 @@ internal class PYDroidInitializer internal constructor(
   init {
     if (debug) {
       Timber.plant(Timber.DebugTree())
-      setStrictMode()
     }
 
     val impl = PYDroidComponent.ComponentImpl.FactoryImpl()

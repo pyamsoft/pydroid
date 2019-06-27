@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.LinkedList
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -64,8 +65,21 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     views.forEach { bindEvent(it) }
     initialize()
 
+    // Init savedState once
     val savedState = UiSavedState(savedInstanceState)
-    handleStateChange(views, latestState(), savedState)
+
+    // Push most recent state
+    val mostRecentState = latestState()
+    handleStateChange(views, mostRecentState, savedState)
+
+    // If most recent and latest get out of sync, do it again
+    val currentState = latestState()
+    if (currentState != mostRecentState) {
+      Timber.w("State is out of sync, re-emit with latest: $currentState")
+      handleStateChange(views, currentState, savedState)
+    }
+
+    // Listen for changes
     stateBus.onEvent { state ->
       handleStateChange(views, state, savedState)
     }

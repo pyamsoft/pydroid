@@ -26,6 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.LinkedList
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -34,7 +36,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private val initialState: S
 ) : ViewModel() {
 
-  private val lock = Any()
+  private val mutex = Mutex()
   private val controllerEventBus = EventBus.create<C>()
   private val stateBus = EventBus.create<S>()
   private val flushQueueBus = EventBus.create<Unit>()
@@ -94,27 +96,25 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   }
 
   protected fun setState(func: S.() -> S) {
-    synchronized(lock) {
-      stateQueue.add(func)
+    viewModelScope.launch(context = Dispatchers.Default) {
+      mutex.withLock { stateQueue.add(func) }
+      flushQueueBus.publish(Unit)
     }
-    flushQueueBus.publish(Unit)
   }
 
   @CheckResult
   private fun dequeueAllPendingStateChanges(): List<S.() -> S> {
-    synchronized(lock) {
-      if (stateQueue.isEmpty()) {
-        return emptyList()
-      }
-
-      val queue = stateQueue
-      stateQueue = LinkedList()
-      return queue
+    if (stateQueue.isEmpty()) {
+      return emptyList()
     }
+
+    val queue = stateQueue
+    stateQueue = LinkedList()
+    return queue
   }
 
-  private fun flushQueue() {
-    synchronized(lock) {
+  private suspend fun flushQueue() {
+    mutex.withLock {
       val stateChanges = dequeueAllPendingStateChanges()
       if (stateChanges.isEmpty()) {
         return

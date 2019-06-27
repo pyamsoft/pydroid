@@ -38,7 +38,6 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal class AppSettingsViewModel internal constructor(
   activity: Activity,

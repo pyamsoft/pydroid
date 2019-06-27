@@ -22,7 +22,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal class AboutAdapter internal constructor(
   private val callback: (event: AboutItemControllerEvent) -> Unit

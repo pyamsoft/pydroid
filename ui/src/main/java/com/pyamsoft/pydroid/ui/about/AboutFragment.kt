@@ -39,7 +39,6 @@ import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class AboutFragment : Fragment() {
 

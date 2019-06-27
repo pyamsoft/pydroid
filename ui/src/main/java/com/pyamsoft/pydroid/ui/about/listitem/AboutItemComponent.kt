@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal interface AboutItemComponent {
 

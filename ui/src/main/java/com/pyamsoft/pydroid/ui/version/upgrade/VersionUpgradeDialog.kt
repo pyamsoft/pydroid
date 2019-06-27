@@ -37,7 +37,6 @@ import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class VersionUpgradeDialog : DialogFragment() {
 

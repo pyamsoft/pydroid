@@ -33,7 +33,6 @@ import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal class AboutListView internal constructor(
   private val owner: LifecycleOwner,

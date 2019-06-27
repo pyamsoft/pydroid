@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal class AboutViewHolder private constructor(
   view: View,

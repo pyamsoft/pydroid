@@ -20,8 +20,6 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.ReceiveChannel
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) {

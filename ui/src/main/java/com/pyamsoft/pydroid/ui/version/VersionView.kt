@@ -25,7 +25,6 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 internal class VersionView internal constructor(

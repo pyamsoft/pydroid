@@ -29,7 +29,6 @@ import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 abstract class VersionCheckActivity : ActivityBase() {
 

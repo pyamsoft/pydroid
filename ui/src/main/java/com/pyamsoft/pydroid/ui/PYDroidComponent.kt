@@ -33,7 +33,6 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal interface PYDroidComponent {
 

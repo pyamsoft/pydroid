@@ -23,7 +23,6 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal interface AboutComponent {
 

@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.rating
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal interface RatingComponent {
 

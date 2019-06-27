@@ -51,7 +51,6 @@ import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionView
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.HyperlinkIntent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {

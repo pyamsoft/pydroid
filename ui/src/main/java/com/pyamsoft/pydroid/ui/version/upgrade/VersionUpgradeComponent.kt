@@ -22,7 +22,6 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal interface VersionUpgradeComponent {
 

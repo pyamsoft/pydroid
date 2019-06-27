@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
 internal class PYDroidInitializer internal constructor(

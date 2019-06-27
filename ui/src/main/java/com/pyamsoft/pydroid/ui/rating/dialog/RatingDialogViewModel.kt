@@ -38,6 +38,9 @@ internal class RatingDialogViewModel internal constructor(
 
   private var saveJob by singleJob()
 
+  override fun onInit() {
+  }
+
   override fun onTeardown() {
     saveJob.cancel()
   }

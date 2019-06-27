@@ -59,6 +59,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   ): Job = viewModelScope.launch(context = Dispatchers.Default) {
     bindEvents(onControllerEvent)
     views.forEach { bindEvent(it) }
+    initialize()
 
     val savedState = UiSavedState(savedInstanceState)
     handleStateChange(views, latestState(), savedState)
@@ -142,6 +143,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
       }
     }
   }
+
+  private fun CoroutineScope.initialize() = launch(context = Dispatchers.Main) {
+    onInit()
+  }
+
+  protected abstract fun onInit()
 
   private fun CoroutineScope.renderState(
     view: UiView<S, V>,

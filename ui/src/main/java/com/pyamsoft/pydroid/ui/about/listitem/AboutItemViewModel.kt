@@ -27,6 +27,9 @@ internal class AboutItemViewModel internal constructor(
     initialState = UnitViewState
 ) {
 
+  override fun onInit() {
+  }
+
   override fun handleViewEvent(event: AboutItemViewEvent) {
     return when (event) {
       is OpenUrl -> publish(ExternalUrl(event.url))

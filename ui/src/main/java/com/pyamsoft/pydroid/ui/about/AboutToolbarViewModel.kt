@@ -26,6 +26,9 @@ internal class AboutToolbarViewModel internal constructor(
     initialState = AboutToolbarState(title = "Open Source Licenses")
 ) {
 
+  override fun onInit() {
+  }
+
   override fun handleViewEvent(event: AboutToolbarViewEvent) {
     return when (event) {
       is UpNavigate -> publish(Navigation)

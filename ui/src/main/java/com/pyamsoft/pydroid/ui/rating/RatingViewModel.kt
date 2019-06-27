@@ -34,7 +34,7 @@ internal class RatingViewModel internal constructor(
 
   private var loadJob by singleJob()
 
-  init {
+  override fun onInit() {
     load(false)
   }
 

@@ -43,7 +43,7 @@ internal class AboutListViewModel internal constructor(
 
   private var licenseJob by singleJob()
 
-  init {
+  override fun onInit() {
     loadLicenses(false)
   }
 

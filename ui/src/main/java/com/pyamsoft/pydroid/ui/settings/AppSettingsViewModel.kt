@@ -48,6 +48,9 @@ internal class AppSettingsViewModel internal constructor(
     )
 ) {
 
+  override fun onInit() {
+  }
+
   override fun handleViewEvent(event: AppSettingsViewEvent) {
     return when (event) {
       is MoreApps -> publish(NavigateMoreApps)

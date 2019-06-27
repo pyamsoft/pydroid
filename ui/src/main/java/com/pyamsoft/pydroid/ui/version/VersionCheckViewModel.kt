@@ -42,7 +42,7 @@ internal class VersionCheckViewModel internal constructor(
 
   private var checkUpdateJob by singleJob()
 
-  init {
+  override fun onInit() {
     checkForUpdates(false)
   }
 

@@ -23,6 +23,9 @@ class UnitViewModel private constructor() : UiViewModel<UnitViewState, UnitViewE
     initialState = UnitViewState
 ) {
 
+  override fun onInit() {
+  }
+
   override fun handleViewEvent(event: UnitViewEvent) {
   }
 

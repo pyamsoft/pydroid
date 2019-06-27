@@ -18,36 +18,20 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.consumeEach
-import timber.log.Timber
 
-@ExperimentalCoroutinesApi
-class EventBus<T : Any> private constructor() {
+interface EventBus<T : Any> {
 
-  private val bus = BroadcastChannel<T>(1)
+  fun publish(event: T)
 
-  fun publish(event: T) {
-    if (!bus.offer(event)) {
-      Timber.w("Failed to offer event onto bus: $event")
-    }
-  }
-
-  internal suspend inline fun onEvent(crossinline func: (event: T) -> Unit) {
-    bus.openSubscription()
-        .consumeEach(func)
-  }
+  suspend fun onEvent(func: suspend (event: T) -> Unit)
 
   companion object {
 
     private val EMPTY by lazy { create<Unit>() }
 
-    @JvmStatic
     @CheckResult
-    fun <T : Any> create(): EventBus<T> = EventBus()
+    fun <T : Any> create(): EventBus<T> = RealBus()
 
-    @JvmStatic
     @CheckResult
     fun empty(): EventBus<Unit> = EMPTY
   }

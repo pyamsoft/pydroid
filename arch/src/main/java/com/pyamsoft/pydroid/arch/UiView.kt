@@ -21,8 +21,8 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.ReceiveChannel
 
-@ExperimentalCoroutinesApi
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) {
 
@@ -57,12 +57,10 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
   open fun saveState(outState: Bundle) {
   }
 
-  @ExperimentalCoroutinesApi
-  internal suspend fun onViewEvent(func: (event: V) -> Unit) {
+  internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
     viewEventBus.onEvent(func)
   }
 
-  @ExperimentalCoroutinesApi
   protected fun publish(event: V) {
     viewEventBus.publish(event)
   }

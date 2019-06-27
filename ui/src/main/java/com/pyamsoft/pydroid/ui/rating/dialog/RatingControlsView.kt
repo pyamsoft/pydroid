@@ -31,7 +31,6 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class RatingControlsView internal constructor(
   private val rateLink: String,
   private val owner: LifecycleOwner,

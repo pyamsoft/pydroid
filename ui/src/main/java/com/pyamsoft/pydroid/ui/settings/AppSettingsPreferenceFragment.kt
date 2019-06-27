@@ -54,7 +54,6 @@ import com.pyamsoft.pydroid.util.HyperlinkIntent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
 abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
   protected open val preferenceXmlResId: Int = 0

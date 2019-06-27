@@ -22,7 +22,6 @@ import android.os.StrictMode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
 internal class PYDroidInitializer internal constructor(
   application: Application,
   applicationName: String,

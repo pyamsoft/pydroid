@@ -34,7 +34,6 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.reflect.KClass
 
-@ExperimentalCoroutinesApi
 internal class PYDroidViewModelFactory internal constructor(
   private val activity: Activity,
   private val ratingInteractor: RatingInteractor,

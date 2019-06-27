@@ -24,7 +24,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal interface VersionUpgradeComponent {
 
   fun inject(dialog: VersionUpgradeDialog)

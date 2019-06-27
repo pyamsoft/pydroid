@@ -40,7 +40,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class AppSettingsViewModel internal constructor(
   activity: Activity,
   private val theming: Theming

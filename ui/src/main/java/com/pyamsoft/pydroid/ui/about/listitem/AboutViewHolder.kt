@@ -29,7 +29,6 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class AboutViewHolder private constructor(
   view: View,
   private val callback: (event: AboutItemControllerEvent) -> Unit

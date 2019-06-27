@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class AboutItemActionView internal constructor(
   private val library: OssLibrary,
   parent: ViewGroup

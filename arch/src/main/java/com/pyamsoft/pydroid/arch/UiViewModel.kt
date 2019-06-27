@@ -23,15 +23,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.LinkedList
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-@ExperimentalCoroutinesApi
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
   private val initialState: S
 ) : ViewModel() {
@@ -50,22 +48,20 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
   protected abstract fun handleViewEvent(event: V)
 
-  @PublishedApi
   @CheckResult
+  @PublishedApi
   internal fun render(
     savedInstanceState: Bundle?,
     vararg views: UiView<S, V>,
-    onControllerEvent: (event: C) -> Unit
-  ): Job {
-    return viewModelScope.launch(context = Dispatchers.Default) {
-      bindEvents(onControllerEvent)
-      bindEvents(views)
+    onControllerEvent: suspend (event: C) -> Unit
+  ): Job = viewModelScope.launch(context = Dispatchers.Default) {
+    bindEvents(onControllerEvent)
+    views.forEach { bindEvent(it) }
 
-      val savedState = UiSavedState(savedInstanceState)
-      handleStateChange(views, latestState(), savedState)
-      stateBus.onEvent { state ->
-        handleStateChange(views, state, savedState)
-      }
+    val savedState = UiSavedState(savedInstanceState)
+    handleStateChange(views, latestState(), savedState)
+    stateBus.onEvent { state ->
+      handleStateChange(views, state, savedState)
     }
   }
 
@@ -80,10 +76,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   @JvmOverloads
   protected fun <E : Any> EventBus<E>.scopedEvent(
     context: CoroutineContext = EmptyCoroutineContext,
-    func: (event: E) -> Unit
+    func: suspend (event: E) -> Unit
   ): Job {
     val bus = this
-    return viewModelScope.launch(context = context) { bus.onEvent(func) }
+    return viewModelScope.launch(context = context) {
+      bus.onEvent(func)
+    }
   }
 
   protected fun publish(event: C) {
@@ -132,15 +130,24 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
   }
 
-  private fun CoroutineScope.handleStateChange(
+  private suspend fun handleStateChange(
     views: Array<out UiView<S, V>>,
     state: S,
     savedState: UiSavedState
-  ) = launch {
+  ) {
     val combined = combineWithSavedState(state, savedState)
-    views.forEach {
-      launch(context = Dispatchers.Main) { it.render(combined.state, combined.savedState) }
+    views.forEach { v ->
+      coroutineScope {
+        renderState(v, combined)
+      }
     }
+  }
+
+  private fun CoroutineScope.renderState(
+    view: UiView<S, V>,
+    combined: StateWithSavedState<S>
+  ) = launch(context = Dispatchers.Main) {
+    view.render(combined.state, combined.savedState)
   }
 
   @CheckResult
@@ -151,17 +158,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     return StateWithSavedState(state, savedState)
   }
 
-  private fun CoroutineScope.bindEvents(views: Array<out UiView<S, V>>) = launch {
-    views.forEach { v ->
-      launch {
-        v.onViewEvent { event ->
-          launch(context = Dispatchers.Main) { handleViewEvent(event) }
-        }
-      }
+  private fun CoroutineScope.bindEvent(view: UiView<S, V>) = launch {
+    view.onViewEvent { event ->
+      launch(context = Dispatchers.Main) { handleViewEvent(event) }
     }
   }
 
-  private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: (event: C) -> Unit) =
+  private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: suspend (event: C) -> Unit) =
     launch {
       controllerEventBus.onEvent { event ->
         launch(context = Dispatchers.Main) { onControllerEvent(event) }

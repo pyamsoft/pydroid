@@ -28,7 +28,6 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
 internal class VersionView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup

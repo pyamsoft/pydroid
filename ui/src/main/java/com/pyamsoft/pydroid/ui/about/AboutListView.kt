@@ -35,7 +35,6 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class AboutListView internal constructor(
   private val owner: LifecycleOwner,
   parent: ViewGroup
@@ -76,7 +75,6 @@ internal class AboutListView internal constructor(
     }
   }
 
-  @ExperimentalCoroutinesApi
   private fun setupListView() {
     aboutAdapter = AboutAdapter {
       return@AboutAdapter when (it) {

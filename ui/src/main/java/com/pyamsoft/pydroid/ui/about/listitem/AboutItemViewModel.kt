@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent.ExternalU
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class AboutItemViewModel internal constructor(
 ) : UiViewModel<UnitViewState, AboutItemViewEvent, AboutItemControllerEvent>(
     initialState = UnitViewState

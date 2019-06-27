@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal interface RatingDialogComponent {
 
   fun inject(dialog: RatingDialog)

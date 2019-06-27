@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.ListAdapter
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class AboutAdapter internal constructor(
   private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : ListAdapter<OssLibrary, BaseViewHolder>(object : DiffUtil.ItemCallback<OssLibrary>() {

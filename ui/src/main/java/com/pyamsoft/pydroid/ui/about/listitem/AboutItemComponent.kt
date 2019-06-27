@@ -22,7 +22,6 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal interface AboutItemComponent {
 
   fun inject(viewHolder: AboutViewHolder)

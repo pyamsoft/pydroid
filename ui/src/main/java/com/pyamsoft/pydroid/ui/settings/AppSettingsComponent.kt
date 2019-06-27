@@ -28,7 +28,6 @@ import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal interface AppSettingsComponent {
 
   fun inject(fragment: AppSettingsPreferenceFragment)

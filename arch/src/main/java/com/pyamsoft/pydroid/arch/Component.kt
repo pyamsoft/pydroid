@@ -19,15 +19,13 @@ package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
   savedInstanceState: Bundle?,
   owner: LifecycleOwner,
   viewModel: UiViewModel<S, V, C>,
   vararg views: UiView<S, V>,
-  crossinline onControllerEvent: (event: C) -> Unit
+  crossinline onControllerEvent: suspend (event: C) -> Unit
 ) {
   views.forEach { it.inflate(savedInstanceState) }
   val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }

@@ -41,7 +41,6 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.Navigat
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class RatingDialog : DialogFragment() {
 
   internal var viewModelFactory: ViewModelProvider.Factory? = null

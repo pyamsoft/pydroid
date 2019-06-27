@@ -39,7 +39,6 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
   internal var ratingViewModel: RatingViewModel? = null

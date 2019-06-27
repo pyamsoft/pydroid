@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal class AboutToolbarView internal constructor(
   private val backstackCount: Int,
   private val toolbarActivity: ToolbarActivity

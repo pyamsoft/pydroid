@@ -32,7 +32,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
 internal class AboutListViewModel internal constructor(
   private val interactor: AboutInteractor
 ) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(

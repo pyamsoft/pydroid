@@ -41,7 +41,6 @@ import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class AboutFragment : Fragment() {
 
   internal var aboutViewModelFactory: ViewModelProvider.Factory? = null

@@ -31,7 +31,6 @@ import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 abstract class VersionCheckActivity : ActivityBase() {
 
   protected abstract val snackbarRoot: ViewGroup

@@ -15,21 +15,30 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.arch
 
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
-import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
+import androidx.annotation.CheckResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.consumeEach
+import timber.log.Timber
 
-internal class AboutToolbarViewModel internal constructor(
-) : UiViewModel<AboutToolbarState, AboutToolbarViewEvent, AboutToolbarControllerEvent>(
-    initialState = AboutToolbarState(title = "Open Source Licenses")
-) {
+class RealBus<T : Any> internal constructor() : EventBus<T> {
 
-  override fun handleViewEvent(event: AboutToolbarViewEvent) {
-    return when (event) {
-      is UpNavigate -> publish(Navigation)
+  @ExperimentalCoroutinesApi
+  private val bus = BroadcastChannel<T>(1)
+
+  @ExperimentalCoroutinesApi
+  override fun publish(event: T) {
+    if (!bus.offer(event)) {
+      Timber.w("Failed to offer event onto bus: $event")
     }
+  }
+
+  @CheckResult
+  @ExperimentalCoroutinesApi
+  override suspend fun onEvent(func: suspend (event: T) -> Unit) {
+    bus.openSubscription()
+        .consumeEach { func(it) }
   }
 }

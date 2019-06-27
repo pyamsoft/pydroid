@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 

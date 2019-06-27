@@ -30,8 +30,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-@ExperimentalCoroutinesApi
 internal class RatingDialogViewModel internal constructor(
   private val interactor: RatingInteractor
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
@@ -53,8 +53,7 @@ internal class RatingDialogViewModel internal constructor(
 
   private fun save(link: String) {
     saveJob = viewModelScope.launch {
-      val runner = async(Dispatchers.Default) { interactor.saveRating() }
-      runner.await()
+      withContext(Dispatchers.Default) { interactor.saveRating() }
       handleRate(link)
     }
   }

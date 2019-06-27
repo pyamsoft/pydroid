@@ -25,7 +25,6 @@ import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal interface AboutComponent {
 
   fun inject(fragment: AboutFragment)

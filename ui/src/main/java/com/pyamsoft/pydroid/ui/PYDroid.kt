@@ -27,7 +27,6 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * PYDroid library entry point
  */
-@ExperimentalCoroutinesApi
 object PYDroid {
 
   private val DEFAULT_INIT_CALLBACK: (provider: ModuleProvider) -> Unit = {}

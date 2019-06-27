@@ -21,7 +21,6 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 internal interface RatingComponent {
 
   fun inject(fragment: RatingActivity)

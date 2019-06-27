@@ -30,7 +30,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-@ExperimentalCoroutinesApi
 abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructor(
   parent: PreferenceScreen
 ) : UiView<S, V>() {

@@ -25,8 +25,8 @@ import com.pyamsoft.pydroid.arch.singleJob
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor
@@ -47,8 +47,8 @@ internal class RatingViewModel internal constructor(
 
   internal fun load(force: Boolean) {
     loadJob = viewModelScope.launch {
-      val show = async(Dispatchers.Default) { interactor.needsToViewRating(force) }
-      if (show.await()) {
+      val show = withContext(Dispatchers.Default) { interactor.needsToViewRating(force) }
+      if (show) {
         publish(LoadRating)
       }
     }

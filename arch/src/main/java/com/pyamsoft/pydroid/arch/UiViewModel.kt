@@ -28,6 +28,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import java.util.LinkedList
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -47,6 +48,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   init {
     flushQueueBus.scopedEvent(Dispatchers.Default) { flushQueue() }
   }
+
+  protected abstract fun onInit()
 
   protected abstract fun handleViewEvent(event: V)
 
@@ -98,7 +101,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
   protected fun setState(func: S.() -> S) {
     viewModelScope.launch(context = Dispatchers.Default) {
-      mutex.withLock { stateQueue.add(func) }
+      mutex.withLock {
+        stateQueue.add(func)
+      }
+
       flushQueueBus.publish(Unit)
     }
   }
@@ -115,17 +121,20 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   }
 
   private suspend fun flushQueue() {
-    mutex.withLock {
-      val stateChanges = dequeueAllPendingStateChanges()
-      if (stateChanges.isEmpty()) {
-        return
-      }
+    coroutineScope {
+      mutex.withLock {
+        val stateChanges = dequeueAllPendingStateChanges()
+        if (stateChanges.isEmpty()) {
+          return@coroutineScope
+        }
 
-      for (stateChange in stateChanges) {
-        val newState = latestState().stateChange()
-        if (newState != state) {
-          state = newState
-          stateBus.publish(newState)
+        for (stateChange in stateChanges) {
+          val newState = latestState().stateChange()
+          if (newState != state) {
+            state = newState
+
+            stateBus.publish(newState)
+          }
         }
       }
     }
@@ -136,25 +145,19 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     state: S,
     savedState: UiSavedState
   ) {
-    val combined = combineWithSavedState(state, savedState)
-    views.forEach { v ->
-      coroutineScope {
-        renderState(v, combined)
+    coroutineScope {
+      val combined = combineWithSavedState(state, savedState)
+
+      views.forEach { v ->
+        withContext(context = Dispatchers.Main) {
+          v.render(combined.state, combined.savedState)
+        }
       }
     }
   }
 
   private fun CoroutineScope.initialize() = launch(context = Dispatchers.Main) {
     onInit()
-  }
-
-  protected abstract fun onInit()
-
-  private fun CoroutineScope.renderState(
-    view: UiView<S, V>,
-    combined: StateWithSavedState<S>
-  ) = launch(context = Dispatchers.Main) {
-    view.render(combined.state, combined.savedState)
   }
 
   @CheckResult
@@ -167,14 +170,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
   private fun CoroutineScope.bindEvent(view: UiView<S, V>) = launch {
     view.onViewEvent { event ->
-      launch(context = Dispatchers.Main) { handleViewEvent(event) }
+      withContext(context = Dispatchers.Main) { handleViewEvent(event) }
     }
   }
 
   private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: suspend (event: C) -> Unit) =
     launch {
       controllerEventBus.onEvent { event ->
-        launch(context = Dispatchers.Main) { onControllerEvent(event) }
+        withContext(context = Dispatchers.Main) { onControllerEvent(event) }
       }
     }
 

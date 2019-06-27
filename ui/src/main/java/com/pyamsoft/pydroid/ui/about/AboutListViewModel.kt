@@ -27,8 +27,8 @@ import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class AboutListViewModel internal constructor(
@@ -62,8 +62,8 @@ internal class AboutListViewModel internal constructor(
 
       handleLicenseLoadBegin()
       try {
-        val licenses = async(Dispatchers.Default) { interactor.loadLicenses(force) }
-        handleLicensesLoaded(licenses.await())
+        val licenses = withContext(Dispatchers.Default) { interactor.loadLicenses(force) }
+        handleLicensesLoaded(licenses)
       } catch (e: Throwable) {
         if (e !is CancellationException) {
           Timber.e(e, "Error loading licenses")

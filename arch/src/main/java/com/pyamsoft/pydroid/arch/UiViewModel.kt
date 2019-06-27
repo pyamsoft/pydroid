@@ -114,18 +114,18 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   }
 
   private fun flushQueue() {
-    val stateChanges = dequeueAllPendingStateChanges()
-    if (stateChanges.isEmpty()) {
-      return
-    }
+    synchronized(lock) {
+      val stateChanges = dequeueAllPendingStateChanges()
+      if (stateChanges.isEmpty()) {
+        return
+      }
 
-    for (stateChange in stateChanges) {
-      val newState = latestState().stateChange()
-      if (newState != state) {
-        synchronized(lock) {
+      for (stateChange in stateChanges) {
+        val newState = latestState().stateChange()
+        if (newState != state) {
           state = newState
+          stateBus.publish(newState)
         }
-        stateBus.publish(newState)
       }
     }
   }

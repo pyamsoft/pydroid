@@ -37,7 +37,6 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 internal class AppSettingsView internal constructor(
   private val activity: Activity,
@@ -125,54 +124,54 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupMoreApps() {
-    moreApps.setOnPreferenceClickListener {
+    moreApps.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(MoreApps)
-      return@setOnPreferenceClickListener true
+      return@OnPreferenceClickListener true
     }
   }
 
   private fun setupSocial() {
     val socialLink = FACEBOOK.hyperlink(activity)
-    social.setOnPreferenceClickListener {
+    social.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(socialLink))
-      return@setOnPreferenceClickListener true
+      return@OnPreferenceClickListener true
     }
   }
 
   private fun setupBlog() {
     val blogLink = BLOG.hyperlink(activity)
-    followBlog.setOnPreferenceClickListener {
+    followBlog.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(blogLink))
-      return@setOnPreferenceClickListener true
+      return@OnPreferenceClickListener true
     }
   }
 
   private fun setupRateApp() {
-    rate.setOnPreferenceClickListener {
+    rate.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(RateApp)
-      return@setOnPreferenceClickListener true
+      return@OnPreferenceClickListener true
     }
   }
 
   private fun setupBugReport(bugReportUrl: String) {
     val reportLink = bugReportUrl.hyperlink(activity)
-    bugReport.setOnPreferenceClickListener {
+    bugReport.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(reportLink))
-      return@setOnPreferenceClickListener true
+      return@OnPreferenceClickListener true
     }
   }
 
   private fun setupLicenses() {
-    licenses.setOnPreferenceClickListener {
+    licenses.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(ViewLicense)
-      return@setOnPreferenceClickListener true
+      return@OnPreferenceClickListener true
     }
   }
 
   private fun setupCheckUpgrade() {
-    version.setOnPreferenceClickListener {
+    version.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(CheckUpgrade)
-      return@setOnPreferenceClickListener true
+      return@OnPreferenceClickListener true
     }
   }
 
@@ -180,9 +179,9 @@ internal class AppSettingsView internal constructor(
     if (hideClearAll) {
       clearAll.isVisible = false
     } else {
-      clearAll.setOnPreferenceClickListener {
+      clearAll.onPreferenceClickListener = Preference.OnPreferenceClickListener {
         publish(ClearData)
-        return@setOnPreferenceClickListener true
+        return@OnPreferenceClickListener true
       }
     }
   }
@@ -191,20 +190,20 @@ internal class AppSettingsView internal constructor(
     if (hideUpgradeInformation) {
       upgradeInfo.isVisible = false
     } else {
-      upgradeInfo.setOnPreferenceClickListener {
+      upgradeInfo.onPreferenceClickListener = Preference.OnPreferenceClickListener {
         publish(ShowUpgrade)
-        return@setOnPreferenceClickListener true
+        return@OnPreferenceClickListener true
       }
     }
   }
 
   private fun setupDarkTheme() {
-    theme.setOnPreferenceChangeListener { _, newValue ->
+    theme.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
       if (newValue is String) {
         publish(ToggleDarkTheme(activity, newValue))
-        return@setOnPreferenceChangeListener true
+        return@OnPreferenceChangeListener true
       }
-      return@setOnPreferenceChangeListener false
+      return@OnPreferenceChangeListener false
     }
   }
 

@@ -32,6 +32,19 @@ object OssLibraries {
   var UI = false
   var LOADER = false
 
+  private fun addBuildLibraries() {
+    add(
+        "Dexcount Gradle Plugin",
+        "https://github.com/KeepSafe/dexcount-gradle-plugin",
+        "A Gradle plugin to report the number of method references in your APK on every build."
+    )
+    add(
+        "Gradle Versions Plugin",
+        "https://github.com/ben-manes/gradle-versions-plugin",
+        "Gradle plugin to discover dependency updates."
+    )
+  }
+
   private fun addCoreLibraries() {
     add(
         "PYDroid Core",
@@ -49,34 +62,14 @@ object OssLibraries {
         "The AndroidX Jetpack Lifecycle library. Manages your activity and fragment lifecycles."
     )
     add(
-        "Dexcount Gradle Plugin",
-        "https://github.com/KeepSafe/dexcount-gradle-plugin",
-        "A Gradle plugin to report the number of method references in your APK on every build."
-    )
-    add(
-        "Gradle Versions Plugin",
-        "https://github.com/ben-manes/gradle-versions-plugin",
-        "Gradle plugin to discover dependency updates."
-    )
-    add(
         "Kotlin",
         "https://github.com/JetBrains/kotlin",
         "The Kotlin Programming Language."
     )
     add(
-        "RxJava",
-        "https://github.com/ReactiveX/RxJava",
-        "Reactive Extensions for the JVM – a library for composing asynchronous and event-based programs using observable sequences for the Java VM."
-    )
-    add(
         "Timber",
         "https://github.com/JakeWharton/timber",
         "A logger with a small, extensible API which provides utility on top of Android's normal Log class."
-    )
-    add(
-        "RxAndroid",
-        "https://github.com/ReactiveX/RxAndroid",
-        "RxJava bindings for Android."
     )
   }
 
@@ -105,7 +98,6 @@ object OssLibraries {
         "Type-safe HTTP client for Android and Java by Square, Inc."
     )
     add(
-
         "Moshi",
         "https://github.com/square/moshi",
         "A modern JSON library for Android and Java."
@@ -116,9 +108,9 @@ object OssLibraries {
         "An HTTP+HTTP/2 client for Android and Java applications."
     )
     add(
-        "Repo",
-        "https://github.com/POPinNow/Repo",
-        "Simple Repository pattern for Android."
+        "Cachify",
+        "https://github.com/pyamsoft/cachify",
+        "Simple in-memory caching of all the things"
     )
   }
 
@@ -129,7 +121,7 @@ object OssLibraries {
         "PYDroid reference implementation for various UI components"
     )
     add(
-        "AndroidX KTX",
+        "AndroidX Core KTX",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/core/ktx/",
         "The AndroidX Jetpack Core KTX library. Write more concise, idiomatic Kotlin code."
     )
@@ -152,11 +144,6 @@ object OssLibraries {
         "AndroidX Preference",
         "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/preference/",
         "The AndroidX Jetpack Preference library. Allow users to modify UI settings."
-    )
-    add(
-        "FluidResizer",
-        "https://github.com/POPinNow/FluidResizer",
-        "Fluid and smooth animation for reacting to keyboard visibility changes"
     )
     add(
         "AndroidX Constraint Layout",
@@ -184,6 +171,21 @@ object OssLibraries {
         "https://github.com/pyamsoft/pydroid",
         "PYDroid standard architecture for a UiComponent based, ViewModel driven, reactive MVI UI design pattern"
     )
+    add(
+        "Kotlin Coroutines",
+        "https://github.com/Kotlin/kotlinx.coroutines",
+        "Library support for Kotlin coroutines with multiplatform support."
+    )
+    add(
+        "AndroidX Lifecycle ViewModel KTX",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
+        "Kotlin extensions for the Android Jetpack ViewModel"
+    )
+    add(
+        "AndroidX Lifecycle ViewModel",
+        "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/lifecycle/",
+        "The AndroidX Jetpack ViewModel library. Model the state of your application easily."
+    )
   }
 
   @JvmOverloads
@@ -208,8 +210,9 @@ object OssLibraries {
   @JvmStatic
   @CheckResult
   fun libraries(): Set<OssLibrary> {
-    // Core is always added if you're using any PYDroid
+    // Core and Build is always added if you're using any PYDroid
     addCoreLibraries()
+    addBuildLibraries()
 
     if (UTIL) {
       addUtilLibraries()

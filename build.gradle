@@ -49,7 +49,6 @@ buildscript {
     appCompat = "1.0.2"
 
     cachify = "0.0.1-SNAPSHOT"
-    refreshLatch = "0.0.1"
 
     timber = "4.7.1"
 

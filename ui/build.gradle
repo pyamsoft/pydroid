@@ -26,8 +26,6 @@ dependencies {
   api "androidx.preference:preference:$preference"
   api "androidx.constraintlayout:constraintlayout:$constraintLayout"
 
-  implementation "com.popinnow.android.refresh:refresh-latch:$refreshLatch"
-
   api project(':arch')
   api project(':bootstrap')
   api project(':loader')

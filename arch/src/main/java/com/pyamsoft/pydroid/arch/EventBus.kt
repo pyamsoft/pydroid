@@ -19,11 +19,9 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 
-interface EventBus<T : Any> {
+interface EventBus<T : Any> : EventConsumer<T> {
 
   fun publish(event: T)
-
-  suspend fun onEvent(func: suspend (event: T) -> Unit)
 
   companion object {
 

@@ -25,7 +25,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
   owner: LifecycleOwner,
   viewModel: UiViewModel<S, V, C>,
   vararg views: UiView<S, V>,
-  crossinline onControllerEvent: suspend (event: C) -> Unit
+  crossinline onControllerEvent: (event: C) -> Unit
 ) {
   views.forEach { it.inflate(savedInstanceState) }
   val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }

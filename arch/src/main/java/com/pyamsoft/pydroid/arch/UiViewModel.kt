@@ -31,6 +31,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.LinkedList
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -38,6 +39,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private val initialState: S
 ) : ViewModel() {
 
+  private val isInitialized = AtomicBoolean(false)
   private val mutex = Mutex()
   private val controllerEventBus = EventBus.create<C>()
   private val stateBus = EventBus.create<S>()
@@ -59,10 +61,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   internal fun render(
     savedInstanceState: Bundle?,
     vararg views: UiView<S, V>,
-    onControllerEvent: suspend (event: C) -> Unit
-  ): Job = viewModelScope.launch(context = Dispatchers.Default) {
+    onControllerEvent: (event: C) -> Unit
+  ): Job = viewModelScope.launch {
     bindEvents(onControllerEvent)
     views.forEach { bindEvent(it) }
+
     initialize()
 
     // Init savedState once
@@ -80,13 +83,17 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     // Listen for changes
-    stateBus.onEvent { state ->
-      handleStateChange(views, state, savedState)
+    launch(context = Dispatchers.Default) {
+      stateBus.onEvent { state ->
+        withContext(context = Dispatchers.Main) { handleStateChange(views, state, savedState) }
+      }
     }
   }
 
   final override fun onCleared() {
-    onTeardown()
+    if (isInitialized.compareAndSet(true, false)) {
+      onTeardown()
+    }
   }
 
   protected open fun onTeardown() {
@@ -154,24 +161,19 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
   }
 
-  private suspend fun handleStateChange(
+  private fun handleStateChange(
     views: Array<out UiView<S, V>>,
     state: S,
     savedState: UiSavedState
   ) {
-    coroutineScope {
-      val combined = combineWithSavedState(state, savedState)
-
-      views.forEach { v ->
-        withContext(context = Dispatchers.Main) {
-          v.render(combined.state, combined.savedState)
-        }
-      }
-    }
+    val combined = combineWithSavedState(state, savedState)
+    views.forEach { it.render(combined.state, combined.savedState) }
   }
 
-  private fun CoroutineScope.initialize() = launch(context = Dispatchers.Main) {
-    onInit()
+  private fun initialize() {
+    if (isInitialized.compareAndSet(false, true)) {
+      onInit()
+    }
   }
 
   @CheckResult
@@ -182,14 +184,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     return StateWithSavedState(state, savedState)
   }
 
-  private fun CoroutineScope.bindEvent(view: UiView<S, V>) = launch {
+  private fun CoroutineScope.bindEvent(view: UiView<S, V>) = launch(context = Dispatchers.Default) {
     view.onViewEvent { event ->
       withContext(context = Dispatchers.Main) { handleViewEvent(event) }
     }
   }
 
-  private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: suspend (event: C) -> Unit) =
-    launch {
+  private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: (event: C) -> Unit) =
+    launch(context = Dispatchers.Default) {
       controllerEventBus.onEvent { event ->
         withContext(context = Dispatchers.Main) { onControllerEvent(event) }
       }

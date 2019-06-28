@@ -37,8 +37,8 @@ class RealBus<T : Any> internal constructor() : EventBus<T> {
 
   @CheckResult
   @ExperimentalCoroutinesApi
-  override suspend fun onEvent(func: suspend (event: T) -> Unit) {
+  override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
     bus.openSubscription()
-        .consumeEach { func(it) }
+        .consumeEach { emitter(it) }
   }
 }

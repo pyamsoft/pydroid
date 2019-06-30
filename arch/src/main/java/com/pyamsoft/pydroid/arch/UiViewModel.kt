@@ -24,7 +24,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -63,36 +62,44 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     vararg views: UiView<S, V>,
     onControllerEvent: (event: C) -> Unit
   ): Job = viewModelScope.launch {
-    bindEvents(onControllerEvent)
-    views.forEach { bindEvent(it) }
-
-    initialize()
-
     // Init savedState once
     val savedState = UiSavedState(savedInstanceState)
-
-    // Push most recent state
-    val mostRecentState = latestState()
-    handleStateChange(views, mostRecentState, savedState)
-
-    // If most recent and latest get out of sync, do it again
-    val currentState = latestState()
-    if (currentState != mostRecentState) {
-      Timber.w("State is out of sync, re-emit with latest: $currentState")
-      handleStateChange(views, currentState, savedState)
-    }
 
     // Listen for changes
     launch(context = Dispatchers.Default) {
       stateBus.onEvent { state ->
-        withContext(context = Dispatchers.Main) { handleStateChange(views, state, savedState) }
+        Timber.d("onStateChange: $state")
+        withContext(context = Dispatchers.Main) {
+          handleStateChange(
+              views, state, savedState, fromInitialState = false
+          )
+        }
       }
+    }
+
+    // Push most recent state
+    val mostRecentState = latestState()
+    handleStateChange(views, mostRecentState, savedState, fromInitialState = true)
+
+    // Bind ViewModel
+    bindEvents(onControllerEvent)
+    views.forEach { bindEvent(it) }
+    initialize()
+
+    // If most recent and latest get out of sync, do it again
+    // This should not happen, but we leave it around just in case - since it was happening at one point.
+    val currentState = latestState()
+    if (currentState != mostRecentState) {
+      Timber.w("State is out of sync, re-emit. Old: $mostRecentState -- New $currentState")
+      handleStateChange(views, currentState, savedState, fromInitialState = true)
     }
   }
 
   final override fun onCleared() {
     if (isInitialized.compareAndSet(true, false)) {
       onTeardown()
+    } else {
+      Timber.w("Teardown is already complete.")
     }
   }
 
@@ -138,24 +145,25 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     val queue = stateQueue
     stateQueue = LinkedList()
-    return queue
+    return queue.toList()
   }
 
   private suspend fun flushQueue() {
-    coroutineScope {
-      mutex.withLock {
-        val stateChanges = dequeueAllPendingStateChanges()
-        if (stateChanges.isEmpty()) {
-          return@coroutineScope
-        }
+    Timber.d("Flushing queue")
+    mutex.withLock {
+      val stateChanges = dequeueAllPendingStateChanges()
+      if (stateChanges.isEmpty()) {
+        Timber.w("State queue is empty, ignore flush.")
+        return
+      }
 
-        for (stateChange in stateChanges) {
-          val newState = latestState().stateChange()
-          if (newState != state) {
-            state = newState
+      for (stateChange in stateChanges) {
+        val newState = latestState().stateChange()
+        Timber.d("State change: $state -> $newState")
+        if (newState != state) {
+          state = newState
 
-            stateBus.publish(newState)
-          }
+          stateBus.publish(newState)
         }
       }
     }
@@ -164,15 +172,19 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private fun handleStateChange(
     views: Array<out UiView<S, V>>,
     state: S,
-    savedState: UiSavedState
+    savedState: UiSavedState,
+    fromInitialState: Boolean
   ) {
     val combined = combineWithSavedState(state, savedState)
+    Timber.d("Handle ${if (fromInitialState) "initial" else "new"} state change: $state")
     views.forEach { it.render(combined.state, combined.savedState) }
   }
 
   private fun initialize() {
     if (isInitialized.compareAndSet(false, true)) {
       onInit()
+    } else {
+      Timber.w("Initialization is already complete.")
     }
   }
 

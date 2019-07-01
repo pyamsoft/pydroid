@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.singleJob
+import com.pyamsoft.pydroid.arch.tryCancel
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
@@ -42,7 +43,7 @@ internal class RatingDialogViewModel internal constructor(
   }
 
   override fun onTeardown() {
-    saveJob.cancel()
+    saveJob.tryCancel()
   }
 
   override fun handleViewEvent(event: RatingDialogViewEvent) {

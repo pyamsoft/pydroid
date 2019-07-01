@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.singleJob
+import com.pyamsoft.pydroid.arch.tryCancel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
@@ -48,7 +49,7 @@ internal class AboutListViewModel internal constructor(
   }
 
   override fun onTeardown() {
-    licenseJob.cancel()
+    licenseJob.tryCancel()
   }
 
   override fun handleViewEvent(event: AboutListViewEvent) {

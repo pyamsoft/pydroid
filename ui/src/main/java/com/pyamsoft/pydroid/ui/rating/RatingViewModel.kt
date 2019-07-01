@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.arch.singleJob
+import com.pyamsoft.pydroid.arch.tryCancel
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +40,7 @@ internal class RatingViewModel internal constructor(
   }
 
   override fun onTeardown() {
-    loadJob.cancel()
+    loadJob.tryCancel()
   }
 
   override fun handleViewEvent(event: UnitViewEvent) {

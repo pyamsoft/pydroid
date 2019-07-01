@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.singleJob
+import com.pyamsoft.pydroid.arch.tryCancel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
@@ -47,7 +48,7 @@ internal class VersionCheckViewModel internal constructor(
   }
 
   override fun onTeardown() {
-    checkUpdateJob.cancel()
+    checkUpdateJob.tryCancel()
   }
 
   override fun handleViewEvent(event: UnitViewEvent) {

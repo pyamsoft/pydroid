@@ -172,6 +172,11 @@ object OssLibraries {
         "PYDroid standard architecture for a UiComponent based, ViewModel driven, reactive MVI UI design pattern"
     )
     add(
+        "Highlander",
+        "https://github.com/pyamsoft/highlander",
+        "There can only be one. A coroutine powered runner which guarantees that the only one instance of a runner function is active at any given time."
+    )
+    add(
         "Kotlin Coroutines",
         "https://github.com/Kotlin/kotlinx.coroutines",
         "Library support for Kotlin coroutines with multiplatform support."

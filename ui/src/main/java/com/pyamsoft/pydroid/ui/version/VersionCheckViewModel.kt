@@ -40,7 +40,7 @@ internal class VersionCheckViewModel internal constructor(
     )
 ) {
 
-  private var checkUpdateRunner = highlander<Unit, Boolean> { force ->
+  private val checkUpdateRunner = highlander<Unit, Boolean> { force ->
     handleVersionCheckBegin(force)
     try {
       val version = withContext(Dispatchers.IO) { interactor.checkVersion(force) }

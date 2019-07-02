@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -68,7 +69,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     // Listen for changes
     launch(context = Dispatchers.Default) {
       stateBus.onEvent { state ->
-        Timber.d("onStateChange: $state")
         withContext(context = Dispatchers.Main) {
           handleStateChange(
               views, state, savedState, fromInitialState = false
@@ -148,18 +148,16 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     return queue.toList()
   }
 
-  private suspend fun flushQueue() {
-    Timber.d("Flushing queue")
+  private suspend fun flushQueue() = coroutineScope {
     mutex.withLock {
       val stateChanges = dequeueAllPendingStateChanges()
       if (stateChanges.isEmpty()) {
         Timber.w("State queue is empty, ignore flush.")
-        return
+        return@coroutineScope
       }
 
       for (stateChange in stateChanges) {
         val newState = latestState().stateChange()
-        Timber.d("State change: $state -> $newState")
         if (newState != state) {
           state = newState
 

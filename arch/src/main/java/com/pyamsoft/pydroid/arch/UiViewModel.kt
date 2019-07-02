@@ -69,17 +69,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     // Listen for changes
     launch(context = Dispatchers.Default) {
       stateBus.onEvent { state ->
-        withContext(context = Dispatchers.Main) {
-          handleStateChange(
-              views, state, savedState, fromInitialState = false
-          )
-        }
+        withContext(context = Dispatchers.Main) { handleStateChange(views, state, savedState) }
       }
     }
 
     // Push most recent state
     val mostRecentState = latestState()
-    handleStateChange(views, mostRecentState, savedState, fromInitialState = true)
+    handleStateChange(views, mostRecentState, savedState)
 
     // Bind ViewModel
     bindEvents(onControllerEvent)
@@ -91,7 +87,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     val currentState = latestState()
     if (currentState != mostRecentState) {
       Timber.w("State is out of sync, re-emit. Old: $mostRecentState -- New $currentState")
-      handleStateChange(views, currentState, savedState, fromInitialState = true)
+      handleStateChange(views, currentState, savedState)
     }
   }
 
@@ -170,11 +166,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private fun handleStateChange(
     views: Array<out UiView<S, V>>,
     state: S,
-    savedState: UiSavedState,
-    fromInitialState: Boolean
+    savedState: UiSavedState
   ) {
     val combined = combineWithSavedState(state, savedState)
-    Timber.d("Handle ${if (fromInitialState) "initial" else "new"} state change: $state")
     views.forEach { it.render(combined.state, combined.savedState) }
   }
 

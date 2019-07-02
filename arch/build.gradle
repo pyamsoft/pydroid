@@ -21,6 +21,8 @@ dependencies {
 
   api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 
+  api "com.pyamsoft.highlander:highlander:$highlander"
+
   api project(':core')
 }
 

@@ -19,9 +19,8 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
+import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.singleJob
-import com.pyamsoft.pydroid.arch.tryCancel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
@@ -42,14 +41,23 @@ internal class AboutListViewModel internal constructor(
     )
 ) {
 
-  private var licenseJob by singleJob()
+  private var licenseRunner = highlander<Unit, Boolean> { force ->
+    handleLicenseLoadBegin()
+    try {
+      val licenses = withContext(Dispatchers.Default) { interactor.loadLicenses(force) }
+      handleLicensesLoaded(licenses)
+    } catch (e: Throwable) {
+      if (e !is CancellationException) {
+        Timber.e(e, "Error loading licenses")
+        handleLicenseLoadError(e)
+      }
+    } finally {
+      handleLicenseLoadComplete()
+    }
+  }
 
   override fun onInit() {
     loadLicenses(false)
-  }
-
-  override fun onTeardown() {
-    licenseJob.tryCancel()
   }
 
   override fun handleViewEvent(event: AboutListViewEvent) {
@@ -59,21 +67,7 @@ internal class AboutListViewModel internal constructor(
   }
 
   private fun loadLicenses(force: Boolean) {
-    licenseJob = viewModelScope.launch {
-
-      handleLicenseLoadBegin()
-      try {
-        val licenses = withContext(Dispatchers.Default) { interactor.loadLicenses(force) }
-        handleLicensesLoaded(licenses)
-      } catch (e: Throwable) {
-        if (e !is CancellationException) {
-          Timber.e(e, "Error loading licenses")
-          handleLicenseLoadError(e)
-        }
-      } finally {
-        handleLicenseLoadComplete()
-      }
-    }
+    viewModelScope.launch { licenseRunner.call(force) }
   }
 
   private fun handleLicenseLoadBegin() {

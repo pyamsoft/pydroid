@@ -48,7 +48,8 @@ buildscript {
     fragment = "1.0.0"
     appCompat = "1.0.2"
 
-    cachify = "0.0.1-SNAPSHOT"
+    cachify = "0.0.1"
+    highlander = "0.0.1"
 
     timber = "4.7.1"
 
@@ -93,7 +94,7 @@ subprojects {
   apply plugin: 'com.jfrog.bintray'
 
   final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "20.2.0-SNAPSHOT"
+  final String POM_VERSION = "20.3.0-SNAPSHOT"
 
   group = POM_GROUP
   version = POM_VERSION

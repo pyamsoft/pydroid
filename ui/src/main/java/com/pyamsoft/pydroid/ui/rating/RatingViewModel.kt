@@ -18,11 +18,10 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import androidx.lifecycle.viewModelScope
+import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.arch.singleJob
-import com.pyamsoft.pydroid.arch.tryCancel
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import kotlinx.coroutines.Dispatchers
@@ -33,26 +32,22 @@ internal class RatingViewModel internal constructor(
   private val interactor: RatingInteractor
 ) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
 
-  private var loadJob by singleJob()
+  private var loadRunner = highlander<Unit, Boolean> { force ->
+    val show = withContext(Dispatchers.Default) { interactor.needsToViewRating(force) }
+    if (show) {
+      publish(LoadRating)
+    }
+  }
 
   override fun onInit() {
     load(false)
-  }
-
-  override fun onTeardown() {
-    loadJob.tryCancel()
   }
 
   override fun handleViewEvent(event: UnitViewEvent) {
   }
 
   internal fun load(force: Boolean) {
-    loadJob = viewModelScope.launch {
-      val show = withContext(Dispatchers.Default) { interactor.needsToViewRating(force) }
-      if (show) {
-        publish(LoadRating)
-      }
-    }
+    viewModelScope.launch { loadRunner.call(force) }
   }
 
 }

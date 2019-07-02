@@ -18,10 +18,9 @@
 package com.pyamsoft.pydroid.ui.version
 
 import androidx.lifecycle.viewModelScope
+import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.singleJob
-import com.pyamsoft.pydroid.arch.tryCancel
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
@@ -41,14 +40,25 @@ internal class VersionCheckViewModel internal constructor(
     )
 ) {
 
-  private var checkUpdateJob by singleJob()
+  private var checkUpdateRunner = highlander<Unit, Boolean> { force ->
+    handleVersionCheckBegin(force)
+    try {
+      val version = withContext(Dispatchers.IO) { interactor.checkVersion(force) }
+      if (version != null) {
+        handleVersionCheckFound(version.currentVersion, version.newVersion)
+      }
+    } catch (e: Throwable) {
+      if (e !is CancellationException) {
+        Timber.e(e, "Error checking for latest version")
+        handleVersionCheckError(e)
+      }
+    } finally {
+      handleVersionCheckComplete()
+    }
+  }
 
   override fun onInit() {
     checkForUpdates(false)
-  }
-
-  override fun onTeardown() {
-    checkUpdateJob.tryCancel()
   }
 
   override fun handleViewEvent(event: UnitViewEvent) {
@@ -75,22 +85,7 @@ internal class VersionCheckViewModel internal constructor(
   }
 
   internal fun checkForUpdates(force: Boolean) {
-    checkUpdateJob = viewModelScope.launch {
-      handleVersionCheckBegin(force)
-      try {
-        val version = withContext(Dispatchers.IO) { interactor.checkVersion(force) }
-        if (version != null) {
-          handleVersionCheckFound(version.currentVersion, version.newVersion)
-        }
-      } catch (e: Throwable) {
-        if (e !is CancellationException) {
-          Timber.e(e, "Error checking for latest version")
-          handleVersionCheckError(e)
-        }
-      } finally {
-        handleVersionCheckComplete()
-      }
-    }
+    viewModelScope.launch { checkUpdateRunner.call(force) }
   }
 
 }

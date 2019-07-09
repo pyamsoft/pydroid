@@ -17,12 +17,13 @@
 
 package com.pyamsoft.pydroid.ui.rating
 
+import android.app.Activity
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface RatingComponent {
 
-  fun inject(fragment: RatingActivity)
+  fun inject(activity: RatingActivity)
 
   interface Factory {
 
@@ -32,20 +33,19 @@ internal interface RatingComponent {
   }
 
   class Impl private constructor(
-    private val module: RatingModule
+    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
   ) : RatingComponent {
 
-    override fun inject(fragment: RatingActivity) {
-      val viewModel = RatingViewModel(module.provideInteractor())
-      fragment.ratingViewModel = viewModel
+    override fun inject(activity: RatingActivity) {
+      activity.ratingFactory = factoryProvider(activity)
     }
 
     internal class FactoryImpl internal constructor(
-      private val module: RatingModule
+      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
 
       override fun create(): RatingComponent {
-        return Impl(module)
+        return Impl(factoryProvider)
       }
 
     }

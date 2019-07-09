@@ -33,7 +33,9 @@ internal class AboutViewHolder private constructor(
   private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : BaseViewHolder(view) {
 
+  // Don't inject this VM since we don't want it to persist
   internal var viewModel: AboutItemViewModel? = null
+
   internal var titleView: AboutItemTitleView? = null
   internal var descriptionView: AboutItemDescriptionView? = null
   internal var actionView: AboutItemActionView? = null

@@ -26,7 +26,6 @@ import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -34,6 +33,7 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
+import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
@@ -43,7 +43,7 @@ class VersionUpgradeDialog : DialogFragment() {
   internal var factory: ViewModelProvider.Factory? = null
   internal var content: VersionUpgradeContentView? = null
   internal var control: VersionUpgradeControlView? = null
-  private var viewModel: VersionUpgradeViewModel? = null
+  private val viewModel by factory<VersionUpgradeViewModel> { factory }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState)
@@ -72,14 +72,9 @@ class VersionUpgradeDialog : DialogFragment() {
         .create(requireActivity(), layoutRoot, viewLifecycleOwner, latestVersion)
         .inject(this)
 
-    ViewModelProviders.of(this, factory)
-        .let { factory ->
-          viewModel = factory.get(VersionUpgradeViewModel::class.java)
-        }
-
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(viewModel),
+        viewModel,
         requireNotNull(content),
         requireNotNull(control)
     ) {
@@ -92,10 +87,9 @@ class VersionUpgradeDialog : DialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-
-    viewModel = null
     content = null
     control = null
+    factory = null
   }
 
   override fun onResume() {
@@ -115,7 +109,7 @@ class VersionUpgradeDialog : DialogFragment() {
   private fun navigateToMarket() {
     val error = MarketLinker.linkToMarketPage(requireContext(), requireContext().packageName)
     if (error != null) {
-      requireNotNull(viewModel).navigationFailed(error)
+      viewModel.navigationFailed(error)
     } else {
       dismiss()
     }

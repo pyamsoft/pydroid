@@ -59,7 +59,7 @@ internal interface RatingDialogComponent {
       val changelog = RatingChangelogView(changeLog, parent)
       val controls = RatingControlsView(rateLink, owner, parent)
 
-      dialog.viewModelFactory = factoryProvider(activity)
+      dialog.factory = factoryProvider(activity)
       dialog.iconView = icon
       dialog.changelogView = changelog
       dialog.controlsView = controls

@@ -27,7 +27,6 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.Injector
@@ -37,19 +36,20 @@ import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
+import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
 
 class AboutFragment : Fragment() {
 
-  internal var aboutViewModelFactory: ViewModelProvider.Factory? = null
+  internal var factory: ViewModelProvider.Factory? = null
 
   internal var listView: AboutListView? = null
   internal var spinnerView: AboutSpinnerView? = null
-  private var listViewModel: AboutListViewModel? = null
+  private val listViewModel by factory<AboutListViewModel> { factory }
 
   internal var toolbar: AboutToolbarView? = null
-  private var toolbarViewModel: AboutToolbarViewModel? = null
+  private val toolbarViewModel by factory<AboutToolbarViewModel> { factory }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -74,15 +74,9 @@ class AboutFragment : Fragment() {
         )
         .inject(this)
 
-    ViewModelProviders.of(this, aboutViewModelFactory)
-        .let { factory ->
-          listViewModel = factory.get(AboutListViewModel::class.java)
-          toolbarViewModel = factory.get(AboutToolbarViewModel::class.java)
-        }
-
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(listViewModel),
+        listViewModel,
         requireNotNull(listView),
         requireNotNull(spinnerView)
     ) {
@@ -93,7 +87,7 @@ class AboutFragment : Fragment() {
 
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(toolbarViewModel),
+        toolbarViewModel,
         requireNotNull(toolbar)
     ) {
       return@createComponent when (it) {
@@ -105,10 +99,8 @@ class AboutFragment : Fragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     listView = null
-    listViewModel = null
     toolbar = null
-    toolbarViewModel = null
-    aboutViewModelFactory = null
+    factory = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -121,7 +113,7 @@ class AboutFragment : Fragment() {
     val error = url.hyperlink(requireActivity())
         .navigate()
     if (error != null) {
-      requireNotNull(listViewModel).navigationFailed(error)
+      listViewModel.navigationFailed(error)
     }
   }
 

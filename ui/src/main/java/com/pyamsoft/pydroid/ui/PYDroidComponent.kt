@@ -70,9 +70,9 @@ internal interface PYDroidComponent {
   class ComponentImpl private constructor(
     application: Application,
     debug: Boolean,
-    private val applicationName: String,
-    private val bugReportUrl: String,
-    private val currentVersion: Int
+    private val name: String,
+    private val reportUrl: String,
+    private val version: Int
   ) : PYDroidComponent, ModuleProvider {
 
     private val context = application
@@ -83,9 +83,9 @@ internal interface PYDroidComponent {
 
     private val aboutModule = AboutModule(enforcer)
     private val loaderModule = LoaderModule()
-    private val ratingModule = RatingModule(currentVersion, enforcer, preferences)
+    private val ratingModule = RatingModule(version, enforcer, preferences)
     private val versionCheckModule =
-      VersionCheckModule(debug, currentVersion, packageName, enforcer)
+      VersionCheckModule(debug, version, packageName, enforcer)
 
     @CheckResult
     private fun viewModelFactory(activity: Activity): PYDroidViewModelFactory {
@@ -111,19 +111,15 @@ internal interface PYDroidComponent {
     }
 
     override fun plusVersion(): VersionComponent.Factory {
-      return VersionComponent.Impl.FactoryImpl(ratingModule) { viewModelFactory(it) }
+      return VersionComponent.Impl.FactoryImpl { viewModelFactory(it) }
     }
 
     override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-      return VersionUpgradeComponent.Impl.FactoryImpl(
-          applicationName, currentVersion
-      ) { viewModelFactory(it) }
+      return VersionUpgradeComponent.Impl.FactoryImpl(name, version) { viewModelFactory(it) }
     }
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
-      return AppSettingsComponent.Impl.FactoryImpl(
-          applicationName, bugReportUrl, ratingModule
-      ) { viewModelFactory(it) }
+      return AppSettingsComponent.Impl.FactoryImpl(name, reportUrl) { viewModelFactory(it) }
     }
 
     override fun enforcer(): Enforcer {
@@ -147,10 +143,7 @@ internal interface PYDroidComponent {
         bugReportUrl: String,
         currentVersion: Int
       ): ComponentImpl {
-        return ComponentImpl(
-            application, debug, applicationName,
-            bugReportUrl, currentVersion
-        )
+        return ComponentImpl(application, debug, applicationName, bugReportUrl, currentVersion)
       }
 
     }

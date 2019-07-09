@@ -28,13 +28,13 @@ import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.app.requireArguments
+import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
@@ -42,11 +42,11 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 class RatingDialog : DialogFragment() {
 
-  internal var viewModelFactory: ViewModelProvider.Factory? = null
+  internal var factory: ViewModelProvider.Factory? = null
   internal var changelogView: RatingChangelogView? = null
   internal var controlsView: RatingControlsView? = null
   internal var iconView: RatingIconView? = null
-  private var viewModel: RatingDialogViewModel? = null
+  private val viewModel by factory<RatingDialogViewModel> { factory }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -89,14 +89,9 @@ class RatingDialog : DialogFragment() {
         )
         .inject(this)
 
-    ViewModelProviders.of(this, viewModelFactory)
-        .let { factory ->
-          viewModel = factory.get(RatingDialogViewModel::class.java)
-        }
-
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(viewModel),
+        viewModel,
         requireNotNull(iconView),
         requireNotNull(changelogView),
         requireNotNull(controlsView)
@@ -110,12 +105,10 @@ class RatingDialog : DialogFragment() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-
-    viewModel = null
     changelogView = null
     controlsView = null
     iconView = null
-    viewModelFactory = null
+    factory = null
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
@@ -138,7 +131,7 @@ class RatingDialog : DialogFragment() {
     val error = MarketLinker.linkToMarketPage(requireContext(), link)
 
     if (error != null) {
-      requireNotNull(viewModel).navigationFailed(error)
+      viewModel.navigationFailed(error)
     } else {
       dismiss()
     }

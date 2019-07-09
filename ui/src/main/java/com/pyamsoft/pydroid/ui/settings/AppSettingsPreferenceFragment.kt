@@ -23,7 +23,6 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
@@ -31,6 +30,7 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.ActivityBase
+import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
@@ -61,14 +61,14 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
   protected open val hideClearAll: Boolean = false
 
-  internal var appSettingsViewModelFactory: ViewModelProvider.Factory? = null
-  internal var appSettingsView: AppSettingsView? = null
-  private var appSettingsViewModel: AppSettingsViewModel? = null
+  internal var factory: ViewModelProvider.Factory? = null
+  internal var settingsView: AppSettingsView? = null
+  private val settingsViewModel by factory<AppSettingsViewModel> { factory }
 
-  internal var ratingViewModel: RatingViewModel? = null
+  private val ratingViewModel by factory<RatingViewModel> { factory }
 
   internal var versionView: VersionView? = null
-  private var versionViewModel: VersionCheckViewModel? = null
+  private val versionViewModel by factory<VersionCheckViewModel> { factory }
 
   @CallSuper
   override fun onCreatePreferences(
@@ -97,32 +97,26 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         )
         .inject(this)
 
-    ViewModelProviders.of(this, appSettingsViewModelFactory)
-        .let { factory ->
-          appSettingsViewModel = factory.get(AppSettingsViewModel::class.java)
-          versionViewModel = factory.get(VersionCheckViewModel::class.java)
-        }
-
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(appSettingsViewModel),
-        requireNotNull(appSettingsView)
+        settingsViewModel,
+        requireNotNull(settingsView)
     ) {
       return@createComponent when (it) {
         is NavigateMoreApps -> viewMorePyamsoftApps()
         is NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
         is NavigateRateApp -> openMarkForRating()
         is ShowLicense -> openLicensesPage()
-        is AttemptCheckUpgrade -> forceUpgradeCheck()
+        is AttemptCheckUpgrade -> versionViewModel.checkForUpdates(true)
         is AttemptClearData -> openClearDataDialog()
-        is OpenShowUpgrade -> requireNotNull(ratingViewModel).load(true)
+        is OpenShowUpgrade -> ratingViewModel.load(true)
         is ChangeDarkTheme -> darkThemeChanged(it.newMode)
       }
     }
 
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(versionViewModel),
+        versionViewModel,
         requireNotNull(versionView)
     ) {
       return@createComponent when (it) {
@@ -132,18 +126,14 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
     createComponent(
         savedInstanceState, viewLifecycleOwner,
-        requireNotNull(ratingViewModel)
+        ratingViewModel
     ) {
       return@createComponent when (it) {
         is LoadRating -> openUpdateInfo()
       }
     }
 
-    requireNotNull(appSettingsViewModel).initDarkThemeState(requireActivity())
-  }
-
-  private fun forceUpgradeCheck() {
-    requireNotNull(versionViewModel).checkForUpdates(true)
+    settingsViewModel.initDarkThemeState(requireActivity())
   }
 
   private fun openUpdateInfo() {
@@ -158,15 +148,13 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
   override fun onDestroyView() {
     super.onDestroyView()
-
-    appSettingsViewModel = null
-    appSettingsView = null
-    appSettingsViewModelFactory = null
+    settingsView = null
+    factory = null
   }
 
   private fun failedNavigation(error: ActivityNotFoundException?) {
     if (error != null) {
-      requireNotNull(appSettingsViewModel).navigationFailed(error)
+      settingsViewModel.navigationFailed(error)
     }
   }
 
@@ -203,7 +191,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
   @CallSuper
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    appSettingsView?.saveState(outState)
+    settingsView?.saveState(outState)
   }
 
   /**

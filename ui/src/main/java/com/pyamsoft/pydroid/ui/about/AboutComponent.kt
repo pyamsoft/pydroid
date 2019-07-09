@@ -56,7 +56,7 @@ internal interface AboutComponent {
 
       val toolbar = AboutToolbarView(backstack, toolbarActivity)
 
-      fragment.aboutViewModelFactory = factoryProvider(activity)
+      fragment.factory = factoryProvider(activity)
       fragment.listView = listView
       fragment.spinnerView = spinnerView
       fragment.toolbar = toolbar

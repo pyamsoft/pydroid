@@ -174,7 +174,7 @@ object OssLibraries {
     add(
         "Highlander",
         "https://github.com/pyamsoft/highlander",
-        "There can only be one. A coroutine powered runner which guarantees that the only one instance of a runner function is active at any given time."
+        "There can be only one. A coroutine powered runner which guarantees that the only one instance of a runner function is active at any given time."
     )
     add(
         "Kotlin Coroutines",

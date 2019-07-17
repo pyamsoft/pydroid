@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -200,6 +201,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         withContext(context = Dispatchers.Main) { onControllerEvent(event) }
       }
     }
+
+  protected inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
+    if (this !is CancellationException) {
+      func(this)
+    }
+  }
 
   private data class StateWithSavedState<S : UiViewState>(
     val state: S,

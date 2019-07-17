@@ -24,8 +24,9 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
+import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.LicenseLoadError
+import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.NavigationError
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,7 +37,6 @@ internal class AboutListViewModel internal constructor(
 ) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
     initialState = AboutListState(
         isLoading = false,
-        throwable = null,
         licenses = emptyList()
     )
 ) {
@@ -46,8 +46,8 @@ internal class AboutListViewModel internal constructor(
     try {
       val licenses = withContext(Dispatchers.Default) { interactor.loadLicenses(force) }
       handleLicensesLoaded(licenses)
-    } catch (e: Throwable) {
-      if (e !is CancellationException) {
+    } catch (error: Throwable) {
+      error.onActualError { e ->
         Timber.e(e, "Error loading licenses")
         handleLicenseLoadError(e)
       }
@@ -75,11 +75,11 @@ internal class AboutListViewModel internal constructor(
   }
 
   private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
-    setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses, throwable = null) }
+    setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses) }
   }
 
   private fun handleLicenseLoadError(throwable: Throwable) {
-    setState { copy(licenses = emptyList(), throwable = throwable) }
+    publish(LicenseLoadError(throwable))
   }
 
   private fun handleLicenseLoadComplete() {
@@ -87,6 +87,6 @@ internal class AboutListViewModel internal constructor(
   }
 
   fun navigationFailed(throwable: ActivityNotFoundException) {
-    setState { copy(throwable = throwable) }
+    publish(NavigationError(throwable))
   }
 }

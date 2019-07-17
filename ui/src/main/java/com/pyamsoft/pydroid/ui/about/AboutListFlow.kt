@@ -24,18 +24,23 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 data class AboutListState(
   val isLoading: Boolean,
-  val throwable: Throwable?,
   val licenses: List<OssLibrary>
 ) : UiViewState
 
 sealed class AboutListViewEvent : UiViewEvent {
 
-  data class OpenUrl(val url: String) : AboutListViewEvent()
+  data class OpenUrl internal constructor(val url: String) : AboutListViewEvent()
 
 }
 
 sealed class AboutListControllerEvent : UiControllerEvent {
 
-  data class ExternalUrl(val url: String) : AboutListControllerEvent()
+  data class ExternalUrl internal constructor(val url: String) : AboutListControllerEvent()
+
+  data class NavigationError internal constructor(val throwable: Throwable) :
+      AboutListControllerEvent()
+
+  data class LicenseLoadError internal constructor(val throwable: Throwable) :
+      AboutListControllerEvent()
 
 }

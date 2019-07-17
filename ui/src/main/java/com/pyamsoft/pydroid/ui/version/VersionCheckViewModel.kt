@@ -23,9 +23,9 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.VersionCheckError
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,8 +35,7 @@ internal class VersionCheckViewModel internal constructor(
   private val interactor: VersionCheckInteractor
 ) : UiViewModel<VersionViewState, UnitViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
-        isLoading = null,
-        throwable = null
+        isLoading = null
     )
 ) {
 
@@ -47,8 +46,8 @@ internal class VersionCheckViewModel internal constructor(
       if (version != null) {
         handleVersionCheckFound(version.currentVersion, version.newVersion)
       }
-    } catch (e: Throwable) {
-      if (e !is CancellationException) {
+    } catch (error: Throwable) {
+      error.onActualError { e ->
         Timber.e(e, "Error checking for latest version")
         handleVersionCheckError(e)
       }
@@ -72,12 +71,11 @@ internal class VersionCheckViewModel internal constructor(
     currentVersion: Int,
     newVersion: Int
   ) {
-    setState { copy(throwable = null) }
     publish(ShowUpgrade(UpgradePayload(currentVersion, newVersion)))
   }
 
   private fun handleVersionCheckError(throwable: Throwable) {
-    setState { copy(throwable = throwable) }
+    publish(VersionCheckError(throwable))
   }
 
   private fun handleVersionCheckComplete() {

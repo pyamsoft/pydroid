@@ -25,12 +25,13 @@ import android.widget.ScrollView
 import android.widget.TextView
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
   private val changelog: SpannedString,
   parent: ViewGroup
-) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
+) : BaseUiView<UnitViewState, RatingDialogViewEvent>(parent) {
 
   private val changelogText by boundView<TextView>(R.id.rating_changelog_text)
 
@@ -46,7 +47,7 @@ internal class RatingChangelogView internal constructor(
   }
 
   override fun onRender(
-    state: RatingDialogViewState,
+    state: UnitViewState,
     savedState: UiSavedState
   ) {
   }

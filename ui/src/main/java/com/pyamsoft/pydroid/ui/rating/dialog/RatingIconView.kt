@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
@@ -31,7 +32,7 @@ internal class RatingIconView internal constructor(
   private val changelogIcon: Int,
   private val imageLoader: ImageLoader,
   parent: ViewGroup
-) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
+) : BaseUiView<UnitViewState, RatingDialogViewEvent>(parent) {
 
   private val iconView by boundView<ImageView>(R.id.icon)
 
@@ -51,7 +52,7 @@ internal class RatingIconView internal constructor(
   }
 
   override fun onRender(
-    state: RatingDialogViewState,
+    state: UnitViewState,
     savedState: UiSavedState
   ) {
   }

@@ -102,14 +102,6 @@ internal class AboutListView internal constructor(
       }
     }
 
-    state.throwable.let { throwable ->
-      if (throwable == null) {
-        clearError()
-      } else {
-        showError(throwable)
-      }
-    }
-
     state.isLoading.let { loading ->
       if (loading) {
         hide()
@@ -143,7 +135,7 @@ internal class AboutListView internal constructor(
     scrollToLastViewedItem(savedState)
   }
 
-  private fun showError(error: Throwable) {
+  fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
         .short(layoutRoot, error.message ?: "An unexpected error occurred.")
   }

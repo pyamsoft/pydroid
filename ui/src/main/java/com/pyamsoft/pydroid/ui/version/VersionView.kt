@@ -25,7 +25,6 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import timber.log.Timber
 
 internal class VersionView internal constructor(
   private val owner: LifecycleOwner,
@@ -54,15 +53,10 @@ internal class VersionView internal constructor(
         dismissUpdating()
       }
     }
-
-    state.throwable.let { throwable ->
-      if (throwable != null) {
-        Timber.e(throwable, "Error checking for updated version")
-      }
-    }
   }
 
   override fun doTeardown() {
+    dismissUpdating()
     parent = null
   }
 
@@ -77,5 +71,13 @@ internal class VersionView internal constructor(
   private fun dismissUpdating() {
     Snackbreak.bindTo(owner)
         .dismiss()
+  }
+
+  fun showError(throwable: Throwable) {
+    Snackbreak.bindTo(owner)
+        .short(
+            requireNotNull(parent),
+            throwable.message ?: "An error occurred while checking for updates."
+        )
   }
 }

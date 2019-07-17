@@ -48,6 +48,7 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.VersionCheckError
 import com.pyamsoft.pydroid.ui.version.VersionView
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.HyperlinkIntent
@@ -121,6 +122,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     ) {
       return@createComponent when (it) {
         is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
+        is VersionCheckError -> requireNotNull(versionView).showError(it.throwable)
       }
     }
 

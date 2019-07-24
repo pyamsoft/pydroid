@@ -57,7 +57,6 @@ internal class VersionCheckViewModel internal constructor(
   }
 
   override fun onInit() {
-    checkForUpdates(false)
   }
 
   override fun handleViewEvent(event: UnitViewEvent) {

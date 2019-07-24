@@ -61,6 +61,8 @@ abstract class VersionCheckActivity : ActivityBase() {
         is VersionCheckError -> Timber.e(it.throwable, "Failed to check for new version")
       }
     }
+
+    versionViewModel.checkForUpdates(false)
   }
 
   @CallSuper

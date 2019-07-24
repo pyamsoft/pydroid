@@ -56,7 +56,7 @@ buildscript {
     moshi = "1.8.0"
 
     retrofit = "2.6.0"
-    okhttp = "4.0.0"
+    okhttp = "4.0.1"
 
     glide = "4.9.0"
   }

@@ -128,10 +128,13 @@ object Snackbreak {
     lifecycle: Lifecycle,
     id: String?
   ): Instance {
-    if (cache.containsKey(lifecycle)) {
-      return requireNotNull(requireNotNull(cache[lifecycle]).find { id == it.id }).instance
-    } else {
+    val instance = cache[lifecycle]
+        ?.find { id == it.id }
+        ?.instance
+    if (instance == null) {
       return cacheInstance(lifecycle, id)
+    } else {
+      return instance
     }
   }
 

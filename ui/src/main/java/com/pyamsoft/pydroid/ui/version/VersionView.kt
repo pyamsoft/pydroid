@@ -65,7 +65,7 @@ internal class VersionView internal constructor(
 
   private fun showUpdating() {
     Snackbreak.bindTo(owner)
-        .short(requireNotNull(parent), "Checking for updates")
+        .make(requireNotNull(parent), "Checking for updates")
   }
 
   private fun dismissUpdating() {
@@ -75,7 +75,7 @@ internal class VersionView internal constructor(
 
   fun showError(throwable: Throwable) {
     Snackbreak.bindTo(owner)
-        .short(
+        .make(
             requireNotNull(parent),
             throwable.message ?: "An error occurred while checking for updates."
         )

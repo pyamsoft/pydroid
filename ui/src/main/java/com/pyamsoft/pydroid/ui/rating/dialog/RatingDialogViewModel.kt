@@ -21,11 +21,9 @@ import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigationError
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +32,8 @@ import kotlinx.coroutines.withContext
 
 internal class RatingDialogViewModel internal constructor(
   private val interactor: RatingInteractor
-) : UiViewModel<UnitViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
-    initialState = UnitViewState
+) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
+    initialState = RatingDialogViewState(throwable = null)
 ) {
 
   private val saveRunner = highlander<Unit, String> { link ->
@@ -66,7 +64,11 @@ internal class RatingDialogViewModel internal constructor(
   }
 
   fun navigationFailed(error: ActivityNotFoundException) {
-    publish(NavigationError(error))
+    setState { copy(throwable = error) }
+  }
+
+  fun navigationSuccess() {
+    setState { copy(throwable = null) }
   }
 
 }

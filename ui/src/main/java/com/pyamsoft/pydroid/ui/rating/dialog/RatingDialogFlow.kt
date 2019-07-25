@@ -19,6 +19,9 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+
+data class RatingDialogViewState internal constructor(val throwable: Throwable?) : UiViewState
 
 sealed class RatingDialogViewEvent : UiViewEvent {
 
@@ -31,9 +34,6 @@ sealed class RatingDialogViewEvent : UiViewEvent {
 sealed class RatingDialogControllerEvent : UiControllerEvent {
 
   data class NavigateRating internal constructor(val link: String) : RatingDialogControllerEvent()
-
-  data class NavigationError internal constructor(val throwable: Throwable) :
-      RatingDialogControllerEvent()
 
   object CancelDialog : RatingDialogControllerEvent()
 

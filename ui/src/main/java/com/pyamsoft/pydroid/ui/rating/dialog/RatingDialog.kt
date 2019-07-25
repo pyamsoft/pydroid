@@ -38,7 +38,6 @@ import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigationError
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 class RatingDialog : DialogFragment() {
@@ -100,7 +99,6 @@ class RatingDialog : DialogFragment() {
       return@createComponent when (it) {
         is NavigateRating -> navigateToApplicationPage(it.link)
         is CancelDialog -> dismiss()
-        is NavigationError -> requireNotNull(controlsView).showError(it.throwable)
       }
     }
   }
@@ -135,6 +133,7 @@ class RatingDialog : DialogFragment() {
     if (error != null) {
       viewModel.navigationFailed(error)
     } else {
+      viewModel.navigationSuccess()
       dismiss()
     }
   }

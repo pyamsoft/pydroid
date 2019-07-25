@@ -65,7 +65,7 @@ internal class VersionUpgradeControlView internal constructor(
 
   private fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
-        .short(layoutRoot, error.message ?: "An unexpected error occurred.")
+        .make(layoutRoot, error.message ?: "An unexpected error occurred.")
   }
 
   private fun clearError() {

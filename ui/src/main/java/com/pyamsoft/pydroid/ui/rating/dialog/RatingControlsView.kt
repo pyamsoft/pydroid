@@ -24,7 +24,6 @@ import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
-import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
@@ -35,7 +34,7 @@ internal class RatingControlsView internal constructor(
   private val rateLink: String,
   private val owner: LifecycleOwner,
   parent: ViewGroup
-) : BaseUiView<UnitViewState, RatingDialogViewEvent>(parent) {
+) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
   private val rateApplication by boundView<Button>(R.id.rate_application)
   private val noThanks by boundView<Button>(R.id.no_thanks)
@@ -53,14 +52,21 @@ internal class RatingControlsView internal constructor(
   }
 
   override fun onRender(
-    state: UnitViewState,
+    state: RatingDialogViewState,
     savedState: UiSavedState
   ) {
+    state.throwable.let { throwable ->
+      if (throwable == null) {
+        clearError()
+      } else {
+        showError(throwable)
+      }
+    }
   }
 
-  fun showError(error: Throwable) {
+  private fun showError(error: Throwable) {
     Snackbreak.bindTo(owner)
-        .short(layoutRoot, error.message ?: "An unexpected error occurred.")
+        .make(layoutRoot, error.message ?: "An unexpected error occurred.")
   }
 
   private fun clearError() {

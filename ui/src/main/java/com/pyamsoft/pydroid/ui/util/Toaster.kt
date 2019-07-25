@@ -26,6 +26,7 @@ import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import java.util.concurrent.ConcurrentHashMap
 
 object Toaster {
 
@@ -49,9 +50,7 @@ object Toaster {
     return Toast.makeText(context.applicationContext, message, duration)
   }
 
-  private val cache: MutableMap<Lifecycle, Instance> by lazy {
-    LinkedHashMap<Lifecycle, Instance>()
-  }
+  private val cache: MutableMap<Lifecycle, Instance> by lazy { ConcurrentHashMap<Lifecycle, Instance>() }
 
   @CheckResult
   fun bindTo(owner: LifecycleOwner): Instance {

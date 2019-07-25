@@ -42,7 +42,7 @@ abstract class VersionCheckActivity : ActivityBase() {
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
+
 
     // Need to do this in onPostCreate because the snackbarRoot will not be available until
     // after subclass onCreate

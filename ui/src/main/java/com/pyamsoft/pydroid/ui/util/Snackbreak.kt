@@ -32,6 +32,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.util.toDp
+import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
 
@@ -86,9 +87,7 @@ object Snackbreak {
         .also { it.materialDesign() }
   }
 
-  private val cache: MutableMap<Lifecycle, Instance> by lazy {
-    LinkedHashMap<Lifecycle, Instance>()
-  }
+  private val cache: MutableMap<Lifecycle, Instance> by lazy { ConcurrentHashMap<Lifecycle, Instance>() }
 
   @CheckResult
   fun bindTo(owner: LifecycleOwner): Instance {
@@ -167,6 +166,7 @@ object Snackbreak {
     }
 
     @JvmOverloads
+    @Deprecated("Use make() to fit in better to the MVI flow")
     fun short(
       view: View,
       message: CharSequence,
@@ -177,6 +177,7 @@ object Snackbreak {
     }
 
     @JvmOverloads
+    @Deprecated("Use make() to fit in better to the MVI flow")
     fun short(
       view: View,
       @StringRes message: Int,
@@ -187,6 +188,7 @@ object Snackbreak {
     }
 
     @JvmOverloads
+    @Deprecated("Use make() to fit in better to the MVI flow")
     fun long(
       view: View,
       message: CharSequence,
@@ -197,6 +199,7 @@ object Snackbreak {
     }
 
     @JvmOverloads
+    @Deprecated("Use make() to fit in better to the MVI flow")
     fun long(
       view: View,
       @StringRes message: Int,
@@ -207,23 +210,43 @@ object Snackbreak {
     }
 
     @JvmOverloads
+    @Deprecated("Use make() instead", ReplaceWith("make(view, message)"))
     fun indefinite(
       view: View,
       message: CharSequence,
       force: Boolean = false,
       builder: Snackbar.() -> Snackbar = { this }
     ) {
-      snack(force, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
+      make(view, message, builder)
     }
 
     @JvmOverloads
+    fun make(
+      view: View,
+      message: CharSequence,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(false, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
+    }
+
+    @JvmOverloads
+    @Deprecated("Use make() instead", ReplaceWith("make(view, message)"))
     fun indefinite(
       view: View,
       @StringRes message: Int,
       force: Boolean = false,
       builder: Snackbar.() -> Snackbar = { this }
     ) {
-      snack(force, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
+      make(view, message, builder)
+    }
+
+    @JvmOverloads
+    fun make(
+      view: View,
+      @StringRes message: Int,
+      builder: Snackbar.() -> Snackbar = { this }
+    ) {
+      snack(false, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
     }
 
   }

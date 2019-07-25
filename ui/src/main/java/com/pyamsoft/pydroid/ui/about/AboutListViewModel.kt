@@ -24,8 +24,6 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.LicenseLoadError
-import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.NavigationError
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +35,9 @@ internal class AboutListViewModel internal constructor(
 ) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
     initialState = AboutListState(
         isLoading = false,
-        licenses = emptyList()
+        licenses = emptyList(),
+        loadError = null,
+        navigationError = null
     )
 ) {
 
@@ -75,11 +75,11 @@ internal class AboutListViewModel internal constructor(
   }
 
   private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
-    setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses) }
+    setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses, loadError = null) }
   }
 
   private fun handleLicenseLoadError(throwable: Throwable) {
-    publish(LicenseLoadError(throwable))
+    setState { copy(licenses = emptyList(), loadError = throwable) }
   }
 
   private fun handleLicenseLoadComplete() {
@@ -87,6 +87,10 @@ internal class AboutListViewModel internal constructor(
   }
 
   fun navigationFailed(throwable: ActivityNotFoundException) {
-    publish(NavigationError(throwable))
+    setState { copy(navigationError = throwable) }
+  }
+
+  fun navigationSuccess() {
+    setState { copy(navigationError = null) }
   }
 }

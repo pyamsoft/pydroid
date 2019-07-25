@@ -33,8 +33,6 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.LicenseLoadError
-import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.NavigationError
 import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
 import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
@@ -84,8 +82,6 @@ class AboutFragment : Fragment() {
     ) {
       return@createComponent when (it) {
         is ExternalUrl -> navigateToExternalUrl(it.url)
-        is NavigationError -> handleError(it.throwable)
-        is LicenseLoadError -> handleError(it.throwable)
       }
     }
 
@@ -98,10 +94,6 @@ class AboutFragment : Fragment() {
         is Navigation -> close()
       }
     }
-  }
-
-  private fun handleError(throwable: Throwable) {
-    requireNotNull(listView).showError(throwable)
   }
 
   override fun onDestroyView() {

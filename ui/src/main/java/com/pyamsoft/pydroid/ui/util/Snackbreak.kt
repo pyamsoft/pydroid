@@ -87,7 +87,14 @@ object Snackbreak {
         .also { it.materialDesign() }
   }
 
-  private val cache: MutableMap<Lifecycle, Instance> by lazy { ConcurrentHashMap<Lifecycle, Instance>() }
+  private data class CacheEntry(
+    val instance: Instance,
+    val id: String?
+  )
+
+  private val cache: MutableMap<Lifecycle, MutableSet<CacheEntry>> by lazy {
+    ConcurrentHashMap<Lifecycle, MutableSet<CacheEntry>>()
+  }
 
   @CheckResult
   fun bindTo(owner: LifecycleOwner): Instance {
@@ -95,18 +102,47 @@ object Snackbreak {
   }
 
   @CheckResult
-  fun bindTo(lifecycle: Lifecycle): Instance {
+  fun bindTo(
+    owner: LifecycleOwner,
+    id: String
+  ): Instance {
+    return bindTo(owner.lifecycle, id)
+  }
+
+  @CheckResult
+  fun bindTo(
+    lifecycle: Lifecycle
+  ): Instance {
+    return realBindTo(lifecycle, null)
+  }
+
+  @CheckResult
+  fun bindTo(
+    lifecycle: Lifecycle,
+    id: String
+  ): Instance {
+    return realBindTo(lifecycle, id)
+  }
+
+  private fun realBindTo(
+    lifecycle: Lifecycle,
+    id: String?
+  ): Instance {
     if (cache.containsKey(lifecycle)) {
-      return requireNotNull(cache[lifecycle])
+      return requireNotNull(requireNotNull(cache[lifecycle]).find { id == it.id }).instance
     } else {
-      return cacheInstance(lifecycle)
+      return cacheInstance(lifecycle, id)
     }
   }
 
   @CheckResult
-  private fun cacheInstance(lifecycle: Lifecycle): Instance {
+  private fun cacheInstance(
+    lifecycle: Lifecycle,
+    id: String?
+  ): Instance {
     val instance = Instance()
-    cache[lifecycle] = instance
+    cache.getOrPut(lifecycle) { mutableSetOf() }
+        .add(CacheEntry(instance, id))
 
     lifecycle.addObserver(object : LifecycleObserver {
 
@@ -115,7 +151,7 @@ object Snackbreak {
       fun onDestroy() {
         lifecycle.removeObserver(this)
         cache.remove(lifecycle)
-        instance.onDestroy()
+            ?.forEach { it.instance.onDestroy() }
       }
 
     })

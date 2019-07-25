@@ -56,7 +56,8 @@ internal class AboutListView internal constructor(
     super.onTeardown()
     layoutRoot.adapter = null
     clearLicenses()
-    clearError()
+    clearLoadError()
+    clearNavigationError()
     aboutAdapter = null
   }
 
@@ -109,6 +110,22 @@ internal class AboutListView internal constructor(
         show()
       }
     }
+
+    state.navigationError.let { throwable ->
+      if (throwable == null) {
+        clearNavigationError()
+      } else {
+        showNavigationError(throwable)
+      }
+    }
+
+    state.loadError.let { throwable ->
+      if (throwable == null) {
+        clearLoadError()
+      } else {
+        showLoadError(throwable)
+      }
+    }
   }
 
   private fun scrollToLastViewedItem(savedState: UiSavedState) {
@@ -135,13 +152,23 @@ internal class AboutListView internal constructor(
     scrollToLastViewedItem(savedState)
   }
 
-  fun showError(error: Throwable) {
-    Snackbreak.bindTo(owner)
+  private fun showNavigationError(error: Throwable) {
+    Snackbreak.bindTo(owner, "navigate")
         .make(layoutRoot, error.message ?: "An unexpected error occurred.")
   }
 
-  private fun clearError() {
-    Snackbreak.bindTo(owner)
+  private fun clearNavigationError() {
+    Snackbreak.bindTo(owner, "navigate")
+        .dismiss()
+  }
+
+  private fun showLoadError(error: Throwable) {
+    Snackbreak.bindTo(owner, "load")
+        .make(layoutRoot, error.message ?: "An unexpected error occurred.")
+  }
+
+  private fun clearLoadError() {
+    Snackbreak.bindTo(owner, "load")
         .dismiss()
   }
 

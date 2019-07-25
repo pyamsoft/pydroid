@@ -202,7 +202,6 @@ object Snackbreak {
     }
 
     @JvmOverloads
-    @Deprecated("Use make() to fit in better to the MVI flow")
     fun short(
       view: View,
       message: CharSequence,
@@ -213,7 +212,6 @@ object Snackbreak {
     }
 
     @JvmOverloads
-    @Deprecated("Use make() to fit in better to the MVI flow")
     fun short(
       view: View,
       @StringRes message: Int,
@@ -224,7 +222,6 @@ object Snackbreak {
     }
 
     @JvmOverloads
-    @Deprecated("Use make() to fit in better to the MVI flow")
     fun long(
       view: View,
       message: CharSequence,
@@ -235,7 +232,6 @@ object Snackbreak {
     }
 
     @JvmOverloads
-    @Deprecated("Use make() to fit in better to the MVI flow")
     fun long(
       view: View,
       @StringRes message: Int,
@@ -243,17 +239,6 @@ object Snackbreak {
       builder: Snackbar.() -> Snackbar = { this }
     ) {
       snack(force, builder) { make(view, message, Snackbar.LENGTH_LONG) }
-    }
-
-    @JvmOverloads
-    @Deprecated("Use make() instead", ReplaceWith("make(view, message)"))
-    fun indefinite(
-      view: View,
-      message: CharSequence,
-      force: Boolean = false,
-      builder: Snackbar.() -> Snackbar = { this }
-    ) {
-      make(view, message, builder)
     }
 
     @JvmOverloads
@@ -263,17 +248,6 @@ object Snackbreak {
       builder: Snackbar.() -> Snackbar = { this }
     ) {
       snack(false, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
-    }
-
-    @JvmOverloads
-    @Deprecated("Use make() instead", ReplaceWith("make(view, message)"))
-    fun indefinite(
-      view: View,
-      @StringRes message: Int,
-      force: Boolean = false,
-      builder: Snackbar.() -> Snackbar = { this }
-    ) {
-      make(view, message, builder)
     }
 
     @JvmOverloads

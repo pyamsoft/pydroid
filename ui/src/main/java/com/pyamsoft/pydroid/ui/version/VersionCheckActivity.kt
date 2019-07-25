@@ -28,9 +28,7 @@ import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
-import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.VersionCheckError
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
-import timber.log.Timber
 
 abstract class VersionCheckActivity : ActivityBase() {
 
@@ -42,7 +40,7 @@ abstract class VersionCheckActivity : ActivityBase() {
 
   @CallSuper
   override fun onPostCreate(savedInstanceState: Bundle?) {
-
+    super.onPostCreate(savedInstanceState)
 
     // Need to do this in onPostCreate because the snackbarRoot will not be available until
     // after subclass onCreate
@@ -58,7 +56,6 @@ abstract class VersionCheckActivity : ActivityBase() {
     ) {
       return@createComponent when (it) {
         is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
-        is VersionCheckError -> Timber.e(it.throwable, "Failed to check for new version")
       }
     }
 

@@ -22,7 +22,8 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
 
 data class VersionViewState(
-  val isLoading: Loading?
+  val isLoading: Loading?,
+  val throwable: Throwable?
 ) : UiViewState {
 
   data class Loading(val forced: Boolean)
@@ -37,8 +38,5 @@ data class VersionViewState(
 sealed class VersionControllerEvent : UiControllerEvent {
 
   data class ShowUpgrade internal constructor(val payload: UpgradePayload) : VersionControllerEvent()
-
-  data class VersionCheckError internal constructor(val throwable: Throwable) :
-      VersionControllerEvent()
 
 }

@@ -43,4 +43,8 @@ internal class VersionUpgradeViewModel internal constructor(
     setState { copy(throwable = error) }
   }
 
+  fun navigationSuccess() {
+    setState { copy(throwable = null) }
+  }
+
 }

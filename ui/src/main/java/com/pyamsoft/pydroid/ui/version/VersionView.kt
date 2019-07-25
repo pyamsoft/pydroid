@@ -53,10 +53,19 @@ internal class VersionView internal constructor(
         dismissUpdating()
       }
     }
+
+    state.throwable.let { throwable ->
+      if (throwable == null) {
+        clearError()
+      } else {
+        showError(throwable)
+      }
+    }
   }
 
   override fun doTeardown() {
     dismissUpdating()
+    clearError()
     parent = null
   }
 
@@ -73,11 +82,16 @@ internal class VersionView internal constructor(
         .dismiss()
   }
 
-  fun showError(throwable: Throwable) {
-    Snackbreak.bindTo(owner)
-        .make(
+  private fun showError(throwable: Throwable) {
+    Snackbreak.bindTo(owner, "error")
+        .short(
             requireNotNull(parent),
             throwable.message ?: "An error occurred while checking for updates."
         )
+  }
+
+  private fun clearError() {
+    Snackbreak.bindTo(owner, "error")
+        .dismiss()
   }
 }

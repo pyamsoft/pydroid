@@ -80,4 +80,8 @@ internal class AppSettingsViewModel internal constructor(
     setState { copy(throwable = error) }
   }
 
+  fun navigationSuccess() {
+    setState { copy(throwable = null) }
+  }
+
 }

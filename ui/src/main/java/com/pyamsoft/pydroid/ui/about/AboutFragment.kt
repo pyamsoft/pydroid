@@ -112,7 +112,9 @@ class AboutFragment : Fragment() {
   private fun navigateToExternalUrl(url: String) {
     val error = url.hyperlink(requireActivity())
         .navigate()
-    if (error != null) {
+    if (error == null) {
+      listViewModel.navigationSuccess()
+    } else {
       listViewModel.navigationFailed(error)
     }
   }

@@ -111,6 +111,7 @@ class VersionUpgradeDialog : DialogFragment() {
     if (error != null) {
       viewModel.navigationFailed(error)
     } else {
+      viewModel.navigationSuccess()
       dismiss()
     }
   }

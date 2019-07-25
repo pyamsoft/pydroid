@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
-import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.VersionCheckError
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +34,8 @@ internal class VersionCheckViewModel internal constructor(
   private val interactor: VersionCheckInteractor
 ) : UiViewModel<VersionViewState, UnitViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
-        isLoading = null
+        isLoading = null,
+        throwable = null
     )
 ) {
 
@@ -74,7 +74,7 @@ internal class VersionCheckViewModel internal constructor(
   }
 
   private fun handleVersionCheckError(throwable: Throwable) {
-    publish(VersionCheckError(throwable))
+    setState { copy(throwable = throwable) }
   }
 
   private fun handleVersionCheckComplete() {

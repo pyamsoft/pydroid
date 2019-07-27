@@ -32,6 +32,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.util.toDp
+import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
@@ -132,8 +133,10 @@ object Snackbreak {
         ?.find { id == it.id }
         ?.instance
     if (instance == null) {
+      Timber.d("Caching Snackbreak for later: $id")
       return cacheInstance(lifecycle, id)
     } else {
+      Timber.d("Continue existing Snackbreak: $id")
       return instance
     }
   }
@@ -144,20 +147,25 @@ object Snackbreak {
     id: String?
   ): Instance {
     val instance = Instance()
-    cache.getOrPut(lifecycle) { mutableSetOf() }
+    cache.getOrPut(lifecycle) {
+      lifecycle.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_DESTROY)
+        fun onDestroy() {
+          lifecycle.removeObserver(this)
+          cache.remove(lifecycle)
+              ?.forEach { entry ->
+                Timber.d("Destroy Snackbreak: ${entry.id}")
+                entry.instance.onDestroy()
+              }
+        }
+
+      })
+
+      return@getOrPut mutableSetOf()
+    }
         .add(CacheEntry(instance, id))
-
-    lifecycle.addObserver(object : LifecycleObserver {
-
-      @Suppress("unused")
-      @OnLifecycleEvent(ON_DESTROY)
-      fun onDestroy() {
-        lifecycle.removeObserver(this)
-        cache.remove(lifecycle)
-            ?.forEach { it.instance.onDestroy() }
-      }
-
-    })
 
     return instance
   }

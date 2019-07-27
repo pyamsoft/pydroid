@@ -76,6 +76,5 @@ internal class VersionUpgradeControlView internal constructor(
   override fun onTeardown() {
     upgradeButton.setOnClickListener(null)
     laterButton.setOnClickListener(null)
-    clearError()
   }
 }

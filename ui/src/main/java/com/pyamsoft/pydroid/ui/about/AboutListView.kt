@@ -56,8 +56,6 @@ internal class AboutListView internal constructor(
     super.onTeardown()
     layoutRoot.adapter = null
     clearLicenses()
-    clearLoadError()
-    clearNavigationError()
     aboutAdapter = null
   }
 

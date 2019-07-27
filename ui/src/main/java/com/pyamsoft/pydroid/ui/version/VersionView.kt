@@ -64,8 +64,6 @@ internal class VersionView internal constructor(
   }
 
   override fun doTeardown() {
-    dismissUpdating()
-    clearError()
     parent = null
   }
 

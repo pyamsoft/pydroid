@@ -77,7 +77,6 @@ internal class RatingControlsView internal constructor(
   override fun onTeardown() {
     rateApplication.setOnClickListener(null)
     noThanks.setOnClickListener(null)
-    clearError()
   }
 
 }

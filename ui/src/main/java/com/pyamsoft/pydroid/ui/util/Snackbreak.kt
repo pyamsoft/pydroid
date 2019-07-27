@@ -97,55 +97,65 @@ object Snackbreak {
     ConcurrentHashMap<Lifecycle, MutableSet<CacheEntry>>()
   }
 
-  @CheckResult
-  fun bindTo(owner: LifecycleOwner): Instance {
-    return bindTo(owner.lifecycle)
-  }
-
-  @CheckResult
-  fun bindTo(
+  inline fun bindTo(
     owner: LifecycleOwner,
-    id: String
-  ): Instance {
-    return bindTo(owner.lifecycle, id)
+    crossinline withInstance: Instance.() -> Unit
+  ) {
+    return bindTo(owner.lifecycle) { withInstance() }
   }
 
-  @CheckResult
-  fun bindTo(
-    lifecycle: Lifecycle
-  ): Instance {
-    return realBindTo(lifecycle, null)
+  inline fun bindTo(
+    owner: LifecycleOwner,
+    id: String,
+    crossinline withInstance: Instance.() -> Unit
+  ) {
+    return bindTo(owner.lifecycle, id) { withInstance() }
   }
 
-  @CheckResult
-  fun bindTo(
+  inline fun bindTo(
     lifecycle: Lifecycle,
-    id: String
-  ): Instance {
-    return realBindTo(lifecycle, id)
+    crossinline withInstance: Instance.() -> Unit
+  ) {
+    return realBindTo(lifecycle, null) { withInstance() }
   }
 
-  private fun realBindTo(
+  inline fun bindTo(
     lifecycle: Lifecycle,
-    id: String?
-  ): Instance {
+    id: String,
+    crossinline withInstance: Instance.() -> Unit
+  ) {
+    return realBindTo(lifecycle, id) { withInstance() }
+  }
+
+  @PublishedApi
+  internal fun realBindTo(
+    lifecycle: Lifecycle,
+    id: String?,
+    withInstance: Instance.() -> Unit
+  ) {
     val instance = cache[lifecycle]
         ?.find { id == it.id }
         ?.instance
     if (instance == null) {
       Timber.d("Caching Snackbreak for later: $id")
-      return cacheInstance(lifecycle, id)
+      cacheInstance(lifecycle, id, withInstance)
     } else {
       Timber.d("Continue existing Snackbreak: $id")
-      return instance
+      withInstance(instance)
     }
   }
 
-  @CheckResult
-  private fun cacheInstance(
+  @PublishedApi
+  internal fun cacheInstance(
     lifecycle: Lifecycle,
-    id: String?
-  ): Instance {
+    id: String?,
+    withInstance: Instance.() -> Unit
+  ) {
+    if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
+      Timber.w("Snackbreak is destroyed, cannot continue calling it")
+      return
+    }
+
     val instance = Instance()
     cache.getOrPut(lifecycle) {
       lifecycle.addObserver(object : LifecycleObserver {
@@ -166,8 +176,7 @@ object Snackbreak {
       return@getOrPut mutableSetOf()
     }
         .add(CacheEntry(instance, id))
-
-    return instance
+    withInstance(instance)
   }
 
   class Instance internal constructor() {

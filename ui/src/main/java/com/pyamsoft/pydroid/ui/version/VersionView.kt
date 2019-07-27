@@ -71,25 +71,29 @@ internal class VersionView internal constructor(
   }
 
   private fun showUpdating() {
-    Snackbreak.bindTo(owner)
-        .make(requireNotNull(parent), "Checking for updates")
+    Snackbreak.bindTo(owner) {
+      make(requireNotNull(parent), "Checking for updates")
+    }
   }
 
   private fun dismissUpdating() {
-    Snackbreak.bindTo(owner)
-        .dismiss()
+    Snackbreak.bindTo(owner) {
+      dismiss()
+    }
   }
 
   private fun showError(throwable: Throwable) {
-    Snackbreak.bindTo(owner, "error")
-        .short(
-            requireNotNull(parent),
-            throwable.message ?: "An error occurred while checking for updates."
-        )
+    Snackbreak.bindTo(owner, "error") {
+      short(
+        requireNotNull(parent),
+        throwable.message ?: "An error occurred while checking for updates."
+    )
+    }
   }
 
   private fun clearError() {
-    Snackbreak.bindTo(owner, "error")
-        .dismiss()
+    Snackbreak.bindTo(owner, "error") {
+      dismiss()
+    }
   }
 }

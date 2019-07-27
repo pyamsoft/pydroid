@@ -65,13 +65,15 @@ internal class RatingControlsView internal constructor(
   }
 
   private fun showError(error: Throwable) {
-    Snackbreak.bindTo(owner)
-        .make(layoutRoot, error.message ?: "An unexpected error occurred.")
+    Snackbreak.bindTo(owner) {
+      make(layoutRoot, error.message ?: "An unexpected error occurred.")
+    }
   }
 
   private fun clearError() {
-    Snackbreak.bindTo(owner)
-        .dismiss()
+    Snackbreak.bindTo(owner) {
+      dismiss()
+    }
   }
 
   override fun onTeardown() {

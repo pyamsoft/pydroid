@@ -29,6 +29,7 @@ import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.util.toDp
@@ -36,6 +37,10 @@ import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
+
+  private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
+  private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
+  private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
 
   private fun Snackbar.setMargin() {
     val params = view.layoutParams as? ViewGroup.MarginLayoutParams
@@ -209,6 +214,8 @@ object Snackbreak {
 
     private inline fun snack(
       force: Boolean,
+      crossinline onShown: (snackbar: Snackbar) -> Unit,
+      crossinline onHidden: (snackbar: Snackbar, event: Int) -> Unit,
       builder: Snackbar.() -> Snackbar,
       snack: () -> Snackbar
     ) {
@@ -217,6 +224,29 @@ object Snackbreak {
         dismiss()
         snackbar = snack()
             .run(builder)
+            .let { bar ->
+              return@let bar.addCallback(object : BaseCallback<Snackbar>() {
+
+                override fun onShown(transientBottomBar: Snackbar?) {
+                  super.onShown(transientBottomBar)
+                  bar.removeCallback(this)
+                  onShown(bar)
+                }
+              })
+            }
+            .let { bar ->
+              return@let bar.addCallback(object : BaseCallback<Snackbar>() {
+
+                override fun onDismissed(
+                  transientBottomBar: Snackbar?,
+                  event: Int
+                ) {
+                  super.onDismissed(transientBottomBar, event)
+                  bar.removeCallback(this)
+                  onHidden(bar, event)
+                }
+              })
+            }
             .also { it.show() }
       }
     }
@@ -226,9 +256,13 @@ object Snackbreak {
       view: View,
       message: CharSequence,
       force: Boolean = false,
-      builder: Snackbar.() -> Snackbar = { this }
+      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
     ) {
-      snack(force, builder) { make(view, message, Snackbar.LENGTH_SHORT) }
+      snack(force, onShown, onHidden, builder) {
+        make(view, message, Snackbar.LENGTH_SHORT)
+      }
     }
 
     @JvmOverloads
@@ -236,9 +270,13 @@ object Snackbreak {
       view: View,
       @StringRes message: Int,
       force: Boolean = false,
-      builder: Snackbar.() -> Snackbar = { this }
+      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
     ) {
-      snack(force, builder) { make(view, message, Snackbar.LENGTH_SHORT) }
+      snack(force, onShown, onHidden, builder) {
+        make(view, message, Snackbar.LENGTH_SHORT)
+      }
     }
 
     @JvmOverloads
@@ -246,9 +284,13 @@ object Snackbreak {
       view: View,
       message: CharSequence,
       force: Boolean = false,
-      builder: Snackbar.() -> Snackbar = { this }
+      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
     ) {
-      snack(force, builder) { make(view, message, Snackbar.LENGTH_LONG) }
+      snack(force, onShown, onHidden, builder) {
+        make(view, message, Snackbar.LENGTH_LONG)
+      }
     }
 
     @JvmOverloads
@@ -256,27 +298,39 @@ object Snackbreak {
       view: View,
       @StringRes message: Int,
       force: Boolean = false,
-      builder: Snackbar.() -> Snackbar = { this }
+      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
     ) {
-      snack(force, builder) { make(view, message, Snackbar.LENGTH_LONG) }
+      snack(force, onShown, onHidden, builder) {
+        make(view, message, Snackbar.LENGTH_LONG)
+      }
     }
 
     @JvmOverloads
     fun make(
       view: View,
       message: CharSequence,
-      builder: Snackbar.() -> Snackbar = { this }
+      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
     ) {
-      snack(false, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
+      snack(false, onShown, onHidden, builder) {
+        make(view, message, Snackbar.LENGTH_INDEFINITE)
+      }
     }
 
     @JvmOverloads
     fun make(
       view: View,
       @StringRes message: Int,
-      builder: Snackbar.() -> Snackbar = { this }
+      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
     ) {
-      snack(false, builder) { make(view, message, Snackbar.LENGTH_INDEFINITE) }
+      snack(false, onShown, onHidden, builder) {
+        make(view, message, Snackbar.LENGTH_INDEFINITE)
+      }
     }
 
   }

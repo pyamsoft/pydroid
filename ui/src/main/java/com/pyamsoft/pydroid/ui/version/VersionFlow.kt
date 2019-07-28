@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.version
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
 
@@ -33,6 +34,11 @@ data class VersionViewState(
     val newVersion: Int
   )
 
+}
+
+sealed class VersionViewEvent : UiViewEvent {
+
+  object SnackbarHidden : VersionViewEvent()
 }
 
 sealed class VersionControllerEvent : UiControllerEvent {

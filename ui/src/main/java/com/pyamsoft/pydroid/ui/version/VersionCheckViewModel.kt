@@ -20,9 +20,9 @@ package com.pyamsoft.pydroid.ui.version
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,7 @@ import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
   private val interactor: VersionCheckInteractor
-) : UiViewModel<VersionViewState, UnitViewEvent, VersionControllerEvent>(
+) : UiViewModel<VersionViewState, VersionViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
         isLoading = null,
         throwable = null
@@ -59,7 +59,10 @@ internal class VersionCheckViewModel internal constructor(
   override fun onInit() {
   }
 
-  override fun handleViewEvent(event: UnitViewEvent) {
+  override fun handleViewEvent(event: VersionViewEvent) {
+    return when (event) {
+      is SnackbarHidden -> setState { copy(throwable = null) }
+    }
   }
 
   private fun handleVersionCheckBegin(forced: Boolean) {

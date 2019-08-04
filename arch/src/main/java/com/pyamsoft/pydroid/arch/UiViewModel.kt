@@ -25,7 +25,6 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -44,7 +43,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   private val mutex = Mutex()
   private val controllerEventBus = EventBus.create<C>()
   private val stateBus = EventBus.create<S>()
-  private val flushQueueBus = EventBus.create<Unit>()
+  private val flushQueueBus = EventBus.create<FlushQueueEvent>()
 
   @Volatile private var stateQueue = LinkedList<S.() -> S>()
   @Volatile private var state: S? = null
@@ -132,7 +131,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         stateQueue.add(func)
       }
 
-      flushQueueBus.publish(Unit)
+      flushQueueBus.send(FlushQueueEvent)
     }
   }
 
@@ -147,20 +146,19 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     return queue.toList()
   }
 
-  private suspend fun flushQueue() = coroutineScope {
+  private suspend fun flushQueue() {
     mutex.withLock {
       val stateChanges = dequeueAllPendingStateChanges()
       if (stateChanges.isEmpty()) {
         Timber.w("State queue is empty, ignore flush.")
-        return@coroutineScope
+        return
       }
 
       for (stateChange in stateChanges) {
         val newState = latestState().stateChange()
         if (newState != state) {
           state = newState
-
-          stateBus.publish(newState)
+          stateBus.send(newState)
         }
       }
     }
@@ -214,5 +212,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     val state: S,
     val savedState: UiSavedState
   )
+
+  private object FlushQueueEvent
 
 }

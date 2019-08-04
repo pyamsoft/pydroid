@@ -18,6 +18,8 @@
 package com.pyamsoft.pydroid.bootstrap.rating
 
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class RatingInteractorImpl internal constructor(
@@ -26,33 +28,34 @@ internal class RatingInteractorImpl internal constructor(
   private val preferences: RatingPreferences
 ) : RatingInteractor {
 
-  override suspend fun needsToViewRating(force: Boolean): Boolean {
-    enforcer.assertNotOnMainThread()
-    if (force) {
-      Timber.d("Force view rating")
-      return true
-    } else {
-      // If the version code is 1, it's the first app version, don't show a changelog
-      if (currentVersion <= 1) {
-        Timber.w("Version code is invalid: $currentVersion")
-        return false
+  override suspend fun needsToViewRating(force: Boolean): Boolean =
+    withContext(context = Dispatchers.Default) {
+      enforcer.assertNotOnMainThread()
+      if (force) {
+        Timber.d("Force view rating")
+        return@withContext true
       } else {
-        // If the preference is default, the app may be installed for the first time
-        // regardless of the current version. Don't show change log, else show it
-        val lastSeenVersion: Int = preferences.ratingAcceptedVersion
-        if (lastSeenVersion == RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION) {
-          Timber.i("Last seen version is default, app is installed for the first time or reset")
-          preferences.ratingAcceptedVersion = currentVersion
-          return false
+        // If the version code is 1, it's the first app version, don't show a changelog
+        if (currentVersion <= 1) {
+          Timber.w("Version code is invalid: $currentVersion")
+          return@withContext false
         } else {
-          Timber.d("Compare version code to last seen: $currentVersion <-> $lastSeenVersion")
-          return lastSeenVersion < currentVersion
+          // If the preference is default, the app may be installed for the first time
+          // regardless of the current version. Don't show change log, else show it
+          val lastSeenVersion: Int = preferences.ratingAcceptedVersion
+          if (lastSeenVersion == RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION) {
+            Timber.i("Last seen version is default, app is installed for the first time or reset")
+            preferences.ratingAcceptedVersion = currentVersion
+            return@withContext false
+          } else {
+            Timber.d("Compare version code to last seen: $currentVersion <-> $lastSeenVersion")
+            return@withContext lastSeenVersion < currentVersion
+          }
         }
       }
     }
-  }
 
-  override suspend fun saveRating() {
+  override suspend fun saveRating() = withContext(context = Dispatchers.Default) {
     enforcer.assertNotOnMainThread()
     preferences.ratingAcceptedVersion = currentVersion
   }

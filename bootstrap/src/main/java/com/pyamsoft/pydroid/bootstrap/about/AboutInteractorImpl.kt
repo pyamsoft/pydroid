@@ -21,6 +21,8 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class AboutInteractorImpl internal constructor(
   private val enforcer: Enforcer
@@ -32,7 +34,8 @@ internal class AboutInteractorImpl internal constructor(
     return OssLibraries.libraries()
   }
 
-  override suspend fun loadLicenses(bypass: Boolean): List<OssLibrary> {
-    return createLicenseStream().sortedBy { it.name.toLowerCase() }
-  }
+  override suspend fun loadLicenses(bypass: Boolean): List<OssLibrary> =
+    withContext(context = Dispatchers.Default) {
+      return@withContext createLicenseStream().sortedBy { it.name.toLowerCase() }
+    }
 }

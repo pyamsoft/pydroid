@@ -31,8 +31,13 @@ class RealBus<T : Any> internal constructor() : EventBus<T> {
   @ExperimentalCoroutinesApi
   override fun publish(event: T) {
     if (!bus.offer(event)) {
-      Timber.w("Failed to offer event onto bus: $event")
+      Timber.w("Failed to publish event onto bus: $event")
     }
+  }
+
+  @ExperimentalCoroutinesApi
+  override suspend fun send(event: T) {
+    bus.send(event)
   }
 
   @CheckResult

@@ -116,7 +116,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
   }
 
   protected fun publish(event: C) {
-    controllerEventBus.publish(event)
+    viewModelScope.launch(context = Dispatchers.Default) {
+      controllerEventBus.send(event)
+    }
   }
 
   @CheckResult

@@ -30,7 +30,7 @@ interface EventConsumer<T : Any> {
       from: suspend (
         onCancel: (doOnCancel: () -> Unit) -> Unit,
         startWith: (doOnStart: () -> T) -> Unit,
-        emit: (event: T) -> Unit
+        emit: suspend (event: T) -> Unit
       ) -> Unit
     ): EventConsumer<T> {
       return object : EventConsumer<T> {
@@ -42,8 +42,8 @@ interface EventConsumer<T : Any> {
           var cancel: (() -> Unit)? = null
           val onCancel: (doOnCancel: () -> Unit) -> Unit = { cancel = it }
 
-          // On emit, we publish on the bus
-          val onEmit: (value: T) -> Unit = { realBus.publish(it) }
+          // On emit, we send on the bus
+          val onEmit: suspend (value: T) -> Unit = { realBus.send(it) }
 
           // Run and emit an event on stream start
           var startWith: (() -> T)? = null

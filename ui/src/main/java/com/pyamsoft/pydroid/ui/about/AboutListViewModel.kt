@@ -44,7 +44,7 @@ internal class AboutListViewModel internal constructor(
   private val licenseRunner = highlander<Unit, Boolean> { force ->
     handleLicenseLoadBegin()
     try {
-      val licenses = withContext(Dispatchers.Default) { interactor.loadLicenses(force) }
+      val licenses = interactor.loadLicenses(force)
       handleLicensesLoaded(licenses)
     } catch (error: Throwable) {
       error.onActualError { e ->

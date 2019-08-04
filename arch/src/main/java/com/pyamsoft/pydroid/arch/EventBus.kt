@@ -23,6 +23,8 @@ interface EventBus<T : Any> : EventConsumer<T> {
 
   fun publish(event: T)
 
+  suspend fun send(event: T)
+
   companion object {
 
     private val EMPTY by lazy { create<Unit>() }

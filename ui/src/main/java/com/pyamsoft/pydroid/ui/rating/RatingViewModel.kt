@@ -33,7 +33,7 @@ internal class RatingViewModel internal constructor(
 ) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
 
   private val loadRunner = highlander<Unit, Boolean> { force ->
-    val show = withContext(Dispatchers.Default) { interactor.needsToViewRating(force) }
+    val show = interactor.needsToViewRating(force)
     if (show) {
       publish(LoadRating)
     }

@@ -21,6 +21,8 @@ import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class VersionCheckInteractorImpl internal constructor(
   private val debug: Boolean,
@@ -28,20 +30,21 @@ internal class VersionCheckInteractorImpl internal constructor(
   private val updateCache: Cached<UpdatePayload>
 ) : VersionCheckInteractor, Cache {
 
-  override suspend fun checkVersion(force: Boolean): UpdatePayload? {
-    enforcer.assertNotOnMainThread()
+  override suspend fun checkVersion(force: Boolean): UpdatePayload? =
+    withContext(context = Dispatchers.IO) {
+      enforcer.assertNotOnMainThread()
 
-    if (force) {
-      updateCache.clear()
-    }
+      if (force) {
+        updateCache.clear()
+      }
 
-    val result = requireNotNull(updateCache.call())
-    if (result.currentVersion < result.newVersion || (debug && force)) {
-      return result
-    } else {
-      return null
+      val result = requireNotNull(updateCache.call())
+      if (result.currentVersion < result.newVersion || (debug && force)) {
+        return@withContext result
+      } else {
+        return@withContext null
+      }
     }
-  }
 
   override fun clear() {
     updateCache.clear()

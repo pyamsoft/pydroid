@@ -37,7 +37,7 @@ internal class RatingDialogViewModel internal constructor(
 ) {
 
   private val saveRunner = highlander<Unit, String> { link ->
-    withContext(Dispatchers.Default) { interactor.saveRating() }
+    interactor.saveRating()
     handleRate(link)
   }
 

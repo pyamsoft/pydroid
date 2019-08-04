@@ -76,7 +76,7 @@ inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.factory(
 }
 
 class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
-  private val lifecycle: Lifecycle,
+  private val lifecycleProvider: () -> Lifecycle,
   private val store: ViewModelStore?,
   private val fragment: Fragment?,
   private val activity: FragmentActivity?,
@@ -89,24 +89,24 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     store: ViewModelStore,
     type: Class<T>,
     factoryProvider: () -> Factory
-  ) : this(lifecycle, store, null, null, type, factoryProvider)
+  ) : this({ lifecycle }, store, null, null, type, factoryProvider)
 
   constructor(
     fragment: Fragment,
     type: Class<T>,
     factoryProvider: () -> Factory
-  ) : this(fragment.viewLifecycleOwner.lifecycle, null, fragment, null, type, factoryProvider)
+  ) : this({ fragment.viewLifecycleOwner.lifecycle }, null, fragment, null, type, factoryProvider)
 
   constructor(
     activity: FragmentActivity,
     type: Class<T>,
     factoryProvider: () -> Factory
-  ) : this(activity.lifecycle, null, null, activity, type, factoryProvider)
+  ) : this({ activity.lifecycle }, null, null, activity, type, factoryProvider)
 
   private val lock = Any()
   @Volatile private var value: T? = null
 
-  private fun attachToLifecycle() {
+  private fun attachToLifecycle(lifecycle: Lifecycle) {
     lifecycle.addObserver(object : LifecycleObserver {
 
       @Suppress("unused")
@@ -121,7 +121,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
 
   @CheckResult
   private fun resolveValue(): T {
-    attachToLifecycle()
+    attachToLifecycle(lifecycleProvider())
     store?.let { s ->
       return ViewModelProvider(s, factoryProvider())
           .get(type)

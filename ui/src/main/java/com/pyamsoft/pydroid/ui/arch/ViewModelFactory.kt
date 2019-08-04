@@ -23,12 +23,37 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiViewModel
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
+
+/**
+ * Allow nullable for easier caller API
+ */
+@CheckResult
+inline fun <reified T : UiViewModel<*, *, *>> LifecycleOwner.factory(
+  store: ViewModelStore,
+  crossinline factoryProvider: () -> Factory?
+): ViewModelFactory<T> {
+  return lifecycle.factory(store, factoryProvider)
+}
+
+/**
+ * Allow nullable for easier caller API
+ */
+@CheckResult
+inline fun <reified T : UiViewModel<*, *, *>> Lifecycle.factory(
+  store: ViewModelStore,
+  crossinline factoryProvider: () -> Factory?
+): ViewModelFactory<T> {
+  return ViewModelFactory(this, store, T::class.java) { requireNotNull(factoryProvider()) }
+}
 
 /**
  * Allow nullable for easier caller API
@@ -51,6 +76,8 @@ inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.factory(
 }
 
 class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
+  private val lifecycle: Lifecycle,
+  private val store: ViewModelStore?,
   private val fragment: Fragment?,
   private val activity: FragmentActivity?,
   private val type: Class<T>,
@@ -58,21 +85,28 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
 ) : ReadOnlyProperty<Any, T> {
 
   constructor(
+    lifecycle: Lifecycle,
+    store: ViewModelStore,
+    type: Class<T>,
+    factoryProvider: () -> Factory
+  ) : this(lifecycle, store, null, null, type, factoryProvider)
+
+  constructor(
     fragment: Fragment,
     type: Class<T>,
     factoryProvider: () -> Factory
-  ) : this(fragment, null, type, factoryProvider)
+  ) : this(fragment.viewLifecycleOwner.lifecycle, null, fragment, null, type, factoryProvider)
 
   constructor(
     activity: FragmentActivity,
     type: Class<T>,
     factoryProvider: () -> Factory
-  ) : this(null, activity, type, factoryProvider)
+  ) : this(activity.lifecycle, null, null, activity, type, factoryProvider)
 
   private val lock = Any()
   @Volatile private var value: T? = null
 
-  private fun attachToLifecycle(lifecycle: Lifecycle) {
+  private fun attachToLifecycle() {
     lifecycle.addObserver(object : LifecycleObserver {
 
       @Suppress("unused")
@@ -87,13 +121,16 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
 
   @CheckResult
   private fun resolveValue(): T {
+    attachToLifecycle()
+    store?.let { s ->
+      return ViewModelProvider(s, factoryProvider())
+          .get(type)
+    }
     fragment?.let { f ->
-      attachToLifecycle(f.viewLifecycleOwner.lifecycle)
       return ViewModelProviders.of(f, factoryProvider())
           .get(type)
     }
     activity?.let { a ->
-      attachToLifecycle(a.lifecycle)
       return ViewModelProviders.of(a, factoryProvider())
           .get(type)
     }

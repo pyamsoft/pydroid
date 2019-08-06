@@ -139,6 +139,11 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
 
   @CheckResult
   fun get(): T {
+    val lifecycle = lifecycleProvider()
+    if (lifecycle.currentState === Lifecycle.State.DESTROYED) {
+      throw IllegalStateException("Cannot access ViewModel after Lifecycle is DESTROYED")
+    }
+
     val v = value
     if (v != null) {
       return v

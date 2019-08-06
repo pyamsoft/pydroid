@@ -41,19 +41,17 @@ internal interface AboutItemComponent {
   ) : AboutItemComponent {
 
     override fun inject(viewHolder: AboutViewHolder) {
-      val viewModel = AboutItemViewModel()
       val title = AboutItemTitleView(library, parent)
       val description = AboutItemDescriptionView(library, parent)
       val action = AboutItemActionView(library, parent)
 
-      viewHolder.viewModel = viewModel
+      viewHolder.factory = AboutItemViewModelFactory()
       viewHolder.titleView = title
       viewHolder.descriptionView = description
       viewHolder.actionView = action
     }
 
-    class FactoryImpl internal constructor(
-    ) : Factory {
+    class FactoryImpl internal constructor() : Factory {
 
       override fun create(
         parent: ViewGroup,

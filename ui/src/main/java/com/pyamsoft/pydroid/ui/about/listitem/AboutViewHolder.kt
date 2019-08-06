@@ -21,27 +21,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
+import com.pyamsoft.pydroid.ui.arch.factory
 
 internal class AboutViewHolder private constructor(
   view: View,
   private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : BaseViewHolder(view) {
 
-  // Don't inject this VM since we don't want it to persist
-  internal var viewModel: AboutItemViewModel? = null
-
+  internal var factory: ViewModelProvider.Factory? = null
   internal var titleView: AboutItemTitleView? = null
   internal var descriptionView: AboutItemDescriptionView? = null
   internal var actionView: AboutItemActionView? = null
 
+  private var viewModel: AboutItemViewModel? = null
+
   private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
   private var bindLifecycle: ListItemLifecycle? = null
+
+  private fun injectViewModel(lifecycle: Lifecycle) {
+    viewModel = lifecycle.factory<AboutItemViewModel>(ViewModelStore()) { factory }
+        .get()
+  }
 
   override fun bind(model: OssLibrary) {
     bindLifecycle?.unbind()
@@ -53,6 +62,7 @@ internal class AboutViewHolder private constructor(
 
     val owner = ListItemLifecycle()
     bindLifecycle = owner
+    injectViewModel(owner.lifecycle)
 
     createComponent(
         null, owner,

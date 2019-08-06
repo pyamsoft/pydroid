@@ -46,7 +46,7 @@ internal class VersionCheckInteractorImpl internal constructor(
       }
     }
 
-  override fun clear() {
+  override suspend fun clear() {
     updateCache.clear()
   }
 }

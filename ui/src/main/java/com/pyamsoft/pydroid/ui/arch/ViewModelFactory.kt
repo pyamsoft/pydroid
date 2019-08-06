@@ -137,10 +137,8 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     throw IllegalStateException("Both Fragment an Activity are null")
   }
 
-  override fun getValue(
-    thisRef: Any,
-    property: KProperty<*>
-  ): T {
+  @CheckResult
+  fun get(): T {
     val v = value
     if (v != null) {
       return v
@@ -155,5 +153,12 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     }
 
     return requireNotNull(value)
+  }
+
+  override fun getValue(
+    thisRef: Any,
+    property: KProperty<*>
+  ): T {
+    return get()
   }
 }

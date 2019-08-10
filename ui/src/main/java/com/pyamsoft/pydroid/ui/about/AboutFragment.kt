@@ -144,7 +144,7 @@ class AboutFragment : Fragment() {
       val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {
         fragmentManager.commit(fragment) {
-          add(container, newInstance(backStackCount), TAG)
+          replace(container, newInstance(backStackCount), TAG)
           addToBackStack(null)
         }
       }

@@ -18,14 +18,22 @@
 package com.pyamsoft.pydroid.ui.app
 
 import androidx.annotation.CallSuper
+import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentManager
 import com.pyamsoft.pydroid.util.runWhenReady
+import timber.log.Timber
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
 
   /**
-   * Whether back press should respect child backstack state
+   * Whether back press should respect fragment backstack state
+   */
+  protected var respectFragmentBackStack: Boolean = true
+
+  /**
+   * Whether back press should respect fragment child backstack state
    */
   protected var respectChildFragmentBackStack: Boolean = true
 
@@ -57,21 +65,45 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
   }
 
   override fun onBackPressed() {
-    var handledByChild = false
-    if (respectChildFragmentBackStack) {
+    var handled = false
+    if (respectFragmentBackStack || respectChildFragmentBackStack) {
       val fragments = supportFragmentManager.fragments
       for (fragment in fragments.filterNot { it == null }.reversed()) {
-        val childFragmentManager = fragment.childFragmentManager
-        if (childFragmentManager.backStackEntryCount > 0) {
-          runWhenReady(this) { childFragmentManager.popBackStack() }
-          handledByChild = true
-          break
+        if (respectChildFragmentBackStack) {
+          if (popFragmentManager(fragment.childFragmentManager, fragment.tag)) {
+            handled = true
+            break
+          }
+        }
+
+        if (respectFragmentBackStack) {
+          if (popFragmentManager(fragment.requireFragmentManager(), fragment.tag)) {
+            handled = true
+            break
+          }
         }
       }
     }
 
-    if (!handledByChild) {
+    if (!handled) {
       super.onBackPressed()
     }
+  }
+
+  @CheckResult
+  private fun popFragmentManager(
+    fragmentManager: FragmentManager,
+    tag: String?
+  ): Boolean {
+    if (fragmentManager.backStackEntryCount > 0) {
+      runWhenReady(this) {
+        Timber.d("Pop backstack: $tag")
+        fragmentManager.popBackStackImmediate()
+      }
+
+      return true
+    }
+
+    return false
   }
 }

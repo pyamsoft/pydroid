@@ -26,6 +26,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
@@ -153,8 +154,16 @@ class AboutFragment : Fragment() {
     @Suppress("unused")
     @JvmStatic
     @CheckResult
-    fun isPresent(activity: FragmentActivity): Boolean =
-      (activity.supportFragmentManager.findFragmentByTag(TAG) != null)
+    fun isPresent(activity: FragmentActivity): Boolean {
+      return isPresent(activity.supportFragmentManager)
+    }
+
+    @Suppress("unused")
+    @JvmStatic
+    @CheckResult
+    fun isPresent(fragmentManager: FragmentManager): Boolean {
+      return fragmentManager.findFragmentByTag(TAG) != null
+    }
 
     @JvmStatic
     @CheckResult

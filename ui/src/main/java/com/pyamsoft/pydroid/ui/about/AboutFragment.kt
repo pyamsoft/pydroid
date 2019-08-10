@@ -126,7 +126,7 @@ class AboutFragment : Fragment() {
 
   companion object {
 
-    private const val TAG = "AboutFragment"
+    const val TAG = "AboutFragment"
     private const val KEY_BACK_STACK = "key_back_stack"
 
     @JvmStatic

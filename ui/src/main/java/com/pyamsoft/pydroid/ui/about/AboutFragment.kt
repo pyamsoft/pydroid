@@ -130,7 +130,7 @@ class AboutFragment : Fragment() {
 
     @JvmStatic
     fun show(
-      activity: FragmentActivity,
+      fragment: Fragment,
       @IdRes container: Int
     ) {
       // If you're using this function, all of these are available
@@ -140,10 +140,10 @@ class AboutFragment : Fragment() {
       OssLibraries.LOADER = true
       OssLibraries.UI = true
 
-      val fragmentManager = activity.supportFragmentManager
+      val fragmentManager = requireNotNull(fragment.fragmentManager)
       val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {
-        fragmentManager.commit(activity) {
+        fragmentManager.commit(fragment) {
           replace(container, newInstance(backStackCount), TAG)
           addToBackStack(null)
         }

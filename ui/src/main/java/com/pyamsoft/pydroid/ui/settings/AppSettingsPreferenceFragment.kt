@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.settings
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +30,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
-import com.pyamsoft.pydroid.ui.app.ActivityBase
+import com.pyamsoft.pydroid.ui.app.requireView
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
@@ -218,10 +219,8 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
    */
   @CallSuper
   protected open fun onLicenseItemClicked() {
-    val a = requireActivity()
-    if (a is ActivityBase) {
-      Timber.d("Show about licenses fragment")
-      AboutFragment.show(a, a.fragmentContainerId)
-    }
+    Timber.d("Show about licenses fragment")
+    val container = requireView().parent as ViewGroup
+    AboutFragment.show(this, container.id)
   }
 }

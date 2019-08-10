@@ -20,8 +20,14 @@ package com.pyamsoft.pydroid.ui.app
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.pyamsoft.pydroid.util.runWhenReady
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
+
+  /**
+   * Whether back press should respect child backstack state
+   */
+  protected var respectChildFragmentBackStack: Boolean = true
 
   /**
    * The main view container for all page level fragment transactions
@@ -48,5 +54,24 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
 
   final override fun setToolbar(toolbar: Toolbar?) {
     capturedToolbar = toolbar
+  }
+
+  override fun onBackPressed() {
+    var handledByChild = false
+    if (respectChildFragmentBackStack) {
+      val fragments = supportFragmentManager.fragments
+      for (fragment in fragments.filterNot { it == null }.reversed()) {
+        val childFragmentManager = fragment.childFragmentManager
+        if (childFragmentManager.backStackEntryCount > 0) {
+          runWhenReady(this) { childFragmentManager.popBackStack() }
+          handledByChild = true
+          break
+        }
+      }
+    }
+
+    if (!handledByChild) {
+      super.onBackPressed()
+    }
   }
 }

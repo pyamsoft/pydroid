@@ -35,6 +35,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.toDp
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
@@ -51,6 +52,10 @@ object Snackbreak {
       val margin = 8.toDp(view.context)
       view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
       view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+      view.doOnApplyWindowInsets { v, _, _ ->
+        v.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
+        v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+      }
     }
   }
 

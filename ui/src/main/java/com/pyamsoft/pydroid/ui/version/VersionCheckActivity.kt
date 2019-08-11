@@ -58,7 +58,11 @@ abstract class VersionCheckActivity : ActivityBase() {
         is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
       }
     }
+  }
 
+  @CallSuper
+  override fun onResume() {
+    super.onResume()
     versionViewModel.checkForUpdates(false)
   }
 

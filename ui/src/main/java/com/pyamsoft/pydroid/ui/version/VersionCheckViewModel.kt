@@ -37,11 +37,14 @@ internal class VersionCheckViewModel internal constructor(
     )
 ) {
 
+  private var notifyUpgrade: Boolean = true
+
   private val checkUpdateRunner = highlander<Unit, Boolean> { force ->
     handleVersionCheckBegin(force)
     try {
       val version = interactor.checkVersion(force)
-      if (version != null) {
+      if (version != null && (force || notifyUpgrade)) {
+        notifyUpgrade = false
         handleVersionCheckFound(version.currentVersion, version.newVersion)
       }
     } catch (error: Throwable) {

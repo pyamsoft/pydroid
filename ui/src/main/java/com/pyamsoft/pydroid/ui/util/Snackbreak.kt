@@ -52,6 +52,11 @@ object Snackbreak {
       val margin = 8.toDp(view.context)
       view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
       view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+
+      // The Snackbar in material library sets a Material design theme but
+      // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
+      // and adjusting for bottom padding - it adds the bottom padding from the insets
+      // into the snackbar as well.
       view.doOnApplyWindowInsets { v, _, _ ->
         v.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
         v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)

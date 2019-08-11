@@ -29,8 +29,11 @@ import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.util.runWhenReady
 
 abstract class VersionCheckActivity : ActivityBase() {
+
+  protected open val checkForUpdates: Boolean = true
 
   protected abstract val snackbarRoot: ViewGroup
 
@@ -63,7 +66,14 @@ abstract class VersionCheckActivity : ActivityBase() {
   @CallSuper
   override fun onResume() {
     super.onResume()
-    versionViewModel.checkForUpdates(false)
+
+    if (checkForUpdates) {
+      checkForUpdate()
+    }
+  }
+
+  fun checkForUpdate() {
+    runWhenReady(this) { versionViewModel.checkForUpdates(false) }
   }
 
   @CallSuper

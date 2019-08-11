@@ -34,18 +34,18 @@ internal interface AppSettingsComponent {
     @CheckResult
     fun create(
       activity: Activity,
-      parent: ViewGroup,
       owner: LifecycleOwner,
       preferenceScreen: PreferenceScreen,
       hideClearAll: Boolean,
-      hideUpgradeInformation: Boolean
+      hideUpgradeInformation: Boolean,
+      parentProvider: () -> ViewGroup
     ): AppSettingsComponent
 
   }
 
   class Impl private constructor(
     private val activity: Activity,
-    private val parent: ViewGroup,
+    private val parentProvider: () -> ViewGroup,
     private val owner: LifecycleOwner,
     private val applicationName: String,
     private val bugReportUrl: String,
@@ -56,7 +56,7 @@ internal interface AppSettingsComponent {
   ) : AppSettingsComponent {
 
     override fun inject(fragment: AppSettingsPreferenceFragment) {
-      val versionView = VersionView(owner, parent)
+      val versionView = VersionView(owner, parentProvider)
       val settingsView = AppSettingsView(
           activity, applicationName, bugReportUrl,
           hideClearAll, hideUpgradeInformation,
@@ -76,14 +76,14 @@ internal interface AppSettingsComponent {
 
       override fun create(
         activity: Activity,
-        parent: ViewGroup,
         owner: LifecycleOwner,
         preferenceScreen: PreferenceScreen,
         hideClearAll: Boolean,
-        hideUpgradeInformation: Boolean
+        hideUpgradeInformation: Boolean,
+        parentProvider: () -> ViewGroup
       ): AppSettingsComponent {
         return Impl(
-            activity, parent, owner, applicationName, bugReportUrl,
+            activity, parentProvider, owner, applicationName, bugReportUrl,
             hideClearAll, hideUpgradeInformation, preferenceScreen,
             factoryProvider
         )

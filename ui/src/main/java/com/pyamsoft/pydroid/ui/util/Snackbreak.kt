@@ -19,11 +19,14 @@ package com.pyamsoft.pydroid.ui.util
 
 import android.graphics.drawable.GradientDrawable
 import android.view.View
-import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.setMargins
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.LifecycleObserver
@@ -43,11 +46,11 @@ object Snackbreak {
   private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
 
   private fun Snackbar.setMargin() {
-    val params = view.layoutParams as? ViewGroup.MarginLayoutParams
+    val params = view.layoutParams as? MarginLayoutParams
     if (params != null) {
-      val margin = 8.toDp(context)
-      params.setMargins(margin, margin, margin, margin)
-      view.layoutParams = params
+      val margin = 8.toDp(view.context)
+      view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
+      view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
     }
   }
 

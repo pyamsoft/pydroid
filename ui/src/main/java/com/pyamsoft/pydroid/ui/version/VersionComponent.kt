@@ -36,13 +36,13 @@ internal interface VersionComponent {
     @CheckResult
     fun create(
       owner: LifecycleOwner,
-      parent: ViewGroup
+      snackbarRootProvider: () -> ViewGroup
     ): VersionComponent
 
   }
 
   class Impl private constructor(
-    private val parent: ViewGroup,
+    private val snackbarRootProvider: () -> ViewGroup,
     private val owner: LifecycleOwner,
     private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
   ) : VersionComponent {
@@ -52,7 +52,7 @@ internal interface VersionComponent {
     }
 
     override fun inject(activity: VersionCheckActivity) {
-      val versionView = VersionView(owner, parent)
+      val versionView = VersionView(owner, snackbarRootProvider)
 
       activity.versionFactory = factoryProvider(activity)
       activity.versionView = versionView
@@ -64,9 +64,9 @@ internal interface VersionComponent {
 
       override fun create(
         owner: LifecycleOwner,
-        parent: ViewGroup
+        snackbarRootProvider: () -> ViewGroup
       ): VersionComponent {
-        return Impl(parent, owner, factoryProvider)
+        return Impl(snackbarRootProvider, owner, factoryProvider)
       }
 
     }

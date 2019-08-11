@@ -28,10 +28,8 @@ import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
 
 internal class VersionView internal constructor(
   private val owner: LifecycleOwner,
-  parent: ViewGroup
+  private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<VersionViewState, VersionViewEvent>() {
-
-  private var parent: ViewGroup? = parent
 
   override fun id(): Int {
     throw InvalidIdException
@@ -63,16 +61,12 @@ internal class VersionView internal constructor(
     }
   }
 
-  override fun doTeardown() {
-    parent = null
-  }
-
   override fun saveState(outState: Bundle) {
   }
 
   private fun showUpdating() {
     Snackbreak.bindTo(owner) {
-      make(requireNotNull(parent), "Checking for updates")
+      make(snackbarRootProvider(), "Checking for updates")
     }
   }
 
@@ -84,8 +78,7 @@ internal class VersionView internal constructor(
 
   private fun showError(throwable: Throwable) {
     Snackbreak.bindTo(owner, "error") {
-      short(
-          requireNotNull(parent),
+      short(snackbarRootProvider(),
           throwable.message ?: "An error occurred while checking for updates.",
           onHidden = { _, _ -> publish(SnackbarHidden) }
       )

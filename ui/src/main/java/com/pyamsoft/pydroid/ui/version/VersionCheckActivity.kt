@@ -49,7 +49,7 @@ abstract class VersionCheckActivity : ActivityBase() {
     // after subclass onCreate
     Injector.obtain<PYDroidComponent>(applicationContext)
         .plusVersion()
-        .create(this, snackbarRoot)
+        .create(this) { snackbarRoot }
         .inject(this)
 
     createComponent(

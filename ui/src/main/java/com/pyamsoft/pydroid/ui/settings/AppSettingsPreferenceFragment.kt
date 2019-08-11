@@ -30,7 +30,6 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
-import com.pyamsoft.pydroid.ui.app.requireView
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
@@ -93,9 +92,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     Injector.obtain<PYDroidComponent>(view.context.applicationContext)
         .plusSettingsComponent()
         .create(
-            requireActivity(), listView, viewLifecycleOwner, preferenceScreen,
+            requireActivity(), viewLifecycleOwner, preferenceScreen,
             hideClearAll, hideUpgradeInformation
-        )
+        ) { listView }
         .inject(this)
 
     createComponent(

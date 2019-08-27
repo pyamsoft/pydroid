@@ -37,7 +37,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.toDp
-import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
@@ -155,10 +154,8 @@ object Snackbreak {
         ?.find { id == it.id }
         ?.instance
     if (instance == null) {
-      Timber.d("Caching Snackbreak for later: $id")
       cacheInstance(lifecycle, id, withInstance)
     } else {
-      Timber.d("Continue existing Snackbreak: $id")
       withInstance(instance)
     }
   }
@@ -170,7 +167,6 @@ object Snackbreak {
     withInstance: Instance.() -> Unit
   ) {
     if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
-      Timber.w("Snackbreak is destroyed, cannot continue calling it")
       return
     }
 
@@ -184,7 +180,6 @@ object Snackbreak {
           lifecycle.removeObserver(this)
           cache.remove(lifecycle)
               ?.forEach { entry ->
-                Timber.d("Destroy Snackbreak: ${entry.id}")
                 entry.instance.onDestroy()
               }
         }

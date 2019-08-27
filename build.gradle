@@ -19,7 +19,7 @@
 
 buildscript {
   ext {
-    kotlin_version = '1.3.41'
+    kotlin_version = '1.3.50'
     dokka_version = "0.9.17"
   }
   repositories {
@@ -34,7 +34,7 @@ buildscript {
     minSdk = 22
     maxSdk = 29
 
-    coroutines = "1.3.0-M1"
+    coroutines = "1.3.0"
 
     // AndroidX
     core = "1.0.2"

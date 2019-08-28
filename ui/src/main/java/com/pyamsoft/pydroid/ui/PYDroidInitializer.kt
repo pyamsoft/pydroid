@@ -24,6 +24,7 @@ import timber.log.Timber
 internal class PYDroidInitializer internal constructor(
   application: Application,
   applicationName: String,
+  viewSourceUrl: String,
   bugReportUrl: String,
   currentVersion: Int,
   debug: Boolean
@@ -35,6 +36,7 @@ internal class PYDroidInitializer internal constructor(
   init {
     if (debug) {
       Timber.plant(Timber.DebugTree())
+      setStrictMode()
     }
 
     val impl = PYDroidComponent.ComponentImpl.FactoryImpl()
@@ -42,6 +44,7 @@ internal class PYDroidInitializer internal constructor(
             application,
             debug,
             applicationName,
+            viewSourceUrl,
             bugReportUrl,
             currentVersion
         )

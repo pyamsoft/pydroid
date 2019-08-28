@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.app
 
-import android.os.Bundle
-import android.view.View
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 
@@ -35,15 +33,5 @@ val Fragment.toolbarActivity: ToolbarActivity?
 @CheckResult
 fun Fragment.requireToolbarActivity(): ToolbarActivity {
   return requireNotNull(toolbarActivity) { "ToolbarActivity is required and cannot be null." }
-}
-
-@CheckResult
-fun Fragment.requireView(): View {
-  return checkNotNull(view) { "View is required and cannot be null." }
-}
-
-@CheckResult
-fun Fragment.requireArguments(): Bundle {
-  return checkNotNull(arguments) { "Arguments are required and cannot be null." }
 }
 

@@ -49,6 +49,7 @@ internal interface AppSettingsComponent {
     private val owner: LifecycleOwner,
     private val applicationName: String,
     private val bugReportUrl: String,
+    private val viewSourceUrl: String,
     private val hideClearAll: Boolean,
     private val hideUpgradeInformation: Boolean,
     private val preferenceScreen: PreferenceScreen,
@@ -59,7 +60,7 @@ internal interface AppSettingsComponent {
       val versionView = VersionView(owner, parentProvider)
       val settingsView = AppSettingsView(
           activity, applicationName, bugReportUrl,
-          hideClearAll, hideUpgradeInformation,
+          viewSourceUrl, hideClearAll, hideUpgradeInformation,
           preferenceScreen
       )
 
@@ -71,6 +72,7 @@ internal interface AppSettingsComponent {
     internal class FactoryImpl internal constructor(
       private val applicationName: String,
       private val bugReportUrl: String,
+      private val viewSourceUrl: String,
       private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
 
@@ -84,7 +86,7 @@ internal interface AppSettingsComponent {
       ): AppSettingsComponent {
         return Impl(
             activity, parentProvider, owner, applicationName, bugReportUrl,
-            hideClearAll, hideUpgradeInformation, preferenceScreen,
+            viewSourceUrl, hideClearAll, hideUpgradeInformation, preferenceScreen,
             factoryProvider
         )
       }

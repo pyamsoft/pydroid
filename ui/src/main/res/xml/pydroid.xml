@@ -15,12 +15,12 @@
   ~
   -->
 
-<PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-  <PreferenceCategory android:key="application_settings">
+  <androidx.preference.PreferenceCategory android:key="application_settings">
 
     <com.pyamsoft.pydroid.ui.preference.ListPreferenceCompat
         android:dialogTitle="@string/dark_mode_title"
@@ -42,7 +42,7 @@
         android:key="@string/check_version_key"
         android:summary="@string/check_version_summary"
         android:title="@string/check_version_title"
-        app:iconCompat="@drawable/ic_code_24dp"
+        app:iconCompat="@drawable/ic_get_app_24dp"
         />
 
     <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
@@ -59,9 +59,9 @@
         app:iconCompat="@drawable/ic_warning_24dp"
         />
 
-  </PreferenceCategory>
+  </androidx.preference.PreferenceCategory>
 
-  <PreferenceCategory
+  <androidx.preference.PreferenceCategory
       android:key="@string/support_pyamsoft"
       android:title="@string/support_pyamsoft">
 
@@ -79,9 +79,16 @@
         app:iconCompat="@drawable/ic_bug_report_24dp"
         />
 
-  </PreferenceCategory>
+    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+        android:key="@string/view_source_key"
+        android:summary="@string/view_source_summary"
+        android:title="@string/view_source_title"
+        app:iconCompat="@drawable/ic_code_24dp"
+        />
 
-  <PreferenceCategory
+  </androidx.preference.PreferenceCategory>
+
+  <androidx.preference.PreferenceCategory
       android:key="@string/more_apps_from_pyamsoft"
       android:title="@string/more_apps_from_pyamsoft">
 
@@ -89,12 +96,12 @@
         android:key="@string/more_apps_key"
         android:summary="@string/more_apps_summary"
         android:title="@string/more_apps_title"
-        app:iconCompat="@drawable/ic_get_app_24dp"
+        app:iconCompat="@drawable/ic_library_add_24dp"
         />
 
-  </PreferenceCategory>
+  </androidx.preference.PreferenceCategory>
 
-  <PreferenceCategory
+  <androidx.preference.PreferenceCategory
       android:key="@string/follow_pyamsoft_around_the_web"
       android:title="@string/follow_pyamsoft_around_the_web">
 
@@ -110,6 +117,6 @@
         android:title="@string/social_media_b_title"
         />
 
-  </PreferenceCategory>
+  </androidx.preference.PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

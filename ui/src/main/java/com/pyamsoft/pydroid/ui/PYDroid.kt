@@ -62,6 +62,7 @@ object PYDroid {
   fun init(
     application: Application,
     applicationName: String,
+    viewSourceUrl: String,
     bugReportUrl: String,
     currentVersion: Int,
     debug: Boolean,
@@ -71,6 +72,7 @@ object PYDroid {
       val pydroid = PYDroidInitializer(
           application,
           applicationName,
+          viewSourceUrl,
           bugReportUrl,
           currentVersion,
           debug

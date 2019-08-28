@@ -35,7 +35,6 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
-import com.pyamsoft.pydroid.ui.app.requireArguments
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.util.commit

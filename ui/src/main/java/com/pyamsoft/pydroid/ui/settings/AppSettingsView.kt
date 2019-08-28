@@ -42,6 +42,7 @@ internal class AppSettingsView internal constructor(
   private val activity: Activity,
   private val applicationName: String,
   private val bugReportUrl: String,
+  private val viewSourceUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean,
   preferenceScreen: PreferenceScreen
@@ -54,6 +55,7 @@ internal class AppSettingsView internal constructor(
   private val followBlog by boundPref<Preference>(R.string.social_media_b_key)
   private val rate by boundPref<Preference>(R.string.rating_key)
   private val bugReport by boundPref<Preference>(R.string.bugreport_key)
+  private val viewSource by boundPref<Preference>(R.string.view_source_key)
   private val licenses by boundPref<Preference>(R.string.about_license_key)
   private val version by boundPref<Preference>(R.string.check_version_key)
   private val clearAll by boundPref<Preference>(R.string.clear_all_key)
@@ -65,10 +67,11 @@ internal class AppSettingsView internal constructor(
     preferenceScreen: PreferenceScreen,
     savedInstanceState: Bundle?
   ) {
-    setupApplicationTitle(applicationName)
-    setupBugReport(bugReportUrl)
-    setupClearAppData(hideClearAll)
-    setupShowUpgradeInfo(hideUpgradeInformation)
+    setupApplicationTitle()
+    setupBugReport()
+    setupViewSource()
+    setupClearAppData()
+    setupShowUpgradeInfo()
     setupMoreApps()
     setupBlog()
     setupCheckUpgrade()
@@ -91,6 +94,7 @@ internal class AppSettingsView internal constructor(
     followBlog.onPreferenceClickListener = null
     rate.onPreferenceClickListener = null
     bugReport.onPreferenceClickListener = null
+    viewSource.onPreferenceClickListener = null
     licenses.onPreferenceClickListener = null
     version.onPreferenceClickListener = null
     clearAll.onPreferenceClickListener = null
@@ -120,6 +124,14 @@ internal class AppSettingsView internal constructor(
               if (darkTheme) R.color.white else R.color.black
           )
       )
+    }
+  }
+
+  private fun setupViewSource() {
+    val sourceLink = viewSourceUrl.hyperlink(activity)
+    viewSource.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+      publish(Hyperlink(sourceLink))
+      return@OnPreferenceClickListener true
     }
   }
 
@@ -153,7 +165,7 @@ internal class AppSettingsView internal constructor(
     }
   }
 
-  private fun setupBugReport(bugReportUrl: String) {
+  private fun setupBugReport() {
     val reportLink = bugReportUrl.hyperlink(activity)
     bugReport.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(reportLink))
@@ -175,7 +187,7 @@ internal class AppSettingsView internal constructor(
     }
   }
 
-  private fun setupClearAppData(hideClearAll: Boolean) {
+  private fun setupClearAppData() {
     if (hideClearAll) {
       clearAll.isVisible = false
     } else {
@@ -186,7 +198,7 @@ internal class AppSettingsView internal constructor(
     }
   }
 
-  private fun setupShowUpgradeInfo(hideUpgradeInformation: Boolean) {
+  private fun setupShowUpgradeInfo() {
     if (hideUpgradeInformation) {
       upgradeInfo.isVisible = false
     } else {
@@ -207,7 +219,7 @@ internal class AppSettingsView internal constructor(
     }
   }
 
-  private fun setupApplicationTitle(applicationName: String) {
+  private fun setupApplicationTitle() {
     applicationGroup.title = "$applicationName Settings"
   }
 

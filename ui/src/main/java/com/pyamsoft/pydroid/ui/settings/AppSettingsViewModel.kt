@@ -40,8 +40,8 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
 
 internal class AppSettingsViewModel internal constructor(
-  activity: Activity,
-  private val theming: Theming
+  private val theming: Theming,
+  activity: Activity
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
     initialState = AppSettingsViewState(
         isDarkTheme = theming.isDarkTheme(activity), throwable = null

@@ -47,7 +47,7 @@ internal class PYDroidViewModelFactory internal constructor(
       AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
       RatingViewModel::class -> RatingViewModel(ratingInteractor)
       RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
-      AppSettingsViewModel::class -> AppSettingsViewModel(activity, theming)
+      AppSettingsViewModel::class -> AppSettingsViewModel(theming, activity)
       VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
       VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
       else -> fail()

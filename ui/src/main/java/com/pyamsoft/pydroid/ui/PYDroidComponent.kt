@@ -61,6 +61,7 @@ internal interface PYDroidComponent {
       application: Application,
       debug: Boolean,
       applicationName: String,
+      viewSourceUrl: String,
       bugReportUrl: String,
       currentVersion: Int
     ): ComponentImpl
@@ -71,6 +72,7 @@ internal interface PYDroidComponent {
     application: Application,
     debug: Boolean,
     private val name: String,
+    private val sourceUrl: String,
     private val reportUrl: String,
     private val version: Int
   ) : PYDroidComponent, ModuleProvider {
@@ -119,7 +121,9 @@ internal interface PYDroidComponent {
     }
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
-      return AppSettingsComponent.Impl.FactoryImpl(name, reportUrl) { viewModelFactory(it) }
+      return AppSettingsComponent.Impl.FactoryImpl(name, reportUrl, sourceUrl) {
+        viewModelFactory(it)
+      }
     }
 
     override fun enforcer(): Enforcer {
@@ -140,10 +144,18 @@ internal interface PYDroidComponent {
         application: Application,
         debug: Boolean,
         applicationName: String,
+        viewSourceUrl: String,
         bugReportUrl: String,
         currentVersion: Int
       ): ComponentImpl {
-        return ComponentImpl(application, debug, applicationName, bugReportUrl, currentVersion)
+        return ComponentImpl(
+            application,
+            debug,
+            applicationName,
+            viewSourceUrl,
+            bugReportUrl,
+            currentVersion
+        )
       }
 
     }

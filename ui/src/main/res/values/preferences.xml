@@ -41,6 +41,10 @@
   <string name="bugreport_title">Submit a Bug Report</string>
   <string name="bugreport_summary">Something not working right? Help me help you!</string>
 
+  <string name="view_source_key">view_source</string>
+  <string name="view_source_title">View Source Code</string>
+  <string name="view_source_summary">We love open source! View the source code of this app!</string>
+
   <string name="more_apps_key">more_apps</string>
   <string name="more_apps_title">@string/more_apps_from_pyamsoft</string>
   <string name="more_apps_summary">See more great Apps from pyamsoft!</string>

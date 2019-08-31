@@ -27,6 +27,9 @@ import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
+import com.pyamsoft.pydroid.ui.privacy.PrivacyEventBus
+import com.pyamsoft.pydroid.ui.privacy.PrivacyEvents.ViewPrivacyPolicy
+import com.pyamsoft.pydroid.ui.privacy.PrivacyEvents.ViewTermsAndConditions
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearData
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.Hyperlink
@@ -39,15 +42,18 @@ import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
-  private val activity: Activity,
+  activity: Activity,
   private val applicationName: String,
   private val bugReportUrl: String,
   private val viewSourceUrl: String,
+  private val privacyPolicyUrl: String,
+  private val termsConditionsUrl: String,
   private val hideClearAll: Boolean,
   private val hideUpgradeInformation: Boolean,
   preferenceScreen: PreferenceScreen
 ) : PrefUiView<AppSettingsViewState, AppSettingsViewEvent>(preferenceScreen) {
 
+  private var activity: Activity? = activity
   private var preferenceScreen: PreferenceScreen? = preferenceScreen
 
   private val moreApps by boundPref<Preference>(R.string.more_apps_key)
@@ -61,6 +67,8 @@ internal class AppSettingsView internal constructor(
   private val clearAll by boundPref<Preference>(R.string.clear_all_key)
   private val upgradeInfo by boundPref<Preference>(R.string.upgrade_info_key)
   private val theme by boundPref<ListPreference>(R.string.dark_mode_key)
+  private val privacyPolicy by boundPref<Preference>(R.string.view_privacy_key)
+  private val termsConditions by boundPref<Preference>(R.string.view_terms_key)
   private val applicationGroup by boundPref<Preference>("application_settings")
 
   override fun onInflated(
@@ -79,6 +87,8 @@ internal class AppSettingsView internal constructor(
     setupLicenses()
     setupRateApp()
     setupSocial()
+    setupPrivacyPolicy()
+    setupTermsConditions()
   }
 
   override fun onRender(
@@ -100,7 +110,11 @@ internal class AppSettingsView internal constructor(
     clearAll.onPreferenceClickListener = null
     upgradeInfo.onPreferenceClickListener = null
     theme.onPreferenceClickListener = null
+    privacyPolicy.onPreferenceClickListener = null
+    termsConditions.onPreferenceClickListener = null
+
     preferenceScreen = null
+    activity = null
   }
 
   private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {
@@ -127,8 +141,22 @@ internal class AppSettingsView internal constructor(
     }
   }
 
+  private fun setupPrivacyPolicy() {
+    privacyPolicy.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+      PrivacyEventBus.publish(ViewPrivacyPolicy(privacyPolicyUrl))
+      return@OnPreferenceClickListener true
+    }
+  }
+
+  private fun setupTermsConditions() {
+    termsConditions.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+      PrivacyEventBus.publish(ViewTermsAndConditions(termsConditionsUrl))
+      return@OnPreferenceClickListener true
+    }
+  }
+
   private fun setupViewSource() {
-    val sourceLink = viewSourceUrl.hyperlink(activity)
+    val sourceLink = viewSourceUrl.hyperlink(requireNotNull(activity))
     viewSource.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(sourceLink))
       return@OnPreferenceClickListener true
@@ -143,7 +171,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupSocial() {
-    val socialLink = FACEBOOK.hyperlink(activity)
+    val socialLink = FACEBOOK.hyperlink(requireNotNull(activity))
     social.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(socialLink))
       return@OnPreferenceClickListener true
@@ -151,7 +179,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBlog() {
-    val blogLink = BLOG.hyperlink(activity)
+    val blogLink = BLOG.hyperlink(requireNotNull(activity))
     followBlog.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(blogLink))
       return@OnPreferenceClickListener true
@@ -166,7 +194,7 @@ internal class AppSettingsView internal constructor(
   }
 
   private fun setupBugReport() {
-    val reportLink = bugReportUrl.hyperlink(activity)
+    val reportLink = bugReportUrl.hyperlink(requireNotNull(activity))
     bugReport.onPreferenceClickListener = Preference.OnPreferenceClickListener {
       publish(Hyperlink(reportLink))
       return@OnPreferenceClickListener true
@@ -212,7 +240,7 @@ internal class AppSettingsView internal constructor(
   private fun setupDarkTheme() {
     theme.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
       if (newValue is String) {
-        publish(ToggleDarkTheme(activity, newValue))
+        publish(ToggleDarkTheme(requireNotNull(activity), newValue))
         return@OnPreferenceChangeListener true
       }
       return@OnPreferenceChangeListener false

@@ -27,6 +27,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
@@ -133,6 +134,23 @@ class AboutFragment : Fragment() {
       fragment: Fragment,
       @IdRes container: Int
     ) {
+      show(fragment.viewLifecycleOwner, requireNotNull(fragment.fragmentManager), container)
+    }
+
+    @JvmStatic
+    fun show(
+      activity: FragmentActivity,
+      @IdRes container: Int
+    ) {
+      show(activity, activity.supportFragmentManager, container)
+    }
+
+    @JvmStatic
+    fun show(
+      owner: LifecycleOwner,
+      fragmentManager: FragmentManager,
+      @IdRes container: Int
+    ) {
       // If you're using this function, all of these are available
       OssLibraries.BOOTSTRAP = true
       OssLibraries.UTIL = true
@@ -140,10 +158,9 @@ class AboutFragment : Fragment() {
       OssLibraries.LOADER = true
       OssLibraries.UI = true
 
-      val fragmentManager = requireNotNull(fragment.fragmentManager)
       val backStackCount = fragmentManager.backStackEntryCount
       if (fragmentManager.findFragmentByTag(TAG) == null) {
-        fragmentManager.commit(fragment) {
+        fragmentManager.commit(owner) {
           replace(container, newInstance(backStackCount), TAG)
           addToBackStack(null)
         }

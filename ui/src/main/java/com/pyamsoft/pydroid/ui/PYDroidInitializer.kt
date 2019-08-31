@@ -26,6 +26,8 @@ internal class PYDroidInitializer internal constructor(
   applicationName: String,
   viewSourceUrl: String,
   bugReportUrl: String,
+  privacyPolicyUrl: String,
+  termsConditionsUrl: String,
   currentVersion: Int,
   debug: Boolean
 ) {
@@ -46,6 +48,8 @@ internal class PYDroidInitializer internal constructor(
             applicationName,
             viewSourceUrl,
             bugReportUrl,
+            privacyPolicyUrl,
+            termsConditionsUrl,
             currentVersion
         )
     component = impl

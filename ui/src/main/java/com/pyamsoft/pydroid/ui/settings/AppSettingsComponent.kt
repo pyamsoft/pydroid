@@ -50,6 +50,8 @@ internal interface AppSettingsComponent {
     private val applicationName: String,
     private val bugReportUrl: String,
     private val viewSourceUrl: String,
+    private val privacyPolicyUrl: String,
+    private val termsConditionsUrl: String,
     private val hideClearAll: Boolean,
     private val hideUpgradeInformation: Boolean,
     private val preferenceScreen: PreferenceScreen,
@@ -60,8 +62,8 @@ internal interface AppSettingsComponent {
       val versionView = VersionView(owner, parentProvider)
       val settingsView = AppSettingsView(
           activity, applicationName, bugReportUrl,
-          viewSourceUrl, hideClearAll, hideUpgradeInformation,
-          preferenceScreen
+          viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
+          hideClearAll, hideUpgradeInformation, preferenceScreen
       )
 
       fragment.versionView = versionView
@@ -73,6 +75,8 @@ internal interface AppSettingsComponent {
       private val applicationName: String,
       private val bugReportUrl: String,
       private val viewSourceUrl: String,
+      private val privacyPolicyUrl: String,
+      private val termsConditionsUrl: String,
       private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
     ) : Factory {
 
@@ -86,7 +90,8 @@ internal interface AppSettingsComponent {
       ): AppSettingsComponent {
         return Impl(
             activity, parentProvider, owner, applicationName, bugReportUrl,
-            viewSourceUrl, hideClearAll, hideUpgradeInformation, preferenceScreen,
+            viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
+            hideClearAll, hideUpgradeInformation, preferenceScreen,
             factoryProvider
         )
       }

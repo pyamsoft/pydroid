@@ -64,6 +64,8 @@ object PYDroid {
     applicationName: String,
     viewSourceUrl: String,
     bugReportUrl: String,
+    privacyPolicyUrl: String,
+    termsConditionsUrl: String,
     currentVersion: Int,
     debug: Boolean,
     onInit: (provider: ModuleProvider) -> Unit = DEFAULT_INIT_CALLBACK
@@ -74,6 +76,8 @@ object PYDroid {
           applicationName,
           viewSourceUrl,
           bugReportUrl,
+          privacyPolicyUrl,
+          termsConditionsUrl,
           currentVersion,
           debug
       )

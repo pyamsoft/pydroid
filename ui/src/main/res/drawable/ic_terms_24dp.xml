@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
@@ -17,18 +15,12 @@
   ~
   -->
 
-<resources>
-
-  <string name="blank"/>
-  <string name="no_thanks">No Thanks</string>
-
-  <string name="support_pyamsoft">Support pyamsoft</string>
-  <string name="rate_application">Rate Application</string>
-
-  <string name="privacy_policy">View Privacy Policy</string>
-  <string name="terms_conditions">View Terms &amp; Conditions</string>
-
-  <string name="more_apps_from_pyamsoft">More apps from pyamsoft</string>
-  <string name="follow_pyamsoft_around_the_web">Follow pyamsoft around the web</string>
-
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="24dp"
+    android:viewportHeight="24"
+    android:viewportWidth="24"
+    android:width="24dp">
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M12,7L12,3L2,3v18h20L22,7L12,7zM6,19L4,19v-2h2v2zM6,15L4,15v-2h2v2zM6,11L4,11L4,9h2v2zM6,7L4,7L4,5h2v2zM10,19L8,19v-2h2v2zM10,15L8,15v-2h2v2zM10,11L8,11L8,9h2v2zM10,7L8,7L8,5h2v2zM20,19h-8v-2h2v-2h-2v-2h2v-2h-2L12,9h8v10zM18,11h-2v2h2v-2zM18,15h-2v2h2v-2z"/>
+</vector>

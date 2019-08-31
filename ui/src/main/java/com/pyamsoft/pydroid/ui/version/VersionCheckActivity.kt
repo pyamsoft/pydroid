@@ -18,24 +18,21 @@
 package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.runWhenReady
 
-abstract class VersionCheckActivity : ActivityBase() {
+abstract class VersionCheckActivity : PrivacyActivity() {
 
   protected open val checkForUpdates: Boolean = true
-
-  protected abstract val snackbarRoot: ViewGroup
 
   internal var versionFactory: ViewModelProvider.Factory? = null
   internal var versionView: VersionView? = null

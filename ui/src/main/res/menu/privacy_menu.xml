@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +15,19 @@
   ~
   -->
 
-<resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-  <string name="blank"/>
-  <string name="no_thanks">No Thanks</string>
+  <item xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:id="@+id/menu_id_privacy_policy"
+      android:title="@string/privacy_policy"
+      app:showAsAction="never"
+      tools:ignore="AppCompatResource"/>
 
-  <string name="support_pyamsoft">Support pyamsoft</string>
-  <string name="rate_application">Rate Application</string>
+  <item xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:id="@+id/menu_id_t_c"
+      android:title="@string/terms_conditions"
+      app:showAsAction="never"
+      tools:ignore="AppCompatResource"/>
 
-  <string name="privacy_policy">View Privacy Policy</string>
-  <string name="terms_conditions">View Terms &amp; Conditions</string>
-
-  <string name="more_apps_from_pyamsoft">More apps from pyamsoft</string>
-  <string name="follow_pyamsoft_around_the_web">Follow pyamsoft around the web</string>
-
-</resources>
+</menu>

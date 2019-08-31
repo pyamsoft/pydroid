@@ -26,9 +26,11 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
   /**
    * The main view container for all page level fragment transactions
    */
-  @Suppress("unused")
   abstract val fragmentContainerId: Int
 
+  /**
+   * Activity level toolbar, similar to ActionBar
+   */
   private var capturedToolbar: Toolbar? = null
 
   @CallSuper

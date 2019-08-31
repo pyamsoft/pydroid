@@ -45,6 +45,14 @@
   <string name="view_source_title">View Source Code</string>
   <string name="view_source_summary">We love open source! View the source code of this app!</string>
 
+  <string name="view_privacy_key">view_privacy</string>
+  <string name="view_privacy_title">@string/privacy_policy</string>
+  <string name="view_privacy_summary">Read our Privacy Policy!</string>
+
+  <string name="view_terms_key">view_terms</string>
+  <string name="view_terms_title">@string/terms_conditions</string>
+  <string name="view_terms_summary">Read our Terms &amp; Conditions!</string>
+
   <string name="more_apps_key">more_apps</string>
   <string name="more_apps_title">@string/more_apps_from_pyamsoft</string>
   <string name="more_apps_summary">See more great Apps from pyamsoft!</string>

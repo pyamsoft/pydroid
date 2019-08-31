@@ -86,6 +86,20 @@
         app:iconCompat="@drawable/ic_code_24dp"
         />
 
+    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+        android:key="@string/view_privacy_key"
+        android:summary="@string/view_privacy_summary"
+        android:title="@string/view_privacy_title"
+        app:iconCompat="@drawable/ic_policy_24dp"
+        />
+
+    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+        android:key="@string/view_terms_key"
+        android:summary="@string/view_terms_summary"
+        android:title="@string/view_terms_title"
+        app:iconCompat="@drawable/ic_terms_24dp"
+        />
+
   </androidx.preference.PreferenceCategory>
 
   <androidx.preference.PreferenceCategory

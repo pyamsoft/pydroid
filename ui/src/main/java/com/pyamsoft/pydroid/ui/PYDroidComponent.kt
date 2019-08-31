@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
+import com.pyamsoft.pydroid.ui.privacy.PrivacyComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -35,6 +36,9 @@ import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 
 internal interface PYDroidComponent {
+
+  @CheckResult
+  fun plusPrivacy(): PrivacyComponent.Factory
 
   @CheckResult
   fun plusAbout(): AboutComponent.Factory
@@ -63,6 +67,8 @@ internal interface PYDroidComponent {
       applicationName: String,
       viewSourceUrl: String,
       bugReportUrl: String,
+      privacyPolicyUrl: String,
+      termsConditionsUrl: String,
       currentVersion: Int
     ): ComponentImpl
 
@@ -74,6 +80,8 @@ internal interface PYDroidComponent {
     private val name: String,
     private val sourceUrl: String,
     private val reportUrl: String,
+    private val privacyPolicyUrl: String,
+    private val termsConditionsUrl: String,
     private val version: Int
   ) : PYDroidComponent, ModuleProvider {
 
@@ -100,6 +108,10 @@ internal interface PYDroidComponent {
       )
     }
 
+    override fun plusPrivacy(): PrivacyComponent.Factory {
+      return PrivacyComponent.Impl.FactoryImpl { viewModelFactory(it) }
+    }
+
     override fun plusAbout(): AboutComponent.Factory {
       return AboutComponent.Impl.FactoryImpl { viewModelFactory(it) }
     }
@@ -121,9 +133,9 @@ internal interface PYDroidComponent {
     }
 
     override fun plusSettingsComponent(): AppSettingsComponent.Factory {
-      return AppSettingsComponent.Impl.FactoryImpl(name, reportUrl, sourceUrl) {
-        viewModelFactory(it)
-      }
+      return AppSettingsComponent.Impl.FactoryImpl(
+          name, reportUrl, sourceUrl, privacyPolicyUrl, termsConditionsUrl
+      ) { viewModelFactory(it) }
     }
 
     override fun enforcer(): Enforcer {
@@ -146,6 +158,8 @@ internal interface PYDroidComponent {
         applicationName: String,
         viewSourceUrl: String,
         bugReportUrl: String,
+        privacyPolicyUrl: String,
+        termsConditionsUrl: String,
         currentVersion: Int
       ): ComponentImpl {
         return ComponentImpl(
@@ -154,6 +168,8 @@ internal interface PYDroidComponent {
             applicationName,
             viewSourceUrl,
             bugReportUrl,
+            privacyPolicyUrl,
+            termsConditionsUrl,
             currentVersion
         )
       }

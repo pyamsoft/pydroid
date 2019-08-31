@@ -48,7 +48,13 @@ internal class AppSettingsViewModel internal constructor(
     )
 ) {
 
+  private var activity: Activity? = activity
+
   override fun onInit() {
+  }
+
+  override fun onTeardown() {
+    activity = null
   }
 
   override fun handleViewEvent(event: AppSettingsViewEvent) {

@@ -17,14 +17,21 @@
 
 package com.pyamsoft.pydroid.loader
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 
 internal class ImageLoaderImpl internal constructor(
+  private val context: Context
 ) : ImageLoader {
 
   override fun load(@DrawableRes resource: Int): Loader<Drawable> {
     return GlideResourceLoader(resource)
+  }
+
+  override fun immediate(resource: Int): Drawable {
+    return requireNotNull(AppCompatResources.getDrawable(context, resource))
   }
 
 }

@@ -21,6 +21,9 @@ dependencies {
   implementation "com.github.bumptech.glide:glide:$glide"
   kapt "com.github.bumptech.glide:compiler:$glide"
 
+  // AppCompat
+  api "androidx.appcompat:appcompat:$appCompat"
+
   api project(':core')
 }
 

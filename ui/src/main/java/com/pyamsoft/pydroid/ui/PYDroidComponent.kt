@@ -92,7 +92,7 @@ internal interface PYDroidComponent {
     private val packageName = context.packageName
 
     private val aboutModule = AboutModule(enforcer)
-    private val loaderModule = LoaderModule()
+    private val loaderModule = LoaderModule(context)
     private val ratingModule = RatingModule(version, enforcer, preferences)
     private val versionCheckModule =
       VersionCheckModule(debug, version, packageName, enforcer)

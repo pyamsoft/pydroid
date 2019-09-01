@@ -17,4 +17,4 @@
   ~
   -->
 
-<manifest package="com.pyamsoft.pydroid.core"/>
+<manifest package="com.pyamsoft.pydroid.core" />

@@ -24,30 +24,27 @@ import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal class RatingViewModel internal constructor(
-  private val interactor: RatingInteractor
+    private val interactor: RatingInteractor
 ) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
 
-  private val loadRunner = highlander<Unit, Boolean> { force ->
-    val show = interactor.needsToViewRating(force)
-    if (show) {
-      publish(LoadRating)
+    private val loadRunner = highlander<Unit, Boolean> { force ->
+        val show = interactor.needsToViewRating(force)
+        if (show) {
+            publish(LoadRating)
+        }
     }
-  }
 
-  override fun onInit() {
-    load(false)
-  }
+    override fun onInit() {
+        load(false)
+    }
 
-  override fun handleViewEvent(event: UnitViewEvent) {
-  }
+    override fun handleViewEvent(event: UnitViewEvent) {
+    }
 
-  internal fun load(force: Boolean) {
-    viewModelScope.launch { loadRunner.call(force) }
-  }
-
+    internal fun load(force: Boolean) {
+        viewModelScope.launch { loadRunner.call(force) }
+    }
 }

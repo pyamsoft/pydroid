@@ -27,42 +27,42 @@ import com.pyamsoft.pydroid.ui.privacy.PrivacyViewEvent.SnackbarHidden
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class PrivacyView internal constructor(
-  private val owner: LifecycleOwner,
-  private val snackbarRootProvider: () -> ViewGroup
+    private val owner: LifecycleOwner,
+    private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<PrivacyViewState, PrivacyViewEvent>() {
 
-  override fun id(): Int {
-    throw InvalidIdException
-  }
-
-  override fun doInflate(savedInstanceState: Bundle?) {
-  }
-
-  override fun render(
-    state: PrivacyViewState,
-    savedState: UiSavedState
-  ) {
-    state.throwable.let { throwable ->
-      if (throwable == null) {
-        clearError()
-      } else {
-        showError(throwable)
-      }
+    override fun id(): Int {
+        throw InvalidIdException
     }
-  }
 
-  private fun showError(throwable: Throwable) {
-    Snackbreak.bindTo(owner, "error") {
-      short(snackbarRootProvider(),
-          throwable.message ?: "An error occurred while showing policy.",
-          onHidden = { _, _ -> publish(SnackbarHidden) }
-      )
+    override fun doInflate(savedInstanceState: Bundle?) {
     }
-  }
 
-  private fun clearError() {
-    Snackbreak.bindTo(owner, "error") {
-      dismiss()
+    override fun render(
+        state: PrivacyViewState,
+        savedState: UiSavedState
+    ) {
+        state.throwable.let { throwable ->
+            if (throwable == null) {
+                clearError()
+            } else {
+                showError(throwable)
+            }
+        }
     }
-  }
+
+    private fun showError(throwable: Throwable) {
+        Snackbreak.bindTo(owner, "error") {
+            short(snackbarRootProvider(),
+                throwable.message ?: "An error occurred while showing policy.",
+                onHidden = { _, _ -> publish(SnackbarHidden) }
+            )
+        }
+    }
+
+    private fun clearError() {
+        Snackbreak.bindTo(owner, "error") {
+            dismiss()
+        }
+    }
 }

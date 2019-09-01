@@ -21,15 +21,15 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 
 class RatingModule(
-  currentVersion: Int,
-  enforcer: Enforcer,
-  preferences: RatingPreferences
+    currentVersion: Int,
+    enforcer: Enforcer,
+    preferences: RatingPreferences
 ) {
 
-  private val impl = RatingInteractorImpl(currentVersion, enforcer, preferences)
+    private val impl = RatingInteractorImpl(currentVersion, enforcer, preferences)
 
-  @CheckResult
-  fun provideInteractor(): RatingInteractor {
-    return impl
-  }
+    @CheckResult
+    fun provideInteractor(): RatingInteractor {
+        return impl
+    }
 }

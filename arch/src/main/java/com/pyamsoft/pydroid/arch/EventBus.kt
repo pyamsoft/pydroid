@@ -21,18 +21,18 @@ import androidx.annotation.CheckResult
 
 interface EventBus<T : Any> : EventConsumer<T> {
 
-  fun publish(event: T)
+    fun publish(event: T)
 
-  suspend fun send(event: T)
+    suspend fun send(event: T)
 
-  companion object {
+    companion object {
 
-    private val EMPTY by lazy { create<Unit>() }
+        private val EMPTY by lazy { create<Unit>() }
 
-    @CheckResult
-    fun <T : Any> create(): EventBus<T> = RealBus()
+        @CheckResult
+        fun <T : Any> create(): EventBus<T> = RealBus()
 
-    @CheckResult
-    fun empty(): EventBus<Unit> = EMPTY
-  }
+        @CheckResult
+        fun empty(): EventBus<Unit> = EMPTY
+    }
 }

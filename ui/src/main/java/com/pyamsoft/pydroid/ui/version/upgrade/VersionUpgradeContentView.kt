@@ -28,45 +28,44 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
-  private val applicationName: String,
-  private val currentVersion: Int,
-  private val newVersion: Int,
-  parent: ViewGroup
+    private val applicationName: String,
+    private val currentVersion: Int,
+    private val newVersion: Int,
+    parent: ViewGroup
 ) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 
-  private val upgradeMessage by boundView<TextView>(R.id.upgrade_message)
-  private val currentValue by boundView<TextView>(R.id.upgrade_current_value)
-  private val newValue by boundView<TextView>(R.id.upgrade_new_value)
+    private val upgradeMessage by boundView<TextView>(R.id.upgrade_message)
+    private val currentValue by boundView<TextView>(R.id.upgrade_current_value)
+    private val newValue by boundView<TextView>(R.id.upgrade_new_value)
 
-  override val layout: Int = R.layout.version_upgrade_content
+    override val layout: Int = R.layout.version_upgrade_content
 
-  override val layoutRoot by boundView<View>(R.id.version_content_root)
+    override val layoutRoot by boundView<View>(R.id.version_content_root)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onInflated(view, savedInstanceState)
-    upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
-    currentValue.text = "$currentVersion"
-    newValue.text = "$newVersion"
-  }
+    override fun onInflated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onInflated(view, savedInstanceState)
+        upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
+        currentValue.text = "$currentVersion"
+        newValue.text = "$newVersion"
+    }
 
-  override fun onRender(
-    state: VersionUpgradeViewState,
-    savedState: UiSavedState
-  ) {
-  }
+    override fun onRender(
+        state: VersionUpgradeViewState,
+        savedState: UiSavedState
+    ) {
+    }
 
-  override fun onTeardown() {
-    upgradeMessage.text = ""
-    currentValue.text = ""
-    newValue.text = ""
-  }
+    override fun onTeardown() {
+        upgradeMessage.text = ""
+        currentValue.text = ""
+        newValue.text = ""
+    }
 
-  @CheckResult
-  private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
-    return layoutRoot.context.getString(id, *formatArgs)
-  }
-
+    @CheckResult
+    private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
+        return layoutRoot.context.getString(id, *formatArgs)
+    }
 }

@@ -29,43 +29,43 @@ import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : Fragment() {
 
-  private var coordinatorLayout: CoordinatorLayout? = null
+    private var coordinatorLayout: CoordinatorLayout? = null
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.layout_coordinator, container, false)
-  }
-
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-    coordinatorLayout = view.findViewById(R.id.layout_coordinator)
-    showPreferenceFragment()
-  }
-
-  private fun showPreferenceFragment() {
-    val fragmentManager = childFragmentManager
-    val tag: String = provideSettingsTag()
-    if (fragmentManager.findFragmentByTag(tag) == null) {
-      fragmentManager.commit(viewLifecycleOwner) {
-        add(requireNotNull(coordinatorLayout).id, provideSettingsFragment(), tag)
-      }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.layout_coordinator, container, false)
     }
-  }
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    coordinatorLayout = null
-  }
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+        coordinatorLayout = view.findViewById(R.id.layout_coordinator)
+        showPreferenceFragment()
+    }
 
-  @CheckResult
-  abstract fun provideSettingsFragment(): AppSettingsPreferenceFragment
+    private fun showPreferenceFragment() {
+        val fragmentManager = childFragmentManager
+        val tag: String = provideSettingsTag()
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            fragmentManager.commit(viewLifecycleOwner) {
+                add(requireNotNull(coordinatorLayout).id, provideSettingsFragment(), tag)
+            }
+        }
+    }
 
-  @CheckResult
-  abstract fun provideSettingsTag(): String
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coordinatorLayout = null
+    }
+
+    @CheckResult
+    abstract fun provideSettingsFragment(): AppSettingsPreferenceFragment
+
+    @CheckResult
+    abstract fun provideSettingsTag(): String
 }

@@ -26,65 +26,63 @@ import androidx.recyclerview.widget.RecyclerView
  * Floating Action Button behavior which hides button after scroll distance is passed
  */
 class HideOnScrollListener private constructor(
-  private var visible: Boolean,
-  private val distanceThreshold: Int,
-  private val onVisibilityChanged: (Boolean) -> Unit
+    private var visible: Boolean,
+    private val distanceThreshold: Int,
+    private val onVisibilityChanged: (Boolean) -> Unit
 ) : RecyclerView.OnScrollListener() {
 
-  private var distanceScrolled: Int = 0
+    private var distanceScrolled: Int = 0
 
-  override fun onScrolled(
-    recyclerView: RecyclerView,
-    dx: Int,
-    dy: Int
-  ) {
-    super.onScrolled(recyclerView, dx, dy)
-    if (distanceScrolled > distanceThreshold && visible) {
-      // Once we pass minimum distance threshold, and we are currently visible
-      // Then we hide
-      onVisibilityChanged(false)
-      visible = false
-      distanceScrolled = 0
-    } else if (distanceScrolled < -distanceThreshold && !visible) {
-      // Once we pass minimum distance threshold, and we are currently invisible
-      // Then we show
-      onVisibilityChanged(true)
-      visible = true
-      distanceScrolled = 0
-    } else {
-      // Otherwise, we track how much we have scrolled until we cross the threshold
-      if ((visible && dy > 0) || (!visible && dy < 0)) {
-        distanceScrolled += dy
-      }
+    override fun onScrolled(
+        recyclerView: RecyclerView,
+        dx: Int,
+        dy: Int
+    ) {
+        super.onScrolled(recyclerView, dx, dy)
+        if (distanceScrolled > distanceThreshold && visible) {
+            // Once we pass minimum distance threshold, and we are currently visible
+            // Then we hide
+            onVisibilityChanged(false)
+            visible = false
+            distanceScrolled = 0
+        } else if (distanceScrolled < -distanceThreshold && !visible) {
+            // Once we pass minimum distance threshold, and we are currently invisible
+            // Then we show
+            onVisibilityChanged(true)
+            visible = true
+            distanceScrolled = 0
+        } else {
+            // Otherwise, we track how much we have scrolled until we cross the threshold
+            if ((visible && dy > 0) || (!visible && dy < 0)) {
+                distanceScrolled += dy
+            }
+        }
     }
 
-  }
+    companion object {
 
-  companion object {
+        private const val DEFAULT_DISTANCE = 12
 
-    private const val DEFAULT_DISTANCE = 12
+        @JvmStatic
+        @JvmOverloads
+        @CheckResult
+        fun create(
+            startVisible: Boolean,
+            distance: Int = DEFAULT_DISTANCE,
+            onVisibilityChanged: (Boolean) -> Unit
+        ): HideOnScrollListener {
+            return HideOnScrollListener(startVisible, distance, onVisibilityChanged)
+        }
 
-    @JvmStatic
-    @JvmOverloads
-    @CheckResult
-    fun create(
-      startVisible: Boolean,
-      distance: Int = DEFAULT_DISTANCE,
-      onVisibilityChanged: (Boolean) -> Unit
-    ): HideOnScrollListener {
-      return HideOnScrollListener(startVisible, distance, onVisibilityChanged)
+        @JvmStatic
+        @JvmOverloads
+        @CheckResult
+        fun withView(
+            view: View,
+            distance: Int = DEFAULT_DISTANCE,
+            onVisibilityChanged: (Boolean) -> Unit
+        ): HideOnScrollListener {
+            return HideOnScrollListener(view.isVisible, distance, onVisibilityChanged)
+        }
     }
-
-    @JvmStatic
-    @JvmOverloads
-    @CheckResult
-    fun withView(
-      view: View,
-      distance: Int = DEFAULT_DISTANCE,
-      onVisibilityChanged: (Boolean) -> Unit
-    ): HideOnScrollListener {
-      return HideOnScrollListener(view.isVisible, distance, onVisibilityChanged)
-    }
-  }
-
 }

@@ -18,22 +18,19 @@
 
 <merge>
 
-  <FrameLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/spinner_root"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/spinner_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/spinner"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        />
+        <ProgressBar
+            android:id="@+id/spinner"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="invisible" />
 
-  </FrameLayout>
+    </FrameLayout>
 
 </merge>

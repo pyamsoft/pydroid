@@ -22,57 +22,57 @@ import android.os.StrictMode
 import timber.log.Timber
 
 internal class PYDroidInitializer internal constructor(
-  application: Application,
-  applicationName: String,
-  viewSourceUrl: String,
-  bugReportUrl: String,
-  privacyPolicyUrl: String,
-  termsConditionsUrl: String,
-  currentVersion: Int,
-  debug: Boolean
+    application: Application,
+    applicationName: String,
+    viewSourceUrl: String,
+    bugReportUrl: String,
+    privacyPolicyUrl: String,
+    termsConditionsUrl: String,
+    currentVersion: Int,
+    debug: Boolean
 ) {
 
-  internal val component: PYDroidComponent
-  internal val moduleProvider: ModuleProvider
+    internal val component: PYDroidComponent
+    internal val moduleProvider: ModuleProvider
 
-  init {
-    if (debug) {
-      Timber.plant(Timber.DebugTree())
-      setStrictMode()
+    init {
+        if (debug) {
+            Timber.plant(Timber.DebugTree())
+            setStrictMode()
+        }
+
+        val impl = PYDroidComponent.ComponentImpl.FactoryImpl()
+            .create(
+                application,
+                debug,
+                applicationName,
+                viewSourceUrl,
+                bugReportUrl,
+                privacyPolicyUrl,
+                termsConditionsUrl,
+                currentVersion
+            )
+        component = impl
+        moduleProvider = impl
     }
 
-    val impl = PYDroidComponent.ComponentImpl.FactoryImpl()
-        .create(
-            application,
-            debug,
-            applicationName,
-            viewSourceUrl,
-            bugReportUrl,
-            privacyPolicyUrl,
-            termsConditionsUrl,
-            currentVersion
-        )
-    component = impl
-    moduleProvider = impl
-  }
+    companion object {
 
-  companion object {
-
-    @JvmStatic
-    private fun setStrictMode() {
-      StrictMode.setThreadPolicy(
-          StrictMode.ThreadPolicy.Builder()
-              .detectAll()
-              .penaltyLog()
-              .penaltyFlashScreen()
-              .build()
-      )
-      StrictMode.setVmPolicy(
-          StrictMode.VmPolicy.Builder()
-              .detectAll()
-              .penaltyLog()
-              .build()
-      )
+        @JvmStatic
+        private fun setStrictMode() {
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .penaltyFlashScreen()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+        }
     }
-  }
 }

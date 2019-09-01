@@ -16,13 +16,13 @@
  */
 
 dependencies {
-  // AndroidX Lifecycle
-  api "androidx.lifecycle:lifecycle-runtime:$lifecycle"
+    // AndroidX Lifecycle
+    api "androidx.lifecycle:lifecycle-runtime:$lifecycle"
 
-  // Timber logging
-  api "com.jakewharton.timber:timber:$timber"
+    // Timber logging
+    api "com.jakewharton.timber:timber:$timber"
 
-  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 

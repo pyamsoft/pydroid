@@ -27,30 +27,30 @@ import com.pyamsoft.pydroid.ui.R
 
 class PreferenceCompat : Preference {
 
-  constructor(context: Context) : this(context, null)
+    constructor(context: Context) : this(context, null)
 
-  constructor(
-    context: Context,
-    attrs: AttributeSet?
-  ) : this(
-      context, attrs, context.getStyledAttr(
-      R.attr.preferenceStyle,
-      android.R.attr.preferenceStyle
-  )
-  )
+    constructor(
+        context: Context,
+        attrs: AttributeSet?
+    ) : this(
+        context, attrs, context.getStyledAttr(
+            R.attr.preferenceStyle,
+            android.R.attr.preferenceStyle
+        )
+    )
 
-  constructor(
-    context: Context,
-    attrs: AttributeSet?,
-    defStyleAttr: Int
-  ) : this(context, attrs, defStyleAttr, 0)
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : this(context, attrs, defStyleAttr, 0)
 
-  constructor(
-    context: Context,
-    attrs: AttributeSet?,
-    defStyleAttr: Int,
-    defStyleRes: Int
-  ) : super(context, attrs, defStyleAttr, defStyleRes) {
-    loadIconCompat(attrs)
-  }
+    constructor(
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) : super(context, attrs, defStyleAttr, defStyleRes) {
+        loadIconCompat(attrs)
+    }
 }

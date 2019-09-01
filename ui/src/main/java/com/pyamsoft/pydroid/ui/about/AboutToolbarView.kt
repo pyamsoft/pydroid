@@ -27,61 +27,60 @@ import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
 internal class AboutToolbarView internal constructor(
-  private val backstackCount: Int,
-  private val toolbarActivity: ToolbarActivity
+    private val backstackCount: Int,
+    private val toolbarActivity: ToolbarActivity
 ) : UiView<AboutToolbarState, AboutToolbarViewEvent>() {
 
-  private var oldTitle: CharSequence? = null
+    private var oldTitle: CharSequence? = null
 
-  override fun id(): Int {
-    throw InvalidIdException
-  }
-
-  override fun doInflate(savedInstanceState: Bundle?) {
-    if (savedInstanceState != null) {
-      oldTitle = savedInstanceState.getCharSequence(KEY_OLD_TITLE)
+    override fun id(): Int {
+        throw InvalidIdException
     }
 
-    toolbarActivity.withToolbar { toolbar ->
-      if (oldTitle == null) {
-        oldTitle = toolbar.title
-      }
+    override fun doInflate(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            oldTitle = savedInstanceState.getCharSequence(KEY_OLD_TITLE)
+        }
 
-      toolbar.setUpEnabled(true)
-      toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create { publish(UpNavigate) })
+        toolbarActivity.withToolbar { toolbar ->
+            if (oldTitle == null) {
+                oldTitle = toolbar.title
+            }
+
+            toolbar.setUpEnabled(true)
+            toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create { publish(UpNavigate) })
+        }
     }
-  }
 
-  override fun render(
-    state: AboutToolbarState,
-    savedState: UiSavedState
-  ) {
-    toolbarActivity.withToolbar { toolbar ->
-      toolbar.title = state.title
+    override fun render(
+        state: AboutToolbarState,
+        savedState: UiSavedState
+    ) {
+        toolbarActivity.withToolbar { toolbar ->
+            toolbar.title = state.title
+        }
     }
-  }
 
-  override fun doTeardown() {
-    toolbarActivity.withToolbar { toolbar ->
-      // Set title back to original
-      toolbar.title = oldTitle ?: toolbar.title
+    override fun doTeardown() {
+        toolbarActivity.withToolbar { toolbar ->
+            // Set title back to original
+            toolbar.title = oldTitle ?: toolbar.title
 
-      // If this page was last on the back stack, set up false
-      if (backstackCount == 0) {
-        toolbar.setUpEnabled(false)
-      }
+            // If this page was last on the back stack, set up false
+            if (backstackCount == 0) {
+                toolbar.setUpEnabled(false)
+            }
 
-      toolbar.setNavigationOnClickListener(null)
+            toolbar.setNavigationOnClickListener(null)
+        }
     }
-  }
 
-  override fun saveState(outState: Bundle) {
-    outState.putCharSequence(KEY_OLD_TITLE, oldTitle)
-  }
+    override fun saveState(outState: Bundle) {
+        outState.putCharSequence(KEY_OLD_TITLE, oldTitle)
+    }
 
-  companion object {
+    companion object {
 
-    private const val KEY_OLD_TITLE = "key_old_title"
-  }
-
+        private const val KEY_OLD_TITLE = "key_old_title"
+    }
 }

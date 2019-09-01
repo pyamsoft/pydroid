@@ -26,26 +26,26 @@ import androidx.annotation.Px
 import kotlin.math.roundToInt
 
 private val cachedDP: SparseIntArray by lazy {
-  SparseIntArray(10)
+    SparseIntArray(10)
 }
 
 @CheckResult
 private fun toDp(c: Context, @Px px: Int): Int {
-  if (px <= 0) {
-    return 0
-  } else {
-    val cached: Int = cachedDP[px, 0]
-    if (cached != 0) {
-      return cached
+    if (px <= 0) {
+        return 0
     } else {
-      val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
-      val dp: Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
-          .roundToInt()
-      cachedDP.put(px, dp)
-      // Return
-      return dp
+        val cached: Int = cachedDP[px, 0]
+        if (cached != 0) {
+            return cached
+        } else {
+            val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
+            val dp: Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
+                .roundToInt()
+            cachedDP.put(px, dp)
+            // Return
+            return dp
+        }
     }
-  }
 }
 
 @CheckResult

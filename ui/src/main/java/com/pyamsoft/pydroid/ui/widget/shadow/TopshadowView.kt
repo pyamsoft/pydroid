@@ -29,32 +29,31 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.R
 
 class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
-  parent: ViewGroup
+    parent: ViewGroup
 ) : BaseUiView<S, E>(parent) {
 
-  override val layout: Int = R.layout.dropshadow
+    override val layout: Int = R.layout.dropshadow
 
-  override val layoutRoot by boundView<View>(R.id.dropshadow_view)
+    override val layoutRoot by boundView<View>(R.id.dropshadow_view)
 
-  override fun onRender(
-    state: S,
-    savedState: UiSavedState
-  ) {
-  }
-
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    fun create(parent: ViewGroup): TopshadowView<UnitViewState, UnitViewEvent> {
-      return createTyped(parent)
+    override fun onRender(
+        state: S,
+        savedState: UiSavedState
+    ) {
     }
 
-    @JvmStatic
-    @CheckResult
-    fun <S : UiViewState, E : UiViewEvent> createTyped(parent: ViewGroup): TopshadowView<S, E> {
-      return TopshadowView(parent)
-    }
-  }
+    companion object {
 
+        @JvmStatic
+        @CheckResult
+        fun create(parent: ViewGroup): TopshadowView<UnitViewState, UnitViewEvent> {
+            return createTyped(parent)
+        }
+
+        @JvmStatic
+        @CheckResult
+        fun <S : UiViewState, E : UiViewEvent> createTyped(parent: ViewGroup): TopshadowView<S, E> {
+            return TopshadowView(parent)
+        }
+    }
 }

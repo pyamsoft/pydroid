@@ -23,7 +23,6 @@ import androidx.annotation.CheckResult
 
 @CheckResult
 fun Dialog.noTitle(): Dialog {
-  requestWindowFeature(Window.FEATURE_NO_TITLE)
-  return this
+    requestWindowFeature(Window.FEATURE_NO_TITLE)
+    return this
 }
-

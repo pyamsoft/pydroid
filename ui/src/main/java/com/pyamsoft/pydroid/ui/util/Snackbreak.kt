@@ -41,306 +41,303 @@ import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
 
-  private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
-  private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
-  private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
+    private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
+    private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
+    private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
 
-  private fun Snackbar.setMargin() {
-    val params = view.layoutParams as? MarginLayoutParams
-    if (params != null) {
-      val margin = 8.toDp(view.context)
-      view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
-      view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+    private fun Snackbar.setMargin() {
+        val params = view.layoutParams as? MarginLayoutParams
+        if (params != null) {
+            val margin = 8.toDp(view.context)
+            view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
+            view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
 
-      // The Snackbar in material library sets a Material design theme but
-      // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
-      // and adjusting for bottom padding - it adds the bottom padding from the insets
-      // into the snackbar as well.
-      view.doOnApplyWindowInsets { v, _, _ ->
-        v.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
-        v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
-      }
-    }
-  }
-
-  private fun Snackbar.setBackground() {
-    val drawable = GradientDrawable().mutate() as GradientDrawable
-
-    val background = drawable.apply {
-      shape = GradientDrawable.RECTANGLE
-      setColor(ContextCompat.getColor(context, R.color.snackbar))
-
-      cornerRadius = 4.toDp(context)
-          .toFloat()
+            // The Snackbar in material library sets a Material design theme but
+            // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
+            // and adjusting for bottom padding - it adds the bottom padding from the insets
+            // into the snackbar as well.
+            view.doOnApplyWindowInsets { v, _, _ ->
+                v.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
+                v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+            }
+        }
     }
 
-    view.background = background
-  }
+    private fun Snackbar.setBackground() {
+        val drawable = GradientDrawable().mutate() as GradientDrawable
 
-  private fun Snackbar.materialDesign() {
-    setMargin()
-    setBackground()
-    ViewCompat.setElevation(view, 6.toDp(context).toFloat())
-  }
+        val background = drawable.apply {
+            shape = GradientDrawable.RECTANGLE
+            setColor(ContextCompat.getColor(context, R.color.snackbar))
 
-  @JvmStatic
-  @CheckResult
-  private fun make(
-    view: View,
-    @StringRes resId: Int,
-    duration: Int
-  ): Snackbar {
-    return Snackbar.make(view, resId, duration)
-        .also { it.materialDesign() }
-  }
-
-  @JvmStatic
-  @CheckResult
-  private fun make(
-    view: View,
-    message: CharSequence,
-    duration: Int
-  ): Snackbar {
-    return Snackbar.make(view, message, duration)
-        .also { it.materialDesign() }
-  }
-
-  private data class CacheEntry(
-    val instance: Instance,
-    val id: String?
-  )
-
-  private val cache: MutableMap<Lifecycle, MutableSet<CacheEntry>> by lazy {
-    ConcurrentHashMap<Lifecycle, MutableSet<CacheEntry>>()
-  }
-
-  inline fun bindTo(
-    owner: LifecycleOwner,
-    crossinline withInstance: Instance.() -> Unit
-  ) {
-    return bindTo(owner.lifecycle) { withInstance() }
-  }
-
-  inline fun bindTo(
-    owner: LifecycleOwner,
-    id: String,
-    crossinline withInstance: Instance.() -> Unit
-  ) {
-    return bindTo(owner.lifecycle, id) { withInstance() }
-  }
-
-  inline fun bindTo(
-    lifecycle: Lifecycle,
-    crossinline withInstance: Instance.() -> Unit
-  ) {
-    return realBindTo(lifecycle, null) { withInstance() }
-  }
-
-  inline fun bindTo(
-    lifecycle: Lifecycle,
-    id: String,
-    crossinline withInstance: Instance.() -> Unit
-  ) {
-    return realBindTo(lifecycle, id) { withInstance() }
-  }
-
-  @PublishedApi
-  internal fun realBindTo(
-    lifecycle: Lifecycle,
-    id: String?,
-    withInstance: Instance.() -> Unit
-  ) {
-    val instance = cache[lifecycle]
-        ?.find { id == it.id }
-        ?.instance
-    if (instance == null) {
-      cacheInstance(lifecycle, id, withInstance)
-    } else {
-      withInstance(instance)
-    }
-  }
-
-  @PublishedApi
-  internal fun cacheInstance(
-    lifecycle: Lifecycle,
-    id: String?,
-    withInstance: Instance.() -> Unit
-  ) {
-    if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
-      return
-    }
-
-    val instance = Instance()
-    cache.getOrPut(lifecycle) {
-      lifecycle.addObserver(object : LifecycleObserver {
-
-        @Suppress("unused")
-        @OnLifecycleEvent(ON_DESTROY)
-        fun onDestroy() {
-          lifecycle.removeObserver(this)
-          cache.remove(lifecycle)
-              ?.forEach { entry ->
-                entry.instance.onDestroy()
-              }
+            cornerRadius = 4.toDp(context)
+                .toFloat()
         }
 
-      })
-
-      return@getOrPut mutableSetOf()
-    }
-        .add(CacheEntry(instance, id))
-    withInstance(instance)
-  }
-
-  class Instance internal constructor() {
-
-    private var alive = true
-    private var snackbar: Snackbar? = null
-
-    internal fun onDestroy() {
-      dismiss()
-      alive = false
+        view.background = background
     }
 
-    private fun requireStillAlive() {
-      require(alive) { "This Snackbreak.${Instance::class.java.simpleName} is Dead" }
+    private fun Snackbar.materialDesign() {
+        setMargin()
+        setBackground()
+        ViewCompat.setElevation(view, 6.toDp(context).toFloat())
     }
 
-    fun dismiss() {
-      snackbar?.dismiss()
-      snackbar = null
-    }
-
+    @JvmStatic
     @CheckResult
-    private fun canShowNewSnackbar(force: Boolean): Boolean {
-      if (force) {
-        return true
-      } else {
-        return snackbar.let { if (it == null) true else !it.isShownOrQueued }
-      }
+    private fun make(
+        view: View,
+        @StringRes resId: Int,
+        duration: Int
+    ): Snackbar {
+        return Snackbar.make(view, resId, duration)
+            .also { it.materialDesign() }
     }
 
-    private inline fun snack(
-      force: Boolean,
-      crossinline onShown: (snackbar: Snackbar) -> Unit,
-      crossinline onHidden: (snackbar: Snackbar, event: Int) -> Unit,
-      builder: Snackbar.() -> Snackbar,
-      snack: () -> Snackbar
-    ) {
-      requireStillAlive()
-      if (canShowNewSnackbar(force)) {
-        dismiss()
-        snackbar = snack()
-            .run(builder)
-            .let { bar ->
-              return@let bar.addCallback(object : BaseCallback<Snackbar>() {
+    @JvmStatic
+    @CheckResult
+    private fun make(
+        view: View,
+        message: CharSequence,
+        duration: Int
+    ): Snackbar {
+        return Snackbar.make(view, message, duration)
+            .also { it.materialDesign() }
+    }
 
-                override fun onShown(transientBottomBar: Snackbar?) {
-                  super.onShown(transientBottomBar)
-                  bar.removeCallback(this)
-                  onShown(bar)
+    private data class CacheEntry(
+        val instance: Instance,
+        val id: String?
+    )
+
+    private val cache: MutableMap<Lifecycle, MutableSet<CacheEntry>> by lazy {
+        ConcurrentHashMap<Lifecycle, MutableSet<CacheEntry>>()
+    }
+
+    inline fun bindTo(
+        owner: LifecycleOwner,
+        crossinline withInstance: Instance.() -> Unit
+    ) {
+        return bindTo(owner.lifecycle) { withInstance() }
+    }
+
+    inline fun bindTo(
+        owner: LifecycleOwner,
+        id: String,
+        crossinline withInstance: Instance.() -> Unit
+    ) {
+        return bindTo(owner.lifecycle, id) { withInstance() }
+    }
+
+    inline fun bindTo(
+        lifecycle: Lifecycle,
+        crossinline withInstance: Instance.() -> Unit
+    ) {
+        return realBindTo(lifecycle, null) { withInstance() }
+    }
+
+    inline fun bindTo(
+        lifecycle: Lifecycle,
+        id: String,
+        crossinline withInstance: Instance.() -> Unit
+    ) {
+        return realBindTo(lifecycle, id) { withInstance() }
+    }
+
+    @PublishedApi
+    internal fun realBindTo(
+        lifecycle: Lifecycle,
+        id: String?,
+        withInstance: Instance.() -> Unit
+    ) {
+        val instance = cache[lifecycle]
+            ?.find { id == it.id }
+            ?.instance
+        if (instance == null) {
+            cacheInstance(lifecycle, id, withInstance)
+        } else {
+            withInstance(instance)
+        }
+    }
+
+    @PublishedApi
+    internal fun cacheInstance(
+        lifecycle: Lifecycle,
+        id: String?,
+        withInstance: Instance.() -> Unit
+    ) {
+        if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
+            return
+        }
+
+        val instance = Instance()
+        cache.getOrPut(lifecycle) {
+            lifecycle.addObserver(object : LifecycleObserver {
+
+                @Suppress("unused")
+                @OnLifecycleEvent(ON_DESTROY)
+                fun onDestroy() {
+                    lifecycle.removeObserver(this)
+                    cache.remove(lifecycle)
+                        ?.forEach { entry ->
+                            entry.instance.onDestroy()
+                        }
                 }
-              })
+            })
+
+            return@getOrPut mutableSetOf()
+        }
+            .add(CacheEntry(instance, id))
+        withInstance(instance)
+    }
+
+    class Instance internal constructor() {
+
+        private var alive = true
+        private var snackbar: Snackbar? = null
+
+        internal fun onDestroy() {
+            dismiss()
+            alive = false
+        }
+
+        private fun requireStillAlive() {
+            require(alive) { "This Snackbreak.${Instance::class.java.simpleName} is Dead" }
+        }
+
+        fun dismiss() {
+            snackbar?.dismiss()
+            snackbar = null
+        }
+
+        @CheckResult
+        private fun canShowNewSnackbar(force: Boolean): Boolean {
+            if (force) {
+                return true
+            } else {
+                return snackbar.let { if (it == null) true else !it.isShownOrQueued }
             }
-            .let { bar ->
-              return@let bar.addCallback(object : BaseCallback<Snackbar>() {
+        }
 
-                override fun onDismissed(
-                  transientBottomBar: Snackbar?,
-                  event: Int
-                ) {
-                  super.onDismissed(transientBottomBar, event)
-                  bar.removeCallback(this)
-                  onHidden(bar, event)
-                }
-              })
+        private inline fun snack(
+            force: Boolean,
+            crossinline onShown: (snackbar: Snackbar) -> Unit,
+            crossinline onHidden: (snackbar: Snackbar, event: Int) -> Unit,
+            builder: Snackbar.() -> Snackbar,
+            snack: () -> Snackbar
+        ) {
+            requireStillAlive()
+            if (canShowNewSnackbar(force)) {
+                dismiss()
+                snackbar = snack()
+                    .run(builder)
+                    .let { bar ->
+                        return@let bar.addCallback(object : BaseCallback<Snackbar>() {
+
+                            override fun onShown(transientBottomBar: Snackbar?) {
+                                super.onShown(transientBottomBar)
+                                bar.removeCallback(this)
+                                onShown(bar)
+                            }
+                        })
+                    }
+                    .let { bar ->
+                        return@let bar.addCallback(object : BaseCallback<Snackbar>() {
+
+                            override fun onDismissed(
+                                transientBottomBar: Snackbar?,
+                                event: Int
+                            ) {
+                                super.onDismissed(transientBottomBar, event)
+                                bar.removeCallback(this)
+                                onHidden(bar, event)
+                            }
+                        })
+                    }
+                    .also { it.show() }
             }
-            .also { it.show() }
-      }
+        }
+
+        @JvmOverloads
+        fun short(
+            view: View,
+            message: CharSequence,
+            force: Boolean = false,
+            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+        ) {
+            snack(force, onShown, onHidden, builder) {
+                make(view, message, Snackbar.LENGTH_SHORT)
+            }
+        }
+
+        @JvmOverloads
+        fun short(
+            view: View,
+            @StringRes message: Int,
+            force: Boolean = false,
+            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+        ) {
+            snack(force, onShown, onHidden, builder) {
+                make(view, message, Snackbar.LENGTH_SHORT)
+            }
+        }
+
+        @JvmOverloads
+        fun long(
+            view: View,
+            message: CharSequence,
+            force: Boolean = false,
+            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+        ) {
+            snack(force, onShown, onHidden, builder) {
+                make(view, message, Snackbar.LENGTH_LONG)
+            }
+        }
+
+        @JvmOverloads
+        fun long(
+            view: View,
+            @StringRes message: Int,
+            force: Boolean = false,
+            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+        ) {
+            snack(force, onShown, onHidden, builder) {
+                make(view, message, Snackbar.LENGTH_LONG)
+            }
+        }
+
+        @JvmOverloads
+        fun make(
+            view: View,
+            message: CharSequence,
+            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+        ) {
+            snack(false, onShown, onHidden, builder) {
+                make(view, message, Snackbar.LENGTH_INDEFINITE)
+            }
+        }
+
+        @JvmOverloads
+        fun make(
+            view: View,
+            @StringRes message: Int,
+            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
+            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+        ) {
+            snack(false, onShown, onHidden, builder) {
+                make(view, message, Snackbar.LENGTH_INDEFINITE)
+            }
+        }
     }
-
-    @JvmOverloads
-    fun short(
-      view: View,
-      message: CharSequence,
-      force: Boolean = false,
-      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
-    ) {
-      snack(force, onShown, onHidden, builder) {
-        make(view, message, Snackbar.LENGTH_SHORT)
-      }
-    }
-
-    @JvmOverloads
-    fun short(
-      view: View,
-      @StringRes message: Int,
-      force: Boolean = false,
-      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
-    ) {
-      snack(force, onShown, onHidden, builder) {
-        make(view, message, Snackbar.LENGTH_SHORT)
-      }
-    }
-
-    @JvmOverloads
-    fun long(
-      view: View,
-      message: CharSequence,
-      force: Boolean = false,
-      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
-    ) {
-      snack(force, onShown, onHidden, builder) {
-        make(view, message, Snackbar.LENGTH_LONG)
-      }
-    }
-
-    @JvmOverloads
-    fun long(
-      view: View,
-      @StringRes message: Int,
-      force: Boolean = false,
-      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
-    ) {
-      snack(force, onShown, onHidden, builder) {
-        make(view, message, Snackbar.LENGTH_LONG)
-      }
-    }
-
-    @JvmOverloads
-    fun make(
-      view: View,
-      message: CharSequence,
-      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
-    ) {
-      snack(false, onShown, onHidden, builder) {
-        make(view, message, Snackbar.LENGTH_INDEFINITE)
-      }
-    }
-
-    @JvmOverloads
-    fun make(
-      view: View,
-      @StringRes message: Int,
-      onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-      onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-      builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
-    ) {
-      snack(false, onShown, onHidden, builder) {
-        make(view, message, Snackbar.LENGTH_INDEFINITE)
-      }
-    }
-
-  }
-
 }

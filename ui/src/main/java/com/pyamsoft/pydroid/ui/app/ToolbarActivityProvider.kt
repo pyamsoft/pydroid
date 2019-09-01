@@ -21,6 +21,5 @@ import androidx.appcompat.widget.Toolbar
 
 interface ToolbarActivityProvider {
 
-  fun setToolbar(toolbar: Toolbar?)
-
+    fun setToolbar(toolbar: Toolbar?)
 }

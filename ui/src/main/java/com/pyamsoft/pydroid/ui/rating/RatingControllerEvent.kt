@@ -21,6 +21,5 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 
 sealed class RatingControllerEvent : UiControllerEvent {
 
-  object LoadRating : RatingControllerEvent()
-
+    object LoadRating : RatingControllerEvent()
 }

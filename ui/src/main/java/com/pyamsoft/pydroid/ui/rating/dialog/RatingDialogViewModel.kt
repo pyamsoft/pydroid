@@ -26,49 +26,46 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelD
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal class RatingDialogViewModel internal constructor(
-  private val interactor: RatingInteractor
+    private val interactor: RatingInteractor
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
     initialState = RatingDialogViewState(throwable = null)
 ) {
 
-  private val saveRunner = highlander<Unit, String> { link ->
-    interactor.saveRating()
-    handleRate(link)
-  }
-
-  override fun onInit() {
-  }
-
-  override fun handleViewEvent(event: RatingDialogViewEvent) {
-    return when (event) {
-      is Rate -> save(event.link)
-      is Cancel -> save("")
+    private val saveRunner = highlander<Unit, String> { link ->
+        interactor.saveRating()
+        handleRate(link)
     }
-  }
 
-  private fun save(link: String) {
-    viewModelScope.launch { saveRunner.call(link) }
-  }
-
-  private fun handleRate(link: String) {
-    if (link.isBlank()) {
-      publish(CancelDialog)
-    } else {
-      publish(NavigateRating(link))
+    override fun onInit() {
     }
-  }
 
-  fun navigationFailed(error: ActivityNotFoundException) {
-    setState { copy(throwable = error) }
-  }
+    override fun handleViewEvent(event: RatingDialogViewEvent) {
+        return when (event) {
+            is Rate -> save(event.link)
+            is Cancel -> save("")
+        }
+    }
 
-  fun navigationSuccess() {
-    setState { copy(throwable = null) }
-  }
+    private fun save(link: String) {
+        viewModelScope.launch { saveRunner.call(link) }
+    }
 
+    private fun handleRate(link: String) {
+        if (link.isBlank()) {
+            publish(CancelDialog)
+        } else {
+            publish(NavigateRating(link))
+        }
+    }
+
+    fun navigationFailed(error: ActivityNotFoundException) {
+        setState { copy(throwable = error) }
+    }
+
+    fun navigationSuccess() {
+        setState { copy(throwable = null) }
+    }
 }

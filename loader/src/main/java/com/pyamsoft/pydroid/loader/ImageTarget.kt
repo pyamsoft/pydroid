@@ -23,14 +23,14 @@ import androidx.annotation.CheckResult
 
 interface ImageTarget<T : Any> {
 
-  @CheckResult
-  fun view(): View
+    @CheckResult
+    fun view(): View
 
-  fun clear()
+    fun clear()
 
-  fun setImage(image: T)
+    fun setImage(image: T)
 
-  fun setError(error: Drawable?)
+    fun setError(error: Drawable?)
 
-  fun setPlaceholder(placeholder: Drawable?)
+    fun setPlaceholder(placeholder: Drawable?)
 }

@@ -18,4 +18,3 @@
 package com.pyamsoft.pydroid.arch
 
 interface UiViewState
-

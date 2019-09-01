@@ -21,7 +21,7 @@ import android.os.Build
 
 internal class MinimumApiProviderImpl internal constructor() : MinimumApiProvider {
 
-  override fun minApi(): Int {
-    return Build.VERSION.SDK_INT
-  }
+    override fun minApi(): Int {
+        return Build.VERSION.SDK_INT
+    }
 }

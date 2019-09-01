@@ -27,36 +27,36 @@ import com.pyamsoft.pydroid.ui.theme.ThemingPreferences
 import com.pyamsoft.pydroid.ui.theme.toMode
 
 internal class PYDroidPreferencesImpl internal constructor(
-  context: Context
+    context: Context
 ) : RatingPreferences, ThemingPreferences {
 
-  private val darkModeKey = context.getString(R.string.dark_mode_key)
-  private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    private val darkModeKey = context.getString(R.string.dark_mode_key)
+    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
 
-  override var ratingAcceptedVersion: Int
-    get() = prefs.getInt(
-        RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
-    )
-    set(value) {
-      prefs.edit {
-        putInt(RATING_ACCEPTED_VERSION, value)
-      }
+    override var ratingAcceptedVersion: Int
+        get() = prefs.getInt(
+            RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
+        )
+        set(value) {
+            prefs.edit {
+                putInt(RATING_ACCEPTED_VERSION, value)
+            }
+        }
+
+    override fun initializeDarkMode(onInit: (mode: Mode) -> Unit) {
+        if (!prefs.contains(darkModeKey)) {
+            val mode = SYSTEM
+            prefs.edit { putString(darkModeKey, mode.toRawString()) }
+            onInit(mode)
+        }
     }
 
-  override fun initializeDarkMode(onInit: (mode: Mode) -> Unit) {
-    if (!prefs.contains(darkModeKey)) {
-      val mode = SYSTEM
-      prefs.edit { putString(darkModeKey, mode.toRawString()) }
-      onInit(mode)
+    override fun getDarkMode(): Mode {
+        return requireNotNull(prefs.getString(darkModeKey, SYSTEM.toRawString())).toMode()
     }
-  }
 
-  override fun getDarkMode(): Mode {
-    return requireNotNull(prefs.getString(darkModeKey, SYSTEM.toRawString())).toMode()
-  }
+    companion object {
 
-  companion object {
-
-    private const val RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version"
-  }
+        private const val RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version"
+    }
 }

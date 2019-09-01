@@ -36,183 +36,183 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
-  private val initialState: S
+    private val initialState: S
 ) : ViewModel() {
 
-  private val isInitialized = AtomicBoolean(false)
-  private val mutex = Mutex()
-  private val controllerEventBus = EventBus.create<C>()
-  private val stateBus = EventBus.create<S>()
-  private val flushQueueBus = EventBus.create<FlushQueueEvent>()
+    private val isInitialized = AtomicBoolean(false)
+    private val mutex = Mutex()
+    private val controllerEventBus = EventBus.create<C>()
+    private val stateBus = EventBus.create<S>()
+    private val flushQueueBus = EventBus.create<FlushQueueEvent>()
 
-  @Volatile private var stateQueue = LinkedList<S.() -> S>()
-  @Volatile private var state: S? = null
+    @Volatile
+    private var stateQueue = LinkedList<S.() -> S>()
+    @Volatile
+    private var state: S? = null
 
-  init {
-    flushQueueBus.scopedEvent(Dispatchers.Default) { flushQueue() }
-  }
-
-  protected abstract fun onInit()
-
-  protected abstract fun handleViewEvent(event: V)
-
-  @CheckResult
-  @PublishedApi
-  internal fun render(
-    savedInstanceState: Bundle?,
-    vararg views: UiView<S, V>,
-    onControllerEvent: (event: C) -> Unit
-  ): Job = viewModelScope.launch {
-    // Init savedState once
-    val savedState = UiSavedState(savedInstanceState)
-
-    // Listen for changes
-    launch(context = Dispatchers.Default) {
-      stateBus.onEvent { state ->
-        withContext(context = Dispatchers.Main) { handleStateChange(views, state, savedState) }
-      }
+    init {
+        flushQueueBus.scopedEvent(Dispatchers.Default) { flushQueue() }
     }
 
-    // Push most recent state
-    val mostRecentState = latestState()
-    handleStateChange(views, mostRecentState, savedState)
+    protected abstract fun onInit()
 
-    // Bind ViewModel
-    bindEvents(onControllerEvent)
-    views.forEach { bindEvent(it) }
-    initialize()
+    protected abstract fun handleViewEvent(event: V)
 
-    // If most recent and latest get out of sync, do it again
-    // This should not happen, but we leave it around just in case - since it was happening at one point.
-    val currentState = latestState()
-    if (currentState != mostRecentState) {
-      Timber.w("State is out of sync, re-emit. Old: $mostRecentState -- New $currentState")
-      handleStateChange(views, currentState, savedState)
-    }
-  }
+    @CheckResult
+    @PublishedApi
+    internal fun render(
+        savedInstanceState: Bundle?,
+        vararg views: UiView<S, V>,
+        onControllerEvent: (event: C) -> Unit
+    ): Job = viewModelScope.launch {
+        // Init savedState once
+        val savedState = UiSavedState(savedInstanceState)
 
-  final override fun onCleared() {
-    if (isInitialized.compareAndSet(true, false)) {
-      onTeardown()
-    } else {
-      Timber.w("Teardown is already complete.")
-    }
-  }
-
-  protected open fun onTeardown() {
-
-  }
-
-  @JvmOverloads
-  protected fun <E : Any> EventBus<E>.scopedEvent(
-    context: CoroutineContext = EmptyCoroutineContext,
-    func: suspend (event: E) -> Unit
-  ): Job {
-    val bus = this
-    return viewModelScope.launch(context = context) {
-      bus.onEvent(func)
-    }
-  }
-
-  protected fun publish(event: C) {
-    viewModelScope.launch(context = Dispatchers.Default) {
-      controllerEventBus.send(event)
-    }
-  }
-
-  @CheckResult
-  private fun latestState(): S {
-    return state ?: initialState
-  }
-
-  protected fun setState(func: S.() -> S) {
-    viewModelScope.launch(context = Dispatchers.Default) {
-      mutex.withLock {
-        stateQueue.add(func)
-      }
-
-      flushQueueBus.send(FlushQueueEvent)
-    }
-  }
-
-  @CheckResult
-  private fun dequeueAllPendingStateChanges(): List<S.() -> S> {
-    if (stateQueue.isEmpty()) {
-      return emptyList()
-    }
-
-    val queue = stateQueue
-    stateQueue = LinkedList()
-    return queue.toList()
-  }
-
-  private suspend fun flushQueue() {
-    mutex.withLock {
-      val stateChanges = dequeueAllPendingStateChanges()
-      if (stateChanges.isEmpty()) {
-        Timber.w("State queue is empty, ignore flush.")
-        return
-      }
-
-      for (stateChange in stateChanges) {
-        val newState = latestState().stateChange()
-        if (newState != state) {
-          state = newState
-          stateBus.send(newState)
+        // Listen for changes
+        launch(context = Dispatchers.Default) {
+            stateBus.onEvent { state ->
+                withContext(context = Dispatchers.Main) { handleStateChange(views, state, savedState) }
+            }
         }
-      }
-    }
-  }
 
-  private fun handleStateChange(
-    views: Array<out UiView<S, V>>,
-    state: S,
-    savedState: UiSavedState
-  ) {
-    val combined = combineWithSavedState(state, savedState)
-    views.forEach { it.render(combined.state, combined.savedState) }
-  }
+        // Push most recent state
+        val mostRecentState = latestState()
+        handleStateChange(views, mostRecentState, savedState)
 
-  private fun initialize() {
-    if (isInitialized.compareAndSet(false, true)) {
-      onInit()
-    } else {
-      Timber.w("Initialization is already complete.")
-    }
-  }
+        // Bind ViewModel
+        bindEvents(onControllerEvent)
+        views.forEach { bindEvent(it) }
+        initialize()
 
-  @CheckResult
-  private fun combineWithSavedState(
-    state: S,
-    savedState: UiSavedState
-  ): StateWithSavedState<S> {
-    return StateWithSavedState(state, savedState)
-  }
-
-  private fun CoroutineScope.bindEvent(view: UiView<S, V>) = launch(context = Dispatchers.Default) {
-    view.onViewEvent { event ->
-      withContext(context = Dispatchers.Main) { handleViewEvent(event) }
-    }
-  }
-
-  private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: (event: C) -> Unit) =
-    launch(context = Dispatchers.Default) {
-      controllerEventBus.onEvent { event ->
-        withContext(context = Dispatchers.Main) { onControllerEvent(event) }
-      }
+        // If most recent and latest get out of sync, do it again
+        // This should not happen, but we leave it around just in case - since it was happening at one point.
+        val currentState = latestState()
+        if (currentState != mostRecentState) {
+            Timber.w("State is out of sync, re-emit. Old: $mostRecentState -- New $currentState")
+            handleStateChange(views, currentState, savedState)
+        }
     }
 
-  protected inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
-    if (this !is CancellationException) {
-      func(this)
+    final override fun onCleared() {
+        if (isInitialized.compareAndSet(true, false)) {
+            onTeardown()
+        } else {
+            Timber.w("Teardown is already complete.")
+        }
     }
-  }
 
-  private data class StateWithSavedState<S : UiViewState>(
-    val state: S,
-    val savedState: UiSavedState
-  )
+    protected open fun onTeardown() {
+    }
 
-  private object FlushQueueEvent
+    @JvmOverloads
+    protected fun <E : Any> EventBus<E>.scopedEvent(
+        context: CoroutineContext = EmptyCoroutineContext,
+        func: suspend (event: E) -> Unit
+    ): Job {
+        val bus = this
+        return viewModelScope.launch(context = context) {
+            bus.onEvent(func)
+        }
+    }
 
+    protected fun publish(event: C) {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            controllerEventBus.send(event)
+        }
+    }
+
+    @CheckResult
+    private fun latestState(): S {
+        return state ?: initialState
+    }
+
+    protected fun setState(func: S.() -> S) {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            mutex.withLock {
+                stateQueue.add(func)
+            }
+
+            flushQueueBus.send(FlushQueueEvent)
+        }
+    }
+
+    @CheckResult
+    private fun dequeueAllPendingStateChanges(): List<S.() -> S> {
+        if (stateQueue.isEmpty()) {
+            return emptyList()
+        }
+
+        val queue = stateQueue
+        stateQueue = LinkedList()
+        return queue.toList()
+    }
+
+    private suspend fun flushQueue() {
+        mutex.withLock {
+            val stateChanges = dequeueAllPendingStateChanges()
+            if (stateChanges.isEmpty()) {
+                Timber.w("State queue is empty, ignore flush.")
+                return
+            }
+
+            for (stateChange in stateChanges) {
+                val newState = latestState().stateChange()
+                if (newState != state) {
+                    state = newState
+                    stateBus.send(newState)
+                }
+            }
+        }
+    }
+
+    private fun handleStateChange(
+        views: Array<out UiView<S, V>>,
+        state: S,
+        savedState: UiSavedState
+    ) {
+        val combined = combineWithSavedState(state, savedState)
+        views.forEach { it.render(combined.state, combined.savedState) }
+    }
+
+    private fun initialize() {
+        if (isInitialized.compareAndSet(false, true)) {
+            onInit()
+        } else {
+            Timber.w("Initialization is already complete.")
+        }
+    }
+
+    @CheckResult
+    private fun combineWithSavedState(
+        state: S,
+        savedState: UiSavedState
+    ): StateWithSavedState<S> {
+        return StateWithSavedState(state, savedState)
+    }
+
+    private fun CoroutineScope.bindEvent(view: UiView<S, V>) = launch(context = Dispatchers.Default) {
+        view.onViewEvent { event ->
+            withContext(context = Dispatchers.Main) { handleViewEvent(event) }
+        }
+    }
+
+    private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: (event: C) -> Unit) =
+        launch(context = Dispatchers.Default) {
+            controllerEventBus.onEvent { event ->
+                withContext(context = Dispatchers.Main) { onControllerEvent(event) }
+            }
+        }
+
+    protected inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
+        if (this !is CancellationException) {
+            func(this)
+        }
+    }
+
+    private data class StateWithSavedState<S : UiViewState>(
+        val state: S,
+        val savedState: UiSavedState
+    )
+
+    private object FlushQueueEvent
 }

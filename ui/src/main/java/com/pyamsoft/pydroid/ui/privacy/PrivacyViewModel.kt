@@ -29,39 +29,38 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class PrivacyViewModel internal constructor(
-  activity: Activity
+    activity: Activity
 ) : UiViewModel<PrivacyViewState, PrivacyViewEvent, PrivacyControllerEvent>(
     initialState = PrivacyViewState(throwable = null)
 ) {
 
-  private var activity: Activity? = activity
+    private var activity: Activity? = activity
 
-  override fun onInit() {
-    viewModelScope.launch(context = Dispatchers.Default) {
-      PrivacyEventBus.onEvent { event ->
-        withContext(context = Dispatchers.Main) {
-          publish(ViewExternalPolicy(event.url.hyperlink(requireNotNull(activity))))
+    override fun onInit() {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            PrivacyEventBus.onEvent { event ->
+                withContext(context = Dispatchers.Main) {
+                    publish(ViewExternalPolicy(event.url.hyperlink(requireNotNull(activity))))
+                }
+            }
         }
-      }
     }
-  }
 
-  override fun handleViewEvent(event: PrivacyViewEvent) {
-    return when (event) {
-      is SnackbarHidden -> setState { copy(throwable = null) }
+    override fun handleViewEvent(event: PrivacyViewEvent) {
+        return when (event) {
+            is SnackbarHidden -> setState { copy(throwable = null) }
+        }
     }
-  }
 
-  override fun onTeardown() {
-    activity = null
-  }
+    override fun onTeardown() {
+        activity = null
+    }
 
-  fun navigationFailed(error: ActivityNotFoundException) {
-    setState { copy(throwable = error) }
-  }
+    fun navigationFailed(error: ActivityNotFoundException) {
+        setState { copy(throwable = error) }
+    }
 
-  fun navigationSuccess() {
-    setState { copy(throwable = null) }
-  }
-
+    fun navigationSuccess() {
+        setState { copy(throwable = null) }
+    }
 }

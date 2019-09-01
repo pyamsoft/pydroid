@@ -32,62 +32,62 @@ import com.pyamsoft.pydroid.util.runWhenReady
 
 abstract class VersionCheckActivity : PrivacyActivity() {
 
-  protected open val checkForUpdates: Boolean = true
+    protected open val checkForUpdates: Boolean = true
 
-  internal var versionFactory: ViewModelProvider.Factory? = null
-  internal var versionView: VersionView? = null
-  private val versionViewModel by factory<VersionCheckViewModel> { versionFactory }
+    internal var versionFactory: ViewModelProvider.Factory? = null
+    internal var versionView: VersionView? = null
+    private val versionViewModel by factory<VersionCheckViewModel> { versionFactory }
 
-  @CallSuper
-  override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
+    @CallSuper
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
 
-    // Need to do this in onPostCreate because the snackbarRoot will not be available until
-    // after subclass onCreate
-    Injector.obtain<PYDroidComponent>(applicationContext)
-        .plusVersion()
-        .create(this) { snackbarRoot }
-        .inject(this)
+        // Need to do this in onPostCreate because the snackbarRoot will not be available until
+        // after subclass onCreate
+        Injector.obtain<PYDroidComponent>(applicationContext)
+            .plusVersion()
+            .create(this) { snackbarRoot }
+            .inject(this)
 
-    createComponent(
-        savedInstanceState, this,
-        versionViewModel,
-        requireNotNull(versionView)
-    ) {
-      return@createComponent when (it) {
-        is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
-      }
+        createComponent(
+            savedInstanceState, this,
+            versionViewModel,
+            requireNotNull(versionView)
+        ) {
+            return@createComponent when (it) {
+                is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
+            }
+        }
     }
-  }
 
-  @CallSuper
-  override fun onResume() {
-    super.onResume()
+    @CallSuper
+    override fun onResume() {
+        super.onResume()
 
-    if (checkForUpdates) {
-      checkForUpdate()
+        if (checkForUpdates) {
+            checkForUpdate()
+        }
     }
-  }
 
-  fun checkForUpdate() {
-    runWhenReady(this) { versionViewModel.checkForUpdates(false) }
-  }
+    fun checkForUpdate() {
+        runWhenReady(this) { versionViewModel.checkForUpdates(false) }
+    }
 
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    versionView?.saveState(outState)
-  }
+    @CallSuper
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        versionView?.saveState(outState)
+    }
 
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    versionView = null
-    versionFactory = null
-  }
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        versionView = null
+        versionFactory = null
+    }
 
-  private fun showVersionUpgrade(newVersion: Int) {
-    VersionUpgradeDialog.newInstance(newVersion)
-        .show(this, VersionUpgradeDialog.TAG)
-  }
+    private fun showVersionUpgrade(newVersion: Int) {
+        VersionUpgradeDialog.newInstance(newVersion)
+            .show(this, VersionUpgradeDialog.TAG)
+    }
 }

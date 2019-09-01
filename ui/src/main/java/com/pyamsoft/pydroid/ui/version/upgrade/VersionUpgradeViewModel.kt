@@ -24,27 +24,26 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.Ope
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
-internal class VersionUpgradeViewModel internal constructor(
-) : UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
-    initialState = VersionUpgradeViewState(throwable = null)
-) {
+internal class VersionUpgradeViewModel internal constructor() :
+    UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
+        initialState = VersionUpgradeViewState(throwable = null)
+    ) {
 
-  override fun onInit() {
-  }
-
-  override fun handleViewEvent(event: VersionUpgradeViewEvent) {
-    return when (event) {
-      Upgrade -> publish(OpenMarket)
-      Cancel -> publish(CancelDialog)
+    override fun onInit() {
     }
-  }
 
-  fun navigationFailed(error: ActivityNotFoundException) {
-    setState { copy(throwable = error) }
-  }
+    override fun handleViewEvent(event: VersionUpgradeViewEvent) {
+        return when (event) {
+            Upgrade -> publish(OpenMarket)
+            Cancel -> publish(CancelDialog)
+        }
+    }
 
-  fun navigationSuccess() {
-    setState { copy(throwable = null) }
-  }
+    fun navigationFailed(error: ActivityNotFoundException) {
+        setState { copy(throwable = error) }
+    }
 
+    fun navigationSuccess() {
+        setState { copy(throwable = null) }
+    }
 }

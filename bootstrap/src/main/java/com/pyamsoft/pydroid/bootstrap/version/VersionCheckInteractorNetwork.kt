@@ -25,40 +25,40 @@ import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.Enforcer
 
 internal class VersionCheckInteractorNetwork internal constructor(
-  private val currentVersion: Int,
-  private val packageName: String,
-  private val enforcer: Enforcer,
-  private val minimumApiProvider: MinimumApiProvider,
-  private val versionCheckService: VersionCheckService
+    private val currentVersion: Int,
+    private val packageName: String,
+    private val enforcer: Enforcer,
+    private val minimumApiProvider: MinimumApiProvider,
+    private val versionCheckService: VersionCheckService
 ) : VersionCheckInteractor {
 
-  @CheckResult
-  private fun versionCodeForApi(
-    response: VersionCheckResponse
-  ): Int {
-    enforcer.assertNotOnMainThread()
-    val minApi = minimumApiProvider.minApi()
-    var versionCode = 0
-    response.responseObjects()
-        .asSequence()
-        .sortedBy { it.minApi() }
-        .forEach {
-          if (it.minApi() <= minApi) {
-            versionCode = it.version()
-          }
-        }
-    return versionCode
-  }
-
-  override suspend fun checkVersion(force: Boolean): UpdatePayload {
-    enforcer.assertNotOnMainThread()
-    val targetName: String
-    if (packageName.endsWith(".dev")) {
-      targetName = packageName.substringBefore(".dev")
-    } else {
-      targetName = packageName
+    @CheckResult
+    private fun versionCodeForApi(
+        response: VersionCheckResponse
+    ): Int {
+        enforcer.assertNotOnMainThread()
+        val minApi = minimumApiProvider.minApi()
+        var versionCode = 0
+        response.responseObjects()
+            .asSequence()
+            .sortedBy { it.minApi() }
+            .forEach {
+                if (it.minApi() <= minApi) {
+                    versionCode = it.version()
+                }
+            }
+        return versionCode
     }
-    val result = versionCheckService.checkVersion(targetName)
-    return UpdatePayload(currentVersion, versionCodeForApi(result))
-  }
+
+    override suspend fun checkVersion(force: Boolean): UpdatePayload {
+        enforcer.assertNotOnMainThread()
+        val targetName: String
+        if (packageName.endsWith(".dev")) {
+            targetName = packageName.substringBefore(".dev")
+        } else {
+            targetName = packageName
+        }
+        val result = versionCheckService.checkVersion(targetName)
+        return UpdatePayload(currentVersion, versionCodeForApi(result))
+    }
 }

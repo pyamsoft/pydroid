@@ -59,197 +59,196 @@ import timber.log.Timber
 
 abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
-  protected open val preferenceXmlResId: Int = 0
+    protected open val preferenceXmlResId: Int = 0
 
-  protected open val hideUpgradeInformation: Boolean = false
+    protected open val hideUpgradeInformation: Boolean = false
 
-  protected open val hideClearAll: Boolean = false
+    protected open val hideClearAll: Boolean = false
 
-  internal var factory: ViewModelProvider.Factory? = null
-  internal var settingsView: AppSettingsView? = null
-  private val settingsViewModel by factory<AppSettingsViewModel> { factory }
+    internal var factory: ViewModelProvider.Factory? = null
+    internal var settingsView: AppSettingsView? = null
+    private val settingsViewModel by factory<AppSettingsViewModel> { factory }
 
-  private val ratingViewModel by factory<RatingViewModel> { factory }
+    private val ratingViewModel by factory<RatingViewModel> { factory }
 
-  internal var versionView: VersionView? = null
-  private val versionViewModel by factory<VersionCheckViewModel> { factory }
+    internal var versionView: VersionView? = null
+    private val versionViewModel by factory<VersionCheckViewModel> { factory }
 
-  @CallSuper
-  override fun onCreatePreferences(
-    savedInstanceState: Bundle?,
-    rootKey: String?
-  ) {
-    @XmlRes val xmlResId: Int = preferenceXmlResId
-    if (xmlResId != 0) {
-      addPreferencesFromResource(xmlResId)
-    }
-    addPreferencesFromResource(R.xml.pydroid)
-  }
-
-  @CallSuper
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-
-    Injector.obtain<PYDroidComponent>(view.context.applicationContext)
-        .plusSettingsComponent()
-        .create(
-            requireActivity(), viewLifecycleOwner, preferenceScreen,
-            hideClearAll, hideUpgradeInformation
-        ) { listView }
-        .inject(this)
-
-    createComponent(
-        savedInstanceState, viewLifecycleOwner,
-        settingsViewModel,
-        requireNotNull(settingsView)
+    @CallSuper
+    override fun onCreatePreferences(
+        savedInstanceState: Bundle?,
+        rootKey: String?
     ) {
-      return@createComponent when (it) {
-        is NavigateMoreApps -> viewMorePyamsoftApps()
-        is NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
-        is NavigateRateApp -> openMarkForRating()
-        is ShowLicense -> openLicensesPage()
-        is AttemptCheckUpgrade -> versionViewModel.checkForUpdates(true)
-        is AttemptClearData -> openClearDataDialog()
-        is OpenShowUpgrade -> ratingViewModel.load(true)
-        is ChangeDarkTheme -> darkThemeChanged(it.newMode)
-      }
-    }
-
-    createComponent(
-        savedInstanceState, viewLifecycleOwner,
-        versionViewModel,
-        requireNotNull(versionView)
-    ) {
-      return@createComponent when (it) {
-        is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
-      }
-    }
-
-    createComponent(
-        savedInstanceState, viewLifecycleOwner,
-        ratingViewModel
-    ) {
-      return@createComponent when (it) {
-        is LoadRating -> openUpdateInfo()
-      }
-    }
-
-    settingsViewModel.initDarkThemeState(requireActivity())
-  }
-
-  private fun openUpdateInfo() {
-    RatingDialog.newInstance(requireActivity() as ChangeLogProvider)
-        .show(requireActivity(), RatingDialog.TAG)
-  }
-
-  private fun showVersionUpgrade(newVersion: Int) {
-    VersionUpgradeDialog.newInstance(newVersion)
-        .show(requireActivity(), VersionUpgradeDialog.TAG)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    settingsView = null
-    factory = null
-  }
-
-  private fun failedNavigation(error: ActivityNotFoundException?) {
-    if (error == null) {
-      settingsViewModel.navigationSuccess()
-    } else {
-      settingsViewModel.navigationFailed(error)
-    }
-  }
-
-  private fun viewMorePyamsoftApps() {
-    val error = MarketLinker.linkToDeveloperPage(requireContext())
-    failedNavigation(error)
-  }
-
-  private fun darkThemeChanged(mode: Theming.Mode) {
-    onDarkThemeClicked(mode)
-  }
-
-  private fun openClearDataDialog() {
-    onClearAllClicked()
-  }
-
-  private fun openLicensesPage() {
-    onLicenseItemClicked()
-  }
-
-  private fun openMarkForRating() {
-    requireContext().also { c ->
-      val link = c.packageName
-      val error = MarketLinker.linkToMarketPage(c, link)
-      failedNavigation(error)
-    }
-  }
-
-  private fun navigateHyperlink(link: HyperlinkIntent) {
-    val error = link.navigate()
-    failedNavigation(error)
-  }
-
-  @CallSuper
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    settingsView?.saveState(outState)
-  }
-
-  /**
-   * Logs when the Clear All option is clicked, override to use unique implementation
-   */
-  @CallSuper
-  protected open fun onClearAllClicked() {
-    Timber.d("Clear all preferences clicked")
-  }
-
-  /**
-   * Toggles dark theme, override or extend to use unique implementation
-   */
-  @CallSuper
-  protected open fun onDarkThemeClicked(mode: Theming.Mode) {
-    Timber.d("Dark theme set: $mode")
-    requireActivity().recreate()
-  }
-
-  /**
-   * Shows a page for Open Source licenses, override or extend to use unique implementation
-   */
-  @CallSuper
-  protected open fun onLicenseItemClicked() {
-    Timber.d("Show about licenses fragment")
-    if (isInDialogFragment(this)) {
-      val container = requireView().parent as ViewGroup
-      AboutFragment.show(this, container.id)
-    } else {
-      val baseActivity = requireActivity() as ActivityBase
-      AboutFragment.show(baseActivity, baseActivity.fragmentContainerId)
-    }
-  }
-
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    private fun isInDialogFragment(fragment: Fragment): Boolean {
-      if (fragment is DialogFragment) {
-        return true
-      }
-
-      var parent = fragment.parentFragment
-      while (parent != null) {
-        if (parent is DialogFragment) {
-          return true
+        @XmlRes val xmlResId: Int = preferenceXmlResId
+        if (xmlResId != 0) {
+            addPreferencesFromResource(xmlResId)
         }
-        parent = parent.parentFragment
-      }
-      return false
+        addPreferencesFromResource(R.xml.pydroid)
     }
 
-  }
+    @CallSuper
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(view, savedInstanceState)
+
+        Injector.obtain<PYDroidComponent>(view.context.applicationContext)
+            .plusSettingsComponent()
+            .create(
+                requireActivity(), viewLifecycleOwner, preferenceScreen,
+                hideClearAll, hideUpgradeInformation
+            ) { listView }
+            .inject(this)
+
+        createComponent(
+            savedInstanceState, viewLifecycleOwner,
+            settingsViewModel,
+            requireNotNull(settingsView)
+        ) {
+            return@createComponent when (it) {
+                is NavigateMoreApps -> viewMorePyamsoftApps()
+                is NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
+                is NavigateRateApp -> openMarkForRating()
+                is ShowLicense -> openLicensesPage()
+                is AttemptCheckUpgrade -> versionViewModel.checkForUpdates(true)
+                is AttemptClearData -> openClearDataDialog()
+                is OpenShowUpgrade -> ratingViewModel.load(true)
+                is ChangeDarkTheme -> darkThemeChanged(it.newMode)
+            }
+        }
+
+        createComponent(
+            savedInstanceState, viewLifecycleOwner,
+            versionViewModel,
+            requireNotNull(versionView)
+        ) {
+            return@createComponent when (it) {
+                is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
+            }
+        }
+
+        createComponent(
+            savedInstanceState, viewLifecycleOwner,
+            ratingViewModel
+        ) {
+            return@createComponent when (it) {
+                is LoadRating -> openUpdateInfo()
+            }
+        }
+
+        settingsViewModel.initDarkThemeState(requireActivity())
+    }
+
+    private fun openUpdateInfo() {
+        RatingDialog.newInstance(requireActivity() as ChangeLogProvider)
+            .show(requireActivity(), RatingDialog.TAG)
+    }
+
+    private fun showVersionUpgrade(newVersion: Int) {
+        VersionUpgradeDialog.newInstance(newVersion)
+            .show(requireActivity(), VersionUpgradeDialog.TAG)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        settingsView = null
+        factory = null
+    }
+
+    private fun failedNavigation(error: ActivityNotFoundException?) {
+        if (error == null) {
+            settingsViewModel.navigationSuccess()
+        } else {
+            settingsViewModel.navigationFailed(error)
+        }
+    }
+
+    private fun viewMorePyamsoftApps() {
+        val error = MarketLinker.linkToDeveloperPage(requireContext())
+        failedNavigation(error)
+    }
+
+    private fun darkThemeChanged(mode: Theming.Mode) {
+        onDarkThemeClicked(mode)
+    }
+
+    private fun openClearDataDialog() {
+        onClearAllClicked()
+    }
+
+    private fun openLicensesPage() {
+        onLicenseItemClicked()
+    }
+
+    private fun openMarkForRating() {
+        requireContext().also { c ->
+            val link = c.packageName
+            val error = MarketLinker.linkToMarketPage(c, link)
+            failedNavigation(error)
+        }
+    }
+
+    private fun navigateHyperlink(link: HyperlinkIntent) {
+        val error = link.navigate()
+        failedNavigation(error)
+    }
+
+    @CallSuper
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        settingsView?.saveState(outState)
+    }
+
+    /**
+     * Logs when the Clear All option is clicked, override to use unique implementation
+     */
+    @CallSuper
+    protected open fun onClearAllClicked() {
+        Timber.d("Clear all preferences clicked")
+    }
+
+    /**
+     * Toggles dark theme, override or extend to use unique implementation
+     */
+    @CallSuper
+    protected open fun onDarkThemeClicked(mode: Theming.Mode) {
+        Timber.d("Dark theme set: $mode")
+        requireActivity().recreate()
+    }
+
+    /**
+     * Shows a page for Open Source licenses, override or extend to use unique implementation
+     */
+    @CallSuper
+    protected open fun onLicenseItemClicked() {
+        Timber.d("Show about licenses fragment")
+        if (isInDialogFragment(this)) {
+            val container = requireView().parent as ViewGroup
+            AboutFragment.show(this, container.id)
+        } else {
+            val baseActivity = requireActivity() as ActivityBase
+            AboutFragment.show(baseActivity, baseActivity.fragmentContainerId)
+        }
+    }
+
+    companion object {
+
+        @JvmStatic
+        @CheckResult
+        private fun isInDialogFragment(fragment: Fragment): Boolean {
+            if (fragment is DialogFragment) {
+                return true
+            }
+
+            var parent = fragment.parentFragment
+            while (parent != null) {
+                if (parent is DialogFragment) {
+                    return true
+                }
+                parent = parent.parentFragment
+            }
+            return false
+        }
+    }
 }

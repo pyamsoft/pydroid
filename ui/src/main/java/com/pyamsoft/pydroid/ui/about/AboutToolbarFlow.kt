@@ -25,12 +25,10 @@ data class AboutToolbarState(val title: String) : UiViewState
 
 sealed class AboutToolbarViewEvent : UiViewEvent {
 
-  object UpNavigate : AboutToolbarViewEvent()
-
+    object UpNavigate : AboutToolbarViewEvent()
 }
 
 sealed class AboutToolbarControllerEvent : UiControllerEvent {
 
-  object Navigation : AboutToolbarControllerEvent()
-
+    object Navigation : AboutToolbarControllerEvent()
 }

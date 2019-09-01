@@ -30,121 +30,118 @@ import java.util.concurrent.ConcurrentHashMap
 
 object Toaster {
 
-  @JvmStatic
-  @CheckResult
-  private fun make(
-    context: Context,
-    @StringRes resId: Int,
-    duration: Int
-  ): Toast {
-    return Toast.makeText(context.applicationContext, resId, duration)
-  }
-
-  @JvmStatic
-  @CheckResult
-  private fun make(
-    context: Context,
-    message: CharSequence,
-    duration: Int
-  ): Toast {
-    return Toast.makeText(context.applicationContext, message, duration)
-  }
-
-  private val cache: MutableMap<Lifecycle, Instance> by lazy { ConcurrentHashMap<Lifecycle, Instance>() }
-
-  @CheckResult
-  fun bindTo(owner: LifecycleOwner): Instance {
-    return bindTo(owner.lifecycle)
-  }
-
-  @CheckResult
-  fun bindTo(lifecycle: Lifecycle): Instance {
-    if (cache.containsKey(lifecycle)) {
-      return requireNotNull(cache[lifecycle])
-    } else {
-      return cacheInstance(lifecycle)
-    }
-  }
-
-  @CheckResult
-  private fun cacheInstance(lifecycle: Lifecycle): Instance {
-    val instance = Instance()
-    cache[lifecycle] = instance
-
-    lifecycle.addObserver(object : LifecycleObserver {
-
-      @Suppress("unused")
-      @OnLifecycleEvent(ON_DESTROY)
-      fun onDestroy() {
-        lifecycle.removeObserver(this)
-        cache.remove(lifecycle)
-        instance.onDestroy()
-      }
-
-    })
-
-    return instance
-  }
-
-  class Instance internal constructor() {
-
-    private var alive = true
-    private var toast: Toast? = null
-
-    internal fun onDestroy() {
-      dismiss()
-      alive = false
+    @JvmStatic
+    @CheckResult
+    private fun make(
+        context: Context,
+        @StringRes resId: Int,
+        duration: Int
+    ): Toast {
+        return Toast.makeText(context.applicationContext, resId, duration)
     }
 
-    private fun requireStillAlive() {
-      require(alive) { "This Toaster.${Instance::class.java.simpleName} is Dead" }
+    @JvmStatic
+    @CheckResult
+    private fun make(
+        context: Context,
+        message: CharSequence,
+        duration: Int
+    ): Toast {
+        return Toast.makeText(context.applicationContext, message, duration)
     }
 
-    fun dismiss() {
-      toast?.cancel()
-      toast = null
+    private val cache: MutableMap<Lifecycle, Instance> by lazy { ConcurrentHashMap<Lifecycle, Instance>() }
+
+    @CheckResult
+    fun bindTo(owner: LifecycleOwner): Instance {
+        return bindTo(owner.lifecycle)
     }
 
     @CheckResult
-    fun short(
-      context: Context,
-      message: CharSequence
-    ): Toast {
-      requireStillAlive()
-      dismiss()
-      return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
+    fun bindTo(lifecycle: Lifecycle): Instance {
+        if (cache.containsKey(lifecycle)) {
+            return requireNotNull(cache[lifecycle])
+        } else {
+            return cacheInstance(lifecycle)
+        }
     }
 
     @CheckResult
-    fun short(
-      context: Context,
-      @StringRes message: Int
-    ): Toast {
-      requireStillAlive()
-      dismiss()
-      return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
+    private fun cacheInstance(lifecycle: Lifecycle): Instance {
+        val instance = Instance()
+        cache[lifecycle] = instance
+
+        lifecycle.addObserver(object : LifecycleObserver {
+
+            @Suppress("unused")
+            @OnLifecycleEvent(ON_DESTROY)
+            fun onDestroy() {
+                lifecycle.removeObserver(this)
+                cache.remove(lifecycle)
+                instance.onDestroy()
+            }
+        })
+
+        return instance
     }
 
-    @CheckResult
-    fun long(
-      context: Context,
-      message: CharSequence
-    ): Toast {
-      requireStillAlive()
-      dismiss()
-      return make(context, message, Toast.LENGTH_LONG).also { toast = it }
+    class Instance internal constructor() {
+
+        private var alive = true
+        private var toast: Toast? = null
+
+        internal fun onDestroy() {
+            dismiss()
+            alive = false
+        }
+
+        private fun requireStillAlive() {
+            require(alive) { "This Toaster.${Instance::class.java.simpleName} is Dead" }
+        }
+
+        fun dismiss() {
+            toast?.cancel()
+            toast = null
+        }
+
+        @CheckResult
+        fun short(
+            context: Context,
+            message: CharSequence
+        ): Toast {
+            requireStillAlive()
+            dismiss()
+            return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
+        }
+
+        @CheckResult
+        fun short(
+            context: Context,
+            @StringRes message: Int
+        ): Toast {
+            requireStillAlive()
+            dismiss()
+            return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
+        }
+
+        @CheckResult
+        fun long(
+            context: Context,
+            message: CharSequence
+        ): Toast {
+            requireStillAlive()
+            dismiss()
+            return make(context, message, Toast.LENGTH_LONG).also { toast = it }
+        }
+
+        @CheckResult
+        fun long(
+            context: Context,
+            @StringRes message: Int
+        ): Toast {
+            requireStillAlive()
+            dismiss()
+            return make(context, message, Toast.LENGTH_LONG).also { toast = it }
+        }
     }
-
-    @CheckResult
-    fun long(
-      context: Context,
-      @StringRes message: Int
-    ): Toast {
-      requireStillAlive()
-      dismiss()
-      return make(context, message, Toast.LENGTH_LONG).also { toast = it }
-    }
-
-  }
-
 }

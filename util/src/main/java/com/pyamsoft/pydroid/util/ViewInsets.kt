@@ -25,54 +25,54 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 fun ViewGroup.makeWindowSexy() {
-  this.systemUiVisibility =
-    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+    this.systemUiVisibility =
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 }
 
 fun View.doOnApplyWindowInsets(func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit) {
-  // Create a snapshot of the view's padding state
-  val initialPadding = recordInitialPaddingForView(this)
+    // Create a snapshot of the view's padding state
+    val initialPadding = recordInitialPaddingForView(this)
 
-  // Set an actual OnApplyWindowInsetsListener which proxies to the given
-  // lambda, also passing in the original padding state
-  ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-    func(v, insets, initialPadding)
-    // Always return the insets, so that children can also use them
-    return@setOnApplyWindowInsetsListener insets
-  }
+    // Set an actual OnApplyWindowInsetsListener which proxies to the given
+    // lambda, also passing in the original padding state
+    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+        func(v, insets, initialPadding)
+        // Always return the insets, so that children can also use them
+        return@setOnApplyWindowInsetsListener insets
+    }
 
-  // request some insets
-  this.requestApplyInsetsWhenAttached()
+    // request some insets
+    this.requestApplyInsetsWhenAttached()
 }
 
 data class InitialPadding internal constructor(
-  val left: Int,
-  val top: Int,
-  val right: Int,
-  val bottom: Int
+    val left: Int,
+    val top: Int,
+    val right: Int,
+    val bottom: Int
 )
 
 @CheckResult
 private fun recordInitialPaddingForView(view: View): InitialPadding {
-  return InitialPadding(
-      view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
-  )
+    return InitialPadding(
+        view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
+    )
 }
 
 private fun View.requestApplyInsetsWhenAttached() {
-  if (isAttachedToWindow) {
-    // We're already attached, just request as normal
-    this.requestApplyInsets()
-  } else {
-    // We're not attached to the hierarchy, add a listener to
-    // request when we are
-    this.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-      override fun onViewAttachedToWindow(v: View) {
-        v.removeOnAttachStateChangeListener(this)
-        v.requestApplyInsets()
-      }
+    if (isAttachedToWindow) {
+        // We're already attached, just request as normal
+        this.requestApplyInsets()
+    } else {
+        // We're not attached to the hierarchy, add a listener to
+        // request when we are
+        this.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {
+                v.removeOnAttachStateChangeListener(this)
+                v.requestApplyInsets()
+            }
 
-      override fun onViewDetachedFromWindow(v: View) {}
-    })
-  }
+            override fun onViewDetachedFromWindow(v: View) {}
+        })
+    }
 }

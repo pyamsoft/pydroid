@@ -25,58 +25,55 @@ import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface VersionUpgradeComponent {
 
-  fun inject(dialog: VersionUpgradeDialog)
+    fun inject(dialog: VersionUpgradeDialog)
 
-  interface Factory {
+    interface Factory {
 
-    @CheckResult
-    fun create(
-      activity: Activity,
-      parent: ViewGroup,
-      owner: LifecycleOwner,
-      newVersion: Int
-    ): VersionUpgradeComponent
-
-  }
-
-  class Impl private constructor(
-    private val activity: Activity,
-    private val parent: ViewGroup,
-    private val owner: LifecycleOwner,
-    private val applicationName: String,
-    private val currentVersion: Int,
-    private val newVersion: Int,
-    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-  ) : VersionUpgradeComponent {
-
-    override fun inject(dialog: VersionUpgradeDialog) {
-      val contentView =
-        VersionUpgradeContentView(applicationName, currentVersion, newVersion, parent)
-      val controlsView = VersionUpgradeControlView(owner, parent)
-
-      dialog.factory = factoryProvider(activity)
-      dialog.control = controlsView
-      dialog.content = contentView
+        @CheckResult
+        fun create(
+            activity: Activity,
+            parent: ViewGroup,
+            owner: LifecycleOwner,
+            newVersion: Int
+        ): VersionUpgradeComponent
     }
 
-    internal class FactoryImpl internal constructor(
-      private val applicationName: String,
-      private val currentVersion: Int,
-      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-    ) : Factory {
+    class Impl private constructor(
+        private val activity: Activity,
+        private val parent: ViewGroup,
+        private val owner: LifecycleOwner,
+        private val applicationName: String,
+        private val currentVersion: Int,
+        private val newVersion: Int,
+        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+    ) : VersionUpgradeComponent {
 
-      override fun create(
-        activity: Activity,
-        parent: ViewGroup,
-        owner: LifecycleOwner,
-        newVersion: Int
-      ): VersionUpgradeComponent {
-        return Impl(
-            activity, parent, owner, applicationName, currentVersion, newVersion, factoryProvider
-        )
-      }
+        override fun inject(dialog: VersionUpgradeDialog) {
+            val contentView =
+                VersionUpgradeContentView(applicationName, currentVersion, newVersion, parent)
+            val controlsView = VersionUpgradeControlView(owner, parent)
 
+            dialog.factory = factoryProvider(activity)
+            dialog.control = controlsView
+            dialog.content = contentView
+        }
+
+        internal class FactoryImpl internal constructor(
+            private val applicationName: String,
+            private val currentVersion: Int,
+            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        ) : Factory {
+
+            override fun create(
+                activity: Activity,
+                parent: ViewGroup,
+                owner: LifecycleOwner,
+                newVersion: Int
+            ): VersionUpgradeComponent {
+                return Impl(
+                    activity, parent, owner, applicationName, currentVersion, newVersion, factoryProvider
+                )
+            }
+        }
     }
-
-  }
 }

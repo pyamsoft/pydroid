@@ -21,8 +21,8 @@ import androidx.annotation.CheckResult
 
 interface RatingInteractor {
 
-  @CheckResult
-  suspend fun needsToViewRating(force: Boolean): Boolean
+    @CheckResult
+    suspend fun needsToViewRating(force: Boolean): Boolean
 
-  suspend fun saveRating()
+    suspend fun saveRating()
 }

@@ -22,19 +22,17 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 
-internal class AboutItemViewModel internal constructor(
-) : UiViewModel<UnitViewState, AboutItemViewEvent, AboutItemControllerEvent>(
-    initialState = UnitViewState
-) {
+internal class AboutItemViewModel internal constructor() :
+    UiViewModel<UnitViewState, AboutItemViewEvent, AboutItemControllerEvent>(
+        initialState = UnitViewState
+    ) {
 
-  override fun onInit() {
-  }
-
-  override fun handleViewEvent(event: AboutItemViewEvent) {
-    return when (event) {
-      is OpenUrl -> publish(ExternalUrl(event.url))
+    override fun onInit() {
     }
-  }
 
+    override fun handleViewEvent(event: AboutItemViewEvent) {
+        return when (event) {
+            is OpenUrl -> publish(ExternalUrl(event.url))
+        }
+    }
 }
-

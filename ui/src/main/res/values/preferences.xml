@@ -17,68 +17,68 @@
 
 <resources>
 
-  <string name="clear_all_key">clear_all</string>
-  <string name="clear_all_title">Reset All Settings</string>
-  <string name="clear_all_summary">Reset all application settings</string>
+    <string name="clear_all_key">clear_all</string>
+    <string name="clear_all_title">Reset All Settings</string>
+    <string name="clear_all_summary">Reset all application settings</string>
 
-  <string name="upgrade_info_key">upgrade_info</string>
-  <string name="upgrade_info_title">Show Upgrade Information</string>
-  <string name="upgrade_info_summary">Show the most recent change log!</string>
+    <string name="upgrade_info_key">upgrade_info</string>
+    <string name="upgrade_info_title">Show Upgrade Information</string>
+    <string name="upgrade_info_summary">Show the most recent change log!</string>
 
-  <string name="about_license_key">about_license</string>
-  <string name="about_license_title">Open Source Licenses</string>
-  <string name="about_license_summary">Open Source powers pyamsoft applications!</string>
+    <string name="about_license_key">about_license</string>
+    <string name="about_license_title">Open Source Licenses</string>
+    <string name="about_license_summary">Open Source powers pyamsoft applications!</string>
 
-  <string name="check_version_key">check_version</string>
-  <string name="check_version_title">Check for Updates</string>
-  <string name="check_version_summary">Always have the fanciest stuff!</string>
+    <string name="check_version_key">check_version</string>
+    <string name="check_version_title">Check for Updates</string>
+    <string name="check_version_summary">Always have the fanciest stuff!</string>
 
-  <string name="rating_key">rate_application</string>
-  <string name="rating_title">Rate Application</string>
-  <string name="rating_summary">Liking the App? Leave a Review!</string>
+    <string name="rating_key">rate_application</string>
+    <string name="rating_title">Rate Application</string>
+    <string name="rating_summary">Liking the App? Leave a Review!</string>
 
-  <string name="bugreport_key">bugreport</string>
-  <string name="bugreport_title">Submit a Bug Report</string>
-  <string name="bugreport_summary">Something not working right? Help me help you!</string>
+    <string name="bugreport_key">bugreport</string>
+    <string name="bugreport_title">Submit a Bug Report</string>
+    <string name="bugreport_summary">Something not working right? Help me help you!</string>
 
-  <string name="view_source_key">view_source</string>
-  <string name="view_source_title">View Source Code</string>
-  <string name="view_source_summary">We love open source! View the source code of this app!</string>
+    <string name="view_source_key">view_source</string>
+    <string name="view_source_title">View Source Code</string>
+    <string name="view_source_summary">We love open source! View the source code of this app!</string>
 
-  <string name="view_privacy_key">view_privacy</string>
-  <string name="view_privacy_title">@string/privacy_policy</string>
-  <string name="view_privacy_summary">Read our Privacy Policy!</string>
+    <string name="view_privacy_key">view_privacy</string>
+    <string name="view_privacy_title">@string/privacy_policy</string>
+    <string name="view_privacy_summary">Read our Privacy Policy!</string>
 
-  <string name="view_terms_key">view_terms</string>
-  <string name="view_terms_title">@string/terms_conditions</string>
-  <string name="view_terms_summary">Read our Terms &amp; Conditions!</string>
+    <string name="view_terms_key">view_terms</string>
+    <string name="view_terms_title">@string/terms_conditions</string>
+    <string name="view_terms_summary">Read our Terms &amp; Conditions!</string>
 
-  <string name="more_apps_key">more_apps</string>
-  <string name="more_apps_title">@string/more_apps_from_pyamsoft</string>
-  <string name="more_apps_summary">See more great Apps from pyamsoft!</string>
+    <string name="more_apps_key">more_apps</string>
+    <string name="more_apps_title">@string/more_apps_from_pyamsoft</string>
+    <string name="more_apps_summary">See more great Apps from pyamsoft!</string>
 
-  <string name="social_media_f_key">social_media_f</string>
-  <string name="social_media_f_title">Social Media</string>
-  <string name="social_media_f_summary">Follow pyamsoft on social media!</string>
+    <string name="social_media_f_key">social_media_f</string>
+    <string name="social_media_f_title">Social Media</string>
+    <string name="social_media_f_summary">Follow pyamsoft on social media!</string>
 
-  <string name="social_media_b_key">social_media_b</string>
-  <string name="social_media_b_title">Blogs and Updates</string>
-  <string name="social_media_b_summary">Follow the pyamsoft official blog for updates!</string>
+    <string name="social_media_b_key">social_media_b</string>
+    <string name="social_media_b_title">Blogs and Updates</string>
+    <string name="social_media_b_summary">Follow the pyamsoft official blog for updates!</string>
 
-  <string name="dark_mode_key">dark_mode_v2</string>
-  <string name="dark_mode_title">Theme</string>
-  <string name="dark_mode_summary">Apply either a Light or Dark theme!</string>
+    <string name="dark_mode_key">dark_mode_v2</string>
+    <string name="dark_mode_title">Theme</string>
+    <string name="dark_mode_summary">Apply either a Light or Dark theme!</string>
 
-  <string-array name="dark_mode_names_v1">
-    <item name="light">Light Theme</item>
-    <item name="dark">Dark Theme</item>
-    <item name="system">System Default</item>
-  </string-array>
+    <string-array name="dark_mode_names_v1">
+        <item name="light">Light Theme</item>
+        <item name="dark">Dark Theme</item>
+        <item name="system">System Default</item>
+    </string-array>
 
-  <string-array name="dark_mode_values_v1">
-    <item name="light">light</item>
-    <item name="dark">dark</item>
-    <item name="system">system</item>
-  </string-array>
+    <string-array name="dark_mode_values_v1">
+        <item name="light">light</item>
+        <item name="dark">dark</item>
+        <item name="system">system</item>
+    </string-array>
 
 </resources>

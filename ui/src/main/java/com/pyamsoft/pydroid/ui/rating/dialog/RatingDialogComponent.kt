@@ -27,64 +27,61 @@ import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface RatingDialogComponent {
 
-  fun inject(dialog: RatingDialog)
+    fun inject(dialog: RatingDialog)
 
-  interface Factory {
+    interface Factory {
 
-    @CheckResult
-    fun create(
-      activity: Activity,
-      parent: ViewGroup,
-      owner: LifecycleOwner,
-      rateLink: String,
-      changeLogIcon: Int,
-      changeLog: SpannedString
-    ): RatingDialogComponent
-
-  }
-
-  class Impl private constructor(
-    private val activity: Activity,
-    private val parent: ViewGroup,
-    private val changeLogIcon: Int,
-    private val rateLink: String,
-    private val changeLog: SpannedString,
-    private val owner: LifecycleOwner,
-    private val loaderModule: LoaderModule,
-    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-  ) : RatingDialogComponent {
-
-    override fun inject(dialog: RatingDialog) {
-      val icon = RatingIconView(changeLogIcon, loaderModule.provideLoader(), parent)
-      val changelog = RatingChangelogView(changeLog, parent)
-      val controls = RatingControlsView(rateLink, owner, parent)
-
-      dialog.factory = factoryProvider(activity)
-      dialog.iconView = icon
-      dialog.changelogView = changelog
-      dialog.controlsView = controls
+        @CheckResult
+        fun create(
+            activity: Activity,
+            parent: ViewGroup,
+            owner: LifecycleOwner,
+            rateLink: String,
+            changeLogIcon: Int,
+            changeLog: SpannedString
+        ): RatingDialogComponent
     }
 
-    internal class FactoryImpl internal constructor(
-      private val loaderModule: LoaderModule,
-      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-    ) : Factory {
+    class Impl private constructor(
+        private val activity: Activity,
+        private val parent: ViewGroup,
+        private val changeLogIcon: Int,
+        private val rateLink: String,
+        private val changeLog: SpannedString,
+        private val owner: LifecycleOwner,
+        private val loaderModule: LoaderModule,
+        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+    ) : RatingDialogComponent {
 
-      override fun create(
-        activity: Activity,
-        parent: ViewGroup,
-        owner: LifecycleOwner,
-        rateLink: String,
-        changeLogIcon: Int,
-        changeLog: SpannedString
-      ): RatingDialogComponent {
-        return Impl(
-            activity, parent, changeLogIcon, rateLink, changeLog,
-            owner, loaderModule, factoryProvider
-        )
-      }
+        override fun inject(dialog: RatingDialog) {
+            val icon = RatingIconView(changeLogIcon, loaderModule.provideLoader(), parent)
+            val changelog = RatingChangelogView(changeLog, parent)
+            val controls = RatingControlsView(rateLink, owner, parent)
 
+            dialog.factory = factoryProvider(activity)
+            dialog.iconView = icon
+            dialog.changelogView = changelog
+            dialog.controlsView = controls
+        }
+
+        internal class FactoryImpl internal constructor(
+            private val loaderModule: LoaderModule,
+            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        ) : Factory {
+
+            override fun create(
+                activity: Activity,
+                parent: ViewGroup,
+                owner: LifecycleOwner,
+                rateLink: String,
+                changeLogIcon: Int,
+                changeLog: SpannedString
+            ): RatingDialogComponent {
+                return Impl(
+                    activity, parent, changeLogIcon, rateLink, changeLog,
+                    owner, loaderModule, factoryProvider
+                )
+            }
+        }
     }
-
-  }
 }

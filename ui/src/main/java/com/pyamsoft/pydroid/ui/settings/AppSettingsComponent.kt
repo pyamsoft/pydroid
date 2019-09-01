@@ -27,77 +27,73 @@ import com.pyamsoft.pydroid.ui.version.VersionView
 
 internal interface AppSettingsComponent {
 
-  fun inject(fragment: AppSettingsPreferenceFragment)
+    fun inject(fragment: AppSettingsPreferenceFragment)
 
-  interface Factory {
+    interface Factory {
 
-    @CheckResult
-    fun create(
-      activity: Activity,
-      owner: LifecycleOwner,
-      preferenceScreen: PreferenceScreen,
-      hideClearAll: Boolean,
-      hideUpgradeInformation: Boolean,
-      parentProvider: () -> ViewGroup
-    ): AppSettingsComponent
-
-  }
-
-  class Impl private constructor(
-    private val activity: Activity,
-    private val parentProvider: () -> ViewGroup,
-    private val owner: LifecycleOwner,
-    private val applicationName: String,
-    private val bugReportUrl: String,
-    private val viewSourceUrl: String,
-    private val privacyPolicyUrl: String,
-    private val termsConditionsUrl: String,
-    private val hideClearAll: Boolean,
-    private val hideUpgradeInformation: Boolean,
-    private val preferenceScreen: PreferenceScreen,
-    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-  ) : AppSettingsComponent {
-
-    override fun inject(fragment: AppSettingsPreferenceFragment) {
-      val versionView = VersionView(owner, parentProvider)
-      val settingsView = AppSettingsView(
-          activity, applicationName, bugReportUrl,
-          viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
-          hideClearAll, hideUpgradeInformation, preferenceScreen
-      )
-
-      fragment.versionView = versionView
-      fragment.settingsView = settingsView
-      fragment.factory = factoryProvider(activity)
+        @CheckResult
+        fun create(
+            activity: Activity,
+            owner: LifecycleOwner,
+            preferenceScreen: PreferenceScreen,
+            hideClearAll: Boolean,
+            hideUpgradeInformation: Boolean,
+            parentProvider: () -> ViewGroup
+        ): AppSettingsComponent
     }
 
-    internal class FactoryImpl internal constructor(
-      private val applicationName: String,
-      private val bugReportUrl: String,
-      private val viewSourceUrl: String,
-      private val privacyPolicyUrl: String,
-      private val termsConditionsUrl: String,
-      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-    ) : Factory {
+    class Impl private constructor(
+        private val activity: Activity,
+        private val parentProvider: () -> ViewGroup,
+        private val owner: LifecycleOwner,
+        private val applicationName: String,
+        private val bugReportUrl: String,
+        private val viewSourceUrl: String,
+        private val privacyPolicyUrl: String,
+        private val termsConditionsUrl: String,
+        private val hideClearAll: Boolean,
+        private val hideUpgradeInformation: Boolean,
+        private val preferenceScreen: PreferenceScreen,
+        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+    ) : AppSettingsComponent {
 
-      override fun create(
-        activity: Activity,
-        owner: LifecycleOwner,
-        preferenceScreen: PreferenceScreen,
-        hideClearAll: Boolean,
-        hideUpgradeInformation: Boolean,
-        parentProvider: () -> ViewGroup
-      ): AppSettingsComponent {
-        return Impl(
-            activity, parentProvider, owner, applicationName, bugReportUrl,
-            viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
-            hideClearAll, hideUpgradeInformation, preferenceScreen,
-            factoryProvider
-        )
-      }
+        override fun inject(fragment: AppSettingsPreferenceFragment) {
+            val versionView = VersionView(owner, parentProvider)
+            val settingsView = AppSettingsView(
+                activity, applicationName, bugReportUrl,
+                viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
+                hideClearAll, hideUpgradeInformation, preferenceScreen
+            )
 
+            fragment.versionView = versionView
+            fragment.settingsView = settingsView
+            fragment.factory = factoryProvider(activity)
+        }
+
+        internal class FactoryImpl internal constructor(
+            private val applicationName: String,
+            private val bugReportUrl: String,
+            private val viewSourceUrl: String,
+            private val privacyPolicyUrl: String,
+            private val termsConditionsUrl: String,
+            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        ) : Factory {
+
+            override fun create(
+                activity: Activity,
+                owner: LifecycleOwner,
+                preferenceScreen: PreferenceScreen,
+                hideClearAll: Boolean,
+                hideUpgradeInformation: Boolean,
+                parentProvider: () -> ViewGroup
+            ): AppSettingsComponent {
+                return Impl(
+                    activity, parentProvider, owner, applicationName, bugReportUrl,
+                    viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
+                    hideClearAll, hideUpgradeInformation, preferenceScreen,
+                    factoryProvider
+                )
+            }
+        }
     }
-  }
 }
-
-

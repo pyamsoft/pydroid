@@ -24,22 +24,21 @@ import java.util.Collections
 
 @JsonClass(generateAdapter = true)
 internal data class VersionCheckResponse internal constructor(
-  @field:Json(name = "response_objects")
-  internal val responseObjects: List<VersionCheckResponseEntry>?
+    @field:Json(name = "response_objects")
+    internal val responseObjects: List<VersionCheckResponseEntry>?
 ) {
 
-  @CheckResult
-  fun responseObjects(): List<VersionCheckResponseEntry> {
-    return responseObjects.let {
-      if (it == null) {
-        throw RuntimeException("VersionCheckResponse: responseObjects was null")
-      } else {
-        return@let Collections.unmodifiableList(it)
-      }
+    @CheckResult
+    fun responseObjects(): List<VersionCheckResponseEntry> {
+        return responseObjects.let {
+            if (it == null) {
+                throw RuntimeException("VersionCheckResponse: responseObjects was null")
+            } else {
+                return@let Collections.unmodifiableList(it)
+            }
+        }
     }
-  }
 
-  // Needed so we can generate a static adapter
-  companion object
-
+    // Needed so we can generate a static adapter
+    companion object
 }

@@ -17,13 +17,11 @@
 
 <merge>
 
-  <View
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/dropshadow_view"
-      android:layout_width="match_parent"
-      android:layout_height="4dp"
-      android:background="@drawable/dropshadow"
-      />
+    <View xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/dropshadow_view"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/dropshadow" />
 
 </merge>
 

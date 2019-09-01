@@ -21,47 +21,43 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
-) {
+abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() {
 
-  private val viewEventBus = EventBus.create<V>()
+    private val viewEventBus = EventBus.create<V>()
 
-  @IdRes
-  @CheckResult
-  abstract fun id(): Int
+    @IdRes
+    @CheckResult
+    abstract fun id(): Int
 
-  @PublishedApi
-  internal fun inflate(savedInstanceState: Bundle?) {
-    doInflate(savedInstanceState)
-  }
+    @PublishedApi
+    internal fun inflate(savedInstanceState: Bundle?) {
+        doInflate(savedInstanceState)
+    }
 
-  protected open fun doInflate(savedInstanceState: Bundle?) {
-  }
+    protected open fun doInflate(savedInstanceState: Bundle?) {
+    }
 
-  abstract fun render(
-    state: S,
-    savedState: UiSavedState
-  )
+    abstract fun render(
+        state: S,
+        savedState: UiSavedState
+    )
 
-  @PublishedApi
-  internal fun teardown() {
-    doTeardown()
-  }
+    @PublishedApi
+    internal fun teardown() {
+        doTeardown()
+    }
 
-  protected open fun doTeardown() {
+    protected open fun doTeardown() {
+    }
 
-  }
+    open fun saveState(outState: Bundle) {
+    }
 
-  open fun saveState(outState: Bundle) {
-  }
+    internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
+        viewEventBus.onEvent(func)
+    }
 
-  internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
-    viewEventBus.onEvent(func)
-  }
-
-  protected fun publish(event: V) {
-    viewEventBus.publish(event)
-  }
-
+    protected fun publish(event: V) {
+        viewEventBus.publish(event)
+    }
 }
-

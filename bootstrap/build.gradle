@@ -17,18 +17,18 @@
 
 dependencies {
 
-  // Moshi
-  implementation "com.squareup.moshi:moshi:$moshi"
-  kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
+    // Moshi
+    implementation "com.squareup.moshi:moshi:$moshi"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
-  // Retrofit
-  implementation "com.squareup.retrofit2:retrofit:$retrofit"
-  implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
-  implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
 
-  // Cachify
-  api "com.pyamsoft.cachify:cachify:$cachify"
+    // Cachify
+    api "com.pyamsoft.cachify:cachify:$cachify"
 
-  api project(':util')
+    api project(':util')
 }
 

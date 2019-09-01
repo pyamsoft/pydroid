@@ -35,25 +35,24 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
-  private val activity: Activity,
-  private val ratingInteractor: RatingInteractor,
-  private val aboutInteractor: AboutInteractor,
-  private val versionInteractor: VersionCheckInteractor,
-  private val theming: Theming
+    private val activity: Activity,
+    private val ratingInteractor: RatingInteractor,
+    private val aboutInteractor: AboutInteractor,
+    private val versionInteractor: VersionCheckInteractor,
+    private val theming: Theming
 ) : UiViewModelFactory() {
 
-  override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
-    return when (modelClass) {
-      AboutToolbarViewModel::class -> AboutToolbarViewModel()
-      AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
-      RatingViewModel::class -> RatingViewModel(ratingInteractor)
-      RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
-      AppSettingsViewModel::class -> AppSettingsViewModel(theming, activity)
-      VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
-      VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
-      PrivacyViewModel::class -> PrivacyViewModel(activity)
-      else -> fail()
+    override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
+        return when (modelClass) {
+            AboutToolbarViewModel::class -> AboutToolbarViewModel()
+            AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
+            RatingViewModel::class -> RatingViewModel(ratingInteractor)
+            RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
+            AppSettingsViewModel::class -> AppSettingsViewModel(theming, activity)
+            VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
+            VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
+            PrivacyViewModel::class -> PrivacyViewModel(activity)
+            else -> fail()
+        }
     }
-  }
-
 }

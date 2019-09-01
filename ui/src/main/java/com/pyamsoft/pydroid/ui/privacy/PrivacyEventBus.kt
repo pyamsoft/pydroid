@@ -21,18 +21,17 @@ import com.pyamsoft.pydroid.arch.EventBus
 
 object PrivacyEventBus : EventBus<PrivacyEvents> {
 
-  private val bus by lazy { EventBus.create<PrivacyEvents>() }
+    private val bus by lazy { EventBus.create<PrivacyEvents>() }
 
-  override fun publish(event: PrivacyEvents) {
-    bus.publish(event)
-  }
+    override fun publish(event: PrivacyEvents) {
+        bus.publish(event)
+    }
 
-  override suspend fun send(event: PrivacyEvents) {
-    bus.send(event)
-  }
+    override suspend fun send(event: PrivacyEvents) {
+        bus.send(event)
+    }
 
-  override suspend fun onEvent(emitter: suspend (event: PrivacyEvents) -> Unit) {
-    bus.onEvent(emitter)
-  }
-
+    override suspend fun onEvent(emitter: suspend (event: PrivacyEvents) -> Unit) {
+        bus.onEvent(emitter)
+    }
 }

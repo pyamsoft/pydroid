@@ -25,17 +25,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class AboutInteractorImpl internal constructor(
-  private val enforcer: Enforcer
+    private val enforcer: Enforcer
 ) : AboutInteractor {
 
-  @CheckResult
-  private fun createLicenseStream(): Set<OssLibrary> {
-    enforcer.assertNotOnMainThread()
-    return OssLibraries.libraries()
-  }
-
-  override suspend fun loadLicenses(bypass: Boolean): List<OssLibrary> =
-    withContext(context = Dispatchers.Default) {
-      return@withContext createLicenseStream().sortedBy { it.name.toLowerCase() }
+    @CheckResult
+    private fun createLicenseStream(): Set<OssLibrary> {
+        enforcer.assertNotOnMainThread()
+        return OssLibraries.libraries()
     }
+
+    override suspend fun loadLicenses(bypass: Boolean): List<OssLibrary> =
+        withContext(context = Dispatchers.Default) {
+            return@withContext createLicenseStream().sortedBy { it.name.toLowerCase() }
+        }
 }

@@ -28,12 +28,12 @@ import androidx.core.content.ContextCompat
 
 @CheckResult
 fun Drawable.tintWith(@ColorInt c: Int): Drawable {
-  return mutate().apply {
-    colorFilter = PorterDuffColorFilter(c, PorterDuff.Mode.SRC_IN)
-  }
+    return mutate().apply {
+        colorFilter = PorterDuffColorFilter(c, PorterDuff.Mode.SRC_IN)
+    }
 }
 
 @CheckResult
 fun Drawable.tintWith(c: Context, @ColorRes cl: Int): Drawable {
-  return tintWith(ContextCompat.getColor(c, cl))
+    return tintWith(ContextCompat.getColor(c, cl))
 }

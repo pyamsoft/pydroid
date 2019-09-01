@@ -30,155 +30,150 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructor(
-  parent: PreferenceScreen
+    parent: PreferenceScreen
 ) : UiView<S, V>() {
 
-  private var _parent: PreferenceScreen? = parent
-  private var boundPrefs: MutableSet<BoundPref<*>>? = null
-
-  @CheckResult
-  private fun parent(): PreferenceScreen {
-    return requireNotNull(_parent)
-  }
-
-  private fun die(): Nothing {
-    throw IllegalStateException("Cannot call UiView methods after it has been torn down")
-  }
-
-  private fun assertValidState() {
-    if (_parent == null) {
-      die()
-    }
-  }
-
-  final override fun id(): Int {
-    throw InvalidIdException
-  }
-
-  final override fun doInflate(savedInstanceState: Bundle?) {
-    onInflated(parent(), savedInstanceState)
-  }
-
-  protected open fun onInflated(
-    preferenceScreen: PreferenceScreen,
-    savedInstanceState: Bundle?
-  ) {
-
-  }
-
-  final override fun render(
-    state: S,
-    savedState: UiSavedState
-  ) {
-    assertValidState()
-    onRender(state, savedState)
-  }
-
-  protected abstract fun onRender(
-    state: S,
-    savedState: UiSavedState
-  )
-
-  final override fun saveState(outState: Bundle) {
-    assertValidState()
-    onSaveState(outState)
-  }
-
-  protected open fun onSaveState(outState: Bundle) {
-  }
-
-  final override fun doTeardown() {
-    assertValidState()
-    onTeardown()
-
-    boundPrefs?.forEach { it.teardown() }
-    boundPrefs?.clear()
-
-    boundPrefs = null
-    _parent = null
-  }
-
-  protected open fun onTeardown() {
-
-  }
-
-  @CheckResult
-  protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {
-    return boundPref(parent().context.getString(id))
-  }
-
-  @CheckResult
-  protected fun <V : Preference> boundPref(key: String): BoundPref<V> {
-    assertValidState()
-
-    return BoundPref<V>(parent(), key).also { v ->
-      assertValidState()
-
-      val bv: MutableSet<BoundPref<*>>? = boundPrefs
-      val mutateMe: MutableSet<BoundPref<*>>
-      if (bv == null) {
-        val bound = LinkedHashSet<BoundPref<*>>()
-        boundPrefs = bound
-        mutateMe = bound
-      } else {
-        mutateMe = bv
-      }
-
-      mutateMe.add(v)
-    }
-  }
-
-  protected class BoundPref<V : Preference> internal constructor(
-    parent: PreferenceScreen,
-    private val key: String
-  ) : ReadOnlyProperty<Any, V> {
-
-    private var parent: PreferenceScreen? = parent
-    private var view: V? = null
-
-    private fun die(): Nothing {
-      throw IllegalStateException("Cannot call BoundPref methods after it has been torn down")
-    }
+    private var _parent: PreferenceScreen? = parent
+    private var boundPrefs: MutableSet<BoundPref<*>>? = null
 
     @CheckResult
     private fun parent(): PreferenceScreen {
-      return parent ?: die()
+        return requireNotNull(_parent)
+    }
+
+    private fun die(): Nothing {
+        throw IllegalStateException("Cannot call UiView methods after it has been torn down")
     }
 
     private fun assertValidState() {
-      if (parent == null) {
-        die()
-      }
+        if (_parent == null) {
+            die()
+        }
     }
 
-    override fun getValue(
-      thisRef: Any,
-      property: KProperty<*>
-    ): V {
-      assertValidState()
-
-      val v: V? = view
-      val result: V
-      if (v == null) {
-        @Suppress("UNCHECKED_CAST")
-        val bound = requireNotNull(parent().findPreference(key)) as V
-        view = bound
-        result = bound
-      } else {
-        result = v
-      }
-
-      return result
+    final override fun id(): Int {
+        throw InvalidIdException
     }
 
-    internal fun teardown() {
-      assertValidState()
-
-      parent = null
-      view = null
+    final override fun doInflate(savedInstanceState: Bundle?) {
+        onInflated(parent(), savedInstanceState)
     }
 
-  }
+    protected open fun onInflated(
+        preferenceScreen: PreferenceScreen,
+        savedInstanceState: Bundle?
+    ) {
+    }
 
+    final override fun render(
+        state: S,
+        savedState: UiSavedState
+    ) {
+        assertValidState()
+        onRender(state, savedState)
+    }
+
+    protected abstract fun onRender(
+        state: S,
+        savedState: UiSavedState
+    )
+
+    final override fun saveState(outState: Bundle) {
+        assertValidState()
+        onSaveState(outState)
+    }
+
+    protected open fun onSaveState(outState: Bundle) {
+    }
+
+    final override fun doTeardown() {
+        assertValidState()
+        onTeardown()
+
+        boundPrefs?.forEach { it.teardown() }
+        boundPrefs?.clear()
+
+        boundPrefs = null
+        _parent = null
+    }
+
+    protected open fun onTeardown() {
+    }
+
+    @CheckResult
+    protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {
+        return boundPref(parent().context.getString(id))
+    }
+
+    @CheckResult
+    protected fun <V : Preference> boundPref(key: String): BoundPref<V> {
+        assertValidState()
+
+        return BoundPref<V>(parent(), key).also { v ->
+            assertValidState()
+
+            val bv: MutableSet<BoundPref<*>>? = boundPrefs
+            val mutateMe: MutableSet<BoundPref<*>>
+            if (bv == null) {
+                val bound = LinkedHashSet<BoundPref<*>>()
+                boundPrefs = bound
+                mutateMe = bound
+            } else {
+                mutateMe = bv
+            }
+
+            mutateMe.add(v)
+        }
+    }
+
+    protected class BoundPref<V : Preference> internal constructor(
+        parent: PreferenceScreen,
+        private val key: String
+    ) : ReadOnlyProperty<Any, V> {
+
+        private var parent: PreferenceScreen? = parent
+        private var view: V? = null
+
+        private fun die(): Nothing {
+            throw IllegalStateException("Cannot call BoundPref methods after it has been torn down")
+        }
+
+        @CheckResult
+        private fun parent(): PreferenceScreen {
+            return parent ?: die()
+        }
+
+        private fun assertValidState() {
+            if (parent == null) {
+                die()
+            }
+        }
+
+        override fun getValue(
+            thisRef: Any,
+            property: KProperty<*>
+        ): V {
+            assertValidState()
+
+            val v: V? = view
+            val result: V
+            if (v == null) {
+                @Suppress("UNCHECKED_CAST")
+                val bound = requireNotNull(parent().findPreference(key)) as V
+                view = bound
+                result = bound
+            } else {
+                result = v
+            }
+
+            return result
+        }
+
+        internal fun teardown() {
+            assertValidState()
+
+            parent = null
+            view = null
+        }
+    }
 }
-

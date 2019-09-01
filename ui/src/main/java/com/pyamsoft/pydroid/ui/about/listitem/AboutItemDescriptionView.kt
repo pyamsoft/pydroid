@@ -30,34 +30,33 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
-  private val library: OssLibrary,
-  parent: ViewGroup
+    private val library: OssLibrary,
+    parent: ViewGroup
 ) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
 
-  override val layout: Int = R.layout.about_item_description
+    override val layout: Int = R.layout.about_item_description
 
-  override val layoutRoot by boundView<TextView>(R.id.about_description)
+    override val layoutRoot by boundView<TextView>(R.id.about_description)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onInflated(view, savedInstanceState)
-    layoutRoot.text = library.description
-    layoutRoot.isVisible = library.description.isNotBlank()
-  }
-
-  override fun onRender(
-    state: UnitViewState,
-    savedState: UiSavedState
-  ) {
-  }
-
-  override fun onTeardown() {
-    layoutRoot.apply {
-      text = ""
-      isGone = true
+    override fun onInflated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onInflated(view, savedInstanceState)
+        layoutRoot.text = library.description
+        layoutRoot.isVisible = library.description.isNotBlank()
     }
-  }
 
+    override fun onRender(
+        state: UnitViewState,
+        savedState: UiSavedState
+    ) {
+    }
+
+    override fun onTeardown() {
+        layoutRoot.apply {
+            text = ""
+            isGone = true
+        }
+    }
 }

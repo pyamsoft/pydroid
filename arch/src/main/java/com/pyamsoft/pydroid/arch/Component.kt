@@ -21,17 +21,16 @@ import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
-  savedInstanceState: Bundle?,
-  owner: LifecycleOwner,
-  viewModel: UiViewModel<S, V, C>,
-  vararg views: UiView<S, V>,
-  crossinline onControllerEvent: (event: C) -> Unit
+    savedInstanceState: Bundle?,
+    owner: LifecycleOwner,
+    viewModel: UiViewModel<S, V, C>,
+    vararg views: UiView<S, V>,
+    crossinline onControllerEvent: (event: C) -> Unit
 ) {
-  views.forEach { it.inflate(savedInstanceState) }
-  val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
-  owner.doOnDestroy {
-    viewModelBinding.cancel()
-    views.forEach { it.teardown() }
-  }
+    views.forEach { it.inflate(savedInstanceState) }
+    val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
+    owner.doOnDestroy {
+        viewModelBinding.cancel()
+        views.forEach { it.teardown() }
+    }
 }
-

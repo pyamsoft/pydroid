@@ -25,16 +25,14 @@ data class VersionUpgradeViewState(val throwable: Throwable?) : UiViewState
 
 sealed class VersionUpgradeViewEvent : UiViewEvent {
 
-  object Upgrade : VersionUpgradeViewEvent()
+    object Upgrade : VersionUpgradeViewEvent()
 
-  object Cancel : VersionUpgradeViewEvent()
-
+    object Cancel : VersionUpgradeViewEvent()
 }
 
 sealed class VersionUpgradeControllerEvent : UiControllerEvent {
 
-  object OpenMarket : VersionUpgradeControllerEvent()
+    object OpenMarket : VersionUpgradeControllerEvent()
 
-  object CancelDialog : VersionUpgradeControllerEvent()
-
+    object CancelDialog : VersionUpgradeControllerEvent()
 }

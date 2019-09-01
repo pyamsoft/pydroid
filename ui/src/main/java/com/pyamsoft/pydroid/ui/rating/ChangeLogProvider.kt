@@ -23,12 +23,12 @@ import androidx.annotation.DrawableRes
 
 interface ChangeLogProvider {
 
-  @CheckResult
-  fun getPackageName(): String
+    @CheckResult
+    fun getPackageName(): String
 
-  @get:CheckResult
-  val changelog: SpannedString
+    @get:CheckResult
+    val changelog: SpannedString
 
-  @get:[DrawableRes CheckResult]
-  val applicationIcon: Int
+    @get:[DrawableRes CheckResult]
+    val applicationIcon: Int
 }

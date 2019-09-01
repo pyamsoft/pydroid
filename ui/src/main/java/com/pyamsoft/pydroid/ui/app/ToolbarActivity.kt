@@ -21,7 +21,7 @@ import androidx.appcompat.widget.Toolbar
 
 interface ToolbarActivity {
 
-  fun withToolbar(func: (Toolbar) -> Unit)
+    fun withToolbar(func: (Toolbar) -> Unit)
 
-  fun requireToolbar(func: (Toolbar) -> Unit)
+    fun requireToolbar(func: (Toolbar) -> Unit)
 }

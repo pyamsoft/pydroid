@@ -22,12 +22,10 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 
 sealed class AboutItemViewEvent : UiViewEvent {
 
-  data class OpenUrl internal constructor(val url: String) : AboutItemViewEvent()
-
+    data class OpenUrl internal constructor(val url: String) : AboutItemViewEvent()
 }
 
 sealed class AboutItemControllerEvent : UiControllerEvent {
 
-  data class ExternalUrl internal constructor(val url: String) : AboutItemControllerEvent()
-
+    data class ExternalUrl internal constructor(val url: String) : AboutItemControllerEvent()
 }

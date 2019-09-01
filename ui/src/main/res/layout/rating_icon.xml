@@ -17,25 +17,22 @@
 
 <merge>
 
-  <FrameLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      android:id="@+id/rating_icon_root"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:paddingTop="16dp"
-      >
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rating_icon_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/blank"
-        tools:src="@drawable/ic_code_24dp"
-        />
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/blank"
+            tools:src="@drawable/ic_code_24dp" />
 
-  </FrameLayout>
+    </FrameLayout>
 
 </merge>
 

@@ -23,27 +23,27 @@ import androidx.annotation.CheckResult
 
 object Injector {
 
-  @JvmStatic
-  @CheckResult
-  @SuppressLint("WrongConstant")
-  inline fun <reified T : Any> obtain(context: Context): T {
-    return obtain(context, T::class.java)
-  }
+    @JvmStatic
+    @CheckResult
+    @SuppressLint("WrongConstant")
+    inline fun <reified T : Any> obtain(context: Context): T {
+        return obtain(context, T::class.java)
+    }
 
-  @JvmStatic
-  @CheckResult
-  @SuppressLint("WrongConstant")
-  fun <T : Any> obtain(
-    context: Context,
-    targetClass: Class<T>
-  ): T {
-    val name = targetClass.name
-    val service: Any = context.getSystemService(name) ?: throw ServiceLookupException(name)
+    @JvmStatic
+    @CheckResult
+    @SuppressLint("WrongConstant")
+    fun <T : Any> obtain(
+        context: Context,
+        targetClass: Class<T>
+    ): T {
+        val name = targetClass.name
+        val service: Any = context.getSystemService(name) ?: throw ServiceLookupException(name)
 
-    @Suppress("UNCHECKED_CAST")
-    return service as T
-  }
+        @Suppress("UNCHECKED_CAST")
+        return service as T
+    }
 
-  class ServiceLookupException(name: String) :
-      IllegalStateException("Unable to location service: $name")
+    class ServiceLookupException(name: String) :
+        IllegalStateException("Unable to location service: $name")
 }

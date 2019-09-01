@@ -23,18 +23,17 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 data class PrivacyViewState internal constructor(
-  val throwable: Throwable?
+    val throwable: Throwable?
 ) : UiViewState
 
 sealed class PrivacyViewEvent : UiViewEvent {
 
-  object SnackbarHidden : PrivacyViewEvent()
+    object SnackbarHidden : PrivacyViewEvent()
 }
 
 sealed class PrivacyControllerEvent : UiControllerEvent {
 
-  data class ViewExternalPolicy internal constructor(
-    val link: HyperlinkIntent
-  ) : PrivacyControllerEvent()
-
+    data class ViewExternalPolicy internal constructor(
+        val link: HyperlinkIntent
+    ) : PrivacyControllerEvent()
 }

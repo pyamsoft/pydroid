@@ -18,16 +18,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-  <item xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/menu_id_privacy_policy"
-      android:title="@string/privacy_policy"
-      app:showAsAction="never"
-      tools:ignore="AppCompatResource"/>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/menu_id_privacy_policy"
+        android:title="@string/privacy_policy"
+        app:showAsAction="never"
+        tools:ignore="AppCompatResource" />
 
-  <item xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/menu_id_t_c"
-      android:title="@string/terms_conditions"
-      app:showAsAction="never"
-      tools:ignore="AppCompatResource"/>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/menu_id_t_c"
+        android:title="@string/terms_conditions"
+        app:showAsAction="never"
+        tools:ignore="AppCompatResource" />
 
 </menu>

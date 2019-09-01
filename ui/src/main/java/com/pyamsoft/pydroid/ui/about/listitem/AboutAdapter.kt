@@ -24,68 +24,67 @@ import androidx.recyclerview.widget.ListAdapter
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal class AboutAdapter internal constructor(
-  private val callback: (event: AboutItemControllerEvent) -> Unit
+    private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : ListAdapter<OssLibrary, BaseViewHolder>(object : DiffUtil.ItemCallback<OssLibrary>() {
-  override fun areItemsTheSame(
-    oldItem: OssLibrary,
-    newItem: OssLibrary
-  ): Boolean {
-    return oldItem.libraryUrl == newItem.libraryUrl
-  }
+    override fun areItemsTheSame(
+        oldItem: OssLibrary,
+        newItem: OssLibrary
+    ): Boolean {
+        return oldItem.libraryUrl == newItem.libraryUrl
+    }
 
-  override fun areContentsTheSame(
-    oldItem: OssLibrary,
-    newItem: OssLibrary
-  ): Boolean {
-    return oldItem == newItem
-  }
-
+    override fun areContentsTheSame(
+        oldItem: OssLibrary,
+        newItem: OssLibrary
+    ): Boolean {
+        return oldItem == newItem
+    }
 }) {
 
-  init {
-    setHasStableIds(true)
-  }
-
-  override fun getItemId(position: Int): Long {
-    return getItem(position).libraryUrl.hashCode()
-        .toLong()
-  }
-
-  override fun getItemViewType(position: Int): Int {
-    if (getItem(position).name.isBlank()) {
-      return VIEW_TYPE_SPACER
-    } else {
-      return VIEW_TYPE_REAL
+    init {
+        setHasStableIds(true)
     }
-  }
 
-  override fun onCreateViewHolder(
-    parent: ViewGroup,
-    viewType: Int
-  ): BaseViewHolder {
-    val inflater = LayoutInflater.from(parent.context)
-    if (viewType == VIEW_TYPE_REAL) {
-      return AboutViewHolder.create(inflater, parent, callback)
-    } else {
-      return SpaceViewHolder.create(inflater, parent)
+    override fun getItemId(position: Int): Long {
+        return getItem(position).libraryUrl.hashCode()
+            .toLong()
     }
-  }
 
-  override fun onBindViewHolder(
-    holder: BaseViewHolder,
-    position: Int
-  ) {
-    holder.bind(getItem(position))
-  }
+    override fun getItemViewType(position: Int): Int {
+        if (getItem(position).name.isBlank()) {
+            return VIEW_TYPE_SPACER
+        } else {
+            return VIEW_TYPE_REAL
+        }
+    }
 
-  override fun onViewRecycled(holder: BaseViewHolder) {
-    super.onViewRecycled(holder)
-    holder.unbind()
-  }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        if (viewType == VIEW_TYPE_REAL) {
+            return AboutViewHolder.create(inflater, parent, callback)
+        } else {
+            return SpaceViewHolder.create(inflater, parent)
+        }
+    }
 
-  companion object {
+    override fun onBindViewHolder(
+        holder: BaseViewHolder,
+        position: Int
+    ) {
+        holder.bind(getItem(position))
+    }
 
-    private const val VIEW_TYPE_SPACER = 1
-    private const val VIEW_TYPE_REAL = 2
-  }
+    override fun onViewRecycled(holder: BaseViewHolder) {
+        super.onViewRecycled(holder)
+        holder.unbind()
+    }
+
+    companion object {
+
+        private const val VIEW_TYPE_SPACER = 1
+        private const val VIEW_TYPE_REAL = 2
+    }
 }

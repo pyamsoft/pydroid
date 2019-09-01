@@ -32,93 +32,92 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class VersionCheckModule(
-  debug: Boolean,
-  currentVersion: Int,
-  packageName: String,
-  enforcer: Enforcer
+    debug: Boolean,
+    currentVersion: Int,
+    packageName: String,
+    enforcer: Enforcer
 ) {
 
-  private val impl: VersionCheckInteractorImpl
-  private val moshi: Moshi
+    private val impl: VersionCheckInteractorImpl
+    private val moshi: Moshi
 
-  init {
-    moshi = createMoshi()
-    val okHttpClient = createOkHttpClient(debug)
-    val retrofit = createRetrofit(okHttpClient, moshi)
-    val versionCheckService = createService(retrofit)
-    val minimumApiProvider = MinimumApiProviderImpl()
+    init {
+        moshi = createMoshi()
+        val okHttpClient = createOkHttpClient(debug)
+        val retrofit = createRetrofit(okHttpClient, moshi)
+        val versionCheckService = createService(retrofit)
+        val minimumApiProvider = MinimumApiProviderImpl()
 
-    val network = VersionCheckInteractorNetwork(
-        currentVersion,
-        packageName,
-        enforcer,
-        minimumApiProvider,
-        versionCheckService
-    )
+        val network = VersionCheckInteractorNetwork(
+            currentVersion,
+            packageName,
+            enforcer,
+            minimumApiProvider,
+            versionCheckService
+        )
 
-    impl = VersionCheckInteractorImpl(debug, enforcer, createCache(debug, network))
-  }
-
-  @CheckResult
-  fun provideInteractor(): VersionCheckInteractor {
-    return impl
-  }
-
-  companion object {
-
-    private const val GITHUB_URL = "raw.githubusercontent.com"
-    private const val CURRENT_VERSION_REPO_BASE_URL =
-      "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
-
-    @JvmStatic
-    @CheckResult
-    private fun createService(retrofit: Retrofit): VersionCheckService {
-      return retrofit.create(VersionCheckService::class.java)
+        impl = VersionCheckInteractorImpl(debug, enforcer, createCache(debug, network))
     }
 
-    @JvmStatic
     @CheckResult
-    private fun createMoshi(): Moshi {
-      return Moshi.Builder()
-          .build()
+    fun provideInteractor(): VersionCheckInteractor {
+        return impl
     }
 
-    @JvmStatic
-    @CheckResult
-    private fun createCache(
-      debug: Boolean,
-      network: VersionCheckInteractor
-    ): Cached<UpdatePayload> {
-      return cachify<UpdatePayload>(debug = debug) { requireNotNull(network.checkVersion(true)) }
-    }
+    companion object {
 
-    @JvmStatic
-    @CheckResult
-    private fun createOkHttpClient(debug: Boolean): OkHttpClient {
-      return OkHttpClient.Builder()
-          .socketFactory(DelegatingSocketFactory.create())
-          .also {
-            if (debug) {
-              val logging = HttpLoggingInterceptor()
-              logging.level = HttpLoggingInterceptor.Level.BODY
-              it.addInterceptor(logging)
-            }
-          }
-          .build()
-    }
+        private const val GITHUB_URL = "raw.githubusercontent.com"
+        private const val CURRENT_VERSION_REPO_BASE_URL =
+            "https://$GITHUB_URL/pyamsoft/android-project-versions/master/"
 
-    @JvmStatic
-    @CheckResult
-    private fun createRetrofit(
-      okHttpClient: OkHttpClient,
-      moshi: Moshi
-    ): Retrofit {
-      return Retrofit.Builder()
-          .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-          .client(okHttpClient)
-          .addConverterFactory(MoshiConverterFactory.create(moshi))
-          .build()
-    }
+        @JvmStatic
+        @CheckResult
+        private fun createService(retrofit: Retrofit): VersionCheckService {
+            return retrofit.create(VersionCheckService::class.java)
+        }
 
-  }
+        @JvmStatic
+        @CheckResult
+        private fun createMoshi(): Moshi {
+            return Moshi.Builder()
+                .build()
+        }
+
+        @JvmStatic
+        @CheckResult
+        private fun createCache(
+            debug: Boolean,
+            network: VersionCheckInteractor
+        ): Cached<UpdatePayload> {
+            return cachify<UpdatePayload>(debug = debug) { requireNotNull(network.checkVersion(true)) }
+        }
+
+        @JvmStatic
+        @CheckResult
+        private fun createOkHttpClient(debug: Boolean): OkHttpClient {
+            return OkHttpClient.Builder()
+                .socketFactory(DelegatingSocketFactory.create())
+                .also {
+                    if (debug) {
+                        val logging = HttpLoggingInterceptor()
+                        logging.level = HttpLoggingInterceptor.Level.BODY
+                        it.addInterceptor(logging)
+                    }
+                }
+                .build()
+        }
+
+        @JvmStatic
+        @CheckResult
+        private fun createRetrofit(
+            okHttpClient: OkHttpClient,
+            moshi: Moshi
+        ): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
+                .client(okHttpClient)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .build()
+        }
+    }
 }

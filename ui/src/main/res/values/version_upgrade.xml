@@ -19,11 +19,11 @@
 
 <resources>
 
-  <string name="upgrade">Upgrade</string>
-  <string name="later">Later</string>
-  <string name="upgrade_available_title">Upgrade Available</string>
-  <string name="upgrade_available_message">A new version of %1$s is available!</string>
-  <string name="upgrade_available_current_version">Current Version:</string>
-  <string name="upgrade_available_new_version">New Version:</string>
+    <string name="upgrade">Upgrade</string>
+    <string name="later">Later</string>
+    <string name="upgrade_available_title">Upgrade Available</string>
+    <string name="upgrade_available_message">A new version of %1$s is available!</string>
+    <string name="upgrade_available_current_version">Current Version:</string>
+    <string name="upgrade_available_new_version">New Version:</string>
 
 </resources>

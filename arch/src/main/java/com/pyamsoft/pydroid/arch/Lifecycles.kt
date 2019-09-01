@@ -24,19 +24,18 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 
 inline fun LifecycleOwner.doOnDestroy(crossinline func: () -> Unit) {
-  lifecycle.doOnDestroy(func)
+    lifecycle.doOnDestroy(func)
 }
 
 inline fun Lifecycle.doOnDestroy(crossinline func: () -> Unit) {
-  val self = this
-  self.addObserver(object : LifecycleObserver {
+    val self = this
+    self.addObserver(object : LifecycleObserver {
 
-    @Suppress("unused")
-    @OnLifecycleEvent(ON_DESTROY)
-    fun onDestroy() {
-      self.removeObserver(this)
-      func()
-    }
-
-  })
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_DESTROY)
+        fun onDestroy() {
+            self.removeObserver(this)
+            func()
+        }
+    })
 }

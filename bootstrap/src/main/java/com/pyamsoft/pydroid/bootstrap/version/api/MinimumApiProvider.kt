@@ -21,5 +21,6 @@ import androidx.annotation.CheckResult
 
 internal interface MinimumApiProvider {
 
-  @CheckResult fun minApi(): Int
+    @CheckResult
+    fun minApi(): Int
 }

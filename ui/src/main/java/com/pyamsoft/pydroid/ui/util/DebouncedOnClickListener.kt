@@ -25,28 +25,28 @@ import androidx.annotation.CheckResult
  */
 abstract class DebouncedOnClickListener protected constructor() : View.OnClickListener {
 
-  final override fun onClick(view: View) {
-    if (enabled) {
-      enabled = false
-      view.post(enableAgain)
-      doClick(view)
-    }
-  }
-
-  abstract fun doClick(view: View)
-
-  companion object {
-    private var enabled: Boolean = true
-    private var enableAgain: Runnable = Runnable { enabled = true }
-
-    @CheckResult
-    @JvmStatic
-    inline fun create(crossinline func: (View) -> Unit): View.OnClickListener {
-      return object : DebouncedOnClickListener() {
-        override fun doClick(view: View) {
-          func(view)
+    final override fun onClick(view: View) {
+        if (enabled) {
+            enabled = false
+            view.post(enableAgain)
+            doClick(view)
         }
-      }
     }
-  }
+
+    abstract fun doClick(view: View)
+
+    companion object {
+        private var enabled: Boolean = true
+        private var enableAgain: Runnable = Runnable { enabled = true }
+
+        @CheckResult
+        @JvmStatic
+        inline fun create(crossinline func: (View) -> Unit): View.OnClickListener {
+            return object : DebouncedOnClickListener() {
+                override fun doClick(view: View) {
+                    func(view)
+                }
+            }
+        }
+    }
 }

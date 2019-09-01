@@ -28,31 +28,30 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
-  private val changelog: SpannedString,
-  parent: ViewGroup
+    private val changelog: SpannedString,
+    parent: ViewGroup
 ) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
-  private val changelogText by boundView<TextView>(R.id.rating_changelog_text)
+    private val changelogText by boundView<TextView>(R.id.rating_changelog_text)
 
-  override val layout: Int = R.layout.rating_changelog
+    override val layout: Int = R.layout.rating_changelog
 
-  override val layoutRoot by boundView<ScrollView>(R.id.rating_changelog_scroll)
+    override val layoutRoot by boundView<ScrollView>(R.id.rating_changelog_scroll)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    changelogText.text = changelog
-  }
+    override fun onInflated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        changelogText.text = changelog
+    }
 
-  override fun onRender(
-    state: RatingDialogViewState,
-    savedState: UiSavedState
-  ) {
-  }
+    override fun onRender(
+        state: RatingDialogViewState,
+        savedState: UiSavedState
+    ) {
+    }
 
-  override fun onTeardown() {
-    changelogText.text = ""
-  }
-
+    override fun onTeardown() {
+        changelogText.text = ""
+    }
 }

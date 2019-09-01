@@ -18,15 +18,13 @@
 
 <merge>
 
-  <WebView
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      android:id="@+id/license_webview"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:visibility="invisible"
-      tools:visibility="visible"
-      />
+    <WebView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/license_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
 </merge>
 

@@ -23,33 +23,33 @@ import androidx.appcompat.widget.Toolbar
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
 
-  /**
-   * The main view container for all page level fragment transactions
-   */
-  abstract val fragmentContainerId: Int
+    /**
+     * The main view container for all page level fragment transactions
+     */
+    abstract val fragmentContainerId: Int
 
-  /**
-   * Activity level toolbar, similar to ActionBar
-   */
-  private var capturedToolbar: Toolbar? = null
+    /**
+     * Activity level toolbar, similar to ActionBar
+     */
+    private var capturedToolbar: Toolbar? = null
 
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
 
-    // Clear captured Toolbar
-    capturedToolbar = null
-  }
+        // Clear captured Toolbar
+        capturedToolbar = null
+    }
 
-  final override fun withToolbar(func: (Toolbar) -> Unit) {
-    capturedToolbar?.let(func)
-  }
+    final override fun withToolbar(func: (Toolbar) -> Unit) {
+        capturedToolbar?.let(func)
+    }
 
-  final override fun requireToolbar(func: (Toolbar) -> Unit) {
-    requireNotNull(capturedToolbar).let(func)
-  }
+    final override fun requireToolbar(func: (Toolbar) -> Unit) {
+        requireNotNull(capturedToolbar).let(func)
+    }
 
-  final override fun setToolbar(toolbar: Toolbar?) {
-    capturedToolbar = toolbar
-  }
+    final override fun setToolbar(toolbar: Toolbar?) {
+        capturedToolbar = toolbar
+    }
 }

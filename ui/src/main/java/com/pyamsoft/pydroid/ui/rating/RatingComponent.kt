@@ -23,32 +23,29 @@ import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface RatingComponent {
 
-  fun inject(activity: RatingActivity)
+    fun inject(activity: RatingActivity)
 
-  interface Factory {
+    interface Factory {
 
-    @CheckResult
-    fun create(): RatingComponent
-
-  }
-
-  class Impl private constructor(
-    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-  ) : RatingComponent {
-
-    override fun inject(activity: RatingActivity) {
-      activity.ratingFactory = factoryProvider(activity)
+        @CheckResult
+        fun create(): RatingComponent
     }
 
-    internal class FactoryImpl internal constructor(
-      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-    ) : Factory {
+    class Impl private constructor(
+        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+    ) : RatingComponent {
 
-      override fun create(): RatingComponent {
-        return Impl(factoryProvider)
-      }
+        override fun inject(activity: RatingActivity) {
+            activity.ratingFactory = factoryProvider(activity)
+        }
 
+        internal class FactoryImpl internal constructor(
+            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        ) : Factory {
+
+            override fun create(): RatingComponent {
+                return Impl(factoryProvider)
+            }
+        }
     }
-
-  }
 }

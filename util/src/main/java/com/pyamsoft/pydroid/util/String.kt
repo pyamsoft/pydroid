@@ -25,31 +25,29 @@ import androidx.annotation.CheckResult
 
 @CheckResult
 fun String.hyperlink(c: Context): HyperlinkIntent {
-  val intent = Intent(Intent.ACTION_VIEW).also {
-    it.data = Uri.parse(this)
-  }
+    val intent = Intent(Intent.ACTION_VIEW).also {
+        it.data = Uri.parse(this)
+    }
 
-  return HyperlinkIntent(c.applicationContext, intent)
-
+    return HyperlinkIntent(c.applicationContext, intent)
 }
 
 data class HyperlinkIntent internal constructor(
-  val context: Context,
-  val intent: Intent
+    val context: Context,
+    val intent: Intent
 ) {
 
-  fun navigate(): ActivityNotFoundException? {
-    val appContext = context.applicationContext
-    try {
-      appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-      return null
-    } catch (e: ActivityNotFoundException) {
-      return e
+    fun navigate(): ActivityNotFoundException? {
+        val appContext = context.applicationContext
+        try {
+            appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            return null
+        } catch (e: ActivityNotFoundException) {
+            return e
+        }
     }
-  }
 
-  inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit): ActivityNotFoundException? {
-    return navigate()?.also(onNavigateError)
-  }
+    inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit): ActivityNotFoundException? {
+        return navigate()?.also(onNavigateError)
+    }
 }
-

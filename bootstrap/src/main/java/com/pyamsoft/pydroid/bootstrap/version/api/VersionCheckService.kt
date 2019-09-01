@@ -23,7 +23,7 @@ import retrofit2.http.Url
 
 internal interface VersionCheckService {
 
-  @GET
-  @CheckResult
-  suspend fun checkVersion(@Url packageName: String): VersionCheckResponse
+    @GET
+    @CheckResult
+    suspend fun checkVersion(@Url packageName: String): VersionCheckResponse
 }

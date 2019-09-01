@@ -21,51 +21,50 @@ import androidx.annotation.CheckResult
 
 interface EventConsumer<T : Any> {
 
-  suspend fun onEvent(emitter: suspend (event: T) -> Unit)
+    suspend fun onEvent(emitter: suspend (event: T) -> Unit)
 
-  companion object {
+    companion object {
 
-    @CheckResult
-    fun <T : Any> create(
-      from: suspend (
-        onCancel: (doOnCancel: () -> Unit) -> Unit,
-        startWith: (doOnStart: () -> T) -> Unit,
-        emit: suspend (event: T) -> Unit
-      ) -> Unit
-    ): EventConsumer<T> {
-      return object : EventConsumer<T> {
+        @CheckResult
+        fun <T : Any> create(
+            from: suspend (
+                onCancel: (doOnCancel: () -> Unit) -> Unit,
+                startWith: (doOnStart: () -> T) -> Unit,
+                emit: suspend (event: T) -> Unit
+            ) -> Unit
+        ): EventConsumer<T> {
+            return object : EventConsumer<T> {
 
-        private val realBus = EventBus.create<T>()
+                private val realBus = EventBus.create<T>()
 
-        override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
-          // If the caller uses onCancel { } it will populate cancel as a lambda
-          var cancel: (() -> Unit)? = null
-          val onCancel: (doOnCancel: () -> Unit) -> Unit = { cancel = it }
+                override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
+                    // If the caller uses onCancel { } it will populate cancel as a lambda
+                    var cancel: (() -> Unit)? = null
+                    val onCancel: (doOnCancel: () -> Unit) -> Unit = { cancel = it }
 
-          // On emit, we send on the bus
-          val onEmit: suspend (value: T) -> Unit = { realBus.send(it) }
+                    // On emit, we send on the bus
+                    val onEmit: suspend (value: T) -> Unit = { realBus.send(it) }
 
-          // Run and emit an event on stream start
-          var startWith: (() -> T)? = null
-          val onStart: (doOnStart: () -> T) -> Unit = { startWith = it }
+                    // Run and emit an event on stream start
+                    var startWith: (() -> T)? = null
+                    val onStart: (doOnStart: () -> T) -> Unit = { startWith = it }
 
-          from(onCancel, onStart, onEmit)
+                    from(onCancel, onStart, onEmit)
 
-          // Start with using the emitter because the bus will not be listening yet
-          val start = startWith
-          if (start != null) {
-            emitter(start())
-          }
+                    // Start with using the emitter because the bus will not be listening yet
+                    val start = startWith
+                    if (start != null) {
+                        emitter(start())
+                    }
 
-          realBus.onEvent { emitter(it) }
+                    realBus.onEvent { emitter(it) }
 
-          val end = cancel
-          if (end != null) {
-            end()
-          }
+                    val end = cancel
+                    if (end != null) {
+                        end()
+                    }
+                }
+            }
         }
-
-      }
     }
-  }
 }

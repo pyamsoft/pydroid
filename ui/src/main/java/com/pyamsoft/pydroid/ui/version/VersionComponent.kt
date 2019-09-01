@@ -26,51 +26,47 @@ import com.pyamsoft.pydroid.ui.rating.RatingComponent
 
 internal interface VersionComponent {
 
-  @CheckResult
-  fun plusRating(): RatingComponent.Factory
-
-  fun inject(activity: VersionCheckActivity)
-
-  interface Factory {
-
     @CheckResult
-    fun create(
-      owner: LifecycleOwner,
-      snackbarRootProvider: () -> ViewGroup
-    ): VersionComponent
+    fun plusRating(): RatingComponent.Factory
 
-  }
+    fun inject(activity: VersionCheckActivity)
 
-  class Impl private constructor(
-    private val snackbarRootProvider: () -> ViewGroup,
-    private val owner: LifecycleOwner,
-    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-  ) : VersionComponent {
+    interface Factory {
 
-    override fun plusRating(): RatingComponent.Factory {
-      return RatingComponent.Impl.FactoryImpl(factoryProvider)
+        @CheckResult
+        fun create(
+            owner: LifecycleOwner,
+            snackbarRootProvider: () -> ViewGroup
+        ): VersionComponent
     }
 
-    override fun inject(activity: VersionCheckActivity) {
-      val versionView = VersionView(owner, snackbarRootProvider)
+    class Impl private constructor(
+        private val snackbarRootProvider: () -> ViewGroup,
+        private val owner: LifecycleOwner,
+        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+    ) : VersionComponent {
 
-      activity.versionFactory = factoryProvider(activity)
-      activity.versionView = versionView
+        override fun plusRating(): RatingComponent.Factory {
+            return RatingComponent.Impl.FactoryImpl(factoryProvider)
+        }
+
+        override fun inject(activity: VersionCheckActivity) {
+            val versionView = VersionView(owner, snackbarRootProvider)
+
+            activity.versionFactory = factoryProvider(activity)
+            activity.versionView = versionView
+        }
+
+        internal class FactoryImpl internal constructor(
+            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        ) : Factory {
+
+            override fun create(
+                owner: LifecycleOwner,
+                snackbarRootProvider: () -> ViewGroup
+            ): VersionComponent {
+                return Impl(snackbarRootProvider, owner, factoryProvider)
+            }
+        }
     }
-
-    internal class FactoryImpl internal constructor(
-      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-    ) : Factory {
-
-      override fun create(
-        owner: LifecycleOwner,
-        snackbarRootProvider: () -> ViewGroup
-      ): VersionComponent {
-        return Impl(snackbarRootProvider, owner, factoryProvider)
-      }
-
-    }
-
-  }
 }
-

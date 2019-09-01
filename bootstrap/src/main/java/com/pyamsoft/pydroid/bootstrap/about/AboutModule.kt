@@ -22,11 +22,10 @@ import com.pyamsoft.pydroid.core.Enforcer
 
 class AboutModule(enforcer: Enforcer) {
 
-  private val impl = AboutInteractorImpl(enforcer)
+    private val impl = AboutInteractorImpl(enforcer)
 
-  @CheckResult
-  fun provideInteractor(): AboutInteractor {
-    return impl
-  }
-
+    @CheckResult
+    fun provideInteractor(): AboutInteractor {
+        return impl
+    }
 }

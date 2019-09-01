@@ -18,15 +18,15 @@
 package com.pyamsoft.pydroid.bootstrap.libraries
 
 data class OssLibrary(
-  val name: String,
-  val description: String,
-  val libraryUrl: String,
-  val licenseName: String,
-  val licenseUrl: String
+    val name: String,
+    val description: String,
+    val libraryUrl: String,
+    val licenseName: String,
+    val licenseUrl: String
 ) {
-  companion object {
+    companion object {
 
-    @JvmStatic
-    val EMPTY = OssLibrary("", "", "", "", "")
-  }
+        @JvmStatic
+        val EMPTY = OssLibrary("", "", "", "", "")
+    }
 }

@@ -20,5 +20,5 @@ package com.pyamsoft.pydroid.ui.util
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 fun SwipeRefreshLayout.refreshing(refreshing: Boolean) {
-  post { isRefreshing = refreshing }
+    post { isRefreshing = refreshing }
 }

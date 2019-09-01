@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +16,8 @@
   -->
 
 <resources>
-  <string name="license_name">License: %1$s</string>
-  <string name="visit_homepage">Visit Homepage</string>
-  <string name="view_license">View License</string>
-  <string name="open_externally">Open Externally</string>
+    <string name="license_name">License: %1$s</string>
+    <string name="visit_homepage">Visit Homepage</string>
+    <string name="view_license">View License</string>
+    <string name="open_externally">Open Externally</string>
 </resources>

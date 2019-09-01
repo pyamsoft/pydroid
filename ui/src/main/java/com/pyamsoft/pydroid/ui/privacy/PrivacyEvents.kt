@@ -19,8 +19,7 @@ package com.pyamsoft.pydroid.ui.privacy
 
 sealed class PrivacyEvents constructor(val url: String) {
 
-  class ViewPrivacyPolicy(url: String) : PrivacyEvents(url)
+    class ViewPrivacyPolicy(url: String) : PrivacyEvents(url)
 
-  class ViewTermsAndConditions(url: String) : PrivacyEvents(url)
-
+    class ViewTermsAndConditions(url: String) : PrivacyEvents(url)
 }

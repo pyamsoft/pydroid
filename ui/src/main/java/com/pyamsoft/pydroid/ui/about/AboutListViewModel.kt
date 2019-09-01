@@ -25,13 +25,11 @@ import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class AboutListViewModel internal constructor(
-  private val interactor: AboutInteractor
+    private val interactor: AboutInteractor
 ) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
     initialState = AboutListState(
         isLoading = false,
@@ -41,56 +39,56 @@ internal class AboutListViewModel internal constructor(
     )
 ) {
 
-  private val licenseRunner = highlander<Unit, Boolean> { force ->
-    handleLicenseLoadBegin()
-    try {
-      val licenses = interactor.loadLicenses(force)
-      handleLicensesLoaded(licenses)
-    } catch (error: Throwable) {
-      error.onActualError { e ->
-        Timber.e(e, "Error loading licenses")
-        handleLicenseLoadError(e)
-      }
-    } finally {
-      handleLicenseLoadComplete()
+    private val licenseRunner = highlander<Unit, Boolean> { force ->
+        handleLicenseLoadBegin()
+        try {
+            val licenses = interactor.loadLicenses(force)
+            handleLicensesLoaded(licenses)
+        } catch (error: Throwable) {
+            error.onActualError { e ->
+                Timber.e(e, "Error loading licenses")
+                handleLicenseLoadError(e)
+            }
+        } finally {
+            handleLicenseLoadComplete()
+        }
     }
-  }
 
-  override fun onInit() {
-    loadLicenses(false)
-  }
-
-  override fun handleViewEvent(event: AboutListViewEvent) {
-    return when (event) {
-      is OpenUrl -> publish(ExternalUrl(event.url))
+    override fun onInit() {
+        loadLicenses(false)
     }
-  }
 
-  private fun loadLicenses(force: Boolean) {
-    viewModelScope.launch { licenseRunner.call(force) }
-  }
+    override fun handleViewEvent(event: AboutListViewEvent) {
+        return when (event) {
+            is OpenUrl -> publish(ExternalUrl(event.url))
+        }
+    }
 
-  private fun handleLicenseLoadBegin() {
-    setState { copy(isLoading = true) }
-  }
+    private fun loadLicenses(force: Boolean) {
+        viewModelScope.launch { licenseRunner.call(force) }
+    }
 
-  private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
-    setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses, loadError = null) }
-  }
+    private fun handleLicenseLoadBegin() {
+        setState { copy(isLoading = true) }
+    }
 
-  private fun handleLicenseLoadError(throwable: Throwable) {
-    setState { copy(licenses = emptyList(), loadError = throwable) }
-  }
+    private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
+        setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses, loadError = null) }
+    }
 
-  private fun handleLicenseLoadComplete() {
-    setState { copy(isLoading = false) }
-  }
+    private fun handleLicenseLoadError(throwable: Throwable) {
+        setState { copy(licenses = emptyList(), loadError = throwable) }
+    }
 
-  fun navigationFailed(throwable: ActivityNotFoundException) {
-    setState { copy(navigationError = throwable) }
-  }
+    private fun handleLicenseLoadComplete() {
+        setState { copy(isLoading = false) }
+    }
 
-  fun navigationSuccess() {
-    setState { copy(navigationError = null) }
-  }
+    fun navigationFailed(throwable: ActivityNotFoundException) {
+        setState { copy(navigationError = throwable) }
+    }
+
+    fun navigationSuccess() {
+        setState { copy(navigationError = null) }
+    }
 }

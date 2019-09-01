@@ -16,7 +16,7 @@
  */
 
 dependencies {
-  api "androidx.core:core:$core"
-  api project(':core')
+    api "androidx.core:core:$core"
+    api project(':core')
 }
 

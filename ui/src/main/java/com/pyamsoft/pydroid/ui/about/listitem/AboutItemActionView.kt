@@ -30,39 +30,38 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
-  private val library: OssLibrary,
-  parent: ViewGroup
+    private val library: OssLibrary,
+    parent: ViewGroup
 ) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
 
-  private val viewLicense by boundView<Button>(R.id.action_view_license)
-  private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
+    private val viewLicense by boundView<Button>(R.id.action_view_license)
+    private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
 
-  override val layout: Int = R.layout.about_item_actions
+    override val layout: Int = R.layout.about_item_actions
 
-  override val layoutRoot by boundView<View>(R.id.about_actions)
+    override val layoutRoot by boundView<View>(R.id.about_actions)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    viewLicense.setOnDebouncedClickListener {
-      publish(OpenUrl(library.licenseUrl))
+    override fun onInflated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        viewLicense.setOnDebouncedClickListener {
+            publish(OpenUrl(library.licenseUrl))
+        }
+
+        visitHomepage.setOnDebouncedClickListener {
+            publish(OpenUrl(library.libraryUrl))
+        }
     }
 
-    visitHomepage.setOnDebouncedClickListener {
-      publish(OpenUrl(library.libraryUrl))
+    override fun onRender(
+        state: UnitViewState,
+        savedState: UiSavedState
+    ) {
     }
-  }
 
-  override fun onRender(
-    state: UnitViewState,
-    savedState: UiSavedState
-  ) {
-  }
-
-  override fun onTeardown() {
-    viewLicense.setOnDebouncedClickListener(null)
-    visitHomepage.setOnDebouncedClickListener(null)
-  }
-
+    override fun onTeardown() {
+        viewLicense.setOnDebouncedClickListener(null)
+        visitHomepage.setOnDebouncedClickListener(null)
+    }
 }

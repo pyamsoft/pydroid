@@ -21,17 +21,16 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 
 val Fragment.toolbarActivity: ToolbarActivity?
-  @get:CheckResult get() {
-    val a = activity
-    if (a is ToolbarActivity) {
-      return a
-    } else {
-      return null
+    @get:CheckResult get() {
+        val a = activity
+        if (a is ToolbarActivity) {
+            return a
+        } else {
+            return null
+        }
     }
-  }
 
 @CheckResult
 fun Fragment.requireToolbarActivity(): ToolbarActivity {
-  return requireNotNull(toolbarActivity) { "ToolbarActivity is required and cannot be null." }
+    return requireNotNull(toolbarActivity) { "ToolbarActivity is required and cannot be null." }
 }
-

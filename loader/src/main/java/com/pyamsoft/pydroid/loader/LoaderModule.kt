@@ -22,10 +22,10 @@ import androidx.annotation.CheckResult
 
 class LoaderModule(context: Context) {
 
-  private val impl = ImageLoaderImpl(context.applicationContext)
+    private val impl = ImageLoaderImpl(context.applicationContext)
 
-  @CheckResult
-  fun provideLoader(): ImageLoader {
-    return impl
-  }
+    @CheckResult
+    fun provideLoader(): ImageLoader {
+        return impl
+    }
 }

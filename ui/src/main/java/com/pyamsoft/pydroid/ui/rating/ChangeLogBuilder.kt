@@ -22,30 +22,30 @@ import java.util.Collections
 
 class ChangeLogBuilder {
 
-  private val builder: MutableCollection<String> = ArrayList()
+    private val builder: MutableCollection<String> = ArrayList()
 
-  @CheckResult
-  fun bugfix(line: String): ChangeLogBuilder {
-    return this.also { builder.add("BUGFIX: $line") }
-  }
+    @CheckResult
+    fun bugfix(line: String): ChangeLogBuilder {
+        return this.also { builder.add("BUGFIX: $line") }
+    }
 
-  @CheckResult
-  fun change(line: String): ChangeLogBuilder {
-    return this.also { builder.add("CHANGE: $line") }
-  }
+    @CheckResult
+    fun change(line: String): ChangeLogBuilder {
+        return this.also { builder.add("CHANGE: $line") }
+    }
 
-  @CheckResult
-  fun feature(line: String): ChangeLogBuilder {
-    return this.also { builder.add("FEATURE: $line") }
-  }
+    @CheckResult
+    fun feature(line: String): ChangeLogBuilder {
+        return this.also { builder.add("FEATURE: $line") }
+    }
 
-  @CheckResult
-  fun build(): List<String> {
-    return Collections.unmodifiableList(builder.toList())
-  }
+    @CheckResult
+    fun build(): List<String> {
+        return Collections.unmodifiableList(builder.toList())
+    }
 }
 
 @CheckResult
 inline fun buildChangeLog(crossinline func: ChangeLogBuilder.() -> Unit): ChangeLogBuilder {
-  return ChangeLogBuilder().also(func)
+    return ChangeLogBuilder().also(func)
 }

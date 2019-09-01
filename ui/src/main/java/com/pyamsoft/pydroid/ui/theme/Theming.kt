@@ -26,63 +26,62 @@ import timber.log.Timber
 
 class Theming internal constructor(preferences: ThemingPreferences) {
 
-  init {
-    preferences.initializeDarkMode { mode ->
-      setDarkTheme(mode) { newMode ->
-        Timber.d("Theming initialized mode: $newMode")
-      }
-    }
-
-    val mode = preferences.getDarkMode()
-    setDarkTheme(mode)
-  }
-
-  @CheckResult
-  fun isDarkTheme(activity: Activity): Boolean {
-    val uiMode = activity.resources.configuration.uiMode
-    return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-  }
-
-  @JvmOverloads
-  fun setDarkTheme(
-    mode: Mode,
-    onSet: (mode: Mode) -> Unit = DEFAULT_ON_SET_CALLBACK
-  ) {
-    AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
-    onSet(mode)
-  }
-
-  enum class Mode {
-    LIGHT,
-    DARK,
-    SYSTEM;
-
-    @CheckResult
-    fun toRawString(): String {
-      return name.toLowerCase()
-    }
-
-    @CheckResult
-    fun toAppCompatMode(): Int {
-      return when (this) {
-        LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-        DARK -> AppCompatDelegate.MODE_NIGHT_YES
-        else -> when {
-          supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-          else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+    init {
+        preferences.initializeDarkMode { mode ->
+            setDarkTheme(mode) { newMode ->
+                Timber.d("Theming initialized mode: $newMode")
+            }
         }
-      }
+
+        val mode = preferences.getDarkMode()
+        setDarkTheme(mode)
     }
 
     @CheckResult
-    private fun supportsFollowSystem(): Boolean {
-      return Build.VERSION.SDK_INT >= 28
+    fun isDarkTheme(activity: Activity): Boolean {
+        val uiMode = activity.resources.configuration.uiMode
+        return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     }
-  }
 
-  companion object {
+    @JvmOverloads
+    fun setDarkTheme(
+        mode: Mode,
+        onSet: (mode: Mode) -> Unit = DEFAULT_ON_SET_CALLBACK
+    ) {
+        AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
+        onSet(mode)
+    }
 
-    private val DEFAULT_ON_SET_CALLBACK: (mode: Mode) -> Unit = {}
-  }
+    enum class Mode {
+        LIGHT,
+        DARK,
+        SYSTEM;
 
+        @CheckResult
+        fun toRawString(): String {
+            return name.toLowerCase()
+        }
+
+        @CheckResult
+        fun toAppCompatMode(): Int {
+            return when (this) {
+                LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+                DARK -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> when {
+                    supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                }
+            }
+        }
+
+        @CheckResult
+        private fun supportsFollowSystem(): Boolean {
+            return Build.VERSION.SDK_INT >= 28
+        }
+    }
+
+    companion object {
+
+        private val DEFAULT_ON_SET_CALLBACK: (mode: Mode) -> Unit = {}
+    }
 }

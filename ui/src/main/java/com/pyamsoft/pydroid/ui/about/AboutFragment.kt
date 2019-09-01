@@ -43,152 +43,152 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 class AboutFragment : Fragment() {
 
-  internal var factory: ViewModelProvider.Factory? = null
+    internal var factory: ViewModelProvider.Factory? = null
 
-  internal var listView: AboutListView? = null
-  internal var spinnerView: AboutSpinnerView? = null
-  private val listViewModel by factory<AboutListViewModel> { factory }
+    internal var listView: AboutListView? = null
+    internal var spinnerView: AboutSpinnerView? = null
+    private val listViewModel by factory<AboutListViewModel> { factory }
 
-  internal var toolbar: AboutToolbarView? = null
-  private val toolbarViewModel by factory<AboutToolbarViewModel> { factory }
+    internal var toolbar: AboutToolbarView? = null
+    private val toolbarViewModel by factory<AboutToolbarViewModel> { factory }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(R.layout.layout_frame, container, false)
-  }
-
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-
-    val backstack = requireArguments().getInt(KEY_BACK_STACK, 0)
-    val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
-    Injector.obtain<PYDroidComponent>(view.context.applicationContext)
-        .plusAbout()
-        .create(
-            requireActivity(), layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack
-        )
-        .inject(this)
-
-    createComponent(
-        savedInstanceState, viewLifecycleOwner,
-        listViewModel,
-        requireNotNull(listView),
-        requireNotNull(spinnerView)
-    ) {
-      return@createComponent when (it) {
-        is ExternalUrl -> navigateToExternalUrl(it.url)
-      }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.layout_frame, container, false)
     }
 
-    createComponent(
-        savedInstanceState, viewLifecycleOwner,
-        toolbarViewModel,
-        requireNotNull(toolbar)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
     ) {
-      return@createComponent when (it) {
-        is Navigation -> close()
-      }
-    }
-  }
+        super.onViewCreated(view, savedInstanceState)
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    listView = null
-    toolbar = null
-    factory = null
-  }
+        val backstack = requireArguments().getInt(KEY_BACK_STACK, 0)
+        val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
+        Injector.obtain<PYDroidComponent>(view.context.applicationContext)
+            .plusAbout()
+            .create(
+                requireActivity(), layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack
+            )
+            .inject(this)
 
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    listView?.saveState(outState)
-    toolbar?.saveState(outState)
-  }
-
-  private fun navigateToExternalUrl(url: String) {
-    val error = url.hyperlink(requireActivity())
-        .navigate()
-    if (error == null) {
-      listViewModel.navigationSuccess()
-    } else {
-      listViewModel.navigationFailed(error)
-    }
-  }
-
-  private fun close() {
-    requireActivity().onBackPressed()
-  }
-
-  companion object {
-
-    const val TAG = "AboutFragment"
-    private const val KEY_BACK_STACK = "key_back_stack"
-
-    @JvmStatic
-    fun show(
-      fragment: Fragment,
-      @IdRes container: Int
-    ) {
-      show(fragment.viewLifecycleOwner, requireNotNull(fragment.fragmentManager), container)
-    }
-
-    @JvmStatic
-    fun show(
-      activity: FragmentActivity,
-      @IdRes container: Int
-    ) {
-      show(activity, activity.supportFragmentManager, container)
-    }
-
-    @JvmStatic
-    fun show(
-      owner: LifecycleOwner,
-      fragmentManager: FragmentManager,
-      @IdRes container: Int
-    ) {
-      // If you're using this function, all of these are available
-      OssLibraries.BOOTSTRAP = true
-      OssLibraries.UTIL = true
-      OssLibraries.ARCH = true
-      OssLibraries.LOADER = true
-      OssLibraries.UI = true
-
-      val backStackCount = fragmentManager.backStackEntryCount
-      if (fragmentManager.findFragmentByTag(TAG) == null) {
-        fragmentManager.commit(owner) {
-          replace(container, newInstance(backStackCount), TAG)
-          addToBackStack(null)
+        createComponent(
+            savedInstanceState, viewLifecycleOwner,
+            listViewModel,
+            requireNotNull(listView),
+            requireNotNull(spinnerView)
+        ) {
+            return@createComponent when (it) {
+                is ExternalUrl -> navigateToExternalUrl(it.url)
+            }
         }
-      }
-    }
 
-    @Suppress("unused")
-    @JvmStatic
-    @CheckResult
-    fun isPresent(activity: FragmentActivity): Boolean {
-      return isPresent(activity.supportFragmentManager)
-    }
-
-    @Suppress("unused")
-    @JvmStatic
-    @CheckResult
-    fun isPresent(fragmentManager: FragmentManager): Boolean {
-      return fragmentManager.findFragmentByTag(TAG) != null
-    }
-
-    @JvmStatic
-    @CheckResult
-    private fun newInstance(backStackCount: Int): AboutFragment {
-      return AboutFragment().apply {
-        arguments = Bundle().apply {
-          putInt(KEY_BACK_STACK, backStackCount)
+        createComponent(
+            savedInstanceState, viewLifecycleOwner,
+            toolbarViewModel,
+            requireNotNull(toolbar)
+        ) {
+            return@createComponent when (it) {
+                is Navigation -> close()
+            }
         }
-      }
     }
-  }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        listView = null
+        toolbar = null
+        factory = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        listView?.saveState(outState)
+        toolbar?.saveState(outState)
+    }
+
+    private fun navigateToExternalUrl(url: String) {
+        val error = url.hyperlink(requireActivity())
+            .navigate()
+        if (error == null) {
+            listViewModel.navigationSuccess()
+        } else {
+            listViewModel.navigationFailed(error)
+        }
+    }
+
+    private fun close() {
+        requireActivity().onBackPressed()
+    }
+
+    companion object {
+
+        const val TAG = "AboutFragment"
+        private const val KEY_BACK_STACK = "key_back_stack"
+
+        @JvmStatic
+        fun show(
+            fragment: Fragment,
+            @IdRes container: Int
+        ) {
+            show(fragment.viewLifecycleOwner, requireNotNull(fragment.fragmentManager), container)
+        }
+
+        @JvmStatic
+        fun show(
+            activity: FragmentActivity,
+            @IdRes container: Int
+        ) {
+            show(activity, activity.supportFragmentManager, container)
+        }
+
+        @JvmStatic
+        fun show(
+            owner: LifecycleOwner,
+            fragmentManager: FragmentManager,
+            @IdRes container: Int
+        ) {
+            // If you're using this function, all of these are available
+            OssLibraries.BOOTSTRAP = true
+            OssLibraries.UTIL = true
+            OssLibraries.ARCH = true
+            OssLibraries.LOADER = true
+            OssLibraries.UI = true
+
+            val backStackCount = fragmentManager.backStackEntryCount
+            if (fragmentManager.findFragmentByTag(TAG) == null) {
+                fragmentManager.commit(owner) {
+                    replace(container, newInstance(backStackCount), TAG)
+                    addToBackStack(null)
+                }
+            }
+        }
+
+        @Suppress("unused")
+        @JvmStatic
+        @CheckResult
+        fun isPresent(activity: FragmentActivity): Boolean {
+            return isPresent(activity.supportFragmentManager)
+        }
+
+        @Suppress("unused")
+        @JvmStatic
+        @CheckResult
+        fun isPresent(fragmentManager: FragmentManager): Boolean {
+            return fragmentManager.findFragmentByTag(TAG) != null
+        }
+
+        @JvmStatic
+        @CheckResult
+        private fun newInstance(backStackCount: Int): AboutFragment {
+            return AboutFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(KEY_BACK_STACK, backStackCount)
+                }
+            }
+        }
+    }
 }

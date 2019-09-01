@@ -21,17 +21,17 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 
-internal class AboutToolbarViewModel internal constructor(
-) : UiViewModel<AboutToolbarState, AboutToolbarViewEvent, AboutToolbarControllerEvent>(
-    initialState = AboutToolbarState(title = "Open Source Licenses")
-) {
+internal class AboutToolbarViewModel internal constructor() :
+    UiViewModel<AboutToolbarState, AboutToolbarViewEvent, AboutToolbarControllerEvent>(
+        initialState = AboutToolbarState(title = "Open Source Licenses")
+    ) {
 
-  override fun onInit() {
-  }
-
-  override fun handleViewEvent(event: AboutToolbarViewEvent) {
-    return when (event) {
-      is UpNavigate -> publish(Navigation)
+    override fun onInit() {
     }
-  }
+
+    override fun handleViewEvent(event: AboutToolbarViewEvent) {
+        return when (event) {
+            is UpNavigate -> publish(Navigation)
+        }
+    }
 }

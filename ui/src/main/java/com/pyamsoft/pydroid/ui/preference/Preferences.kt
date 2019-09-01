@@ -31,27 +31,27 @@ import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
 
 fun Preference.loadIconCompat(attrs: AttributeSet?) {
-  if (attrs != null) {
-    context.withStyledAttributes(attrs, R.styleable.PreferenceCompat) {
-      val iconResId = getResourceId(R.styleable.PreferenceCompat_iconCompat, 0)
-      if (iconResId != 0) {
-        val icon = AppCompatResources.getDrawable(context, iconResId)
-        setIcon(icon)
-      }
+    if (attrs != null) {
+        context.withStyledAttributes(attrs, R.styleable.PreferenceCompat) {
+            val iconResId = getResourceId(R.styleable.PreferenceCompat_iconCompat, 0)
+            if (iconResId != 0) {
+                val icon = AppCompatResources.getDrawable(context, iconResId)
+                setIcon(icon)
+            }
+        }
     }
-  }
 }
 
 @CheckResult
 @AttrRes
 fun Context.getStyledAttr(
-  @AttrRes attr: Int,
-  @AttrRes fallbackAttr: Int
+    @AttrRes attr: Int,
+    @AttrRes fallbackAttr: Int
 ): Int {
-  val value = TypedValue()
-  theme.resolveAttribute(attr, value, true)
-  if (value.resourceId != 0) {
-    return attr
-  }
-  return fallbackAttr
+    val value = TypedValue()
+    theme.resolveAttribute(attr, value, true)
+    if (value.resourceId != 0) {
+        return attr
+    }
+    return fallbackAttr
 }

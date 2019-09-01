@@ -23,20 +23,18 @@ class UnitViewModel private constructor() : UiViewModel<UnitViewState, UnitViewE
     initialState = UnitViewState
 ) {
 
-  override fun onInit() {
-  }
-
-  override fun handleViewEvent(event: UnitViewEvent) {
-  }
-
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    fun create(): UiViewModel<UnitViewState, UnitViewEvent, UnitControllerEvent> {
-      return UnitViewModel()
+    override fun onInit() {
     }
 
-  }
+    override fun handleViewEvent(event: UnitViewEvent) {
+    }
 
+    companion object {
+
+        @JvmStatic
+        @CheckResult
+        fun create(): UiViewModel<UnitViewState, UnitViewEvent, UnitControllerEvent> {
+            return UnitViewModel()
+        }
+    }
 }

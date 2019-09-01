@@ -30,40 +30,38 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
-  private val library: OssLibrary,
-  parent: ViewGroup
+    private val library: OssLibrary,
+    parent: ViewGroup
 ) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
 
-  private val title by boundView<TextView>(R.id.title)
-  private val license by boundView<TextView>(R.id.license)
+    private val title by boundView<TextView>(R.id.title)
+    private val license by boundView<TextView>(R.id.license)
 
-  override val layout: Int = R.layout.about_item_title
+    override val layout: Int = R.layout.about_item_title
 
-  override val layoutRoot by boundView<View>(R.id.about_title)
+    override val layoutRoot by boundView<View>(R.id.about_title)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    title.text = library.name
-    license.text = getString(R.string.license_name, library.licenseName)
-  }
+    override fun onInflated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        title.text = library.name
+        license.text = getString(R.string.license_name, library.licenseName)
+    }
 
-  override fun onRender(
-    state: UnitViewState,
-    savedState: UiSavedState
-  ) {
-  }
+    override fun onRender(
+        state: UnitViewState,
+        savedState: UiSavedState
+    ) {
+    }
 
-  override fun onTeardown() {
-    title.text = ""
-    license.text = ""
-  }
+    override fun onTeardown() {
+        title.text = ""
+        license.text = ""
+    }
 
-  @CheckResult
-  private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
-    return layoutRoot.context.getString(id, *formatArgs)
-  }
-
+    @CheckResult
+    private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
+        return layoutRoot.context.getString(id, *formatArgs)
+    }
 }
-

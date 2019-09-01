@@ -25,49 +25,47 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 data class AppSettingsViewState(
-  val isDarkTheme: Boolean,
-  val throwable: Throwable?
+    val isDarkTheme: Boolean,
+    val throwable: Throwable?
 ) : UiViewState
 
 sealed class AppSettingsViewEvent : UiViewEvent {
 
-  object MoreApps : AppSettingsViewEvent()
+    object MoreApps : AppSettingsViewEvent()
 
-  data class Hyperlink(val hyperlinkIntent: HyperlinkIntent) : AppSettingsViewEvent()
+    data class Hyperlink(val hyperlinkIntent: HyperlinkIntent) : AppSettingsViewEvent()
 
-  object RateApp : AppSettingsViewEvent()
+    object RateApp : AppSettingsViewEvent()
 
-  object ViewLicense : AppSettingsViewEvent()
+    object ViewLicense : AppSettingsViewEvent()
 
-  object CheckUpgrade : AppSettingsViewEvent()
+    object CheckUpgrade : AppSettingsViewEvent()
 
-  object ClearData : AppSettingsViewEvent()
+    object ClearData : AppSettingsViewEvent()
 
-  object ShowUpgrade : AppSettingsViewEvent()
+    object ShowUpgrade : AppSettingsViewEvent()
 
-  data class ToggleDarkTheme(
-    val activity: Activity,
-    val mode: String
-  ) : AppSettingsViewEvent()
-
+    data class ToggleDarkTheme(
+        val activity: Activity,
+        val mode: String
+    ) : AppSettingsViewEvent()
 }
 
 sealed class AppSettingsControllerEvent : UiControllerEvent {
 
-  object NavigateMoreApps : AppSettingsControllerEvent()
+    object NavigateMoreApps : AppSettingsControllerEvent()
 
-  data class NavigateHyperlink(val hyperlinkIntent: HyperlinkIntent) : AppSettingsControllerEvent()
+    data class NavigateHyperlink(val hyperlinkIntent: HyperlinkIntent) : AppSettingsControllerEvent()
 
-  object NavigateRateApp : AppSettingsControllerEvent()
+    object NavigateRateApp : AppSettingsControllerEvent()
 
-  object ShowLicense : AppSettingsControllerEvent()
+    object ShowLicense : AppSettingsControllerEvent()
 
-  object AttemptCheckUpgrade : AppSettingsControllerEvent()
+    object AttemptCheckUpgrade : AppSettingsControllerEvent()
 
-  object AttemptClearData : AppSettingsControllerEvent()
+    object AttemptClearData : AppSettingsControllerEvent()
 
-  object OpenShowUpgrade : AppSettingsControllerEvent()
+    object OpenShowUpgrade : AppSettingsControllerEvent()
 
-  data class ChangeDarkTheme(val newMode: Theming.Mode) : AppSettingsControllerEvent()
-
+    data class ChangeDarkTheme(val newMode: Theming.Mode) : AppSettingsControllerEvent()
 }

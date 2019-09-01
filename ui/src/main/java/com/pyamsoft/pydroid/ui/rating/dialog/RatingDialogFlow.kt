@@ -25,16 +25,14 @@ data class RatingDialogViewState internal constructor(val throwable: Throwable?)
 
 sealed class RatingDialogViewEvent : UiViewEvent {
 
-  data class Rate internal constructor(val link: String) : RatingDialogViewEvent()
+    data class Rate internal constructor(val link: String) : RatingDialogViewEvent()
 
-  object Cancel : RatingDialogViewEvent()
-
+    object Cancel : RatingDialogViewEvent()
 }
 
 sealed class RatingDialogControllerEvent : UiControllerEvent {
 
-  data class NavigateRating internal constructor(val link: String) : RatingDialogControllerEvent()
+    data class NavigateRating internal constructor(val link: String) : RatingDialogControllerEvent()
 
-  object CancelDialog : RatingDialogControllerEvent()
-
+    object CancelDialog : RatingDialogControllerEvent()
 }

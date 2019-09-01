@@ -24,66 +24,66 @@ import java.net.Socket
 import javax.net.SocketFactory
 
 open class DelegatingSocketFactory protected constructor(
-  private val delegate: SocketFactory
+    private val delegate: SocketFactory
 ) : SocketFactory() {
 
-  final override fun createSocket(): Socket {
-    return delegate.createSocket()
-        .also { configureSocket(it) }
-  }
-
-  final override fun createSocket(
-    host: String?,
-    port: Int
-  ): Socket {
-    return delegate.createSocket(host, port)
-        .also { configureSocket(it) }
-  }
-
-  final override fun createSocket(
-    host: String?,
-    port: Int,
-    localAddress: InetAddress?,
-    localPort: Int
-  ): Socket {
-    return delegate.createSocket(host, port, localAddress, localPort)
-        .also { configureSocket(it) }
-  }
-
-  final override fun createSocket(
-    host: InetAddress?,
-    port: Int
-  ): Socket {
-    return delegate.createSocket(host, port)
-        .also { configureSocket(it) }
-  }
-
-  final override fun createSocket(
-    host: InetAddress?,
-    port: Int,
-    localAddress: InetAddress?,
-    localPort: Int
-  ): Socket {
-    return delegate.createSocket(host, port, localAddress, localPort)
-        .also { configureSocket(it) }
-  }
-
-  @CheckResult
-  protected open fun configureSocket(socket: Socket): Socket {
-    // On Android O and above, StrictMode causes untagged socket errors
-    // Setting the ThreadStatsTag seems to fix it
-    TrafficStats.setThreadStatsTag(1)
-
-    return socket
-  }
-
-  companion object {
-
-    @JvmStatic
-    @CheckResult
-    @JvmOverloads
-    fun create(factory: SocketFactory = getDefault()): SocketFactory {
-      return DelegatingSocketFactory(factory)
+    final override fun createSocket(): Socket {
+        return delegate.createSocket()
+            .also { configureSocket(it) }
     }
-  }
+
+    final override fun createSocket(
+        host: String?,
+        port: Int
+    ): Socket {
+        return delegate.createSocket(host, port)
+            .also { configureSocket(it) }
+    }
+
+    final override fun createSocket(
+        host: String?,
+        port: Int,
+        localAddress: InetAddress?,
+        localPort: Int
+    ): Socket {
+        return delegate.createSocket(host, port, localAddress, localPort)
+            .also { configureSocket(it) }
+    }
+
+    final override fun createSocket(
+        host: InetAddress?,
+        port: Int
+    ): Socket {
+        return delegate.createSocket(host, port)
+            .also { configureSocket(it) }
+    }
+
+    final override fun createSocket(
+        host: InetAddress?,
+        port: Int,
+        localAddress: InetAddress?,
+        localPort: Int
+    ): Socket {
+        return delegate.createSocket(host, port, localAddress, localPort)
+            .also { configureSocket(it) }
+    }
+
+    @CheckResult
+    protected open fun configureSocket(socket: Socket): Socket {
+        // On Android O and above, StrictMode causes untagged socket errors
+        // Setting the ThreadStatsTag seems to fix it
+        TrafficStats.setThreadStatsTag(1)
+
+        return socket
+    }
+
+    companion object {
+
+        @JvmStatic
+        @CheckResult
+        @JvmOverloads
+        fun create(factory: SocketFactory = getDefault()): SocketFactory {
+            return DelegatingSocketFactory(factory)
+        }
+    }
 }

@@ -18,6 +18,6 @@
 package com.pyamsoft.pydroid.bootstrap.version.api
 
 data class UpdatePayload internal constructor(
-  val currentVersion: Int,
-  val newVersion: Int
+    val currentVersion: Int,
+    val newVersion: Int
 )

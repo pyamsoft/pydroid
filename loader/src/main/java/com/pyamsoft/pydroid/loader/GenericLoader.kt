@@ -21,24 +21,24 @@ import android.graphics.drawable.Drawable
 
 abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 
-  protected var startAction: (() -> Unit)? = null
-  protected var errorAction: ((Drawable?) -> Unit)? = null
-  protected var completeAction: ((T) -> Unit)? = null
-  protected var mutator: ((T) -> T)? = null
+    protected var startAction: (() -> Unit)? = null
+    protected var errorAction: ((Drawable?) -> Unit)? = null
+    protected var completeAction: ((T) -> Unit)? = null
+    protected var mutator: ((T) -> T)? = null
 
-  final override fun onRequest(action: () -> Unit): Loader<T> {
-    return this.also { it.startAction = action }
-  }
+    final override fun onRequest(action: () -> Unit): Loader<T> {
+        return this.also { it.startAction = action }
+    }
 
-  final override fun onError(action: (Drawable?) -> Unit): Loader<T> {
-    return this.also { it.errorAction = action }
-  }
+    final override fun onError(action: (Drawable?) -> Unit): Loader<T> {
+        return this.also { it.errorAction = action }
+    }
 
-  final override fun onLoaded(action: (T) -> Unit): Loader<T> {
-    return this.also { it.completeAction = action }
-  }
+    final override fun onLoaded(action: (T) -> Unit): Loader<T> {
+        return this.also { it.completeAction = action }
+    }
 
-  final override fun mutate(action: (T) -> T): Loader<T> {
-    return this.also { it.mutator = action }
-  }
+    final override fun mutate(action: (T) -> T): Loader<T> {
+        return this.also { it.mutator = action }
+    }
 }

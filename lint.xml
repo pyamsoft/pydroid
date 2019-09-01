@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +16,9 @@
   -->
 
 <lint>
-  <issue id="all">
-    <ignore path="build"/>
-    <ignore path="assets"/>
-    <ignore path="rel"/>
-  </issue>
+    <issue id="all">
+        <ignore path="build" />
+        <ignore path="assets" />
+        <ignore path="rel" />
+    </issue>
 </lint>

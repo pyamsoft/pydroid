@@ -22,6 +22,6 @@ import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 
 interface VersionCheckInteractor {
 
-  @CheckResult
-  suspend fun checkVersion(force: Boolean): UpdatePayload?
+    @CheckResult
+    suspend fun checkVersion(force: Boolean): UpdatePayload?
 }

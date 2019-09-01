@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
-  private val interactor: VersionCheckInteractor
+    private val interactor: VersionCheckInteractor
 ) : UiViewModel<VersionViewState, VersionViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
         isLoading = null,
@@ -37,56 +37,55 @@ internal class VersionCheckViewModel internal constructor(
     )
 ) {
 
-  private var notifyUpgrade: Boolean = true
+    private var notifyUpgrade: Boolean = true
 
-  private val checkUpdateRunner = highlander<Unit, Boolean> { force ->
-    handleVersionCheckBegin(force)
-    try {
-      val version = interactor.checkVersion(force)
-      if (version != null && (force || notifyUpgrade)) {
-        notifyUpgrade = false
-        handleVersionCheckFound(version.currentVersion, version.newVersion)
-      }
-    } catch (error: Throwable) {
-      error.onActualError { e ->
-        Timber.e(e, "Error checking for latest version")
-        handleVersionCheckError(e)
-      }
-    } finally {
-      handleVersionCheckComplete()
+    private val checkUpdateRunner = highlander<Unit, Boolean> { force ->
+        handleVersionCheckBegin(force)
+        try {
+            val version = interactor.checkVersion(force)
+            if (version != null && (force || notifyUpgrade)) {
+                notifyUpgrade = false
+                handleVersionCheckFound(version.currentVersion, version.newVersion)
+            }
+        } catch (error: Throwable) {
+            error.onActualError { e ->
+                Timber.e(e, "Error checking for latest version")
+                handleVersionCheckError(e)
+            }
+        } finally {
+            handleVersionCheckComplete()
+        }
     }
-  }
 
-  override fun onInit() {
-  }
-
-  override fun handleViewEvent(event: VersionViewEvent) {
-    return when (event) {
-      is SnackbarHidden -> setState { copy(throwable = null) }
+    override fun onInit() {
     }
-  }
 
-  private fun handleVersionCheckBegin(forced: Boolean) {
-    setState { copy(isLoading = Loading(forced)) }
-  }
+    override fun handleViewEvent(event: VersionViewEvent) {
+        return when (event) {
+            is SnackbarHidden -> setState { copy(throwable = null) }
+        }
+    }
 
-  private fun handleVersionCheckFound(
-    currentVersion: Int,
-    newVersion: Int
-  ) {
-    publish(ShowUpgrade(UpgradePayload(currentVersion, newVersion)))
-  }
+    private fun handleVersionCheckBegin(forced: Boolean) {
+        setState { copy(isLoading = Loading(forced)) }
+    }
 
-  private fun handleVersionCheckError(throwable: Throwable) {
-    setState { copy(throwable = throwable) }
-  }
+    private fun handleVersionCheckFound(
+        currentVersion: Int,
+        newVersion: Int
+    ) {
+        publish(ShowUpgrade(UpgradePayload(currentVersion, newVersion)))
+    }
 
-  private fun handleVersionCheckComplete() {
-    setState { copy(isLoading = null) }
-  }
+    private fun handleVersionCheckError(throwable: Throwable) {
+        setState { copy(throwable = throwable) }
+    }
 
-  internal fun checkForUpdates(force: Boolean) {
-    viewModelScope.launch { checkUpdateRunner.call(force) }
-  }
+    private fun handleVersionCheckComplete() {
+        setState { copy(isLoading = null) }
+    }
 
+    internal fun checkForUpdates(force: Boolean) {
+        viewModelScope.launch { checkUpdateRunner.call(force) }
+    }
 }

@@ -24,13 +24,12 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 
 interface ModuleProvider {
 
-  @CheckResult
-  fun enforcer(): Enforcer
+    @CheckResult
+    fun enforcer(): Enforcer
 
-  @CheckResult
-  fun theming(): Theming
+    @CheckResult
+    fun theming(): Theming
 
-  @CheckResult
-  fun imageLoader(): ImageLoader
-
+    @CheckResult
+    fun imageLoader(): ImageLoader
 }

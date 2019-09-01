@@ -40,54 +40,53 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
 
 internal class AppSettingsViewModel internal constructor(
-  private val theming: Theming,
-  activity: Activity
+    private val theming: Theming,
+    activity: Activity
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
     initialState = AppSettingsViewState(
         isDarkTheme = theming.isDarkTheme(activity), throwable = null
     )
 ) {
 
-  private var activity: Activity? = activity
+    private var activity: Activity? = activity
 
-  override fun onInit() {
-  }
-
-  override fun onTeardown() {
-    activity = null
-  }
-
-  override fun handleViewEvent(event: AppSettingsViewEvent) {
-    return when (event) {
-      is MoreApps -> publish(NavigateMoreApps)
-      is Hyperlink -> publish(NavigateHyperlink(event.hyperlinkIntent))
-      is RateApp -> publish(NavigateRateApp)
-      is ViewLicense -> publish(ShowLicense)
-      is CheckUpgrade -> publish(AttemptCheckUpgrade)
-      is ClearData -> publish(AttemptClearData)
-      is ShowUpgrade -> publish(OpenShowUpgrade)
-      is ToggleDarkTheme -> changeDarkMode(event.mode)
+    override fun onInit() {
     }
-  }
 
-  fun initDarkThemeState(activity: Activity) {
-    setState { copy(isDarkTheme = theming.isDarkTheme(activity)) }
-  }
-
-  private fun changeDarkMode(
-    mode: String
-  ) {
-    theming.setDarkTheme(mode.toMode()) {
-      publish(ChangeDarkTheme(it))
+    override fun onTeardown() {
+        activity = null
     }
-  }
 
-  fun navigationFailed(error: ActivityNotFoundException) {
-    setState { copy(throwable = error) }
-  }
+    override fun handleViewEvent(event: AppSettingsViewEvent) {
+        return when (event) {
+            is MoreApps -> publish(NavigateMoreApps)
+            is Hyperlink -> publish(NavigateHyperlink(event.hyperlinkIntent))
+            is RateApp -> publish(NavigateRateApp)
+            is ViewLicense -> publish(ShowLicense)
+            is CheckUpgrade -> publish(AttemptCheckUpgrade)
+            is ClearData -> publish(AttemptClearData)
+            is ShowUpgrade -> publish(OpenShowUpgrade)
+            is ToggleDarkTheme -> changeDarkMode(event.mode)
+        }
+    }
 
-  fun navigationSuccess() {
-    setState { copy(throwable = null) }
-  }
+    fun initDarkThemeState(activity: Activity) {
+        setState { copy(isDarkTheme = theming.isDarkTheme(activity)) }
+    }
 
+    private fun changeDarkMode(
+        mode: String
+    ) {
+        theming.setDarkTheme(mode.toMode()) {
+            publish(ChangeDarkTheme(it))
+        }
+    }
+
+    fun navigationFailed(error: ActivityNotFoundException) {
+        setState { copy(throwable = error) }
+    }
+
+    fun navigationSuccess() {
+        setState { copy(throwable = null) }
+    }
 }

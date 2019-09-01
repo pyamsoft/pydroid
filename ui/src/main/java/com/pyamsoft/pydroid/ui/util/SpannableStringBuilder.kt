@@ -24,6 +24,6 @@ import androidx.core.text.inSpans
 
 @CheckResult
 inline fun SpannableStringBuilder.size(
-  size: Int,
-  builderAction: SpannableStringBuilder.() -> Unit
+    size: Int,
+    builderAction: SpannableStringBuilder.() -> Unit
 ) = inSpans(AbsoluteSizeSpan(size), builderAction = builderAction)

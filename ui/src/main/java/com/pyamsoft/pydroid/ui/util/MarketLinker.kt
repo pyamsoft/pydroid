@@ -23,43 +23,42 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 object MarketLinker {
 
-  private const val BASE_MARKET = "market://details?id="
-  private const val DEVELOPER_PAGE = "https://play.google.com/store/apps/dev?id=5257476342110165153"
+    private const val BASE_MARKET = "market://details?id="
+    private const val DEVELOPER_PAGE = "https://play.google.com/store/apps/dev?id=5257476342110165153"
 
-  @JvmStatic
-  @JvmOverloads
-  fun linkToMarketPage(
-    context: Context,
-    packageName: String,
-    onError: ((error: ActivityNotFoundException) -> Unit)? = null
-  ): ActivityNotFoundException? {
-    val targetName: String
-    if (packageName.endsWith(".dev")) {
-      targetName = packageName.substringBefore(".dev")
-    } else {
-      targetName = packageName
+    @JvmStatic
+    @JvmOverloads
+    fun linkToMarketPage(
+        context: Context,
+        packageName: String,
+        onError: ((error: ActivityNotFoundException) -> Unit)? = null
+    ): ActivityNotFoundException? {
+        val targetName: String
+        if (packageName.endsWith(".dev")) {
+            targetName = packageName.substringBefore(".dev")
+        } else {
+            targetName = packageName
+        }
+
+        val hyperlink = "$BASE_MARKET$targetName".hyperlink(context)
+        if (onError == null) {
+            return hyperlink.navigate()
+        } else {
+            return hyperlink.navigate(onError)
+        }
     }
 
-    val hyperlink = "$BASE_MARKET$targetName".hyperlink(context)
-    if (onError == null) {
-      return hyperlink.navigate()
-    } else {
-      return hyperlink.navigate(onError)
+    @JvmStatic
+    @JvmOverloads
+    fun linkToDeveloperPage(
+        context: Context,
+        onError: ((error: ActivityNotFoundException) -> Unit)? = null
+    ): ActivityNotFoundException? {
+        val hyperlink = DEVELOPER_PAGE.hyperlink(context)
+        if (onError == null) {
+            return hyperlink.navigate()
+        } else {
+            return hyperlink.navigate(onError)
+        }
     }
-  }
-
-  @JvmStatic
-  @JvmOverloads
-  fun linkToDeveloperPage(
-    context: Context,
-    onError: ((error: ActivityNotFoundException) -> Unit)? = null
-  ): ActivityNotFoundException? {
-    val hyperlink = DEVELOPER_PAGE.hyperlink(context)
-    if (onError == null) {
-      return hyperlink.navigate()
-    } else {
-      return hyperlink.navigate(onError)
-    }
-  }
-
 }

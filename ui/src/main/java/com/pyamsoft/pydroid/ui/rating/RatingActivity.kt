@@ -42,89 +42,89 @@ import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
-  internal var ratingFactory: ViewModelProvider.Factory? = null
-  private val viewModel by factory<RatingViewModel> { ratingFactory }
+    internal var ratingFactory: ViewModelProvider.Factory? = null
+    private val viewModel by factory<RatingViewModel> { ratingFactory }
 
-  protected abstract val changeLogLines: ChangeLogBuilder
+    protected abstract val changeLogLines: ChangeLogBuilder
 
-  protected abstract val versionName: String
+    protected abstract val versionName: String
 
-  final override val changelog: SpannedString
-    get() {
-      return buildSpannedString {
-        val attrArray = intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
-        val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
-        val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
-        withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
-          val size: Int =
-            getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
-          val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
+    final override val changelog: SpannedString
+        get() {
+            return buildSpannedString {
+                val attrArray = intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
+                val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
+                val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
+                withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
+                    val size: Int =
+                        getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
+                    val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
-          inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-            appendln("What's New in version $versionName")
-          }
-        }
+                    inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+                        appendln("What's New in version $versionName")
+                    }
+                }
 
-        withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
-          val size: Int =
-            getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
-          val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
+                withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
+                    val size: Int =
+                        getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
+                    val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
-          inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-            for (line in changeLogLines.build()) {
-              appendln(line)
+                    inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+                        for (line in changeLogLines.build()) {
+                            appendln(line)
+                        }
+                    }
+                }
             }
-          }
         }
-      }
+
+    @CheckResult
+    private fun Int.validate(what: String): Int {
+        if (this == RESOURCE_NOT_FOUND) {
+            throw IllegalArgumentException("Value for $what is: $this")
+        } else {
+            Timber.d("Value for $what is: $this")
+            return this
+        }
     }
 
-  @CheckResult
-  private fun Int.validate(what: String): Int {
-    if (this == RESOURCE_NOT_FOUND) {
-      throw IllegalArgumentException("Value for $what is: $this")
-    } else {
-      Timber.d("Value for $what is: $this")
-      return this
+    @CallSuper
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        // Need to do this in onPostCreate because the snackbarRoot will not be available until
+        // after subclass onCreate
+        Injector.obtain<PYDroidComponent>(applicationContext)
+            .plusVersion()
+            .create(this) { snackbarRoot }
+            .plusRating()
+            .create()
+            .inject(this)
+
+        createComponent(
+            savedInstanceState, this,
+            viewModel
+        ) {
+            return@createComponent when (it) {
+                is LoadRating -> showRating()
+            }
+        }
     }
-  }
 
-  @CallSuper
-  override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
-
-    // Need to do this in onPostCreate because the snackbarRoot will not be available until
-    // after subclass onCreate
-    Injector.obtain<PYDroidComponent>(applicationContext)
-        .plusVersion()
-        .create(this) { snackbarRoot }
-        .plusRating()
-        .create()
-        .inject(this)
-
-    createComponent(
-        savedInstanceState, this,
-        viewModel
-    ) {
-      return@createComponent when (it) {
-        is LoadRating -> showRating()
-      }
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        ratingFactory = null
     }
-  }
 
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    ratingFactory = null
-  }
+    private fun showRating() {
+        RatingDialog.newInstance(this)
+            .show(this, RatingDialog.TAG)
+    }
 
-  private fun showRating() {
-    RatingDialog.newInstance(this)
-        .show(this, RatingDialog.TAG)
-  }
+    companion object {
 
-  companion object {
-
-    private const val RESOURCE_NOT_FOUND = 0
-  }
+        private const val RESOURCE_NOT_FOUND = 0
+    }
 }

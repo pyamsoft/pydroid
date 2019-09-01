@@ -24,25 +24,22 @@ import androidx.annotation.CheckResult
 
 class Enforcer(private val debug: Boolean) {
 
-  private val mainLooper = Looper.getMainLooper()
+    private val mainLooper = Looper.getMainLooper()
 
-  @CheckResult
-  fun isMainThread(): Boolean {
-    return mainLooper.thread == Thread.currentThread()
-  }
-
-  fun assertNotOnMainThread() {
-    // No enforcement in production mode - we will deal with things being slow instead
-    // of flat out crashing
-    if (!debug) {
-      return
+    @CheckResult
+    fun isMainThread(): Boolean {
+        return mainLooper.thread == Thread.currentThread()
     }
 
-    if (isMainThread()) {
-      throw AssertionError("Should be off main thread!")
-    }
-  }
+    fun assertNotOnMainThread() {
+        // No enforcement in production mode - we will deal with things being slow instead
+        // of flat out crashing
+        if (!debug) {
+            return
+        }
 
+        if (isMainThread()) {
+            throw AssertionError("Should be off main thread!")
+        }
+    }
 }
-
-

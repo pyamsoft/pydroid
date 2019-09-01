@@ -33,72 +33,70 @@ import androidx.lifecycle.OnLifecycleEvent
  * Execute func() on ON_START
  */
 inline fun runWhenReady(
-  owner: LifecycleOwner,
-  crossinline func: () -> Unit
+    owner: LifecycleOwner,
+    crossinline func: () -> Unit
 ) {
-  runWhenReady(owner.lifecycle, func)
+    runWhenReady(owner.lifecycle, func)
 }
 
 /**
  * Execute func() on ON_START
  */
 inline fun runWhenReady(
-  lifecycle: Lifecycle,
-  crossinline func: () -> Unit
+    lifecycle: Lifecycle,
+    crossinline func: () -> Unit
 ) {
-  val observer = object : LifecycleObserver {
+    val observer = object : LifecycleObserver {
 
-    @Suppress("unused")
-    @OnLifecycleEvent(ON_START)
-    fun onReady() {
-      lifecycle.removeObserver(this)
-      func()
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_START)
+        fun onReady() {
+            lifecycle.removeObserver(this)
+            func()
+        }
     }
 
-  }
-
-  lifecycle.addObserver(observer)
+    lifecycle.addObserver(observer)
 }
 
 /**
  * Execute func() on ON_RESUME
  */
 inline fun runAfterReady(
-  owner: LifecycleOwner,
-  crossinline func: () -> Unit
+    owner: LifecycleOwner,
+    crossinline func: () -> Unit
 ) {
-  runAfterReady(owner.lifecycle, func)
+    runAfterReady(owner.lifecycle, func)
 }
 
 /**
  * Execute func() on ON_RESUME
  */
 inline fun runAfterReady(
-  lifecycle: Lifecycle,
-  crossinline func: () -> Unit
+    lifecycle: Lifecycle,
+    crossinline func: () -> Unit
 ) {
-  val observer = object : LifecycleObserver {
+    val observer = object : LifecycleObserver {
 
-    @Suppress("unused")
-    @OnLifecycleEvent(ON_RESUME)
-    fun onReady() {
-      lifecycle.removeObserver(this)
-      func()
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_RESUME)
+        fun onReady() {
+            lifecycle.removeObserver(this)
+            func()
+        }
     }
 
-  }
-
-  lifecycle.addObserver(observer)
+    lifecycle.addObserver(observer)
 }
 
 fun LifecycleRegistry.fakeBind() {
-  handleLifecycleEvent(ON_CREATE)
-  handleLifecycleEvent(ON_START)
-  handleLifecycleEvent(ON_RESUME)
+    handleLifecycleEvent(ON_CREATE)
+    handleLifecycleEvent(ON_START)
+    handleLifecycleEvent(ON_RESUME)
 }
 
 fun LifecycleRegistry.fakeUnbind() {
-  handleLifecycleEvent(ON_PAUSE)
-  handleLifecycleEvent(ON_STOP)
-  handleLifecycleEvent(ON_DESTROY)
+    handleLifecycleEvent(ON_PAUSE)
+    handleLifecycleEvent(ON_STOP)
+    handleLifecycleEvent(ON_DESTROY)
 }

@@ -31,52 +31,52 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeControlView internal constructor(
-  private val owner: LifecycleOwner,
-  parent: ViewGroup
+    private val owner: LifecycleOwner,
+    parent: ViewGroup
 ) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 
-  private val upgradeButton by boundView<Button>(R.id.upgrade_button)
-  private val laterButton by boundView<Button>(R.id.later_button)
+    private val upgradeButton by boundView<Button>(R.id.upgrade_button)
+    private val laterButton by boundView<Button>(R.id.later_button)
 
-  override val layout: Int = R.layout.version_upgrade_controls
+    override val layout: Int = R.layout.version_upgrade_controls
 
-  override val layoutRoot by boundView<View>(R.id.version_control_root)
+    override val layoutRoot by boundView<View>(R.id.version_control_root)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
-    laterButton.setOnDebouncedClickListener { publish(Cancel) }
-  }
-
-  override fun onRender(
-    state: VersionUpgradeViewState,
-    savedState: UiSavedState
-  ) {
-    state.throwable.let { throwable ->
-      if (throwable == null) {
-        clearError()
-      } else {
-        showError(throwable)
-      }
+    override fun onInflated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
+        laterButton.setOnDebouncedClickListener { publish(Cancel) }
     }
-  }
 
-  private fun showError(error: Throwable) {
-    Snackbreak.bindTo(owner) {
-      make(layoutRoot, error.message ?: "An unexpected error occurred.")
+    override fun onRender(
+        state: VersionUpgradeViewState,
+        savedState: UiSavedState
+    ) {
+        state.throwable.let { throwable ->
+            if (throwable == null) {
+                clearError()
+            } else {
+                showError(throwable)
+            }
+        }
     }
-  }
 
-  private fun clearError() {
-    Snackbreak.bindTo(owner) {
-      dismiss()
+    private fun showError(error: Throwable) {
+        Snackbreak.bindTo(owner) {
+            make(layoutRoot, error.message ?: "An unexpected error occurred.")
+        }
     }
-  }
 
-  override fun onTeardown() {
-    upgradeButton.setOnClickListener(null)
-    laterButton.setOnClickListener(null)
-  }
+    private fun clearError() {
+        Snackbreak.bindTo(owner) {
+            dismiss()
+        }
+    }
+
+    override fun onTeardown() {
+        upgradeButton.setOnClickListener(null)
+        laterButton.setOnClickListener(null)
+    }
 }

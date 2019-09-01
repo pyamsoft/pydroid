@@ -26,23 +26,22 @@ import com.pyamsoft.pydroid.ui.R
 
 internal class SpaceViewHolder private constructor(view: View) : BaseViewHolder(view) {
 
-  override fun bind(model: OssLibrary) {
-  }
-
-  override fun unbind() {
-  }
-
-  companion object {
-
-    @CheckResult
-    @JvmStatic
-    fun create(
-      inflater: LayoutInflater,
-      container: ViewGroup
-    ): SpaceViewHolder {
-      val view = inflater.inflate(R.layout.adapter_item_about_space, container, false)
-      return SpaceViewHolder(view)
+    override fun bind(model: OssLibrary) {
     }
-  }
-}
 
+    override fun unbind() {
+    }
+
+    companion object {
+
+        @CheckResult
+        @JvmStatic
+        fun create(
+            inflater: LayoutInflater,
+            container: ViewGroup
+        ): SpaceViewHolder {
+            val view = inflater.inflate(R.layout.adapter_item_about_space, container, false)
+            return SpaceViewHolder(view)
+        }
+    }
+}

@@ -23,45 +23,41 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal interface AboutItemComponent {
 
-  fun inject(viewHolder: AboutViewHolder)
+    fun inject(viewHolder: AboutViewHolder)
 
-  interface Factory {
+    interface Factory {
 
-    @CheckResult
-    fun create(
-      parent: ViewGroup,
-      library: OssLibrary
-    ): AboutItemComponent
-
-  }
-
-  class Impl private constructor(
-    private val parent: ViewGroup,
-    private val library: OssLibrary
-  ) : AboutItemComponent {
-
-    override fun inject(viewHolder: AboutViewHolder) {
-      val title = AboutItemTitleView(library, parent)
-      val description = AboutItemDescriptionView(library, parent)
-      val action = AboutItemActionView(library, parent)
-
-      viewHolder.factory = AboutItemViewModelFactory()
-      viewHolder.titleView = title
-      viewHolder.descriptionView = description
-      viewHolder.actionView = action
+        @CheckResult
+        fun create(
+            parent: ViewGroup,
+            library: OssLibrary
+        ): AboutItemComponent
     }
 
-    class FactoryImpl internal constructor() : Factory {
+    class Impl private constructor(
+        private val parent: ViewGroup,
+        private val library: OssLibrary
+    ) : AboutItemComponent {
 
-      override fun create(
-        parent: ViewGroup,
-        library: OssLibrary
-      ): AboutItemComponent {
-        return Impl(parent, library)
-      }
+        override fun inject(viewHolder: AboutViewHolder) {
+            val title = AboutItemTitleView(library, parent)
+            val description = AboutItemDescriptionView(library, parent)
+            val action = AboutItemActionView(library, parent)
 
+            viewHolder.factory = AboutItemViewModelFactory()
+            viewHolder.titleView = title
+            viewHolder.descriptionView = description
+            viewHolder.actionView = action
+        }
+
+        class FactoryImpl internal constructor() : Factory {
+
+            override fun create(
+                parent: ViewGroup,
+                library: OssLibrary
+            ): AboutItemComponent {
+                return Impl(parent, library)
+            }
+        }
     }
-
-  }
-
 }

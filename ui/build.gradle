@@ -16,17 +16,17 @@
  */
 
 dependencies {
-  // Android support library.
-  api "androidx.core:core-ktx:$ktx"
-  api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
-  api "androidx.recyclerview:recyclerview:$recyclerView"
-  api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
-  api "androidx.fragment:fragment:$fragment"
-  api "com.google.android.material:material:$materialDesign"
-  api "androidx.preference:preference:$preference"
-  api "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    // Android support library.
+    api "androidx.core:core-ktx:$ktx"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
+    api "androidx.recyclerview:recyclerview:$recyclerView"
+    api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
+    api "androidx.fragment:fragment:$fragment"
+    api "com.google.android.material:material:$materialDesign"
+    api "androidx.preference:preference:$preference"
+    api "androidx.constraintlayout:constraintlayout:$constraintLayout"
 
-  api project(':arch')
-  api project(':bootstrap')
-  api project(':loader')
+    api project(':arch')
+    api project(':bootstrap')
+    api project(':loader')
 }

@@ -25,10 +25,10 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 
 @CheckResult
 fun String.toMode(): Mode {
-  return when (this) {
-    "light" -> LIGHT
-    "dark" -> DARK
-    "system" -> SYSTEM
-    else -> SYSTEM
-  }
+    return when (this) {
+        "light" -> LIGHT
+        "dark" -> DARK
+        "system" -> SYSTEM
+        else -> SYSTEM
+    }
 }

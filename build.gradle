@@ -18,239 +18,253 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-  ext {
-    kotlin_version = '1.3.50'
-    dokka_version = "0.9.17"
-  }
-  repositories {
-    mavenLocal()
-    google()
-    mavenCentral()
-    jcenter()
-  }
+    ext {
+        kotlin_version = '1.3.50'
+        dokka_version = "0.9.17"
+    }
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+        jcenter()
 
-  ext {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
 
-    minSdk = 22
-    maxSdk = 29
+    ext {
 
-    coroutines = "1.3.0"
+        minSdk = 22
+        maxSdk = 29
 
-    // AndroidX
-    core = "1.0.2"
-    ktx = "1.0.2"
-    constraintLayout = "1.1.3"
-    lifecycle = "2.1.0-beta01"
-    materialDesign = "1.0.0"
-    vectorDrawable = "1.0.1"
-    preference = "1.0.0"
-    recyclerView = "1.0.0"
-    fragment = "1.1.0-rc04"
-    appCompat = "1.0.2"
+        coroutines = "1.3.0"
 
-    cachify = "0.0.2"
-    highlander = "0.0.2"
+        // AndroidX
+        core = "1.0.2"
+        ktx = "1.0.2"
+        constraintLayout = "1.1.3"
+        lifecycle = "2.1.0-beta01"
+        materialDesign = "1.0.0"
+        vectorDrawable = "1.0.1"
+        preference = "1.0.0"
+        recyclerView = "1.0.0"
+        fragment = "1.1.0-rc04"
+        appCompat = "1.0.2"
 
-    timber = "4.7.1"
+        cachify = "0.0.2"
+        highlander = "0.0.2"
 
-    moshi = "1.8.0"
+        timber = "4.7.1"
 
-    retrofit = "2.6.1"
-    okhttp = "4.0.1"
+        moshi = "1.8.0"
 
-    glide = "4.9.0"
-  }
+        retrofit = "2.6.1"
+        okhttp = "4.0.1"
 
-  dependencies {
-    classpath "com.android.tools.build:gradle:3.4.1"
+        glide = "4.9.0"
+    }
 
-    // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.6'
+    dependencies {
+        classpath "com.android.tools.build:gradle:3.4.1"
 
-    // Gradle version checker
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
+        // Dex count
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.6'
 
-    // To publish
-    classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
-    classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+        // Gradle version checker
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
 
-    // Kotlin
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // To publish
+        classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
 
-    // Dokka
-    classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
-  }
+        // Kotlin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // Dokka
+        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
+
+        // Ktlint
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:8.2.0"
+    }
 }
 
 subprojects {
-  apply plugin: 'com.android.library'
-  apply plugin: 'kotlin-android'
-  apply plugin: 'kotlin-kapt'
-  apply plugin: "com.getkeepsafe.dexcount"
-  apply plugin: 'com.github.dcendents.android-maven'
-  apply plugin: 'com.github.ben-manes.versions'
-  apply plugin: 'org.jetbrains.dokka-android'
-  apply plugin: 'maven-publish'
-  apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'com.android.library'
+    apply plugin: 'kotlin-android'
+    apply plugin: 'kotlin-kapt'
+    apply plugin: "com.getkeepsafe.dexcount"
+    apply plugin: 'com.github.dcendents.android-maven'
+    apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'org.jetbrains.dokka-android'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
 
-  final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "20.4.0-SNAPSHOT"
+    final String POM_GROUP = "com.pyamsoft.pydroid"
+    final String POM_VERSION = "20.4.0-SNAPSHOT"
 
-  group = POM_GROUP
-  version = POM_VERSION
+    group = POM_GROUP
+    version = POM_VERSION
 
-  task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
-    from android.sourceSets.main.java.source
-  }
-
-  task androidJavadocsJar(type: Jar, dependsOn: dokka) {
-    classifier = 'javadoc'
-    from "$buildDir/dokka"
-  }
-
-  artifacts {
-    archives androidSourcesJar
-    archives androidJavadocsJar
-  }
-
-  // Kapt flags
-  kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-    mapDiagnosticLocations = true
-
-    javacOptions {
-      option("-Xlint:unchecked")
-      option("-Xlint:deprecation")
-      option("-Xmaxerrs", 10000)
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.source
     }
-  }
 
-  // Ignore non-release libraries
-  dependencyUpdates.resolutionStrategy {
-    componentSelection { rules ->
-      rules.all { ComponentSelection selection ->
-        boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview'].any { qualifier ->
-          selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+    task androidJavadocsJar(type: Jar, dependsOn: dokka) {
+        classifier = 'javadoc'
+        from "$buildDir/dokka"
+    }
+
+    artifacts {
+        archives androidSourcesJar
+        archives androidJavadocsJar
+    }
+
+    // Kapt flags
+    kapt {
+        correctErrorTypes = true
+        useBuildCache = true
+        mapDiagnosticLocations = true
+
+        javacOptions {
+            option("-Xlint:unchecked")
+            option("-Xlint:deprecation")
+            option("-Xmaxerrs", 10000)
         }
-        if (rejected) {
-          selection.reject('Release candidate')
-        }
-      }
-    }
-  }
-
-  android {
-    compileSdkVersion rootProject.ext.maxSdk
-
-    //noinspection GroovyMissingReturnStatement
-    defaultConfig {
-      minSdkVersion rootProject.ext.minSdk
-
-      // For vector drawables
-      vectorDrawables.useSupportLibrary = true
-
-      // Consumer proguard file
-      consumerProguardFiles "proguard-rules.pro"
-
-      // Only English, I don't have any translations
-      resConfigs "en"
-
-      javaCompileOptions {
-        annotationProcessorOptions {
-          // Fix kapt
-          includeCompileClasspath = true
-        }
-      }
-
-      compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-      }
     }
 
-    buildTypes {
-      debug {
-        minifyEnabled false
-        shrinkResources false
-      }
-
-      release {
-        minifyEnabled false
-        shrinkResources false
-        proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-      }
-    }
-  }
-
-  project.afterEvaluate {
-    publishing {
-      publications {
-        PYDroid(MavenPublication) {
-          artifact bundleReleaseAar
-          artifact androidSourcesJar
-          artifact androidJavadocsJar
-          groupId POM_GROUP
-          artifactId project.name
-          version POM_VERSION
-
-          pom.withXml {
-            def dependenciesNode = asNode().appendNode('dependencies')
-
-            configurations.implementation.allDependencies.each {
-              // Ensure dependencies such as fileTree are not included in the pom.
-              if (it.name != 'unspecified') {
-                def dependencyNode = dependenciesNode.appendNode('dependency')
-                dependencyNode.appendNode('groupId', it.group)
-                dependencyNode.appendNode('artifactId', it.name)
-                dependencyNode.appendNode('version', it.version)
-              }
+    // Ignore non-release libraries
+    dependencyUpdates.resolutionStrategy {
+        componentSelection { rules ->
+            rules.all { ComponentSelection selection ->
+                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'preview'].any { qualifier ->
+                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+                }
+                if (rejected) {
+                    selection.reject('Release candidate')
+                }
             }
-          }
         }
-      }
     }
-  }
 
-  final String GITHUB_ROOT_URL = "https://github.com/pyamsoft/pydroid"
-  bintray {
-    user = 'pyamsoft'
-    key = BINTRAY_API_KEY
-    publications = ['PYDroid']
-    override = true
-    pkg {
-      repo = 'PYDroid'
-      name = project.name
-      desc = "PYDroid library: ${project.name}"
-      licenses = ['Apache-2.0']
-      vcsUrl = "${GITHUB_ROOT_URL}/tree/master/${project.name}"
-      websiteUrl = "${GITHUB_ROOT_URL}"
-      version {
-        name = POM_VERSION
-        issueTrackerUrl = "${GITHUB_ROOT_URL}/issues"
-        desc = "PYDroid library: ${project.name}"
-        released = new Date()
-        vcsTag = POM_VERSION
-      }
+    android {
+        compileSdkVersion rootProject.ext.maxSdk
+
+        //noinspection GroovyMissingReturnStatement
+        defaultConfig {
+            minSdkVersion rootProject.ext.minSdk
+
+            // For vector drawables
+            vectorDrawables.useSupportLibrary = true
+
+            // Consumer proguard file
+            consumerProguardFiles "proguard-rules.pro"
+
+            // Only English, I don't have any translations
+            resConfigs "en"
+
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    // Fix kapt
+                    includeCompileClasspath = true
+                }
+            }
+
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
+            }
+        }
+
+        buildTypes {
+            debug {
+                minifyEnabled false
+                shrinkResources false
+            }
+
+            release {
+                minifyEnabled false
+                shrinkResources false
+                proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            }
+        }
     }
-  }
+
+    project.afterEvaluate {
+        publishing {
+            publications {
+                PYDroid(MavenPublication) {
+                    artifact bundleReleaseAar
+                    artifact androidSourcesJar
+                    artifact androidJavadocsJar
+                    groupId POM_GROUP
+                    artifactId project.name
+                    version POM_VERSION
+
+                    pom.withXml {
+                        def dependenciesNode = asNode().appendNode('dependencies')
+
+                        configurations.implementation.allDependencies.each {
+                            // Ensure dependencies such as fileTree are not included in the pom.
+                            if (it.name != 'unspecified') {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', it.group)
+                                dependencyNode.appendNode('artifactId', it.name)
+                                dependencyNode.appendNode('version', it.version)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    final String GITHUB_ROOT_URL = "https://github.com/pyamsoft/pydroid"
+    bintray {
+        user = 'pyamsoft'
+        key = BINTRAY_API_KEY
+        publications = ['PYDroid']
+        override = true
+        pkg {
+            repo = 'PYDroid'
+            name = project.name
+            desc = "PYDroid library: ${project.name}"
+            licenses = ['Apache-2.0']
+            vcsUrl = "${GITHUB_ROOT_URL}/tree/master/${project.name}"
+            websiteUrl = "${GITHUB_ROOT_URL}"
+            version {
+                name = POM_VERSION
+                issueTrackerUrl = "${GITHUB_ROOT_URL}/issues"
+                desc = "PYDroid library: ${project.name}"
+                released = new Date()
+                vcsTag = POM_VERSION
+            }
+        }
+    }
 }
 
 allprojects {
-  repositories {
-    mavenLocal()
-    google()
-    mavenCentral()
-    jcenter()
-  }
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+        jcenter()
 
-  tasks.withType(JavaCompile) {
-    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
-    options.deprecation = true
-  }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+        options.deprecation = true
+    }
+
+    apply plugin: "org.jlleitschuh.gradle.ktlint"
 }
 
 task clean(type: Delete) {
-  delete rootProject.buildDir
+    delete rootProject.buildDir
 }

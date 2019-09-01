@@ -38,10 +38,10 @@ import kotlin.reflect.KProperty
  */
 @CheckResult
 inline fun <reified T : UiViewModel<*, *, *>> LifecycleOwner.factory(
-  store: ViewModelStore,
-  crossinline factoryProvider: () -> Factory?
+    store: ViewModelStore,
+    crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-  return lifecycle.factory(store, factoryProvider)
+    return lifecycle.factory(store, factoryProvider)
 }
 
 /**
@@ -49,10 +49,10 @@ inline fun <reified T : UiViewModel<*, *, *>> LifecycleOwner.factory(
  */
 @CheckResult
 inline fun <reified T : UiViewModel<*, *, *>> Lifecycle.factory(
-  store: ViewModelStore,
-  crossinline factoryProvider: () -> Factory?
+    store: ViewModelStore,
+    crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-  return ViewModelFactory(this, store, T::class.java) { requireNotNull(factoryProvider()) }
+    return ViewModelFactory(this, store, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
 /**
@@ -60,9 +60,9 @@ inline fun <reified T : UiViewModel<*, *, *>> Lifecycle.factory(
  */
 @CheckResult
 inline fun <reified T : UiViewModel<*, *, *>> Fragment.factory(
-  crossinline factoryProvider: () -> Factory?
+    crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-  return ViewModelFactory(this, T::class.java) { requireNotNull(factoryProvider()) }
+    return ViewModelFactory(this, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
 /**
@@ -70,100 +70,100 @@ inline fun <reified T : UiViewModel<*, *, *>> Fragment.factory(
  */
 @CheckResult
 inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.factory(
-  crossinline factoryProvider: () -> Factory?
+    crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-  return ViewModelFactory(this, T::class.java) { requireNotNull(factoryProvider()) }
+    return ViewModelFactory(this, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
 class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
-  private val lifecycleProvider: () -> Lifecycle,
-  private val store: ViewModelStore?,
-  private val fragment: Fragment?,
-  private val activity: FragmentActivity?,
-  private val type: Class<T>,
-  private val factoryProvider: () -> Factory
+    private val lifecycleProvider: () -> Lifecycle,
+    private val store: ViewModelStore?,
+    private val fragment: Fragment?,
+    private val activity: FragmentActivity?,
+    private val type: Class<T>,
+    private val factoryProvider: () -> Factory
 ) : ReadOnlyProperty<Any, T> {
 
-  constructor(
-    lifecycle: Lifecycle,
-    store: ViewModelStore,
-    type: Class<T>,
-    factoryProvider: () -> Factory
-  ) : this({ lifecycle }, store, null, null, type, factoryProvider)
+    constructor(
+        lifecycle: Lifecycle,
+        store: ViewModelStore,
+        type: Class<T>,
+        factoryProvider: () -> Factory
+    ) : this({ lifecycle }, store, null, null, type, factoryProvider)
 
-  constructor(
-    fragment: Fragment,
-    type: Class<T>,
-    factoryProvider: () -> Factory
-  ) : this({ fragment.viewLifecycleOwner.lifecycle }, null, fragment, null, type, factoryProvider)
+    constructor(
+        fragment: Fragment,
+        type: Class<T>,
+        factoryProvider: () -> Factory
+    ) : this({ fragment.viewLifecycleOwner.lifecycle }, null, fragment, null, type, factoryProvider)
 
-  constructor(
-    activity: FragmentActivity,
-    type: Class<T>,
-    factoryProvider: () -> Factory
-  ) : this({ activity.lifecycle }, null, null, activity, type, factoryProvider)
+    constructor(
+        activity: FragmentActivity,
+        type: Class<T>,
+        factoryProvider: () -> Factory
+    ) : this({ activity.lifecycle }, null, null, activity, type, factoryProvider)
 
-  private val lock = Any()
-  @Volatile private var value: T? = null
+    private val lock = Any()
+    @Volatile
+    private var value: T? = null
 
-  private fun attachToLifecycle(lifecycle: Lifecycle) {
-    lifecycle.addObserver(object : LifecycleObserver {
+    private fun attachToLifecycle(lifecycle: Lifecycle) {
+        lifecycle.addObserver(object : LifecycleObserver {
 
-      @Suppress("unused")
-      @OnLifecycleEvent(ON_DESTROY)
-      fun onDestroy() {
-        lifecycle.removeObserver(this)
-        value = null
-      }
-
-    })
-  }
-
-  @CheckResult
-  private fun resolveValue(): T {
-    attachToLifecycle(lifecycleProvider())
-    store?.let { s ->
-      return ViewModelProvider(s, factoryProvider())
-          .get(type)
-    }
-    fragment?.let { f ->
-      return ViewModelProviders.of(f, factoryProvider())
-          .get(type)
-    }
-    activity?.let { a ->
-      return ViewModelProviders.of(a, factoryProvider())
-          .get(type)
-    }
-    throw IllegalStateException("Both Fragment an Activity are null")
-  }
-
-  @CheckResult
-  fun get(): T {
-    val lifecycle = lifecycleProvider()
-    if (lifecycle.currentState === Lifecycle.State.DESTROYED) {
-      throw IllegalStateException("Cannot access ViewModel after Lifecycle is DESTROYED")
+            @Suppress("unused")
+            @OnLifecycleEvent(ON_DESTROY)
+            fun onDestroy() {
+                lifecycle.removeObserver(this)
+                value = null
+            }
+        })
     }
 
-    val v = value
-    if (v != null) {
-      return v
-    }
-
-    if (value == null) {
-      synchronized(lock) {
-        if (value == null) {
-          value = resolveValue()
+    @CheckResult
+    private fun resolveValue(): T {
+        attachToLifecycle(lifecycleProvider())
+        store?.let { s ->
+            return ViewModelProvider(s, factoryProvider())
+                .get(type)
         }
-      }
+        fragment?.let { f ->
+            return ViewModelProviders.of(f, factoryProvider())
+                .get(type)
+        }
+        activity?.let { a ->
+            return ViewModelProviders.of(a, factoryProvider())
+                .get(type)
+        }
+        throw IllegalStateException("Both Fragment an Activity are null")
     }
 
-    return requireNotNull(value)
-  }
+    @CheckResult
+    fun get(): T {
+        val lifecycle = lifecycleProvider()
+        if (lifecycle.currentState === Lifecycle.State.DESTROYED) {
+            throw IllegalStateException("Cannot access ViewModel after Lifecycle is DESTROYED")
+        }
 
-  override fun getValue(
-    thisRef: Any,
-    property: KProperty<*>
-  ): T {
-    return get()
-  }
+        val v = value
+        if (v != null) {
+            return v
+        }
+
+        if (value == null) {
+            synchronized(lock) {
+                if (value == null) {
+                    value = resolveValue()
+                }
+            }
+        }
+
+        return requireNotNull(value)
+    }
+
+    override fun getValue(
+        thisRef: Any,
+        property: KProperty<*>
+    ): T {
+        return get()
+    }
 }

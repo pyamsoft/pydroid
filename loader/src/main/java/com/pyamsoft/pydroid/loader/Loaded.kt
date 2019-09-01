@@ -19,7 +19,5 @@ package com.pyamsoft.pydroid.loader
 
 interface Loaded {
 
-  fun dispose()
-
+    fun dispose()
 }
-

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,36 +18,32 @@
 
 <merge>
 
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/about_actions"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:padding="8dp"
-      style="?attr/buttonBarStyle"
-      >
-
-    <Button
-        android:id="@+id/action_visit_homepage"
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/about_actions"
+        style="?attr/buttonBarStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/visit_homepage"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        style="?attr/buttonBarButtonStyle"
-        />
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-    <Button
-        android:id="@+id/action_view_license"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/view_license"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        style="?attr/buttonBarButtonStyle"
-        />
+        <Button
+            android:id="@+id/action_visit_homepage"
+            style="?attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/visit_homepage"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-  </LinearLayout>
+        <Button
+            android:id="@+id/action_view_license"
+            style="?attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/view_license"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    </LinearLayout>
 
 </merge>
 

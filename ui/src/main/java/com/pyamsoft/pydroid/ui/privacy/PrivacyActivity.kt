@@ -31,43 +31,43 @@ import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 abstract class PrivacyActivity : ActivityBase() {
 
-  internal var privacyFactory: ViewModelProvider.Factory? = null
-  internal var privacyView: PrivacyView? = null
-  private val viewModel by factory<PrivacyViewModel> { privacyFactory }
+    internal var privacyFactory: ViewModelProvider.Factory? = null
+    internal var privacyView: PrivacyView? = null
+    private val viewModel by factory<PrivacyViewModel> { privacyFactory }
 
-  /**
-   * Used for Activity level snackbars
-   */
-  protected abstract val snackbarRoot: ViewGroup
+    /**
+     * Used for Activity level snackbars
+     */
+    protected abstract val snackbarRoot: ViewGroup
 
-  @CallSuper
-  override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
+    @CallSuper
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
 
-    // Need to do this in onPostCreate because the snackbarRoot will not be available until
-    // after subclass onCreate
-    Injector.obtain<PYDroidComponent>(applicationContext)
-        .plusPrivacy()
-        .create(this) { snackbarRoot }
-        .inject(this)
+        // Need to do this in onPostCreate because the snackbarRoot will not be available until
+        // after subclass onCreate
+        Injector.obtain<PYDroidComponent>(applicationContext)
+            .plusPrivacy()
+            .create(this) { snackbarRoot }
+            .inject(this)
 
-    createComponent(
-        savedInstanceState, this,
-        viewModel,
-        requireNotNull(privacyView)
-    ) {
-      return@createComponent when (it) {
-        is ViewExternalPolicy -> openExternalPolicyPage(it.link)
-      }
+        createComponent(
+            savedInstanceState, this,
+            viewModel,
+            requireNotNull(privacyView)
+        ) {
+            return@createComponent when (it) {
+                is ViewExternalPolicy -> openExternalPolicyPage(it.link)
+            }
+        }
     }
-  }
 
-  private fun openExternalPolicyPage(link: HyperlinkIntent) {
-    val error = link.navigate()
-    if (error == null) {
-      viewModel.navigationSuccess()
-    } else {
-      viewModel.navigationFailed(error)
+    private fun openExternalPolicyPage(link: HyperlinkIntent) {
+        val error = link.navigate()
+        if (error == null) {
+            viewModel.navigationSuccess()
+        } else {
+            viewModel.navigationFailed(error)
+        }
     }
-  }
 }

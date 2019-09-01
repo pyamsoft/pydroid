@@ -20,14 +20,13 @@ package com.pyamsoft.pydroid.loader
 import com.bumptech.glide.Glide
 
 class GlideLoaded internal constructor(
-  private val target: ImageTarget<*>
+    private val target: ImageTarget<*>
 ) : Loaded {
 
-  override fun dispose() {
-    val view = target.view()
-    Glide.with(view.context.applicationContext)
-        .clear(view)
-    target.clear()
-  }
-
+    override fun dispose() {
+        val view = target.view()
+        Glide.with(view.context.applicationContext)
+            .clear(view)
+        target.clear()
+    }
 }

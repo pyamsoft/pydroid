@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,35 +18,31 @@
 
 <merge>
 
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/version_control_root"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="end"
-      android:orientation="horizontal"
-      android:paddingBottom="8dp"
-      android:paddingEnd="16dp"
-      android:paddingStart="16dp"
-      style="?attr/buttonBarStyle"
-      >
-
-    <Button
-        android:id="@+id/later_button"
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/version_control_root"
+        style="?attr/buttonBarStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/later"
-        style="?attr/borderlessButtonStyle"
-        />
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp">
 
-    <Button
-        android:id="@+id/upgrade_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/upgrade"
-        style="?attr/borderlessButtonStyle"
-        />
+        <Button
+            android:id="@+id/later_button"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/later" />
 
-  </LinearLayout>
+        <Button
+            android:id="@+id/upgrade_button"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/upgrade" />
+
+    </LinearLayout>
 </merge>
 

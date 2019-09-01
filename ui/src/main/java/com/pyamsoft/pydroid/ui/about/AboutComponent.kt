@@ -26,57 +26,54 @@ import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 
 internal interface AboutComponent {
 
-  fun inject(fragment: AboutFragment)
+    fun inject(fragment: AboutFragment)
 
-  interface Factory {
+    interface Factory {
 
-    @CheckResult
-    fun create(
-      activity: Activity,
-      parent: ViewGroup,
-      owner: LifecycleOwner,
-      toolbarActivity: ToolbarActivity,
-      backstack: Int
-    ): AboutComponent
-
-  }
-
-  class Impl private constructor(
-    private val activity: Activity,
-    private val parent: ViewGroup,
-    private val owner: LifecycleOwner,
-    private val backstack: Int,
-    private val toolbarActivity: ToolbarActivity,
-    private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-  ) : AboutComponent {
-
-    override fun inject(fragment: AboutFragment) {
-      val listView = AboutListView(owner, parent)
-      val spinnerView = AboutSpinnerView(parent)
-
-      val toolbar = AboutToolbarView(backstack, toolbarActivity)
-
-      fragment.factory = factoryProvider(activity)
-      fragment.listView = listView
-      fragment.spinnerView = spinnerView
-      fragment.toolbar = toolbar
+        @CheckResult
+        fun create(
+            activity: Activity,
+            parent: ViewGroup,
+            owner: LifecycleOwner,
+            toolbarActivity: ToolbarActivity,
+            backstack: Int
+        ): AboutComponent
     }
 
-    class FactoryImpl internal constructor(
-      private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
-    ) : Factory {
+    class Impl private constructor(
+        private val activity: Activity,
+        private val parent: ViewGroup,
+        private val owner: LifecycleOwner,
+        private val backstack: Int,
+        private val toolbarActivity: ToolbarActivity,
+        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+    ) : AboutComponent {
 
-      override fun create(
-        activity: Activity,
-        parent: ViewGroup,
-        owner: LifecycleOwner,
-        toolbarActivity: ToolbarActivity,
-        backstack: Int
-      ): AboutComponent {
-        return Impl(activity, parent, owner, backstack, toolbarActivity, factoryProvider)
-      }
+        override fun inject(fragment: AboutFragment) {
+            val listView = AboutListView(owner, parent)
+            val spinnerView = AboutSpinnerView(parent)
 
+            val toolbar = AboutToolbarView(backstack, toolbarActivity)
+
+            fragment.factory = factoryProvider(activity)
+            fragment.listView = listView
+            fragment.spinnerView = spinnerView
+            fragment.toolbar = toolbar
+        }
+
+        class FactoryImpl internal constructor(
+            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        ) : Factory {
+
+            override fun create(
+                activity: Activity,
+                parent: ViewGroup,
+                owner: LifecycleOwner,
+                toolbarActivity: ToolbarActivity,
+                backstack: Int
+            ): AboutComponent {
+                return Impl(activity, parent, owner, backstack, toolbarActivity, factoryProvider)
+            }
+        }
     }
-
-  }
 }

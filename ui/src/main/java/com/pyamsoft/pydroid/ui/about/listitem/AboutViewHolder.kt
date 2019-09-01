@@ -33,69 +33,67 @@ import com.pyamsoft.pydroid.ui.app.ListItemLifecycle
 import com.pyamsoft.pydroid.ui.arch.factory
 
 internal class AboutViewHolder private constructor(
-  view: View,
-  private val callback: (event: AboutItemControllerEvent) -> Unit
+    view: View,
+    private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : BaseViewHolder(view) {
 
-  internal var factory: ViewModelProvider.Factory? = null
-  internal var titleView: AboutItemTitleView? = null
-  internal var descriptionView: AboutItemDescriptionView? = null
-  internal var actionView: AboutItemActionView? = null
+    internal var factory: ViewModelProvider.Factory? = null
+    internal var titleView: AboutItemTitleView? = null
+    internal var descriptionView: AboutItemDescriptionView? = null
+    internal var actionView: AboutItemActionView? = null
 
-  private var viewModel: AboutItemViewModel? = null
+    private var viewModel: AboutItemViewModel? = null
 
-  private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
-  private var bindLifecycle: ListItemLifecycle? = null
+    private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
+    private var bindLifecycle: ListItemLifecycle? = null
 
-  private fun injectViewModel(lifecycle: Lifecycle) {
-    viewModel = lifecycle.factory<AboutItemViewModel>(ViewModelStore()) { factory }
-        .get()
-  }
-
-  override fun bind(model: OssLibrary) {
-    bindLifecycle?.unbind()
-
-    Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
-        .plusAboutItem()
-        .create(parent, model)
-        .inject(this)
-
-    val owner = ListItemLifecycle()
-    bindLifecycle = owner
-    injectViewModel(owner.lifecycle)
-
-    createComponent(
-        null, owner,
-        requireNotNull(viewModel),
-        requireNotNull(titleView),
-        requireNotNull(actionView),
-        requireNotNull(descriptionView)
-    ) { callback(it) }
-  }
-
-  override fun unbind() {
-    bindLifecycle?.unbind()
-    bindLifecycle = null
-
-    viewModel = null
-    titleView = null
-    descriptionView = null
-    actionView = null
-  }
-
-  companion object {
-
-    @CheckResult
-    @JvmStatic
-    fun create(
-      inflater: LayoutInflater,
-      container: ViewGroup,
-      callback: (event: AboutItemControllerEvent) -> Unit
-    ): AboutViewHolder {
-      val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
-      return AboutViewHolder(view, callback)
+    private fun injectViewModel(lifecycle: Lifecycle) {
+        viewModel = lifecycle.factory<AboutItemViewModel>(ViewModelStore()) { factory }
+            .get()
     }
-  }
 
+    override fun bind(model: OssLibrary) {
+        bindLifecycle?.unbind()
+
+        Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
+            .plusAboutItem()
+            .create(parent, model)
+            .inject(this)
+
+        val owner = ListItemLifecycle()
+        bindLifecycle = owner
+        injectViewModel(owner.lifecycle)
+
+        createComponent(
+            null, owner,
+            requireNotNull(viewModel),
+            requireNotNull(titleView),
+            requireNotNull(actionView),
+            requireNotNull(descriptionView)
+        ) { callback(it) }
+    }
+
+    override fun unbind() {
+        bindLifecycle?.unbind()
+        bindLifecycle = null
+
+        viewModel = null
+        titleView = null
+        descriptionView = null
+        actionView = null
+    }
+
+    companion object {
+
+        @CheckResult
+        @JvmStatic
+        fun create(
+            inflater: LayoutInflater,
+            container: ViewGroup,
+            callback: (event: AboutItemControllerEvent) -> Unit
+        ): AboutViewHolder {
+            val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
+            return AboutViewHolder(view, callback)
+        }
+    }
 }
-

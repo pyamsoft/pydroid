@@ -27,67 +27,67 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
 
 internal class VersionView internal constructor(
-  private val owner: LifecycleOwner,
-  private val snackbarRootProvider: () -> ViewGroup
+    private val owner: LifecycleOwner,
+    private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<VersionViewState, VersionViewEvent>() {
 
-  override fun id(): Int {
-    throw InvalidIdException
-  }
+    override fun id(): Int {
+        throw InvalidIdException
+    }
 
-  override fun doInflate(savedInstanceState: Bundle?) {
-  }
+    override fun doInflate(savedInstanceState: Bundle?) {
+    }
 
-  override fun render(
-    state: VersionViewState,
-    savedState: UiSavedState
-  ) {
-    state.isLoading.let { loading ->
-      if (loading != null) {
-        if (loading.forced) {
-          showUpdating()
+    override fun render(
+        state: VersionViewState,
+        savedState: UiSavedState
+    ) {
+        state.isLoading.let { loading ->
+            if (loading != null) {
+                if (loading.forced) {
+                    showUpdating()
+                }
+            } else {
+                dismissUpdating()
+            }
         }
-      } else {
-        dismissUpdating()
-      }
+
+        state.throwable.let { throwable ->
+            if (throwable == null) {
+                clearError()
+            } else {
+                showError(throwable)
+            }
+        }
     }
 
-    state.throwable.let { throwable ->
-      if (throwable == null) {
-        clearError()
-      } else {
-        showError(throwable)
-      }
+    override fun saveState(outState: Bundle) {
     }
-  }
 
-  override fun saveState(outState: Bundle) {
-  }
-
-  private fun showUpdating() {
-    Snackbreak.bindTo(owner) {
-      make(snackbarRootProvider(), "Checking for updates")
+    private fun showUpdating() {
+        Snackbreak.bindTo(owner) {
+            make(snackbarRootProvider(), "Checking for updates")
+        }
     }
-  }
 
-  private fun dismissUpdating() {
-    Snackbreak.bindTo(owner) {
-      dismiss()
+    private fun dismissUpdating() {
+        Snackbreak.bindTo(owner) {
+            dismiss()
+        }
     }
-  }
 
-  private fun showError(throwable: Throwable) {
-    Snackbreak.bindTo(owner, "error") {
-      short(snackbarRootProvider(),
-          throwable.message ?: "An error occurred while checking for updates.",
-          onHidden = { _, _ -> publish(SnackbarHidden) }
-      )
+    private fun showError(throwable: Throwable) {
+        Snackbreak.bindTo(owner, "error") {
+            short(snackbarRootProvider(),
+                throwable.message ?: "An error occurred while checking for updates.",
+                onHidden = { _, _ -> publish(SnackbarHidden) }
+            )
+        }
     }
-  }
 
-  private fun clearError() {
-    Snackbreak.bindTo(owner, "error") {
-      dismiss()
+    private fun clearError() {
+        Snackbreak.bindTo(owner, "error") {
+            dismiss()
+        }
     }
-  }
 }

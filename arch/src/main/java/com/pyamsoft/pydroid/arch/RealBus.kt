@@ -25,25 +25,25 @@ import timber.log.Timber
 
 class RealBus<T : Any> internal constructor() : EventBus<T> {
 
-  @ExperimentalCoroutinesApi
-  private val bus = BroadcastChannel<T>(1)
+    @ExperimentalCoroutinesApi
+    private val bus = BroadcastChannel<T>(1)
 
-  @ExperimentalCoroutinesApi
-  override fun publish(event: T) {
-    if (!bus.offer(event)) {
-      Timber.w("Failed to publish event onto bus: $event")
+    @ExperimentalCoroutinesApi
+    override fun publish(event: T) {
+        if (!bus.offer(event)) {
+            Timber.w("Failed to publish event onto bus: $event")
+        }
     }
-  }
 
-  @ExperimentalCoroutinesApi
-  override suspend fun send(event: T) {
-    bus.send(event)
-  }
+    @ExperimentalCoroutinesApi
+    override suspend fun send(event: T) {
+        bus.send(event)
+    }
 
-  @CheckResult
-  @ExperimentalCoroutinesApi
-  override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
-    bus.openSubscription()
-        .consumeEach { emitter(it) }
-  }
+    @CheckResult
+    @ExperimentalCoroutinesApi
+    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
+        bus.openSubscription()
+            .consumeEach { emitter(it) }
+    }
 }

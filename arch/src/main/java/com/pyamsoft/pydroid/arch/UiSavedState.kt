@@ -23,53 +23,52 @@ import android.os.Bundle
 
 class UiSavedState internal constructor(bundle: Bundle?) {
 
-  private val bundle: Bundle?
+    private val bundle: Bundle?
 
-  init {
-    if (VERSION.SDK_INT >= VERSION_CODES.O) {
-      this.bundle = bundle?.deepCopy()
-    } else {
-      this.bundle = bundle?.let { Bundle(it) }
-    }
-  }
-
-  fun <T : Any> consume(
-    key: String,
-    defaultValue: T,
-    consumer: (value: T) -> Unit
-  ) {
-    consume(key, validConsumer = consumer, invalidConsumer = { consumer(defaultValue) })
-  }
-
-  fun <T : Any> consume(
-    key: String,
-    consumer: (value: T) -> Unit
-  ) {
-    consume(key, validConsumer = consumer, invalidConsumer = {})
-  }
-
-  private inline fun <T : Any> consume(
-    key: String,
-    validConsumer: (value: T) -> Unit,
-    invalidConsumer: () -> Unit
-  ) {
-    val b = bundle
-    if (b == null) {
-      invalidConsumer()
-    } else {
-      if (!b.containsKey(key)) {
-        invalidConsumer()
-      } else {
-        @Suppress("UNCHECKED_CAST")
-        val value = b.get(key) as? T
-        b.remove(key)
-        if (value == null) {
-          invalidConsumer()
+    init {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            this.bundle = bundle?.deepCopy()
         } else {
-          validConsumer(value)
+            this.bundle = bundle?.let { Bundle(it) }
         }
-      }
     }
-  }
 
+    fun <T : Any> consume(
+        key: String,
+        defaultValue: T,
+        consumer: (value: T) -> Unit
+    ) {
+        consume(key, validConsumer = consumer, invalidConsumer = { consumer(defaultValue) })
+    }
+
+    fun <T : Any> consume(
+        key: String,
+        consumer: (value: T) -> Unit
+    ) {
+        consume(key, validConsumer = consumer, invalidConsumer = {})
+    }
+
+    private inline fun <T : Any> consume(
+        key: String,
+        validConsumer: (value: T) -> Unit,
+        invalidConsumer: () -> Unit
+    ) {
+        val b = bundle
+        if (b == null) {
+            invalidConsumer()
+        } else {
+            if (!b.containsKey(key)) {
+                invalidConsumer()
+            } else {
+                @Suppress("UNCHECKED_CAST")
+                val value = b.get(key) as? T
+                b.remove(key)
+                if (value == null) {
+                    invalidConsumer()
+                } else {
+                    validConsumer(value)
+                }
+            }
+        }
+    }
 }

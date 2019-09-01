@@ -21,11 +21,11 @@ import androidx.annotation.CheckResult
 
 interface RatingPreferences {
 
-  var ratingAcceptedVersion: Int
-    @get:CheckResult get
+    var ratingAcceptedVersion: Int
+        @get:CheckResult get
 
-  companion object {
+    companion object {
 
-    const val DEFAULT_RATING_ACCEPTED_VERSION: Int = 0
-  }
+        const val DEFAULT_RATING_ACCEPTED_VERSION: Int = 0
+    }
 }

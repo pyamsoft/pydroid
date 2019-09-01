@@ -28,36 +28,35 @@ import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingIconView internal constructor(
-  private val changelogIcon: Int,
-  private val imageLoader: ImageLoader,
-  parent: ViewGroup
+    private val changelogIcon: Int,
+    private val imageLoader: ImageLoader,
+    parent: ViewGroup
 ) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 
-  private val iconView by boundView<ImageView>(R.id.icon)
+    private val iconView by boundView<ImageView>(R.id.icon)
 
-  private var iconLoaded: Loaded? = null
+    private var iconLoaded: Loaded? = null
 
-  override val layout: Int = R.layout.rating_icon
+    override val layout: Int = R.layout.rating_icon
 
-  override val layoutRoot by boundView<View>(R.id.rating_icon_root)
+    override val layoutRoot by boundView<View>(R.id.rating_icon_root)
 
-  override fun onInflated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    iconLoaded?.dispose()
-    iconLoaded = imageLoader.load(changelogIcon)
-        .into(iconView)
-  }
+    override fun onInflated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        iconLoaded?.dispose()
+        iconLoaded = imageLoader.load(changelogIcon)
+            .into(iconView)
+    }
 
-  override fun onRender(
-    state: RatingDialogViewState,
-    savedState: UiSavedState
-  ) {
-  }
+    override fun onRender(
+        state: RatingDialogViewState,
+        savedState: UiSavedState
+    ) {
+    }
 
-  override fun onTeardown() {
-    iconLoaded?.dispose()
-  }
-
+    override fun onTeardown() {
+        iconLoaded?.dispose()
+    }
 }

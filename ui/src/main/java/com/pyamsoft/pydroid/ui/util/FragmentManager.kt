@@ -25,45 +25,44 @@ import com.pyamsoft.pydroid.util.runWhenReady
 
 @JvmOverloads
 inline fun FragmentManager.commit(
-  owner: LifecycleOwner,
-  immediate: Boolean = false,
-  crossinline transaction: FragmentTransaction.() -> FragmentTransaction
+    owner: LifecycleOwner,
+    immediate: Boolean = false,
+    crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-  return this.commit(owner.lifecycle, immediate, transaction)
+    return this.commit(owner.lifecycle, immediate, transaction)
 }
 
 @JvmOverloads
 inline fun FragmentManager.commit(
-  lifecycle: Lifecycle,
-  immediate: Boolean = false,
-  crossinline transaction: FragmentTransaction.() -> FragmentTransaction
+    lifecycle: Lifecycle,
+    immediate: Boolean = false,
+    crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-  runWhenReady(lifecycle) {
-    this.beginTransaction()
-        .run(transaction)
-        .commit()
+    runWhenReady(lifecycle) {
+        this.beginTransaction()
+            .run(transaction)
+            .commit()
 
-    if (immediate) {
-      this.executePendingTransactions()
+        if (immediate) {
+            this.executePendingTransactions()
+        }
     }
-  }
 }
 
 inline fun FragmentManager.commitNow(
-  owner: LifecycleOwner,
-  crossinline transaction: FragmentTransaction.() -> FragmentTransaction
+    owner: LifecycleOwner,
+    crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-  return this.commitNow(owner.lifecycle, transaction)
+    return this.commitNow(owner.lifecycle, transaction)
 }
 
 inline fun FragmentManager.commitNow(
-  lifecycle: Lifecycle,
-  crossinline transaction: FragmentTransaction.() -> FragmentTransaction
+    lifecycle: Lifecycle,
+    crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-  runWhenReady(lifecycle) {
-    this.beginTransaction()
-        .run(transaction)
-        .commitNow()
-  }
+    runWhenReady(lifecycle) {
+        this.beginTransaction()
+            .run(transaction)
+            .commitNow()
+    }
 }
-

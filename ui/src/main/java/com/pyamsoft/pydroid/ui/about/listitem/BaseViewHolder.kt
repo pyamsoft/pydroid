@@ -22,11 +22,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal abstract class BaseViewHolder internal constructor(
-  itemView: View
+    itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
-  abstract fun bind(model: OssLibrary)
+    abstract fun bind(model: OssLibrary)
 
-  abstract fun unbind()
-
+    abstract fun unbind()
 }

@@ -25,18 +25,17 @@ import com.pyamsoft.pydroid.util.fakeUnbind
 
 class ListItemLifecycle : LifecycleOwner {
 
-  private val registry = LifecycleRegistry(this)
+    private val registry = LifecycleRegistry(this)
 
-  override fun getLifecycle(): Lifecycle {
-    return registry
-  }
+    override fun getLifecycle(): Lifecycle {
+        return registry
+    }
 
-  fun bind() {
-    registry.fakeBind()
-  }
+    fun bind() {
+        registry.fakeBind()
+    }
 
-  fun unbind() {
-    registry.fakeUnbind()
-  }
-
+    fun unbind() {
+        registry.fakeUnbind()
+    }
 }

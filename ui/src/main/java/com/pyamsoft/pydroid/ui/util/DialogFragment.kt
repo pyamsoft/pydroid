@@ -30,23 +30,23 @@ import timber.log.Timber
  * ready
  */
 fun DialogFragment.show(
-  activity: FragmentActivity,
-  tag: String
+    activity: FragmentActivity,
+    tag: String
 ) {
-  if (tag.isEmpty()) {
-    throw IllegalArgumentException("Cannot use EMPTY tag")
-  }
-
-  runAfterReady(activity) {
-    val fragmentManager = activity.supportFragmentManager
-    val transaction = fragmentManager.beginTransaction()
-    val prev = fragmentManager.findFragmentByTag(tag)
-    if (prev != null) {
-      Timber.d("Remove old fragment with tag: %s", tag)
-      transaction.remove(prev)
+    if (tag.isEmpty()) {
+        throw IllegalArgumentException("Cannot use EMPTY tag")
     }
 
-    Timber.d("Add new fragment with tag: %s", tag)
-    show(transaction, tag)
-  }
+    runAfterReady(activity) {
+        val fragmentManager = activity.supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+        val prev = fragmentManager.findFragmentByTag(tag)
+        if (prev != null) {
+            Timber.d("Remove old fragment with tag: %s", tag)
+            transaction.remove(prev)
+        }
+
+        Timber.d("Add new fragment with tag: %s", tag)
+        show(transaction, tag)
+    }
 }

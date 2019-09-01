@@ -39,95 +39,95 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.Ope
 
 class VersionUpgradeDialog : DialogFragment() {
 
-  internal var factory: ViewModelProvider.Factory? = null
-  internal var content: VersionUpgradeContentView? = null
-  internal var control: VersionUpgradeControlView? = null
-  private val viewModel by factory<VersionUpgradeViewModel> { factory }
+    internal var factory: ViewModelProvider.Factory? = null
+    internal var content: VersionUpgradeContentView? = null
+    internal var control: VersionUpgradeControlView? = null
+    private val viewModel by factory<VersionUpgradeViewModel> { factory }
 
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return super.onCreateDialog(savedInstanceState)
-        .noTitle()
-  }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState)
+            .noTitle()
+    }
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    return inflater.inflate(layout.layout_linear_vertical, container, false)
-  }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(layout.layout_linear_vertical, container, false)
+    }
 
-  override fun onViewCreated(
-    view: View,
-    savedInstanceState: Bundle?
-  ) {
-    super.onViewCreated(view, savedInstanceState)
-
-    val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
-    require(latestVersion > 0)
-    val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
-    Injector.obtain<PYDroidComponent>(view.context.applicationContext)
-        .plusUpgrade()
-        .create(requireActivity(), layoutRoot, viewLifecycleOwner, latestVersion)
-        .inject(this)
-
-    createComponent(
-        savedInstanceState, viewLifecycleOwner,
-        viewModel,
-        requireNotNull(content),
-        requireNotNull(control)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
     ) {
-      return@createComponent when (it) {
-        is OpenMarket -> navigateToMarket()
-        is CancelDialog -> dismiss()
-      }
-    }
-  }
+        super.onViewCreated(view, savedInstanceState)
 
-  override fun onDestroyView() {
-    super.onDestroyView()
-    content = null
-    control = null
-    factory = null
-  }
+        val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
+        require(latestVersion > 0)
+        val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
+        Injector.obtain<PYDroidComponent>(view.context.applicationContext)
+            .plusUpgrade()
+            .create(requireActivity(), layoutRoot, viewLifecycleOwner, latestVersion)
+            .inject(this)
 
-  override fun onResume() {
-    super.onResume()
-    dialog?.window?.setLayout(
-        ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT
-    )
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    content?.saveState(outState)
-    control?.saveState(outState)
-  }
-
-  private fun navigateToMarket() {
-    val error = MarketLinker.linkToMarketPage(requireContext(), requireContext().packageName)
-    if (error != null) {
-      viewModel.navigationFailed(error)
-    } else {
-      viewModel.navigationSuccess()
-      dismiss()
-    }
-  }
-
-  companion object {
-
-    internal const val TAG = "VersionUpgradeDialog"
-    private const val KEY_LATEST_VERSION = "key_latest_version"
-
-    @JvmStatic
-    @CheckResult
-    fun newInstance(latestVersion: Int): VersionUpgradeDialog {
-      return VersionUpgradeDialog().apply {
-        arguments = Bundle().apply {
-          putInt(KEY_LATEST_VERSION, latestVersion)
+        createComponent(
+            savedInstanceState, viewLifecycleOwner,
+            viewModel,
+            requireNotNull(content),
+            requireNotNull(control)
+        ) {
+            return@createComponent when (it) {
+                is OpenMarket -> navigateToMarket()
+                is CancelDialog -> dismiss()
+            }
         }
-      }
     }
-  }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        content = null
+        control = null
+        factory = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        dialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        content?.saveState(outState)
+        control?.saveState(outState)
+    }
+
+    private fun navigateToMarket() {
+        val error = MarketLinker.linkToMarketPage(requireContext(), requireContext().packageName)
+        if (error != null) {
+            viewModel.navigationFailed(error)
+        } else {
+            viewModel.navigationSuccess()
+            dismiss()
+        }
+    }
+
+    companion object {
+
+        internal const val TAG = "VersionUpgradeDialog"
+        private const val KEY_LATEST_VERSION = "key_latest_version"
+
+        @JvmStatic
+        @CheckResult
+        fun newInstance(latestVersion: Int): VersionUpgradeDialog {
+            return VersionUpgradeDialog().apply {
+                arguments = Bundle().apply {
+                    putInt(KEY_LATEST_VERSION, latestVersion)
+                }
+            }
+        }
+    }
 }

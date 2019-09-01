@@ -26,26 +26,25 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutSpinnerView internal constructor(
-  parent: ViewGroup
+    parent: ViewGroup
 ) : BaseUiView<AboutListState, AboutListViewEvent>(parent) {
 
-  override val layout: Int = R.layout.loading_spinner
+    override val layout: Int = R.layout.loading_spinner
 
-  override val layoutRoot by boundView<View>(R.id.spinner_root)
+    override val layoutRoot by boundView<View>(R.id.spinner_root)
 
-  private val spinner by boundView<ProgressBar>(R.id.spinner)
+    private val spinner by boundView<ProgressBar>(R.id.spinner)
 
-  override fun onRender(
-    state: AboutListState,
-    savedState: UiSavedState
-  ) {
-    state.isLoading.let { loading ->
-      spinner.isVisible = loading
+    override fun onRender(
+        state: AboutListState,
+        savedState: UiSavedState
+    ) {
+        state.isLoading.let { loading ->
+            spinner.isVisible = loading
+        }
     }
-  }
 
-  override fun onTeardown() {
-    spinner.isVisible = false
-  }
-
+    override fun onTeardown() {
+        spinner.isVisible = false
+    }
 }

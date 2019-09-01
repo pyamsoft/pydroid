@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +16,7 @@
   -->
 
 <resources>
-  <declare-styleable name="PreferenceCompat">
-    <attr format="reference" name="iconCompat"/>
-  </declare-styleable>
+    <declare-styleable name="PreferenceCompat">
+        <attr name="iconCompat" format="reference" />
+    </declare-styleable>
 </resources>

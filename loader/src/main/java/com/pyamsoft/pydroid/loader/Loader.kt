@@ -23,21 +23,21 @@ import androidx.annotation.CheckResult
 
 interface Loader<T : Any> {
 
-  @CheckResult
-  fun onRequest(action: () -> Unit): Loader<T>
+    @CheckResult
+    fun onRequest(action: () -> Unit): Loader<T>
 
-  @CheckResult
-  fun onError(action: (Drawable?) -> Unit): Loader<T>
+    @CheckResult
+    fun onError(action: (Drawable?) -> Unit): Loader<T>
 
-  @CheckResult
-  fun onLoaded(action: (T) -> Unit): Loader<T>
+    @CheckResult
+    fun onLoaded(action: (T) -> Unit): Loader<T>
 
-  @CheckResult
-  fun mutate(action: (T) -> T): Loader<T>
+    @CheckResult
+    fun mutate(action: (T) -> T): Loader<T>
 
-  @CheckResult
-  fun into(imageView: ImageView): Loaded
+    @CheckResult
+    fun into(imageView: ImageView): Loaded
 
-  @CheckResult
-  fun into(target: ImageTarget<T>): Loaded
+    @CheckResult
+    fun into(target: ImageTarget<T>): Loaded
 }

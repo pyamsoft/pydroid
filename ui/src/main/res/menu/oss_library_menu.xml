@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2019 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +17,10 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <item
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/menu_item_view_license"
-      android:icon="@drawable/ic_open_in_browser_24dp"
-      android:title="@string/open_externally"
-      app:showAsAction="ifRoom"/>
+    <item xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/menu_item_view_license"
+        android:icon="@drawable/ic_open_in_browser_24dp"
+        android:title="@string/open_externally"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -24,23 +24,22 @@ import kotlin.reflect.KClass
 
 abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
-  final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-    if (UiViewModel::class.java.isAssignableFrom(modelClass)) {
-      @Suppress("UNCHECKED_CAST")
-      val viewModelClass = modelClass as Class<out UiViewModel<*, *, *>>
+    final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (UiViewModel::class.java.isAssignableFrom(modelClass)) {
+            @Suppress("UNCHECKED_CAST")
+            val viewModelClass = modelClass as Class<out UiViewModel<*, *, *>>
 
-      @Suppress("UNCHECKED_CAST")
-      return viewModel(viewModelClass.kotlin) as T
-    } else {
-      fail()
+            @Suppress("UNCHECKED_CAST")
+            return viewModel(viewModelClass.kotlin) as T
+        } else {
+            fail()
+        }
     }
-  }
 
-  protected fun fail(): Nothing {
-    throw IllegalArgumentException("Factory can only handle classes that extend UiViewModel")
-  }
+    protected fun fail(): Nothing {
+        throw IllegalArgumentException("Factory can only handle classes that extend UiViewModel")
+    }
 
-  @CheckResult
-  protected abstract fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *>
-
+    @CheckResult
+    protected abstract fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *>
 }

@@ -21,14 +21,12 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import kotlin.reflect.KClass
 
-internal class AboutItemViewModelFactory internal constructor(
-) : UiViewModelFactory() {
+internal class AboutItemViewModelFactory internal constructor() : UiViewModelFactory() {
 
-  override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
-    return when (modelClass) {
-      AboutItemViewModel::class -> AboutItemViewModel()
-      else -> fail()
+    override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
+        return when (modelClass) {
+            AboutItemViewModel::class -> AboutItemViewModel()
+            else -> fail()
+        }
     }
-  }
-
 }

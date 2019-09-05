@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.app
 
+import android.os.Build
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -39,6 +40,32 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
 
         // Clear captured Toolbar
         capturedToolbar = null
+    }
+
+    override fun onBackPressed() {
+        onAndroid10BackPressed()
+    }
+
+    /**
+     * Android 10 leaks Activity on back pressed....
+     * https://twitter.com/Piwai/status/1169274622614704129
+     */
+    private fun onAndroid10BackPressed() {
+        // Copied from FragmentActivity
+        val fragmentManager = supportFragmentManager
+        val isStateSaved = fragmentManager.isStateSaved
+        if (isStateSaved && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            // Older versions will throw an exception from the framework
+            // FragmentManager.popBackStackImmediate(), so we'll just
+            // return here. The Activity is likely already on its way out
+            // since the fragmentManager has already been saved.
+            return
+        }
+
+        if (isStateSaved || !fragmentManager.popBackStackImmediate()) {
+            // Using finishAfterTransition instead of onBackPressed() should fix leak
+            supportFinishAfterTransition()
+        }
     }
 
     final override fun withToolbar(func: (Toolbar) -> Unit) {

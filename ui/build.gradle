@@ -17,7 +17,7 @@
 
 dependencies {
     // Android support library.
-    api "androidx.core:core-ktx:$ktx"
+    api "androidx.core:core-ktx:$core"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
     api "androidx.recyclerview:recyclerview:$recyclerView"
     api "androidx.vectordrawable:vectordrawable:$vectorDrawable"

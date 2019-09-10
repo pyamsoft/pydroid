@@ -42,6 +42,7 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
         capturedToolbar = null
     }
 
+    @CallSuper
     override fun onBackPressed() {
         onAndroid10BackPressed()
     }

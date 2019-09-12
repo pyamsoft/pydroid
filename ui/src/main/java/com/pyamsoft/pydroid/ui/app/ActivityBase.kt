@@ -65,7 +65,11 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
 
         if (isStateSaved || !fragmentManager.popBackStackImmediate()) {
             // Using finishAfterTransition instead of onBackPressed() should fix leak
-            supportFinishAfterTransition()
+            if (isTaskRoot) {
+                supportFinishAfterTransition()
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 

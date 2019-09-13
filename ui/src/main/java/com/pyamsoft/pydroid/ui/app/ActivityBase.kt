@@ -21,6 +21,9 @@ import android.os.Build
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
+import timber.log.Timber
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
 
@@ -66,10 +69,37 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
         if (isStateSaved || !fragmentManager.popBackStackImmediate()) {
             // Using finishAfterTransition instead of onBackPressed() should fix leak
             if (isTaskRoot) {
-                supportFinishAfterTransition()
+                fixAndroid10MemoryLeak(isStateSaved, fragmentManager)
             } else {
+                Timber.d("Normal onBackPressed")
                 super.onBackPressed()
             }
+        }
+    }
+
+    private fun fixAndroid10MemoryLeak(
+        stateLossAllowed: Boolean,
+        fragmentManager: FragmentManager
+    ) {
+        val fragments = fragmentManager.fragments
+
+        var dismissedDialog = false
+        for (fragment in fragments) {
+            if (fragment is DialogFragment) {
+                Timber.w("Android 10 leak avoid - dismiss dialog")
+                if (stateLossAllowed) {
+                    fragment.dismissAllowingStateLoss()
+                } else {
+                    fragment.dismiss()
+                }
+                dismissedDialog = true
+                break
+            }
+        }
+
+        if (!dismissedDialog) {
+            Timber.w("Android 10 leak avoid - finishAfterTransition")
+            supportFinishAfterTransition()
         }
     }
 

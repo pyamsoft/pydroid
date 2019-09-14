@@ -46,7 +46,7 @@ buildscript {
         lifecycle = "2.1.0"
         materialDesign = "1.0.0"
         vectorDrawable = "1.1.0"
-        preference = "1.0.0"
+        preference = "1.1.0"
         recyclerView = "1.0.0"
         fragment = "1.1.0"
         appCompat = "1.1.0"
@@ -59,7 +59,7 @@ buildscript {
         moshi = "1.8.0"
 
         retrofit = "2.6.1"
-        okhttp = "4.1.1"
+        okhttp = "4.2.0"
 
         glide = "4.9.0"
     }

@@ -159,7 +159,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
             val result: V
             if (v == null) {
                 @Suppress("UNCHECKED_CAST")
-                val bound = requireNotNull(parent().findPreference(key)) as V
+                val bound = requireNotNull(parent().findPreference<V>(key))
                 view = bound
                 result = bound
             } else {

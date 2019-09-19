@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
-    private val library: OssLibrary,
+    library: OssLibrary,
     parent: ViewGroup
 ) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
 

@@ -27,8 +27,8 @@ import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingIconView internal constructor(
-    private val changelogIcon: Int,
-    private val imageLoader: ImageLoader,
+    changelogIcon: Int,
+    imageLoader: ImageLoader,
     parent: ViewGroup
 ) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 

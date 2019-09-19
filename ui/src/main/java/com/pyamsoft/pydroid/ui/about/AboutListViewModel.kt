@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class AboutListViewModel internal constructor(
-    private val interactor: AboutInteractor
+    interactor: AboutInteractor
 ) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
     initialState = AboutListState(
         isLoading = false,

@@ -27,9 +27,9 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
-    private val applicationName: String,
-    private val currentVersion: Int,
-    private val newVersion: Int,
+    applicationName: String,
+    currentVersion: Int,
+    newVersion: Int,
     parent: ViewGroup
 ) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 

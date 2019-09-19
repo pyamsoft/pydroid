@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class RatingControlsView internal constructor(
-    private val rateLink: String,
+    rateLink: String,
     private val owner: LifecycleOwner,
     parent: ViewGroup
 ) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {

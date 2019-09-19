@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
 internal class AboutToolbarView internal constructor(
-    private val backstackCount: Int,
+    backstackCount: Int,
     private val toolbarActivity: ToolbarActivity
 ) : UiView<AboutToolbarState, AboutToolbarViewEvent>() {
 

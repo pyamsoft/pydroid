@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
-    private val changelog: SpannedString,
+    changelog: SpannedString,
     parent: ViewGroup
 ) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
 

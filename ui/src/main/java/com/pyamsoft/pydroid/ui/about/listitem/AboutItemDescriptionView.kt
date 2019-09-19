@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
-    private val library: OssLibrary,
+    library: OssLibrary,
     parent: ViewGroup
 ) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
 

@@ -27,7 +27,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import kotlinx.coroutines.launch
 
 internal class RatingViewModel internal constructor(
-    private val interactor: RatingInteractor
+    interactor: RatingInteractor
 ) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->

@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
-    private val interactor: VersionCheckInteractor
+    interactor: VersionCheckInteractor
 ) : UiViewModel<VersionViewState, VersionViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
         isLoading = null,

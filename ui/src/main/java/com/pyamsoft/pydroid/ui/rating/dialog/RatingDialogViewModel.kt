@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 import kotlinx.coroutines.launch
 
 internal class RatingDialogViewModel internal constructor(
-    private val interactor: RatingInteractor
+    interactor: RatingInteractor
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
     initialState = RatingDialogViewState(throwable = null)
 ) {

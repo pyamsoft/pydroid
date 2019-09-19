@@ -48,14 +48,6 @@ internal class AppSettingsViewModel internal constructor(
     )
 ) {
 
-    private var activity: Activity? = activity
-
-    init {
-        doOnTeardown {
-            this.activity = null
-        }
-    }
-
     override fun handleViewEvent(event: AppSettingsViewEvent) {
         return when (event) {
             is MoreApps -> publish(NavigateMoreApps)

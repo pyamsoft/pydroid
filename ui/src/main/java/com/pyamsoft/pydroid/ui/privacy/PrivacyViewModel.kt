@@ -34,22 +34,15 @@ internal class PrivacyViewModel internal constructor(
     initialState = PrivacyViewState(throwable = null)
 ) {
 
-    private var activity: Activity? = activity
-
     init {
-        val self = this
         doOnInit {
             viewModelScope.launch(context = Dispatchers.Default) {
                 PrivacyEventBus.onEvent { event ->
                     withContext(context = Dispatchers.Main) {
-                        publish(ViewExternalPolicy(event.url.hyperlink(requireNotNull(self.activity))))
+                        publish(ViewExternalPolicy(event.url.hyperlink(activity)))
                     }
                 }
             }
-        }
-
-        doOnTeardown {
-            self.activity = null
         }
     }
 

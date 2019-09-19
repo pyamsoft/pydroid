@@ -41,7 +41,6 @@ import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
-    activity: Activity,
     private val applicationName: String,
     private val bugReportUrl: String,
     private val viewSourceUrl: String,
@@ -49,6 +48,7 @@ internal class AppSettingsView internal constructor(
     private val termsConditionsUrl: String,
     private val hideClearAll: Boolean,
     private val hideUpgradeInformation: Boolean,
+    activity: Activity,
     preferenceScreen: PreferenceScreen
 ) : PrefUiView<AppSettingsViewState, AppSettingsViewEvent>(preferenceScreen) {
 

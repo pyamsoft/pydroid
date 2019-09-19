@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import android.app.Activity
-import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -71,24 +70,43 @@ internal class AppSettingsView internal constructor(
     private val termsConditions by boundPref<Preference>(R.string.view_terms_key)
     private val applicationGroup by boundPref<Preference>("application_settings")
 
-    override fun onInflated(
-        preferenceScreen: PreferenceScreen,
-        savedInstanceState: Bundle?
-    ) {
-        setupApplicationTitle()
-        setupBugReport()
-        setupViewSource()
-        setupClearAppData()
-        setupShowUpgradeInfo()
-        setupMoreApps()
-        setupBlog()
-        setupCheckUpgrade()
-        setupDarkTheme()
-        setupLicenses()
-        setupRateApp()
-        setupSocial()
-        setupPrivacyPolicy()
-        setupTermsConditions()
+    init {
+        val self = this
+        doOnInflate {
+            setupApplicationTitle()
+            setupBugReport()
+            setupViewSource()
+            setupClearAppData()
+            setupShowUpgradeInfo()
+            setupMoreApps()
+            setupBlog()
+            setupCheckUpgrade()
+            setupDarkTheme()
+            setupLicenses()
+            setupRateApp()
+            setupSocial()
+            setupPrivacyPolicy()
+            setupTermsConditions()
+        }
+
+        doOnTeardown {
+            moreApps.onPreferenceClickListener = null
+            social.onPreferenceClickListener = null
+            followBlog.onPreferenceClickListener = null
+            rate.onPreferenceClickListener = null
+            bugReport.onPreferenceClickListener = null
+            viewSource.onPreferenceClickListener = null
+            licenses.onPreferenceClickListener = null
+            version.onPreferenceClickListener = null
+            clearAll.onPreferenceClickListener = null
+            upgradeInfo.onPreferenceClickListener = null
+            theme.onPreferenceClickListener = null
+            privacyPolicy.onPreferenceClickListener = null
+            termsConditions.onPreferenceClickListener = null
+
+            self.preferenceScreen = null
+            self.activity = null
+        }
     }
 
     override fun onRender(
@@ -96,25 +114,6 @@ internal class AppSettingsView internal constructor(
         savedState: UiSavedState
     ) {
         requireNotNull(preferenceScreen).adjustTint(state.isDarkTheme)
-    }
-
-    override fun onTeardown() {
-        moreApps.onPreferenceClickListener = null
-        social.onPreferenceClickListener = null
-        followBlog.onPreferenceClickListener = null
-        rate.onPreferenceClickListener = null
-        bugReport.onPreferenceClickListener = null
-        viewSource.onPreferenceClickListener = null
-        licenses.onPreferenceClickListener = null
-        version.onPreferenceClickListener = null
-        clearAll.onPreferenceClickListener = null
-        upgradeInfo.onPreferenceClickListener = null
-        theme.onPreferenceClickListener = null
-        privacyPolicy.onPreferenceClickListener = null
-        termsConditions.onPreferenceClickListener = null
-
-        preferenceScreen = null
-        activity = null
     }
 
     private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {

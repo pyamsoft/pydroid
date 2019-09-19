@@ -20,10 +20,18 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() {
 
     private val viewEventBus = EventBus.create<V>()
+    private val onInflateEventDelegate = lazy(NONE) {
+        mutableListOf<(savedInstanceState: Bundle?) -> Unit>()
+    }
+    private val onInflateEvents by onInflateEventDelegate
+
+    private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
+    private val onTeardownEvents by onTeardownEventDelegate
 
     @IdRes
     @CheckResult
@@ -32,9 +40,38 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     @PublishedApi
     internal fun inflate(savedInstanceState: Bundle?) {
         doInflate(savedInstanceState)
+
+        // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
+        if (onInflateEventDelegate.isInitialized()) {
+            for (inflateEvent in onInflateEvents) {
+                inflateEvent(savedInstanceState)
+            }
+
+            // Clear the inflation hooks list to free up memory
+            onInflateEvents.clear()
+        }
     }
 
+    @Deprecated("Use doOnInflate { savedInstanceState: Bundle? -> } instead.")
     protected open fun doInflate(savedInstanceState: Bundle?) {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
+    }
+
+    /**
+     * Use this to run an event after UiView inflation has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnInflate { savedInstanceState ->
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnInflate(onInflate: (savedInstanceState: Bundle?) -> Unit) {
+        onInflateEvents.add(onInflate)
     }
 
     abstract fun render(
@@ -45,9 +82,38 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     @PublishedApi
     internal fun teardown() {
         doTeardown()
+
+        // Only run teardown hooks if they exist, otherwise don't init memory
+        if (onTeardownEventDelegate.isInitialized()) {
+            for (teardownEvent in onTeardownEvents) {
+                teardownEvent()
+            }
+
+            // Clear the teardown hooks list to free up memory
+            onTeardownEvents.clear()
+        }
     }
 
+    /**
+     * Use this to run an event after UiView teardown has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnTeardown {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnTeardown(onTeardown: () -> Unit) {
+        onTeardownEvents.add(onTeardown)
+    }
+
+    @Deprecated("Use doOnTeardown { () -> } instead.")
     protected open fun doTeardown() {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     open fun saveState(outState: Bundle) {

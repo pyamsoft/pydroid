@@ -38,12 +38,36 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     private var _parent: ViewGroup? = parent
     private var boundViews: MutableSet<BoundView<*>>? = null
 
+    init {
+        doOnInflate { savedInstanceState ->
+            assertValidState()
+
+            parent().inflateAndAdd(layout) {
+                // NOTE: The deprecated function call is kept around for compat purposes.
+                onInflated(this, savedInstanceState)
+            }
+        }
+        doOnTeardown {
+            assertValidState()
+
+            // NOTE: The deprecated function call is kept around for compat purposes.
+            onTeardown()
+
+            parent().removeView(layoutRoot)
+            boundViews?.forEach { it.teardown() }
+            boundViews?.clear()
+
+            boundViews = null
+            _parent = null
+        }
+    }
+
     private fun die(): Nothing {
         throw IllegalStateException("Cannot call UiView methods after it has been torn down")
     }
 
     @CheckResult
-    private fun parent(): ViewGroup {
+    protected fun parent(): ViewGroup {
         return _parent ?: die()
     }
 
@@ -58,17 +82,17 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     final override fun doInflate(savedInstanceState: Bundle?) {
-        assertValidState()
-
-        parent().inflateAndAdd(layout) {
-            onInflated(this, savedInstanceState)
-        }
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
+    @Deprecated("Use doOnInflate { savedInstanceState: Bundle? -> } instead.")
     protected open fun onInflated(
         view: View,
         savedInstanceState: Bundle?
     ) {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     final override fun render(
@@ -93,18 +117,12 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     final override fun doTeardown() {
-        assertValidState()
-        onTeardown()
-
-        parent().removeView(layoutRoot)
-        boundViews?.forEach { it.teardown() }
-        boundViews?.clear()
-
-        boundViews = null
-        _parent = null
     }
 
+    @Deprecated("Use doOnTeardown { () -> } instead.")
     protected open fun onTeardown() {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     private inline fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int, findViews: View.() -> Unit) {

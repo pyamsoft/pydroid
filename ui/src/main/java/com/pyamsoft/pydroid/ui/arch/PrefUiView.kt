@@ -36,8 +36,28 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     private var _parent: PreferenceScreen? = parent
     private var boundPrefs: MutableSet<BoundPref<*>>? = null
 
+    init {
+        doOnInflate { savedInstanceState ->
+            // NOTE: The deprecated function call is kept around for compat purposes.
+            onInflated(parent(), savedInstanceState)
+        }
+
+        doOnTeardown {
+            assertValidState()
+
+            // NOTE: The deprecated function call is kept around for compat purposes.
+            onTeardown()
+
+            boundPrefs?.forEach { it.teardown() }
+            boundPrefs?.clear()
+
+            boundPrefs = null
+            _parent = null
+        }
+    }
+
     @CheckResult
-    private fun parent(): PreferenceScreen {
+    protected fun parent(): PreferenceScreen {
         return requireNotNull(_parent)
     }
 
@@ -56,13 +76,17 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     final override fun doInflate(savedInstanceState: Bundle?) {
-        onInflated(parent(), savedInstanceState)
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
+    @Deprecated("Use doOnInflate { savedInstanceState: Bundle? -> } instead.")
     protected open fun onInflated(
         preferenceScreen: PreferenceScreen,
         savedInstanceState: Bundle?
     ) {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     final override fun render(
@@ -87,17 +111,14 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     final override fun doTeardown() {
-        assertValidState()
-        onTeardown()
-
-        boundPrefs?.forEach { it.teardown() }
-        boundPrefs?.clear()
-
-        boundPrefs = null
-        _parent = null
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
+    @Deprecated("Use doOnTeardown { () -> } instead.")
     protected open fun onTeardown() {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     @CheckResult

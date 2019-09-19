@@ -32,6 +32,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.LinkedList
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -40,6 +41,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 ) : ViewModel() {
 
     private val isInitialized = AtomicBoolean(false)
+    private val onInitEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
+    private val onInitEvents by onInitEventDelegate
+    private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
+    private val onTeardownEvents by onTeardownEventDelegate
+
     private val mutex = Mutex()
     private val controllerEventBus = EventBus.create<C>()
     private val stateBus = EventBus.create<S>()
@@ -54,7 +60,27 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         flushQueueBus.scopedEvent(Dispatchers.Default) { flushQueue() }
     }
 
-    protected abstract fun onInit()
+    /**
+     * Use this to run an event after UiViewModel initialization has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnInit {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnInit(onInit: () -> Unit) {
+        onInitEvents.add(onInit)
+    }
+
+    @Deprecated("Use doOnInit { () -> } instead.")
+    protected open fun onInit() {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
+    }
 
     protected abstract fun handleViewEvent(event: V)
 
@@ -71,7 +97,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Listen for changes
         launch(context = Dispatchers.Default) {
             stateBus.onEvent { state ->
-                withContext(context = Dispatchers.Main) { handleStateChange(views, state, savedState) }
+                withContext(context = Dispatchers.Main) {
+                    handleStateChange(
+                        views,
+                        state,
+                        savedState
+                    )
+                }
             }
         }
 
@@ -95,13 +127,43 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     final override fun onCleared() {
         if (isInitialized.compareAndSet(true, false)) {
+            // NOTE: The deprecated function call is kept around for compat purposes.
             onTeardown()
+
+            // Only run teardown hooks if they exist, otherwise don't init memory
+            if (onTeardownEventDelegate.isInitialized()) {
+                for (teardownEvent in onTeardownEvents) {
+                    teardownEvent()
+                }
+
+                // Clear the teardown hooks list to free up memory
+                onTeardownEvents.clear()
+            }
         } else {
             Timber.w("Teardown is already complete.")
         }
     }
 
+    /**
+     * Use this to run an event after UiViewModel teardown has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnTeardown {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnTeardown(onTeardown: () -> Unit) {
+        onTeardownEvents.add(onTeardown)
+    }
+
+    @Deprecated("Use doOnTeardown { () -> } instead.")
     protected open fun onTeardown() {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     @JvmOverloads
@@ -176,7 +238,18 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private fun initialize() {
         if (isInitialized.compareAndSet(false, true)) {
+            // NOTE: The deprecated function call is kept around for compat purposes.
             onInit()
+
+            // Only run the init hooks if they exist, otherwise we don't need to init the memory
+            if (onInitEventDelegate.isInitialized()) {
+                for (initEvent in onInitEvents) {
+                    initEvent()
+                }
+
+                // Clear the init hooks list to free up memory
+                onInitEvents.clear()
+            }
         } else {
             Timber.w("Initialization is already complete.")
         }
@@ -190,11 +263,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         return StateWithSavedState(state, savedState)
     }
 
-    private fun CoroutineScope.bindEvent(view: UiView<S, V>) = launch(context = Dispatchers.Default) {
-        view.onViewEvent { event ->
-            withContext(context = Dispatchers.Main) { handleViewEvent(event) }
+    private fun CoroutineScope.bindEvent(view: UiView<S, V>) =
+        launch(context = Dispatchers.Default) {
+            view.onViewEvent { event ->
+                withContext(context = Dispatchers.Main) { handleViewEvent(event) }
+            }
         }
-    }
 
     private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: (event: C) -> Unit) =
         launch(context = Dispatchers.Default) {

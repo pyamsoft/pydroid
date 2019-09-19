@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UiSavedState
@@ -56,9 +55,6 @@ internal class VersionView internal constructor(
                 showError(throwable)
             }
         }
-    }
-
-    override fun saveState(outState: Bundle) {
     }
 
     private fun showUpdating() {

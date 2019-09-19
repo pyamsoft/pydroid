@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.os.Bundle
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
@@ -46,9 +45,7 @@ internal class AboutToolbarView internal constructor(
 
                 toolbar.setUpEnabled(true)
                 toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
-                    publish(
-                        UpNavigate
-                    )
+                    publish(UpNavigate)
                 })
             }
         }
@@ -66,6 +63,10 @@ internal class AboutToolbarView internal constructor(
                 toolbar.setNavigationOnClickListener(null)
             }
         }
+
+        doOnSaveState { outState ->
+            outState.putCharSequence(KEY_OLD_TITLE, oldTitle)
+        }
     }
 
     override fun id(): Int {
@@ -79,10 +80,6 @@ internal class AboutToolbarView internal constructor(
         toolbarActivity.withToolbar { toolbar ->
             toolbar.title = state.title
         }
-    }
-
-    override fun saveState(outState: Bundle) {
-        outState.putCharSequence(KEY_OLD_TITLE, oldTitle)
     }
 
     companion object {

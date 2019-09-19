@@ -110,13 +110,27 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
     final override fun saveState(outState: Bundle) {
         assertValidState()
+
+        // NOTE: The deprecated function call is kept around for compat purposes.
         onSaveState(outState)
+
+        // Must call super - this is currently "deprecated" but only to encourage external consumers
+        // to move away from the saveState method directly.
+        //
+        // It will continue to be used internally in the library and will be closed
+        // and un-deprecated in the future.
+        super.saveState(outState)
     }
 
+    @Deprecated("Use doOnSaveState { outState: Bundle -> } instead.")
     protected open fun onSaveState(outState: Bundle) {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     final override fun doTeardown() {
+        // NOTE: The deprecated function call is kept around for compat purposes.
+        // Intentionally blank
     }
 
     @Deprecated("Use doOnTeardown { () -> } instead.")

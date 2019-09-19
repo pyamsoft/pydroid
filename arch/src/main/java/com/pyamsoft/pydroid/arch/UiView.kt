@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
+import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
@@ -25,13 +26,16 @@ import kotlin.LazyThreadSafetyMode.NONE
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() {
 
     private val viewEventBus = EventBus.create<V>()
-    private val onInflateEventDelegate = lazy(NONE) {
-        mutableListOf<(savedInstanceState: Bundle?) -> Unit>()
-    }
+
+    private val onInflateEventDelegate =
+        lazy(NONE) { mutableListOf<(savedInstanceState: Bundle?) -> Unit>() }
     private val onInflateEvents by onInflateEventDelegate
 
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
+
+    private val onSaveEventDelegate = lazy(NONE) { mutableListOf<(outState: Bundle) -> Unit>() }
+    private val onSaveEvents by onSaveEventDelegate
 
     @IdRes
     @CheckResult
@@ -92,6 +96,16 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
             // Clear the teardown hooks list to free up memory
             onTeardownEvents.clear()
         }
+
+        // If there are any inflate event hooks hanging around, clear them out too
+        if (onInflateEventDelegate.isInitialized()) {
+            onInflateEvents.clear()
+        }
+
+        // If there are any save state event hooks hanging around, clear them out too
+        if (onSaveEventDelegate.isInitialized()) {
+            onSaveEvents.clear()
+        }
     }
 
     /**
@@ -116,7 +130,36 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         // Intentionally blank
     }
 
+    // TODO: After the migration which kills the other old doInflate and doTeardown methods, close this function
+    // Callers should be implementing the doOnSaveState hook at that point.
+    @CallSuper
     open fun saveState(outState: Bundle) {
+
+        // Only run save state hooks if they exist, otherwise don't init memory
+        if (onSaveEventDelegate.isInitialized()) {
+            for (saveEvent in onSaveEvents) {
+                saveEvent(outState)
+            }
+
+            // DO NOT clear the onSaveEvents hook list here because onSaveState can happen multiple
+            // times before the UiView calls teardown()
+        }
+    }
+
+    /**
+     * Use this to run an event during a UiView lifecycle saveState event
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnSaveState { outState ->
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnSaveState(onSaveState: (outState: Bundle) -> Unit) {
+        onSaveEvents.add(onSaveState)
     }
 
     internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {

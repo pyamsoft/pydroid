@@ -35,6 +35,12 @@ internal class AboutSpinnerView internal constructor(
 
     private val spinner by boundView<ProgressBar>(R.id.spinner)
 
+    init {
+        doOnTeardown {
+            spinner.isVisible = false
+        }
+    }
+
     override fun onRender(
         state: AboutListState,
         savedState: UiSavedState
@@ -42,9 +48,5 @@ internal class AboutSpinnerView internal constructor(
         state.isLoading.let { loading ->
             spinner.isVisible = loading
         }
-    }
-
-    override fun onTeardown() {
-        spinner.isVisible = false
     }
 }

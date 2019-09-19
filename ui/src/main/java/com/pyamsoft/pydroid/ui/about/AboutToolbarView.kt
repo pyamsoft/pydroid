@@ -33,23 +33,43 @@ internal class AboutToolbarView internal constructor(
 
     private var oldTitle: CharSequence? = null
 
-    override fun id(): Int {
-        throw InvalidIdException
-    }
-
-    override fun doInflate(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            oldTitle = savedInstanceState.getCharSequence(KEY_OLD_TITLE)
-        }
-
-        toolbarActivity.withToolbar { toolbar ->
-            if (oldTitle == null) {
-                oldTitle = toolbar.title
+    init {
+        doOnInflate { savedInstanceState ->
+            if (savedInstanceState != null) {
+                oldTitle = savedInstanceState.getCharSequence(KEY_OLD_TITLE)
             }
 
-            toolbar.setUpEnabled(true)
-            toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create { publish(UpNavigate) })
+            toolbarActivity.withToolbar { toolbar ->
+                if (oldTitle == null) {
+                    oldTitle = toolbar.title
+                }
+
+                toolbar.setUpEnabled(true)
+                toolbar.setNavigationOnClickListener(DebouncedOnClickListener.create {
+                    publish(
+                        UpNavigate
+                    )
+                })
+            }
         }
+
+        doOnTeardown {
+            toolbarActivity.withToolbar { toolbar ->
+                // Set title back to original
+                toolbar.title = oldTitle ?: toolbar.title
+
+                // If this page was last on the back stack, set up false
+                if (backstackCount == 0) {
+                    toolbar.setUpEnabled(false)
+                }
+
+                toolbar.setNavigationOnClickListener(null)
+            }
+        }
+    }
+
+    override fun id(): Int {
+        throw InvalidIdException
     }
 
     override fun render(
@@ -58,20 +78,6 @@ internal class AboutToolbarView internal constructor(
     ) {
         toolbarActivity.withToolbar { toolbar ->
             toolbar.title = state.title
-        }
-    }
-
-    override fun doTeardown() {
-        toolbarActivity.withToolbar { toolbar ->
-            // Set title back to original
-            toolbar.title = oldTitle ?: toolbar.title
-
-            // If this page was last on the back stack, set up false
-            if (backstackCount == 0) {
-                toolbar.setUpEnabled(false)
-            }
-
-            toolbar.setNavigationOnClickListener(null)
         }
     }
 

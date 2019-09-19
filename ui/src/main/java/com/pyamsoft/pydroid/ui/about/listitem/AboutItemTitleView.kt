@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -41,23 +40,22 @@ internal class AboutItemTitleView internal constructor(
 
     override val layoutRoot by boundView<View>(R.id.about_title)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        title.text = library.name
-        license.text = getString(R.string.license_name, library.licenseName)
+    init {
+        doOnInflate {
+            title.text = library.name
+            license.text = getString(R.string.license_name, library.licenseName)
+        }
+
+        doOnTeardown {
+            title.text = ""
+            license.text = ""
+        }
     }
 
     override fun onRender(
         state: UnitViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        title.text = ""
-        license.text = ""
     }
 
     @CheckResult

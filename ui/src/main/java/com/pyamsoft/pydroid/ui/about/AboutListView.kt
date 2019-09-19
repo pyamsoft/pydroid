@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
@@ -45,18 +44,16 @@ internal class AboutListView internal constructor(
 
     override val layoutRoot by boundView<RecyclerView>(R.id.about_list)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        setupListView()
-    }
+    init {
+        doOnInflate {
+            setupListView()
+        }
 
-    override fun onTeardown() {
-        super.onTeardown()
-        layoutRoot.adapter = null
-        clearLicenses()
-        aboutAdapter = null
+        doOnTeardown {
+            layoutRoot.adapter = null
+            clearLicenses()
+            aboutAdapter = null
+        }
     }
 
     override fun onSaveState(outState: Bundle) {
@@ -66,11 +63,7 @@ internal class AboutListView internal constructor(
     @CheckResult
     private fun getCurrentPosition(): Int {
         val manager = layoutRoot.layoutManager
-        if (manager is LinearLayoutManager) {
-            return manager.findFirstVisibleItemPosition()
-        } else {
-            return 0
-        }
+        return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
     }
 
     private fun setupListView() {

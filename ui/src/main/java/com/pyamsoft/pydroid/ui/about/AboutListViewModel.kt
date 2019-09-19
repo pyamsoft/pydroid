@@ -54,8 +54,10 @@ internal class AboutListViewModel internal constructor(
         }
     }
 
-    override fun onInit() {
-        loadLicenses(false)
+    init {
+        doOnInit {
+            loadLicenses(false)
+        }
     }
 
     override fun handleViewEvent(event: AboutListViewEvent) {

@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
@@ -38,25 +36,23 @@ internal class AboutItemDescriptionView internal constructor(
 
     override val layoutRoot by boundView<TextView>(R.id.about_description)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onInflated(view, savedInstanceState)
-        layoutRoot.text = library.description
-        layoutRoot.isVisible = library.description.isNotBlank()
+    init {
+        doOnInflate {
+            layoutRoot.text = library.description
+            layoutRoot.isVisible = library.description.isNotBlank()
+        }
+
+        doOnTeardown {
+            layoutRoot.apply {
+                text = ""
+                isGone = true
+            }
+        }
     }
 
     override fun onRender(
         state: UnitViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        layoutRoot.apply {
-            text = ""
-            isGone = true
-        }
     }
 }

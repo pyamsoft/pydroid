@@ -22,13 +22,10 @@ import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 
-internal class AboutItemViewModel internal constructor() :
-    UiViewModel<UnitViewState, AboutItemViewEvent, AboutItemControllerEvent>(
-        initialState = UnitViewState
-    ) {
-
-    override fun onInit() {
-    }
+internal class AboutItemViewModel internal constructor(
+) : UiViewModel<UnitViewState, AboutItemViewEvent, AboutItemControllerEvent>(
+    initialState = UnitViewState
+) {
 
     override fun handleViewEvent(event: AboutItemViewEvent) {
         return when (event) {

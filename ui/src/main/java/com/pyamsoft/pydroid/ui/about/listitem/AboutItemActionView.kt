@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -41,16 +40,20 @@ internal class AboutItemActionView internal constructor(
 
     override val layoutRoot by boundView<View>(R.id.about_actions)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        viewLicense.setOnDebouncedClickListener {
-            publish(OpenUrl(library.licenseUrl))
+    init {
+        doOnInflate {
+            viewLicense.setOnDebouncedClickListener {
+                publish(OpenUrl(library.licenseUrl))
+            }
+
+            visitHomepage.setOnDebouncedClickListener {
+                publish(OpenUrl(library.libraryUrl))
+            }
         }
 
-        visitHomepage.setOnDebouncedClickListener {
-            publish(OpenUrl(library.libraryUrl))
+        doOnTeardown {
+            viewLicense.setOnDebouncedClickListener(null)
+            visitHomepage.setOnDebouncedClickListener(null)
         }
     }
 
@@ -58,10 +61,5 @@ internal class AboutItemActionView internal constructor(
         state: UnitViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        viewLicense.setOnDebouncedClickListener(null)
-        visitHomepage.setOnDebouncedClickListener(null)
     }
 }

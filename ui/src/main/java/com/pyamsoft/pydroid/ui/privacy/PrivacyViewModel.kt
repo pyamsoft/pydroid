@@ -36,13 +36,20 @@ internal class PrivacyViewModel internal constructor(
 
     private var activity: Activity? = activity
 
-    override fun onInit() {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            PrivacyEventBus.onEvent { event ->
-                withContext(context = Dispatchers.Main) {
-                    publish(ViewExternalPolicy(event.url.hyperlink(requireNotNull(activity))))
+    init {
+        val self = this
+        doOnInit {
+            viewModelScope.launch(context = Dispatchers.Default) {
+                PrivacyEventBus.onEvent { event ->
+                    withContext(context = Dispatchers.Main) {
+                        publish(ViewExternalPolicy(event.url.hyperlink(requireNotNull(self.activity))))
+                    }
                 }
             }
+        }
+
+        doOnTeardown {
+            self.activity = null
         }
     }
 
@@ -50,10 +57,6 @@ internal class PrivacyViewModel internal constructor(
         return when (event) {
             is SnackbarHidden -> setState { copy(throwable = null) }
         }
-    }
-
-    override fun onTeardown() {
-        activity = null
     }
 
     fun navigationFailed(error: ActivityNotFoundException) {

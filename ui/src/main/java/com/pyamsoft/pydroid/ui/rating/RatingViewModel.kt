@@ -37,8 +37,10 @@ internal class RatingViewModel internal constructor(
         }
     }
 
-    override fun onInit() {
-        load(false)
+    init {
+        doOnInit {
+            load(false)
+        }
     }
 
     override fun handleViewEvent(event: UnitViewEvent) {

@@ -39,9 +39,6 @@ internal class RatingDialogViewModel internal constructor(
         handleRate(link)
     }
 
-    override fun onInit() {
-    }
-
     override fun handleViewEvent(event: RatingDialogViewEvent) {
         return when (event) {
             is Rate -> save(event.link)

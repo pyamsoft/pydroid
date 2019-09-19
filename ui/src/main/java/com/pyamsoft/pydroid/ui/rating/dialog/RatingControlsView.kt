@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -43,12 +42,16 @@ internal class RatingControlsView internal constructor(
 
     override val layoutRoot by boundView<View>(R.id.rating_control_root)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        rateApplication.setOnDebouncedClickListener { publish(Rate(rateLink)) }
-        noThanks.setOnDebouncedClickListener { publish(Cancel) }
+    init {
+        doOnInflate {
+            rateApplication.setOnDebouncedClickListener { publish(Rate(rateLink)) }
+            noThanks.setOnDebouncedClickListener { publish(Cancel) }
+        }
+
+        doOnTeardown {
+            rateApplication.setOnClickListener(null)
+            noThanks.setOnClickListener(null)
+        }
     }
 
     override fun onRender(
@@ -74,10 +77,5 @@ internal class RatingControlsView internal constructor(
         Snackbreak.bindTo(owner) {
             dismiss()
         }
-    }
-
-    override fun onTeardown() {
-        rateApplication.setOnClickListener(null)
-        noThanks.setOnClickListener(null)
     }
 }

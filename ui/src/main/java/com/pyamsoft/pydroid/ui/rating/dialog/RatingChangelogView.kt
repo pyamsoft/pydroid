@@ -17,9 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
 import android.text.SpannedString
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
@@ -38,20 +36,19 @@ internal class RatingChangelogView internal constructor(
 
     override val layoutRoot by boundView<ScrollView>(R.id.rating_changelog_scroll)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        changelogText.text = changelog
+    init {
+        doOnInflate {
+            changelogText.text = changelog
+        }
+
+        doOnTeardown {
+            changelogText.text = ""
+        }
     }
 
     override fun onRender(
         state: RatingDialogViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        changelogText.text = ""
     }
 }

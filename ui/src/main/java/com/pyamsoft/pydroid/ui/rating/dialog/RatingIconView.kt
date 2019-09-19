@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -41,22 +40,22 @@ internal class RatingIconView internal constructor(
 
     override val layoutRoot by boundView<View>(R.id.rating_icon_root)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        iconLoaded?.dispose()
-        iconLoaded = imageLoader.load(changelogIcon)
-            .into(iconView)
+    init {
+        doOnInflate {
+            iconLoaded?.dispose()
+            iconLoaded = imageLoader.load(changelogIcon)
+                .into(iconView)
+        }
+
+        doOnTeardown {
+            iconLoaded?.dispose()
+            iconLoaded = null
+        }
     }
 
     override fun onRender(
         state: RatingDialogViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        iconLoaded?.dispose()
     }
 }

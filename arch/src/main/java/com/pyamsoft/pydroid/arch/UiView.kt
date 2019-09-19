@@ -34,7 +34,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveEventDelegate = lazy(NONE) { mutableListOf<(outState: Bundle) -> Unit>() }
+    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(outState: Bundle) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
     @IdRes
@@ -47,6 +47,8 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
         if (onInflateEventDelegate.isInitialized()) {
+
+            // Call inflate hooks in FIFO order
             for (inflateEvent in onInflateEvents) {
                 inflateEvent(savedInstanceState)
             }
@@ -64,6 +66,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     /**
      * Use this to run an event after UiView inflation has successfully finished.
+     * Events are guaranteed to be called in FIFO order, one after the other.
      *
      * This is generally used in something like the constructor
      *
@@ -89,6 +92,10 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
         // Only run teardown hooks if they exist, otherwise don't init memory
         if (onTeardownEventDelegate.isInitialized()) {
+
+            // Reverse the list order so that we teardown in LIFO order
+            onTeardownEvents.reverse()
+
             for (teardownEvent in onTeardownEvents) {
                 teardownEvent()
             }
@@ -110,6 +117,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     /**
      * Use this to run an event after UiView teardown has successfully finished.
+     * Events are guaranteed to be called in LIFO (reverse) order, one after the other.
      *
      * This is generally used in something like the constructor
      *
@@ -137,6 +145,8 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
         // Only run save state hooks if they exist, otherwise don't init memory
         if (onSaveEventDelegate.isInitialized()) {
+
+            // Call save hooks in any arbitrary order
             for (saveEvent in onSaveEvents) {
                 saveEvent(outState)
             }
@@ -148,6 +158,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     /**
      * Use this to run an event during a UiView lifecycle saveState event
+     * Events are not guaranteed to run in any consistent order
      *
      * This is generally used in something like the constructor
      *

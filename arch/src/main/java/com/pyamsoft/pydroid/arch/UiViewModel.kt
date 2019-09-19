@@ -130,14 +130,22 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // NOTE: The deprecated function call is kept around for compat purposes.
             onTeardown()
 
-            // Only run teardown hooks if they exist, otherwise don't init memory
             if (onTeardownEventDelegate.isInitialized()) {
+
+                // Reverse the list order so that we teardown in LIFO order
+                onTeardownEvents.reverse()
+
                 for (teardownEvent in onTeardownEvents) {
                     teardownEvent()
                 }
 
                 // Clear the teardown hooks list to free up memory
                 onTeardownEvents.clear()
+            }
+
+            // If there are any init event hooks hanging around, clear them out too
+            if (onInitEventDelegate.isInitialized()) {
+                onInitEvents.clear()
             }
         } else {
             Timber.w("Teardown is already complete.")
@@ -243,6 +251,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
             // Only run the init hooks if they exist, otherwise we don't need to init the memory
             if (onInitEventDelegate.isInitialized()) {
+
+                // Call init hooks in FIFO order
                 for (initEvent in onInitEvents) {
                     initEvent()
                 }

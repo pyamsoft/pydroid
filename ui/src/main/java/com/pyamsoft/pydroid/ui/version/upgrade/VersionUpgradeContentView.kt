@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -42,26 +41,24 @@ internal class VersionUpgradeContentView internal constructor(
 
     override val layoutRoot by boundView<View>(R.id.version_content_root)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onInflated(view, savedInstanceState)
-        upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
-        currentValue.text = "$currentVersion"
-        newValue.text = "$newVersion"
+    init {
+        doOnInflate {
+            upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
+            currentValue.text = "$currentVersion"
+            newValue.text = "$newVersion"
+        }
+
+        doOnTeardown {
+            upgradeMessage.text = ""
+            currentValue.text = ""
+            newValue.text = ""
+        }
     }
 
     override fun onRender(
         state: VersionUpgradeViewState,
         savedState: UiSavedState
     ) {
-    }
-
-    override fun onTeardown() {
-        upgradeMessage.text = ""
-        currentValue.text = ""
-        newValue.text = ""
     }
 
     @CheckResult

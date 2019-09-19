@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
@@ -54,10 +53,10 @@ internal class AboutListView internal constructor(
             clearLicenses()
             aboutAdapter = null
         }
-    }
 
-    override fun onSaveState(outState: Bundle) {
-        outState.putInt(KEY_CURRENT, getCurrentPosition())
+        doOnSaveState { outState ->
+            outState.putInt(KEY_CURRENT, getCurrentPosition())
+        }
     }
 
     @CheckResult

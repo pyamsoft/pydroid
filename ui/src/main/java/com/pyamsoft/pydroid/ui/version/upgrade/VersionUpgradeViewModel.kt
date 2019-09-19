@@ -29,9 +29,6 @@ internal class VersionUpgradeViewModel internal constructor() :
         initialState = VersionUpgradeViewState(throwable = null)
     ) {
 
-    override fun onInit() {
-    }
-
     override fun handleViewEvent(event: VersionUpgradeViewEvent) {
         return when (event) {
             Upgrade -> publish(OpenMarket)

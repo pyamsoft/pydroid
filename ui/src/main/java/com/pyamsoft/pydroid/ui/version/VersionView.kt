@@ -35,9 +35,6 @@ internal class VersionView internal constructor(
         throw InvalidIdException
     }
 
-    override fun doInflate(savedInstanceState: Bundle?) {
-    }
-
     override fun render(
         state: VersionViewState,
         savedState: UiSavedState

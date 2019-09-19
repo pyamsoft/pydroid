@@ -57,9 +57,6 @@ internal class VersionCheckViewModel internal constructor(
         }
     }
 
-    override fun onInit() {
-    }
-
     override fun handleViewEvent(event: VersionViewEvent) {
         return when (event) {
             is SnackbarHidden -> setState { copy(throwable = null) }

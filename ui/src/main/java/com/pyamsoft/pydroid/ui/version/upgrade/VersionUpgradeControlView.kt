@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -42,12 +41,16 @@ internal class VersionUpgradeControlView internal constructor(
 
     override val layoutRoot by boundView<View>(R.id.version_control_root)
 
-    override fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
-        laterButton.setOnDebouncedClickListener { publish(Cancel) }
+    init {
+        doOnInflate {
+            upgradeButton.setOnDebouncedClickListener { publish(Upgrade) }
+            laterButton.setOnDebouncedClickListener { publish(Cancel) }
+        }
+
+        doOnTeardown {
+            upgradeButton.setOnClickListener(null)
+            laterButton.setOnClickListener(null)
+        }
     }
 
     override fun onRender(
@@ -73,10 +76,5 @@ internal class VersionUpgradeControlView internal constructor(
         Snackbreak.bindTo(owner) {
             dismiss()
         }
-    }
-
-    override fun onTeardown() {
-        upgradeButton.setOnClickListener(null)
-        laterButton.setOnClickListener(null)
     }
 }

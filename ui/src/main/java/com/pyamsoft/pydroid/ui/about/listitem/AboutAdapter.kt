@@ -51,10 +51,10 @@ internal class AboutAdapter internal constructor(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (getItem(position).name.isBlank()) {
-            return VIEW_TYPE_SPACER
+        return if (getItem(position).name.isBlank()) {
+            VIEW_TYPE_SPACER
         } else {
-            return VIEW_TYPE_REAL
+            VIEW_TYPE_REAL
         }
     }
 
@@ -63,10 +63,10 @@ internal class AboutAdapter internal constructor(
         viewType: Int
     ): BaseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        if (viewType == VIEW_TYPE_REAL) {
-            return AboutViewHolder.create(inflater, parent, callback)
+        return if (viewType == VIEW_TYPE_REAL) {
+            AboutViewHolder.create(inflater, parent, callback)
         } else {
-            return SpaceViewHolder.create(inflater, parent)
+            SpaceViewHolder.create(inflater, parent)
         }
     }
 

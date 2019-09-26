@@ -69,7 +69,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         }
     }
 
-    fun checkForUpdate() {
+    private fun checkForUpdate() {
         runWhenReady(this) { versionViewModel.checkForUpdates(false) }
     }
 

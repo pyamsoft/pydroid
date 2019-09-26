@@ -74,16 +74,7 @@ private fun Toolbar.loadIcon(@ColorRes customColor: Int): Drawable? {
 }
 
 private fun Toolbar.showUpIcon(customIcon: Drawable? = null, @ColorRes customColor: Int = 0) {
-    var icon: Drawable?
-
-    if (customIcon != null) {
-        // Use the custom icon if available
-        icon = customIcon
-    } else {
-        // Use the current icon if available
-        icon = navigationIcon
-    }
-
+    var icon: Drawable? = customIcon ?: navigationIcon
     if (icon == null) {
         icon = loadIcon(customColor)
     }

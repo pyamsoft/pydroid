@@ -52,12 +52,16 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     final override val changelog: SpannedString
         get() {
             return buildSpannedString {
-                val attrArray = intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
+                val attrArray =
+                    intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
                 val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
                 val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
                 withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
                     val size: Int =
-                        getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
+                        getDimensionPixelSize(
+                            indexOfSize,
+                            RESOURCE_NOT_FOUND
+                        ).validate("dimensionPixelSize")
                     val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
                     inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
@@ -67,7 +71,10 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
                 withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
                     val size: Int =
-                        getDimensionPixelSize(indexOfSize, RESOURCE_NOT_FOUND).validate("dimensionPixelSize")
+                        getDimensionPixelSize(
+                            indexOfSize,
+                            RESOURCE_NOT_FOUND
+                        ).validate("dimensionPixelSize")
                     val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
                     inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
@@ -81,12 +88,9 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
     @CheckResult
     private fun Int.validate(what: String): Int {
-        if (this == RESOURCE_NOT_FOUND) {
-            throw IllegalArgumentException("Value for $what is: $this")
-        } else {
-            Timber.d("Value for $what is: $this")
-            return this
-        }
+        require(this != RESOURCE_NOT_FOUND) { "Value for $what is: $this" }
+        Timber.d("Value for $what is: $this")
+        return this
     }
 
     @CallSuper

@@ -33,20 +33,18 @@ fun DialogFragment.show(
     activity: FragmentActivity,
     tag: String
 ) {
-    if (tag.isEmpty()) {
-        throw IllegalArgumentException("Cannot use EMPTY tag")
-    }
+    require(tag.isNotBlank()) { "Cannot use blank tag" }
 
     runAfterReady(activity) {
         val fragmentManager = activity.supportFragmentManager
         val transaction = fragmentManager.beginTransaction()
         val prev = fragmentManager.findFragmentByTag(tag)
         if (prev != null) {
-            Timber.d("Remove old fragment with tag: %s", tag)
+            Timber.d("Remove old fragment with tag: $tag")
             transaction.remove(prev)
         }
 
-        Timber.d("Add new fragment with tag: %s", tag)
+        Timber.d("Add new fragment with tag: $tag")
         show(transaction, tag)
     }
 }

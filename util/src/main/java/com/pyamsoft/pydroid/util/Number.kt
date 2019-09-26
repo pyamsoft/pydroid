@@ -31,19 +31,17 @@ private val cachedDP: SparseIntArray by lazy {
 
 @CheckResult
 private fun toDp(c: Context, @Px px: Int): Int {
-    if (px <= 0) {
-        return 0
-    } else {
+    return if (px <= 0) 0 else {
         val cached: Int = cachedDP[px, 0]
         if (cached != 0) {
-            return cached
+            cached
         } else {
             val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
             val dp: Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
                 .roundToInt()
             cachedDP.put(px, dp)
             // Return
-            return dp
+            dp
         }
     }
 }

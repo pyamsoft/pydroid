@@ -59,10 +59,10 @@ object Toaster {
 
     @CheckResult
     fun bindTo(lifecycle: Lifecycle): Instance {
-        if (cache.containsKey(lifecycle)) {
-            return requireNotNull(cache[lifecycle])
+        return if (cache.containsKey(lifecycle)) {
+            requireNotNull(cache[lifecycle])
         } else {
-            return cacheInstance(lifecycle)
+            cacheInstance(lifecycle)
         }
     }
 

@@ -212,10 +212,8 @@ object Snackbreak {
 
         @CheckResult
         private fun canShowNewSnackbar(force: Boolean): Boolean {
-            if (force) {
-                return true
-            } else {
-                return snackbar.let { if (it == null) true else !it.isShownOrQueued }
+            return if (force) true else {
+                snackbar.let { if (it == null) true else !it.isShownOrQueued }
             }
         }
 

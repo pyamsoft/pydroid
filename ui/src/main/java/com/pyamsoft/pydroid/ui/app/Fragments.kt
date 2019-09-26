@@ -23,11 +23,7 @@ import androidx.fragment.app.Fragment
 val Fragment.toolbarActivity: ToolbarActivity?
     @get:CheckResult get() {
         val a = activity
-        if (a is ToolbarActivity) {
-            return a
-        } else {
-            return null
-        }
+        return if (a is ToolbarActivity) a else null
     }
 
 @CheckResult

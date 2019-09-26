@@ -52,11 +52,10 @@ internal class VersionCheckInteractorNetwork internal constructor(
 
     override suspend fun checkVersion(force: Boolean): UpdatePayload {
         enforcer.assertNotOnMainThread()
-        val targetName: String
-        if (packageName.endsWith(".dev")) {
-            targetName = packageName.substringBefore(".dev")
+        val targetName = if (packageName.endsWith(".dev")) {
+            packageName.substringBefore(".dev")
         } else {
-            targetName = packageName
+            packageName
         }
         val result = versionCheckService.checkVersion(targetName)
         return UpdatePayload(currentVersion, versionCodeForApi(result))

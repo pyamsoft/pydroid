@@ -65,11 +65,17 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         super.onResume()
 
         if (checkForUpdates) {
-            checkForUpdate()
+            forceCheckForUpdate()
         }
     }
 
-    private fun checkForUpdate() {
+    private fun forceCheckForUpdate() {
+        runWhenReady(this) { versionViewModel.checkForUpdates(false) }
+    }
+
+    // Keep public for app consumers
+    fun checkForUpdate() {
+        check(!checkForUpdates) { "Do not call this method manually, updates are automatically checked onResume" }
         runWhenReady(this) { versionViewModel.checkForUpdates(false) }
     }
 

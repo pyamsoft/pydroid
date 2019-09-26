@@ -26,8 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class PrivacyViewModel internal constructor(
-) : UiViewModel<PrivacyViewState, PrivacyViewEvent, PrivacyControllerEvent>(
+internal class PrivacyViewModel internal constructor() : UiViewModel<PrivacyViewState, PrivacyViewEvent, PrivacyControllerEvent>(
     initialState = PrivacyViewState(throwable = null)
 ) {
 

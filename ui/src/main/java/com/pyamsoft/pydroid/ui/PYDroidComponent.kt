@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.app.Activity
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
@@ -87,7 +86,7 @@ internal interface PYDroidComponent {
         private val context = application
         private val enforcer = Enforcer(debug)
         private val preferences = PYDroidPreferencesImpl(context)
-        private val theming = Theming(preferences)
+        private val theming = Theming(context, preferences)
         private val packageName = context.packageName
 
         private val aboutModule = AboutModule(enforcer)
@@ -97,9 +96,8 @@ internal interface PYDroidComponent {
             VersionCheckModule(debug, version, packageName, enforcer)
 
         @CheckResult
-        private fun viewModelFactory(activity: Activity): PYDroidViewModelFactory {
+        private fun viewModelFactory(): PYDroidViewModelFactory {
             return PYDroidViewModelFactory(
-                activity,
                 ratingModule.provideInteractor(),
                 aboutModule.provideInteractor(),
                 versionCheckModule.provideInteractor(),
@@ -108,11 +106,11 @@ internal interface PYDroidComponent {
         }
 
         override fun plusPrivacy(): PrivacyComponent.Factory {
-            return PrivacyComponent.Impl.FactoryImpl { viewModelFactory(it) }
+            return PrivacyComponent.Impl.FactoryImpl(viewModelFactory())
         }
 
         override fun plusAbout(): AboutComponent.Factory {
-            return AboutComponent.Impl.FactoryImpl { viewModelFactory(it) }
+            return AboutComponent.Impl.FactoryImpl(viewModelFactory())
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -120,21 +118,23 @@ internal interface PYDroidComponent {
         }
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {
-            return RatingDialogComponent.Impl.FactoryImpl(loaderModule) { viewModelFactory(it) }
+            return RatingDialogComponent.Impl.FactoryImpl(loaderModule, viewModelFactory())
         }
 
         override fun plusVersion(): VersionComponent.Factory {
-            return VersionComponent.Impl.FactoryImpl { viewModelFactory(it) }
+            return VersionComponent.Impl.FactoryImpl(viewModelFactory())
         }
 
         override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-            return VersionUpgradeComponent.Impl.FactoryImpl(name, version) { viewModelFactory(it) }
+            return VersionUpgradeComponent.Impl.FactoryImpl(name, version, viewModelFactory())
         }
 
         override fun plusSettingsComponent(): AppSettingsComponent.Factory {
             return AppSettingsComponent.Impl.FactoryImpl(
-                name, reportUrl, sourceUrl, privacyPolicyUrl, termsConditionsUrl
-            ) { viewModelFactory(it) }
+                name, reportUrl, sourceUrl,
+                privacyPolicyUrl, termsConditionsUrl,
+                viewModelFactory()
+            )
         }
 
         override fun enforcer(): Enforcer {

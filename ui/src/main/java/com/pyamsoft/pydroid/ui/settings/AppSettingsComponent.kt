@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
@@ -33,7 +32,6 @@ internal interface AppSettingsComponent {
 
         @CheckResult
         fun create(
-            activity: Activity,
             owner: LifecycleOwner,
             preferenceScreen: PreferenceScreen,
             hideClearAll: Boolean,
@@ -43,7 +41,6 @@ internal interface AppSettingsComponent {
     }
 
     class Impl private constructor(
-        private val activity: Activity,
         private val parentProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
         private val applicationName: String,
@@ -54,7 +51,7 @@ internal interface AppSettingsComponent {
         private val hideClearAll: Boolean,
         private val hideUpgradeInformation: Boolean,
         private val preferenceScreen: PreferenceScreen,
-        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        private val factory: PYDroidViewModelFactory
     ) : AppSettingsComponent {
 
         override fun inject(fragment: AppSettingsPreferenceFragment) {
@@ -62,12 +59,12 @@ internal interface AppSettingsComponent {
             val settingsView = AppSettingsView(
                 applicationName, bugReportUrl,
                 viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
-                hideClearAll, hideUpgradeInformation, activity, preferenceScreen
+                hideClearAll, hideUpgradeInformation, preferenceScreen
             )
 
             fragment.versionView = versionView
             fragment.settingsView = settingsView
-            fragment.factory = factoryProvider(activity)
+            fragment.factory = factory
         }
 
         internal class FactoryImpl internal constructor(
@@ -76,11 +73,10 @@ internal interface AppSettingsComponent {
             private val viewSourceUrl: String,
             private val privacyPolicyUrl: String,
             private val termsConditionsUrl: String,
-            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+            private val factory: PYDroidViewModelFactory
         ) : Factory {
 
             override fun create(
-                activity: Activity,
                 owner: LifecycleOwner,
                 preferenceScreen: PreferenceScreen,
                 hideClearAll: Boolean,
@@ -88,10 +84,10 @@ internal interface AppSettingsComponent {
                 parentProvider: () -> ViewGroup
             ): AppSettingsComponent {
                 return Impl(
-                    activity, parentProvider, owner, applicationName, bugReportUrl,
+                    parentProvider, owner, applicationName, bugReportUrl,
                     viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
                     hideClearAll, hideUpgradeInformation, preferenceScreen,
-                    factoryProvider
+                    factory
                 )
             }
         }

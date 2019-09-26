@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.app.Activity
 import android.text.SpannedString
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
@@ -33,7 +32,6 @@ internal interface RatingDialogComponent {
 
         @CheckResult
         fun create(
-            activity: Activity,
             parent: ViewGroup,
             owner: LifecycleOwner,
             rateLink: String,
@@ -43,14 +41,13 @@ internal interface RatingDialogComponent {
     }
 
     class Impl private constructor(
-        private val activity: Activity,
         private val parent: ViewGroup,
         private val changeLogIcon: Int,
         private val rateLink: String,
         private val changeLog: SpannedString,
         private val owner: LifecycleOwner,
         private val loaderModule: LoaderModule,
-        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        private val factory: PYDroidViewModelFactory
     ) : RatingDialogComponent {
 
         override fun inject(dialog: RatingDialog) {
@@ -58,7 +55,7 @@ internal interface RatingDialogComponent {
             val changelog = RatingChangelogView(changeLog, parent)
             val controls = RatingControlsView(rateLink, owner, parent)
 
-            dialog.factory = factoryProvider(activity)
+            dialog.factory = factory
             dialog.iconView = icon
             dialog.changelogView = changelog
             dialog.controlsView = controls
@@ -66,11 +63,10 @@ internal interface RatingDialogComponent {
 
         internal class FactoryImpl internal constructor(
             private val loaderModule: LoaderModule,
-            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+            private val factory: PYDroidViewModelFactory
         ) : Factory {
 
             override fun create(
-                activity: Activity,
                 parent: ViewGroup,
                 owner: LifecycleOwner,
                 rateLink: String,
@@ -78,8 +74,8 @@ internal interface RatingDialogComponent {
                 changeLog: SpannedString
             ): RatingDialogComponent {
                 return Impl(
-                    activity, parent, changeLogIcon, rateLink, changeLog,
-                    owner, loaderModule, factoryProvider
+                    parent, changeLogIcon, rateLink, changeLog,
+                    owner, loaderModule, factory
                 )
             }
         }

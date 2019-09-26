@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.privacy
 
-import android.app.Activity
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
@@ -39,25 +38,25 @@ internal interface PrivacyComponent {
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
-        private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+        private val factory: PYDroidViewModelFactory
     ) : PrivacyComponent {
 
         override fun inject(activity: PrivacyActivity) {
             val privacyView = PrivacyView(owner, snackbarRootProvider)
 
-            activity.privacyFactory = factoryProvider(activity)
+            activity.privacyFactory = factory
             activity.privacyView = privacyView
         }
 
         internal class FactoryImpl internal constructor(
-            private val factoryProvider: (activity: Activity) -> PYDroidViewModelFactory
+            private val factory: PYDroidViewModelFactory
         ) : Factory {
 
             override fun create(
                 owner: LifecycleOwner,
                 snackbarRootProvider: () -> ViewGroup
             ): PrivacyComponent {
-                return Impl(snackbarRootProvider, owner, factoryProvider)
+                return Impl(snackbarRootProvider, owner, factory)
             }
         }
     }

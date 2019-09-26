@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.privacy
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 data class PrivacyViewState internal constructor(
     val throwable: Throwable?
@@ -34,6 +33,6 @@ sealed class PrivacyViewEvent : UiViewEvent {
 sealed class PrivacyControllerEvent : UiControllerEvent {
 
     data class ViewExternalPolicy internal constructor(
-        val link: HyperlinkIntent
+        val url: String
     ) : PrivacyControllerEvent()
 }

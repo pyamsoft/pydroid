@@ -70,9 +70,7 @@ class AboutFragment : Fragment() {
         val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusAbout()
-            .create(
-                requireActivity(), layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack
-            )
+            .create(layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack)
             .inject(this)
 
         createComponent(

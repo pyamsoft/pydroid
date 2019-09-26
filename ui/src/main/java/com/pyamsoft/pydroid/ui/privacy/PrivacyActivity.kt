@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.privacy.PrivacyControllerEvent.ViewExternalPolicy
 import com.pyamsoft.pydroid.util.HyperlinkIntent
+import com.pyamsoft.pydroid.util.hyperlink
 
 abstract class PrivacyActivity : ActivityBase() {
 
@@ -57,7 +58,7 @@ abstract class PrivacyActivity : ActivityBase() {
             requireNotNull(privacyView)
         ) {
             return@createComponent when (it) {
-                is ViewExternalPolicy -> openExternalPolicyPage(it.link)
+                is ViewExternalPolicy -> openExternalPolicyPage(it.url.hyperlink(this))
             }
         }
     }

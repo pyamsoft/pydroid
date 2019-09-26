@@ -96,8 +96,10 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusSettingsComponent()
             .create(
-                requireActivity(), viewLifecycleOwner, preferenceScreen,
-                hideClearAll, hideUpgradeInformation
+                viewLifecycleOwner,
+                preferenceScreen,
+                hideClearAll,
+                hideUpgradeInformation
             ) { listView }
             .inject(this)
 
@@ -137,7 +139,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             }
         }
 
-        settingsViewModel.initDarkThemeState(requireActivity())
+        settingsViewModel.syncDarkThemeState()
     }
 
     private fun openUpdateInfo() {

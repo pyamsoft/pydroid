@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import android.app.Activity
 import androidx.core.content.ContextCompat
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -48,11 +47,9 @@ internal class AppSettingsView internal constructor(
     private val termsConditionsUrl: String,
     private val hideClearAll: Boolean,
     private val hideUpgradeInformation: Boolean,
-    activity: Activity,
     preferenceScreen: PreferenceScreen
 ) : PrefUiView<AppSettingsViewState, AppSettingsViewEvent>(preferenceScreen) {
 
-    private var activity: Activity? = activity
     private var preferenceScreen: PreferenceScreen? = preferenceScreen
 
     private val moreApps by boundPref<Preference>(R.string.more_apps_key)
@@ -105,7 +102,6 @@ internal class AppSettingsView internal constructor(
             termsConditions.onPreferenceClickListener = null
 
             self.preferenceScreen = null
-            self.activity = null
         }
     }
 
@@ -155,7 +151,7 @@ internal class AppSettingsView internal constructor(
     }
 
     private fun setupViewSource() {
-        val sourceLink = viewSourceUrl.hyperlink(requireNotNull(activity))
+        val sourceLink = viewSourceUrl.hyperlink(viewSource.context)
         viewSource.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             publish(Hyperlink(sourceLink))
             return@OnPreferenceClickListener true
@@ -170,7 +166,7 @@ internal class AppSettingsView internal constructor(
     }
 
     private fun setupSocial() {
-        val socialLink = FACEBOOK.hyperlink(requireNotNull(activity))
+        val socialLink = FACEBOOK.hyperlink(social.context)
         social.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             publish(Hyperlink(socialLink))
             return@OnPreferenceClickListener true
@@ -178,7 +174,7 @@ internal class AppSettingsView internal constructor(
     }
 
     private fun setupBlog() {
-        val blogLink = BLOG.hyperlink(requireNotNull(activity))
+        val blogLink = BLOG.hyperlink(followBlog.context)
         followBlog.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             publish(Hyperlink(blogLink))
             return@OnPreferenceClickListener true
@@ -193,7 +189,7 @@ internal class AppSettingsView internal constructor(
     }
 
     private fun setupBugReport() {
-        val reportLink = bugReportUrl.hyperlink(requireNotNull(activity))
+        val reportLink = bugReportUrl.hyperlink(bugReport.context)
         bugReport.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             publish(Hyperlink(reportLink))
             return@OnPreferenceClickListener true
@@ -239,7 +235,7 @@ internal class AppSettingsView internal constructor(
     private fun setupDarkTheme() {
         theme.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             if (newValue is String) {
-                publish(ToggleDarkTheme(requireNotNull(activity), newValue))
+                publish(ToggleDarkTheme(newValue))
                 return@OnPreferenceChangeListener true
             }
             return@OnPreferenceChangeListener false

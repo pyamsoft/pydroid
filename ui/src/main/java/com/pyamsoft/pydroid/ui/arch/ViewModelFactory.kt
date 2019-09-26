@@ -77,10 +77,10 @@ inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.factory(
 
 class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     private val lifecycleProvider: () -> Lifecycle,
-    private val store: ViewModelStore?,
-    private val fragment: Fragment?,
-    private val activity: FragmentActivity?,
     private val type: Class<T>,
+    private var store: ViewModelStore?,
+    private var fragment: Fragment?,
+    private var activity: FragmentActivity?,
     private val factoryProvider: () -> Factory
 ) : ReadOnlyProperty<Any, T> {
 
@@ -89,23 +89,29 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
         store: ViewModelStore,
         type: Class<T>,
         factoryProvider: () -> Factory
-    ) : this({ lifecycle }, store, null, null, type, factoryProvider)
+    ) : this({ lifecycle }, type, store, null, null, factoryProvider)
 
     constructor(
         fragment: Fragment,
         type: Class<T>,
         factoryProvider: () -> Factory
-    ) : this({ fragment.viewLifecycleOwner.lifecycle }, null, fragment, null, type, factoryProvider)
+    ) : this({ fragment.viewLifecycleOwner.lifecycle }, type, null, fragment, null, factoryProvider)
 
     constructor(
         activity: FragmentActivity,
         type: Class<T>,
         factoryProvider: () -> Factory
-    ) : this({ activity.lifecycle }, null, null, activity, type, factoryProvider)
+    ) : this({ activity.lifecycle }, type, null, null, activity, factoryProvider)
 
     private val lock = Any()
     @Volatile
     private var value: T? = null
+
+    private fun clear() {
+        store = null
+        fragment = null
+        activity = null
+    }
 
     private fun attachToLifecycle(lifecycle: Lifecycle) {
         lifecycle.addObserver(object : LifecycleObserver {
@@ -114,6 +120,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             @OnLifecycleEvent(ON_DESTROY)
             fun onDestroy() {
                 lifecycle.removeObserver(this)
+                clear()
                 value = null
             }
         })
@@ -140,8 +147,8 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     @CheckResult
     fun get(): T {
         val lifecycle = lifecycleProvider()
-        if (lifecycle.currentState === Lifecycle.State.DESTROYED) {
-            throw IllegalStateException("Cannot access ViewModel after Lifecycle is DESTROYED")
+        check(lifecycle.currentState != Lifecycle.State.DESTROYED) {
+            "Cannot access ViewModel after Lifecycle is DESTROYED"
         }
 
         val v = value
@@ -153,6 +160,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             synchronized(lock) {
                 if (value == null) {
                     value = resolveValue()
+                    clear()
                 }
             }
         }

@@ -17,14 +17,18 @@
 
 package com.pyamsoft.pydroid.ui.theme
 
-import android.app.Activity
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
 import timber.log.Timber
+import java.util.Locale
 
-class Theming internal constructor(preferences: ThemingPreferences) {
+class Theming internal constructor(
+    private val context: Context,
+    preferences: ThemingPreferences
+) {
 
     init {
         preferences.initializeDarkMode { mode ->
@@ -38,8 +42,8 @@ class Theming internal constructor(preferences: ThemingPreferences) {
     }
 
     @CheckResult
-    fun isDarkTheme(activity: Activity): Boolean {
-        val uiMode = activity.resources.configuration.uiMode
+    fun isDarkTheme(): Boolean {
+        val uiMode = context.applicationContext.resources.configuration.uiMode
         return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     }
 
@@ -59,7 +63,7 @@ class Theming internal constructor(preferences: ThemingPreferences) {
 
         @CheckResult
         fun toRawString(): String {
-            return name.toLowerCase()
+            return name.toLowerCase(Locale.getDefault())
         }
 
         @CheckResult

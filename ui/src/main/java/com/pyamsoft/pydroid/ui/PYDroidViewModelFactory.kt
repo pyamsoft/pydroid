@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui
 
-import android.app.Activity
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
@@ -35,7 +34,6 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
-    private val activity: Activity,
     private val ratingInteractor: RatingInteractor,
     private val aboutInteractor: AboutInteractor,
     private val versionInteractor: VersionCheckInteractor,
@@ -48,10 +46,10 @@ internal class PYDroidViewModelFactory internal constructor(
             AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
             RatingViewModel::class -> RatingViewModel(ratingInteractor)
             RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
-            AppSettingsViewModel::class -> AppSettingsViewModel(theming, activity)
+            AppSettingsViewModel::class -> AppSettingsViewModel(theming)
             VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
             VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
-            PrivacyViewModel::class -> PrivacyViewModel(activity)
+            PrivacyViewModel::class -> PrivacyViewModel()
             else -> fail()
         }
     }

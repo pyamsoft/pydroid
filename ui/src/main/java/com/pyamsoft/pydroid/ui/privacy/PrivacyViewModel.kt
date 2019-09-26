@@ -17,19 +17,16 @@
 
 package com.pyamsoft.pydroid.ui.privacy
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyControllerEvent.ViewExternalPolicy
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewEvent.SnackbarHidden
-import com.pyamsoft.pydroid.util.hyperlink
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class PrivacyViewModel internal constructor(
-    activity: Activity
 ) : UiViewModel<PrivacyViewState, PrivacyViewEvent, PrivacyControllerEvent>(
     initialState = PrivacyViewState(throwable = null)
 ) {
@@ -39,7 +36,7 @@ internal class PrivacyViewModel internal constructor(
             viewModelScope.launch(context = Dispatchers.Default) {
                 PrivacyEventBus.onEvent { event ->
                     withContext(context = Dispatchers.Main) {
-                        publish(ViewExternalPolicy(event.url.hyperlink(activity)))
+                        publish(ViewExternalPolicy(event.url))
                     }
                 }
             }

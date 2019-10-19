@@ -51,7 +51,7 @@ buildscript {
         fragment = "1.1.0"
         appCompat = "1.1.0"
 
-        cachify = "0.0.2"
+        cachify = "0.0.3"
         highlander = "0.0.2"
 
         timber = "4.7.1"
@@ -101,7 +101,7 @@ subprojects {
     apply plugin: "org.jlleitschuh.gradle.ktlint"
 
     final String POM_GROUP = "com.pyamsoft.pydroid"
-    final String POM_VERSION = "20.5.0"
+    final String POM_VERSION = "20.6.0"
 
     group = POM_GROUP
     version = POM_VERSION

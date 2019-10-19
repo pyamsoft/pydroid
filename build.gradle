@@ -59,7 +59,7 @@ buildscript {
         moshi = "1.8.0"
 
         retrofit = '2.6.2'
-        okhttp = "4.2.0"
+        okhttp = "4.2.2"
 
         glide = '4.10.0'
     }
@@ -101,7 +101,7 @@ subprojects {
     apply plugin: "org.jlleitschuh.gradle.ktlint"
 
     final String POM_GROUP = "com.pyamsoft.pydroid"
-    final String POM_VERSION = "20.5.0-SNAPSHOT"
+    final String POM_VERSION = "20.5.0"
 
     group = POM_GROUP
     version = POM_VERSION

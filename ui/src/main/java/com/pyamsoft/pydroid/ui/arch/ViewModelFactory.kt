@@ -20,11 +20,6 @@ package com.pyamsoft.pydroid.ui.arch
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
@@ -38,22 +33,11 @@ import kotlin.reflect.KProperty
  * Allow nullable for easier caller API
  */
 @CheckResult
-inline fun <reified T : UiViewModel<*, *, *>> LifecycleOwner.factory(
+inline fun <reified T : UiViewModel<*, *, *>> factory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-    return lifecycle.factory(store, factoryProvider)
-}
-
-/**
- * Allow nullable for easier caller API
- */
-@CheckResult
-inline fun <reified T : UiViewModel<*, *, *>> Lifecycle.factory(
-    store: ViewModelStore,
-    crossinline factoryProvider: () -> Factory?
-): ViewModelFactory<T> {
-    return ViewModelFactory(this, store, T::class.java) { requireNotNull(factoryProvider()) }
+    return ViewModelFactory(store, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
 /**
@@ -77,88 +61,77 @@ inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.factory(
 }
 
 class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
-    private val lifecycleProvider: () -> Lifecycle,
-    private val type: Class<T>,
-    private var store: ViewModelStore?,
-    private var fragment: Fragment?,
-    private var activity: FragmentActivity?,
-    private val factoryProvider: () -> Factory
+    type: Class<T>,
+    store: ViewModelStore?,
+    fragment: Fragment?,
+    activity: FragmentActivity?,
+    factoryProvider: () -> Factory
 ) : ReadOnlyProperty<Any, T> {
 
     constructor(
-        lifecycle: Lifecycle,
         store: ViewModelStore,
         type: Class<T>,
         factoryProvider: () -> Factory
-    ) : this({ lifecycle }, type, store, null, null, factoryProvider)
+    ) : this(type, store, null, null, factoryProvider)
 
     constructor(
         fragment: Fragment,
         type: Class<T>,
         factoryProvider: () -> Factory
-    ) : this({ fragment.viewLifecycleOwner.lifecycle }, type, null, fragment, null, factoryProvider)
+    ) : this(type, null, fragment, null, factoryProvider)
 
     constructor(
         activity: FragmentActivity,
         type: Class<T>,
         factoryProvider: () -> Factory
-    ) : this({ activity.lifecycle }, type, null, null, activity, factoryProvider)
+    ) : this(type, null, null, activity, factoryProvider)
+
+    private val lock = Any()
+
+    @Volatile
+    private var modelResolver: (() -> T)? = null
 
     @Volatile
     private var value: T? = null
-    private val lock = Any()
 
-    private fun clear() {
-        store = null
-        fragment = null
-        activity = null
-
-        Timber.d("ViewModel cleared: $value")
-        value = null
-    }
-
-    private fun attachToLifecycle() {
-        val lifecycle = lifecycleProvider()
-
-        check(lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)) {
-            "Cannot access ViewModel, Lifecycle must be at least INITIALIZED and not DESTROYED"
-        }
-
-        Timber.d("Attach to Lifecycle for ViewModel lifespan")
-        lifecycle.addObserver(object : LifecycleObserver {
-
-            @Suppress("unused")
-            @OnLifecycleEvent(ON_DESTROY)
-            fun onDestroy() {
-                lifecycle.removeObserver(this)
-                clear()
+    init {
+        modelResolver = resolver@{
+            return@resolver when {
+                store != null -> {
+                    Timber.d("store init() ViewModel with type: $type")
+                    ViewModelProvider(store, factoryProvider())
+                        .get(type)
+                }
+                fragment != null -> {
+                    Timber.d("fragment init() ViewModel with type: $type")
+                    ViewModelProviders.of(fragment, factoryProvider())
+                        .get(type)
+                }
+                activity != null -> {
+                    Timber.d("activity init() ViewModel with type: $type")
+                    ViewModelProviders.of(activity, factoryProvider())
+                        .get(type)
+                }
+                else -> throw IllegalStateException("Unable to create model resolver - ViewModelStore, Activity, and Fragment are NULL")
             }
-        })
+        }
     }
 
     @CheckResult
     private fun resolveValue(): T {
-        attachToLifecycle()
+        synchronized(lock) {
+            val resolver = modelResolver
+                ?: throw IllegalStateException("Cannot resolve ViewModel - resolver is NULL")
 
-        store?.let { s ->
-            return ViewModelProvider(s, factoryProvider())
-                .get(type)
+            modelResolver = null
+            val vm = resolver()
+            Timber.d("Resolved ViewModel $vm")
+            return vm
         }
-        fragment?.let { f ->
-            return ViewModelProviders.of(f, factoryProvider())
-                .get(type)
-        }
-        activity?.let { a ->
-            return ViewModelProviders.of(a, factoryProvider())
-                .get(type)
-        }
-
-        throw IllegalStateException("Cannot resolve ViewModel, no provider is valid. NULL Fragment, Activity, and ViewModelStore")
     }
 
     @CheckResult
     fun get(): T {
-
         val v = value
         if (v != null) {
             return v
@@ -168,7 +141,6 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             synchronized(lock) {
                 if (value == null) {
                     value = resolveValue()
-                    Timber.d("Resolved ViewModel $value")
                 }
             }
         }

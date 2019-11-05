@@ -95,9 +95,8 @@ internal interface PYDroidComponent {
         private val versionCheckModule =
             VersionCheckModule(debug, version, packageName, enforcer)
 
-        @CheckResult
-        private fun viewModelFactory(): PYDroidViewModelFactory {
-            return PYDroidViewModelFactory(
+        private val viewModelFactory by lazy {
+            PYDroidViewModelFactory(
                 ratingModule.provideInteractor(),
                 aboutModule.provideInteractor(),
                 versionCheckModule.provideInteractor(),
@@ -106,11 +105,11 @@ internal interface PYDroidComponent {
         }
 
         override fun plusPrivacy(): PrivacyComponent.Factory {
-            return PrivacyComponent.Impl.FactoryImpl(viewModelFactory())
+            return PrivacyComponent.Impl.FactoryImpl(viewModelFactory)
         }
 
         override fun plusAbout(): AboutComponent.Factory {
-            return AboutComponent.Impl.FactoryImpl(viewModelFactory())
+            return AboutComponent.Impl.FactoryImpl(viewModelFactory)
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -118,22 +117,22 @@ internal interface PYDroidComponent {
         }
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {
-            return RatingDialogComponent.Impl.FactoryImpl(loaderModule, viewModelFactory())
+            return RatingDialogComponent.Impl.FactoryImpl(loaderModule, viewModelFactory)
         }
 
         override fun plusVersion(): VersionComponent.Factory {
-            return VersionComponent.Impl.FactoryImpl(viewModelFactory())
+            return VersionComponent.Impl.FactoryImpl(viewModelFactory)
         }
 
         override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-            return VersionUpgradeComponent.Impl.FactoryImpl(name, version, viewModelFactory())
+            return VersionUpgradeComponent.Impl.FactoryImpl(name, version, viewModelFactory)
         }
 
         override fun plusSettingsComponent(): AppSettingsComponent.Factory {
             return AppSettingsComponent.Impl.FactoryImpl(
                 name, reportUrl, sourceUrl,
                 privacyPolicyUrl, termsConditionsUrl,
-                viewModelFactory()
+                viewModelFactory
             )
         }
 

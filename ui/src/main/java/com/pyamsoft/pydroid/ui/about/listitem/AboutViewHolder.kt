@@ -42,6 +42,7 @@ internal class AboutViewHolder private constructor(
     internal var actionView: AboutItemActionView? = null
 
     private var viewModel: AboutItemViewModel? = null
+    private var lifecycle: ListItemLifecycle? = null
 
     private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
 
@@ -56,6 +57,8 @@ internal class AboutViewHolder private constructor(
             .inject(this)
 
         val owner = ListItemLifecycle()
+        lifecycle?.unbind()
+        lifecycle = owner
         injectViewModel()
 
         createComponent(
@@ -65,9 +68,14 @@ internal class AboutViewHolder private constructor(
             requireNotNull(actionView),
             requireNotNull(descriptionView)
         ) { callback(it) }
+
+        owner.bind()
     }
 
     override fun unbind() {
+        lifecycle?.unbind()
+        lifecycle = null
+
         viewModel = null
         titleView = null
         descriptionView = null

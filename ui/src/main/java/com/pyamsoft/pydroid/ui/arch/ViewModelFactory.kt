@@ -124,6 +124,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             "Cannot access ViewModel, Lifecycle must be at least INITIALIZED and not DESTROYED"
         }
 
+        Timber.d("Attach to Lifecycle for ViewModel lifespan")
         lifecycle.addObserver(object : LifecycleObserver {
 
             @Suppress("unused")
@@ -167,6 +168,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             synchronized(lock) {
                 if (value == null) {
                     value = resolveValue()
+                    Timber.d("Resolved ViewModel $value")
                 }
             }
         }

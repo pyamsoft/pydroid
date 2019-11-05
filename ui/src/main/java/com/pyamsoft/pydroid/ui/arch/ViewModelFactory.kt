@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiViewModel
+import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -103,17 +104,26 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
         factoryProvider: () -> Factory
     ) : this({ activity.lifecycle }, type, null, null, activity, factoryProvider)
 
-    private val lock = Any()
     @Volatile
     private var value: T? = null
+    private val lock = Any()
 
     private fun clear() {
         store = null
         fragment = null
         activity = null
+
+        Timber.d("ViewModel cleared: $value")
+        value = null
     }
 
-    private fun attachToLifecycle(lifecycle: Lifecycle) {
+    private fun attachToLifecycle() {
+        val lifecycle = lifecycleProvider()
+
+        check(lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED)) {
+            "Cannot access ViewModel, Lifecycle must be at least INITIALIZED and not DESTROYED"
+        }
+
         lifecycle.addObserver(object : LifecycleObserver {
 
             @Suppress("unused")
@@ -121,14 +131,14 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             fun onDestroy() {
                 lifecycle.removeObserver(this)
                 clear()
-                value = null
             }
         })
     }
 
     @CheckResult
     private fun resolveValue(): T {
-        attachToLifecycle(lifecycleProvider())
+        attachToLifecycle()
+
         store?.let { s ->
             return ViewModelProvider(s, factoryProvider())
                 .get(type)
@@ -141,15 +151,12 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             return ViewModelProviders.of(a, factoryProvider())
                 .get(type)
         }
-        throw IllegalStateException("Both Fragment an Activity are null")
+
+        throw IllegalStateException("Cannot resolve ViewModel, no provider is valid. NULL Fragment, Activity, and ViewModelStore")
     }
 
     @CheckResult
     fun get(): T {
-        val lifecycle = lifecycleProvider()
-        check(lifecycle.currentState != Lifecycle.State.DESTROYED) {
-            "Cannot access ViewModel after Lifecycle is DESTROYED"
-        }
 
         val v = value
         if (v != null) {
@@ -160,7 +167,6 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
             synchronized(lock) {
                 if (value == null) {
                     value = resolveValue()
-                    clear()
                 }
             }
         }

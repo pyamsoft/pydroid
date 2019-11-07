@@ -26,7 +26,9 @@ import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.Enforcer
 import com.squareup.moshi.Moshi
+import okhttp3.Call
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -43,8 +45,7 @@ class VersionCheckModule(
 
     init {
         moshi = createMoshi()
-        val okHttpClient = createOkHttpClient(debug)
-        val retrofit = createRetrofit(okHttpClient, moshi)
+        val retrofit = createRetrofit(enforcer, moshi) { createOkHttpClient(enforcer, debug) }
         val versionCheckService = createService(retrofit)
         val minimumApiProvider = MinimumApiProviderImpl()
 
@@ -94,7 +95,9 @@ class VersionCheckModule(
 
         @JvmStatic
         @CheckResult
-        private fun createOkHttpClient(debug: Boolean): OkHttpClient {
+        private fun createOkHttpClient(enforcer: Enforcer, debug: Boolean): OkHttpClient {
+            enforcer.assertNotOnMainThread()
+
             return OkHttpClient.Builder()
                 .socketFactory(DelegatingSocketFactory.create())
                 .also {
@@ -110,14 +113,28 @@ class VersionCheckModule(
         @JvmStatic
         @CheckResult
         private fun createRetrofit(
-            okHttpClient: OkHttpClient,
-            moshi: Moshi
+            enforcer: Enforcer,
+            moshi: Moshi,
+            clientProvider: () -> OkHttpClient
         ): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-                .client(okHttpClient)
+                .callFactory(OkHttpClientLazyCallFactory(enforcer, clientProvider))
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .build()
+        }
+
+        private class OkHttpClientLazyCallFactory(
+            private val enforcer: Enforcer,
+            provider: () -> OkHttpClient
+        ) : Call.Factory {
+
+            private val client by lazy { provider() }
+
+            override fun newCall(request: Request): Call {
+                enforcer.assertNotOnMainThread()
+                return client.newCall(request)
+            }
         }
     }
 }

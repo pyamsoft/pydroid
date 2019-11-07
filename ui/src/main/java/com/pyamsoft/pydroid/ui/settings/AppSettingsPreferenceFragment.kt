@@ -139,7 +139,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             }
         }
 
-        settingsViewModel.syncDarkThemeState()
+        settingsViewModel.syncDarkThemeState(requireActivity())
     }
 
     private fun openUpdateInfo() {

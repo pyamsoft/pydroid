@@ -109,7 +109,9 @@ internal class AppSettingsView internal constructor(
         state: AppSettingsViewState,
         savedState: UiSavedState
     ) {
-        requireNotNull(preferenceScreen).adjustTint(state.isDarkTheme)
+        state.isDarkTheme?.let { darkTheme ->
+            requireNotNull(preferenceScreen).adjustTint(darkTheme.dark)
+        }
     }
 
     private fun PreferenceGroup.adjustTint(darkTheme: Boolean) {

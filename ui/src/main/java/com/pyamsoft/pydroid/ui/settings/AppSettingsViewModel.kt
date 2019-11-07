@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
@@ -35,15 +36,14 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateApp
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
+import com.pyamsoft.pydroid.ui.settings.AppSettingsViewState.DarkTheme
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
 
 internal class AppSettingsViewModel internal constructor(
     private val theming: Theming
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
-    initialState = AppSettingsViewState(
-        isDarkTheme = theming.isDarkTheme(), throwable = null
-    )
+    initialState = AppSettingsViewState(isDarkTheme = null, throwable = null)
 ) {
 
     override fun handleViewEvent(event: AppSettingsViewEvent) {
@@ -59,8 +59,8 @@ internal class AppSettingsViewModel internal constructor(
         }
     }
 
-    fun syncDarkThemeState() {
-        setState { copy(isDarkTheme = theming.isDarkTheme()) }
+    fun syncDarkThemeState(activity: Activity) {
+        setState { copy(isDarkTheme = DarkTheme(theming.isDarkTheme(activity))) }
     }
 
     private fun changeDarkMode(mode: String) {

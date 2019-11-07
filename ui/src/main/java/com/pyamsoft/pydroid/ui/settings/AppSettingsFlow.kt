@@ -24,9 +24,12 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 data class AppSettingsViewState(
-    val isDarkTheme: Boolean,
+    val isDarkTheme: DarkTheme?,
     val throwable: Throwable?
-) : UiViewState
+) : UiViewState {
+
+    data class DarkTheme internal constructor(val dark: Boolean)
+}
 
 sealed class AppSettingsViewEvent : UiViewEvent {
 

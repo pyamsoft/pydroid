@@ -107,22 +107,15 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             }
         }
 
-        // Push most recent state
-        val mostRecentState = latestState()
-        handleStateChange(views, mostRecentState, savedState)
-
         // Bind ViewModel
         bindEvents(onControllerEvent)
         views.forEach { bindEvent(it) }
+
+        // Initialize before first render
         initialize()
 
-        // If most recent and latest get out of sync, do it again
-        // This should not happen, but we leave it around just in case - since it was happening at one point.
         val currentState = latestState()
-        if (currentState != mostRecentState) {
-            Timber.w("State is out of sync, re-emit. Old: $mostRecentState -- New $currentState")
-            handleStateChange(views, currentState, savedState)
-        }
+        handleStateChange(views, currentState, savedState)
     }
 
     final override fun onCleared() {

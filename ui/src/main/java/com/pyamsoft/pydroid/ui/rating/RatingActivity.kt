@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.rating
 
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
-import android.text.SpannedString
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -39,6 +38,7 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
@@ -51,38 +51,39 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     @get:CheckResult
     protected abstract val versionName: String
 
-    final override val changeLogPackageName: String
-        get() = packageName
+    final override val changeLogPackageName by lazy(NONE) { requireNotNull(packageName) }
 
-    final override val changelog: SpannedString = buildSpannedString {
-        val attrArray =
-            intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
-        val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
-        val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
-        withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
-            val size: Int =
-                getDimensionPixelSize(
-                    indexOfSize,
-                    RESOURCE_NOT_FOUND
-                ).validate("dimensionPixelSize")
-            val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
+    final override val changelog by lazy(NONE) {
+        buildSpannedString {
+            val attrArray =
+                intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
+            val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
+            val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
+            withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
+                val size: Int =
+                    getDimensionPixelSize(
+                        indexOfSize,
+                        RESOURCE_NOT_FOUND
+                    ).validate("dimensionPixelSize")
+                val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
-            inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                appendln("What's New in version $versionName")
+                inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+                    appendln("What's New in version $versionName")
+                }
             }
-        }
 
-        withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
-            val size: Int =
-                getDimensionPixelSize(
-                    indexOfSize,
-                    RESOURCE_NOT_FOUND
-                ).validate("dimensionPixelSize")
-            val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
+            withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
+                val size: Int =
+                    getDimensionPixelSize(
+                        indexOfSize,
+                        RESOURCE_NOT_FOUND
+                    ).validate("dimensionPixelSize")
+                val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
-            inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                for (line in changeLogLines.build()) {
-                    appendln(line)
+                inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+                    for (line in changeLogLines.build()) {
+                        appendln(line)
+                    }
                 }
             }
         }

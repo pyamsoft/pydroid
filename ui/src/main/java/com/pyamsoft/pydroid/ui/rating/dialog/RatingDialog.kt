@@ -154,7 +154,7 @@ class RatingDialog : DialogFragment() {
                 arguments = Bundle().apply {
                     putString(RATE_LINK, provider.changeLogPackageName)
                     putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
-                    putInt(CHANGE_LOG_ICON, provider.appplicationIcon)
+                    putInt(CHANGE_LOG_ICON, provider.applicationIcon)
                     putInt(THEME, provider.changeLogTheme)
                 }
             }

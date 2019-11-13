@@ -34,5 +34,5 @@ interface ChangeLogProvider {
     val changelog: SpannedString
 
     @get:[CheckResult DrawableRes]
-    val appplicationIcon: Int
+    val applicationIcon: Int
 }

@@ -20,15 +20,21 @@ package com.pyamsoft.pydroid.ui.rating
 import android.text.SpannedString
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
+import androidx.annotation.StyleRes
 
 interface ChangeLogProvider {
+
+    @StyleRes
+    @CheckResult
+    fun getChangeLogTheme(): Int
 
     @CheckResult
     fun getPackageName(): String
 
-    @get:CheckResult
-    val changelog: SpannedString
+    @CheckResult
+    fun getChangelog(): SpannedString
 
-    @get:[DrawableRes CheckResult]
-    val applicationIcon: Int
+    @CheckResult
+    @DrawableRes
+    fun getApplicationIcon(): Int
 }

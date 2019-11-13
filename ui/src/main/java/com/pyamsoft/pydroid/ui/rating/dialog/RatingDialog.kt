@@ -46,14 +46,19 @@ class RatingDialog : DialogFragment() {
     internal var iconView: RatingIconView? = null
     private val viewModel by factory<RatingDialogViewModel> { factory }
 
+    private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = false
     }
 
+    override fun getTheme(): Int {
+        return if (customTheme == 0) super.getTheme() else customTheme
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
-            .noTitle()
+        return Dialog(requireContext(), theme).noTitle()
     }
 
     override fun onCreateView(
@@ -140,15 +145,18 @@ class RatingDialog : DialogFragment() {
         private const val CHANGE_LOG_TEXT = "change_log_text"
         private const val CHANGE_LOG_ICON = "change_log_icon"
         private const val RATE_LINK = "rate_link"
+        private const val THEME = "theme"
 
-        @CheckResult
         @JvmStatic
-        fun newInstance(provider: ChangeLogProvider): RatingDialog {
+        @CheckResult
+        @JvmOverloads
+        fun newInstance(provider: ChangeLogProvider, theme: Int = 0): RatingDialog {
             return RatingDialog().apply {
                 arguments = Bundle().apply {
                     putString(RATE_LINK, provider.getPackageName())
                     putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
                     putInt(CHANGE_LOG_ICON, provider.applicationIcon)
+                    putInt(THEME, theme)
                 }
             }
         }

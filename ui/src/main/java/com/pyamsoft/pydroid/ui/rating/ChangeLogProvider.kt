@@ -24,17 +24,15 @@ import androidx.annotation.StyleRes
 
 interface ChangeLogProvider {
 
-    @StyleRes
-    @CheckResult
-    fun getChangeLogTheme(): Int
+    @get:[CheckResult StyleRes]
+    val changeLogTheme: Int
 
-    @CheckResult
-    fun getPackageName(): String
+    @get:CheckResult
+    val changeLogPackageName: String
 
-    @CheckResult
-    fun getChangelog(): SpannedString
+    @get:CheckResult
+    val changelog: SpannedString
 
-    @CheckResult
-    @DrawableRes
-    fun getApplicationIcon(): Int
+    @get:[CheckResult DrawableRes]
+    val appplicationIcon: Int
 }

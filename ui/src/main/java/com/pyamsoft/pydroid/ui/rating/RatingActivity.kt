@@ -45,43 +45,44 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     internal var ratingFactory: ViewModelProvider.Factory? = null
     private val viewModel by factory<RatingViewModel> { ratingFactory }
 
-    @CheckResult
-    protected abstract fun getChangeLogLines(): ChangeLogBuilder
+    @get:CheckResult
+    protected abstract val changeLogLines: ChangeLogBuilder
 
-    @CheckResult
-    protected abstract fun getVersionName(): String
+    @get:CheckResult
+    protected abstract val versionName: String
 
-    final override fun getChangelog(): SpannedString {
-        return buildSpannedString {
-            val attrArray =
-                intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
-            val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
-            val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
-            withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
-                val size: Int =
-                    getDimensionPixelSize(
-                        indexOfSize,
-                        RESOURCE_NOT_FOUND
-                    ).validate("dimensionPixelSize")
-                val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
+    final override val changeLogPackageName: String
+        get() = packageName
 
-                inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                    appendln("What's New in version ${getVersionName()}")
-                }
+    final override val changelog: SpannedString = buildSpannedString {
+        val attrArray =
+            intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
+        val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
+        val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
+        withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
+            val size: Int =
+                getDimensionPixelSize(
+                    indexOfSize,
+                    RESOURCE_NOT_FOUND
+                ).validate("dimensionPixelSize")
+            val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
+
+            inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+                appendln("What's New in version $versionName")
             }
+        }
 
-            withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
-                val size: Int =
-                    getDimensionPixelSize(
-                        indexOfSize,
-                        RESOURCE_NOT_FOUND
-                    ).validate("dimensionPixelSize")
-                val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
+        withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
+            val size: Int =
+                getDimensionPixelSize(
+                    indexOfSize,
+                    RESOURCE_NOT_FOUND
+                ).validate("dimensionPixelSize")
+            val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
-                inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                    for (line in getChangeLogLines().build()) {
-                        appendln(line)
-                    }
+            inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
+                for (line in changeLogLines.build()) {
+                    appendln(line)
                 }
             }
         }

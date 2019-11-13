@@ -152,10 +152,10 @@ class RatingDialog : DialogFragment() {
         fun newInstance(provider: ChangeLogProvider): RatingDialog {
             return RatingDialog().apply {
                 arguments = Bundle().apply {
-                    putString(RATE_LINK, provider.getPackageName())
-                    putCharSequence(CHANGE_LOG_TEXT, provider.getChangelog())
-                    putInt(CHANGE_LOG_ICON, provider.getApplicationIcon())
-                    putInt(THEME, provider.getChangeLogTheme())
+                    putString(RATE_LINK, provider.changeLogPackageName)
+                    putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
+                    putInt(CHANGE_LOG_ICON, provider.appplicationIcon)
+                    putInt(THEME, provider.changeLogTheme)
                 }
             }
         }

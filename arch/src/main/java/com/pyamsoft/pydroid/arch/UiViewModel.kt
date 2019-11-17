@@ -199,6 +199,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
+    protected fun withState(func: S.() -> Unit) {
+        setState {
+            func(this)
+            return@setState this
+        }
+    }
+
     @CheckResult
     private fun dequeueAllPendingStateChanges(): List<S.() -> S> {
         if (stateQueue.isEmpty()) {

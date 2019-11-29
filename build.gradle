@@ -51,7 +51,7 @@ buildscript {
         fragment = "1.1.0"
         appCompat = "1.1.0"
 
-        cachify = "0.0.5"
+        cachify = "0.0.6-SNAPSHOT"
         highlander = "0.0.3"
 
         timber = "4.7.1"

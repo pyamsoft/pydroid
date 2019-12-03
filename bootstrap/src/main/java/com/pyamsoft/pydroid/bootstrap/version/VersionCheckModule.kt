@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.cachify.Cached
+import com.pyamsoft.cachify.MemoryCacheStorage
 import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.network.DelegatingSocketFactory
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
@@ -32,6 +33,7 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(
     debug: Boolean,
@@ -90,7 +92,10 @@ class VersionCheckModule(
             debug: Boolean,
             network: VersionCheckInteractor
         ): Cached<UpdatePayload> {
-            return cachify<UpdatePayload>(debug = debug) { requireNotNull(network.checkVersion(true)) }
+            return cachify<UpdatePayload>(
+                storage = MemoryCacheStorage.create(30, MINUTES),
+                debug = debug
+            ) { requireNotNull(network.checkVersion(true)) }
         }
 
         @JvmStatic

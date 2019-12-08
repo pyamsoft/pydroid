@@ -23,6 +23,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
+import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.ViewPropertyAnimatorListener
 
 @CheckResult
@@ -41,17 +42,15 @@ private fun getAccelCubicInterpolator(context: Context): Interpolator {
     )
 }
 
+@CheckResult
 @JvmOverloads
 fun View.popShow(
     startDelay: Long = 300L,
     duration: Long = 500L,
     listener: ViewPropertyAnimatorListener? = null
-) {
+): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(context)
-    alpha = 0f
-    scaleX = 0f
-    scaleY = 0f
-    ViewCompat.animate(this)
+    return ViewCompat.animate(this)
         .alpha(1f)
         .scaleX(1f)
         .scaleY(1f)
@@ -61,6 +60,9 @@ fun View.popShow(
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
+                view.alpha = 0f
+                view.scaleX = 0f
+                view.scaleY = 0f
                 listener?.onAnimationStart(view)
             }
 
@@ -76,18 +78,15 @@ fun View.popShow(
         })
 }
 
+@CheckResult
 @JvmOverloads
 fun View.popHide(
     startDelay: Long = 300L,
     duration: Long = 500L,
     listener: ViewPropertyAnimatorListener? = null
-) {
+): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(context)
-    alpha = 1f
-    scaleX = 1f
-    scaleY = 1f
-    visibility = View.VISIBLE
-    ViewCompat.animate(this)
+    return ViewCompat.animate(this)
         .alpha(0f)
         .scaleX(0f)
         .scaleY(0f)
@@ -97,6 +96,9 @@ fun View.popHide(
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
+                view.alpha = 1f
+                view.scaleX = 1f
+                view.scaleY = 1f
                 listener?.onAnimationStart(view)
             }
 
@@ -112,40 +114,67 @@ fun View.popHide(
         })
 }
 
+@CheckResult
 @JvmOverloads
-fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null) {
+fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
-    alpha = 0f
-    scaleX = 0.8f
-    scaleY = 0.8f
-    ViewCompat.animate(this)
+    return ViewCompat.animate(this)
         .alpha(1f)
         .scaleX(1f)
         .scaleY(1f)
         .setStartDelay(300)
         .setDuration(900)
         .setInterpolator(i)
-        .setListener(listener)
+        .setListener(object : ViewPropertyAnimatorListener {
+            override fun onAnimationEnd(view: View) {
+                listener?.onAnimationEnd(view)
+            }
+
+            override fun onAnimationCancel(view: View) {
+                listener?.onAnimationCancel(view)
+            }
+
+            override fun onAnimationStart(view: View) {
+                view.alpha = 0f
+                view.scaleX = 0.8f
+                view.scaleY = 0.8f
+                listener?.onAnimationStart(view)
+            }
+        })
 }
 
+@CheckResult
 @JvmOverloads
-fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null) {
+fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
-    alpha = 1f
-    scaleX = 1f
-    scaleY = 1f
-    ViewCompat.animate(this)
+    return ViewCompat.animate(this)
         .alpha(0f)
         .setStartDelay(300)
         .setDuration(900)
         .setInterpolator(i)
-        .setListener(listener)
+        .setListener(object : ViewPropertyAnimatorListener {
+            override fun onAnimationEnd(view: View) {
+                listener?.onAnimationEnd(view)
+            }
+
+            override fun onAnimationCancel(view: View) {
+                listener?.onAnimationCancel(view)
+            }
+
+            override fun onAnimationStart(view: View) {
+                view.alpha = 1f
+                view.scaleX = 1f
+                view.scaleY = 1f
+                listener?.onAnimationStart(view)
+            }
+        })
 }
 
+@CheckResult
 @JvmOverloads
-fun View.flipVertical(listener: ViewPropertyAnimatorListener? = null) {
+fun View.flipVertical(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
-    ViewCompat.animate(this)
+    return ViewCompat.animate(this)
         .scaleY(-scaleY)
         .setStartDelay(100)
         .setDuration(300)

@@ -50,6 +50,9 @@ fun View.popShow(
     listener: ViewPropertyAnimatorListener? = null
 ): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(context)
+    alpha = 0f
+    scaleX = 0f
+    scaleY = 0f
     return ViewCompat.animate(this)
         .alpha(1f)
         .scaleX(1f)
@@ -60,9 +63,6 @@ fun View.popShow(
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
-                view.alpha = 0f
-                view.scaleX = 0f
-                view.scaleY = 0f
                 listener?.onAnimationStart(view)
             }
 
@@ -86,6 +86,9 @@ fun View.popHide(
     listener: ViewPropertyAnimatorListener? = null
 ): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(context)
+    alpha = 1f
+    scaleX = 1f
+    scaleY = 1f
     return ViewCompat.animate(this)
         .alpha(0f)
         .scaleX(0f)
@@ -96,9 +99,6 @@ fun View.popHide(
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
-                view.alpha = 1f
-                view.scaleX = 1f
-                view.scaleY = 1f
                 listener?.onAnimationStart(view)
             }
 
@@ -118,6 +118,9 @@ fun View.popHide(
 @JvmOverloads
 fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
+    alpha = 0f
+    scaleX = 0.8f
+    scaleY = 0.8f
     return ViewCompat.animate(this)
         .alpha(1f)
         .scaleX(1f)
@@ -135,9 +138,6 @@ fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAni
             }
 
             override fun onAnimationStart(view: View) {
-                view.alpha = 0f
-                view.scaleX = 0.8f
-                view.scaleY = 0.8f
                 listener?.onAnimationStart(view)
             }
         })
@@ -147,6 +147,9 @@ fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAni
 @JvmOverloads
 fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
+    alpha = 1f
+    scaleX = 1f
+    scaleY = 1f
     return ViewCompat.animate(this)
         .alpha(0f)
         .setStartDelay(300)
@@ -162,9 +165,6 @@ fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null): ViewPropertyA
             }
 
             override fun onAnimationStart(view: View) {
-                view.alpha = 1f
-                view.scaleX = 1f
-                view.scaleY = 1f
                 listener?.onAnimationStart(view)
             }
         })

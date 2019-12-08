@@ -58,17 +58,20 @@ fun View.popShow(
         .setStartDelay(startDelay)
         .setDuration(duration)
         .setInterpolator(i)
-        .setListener(listener ?: object : ViewPropertyAnimatorListener {
+        .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
+                listener?.onAnimationStart(view)
             }
 
             override fun onAnimationEnd(view: View) {
                 view.visibility = View.VISIBLE
+                listener?.onAnimationEnd(view)
             }
 
             override fun onAnimationCancel(view: View) {
                 view.visibility = View.VISIBLE
+                listener?.onAnimationCancel(view)
             }
         })
 }
@@ -91,17 +94,20 @@ fun View.popHide(
         .setStartDelay(startDelay)
         .setDuration(duration)
         .setInterpolator(i)
-        .setListener(listener ?: object : ViewPropertyAnimatorListener {
+        .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
+                listener?.onAnimationStart(view)
             }
 
             override fun onAnimationEnd(view: View) {
                 view.visibility = View.GONE
+                listener?.onAnimationEnd(view)
             }
 
             override fun onAnimationCancel(view: View) {
                 view.visibility = View.GONE
+                listener?.onAnimationCancel(view)
             }
         })
 }

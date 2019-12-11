@@ -30,7 +30,7 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="?attr/textAppearanceBody1"
             android:textStyle="bold"
             tools:text="Android SDK Library Guy" />
 
@@ -38,7 +38,7 @@
             android:id="@+id/license"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="License: Apache v2" />
 
     </LinearLayout>

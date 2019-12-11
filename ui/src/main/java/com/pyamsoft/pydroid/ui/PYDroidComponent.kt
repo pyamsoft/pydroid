@@ -55,7 +55,7 @@ internal interface PYDroidComponent {
     fun plusUpgrade(): VersionUpgradeComponent.Factory
 
     @CheckResult
-    fun plusSettingsComponent(): AppSettingsComponent.Factory
+    fun plusSettings(): AppSettingsComponent.Factory
 
     interface Factory {
 
@@ -85,15 +85,14 @@ internal interface PYDroidComponent {
 
         private val context = application
         private val enforcer = Enforcer(debug)
-        private val preferences = PYDroidPreferencesImpl(context)
+        private val preferences = PYDroidPreferencesImpl(application)
         private val theming = Theming(preferences)
-        private val packageName = context.packageName
+        private val packageName = application.packageName
 
         private val aboutModule = AboutModule(enforcer)
         private val loaderModule = LoaderModule(context)
         private val ratingModule = RatingModule(version, enforcer, preferences)
-        private val versionCheckModule =
-            VersionCheckModule(debug, version, packageName, enforcer)
+        private val versionCheckModule = VersionCheckModule(debug, version, packageName, enforcer)
 
         private val viewModelFactory by lazy {
             PYDroidViewModelFactory(
@@ -113,7 +112,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
-            return AboutItemComponent.Impl.FactoryImpl()
+            return AboutItemComponent.Impl.FactoryImpl(viewModelFactory)
         }
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {
@@ -128,7 +127,7 @@ internal interface PYDroidComponent {
             return VersionUpgradeComponent.Impl.FactoryImpl(name, version, viewModelFactory)
         }
 
-        override fun plusSettingsComponent(): AppSettingsComponent.Factory {
+        override fun plusSettings(): AppSettingsComponent.Factory {
             return AppSettingsComponent.Impl.FactoryImpl(
                 name, reportUrl, sourceUrl,
                 privacyPolicyUrl, termsConditionsUrl,

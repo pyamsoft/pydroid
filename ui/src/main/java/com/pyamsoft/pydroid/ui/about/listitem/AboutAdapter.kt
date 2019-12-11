@@ -25,21 +25,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal class AboutAdapter internal constructor(
     private val callback: (event: AboutItemControllerEvent) -> Unit
-) : ListAdapter<OssLibrary, BaseViewHolder>(object : DiffUtil.ItemCallback<OssLibrary>() {
-    override fun areItemsTheSame(
-        oldItem: OssLibrary,
-        newItem: OssLibrary
-    ): Boolean {
-        return oldItem.libraryUrl == newItem.libraryUrl
-    }
-
-    override fun areContentsTheSame(
-        oldItem: OssLibrary,
-        newItem: OssLibrary
-    ): Boolean {
-        return oldItem == newItem
-    }
-}) {
+) : ListAdapter<OssLibrary, BaseViewHolder>(DIFFER) {
 
     init {
         setHasStableIds(true)
@@ -86,5 +72,21 @@ internal class AboutAdapter internal constructor(
 
         private const val VIEW_TYPE_SPACER = 1
         private const val VIEW_TYPE_REAL = 2
+
+        private val DIFFER = object : DiffUtil.ItemCallback<OssLibrary>() {
+            override fun areItemsTheSame(
+                oldItem: OssLibrary,
+                newItem: OssLibrary
+            ): Boolean {
+                return oldItem.libraryUrl == newItem.libraryUrl
+            }
+
+            override fun areContentsTheSame(
+                oldItem: OssLibrary,
+                newItem: OssLibrary
+            ): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }

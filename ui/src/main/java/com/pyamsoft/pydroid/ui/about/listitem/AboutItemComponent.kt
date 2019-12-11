@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface AboutItemComponent {
 
@@ -36,7 +37,8 @@ internal interface AboutItemComponent {
 
     class Impl private constructor(
         private val parent: ViewGroup,
-        private val library: OssLibrary
+        private val library: OssLibrary,
+        private val factory: PYDroidViewModelFactory
     ) : AboutItemComponent {
 
         override fun inject(viewHolder: AboutViewHolder) {
@@ -44,19 +46,21 @@ internal interface AboutItemComponent {
             val description = AboutItemDescriptionView(library, parent)
             val action = AboutItemActionView(library, parent)
 
-            viewHolder.factory = AboutItemViewModelFactory()
+            viewHolder.factory = factory
             viewHolder.titleView = title
             viewHolder.descriptionView = description
             viewHolder.actionView = action
         }
 
-        class FactoryImpl internal constructor() : Factory {
+        class FactoryImpl internal constructor(
+            private val factory: PYDroidViewModelFactory
+        ) : Factory {
 
             override fun create(
                 parent: ViewGroup,
                 library: OssLibrary
             ): AboutItemComponent {
-                return Impl(parent, library)
+                return Impl(parent, library, factory)
             }
         }
     }

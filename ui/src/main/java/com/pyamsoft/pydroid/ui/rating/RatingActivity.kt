@@ -60,7 +60,10 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
                 intArrayOf(android.R.attr.textSize, android.R.attr.textColor).sortedArray()
             val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
             val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
-            withStyledAttributes(R.style.TextAppearance_AppCompat_Large, attrArray.copyOf()) {
+            withStyledAttributes(
+                R.style.TextAppearance_MaterialComponents_Headline5,
+                attrArray.copyOf()
+            ) {
                 val size: Int =
                     getDimensionPixelSize(
                         indexOfSize,
@@ -73,7 +76,10 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
                 }
             }
 
-            withStyledAttributes(R.style.TextAppearance_AppCompat_Small, attrArray.copyOf()) {
+            withStyledAttributes(
+                R.style.TextAppearance_MaterialComponents_Body2,
+                attrArray.copyOf()
+            ) {
                 val size: Int =
                     getDimensionPixelSize(
                         indexOfSize,

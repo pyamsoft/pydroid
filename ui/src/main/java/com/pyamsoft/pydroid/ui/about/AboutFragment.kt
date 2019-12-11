@@ -181,7 +181,7 @@ class AboutFragment : Fragment() {
 
         @JvmStatic
         @CheckResult
-        private fun newInstance(backStackCount: Int): AboutFragment {
+        private fun newInstance(backStackCount: Int): Fragment {
             return AboutFragment().apply {
                 arguments = Bundle().apply {
                     putInt(KEY_BACK_STACK, backStackCount)

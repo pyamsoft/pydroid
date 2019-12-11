@@ -36,15 +36,16 @@ internal class AboutViewHolder private constructor(
     private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : BaseViewHolder(view) {
 
-    internal var factory: ViewModelProvider.Factory? = null
     internal var titleView: AboutItemTitleView? = null
     internal var descriptionView: AboutItemDescriptionView? = null
     internal var actionView: AboutItemActionView? = null
 
+    internal var factory: ViewModelProvider.Factory? = null
     private var viewModel: AboutItemViewModel? = null
-    private var lifecycle: ListItemLifecycle? = null
 
     private val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
+
+    private var lifecycle: ListItemLifecycle? = null
 
     private fun injectViewModel() {
         viewModel = factory<AboutItemViewModel>(ViewModelStore()) { factory }.get()
@@ -80,6 +81,7 @@ internal class AboutViewHolder private constructor(
         titleView = null
         descriptionView = null
         actionView = null
+        factory = null
     }
 
     companion object {

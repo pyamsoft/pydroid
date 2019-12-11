@@ -58,7 +58,7 @@ class RatingDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return Dialog(requireContext(), theme).noTitle()
+        return Dialog(requireActivity(), theme).noTitle()
     }
 
     override fun onCreateView(
@@ -149,7 +149,7 @@ class RatingDialog : DialogFragment() {
 
         @JvmStatic
         @CheckResult
-        fun newInstance(provider: ChangeLogProvider): RatingDialog {
+        fun newInstance(provider: ChangeLogProvider): DialogFragment {
             return RatingDialog().apply {
                 arguments = Bundle().apply {
                     putString(RATE_LINK, provider.changeLogPackageName)

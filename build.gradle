@@ -47,7 +47,7 @@ buildscript {
         materialDesign = "1.0.0"
         vectorDrawable = "1.1.0"
         preference = "1.1.0"
-        recyclerView = "1.0.0"
+        recyclerView = "1.1.0"
         fragment = "1.1.0"
         appCompat = "1.1.0"
 

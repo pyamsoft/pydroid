@@ -26,7 +26,9 @@ data class AboutItemViewState internal constructor(val library: OssLibrary?) : U
 
 sealed class AboutItemViewEvent : UiViewEvent {
 
-    data class OpenUrl internal constructor(val url: String) : AboutItemViewEvent()
+    object OpenLicenseUrl : AboutItemViewEvent()
+
+    object OpenLibraryUrl : AboutItemViewEvent()
 }
 
 sealed class AboutItemControllerEvent : UiControllerEvent {

@@ -23,7 +23,8 @@ import android.widget.Button
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
@@ -38,6 +39,10 @@ internal class AboutItemActionView internal constructor(
     override val layoutRoot by boundView<View>(R.id.about_actions)
 
     init {
+        doOnInflate {
+            viewLicense.setOnDebouncedClickListener { publish(OpenLicenseUrl) }
+            visitHomepage.setOnDebouncedClickListener { publish(OpenLibraryUrl) }
+        }
         doOnTeardown {
             clear()
         }
@@ -52,18 +57,5 @@ internal class AboutItemActionView internal constructor(
         state: AboutItemViewState,
         savedState: UiSavedState
     ) {
-        state.library.let { library ->
-            if (library == null) {
-                clear()
-            } else {
-                viewLicense.setOnDebouncedClickListener {
-                    publish(OpenUrl(library.licenseUrl))
-                }
-
-                visitHomepage.setOnDebouncedClickListener {
-                    publish(OpenUrl(library.libraryUrl))
-                }
-            }
-        }
     }
 }

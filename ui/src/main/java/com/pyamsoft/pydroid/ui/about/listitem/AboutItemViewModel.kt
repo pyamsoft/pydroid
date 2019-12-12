@@ -20,7 +20,8 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 
 internal class AboutItemViewModel internal constructor() :
     UiViewModel<AboutItemViewState, AboutItemViewEvent, AboutItemControllerEvent>(
@@ -29,7 +30,8 @@ internal class AboutItemViewModel internal constructor() :
 
     override fun handleViewEvent(event: AboutItemViewEvent) {
         return when (event) {
-            is OpenUrl -> publish(ExternalUrl(event.url))
+            is OpenLicenseUrl -> withState { library?.let { publish(ExternalUrl(it.licenseUrl)) } }
+            is OpenLibraryUrl -> withState { library?.let { publish(ExternalUrl(it.libraryUrl)) } }
         }
     }
 

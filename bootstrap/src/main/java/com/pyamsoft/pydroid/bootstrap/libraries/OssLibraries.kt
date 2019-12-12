@@ -132,7 +132,7 @@ object OssLibraries {
         )
         add(
             "AndroidX Vector Drawable",
-            "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/graphics/drawable/static/",
+            "https://android.googlesource.com/platform/frameworks/support/+/androidx-master-dev/vectordrawable/",
             "The AndroidX Jetpack Vector Drawable Compat library. Create drawables based on XML vector graphics."
         )
         add(

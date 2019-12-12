@@ -78,8 +78,9 @@ abstract class BaseUiViewHolder<S : UiViewState, V : UiViewEvent> protected cons
     }
 
     final override fun unbind() {
-        assertValidState()
-        onUnbind()
+        if (_parent != null) {
+            onUnbind()
+        }
     }
 
     protected abstract fun onBind(state: S)

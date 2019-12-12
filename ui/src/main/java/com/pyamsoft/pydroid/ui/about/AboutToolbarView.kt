@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.about
 
 import com.pyamsoft.pydroid.arch.RenderableUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
-import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException

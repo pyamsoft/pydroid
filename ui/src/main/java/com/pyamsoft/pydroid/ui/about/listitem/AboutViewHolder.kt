@@ -28,7 +28,6 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import kotlinx.coroutines.CoroutineScope
 
 internal class AboutViewHolder private constructor(
     view: View,

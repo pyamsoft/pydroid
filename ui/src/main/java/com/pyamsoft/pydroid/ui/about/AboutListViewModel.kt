@@ -57,7 +57,7 @@ internal class AboutListViewModel internal constructor(
 
     init {
         doOnInit {
-            loadLicenses(false)
+            loadLicenses()
         }
     }
 
@@ -79,8 +79,8 @@ internal class AboutListViewModel internal constructor(
         }
     }
 
-    private fun loadLicenses(force: Boolean) {
-        viewModelScope.launch { licenseRunner.call(force) }
+    private fun loadLicenses() {
+        viewModelScope.launch { licenseRunner.call(false) }
     }
 
     private fun handleLicenseLoadBegin() {

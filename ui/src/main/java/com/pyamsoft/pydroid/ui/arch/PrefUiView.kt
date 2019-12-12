@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
@@ -37,16 +36,8 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     private var boundPrefs: MutableSet<BoundPref<*>>? = null
 
     init {
-        doOnInflate { savedInstanceState ->
-            // NOTE: The deprecated function call is kept around for compat purposes.
-            onInflated(parent(), savedInstanceState)
-        }
-
         doOnTeardown {
             assertValidState()
-
-            // NOTE: The deprecated function call is kept around for compat purposes.
-            onTeardown()
 
             boundPrefs?.forEach { it.teardown() }
             boundPrefs?.clear()
@@ -75,20 +66,6 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         throw InvalidIdException
     }
 
-    final override fun doInflate(savedInstanceState: Bundle?) {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    @Deprecated("Use doOnInflate { savedInstanceState: Bundle? -> } instead.")
-    protected open fun onInflated(
-        preferenceScreen: PreferenceScreen,
-        savedInstanceState: Bundle?
-    ) {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
     final override fun render(
         state: S,
         savedState: UiSavedState
@@ -101,37 +78,6 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         state: S,
         savedState: UiSavedState
     )
-
-    final override fun saveState(outState: Bundle) {
-        assertValidState()
-
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        onSaveState(outState)
-
-        // Must call super - this is currently "deprecated" but only to encourage external consumers
-        // to move away from the saveState method directly.
-        //
-        // It will continue to be used internally in the library and will be closed
-        // and un-deprecated in the future.
-        super.saveState(outState)
-    }
-
-    @Deprecated("Use doOnSaveState { outState: Bundle -> } instead.")
-    protected open fun onSaveState(outState: Bundle) {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    final override fun doTeardown() {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    @Deprecated("Use doOnTeardown { () -> } instead.")
-    protected open fun onTeardown() {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
 
     @CheckResult
     protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {

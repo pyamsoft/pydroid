@@ -17,22 +17,8 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CheckResult
+interface Renderable<S : UiViewState> {
 
-class UnitViewModel private constructor(
-) : UiViewModel<UnitViewState, UnitViewEvent, UnitControllerEvent>(
-    initialState = UnitViewState
-) {
-
-    override fun handleViewEvent(event: UnitViewEvent) {
-    }
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        fun create(): UiViewModel<UnitViewState, UnitViewEvent, UnitControllerEvent> {
-            return UnitViewModel()
-        }
-    }
+    fun render(state: S, savedState: UiSavedState)
 }
+

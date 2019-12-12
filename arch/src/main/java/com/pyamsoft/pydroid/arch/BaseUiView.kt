@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,19 +38,13 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     private var boundViews: MutableSet<BoundView<*>>? = null
 
     init {
-        doOnInflate { savedInstanceState ->
+        doOnInflate {
             assertValidState()
-
-            parent().inflateAndAdd(layout) {
-                // NOTE: The deprecated function call is kept around for compat purposes.
-                onInflated(this, savedInstanceState)
-            }
+            parent().inflateAndAdd(layout)
         }
+
         doOnTeardown {
             assertValidState()
-
-            // NOTE: The deprecated function call is kept around for compat purposes.
-            onTeardown()
 
             parent().removeView(layoutRoot)
             boundViews?.forEach { it.teardown() }
@@ -81,20 +74,6 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         return layoutRoot.id
     }
 
-    final override fun doInflate(savedInstanceState: Bundle?) {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    @Deprecated("Use doOnInflate { savedInstanceState: Bundle? -> } instead.")
-    protected open fun onInflated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
     final override fun render(
         state: S,
         savedState: UiSavedState
@@ -108,41 +87,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         savedState: UiSavedState
     )
 
-    final override fun saveState(outState: Bundle) {
-        assertValidState()
-
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        onSaveState(outState)
-
-        // Must call super - this is currently "deprecated" but only to encourage external consumers
-        // to move away from the saveState method directly.
-        //
-        // It will continue to be used internally in the library and will be closed
-        // and un-deprecated in the future.
-        super.saveState(outState)
-    }
-
-    @Deprecated("Use doOnSaveState { outState: Bundle -> } instead.")
-    protected open fun onSaveState(outState: Bundle) {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    final override fun doTeardown() {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    @Deprecated("Use doOnTeardown { () -> } instead.")
-    protected open fun onTeardown() {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    private inline fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int, findViews: View.() -> Unit) {
+    private fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int) {
         LayoutInflater.from(context)
             .inflate(layout, this, true)
-            .run(findViews)
     }
 
     @CheckResult

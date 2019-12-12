@@ -18,12 +18,11 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
-import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() {
+abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : Renderable<S> {
 
     private val viewEventBus = EventBus.create<V>()
 
@@ -43,8 +42,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     @PublishedApi
     internal fun inflate(savedInstanceState: Bundle?) {
-        doInflate(savedInstanceState)
-
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
         if (onInflateEventDelegate.isInitialized()) {
 
@@ -56,12 +53,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
             // Clear the inflation hooks list to free up memory
             onInflateEvents.clear()
         }
-    }
-
-    @Deprecated("Use doOnInflate { savedInstanceState: Bundle? -> } instead.")
-    protected open fun doInflate(savedInstanceState: Bundle?) {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
     }
 
     /**
@@ -81,15 +72,8 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         onInflateEvents.add(onInflate)
     }
 
-    abstract fun render(
-        state: S,
-        savedState: UiSavedState
-    )
-
     @PublishedApi
     internal fun teardown() {
-        doTeardown()
-
         // Only run teardown hooks if they exist, otherwise don't init memory
         if (onTeardownEventDelegate.isInitialized()) {
 
@@ -132,17 +116,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         onTeardownEvents.add(onTeardown)
     }
 
-    @Deprecated("Use doOnTeardown { () -> } instead.")
-    protected open fun doTeardown() {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
-    // TODO: After the migration which kills the other old doInflate and doTeardown methods, close this function
-    // Callers should be implementing the doOnSaveState hook at that point.
-    @CallSuper
-    open fun saveState(outState: Bundle) {
-
+    fun saveState(outState: Bundle) {
         // Only run save state hooks if they exist, otherwise don't init memory
         if (onSaveEventDelegate.isInitialized()) {
 

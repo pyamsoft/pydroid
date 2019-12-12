@@ -76,12 +76,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         onInitEvents.add(onInit)
     }
 
-    @Deprecated("Use doOnInit { () -> } instead.")
-    protected open fun onInit() {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
-    }
-
     protected abstract fun handleViewEvent(event: V)
 
     @CheckResult
@@ -120,9 +114,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     final override fun onCleared() {
         if (isInitialized.compareAndSet(true, false)) {
-            // NOTE: The deprecated function call is kept around for compat purposes.
-            onTeardown()
-
             if (onTeardownEventDelegate.isInitialized()) {
 
                 // Reverse the list order so that we teardown in LIFO order
@@ -159,12 +150,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      */
     protected fun doOnTeardown(onTeardown: () -> Unit) {
         onTeardownEvents.add(onTeardown)
-    }
-
-    @Deprecated("Use doOnTeardown { () -> } instead.")
-    protected open fun onTeardown() {
-        // NOTE: The deprecated function call is kept around for compat purposes.
-        // Intentionally blank
     }
 
     @JvmOverloads
@@ -246,9 +231,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private fun initialize() {
         if (isInitialized.compareAndSet(false, true)) {
-            // NOTE: The deprecated function call is kept around for compat purposes.
-            onInit()
-
             // Only run the init hooks if they exist, otherwise we don't need to init the memory
             if (onInitEventDelegate.isInitialized()) {
 

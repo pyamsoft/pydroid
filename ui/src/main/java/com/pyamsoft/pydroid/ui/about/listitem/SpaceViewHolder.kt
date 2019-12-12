@@ -21,12 +21,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class SpaceViewHolder private constructor(view: View) : BaseViewHolder(view) {
 
-    override fun bind(model: OssLibrary) {
+    override fun bind(state: AboutItemViewState) {
     }
 
     override fun unbind() {

@@ -27,9 +27,12 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
+import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLibrary
+import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLicense
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemControllerEvent
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
+import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewState
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class AboutListView internal constructor(
@@ -66,9 +69,10 @@ internal class AboutListView internal constructor(
     }
 
     private fun setupListView() {
-        aboutAdapter = AboutAdapter(owner) {
-            return@AboutAdapter when (it) {
-                is AboutItemControllerEvent.ExternalUrl -> publish(OpenUrl(it.url))
+        aboutAdapter = AboutAdapter(owner) { event, index ->
+            return@AboutAdapter when (event) {
+                is OpenLicenseUrl -> publish(OpenLicense(index))
+                is OpenLibraryUrl -> publish(OpenLibrary(index))
             }
         }
 
@@ -138,7 +142,7 @@ internal class AboutListView internal constructor(
         libraries: List<OssLibrary>,
         savedState: UiSavedState
     ) {
-        requireNotNull(aboutAdapter).submitList(libraries)
+        requireNotNull(aboutAdapter).submitList(libraries.map { AboutItemViewState(it) })
         scrollToLastViewedItem(savedState)
     }
 

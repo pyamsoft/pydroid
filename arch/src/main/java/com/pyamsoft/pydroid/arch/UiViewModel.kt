@@ -82,7 +82,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @PublishedApi
     internal fun render(
         savedInstanceState: Bundle?,
-        vararg views: UiView<S, V>,
+        vararg views: RenderableUiView<S, V>,
         onControllerEvent: (event: C) -> Unit
     ): Job = viewModelScope.launch {
         // Init savedState once
@@ -221,7 +221,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private fun handleStateChange(
-        views: Array<out UiView<S, V>>,
+        views: Array<out Renderable<S>>,
         state: S,
         savedState: UiSavedState
     ) {

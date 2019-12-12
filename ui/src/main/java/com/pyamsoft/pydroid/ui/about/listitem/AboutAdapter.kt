@@ -22,24 +22,23 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal class AboutAdapter internal constructor(
     private val owner: LifecycleOwner,
-    private val callback: (event: AboutItemControllerEvent) -> Unit
-) : ListAdapter<OssLibrary, BaseViewHolder>(DIFFER) {
+    private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
+) : ListAdapter<AboutItemViewState, BaseViewHolder>(DIFFER) {
 
     init {
         setHasStableIds(true)
     }
 
     override fun getItemId(position: Int): Long {
-        return getItem(position).libraryUrl.hashCode()
+        return getItem(position).library.libraryUrl.hashCode()
             .toLong()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).name.isBlank()) {
+        return if (getItem(position).library.name.isBlank()) {
             VIEW_TYPE_SPACER
         } else {
             VIEW_TYPE_REAL
@@ -75,17 +74,17 @@ internal class AboutAdapter internal constructor(
         private const val VIEW_TYPE_SPACER = 1
         private const val VIEW_TYPE_REAL = 2
 
-        private val DIFFER = object : DiffUtil.ItemCallback<OssLibrary>() {
+        private val DIFFER = object : DiffUtil.ItemCallback<AboutItemViewState>() {
             override fun areItemsTheSame(
-                oldItem: OssLibrary,
-                newItem: OssLibrary
+                oldItem: AboutItemViewState,
+                newItem: AboutItemViewState
             ): Boolean {
-                return oldItem.libraryUrl == newItem.libraryUrl
+                return oldItem.library.libraryUrl == newItem.library.libraryUrl
             }
 
             override fun areContentsTheSame(
-                oldItem: OssLibrary,
-                newItem: OssLibrary
+                oldItem: AboutItemViewState,
+                newItem: AboutItemViewState
             ): Boolean {
                 return oldItem == newItem
             }

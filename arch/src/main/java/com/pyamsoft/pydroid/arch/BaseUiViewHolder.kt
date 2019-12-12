@@ -24,9 +24,9 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 
-abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructor(
+abstract class BaseUiViewHolder<S : UiViewState, V : UiViewEvent> protected constructor(
     parent: ViewGroup
-) : RenderableUiView<S, V>() {
+) : BindableUiView<S, V>() {
 
     protected abstract val layoutRoot: View
 
@@ -72,18 +72,19 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         return layoutRoot.id
     }
 
-    final override fun render(
-        state: S,
-        savedState: UiSavedState
-    ) {
+    final override fun bind(state: S) {
         assertValidState()
-        onRender(state, savedState)
+        onBind(state)
     }
 
-    protected abstract fun onRender(
-        state: S,
-        savedState: UiSavedState
-    )
+    final override fun unbind() {
+        assertValidState()
+        onUnbind()
+    }
+
+    protected abstract fun onBind(state: S)
+
+    protected abstract fun onUnbind()
 
     private fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int) {
         LayoutInflater.from(context)

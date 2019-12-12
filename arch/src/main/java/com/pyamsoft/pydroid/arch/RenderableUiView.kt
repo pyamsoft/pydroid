@@ -15,16 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.listitem
+package com.pyamsoft.pydroid.arch
 
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
-
-internal abstract class BaseViewHolder internal constructor(
-    itemView: View
-) : RecyclerView.ViewHolder(itemView) {
-
-    abstract fun bind(state: AboutItemViewState)
-
-    abstract fun unbind()
-}
+abstract class RenderableUiView<S : UiViewState, V : UiViewEvent> protected constructor(
+) : UiView<S, V>(), Renderable<S>

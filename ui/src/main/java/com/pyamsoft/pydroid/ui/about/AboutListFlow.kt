@@ -31,7 +31,9 @@ data class AboutListState(
 
 sealed class AboutListViewEvent : UiViewEvent {
 
-    data class OpenUrl internal constructor(val url: String) : AboutListViewEvent()
+    data class OpenLibrary internal constructor(val index: Int) : AboutListViewEvent()
+
+    data class OpenLicense internal constructor(val index: Int) : AboutListViewEvent()
 }
 
 sealed class AboutListControllerEvent : UiControllerEvent {

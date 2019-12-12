@@ -22,28 +22,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.Bindable
+import com.pyamsoft.pydroid.arch.bindViews
 import com.pyamsoft.pydroid.arch.doOnDestroy
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.factory
+import kotlinx.coroutines.CoroutineScope
 
 internal class AboutViewHolder private constructor(
     view: View,
     owner: LifecycleOwner,
-    callback: (event: AboutItemControllerEvent) -> Unit
+    callback: (event: AboutItemViewEvent, index: Int) -> Unit
 ) : BaseViewHolder(view) {
+
+    private val binder: Bindable<AboutItemViewState>
 
     internal var titleView: AboutItemTitleView? = null
     internal var descriptionView: AboutItemDescriptionView? = null
     internal var actionView: AboutItemActionView? = null
-
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by factory<AboutItemViewModel>(ViewModelStore()) { factory }
 
     init {
         val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
@@ -52,28 +49,28 @@ internal class AboutViewHolder private constructor(
             .create(parent)
             .inject(this)
 
-        createComponent(
-            null, owner,
-            viewModel,
+        binder = bindViews(
+            owner,
             requireNotNull(titleView),
-            requireNotNull(actionView),
-            requireNotNull(descriptionView)
-        ) { callback(it) }
+            requireNotNull(descriptionView),
+            requireNotNull(actionView)
+        ) {
+            callback(it, adapterPosition)
+        }
 
         owner.doOnDestroy {
             titleView = null
             descriptionView = null
             actionView = null
-            factory = null
         }
     }
 
-    override fun bind(model: OssLibrary) {
-        viewModel.bind(model)
+    override fun bind(state: AboutItemViewState) {
+        binder.bind(state)
     }
 
     override fun unbind() {
-        viewModel.unbind()
+        binder.unbind()
     }
 
     companion object {
@@ -84,7 +81,7 @@ internal class AboutViewHolder private constructor(
             inflater: LayoutInflater,
             container: ViewGroup,
             owner: LifecycleOwner,
-            callback: (event: AboutItemControllerEvent) -> Unit
+            callback: (event: AboutItemViewEvent, index: Int) -> Unit
         ): AboutViewHolder {
             val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
             return AboutViewHolder(view, owner, callback)

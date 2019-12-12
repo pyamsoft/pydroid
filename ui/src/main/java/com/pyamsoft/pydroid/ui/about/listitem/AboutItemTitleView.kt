@@ -22,13 +22,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.BaseUiViewHolder
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
+) : BaseUiViewHolder<AboutItemViewState, AboutItemViewEvent>(parent) {
 
     private val title by boundView<TextView>(R.id.title)
     private val license by boundView<TextView>(R.id.license)
@@ -48,18 +47,15 @@ internal class AboutItemTitleView internal constructor(
         license.text = ""
     }
 
-    override fun onRender(
-        state: AboutItemViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onBind(state: AboutItemViewState) {
         state.library.let { library ->
-            if (library == null) {
-                clear()
-            } else {
-                title.text = library.name
-                license.text = getString(R.string.license_name, library.licenseName)
-            }
+            title.text = library.name
+            license.text = getString(R.string.license_name, library.licenseName)
         }
+    }
+
+    override fun onUnbind() {
+        clear()
     }
 
     @CheckResult

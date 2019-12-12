@@ -15,16 +15,11 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.listitem
+package com.pyamsoft.pydroid.arch
 
-import android.view.View
-import androidx.recyclerview.widget.RecyclerView
+interface Bindable<S : UiViewState> {
 
-internal abstract class BaseViewHolder internal constructor(
-    itemView: View
-) : RecyclerView.ViewHolder(itemView) {
+    fun bind(state: S)
 
-    abstract fun bind(state: AboutItemViewState)
-
-    abstract fun unbind()
+    fun unbind()
 }

@@ -15,18 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about.listitem
+package com.pyamsoft.pydroid.arch
 
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UiViewModelFactory
-import kotlin.reflect.KClass
-
-internal class AboutItemViewModelFactory internal constructor() : UiViewModelFactory() {
-
-    override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
-        return when (modelClass) {
-            AboutItemViewModel::class -> AboutItemViewModel()
-            else -> fail()
-        }
-    }
-}
+abstract class BindableUiView<S : UiViewState, V : UiViewEvent> protected constructor(
+) : UiView<S, V>(), Bindable<S>

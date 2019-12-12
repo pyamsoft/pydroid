@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
 internal interface AboutItemComponent {
 
@@ -32,27 +31,22 @@ internal interface AboutItemComponent {
     }
 
     class Impl private constructor(
-        private val parent: ViewGroup,
-        private val factory: PYDroidViewModelFactory
+        private val parent: ViewGroup
     ) : AboutItemComponent {
 
         override fun inject(viewHolder: AboutViewHolder) {
             val title = AboutItemTitleView(parent)
             val description = AboutItemDescriptionView(parent)
             val action = AboutItemActionView(parent)
-
-            viewHolder.factory = factory
             viewHolder.titleView = title
             viewHolder.descriptionView = description
             viewHolder.actionView = action
         }
 
-        class FactoryImpl internal constructor(
-            private val factory: PYDroidViewModelFactory
-        ) : Factory {
+        class FactoryImpl internal constructor() : Factory {
 
             override fun create(parent: ViewGroup): AboutItemComponent {
-                return Impl(parent, factory)
+                return Impl(parent)
             }
         }
     }

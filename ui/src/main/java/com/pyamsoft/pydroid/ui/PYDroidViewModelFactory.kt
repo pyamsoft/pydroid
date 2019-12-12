@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.about.AboutListViewModel
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel
@@ -43,7 +42,6 @@ internal class PYDroidViewModelFactory internal constructor(
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
-            AboutItemViewModel::class -> AboutItemViewModel()
             AboutToolbarViewModel::class -> AboutToolbarViewModel()
             AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
             RatingViewModel::class -> RatingViewModel(ratingInteractor)

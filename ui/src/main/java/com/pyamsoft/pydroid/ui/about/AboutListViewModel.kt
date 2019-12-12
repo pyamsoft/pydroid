@@ -24,7 +24,8 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenUrl
+import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLibrary
+import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLicense
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -62,7 +63,19 @@ internal class AboutListViewModel internal constructor(
 
     override fun handleViewEvent(event: AboutListViewEvent) {
         return when (event) {
-            is OpenUrl -> publish(ExternalUrl(event.url))
+            is OpenLibrary -> openUrl(event.index) { it.libraryUrl }
+            is OpenLicense -> openUrl(event.index) { it.licenseUrl }
+        }
+    }
+
+    private inline fun openUrl(index: Int, crossinline func: (library: OssLibrary) -> String) {
+        withState {
+            val l = licenses
+            if (l.isNotEmpty()) {
+                l.getOrNull(index)?.let { lib ->
+                    publish(ExternalUrl(func(lib)))
+                }
+            }
         }
     }
 

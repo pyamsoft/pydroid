@@ -22,7 +22,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : Renderable<S> {
+abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() {
 
     private val viewEventBus = EventBus.create<V>()
 

@@ -112,7 +112,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
-            return AboutItemComponent.Impl.FactoryImpl(viewModelFactory)
+            return AboutItemComponent.Impl.FactoryImpl()
         }
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {

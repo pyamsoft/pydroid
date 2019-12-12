@@ -25,6 +25,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -58,6 +59,13 @@ internal class AboutViewHolder private constructor(
             requireNotNull(actionView),
             requireNotNull(descriptionView)
         ) { callback(it) }
+
+        owner.doOnDestroy {
+            titleView = null
+            descriptionView = null
+            actionView = null
+            factory = null
+        }
     }
 
     override fun bind(model: OssLibrary) {

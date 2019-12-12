@@ -28,7 +28,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     savedInstanceState: Bundle?,
     owner: LifecycleOwner,
     viewModel: UiViewModel<S, V, C>,
-    vararg views: RenderableUiView<S, V>,
+    vararg views: UiView<S, V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ) {
     views.forEach { it.inflate(savedInstanceState) }
@@ -42,9 +42,9 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
 @CheckResult
 fun <S : UiViewState, V : UiViewEvent> bindViews(
     owner: LifecycleOwner,
-    vararg views: BindableUiView<S, V>,
+    vararg views: UiView<S, V>,
     onViewEvent: suspend (event: V) -> Unit
-): Bindable<S> {
+): ViewBinder<S> {
     views.forEach { it.inflate(null) }
     views.forEach {
         owner.lifecycleScope.launch(context = Dispatchers.Default) {
@@ -53,13 +53,9 @@ fun <S : UiViewState, V : UiViewEvent> bindViews(
     }
     owner.doOnDestroy { views.forEach { it.teardown() } }
 
-    return object : Bindable<S> {
+    return object : ViewBinder<S> {
         override fun bind(state: S) {
-            views.forEach { it.bind(state) }
-        }
-
-        override fun unbind() {
-            views.forEach { it.unbind() }
+            views.forEach { it.render(state, UiSavedState.EMPTY) }
         }
     }
 }

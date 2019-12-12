@@ -21,12 +21,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.BaseUiViewHolder
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
     parent: ViewGroup
-) : BaseUiViewHolder<AboutItemViewState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
 
     override val layout: Int = R.layout.about_item_description
 
@@ -45,14 +46,10 @@ internal class AboutItemDescriptionView internal constructor(
         }
     }
 
-    override fun onBind(state: AboutItemViewState) {
+    override fun onRender(state: AboutItemViewState, savedState: UiSavedState) {
         state.library.let { library ->
             layoutRoot.text = library.description
             layoutRoot.isVisible = library.description.isNotBlank()
         }
-    }
-
-    override fun onUnbind() {
-        clear()
     }
 }

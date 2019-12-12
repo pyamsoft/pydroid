@@ -25,6 +25,4 @@ internal abstract class BaseViewHolder internal constructor(
 ) : RecyclerView.ViewHolder(itemView) {
 
     abstract fun bind(state: AboutItemViewState)
-
-    abstract fun unbind()
 }

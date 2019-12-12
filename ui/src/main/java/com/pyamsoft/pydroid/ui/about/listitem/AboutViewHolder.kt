@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.Bindable
+import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.bindViews
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
@@ -35,7 +35,7 @@ internal class AboutViewHolder private constructor(
     callback: (event: AboutItemViewEvent, index: Int) -> Unit
 ) : BaseViewHolder(view) {
 
-    private val binder: Bindable<AboutItemViewState>
+    private val binder: ViewBinder<AboutItemViewState>
 
     internal var titleView: AboutItemTitleView? = null
     internal var descriptionView: AboutItemDescriptionView? = null
@@ -66,10 +66,6 @@ internal class AboutViewHolder private constructor(
 
     override fun bind(state: AboutItemViewState) {
         binder.bind(state)
-    }
-
-    override fun unbind() {
-        binder.unbind()
     }
 
     companion object {

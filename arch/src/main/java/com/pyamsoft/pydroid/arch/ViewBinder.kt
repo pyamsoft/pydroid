@@ -17,5 +17,7 @@
 
 package com.pyamsoft.pydroid.arch
 
-abstract class BindableUiView<S : UiViewState, V : UiViewEvent> protected constructor(
-) : UiView<S, V>(), Bindable<S>
+interface ViewBinder<S : UiViewState> {
+
+    fun bind(state: S)
+}

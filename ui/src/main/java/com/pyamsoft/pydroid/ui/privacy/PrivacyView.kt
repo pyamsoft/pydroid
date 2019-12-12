@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.privacy
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.RenderableUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
@@ -29,7 +28,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class PrivacyView internal constructor(
     private val owner: LifecycleOwner,
     private val snackbarRootProvider: () -> ViewGroup
-) : RenderableUiView<PrivacyViewState, PrivacyViewEvent>() {
+) : UiView<PrivacyViewState, PrivacyViewEvent>() {
 
     override fun id(): Int {
         throw InvalidIdException

@@ -20,7 +20,8 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.arch.BaseUiViewHolder
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
@@ -28,7 +29,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
     parent: ViewGroup
-) : BaseUiViewHolder<AboutItemViewState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
 
     private val viewLicense by boundView<Button>(R.id.action_view_license)
     private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
@@ -48,9 +49,6 @@ internal class AboutItemActionView internal constructor(
         }
     }
 
-    override fun onBind(state: AboutItemViewState) {
-    }
-
-    override fun onUnbind() {
+    override fun onRender(state: AboutItemViewState, savedState: UiSavedState) {
     }
 }

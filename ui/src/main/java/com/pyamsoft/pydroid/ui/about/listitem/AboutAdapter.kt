@@ -64,11 +64,6 @@ internal class AboutAdapter internal constructor(
         holder.bind(getItem(position))
     }
 
-    override fun onViewRecycled(holder: BaseViewHolder) {
-        super.onViewRecycled(holder)
-        holder.unbind()
-    }
-
     companion object {
 
         private const val VIEW_TYPE_SPACER = 1

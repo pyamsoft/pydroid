@@ -17,8 +17,8 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import com.pyamsoft.pydroid.arch.RenderableUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewEvent.UpNavigate
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.ui.util.setUpEnabled
 internal class AboutToolbarView internal constructor(
     backstackCount: Int,
     private val toolbarActivity: ToolbarActivity
-) : RenderableUiView<AboutToolbarState, AboutToolbarViewEvent>() {
+) : UiView<AboutToolbarState, AboutToolbarViewEvent>() {
 
     private var oldTitle: CharSequence? = null
 

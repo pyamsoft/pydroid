@@ -21,8 +21,8 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.arch.RenderableUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import kotlin.properties.ReadOnlyProperty
@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty
 
 abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructor(
     parent: PreferenceScreen
-) : RenderableUiView<S, V>() {
+) : UiView<S, V>() {
 
     private var _parent: PreferenceScreen? = parent
     private var boundPrefs: MutableSet<BoundPref<*>>? = null

@@ -23,10 +23,12 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructor(
     parent: ViewGroup
-) : RenderableUiView<S, V>() {
+) : UiView<S, V>() {
 
     protected abstract val layoutRoot: View
 
@@ -110,5 +112,55 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
                 mutateMe.add(v)
             }
+    }
+
+    protected class BoundView<V : View> internal constructor(
+        parent: ViewGroup,
+        @IdRes private val id: Int
+    ) : ReadOnlyProperty<Any, V> {
+
+        private var parent: ViewGroup? = parent
+        private var view: V? = null
+
+        private fun die(): Nothing {
+            throw IllegalStateException("Cannot call BoundView methods after it has been torn down")
+        }
+
+        @CheckResult
+        private fun parent(): ViewGroup {
+            return parent ?: die()
+        }
+
+        private fun assertValidState() {
+            if (parent == null) {
+                die()
+            }
+        }
+
+        override fun getValue(
+            thisRef: Any,
+            property: KProperty<*>
+        ): V {
+            assertValidState()
+
+            val v: V? = view
+            val result: V
+            if (v == null) {
+                val bound = requireNotNull(parent().findViewById<V>(id))
+                view = bound
+                result = bound
+            } else {
+                result = v
+            }
+
+            return result
+        }
+
+        internal fun teardown() {
+            assertValidState()
+
+            parent = null
+            view = null
+        }
     }
 }

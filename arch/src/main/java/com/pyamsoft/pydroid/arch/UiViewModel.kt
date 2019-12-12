@@ -82,7 +82,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @PublishedApi
     internal fun render(
         savedInstanceState: Bundle?,
-        vararg views: RenderableUiView<S, V>,
+        vararg views: UiView<S, V>,
         onControllerEvent: (event: C) -> Unit
     ): Job = viewModelScope.launch {
         // Init savedState once

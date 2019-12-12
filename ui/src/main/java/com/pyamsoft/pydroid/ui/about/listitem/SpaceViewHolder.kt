@@ -28,9 +28,6 @@ internal class SpaceViewHolder private constructor(view: View) : BaseViewHolder(
     override fun bind(state: AboutItemViewState) {
     }
 
-    override fun unbind() {
-    }
-
     companion object {
 
         @CheckResult

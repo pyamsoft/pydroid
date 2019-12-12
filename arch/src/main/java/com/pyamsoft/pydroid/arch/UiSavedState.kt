@@ -71,4 +71,9 @@ class UiSavedState internal constructor(bundle: Bundle?) {
             }
         }
     }
+
+    companion object {
+
+        internal val EMPTY = UiSavedState(null)
+    }
 }

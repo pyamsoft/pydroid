@@ -19,6 +19,10 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+
+data class AboutItemViewState internal constructor(val library: OssLibrary?) : UiViewState
 
 sealed class AboutItemViewEvent : UiViewEvent {
 

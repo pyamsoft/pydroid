@@ -22,16 +22,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
-import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
-    library: OssLibrary,
     parent: ViewGroup
-) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
 
     private val viewLicense by boundView<Button>(R.id.action_view_license)
     private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
@@ -41,25 +38,32 @@ internal class AboutItemActionView internal constructor(
     override val layoutRoot by boundView<View>(R.id.about_actions)
 
     init {
-        doOnInflate {
-            viewLicense.setOnDebouncedClickListener {
-                publish(OpenUrl(library.licenseUrl))
-            }
-
-            visitHomepage.setOnDebouncedClickListener {
-                publish(OpenUrl(library.libraryUrl))
-            }
-        }
-
         doOnTeardown {
-            viewLicense.setOnDebouncedClickListener(null)
-            visitHomepage.setOnDebouncedClickListener(null)
+            clear()
         }
     }
 
+    private fun clear() {
+        viewLicense.setOnDebouncedClickListener(null)
+        visitHomepage.setOnDebouncedClickListener(null)
+    }
+
     override fun onRender(
-        state: UnitViewState,
+        state: AboutItemViewState,
         savedState: UiSavedState
     ) {
+        state.library.let { library ->
+            if (library == null) {
+                clear()
+            } else {
+                viewLicense.setOnDebouncedClickListener {
+                    publish(OpenUrl(library.licenseUrl))
+                }
+
+                visitHomepage.setOnDebouncedClickListener {
+                    publish(OpenUrl(library.libraryUrl))
+                }
+            }
+        }
     }
 }

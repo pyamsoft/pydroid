@@ -23,36 +23,40 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
-import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
-    library: OssLibrary,
     parent: ViewGroup
-) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
 
     override val layout: Int = R.layout.about_item_description
 
     override val layoutRoot by boundView<TextView>(R.id.about_description)
 
     init {
-        doOnInflate {
-            layoutRoot.text = library.description
-            layoutRoot.isVisible = library.description.isNotBlank()
-        }
-
         doOnTeardown {
-            layoutRoot.apply {
-                text = ""
-                isGone = true
-            }
+            clear()
+        }
+    }
+
+    private fun clear() {
+        layoutRoot.apply {
+            text = ""
+            isGone = true
         }
     }
 
     override fun onRender(
-        state: UnitViewState,
+        state: AboutItemViewState,
         savedState: UiSavedState
     ) {
+        state.library.let { library ->
+            if (library == null) {
+                clear()
+            } else {
+                layoutRoot.text = library.description
+                layoutRoot.isVisible = library.description.isNotBlank()
+            }
+        }
     }
 }

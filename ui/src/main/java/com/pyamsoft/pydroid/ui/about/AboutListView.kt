@@ -66,7 +66,7 @@ internal class AboutListView internal constructor(
     }
 
     private fun setupListView() {
-        aboutAdapter = AboutAdapter {
+        aboutAdapter = AboutAdapter(owner) {
             return@AboutAdapter when (it) {
                 is AboutItemControllerEvent.ExternalUrl -> publish(OpenUrl(it.url))
             }

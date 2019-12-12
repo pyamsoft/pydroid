@@ -19,11 +19,13 @@ package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
 internal class AboutAdapter internal constructor(
+    private val owner: LifecycleOwner,
     private val callback: (event: AboutItemControllerEvent) -> Unit
 ) : ListAdapter<OssLibrary, BaseViewHolder>(DIFFER) {
 
@@ -50,7 +52,7 @@ internal class AboutAdapter internal constructor(
     ): BaseViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == VIEW_TYPE_REAL) {
-            AboutViewHolder.create(inflater, parent, callback)
+            AboutViewHolder.create(inflater, parent, owner, callback)
         } else {
             SpaceViewHolder.create(inflater, parent)
         }

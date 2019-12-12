@@ -24,14 +24,11 @@ import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
-import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
-    library: OssLibrary,
     parent: ViewGroup
-) : BaseUiView<UnitViewState, AboutItemViewEvent>(parent) {
+) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
 
     private val title by boundView<TextView>(R.id.title)
     private val license by boundView<TextView>(R.id.license)
@@ -41,21 +38,28 @@ internal class AboutItemTitleView internal constructor(
     override val layoutRoot by boundView<View>(R.id.about_title)
 
     init {
-        doOnInflate {
-            title.text = library.name
-            license.text = getString(R.string.license_name, library.licenseName)
-        }
-
         doOnTeardown {
-            title.text = ""
-            license.text = ""
+            clear()
         }
     }
 
+    private fun clear() {
+        title.text = ""
+        license.text = ""
+    }
+
     override fun onRender(
-        state: UnitViewState,
+        state: AboutItemViewState,
         savedState: UiSavedState
     ) {
+        state.library.let { library ->
+            if (library == null) {
+                clear()
+            } else {
+                title.text = library.name
+                license.text = getString(R.string.license_name, library.licenseName)
+            }
+        }
     }
 
     @CheckResult

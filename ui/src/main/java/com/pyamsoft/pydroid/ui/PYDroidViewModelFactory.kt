@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui
 
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
@@ -26,11 +27,9 @@ import com.pyamsoft.pydroid.ui.about.AboutListViewModel
 import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
@@ -45,12 +44,15 @@ internal class PYDroidViewModelFactory internal constructor(
             AboutToolbarViewModel::class -> AboutToolbarViewModel()
             AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
             RatingViewModel::class -> RatingViewModel(ratingInteractor)
-            RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
             AppSettingsViewModel::class -> AppSettingsViewModel(theming)
             VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
-            VersionUpgradeViewModel::class -> VersionUpgradeViewModel()
             PrivacyViewModel::class -> PrivacyViewModel()
             else -> fail()
         }
+    }
+
+    @CheckResult
+    internal fun <T : UiViewModel<*, *, *>> exposedViewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
+        return viewModel(modelClass)
     }
 }

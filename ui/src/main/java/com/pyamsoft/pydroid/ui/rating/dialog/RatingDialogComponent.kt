@@ -21,6 +21,7 @@ import android.text.SpannedString
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
@@ -46,22 +47,26 @@ internal interface RatingDialogComponent {
         private val rateLink: String,
         private val changeLog: SpannedString,
         private val owner: LifecycleOwner,
+        private val ratingModule: RatingModule,
         private val loaderModule: LoaderModule,
         private val factory: PYDroidViewModelFactory
     ) : RatingDialogComponent {
 
         override fun inject(dialog: RatingDialog) {
-            val icon = RatingIconView(changeLogIcon, loaderModule.provideLoader(), parent)
-            val changelog = RatingChangelogView(changeLog, parent)
+            val icon = RatingIconView(loaderModule.provideLoader(), parent)
+            val changelog = RatingChangelogView(parent)
             val controls = RatingControlsView(rateLink, owner, parent)
 
-            dialog.factory = factory
+            dialog.factory = RatingDialogViewModelFactory(
+                factory, changeLog, changeLogIcon, ratingModule
+            )
             dialog.iconView = icon
             dialog.changelogView = changelog
             dialog.controlsView = controls
         }
 
         internal class FactoryImpl internal constructor(
+            private val ratingModule: RatingModule,
             private val loaderModule: LoaderModule,
             private val factory: PYDroidViewModelFactory
         ) : Factory {
@@ -75,7 +80,7 @@ internal interface RatingDialogComponent {
             ): RatingDialogComponent {
                 return Impl(
                     parent, changeLogIcon, rateLink, changeLog,
-                    owner, loaderModule, factory
+                    owner, ratingModule, loaderModule, factory
                 )
             }
         }

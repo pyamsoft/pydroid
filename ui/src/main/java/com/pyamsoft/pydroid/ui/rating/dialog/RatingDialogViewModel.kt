@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.content.ActivityNotFoundException
+import android.text.SpannedString
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
@@ -29,9 +30,15 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 import kotlinx.coroutines.launch
 
 internal class RatingDialogViewModel internal constructor(
+    changelog: SpannedString,
+    icon: Int,
     interactor: RatingInteractor
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
-    initialState = RatingDialogViewState(throwable = null)
+    initialState = RatingDialogViewState(
+        throwable = null,
+        changelog = changelog,
+        icon = icon
+    )
 ) {
 
     private val saveRunner = highlander<Unit, String> { link ->

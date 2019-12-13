@@ -17,11 +17,16 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
+import android.text.SpannedString
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-data class RatingDialogViewState internal constructor(val throwable: Throwable?) : UiViewState
+data class RatingDialogViewState internal constructor(
+    val changelog: SpannedString?,
+    val throwable: Throwable?,
+    val icon: Int
+) : UiViewState
 
 sealed class RatingDialogViewEvent : UiViewEvent {
 

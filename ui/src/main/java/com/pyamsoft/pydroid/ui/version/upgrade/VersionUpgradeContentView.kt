@@ -27,9 +27,6 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
-    applicationName: String,
-    currentVersion: Int,
-    newVersion: Int,
     parent: ViewGroup
 ) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
 
@@ -42,12 +39,6 @@ internal class VersionUpgradeContentView internal constructor(
     override val layoutRoot by boundView<View>(R.id.version_content_root)
 
     init {
-        doOnInflate {
-            upgradeMessage.text = getString(R.string.upgrade_available_message, applicationName)
-            currentValue.text = "$currentVersion"
-            newValue.text = "$newVersion"
-        }
-
         doOnTeardown {
             upgradeMessage.text = ""
             currentValue.text = ""
@@ -59,6 +50,29 @@ internal class VersionUpgradeContentView internal constructor(
         state: VersionUpgradeViewState,
         savedState: UiSavedState
     ) {
+        state.applicationName.let { name ->
+            if (name.isNotBlank()) {
+                upgradeMessage.text = getString(R.string.upgrade_available_message, name)
+            } else {
+                upgradeMessage.text = ""
+            }
+        }
+
+        state.currentVersion.let { version ->
+            if (version == 0) {
+                currentValue.text = ""
+            } else {
+                currentValue.text = "$version"
+            }
+        }
+
+        state.newVersion.let { version ->
+            if (version == 0) {
+                newValue.text = ""
+            } else {
+                newValue.text = "$version"
+            }
+        }
     }
 
     @CheckResult

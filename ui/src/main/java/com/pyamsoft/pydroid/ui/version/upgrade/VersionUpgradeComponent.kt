@@ -47,10 +47,12 @@ internal interface VersionUpgradeComponent {
 
         override fun inject(dialog: VersionUpgradeDialog) {
             val contentView =
-                VersionUpgradeContentView(applicationName, currentVersion, newVersion, parent)
+                VersionUpgradeContentView(parent)
             val controlsView = VersionUpgradeControlView(owner, parent)
 
-            dialog.factory = factory
+            dialog.factory = VersionUpgradeViewModelFactory(
+                factory, applicationName, currentVersion, newVersion
+            )
             dialog.control = controlsView
             dialog.content = contentView
         }

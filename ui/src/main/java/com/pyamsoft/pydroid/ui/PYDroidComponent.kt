@@ -116,7 +116,11 @@ internal interface PYDroidComponent {
         }
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {
-            return RatingDialogComponent.Impl.FactoryImpl(loaderModule, viewModelFactory)
+            return RatingDialogComponent.Impl.FactoryImpl(
+                ratingModule,
+                loaderModule,
+                viewModelFactory
+            )
         }
 
         override fun plusVersion(): VersionComponent.Factory {

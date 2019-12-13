@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.text.SpannedString
 import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
@@ -26,23 +25,18 @@ import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
-    changelog: SpannedString,
     parent: ViewGroup
 ) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent>(parent) {
-
-    private val changelogText by boundView<TextView>(R.id.rating_changelog_text)
 
     override val layout: Int = R.layout.rating_changelog
 
     override val layoutRoot by boundView<ScrollView>(R.id.rating_changelog_scroll)
 
-    init {
-        doOnInflate {
-            changelogText.text = changelog
-        }
+    private val changelogText by boundView<TextView>(R.id.rating_changelog_text)
 
+    init {
         doOnTeardown {
-            changelogText.text = ""
+            changelogText.text = null
         }
     }
 
@@ -50,5 +44,6 @@ internal class RatingChangelogView internal constructor(
         state: RatingDialogViewState,
         savedState: UiSavedState
     ) {
+        state.changelog?.let { changelogText.text = it }
     }
 }

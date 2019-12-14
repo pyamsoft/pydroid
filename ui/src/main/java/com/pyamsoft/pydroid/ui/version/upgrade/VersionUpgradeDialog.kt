@@ -44,9 +44,14 @@ class VersionUpgradeDialog : DialogFragment() {
     internal var control: VersionUpgradeControlView? = null
     private val viewModel by factory<VersionUpgradeViewModel> { factory }
 
+    private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
+
+    override fun getTheme(): Int {
+        return if (customTheme == 0) super.getTheme() else customTheme
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return super.onCreateDialog(savedInstanceState)
-            .noTitle()
+        return Dialog(requireActivity(), theme).noTitle()
     }
 
     override fun onCreateView(
@@ -119,13 +124,15 @@ class VersionUpgradeDialog : DialogFragment() {
 
         internal const val TAG = "VersionUpgradeDialog"
         private const val KEY_LATEST_VERSION = "key_latest_version"
+        private const val THEME = "theme"
 
         @JvmStatic
         @CheckResult
-        fun newInstance(latestVersion: Int): DialogFragment {
+        fun newInstance(latestVersion: Int, theme: Int = 0): DialogFragment {
             return VersionUpgradeDialog().apply {
                 arguments = Bundle().apply {
                     putInt(KEY_LATEST_VERSION, latestVersion)
+                    putInt(THEME, theme)
                 }
             }
         }

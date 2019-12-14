@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.runWhenReady
 
-abstract class VersionCheckActivity : PrivacyActivity() {
+abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
 
     protected open val checkForUpdates: Boolean = true
 
@@ -93,7 +93,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     }
 
     private fun showVersionUpgrade(newVersion: Int) {
-        VersionUpgradeDialog.newInstance(newVersion)
+        VersionUpgradeDialog.newInstance(newVersion, versionCheckTheme)
             .show(this, VersionUpgradeDialog.TAG)
     }
 }

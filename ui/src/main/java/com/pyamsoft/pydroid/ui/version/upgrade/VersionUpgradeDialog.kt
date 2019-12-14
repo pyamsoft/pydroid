@@ -128,7 +128,7 @@ class VersionUpgradeDialog : DialogFragment() {
 
         @JvmStatic
         @CheckResult
-        fun newInstance(latestVersion: Int, theme: Int = 0): DialogFragment {
+        fun newInstance(latestVersion: Int, theme: Int): DialogFragment {
             return VersionUpgradeDialog().apply {
                 arguments = Bundle().apply {
                     putInt(KEY_LATEST_VERSION, latestVersion)

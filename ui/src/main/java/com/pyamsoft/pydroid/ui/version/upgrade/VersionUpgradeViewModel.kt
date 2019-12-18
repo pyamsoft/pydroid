@@ -28,15 +28,14 @@ internal class VersionUpgradeViewModel internal constructor(
     applicationName: String,
     currentVersion: Int,
     newVersion: Int
-) :
-    UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
-        initialState = VersionUpgradeViewState(
-            throwable = null,
-            applicationName = applicationName,
-            currentVersion = currentVersion,
-            newVersion = newVersion
-        )
-    ) {
+) : UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
+    initialState = VersionUpgradeViewState(
+        throwable = null,
+        applicationName = applicationName,
+        currentVersion = currentVersion,
+        newVersion = newVersion
+    )
+) {
 
     override fun handleViewEvent(event: VersionUpgradeViewEvent) {
         return when (event) {

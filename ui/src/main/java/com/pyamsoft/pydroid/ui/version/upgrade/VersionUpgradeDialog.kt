@@ -39,10 +39,11 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.Ope
 
 class VersionUpgradeDialog : DialogFragment() {
 
-    internal var factory: ViewModelProvider.Factory? = null
     internal var content: VersionUpgradeContentView? = null
     internal var control: VersionUpgradeControlView? = null
-    private val viewModel by factory<VersionUpgradeViewModel> { factory }
+
+    internal var factory: ViewModelProvider.Factory? = null
+    private val viewModel by factory<VersionUpgradeViewModel>(activity = true) { factory }
 
     private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
 

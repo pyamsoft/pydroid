@@ -43,14 +43,13 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 class AboutFragment : Fragment() {
 
-    internal var factory: ViewModelProvider.Factory? = null
-
     internal var listView: AboutListView? = null
     internal var spinnerView: AboutSpinnerView? = null
-    private val listViewModel by factory<AboutListViewModel> { factory }
-
     internal var toolbar: AboutToolbarView? = null
-    private val toolbarViewModel by factory<AboutToolbarViewModel> { factory }
+
+    internal var factory: ViewModelProvider.Factory? = null
+    private val listViewModel by factory<AboutListViewModel>(activity = true) { factory }
+    private val toolbarViewModel by factory<AboutToolbarViewModel>(activity = true) { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,

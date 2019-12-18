@@ -25,6 +25,8 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromActivity
+import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromFragment
 import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -44,10 +46,13 @@ inline fun <reified T : UiViewModel<*, *, *>> factory(
  * Allow nullable for easier caller API
  */
 @CheckResult
+@JvmOverloads
 inline fun <reified T : UiViewModel<*, *, *>> Fragment.factory(
+    activity: Boolean = false,
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-    return ViewModelFactory(this, T::class.java) { requireNotNull(factoryProvider()) }
+    val factory = if (activity) FromActivity(this) else FromFragment(this)
+    return ViewModelFactory(factory, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
 /**
@@ -63,7 +68,7 @@ inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.factory(
 class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     type: Class<T>,
     store: ViewModelStore?,
-    fragment: Fragment?,
+    fragment: FragmentFactoryProvider?,
     activity: FragmentActivity?,
     factoryProvider: () -> Factory
 ) : ReadOnlyProperty<Any, T> {
@@ -75,7 +80,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     ) : this(type, store, null, null, factoryProvider)
 
     constructor(
-        fragment: Fragment,
+        fragment: FragmentFactoryProvider,
         type: Class<T>,
         factoryProvider: () -> Factory
     ) : this(type, null, fragment, null, factoryProvider)
@@ -98,17 +103,29 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
         modelResolver = resolver@{
             return@resolver when {
                 store != null -> {
-                    Timber.d("store init() ViewModel with type: $type")
+                    Timber.d("Store init() ViewModel with type: $type")
                     ViewModelProvider(store, factoryProvider())
                         .get(type)
                 }
                 fragment != null -> {
-                    Timber.d("fragment init() ViewModel with type: $type")
-                    ViewModelProviders.of(fragment, factoryProvider())
-                        .get(type)
+                    return@resolver when (fragment) {
+                        is FromFragment -> {
+                            Timber.d("Fragment init() ViewModel with type: $type")
+                            ViewModelProviders.of(fragment.fragment, factoryProvider())
+                                .get(type)
+                        }
+                        is FromActivity -> {
+                            Timber.d("FragmentActivity init() ViewModel with type: $type")
+                            ViewModelProviders.of(
+                                fragment.fragment.requireActivity(),
+                                factoryProvider()
+                            )
+                                .get(type)
+                        }
+                    }
                 }
                 activity != null -> {
-                    Timber.d("activity init() ViewModel with type: $type")
+                    Timber.d("Activity init() ViewModel with type: $type")
                     ViewModelProviders.of(activity, factoryProvider())
                         .get(type)
                 }
@@ -154,4 +171,11 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     ): T {
         return get()
     }
+}
+
+sealed class FragmentFactoryProvider {
+
+    data class FromFragment(internal val fragment: Fragment) : FragmentFactoryProvider()
+
+    data class FromActivity(internal val fragment: Fragment) : FragmentFactoryProvider()
 }

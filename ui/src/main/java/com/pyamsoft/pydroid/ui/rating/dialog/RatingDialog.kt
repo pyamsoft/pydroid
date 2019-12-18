@@ -40,11 +40,12 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 class RatingDialog : DialogFragment() {
 
-    internal var factory: ViewModelProvider.Factory? = null
     internal var changelogView: RatingChangelogView? = null
     internal var controlsView: RatingControlsView? = null
     internal var iconView: RatingIconView? = null
-    private val viewModel by factory<RatingDialogViewModel> { factory }
+
+    internal var factory: ViewModelProvider.Factory? = null
+    private val viewModel by factory<RatingDialogViewModel>(activity = true) { factory }
 
     private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
 

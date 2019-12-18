@@ -66,14 +66,14 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
     protected open val hideClearAll: Boolean = false
 
-    internal var factory: ViewModelProvider.Factory? = null
     internal var settingsView: AppSettingsView? = null
-    private val settingsViewModel by factory<AppSettingsViewModel> { factory }
-
-    private val ratingViewModel by factory<RatingViewModel> { factory }
 
     internal var versionView: VersionView? = null
-    private val versionViewModel by factory<VersionCheckViewModel> { factory }
+
+    internal var factory: ViewModelProvider.Factory? = null
+    private val settingsViewModel by factory<AppSettingsViewModel>(activity = true) { factory }
+    private val versionViewModel by factory<VersionCheckViewModel>(activity = true) { factory }
+    private val ratingViewModel by factory<RatingViewModel>(activity = true) { factory }
 
     @CallSuper
     override fun onCreatePreferences(

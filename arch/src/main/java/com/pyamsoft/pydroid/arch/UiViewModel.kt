@@ -219,7 +219,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             }
 
             // Loop over all state changes first
-            var newState: S = latestState()
+            val oldState = latestState()
+            var newState = oldState
             for (stateChange in stateChanges) {
                 newState = newState.stateChange()
                 if (newState != state) {
@@ -228,7 +229,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             }
 
             // Only send the new state at the end of the state change loop
-            if (newState != state) {
+            if (newState != oldState) {
                 stateBus.send(newState)
             }
         }

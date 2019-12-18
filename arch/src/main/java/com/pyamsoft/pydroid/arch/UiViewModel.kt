@@ -108,6 +108,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Initialize before first render
         initialize()
 
+        // Flush the queue before we begin
+        flushQueue()
+
+        // Render the latest or initial state
         val currentState = latestState()
         handleStateChange(views, currentState, savedState)
     }
@@ -225,6 +229,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         state: S,
         savedState: UiSavedState
     ) {
+        Timber.d("Render with state: $views ($state)")
         val combined = combineWithSavedState(state, savedState)
         views.forEach { it.render(combined.state, combined.savedState) }
     }

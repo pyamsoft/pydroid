@@ -135,6 +135,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             if (onInitEventDelegate.isInitialized()) {
                 onInitEvents.clear()
             }
+
+            // Clear queues and state
+            stateQueue.clear()
+            state = null
         } else {
             Timber.w("Teardown is already complete.")
         }

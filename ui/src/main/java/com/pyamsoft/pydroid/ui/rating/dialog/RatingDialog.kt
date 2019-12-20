@@ -88,7 +88,7 @@ class RatingDialog : DialogFragment() {
         val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusRatingDialog()
-            .create(layoutRoot, viewLifecycleOwner, rateLink, changeLogIcon, changelog)
+            .create(layoutRoot, viewLifecycleOwner, rateLink)
             .inject(this)
 
         createComponent(
@@ -103,6 +103,8 @@ class RatingDialog : DialogFragment() {
                 is CancelDialog -> dismiss()
             }
         }
+
+        viewModel.initialize(changelog, changeLogIcon)
     }
 
     override fun onDestroyView() {

@@ -96,6 +96,8 @@ internal interface PYDroidComponent {
 
         private val viewModelFactory by lazy {
             PYDroidViewModelFactory(
+                name,
+                version,
                 ratingModule.provideInteractor(),
                 aboutModule.provideInteractor(),
                 versionCheckModule.provideInteractor(),
@@ -116,11 +118,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {
-            return RatingDialogComponent.Impl.FactoryImpl(
-                ratingModule,
-                loaderModule,
-                viewModelFactory
-            )
+            return RatingDialogComponent.Impl.FactoryImpl(loaderModule, viewModelFactory)
         }
 
         override fun plusVersion(): VersionComponent.Factory {
@@ -128,7 +126,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-            return VersionUpgradeComponent.Impl.FactoryImpl(name, version, viewModelFactory)
+            return VersionUpgradeComponent.Impl.FactoryImpl(viewModelFactory)
         }
 
         override fun plusSettings(): AppSettingsComponent.Factory {

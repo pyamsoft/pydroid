@@ -22,21 +22,26 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-data class AboutListState(
+data class AboutViewState(
+    val toolbarTitle: String,
     val isLoading: Boolean,
     val licenses: List<OssLibrary>,
     val loadError: Throwable?,
     val navigationError: Throwable?
 ) : UiViewState
 
-sealed class AboutListViewEvent : UiViewEvent {
+sealed class AboutViewEvent : UiViewEvent {
 
-    data class OpenLibrary internal constructor(val index: Int) : AboutListViewEvent()
+    data class OpenLibrary internal constructor(val index: Int) : AboutViewEvent()
 
-    data class OpenLicense internal constructor(val index: Int) : AboutListViewEvent()
+    data class OpenLicense internal constructor(val index: Int) : AboutViewEvent()
+
+    object UpNavigate : AboutViewEvent()
 }
 
-sealed class AboutListControllerEvent : UiControllerEvent {
+sealed class AboutControllerEvent : UiControllerEvent {
 
-    data class ExternalUrl internal constructor(val url: String) : AboutListControllerEvent()
+    data class ExternalUrl internal constructor(val url: String) : AboutControllerEvent()
+
+    object Navigation : AboutControllerEvent()
 }

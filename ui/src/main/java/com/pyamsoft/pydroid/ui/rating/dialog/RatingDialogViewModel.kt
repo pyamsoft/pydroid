@@ -30,14 +30,12 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 import kotlinx.coroutines.launch
 
 internal class RatingDialogViewModel internal constructor(
-    changelog: SpannedString,
-    icon: Int,
     interactor: RatingInteractor
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
     initialState = RatingDialogViewState(
         throwable = null,
-        changelog = changelog,
-        icon = icon
+        changelog = null,
+        icon = 0
     )
 ) {
 
@@ -51,6 +49,10 @@ internal class RatingDialogViewModel internal constructor(
             is Rate -> save(event.link)
             is Cancel -> save("")
         }
+    }
+
+    fun initialize(changelog: SpannedString, icon: Int) {
+        this.setState { copy(changelog = changelog, icon = icon) }
     }
 
     private fun save(link: String) {

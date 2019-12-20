@@ -27,7 +27,7 @@ import com.pyamsoft.pydroid.ui.R
 
 internal class AboutSpinnerView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutListState, AboutListViewEvent>(parent) {
+) : BaseUiView<AboutViewState, AboutViewEvent>(parent) {
 
     override val layout: Int = R.layout.loading_spinner
 
@@ -42,7 +42,7 @@ internal class AboutSpinnerView internal constructor(
     }
 
     override fun onRender(
-        state: AboutListState,
+        state: AboutViewState,
         savedState: UiSavedState
     ) {
         state.isLoading.let { loading ->

@@ -17,22 +17,24 @@
 
 package com.pyamsoft.pydroid.ui
 
-import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
-import com.pyamsoft.pydroid.ui.about.AboutListViewModel
-import com.pyamsoft.pydroid.ui.about.AboutToolbarViewModel
+import com.pyamsoft.pydroid.ui.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
+import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
+    private val name: String,
+    private val version: Int,
     private val ratingInteractor: RatingInteractor,
     private val aboutInteractor: AboutInteractor,
     private val versionInteractor: VersionCheckInteractor,
@@ -41,18 +43,14 @@ internal class PYDroidViewModelFactory internal constructor(
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
-            AboutToolbarViewModel::class -> AboutToolbarViewModel()
-            AboutListViewModel::class -> AboutListViewModel(aboutInteractor)
+            RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
+            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(name, version)
+            AboutViewModel::class -> AboutViewModel(aboutInteractor)
             RatingViewModel::class -> RatingViewModel(ratingInteractor)
             AppSettingsViewModel::class -> AppSettingsViewModel(theming)
             VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
             PrivacyViewModel::class -> PrivacyViewModel()
             else -> fail()
         }
-    }
-
-    @CheckResult
-    internal fun <T : UiViewModel<*, *, *>> exposedViewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
-        return viewModel(modelClass)
     }
 }

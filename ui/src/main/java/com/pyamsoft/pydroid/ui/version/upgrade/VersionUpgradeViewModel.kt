@@ -26,14 +26,13 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeViewModel internal constructor(
     applicationName: String,
-    currentVersion: Int,
-    newVersion: Int
+    currentVersion: Int
 ) : UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(
     initialState = VersionUpgradeViewState(
         throwable = null,
         applicationName = applicationName,
         currentVersion = currentVersion,
-        newVersion = newVersion
+        newVersion = 0
     )
 ) {
 
@@ -42,6 +41,10 @@ internal class VersionUpgradeViewModel internal constructor(
             Upgrade -> publish(OpenMarket)
             Cancel -> publish(CancelDialog)
         }
+    }
+
+    fun initialize(newVersion: Int) {
+        this.setState { copy(newVersion = newVersion) }
     }
 
     fun navigationFailed(error: ActivityNotFoundException) {

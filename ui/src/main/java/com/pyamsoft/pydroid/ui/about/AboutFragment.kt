@@ -34,8 +34,8 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.about.AboutToolbarControllerEvent.Navigation
+import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.ExternalUrl
+import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.Navigation
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.util.commit
@@ -48,8 +48,7 @@ class AboutFragment : Fragment() {
     internal var toolbar: AboutToolbarView? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val listViewModel by factory<AboutListViewModel>(activity = true) { factory }
-    private val toolbarViewModel by factory<AboutToolbarViewModel>(activity = true) { factory }
+    private val viewModel by factory<AboutViewModel>(activity = true) { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,21 +73,13 @@ class AboutFragment : Fragment() {
 
         createComponent(
             savedInstanceState, viewLifecycleOwner,
-            listViewModel,
+            viewModel,
             requireNotNull(listView),
-            requireNotNull(spinnerView)
-        ) {
-            return@createComponent when (it) {
-                is ExternalUrl -> navigateToExternalUrl(it.url)
-            }
-        }
-
-        createComponent(
-            savedInstanceState, viewLifecycleOwner,
-            toolbarViewModel,
+            requireNotNull(spinnerView),
             requireNotNull(toolbar)
         ) {
             return@createComponent when (it) {
+                is ExternalUrl -> navigateToExternalUrl(it.url)
                 is Navigation -> close()
             }
         }
@@ -111,9 +102,9 @@ class AboutFragment : Fragment() {
         val error = url.hyperlink(requireActivity())
             .navigate()
         if (error == null) {
-            listViewModel.navigationSuccess()
+            viewModel.navigationSuccess()
         } else {
-            listViewModel.navigationFailed(error)
+            viewModel.navigationFailed(error)
         }
     }
 

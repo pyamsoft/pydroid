@@ -31,46 +31,31 @@ internal interface VersionUpgradeComponent {
         @CheckResult
         fun create(
             parent: ViewGroup,
-            owner: LifecycleOwner,
-            newVersion: Int
+            owner: LifecycleOwner
         ): VersionUpgradeComponent
     }
 
     class Impl private constructor(
         private val parent: ViewGroup,
         private val owner: LifecycleOwner,
-        private val applicationName: String,
-        private val currentVersion: Int,
-        private val newVersion: Int,
         private val factory: PYDroidViewModelFactory
     ) : VersionUpgradeComponent {
 
         override fun inject(dialog: VersionUpgradeDialog) {
-            val contentView =
-                VersionUpgradeContentView(parent)
+            val contentView = VersionUpgradeContentView(parent)
             val controlsView = VersionUpgradeControlView(owner, parent)
 
-            dialog.factory = VersionUpgradeViewModelFactory(
-                factory, applicationName, currentVersion, newVersion
-            )
+            dialog.factory = factory
             dialog.control = controlsView
             dialog.content = contentView
         }
 
         internal class FactoryImpl internal constructor(
-            private val applicationName: String,
-            private val currentVersion: Int,
             private val factory: PYDroidViewModelFactory
         ) : Factory {
 
-            override fun create(
-                parent: ViewGroup,
-                owner: LifecycleOwner,
-                newVersion: Int
-            ): VersionUpgradeComponent {
-                return Impl(
-                    parent, owner, applicationName, currentVersion, newVersion, factory
-                )
+            override fun create(parent: ViewGroup, owner: LifecycleOwner): VersionUpgradeComponent {
+                return Impl(parent, owner, factory)
             }
         }
     }

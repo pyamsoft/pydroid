@@ -17,11 +17,9 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.text.SpannedString
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
 
@@ -35,19 +33,14 @@ internal interface RatingDialogComponent {
         fun create(
             parent: ViewGroup,
             owner: LifecycleOwner,
-            rateLink: String,
-            changeLogIcon: Int,
-            changeLog: SpannedString
+            rateLink: String
         ): RatingDialogComponent
     }
 
     class Impl private constructor(
         private val parent: ViewGroup,
-        private val changeLogIcon: Int,
         private val rateLink: String,
-        private val changeLog: SpannedString,
         private val owner: LifecycleOwner,
-        private val ratingModule: RatingModule,
         private val loaderModule: LoaderModule,
         private val factory: PYDroidViewModelFactory
     ) : RatingDialogComponent {
@@ -57,16 +50,13 @@ internal interface RatingDialogComponent {
             val changelog = RatingChangelogView(parent)
             val controls = RatingControlsView(rateLink, owner, parent)
 
-            dialog.factory = RatingDialogViewModelFactory(
-                factory, changeLog, changeLogIcon, ratingModule
-            )
+            dialog.factory = factory
             dialog.iconView = icon
             dialog.changelogView = changelog
             dialog.controlsView = controls
         }
 
         internal class FactoryImpl internal constructor(
-            private val ratingModule: RatingModule,
             private val loaderModule: LoaderModule,
             private val factory: PYDroidViewModelFactory
         ) : Factory {
@@ -74,14 +64,9 @@ internal interface RatingDialogComponent {
             override fun create(
                 parent: ViewGroup,
                 owner: LifecycleOwner,
-                rateLink: String,
-                changeLogIcon: Int,
-                changeLog: SpannedString
+                rateLink: String
             ): RatingDialogComponent {
-                return Impl(
-                    parent, changeLogIcon, rateLink, changeLog,
-                    owner, ratingModule, loaderModule, factory
-                )
+                return Impl(parent, rateLink, owner, loaderModule, factory)
             }
         }
     }

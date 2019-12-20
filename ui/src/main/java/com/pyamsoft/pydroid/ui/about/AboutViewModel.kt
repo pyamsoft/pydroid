@@ -23,16 +23,19 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.about.AboutListControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLibrary
-import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLicense
+import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.ExternalUrl
+import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.Navigation
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLibrary
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLicense
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.UpNavigate
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-internal class AboutListViewModel internal constructor(
+internal class AboutViewModel internal constructor(
     interactor: AboutInteractor
-) : UiViewModel<AboutListState, AboutListViewEvent, AboutListControllerEvent>(
-    initialState = AboutListState(
+) : UiViewModel<AboutViewState, AboutViewEvent, AboutControllerEvent>(
+    initialState = AboutViewState(
+        toolbarTitle = "Open Source Licenses",
         isLoading = false,
         licenses = emptyList(),
         loadError = null,
@@ -61,10 +64,11 @@ internal class AboutListViewModel internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: AboutListViewEvent) {
+    override fun handleViewEvent(event: AboutViewEvent) {
         return when (event) {
             is OpenLibrary -> openUrl(event.index) { it.libraryUrl }
             is OpenLicense -> openUrl(event.index) { it.licenseUrl }
+            is UpNavigate -> publish(Navigation)
         }
     }
 

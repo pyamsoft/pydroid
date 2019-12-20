@@ -27,8 +27,8 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLibrary
-import com.pyamsoft.pydroid.ui.about.AboutListViewEvent.OpenLicense
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLibrary
+import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLicense
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class AboutListView internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BaseUiView<AboutListState, AboutListViewEvent>(parent) {
+) : BaseUiView<AboutViewState, AboutViewEvent>(parent) {
 
     private var aboutAdapter: AboutAdapter? = null
 
@@ -86,7 +86,7 @@ internal class AboutListView internal constructor(
     }
 
     override fun onRender(
-        state: AboutListState,
+        state: AboutViewState,
         savedState: UiSavedState
     ) {
         state.licenses.let { licenses ->

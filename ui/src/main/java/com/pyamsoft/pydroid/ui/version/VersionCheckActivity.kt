@@ -82,6 +82,7 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        versionViewModel.saveState(outState)
         versionView?.saveState(outState)
     }
 

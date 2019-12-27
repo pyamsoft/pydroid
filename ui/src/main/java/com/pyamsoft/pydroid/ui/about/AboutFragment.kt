@@ -94,6 +94,7 @@ class AboutFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        viewModel.saveState(outState)
         listView?.saveState(outState)
         toolbar?.saveState(outState)
     }

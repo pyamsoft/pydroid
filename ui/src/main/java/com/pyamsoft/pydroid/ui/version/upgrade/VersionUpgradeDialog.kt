@@ -108,6 +108,7 @@ class VersionUpgradeDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        viewModel.saveState(outState)
         content?.saveState(outState)
         control?.saveState(outState)
     }

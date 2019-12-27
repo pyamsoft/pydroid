@@ -117,6 +117,7 @@ class RatingDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        viewModel.saveState(outState)
         changelogView?.saveState(outState)
         controlsView?.saveState(outState)
         iconView?.saveState(outState)

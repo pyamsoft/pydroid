@@ -202,6 +202,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        ratingViewModel.saveState(outState)
+        settingsViewModel.saveState(outState)
+        versionViewModel.saveState(outState)
         settingsView?.saveState(outState)
     }
 

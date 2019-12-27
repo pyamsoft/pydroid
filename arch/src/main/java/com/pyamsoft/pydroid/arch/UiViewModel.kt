@@ -41,10 +41,15 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 ) : ViewModel() {
 
     private val isInitialized = AtomicBoolean(false)
+
     private val onInitEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onInitEvents by onInitEventDelegate
+
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
+
+    private val onSaveStateEventDelegate = lazy(NONE) { mutableListOf<Bundle.() -> Unit>() }
+    private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val mutex = Mutex()
     private val controllerEventBus = EventBus.create<C>()
@@ -79,6 +84,22 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     protected abstract fun handleViewEvent(event: V)
+
+    /**
+     * Used for saving state in persistent lifecycle
+     */
+    fun saveState(outState: Bundle) {
+        // Only run the save state hooks if they exist, otherwise we don't need to init the memory
+        if (onSaveStateEventDelegate.isInitialized()) {
+
+            // Call init hooks in FIFO order
+            for (saveState in onSaveStateEvents) {
+                outState.saveState()
+            }
+
+            // Don't clear the event list since this lifecycle method can be called many times.
+        }
+    }
 
     @CheckResult
     @PublishedApi
@@ -138,6 +159,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 onInitEvents.clear()
             }
 
+            // If there are save state hooks around, clear them out
+            if (onSaveStateEventDelegate.isInitialized()) {
+                onSaveStateEvents.clear()
+            }
+
             // Clear queues and state
             setStateQueue.clear()
             withStateQueue.clear()
@@ -145,6 +171,22 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         } else {
             Timber.w("Teardown is already complete.")
         }
+    }
+
+    /**
+     * Use this to run an event when lifecycle is saving state
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnSaveState {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnSaveState(onSaveState: Bundle.() -> Unit) {
+        onSaveStateEvents.add(onSaveState)
     }
 
     /**

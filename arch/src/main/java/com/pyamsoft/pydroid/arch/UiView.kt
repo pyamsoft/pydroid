@@ -22,7 +22,8 @@ import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : Renderable<S> {
+abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
+) : Renderable<S>, Inflatable<S> {
 
     private val viewEventBus = EventBus.create<V>()
 
@@ -40,8 +41,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     @CheckResult
     abstract fun id(): Int
 
-    @PublishedApi
-    internal fun inflate(savedInstanceState: Bundle?) {
+    override fun inflate(savedInstanceState: Bundle?) {
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
         if (onInflateEventDelegate.isInitialized()) {
 
@@ -72,8 +72,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         onInflateEvents.add(onInflate)
     }
 
-    @PublishedApi
-    internal fun teardown() {
+    override fun teardown() {
         // Only run teardown hooks if they exist, otherwise don't init memory
         if (onTeardownEventDelegate.isInitialized()) {
 

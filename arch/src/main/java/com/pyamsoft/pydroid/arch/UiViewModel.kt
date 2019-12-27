@@ -319,8 +319,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         savedState: UiSavedState
     ) {
         Timber.d("Render with state: $views ($state)")
-        val combined = combineWithSavedState(state, savedState)
-        views.forEach { it.render(combined.state, combined.savedState) }
+        views.forEach { it.render(state, savedState) }
     }
 
     private fun initialize() {
@@ -339,14 +338,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         } else {
             Timber.w("Initialization is already complete.")
         }
-    }
-
-    @CheckResult
-    private fun combineWithSavedState(
-        state: S,
-        savedState: UiSavedState
-    ): StateWithSavedState<S> {
-        return StateWithSavedState(state, savedState)
     }
 
     private fun CoroutineScope.bindEvent(view: UiView<S, V>) =
@@ -368,11 +359,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             func(this)
         }
     }
-
-    private data class StateWithSavedState<S : UiViewState>(
-        val state: S,
-        val savedState: UiSavedState
-    )
 
     private object FlushQueueEvent
 }

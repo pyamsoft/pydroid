@@ -24,18 +24,28 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@CheckResult
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
     savedInstanceState: Bundle?,
     owner: LifecycleOwner,
     viewModel: UiViewModel<S, V, C>,
     vararg views: UiView<S, V>,
     crossinline onControllerEvent: (event: C) -> Unit
-) {
+): StateSaver {
     views.forEach { it.inflate(savedInstanceState) }
     val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
     owner.doOnDestroy {
         viewModelBinding.cancel()
         views.forEach { it.teardown() }
+    }
+
+    return object : StateSaver {
+
+        override fun saveState(outState: Bundle) {
+            viewModel.saveState(outState)
+            views.forEach { it.saveState(outState) }
+        }
+
     }
 }
 

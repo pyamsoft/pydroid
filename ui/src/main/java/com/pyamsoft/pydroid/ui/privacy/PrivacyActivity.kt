@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -32,6 +33,7 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 abstract class PrivacyActivity : ActivityBase() {
 
+    private var stateSaver: StateSaver? = null
     internal var privacyFactory: ViewModelProvider.Factory? = null
     internal var privacyView: PrivacyView? = null
     private val viewModel by factory<PrivacyViewModel> { privacyFactory }
@@ -52,7 +54,7 @@ abstract class PrivacyActivity : ActivityBase() {
             .create(this) { snackbarRoot }
             .inject(this)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, this,
             viewModel,
             requireNotNull(privacyView)
@@ -70,5 +72,19 @@ abstract class PrivacyActivity : ActivityBase() {
         } else {
             viewModel.navigationFailed(error)
         }
+    }
+
+    @CallSuper
+    override fun onDestroy() {
+        super.onDestroy()
+        privacyFactory = null
+        privacyView = null
+        stateSaver = null
+    }
+
+    @CallSuper
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        stateSaver?.saveState(outState)
     }
 }

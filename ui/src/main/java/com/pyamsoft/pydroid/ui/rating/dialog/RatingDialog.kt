@@ -27,6 +27,7 @@ import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -40,6 +41,7 @@ import com.pyamsoft.pydroid.ui.util.MarketLinker
 
 class RatingDialog : DialogFragment() {
 
+    private var stateSaver: StateSaver? = null
     internal var changelogView: RatingChangelogView? = null
     internal var controlsView: RatingControlsView? = null
     internal var iconView: RatingIconView? = null
@@ -91,7 +93,7 @@ class RatingDialog : DialogFragment() {
             .create(layoutRoot, viewLifecycleOwner, rateLink)
             .inject(this)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             viewModel,
             requireNotNull(iconView),
@@ -113,14 +115,12 @@ class RatingDialog : DialogFragment() {
         controlsView = null
         iconView = null
         factory = null
+        stateSaver = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.saveState(outState)
-        changelogView?.saveState(outState)
-        controlsView?.saveState(outState)
-        iconView?.saveState(outState)
+        stateSaver?.saveState(outState)
     }
 
     override fun onResume() {

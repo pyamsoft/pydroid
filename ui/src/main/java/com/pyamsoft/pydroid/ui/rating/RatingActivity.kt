@@ -29,6 +29,7 @@ import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -42,6 +43,7 @@ import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
+    private var stateSaver: StateSaver? = null
     internal var ratingFactory: ViewModelProvider.Factory? = null
     private val viewModel by factory<RatingViewModel> { ratingFactory }
 
@@ -115,7 +117,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
             .create()
             .inject(this)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, this,
             viewModel
         ) {
@@ -126,9 +128,16 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
     }
 
     @CallSuper
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        stateSaver?.saveState(outState)
+    }
+
+    @CallSuper
     override fun onDestroy() {
         super.onDestroy()
         ratingFactory = null
+        stateSaver = null
     }
 
     private fun showRating() {

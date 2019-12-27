@@ -28,6 +28,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -39,14 +40,7 @@ import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ChangeDarkTheme
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateHyperlink
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateMoreApps
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateRateApp
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.OpenShowUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ShowLicense
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.*
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
@@ -59,6 +53,10 @@ import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
 abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
+
+    private var settingsStateSaver: StateSaver? = null
+    private var ratingStateSaver: StateSaver? = null
+    private var versionStateSaver: StateSaver? = null
 
     protected open val preferenceXmlResId: Int = 0
 
@@ -104,7 +102,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             ) { listView }
             .inject(this)
 
-        createComponent(
+        settingsStateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             settingsViewModel,
             requireNotNull(settingsView)
@@ -121,7 +119,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             }
         }
 
-        createComponent(
+        versionStateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             versionViewModel,
             requireNotNull(versionView)
@@ -131,7 +129,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             }
         }
 
-        createComponent(
+        ratingStateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             ratingViewModel
         ) {
@@ -159,6 +157,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         super.onDestroyView()
         settingsView = null
         factory = null
+        settingsStateSaver = null
+        ratingStateSaver = null
+        versionStateSaver = null
     }
 
     private fun failedNavigation(error: ActivityNotFoundException?) {
@@ -202,10 +203,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        ratingViewModel.saveState(outState)
-        settingsViewModel.saveState(outState)
-        versionViewModel.saveState(outState)
-        settingsView?.saveState(outState)
+        settingsStateSaver?.saveState(outState)
+        ratingStateSaver?.saveState(outState)
+        versionStateSaver?.saveState(outState)
     }
 
     /**

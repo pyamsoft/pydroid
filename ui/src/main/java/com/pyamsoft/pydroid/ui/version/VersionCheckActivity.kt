@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.version
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -34,6 +35,7 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
 
     protected open val checkForUpdates: Boolean = true
 
+    private var stateSaver: StateSaver? = null
     internal var versionFactory: ViewModelProvider.Factory? = null
     internal var versionView: VersionView? = null
     private val versionViewModel by factory<VersionCheckViewModel> { versionFactory }
@@ -49,7 +51,7 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
             .create(this) { snackbarRoot }
             .inject(this)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, this,
             versionViewModel,
             requireNotNull(versionView)
@@ -82,8 +84,7 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        versionViewModel.saveState(outState)
-        versionView?.saveState(outState)
+        stateSaver?.saveState(outState)
     }
 
     @CallSuper
@@ -91,6 +92,7 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
         super.onDestroy()
         versionView = null
         versionFactory = null
+        stateSaver = null
     }
 
     private fun showVersionUpgrade(newVersion: Int) {

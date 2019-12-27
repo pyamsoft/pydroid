@@ -23,7 +23,7 @@ import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
-) : Renderable<S>, Inflatable<S> {
+) : Renderable<S>, Inflatable<S>, SaveableState {
 
     private val viewEventBus = EventBus.create<V>()
 
@@ -115,7 +115,13 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
         onTeardownEvents.add(onTeardown)
     }
 
-    fun saveState(outState: Bundle) {
+    /**
+     * Save state
+     *
+     * NOTE: While not deprecated, do your best to use StateSaver.saveState to bundle state
+     * saving of entire components in a safe way
+     */
+    override fun saveState(outState: Bundle) {
         // Only run save state hooks if they exist, otherwise don't init memory
         if (onSaveEventDelegate.isInitialized()) {
 

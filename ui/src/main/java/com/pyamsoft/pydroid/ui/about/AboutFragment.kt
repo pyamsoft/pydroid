@@ -29,6 +29,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.Injector
@@ -43,6 +44,7 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 class AboutFragment : Fragment() {
 
+    private var stateSaver: StateSaver? = null
     internal var listView: AboutListView? = null
     internal var spinnerView: AboutSpinnerView? = null
     internal var toolbar: AboutToolbarView? = null
@@ -71,7 +73,7 @@ class AboutFragment : Fragment() {
             .create(layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack)
             .inject(this)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             viewModel,
             requireNotNull(listView),
@@ -90,13 +92,12 @@ class AboutFragment : Fragment() {
         listView = null
         toolbar = null
         factory = null
+        stateSaver = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.saveState(outState)
-        listView?.saveState(outState)
-        toolbar?.saveState(outState)
+        stateSaver?.saveState(outState)
     }
 
     private fun navigateToExternalUrl(url: String) {

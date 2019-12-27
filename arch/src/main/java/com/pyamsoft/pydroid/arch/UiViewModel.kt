@@ -38,7 +38,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     private val initialState: S
-) : ViewModel() {
+) : ViewModel(), SaveableState {
 
     private val isInitialized = AtomicBoolean(false)
 
@@ -87,8 +87,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     /**
      * Used for saving state in persistent lifecycle
+     *
+     * NOTE: While not deprecated, do your best to use StateSaver.saveState to bundle state
+     * saving of entire components in a safe way
      */
-    fun saveState(outState: Bundle) {
+    override fun saveState(outState: Bundle) {
         // Only run the save state hooks if they exist, otherwise we don't need to init the memory
         if (onSaveStateEventDelegate.isInitialized()) {
 

@@ -26,6 +26,7 @@ import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -39,6 +40,7 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.Ope
 
 class VersionUpgradeDialog : DialogFragment() {
 
+    private var stateSaver: StateSaver? = null
     internal var content: VersionUpgradeContentView? = null
     internal var control: VersionUpgradeControlView? = null
 
@@ -77,7 +79,7 @@ class VersionUpgradeDialog : DialogFragment() {
             .create(layoutRoot, viewLifecycleOwner)
             .inject(this)
 
-        createComponent(
+        stateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             viewModel,
             requireNotNull(content),
@@ -88,6 +90,7 @@ class VersionUpgradeDialog : DialogFragment() {
                 is CancelDialog -> dismiss()
             }
         }
+
         viewModel.initialize(latestVersion)
     }
 
@@ -96,6 +99,7 @@ class VersionUpgradeDialog : DialogFragment() {
         content = null
         control = null
         factory = null
+        stateSaver = null
     }
 
     override fun onResume() {
@@ -108,9 +112,7 @@ class VersionUpgradeDialog : DialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.saveState(outState)
-        content?.saveState(outState)
-        control?.saveState(outState)
+        stateSaver?.saveState(outState)
     }
 
     private fun navigateToMarket() {

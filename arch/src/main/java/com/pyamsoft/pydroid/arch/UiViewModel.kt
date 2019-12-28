@@ -67,22 +67,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         flushQueueBus.scopedEvent(Dispatchers.Default) { flushQueues() }
     }
 
-    /**
-     * Use this to run an event after UiViewModel initialization has successfully finished.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnInit {
-     *         ...
-     *     }
-     * }
-     *
-     */
-    protected fun doOnInit(onInit: () -> Unit) {
-        onInitEvents.add(onInit)
-    }
-
     protected abstract fun handleViewEvent(event: V)
 
     /**
@@ -178,13 +162,30 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     /**
+     * Use this to run an event after UiViewModel initialization has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnInit {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnInit(onInit: () -> Unit) {
+        onInitEvents.add(onInit)
+    }
+
+    /**
      * Use this to run an event when lifecycle is saving state
      *
      * This is generally used in something like the constructor
      *
      * init {
-     *     doOnSaveState {
-     *         ...
+     *     doOnSaveState { state ->
+     *          putInt(...)
+     *          putString(...)
      *     }
      * }
      *

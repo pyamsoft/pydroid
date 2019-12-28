@@ -48,7 +48,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveStateEventDelegate = lazy(NONE) { mutableListOf<Bundle.() -> Unit>() }
+    private val onSaveStateEventDelegate = lazy(NONE) { mutableListOf<Bundle.(state: S) -> Unit>() }
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val mutex = Mutex()
@@ -96,8 +96,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onSaveStateEventDelegate.isInitialized()) {
 
             // Call init hooks in FIFO order
+            val s = latestState()
             for (saveState in onSaveStateEvents) {
-                outState.saveState()
+                outState.saveState(s)
             }
 
             // Don't clear the event list since this lifecycle method can be called many times.
@@ -188,7 +189,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * }
      *
      */
-    protected fun doOnSaveState(onSaveState: Bundle.() -> Unit) {
+    protected fun doOnSaveState(onSaveState: Bundle.(state: S) -> Unit) {
         onSaveStateEvents.add(onSaveState)
     }
 

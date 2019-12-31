@@ -72,7 +72,6 @@ fun View.popShow(
             }
 
             override fun onAnimationCancel(view: View) {
-                view.visibility = View.VISIBLE
                 listener?.onAnimationCancel(view)
             }
         })
@@ -108,7 +107,6 @@ fun View.popHide(
             }
 
             override fun onAnimationCancel(view: View) {
-                view.visibility = View.GONE
                 listener?.onAnimationCancel(view)
             }
         })
@@ -130,6 +128,7 @@ fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAni
         .setInterpolator(i)
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationEnd(view: View) {
+                view.visibility = View.VISIBLE
                 listener?.onAnimationEnd(view)
             }
 
@@ -138,6 +137,7 @@ fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAni
             }
 
             override fun onAnimationStart(view: View) {
+                view.visibility = View.VISIBLE
                 listener?.onAnimationStart(view)
             }
         })
@@ -157,6 +157,7 @@ fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null): ViewPropertyA
         .setInterpolator(i)
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationEnd(view: View) {
+                view.visibility = View.GONE
                 listener?.onAnimationEnd(view)
             }
 
@@ -165,6 +166,7 @@ fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null): ViewPropertyA
             }
 
             override fun onAnimationStart(view: View) {
+                view.visibility = View.VISIBLE
                 listener?.onAnimationStart(view)
             }
         })

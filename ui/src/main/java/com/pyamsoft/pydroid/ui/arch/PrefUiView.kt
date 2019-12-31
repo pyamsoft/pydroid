@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
+import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
@@ -45,6 +46,9 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
             boundPrefs = null
             _parent = null
         }
+    }
+
+    override fun onInit(savedInstanceState: Bundle?) {
     }
 
     @CheckResult

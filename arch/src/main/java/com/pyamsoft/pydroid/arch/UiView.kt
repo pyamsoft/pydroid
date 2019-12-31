@@ -23,23 +23,49 @@ import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
-) : Renderable<S>, Inflatable<S>, SaveableState {
+) : Renderable<S>, Inflatable<S>, Initializable, SaveableState {
 
-    private val viewEventBus = EventBus.create<V>()
+    private val viewEventBus by lazy(NONE) { EventBus.create<V>() }
 
-    private val onInflateEventDelegate =
-        lazy(NONE) { mutableListOf<(savedInstanceState: Bundle?) -> Unit>() }
+    private val onInitEventDelegate = lazy(NONE) { mutableListOf<() -> UiView<S, V>>() }
+    private val onInitEvents by onInitEventDelegate
+
+    private val onInflateEventDelegate = lazy(NONE) { mutableListOf<(Bundle?) -> Unit>() }
     private val onInflateEvents by onInflateEventDelegate
 
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(outState: Bundle) -> Unit>() }
+    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(Bundle) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
     @IdRes
     @CheckResult
     abstract fun id(): Int
+
+    /**
+     * This is really only used as a hack, so we can inflate the actual Layout before running init hooks.
+     *
+     * This way a UiViewModel can bind event handlers and receive events, and the view can publish()
+     * inside of doOnInflate hooks.
+     */
+    final override fun init(savedInstanceState: Bundle?) {
+        onInit(savedInstanceState)
+
+        // Only run the initialization hooks if they exist, otherwise we don't need to init the memory
+        if (onInitEventDelegate.isInitialized()) {
+
+            // Call init hooks in FIFO order
+            for (initEvent in onInitEvents) {
+                initEvent().init(savedInstanceState)
+            }
+
+            // Clear the initialization hooks list to free up memory
+            onInitEvents.clear()
+        }
+    }
+
+    protected abstract fun onInit(savedInstanceState: Bundle?)
 
     override fun inflate(savedInstanceState: Bundle?) {
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
@@ -53,23 +79,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
             // Clear the inflation hooks list to free up memory
             onInflateEvents.clear()
         }
-    }
-
-    /**
-     * Use this to run an event after UiView inflation has successfully finished.
-     * Events are guaranteed to be called in FIFO order, one after the other.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnInflate { savedInstanceState ->
-     *         ...
-     *     }
-     * }
-     *
-     */
-    protected fun doOnInflate(onInflate: (savedInstanceState: Bundle?) -> Unit) {
-        onInflateEvents.add(onInflate)
     }
 
     override fun teardown() {
@@ -87,6 +96,11 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
             onTeardownEvents.clear()
         }
 
+        // If there are any initialization event hooks hanging around, clear them out too
+        if (onInitEventDelegate.isInitialized()) {
+            onInitEvents.clear()
+        }
+
         // If there are any inflate event hooks hanging around, clear them out too
         if (onInflateEventDelegate.isInitialized()) {
             onInflateEvents.clear()
@@ -96,23 +110,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
         if (onSaveEventDelegate.isInitialized()) {
             onSaveEvents.clear()
         }
-    }
-
-    /**
-     * Use this to run an event after UiView teardown has successfully finished.
-     * Events are guaranteed to be called in LIFO (reverse) order, one after the other.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnTeardown {
-     *         ...
-     *     }
-     * }
-     *
-     */
-    protected fun doOnTeardown(onTeardown: () -> Unit) {
-        onTeardownEvents.add(onTeardown)
     }
 
     /**
@@ -135,6 +132,63 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
         }
     }
 
+    internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
+        viewEventBus.onEvent(func)
+    }
+
+    protected fun publish(event: V) {
+        viewEventBus.publish(event)
+    }
+
+    /**
+     * Use this to run an event after UiView teardown has successfully finished.
+     * Events are guaranteed to be called in LIFO (reverse) order, one after the other.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnTeardown {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnTeardown(onTeardown: () -> Unit) {
+        onTeardownEvents.add(onTeardown)
+    }
+
+    /**
+     * Use this to run an event after UiView inflation has successfully finished.
+     * Events are guaranteed to be called in FIFO order, one after the other.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnInflate { savedInstanceState ->
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnInflate(onInflate: (savedInstanceState: Bundle?) -> Unit) {
+        onInflateEvents.add(onInflate)
+    }
+
+    /**
+     * Use this to also init a nested UiView<S, V>
+     * Events are guaranteed to be called in FIFO order, one after the other.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     alsoInit { nestedView }
+     * }
+     *
+     */
+    protected fun alsoInit(onInit: () -> UiView<S, V>) {
+        onInitEvents.add(onInit)
+    }
+
     /**
      * Use this to run an event during a UiView lifecycle saveState event
      * Events are not guaranteed to run in any consistent order
@@ -152,11 +206,15 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
         onSaveEvents.add(onSaveState)
     }
 
-    internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
-        viewEventBus.onEvent(func)
-    }
-
-    protected fun publish(event: V) {
-        viewEventBus.publish(event)
+    /**
+     * Convenience hook for nested UiView<S, V> instances
+     */
+    protected fun nest(vararg views: UiView<S,V>) {
+        views.forEach { view ->
+            alsoInit { view }
+            doOnInflate { view.inflate(it) }
+            doOnSaveState { view.saveState(it) }
+            doOnTeardown { view.teardown() }
+        }
     }
 }

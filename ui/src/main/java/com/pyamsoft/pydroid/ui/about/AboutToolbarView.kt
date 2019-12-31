@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import android.os.Bundle
 import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.UpNavigate
@@ -71,6 +72,9 @@ internal class AboutToolbarView internal constructor(
 
     override fun id(): Int {
         throw InvalidIdException
+    }
+
+    override fun onInit(savedInstanceState: Bundle?) {
     }
 
     override fun render(

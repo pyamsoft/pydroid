@@ -95,7 +95,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         savedInstanceState: Bundle?,
         vararg views: UiView<S, V>,
         onControllerEvent: (event: C) -> Unit
-    ): Job = viewModelScope.launch {
+    ): Job = viewModelScope.launch(context = Dispatchers.Main) {
         // Init savedState once
         val savedState = UiSavedState(savedInstanceState)
 
@@ -118,6 +118,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
         // Initialize before first render
         initialize(savedInstanceState)
+
+        // Inflate the views
+        views.forEach { it.inflate(savedInstanceState) }
 
         // Flush the queue before we begin
         flushQueues()
@@ -159,55 +162,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         } else {
             Timber.w("Teardown is already complete.")
         }
-    }
-
-    /**
-     * Use this to run an event after UiViewModel initialization has successfully finished.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnInit {
-     *         ...
-     *     }
-     * }
-     *
-     */
-    protected fun doOnInit(onInit: (savedInstanceState: Bundle?) -> Unit) {
-        onInitEvents.add(onInit)
-    }
-
-    /**
-     * Use this to run an event when lifecycle is saving state
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnSaveState { state ->
-     *          putInt(...)
-     *          putString(...)
-     *     }
-     * }
-     *
-     */
-    protected fun doOnSaveState(onSaveState: Bundle.(state: S) -> Unit) {
-        onSaveStateEvents.add(onSaveState)
-    }
-
-    /**
-     * Use this to run an event after UiViewModel teardown has successfully finished.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnTeardown {
-     *         ...
-     *     }
-     * }
-     *
-     */
-    protected fun doOnTeardown(onTeardown: () -> Unit) {
-        onTeardownEvents.add(onTeardown)
     }
 
     @JvmOverloads
@@ -363,6 +317,55 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (this !is CancellationException) {
             func(this)
         }
+    }
+
+    /**
+     * Use this to run an event after UiViewModel initialization has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnInit {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnInit(onInit: (savedInstanceState: Bundle?) -> Unit) {
+        onInitEvents.add(onInit)
+    }
+
+    /**
+     * Use this to run an event when lifecycle is saving state
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnSaveState { state ->
+     *          putInt(...)
+     *          putString(...)
+     *     }
+     * }
+     *
+     */
+    protected fun doOnSaveState(onSaveState: Bundle.(state: S) -> Unit) {
+        onSaveStateEvents.add(onSaveState)
+    }
+
+    /**
+     * Use this to run an event after UiViewModel teardown has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnTeardown {
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnTeardown(onTeardown: () -> Unit) {
+        onTeardownEvents.add(onTeardown)
     }
 
     private object FlushQueueEvent

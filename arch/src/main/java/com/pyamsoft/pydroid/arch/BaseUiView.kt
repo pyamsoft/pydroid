@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +41,6 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     init {
         doOnInflate {
             assertValidState()
-            parent().inflateAndAdd(layout)
         }
 
         doOnTeardown {
@@ -53,6 +53,11 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
             boundViews = null
             _parent = null
         }
+    }
+
+    final override fun onInit(savedInstanceState: Bundle?) {
+        assertValidState()
+        parent().inflateAndAdd(layout)
     }
 
     private fun die(): Nothing {

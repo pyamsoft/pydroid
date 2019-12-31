@@ -32,13 +32,17 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     vararg views: UiView<S, V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ): StateSaver {
-    views.forEach { it.inflate(savedInstanceState) }
+    // Init first
+    views.forEach { it.init(savedInstanceState) }
+
+    // Bind view event listeners, inflate and attach
     val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
     owner.doOnDestroy {
         viewModelBinding.cancel()
         views.forEach { it.teardown() }
     }
 
+    // State saver
     return object : StateSaver {
 
         override fun saveState(outState: Bundle) {
@@ -55,14 +59,21 @@ fun <S : UiViewState, V : UiViewEvent> bindViews(
     vararg views: UiView<S, V>,
     onViewEvent: suspend (event: V) -> Unit
 ): ViewBinder<S> {
-    views.forEach { it.inflate(null) }
+    // Init first
+    views.forEach { it.init(null) }
+
+    // Bind view event listeners
     views.forEach {
         owner.lifecycleScope.launch(context = Dispatchers.Default) {
             it.onViewEvent(onViewEvent)
         }
     }
+
+    // Inflate and attach
+    views.forEach { it.inflate(null) }
     owner.doOnDestroy { views.forEach { it.teardown() } }
 
+    // State saver
     return object : ViewBinder<S> {
         override fun bind(state: S) {
             views.forEach { it.render(state, UiSavedState.EMPTY) }

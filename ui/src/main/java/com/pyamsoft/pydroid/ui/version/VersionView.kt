@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UiSavedState
@@ -32,6 +33,9 @@ internal class VersionView internal constructor(
 
     override fun id(): Int {
         throw InvalidIdException
+    }
+
+    override fun onInit(savedInstanceState: Bundle?) {
     }
 
     override fun render(

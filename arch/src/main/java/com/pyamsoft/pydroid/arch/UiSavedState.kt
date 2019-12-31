@@ -17,21 +17,11 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 
-class UiSavedState internal constructor(bundle: Bundle?) {
+class UiSavedState internal constructor(private val bundle: Bundle?) {
 
-    private val bundle: Bundle?
-
-    init {
-        if (VERSION.SDK_INT >= VERSION_CODES.O) {
-            this.bundle = bundle?.deepCopy()
-        } else {
-            this.bundle = bundle?.let { Bundle(it) }
-        }
-    }
+    private val consumedKeys by lazy(LazyThreadSafetyMode.NONE) { mutableSetOf<String>() }
 
     fun <T : Any> consume(
         key: String,
@@ -57,12 +47,12 @@ class UiSavedState internal constructor(bundle: Bundle?) {
         if (b == null) {
             invalidConsumer()
         } else {
-            if (!b.containsKey(key)) {
+            if (!b.containsKey(key) || consumedKeys.contains(key)) {
                 invalidConsumer()
             } else {
                 @Suppress("UNCHECKED_CAST")
                 val value = b.get(key) as? T
-                b.remove(key)
+                consumedKeys.add(key)
                 if (value == null) {
                     invalidConsumer()
                 } else {

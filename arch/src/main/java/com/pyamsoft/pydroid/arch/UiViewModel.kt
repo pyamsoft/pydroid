@@ -42,7 +42,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private val isInitialized = AtomicBoolean(false)
 
-    private val onInitEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
+    private val onInitEventDelegate = lazy(NONE) { mutableListOf<(Bundle?) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
 
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
@@ -117,7 +117,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         views.forEach { bindEvent(it) }
 
         // Initialize before first render
-        initialize()
+        initialize(savedInstanceState)
 
         // Flush the queue before we begin
         flushQueues()
@@ -173,7 +173,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * }
      *
      */
-    protected fun doOnInit(onInit: () -> Unit) {
+    protected fun doOnInit(onInit: (savedInstanceState: Bundle?) -> Unit) {
         onInitEvents.add(onInit)
     }
 
@@ -327,14 +327,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         views.forEach { it.render(state, savedState) }
     }
 
-    private fun initialize() {
+    private fun initialize(savedInstanceState: Bundle?) {
         if (isInitialized.compareAndSet(false, true)) {
             // Only run the init hooks if they exist, otherwise we don't need to init the memory
             if (onInitEventDelegate.isInitialized()) {
 
                 // Call init hooks in FIFO order
                 for (initEvent in onInitEvents) {
-                    initEvent()
+                    initEvent(savedInstanceState)
                 }
 
                 // Clear the init hooks list to free up memory

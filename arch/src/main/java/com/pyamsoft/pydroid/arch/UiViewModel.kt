@@ -93,7 +93,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @PublishedApi
     internal fun render(
         savedInstanceState: Bundle?,
-        vararg views: UiView<S, V>,
+        vararg views: IView<S, V>,
         onControllerEvent: (event: C) -> Unit
     ): Job = viewModelScope.launch(context = Dispatchers.Main) {
         // Init savedState once
@@ -113,8 +113,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
 
         // Bind ViewModel
-        bindEvents(onControllerEvent)
-        views.forEach { bindEvent(it) }
+        bindControllerEvents(onControllerEvent)
+        bindViewEvents(views)
 
         // Initialize before first render
         initialize(savedInstanceState)
@@ -299,14 +299,30 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    private fun CoroutineScope.bindEvent(view: UiView<S, V>) =
+    @CheckResult
+    private fun CoroutineScope.bindViewEvents(views: Array<out IView<S, V>>): Job =
         launch(context = Dispatchers.Default) {
-            view.onViewEvent { event ->
-                withContext(context = Dispatchers.Main) { handleViewEvent(event) }
+            for (view in views) {
+                if (view is UiView<S, V>) {
+
+                    // Launch another coroutine here for handling view events
+                    launch(context = Dispatchers.Default) {
+                        view.onViewEvent { event ->
+                            withContext(context = Dispatchers.Main) { handleViewEvent(event) }
+                        }
+                    }
+
+                    val nestedViews = view.nestedViews()
+                    if (nestedViews.isNotEmpty()) {
+                        bindViewEvents(nestedViews)
+                    }
+                }
             }
         }
 
-    private inline fun CoroutineScope.bindEvents(crossinline onControllerEvent: (event: C) -> Unit) =
+
+    @CheckResult
+    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit): Job =
         launch(context = Dispatchers.Default) {
             controllerEventBus.onEvent { event ->
                 withContext(context = Dispatchers.Main) { onControllerEvent(event) }

@@ -43,6 +43,21 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
             assertValidState()
         }
 
+        doOnNestedInit { view ->
+            if (view !is BaseUiView<S, V>) {
+                return@doOnNestedInit
+            }
+
+            val root = layoutRoot
+            if (root is ViewGroup) {
+                // Adopt the view to this UiView parent
+                // Otherwise the child view will inflate into the same parent instead of the parent layoutRoot
+                view._parent = root
+            } else {
+                throw IllegalStateException("Cannot initialize nested view. This UiView layoutRoot must be a ViewGroup.")
+            }
+        }
+
         doOnTeardown {
             assertValidState()
 

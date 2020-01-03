@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -34,6 +35,12 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     protected abstract val layoutRoot: View
 
     protected abstract val layout: Int
+
+    private val nestedViewDelegate = lazy(NONE) { mutableListOf<IView<S, V>>() }
+    private val nestedViews by nestedViewDelegate
+
+    private val nestedInitDelegate = lazy(NONE) { mutableSetOf<(IView<S, V>) -> Unit>() }
+    private val nestedInits by nestedInitDelegate
 
     private var _parent: ViewGroup? = parent
     private var boundViews: MutableSet<BoundView<*>>? = null
@@ -60,19 +67,60 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
         doOnTeardown {
             assertValidState()
-
             parent().removeView(layoutRoot)
+            _parent = null
+        }
+
+        doOnTeardown {
             boundViews?.forEach { it.teardown() }
             boundViews?.clear()
-
             boundViews = null
-            _parent = null
+        }
+
+        doOnTeardown {
+            // If there are any nested views hanging around, clear them out too
+            if (nestedViewDelegate.isInitialized()) {
+                nestedViews.clear()
+            }
+
+            // If there are any nested init hooks hanging around, clear them out too
+            if (nestedInitDelegate.isInitialized()) {
+                nestedInits.clear()
+            }
         }
     }
 
     final override fun onInit(savedInstanceState: Bundle?) {
         assertValidState()
         parent().inflateAndAdd(layout)
+
+        // Only run the initialization hooks if they exist, otherwise we don't need to init the memory
+        if (nestedViewDelegate.isInitialized()) {
+
+            // Call init hooks in FIFO order
+            for (nestedView in nestedViews) {
+                onWillInitNested(nestedView)
+                nestedView.init(savedInstanceState)
+            }
+
+            // Don't clear the nestedViews list yet, we still need it
+            if (nestedInitDelegate.isInitialized()) {
+                nestedInits.clear()
+            }
+        }
+    }
+
+    private fun onWillInitNested(view: IView<S, V>) {
+        if (nestedInitDelegate.isInitialized()) {
+            for (nestedInit in nestedInits) {
+                nestedInit(view)
+            }
+        }
+    }
+
+    @CheckResult
+    internal fun nestedViews(): Array<out IView<S, V>> {
+        return if (nestedViewDelegate.isInitialized()) nestedViews.toTypedArray() else emptyArray()
     }
 
     private fun die(): Nothing {
@@ -110,6 +158,35 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     private fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int) {
         LayoutInflater.from(context)
             .inflate(layout, this, true)
+    }
+
+    /**
+     * Use this to run an event before a UiView initializes its nested UiView children
+     * Events are not guaranteed to run in any consistent order
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnNestedInit { view ->
+     *         ...
+     *     }
+     * }
+     *
+     */
+    protected fun doOnNestedInit(onNestedInit: (view: IView<S, V>) -> Unit) {
+        nestedInits.add(onNestedInit)
+    }
+
+    /**
+     * Convenience hook for nested IView<S, V> instances
+     */
+    protected fun nest(vararg views: IView<S, V>) {
+        views.forEach { view ->
+            nestedViews.add(view)
+            doOnInflate { view.inflate(it) }
+            doOnSaveState { view.saveState(it) }
+            doOnTeardown { view.teardown() }
+        }
     }
 
     @CheckResult

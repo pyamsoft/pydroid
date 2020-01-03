@@ -312,14 +312,15 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                         }
                     }
 
-                    val nestedViews = view.nestedViews()
-                    if (nestedViews.isNotEmpty()) {
-                        bindViewEvents(nestedViews)
+                    if (view is BaseUiView<S, V>) {
+                        val nestedViews = view.nestedViews()
+                        if (nestedViews.isNotEmpty()) {
+                            bindViewEvents(nestedViews)
+                        }
                     }
                 }
             }
         }
-
 
     @CheckResult
     private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit): Job =

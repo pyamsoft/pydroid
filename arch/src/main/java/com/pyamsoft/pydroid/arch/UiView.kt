@@ -36,12 +36,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
     private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(Bundle) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
-    private val nestedViewDelegate = lazy(NONE) { mutableListOf<IView<S, V>>() }
-    private val nestedViews by nestedViewDelegate
-
-    private val nestedInitDelegate = lazy(NONE) { mutableSetOf<(IView<S, V>) -> Unit>() }
-    private val nestedInits by nestedInitDelegate
-
     @IdRes
     @CheckResult
     abstract fun id(): Int
@@ -54,32 +48,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
      */
     final override fun init(savedInstanceState: Bundle?) {
         onInit(savedInstanceState)
-
-        // Only run the initialization hooks if they exist, otherwise we don't need to init the memory
-        if (nestedViewDelegate.isInitialized()) {
-
-            // Call init hooks in FIFO order
-            for (nestedView in nestedViews) {
-                onWillInitNested(nestedView)
-                nestedView.init(savedInstanceState)
-            }
-
-            // Don't clear the nestedViews list yet, we still need it
-            if (nestedInitDelegate.isInitialized()) {
-                nestedInits.clear()
-            }
-        }
-    }
-
-    /**
-     * Call this to override any nested view behavior before initializing
-     */
-    private fun onWillInitNested(view: IView<S, V>) {
-        if (nestedInitDelegate.isInitialized()) {
-            for (nestedInit in nestedInits) {
-                nestedInit(view)
-            }
-        }
     }
 
     override fun inflate(savedInstanceState: Bundle?) {
@@ -119,16 +87,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
         // If there are any save state event hooks hanging around, clear them out too
         if (onSaveEventDelegate.isInitialized()) {
             onSaveEvents.clear()
-        }
-
-        // If there are any nested views hanging around, clear them out too
-        if (nestedViewDelegate.isInitialized()) {
-            nestedViews.clear()
-        }
-
-        // If there are any nested init hooks hanging around, clear them out too
-        if (nestedInitDelegate.isInitialized()) {
-            nestedInits.clear()
         }
     }
 
@@ -209,41 +167,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
      */
     protected fun doOnSaveState(onSaveState: (outState: Bundle) -> Unit) {
         onSaveEvents.add(onSaveState)
-    }
-
-
-    /**
-     * Use this to run an event before a UiView initializes its nested UiView children
-     * Events are not guaranteed to run in any consistent order
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnNestedInit { view ->
-     *         ...
-     *     }
-     * }
-     *
-     */
-    protected fun doOnNestedInit(onNestedInit: (view: IView<S, V>) -> Unit) {
-        nestedInits.add(onNestedInit)
-    }
-
-    /**
-     * Convenience hook for nested IView<S, V> instances
-     */
-    protected fun nest(vararg views: IView<S, V>) {
-        views.forEach { view ->
-            nestedViews.add(view)
-            doOnInflate { view.inflate(it) }
-            doOnSaveState { view.saveState(it) }
-            doOnTeardown { view.teardown() }
-        }
-    }
-
-    @CheckResult
-    internal fun nestedViews(): Array<out IView<S, V>> {
-        return if (nestedViewDelegate.isInitialized()) nestedViews.toTypedArray() else emptyArray()
     }
 
     protected abstract fun onInit(savedInstanceState: Bundle?)

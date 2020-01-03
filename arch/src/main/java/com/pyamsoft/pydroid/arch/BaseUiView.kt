@@ -68,13 +68,10 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         doOnTeardown {
             assertValidState()
             parent().removeView(layoutRoot)
-            _parent = null
-        }
-
-        doOnTeardown {
             boundViews?.forEach { it.teardown() }
             boundViews?.clear()
             boundViews = null
+            _parent = null
         }
 
         doOnTeardown {

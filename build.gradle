@@ -83,8 +83,8 @@ buildscript {
         // Dokka
         classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
 
-        // Ktlint
-        classpath "org.jlleitschuh.gradle:ktlint-gradle:8.2.0"
+        // Spotless
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:3.27.0"
     }
 }
 
@@ -98,7 +98,7 @@ subprojects {
     apply plugin: 'org.jetbrains.dokka-android'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
-    apply plugin: "org.jlleitschuh.gradle.ktlint"
+    apply plugin: "com.diffplug.gradle.spotless"
 
     final String POM_GROUP = "com.pyamsoft.pydroid"
     final String POM_VERSION = "20.7.0"
@@ -119,6 +119,16 @@ subprojects {
     artifacts {
         archives androidSourcesJar
         archives androidJavadocsJar
+    }
+
+    spotless {
+        java {
+            target "**/*.java"
+        }
+        kotlin {
+            target "**/*.kt"
+            ktlint()
+        }
     }
 
     // Kapt flags
@@ -260,10 +270,5 @@ allprojects {
         options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
         options.deprecation = true
     }
-
-    apply plugin: "org.jlleitschuh.gradle.ktlint"
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}

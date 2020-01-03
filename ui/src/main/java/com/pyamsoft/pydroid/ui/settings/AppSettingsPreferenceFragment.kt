@@ -40,7 +40,14 @@ import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.*
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ChangeDarkTheme
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateHyperlink
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateMoreApps
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateRateApp
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.OpenShowUpgrade
+import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ShowLicense
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show

@@ -21,4 +21,3 @@ interface Renderable<S : UiViewState> {
 
     fun render(state: S, savedState: UiSavedState)
 }
-

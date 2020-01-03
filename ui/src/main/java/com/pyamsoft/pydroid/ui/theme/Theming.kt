@@ -22,8 +22,8 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import timber.log.Timber
 import java.util.Locale
+import timber.log.Timber
 
 class Theming internal constructor(preferences: ThemingPreferences) {
 

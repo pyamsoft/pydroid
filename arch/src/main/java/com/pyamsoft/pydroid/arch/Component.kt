@@ -49,7 +49,6 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
             viewModel.saveState(outState)
             views.forEach { it.saveState(outState) }
         }
-
     }
 }
 
@@ -80,4 +79,3 @@ fun <S : UiViewState, V : UiViewEvent> bindViews(
         }
     }
 }
-

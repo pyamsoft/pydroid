@@ -27,9 +27,9 @@ import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromActivity
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromFragment
-import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
+import timber.log.Timber
 
 /**
  * Allow nullable for easier caller API

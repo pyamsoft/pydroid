@@ -42,13 +42,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private val isInitialized = AtomicBoolean(false)
 
-    private val onInitEventDelegate = lazy(NONE) { mutableListOf<(Bundle?) -> Unit>() }
+    private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(Bundle?) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
 
-    private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
+    private val onTeardownEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveStateEventDelegate = lazy(NONE) { mutableListOf<Bundle.(state: S) -> Unit>() }
+    private val onSaveStateEventDelegate = lazy(NONE) { mutableSetOf<Bundle.(state: S) -> Unit>() }
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val mutex = Mutex()
@@ -134,9 +134,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (isInitialized.compareAndSet(true, false)) {
             if (onTeardownEventDelegate.isInitialized()) {
 
-                // Reverse the list order so that we teardown in LIFO order
-                onTeardownEvents.reverse()
-
+                // Call teardown hooks in random order
                 for (teardownEvent in onTeardownEvents) {
                     teardownEvent()
                 }
@@ -286,7 +284,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // Only run the init hooks if they exist, otherwise we don't need to init the memory
             if (onInitEventDelegate.isInitialized()) {
 
-                // Call init hooks in FIFO order
+                // Call init hooks in random order
                 for (initEvent in onInitEvents) {
                     initEvent(savedInstanceState)
                 }

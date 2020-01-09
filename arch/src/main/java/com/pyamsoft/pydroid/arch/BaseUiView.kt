@@ -90,27 +90,26 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     final override fun onInit(savedInstanceState: Bundle?) {
         assertValidState()
         parent().inflateAndAdd(layout)
+        initNestedViews(savedInstanceState)
+    }
 
+    private fun initNestedViews(savedInstanceState: Bundle?) {
         // Only run the initialization hooks if they exist, otherwise we don't need to init the memory
         if (nestedViewDelegate.isInitialized()) {
 
             // Call init hooks in FIFO order
             for (nestedView in nestedViews) {
-                onWillInitNested(nestedView)
+                if (nestedInitDelegate.isInitialized()) {
+                    for (nestedInit in nestedInits) {
+                        nestedInit(nestedView)
+                    }
+                }
                 nestedView.init(savedInstanceState)
             }
 
             // Don't clear the nestedViews list yet, we still need it
             if (nestedInitDelegate.isInitialized()) {
                 nestedInits.clear()
-            }
-        }
-    }
-
-    private fun onWillInitNested(view: IView<S, V>) {
-        if (nestedInitDelegate.isInitialized()) {
-            for (nestedInit in nestedInits) {
-                nestedInit(view)
             }
         }
     }

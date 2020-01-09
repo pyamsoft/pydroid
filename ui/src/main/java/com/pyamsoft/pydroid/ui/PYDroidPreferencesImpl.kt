@@ -31,19 +31,23 @@ internal class PYDroidPreferencesImpl internal constructor(
 ) : RatingPreferences, ThemingPreferences {
 
     private val darkModeKey = context.getString(R.string.dark_mode_key)
-    private val prefs = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    private val prefs by lazy {
+        PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+    }
 
-    override var ratingAcceptedVersion: Int
-        get() = prefs.getInt(
+    override suspend fun getRatingAcceptedVersion(): Int {
+        return prefs.getInt(
             RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
         )
-        set(value) {
-            prefs.edit {
-                putInt(RATING_ACCEPTED_VERSION, value)
-            }
-        }
+    }
 
-    override fun initializeDarkMode(onInit: (mode: Mode) -> Unit) {
+    override suspend fun applyRatingAcceptedVersion(version: Int) {
+        prefs.edit {
+            putInt(RATING_ACCEPTED_VERSION, version)
+        }
+    }
+
+    override suspend fun initializeDarkMode(onInit: (mode: Mode) -> Unit) {
         if (!prefs.contains(darkModeKey)) {
             val mode = SYSTEM
             prefs.edit { putString(darkModeKey, mode.toRawString()) }
@@ -51,7 +55,7 @@ internal class PYDroidPreferencesImpl internal constructor(
         }
     }
 
-    override fun getDarkMode(): Mode {
+    override suspend fun getDarkMode(): Mode {
         return requireNotNull(prefs.getString(darkModeKey, SYSTEM.toRawString())).toMode()
     }
 

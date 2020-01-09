@@ -22,20 +22,27 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.Locale
 
 class Theming internal constructor(preferences: ThemingPreferences) {
 
     init {
-        preferences.initializeDarkMode { mode ->
-            setDarkTheme(mode) { newMode ->
-                Timber.d("Theming initialized mode: $newMode")
+        // NOTE: We use GlobalScope here because this is an application level thing
+        // Maybe its an anti-pattern but I think in controlled use, its okay.
+        GlobalScope.launch(context = Dispatchers.Default) {
+            preferences.initializeDarkMode { mode ->
+                setDarkTheme(mode) { newMode ->
+                    Timber.d("Theming initialized mode: $newMode")
+                }
             }
-        }
 
-        val mode = preferences.getDarkMode()
-        setDarkTheme(mode)
+            val mode = preferences.getDarkMode()
+            setDarkTheme(mode)
+        }
     }
 
     @CheckResult

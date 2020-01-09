@@ -42,10 +42,10 @@ internal class RatingInteractorImpl internal constructor(
                 } else {
                     // If the preference is default, the app may be installed for the first time
                     // regardless of the current version. Don't show change log, else show it
-                    val lastSeenVersion: Int = preferences.ratingAcceptedVersion
+                    val lastSeenVersion: Int = preferences.getRatingAcceptedVersion()
                     if (lastSeenVersion == RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION) {
                         Timber.i("Last seen version is default, app is installed for the first time or reset")
-                        preferences.ratingAcceptedVersion = currentVersion
+                        commitVersion(currentVersion)
                         return@withContext false
                     } else {
                         Timber.d("Compare version code to last seen: $currentVersion <-> $lastSeenVersion")
@@ -56,7 +56,11 @@ internal class RatingInteractorImpl internal constructor(
         }
 
     override suspend fun saveRating() = withContext(context = Dispatchers.Default) {
+        commitVersion(currentVersion)
+    }
+
+    private suspend fun commitVersion(version: Int) {
         enforcer.assertNotOnMainThread()
-        preferences.ratingAcceptedVersion = currentVersion
+        preferences.applyRatingAcceptedVersion(version)
     }
 }

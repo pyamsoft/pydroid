@@ -21,8 +21,10 @@ import androidx.annotation.CheckResult
 
 interface RatingPreferences {
 
-    var ratingAcceptedVersion: Int
-        @get:CheckResult get
+    @CheckResult
+    suspend fun getRatingAcceptedVersion(): Int
+
+    suspend fun applyRatingAcceptedVersion(version: Int)
 
     companion object {
 

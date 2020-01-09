@@ -79,7 +79,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Only run the save state hooks if they exist, otherwise we don't need to init the memory
         if (onSaveStateEventDelegate.isInitialized()) {
 
-            // Call init hooks in FIFO order
+            // Call save state hooks in random order
             val s = latestState()
             for (saveState in onSaveStateEvents) {
                 outState.saveState(s)

@@ -46,8 +46,7 @@ private fun getAccelCubicInterpolator(context: Context): Interpolator {
 @JvmOverloads
 fun View.popShow(
     startDelay: Long = 300L,
-    duration: Long = 500L,
-    listener: ViewPropertyAnimatorListener? = null
+    duration: Long = 500L
 ): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(context)
     alpha = 0f
@@ -63,16 +62,13 @@ fun View.popShow(
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
-                listener?.onAnimationStart(view)
             }
 
             override fun onAnimationEnd(view: View) {
                 view.visibility = View.VISIBLE
-                listener?.onAnimationEnd(view)
             }
 
             override fun onAnimationCancel(view: View) {
-                listener?.onAnimationCancel(view)
             }
         })
 }
@@ -81,8 +77,7 @@ fun View.popShow(
 @JvmOverloads
 fun View.popHide(
     startDelay: Long = 300L,
-    duration: Long = 500L,
-    listener: ViewPropertyAnimatorListener? = null
+    duration: Long = 500L
 ): ViewPropertyAnimatorCompat {
     val i: Interpolator = getOvershootInterpolator(context)
     alpha = 1f
@@ -98,23 +93,19 @@ fun View.popHide(
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
-                listener?.onAnimationStart(view)
             }
 
             override fun onAnimationEnd(view: View) {
                 view.visibility = View.GONE
-                listener?.onAnimationEnd(view)
             }
 
             override fun onAnimationCancel(view: View) {
-                listener?.onAnimationCancel(view)
             }
         })
 }
 
 @CheckResult
-@JvmOverloads
-fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
+fun View.fadeIn(): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
     alpha = 0f
     scaleX = 0.8f
@@ -129,23 +120,19 @@ fun View.fadeIn(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAni
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationEnd(view: View) {
                 view.visibility = View.VISIBLE
-                listener?.onAnimationEnd(view)
             }
 
             override fun onAnimationCancel(view: View) {
-                listener?.onAnimationCancel(view)
             }
 
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
-                listener?.onAnimationStart(view)
             }
         })
 }
 
 @CheckResult
-@JvmOverloads
-fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
+fun View.fadeAway(): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
     alpha = 1f
     scaleX = 1f
@@ -158,30 +145,25 @@ fun View.fadeAway(listener: ViewPropertyAnimatorListener? = null): ViewPropertyA
         .setListener(object : ViewPropertyAnimatorListener {
             override fun onAnimationEnd(view: View) {
                 view.visibility = View.GONE
-                listener?.onAnimationEnd(view)
             }
 
             override fun onAnimationCancel(view: View) {
-                listener?.onAnimationCancel(view)
             }
 
             override fun onAnimationStart(view: View) {
                 view.visibility = View.VISIBLE
-                listener?.onAnimationStart(view)
             }
         })
 }
 
 @CheckResult
-@JvmOverloads
-fun View.flipVertical(listener: ViewPropertyAnimatorListener? = null): ViewPropertyAnimatorCompat {
+fun View.flipVertical(): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
     return ViewCompat.animate(this)
         .scaleY(-scaleY)
         .setStartDelay(100)
         .setDuration(300)
         .setInterpolator(i)
-        .setListener(listener)
 }
 
 fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?) {

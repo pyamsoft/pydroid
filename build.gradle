@@ -58,10 +58,10 @@ buildscript {
 
         moshi = "1.9.2"
 
-        retrofit = '2.7.0'
-        okhttp = "4.2.2"
+        retrofit = '2.7.1'
+        okhttp = "4.3.1"
 
-        glide = '4.10.0'
+        glide = '4.11.0'
     }
 
     dependencies {

@@ -23,7 +23,6 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class VersionUpgradeContentView internal constructor(
@@ -46,10 +45,7 @@ internal class VersionUpgradeContentView internal constructor(
         }
     }
 
-    override fun onRender(
-        state: VersionUpgradeViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: VersionUpgradeViewState) {
         state.applicationName.let { name ->
             if (name.isNotBlank()) {
                 upgradeMessage.text = getString(R.string.upgrade_available_message, name)

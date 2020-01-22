@@ -22,7 +22,6 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.privacy.PrivacyEventBus
@@ -105,10 +104,7 @@ internal class AppSettingsView internal constructor(
         }
     }
 
-    override fun onRender(
-        state: AppSettingsViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: AppSettingsViewState) {
         state.isDarkTheme?.let { darkTheme ->
             requireNotNull(preferenceScreen).adjustTint(darkTheme.dark)
         }

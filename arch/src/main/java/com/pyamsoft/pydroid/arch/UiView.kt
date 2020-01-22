@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
@@ -26,13 +25,13 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     private val viewEventBus by lazy(NONE) { EventBus.create<V>() }
 
-    private val onInflateEventDelegate = lazy(NONE) { mutableListOf<(Bundle?) -> Unit>() }
+    private val onInflateEventDelegate = lazy(NONE) { mutableListOf<(UiBundleReader) -> Unit>() }
     private val onInflateEvents by onInflateEventDelegate
 
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(Bundle) -> Unit>() }
+    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
     @IdRes
@@ -45,11 +44,11 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      * This way a UiViewModel can bind event handlers and receive events, and the view can publish()
      * inside of doOnInflate hooks.
      */
-    final override fun init(savedInstanceState: Bundle?) {
+    final override fun init(savedInstanceState: UiBundleReader) {
         onInit(savedInstanceState)
     }
 
-    override fun inflate(savedInstanceState: Bundle?) {
+    override fun inflate(savedInstanceState: UiBundleReader) {
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
         if (onInflateEventDelegate.isInitialized()) {
 
@@ -95,7 +94,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      * NOTE: While not deprecated, do your best to use StateSaver.saveState to bundle state
      * saving of entire components in a safe way
      */
-    override fun saveState(outState: Bundle) {
+    override fun saveState(outState: UiBundleWriter) {
         // Only run save state hooks if they exist, otherwise don't init memory
         if (onSaveEventDelegate.isInitialized()) {
 
@@ -147,7 +146,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      * }
      *
      */
-    protected fun doOnInflate(onInflate: (savedInstanceState: Bundle?) -> Unit) {
+    protected fun doOnInflate(onInflate: (savedInstanceState: UiBundleReader) -> Unit) {
         onInflateEvents.add(onInflate)
     }
 
@@ -164,9 +163,9 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      * }
      *
      */
-    protected fun doOnSaveState(onSaveState: (outState: Bundle) -> Unit) {
+    protected fun doOnSaveState(onSaveState: (outState: UiBundleWriter) -> Unit) {
         onSaveEvents.add(onSaveState)
     }
 
-    protected abstract fun onInit(savedInstanceState: Bundle?)
+    protected abstract fun onInit(savedInstanceState: UiBundleReader)
 }

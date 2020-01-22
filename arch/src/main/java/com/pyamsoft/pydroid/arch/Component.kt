@@ -32,11 +32,13 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     vararg views: UiView<S, V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ): StateSaver {
+    val reader = RealUiBundleReader.create(savedInstanceState)
+
     // Init first
-    views.forEach { it.init(savedInstanceState) }
+    views.forEach { it.init(reader) }
 
     // Bind view event listeners, inflate and attach
-    val viewModelBinding = viewModel.render(savedInstanceState, *views) { onControllerEvent(it) }
+    val viewModelBinding = viewModel.render(reader, *views) { onControllerEvent(it) }
     owner.doOnDestroy {
         viewModelBinding.cancel()
         views.forEach { it.teardown() }
@@ -46,8 +48,9 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     return object : StateSaver {
 
         override fun saveState(outState: Bundle) {
-            viewModel.saveState(outState)
-            views.forEach { it.saveState(outState) }
+            val writer = RealUiBundleWriter.create(outState)
+            viewModel.saveState(writer)
+            views.forEach { it.saveState(writer) }
         }
     }
 }
@@ -58,8 +61,10 @@ fun <S : UiViewState, V : UiViewEvent> bindViews(
     vararg views: UiView<S, V>,
     onViewEvent: suspend (event: V) -> Unit
 ): ViewBinder<S> {
+    val reader = RealUiBundleReader.create(null)
+
     // Init first
-    views.forEach { it.init(null) }
+    views.forEach { it.init(reader) }
 
     // Bind view event listeners
     views.forEach {
@@ -69,13 +74,13 @@ fun <S : UiViewState, V : UiViewEvent> bindViews(
     }
 
     // Inflate and attach
-    views.forEach { it.inflate(null) }
+    views.forEach { it.inflate(reader) }
     owner.doOnDestroy { views.forEach { it.teardown() } }
 
     // State saver
     return object : ViewBinder<S> {
         override fun bind(state: S) {
-            views.forEach { it.render(state, UiSavedState.EMPTY) }
+            views.forEach { it.render(state) }
         }
     }
 }

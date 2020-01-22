@@ -17,12 +17,11 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
@@ -48,7 +47,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
-    override fun onInit(savedInstanceState: Bundle?) {
+    override fun onInit(savedInstanceState: UiBundleReader) {
     }
 
     @CheckResult
@@ -70,18 +69,12 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         throw InvalidIdException
     }
 
-    final override fun render(
-        state: S,
-        savedState: UiSavedState
-    ) {
+    final override fun render(state: S) {
         assertValidState()
-        onRender(state, savedState)
+        onRender(state)
     }
 
-    protected abstract fun onRender(
-        state: S,
-        savedState: UiSavedState
-    )
+    protected abstract fun onRender(state: S)
 
     @CheckResult
     protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {

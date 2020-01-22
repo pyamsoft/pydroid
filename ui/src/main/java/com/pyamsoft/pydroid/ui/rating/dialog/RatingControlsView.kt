@@ -22,7 +22,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
@@ -54,10 +53,7 @@ internal class RatingControlsView internal constructor(
         }
     }
 
-    override fun onRender(
-        state: RatingDialogViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: RatingDialogViewState) {
         state.throwable.let { throwable ->
             if (throwable == null) {
                 clearError()

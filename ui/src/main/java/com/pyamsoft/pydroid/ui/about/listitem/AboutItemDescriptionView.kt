@@ -22,7 +22,6 @@ import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemDescriptionView internal constructor(
@@ -46,7 +45,7 @@ internal class AboutItemDescriptionView internal constructor(
         }
     }
 
-    override fun onRender(state: AboutItemViewState, savedState: UiSavedState) {
+    override fun onRender(state: AboutItemViewState) {
         state.library.let { library ->
             layoutRoot.text = library.description
             layoutRoot.isVisible = library.description.isNotBlank()

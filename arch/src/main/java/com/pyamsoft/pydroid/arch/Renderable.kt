@@ -19,5 +19,5 @@ package com.pyamsoft.pydroid.arch
 
 interface Renderable<S : UiViewState> {
 
-    fun render(state: S, savedState: UiSavedState)
+    fun render(state: S)
 }

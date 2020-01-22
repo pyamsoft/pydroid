@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,16 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface EventConsumer<T : Any> {
+import androidx.annotation.CheckResult
 
-    suspend fun onEvent(emitter: suspend (event: T) -> Unit)
+interface UiBundleReader {
+
+    @CheckResult
+    fun <T : Any> get(key: String): T?
+
+    fun <T : Any> getOrDefault(key: String, defaultValue: T): T
+
+    fun <T : Any> useIfAvailable(key: String, func: (value: T) -> Unit)
+
+    fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit)
 }

@@ -21,7 +21,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.R
@@ -45,10 +44,7 @@ internal class RatingIconView internal constructor(
         }
     }
 
-    override fun onRender(
-        state: RatingDialogViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: RatingDialogViewState) {
         state.icon.let { icon ->
             clear()
             if (icon != 0) {

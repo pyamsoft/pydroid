@@ -21,7 +21,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
@@ -49,6 +48,6 @@ internal class AboutItemActionView internal constructor(
         }
     }
 
-    override fun onRender(state: AboutItemViewState, savedState: UiSavedState) {
+    override fun onRender(state: AboutItemViewState) {
     }
 }

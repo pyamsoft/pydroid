@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface EventConsumer<T : Any> {
+interface UiBundleWriter {
 
-    suspend fun onEvent(emitter: suspend (event: T) -> Unit)
+    fun <T : Any> put(key: String, value: T)
+
+    fun remove(key: String)
 }

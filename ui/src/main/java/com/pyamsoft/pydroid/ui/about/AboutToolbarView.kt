@@ -17,8 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.os.Bundle
-import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.UpNavigate
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
@@ -35,8 +34,9 @@ internal class AboutToolbarView internal constructor(
 
     init {
         doOnInflate { savedInstanceState ->
-            if (savedInstanceState != null) {
-                oldTitle = savedInstanceState.getCharSequence(KEY_OLD_TITLE)
+            val title = savedInstanceState.get<CharSequence>(KEY_OLD_TITLE)
+            if (title != null) {
+                oldTitle = title
             }
 
             toolbarActivity.withToolbar { toolbar ->
@@ -66,7 +66,12 @@ internal class AboutToolbarView internal constructor(
         }
 
         doOnSaveState { outState ->
-            outState.putCharSequence(KEY_OLD_TITLE, oldTitle)
+            val title = oldTitle
+            if (title == null) {
+                outState.remove(KEY_OLD_TITLE)
+            } else {
+                outState.put(KEY_OLD_TITLE, title)
+            }
         }
     }
 
@@ -74,13 +79,10 @@ internal class AboutToolbarView internal constructor(
         throw InvalidIdException
     }
 
-    override fun onInit(savedInstanceState: Bundle?) {
+    override fun onInit(savedInstanceState: UiBundleReader) {
     }
 
-    override fun render(
-        state: AboutViewState,
-        savedState: UiSavedState
-    ) {
+    override fun render(state: AboutViewState) {
         toolbarActivity.withToolbar { toolbar ->
             toolbar.title = state.toolbarTitle
         }

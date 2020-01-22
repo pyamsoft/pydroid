@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -87,13 +86,13 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
-    final override fun onInit(savedInstanceState: Bundle?) {
+    final override fun onInit(savedInstanceState: UiBundleReader) {
         assertValidState()
         parent().inflateAndAdd(layout)
         initNestedViews(savedInstanceState)
     }
 
-    private fun initNestedViews(savedInstanceState: Bundle?) {
+    private fun initNestedViews(savedInstanceState: UiBundleReader) {
         // Only run the initialization hooks if they exist, otherwise we don't need to init the memory
         if (nestedViewDelegate.isInitialized()) {
 
@@ -138,18 +137,12 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         return layoutRoot.id
     }
 
-    final override fun render(
-        state: S,
-        savedState: UiSavedState
-    ) {
+    final override fun render(state: S) {
         assertValidState()
-        onRender(state, savedState)
+        onRender(state)
     }
 
-    protected abstract fun onRender(
-        state: S,
-        savedState: UiSavedState
-    )
+    protected abstract fun onRender(state: S)
 
     private fun ViewGroup.inflateAndAdd(@LayoutRes layout: Int) {
         LayoutInflater.from(context)

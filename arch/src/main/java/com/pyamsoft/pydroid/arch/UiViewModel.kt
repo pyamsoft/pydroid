@@ -17,15 +17,9 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import java.util.LinkedList
-import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +29,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.LinkedList
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     private val initialState: S
@@ -42,13 +41,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private val isInitialized = AtomicBoolean(false)
 
-    private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(Bundle?) -> Unit>() }
+    private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
 
     private val onTeardownEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveStateEventDelegate = lazy(NONE) { mutableSetOf<Bundle.(state: S) -> Unit>() }
+    private val onSaveStateEventDelegate =
+        lazy(NONE) { mutableSetOf<UiBundleWriter.(state: S) -> Unit>() }
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val mutex = Mutex()
@@ -75,7 +75,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * NOTE: While not deprecated, do your best to use StateSaver.saveState to bundle state
      * saving of entire components in a safe way
      */
-    override fun saveState(outState: Bundle) {
+    override fun saveState(outState: UiBundleWriter) {
         // Only run the save state hooks if they exist, otherwise we don't need to init the memory
         if (onSaveStateEventDelegate.isInitialized()) {
 
@@ -92,21 +92,17 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @CheckResult
     @PublishedApi
     internal fun render(
-        savedInstanceState: Bundle?,
+        savedInstanceState: UiBundleReader,
         vararg views: IView<S, V>,
         onControllerEvent: (event: C) -> Unit
     ): Job = viewModelScope.launch(context = Dispatchers.Main) {
-        // Init savedState once
-        val savedState = UiSavedState(savedInstanceState)
-
         // Listen for changes
         launch(context = Dispatchers.Default) {
             stateBus.onEvent { state ->
                 withContext(context = Dispatchers.Main) {
                     handleStateChange(
                         views,
-                        state,
-                        savedState
+                        state
                     )
                 }
             }
@@ -126,8 +122,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         flushQueues()
 
         // Render the latest or initial state
-        val currentState = latestState()
-        handleStateChange(views, currentState, savedState)
+        handleStateChange(views, latestState())
     }
 
     final override fun onCleared() {
@@ -233,9 +228,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             return
         }
 
-        // Loop over all state changes first
-        val oldState = latestState()
-        var newState = oldState
+        // Capture the state before modifications take place
+        val currentState = latestState()
+        var newState = currentState
+
+        // Loop over all state changes first, perform but do not actually fire a render to views
         for (stateChange in stateChanges) {
             newState = newState.stateChange()
             if (newState != state) {
@@ -244,7 +241,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
 
         // Only send the new state at the end of the state change loop
-        if (newState != oldState) {
+        if (newState != currentState) {
+            // Replace the old state with this new state
             stateBus.send(newState)
         }
     }
@@ -272,14 +270,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private fun handleStateChange(
         views: Array<out Renderable<S>>,
-        state: S,
-        savedState: UiSavedState
+        state: S
     ) {
-        Timber.d("Render with state: $views ($state)")
-        views.forEach { it.render(state, savedState) }
+        Timber.d("Render with state: $state")
+        views.forEach { it.render(state) }
     }
 
-    private fun initialize(savedInstanceState: Bundle?) {
+    private fun initialize(savedInstanceState: UiBundleReader) {
         if (isInitialized.compareAndSet(false, true)) {
             // Only run the init hooks if they exist, otherwise we don't need to init the memory
             if (onInitEventDelegate.isInitialized()) {
@@ -346,7 +343,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * }
      *
      */
-    protected fun doOnInit(onInit: (savedInstanceState: Bundle?) -> Unit) {
+    protected fun doOnInit(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
         onInitEvents.add(onInit)
     }
 
@@ -363,7 +360,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * }
      *
      */
-    protected fun doOnSaveState(onSaveState: Bundle.(state: S) -> Unit) {
+    protected fun doOnSaveState(onSaveState: UiBundleWriter.(state: S) -> Unit) {
         onSaveStateEvents.add(onSaveState)
     }
 

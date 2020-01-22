@@ -17,10 +17,9 @@
 
 package com.pyamsoft.pydroid.ui.privacy
 
-import android.os.Bundle
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.UiSavedState
+import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewEvent.SnackbarHidden
@@ -35,13 +34,10 @@ internal class PrivacyView internal constructor(
         throw InvalidIdException
     }
 
-    override fun onInit(savedInstanceState: Bundle?) {
+    override fun onInit(savedInstanceState: UiBundleReader) {
     }
 
-    override fun render(
-        state: PrivacyViewState,
-        savedState: UiSavedState
-    ) {
+    override fun render(state: PrivacyViewState) {
         state.throwable.let { throwable ->
             if (throwable == null) {
                 clearError()

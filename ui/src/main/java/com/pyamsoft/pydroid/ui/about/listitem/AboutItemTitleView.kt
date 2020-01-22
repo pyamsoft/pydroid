@@ -23,7 +23,6 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class AboutItemTitleView internal constructor(
@@ -48,7 +47,7 @@ internal class AboutItemTitleView internal constructor(
         license.text = ""
     }
 
-    override fun onRender(state: AboutItemViewState, savedState: UiSavedState) {
+    override fun onRender(state: AboutItemViewState) {
         state.library.let { library ->
             title.text = library.name
             license.text = getString(R.string.license_name, library.licenseName)

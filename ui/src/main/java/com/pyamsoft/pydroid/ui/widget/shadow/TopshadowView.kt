@@ -21,7 +21,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
@@ -36,10 +35,7 @@ class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
 
     override val layoutRoot by boundView<View>(R.id.dropshadow_view)
 
-    override fun onRender(
-        state: S,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: S) {
     }
 
     companion object {

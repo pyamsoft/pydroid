@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.ui.R
 
 internal class RatingChangelogView internal constructor(
@@ -40,10 +39,7 @@ internal class RatingChangelogView internal constructor(
         }
     }
 
-    override fun onRender(
-        state: RatingDialogViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: RatingDialogViewState) {
         state.changelog?.let { changelogText.text = it }
     }
 }

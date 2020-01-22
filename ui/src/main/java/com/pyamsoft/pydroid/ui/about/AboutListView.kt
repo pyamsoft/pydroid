@@ -24,7 +24,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiSavedState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLibrary
@@ -46,9 +45,15 @@ internal class AboutListView internal constructor(
 
     override val layoutRoot by boundView<RecyclerView>(R.id.about_list)
 
+    private var lastViewed: Int = 0
+
     init {
         doOnInflate {
             setupListView()
+        }
+
+        doOnInflate { savedInstanceState ->
+            lastViewed = savedInstanceState.getOrDefault(KEY_CURRENT, 0)
         }
 
         doOnTeardown {
@@ -58,7 +63,7 @@ internal class AboutListView internal constructor(
         }
 
         doOnSaveState { outState ->
-            outState.putInt(KEY_CURRENT, getCurrentPosition())
+            outState.put(KEY_CURRENT, getCurrentPosition())
         }
     }
 
@@ -85,15 +90,17 @@ internal class AboutListView internal constructor(
         }
     }
 
-    override fun onRender(
-        state: AboutViewState,
-        savedState: UiSavedState
-    ) {
+    override fun onRender(state: AboutViewState) {
         state.licenses.let { licenses ->
+            val beganEmpty = isEmpty()
             if (licenses.isEmpty()) {
                 clearLicenses()
             } else {
-                loadLicenses(licenses, savedState)
+                loadLicenses(licenses)
+            }
+
+            if (beganEmpty && !isEmpty()) {
+                scrollToLastViewedItem()
             }
         }
 
@@ -122,11 +129,11 @@ internal class AboutListView internal constructor(
         }
     }
 
-    private fun scrollToLastViewedItem(savedState: UiSavedState) {
-        savedState.consume(KEY_CURRENT, 0) { lastViewed ->
-            if (lastViewed > 0) {
-                layoutRoot.scrollToPosition(lastViewed)
-            }
+    private fun scrollToLastViewedItem() {
+        val viewed = lastViewed
+        if (viewed > 0) {
+            lastViewed = 0
+            layoutRoot.scrollToPosition(viewed)
         }
     }
 
@@ -138,12 +145,13 @@ internal class AboutListView internal constructor(
         layoutRoot.isVisible = false
     }
 
-    private fun loadLicenses(
-        libraries: List<OssLibrary>,
-        savedState: UiSavedState
-    ) {
+    @CheckResult
+    private fun isEmpty(): Boolean {
+        return requireNotNull(aboutAdapter).itemCount == 0
+    }
+
+    private fun loadLicenses(libraries: List<OssLibrary>) {
         requireNotNull(aboutAdapter).submitList(libraries.map { AboutItemViewState(it) })
-        scrollToLastViewedItem(savedState)
     }
 
     private fun showNavigationError(error: Throwable) {

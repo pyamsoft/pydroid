@@ -48,7 +48,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         onInit(savedInstanceState)
     }
 
-    override fun inflate(savedInstanceState: UiBundleReader) {
+    final override fun inflate(savedInstanceState: UiBundleReader) {
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
         if (onInflateEventDelegate.isInitialized()) {
 
@@ -62,7 +62,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         }
     }
 
-    override fun teardown() {
+    final override fun teardown() {
         // Only run teardown hooks if they exist, otherwise don't init memory
         if (onTeardownEventDelegate.isInitialized()) {
 
@@ -94,7 +94,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      * NOTE: While not deprecated, do your best to use StateSaver.saveState to bundle state
      * saving of entire components in a safe way
      */
-    override fun saveState(outState: UiBundleWriter) {
+    final override fun saveState(outState: UiBundleWriter) {
         // Only run save state hooks if they exist, otherwise don't init memory
         if (onSaveEventDelegate.isInitialized()) {
 

@@ -17,7 +17,65 @@
 
 package com.pyamsoft.pydroid.arch
 
+import androidx.annotation.CheckResult
+import kotlinx.coroutines.Job
+import kotlin.coroutines.coroutineContext
+
 interface EventConsumer<T : Any> {
 
     suspend fun onEvent(emitter: suspend (event: T) -> Unit)
+
+    companion object {
+
+        @CheckResult
+        fun <T : Any> fromCallback(
+            callback: suspend (
+                onCancel: (doOnCancel: () -> Unit) -> Unit,
+                startWith: (doOnStart: () -> T) -> Unit,
+                emit: (event: T) -> Unit
+            ) -> Unit
+        ): EventConsumer<T> {
+            return object : EventConsumer<T> {
+
+                private val realBus = EventBus.create<T>()
+
+                private var cancel: (() -> Unit)? = null
+                private var startWith: (() -> T)? = null
+
+                private fun onCancel(doOnCancel: () -> Unit) {
+                    cancel = doOnCancel
+                }
+
+                private fun onEmit(value: T) {
+                    realBus.publish(value)
+                }
+
+                // Run and emit an event on stream start
+                private fun onStart(doOnStart: () -> T) {
+                    startWith = doOnStart
+                }
+
+                override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
+                    val self = this
+
+                    requireNotNull(coroutineContext[Job]).invokeOnCompletion {
+                        val end = cancel
+                        if (end != null) {
+                            end()
+                        }
+                    }
+
+                    callback(this::onCancel, self::onStart, self::onEmit)
+
+                    // Start with using the emitter because the bus will not be listening yet
+                    val start = startWith
+                    if (start != null) {
+                        emitter(start())
+                    }
+
+                    realBus.onEvent { emitter(it) }
+                }
+            }
+        }
+    }
 }

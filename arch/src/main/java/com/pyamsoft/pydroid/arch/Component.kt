@@ -32,7 +32,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     vararg views: UiView<S, V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ): StateSaver {
-    val reader = RealUiBundleReader.create(savedInstanceState)
+    val reader = UiBundleReader.create(savedInstanceState)
 
     // Init first
     views.forEach { it.init(reader) }
@@ -48,7 +48,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     return object : StateSaver {
 
         override fun saveState(outState: Bundle) {
-            val writer = RealUiBundleWriter.create(outState)
+            val writer = UiBundleWriter.create(outState)
             viewModel.saveState(writer)
             views.forEach { it.saveState(writer) }
         }
@@ -61,7 +61,7 @@ fun <S : UiViewState, V : UiViewEvent> bindViews(
     vararg views: UiView<S, V>,
     onViewEvent: suspend (event: V) -> Unit
 ): ViewBinder<S> {
-    val reader = RealUiBundleReader.create(null)
+    val reader = UiBundleReader.create(null)
 
     // Init first
     views.forEach { it.init(reader) }

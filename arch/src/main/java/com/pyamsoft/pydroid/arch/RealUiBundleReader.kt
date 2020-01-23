@@ -18,9 +18,8 @@
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
-import androidx.annotation.CheckResult
 
-class RealUiBundleReader private constructor(private val bundle: Bundle?) : UiBundleReader {
+class RealUiBundleReader internal constructor(private val bundle: Bundle?) : UiBundleReader {
 
     override fun <T : Any> get(key: String): T? {
         @Suppress("UNCHECKED_CAST")
@@ -42,14 +41,5 @@ class RealUiBundleReader private constructor(private val bundle: Bundle?) : UiBu
     override fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit) {
         val value = getOrDefault(key, defaultValue)
         func(value)
-    }
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        fun create(bundle: Bundle?): UiBundleReader {
-            return RealUiBundleReader(bundle)
-        }
     }
 }

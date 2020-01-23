@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
 import androidx.annotation.CheckResult
 
 interface UiBundleReader {
@@ -29,4 +30,13 @@ interface UiBundleReader {
     fun <T : Any> useIfAvailable(key: String, func: (value: T) -> Unit)
 
     fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit)
+
+
+    companion object {
+
+        @CheckResult
+        fun create(bundle: Bundle?): UiBundleReader {
+            return RealUiBundleReader(bundle)
+        }
+    }
 }

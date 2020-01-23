@@ -17,9 +17,22 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
+import androidx.annotation.CheckResult
+
 interface UiBundleWriter {
 
     fun <T : Any> put(key: String, value: T)
 
     fun remove(key: String)
+
+
+    companion object {
+
+        @CheckResult
+        fun create(bundle: Bundle): UiBundleWriter {
+            return RealUiBundleWriter(bundle)
+        }
+    }
 }
+

@@ -26,7 +26,6 @@ interface UiBundleWriter {
 
     fun remove(key: String)
 
-
     companion object {
 
         @CheckResult
@@ -35,4 +34,3 @@ interface UiBundleWriter {
         }
     }
 }
-

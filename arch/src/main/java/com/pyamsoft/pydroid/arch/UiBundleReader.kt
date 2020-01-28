@@ -31,7 +31,6 @@ interface UiBundleReader {
 
     fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit)
 
-
     companion object {
 
         @CheckResult

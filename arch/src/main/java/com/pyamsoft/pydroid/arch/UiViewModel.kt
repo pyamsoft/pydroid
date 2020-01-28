@@ -20,11 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import java.util.LinkedList
-import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +29,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.LinkedList
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     private val initialState: S
@@ -53,13 +53,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private val mutex = Mutex()
     private val controllerEventBus = EventBus.create<C>()
-    private val stateBus = EventBus.create<S>()
+    private val stateBus = EventBus.create<StateChange<S>>()
     private val flushQueueBus = EventBus.create<FlushQueueEvent>()
 
     @Volatile
     private var setStateQueue = LinkedList<S.() -> S>()
     @Volatile
     private var withStateQueue = LinkedList<S.() -> Unit>()
+
     @Volatile
     private var state: S? = null
 
@@ -98,12 +99,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     ): Job = viewModelScope.launch(context = Dispatchers.Main) {
         // Listen for changes
         launch(context = Dispatchers.Default) {
-            stateBus.onEvent { state ->
+            stateBus.onEvent { stateChange ->
                 withContext(context = Dispatchers.Main) {
-                    handleStateChange(
-                        views,
-                        state
-                    )
+                    handleStateChange(views, stateChange)
                 }
             }
         }
@@ -122,7 +120,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         flushQueues()
 
         // Render the latest or initial state
-        handleStateChange(views, latestState())
+        handleStateChange(views, StateChange(newState = latestState(), oldState = null))
     }
 
     final override fun onCleared() {
@@ -243,7 +241,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Only send the new state at the end of the state change loop
         if (newState != currentState) {
             // Replace the old state with this new state
-            stateBus.send(newState)
+            stateBus.send(StateChange(newState = newState, oldState = currentState))
         }
     }
 
@@ -270,10 +268,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private fun handleStateChange(
         views: Array<out Renderable<S>>,
-        state: S
+        state: StateChange<S>
     ) {
         Timber.d("Render with state: $state")
-        views.forEach { it.render(state) }
+        views.forEach { it.render(state.newState) }
     }
 
     private fun initialize(savedInstanceState: UiBundleReader) {
@@ -381,4 +379,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private object FlushQueueEvent
+
+    private data class StateChange<S : UiViewState>(val newState: S, val oldState: S?)
 }

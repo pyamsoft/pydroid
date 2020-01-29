@@ -20,7 +20,7 @@ dependencies {
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
     // For Lifecycle coroutineScope
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-rc03"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
 
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 

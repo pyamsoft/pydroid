@@ -270,6 +270,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private suspend fun initialize(savedInstanceState: UiBundleReader) {
+        if (isInitialized) {
+            Timber.w("Initialization is already complete.")
+            return
+        }
+
         mutex.withLock {
             if (isInitialized) {
                 Timber.w("Initialization is already complete.")

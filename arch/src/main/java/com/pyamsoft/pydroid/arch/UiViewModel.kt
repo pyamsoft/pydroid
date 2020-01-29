@@ -20,8 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import java.util.LinkedList
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -39,7 +37,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val initialState: S
 ) : ViewModel(), SaveableState {
 
-    private val isInitialized = AtomicBoolean(false)
+    private var isInitialized = false
 
     private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
@@ -51,17 +49,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         lazy(NONE) { mutableSetOf<UiBundleWriter.(state: S) -> Unit>() }
     private val onSaveStateEvents by onSaveStateEventDelegate
 
-    private val mutex = Mutex()
     private val controllerEventBus = EventBus.create<C>()
     private val stateBus = EventBus.create<StateChange<S>>()
     private val flushQueueBus = EventBus.create<FlushQueueEvent>()
 
-    @Volatile
-    private var setStateQueue = LinkedList<S.() -> S>()
-    @Volatile
-    private var withStateQueue = LinkedList<S.() -> Unit>()
+    private val mutex = Mutex()
+    private val setStateQueue = mutableListOf<S.() -> S>()
+    private val withStateQueue = mutableListOf<S.() -> Unit>()
 
-    @Volatile
     private var state: S? = null
 
     init {
@@ -124,35 +119,31 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     final override fun onCleared() {
-        if (isInitialized.compareAndSet(true, false)) {
-            if (onTeardownEventDelegate.isInitialized()) {
+        if (onTeardownEventDelegate.isInitialized()) {
 
-                // Call teardown hooks in random order
-                for (teardownEvent in onTeardownEvents) {
-                    teardownEvent()
-                }
-
-                // Clear the teardown hooks list to free up memory
-                onTeardownEvents.clear()
+            // Call teardown hooks in random order
+            for (teardownEvent in onTeardownEvents) {
+                teardownEvent()
             }
 
-            // If there are any init event hooks hanging around, clear them out too
-            if (onInitEventDelegate.isInitialized()) {
-                onInitEvents.clear()
-            }
-
-            // If there are save state hooks around, clear them out
-            if (onSaveStateEventDelegate.isInitialized()) {
-                onSaveStateEvents.clear()
-            }
-
-            // Clear queues and state
-            setStateQueue.clear()
-            withStateQueue.clear()
-            state = null
-        } else {
-            Timber.w("Teardown is already complete.")
+            // Clear the teardown hooks list to free up memory
+            onTeardownEvents.clear()
         }
+
+        // If there are any init event hooks hanging around, clear them out too
+        if (onInitEventDelegate.isInitialized()) {
+            onInitEvents.clear()
+        }
+
+        // If there are save state hooks around, clear them out
+        if (onSaveStateEventDelegate.isInitialized()) {
+            onSaveStateEvents.clear()
+        }
+
+        // Clear queues and state
+        setStateQueue.clear()
+        withStateQueue.clear()
+        state = null
     }
 
     @JvmOverloads
@@ -209,14 +200,16 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     @CheckResult
-    private fun dequeueAllPendingStateChanges(): List<S.() -> S> {
-        if (setStateQueue.isEmpty()) {
-            return emptyList()
-        }
+    private suspend fun dequeueAllPendingStateChanges(): List<S.() -> S> {
+        return mutex.withLock {
+            if (setStateQueue.isEmpty()) {
+                return@withLock emptyList()
+            }
 
-        val queue = setStateQueue
-        setStateQueue = LinkedList()
-        return queue.toList()
+            val queue = setStateQueue
+            setStateQueue.clear()
+            return@withLock queue.toList()
+        }
     }
 
     private suspend fun dequeueAllPendingSetStateChanges() {
@@ -226,22 +219,24 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             return
         }
 
-        // Capture the state before modifications take place
-        val currentState = latestState()
-        var newState = currentState
+        mutex.withLock {
+            // Capture the state before modifications take place
+            val currentState = latestState()
+            var newState = currentState
 
-        // Loop over all state changes first, perform but do not actually fire a render to views
-        for (stateChange in stateChanges) {
-            newState = newState.stateChange()
-            if (newState != state) {
-                state = newState
+            // Loop over all state changes first, perform but do not actually fire a render to views
+            for (stateChange in stateChanges) {
+                newState = newState.stateChange()
+                if (newState != state) {
+                    state = newState
+                }
             }
-        }
 
-        // Only send the new state at the end of the state change loop
-        if (newState != currentState) {
-            // Replace the old state with this new state
-            stateBus.send(StateChange(newState = newState, oldState = currentState))
+            // Only send the new state at the end of the state change loop
+            if (newState != currentState) {
+                // Replace the old state with this new state
+                stateBus.send(StateChange(newState = newState, oldState = currentState))
+            }
         }
     }
 
@@ -255,11 +250,17 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Run all pending setStates first
         dequeueAllPendingSetStateChanges()
 
-        // Queue up one with state
-        val withStateOperation = withStateQueue.poll() ?: return
+        mutex.withLock {
+            // Queue up one withState, or exit the tailrec if there are no more events
+            val stateQueue = withStateQueue
+            if (stateQueue.size <= 0) {
+                return
+            }
 
-        // Run the operation
-        withStateOperation(latestState())
+            // Run the operation
+            val withStateOperation = stateQueue.removeAt(0)
+            withStateOperation(latestState())
+        }
 
         // We must call ourselves as the final operation to be tailrec compatible
         // Recur until we return out by having no more withState operations
@@ -274,8 +275,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         views.forEach { it.render(state.newState) }
     }
 
-    private fun initialize(savedInstanceState: UiBundleReader) {
-        if (isInitialized.compareAndSet(false, true)) {
+    private suspend fun initialize(savedInstanceState: UiBundleReader) {
+        mutex.withLock {
+            if (isInitialized) {
+                Timber.w("Initialization is already complete.")
+                return
+            }
+
+            isInitialized = true
             // Only run the init hooks if they exist, otherwise we don't need to init the memory
             if (onInitEventDelegate.isInitialized()) {
 
@@ -287,8 +294,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 // Clear the init hooks list to free up memory
                 onInitEvents.clear()
             }
-        } else {
-            Timber.w("Initialization is already complete.")
         }
     }
 

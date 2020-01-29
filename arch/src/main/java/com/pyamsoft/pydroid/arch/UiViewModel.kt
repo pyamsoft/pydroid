@@ -240,13 +240,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    private suspend fun flushQueues() {
-        mutex.withLock { reallyFlushQueues() }
-    }
-
     // Pull a page from the MvRx repo's RealMvRxStateStore :)
     // Mark this function as tailrec to see if the compiler can optimize it
-    private tailrec suspend fun reallyFlushQueues() {
+    private tailrec suspend fun flushQueues() {
         // Run all pending setStates first
         dequeueAllPendingSetStateChanges()
 
@@ -264,7 +260,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
         // We must call ourselves as the final operation to be tailrec compatible
         // Recur until we return out by having no more withState operations
-        reallyFlushQueues()
+        flushQueues()
     }
 
     private fun handleStateChange(

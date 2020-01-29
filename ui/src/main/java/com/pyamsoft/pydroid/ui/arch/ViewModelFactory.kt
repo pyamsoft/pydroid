@@ -22,14 +22,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromActivity
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromFragment
-import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
+import timber.log.Timber
 
 /**
  * Allow nullable for easier caller API
@@ -111,12 +110,12 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
                     return@resolver when (fragment) {
                         is FromFragment -> {
                             Timber.d("Fragment init() ViewModel with type: $type")
-                            ViewModelProviders.of(fragment.fragment, factoryProvider())
+                            ViewModelProvider(fragment.fragment, factoryProvider())
                                 .get(type)
                         }
                         is FromActivity -> {
                             Timber.d("FragmentActivity init() ViewModel with type: $type")
-                            ViewModelProviders.of(
+                            ViewModelProvider(
                                 fragment.fragment.requireActivity(),
                                 factoryProvider()
                             )
@@ -126,7 +125,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
                 }
                 activity != null -> {
                     Timber.d("Activity init() ViewModel with type: $type")
-                    ViewModelProviders.of(activity, factoryProvider())
+                    ViewModelProvider(activity, factoryProvider())
                         .get(type)
                 }
                 else -> throw IllegalStateException("Unable to create model resolver - ViewModelStore, Activity, and Fragment are NULL")

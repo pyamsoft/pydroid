@@ -124,7 +124,7 @@ class AboutFragment : Fragment() {
             fragment: Fragment,
             @IdRes container: Int
         ) {
-            show(fragment.viewLifecycleOwner, requireNotNull(fragment.fragmentManager), container)
+            show(fragment.viewLifecycleOwner, fragment.parentFragmentManager, container)
         }
 
         @JvmStatic

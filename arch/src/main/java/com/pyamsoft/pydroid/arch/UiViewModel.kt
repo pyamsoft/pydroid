@@ -20,9 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +29,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     private val initialState: S
@@ -206,9 +206,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 return@withLock emptyList()
             }
 
-            val queue = setStateQueue
+            val queue = setStateQueue.toList()
             setStateQueue.clear()
-            return@withLock queue.toList()
+            return@withLock queue
         }
     }
 

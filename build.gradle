@@ -51,8 +51,8 @@ buildscript {
         fragment = "1.2.0"
         appCompat = "1.1.0"
 
-        cachify = "0.0.6"
-        highlander = "0.0.4"
+        cachify = "0.0.7"
+        highlander = "0.0.5"
 
         timber = "4.7.1"
 
@@ -65,7 +65,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.5.2"
+        classpath "com.android.tools.build:gradle:3.5.3"
 
         // Dex count
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.6'

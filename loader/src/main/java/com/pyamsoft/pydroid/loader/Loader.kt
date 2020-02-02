@@ -40,4 +40,7 @@ interface Loader<T : Any> {
 
     @CheckResult
     fun into(target: ImageTarget<T>): Loaded
+
+    @CheckResult
+    fun immediate(): T
 }

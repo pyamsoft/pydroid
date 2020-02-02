@@ -33,7 +33,7 @@ abstract class GlideLoader<T : Any> protected constructor() : GenericLoader<T>()
     protected abstract fun createRequest(request: RequestManager): RequestBuilder<T>
 
     @CheckResult
-    protected abstract fun mutateResource(resource: T): T
+    protected abstract fun mutateImage(resource: T): T
 
     protected abstract fun setImage(
         view: ImageView,
@@ -84,8 +84,8 @@ abstract class GlideLoader<T : Any> protected constructor() : GenericLoader<T>()
                 resource: T,
                 transition: Transition<in T>?
             ) {
-                val mutated = mutator?.invoke(mutateResource(resource)) ?: resource
-                target.setImage(resource)
+                val mutated = mutator?.invoke(mutateImage(resource)) ?: resource
+                target.setImage(mutated)
                 completeAction?.invoke(mutated)
             }
         }

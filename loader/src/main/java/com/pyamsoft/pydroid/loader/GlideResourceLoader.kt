@@ -17,22 +17,26 @@
 
 package com.pyamsoft.pydroid.loader
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 
 internal class GlideResourceLoader internal constructor(
+    private val context: Context,
     @DrawableRes private val resId: Int
 ) : GlideLoader<Drawable>() {
 
     override fun createRequest(request: RequestManager): RequestBuilder<Drawable> {
-        return request.asDrawable()
+        return request
+            .asDrawable()
             .load(resId)
     }
 
-    override fun mutateResource(resource: Drawable): Drawable {
+    override fun mutateImage(resource: Drawable): Drawable {
         return resource.mutate()
     }
 
@@ -41,5 +45,9 @@ internal class GlideResourceLoader internal constructor(
         image: Drawable
     ) {
         view.setImageDrawable(image)
+    }
+
+    override fun immediate(): Drawable {
+        return requireNotNull(AppCompatResources.getDrawable(context, resId))
     }
 }

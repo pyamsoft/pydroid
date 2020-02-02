@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.loader
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
@@ -27,5 +28,8 @@ interface ImageLoader {
     fun load(@DrawableRes resource: Int): Loader<Drawable>
 
     @CheckResult
-    fun immediate(@DrawableRes resource: Int): Drawable
+    fun load(data: ByteArray): Loader<Bitmap>
+
+    @CheckResult
+    fun load(bitmap: Bitmap): Loader<Bitmap>
 }

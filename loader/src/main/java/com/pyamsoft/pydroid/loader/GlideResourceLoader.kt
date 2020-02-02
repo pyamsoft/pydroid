@@ -47,7 +47,21 @@ internal class GlideResourceLoader internal constructor(
         view.setImageDrawable(image)
     }
 
-    override fun immediate(): Drawable {
-        return requireNotNull(AppCompatResources.getDrawable(context, resId))
+    override fun immediate(): Drawable? {
+        startAction?.invoke()
+        try {
+            val drawable: Drawable? = AppCompatResources.getDrawable(context, resId)
+            if (drawable == null) {
+                errorAction?.invoke()
+            } else {
+                val mutated = mutator?.invoke(mutateImage(drawable)) ?: drawable
+                completeAction?.invoke(mutated)
+                return mutated
+            }
+        } catch (e: Exception) {
+            errorAction?.invoke()
+        }
+
+        return null
     }
 }

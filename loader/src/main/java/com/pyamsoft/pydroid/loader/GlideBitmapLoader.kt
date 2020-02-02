@@ -40,7 +40,7 @@ internal class GlideBitmapLoader internal constructor(
         view.setImageBitmap(image)
     }
 
-    override fun immediate(): Bitmap {
+    override fun immediate(): Bitmap? {
         return bitmap
     }
 }

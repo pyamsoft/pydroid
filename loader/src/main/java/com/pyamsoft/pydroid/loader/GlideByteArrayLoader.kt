@@ -41,7 +41,21 @@ internal class GlideByteArrayLoader internal constructor(
         view.setImageBitmap(image)
     }
 
-    override fun immediate(): Bitmap {
-        return BitmapFactory.decodeByteArray(data, 0, data.size)
+    override fun immediate(): Bitmap? {
+        startAction?.invoke()
+        try {
+            val bitmap: Bitmap? = BitmapFactory.decodeByteArray(data, 0, data.size)
+            if (bitmap == null) {
+                errorAction?.invoke()
+            } else {
+                val mutated = mutator?.invoke(mutateImage(bitmap)) ?: bitmap
+                completeAction?.invoke(mutated)
+                return mutated
+            }
+        } catch (e: Exception) {
+            errorAction?.invoke()
+        }
+
+        return null
     }
 }

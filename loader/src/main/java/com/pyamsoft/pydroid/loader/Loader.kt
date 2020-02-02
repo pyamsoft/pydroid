@@ -17,7 +17,6 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.CheckResult
 
@@ -27,7 +26,7 @@ interface Loader<T : Any> {
     fun onRequest(action: () -> Unit): Loader<T>
 
     @CheckResult
-    fun onError(action: (Drawable?) -> Unit): Loader<T>
+    fun onError(action: () -> Unit): Loader<T>
 
     @CheckResult
     fun onLoaded(action: (T) -> Unit): Loader<T>
@@ -42,5 +41,5 @@ interface Loader<T : Any> {
     fun into(target: ImageTarget<T>): Loaded
 
     @CheckResult
-    fun immediate(): T
+    fun immediate(): T?
 }

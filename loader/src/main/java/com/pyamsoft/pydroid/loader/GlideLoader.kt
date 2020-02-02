@@ -53,14 +53,6 @@ abstract class GlideLoader<T : Any> protected constructor() : GenericLoader<T>()
             override fun setImage(image: T) {
                 setImage(imageView, image)
             }
-
-            override fun setError(error: Drawable?) {
-                imageView.setImageDrawable(error)
-            }
-
-            override fun setPlaceholder(placeholder: Drawable?) {
-                imageView.setImageDrawable(placeholder)
-            }
         })
     }
 
@@ -72,12 +64,12 @@ abstract class GlideLoader<T : Any> protected constructor() : GenericLoader<T>()
     private fun loadTarget(target: ImageTarget<T>): Loaded {
         val loadTarget = object : CustomViewTarget<View, T>(target.view()) {
             override fun onLoadFailed(error: Drawable?) {
-                target.setError(error)
-                errorAction?.invoke(error)
+                target.clear()
+                errorAction?.invoke()
             }
 
             override fun onResourceCleared(placeholder: Drawable?) {
-                target.setPlaceholder(placeholder)
+                target.clear()
             }
 
             override fun onResourceReady(

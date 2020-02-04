@@ -17,12 +17,23 @@
 
 package com.pyamsoft.pydroid.loader
 
+import android.widget.ImageView
+import androidx.annotation.CheckResult
+
 abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 
     protected var startAction: (() -> Unit)? = null
     protected var errorAction: (() -> Unit)? = null
     protected var completeAction: ((T) -> Unit)? = null
     protected var mutator: ((T) -> T)? = null
+
+    @CheckResult
+    protected abstract fun mutateImage(resource: T): T
+
+    protected abstract fun setImage(view: ImageView, image: T)
+
+    @CheckResult
+    protected abstract fun immediateResource(): T?
 
     final override fun onRequest(action: () -> Unit): Loader<T> {
         return this.also { it.startAction = action }
@@ -38,5 +49,23 @@ abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 
     final override fun mutate(action: (T) -> T): Loader<T> {
         return this.also { it.mutator = action }
+    }
+
+    final override fun immediate(): T? {
+        startAction?.invoke()
+        try {
+            val resource: T? = immediateResource()
+            if (resource == null) {
+                errorAction?.invoke()
+            } else {
+                val mutated = mutator?.invoke(mutateImage(resource)) ?: resource
+                completeAction?.invoke(mutated)
+                return mutated
+            }
+        } catch (e: Exception) {
+            errorAction?.invoke()
+        }
+
+        return null
     }
 }

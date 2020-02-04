@@ -15,22 +15,23 @@
  *
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.loader.glide
 
+import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 
-internal class GlideByteArrayLoader internal constructor(
-    private val data: ByteArray
-) : GlideLoader<Bitmap>() {
+internal class GlideBitmapLoader internal constructor(
+    context: Context,
+    private val bitmap: Bitmap
+) : GlideLoader<Bitmap>(context) {
 
     override fun createRequest(request: RequestManager): RequestBuilder<Bitmap> {
         return request
             .asBitmap()
-            .load(data)
+            .load(bitmap)
     }
 
     override fun mutateImage(resource: Bitmap): Bitmap {
@@ -41,21 +42,7 @@ internal class GlideByteArrayLoader internal constructor(
         view.setImageBitmap(image)
     }
 
-    override fun immediate(): Bitmap? {
-        startAction?.invoke()
-        try {
-            val bitmap: Bitmap? = BitmapFactory.decodeByteArray(data, 0, data.size)
-            if (bitmap == null) {
-                errorAction?.invoke()
-            } else {
-                val mutated = mutator?.invoke(mutateImage(bitmap)) ?: bitmap
-                completeAction?.invoke(mutated)
-                return mutated
-            }
-        } catch (e: Exception) {
-            errorAction?.invoke()
-        }
-
-        return null
+    override fun immediateResource(): Bitmap? {
+        return bitmap
     }
 }

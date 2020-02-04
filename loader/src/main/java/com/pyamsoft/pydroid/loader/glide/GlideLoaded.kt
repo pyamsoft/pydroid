@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  *
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.loader.glide
 
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.target.Target
+import com.pyamsoft.pydroid.loader.Loaded
 
-class GlideLoaded internal constructor(
-    private val target: ImageTarget<*>
+internal class GlideLoaded internal constructor(
+    private val manager: RequestManager,
+    private val target: Target<*>
 ) : Loaded {
 
     override fun dispose() {
-        val view = target.view()
-        Glide.with(view.context.applicationContext)
-            .clear(view)
-        target.clear()
+        manager.clear(target)
     }
 }

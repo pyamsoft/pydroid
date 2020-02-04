@@ -21,20 +21,23 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import com.pyamsoft.pydroid.loader.glide.GlideBitmapLoader
+import com.pyamsoft.pydroid.loader.glide.GlideByteArrayLoader
+import com.pyamsoft.pydroid.loader.glide.GlideDrawableLoader
 
 internal class ImageLoaderImpl internal constructor(
     private val context: Context
 ) : ImageLoader {
 
     override fun load(@DrawableRes resource: Int): Loader<Drawable> {
-        return GlideResourceLoader(context.applicationContext, resource)
+        return GlideDrawableLoader(context.applicationContext, resource)
     }
 
     override fun load(data: ByteArray): Loader<Bitmap> {
-        return GlideByteArrayLoader(data)
+        return GlideByteArrayLoader(context.applicationContext, data)
     }
 
     override fun load(bitmap: Bitmap): Loader<Bitmap> {
-        return GlideBitmapLoader(bitmap)
+        return GlideBitmapLoader(context.applicationContext, bitmap)
     }
 }

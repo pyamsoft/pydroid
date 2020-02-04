@@ -17,13 +17,7 @@
 
 package com.pyamsoft.pydroid.loader
 
-import android.view.View
-import androidx.annotation.CheckResult
-
 interface ImageTarget<T : Any> {
-
-    @CheckResult
-    fun view(): View
 
     fun clear()
 

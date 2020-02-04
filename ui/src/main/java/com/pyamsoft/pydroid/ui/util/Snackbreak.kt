@@ -17,12 +17,14 @@
 
 package com.pyamsoft.pydroid.ui.util
 
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
@@ -45,7 +47,7 @@ object Snackbreak {
     private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
     private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
 
-    private fun Snackbar.setMargin() {
+    private fun Snackbar.materialMargin() {
         val params = view.layoutParams as? MarginLayoutParams
         if (params != null) {
             val margin = 8.toDp(view.context)
@@ -63,24 +65,36 @@ object Snackbreak {
         }
     }
 
-    private fun Snackbar.setBackground() {
+    private fun Snackbar.materialBackground() {
         val drawable = GradientDrawable().mutate() as GradientDrawable
 
         val background = drawable.apply {
             shape = GradientDrawable.RECTANGLE
-            setColor(ContextCompat.getColor(context, R.color.snackbar))
+            val snackbarColor = ContextCompat.getColor(context, R.color.snackbar)
+            val alpha = (0.9F * 255).toInt()
+            val snackbarBackground = ColorUtils.setAlphaComponent(snackbarColor, alpha)
+            setColor(snackbarBackground)
 
-            cornerRadius = 4.toDp(context)
-                .toFloat()
+            cornerRadius = 4.toDp(context).toFloat()
         }
 
         view.background = background
     }
 
-    private fun Snackbar.materialDesign() {
-        setMargin()
-        setBackground()
+    private fun Snackbar.materialText() {
+        // Since the background is always customized, the text should always be white
+        setTextColor(Color.WHITE)
+    }
+
+    private fun Snackbar.materialElevation() {
         ViewCompat.setElevation(view, 6.toDp(context).toFloat())
+    }
+
+    private fun Snackbar.materialDesign() {
+        materialMargin()
+        materialBackground()
+        materialText()
+        materialElevation()
     }
 
     @JvmStatic

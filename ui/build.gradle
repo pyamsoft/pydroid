@@ -25,6 +25,8 @@ dependencies {
     api "com.google.android.material:material:$materialDesign"
     api "androidx.preference:preference:$preference"
     api "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
+
 
     api project(':arch')
     api project(':bootstrap')

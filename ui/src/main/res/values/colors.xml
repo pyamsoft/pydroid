@@ -63,10 +63,11 @@
     <color name="yellow500">#ffFFEB3B</color>
     <color name="yellow700">#ffFBC02D</color>
 
+    <color name="shadow_scrim30">#30000000</color>
     <color name="shadow_scrim45">#45000000</color>
-    <color name="snackbar">#323232</color>
+    <color name="shadow_scrim50">#50000000</color>
 
-    <color name="material_dark_background">#ff303030</color>
-    <color name="material_light_background">#fffafafa</color>
+    <color name="material_dark_background">#FF121212</color>
+    <color name="material_light_background">#FFFFFFFF</color>
 
 </resources>

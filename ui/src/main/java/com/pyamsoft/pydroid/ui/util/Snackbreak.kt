@@ -17,14 +17,10 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
@@ -36,7 +32,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.toDp
 import java.util.concurrent.ConcurrentHashMap
@@ -65,35 +60,12 @@ object Snackbreak {
         }
     }
 
-    private fun Snackbar.materialBackground() {
-        val drawable = GradientDrawable().mutate() as GradientDrawable
-
-        val background = drawable.apply {
-            shape = GradientDrawable.RECTANGLE
-            val snackbarColor = ContextCompat.getColor(context, R.color.snackbar)
-            val alpha = (0.9F * 255).toInt()
-            val snackbarBackground = ColorUtils.setAlphaComponent(snackbarColor, alpha)
-            setColor(snackbarBackground)
-
-            cornerRadius = 4.toDp(context).toFloat()
-        }
-
-        view.background = background
-    }
-
-    private fun Snackbar.materialText() {
-        // Since the background is always customized, the text should always be white
-        setTextColor(Color.WHITE)
-    }
-
     private fun Snackbar.materialElevation() {
         ViewCompat.setElevation(view, 6.toDp(context).toFloat())
     }
 
     private fun Snackbar.materialDesign() {
         materialMargin()
-        materialBackground()
-        materialText()
         materialElevation()
     }
 

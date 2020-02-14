@@ -24,12 +24,12 @@ import androidx.core.graphics.ColorUtils
 
 @ColorInt
 @CheckResult
-private fun @receiver:ColorInt Int.lighter(ratio: Float): Int {
+fun @receiver:ColorInt Int.lighter(ratio: Float): Int {
     return ColorUtils.blendARGB(this, Color.WHITE, ratio)
 }
 
 @ColorInt
 @CheckResult
-private fun @receiver:ColorInt Int.darker(ratio: Float): Int {
+fun @receiver:ColorInt Int.darker(ratio: Float): Int {
     return ColorUtils.blendARGB(this, Color.WHITE, ratio)
 }

@@ -41,17 +41,19 @@ internal class PYDroidInitializer internal constructor(
             setStrictMode()
         }
 
-        val impl = PYDroidComponent.ComponentImpl.FactoryImpl()
-            .create(
-                application,
-                debug,
-                applicationName,
-                viewSourceUrl,
-                bugReportUrl,
-                privacyPolicyUrl,
-                termsConditionsUrl,
-                currentVersion
+        val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
+            PYDroidComponent.Factory.Parameters(
+                application = application,
+                debug = debug,
+                applicationName = applicationName,
+                viewSourceUrl = viewSourceUrl,
+                bugReportUrl = bugReportUrl,
+                privacyPolicyUrl = privacyPolicyUrl,
+                termsConditionsUrl = termsConditionsUrl,
+                currentVersion = currentVersion
             )
+        )
+
         component = impl
         moduleProvider = impl
     }

@@ -38,42 +38,41 @@ internal interface AppSettingsComponent {
             hideUpgradeInformation: Boolean,
             parentProvider: () -> ViewGroup
         ): AppSettingsComponent
+
+        data class Parameters internal constructor(
+            internal val applicationName: String,
+            internal val bugReportUrl: String,
+            internal val viewSourceUrl: String,
+            internal val privacyPolicyUrl: String,
+            internal val termsConditionsUrl: String,
+            internal val factory: PYDroidViewModelFactory
+        )
     }
 
     class Impl private constructor(
         private val parentProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
-        private val applicationName: String,
-        private val bugReportUrl: String,
-        private val viewSourceUrl: String,
-        private val privacyPolicyUrl: String,
-        private val termsConditionsUrl: String,
         private val hideClearAll: Boolean,
         private val hideUpgradeInformation: Boolean,
         private val preferenceScreen: PreferenceScreen,
-        private val factory: PYDroidViewModelFactory
+        private val params: Factory.Parameters
     ) : AppSettingsComponent {
 
         override fun inject(fragment: AppSettingsPreferenceFragment) {
             val versionView = VersionView(owner, parentProvider)
             val settingsView = AppSettingsView(
-                applicationName, bugReportUrl,
-                viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
+                params.applicationName, params.bugReportUrl,
+                params.viewSourceUrl, params.privacyPolicyUrl, params.termsConditionsUrl,
                 hideClearAll, hideUpgradeInformation, preferenceScreen
             )
 
             fragment.versionView = versionView
             fragment.settingsView = settingsView
-            fragment.factory = factory
+            fragment.factory = params.factory
         }
 
         internal class FactoryImpl internal constructor(
-            private val applicationName: String,
-            private val bugReportUrl: String,
-            private val viewSourceUrl: String,
-            private val privacyPolicyUrl: String,
-            private val termsConditionsUrl: String,
-            private val factory: PYDroidViewModelFactory
+            private val params: Factory.Parameters
         ) : Factory {
 
             override fun create(
@@ -84,10 +83,8 @@ internal interface AppSettingsComponent {
                 parentProvider: () -> ViewGroup
             ): AppSettingsComponent {
                 return Impl(
-                    parentProvider, owner, applicationName, bugReportUrl,
-                    viewSourceUrl, privacyPolicyUrl, termsConditionsUrl,
-                    hideClearAll, hideUpgradeInformation, preferenceScreen,
-                    factory
+                    parentProvider, owner, hideClearAll,
+                    hideUpgradeInformation, preferenceScreen, params
                 )
             }
         }

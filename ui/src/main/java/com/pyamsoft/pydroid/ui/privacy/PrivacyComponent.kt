@@ -33,30 +33,34 @@ internal interface PrivacyComponent {
             owner: LifecycleOwner,
             snackbarRootProvider: () -> ViewGroup
         ): PrivacyComponent
+
+        data class Parameters internal constructor(
+            internal val factory: PYDroidViewModelFactory
+        )
     }
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
-        private val factory: PYDroidViewModelFactory
+        private val params: Factory.Parameters
     ) : PrivacyComponent {
 
         override fun inject(activity: PrivacyActivity) {
             val privacyView = PrivacyView(owner, snackbarRootProvider)
 
-            activity.privacyFactory = factory
+            activity.privacyFactory = params.factory
             activity.privacyView = privacyView
         }
 
         internal class FactoryImpl internal constructor(
-            private val factory: PYDroidViewModelFactory
+            private val params: Factory.Parameters
         ) : Factory {
 
             override fun create(
                 owner: LifecycleOwner,
                 snackbarRootProvider: () -> ViewGroup
             ): PrivacyComponent {
-                return Impl(snackbarRootProvider, owner, factory)
+                return Impl(snackbarRootProvider, owner, params)
             }
         }
     }

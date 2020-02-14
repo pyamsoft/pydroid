@@ -37,34 +37,44 @@ internal interface VersionComponent {
             owner: LifecycleOwner,
             snackbarRootProvider: () -> ViewGroup
         ): VersionComponent
+
+        data class Parameters internal constructor(
+            internal val factory: PYDroidViewModelFactory
+        )
     }
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
-        private val factory: PYDroidViewModelFactory
+        private val params: Factory.Parameters
     ) : VersionComponent {
 
+        private val ratingParams by lazy {
+            RatingComponent.Factory.Parameters(
+                factory = params.factory
+            )
+        }
+
         override fun plusRating(): RatingComponent.Factory {
-            return RatingComponent.Impl.FactoryImpl(factory)
+            return RatingComponent.Impl.FactoryImpl(ratingParams)
         }
 
         override fun inject(activity: VersionCheckActivity) {
             val versionView = VersionView(owner, snackbarRootProvider)
 
-            activity.versionFactory = factory
+            activity.versionFactory = params.factory
             activity.versionView = versionView
         }
 
         internal class FactoryImpl internal constructor(
-            private val factory: PYDroidViewModelFactory
+            private val params: Factory.Parameters
         ) : Factory {
 
             override fun create(
                 owner: LifecycleOwner,
                 snackbarRootProvider: () -> ViewGroup
             ): VersionComponent {
-                return Impl(snackbarRootProvider, owner, factory)
+                return Impl(snackbarRootProvider, owner, params)
             }
         }
     }

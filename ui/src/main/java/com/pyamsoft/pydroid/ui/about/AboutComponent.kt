@@ -36,6 +36,10 @@ internal interface AboutComponent {
             toolbarActivity: ToolbarActivity,
             backstack: Int
         ): AboutComponent
+
+        data class Parameters internal constructor(
+            internal val factory: PYDroidViewModelFactory
+        )
     }
 
     class Impl private constructor(
@@ -43,7 +47,7 @@ internal interface AboutComponent {
         private val owner: LifecycleOwner,
         private val backstack: Int,
         private val toolbarActivity: ToolbarActivity,
-        private val factory: PYDroidViewModelFactory
+        private val params: Factory.Parameters
     ) : AboutComponent {
 
         override fun inject(fragment: AboutFragment) {
@@ -52,14 +56,14 @@ internal interface AboutComponent {
 
             val toolbar = AboutToolbarView(backstack, toolbarActivity)
 
-            fragment.factory = factory
+            fragment.factory = params.factory
             fragment.listView = listView
             fragment.spinnerView = spinnerView
             fragment.toolbar = toolbar
         }
 
         class FactoryImpl internal constructor(
-            private val factory: PYDroidViewModelFactory
+            private val params: Factory.Parameters
         ) : Factory {
 
             override fun create(
@@ -68,7 +72,7 @@ internal interface AboutComponent {
                 toolbarActivity: ToolbarActivity,
                 backstack: Int
             ): AboutComponent {
-                return Impl(parent, owner, backstack, toolbarActivity, factory)
+                return Impl(parent, owner, backstack, toolbarActivity, params)
             }
         }
     }

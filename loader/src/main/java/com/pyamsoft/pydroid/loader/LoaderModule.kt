@@ -20,12 +20,14 @@ package com.pyamsoft.pydroid.loader
 import android.content.Context
 import androidx.annotation.CheckResult
 
-class LoaderModule(context: Context) {
+class LoaderModule(params: Parameters) {
 
-    private val impl = ImageLoaderImpl(context.applicationContext)
+    private val impl = ImageLoaderImpl(params.context.applicationContext)
 
     @CheckResult
     fun provideLoader(): ImageLoader {
         return impl
     }
+
+    data class Parameters(internal val context: Context)
 }

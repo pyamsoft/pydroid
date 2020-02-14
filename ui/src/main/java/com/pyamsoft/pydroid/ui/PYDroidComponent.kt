@@ -60,57 +60,118 @@ internal interface PYDroidComponent {
     interface Factory {
 
         @CheckResult
-        fun create(
-            application: Application,
-            debug: Boolean,
-            applicationName: String,
-            viewSourceUrl: String,
-            bugReportUrl: String,
-            privacyPolicyUrl: String,
-            termsConditionsUrl: String,
-            currentVersion: Int
-        ): ComponentImpl
+        fun create(params: Parameters): Component
+
+        data class Parameters internal constructor(
+            internal val application: Application,
+            internal val debug: Boolean,
+            internal val applicationName: String,
+            internal val viewSourceUrl: String,
+            internal val bugReportUrl: String,
+            internal val privacyPolicyUrl: String,
+            internal val termsConditionsUrl: String,
+            internal val currentVersion: Int
+        )
     }
 
-    class ComponentImpl private constructor(
-        application: Application,
-        debug: Boolean,
-        private val name: String,
-        private val sourceUrl: String,
-        private val reportUrl: String,
-        private val privacyPolicyUrl: String,
-        private val termsConditionsUrl: String,
-        private val version: Int
-    ) : PYDroidComponent, ModuleProvider {
+    interface Component : PYDroidComponent, ModuleProvider {
 
-        private val context = application
-        private val enforcer = Enforcer(debug)
-        private val preferences = PYDroidPreferencesImpl(application)
+        data class Parameters internal constructor(
+            internal val application: Application,
+            internal val debug: Boolean,
+            internal val name: String,
+            internal val sourceUrl: String,
+            internal val reportUrl: String,
+            internal val privacyPolicyUrl: String,
+            internal val termsConditionsUrl: String,
+            internal val version: Int
+        )
+    }
+
+    class ComponentImpl private constructor(params: Component.Parameters) : Component {
+
+        private val context = params.application.applicationContext
+        private val enforcer = Enforcer(params.debug)
+        private val preferences = PYDroidPreferencesImpl(params.application.applicationContext)
         private val theming = Theming(preferences)
-        private val packageName = application.packageName
+        private val packageName = params.application.packageName
 
-        private val aboutModule = AboutModule(enforcer)
-        private val loaderModule = LoaderModule(context)
-        private val ratingModule = RatingModule(version, enforcer, preferences)
-        private val versionCheckModule = VersionCheckModule(debug, version, packageName, enforcer)
-
-        private val viewModelFactory by lazy {
-            PYDroidViewModelFactory(
-                name,
-                version,
-                ratingModule.provideInteractor(),
-                aboutModule.provideInteractor(),
-                versionCheckModule.provideInteractor(),
-                theming
+        private val loaderModule = LoaderModule(
+            LoaderModule.Parameters(
+                context = context
             )
-        }
+        )
+
+        private val aboutModule = AboutModule(
+            AboutModule.Parameters(
+                enforcer = enforcer
+            )
+        )
+
+        private val ratingModule = RatingModule(
+            RatingModule.Parameters(
+                version = params.version,
+                enforcer = enforcer,
+                preferences = preferences
+            )
+        )
+
+        private val versionCheckModule = VersionCheckModule(
+            VersionCheckModule.Parameters(
+                debug = params.debug,
+                currentVersion = params.version,
+                packageName = packageName,
+                enforcer = enforcer
+            )
+        )
+
+        private val viewModelFactory = PYDroidViewModelFactory(
+            PYDroidViewModelFactory.Parameters(
+                name = params.name,
+                version = params.version,
+                ratingInteractor = ratingModule.provideInteractor(),
+                aboutInteractor = aboutModule.provideInteractor(),
+                versionInteractor = versionCheckModule.provideInteractor(),
+                theming = theming
+            )
+        )
+
+        private val appSettingsParams = AppSettingsComponent.Factory.Parameters(
+            applicationName = params.name,
+            bugReportUrl = params.reportUrl,
+            viewSourceUrl = params.sourceUrl,
+            privacyPolicyUrl = params.privacyPolicyUrl,
+            termsConditionsUrl = params.termsConditionsUrl,
+            factory = viewModelFactory
+        )
+
+        private val versionUpgradeParams = VersionUpgradeComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        private val versionCheckParams = VersionComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        private val privacyParams = PrivacyComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        private val aboutParams = AboutComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        private val ratingDialogParams = RatingDialogComponent.Factory.Parameters(
+            factory = viewModelFactory,
+            module = loaderModule
+        )
 
         override fun plusPrivacy(): PrivacyComponent.Factory {
-            return PrivacyComponent.Impl.FactoryImpl(viewModelFactory)
+            return PrivacyComponent.Impl.FactoryImpl(privacyParams)
         }
 
         override fun plusAbout(): AboutComponent.Factory {
-            return AboutComponent.Impl.FactoryImpl(viewModelFactory)
+            return AboutComponent.Impl.FactoryImpl(aboutParams)
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -118,23 +179,19 @@ internal interface PYDroidComponent {
         }
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {
-            return RatingDialogComponent.Impl.FactoryImpl(loaderModule, viewModelFactory)
+            return RatingDialogComponent.Impl.FactoryImpl(ratingDialogParams)
         }
 
         override fun plusVersion(): VersionComponent.Factory {
-            return VersionComponent.Impl.FactoryImpl(viewModelFactory)
+            return VersionComponent.Impl.FactoryImpl(versionCheckParams)
         }
 
         override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-            return VersionUpgradeComponent.Impl.FactoryImpl(viewModelFactory)
+            return VersionUpgradeComponent.Impl.FactoryImpl(versionUpgradeParams)
         }
 
         override fun plusSettings(): AppSettingsComponent.Factory {
-            return AppSettingsComponent.Impl.FactoryImpl(
-                name, reportUrl, sourceUrl,
-                privacyPolicyUrl, termsConditionsUrl,
-                viewModelFactory
-            )
+            return AppSettingsComponent.Impl.FactoryImpl(appSettingsParams)
         }
 
         override fun enforcer(): Enforcer {
@@ -151,25 +208,18 @@ internal interface PYDroidComponent {
 
         class FactoryImpl internal constructor() : Factory {
 
-            override fun create(
-                application: Application,
-                debug: Boolean,
-                applicationName: String,
-                viewSourceUrl: String,
-                bugReportUrl: String,
-                privacyPolicyUrl: String,
-                termsConditionsUrl: String,
-                currentVersion: Int
-            ): ComponentImpl {
+            override fun create(params: Factory.Parameters): Component {
                 return ComponentImpl(
-                    application,
-                    debug,
-                    applicationName,
-                    viewSourceUrl,
-                    bugReportUrl,
-                    privacyPolicyUrl,
-                    termsConditionsUrl,
-                    currentVersion
+                    Component.Parameters(
+                        application = params.application,
+                        debug = params.debug,
+                        name = params.applicationName,
+                        sourceUrl = params.viewSourceUrl,
+                        reportUrl = params.bugReportUrl,
+                        privacyPolicyUrl = params.privacyPolicyUrl,
+                        termsConditionsUrl = params.termsConditionsUrl,
+                        version = params.currentVersion
+                    )
                 )
             }
         }

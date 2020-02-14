@@ -27,25 +27,25 @@ import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.Enforcer
 import com.squareup.moshi.Moshi
-import java.util.concurrent.TimeUnit.MINUTES
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit.MINUTES
 
-class VersionCheckModule(
-    debug: Boolean,
-    currentVersion: Int,
-    packageName: String,
-    enforcer: Enforcer
-) {
+class VersionCheckModule(params: Parameters) {
 
     private val impl: VersionCheckInteractorImpl
     private val moshi: Moshi
 
     init {
+        val debug = params.debug
+        val enforcer = params.enforcer
+        val currentVersion = params.currentVersion
+        val packageName = params.packageName
+
         moshi = createMoshi()
         val retrofit = createRetrofit(enforcer, moshi) { createOkHttpClient(enforcer, debug) }
         val versionCheckService = createService(retrofit)
@@ -142,4 +142,11 @@ class VersionCheckModule(
             }
         }
     }
+
+    data class Parameters(
+        internal val debug: Boolean,
+        internal val currentVersion: Int,
+        internal val packageName: String,
+        internal val enforcer: Enforcer
+    )
 }

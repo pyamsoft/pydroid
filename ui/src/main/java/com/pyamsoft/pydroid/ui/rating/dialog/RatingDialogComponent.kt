@@ -35,30 +35,33 @@ internal interface RatingDialogComponent {
             owner: LifecycleOwner,
             rateLink: String
         ): RatingDialogComponent
+
+        data class Parameters internal constructor(
+            internal val factory: PYDroidViewModelFactory,
+            internal val module: LoaderModule
+        )
     }
 
     class Impl private constructor(
         private val parent: ViewGroup,
         private val rateLink: String,
         private val owner: LifecycleOwner,
-        private val loaderModule: LoaderModule,
-        private val factory: PYDroidViewModelFactory
+        private val params: Factory.Parameters
     ) : RatingDialogComponent {
 
         override fun inject(dialog: RatingDialog) {
-            val icon = RatingIconView(loaderModule.provideLoader(), parent)
+            val icon = RatingIconView(params.module.provideLoader(), parent)
             val changelog = RatingChangelogView(parent)
             val controls = RatingControlsView(rateLink, owner, parent)
 
-            dialog.factory = factory
+            dialog.factory = params.factory
             dialog.iconView = icon
             dialog.changelogView = changelog
             dialog.controlsView = controls
         }
 
         internal class FactoryImpl internal constructor(
-            private val loaderModule: LoaderModule,
-            private val factory: PYDroidViewModelFactory
+            private val params: Factory.Parameters
         ) : Factory {
 
             override fun create(
@@ -66,7 +69,7 @@ internal interface RatingDialogComponent {
                 owner: LifecycleOwner,
                 rateLink: String
             ): RatingDialogComponent {
-                return Impl(parent, rateLink, owner, loaderModule, factory)
+                return Impl(parent, rateLink, owner, params)
             }
         }
     }

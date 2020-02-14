@@ -20,16 +20,18 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 
-class RatingModule(
-    currentVersion: Int,
-    enforcer: Enforcer,
-    preferences: RatingPreferences
-) {
+class RatingModule(params: Parameters) {
 
-    private val impl = RatingInteractorImpl(currentVersion, enforcer, preferences)
+    private val impl = RatingInteractorImpl(params.version, params.enforcer, params.preferences)
 
     @CheckResult
     fun provideInteractor(): RatingInteractor {
         return impl
     }
+
+    data class Parameters(
+        internal val version: Int,
+        internal val enforcer: Enforcer,
+        internal val preferences: RatingPreferences
+    )
 }

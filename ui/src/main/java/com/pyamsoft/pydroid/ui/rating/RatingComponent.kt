@@ -28,22 +28,26 @@ internal interface RatingComponent {
 
         @CheckResult
         fun create(): RatingComponent
+
+        data class Parameters internal constructor(
+            internal val factory: PYDroidViewModelFactory
+        )
     }
 
     class Impl private constructor(
-        private val factory: PYDroidViewModelFactory
+        private val params: Factory.Parameters
     ) : RatingComponent {
 
         override fun inject(activity: RatingActivity) {
-            activity.ratingFactory = factory
+            activity.ratingFactory = params.factory
         }
 
         internal class FactoryImpl internal constructor(
-            private val factory: PYDroidViewModelFactory
+            private val params: Factory.Parameters
         ) : Factory {
 
             override fun create(): RatingComponent {
-                return Impl(factory)
+                return Impl(params)
             }
         }
     }

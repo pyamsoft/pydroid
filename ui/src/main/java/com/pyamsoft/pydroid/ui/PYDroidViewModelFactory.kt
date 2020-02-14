@@ -33,24 +33,28 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
-    private val name: String,
-    private val version: Int,
-    private val ratingInteractor: RatingInteractor,
-    private val aboutInteractor: AboutInteractor,
-    private val versionInteractor: VersionCheckInteractor,
-    private val theming: Theming
+    private val params: Parameters
 ) : UiViewModelFactory() {
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
-            RatingDialogViewModel::class -> RatingDialogViewModel(ratingInteractor)
-            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(name, version)
-            AboutViewModel::class -> AboutViewModel(aboutInteractor)
-            RatingViewModel::class -> RatingViewModel(ratingInteractor)
-            AppSettingsViewModel::class -> AppSettingsViewModel(theming)
-            VersionCheckViewModel::class -> VersionCheckViewModel(versionInteractor)
+            RatingDialogViewModel::class -> RatingDialogViewModel(params.ratingInteractor)
+            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(params.name, params.version)
+            AboutViewModel::class -> AboutViewModel(params.aboutInteractor)
+            RatingViewModel::class -> RatingViewModel(params.ratingInteractor)
+            AppSettingsViewModel::class -> AppSettingsViewModel(params.theming)
+            VersionCheckViewModel::class -> VersionCheckViewModel(params.versionInteractor)
             PrivacyViewModel::class -> PrivacyViewModel()
             else -> fail()
         }
     }
+
+    internal data class Parameters internal constructor(
+        internal val name: String,
+        internal val version: Int,
+        internal val ratingInteractor: RatingInteractor,
+        internal val aboutInteractor: AboutInteractor,
+        internal val versionInteractor: VersionCheckInteractor,
+        internal val theming: Theming
+    )
 }

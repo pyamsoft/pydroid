@@ -20,6 +20,9 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,9 +32,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     private val initialState: S,
@@ -234,14 +234,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 // the same state both times.
                 if (debug) {
                     val copyNewState = currentState.stateChange()
-                    if (newState != copyNewState) {
-                        throw IllegalStateException(
-                            """State changes must be deterministic
-                            |$copyNewState
-                            |$newState
-                            |""".trimMargin()
-                        )
-                    }
+                    checkStateEquality(newState, copyNewState)
                 }
             }
 
@@ -250,6 +243,36 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 // Replace the old state with this new state
                 state = newState
                 stateBus.send(newState)
+            }
+        }
+    }
+
+    /**
+     * If we are in debug mode, perform the state change twice and make sure that it produces
+     * the same state both times.
+     */
+    private fun checkStateEquality(state1: S, state2: S) {
+        if (state1 != state2) {
+            // Pull a page from the MvRx repo's BaseMvRxViewModel :)
+            val changedProp = state1::class.java.declaredFields.asSequence()
+                .onEach { it.isAccessible = true }
+                .firstOrNull { property ->
+                    try {
+                        val prop1 = property.get(state1)
+                        val prop2 = property.get(state2)
+                        prop1 != prop2
+                    } catch (e: Throwable) {
+                        // Failed but we don't care
+                        false
+                    }
+                }
+
+            if (changedProp == null) {
+                throw DeterministicStateError(state1, state2, null)
+            } else {
+                val prop1 = changedProp.get(state1)
+                val prop2 = changedProp.get(state2)
+                throw DeterministicStateError(prop1, prop2, changedProp.name)
             }
         }
     }
@@ -399,4 +422,21 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private object FlushQueueEvent
+
+    private class DeterministicStateError internal constructor(
+        state1: Any?,
+        state2: Any?,
+        prop: String?
+    ) : IllegalStateException(
+        """State changes must be deterministic
+            |${if (prop != null) {
+            "Property $prop changed from $state1 to $state2"
+        } else {
+            """
+                |$state1
+                |$state2
+            """.trimIndent()
+        }}
+                """.trimIndent()
+    )
 }

@@ -20,8 +20,8 @@ package com.pyamsoft.pydroid.ui.about
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
+import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface AboutComponent {
 

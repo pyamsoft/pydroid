@@ -23,20 +23,14 @@ import timber.log.Timber
 
 internal class PYDroidInitializer internal constructor(
     application: Application,
-    applicationName: String,
-    viewSourceUrl: String,
-    bugReportUrl: String,
-    privacyPolicyUrl: String,
-    termsConditionsUrl: String,
-    currentVersion: Int,
-    debug: Boolean
+    params: PYDroid.Parameters
 ) {
 
     internal val component: PYDroidComponent
     internal val moduleProvider: ModuleProvider
 
     init {
-        if (debug) {
+        if (params.debug) {
             Timber.plant(Timber.DebugTree())
             setStrictMode()
         }
@@ -44,13 +38,13 @@ internal class PYDroidInitializer internal constructor(
         val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
             PYDroidComponent.Factory.Parameters(
                 application = application,
-                debug = debug,
-                applicationName = applicationName,
-                viewSourceUrl = viewSourceUrl,
-                bugReportUrl = bugReportUrl,
-                privacyPolicyUrl = privacyPolicyUrl,
-                termsConditionsUrl = termsConditionsUrl,
-                currentVersion = currentVersion
+                debug = params.debug,
+                applicationName = params.name,
+                viewSourceUrl = params.viewSourceUrl,
+                bugReportUrl = params.bugReportUrl,
+                privacyPolicyUrl = params.privacyPolicyUrl,
+                termsConditionsUrl = params.termsConditionsUrl,
+                currentVersion = params.version
             )
         )
 

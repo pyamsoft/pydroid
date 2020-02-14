@@ -48,39 +48,22 @@ object PYDroid {
      *
      * Track the Instance at the application level, such as:
      *
-     * PYDroid.init(
-     *    this,
-     *    this,
-     *    getString(R.string.app_name),
-     *    getString(R.string.bug_report),
-     *    BuildConfig.VERSION_CODE,
-     *    BuildConfig.DEBUG
-     * )
+     * PYDroid.init(this, PYDroid.Parameters(
+     *    name = getString(R.string.app_name),
+     *    bugReportUrl = getString(R.string.bug_report),
+     *    version = BuildConfig.VERSION_CODE,
+     *    debug = BuildConfig.DEBUG
+     * ))
      */
     @JvmStatic
     @JvmOverloads
     fun init(
         application: Application,
-        applicationName: String,
-        viewSourceUrl: String,
-        bugReportUrl: String,
-        privacyPolicyUrl: String,
-        termsConditionsUrl: String,
-        currentVersion: Int,
-        debug: Boolean,
+        params: Parameters,
         onInit: (provider: ModuleProvider) -> Unit = DEFAULT_INIT_CALLBACK
     ) {
         if (instance.get() == null) {
-            val pydroid = PYDroidInitializer(
-                application,
-                applicationName,
-                viewSourceUrl,
-                bugReportUrl,
-                privacyPolicyUrl,
-                termsConditionsUrl,
-                currentVersion,
-                debug
-            )
+            val pydroid = PYDroidInitializer(application, params)
             if (instance.compareAndSet(null, pydroid)) {
                 onInit(pydroid.moduleProvider)
             }
@@ -100,4 +83,14 @@ object PYDroid {
             else -> null
         }
     }
+
+    data class Parameters(
+        internal val name: String,
+        internal val viewSourceUrl: String,
+        internal val bugReportUrl: String,
+        internal val privacyPolicyUrl: String,
+        internal val termsConditionsUrl: String,
+        internal val version: Int,
+        internal val debug: Boolean
+    )
 }

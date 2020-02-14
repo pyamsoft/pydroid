@@ -15,12 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.ui.preference
 
 import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.ThemingPreferences

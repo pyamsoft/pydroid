@@ -30,13 +30,14 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
 import kotlinx.coroutines.launch
 
 internal class RatingDialogViewModel internal constructor(
-    interactor: RatingInteractor
+    interactor: RatingInteractor,
+    debug: Boolean
 ) : UiViewModel<RatingDialogViewState, RatingDialogViewEvent, RatingDialogControllerEvent>(
     initialState = RatingDialogViewState(
         throwable = null,
         changelog = null,
         icon = 0
-    )
+    ), debug = debug
 ) {
 
     private val saveRunner = highlander<Unit, String> { link ->

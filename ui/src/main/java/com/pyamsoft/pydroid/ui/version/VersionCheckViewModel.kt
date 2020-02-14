@@ -29,12 +29,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
-    interactor: VersionCheckInteractor
+    interactor: VersionCheckInteractor,
+    debug: Boolean
 ) : UiViewModel<VersionViewState, VersionViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
         isLoading = null,
         throwable = null
-    )
+    ), debug = debug
 ) {
 
     private var notifyUpgrade: Boolean = true

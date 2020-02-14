@@ -22,7 +22,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlin.reflect.KClass
 
-abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
+abstract class UiViewModelFactory protected constructor(
+    protected val debug: Boolean
+) : ViewModelProvider.Factory {
 
     final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (UiViewModel::class.java.isAssignableFrom(modelClass)) {

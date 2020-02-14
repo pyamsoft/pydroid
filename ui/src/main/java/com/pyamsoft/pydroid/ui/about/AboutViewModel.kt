@@ -32,7 +32,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class AboutViewModel internal constructor(
-    interactor: AboutInteractor
+    interactor: AboutInteractor,
+    debug: Boolean
 ) : UiViewModel<AboutViewState, AboutViewEvent, AboutControllerEvent>(
     initialState = AboutViewState(
         toolbarTitle = "Open Source Licenses",
@@ -40,7 +41,7 @@ internal class AboutViewModel internal constructor(
         licenses = emptyList(),
         loadError = null,
         navigationError = null
-    )
+    ), debug = debug
 ) {
 
     private val licenseRunner = highlander<Unit, Boolean> { force ->

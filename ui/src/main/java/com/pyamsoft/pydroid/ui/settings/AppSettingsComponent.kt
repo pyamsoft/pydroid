@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.version.VersionView
 
 internal interface AppSettingsComponent {

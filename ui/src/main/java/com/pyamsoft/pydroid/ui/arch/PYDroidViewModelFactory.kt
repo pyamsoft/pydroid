@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui
+package com.pyamsoft.pydroid.ui.arch
 
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
@@ -34,17 +34,17 @@ import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
     private val params: Parameters
-) : UiViewModelFactory() {
+) : UiViewModelFactory(params.debug) {
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
-            RatingDialogViewModel::class -> RatingDialogViewModel(params.ratingInteractor)
-            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(params.name, params.version)
-            AboutViewModel::class -> AboutViewModel(params.aboutInteractor)
-            RatingViewModel::class -> RatingViewModel(params.ratingInteractor)
-            AppSettingsViewModel::class -> AppSettingsViewModel(params.theming)
-            VersionCheckViewModel::class -> VersionCheckViewModel(params.versionInteractor)
-            PrivacyViewModel::class -> PrivacyViewModel()
+            RatingDialogViewModel::class -> RatingDialogViewModel(params.ratingInteractor, debug)
+            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(params.name, params.version, debug)
+            AboutViewModel::class -> AboutViewModel(params.aboutInteractor, debug)
+            RatingViewModel::class -> RatingViewModel(params.ratingInteractor, debug)
+            AppSettingsViewModel::class -> AppSettingsViewModel(params.theming, debug)
+            VersionCheckViewModel::class -> VersionCheckViewModel(params.versionInteractor, debug)
+            PrivacyViewModel::class -> PrivacyViewModel(debug)
             else -> fail()
         }
     }
@@ -55,6 +55,7 @@ internal class PYDroidViewModelFactory internal constructor(
         internal val ratingInteractor: RatingInteractor,
         internal val aboutInteractor: AboutInteractor,
         internal val versionInteractor: VersionCheckInteractor,
-        internal val theming: Theming
+        internal val theming: Theming,
+        internal val debug: Boolean
     )
 }

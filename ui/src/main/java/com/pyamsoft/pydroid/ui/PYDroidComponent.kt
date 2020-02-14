@@ -27,6 +27,8 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
+import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.privacy.PrivacyComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
@@ -92,7 +94,8 @@ internal interface PYDroidComponent {
 
         private val context = params.application.applicationContext
         private val enforcer = Enforcer(params.debug)
-        private val preferences = PYDroidPreferencesImpl(params.application.applicationContext)
+        private val preferences =
+            PYDroidPreferencesImpl(params.application.applicationContext)
         private val theming = Theming(preferences)
         private val packageName = params.application.packageName
 
@@ -125,16 +128,18 @@ internal interface PYDroidComponent {
             )
         )
 
-        private val viewModelFactory = PYDroidViewModelFactory(
-            PYDroidViewModelFactory.Parameters(
-                name = params.name,
-                version = params.version,
-                ratingInteractor = ratingModule.provideInteractor(),
-                aboutInteractor = aboutModule.provideInteractor(),
-                versionInteractor = versionCheckModule.provideInteractor(),
-                theming = theming
+        private val viewModelFactory =
+            PYDroidViewModelFactory(
+                PYDroidViewModelFactory.Parameters(
+                    name = params.name,
+                    version = params.version,
+                    ratingInteractor = ratingModule.provideInteractor(),
+                    aboutInteractor = aboutModule.provideInteractor(),
+                    versionInteractor = versionCheckModule.provideInteractor(),
+                    theming = theming,
+                    debug = params.debug
+                )
             )
-        )
 
         private val appSettingsParams = AppSettingsComponent.Factory.Parameters(
             applicationName = params.name,

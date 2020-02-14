@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface RatingComponent {
 

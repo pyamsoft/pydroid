@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface RatingDialogComponent {
 

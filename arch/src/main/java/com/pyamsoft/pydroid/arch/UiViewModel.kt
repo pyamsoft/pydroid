@@ -20,9 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +29,13 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
-    private val initialState: S
+    private val initialState: S,
+    private val debug: Boolean
 ) : ViewModel(), SaveableState {
 
     private var isInitialized = false
@@ -226,7 +227,17 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
             // Loop over all state changes first, perform but do not actually fire a render to views
             for (stateChange in stateChanges) {
-                newState = newState.stateChange()
+                val currentState = newState
+                newState = currentState.stateChange()
+
+                // If we are in debug mode, perform the state change twice and make sure that it produces
+                // the same state both times.
+                if (debug) {
+                    val copyNewState = currentState.stateChange()
+                    if (newState != copyNewState) {
+                        throw IllegalStateException("State changes must be deterministic - the same input must produce the same outputs")
+                    }
+                }
             }
 
             // Only send the new state at the end of the state change loop

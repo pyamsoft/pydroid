@@ -28,7 +28,6 @@ private fun @receiver:ColorInt Int.lighter(ratio: Float): Int {
     return ColorUtils.blendARGB(this, Color.WHITE, ratio)
 }
 
-
 @ColorInt
 @CheckResult
 private fun @receiver:ColorInt Int.darker(ratio: Float): Int {

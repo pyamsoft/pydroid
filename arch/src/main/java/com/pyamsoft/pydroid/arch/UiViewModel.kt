@@ -235,7 +235,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 if (debug) {
                     val copyNewState = currentState.stateChange()
                     if (newState != copyNewState) {
-                        throw IllegalStateException("STATE ERROR: $copyNewState != $newState")
+                        throw IllegalStateException(
+                            """State changes must be deterministic
+                            |$copyNewState
+                            |$newState
+                            |""".trimMargin()
+                        )
                     }
                 }
             }

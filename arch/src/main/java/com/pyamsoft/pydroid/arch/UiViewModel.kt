@@ -33,9 +33,9 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
+abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> @JvmOverloads protected constructor(
     private val initialState: S,
-    private val debug: Boolean
+    private val debug: Boolean = false
 ) : ViewModel(), SaveableState {
 
     private var isInitialized = false
@@ -429,7 +429,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         prop: String?
     ) : IllegalStateException(
         """State changes must be deterministic
-           ${if (prop != null) "Property $prop changed from" else ""}
+           ${if (prop != null) "Property '$prop' changed:" else ""}
            $state1
            $state2
            """.trimIndent()

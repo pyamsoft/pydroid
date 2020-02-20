@@ -45,7 +45,6 @@ object Injector {
     }
 }
 
-
 class ServiceLookupException internal constructor(
     name: String
 ) : IllegalStateException("Unable to location service: $name")

@@ -26,9 +26,9 @@ import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromActivity
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromFragment
+import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import timber.log.Timber
 
 /**
  * Allow nullable for easier caller API
@@ -128,7 +128,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
                     ViewModelProvider(activity, factoryProvider())
                         .get(type)
                 }
-                else -> throw IllegalStateException("Unable to create model resolver - ViewModelStore, Activity, and Fragment are NULL")
+                else -> throw ResolverException("Unable to create model resolver - ViewModelStore, Activity, and Fragment are NULL")
             }
         }
     }
@@ -136,7 +136,7 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
     @CheckResult
     private fun resolveValue(): T {
         val resolver = modelResolver
-            ?: throw IllegalStateException("Cannot resolve ViewModel - resolver is NULL")
+            ?: throw ResolverException("Cannot resolve ViewModel - resolver is NULL")
 
         modelResolver = null
         val vm = resolver()
@@ -169,6 +169,10 @@ class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
         return get()
     }
 }
+
+class ResolverException internal constructor(
+    message: String
+) : IllegalStateException(message)
 
 sealed class FragmentFactoryProvider {
 

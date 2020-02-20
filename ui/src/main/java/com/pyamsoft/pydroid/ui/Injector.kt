@@ -43,8 +43,9 @@ object Injector {
         @Suppress("UNCHECKED_CAST")
         return service as T
     }
-
-    class ServiceLookupException internal constructor(
-        name: String
-    ) : IllegalStateException("Unable to location service: $name")
 }
+
+
+class ServiceLookupException internal constructor(
+    name: String
+) : IllegalStateException("Unable to location service: $name")

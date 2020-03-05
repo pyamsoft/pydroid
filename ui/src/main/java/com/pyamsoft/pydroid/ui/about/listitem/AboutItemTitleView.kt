@@ -36,7 +36,6 @@ internal class AboutItemTitleView internal constructor(
     private val title by boundView { title }
     private val license by boundView { license }
 
-
     init {
         doOnTeardown {
             clear()

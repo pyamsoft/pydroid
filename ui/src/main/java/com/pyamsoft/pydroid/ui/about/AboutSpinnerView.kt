@@ -17,27 +17,31 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
 
 internal class AboutSpinnerView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutViewState, AboutViewEvent>(parent) {
+) : BindingUiView<AboutViewState, AboutViewEvent, LoadingSpinnerBinding>(parent) {
 
     override val layout: Int = R.layout.loading_spinner
 
-    override val layoutRoot by boundView<View>(R.id.spinner_root)
+    override val layoutRoot by boundView { spinnerRoot }
 
-    private val spinner by boundView<ProgressBar>(R.id.spinner)
+    private val spinner by boundView { spinner }
 
     init {
         doOnTeardown {
             spinner.isVisible = false
         }
+    }
+
+    override fun createBinding(inflater: LayoutInflater, root: ViewGroup): LoadingSpinnerBinding {
+        return LoadingSpinnerBinding.inflate(inflater, root)
     }
 
     override fun onRender(state: AboutViewState) {

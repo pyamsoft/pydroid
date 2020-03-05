@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.viewbinding.ViewBinding
 
+// NOTE: This class will be removed and its functionality will be moved into BaseUiView in the next major version 21.X.X
 abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> protected constructor(
     parent: ViewGroup
 ) : BaseUiView<S, V>(parent) {

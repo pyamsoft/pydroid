@@ -202,6 +202,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     @CheckResult
+    @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.boundView { B.() -> View }")
     protected fun <V : View> boundView(@IdRes id: Int): BoundView<V> {
         assertValidState()
         return createBoundView { parent().findViewById<V>(id) }

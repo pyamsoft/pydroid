@@ -31,8 +31,6 @@ internal class VersionUpgradeContentView internal constructor(
     parent
 ) {
 
-    override val layout: Int = R.layout.version_upgrade_content
-
     override val layoutRoot by boundView { versionContentRoot }
 
     private val upgradeMessage by boundView { upgradeMessage }

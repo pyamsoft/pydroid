@@ -25,14 +25,11 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.DropshadowBinding
 
 class DropshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
 ) : BindingUiView<S, E, DropshadowBinding>(parent) {
-
-    override val layout: Int = R.layout.dropshadow
 
     override val layoutRoot by boundView { dropshadowView }
 

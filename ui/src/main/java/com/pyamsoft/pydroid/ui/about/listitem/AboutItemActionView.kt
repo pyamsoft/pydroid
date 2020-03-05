@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import com.pyamsoft.pydroid.arch.BindingUiView
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.databinding.AboutItemActionsBinding
@@ -30,8 +29,6 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 internal class AboutItemActionView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
-
-    override val layout: Int = R.layout.about_item_actions
 
     override val layoutRoot by boundView { aboutActions }
 

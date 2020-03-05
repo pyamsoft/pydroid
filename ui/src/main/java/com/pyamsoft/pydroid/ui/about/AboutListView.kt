@@ -25,7 +25,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLibrary
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLicense
 import com.pyamsoft.pydroid.ui.about.listitem.AboutAdapter
@@ -40,11 +39,9 @@ internal class AboutListView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
 
-    private var aboutAdapter: AboutAdapter? = null
-
-    override val layout: Int = R.layout.about_libraries_list
-
     override val layoutRoot by boundView { aboutList }
+
+    private var aboutAdapter: AboutAdapter? = null
 
     private var lastViewed: Int = 0
 

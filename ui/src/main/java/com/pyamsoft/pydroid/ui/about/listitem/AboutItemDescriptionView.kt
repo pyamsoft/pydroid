@@ -22,14 +22,11 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BindingUiView
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
 internal class AboutItemDescriptionView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemDescriptionBinding>(parent) {
-
-    override val layout: Int = R.layout.about_item_description
 
     override val layoutRoot by boundView { aboutDescription }
 

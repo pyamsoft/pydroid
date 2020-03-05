@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BindingUiView
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeControlsBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
@@ -34,8 +33,6 @@ internal class VersionUpgradeControlView internal constructor(
 ) : BindingUiView<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControlsBinding>(
     parent
 ) {
-
-    override val layout: Int = R.layout.version_upgrade_controls
 
     override val layoutRoot by boundView { versionControlRoot }
 

@@ -21,14 +21,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BindingUiView
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
 
 internal class AboutSpinnerView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutViewState, AboutViewEvent, LoadingSpinnerBinding>(parent) {
-
-    override val layout: Int = R.layout.loading_spinner
 
     override val layoutRoot by boundView { spinnerRoot }
 

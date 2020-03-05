@@ -22,15 +22,12 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.RatingIconBinding
 
 internal class RatingIconView internal constructor(
     private val imageLoader: ImageLoader,
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingIconBinding>(parent) {
-
-    override val layout: Int = R.layout.rating_icon
 
     override val layoutRoot by boundView { ratingIconRoot }
 

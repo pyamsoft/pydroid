@@ -25,14 +25,11 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.TopshadowBinding
 
 class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
 ) : BindingUiView<S, E, TopshadowBinding>(parent) {
-
-    override val layout: Int = R.layout.topshadow
 
     override val layoutRoot by boundView { topshadowView }
 

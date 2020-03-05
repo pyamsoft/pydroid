@@ -29,8 +29,6 @@ internal class AboutItemTitleView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
 
-    override val layout: Int = R.layout.about_item_title
-
     override val layoutRoot by boundView { aboutTitle }
 
     private val title by boundView { title }

@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BindingUiView
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.RatingControlsBinding
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
@@ -33,8 +32,6 @@ internal class RatingControlsView internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingControlsBinding>(parent) {
-
-    override val layout: Int = R.layout.rating_controls
 
     override val layoutRoot by boundView { ratingControlRoot }
 

@@ -43,11 +43,9 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
         return createBoundView { func(binding()) }
     }
 
-    final override fun inflateAndAddToParent(
-        inflater: LayoutInflater,
-        parent: ViewGroup,
-        layout: Int
-    ) {
+    final override val layout: Int = 0
+
+    final override fun inflateAndAddToParent(inflater: LayoutInflater, parent: ViewGroup) {
         _binding = provideBindingInflater().invoke(inflater, parent)
     }
 }

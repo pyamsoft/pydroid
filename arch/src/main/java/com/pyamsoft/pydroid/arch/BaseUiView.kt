@@ -22,7 +22,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import androidx.annotation.LayoutRes
 import androidx.annotation.RestrictTo
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
@@ -92,7 +91,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
         val parent = parent()
         val inflater = LayoutInflater.from(parent.context)
-        inflateAndAddToParent(inflater, parent, layout)
+        inflateAndAddToParent(inflater, parent)
 
         initNestedViews(savedInstanceState)
     }
@@ -151,8 +150,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
     internal open fun inflateAndAddToParent(
         inflater: LayoutInflater,
-        parent: ViewGroup,
-        @LayoutRes layout: Int
+        parent: ViewGroup
     ) {
         inflater.inflate(layout, parent, true)
     }

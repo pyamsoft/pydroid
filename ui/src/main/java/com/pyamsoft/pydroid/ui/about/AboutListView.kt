@@ -17,13 +17,13 @@
 
 package com.pyamsoft.pydroid.ui.about
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLibrary
@@ -38,13 +38,13 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class AboutListView internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BaseUiView<AboutViewState, AboutViewEvent>(parent) {
+) : BindingUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
 
     private var aboutAdapter: AboutAdapter? = null
 
     override val layout: Int = R.layout.about_libraries_list
 
-    override val layoutRoot by boundView<RecyclerView>(R.id.about_list)
+    override val layoutRoot by boundView { aboutList }
 
     private var lastViewed: Int = 0
 
@@ -66,6 +66,13 @@ internal class AboutListView internal constructor(
         doOnSaveState { outState ->
             outState.put(KEY_CURRENT, getCurrentPosition())
         }
+    }
+
+    override fun createBinding(
+        inflater: LayoutInflater,
+        root: ViewGroup
+    ): AboutLibrariesListBinding {
+        return AboutLibrariesListBinding.inflate(inflater, root)
     }
 
     @CheckResult

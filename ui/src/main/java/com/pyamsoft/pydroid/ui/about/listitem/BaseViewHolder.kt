@@ -17,12 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 
-internal abstract class BaseViewHolder internal constructor(
-    itemView: View
-) : RecyclerView.ViewHolder(itemView) {
+internal abstract class BaseViewHolder<B : ViewBinding> internal constructor(
+    binding: B
+) : RecyclerView.ViewHolder(binding.root) {
 
     abstract fun bind(state: AboutItemViewState)
 }

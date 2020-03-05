@@ -17,25 +17,26 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
+import com.pyamsoft.pydroid.ui.databinding.AboutItemActionsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
-
-    private val viewLicense by boundView<Button>(R.id.action_view_license)
-    private val visitHomepage by boundView<Button>(R.id.action_visit_homepage)
+) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
 
     override val layout: Int = R.layout.about_item_actions
 
-    override val layoutRoot by boundView<View>(R.id.about_actions)
+    override val layoutRoot by boundView { aboutActions }
+
+    private val viewLicense by boundView<Button> { actionViewLicense }
+    private val visitHomepage by boundView<Button> { actionVisitHomepage }
 
     init {
         doOnInflate {
@@ -46,6 +47,10 @@ internal class AboutItemActionView internal constructor(
             viewLicense.setOnDebouncedClickListener(null)
             visitHomepage.setOnDebouncedClickListener(null)
         }
+    }
+
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> AboutItemActionsBinding {
+        return AboutItemActionsBinding::inflate
     }
 
     override fun onRender(state: AboutItemViewState) {

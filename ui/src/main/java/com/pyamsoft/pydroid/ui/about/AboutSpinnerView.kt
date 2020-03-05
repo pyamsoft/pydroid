@@ -40,8 +40,8 @@ internal class AboutSpinnerView internal constructor(
         }
     }
 
-    override fun createBinding(inflater: LayoutInflater, root: ViewGroup): LoadingSpinnerBinding {
-        return LoadingSpinnerBinding.inflate(inflater, root)
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> LoadingSpinnerBinding {
+        return LoadingSpinnerBinding::inflate
     }
 
     override fun onRender(state: AboutViewState) {

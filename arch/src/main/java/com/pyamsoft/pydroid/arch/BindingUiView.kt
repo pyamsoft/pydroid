@@ -31,23 +31,15 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
     private var _binding: B? = null
 
     @CheckResult
-    protected fun binding(): B {
+    private fun binding(): B {
         return _binding ?: die()
     }
 
     @CheckResult
-    protected abstract fun createBinding(inflater: LayoutInflater, root: ViewGroup): B
-
-    private fun assertValidBinding() {
-        if (_binding == null) {
-            die()
-        }
-    }
+    protected abstract fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> B
 
     @CheckResult
     protected fun <V : View> boundView(func: B.() -> V): BoundView<V> {
-        assertValidState()
-        assertValidBinding()
         return createBoundView { func(binding()) }
     }
 
@@ -56,6 +48,6 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
         parent: ViewGroup,
         layout: Int
     ) {
-        _binding = createBinding(inflater, parent)
+        _binding = provideBindingInflater().invoke(inflater, parent)
     }
 }

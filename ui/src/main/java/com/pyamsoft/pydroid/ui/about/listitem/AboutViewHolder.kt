@@ -18,7 +18,6 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
@@ -27,13 +26,13 @@ import com.pyamsoft.pydroid.arch.bindViews
 import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
 
 internal class AboutViewHolder private constructor(
-    view: View,
+    binding: AdapterItemAboutLicenseBinding,
     owner: LifecycleOwner,
     callback: (event: AboutItemViewEvent, index: Int) -> Unit
-) : BaseViewHolder(view) {
+) : BaseViewHolder<AdapterItemAboutLicenseBinding>(binding) {
 
     private val binder: ViewBinder<AboutItemViewState>
 
@@ -42,10 +41,9 @@ internal class AboutViewHolder private constructor(
     internal var actionView: AboutItemActionView? = null
 
     init {
-        val parent = view.findViewById<ViewGroup>(R.id.about_listitem_root)
         Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
             .plusAboutItem()
-            .create(parent)
+            .create(binding.aboutListitemRoot)
             .inject(this)
 
         binder = bindViews(
@@ -78,8 +76,8 @@ internal class AboutViewHolder private constructor(
             owner: LifecycleOwner,
             callback: (event: AboutItemViewEvent, index: Int) -> Unit
         ): AboutViewHolder {
-            val view = inflater.inflate(R.layout.adapter_item_about_license, container, false)
-            return AboutViewHolder(view, owner, callback)
+            val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
+            return AboutViewHolder(binding, owner, callback)
         }
     }
 }

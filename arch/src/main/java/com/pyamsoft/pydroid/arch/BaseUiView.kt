@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import androidx.annotation.RestrictTo
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -127,11 +128,11 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     @CheckResult
-    protected fun parent(): ViewGroup {
+    private fun parent(): ViewGroup {
         return _parent ?: die()
     }
 
-    internal fun assertValidState() {
+    private fun assertValidState() {
         if (_parent == null) {
             die()
         }
@@ -204,12 +205,13 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     @CheckResult
     @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.boundView { B.() -> View }")
     protected fun <V : View> boundView(@IdRes id: Int): BoundView<V> {
-        assertValidState()
         return createBoundView { parent().findViewById<V>(id) }
     }
 
     @CheckResult
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     protected fun <V : View> createBoundView(resolver: () -> V): BoundView<V> {
+        assertValidState()
         return BoundView(resolver).also { trackBound(it) }
     }
 

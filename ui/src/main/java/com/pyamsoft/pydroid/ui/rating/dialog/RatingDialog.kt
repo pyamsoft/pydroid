@@ -34,6 +34,7 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
@@ -87,10 +88,10 @@ class RatingDialog : DialogFragment() {
         require(changeLogIcon > 0)
         require(changelog.isNotBlank())
 
-        val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
+        val binding = LayoutLinearVerticalBinding.bind(view)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusRatingDialog()
-            .create(layoutRoot, viewLifecycleOwner, rateLink)
+            .create(binding.layoutLinearV, viewLifecycleOwner, rateLink)
             .inject(this)
 
         stateSaver = createComponent(

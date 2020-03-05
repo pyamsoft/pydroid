@@ -17,23 +17,28 @@
 
 package com.pyamsoft.pydroid.ui.widget.shadow
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.DropshadowBinding
 
 class DropshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
-) : BaseUiView<S, E>(parent) {
+) : BindingUiView<S, E, DropshadowBinding>(parent) {
 
     override val layout: Int = R.layout.dropshadow
 
-    override val layoutRoot by boundView<View>(R.id.dropshadow_view)
+    override val layoutRoot by boundView { dropshadowView }
+
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> DropshadowBinding {
+        return DropshadowBinding::inflate
+    }
 
     override fun onRender(state: S) {
     }

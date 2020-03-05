@@ -51,7 +51,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     @CheckResult
-    protected fun parent(): PreferenceScreen {
+    private fun parent(): PreferenceScreen {
         return requireNotNull(_parent)
     }
 
@@ -81,46 +81,46 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         return boundPref(parent().context.getString(id))
     }
 
-    @CheckResult
-    protected fun <V : Preference> boundPref(key: String): BoundPref<V> {
+    private fun trackBound(v: BoundPref<*>) {
         assertValidState()
 
-        return BoundPref<V>(parent(), key).also { v ->
-            assertValidState()
-
-            val bv: MutableSet<BoundPref<*>>? = boundPrefs
-            val mutateMe: MutableSet<BoundPref<*>>
-            if (bv == null) {
-                val bound = LinkedHashSet<BoundPref<*>>()
-                boundPrefs = bound
-                mutateMe = bound
-            } else {
-                mutateMe = bv
-            }
-
-            mutateMe.add(v)
+        val bv: MutableSet<BoundPref<*>>? = boundPrefs
+        val mutateMe: MutableSet<BoundPref<*>>
+        if (bv == null) {
+            val bound = LinkedHashSet<BoundPref<*>>()
+            boundPrefs = bound
+            mutateMe = bound
+        } else {
+            mutateMe = bv
         }
+
+        mutateMe.add(v)
+    }
+
+    @CheckResult
+    protected fun <V : Preference> boundPref(key: String): BoundPref<V> {
+        return createBoundPref { requireNotNull(parent().findPreference<V>(key)) }
+    }
+
+    @CheckResult
+    protected fun <V : Preference> createBoundPref(resolver: () -> V): BoundPref<V> {
+        assertValidState()
+        return BoundPref(resolver).also { trackBound(it) }
     }
 
     protected class BoundPref<V : Preference> internal constructor(
-        parent: PreferenceScreen,
-        private val key: String
+        resolver: () -> V
     ) : ReadOnlyProperty<Any, V> {
 
-        private var parent: PreferenceScreen? = parent
+        private var resolver: (() -> V)? = resolver
         private var view: V? = null
 
         private fun die(): Nothing {
             throw IllegalStateException("Cannot call BoundPref methods after it has been torn down")
         }
 
-        @CheckResult
-        private fun parent(): PreferenceScreen {
-            return parent ?: die()
-        }
-
         private fun assertValidState() {
-            if (parent == null) {
+            if (resolver == null) {
                 die()
             }
         }
@@ -135,7 +135,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
             val result: V
             if (v == null) {
                 @Suppress("UNCHECKED_CAST")
-                val bound = requireNotNull(parent().findPreference<V>(key))
+                val bound = requireNotNull(resolver).invoke()
                 view = bound
                 result = bound
             } else {
@@ -148,7 +148,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         internal fun teardown() {
             assertValidState()
 
-            parent = null
+            resolver = null
             view = null
         }
     }

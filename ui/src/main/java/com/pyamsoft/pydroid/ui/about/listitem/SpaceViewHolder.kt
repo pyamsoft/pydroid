@@ -18,12 +18,13 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutSpaceBinding
 
-internal class SpaceViewHolder private constructor(view: View) : BaseViewHolder(view) {
+internal class SpaceViewHolder private constructor(
+    binding: AdapterItemAboutSpaceBinding
+) : BaseViewHolder<AdapterItemAboutSpaceBinding>(binding) {
 
     override fun bind(state: AboutItemViewState) {
     }
@@ -36,8 +37,8 @@ internal class SpaceViewHolder private constructor(view: View) : BaseViewHolder(
             inflater: LayoutInflater,
             container: ViewGroup
         ): SpaceViewHolder {
-            val view = inflater.inflate(R.layout.adapter_item_about_space, container, false)
-            return SpaceViewHolder(view)
+            val binding = AdapterItemAboutSpaceBinding.inflate(inflater, container, false)
+            return SpaceViewHolder(binding)
         }
     }
 }

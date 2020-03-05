@@ -17,25 +17,27 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeContentBinding
 
 internal class VersionUpgradeContentView internal constructor(
     parent: ViewGroup
-) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
-
-    private val upgradeMessage by boundView<TextView>(R.id.upgrade_message)
-    private val currentValue by boundView<TextView>(R.id.upgrade_current_value)
-    private val newValue by boundView<TextView>(R.id.upgrade_new_value)
+) : BindingUiView<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeContentBinding>(
+    parent
+) {
 
     override val layout: Int = R.layout.version_upgrade_content
 
-    override val layoutRoot by boundView<View>(R.id.version_content_root)
+    override val layoutRoot by boundView { versionContentRoot }
+
+    private val upgradeMessage by boundView { upgradeMessage }
+    private val currentValue by boundView { upgradeCurrentValue }
+    private val newValue by boundView { upgradeNewValue }
 
     init {
         doOnTeardown {
@@ -43,6 +45,10 @@ internal class VersionUpgradeContentView internal constructor(
             currentValue.text = ""
             newValue.text = ""
         }
+    }
+
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> VersionUpgradeContentBinding {
+        return VersionUpgradeContentBinding::inflate
     }
 
     override fun onRender(state: VersionUpgradeViewState) {

@@ -17,29 +17,34 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
 internal class AboutItemTitleView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
-
-    private val title by boundView<TextView>(R.id.title)
-    private val license by boundView<TextView>(R.id.license)
+) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
 
     override val layout: Int = R.layout.about_item_title
 
-    override val layoutRoot by boundView<View>(R.id.about_title)
+    override val layoutRoot by boundView { aboutTitle }
+
+    private val title by boundView { title }
+    private val license by boundView { license }
+
 
     init {
         doOnTeardown {
             clear()
         }
+    }
+
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> AboutItemTitleBinding {
+        return AboutItemTitleBinding::inflate
     }
 
     private fun clear() {

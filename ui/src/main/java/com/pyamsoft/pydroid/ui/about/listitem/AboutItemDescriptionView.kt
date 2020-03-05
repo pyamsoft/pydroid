@@ -17,25 +17,30 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
 internal class AboutItemDescriptionView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutItemViewState, AboutItemViewEvent>(parent) {
+) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemDescriptionBinding>(parent) {
 
     override val layout: Int = R.layout.about_item_description
 
-    override val layoutRoot by boundView<TextView>(R.id.about_description)
+    override val layoutRoot by boundView { aboutDescription }
 
     init {
         doOnTeardown {
             clear()
         }
+    }
+
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> AboutItemDescriptionBinding {
+        return AboutItemDescriptionBinding::inflate
     }
 
     private fun clear() {

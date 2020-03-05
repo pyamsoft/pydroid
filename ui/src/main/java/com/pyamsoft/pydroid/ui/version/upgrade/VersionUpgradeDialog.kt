@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.annotation.CheckResult
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -30,10 +29,10 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
@@ -73,10 +72,10 @@ class VersionUpgradeDialog : DialogFragment() {
 
         val latestVersion = requireArguments().getInt(KEY_LATEST_VERSION, 0)
         require(latestVersion > 0)
-        val layoutRoot = view.findViewById<LinearLayout>(R.id.layout_linear_v)
+        val binding = LayoutLinearVerticalBinding.bind(view)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusUpgrade()
-            .create(layoutRoot, viewLifecycleOwner)
+            .create(binding.layoutLinearV, viewLifecycleOwner)
             .inject(this)
 
         stateSaver = createComponent(

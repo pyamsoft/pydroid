@@ -68,11 +68,8 @@ internal class AboutListView internal constructor(
         }
     }
 
-    override fun createBinding(
-        inflater: LayoutInflater,
-        root: ViewGroup
-    ): AboutLibrariesListBinding {
-        return AboutLibrariesListBinding.inflate(inflater, root)
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> AboutLibrariesListBinding {
+        return AboutLibrariesListBinding::inflate
     }
 
     @CheckResult

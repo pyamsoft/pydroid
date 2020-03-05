@@ -17,12 +17,12 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeControlsBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
@@ -31,14 +31,16 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 internal class VersionUpgradeControlView internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent>(parent) {
-
-    private val upgradeButton by boundView<Button>(R.id.upgrade_button)
-    private val laterButton by boundView<Button>(R.id.later_button)
+) : BindingUiView<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControlsBinding>(
+    parent
+) {
 
     override val layout: Int = R.layout.version_upgrade_controls
 
-    override val layoutRoot by boundView<View>(R.id.version_control_root)
+    override val layoutRoot by boundView { versionControlRoot }
+
+    private val upgradeButton by boundView { upgradeButton }
+    private val laterButton by boundView { laterButton }
 
     init {
         doOnInflate {
@@ -50,6 +52,10 @@ internal class VersionUpgradeControlView internal constructor(
             upgradeButton.setOnClickListener(null)
             laterButton.setOnClickListener(null)
         }
+    }
+
+    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> VersionUpgradeControlsBinding {
+        return VersionUpgradeControlsBinding::inflate
     }
 
     override fun onRender(state: VersionUpgradeViewState) {

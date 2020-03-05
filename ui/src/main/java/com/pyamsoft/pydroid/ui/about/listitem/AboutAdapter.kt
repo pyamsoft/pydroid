@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.ListAdapter
 internal class AboutAdapter internal constructor(
     private val owner: LifecycleOwner,
     private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
-) : ListAdapter<AboutItemViewState, BaseViewHolder>(DIFFER) {
+) : ListAdapter<AboutItemViewState, BaseViewHolder<*>>(DIFFER) {
 
     init {
         setHasStableIds(true)
@@ -48,7 +48,7 @@ internal class AboutAdapter internal constructor(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseViewHolder {
+    ): BaseViewHolder<*> {
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == VIEW_TYPE_REAL) {
             AboutViewHolder.create(inflater, parent, owner, callback)
@@ -58,7 +58,7 @@ internal class AboutAdapter internal constructor(
     }
 
     override fun onBindViewHolder(
-        holder: BaseViewHolder,
+        holder: BaseViewHolder<*>,
         position: Int
     ) {
         holder.bind(getItem(position))

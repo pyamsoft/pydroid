@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
@@ -39,6 +38,7 @@ import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.Navigation
 import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
 
@@ -67,10 +67,10 @@ class AboutFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val backstack = requireArguments().getInt(KEY_BACK_STACK, 0)
-        val layoutRoot = view.findViewById<FrameLayout>(R.id.layout_frame)
+        val binding = LayoutFrameBinding.bind(view)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusAbout()
-            .create(layoutRoot, viewLifecycleOwner, requireToolbarActivity(), backstack)
+            .create(binding.layoutFrame, viewLifecycleOwner, requireToolbarActivity(), backstack)
             .inject(this)
 
         stateSaver = createComponent(

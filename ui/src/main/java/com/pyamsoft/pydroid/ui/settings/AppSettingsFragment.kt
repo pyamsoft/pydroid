@@ -25,6 +25,7 @@ import androidx.annotation.CheckResult
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
 abstract class AppSettingsFragment : Fragment() {
@@ -44,7 +45,8 @@ abstract class AppSettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        coordinatorLayout = view.findViewById(R.id.layout_coordinator)
+        val binding = LayoutCoordinatorBinding.bind(view)
+        coordinatorLayout = binding.layoutCoordinator
         showPreferenceFragment()
     }
 

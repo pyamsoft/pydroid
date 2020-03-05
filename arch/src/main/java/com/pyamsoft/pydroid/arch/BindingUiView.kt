@@ -37,6 +37,12 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
         get() = _binding ?: die()
 
     init {
+        doOnInflate {
+            // We place a check for the id here because at the point that the binding is used
+            // the layoutRoot must not be null and must be resolved so that the teardown works
+            // correctly - otherwise you will get a state error.
+            assert(id() != 0) { "id() must not equal 0! " }
+        }
         doOnTeardown {
             _binding = null
         }

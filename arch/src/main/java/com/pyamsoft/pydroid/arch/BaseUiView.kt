@@ -139,7 +139,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     final override fun id(): Int {
-        return layoutRoot.id
+        val id = layoutRoot.id
+        assert(id != 0) { "id() must not equal 0! " }
+        return id
     }
 
     final override fun render(state: S) {

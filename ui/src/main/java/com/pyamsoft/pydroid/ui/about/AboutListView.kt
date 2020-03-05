@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
@@ -39,6 +37,10 @@ internal class AboutListView internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
 ) : BindingUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
+
+    override val viewBinding by viewBinding(AboutLibrariesListBinding::inflate)
+
+    override val layoutRoot by boundView { aboutList }
 
     private var aboutAdapter: AboutAdapter? = null
 
@@ -62,14 +64,6 @@ internal class AboutListView internal constructor(
         doOnSaveState { outState ->
             outState.put(KEY_CURRENT, getCurrentPosition())
         }
-    }
-
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> AboutLibrariesListBinding {
-        return AboutLibrariesListBinding::inflate
-    }
-
-    override fun provideBindingRoot(binding: AboutLibrariesListBinding): View {
-        return binding.aboutList
     }
 
     @CheckResult

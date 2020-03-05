@@ -41,7 +41,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     private val nestedInitDelegate = lazy(NONE) { mutableSetOf<(IView<S, V>) -> Unit>() }
     private val nestedInits by nestedInitDelegate
 
-    private var boundViews: MutableSet<BoundView<*>>? = null
+    private var bound: MutableSet<Bound<*>>? = null
 
     private var _parent: ViewGroup? = parent
 
@@ -68,9 +68,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         doOnTeardown {
             assertValidState()
             parent().removeView(layoutRoot)
-            boundViews?.forEach { it.teardown() }
-            boundViews?.clear()
-            boundViews = null
+            bound?.forEach { it.teardown() }
+            bound?.clear()
+            bound = null
             _parent = null
         }
 
@@ -185,14 +185,14 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
-    private fun trackBound(v: BoundView<*>) {
+    private fun trackBound(v: Bound<*>) {
         assertValidState()
 
-        val bv: MutableSet<BoundView<*>>? = boundViews
-        val mutateMe: MutableSet<BoundView<*>>
+        val bv: MutableSet<Bound<*>>? = bound
+        val mutateMe: MutableSet<Bound<*>>
         if (bv == null) {
-            val bound = LinkedHashSet<BoundView<*>>()
-            boundViews = bound
+            val bound = LinkedHashSet<Bound<*>>()
+            this.bound = bound
             mutateMe = bound
         } else {
             mutateMe = bv
@@ -202,24 +202,24 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     @CheckResult
-    @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.binding instead")
-    protected fun <V : View> boundView(@IdRes id: Int): BoundView<V> {
-        return createBoundView { parent().findViewById<V>(id) }
+    @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.binding or BindingUiView<S,V,B>.boundView() instead")
+    protected fun <V : View> boundView(@IdRes id: Int): Bound<V> {
+        return createBound { parent().findViewById<V>(id) }
     }
 
     @CheckResult
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    protected fun <V : View> createBoundView(resolver: () -> V): BoundView<V> {
+    protected fun <V : Any> createBound(resolver: () -> V): Bound<V> {
         assertValidState()
-        return BoundView(resolver).also { trackBound(it) }
+        return Bound(resolver).also { trackBound(it) }
     }
 
-    protected class BoundView<V : View> internal constructor(
-        resolver: () -> V
-    ) : ReadOnlyProperty<Any, V> {
+    protected class Bound<B : Any> internal constructor(
+        resolver: () -> B
+    ) : ReadOnlyProperty<Any, B> {
 
-        private var resolver: (() -> V)? = resolver
-        private var view: V? = null
+        private var resolver: (() -> B)? = resolver
+        private var bound: B? = null
 
         private fun die(): Nothing {
             throw IllegalStateException("Cannot call BoundView methods after it has been torn down")
@@ -234,17 +234,17 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         override fun getValue(
             thisRef: Any,
             property: KProperty<*>
-        ): V {
+        ): B {
             assertValidState()
 
-            val v: V? = view
-            val result: V
-            if (v == null) {
+            val b: B? = bound
+            val result: B
+            if (b == null) {
                 val bound = requireNotNull(resolver).invoke()
-                view = bound
+                this.bound = bound
                 result = bound
             } else {
-                result = v
+                result = b
             }
 
             return result
@@ -254,7 +254,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
             assertValidState()
 
             resolver = null
-            view = null
+            bound = null
         }
     }
 }

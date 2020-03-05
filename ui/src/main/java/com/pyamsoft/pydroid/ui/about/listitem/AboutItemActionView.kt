@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
@@ -30,6 +28,10 @@ internal class AboutItemActionView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
 
+    override val viewBinding by viewBinding(AboutItemActionsBinding::inflate)
+
+    override val layoutRoot by boundView { aboutActions }
+
     init {
         doOnInflate {
             binding.actionViewLicense.setOnDebouncedClickListener { publish(OpenLicenseUrl) }
@@ -39,14 +41,6 @@ internal class AboutItemActionView internal constructor(
             binding.actionViewLicense.setOnDebouncedClickListener(null)
             binding.actionVisitHomepage.setOnDebouncedClickListener(null)
         }
-    }
-
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> AboutItemActionsBinding {
-        return AboutItemActionsBinding::inflate
-    }
-
-    override fun provideBindingRoot(binding: AboutItemActionsBinding): View {
-        return binding.aboutActions
     }
 
     override fun onRender(state: AboutItemViewState) {

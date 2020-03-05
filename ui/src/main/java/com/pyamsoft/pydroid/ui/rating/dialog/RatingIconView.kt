@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
@@ -30,20 +28,16 @@ internal class RatingIconView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingIconBinding>(parent) {
 
+    override val viewBinding by viewBinding(RatingIconBinding::inflate)
+
+    override val layoutRoot by boundView { ratingIconRoot }
+
     private var iconLoaded: Loaded? = null
 
     init {
         doOnTeardown {
             clear()
         }
-    }
-
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> RatingIconBinding {
-        return RatingIconBinding::inflate
-    }
-
-    override fun provideBindingRoot(binding: RatingIconBinding): View {
-        return binding.ratingIconRoot
     }
 
     override fun onRender(state: RatingDialogViewState) {

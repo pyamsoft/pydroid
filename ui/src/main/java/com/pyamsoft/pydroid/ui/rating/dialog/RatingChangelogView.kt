@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.rating.dialog
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.ui.databinding.RatingChangelogBinding
@@ -27,18 +25,14 @@ internal class RatingChangelogView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingChangelogBinding>(parent) {
 
+    override val viewBinding by viewBinding(RatingChangelogBinding::inflate)
+
+    override val layoutRoot by boundView { ratingChangelogScroll }
+
     init {
         doOnTeardown {
             binding.ratingChangelogText.text = null
         }
-    }
-
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> RatingChangelogBinding {
-        return RatingChangelogBinding::inflate
-    }
-
-    override fun provideBindingRoot(binding: RatingChangelogBinding): View {
-        return binding.ratingChangelogScroll
     }
 
     override fun onRender(state: RatingDialogViewState) {

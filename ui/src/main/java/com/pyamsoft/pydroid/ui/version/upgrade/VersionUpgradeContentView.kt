@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
@@ -32,20 +30,16 @@ internal class VersionUpgradeContentView internal constructor(
     parent
 ) {
 
+    override val viewBinding by viewBinding(VersionUpgradeContentBinding::inflate)
+
+    override val layoutRoot by boundView { versionContentRoot }
+
     init {
         doOnTeardown {
             binding.upgradeMessage.text = ""
             binding.upgradeCurrentValue.text = ""
             binding.upgradeNewValue.text = ""
         }
-    }
-
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> VersionUpgradeContentBinding {
-        return VersionUpgradeContentBinding::inflate
-    }
-
-    override fun provideBindingRoot(binding: VersionUpgradeContentBinding): View {
-        return binding.versionContentRoot
     }
 
     override fun onRender(state: VersionUpgradeViewState) {

@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.widget.shadow
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.BindingUiView
@@ -32,13 +30,9 @@ class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
 ) : BindingUiView<S, E, TopshadowBinding>(parent) {
 
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> TopshadowBinding {
-        return TopshadowBinding::inflate
-    }
+    override val viewBinding by viewBinding(TopshadowBinding::inflate)
 
-    override fun provideBindingRoot(binding: TopshadowBinding): View {
-        return binding.topshadowView
-    }
+    override val layoutRoot by boundView { topshadowView }
 
     override fun onRender(state: S) {
     }

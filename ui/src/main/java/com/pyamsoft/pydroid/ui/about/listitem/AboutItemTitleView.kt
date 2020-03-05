@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about.listitem
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
@@ -30,18 +28,14 @@ internal class AboutItemTitleView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
 
+    override val viewBinding by viewBinding(AboutItemTitleBinding::inflate)
+
+    override val layoutRoot by boundView { aboutTitle }
+
     init {
         doOnTeardown {
             clear()
         }
-    }
-
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> AboutItemTitleBinding {
-        return AboutItemTitleBinding::inflate
-    }
-
-    override fun provideBindingRoot(binding: AboutItemTitleBinding): View {
-        return binding.aboutTitle
     }
 
     private fun clear() {

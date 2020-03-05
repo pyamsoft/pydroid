@@ -30,7 +30,7 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
 
     final override val layout: Int = 0
 
-    final override val layoutRoot by createBoundView { provideBindingRoot(binding) }
+    protected abstract val viewBinding: (LayoutInflater, ViewGroup) -> B
 
     private var _binding: B? = null
     protected val binding: B
@@ -43,12 +43,16 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
     }
 
     final override fun inflateAndAddToParent(inflater: LayoutInflater, parent: ViewGroup) {
-        _binding = provideBindingInflater().invoke(inflater, parent)
+        _binding = viewBinding.invoke(inflater, parent)
     }
 
     @CheckResult
-    protected abstract fun provideBindingRoot(binding: B): View
+    protected fun <V : View> boundView(func: B.() -> V): Bound<V> {
+        return createBound { func(binding) }
+    }
 
     @CheckResult
-    protected abstract fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> B
+    protected fun viewBinding(inflater: (LayoutInflater, ViewGroup) -> B): Bound<(LayoutInflater, ViewGroup) -> B> {
+        return createBound { inflater }
+    }
 }

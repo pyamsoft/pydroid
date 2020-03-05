@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.ui.about
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BindingUiView
@@ -28,18 +26,14 @@ internal class AboutSpinnerView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutViewState, AboutViewEvent, LoadingSpinnerBinding>(parent) {
 
+    override val viewBinding by viewBinding(LoadingSpinnerBinding::inflate)
+
+    override val layoutRoot by boundView { spinnerRoot }
+
     init {
         doOnTeardown {
             binding.spinner.isVisible = false
         }
-    }
-
-    override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> LoadingSpinnerBinding {
-        return LoadingSpinnerBinding::inflate
-    }
-
-    override fun provideBindingRoot(binding: LoadingSpinnerBinding): View {
-        return binding.spinnerRoot
     }
 
     override fun onRender(state: AboutViewState) {

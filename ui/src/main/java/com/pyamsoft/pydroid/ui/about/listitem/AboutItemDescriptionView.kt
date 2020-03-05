@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -27,8 +28,6 @@ import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 internal class AboutItemDescriptionView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemDescriptionBinding>(parent) {
-
-    override val layoutRoot by boundView { aboutDescription }
 
     init {
         doOnTeardown {
@@ -40,8 +39,12 @@ internal class AboutItemDescriptionView internal constructor(
         return AboutItemDescriptionBinding::inflate
     }
 
+    override fun provideBindingRoot(binding: AboutItemDescriptionBinding): View {
+        return binding.aboutDescription
+    }
+
     private fun clear() {
-        layoutRoot.apply {
+        binding.aboutDescription.apply {
             text = ""
             isGone = true
         }
@@ -49,8 +52,8 @@ internal class AboutItemDescriptionView internal constructor(
 
     override fun onRender(state: AboutItemViewState) {
         state.library.let { library ->
-            layoutRoot.text = library.description
-            layoutRoot.isVisible = library.description.isNotBlank()
+            binding.aboutDescription.text = library.description
+            binding.aboutDescription.isVisible = library.description.isNotBlank()
         }
     }
 }

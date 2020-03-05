@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.BindingUiView
@@ -33,25 +34,24 @@ internal class RatingControlsView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingControlsBinding>(parent) {
 
-    override val layoutRoot by boundView { ratingControlRoot }
-
-    private val rateApplication by boundView { rateApplication }
-    private val noThanks by boundView { noThanks }
-
     init {
         doOnInflate {
-            rateApplication.setOnDebouncedClickListener { publish(Rate(rateLink)) }
-            noThanks.setOnDebouncedClickListener { publish(Cancel) }
+            binding.rateApplication.setOnDebouncedClickListener { publish(Rate(rateLink)) }
+            binding.noThanks.setOnDebouncedClickListener { publish(Cancel) }
         }
 
         doOnTeardown {
-            rateApplication.setOnClickListener(null)
-            noThanks.setOnClickListener(null)
+            binding.rateApplication.setOnClickListener(null)
+            binding.noThanks.setOnClickListener(null)
         }
     }
 
     override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> RatingControlsBinding {
         return RatingControlsBinding::inflate
+    }
+
+    override fun provideBindingRoot(binding: RatingControlsBinding): View {
+        return binding.ratingControlRoot
     }
 
     override fun onRender(state: RatingDialogViewState) {

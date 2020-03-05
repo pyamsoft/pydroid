@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.BindingUiView
@@ -31,10 +32,12 @@ class DropshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
 ) : BindingUiView<S, E, DropshadowBinding>(parent) {
 
-    override val layoutRoot by boundView { dropshadowView }
-
     override fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> DropshadowBinding {
         return DropshadowBinding::inflate
+    }
+
+    override fun provideBindingRoot(binding: DropshadowBinding): View {
+        return binding.dropshadowView
     }
 
     override fun onRender(state: S) {

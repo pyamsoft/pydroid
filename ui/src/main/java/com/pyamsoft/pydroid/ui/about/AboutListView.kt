@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
@@ -39,8 +40,6 @@ internal class AboutListView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
 
-    override val layoutRoot by boundView { aboutList }
-
     private var aboutAdapter: AboutAdapter? = null
 
     private var lastViewed: Int = 0
@@ -55,7 +54,7 @@ internal class AboutListView internal constructor(
         }
 
         doOnTeardown {
-            layoutRoot.adapter = null
+            binding.aboutList.adapter = null
             clearLicenses()
             aboutAdapter = null
         }
@@ -69,9 +68,13 @@ internal class AboutListView internal constructor(
         return AboutLibrariesListBinding::inflate
     }
 
+    override fun provideBindingRoot(binding: AboutLibrariesListBinding): View {
+        return binding.aboutList
+    }
+
     @CheckResult
     private fun getCurrentPosition(): Int {
-        val manager = layoutRoot.layoutManager
+        val manager = binding.aboutList.layoutManager
         return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
     }
 
@@ -83,7 +86,7 @@ internal class AboutListView internal constructor(
             }
         }
 
-        layoutRoot.apply {
+        binding.aboutList.apply {
             adapter = aboutAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 initialPrefetchItemCount = 3
@@ -135,7 +138,7 @@ internal class AboutListView internal constructor(
         val viewed = lastViewed
         if (viewed > 0) {
             lastViewed = 0
-            layoutRoot.scrollToPosition(viewed)
+            binding.aboutList.scrollToPosition(viewed)
         }
     }
 

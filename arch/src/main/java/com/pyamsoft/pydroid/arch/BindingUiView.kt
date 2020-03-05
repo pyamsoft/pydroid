@@ -28,24 +28,27 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
     parent: ViewGroup
 ) : BaseUiView<S, V>(parent) {
 
-    private var _binding: B? = null
-
-    @CheckResult
-    private fun binding(): B {
-        return _binding ?: die()
-    }
-
-    @CheckResult
-    protected abstract fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> B
-
-    @CheckResult
-    protected fun <V : View> boundView(func: B.() -> V): BoundView<V> {
-        return createBoundView { func(binding()) }
-    }
-
     final override val layout: Int = 0
+
+    final override val layoutRoot by createBoundView { provideBindingRoot(binding) }
+
+    private var _binding: B? = null
+    protected val binding: B
+        get() = _binding ?: die()
+
+    init {
+        doOnTeardown {
+            _binding = null
+        }
+    }
 
     final override fun inflateAndAddToParent(inflater: LayoutInflater, parent: ViewGroup) {
         _binding = provideBindingInflater().invoke(inflater, parent)
     }
+
+    @CheckResult
+    protected abstract fun provideBindingRoot(binding: B): View
+
+    @CheckResult
+    protected abstract fun provideBindingInflater(): (LayoutInflater, ViewGroup) -> B
 }

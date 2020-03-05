@@ -41,8 +41,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     private val nestedInitDelegate = lazy(NONE) { mutableSetOf<(IView<S, V>) -> Unit>() }
     private val nestedInits by nestedInitDelegate
 
-    private var _parent: ViewGroup? = parent
     private var boundViews: MutableSet<BoundView<*>>? = null
+
+    private var _parent: ViewGroup? = parent
 
     init {
         doOnInflate {
@@ -201,7 +202,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     @CheckResult
-    @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.boundView { B.() -> View }")
+    @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.binding instead")
     protected fun <V : View> boundView(@IdRes id: Int): BoundView<V> {
         return createBoundView { parent().findViewById<V>(id) }
     }

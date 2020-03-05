@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
@@ -31,17 +32,11 @@ internal class VersionUpgradeContentView internal constructor(
     parent
 ) {
 
-    override val layoutRoot by boundView { versionContentRoot }
-
-    private val upgradeMessage by boundView { upgradeMessage }
-    private val currentValue by boundView { upgradeCurrentValue }
-    private val newValue by boundView { upgradeNewValue }
-
     init {
         doOnTeardown {
-            upgradeMessage.text = ""
-            currentValue.text = ""
-            newValue.text = ""
+            binding.upgradeMessage.text = ""
+            binding.upgradeCurrentValue.text = ""
+            binding.upgradeNewValue.text = ""
         }
     }
 
@@ -49,28 +44,32 @@ internal class VersionUpgradeContentView internal constructor(
         return VersionUpgradeContentBinding::inflate
     }
 
+    override fun provideBindingRoot(binding: VersionUpgradeContentBinding): View {
+        return binding.versionContentRoot
+    }
+
     override fun onRender(state: VersionUpgradeViewState) {
         state.applicationName.let { name ->
             if (name.isNotBlank()) {
-                upgradeMessage.text = getString(R.string.upgrade_available_message, name)
+                binding.upgradeMessage.text = getString(R.string.upgrade_available_message, name)
             } else {
-                upgradeMessage.text = ""
+                binding.upgradeMessage.text = ""
             }
         }
 
         state.currentVersion.let { version ->
             if (version == 0) {
-                currentValue.text = ""
+                binding.upgradeCurrentValue.text = ""
             } else {
-                currentValue.text = "$version"
+                binding.upgradeCurrentValue.text = "$version"
             }
         }
 
         state.newVersion.let { version ->
             if (version == 0) {
-                newValue.text = ""
+                binding.upgradeNewValue.text = ""
             } else {
-                newValue.text = "$version"
+                binding.upgradeNewValue.text = "$version"
             }
         }
     }

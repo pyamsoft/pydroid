@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
@@ -29,11 +30,6 @@ internal class AboutItemTitleView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
 
-    override val layoutRoot by boundView { aboutTitle }
-
-    private val title by boundView { title }
-    private val license by boundView { license }
-
     init {
         doOnTeardown {
             clear()
@@ -44,15 +40,19 @@ internal class AboutItemTitleView internal constructor(
         return AboutItemTitleBinding::inflate
     }
 
+    override fun provideBindingRoot(binding: AboutItemTitleBinding): View {
+        return binding.aboutTitle
+    }
+
     private fun clear() {
-        title.text = ""
-        license.text = ""
+        binding.title.text = ""
+        binding.license.text = ""
     }
 
     override fun onRender(state: AboutItemViewState) {
         state.library.let { library ->
-            title.text = library.name
-            license.text = getString(R.string.license_name, library.licenseName)
+            binding.title.text = library.name
+            binding.license.text = getString(R.string.license_name, library.licenseName)
         }
     }
 

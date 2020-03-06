@@ -54,11 +54,14 @@ abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> 
 
     @CheckResult
     protected fun <V : View> boundView(func: B.() -> V): Bound<V> {
-        return createBound { func(binding) }
-    }
-
-    @CheckResult
-    protected fun viewBinding(inflater: (LayoutInflater, ViewGroup) -> B): Bound<(LayoutInflater, ViewGroup) -> B> {
-        return createBound { inflater }
+        return createBound(
+            resolver = { func(binding) },
+            teardown = {
+                val root = binding.root
+                if (root is ViewGroup) {
+                    root.removeView(it)
+                }
+            }
+        )
     }
 }

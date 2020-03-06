@@ -33,7 +33,7 @@ internal class VersionUpgradeControlView internal constructor(
     parent
 ) {
 
-    override val viewBinding by viewBinding(VersionUpgradeControlsBinding::inflate)
+    override val viewBinding = VersionUpgradeControlsBinding::inflate
 
     override val layoutRoot by boundView { versionControlRoot }
 

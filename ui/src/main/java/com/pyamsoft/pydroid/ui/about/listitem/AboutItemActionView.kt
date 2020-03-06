@@ -28,7 +28,7 @@ internal class AboutItemActionView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
 
-    override val viewBinding by viewBinding(AboutItemActionsBinding::inflate)
+    override val viewBinding = AboutItemActionsBinding::inflate
 
     override val layoutRoot by boundView { aboutActions }
 

@@ -26,7 +26,7 @@ internal class AboutSpinnerView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutViewState, AboutViewEvent, LoadingSpinnerBinding>(parent) {
 
-    override val viewBinding by viewBinding(LoadingSpinnerBinding::inflate)
+    override val viewBinding = LoadingSpinnerBinding::inflate
 
     override val layoutRoot by boundView { spinnerRoot }
 

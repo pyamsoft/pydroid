@@ -30,7 +30,7 @@ class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
 ) : BindingUiView<S, E, TopshadowBinding>(parent) {
 
-    override val viewBinding by viewBinding(TopshadowBinding::inflate)
+    override val viewBinding = TopshadowBinding::inflate
 
     override val layoutRoot by boundView { topshadowView }
 

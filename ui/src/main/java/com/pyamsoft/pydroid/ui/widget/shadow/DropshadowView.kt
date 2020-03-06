@@ -30,7 +30,7 @@ class DropshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
 ) : BindingUiView<S, E, DropshadowBinding>(parent) {
 
-    override val viewBinding by viewBinding(DropshadowBinding::inflate)
+    override val viewBinding = DropshadowBinding::inflate
 
     override val layoutRoot by boundView { dropshadowView }
 

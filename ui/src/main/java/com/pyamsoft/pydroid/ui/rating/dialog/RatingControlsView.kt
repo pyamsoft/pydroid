@@ -32,7 +32,7 @@ internal class RatingControlsView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingControlsBinding>(parent) {
 
-    override val viewBinding by viewBinding(RatingControlsBinding::inflate)
+    override val viewBinding = RatingControlsBinding::inflate
 
     override val layoutRoot by boundView { ratingControlRoot }
 

@@ -28,7 +28,7 @@ internal class AboutItemTitleView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
 
-    override val viewBinding by viewBinding(AboutItemTitleBinding::inflate)
+    override val viewBinding = AboutItemTitleBinding::inflate
 
     override val layoutRoot by boundView { aboutTitle }
 

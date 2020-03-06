@@ -25,7 +25,7 @@ internal class RatingChangelogView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingChangelogBinding>(parent) {
 
-    override val viewBinding by viewBinding(RatingChangelogBinding::inflate)
+    override val viewBinding = RatingChangelogBinding::inflate
 
     override val layoutRoot by boundView { ratingChangelogScroll }
 

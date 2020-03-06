@@ -67,9 +67,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
         doOnTeardown {
             assertValidState()
-            parent().removeView(layoutRoot)
             bound?.forEach { it.teardown() }
             bound?.clear()
+            parent().removeView(layoutRoot)
             bound = null
             _parent = null
         }
@@ -205,19 +205,28 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
     @CheckResult
     @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.binding or BindingUiView<S,V,B>.boundView() instead")
+    // NOTE: This function will be removed in the next major version 21.X.X
     protected fun <V : View> boundView(@IdRes id: Int): Bound<V> {
-        return createBound { parent().findViewById<V>(id) }
+        return createBound(
+            resolver = {
+                // Need explicit type here or kotlinc complains
+                parent().findViewById<V>(id)
+            },
+            teardown = { parent().removeView(it) }
+        )
     }
 
     @CheckResult
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    protected fun <V : Any> createBound(resolver: () -> V): Bound<V> {
+    // NOTE: This function will be removed in the next major version 21.X.X
+    protected fun <V : Any> createBound(resolver: () -> V, teardown: ((V) -> Unit)?): Bound<V> {
         assertValidState()
-        return Bound(resolver).also { trackBound(it) }
+        return Bound(resolver, teardown).also { trackBound(it) }
     }
 
     protected class Bound<B : Any> internal constructor(
-        resolver: () -> B
+        resolver: () -> B,
+        private var teardown: ((B) -> Unit)?
     ) : ReadOnlyProperty<Any, B> {
 
         private var resolver: (() -> B)? = resolver
@@ -255,6 +264,8 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         internal fun teardown() {
             assertValidState()
 
+            bound?.let { teardown?.invoke(it) }
+            teardown = null
             resolver = null
             bound = null
         }

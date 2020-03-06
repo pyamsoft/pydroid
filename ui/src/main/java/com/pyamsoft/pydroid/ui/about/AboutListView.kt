@@ -38,7 +38,7 @@ internal class AboutListView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
 
-    override val viewBinding by viewBinding(AboutLibrariesListBinding::inflate)
+    override val viewBinding = AboutLibrariesListBinding::inflate
 
     override val layoutRoot by boundView { aboutList }
 

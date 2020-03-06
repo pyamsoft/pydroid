@@ -27,7 +27,7 @@ internal class AboutItemDescriptionView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemDescriptionBinding>(parent) {
 
-    override val viewBinding by viewBinding(AboutItemDescriptionBinding::inflate)
+    override val viewBinding = AboutItemDescriptionBinding::inflate
 
     override val layoutRoot by boundView { aboutDescription }
 

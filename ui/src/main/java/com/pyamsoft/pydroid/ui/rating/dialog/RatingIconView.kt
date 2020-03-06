@@ -28,7 +28,7 @@ internal class RatingIconView internal constructor(
     parent: ViewGroup
 ) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingIconBinding>(parent) {
 
-    override val viewBinding by viewBinding(RatingIconBinding::inflate)
+    override val viewBinding = RatingIconBinding::inflate
 
     override val layoutRoot by boundView { ratingIconRoot }
 

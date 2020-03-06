@@ -264,7 +264,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
         internal fun remove() {
             assertValidState()
-            bound.let { v -> requireNotNull(parent).removeView(v) }
+            bound.let { requireNotNull(parent).removeView(it) }
         }
 
         internal fun teardown() {

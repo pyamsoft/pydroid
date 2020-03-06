@@ -207,30 +207,29 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.binding or BindingUiView<S,V,B>.boundView() instead")
     // NOTE: This function will be removed in the next major version 21.X.X
     protected fun <V : View> boundView(@IdRes id: Int): Bound<V> {
-        return createBound(
-            resolver = {
-                // Need explicit type here or kotlinc complains
-                parent().findViewById<V>(id)
-            },
-            teardown = { parent().removeView(it) }
-        )
+        return createBound { parent ->
+            // Need explicit type here or kotlinc complains
+            parent.findViewById<V>(id)
+        }
     }
 
     @CheckResult
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     // NOTE: This function will be removed in the next major version 21.X.X
-    protected fun <V : Any> createBound(resolver: () -> V, teardown: ((V) -> Unit)?): Bound<V> {
+    protected fun <V : View> createBound(resolver: (View) -> V): Bound<V> {
         assertValidState()
-        return Bound(resolver, teardown).also { trackBound(it) }
+        return Bound(parent(), resolver).also { trackBound(it) }
     }
 
-    protected class Bound<B : Any> internal constructor(
-        resolver: () -> B,
-        private var teardown: ((B) -> Unit)?
-    ) : ReadOnlyProperty<Any, B> {
+    protected class Bound<V : View> internal constructor(
+        parent: ViewGroup,
+        resolver: (View) -> V
+    ) : ReadOnlyProperty<Any, V> {
 
-        private var resolver: (() -> B)? = resolver
-        private var bound: B? = null
+        private var resolver: ((View) -> V)? = resolver
+
+        private var parent: ViewGroup? = parent
+        private var bound: V? = null
 
         private fun die(): Nothing {
             throw IllegalStateException("Cannot call BoundView methods after it has been torn down")
@@ -245,13 +244,15 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         override fun getValue(
             thisRef: Any,
             property: KProperty<*>
-        ): B {
+        ): V {
             assertValidState()
 
-            val b: B? = bound
-            val result: B
+            val b: V? = bound
+            val result: V
             if (b == null) {
-                val bound = requireNotNull(resolver).invoke()
+                val p = requireNotNull(parent)
+                val r = requireNotNull(resolver)
+                val bound = r(p)
                 this.bound = bound
                 result = bound
             } else {
@@ -264,10 +265,11 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         internal fun teardown() {
             assertValidState()
 
-            bound?.let { teardown?.invoke(it) }
-            teardown = null
-            resolver = null
+            bound?.let { parent?.removeView(it) }
             bound = null
+            parent = null
+
+            resolver = null
         }
     }
 }

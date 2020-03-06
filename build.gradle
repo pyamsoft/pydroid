@@ -108,7 +108,7 @@ subprojects {
     apply plugin: "com.diffplug.gradle.spotless"
 
     final String POM_GROUP = "com.pyamsoft.pydroid"
-    final String POM_VERSION = "20.9.2-SNAPSHOT"
+    final String POM_VERSION = "20.10.0"
 
     group = POM_GROUP
     version = POM_VERSION

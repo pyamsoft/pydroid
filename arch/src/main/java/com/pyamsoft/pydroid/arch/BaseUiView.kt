@@ -67,10 +67,14 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
         doOnTeardown {
             assertValidState()
+
+            // Teardown must happen in this order
+            bound?.forEach { it.remove() }
+            parent.removeView(layoutRoot)
             bound?.forEach { it.teardown() }
             bound?.clear()
-            parent().removeView(layoutRoot)
             bound = null
+
             _parent = null
         }
 
@@ -221,14 +225,11 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         return Bound(parent(), resolver).also { trackBound(it) }
     }
 
-    protected class Bound<V : View> internal constructor(
-        parent: ViewGroup,
-        resolver: (View) -> V
+    protected data class Bound<V : View> internal constructor(
+        private var parent: ViewGroup?,
+        private var resolver: ((View) -> V)?
     ) : ReadOnlyProperty<Any, V> {
 
-        private var resolver: ((View) -> V)? = resolver
-
-        private var parent: ViewGroup? = parent
         private var bound: V? = null
 
         private fun die(): Nothing {
@@ -236,7 +237,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
 
         private fun assertValidState() {
-            if (resolver == null) {
+            if (resolver == null || parent == null) {
                 die()
             }
         }
@@ -250,9 +251,8 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
             val b: V? = bound
             val result: V
             if (b == null) {
-                val p = requireNotNull(parent)
                 val r = requireNotNull(resolver)
-                val bound = r(p)
+                val bound = r(requireNotNull(parent))
                 this.bound = bound
                 result = bound
             } else {
@@ -262,13 +262,16 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
             return result
         }
 
+        internal fun remove() {
+            assertValidState()
+            bound.let { v -> requireNotNull(parent).removeView(v) }
+        }
+
         internal fun teardown() {
             assertValidState()
 
-            bound?.let { parent?.removeView(it) }
             bound = null
             parent = null
-
             resolver = null
         }
     }

@@ -39,7 +39,7 @@ buildscript {
         maxSdk = 29
 
         // Kotlin
-        coroutines = '1.3.3'
+        coroutines = '1.3.4'
 
         // AndroidX
         core = "1.2.0"
@@ -62,7 +62,7 @@ buildscript {
         // Network
         moshi = "1.9.2"
         retrofit = '2.7.2'
-        okhttp = "4.4.0"
+        okhttp = "4.4.1"
 
         // Logging
         timber = "4.7.1"

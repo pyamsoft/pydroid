@@ -37,8 +37,6 @@ internal data class PYDroidInitializer internal constructor(
             params: PYDroid.Parameters
         ): PYDroidInitializer {
             val debug = application.isDebugMode()
-            val enforcer = Enforcer(debug)
-            enforcer.assertNotOnMainThread()
             if (debug) {
                 Timber.plant(Timber.DebugTree())
                 setStrictMode()
@@ -47,7 +45,6 @@ internal data class PYDroidInitializer internal constructor(
             val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
                 PYDroidComponent.Component.Parameters(
                     application = application,
-                    enforcer = enforcer,
                     name = application.displayName,
                     debug = debug,
                     sourceUrl = params.viewSourceUrl,

@@ -85,12 +85,10 @@ object PYDroid {
     }
 
     data class Parameters(
-        internal val name: String,
         internal val viewSourceUrl: String,
         internal val bugReportUrl: String,
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
-        internal val version: Int,
-        internal val debug: Boolean
+        internal val version: Int
     )
 }

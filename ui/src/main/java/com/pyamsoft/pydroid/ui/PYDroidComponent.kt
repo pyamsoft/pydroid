@@ -62,18 +62,7 @@ internal interface PYDroidComponent {
     interface Factory {
 
         @CheckResult
-        fun create(params: Parameters): Component
-
-        data class Parameters internal constructor(
-            internal val application: Application,
-            internal val debug: Boolean,
-            internal val applicationName: String,
-            internal val viewSourceUrl: String,
-            internal val bugReportUrl: String,
-            internal val privacyPolicyUrl: String,
-            internal val termsConditionsUrl: String,
-            internal val currentVersion: Int
-        )
+        fun create(params: Component.Parameters): Component
     }
 
     interface Component : PYDroidComponent, ModuleProvider {
@@ -213,19 +202,8 @@ internal interface PYDroidComponent {
 
         class FactoryImpl internal constructor() : Factory {
 
-            override fun create(params: Factory.Parameters): Component {
-                return ComponentImpl(
-                    Component.Parameters(
-                        application = params.application,
-                        debug = params.debug,
-                        name = params.applicationName,
-                        sourceUrl = params.viewSourceUrl,
-                        reportUrl = params.bugReportUrl,
-                        privacyPolicyUrl = params.privacyPolicyUrl,
-                        termsConditionsUrl = params.termsConditionsUrl,
-                        version = params.currentVersion
-                    )
-                )
+            override fun create(params: Component.Parameters): Component {
+                return ComponentImpl(params)
             }
         }
     }

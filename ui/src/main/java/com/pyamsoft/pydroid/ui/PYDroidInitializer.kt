@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
+import com.pyamsoft.pydroid.util.isDebugMode
 import timber.log.Timber
 
 internal class PYDroidInitializer internal constructor(
@@ -30,21 +31,24 @@ internal class PYDroidInitializer internal constructor(
     internal val moduleProvider: ModuleProvider
 
     init {
-        if (params.debug) {
+        val debug = application.isDebugMode()
+        if (debug) {
             Timber.plant(Timber.DebugTree())
             setStrictMode()
         }
 
+        val applicationName = application.applicationInfo.name
+
         val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
-            PYDroidComponent.Factory.Parameters(
+            PYDroidComponent.Component.Parameters(
                 application = application,
-                debug = params.debug,
-                applicationName = params.name,
-                viewSourceUrl = params.viewSourceUrl,
-                bugReportUrl = params.bugReportUrl,
+                name = applicationName,
+                debug = debug,
+                sourceUrl = params.viewSourceUrl,
+                reportUrl = params.bugReportUrl,
                 privacyPolicyUrl = params.privacyPolicyUrl,
                 termsConditionsUrl = params.termsConditionsUrl,
-                currentVersion = params.version
+                version = params.version
             )
         )
 

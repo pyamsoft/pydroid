@@ -68,9 +68,10 @@ internal interface PYDroidComponent {
     interface Component : PYDroidComponent, ModuleProvider {
 
         data class Parameters internal constructor(
+            internal val enforcer: Enforcer,
             internal val application: Application,
             internal val debug: Boolean,
-            internal val name: String,
+            internal val name: CharSequence,
             internal val sourceUrl: String,
             internal val reportUrl: String,
             internal val privacyPolicyUrl: String,
@@ -81,10 +82,9 @@ internal interface PYDroidComponent {
 
     class ComponentImpl private constructor(params: Component.Parameters) : Component {
 
-        private val context = params.application.applicationContext
-        private val enforcer = Enforcer(params.debug)
-        private val preferences =
-            PYDroidPreferencesImpl(params.application.applicationContext)
+        private val context = params.application
+        private val enforcer = params.enforcer
+        private val preferences = PYDroidPreferencesImpl(params.application)
         private val theming = Theming(preferences)
         private val packageName = params.application.packageName
 

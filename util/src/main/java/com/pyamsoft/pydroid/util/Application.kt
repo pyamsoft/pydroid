@@ -26,3 +26,8 @@ fun Application.isDebugMode(): Boolean {
     val flags = this.applicationInfo.flags
     return flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
 }
+
+val Application.displayName: CharSequence
+    @get:CheckResult get() {
+        return this.applicationInfo.loadLabel(this.packageManager).toString()
+    }

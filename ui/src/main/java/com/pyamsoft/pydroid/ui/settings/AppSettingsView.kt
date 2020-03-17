@@ -39,7 +39,7 @@ import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 
 internal class AppSettingsView internal constructor(
-    private val applicationName: String,
+    private val applicationName: CharSequence,
     private val bugReportUrl: String,
     private val viewSourceUrl: String,
     private val privacyPolicyUrl: String,

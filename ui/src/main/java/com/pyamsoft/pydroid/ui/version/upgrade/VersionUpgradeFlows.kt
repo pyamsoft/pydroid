@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
 data class VersionUpgradeViewState(
-    val applicationName: String,
+    val applicationName: CharSequence,
     val currentVersion: Int,
     val newVersion: Int,
     val throwable: Throwable?

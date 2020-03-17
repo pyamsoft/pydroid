@@ -63,7 +63,7 @@ object PYDroid {
         onInit: (provider: ModuleProvider) -> Unit = DEFAULT_INIT_CALLBACK
     ) {
         if (instance.get() == null) {
-            val pydroid = PYDroidInitializer(application, params)
+            val pydroid = PYDroidInitializer.create(application, params)
             if (instance.compareAndSet(null, pydroid)) {
                 onInit(pydroid.moduleProvider)
             }
@@ -78,8 +78,8 @@ object PYDroid {
     fun getSystemService(name: String): Any? {
         return when (name) {
             Theming::class.java.name -> instance().moduleProvider.theming()
-            PYDroidComponent::class.java.name -> instance().component
             Enforcer::class.java.name -> instance().moduleProvider.enforcer()
+            PYDroidComponent::class.java.name -> instance().component
             else -> null
         }
     }

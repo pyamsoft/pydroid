@@ -40,7 +40,7 @@ internal interface AppSettingsComponent {
         ): AppSettingsComponent
 
         data class Parameters internal constructor(
-            internal val applicationName: String,
+            internal val applicationName: CharSequence,
             internal val bugReportUrl: String,
             internal val viewSourceUrl: String,
             internal val privacyPolicyUrl: String,

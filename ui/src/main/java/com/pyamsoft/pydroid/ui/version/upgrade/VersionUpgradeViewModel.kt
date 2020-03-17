@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewEvent.Upgrade
 
 internal class VersionUpgradeViewModel internal constructor(
-    applicationName: String,
+    applicationName: CharSequence,
     currentVersion: Int,
     debug: Boolean
 ) : UiViewModel<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeControllerEvent>(

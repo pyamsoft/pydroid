@@ -19,44 +19,47 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
+import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.util.displayName
 import com.pyamsoft.pydroid.util.isDebugMode
 import timber.log.Timber
 
-internal class PYDroidInitializer internal constructor(
-    application: Application,
-    params: PYDroid.Parameters
+internal data class PYDroidInitializer internal constructor(
+    internal val component: PYDroidComponent,
+    internal val moduleProvider: ModuleProvider
 ) {
 
-    internal val component: PYDroidComponent
-    internal val moduleProvider: ModuleProvider
-
-    init {
-        val debug = application.isDebugMode()
-        if (debug) {
-            Timber.plant(Timber.DebugTree())
-            setStrictMode()
-        }
-
-        val applicationName = application.applicationInfo.name
-
-        val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
-            PYDroidComponent.Component.Parameters(
-                application = application,
-                name = applicationName,
-                debug = debug,
-                sourceUrl = params.viewSourceUrl,
-                reportUrl = params.bugReportUrl,
-                privacyPolicyUrl = params.privacyPolicyUrl,
-                termsConditionsUrl = params.termsConditionsUrl,
-                version = params.version
-            )
-        )
-
-        component = impl
-        moduleProvider = impl
-    }
-
     companion object {
+
+        @JvmStatic
+        internal fun create(
+            application: Application,
+            params: PYDroid.Parameters
+        ): PYDroidInitializer {
+            val debug = application.isDebugMode()
+            val enforcer = Enforcer(debug)
+            enforcer.assertNotOnMainThread()
+            if (debug) {
+                Timber.plant(Timber.DebugTree())
+                setStrictMode()
+            }
+
+            val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
+                PYDroidComponent.Component.Parameters(
+                    application = application,
+                    enforcer = enforcer,
+                    name = application.displayName,
+                    debug = debug,
+                    sourceUrl = params.viewSourceUrl,
+                    reportUrl = params.bugReportUrl,
+                    privacyPolicyUrl = params.privacyPolicyUrl,
+                    termsConditionsUrl = params.termsConditionsUrl,
+                    version = params.version
+                )
+            )
+
+            return PYDroidInitializer(impl, impl)
+        }
 
         @JvmStatic
         private fun setStrictMode() {

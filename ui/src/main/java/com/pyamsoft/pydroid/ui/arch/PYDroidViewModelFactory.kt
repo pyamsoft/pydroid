@@ -50,7 +50,7 @@ internal class PYDroidViewModelFactory internal constructor(
     }
 
     internal data class Parameters internal constructor(
-        internal val name: String,
+        internal val name: CharSequence,
         internal val version: Int,
         internal val ratingInteractor: RatingInteractor,
         internal val aboutInteractor: AboutInteractor,

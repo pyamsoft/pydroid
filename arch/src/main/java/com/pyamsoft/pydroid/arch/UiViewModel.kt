@@ -20,9 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +28,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     private val initialState: S,
@@ -91,7 +91,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         savedInstanceState: UiBundleReader,
         vararg views: IView<S, V>,
         onControllerEvent: (event: C) -> Unit
-    ): Job = viewModelScope.launch {
+    ): Job = viewModelScope.launch(context = Dispatchers.Main) {
         // Listen for changes
         launch { stateBus.onEvent { handleStateChange(views, it) } }
 
@@ -333,7 +333,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 if (view is UiView<S, V>) {
 
                     // Launch another coroutine here for handling view events
-                    launch(context = Dispatchers.Default) { view.onViewEvent { handleViewEvent(it) } }
+                    launch {
+                        view.onViewEvent {
+                            // View events must fire onto the main thread
+                            launch(context = Dispatchers.Main) {
+                                handleViewEvent(it)
+                            }
+                        }
+                    }
 
                     if (view is BaseUiView<S, V>) {
                         val nestedViews = view.nestedViews()
@@ -347,7 +354,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     @CheckResult
     private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit): Job =
-        launch(context = Dispatchers.Default) { controllerEventBus.onEvent { onControllerEvent(it) } }
+        launch {
+            controllerEventBus.onEvent {
+                // Controller events must fire onto the main thread
+                launch(context = Dispatchers.Main) {
+                    onControllerEvent(it)
+                }
+            }
+        }
 
     protected inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
         if (this !is CancellationException) {

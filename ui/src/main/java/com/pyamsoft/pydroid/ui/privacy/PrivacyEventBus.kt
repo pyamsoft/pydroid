@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.privacy
 
 import com.pyamsoft.pydroid.arch.EventBus
+import kotlin.coroutines.CoroutineContext
 
 object PrivacyEventBus : EventBus<PrivacyEvents> {
 
@@ -33,5 +34,12 @@ object PrivacyEventBus : EventBus<PrivacyEvents> {
 
     override suspend fun onEvent(emitter: suspend (event: PrivacyEvents) -> Unit) {
         bus.onEvent(emitter)
+    }
+
+    override suspend fun onEvent(
+        context: CoroutineContext,
+        emitter: suspend (event: PrivacyEvents) -> Unit
+    ) {
+        bus.onEvent(context, emitter)
     }
 }

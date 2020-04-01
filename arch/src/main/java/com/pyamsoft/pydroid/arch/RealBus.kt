@@ -24,6 +24,7 @@ import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import kotlin.coroutines.CoroutineContext
 
 class RealBus<T : Any> internal constructor() : EventBus<T> {
 
@@ -44,8 +45,14 @@ class RealBus<T : Any> internal constructor() : EventBus<T> {
 
     @CheckResult
     @ExperimentalCoroutinesApi
-    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) =
-        withContext(context = Dispatchers.IO) {
+    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
+        return onEvent(context = Dispatchers.Default, emitter = emitter)
+    }
+
+    @CheckResult
+    @ExperimentalCoroutinesApi
+    override suspend fun onEvent(context: CoroutineContext, emitter: suspend (event: T) -> Unit) =
+        withContext(context = context) {
             bus.openSubscription()
                 .consumeEach { emitter(it) }
         }

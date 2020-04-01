@@ -93,7 +93,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         onControllerEvent: (event: C) -> Unit
     ): Job = viewModelScope.launch(context = Dispatchers.Main) {
         // Listen for changes
-        launch { stateBus.onEvent { handleStateChange(views, it) } }
+        launch(context = Dispatchers.Default) {
+            stateBus.onEvent { event ->
+                launch(context = Dispatchers.Main) { handleStateChange(views, event) }
+            }
+        }
 
         // Bind ViewModel
         bindControllerEvents(onControllerEvent)

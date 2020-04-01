@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.util.displayName
 import com.pyamsoft.pydroid.util.isDebugMode
 import timber.log.Timber

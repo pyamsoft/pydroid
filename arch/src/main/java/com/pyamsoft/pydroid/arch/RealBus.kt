@@ -18,9 +18,11 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class RealBus<T : Any> internal constructor() : EventBus<T> {
@@ -36,14 +38,15 @@ class RealBus<T : Any> internal constructor() : EventBus<T> {
     }
 
     @ExperimentalCoroutinesApi
-    override suspend fun send(event: T) {
+    override suspend fun send(event: T) = withContext(context = Dispatchers.Default) {
         bus.send(event)
     }
 
     @CheckResult
     @ExperimentalCoroutinesApi
-    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
-        bus.openSubscription()
-            .consumeEach { emitter(it) }
-    }
+    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) =
+        withContext(context = Dispatchers.Default) {
+            bus.openSubscription()
+                .consumeEach { emitter(it) }
+        }
 }

@@ -22,9 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyControllerEvent.ViewExternalPolicy
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewEvent.SnackbarHidden
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal class PrivacyViewModel internal constructor(
     debug: Boolean
@@ -35,12 +33,8 @@ internal class PrivacyViewModel internal constructor(
 
     init {
         doOnInit {
-            viewModelScope.launch(context = Dispatchers.Default) {
-                PrivacyEventBus.onEvent { event ->
-                    withContext(context = Dispatchers.Main) {
-                        publish(ViewExternalPolicy(event.url))
-                    }
-                }
+            viewModelScope.launch {
+                PrivacyEventBus.onEvent { publish(ViewExternalPolicy(it.url)) }
             }
         }
     }

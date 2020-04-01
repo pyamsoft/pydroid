@@ -30,7 +30,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
@@ -61,7 +60,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private var state: S? = null
 
     init {
-        flushQueueBus.scopedEvent(Dispatchers.Default) { flushQueues() }
+        flushQueueBus.scopedEvent { flushQueues() }
     }
 
     protected abstract fun handleViewEvent(event: V)
@@ -92,15 +91,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         savedInstanceState: UiBundleReader,
         vararg views: IView<S, V>,
         onControllerEvent: (event: C) -> Unit
-    ): Job = viewModelScope.launch(context = Dispatchers.Main) {
+    ): Job = viewModelScope.launch {
         // Listen for changes
-        launch(context = Dispatchers.Default) {
-            stateBus.onEvent { state ->
-                withContext(context = Dispatchers.Main) {
-                    handleStateChange(views, state)
-                }
-            }
-        }
+        launch { stateBus.onEvent { handleStateChange(views, it) } }
 
         // Bind ViewModel
         bindControllerEvents(onControllerEvent)
@@ -159,9 +152,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     protected fun publish(event: C) {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            controllerEventBus.send(event)
-        }
+        viewModelScope.launch { controllerEventBus.send(event) }
     }
 
     @CheckResult
@@ -342,11 +333,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 if (view is UiView<S, V>) {
 
                     // Launch another coroutine here for handling view events
-                    launch(context = Dispatchers.Default) {
-                        view.onViewEvent { event ->
-                            withContext(context = Dispatchers.Main) { handleViewEvent(event) }
-                        }
-                    }
+                    launch(context = Dispatchers.Default) { view.onViewEvent { handleViewEvent(it) } }
 
                     if (view is BaseUiView<S, V>) {
                         val nestedViews = view.nestedViews()
@@ -360,11 +347,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     @CheckResult
     private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit): Job =
-        launch(context = Dispatchers.Default) {
-            controllerEventBus.onEvent { event ->
-                withContext(context = Dispatchers.Main) { onControllerEvent(event) }
-            }
-        }
+        launch(context = Dispatchers.Default) { controllerEventBus.onEvent { onControllerEvent(it) } }
 
     protected inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
         if (this !is CancellationException) {

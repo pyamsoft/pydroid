@@ -23,6 +23,8 @@ import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class VersionCheckInteractorNetwork internal constructor(
     private val currentVersion: Int,
@@ -50,14 +52,15 @@ internal class VersionCheckInteractorNetwork internal constructor(
         return versionCode
     }
 
-    override suspend fun checkVersion(force: Boolean): UpdatePayload {
-        enforcer.assertNotOnMainThread()
-        val targetName = if (packageName.endsWith(".dev")) {
-            packageName.substringBefore(".dev")
-        } else {
-            packageName
+    override suspend fun checkVersion(force: Boolean): UpdatePayload =
+        withContext(context = Dispatchers.IO) {
+            enforcer.assertNotOnMainThread()
+            val targetName = if (packageName.endsWith(".dev")) {
+                packageName.substringBefore(".dev")
+            } else {
+                packageName
+            }
+            val result = versionCheckService.checkVersion(targetName)
+            return@withContext UpdatePayload(currentVersion, versionCodeForApi(result))
         }
-        val result = versionCheckService.checkVersion(targetName)
-        return UpdatePayload(currentVersion, versionCodeForApi(result))
-    }
 }

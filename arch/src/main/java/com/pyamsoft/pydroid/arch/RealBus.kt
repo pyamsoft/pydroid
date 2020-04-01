@@ -18,13 +18,13 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.coroutines.CoroutineContext
 
 class RealBus<T : Any> internal constructor() : EventBus<T> {
 

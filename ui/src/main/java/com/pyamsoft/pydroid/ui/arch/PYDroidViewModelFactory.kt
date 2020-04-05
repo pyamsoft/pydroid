@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.arch
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
+import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.about.AboutViewModel
@@ -39,10 +40,18 @@ internal class PYDroidViewModelFactory internal constructor(
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
             RatingDialogViewModel::class -> RatingDialogViewModel(params.ratingInteractor, debug)
-            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(params.name, params.version, debug)
+            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(
+                params.name,
+                params.version,
+                debug
+            )
             AboutViewModel::class -> AboutViewModel(params.aboutInteractor, debug)
             RatingViewModel::class -> RatingViewModel(params.ratingInteractor, debug)
-            AppSettingsViewModel::class -> AppSettingsViewModel(params.theming, debug)
+            AppSettingsViewModel::class -> AppSettingsViewModel(
+                params.theming,
+                params.otherAppsInteractor,
+                debug
+            )
             VersionCheckViewModel::class -> VersionCheckViewModel(params.versionInteractor, debug)
             PrivacyViewModel::class -> PrivacyViewModel(debug)
             else -> fail()
@@ -55,6 +64,7 @@ internal class PYDroidViewModelFactory internal constructor(
         internal val ratingInteractor: RatingInteractor,
         internal val aboutInteractor: AboutInteractor,
         internal val versionInteractor: VersionCheckInteractor,
+        internal val otherAppsInteractor: OtherAppsInteractor,
         internal val theming: Theming,
         internal val debug: Boolean
     )

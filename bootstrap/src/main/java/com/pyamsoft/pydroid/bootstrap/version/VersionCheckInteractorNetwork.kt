@@ -31,7 +31,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
     private val packageName: String,
     private val enforcer: Enforcer,
     private val minimumApiProvider: MinimumApiProvider,
-    private val versionCheckService: VersionCheckService
+    private val service: VersionCheckService
 ) : VersionCheckInteractor {
 
     @CheckResult
@@ -60,7 +60,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
             } else {
                 packageName
             }
-            val result = versionCheckService.checkVersion(targetName)
+            val result = service.checkVersion(targetName)
             return@withContext UpdatePayload(currentVersion, versionCodeForApi(result))
         }
 }

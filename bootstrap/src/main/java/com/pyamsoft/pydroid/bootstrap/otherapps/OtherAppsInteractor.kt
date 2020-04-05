@@ -15,24 +15,13 @@
  *
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.bootstrap.otherapps
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-interface ImageLoader {
-
-    @CheckResult
-    fun load(@DrawableRes resource: Int): Loader<Drawable>
+interface OtherAppsInteractor {
 
     @CheckResult
-    fun load(url: String): Loader<Drawable>
-
-    @CheckResult
-    fun load(data: ByteArray): Loader<Bitmap>
-
-    @CheckResult
-    fun load(bitmap: Bitmap): Loader<Bitmap>
+    suspend fun getApps(force: Boolean): List<OtherApp>
 }

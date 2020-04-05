@@ -15,24 +15,26 @@
  *
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.bootstrap.otherapps.api
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import java.util.Collections
 
-interface ImageLoader {
-
-    @CheckResult
-    fun load(@DrawableRes resource: Int): Loader<Drawable>
-
-    @CheckResult
-    fun load(url: String): Loader<Drawable>
-
-    @CheckResult
-    fun load(data: ByteArray): Loader<Bitmap>
+@JsonClass(generateAdapter = true)
+internal data class OtherAppsResponse internal constructor(
+    @field:Json(name = "apps")
+    internal val apps: List<OtherAppsResponseEntry>?
+) {
 
     @CheckResult
-    fun load(bitmap: Bitmap): Loader<Bitmap>
+    fun apps(): List<OtherAppsResponseEntry> {
+        return apps.let {
+            if (it == null) emptyList() else Collections.unmodifiableList(it)
+        }
+    }
+
+    // Needed so we can generate a static adapter
+    companion object
 }

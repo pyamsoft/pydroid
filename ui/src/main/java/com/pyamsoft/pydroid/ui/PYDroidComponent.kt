@@ -20,6 +20,8 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.bootstrap.network.NetworkModule
+import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.core.Enforcer
@@ -28,6 +30,8 @@ import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.otherapps.OtherAppsComponent
+import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemComponent
 import com.pyamsoft.pydroid.ui.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.privacy.PrivacyComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
@@ -46,6 +50,12 @@ internal interface PYDroidComponent {
 
     @CheckResult
     fun plusAboutItem(): AboutItemComponent.Factory
+
+    @CheckResult
+    fun plusOtherApps(): OtherAppsComponent.Factory
+
+    @CheckResult
+    fun plusOtherAppsItem(): OtherAppsItemComponent.Factory
 
     @CheckResult
     fun plusRatingDialog(): RatingDialogComponent.Factory
@@ -107,12 +117,29 @@ internal interface PYDroidComponent {
             )
         )
 
+        private val networkModule = NetworkModule(
+            NetworkModule.Parameters(
+                debug = params.debug,
+                enforcer = enforcer
+            )
+        )
+
         private val versionCheckModule = VersionCheckModule(
             VersionCheckModule.Parameters(
                 debug = params.debug,
                 currentVersion = params.version,
                 packageName = packageName,
-                enforcer = enforcer
+                enforcer = enforcer,
+                serviceCreator = networkModule.provideServiceCreator()
+            )
+        )
+
+        private val otherAppsModule = OtherAppsModule(
+            OtherAppsModule.Parameters(
+                debug = params.debug,
+                enforcer = enforcer,
+                packageName = packageName,
+                serviceCreator = networkModule.provideServiceCreator()
             )
         )
 
@@ -124,6 +151,7 @@ internal interface PYDroidComponent {
                     ratingInteractor = ratingModule.provideInteractor(),
                     aboutInteractor = aboutModule.provideInteractor(),
                     versionInteractor = versionCheckModule.provideInteractor(),
+                    otherAppsInteractor = otherAppsModule.provideInteractor(),
                     theming = theming,
                     debug = params.debug
                 )
@@ -154,6 +182,10 @@ internal interface PYDroidComponent {
             factory = viewModelFactory
         )
 
+        private val otherAppsParams = OtherAppsComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
         private val ratingDialogParams = RatingDialogComponent.Factory.Parameters(
             factory = viewModelFactory,
             module = loaderModule
@@ -165,6 +197,14 @@ internal interface PYDroidComponent {
 
         override fun plusAbout(): AboutComponent.Factory {
             return AboutComponent.Impl.FactoryImpl(aboutParams)
+        }
+
+        override fun plusOtherApps(): OtherAppsComponent.Factory {
+            return OtherAppsComponent.Impl.FactoryImpl(otherAppsParams)
+        }
+
+        override fun plusOtherAppsItem(): OtherAppsItemComponent.Factory {
+            return OtherAppsItemComponent.Impl.FactoryImpl(imageLoader())
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {

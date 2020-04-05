@@ -15,22 +15,21 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.otherapps
 
-import com.pyamsoft.pydroid.ui.about.AboutViewEvent.UpNavigate
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.widget.internal.ToolbarView
 
-internal class AboutToolbarView internal constructor(
+internal class OtherAppsToolbar internal constructor(
     backstackCount: Int,
     toolbarActivity: ToolbarActivity
-) : ToolbarView<AboutViewState, AboutViewEvent>(backstackCount, toolbarActivity) {
+) : ToolbarView<OtherAppsViewState, OtherAppsViewEvent>(backstackCount, toolbarActivity) {
 
     override fun onNavigationClicked() {
-        publish(UpNavigate)
+        publish(OtherAppsViewEvent.UpNavigate)
     }
 
-    override fun render(state: AboutViewState) {
+    override fun render(state: OtherAppsViewState) {
         toolbarActivity.withToolbar { toolbar ->
             toolbar.title = state.toolbarTitle
         }

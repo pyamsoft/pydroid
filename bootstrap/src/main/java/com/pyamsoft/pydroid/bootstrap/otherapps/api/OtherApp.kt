@@ -15,24 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.bootstrap.otherapps.api
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+data class OtherApp internal constructor(
+    val packageName: String,
+    val name: String,
+    val description: String,
+    val icon: String,
+    val storeUrl: String
+) {
+    companion object {
 
-interface ImageLoader {
-
-    @CheckResult
-    fun load(@DrawableRes resource: Int): Loader<Drawable>
-
-    @CheckResult
-    fun load(url: String): Loader<Drawable>
-
-    @CheckResult
-    fun load(data: ByteArray): Loader<Bitmap>
-
-    @CheckResult
-    fun load(bitmap: Bitmap): Loader<Bitmap>
+        val EMPTY = OtherApp("", "", "", "", "")
+    }
 }

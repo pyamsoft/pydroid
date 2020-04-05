@@ -15,24 +15,14 @@
  *
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.ui.otherapps.listitem
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 
-interface ImageLoader {
+internal abstract class BaseViewHolder<B : ViewBinding> internal constructor(
+    protected val binding: B
+) : RecyclerView.ViewHolder(binding.root) {
 
-    @CheckResult
-    fun load(@DrawableRes resource: Int): Loader<Drawable>
-
-    @CheckResult
-    fun load(url: String): Loader<Drawable>
-
-    @CheckResult
-    fun load(data: ByteArray): Loader<Bitmap>
-
-    @CheckResult
-    fun load(bitmap: Bitmap): Loader<Bitmap>
+    abstract fun bind(state: OtherAppsItemViewState)
 }

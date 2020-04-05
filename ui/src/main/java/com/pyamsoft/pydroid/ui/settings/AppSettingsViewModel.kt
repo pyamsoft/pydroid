@@ -19,54 +19,81 @@ package com.pyamsoft.pydroid.ui.settings
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import androidx.lifecycle.viewModelScope
+import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ChangeDarkTheme
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateHyperlink
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateMoreApps
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateRateApp
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.OpenShowUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ShowLicense
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.CheckUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ClearData
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.Hyperlink
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.MoreApps
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.RateApp
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ShowUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
-import com.pyamsoft.pydroid.ui.settings.AppSettingsViewState.DarkTheme
+import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 internal class AppSettingsViewModel internal constructor(
     private val theming: Theming,
+    interactor: OtherAppsInteractor,
     debug: Boolean
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
-    initialState = AppSettingsViewState(isDarkTheme = null, throwable = null), debug = debug
+    initialState = AppSettingsViewState(
+        isDarkTheme = null,
+        throwable = null,
+        otherApps = emptyList()
+    ),
+    debug = debug
 ) {
+
+    private val otherAppsRunner = highlander<Unit, Boolean> { force ->
+        try {
+            val otherApps = interactor.getApps(force)
+            setState { copy(otherApps = otherApps) }
+        } catch (error: Throwable) {
+            error.onActualError { e ->
+                Timber.e(e, "Error checking for other apps")
+            }
+        }
+    }
+
+    init {
+        doOnInit {
+            viewModelScope.launch { otherAppsRunner.call(false) }
+        }
+    }
 
     override fun handleViewEvent(event: AppSettingsViewEvent) {
         return when (event) {
-            is MoreApps -> publish(NavigateMoreApps)
-            is Hyperlink -> publish(NavigateHyperlink(event.hyperlinkIntent))
-            is RateApp -> publish(NavigateRateApp)
-            is ViewLicense -> publish(ShowLicense)
-            is CheckUpgrade -> publish(AttemptCheckUpgrade)
-            is ClearData -> publish(AttemptClearData)
-            is ShowUpgrade -> publish(OpenShowUpgrade)
-            is ToggleDarkTheme -> changeDarkMode(event.mode)
+            is AppSettingsViewEvent.MoreApps -> seeMoreApps()
+            is AppSettingsViewEvent.Hyperlink -> publish(
+                AppSettingsControllerEvent.NavigateHyperlink(
+                    event.hyperlinkIntent
+                )
+            )
+            is AppSettingsViewEvent.RateApp -> publish(AppSettingsControllerEvent.NavigateRateApp)
+            is AppSettingsViewEvent.ViewLicense -> publish(AppSettingsControllerEvent.ShowLicense)
+            is AppSettingsViewEvent.CheckUpgrade -> publish(AppSettingsControllerEvent.AttemptCheckUpgrade)
+            is AppSettingsViewEvent.ClearData -> publish(AppSettingsControllerEvent.AttemptClearData)
+            is AppSettingsViewEvent.ShowUpgrade -> publish(AppSettingsControllerEvent.OpenShowUpgrade)
+            is AppSettingsViewEvent.ToggleDarkTheme -> changeDarkMode(event.mode)
+        }
+    }
+
+    private fun seeMoreApps() {
+        withState {
+            otherApps.let { others ->
+                if (others.isEmpty()) {
+                    publish(AppSettingsControllerEvent.NavigateMoreApps)
+                } else {
+                    publish(AppSettingsControllerEvent.OpenOtherAppsPage(others))
+                }
+            }
         }
     }
 
     fun syncDarkThemeState(activity: Activity) {
-        setState { copy(isDarkTheme = DarkTheme(theming.isDarkTheme(activity))) }
+        setState { copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity))) }
     }
 
     private fun changeDarkMode(mode: String) {
         theming.setDarkTheme(mode.toMode()) {
-            publish(ChangeDarkTheme(it))
+            publish(AppSettingsControllerEvent.ChangeDarkTheme(it))
         }
     }
 

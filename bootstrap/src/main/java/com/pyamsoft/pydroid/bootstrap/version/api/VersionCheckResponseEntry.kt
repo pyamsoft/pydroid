@@ -32,7 +32,7 @@ internal data class VersionCheckResponseEntry internal constructor(
     fun minApi(): Int {
         return minApi.let {
             if (it == 0) {
-                throw RuntimeException("ResponseObject: minApi was 0")
+                throw RuntimeException("VersionCheckResponseEntry: minApi was 0")
             } else {
                 return@let it
             }
@@ -43,7 +43,7 @@ internal data class VersionCheckResponseEntry internal constructor(
     fun version(): Int {
         return version.let {
             if (it == 0) {
-                throw RuntimeException("ResponseObject: version was 0")
+                throw RuntimeException("VersionCheckResponseEntry: version was 0")
             } else {
                 return@let it
             }

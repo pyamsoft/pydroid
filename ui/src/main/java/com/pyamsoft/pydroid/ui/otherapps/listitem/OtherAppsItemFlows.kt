@@ -15,24 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.loader
+package com.pyamsoft.pydroid.ui.otherapps.listitem
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-interface ImageLoader {
+data class OtherAppsItemViewState internal constructor(
+    val app: OtherApp
+) : UiViewState
 
-    @CheckResult
-    fun load(@DrawableRes resource: Int): Loader<Drawable>
+sealed class OtherAppsItemViewEvent : UiViewEvent {
 
-    @CheckResult
-    fun load(url: String): Loader<Drawable>
-
-    @CheckResult
-    fun load(data: ByteArray): Loader<Bitmap>
-
-    @CheckResult
-    fun load(bitmap: Bitmap): Loader<Bitmap>
+    object OpenStore : OtherAppsItemViewEvent()
 }

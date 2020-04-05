@@ -30,12 +30,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutFragment
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.otherapps.OtherAppsFragment
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
@@ -123,6 +125,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 is AttemptClearData -> openClearDataDialog()
                 is OpenShowUpgrade -> ratingViewModel.load(true)
                 is ChangeDarkTheme -> darkThemeChanged(it.newMode)
+                is AppSettingsControllerEvent.OpenOtherAppsPage -> openOtherAppsPage(it.apps)
             }
         }
 
@@ -146,6 +149,17 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         }
 
         settingsViewModel.syncDarkThemeState(requireActivity())
+    }
+
+    private fun openOtherAppsPage(apps: List<OtherApp>) {
+        Timber.d("Show other apps fragment: $apps")
+        if (isInDialogFragment(this)) {
+            val container = requireView().parent as ViewGroup
+            OtherAppsFragment.show(this, container.id)
+        } else {
+            val baseActivity = requireActivity() as ActivityBase
+            OtherAppsFragment.show(baseActivity, baseActivity.fragmentContainerId)
+        }
     }
 
     private fun openUpdateInfo() {

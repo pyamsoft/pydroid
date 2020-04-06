@@ -76,7 +76,7 @@ internal class OtherAppsList internal constructor(
         }
 
         binding.otherAppsList.apply {
-            adapter = adapter
+            adapter = listAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 initialPrefetchItemCount = 3
                 isItemPrefetchEnabled = false

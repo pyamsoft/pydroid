@@ -28,11 +28,11 @@
     app:cardElevation="2dp"
     app:cardMaxElevation="6dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/other_apps_listitem_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:layout_height="64dp"
+        android:orientation="horizontal" />
 
 </com.google.android.material.card.MaterialCardView>
 

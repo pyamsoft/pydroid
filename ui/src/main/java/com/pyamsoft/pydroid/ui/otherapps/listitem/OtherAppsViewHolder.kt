@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.otherapps.listitem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.bindViews
@@ -28,7 +27,6 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
-import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class OtherAppsViewHolder private constructor(
@@ -52,8 +50,8 @@ internal class OtherAppsViewHolder private constructor(
         val icon = requireNotNull(iconView)
         binder = bindViews(
             owner,
-            title,
-            icon
+            icon,
+                    title
         ) {
             callback(it, adapterPosition)
         }
@@ -66,17 +64,6 @@ internal class OtherAppsViewHolder private constructor(
             itemView.setOnDebouncedClickListener(null)
             titleView = null
             iconView = null
-        }
-
-        binding.otherAppsListitemRoot.layout {
-            connect(icon.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-            connect(icon.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-            connect(icon.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-
-            connect(title.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-            connect(title.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-            connect(title.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-            connect(title.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
         }
     }
 

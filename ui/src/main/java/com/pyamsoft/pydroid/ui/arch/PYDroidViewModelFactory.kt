@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.about.AboutViewModel
+import com.pyamsoft.pydroid.ui.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel
@@ -54,6 +55,7 @@ internal class PYDroidViewModelFactory internal constructor(
             )
             VersionCheckViewModel::class -> VersionCheckViewModel(params.versionInteractor, debug)
             PrivacyViewModel::class -> PrivacyViewModel(debug)
+            OtherAppsViewModel::class -> OtherAppsViewModel(params.otherAppsInteractor, debug)
             else -> fail()
         }
     }

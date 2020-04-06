@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
 import com.pyamsoft.pydroid.ui.util.layout
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class OtherAppsViewHolder private constructor(
     binding: AdapterItemOtherAppsBinding,
@@ -57,7 +58,12 @@ internal class OtherAppsViewHolder private constructor(
             callback(it, adapterPosition)
         }
 
+        itemView.setOnDebouncedClickListener {
+            callback(OtherAppsItemViewEvent.OpenStore, adapterPosition)
+        }
+
         owner.doOnDestroy {
+            itemView.setOnDebouncedClickListener(null)
             titleView = null
             iconView = null
         }
@@ -65,7 +71,7 @@ internal class OtherAppsViewHolder private constructor(
         binding.otherAppsListitemRoot.layout {
             connect(icon.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
             connect(icon.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-            connect(icon.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+            connect(icon.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
 
             connect(title.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
             connect(title.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)

@@ -75,7 +75,7 @@ internal class OtherAppsViewHolder private constructor(
 
             connect(title.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
             connect(title.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-            connect(title.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+            connect(title.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
             connect(title.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
         }
     }

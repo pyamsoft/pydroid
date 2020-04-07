@@ -29,7 +29,9 @@ internal data class OtherAppsResponseEntry internal constructor(
     internal val description: String?,
     internal val icon: String?,
     @field:Json(name = "url")
-    internal val storeUrl: String?
+    internal val storeUrl: String?,
+    @field:Json(name = "source")
+    internal val sourceUrl: String?
 ) {
 
     @CheckResult
@@ -81,6 +83,17 @@ internal data class OtherAppsResponseEntry internal constructor(
         return storeUrl.let {
             if (it == null) {
                 throw RuntimeException("OtherAppsResponseEntry: url missing")
+            } else {
+                return@let it
+            }
+        }
+    }
+
+    @CheckResult
+    fun source(): String {
+        return sourceUrl.let {
+            if (it == null) {
+                throw RuntimeException("OtherAppsResponseEntry: source missing")
             } else {
                 return@let it
             }

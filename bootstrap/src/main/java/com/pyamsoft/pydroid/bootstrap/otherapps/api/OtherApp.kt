@@ -22,10 +22,11 @@ data class OtherApp internal constructor(
     val name: String,
     val description: String,
     val icon: String,
-    val storeUrl: String
+    val storeUrl: String,
+    val sourceUrl: String
 ) {
     companion object {
 
-        val EMPTY = OtherApp("", "", "", "", "")
+        val EMPTY = OtherApp("", "", "", "", "", "")
     }
 }

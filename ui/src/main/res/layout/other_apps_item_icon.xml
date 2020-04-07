@@ -19,6 +19,7 @@
 <merge>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/other_apps_icon_root"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_margin="8dp">

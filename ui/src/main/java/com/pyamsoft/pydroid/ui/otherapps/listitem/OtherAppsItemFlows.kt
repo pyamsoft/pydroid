@@ -27,5 +27,7 @@ data class OtherAppsItemViewState internal constructor(
 
 sealed class OtherAppsItemViewEvent : UiViewEvent {
 
+    object ViewSource : OtherAppsItemViewEvent()
+
     object OpenStore : OtherAppsItemViewEvent()
 }

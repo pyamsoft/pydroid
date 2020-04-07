@@ -30,7 +30,7 @@ internal class OtherAppsItemIconView internal constructor(
 
     override val viewBinding = OtherAppsItemIconBinding::inflate
 
-    override val layoutRoot by boundView { otherAppsIcon }
+    override val layoutRoot by boundView { otherAppsIconRoot }
 
     private var loaded: Loaded? = null
 

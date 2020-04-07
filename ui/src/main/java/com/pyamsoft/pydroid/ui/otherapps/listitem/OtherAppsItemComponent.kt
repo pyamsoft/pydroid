@@ -39,8 +39,10 @@ internal interface OtherAppsItemComponent {
         override fun inject(viewHolder: OtherAppsViewHolder) {
             val title = OtherAppsItemTitleView(parent)
             val icon = OtherAppsItemIconView(imageLoader, parent)
+            val action = OtherAppsItemActionView(parent)
             viewHolder.titleView = title
             viewHolder.iconView = icon
+            viewHolder.actionView = action
         }
 
         class FactoryImpl internal constructor(

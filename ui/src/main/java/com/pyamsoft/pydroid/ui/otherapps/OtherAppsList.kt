@@ -25,7 +25,8 @@ import com.pyamsoft.pydroid.arch.BindingUiView
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsListBinding
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsAdapter
-import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewEvent
+import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewEvent.OpenStore
+import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewEvent.ViewSource
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewState
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
@@ -70,8 +71,9 @@ internal class OtherAppsList internal constructor(
 
     private fun setupListView() {
         listAdapter = OtherAppsAdapter(owner) { event, index ->
-            when (event) {
-                is OtherAppsItemViewEvent.OpenStore -> publish(OtherAppsViewEvent.OpenStore(index))
+            return@OtherAppsAdapter when (event) {
+                is OpenStore -> publish(OtherAppsViewEvent.OpenStore(index))
+                is ViewSource -> publish(OtherAppsViewEvent.ViewSource(index))
             }
         }
 

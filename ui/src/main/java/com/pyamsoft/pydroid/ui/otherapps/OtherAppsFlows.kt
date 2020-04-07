@@ -32,6 +32,8 @@ sealed class OtherAppsViewEvent : UiViewEvent {
 
     data class OpenStore internal constructor(val index: Int) : OtherAppsViewEvent()
 
+    data class ViewSource internal constructor(val index: Int) : OtherAppsViewEvent()
+
     object UpNavigate : OtherAppsViewEvent()
 }
 

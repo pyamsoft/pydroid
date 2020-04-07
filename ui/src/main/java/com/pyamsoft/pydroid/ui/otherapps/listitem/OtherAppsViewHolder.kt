@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.otherapps.listitem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.bindViews
@@ -27,7 +28,7 @@ import com.pyamsoft.pydroid.arch.doOnDestroy
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
-import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
+import com.pyamsoft.pydroid.ui.util.layout
 
 internal class OtherAppsViewHolder private constructor(
     binding: AdapterItemOtherAppsBinding,
@@ -39,6 +40,7 @@ internal class OtherAppsViewHolder private constructor(
 
     internal var titleView: OtherAppsItemTitleView? = null
     internal var iconView: OtherAppsItemIconView? = null
+    internal var actionView: OtherAppsItemActionView? = null
 
     init {
         Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
@@ -48,20 +50,51 @@ internal class OtherAppsViewHolder private constructor(
 
         val title = requireNotNull(titleView)
         val icon = requireNotNull(iconView)
+        val action = requireNotNull(actionView)
         binder = bindViews(
             owner,
             icon,
-                    title
+            title,
+            action
         ) {
             callback(it, adapterPosition)
         }
 
-        itemView.setOnDebouncedClickListener {
-            callback(OtherAppsItemViewEvent.OpenStore, adapterPosition)
+        binding.otherAppsListitemRoot.layout {
+            icon.let {
+                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+                connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+                connect(
+                    it.id(),
+                    ConstraintSet.BOTTOM,
+                    ConstraintSet.PARENT_ID,
+                    ConstraintSet.BOTTOM
+                )
+
+                constrainWidth(it.id(), ConstraintSet.WRAP_CONTENT)
+                constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+            }
+
+            title.let {
+                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+                connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+                connect(it.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
+
+                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+                constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+            }
+
+            action.let {
+                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+                connect(it.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
+                connect(it.id(), ConstraintSet.TOP, title.id(), ConstraintSet.BOTTOM)
+
+                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+                constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+            }
         }
 
         owner.doOnDestroy {
-            itemView.setOnDebouncedClickListener(null)
             titleView = null
             iconView = null
         }

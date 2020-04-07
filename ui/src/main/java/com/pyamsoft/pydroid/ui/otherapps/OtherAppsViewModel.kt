@@ -50,6 +50,7 @@ internal class OtherAppsViewModel internal constructor(
     override fun handleViewEvent(event: OtherAppsViewEvent) {
         return when (event) {
             is OtherAppsViewEvent.OpenStore -> openUrl(event.index) { it.storeUrl }
+            is OtherAppsViewEvent.ViewSource -> openUrl(event.index) { it.sourceUrl }
             is OtherAppsViewEvent.UpNavigate -> publish(OtherAppsControllerEvent.Navigation)
         }
     }

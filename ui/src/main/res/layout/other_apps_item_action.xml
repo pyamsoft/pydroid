@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright 2019 Peter Kenji Yamanaka
+  ~ Copyright 2020 Peter Kenji Yamanaka
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 <merge>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/about_actions"
+        android:id="@+id/other_apps_actions"
         style="?attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,23 +27,24 @@
         android:padding="8dp">
 
         <Button
-            android:id="@+id/action_view_license"
+            android:id="@+id/action_view_source"
+            style="?attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_source"
+            android:textAppearance="?attr/textAppearanceBody2" />
+
+        <Button
+            android:id="@+id/action_open_store"
             style="?attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="@string/view_license"
-            android:textAppearance="?attr/textAppearanceBody2" />
-
-        <Button
-            android:id="@+id/action_visit_homepage"
-            style="?attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/visit_homepage"
+            android:text="@string/open_store"
             android:textAppearance="?attr/textAppearanceBody2" />
 
     </LinearLayout>
 
 </merge>
+
 

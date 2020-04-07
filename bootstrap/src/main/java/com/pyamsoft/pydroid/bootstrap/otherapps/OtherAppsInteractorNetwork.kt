@@ -40,7 +40,8 @@ internal class OtherAppsInteractorNetwork internal constructor(
                         entry.name(),
                         entry.description(),
                         entry.icon(),
-                        entry.url()
+                        entry.url(),
+                        entry.source()
                     )
                 }
             } catch (throwable: Throwable) {

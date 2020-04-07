@@ -31,7 +31,6 @@
             style="?attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:text="@string/view_license"
             android:textAppearance="?attr/textAppearanceBody2" />
 
@@ -40,6 +39,7 @@
             style="?attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="@string/visit_homepage"
             android:textAppearance="?attr/textAppearanceBody2" />
 

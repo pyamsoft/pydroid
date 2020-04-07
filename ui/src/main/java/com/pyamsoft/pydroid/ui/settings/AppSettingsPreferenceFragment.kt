@@ -42,14 +42,6 @@ import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptCheckUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.AttemptClearData
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ChangeDarkTheme
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateHyperlink
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateMoreApps
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.NavigateRateApp
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.OpenShowUpgrade
-import com.pyamsoft.pydroid.ui.settings.AppSettingsControllerEvent.ShowLicense
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
@@ -117,14 +109,14 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             requireNotNull(settingsView)
         ) {
             return@createComponent when (it) {
-                is NavigateMoreApps -> viewMorePyamsoftApps()
-                is NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
-                is NavigateRateApp -> openMarkForRating()
-                is ShowLicense -> openLicensesPage()
-                is AttemptCheckUpgrade -> versionViewModel.checkForUpdates(true)
-                is AttemptClearData -> openClearDataDialog()
-                is OpenShowUpgrade -> ratingViewModel.load(true)
-                is ChangeDarkTheme -> darkThemeChanged(it.newMode)
+                is AppSettingsControllerEvent.NavigateMoreApps -> viewMorePyamsoftApps()
+                is AppSettingsControllerEvent.NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
+                is AppSettingsControllerEvent.NavigateRateApp -> openMarkForRating()
+                is AppSettingsControllerEvent.ShowLicense -> openLicensesPage()
+                is AppSettingsControllerEvent.AttemptCheckUpgrade -> versionViewModel.checkForUpdates(true)
+                is AppSettingsControllerEvent.AttemptClearData -> openClearDataDialog()
+                is AppSettingsControllerEvent.OpenShowUpgrade -> ratingViewModel.load(true)
+                is AppSettingsControllerEvent.ChangeDarkTheme -> darkThemeChanged(it.newMode)
                 is AppSettingsControllerEvent.OpenOtherAppsPage -> openOtherAppsPage(it.apps)
             }
         }
@@ -152,6 +144,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun openOtherAppsPage(apps: List<OtherApp>) {
+        onViewMorePyamsoftAppsClicked(false)
         Timber.d("Show other apps fragment: $apps")
         if (isInDialogFragment(this)) {
             val container = requireView().parent as ViewGroup
@@ -192,6 +185,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun viewMorePyamsoftApps() {
+        onViewMorePyamsoftAppsClicked(true)
         val error = MarketLinker.linkToDeveloperPage(requireContext())
         failedNavigation(error)
     }
@@ -259,6 +253,12 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             val baseActivity = requireActivity() as ActivityBase
             AboutFragment.show(baseActivity, baseActivity.fragmentContainerId)
         }
+    }
+
+    /**
+     * Shows a page for  Source licenses, override or extend to use unique implementation
+     */
+    protected open fun onViewMorePyamsoftAppsClicked(navigatingAway: Boolean) {
     }
 
     companion object {

@@ -21,13 +21,17 @@ import android.content.Context
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
+import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 import com.pyamsoft.pydroid.ui.theme.ThemingPreferences
 import com.pyamsoft.pydroid.ui.theme.toMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class PYDroidPreferencesImpl internal constructor(
+    private val enforcer: Enforcer,
     context: Context
 ) : RatingPreferences, ThemingPreferences {
 
@@ -36,28 +40,40 @@ internal class PYDroidPreferencesImpl internal constructor(
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     }
 
-    override suspend fun getRatingAcceptedVersion(): Int {
-        return prefs.getInt(
-            RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
-        )
-    }
-
-    override suspend fun applyRatingAcceptedVersion(version: Int) {
-        prefs.edit {
-            putInt(RATING_ACCEPTED_VERSION, version)
+    override suspend fun getRatingAcceptedVersion(): Int =
+        withContext(context = Dispatchers.Default) {
+            enforcer.assertNotOnMainThread()
+            return@withContext prefs.getInt(
+                RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
+            )
         }
-    }
 
-    override suspend fun initializeDarkMode(onInit: (mode: Mode) -> Unit) {
-        if (!prefs.contains(darkModeKey)) {
-            val mode = SYSTEM
-            prefs.edit { putString(darkModeKey, mode.toRawString()) }
-            onInit(mode)
+    override suspend fun applyRatingAcceptedVersion(version: Int) =
+        withContext(context = Dispatchers.Default) {
+            enforcer.assertNotOnMainThread()
+            prefs.edit {
+                putInt(RATING_ACCEPTED_VERSION, version)
+            }
         }
-    }
 
-    override suspend fun getDarkMode(): Mode {
-        return requireNotNull(prefs.getString(darkModeKey, SYSTEM.toRawString())).toMode()
+    override suspend fun initializeDarkMode(onInit: (mode: Mode) -> Unit) =
+        withContext(context = Dispatchers.Default) {
+            enforcer.assertNotOnMainThread()
+            if (!prefs.contains(darkModeKey)) {
+                val mode = SYSTEM
+                prefs.edit { putString(darkModeKey, mode.toRawString()) }
+                onInit(mode)
+            }
+        }
+
+    override suspend fun getDarkMode(): Mode = withContext(context = Dispatchers.Default) {
+        enforcer.assertNotOnMainThread()
+        return@withContext requireNotNull(
+            prefs.getString(
+                darkModeKey,
+                SYSTEM.toRawString()
+            )
+        ).toMode()
     }
 
     companion object {

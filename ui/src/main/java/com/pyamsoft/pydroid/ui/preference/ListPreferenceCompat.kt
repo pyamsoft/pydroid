@@ -25,7 +25,7 @@ import android.util.AttributeSet
 import androidx.preference.ListPreference
 import com.pyamsoft.pydroid.ui.R
 
-class ListPreferenceCompat : ListPreference {
+open class ListPreferenceCompat : ListPreference {
 
     constructor(context: Context) : this(context, null)
 

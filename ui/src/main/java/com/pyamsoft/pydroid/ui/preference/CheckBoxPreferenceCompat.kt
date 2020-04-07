@@ -25,7 +25,7 @@ import android.util.AttributeSet
 import androidx.preference.CheckBoxPreference
 import com.pyamsoft.pydroid.ui.R
 
-class CheckBoxPreferenceCompat : CheckBoxPreference {
+open class CheckBoxPreferenceCompat : CheckBoxPreference {
 
     constructor(context: Context) : this(context, null)
 

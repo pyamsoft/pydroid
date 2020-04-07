@@ -22,10 +22,9 @@ package com.pyamsoft.pydroid.ui.preference
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
 
-open class PreferenceCompat : Preference {
+class AdPreferenceCompat : PreferenceCompat {
 
     constructor(context: Context) : this(context, null)
 
@@ -51,6 +50,9 @@ open class PreferenceCompat : Preference {
         defStyleAttr: Int,
         defStyleRes: Int
     ) : super(context, attrs, defStyleAttr, defStyleRes) {
-        loadIconCompat(attrs)
+        layoutResource = R.layout.ad_preference_layout
     }
+
+
 }
+

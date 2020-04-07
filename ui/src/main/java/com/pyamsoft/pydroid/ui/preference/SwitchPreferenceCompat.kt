@@ -25,7 +25,7 @@ import android.util.AttributeSet
 import androidx.preference.SwitchPreferenceCompat
 import com.pyamsoft.pydroid.ui.R
 
-class SwitchPreferenceCompat : SwitchPreferenceCompat {
+open class SwitchPreferenceCompat : SwitchPreferenceCompat {
 
     constructor(context: Context) : this(context, null)
 

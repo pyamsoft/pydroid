@@ -22,7 +22,9 @@
         android:id="@+id/other_apps_icon_root"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="8dp">
+        android:layout_marginStart="8dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="12dp">
 
         <ImageView
             android:id="@+id/other_apps_icon"

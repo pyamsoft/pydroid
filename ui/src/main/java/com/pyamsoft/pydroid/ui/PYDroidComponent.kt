@@ -93,7 +93,7 @@ internal interface PYDroidComponent {
 
         private val context = params.application
         private val enforcer = Enforcer(params.debug)
-        private val preferences = PYDroidPreferencesImpl(params.application)
+        private val preferences = PYDroidPreferencesImpl(enforcer, params.application)
         private val theming = Theming(preferences)
         private val packageName = params.application.packageName
 

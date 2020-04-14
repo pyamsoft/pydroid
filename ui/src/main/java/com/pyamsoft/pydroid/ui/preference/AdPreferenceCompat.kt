@@ -52,7 +52,4 @@ class AdPreferenceCompat : PreferenceCompat {
     ) : super(context, attrs, defStyleAttr, defStyleRes) {
         layoutResource = R.layout.ad_preference_layout
     }
-
-
 }
-

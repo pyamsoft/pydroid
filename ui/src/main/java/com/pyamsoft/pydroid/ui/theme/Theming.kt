@@ -22,10 +22,10 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
+import java.util.Locale
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.Locale
 
 class Theming internal constructor(preferences: ThemingPreferences) {
 

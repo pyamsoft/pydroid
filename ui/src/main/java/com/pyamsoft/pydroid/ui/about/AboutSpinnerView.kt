@@ -19,12 +19,12 @@ package com.pyamsoft.pydroid.ui.about
 
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
 
 internal class AboutSpinnerView internal constructor(
     parent: ViewGroup
-) : BindingUiView<AboutViewState, AboutViewEvent, LoadingSpinnerBinding>(parent) {
+) : BaseUiView<AboutViewState, AboutViewEvent, LoadingSpinnerBinding>(parent) {
 
     override val viewBinding = LoadingSpinnerBinding::inflate
 

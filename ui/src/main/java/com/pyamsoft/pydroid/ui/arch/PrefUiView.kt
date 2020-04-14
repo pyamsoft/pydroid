@@ -65,10 +65,6 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
-    final override fun id(): Int {
-        throw InvalidIdException
-    }
-
     final override fun render(state: S) {
         assertValidState()
         onRender(state)

@@ -22,7 +22,7 @@ import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLibrary
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLicense
@@ -36,7 +36,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class AboutListView internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BindingUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
+) : BaseUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
 
     override val viewBinding = AboutLibrariesListBinding::inflate
 

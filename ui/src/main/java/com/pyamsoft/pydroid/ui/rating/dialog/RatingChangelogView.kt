@@ -18,12 +18,12 @@
 package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.RatingChangelogBinding
 
 internal class RatingChangelogView internal constructor(
     parent: ViewGroup
-) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingChangelogBinding>(parent) {
+) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent, RatingChangelogBinding>(parent) {
 
     override val viewBinding = RatingChangelogBinding::inflate
 

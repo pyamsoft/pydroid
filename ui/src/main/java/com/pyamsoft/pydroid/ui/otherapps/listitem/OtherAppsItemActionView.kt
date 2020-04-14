@@ -18,13 +18,13 @@
 package com.pyamsoft.pydroid.ui.otherapps.listitem
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemActionBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class OtherAppsItemActionView internal constructor(
     parent: ViewGroup
-) : BindingUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemActionBinding>(parent) {
+) : BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemActionBinding>(parent) {
 
     override val viewBinding = OtherAppsItemActionBinding::inflate
 

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.RatingControlsBinding
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
@@ -30,7 +30,7 @@ internal class RatingControlsView internal constructor(
     rateLink: String,
     private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BindingUiView<RatingDialogViewState, RatingDialogViewEvent, RatingControlsBinding>(parent) {
+) : BaseUiView<RatingDialogViewState, RatingDialogViewEvent, RatingControlsBinding>(parent) {
 
     override val viewBinding = RatingControlsBinding::inflate
 

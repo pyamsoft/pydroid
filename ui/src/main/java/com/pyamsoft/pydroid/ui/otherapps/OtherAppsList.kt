@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsListBinding
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsAdapter
@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class OtherAppsList internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BindingUiView<OtherAppsViewState, OtherAppsViewEvent, OtherAppsListBinding>(parent) {
+) : BaseUiView<OtherAppsViewState, OtherAppsViewEvent, OtherAppsListBinding>(parent) {
 
     override val viewBinding = OtherAppsListBinding::inflate
 

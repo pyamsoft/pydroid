@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.about.listitem
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.databinding.AboutItemActionsBinding
@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
     parent: ViewGroup
-) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
+) : BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
 
     override val viewBinding = AboutItemActionsBinding::inflate
 

@@ -17,8 +17,6 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : IView<S, V> {
@@ -33,10 +31,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
-
-    @IdRes
-    @CheckResult
-    abstract fun id(): Int
 
     /**
      * This is really only used as a hack, so we can inflate the actual Layout before running init hooks.

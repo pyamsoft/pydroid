@@ -18,12 +18,12 @@
 package com.pyamsoft.pydroid.ui.otherapps.listitem
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemTitleBinding
 
 internal class OtherAppsItemTitleView internal constructor(
     parent: ViewGroup
-) : BindingUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemTitleBinding>(parent) {
+) : BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemTitleBinding>(parent) {
 
     override val viewBinding = OtherAppsItemTitleBinding::inflate
 

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.widget.shadow
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.ui.databinding.DropshadowBinding
 
 class DropshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
-) : BindingUiView<S, E, DropshadowBinding>(parent) {
+) : BaseUiView<S, E, DropshadowBinding>(parent) {
 
     override val viewBinding = DropshadowBinding::inflate
 

@@ -20,13 +20,13 @@ package com.pyamsoft.pydroid.ui.version.upgrade
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.VersionUpgradeContentBinding
 
 internal class VersionUpgradeContentView internal constructor(
     parent: ViewGroup
-) : BindingUiView<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeContentBinding>(
+) : BaseUiView<VersionUpgradeViewState, VersionUpgradeViewEvent, VersionUpgradeContentBinding>(
     parent
 ) {
 

@@ -17,43 +17,17 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CheckResult
 import androidx.viewbinding.ViewBinding
 
-// NOTE: This class will be removed and its functionality will be moved into BaseUiView in the next major version 21.X.X
+// NOTE: This class will be removed in the next major version 22.X.X
+@Deprecated(
+    message = "This class and its functionality has been replaced by BaseUiView",
+    replaceWith = ReplaceWith(
+        expression = "BaseUiView<S,V,C>",
+        imports = ["com.pyamsoft.pydroid.arch.BaseUiView"]
+    )
+)
 abstract class BindingUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> protected constructor(
     parent: ViewGroup
-) : BaseUiView<S, V>(parent) {
-
-    final override val layout: Int = 0
-
-    protected abstract val viewBinding: (LayoutInflater, ViewGroup) -> B
-
-    private var _binding: B? = null
-    protected val binding: B
-        get() = _binding ?: die()
-
-    init {
-        doOnInflate {
-            // We place a check for the id here because at the point that the binding is used
-            // the layoutRoot must not be null and must be resolved so that the teardown works
-            // correctly - otherwise you will get a state error.
-            assert(id() != 0) { "id() must not equal 0! " }
-        }
-        doOnTeardown {
-            _binding = null
-        }
-    }
-
-    final override fun inflateAndAddToParent(inflater: LayoutInflater, parent: ViewGroup) {
-        _binding = viewBinding.invoke(inflater, parent)
-    }
-
-    @CheckResult
-    protected fun <V : View> boundView(func: B.() -> V): Bound<V> {
-        return createBound { func(binding) }
-    }
-}
+) : BaseUiView<S, V, B>(parent)

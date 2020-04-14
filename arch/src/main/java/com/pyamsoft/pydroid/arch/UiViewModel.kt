@@ -346,7 +346,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                         }
                     }
 
-                    if (view is BaseUiView<S, V>) {
+                    if (view is BaseUiView<S, V, *>) {
                         val nestedViews = view.nestedViews()
                         if (nestedViews.isNotEmpty()) {
                             bindViewEvents(nestedViews)

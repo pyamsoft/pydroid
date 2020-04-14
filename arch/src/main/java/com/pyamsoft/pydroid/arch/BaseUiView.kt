@@ -22,18 +22,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
-import androidx.annotation.RestrictTo
+import androidx.viewbinding.ViewBinding
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructor(
+abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> protected constructor(
     parent: ViewGroup
 ) : UiView<S, V>() {
 
     protected abstract val layoutRoot: View
-
-    protected abstract val layout: Int
 
     private val nestedViewDelegate = lazy(NONE) { mutableListOf<IView<S, V>>() }
     private val nestedViews by nestedViewDelegate
@@ -45,13 +43,19 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
     private var _parent: ViewGroup? = parent
 
+    protected abstract val viewBinding: (LayoutInflater, ViewGroup) -> B
+
+    private var _binding: B? = null
+    protected val binding: B
+        get() = _binding ?: die()
+
     init {
         doOnInflate {
             assertValidState()
         }
 
         doOnNestedInit { view ->
-            if (view !is BaseUiView<S, V>) {
+            if (view !is BaseUiView<S, V, *>) {
                 return@doOnNestedInit
             }
 
@@ -88,6 +92,16 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
             if (nestedInitDelegate.isInitialized()) {
                 nestedInits.clear()
             }
+        }
+
+        doOnInflate {
+            // We place a check for the id here because at the point that the binding is used
+            // the layoutRoot must not be null and must be resolved so that the teardown works
+            // correctly - otherwise you will get a state error.
+            assert(id() != 0) { "id() must not equal 0! " }
+        }
+        doOnTeardown {
+            _binding = null
         }
     }
 
@@ -127,7 +141,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         return if (nestedViewDelegate.isInitialized()) nestedViews.toTypedArray() else emptyArray()
     }
 
-    internal fun die(): Nothing {
+    private fun die(): Nothing {
         throw IllegalStateException("Cannot call UiView methods after it has been torn down")
     }
 
@@ -142,7 +156,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
-    final override fun id(): Int {
+    @IdRes
+    @CheckResult
+    fun id(): Int {
         val id = layoutRoot.id
         assert(id != 0) { "id() must not equal 0! " }
         return id
@@ -155,11 +171,11 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
     protected abstract fun onRender(state: S)
 
-    internal open fun inflateAndAddToParent(
+    private fun inflateAndAddToParent(
         inflater: LayoutInflater,
         parent: ViewGroup
     ) {
-        inflater.inflate(layout, parent, true)
+        _binding = viewBinding.invoke(inflater, parent)
     }
 
     /**
@@ -208,21 +224,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     @CheckResult
-    @Deprecated(message = "Use ViewBinding: BindingUiView<S,V,B>.binding or BindingUiView<S,V,B>.boundView() instead")
-    // NOTE: This function will be removed in the next major version 21.X.X
-    protected fun <V : View> boundView(@IdRes id: Int): Bound<V> {
-        return createBound { parent ->
-            // Need explicit type here or kotlinc complains
-            parent.findViewById<V>(id)
-        }
-    }
-
-    @CheckResult
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    // NOTE: This function will be removed in the next major version 21.X.X
-    protected fun <V : View> createBound(resolver: (View) -> V): Bound<V> {
+    protected fun <V : View> boundView(func: B.() -> V): Bound<V> {
         assertValidState()
-        return Bound(parent(), resolver).also { trackBound(it) }
+        return Bound(parent()) { func(binding) }.also { trackBound(it) }
     }
 
     protected data class Bound<V : View> internal constructor(

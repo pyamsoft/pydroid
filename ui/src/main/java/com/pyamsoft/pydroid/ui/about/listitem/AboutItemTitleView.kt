@@ -20,13 +20,13 @@ package com.pyamsoft.pydroid.ui.about.listitem
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
 internal class AboutItemTitleView internal constructor(
     parent: ViewGroup
-) : BindingUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
+) : BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
 
     override val viewBinding = AboutItemTitleBinding::inflate
 

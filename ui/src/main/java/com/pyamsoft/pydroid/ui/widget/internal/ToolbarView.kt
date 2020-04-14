@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import com.pyamsoft.pydroid.ui.arch.InvalidIdException
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
@@ -74,10 +73,6 @@ internal abstract class ToolbarView<S : UiViewState, E : UiViewEvent> protected 
                 outState.put(KEY_OLD_TITLE, title)
             }
         }
-    }
-
-    final override fun id(): Int {
-        throw InvalidIdException
     }
 
     final override fun onInit(savedInstanceState: UiBundleReader) {

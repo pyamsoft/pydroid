@@ -18,7 +18,7 @@
 package com.pyamsoft.pydroid.ui.otherapps.listitem
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.BindingUiView
+import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemIconBinding
@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemIconBinding
 internal class OtherAppsItemIconView internal constructor(
     private val imageLoader: ImageLoader,
     parent: ViewGroup
-) : BindingUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemIconBinding>(parent) {
+) : BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemIconBinding>(parent) {
 
     override val viewBinding = OtherAppsItemIconBinding::inflate
 

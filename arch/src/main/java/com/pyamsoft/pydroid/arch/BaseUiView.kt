@@ -268,7 +268,10 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
 
         internal fun remove() {
             assertValidState()
-            bound.let { requireNotNull(parent).removeView(it) }
+            bound?.let { view ->
+                view.handler?.removeCallbacksAndMessages(null)
+                requireNotNull(parent).removeView(view)
+            }
         }
 
         internal fun teardown() {

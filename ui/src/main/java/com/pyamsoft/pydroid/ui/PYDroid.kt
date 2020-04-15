@@ -84,11 +84,12 @@ object PYDroid {
         }
     }
 
-    data class Parameters(
+    data class Parameters @JvmOverloads constructor(
         internal val viewSourceUrl: String,
         internal val bugReportUrl: String,
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
-        internal val version: Int
+        internal val version: Int,
+        internal val forceDebug: Boolean? = null
     )
 }

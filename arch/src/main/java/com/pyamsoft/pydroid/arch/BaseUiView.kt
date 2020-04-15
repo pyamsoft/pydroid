@@ -36,9 +36,6 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     private val nestedViewDelegate = lazy(NONE) { mutableListOf<IView<S, V>>() }
     private val nestedViews by nestedViewDelegate
 
-    private val nestedInitDelegate = lazy(NONE) { mutableSetOf<(IView<S, V>) -> Unit>() }
-    private val nestedInits by nestedInitDelegate
-
     private var bound: MutableSet<Bound<*>>? = null
 
     private var _parent: ViewGroup? = parent
@@ -47,34 +44,22 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
 
     private var _binding: B? = null
     protected val binding: B
-        get() = _binding ?: die()
+        get() = _binding ?: die("Null binding")
 
     init {
         doOnInflate {
             assertValidState()
         }
 
-        doOnNestedInit { view ->
-            if (view !is BaseUiView<S, V, *>) {
-                return@doOnNestedInit
-            }
-
-            val root = layoutRoot
-            if (root is ViewGroup) {
-                // Adopt the view to this UiView parent
-                // Otherwise the child view will inflate into the same parent instead of the parent layoutRoot
-                view._parent = root
-            } else {
-                throw IllegalStateException("Cannot initialize nested view. This UiView layoutRoot must be a ViewGroup.")
-            }
-        }
-
         doOnTeardown {
             assertValidState()
 
             // Teardown must happen in this order
+            // This is because the layoutRoot may actually just be a bound view itself
+            // So we cannot call teardown to null out the views until it is also torn down
+            // just incase.
             bound?.forEach { it.remove() }
-            parent.removeView(layoutRoot)
+            layoutRoot.teardown(parent)
             bound?.forEach { it.teardown() }
             bound?.clear()
             bound = null
@@ -87,11 +72,6 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
             if (nestedViewDelegate.isInitialized()) {
                 nestedViews.clear()
             }
-
-            // If there are any nested init hooks hanging around, clear them out too
-            if (nestedInitDelegate.isInitialized()) {
-                nestedInits.clear()
-            }
         }
 
         doOnInflate {
@@ -100,6 +80,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
             // correctly - otherwise you will get a state error.
             assert(id() != 0) { "id() must not equal 0! " }
         }
+
         doOnTeardown {
             _binding = null
         }
@@ -121,19 +102,34 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
 
             // Call init hooks in FIFO order
             for (nestedView in nestedViews) {
-                if (nestedInitDelegate.isInitialized()) {
-                    for (nestedInit in nestedInits) {
-                        nestedInit(nestedView)
-                    }
-                }
+                prepareNestedViewInit(nestedView)
                 nestedView.init(savedInstanceState)
             }
-
-            // Don't clear the nestedViews list yet, we still need it
-            if (nestedInitDelegate.isInitialized()) {
-                nestedInits.clear()
-            }
         }
+    }
+
+    private fun prepareNestedViewInit(view: IView<S, V>) {
+        if (view !is BaseUiView<S, V, *>) {
+            return
+        }
+
+        val root = layoutRoot
+        if (root is ViewGroup) {
+            view.adopt(root)
+        } else {
+            throw IllegalStateException("Cannot initialize nested view. This BaseUiView layoutRoot must be a ViewGroup.")
+        }
+    }
+
+    /**
+     * Adopt the view to this UiView parent
+     * Otherwise the child view will inflate into the same parent instead of the parent layoutRoot
+     */
+    private fun adopt(parent: ViewGroup) {
+        _parent = parent
+
+        // Make sure after adoption we are still valid
+        assertValidState()
     }
 
     @CheckResult
@@ -141,18 +137,18 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
         return if (nestedViewDelegate.isInitialized()) nestedViews.toTypedArray() else emptyArray()
     }
 
-    private fun die(): Nothing {
-        throw IllegalStateException("Cannot call UiView methods after it has been torn down")
+    private fun die(reason: String): Nothing {
+        throw IllegalStateException("Kill BaseUiView: $reason")
     }
 
     @CheckResult
     private fun parent(): ViewGroup {
-        return _parent ?: die()
+        return _parent ?: die("Null parent")
     }
 
     private fun assertValidState() {
         if (_parent == null) {
-            die()
+            die("Null parent")
         }
     }
 
@@ -179,24 +175,10 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     }
 
     /**
-     * Use this to run an event before a UiView initializes its nested UiView children
-     * Events are not guaranteed to run in any consistent order
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnNestedInit { view ->
-     *         ...
-     *     }
-     * }
-     *
-     */
-    protected fun doOnNestedInit(onNestedInit: (view: IView<S, V>) -> Unit) {
-        nestedInits.add(onNestedInit)
-    }
-
-    /**
      * Convenience hook for nested IView<S, V> instances
+     *
+     * Nesting a UiView will make its parent element become this UiView's layoutRoot.
+     * This will allow you to embed UiViews inside of other UiView objects.
      */
     protected fun nest(vararg views: IView<S, V>) {
         views.forEach { view ->
@@ -268,10 +250,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
 
         internal fun remove() {
             assertValidState()
-            bound?.let { view ->
-                view.handler?.removeCallbacksAndMessages(null)
-                requireNotNull(parent).removeView(view)
-            }
+            bound?.teardown(requireNotNull(parent))
         }
 
         internal fun teardown() {
@@ -280,6 +259,15 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
             bound = null
             parent = null
             resolver = null
+        }
+    }
+
+    companion object {
+
+        private fun View.teardown(parent: ViewGroup) {
+            // Clear all messages on the view handler before removing it from the view group
+            this.handler?.removeCallbacksAndMessages(null)
+            parent.removeView(this)
         }
     }
 }

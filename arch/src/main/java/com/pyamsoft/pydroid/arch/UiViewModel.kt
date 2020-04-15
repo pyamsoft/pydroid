@@ -20,9 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +28,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     private val initialState: S,
@@ -337,7 +337,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 if (view is UiView<S, V>) {
 
                     // Launch another coroutine here for handling view events
-                    launch {
+                    launch(context = Dispatchers.Default) {
                         view.onViewEvent {
                             // View events must fire onto the main thread
                             launch(context = Dispatchers.Main) {

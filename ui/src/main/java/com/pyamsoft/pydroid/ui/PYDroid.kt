@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 import java.util.concurrent.atomic.AtomicReference
 
@@ -77,6 +78,7 @@ object PYDroid {
     @CheckResult
     fun getSystemService(name: String): Any? {
         return when (name) {
+            ImageLoader::class.java.name -> instance().moduleProvider.imageLoader()
             Theming::class.java.name -> instance().moduleProvider.theming()
             Enforcer::class.java.name -> instance().moduleProvider.enforcer()
             PYDroidComponent::class.java.name -> instance().component

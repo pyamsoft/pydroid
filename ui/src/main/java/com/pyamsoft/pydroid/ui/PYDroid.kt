@@ -90,6 +90,6 @@ object PYDroid {
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
         internal val version: Int,
-        internal val forceDebug: Boolean? = null
+        internal val debug: Boolean? = null
     )
 }

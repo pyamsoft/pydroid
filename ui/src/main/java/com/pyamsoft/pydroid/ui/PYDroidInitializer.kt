@@ -35,7 +35,7 @@ internal data class PYDroidInitializer internal constructor(
             application: Application,
             params: PYDroid.Parameters
         ): PYDroidInitializer {
-            val debug = params.forceDebug ?: application.isDebugMode()
+            val debug = params.debug ?: application.isDebugMode()
             if (debug) {
                 Timber.plant(Timber.DebugTree())
                 setStrictMode()

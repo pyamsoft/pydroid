@@ -98,13 +98,9 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
 
     private fun initNestedViews(savedInstanceState: UiBundleReader) {
         // Only run the initialization hooks if they exist, otherwise we don't need to init the memory
-        if (nestedViewDelegate.isInitialized()) {
-
-            // Call init hooks in FIFO order
-            for (nestedView in nestedViews) {
-                prepareNestedViewInit(nestedView)
-                nestedView.init(savedInstanceState)
-            }
+        nestedViews().forEach { nestedView ->
+            prepareNestedViewInit(nestedView)
+            nestedView.init(savedInstanceState)
         }
     }
 
@@ -133,8 +129,8 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     }
 
     @CheckResult
-    internal fun nestedViews(): Array<out IView<S, V>> {
-        return if (nestedViewDelegate.isInitialized()) nestedViews.toTypedArray() else emptyArray()
+    internal fun nestedViews(): List<IView<S, V>> {
+        return if (nestedViewDelegate.isInitialized()) nestedViews else emptyList()
     }
 
     private fun die(reason: String): Nothing {
@@ -163,6 +159,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     final override fun render(state: S) {
         assertValidState()
         onRender(state)
+        nestedViews().forEach { it.render(state) }
     }
 
     protected abstract fun onRender(state: S)

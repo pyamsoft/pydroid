@@ -101,7 +101,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
         // Bind ViewModel
         bindControllerEvents(onControllerEvent)
-        bindViewEvents(views)
+        bindViewEvents(views.asIterable())
 
         // Initialize before first render
         initialize(savedInstanceState)
@@ -331,7 +331,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     @CheckResult
-    private fun CoroutineScope.bindViewEvents(views: Array<out IView<S, V>>): Job =
+    private fun CoroutineScope.bindViewEvents(views: Iterable<IView<S, V>>): Job =
         launch(context = Dispatchers.Default) {
             for (view in views) {
                 if (view is UiView<S, V>) {

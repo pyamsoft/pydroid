@@ -90,9 +90,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
                 val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
                 inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                    for (line in changeLogLines.build()) {
-                        appendln(line)
-                    }
+                    changeLogLines.build().forEach { appendln(it) }
                 }
             }
         }

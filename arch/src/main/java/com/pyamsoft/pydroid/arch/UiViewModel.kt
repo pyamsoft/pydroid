@@ -77,9 +77,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
             // Call save state hooks in random order
             val s = latestState()
-            for (saveState in onSaveStateEvents) {
-                outState.saveState(s)
-            }
+            onSaveStateEvents.forEach { it(outState, s) }
 
             // Don't clear the event list since this lifecycle method can be called many times.
         }
@@ -120,9 +118,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onTeardownEventDelegate.isInitialized()) {
 
             // Call teardown hooks in random order
-            for (teardownEvent in onTeardownEvents) {
-                teardownEvent()
-            }
+            onTeardownEvents.forEach { it() }
 
             // Clear the teardown hooks list to free up memory
             onTeardownEvents.clear()
@@ -221,7 +217,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             var newState = oldState
 
             // Loop over all state changes first, perform but do not actually fire a render to views
-            for (stateChange in stateChanges) {
+            stateChanges.forEach { stateChange ->
                 val currentState = newState
                 newState = currentState.stateChange()
 
@@ -320,9 +316,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             if (onInitEventDelegate.isInitialized()) {
 
                 // Call init hooks in random order
-                for (initEvent in onInitEvents) {
-                    initEvent(savedInstanceState)
-                }
+                onInitEvents.forEach { it(savedInstanceState) }
 
                 // Clear the init hooks list to free up memory
                 onInitEvents.clear()
@@ -333,7 +327,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @CheckResult
     private fun CoroutineScope.bindViewEvents(views: Iterable<IView<S, V>>): Job =
         launch(context = Dispatchers.Default) {
-            for (view in views) {
+            views.forEach { view ->
                 if (view is UiView<S, V>) {
 
                     // Launch another coroutine here for handling view events

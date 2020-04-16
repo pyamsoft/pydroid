@@ -47,9 +47,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         if (onInflateEventDelegate.isInitialized()) {
 
             // Call inflate hooks in FIFO order
-            for (inflateEvent in onInflateEvents) {
-                inflateEvent(savedInstanceState)
-            }
+            onInflateEvents.forEach { it(savedInstanceState) }
 
             // Clear the inflation hooks list to free up memory
             onInflateEvents.clear()
@@ -61,11 +59,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         if (onTeardownEventDelegate.isInitialized()) {
 
             // Reverse the list order so that we teardown in LIFO order
-            onTeardownEvents.reverse()
-
-            for (teardownEvent in onTeardownEvents) {
-                teardownEvent()
-            }
+            onTeardownEvents.reversed().forEach { it() }
 
             // Clear the teardown hooks list to free up memory
             onTeardownEvents.clear()
@@ -93,9 +87,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         if (onSaveEventDelegate.isInitialized()) {
 
             // Call save hooks in any arbitrary order
-            for (saveEvent in onSaveEvents) {
-                saveEvent(outState)
-            }
+            onSaveEvents.forEach { it(outState) }
 
             // DO NOT clear the onSaveEvents hook list here because onSaveState can happen multiple
             // times before the UiView calls teardown()

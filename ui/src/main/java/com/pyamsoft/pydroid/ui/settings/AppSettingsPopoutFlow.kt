@@ -15,26 +15,23 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.otherapps
+package com.pyamsoft.pydroid.ui.settings
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-data class OtherAppsViewState(
-    val apps: List<OtherApp>,
-    val navigationError: Throwable?
+data class AppSettingsPopoutViewState(
+    val name: String
 ) : UiViewState
 
-sealed class OtherAppsViewEvent : UiViewEvent {
+sealed class AppSettingsPopoutViewEvent : UiViewEvent {
 
-    data class OpenStore internal constructor(val index: Int) : OtherAppsViewEvent()
-
-    data class ViewSource internal constructor(val index: Int) : OtherAppsViewEvent()
+    object ClosePopout : AppSettingsPopoutViewEvent()
 }
 
-sealed class OtherAppsControllerEvent : UiControllerEvent {
+sealed class AppSettingsPopoutControllerEvent : UiControllerEvent {
 
-    data class ExternalUrl internal constructor(val url: String) : OtherAppsControllerEvent()
+    object ClosePopout : AppSettingsPopoutControllerEvent()
+
 }

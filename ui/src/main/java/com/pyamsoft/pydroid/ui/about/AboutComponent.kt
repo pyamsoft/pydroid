@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.about
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface AboutComponent {
@@ -32,9 +31,7 @@ internal interface AboutComponent {
         @CheckResult
         fun create(
             parent: ViewGroup,
-            owner: LifecycleOwner,
-            toolbarActivity: ToolbarActivity,
-            backstack: Int
+            owner: LifecycleOwner
         ): AboutComponent
 
         data class Parameters internal constructor(
@@ -45,21 +42,15 @@ internal interface AboutComponent {
     class Impl private constructor(
         private val parent: ViewGroup,
         private val owner: LifecycleOwner,
-        private val backstack: Int,
-        private val toolbarActivity: ToolbarActivity,
         private val params: Factory.Parameters
     ) : AboutComponent {
 
         override fun inject(fragment: AboutFragment) {
             val listView = AboutListView(owner, parent)
             val spinnerView = AboutSpinnerView(parent)
-
-            val toolbar = AboutToolbarView(backstack, toolbarActivity)
-
             fragment.factory = params.factory
             fragment.listView = listView
             fragment.spinnerView = spinnerView
-            fragment.toolbar = toolbar
         }
 
         class FactoryImpl internal constructor(
@@ -68,11 +59,9 @@ internal interface AboutComponent {
 
             override fun create(
                 parent: ViewGroup,
-                owner: LifecycleOwner,
-                toolbarActivity: ToolbarActivity,
-                backstack: Int
+                owner: LifecycleOwner
             ): AboutComponent {
-                return Impl(parent, owner, backstack, toolbarActivity, params)
+                return Impl(parent, owner, params)
             }
         }
     }

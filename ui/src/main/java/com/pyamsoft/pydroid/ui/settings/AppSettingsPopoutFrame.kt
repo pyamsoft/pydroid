@@ -15,23 +15,23 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.otherapps
+package com.pyamsoft.pydroid.ui.settings
 
-import com.pyamsoft.pydroid.ui.app.ToolbarActivity
-import com.pyamsoft.pydroid.ui.widget.internal.ToolbarView
+import android.view.ViewGroup
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.databinding.AppSettingsPopoutFrameBinding
 
-internal class OtherAppsToolbar internal constructor(
-    backstackCount: Int,
-    toolbarActivity: ToolbarActivity
-) : ToolbarView<OtherAppsViewState, OtherAppsViewEvent>(backstackCount, toolbarActivity) {
 
-    override fun onNavigationClicked() {
-        publish(OtherAppsViewEvent.UpNavigate)
-    }
+internal class AppSettingsPopoutFrame internal constructor(
+    parent: ViewGroup
+) : BaseUiView<AppSettingsPopoutViewState, AppSettingsPopoutViewEvent, AppSettingsPopoutFrameBinding>(
+    parent
+) {
 
-    override fun render(state: OtherAppsViewState) {
-        toolbarActivity.withToolbar { toolbar ->
-            toolbar.title = state.toolbarTitle
-        }
+    override val viewBinding = AppSettingsPopoutFrameBinding::inflate
+
+    override val layoutRoot by boundView { appSettingsFrame }
+
+    override fun onRender(state: AppSettingsPopoutViewState) {
     }
 }

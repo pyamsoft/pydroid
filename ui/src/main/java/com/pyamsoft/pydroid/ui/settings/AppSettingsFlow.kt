@@ -65,7 +65,7 @@ sealed class AppSettingsControllerEvent : UiControllerEvent {
 
     object ShowLicense : AppSettingsControllerEvent()
 
-    object AttemptCheckUpgrade : AppSettingsControllerEvent()
+    object CheckUpgrade : AppSettingsControllerEvent()
 
     object AttemptClearData : AppSettingsControllerEvent()
 

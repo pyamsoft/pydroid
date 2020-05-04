@@ -36,6 +36,7 @@ import com.pyamsoft.pydroid.ui.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.privacy.PrivacyComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPopoutComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
@@ -68,6 +69,9 @@ internal interface PYDroidComponent {
 
     @CheckResult
     fun plusSettings(): AppSettingsComponent.Factory
+
+    @CheckResult
+    fun plusSettingsPopout(): AppSettingsPopoutComponent.Factory
 
     interface Factory {
 
@@ -190,6 +194,14 @@ internal interface PYDroidComponent {
             factory = viewModelFactory,
             module = loaderModule
         )
+
+        private val settingsPopoutParams = AppSettingsPopoutComponent.Factory.Parameters(
+            debug = params.debug
+        )
+
+        override fun plusSettingsPopout(): AppSettingsPopoutComponent.Factory {
+            return AppSettingsPopoutComponent.Impl.FactoryImpl(settingsPopoutParams)
+        }
 
         override fun plusPrivacy(): PrivacyComponent.Factory {
             return PrivacyComponent.Impl.FactoryImpl(privacyParams)

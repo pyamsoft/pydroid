@@ -30,7 +30,6 @@ internal class OtherAppsViewModel internal constructor(
     debug: Boolean
 ) : UiViewModel<OtherAppsViewState, OtherAppsViewEvent, OtherAppsControllerEvent>(
     initialState = OtherAppsViewState(
-        toolbarTitle = "pyamsoft apps",
         apps = emptyList(),
         navigationError = null
     ), debug = debug
@@ -51,7 +50,6 @@ internal class OtherAppsViewModel internal constructor(
         return when (event) {
             is OtherAppsViewEvent.OpenStore -> openUrl(event.index) { it.storeUrl }
             is OtherAppsViewEvent.ViewSource -> openUrl(event.index) { it.sourceUrl }
-            is OtherAppsViewEvent.UpNavigate -> publish(OtherAppsControllerEvent.Navigation)
         }
     }
 

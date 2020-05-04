@@ -47,6 +47,7 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
 
     @CallSuper
     override fun onBackPressed() {
+        Timber.d("On back pressed")
         onAndroid10BackPressed()
     }
 

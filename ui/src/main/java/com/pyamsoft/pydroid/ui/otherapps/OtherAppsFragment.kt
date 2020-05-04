@@ -22,28 +22,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.app.requireToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.factory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
-import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.util.hyperlink
 
-class OtherAppsFragment : Fragment() {
+internal class OtherAppsFragment : Fragment() {
 
     private var stateSaver: StateSaver? = null
     internal var listView: OtherAppsList? = null
-    internal var toolbar: OtherAppsToolbar? = null
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by factory<OtherAppsViewModel>(activity = true) { factory }
@@ -62,22 +55,19 @@ class OtherAppsFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val backstack = requireArguments().getInt(KEY_BACK_STACK, 0)
         val binding = LayoutFrameBinding.bind(view)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusOtherApps()
-            .create(binding.layoutFrame, viewLifecycleOwner, requireToolbarActivity(), backstack)
+            .create(binding.layoutFrame, viewLifecycleOwner)
             .inject(this)
 
         stateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             viewModel,
-            requireNotNull(listView),
-            requireNotNull(toolbar)
+            requireNotNull(listView)
         ) {
             return@createComponent when (it) {
                 is OtherAppsControllerEvent.ExternalUrl -> navigateToExternalUrl(it.url)
-                is OtherAppsControllerEvent.Navigation -> close()
             }
         }
     }
@@ -85,7 +75,6 @@ class OtherAppsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         listView = null
-        toolbar = null
         factory = null
         stateSaver = null
     }
@@ -105,67 +94,13 @@ class OtherAppsFragment : Fragment() {
         }
     }
 
-    private fun close() {
-        requireActivity().onBackPressed()
-    }
-
     companion object {
 
-        const val TAG = "OtherAppsFragment"
-        private const val KEY_BACK_STACK = "key_back_stack"
-
-        @JvmStatic
-        fun show(
-            fragment: Fragment,
-            @IdRes container: Int
-        ) {
-            show(fragment.viewLifecycleOwner, fragment.parentFragmentManager, container)
-        }
-
-        @JvmStatic
-        fun show(
-            activity: FragmentActivity,
-            @IdRes container: Int
-        ) {
-            show(activity, activity.supportFragmentManager, container)
-        }
-
-        @JvmStatic
-        fun show(
-            owner: LifecycleOwner,
-            fragmentManager: FragmentManager,
-            @IdRes container: Int
-        ) {
-            val backStackCount = fragmentManager.backStackEntryCount
-            if (fragmentManager.findFragmentByTag(TAG) == null) {
-                fragmentManager.commit(owner) {
-                    replace(container, newInstance(backStackCount), TAG)
-                    addToBackStack(null)
-                }
-            }
-        }
-
-        @Suppress("unused")
         @JvmStatic
         @CheckResult
-        fun isPresent(activity: FragmentActivity): Boolean {
-            return isPresent(activity.supportFragmentManager)
-        }
-
-        @Suppress("unused")
-        @JvmStatic
-        @CheckResult
-        fun isPresent(fragmentManager: FragmentManager): Boolean {
-            return fragmentManager.findFragmentByTag(TAG) != null
-        }
-
-        @JvmStatic
-        @CheckResult
-        private fun newInstance(backStackCount: Int): Fragment {
+        internal fun newInstance(): Fragment {
             return OtherAppsFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(KEY_BACK_STACK, backStackCount)
-                }
+                arguments = Bundle().apply {}
             }
         }
     }

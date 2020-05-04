@@ -20,12 +20,8 @@ package com.pyamsoft.pydroid.ui.settings
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.annotation.CheckResult
 import androidx.annotation.XmlRes
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
@@ -34,10 +30,9 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.about.AboutFragment
-import com.pyamsoft.pydroid.ui.app.ActivityBase
+import com.pyamsoft.pydroid.ui.about.AboutDialog
 import com.pyamsoft.pydroid.ui.arch.factory
-import com.pyamsoft.pydroid.ui.otherapps.OtherAppsFragment
+import com.pyamsoft.pydroid.ui.otherapps.OtherAppsDialog
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
@@ -113,7 +108,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 is AppSettingsControllerEvent.NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
                 is AppSettingsControllerEvent.NavigateRateApp -> openMarkForRating()
                 is AppSettingsControllerEvent.ShowLicense -> openLicensesPage()
-                is AppSettingsControllerEvent.AttemptCheckUpgrade -> versionViewModel.checkForUpdates(true)
+                is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(true)
                 is AppSettingsControllerEvent.AttemptClearData -> openClearDataDialog()
                 is AppSettingsControllerEvent.OpenShowUpgrade -> ratingViewModel.load(true)
                 is AppSettingsControllerEvent.ChangeDarkTheme -> darkThemeChanged(it.newMode)
@@ -146,13 +141,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     private fun openOtherAppsPage(apps: List<OtherApp>) {
         onViewMorePyamsoftAppsClicked(false)
         Timber.d("Show other apps fragment: $apps")
-        if (isInDialogFragment(this)) {
-            val container = requireView().parent as ViewGroup
-            OtherAppsFragment.show(this, container.id)
-        } else {
-            val baseActivity = requireActivity() as ActivityBase
-            OtherAppsFragment.show(baseActivity, baseActivity.fragmentContainerId)
-        }
+        OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
     }
 
     private fun openUpdateInfo() {
@@ -246,38 +235,12 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     @CallSuper
     protected open fun onLicenseItemClicked() {
         Timber.d("Show about licenses fragment")
-        if (isInDialogFragment(this)) {
-            val container = requireView().parent as ViewGroup
-            AboutFragment.show(this, container.id)
-        } else {
-            val baseActivity = requireActivity() as ActivityBase
-            AboutFragment.show(baseActivity, baseActivity.fragmentContainerId)
-        }
+        AboutDialog().show(requireActivity(), AboutDialog.TAG)
     }
 
     /**
      * Shows a page for  Source licenses, override or extend to use unique implementation
      */
     protected open fun onViewMorePyamsoftAppsClicked(navigatingAway: Boolean) {
-    }
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        private fun isInDialogFragment(fragment: Fragment): Boolean {
-            if (fragment is DialogFragment) {
-                return true
-            }
-
-            var parent = fragment.parentFragment
-            while (parent != null) {
-                if (parent is DialogFragment) {
-                    return true
-                }
-                parent = parent.parentFragment
-            }
-            return false
-        }
     }
 }

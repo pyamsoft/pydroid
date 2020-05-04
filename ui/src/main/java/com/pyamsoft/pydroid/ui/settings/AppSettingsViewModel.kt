@@ -68,7 +68,7 @@ internal class AppSettingsViewModel internal constructor(
             )
             is AppSettingsViewEvent.RateApp -> publish(AppSettingsControllerEvent.NavigateRateApp)
             is AppSettingsViewEvent.ViewLicense -> publish(AppSettingsControllerEvent.ShowLicense)
-            is AppSettingsViewEvent.CheckUpgrade -> publish(AppSettingsControllerEvent.AttemptCheckUpgrade)
+            is AppSettingsViewEvent.CheckUpgrade -> publish(AppSettingsControllerEvent.CheckUpgrade)
             is AppSettingsViewEvent.ClearData -> publish(AppSettingsControllerEvent.AttemptClearData)
             is AppSettingsViewEvent.ShowUpgrade -> publish(AppSettingsControllerEvent.OpenShowUpgrade)
             is AppSettingsViewEvent.ToggleDarkTheme -> changeDarkMode(event.mode)

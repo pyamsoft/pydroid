@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.otherapps
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.app.ToolbarActivity
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface OtherAppsComponent {
@@ -32,9 +31,7 @@ internal interface OtherAppsComponent {
         @CheckResult
         fun create(
             parent: ViewGroup,
-            owner: LifecycleOwner,
-            toolbarActivity: ToolbarActivity,
-            backstack: Int
+            owner: LifecycleOwner
         ): OtherAppsComponent
 
         data class Parameters internal constructor(
@@ -45,18 +42,13 @@ internal interface OtherAppsComponent {
     class Impl private constructor(
         private val parent: ViewGroup,
         private val owner: LifecycleOwner,
-        private val backstack: Int,
-        private val toolbarActivity: ToolbarActivity,
         private val params: Factory.Parameters
     ) : OtherAppsComponent {
 
         override fun inject(fragment: OtherAppsFragment) {
             val listView = OtherAppsList(owner, parent)
-            val toolbar = OtherAppsToolbar(backstack, toolbarActivity)
-
             fragment.factory = params.factory
             fragment.listView = listView
-            fragment.toolbar = toolbar
         }
 
         class FactoryImpl internal constructor(
@@ -65,11 +57,9 @@ internal interface OtherAppsComponent {
 
             override fun create(
                 parent: ViewGroup,
-                owner: LifecycleOwner,
-                toolbarActivity: ToolbarActivity,
-                backstack: Int
+                owner: LifecycleOwner
             ): OtherAppsComponent {
-                return Impl(parent, owner, backstack, toolbarActivity, params)
+                return Impl(parent, owner, params)
             }
         }
     }

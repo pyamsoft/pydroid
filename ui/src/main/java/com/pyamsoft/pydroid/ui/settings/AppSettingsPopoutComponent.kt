@@ -20,9 +20,7 @@ package com.pyamsoft.pydroid.ui.settings
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UiViewModelFactory
-import kotlin.reflect.KClass
+import com.pyamsoft.pydroid.arch.onlyFactory
 
 internal interface AppSettingsPopoutComponent {
 
@@ -48,7 +46,7 @@ internal interface AppSettingsPopoutComponent {
         params: Factory.Parameters
     ) : AppSettingsPopoutComponent {
 
-        private val factory = ViewModelFactory(name, params.debug)
+        private val factory = onlyFactory(params.debug) { AppSettingsPopoutViewModel(name, it) }
 
         override fun inject(dialog: AppSettingsPopoutDialog) {
             dialog.toolbar = AppSettingsPopoutToolbar(parent, background)
@@ -67,18 +65,6 @@ internal interface AppSettingsPopoutComponent {
             ): AppSettingsPopoutComponent {
                 return Impl(parent, background, name, params)
             }
-        }
-
-        private class ViewModelFactory internal constructor(
-            private val name: String, debug: Boolean
-        ) : UiViewModelFactory(debug) {
-            override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
-                return when (modelClass) {
-                    AppSettingsPopoutViewModel::class -> AppSettingsPopoutViewModel(name, debug)
-                    else -> fail()
-                }
-            }
-
         }
     }
 }

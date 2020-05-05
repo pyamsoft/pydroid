@@ -45,3 +45,20 @@ abstract class UiViewModelFactory protected constructor(
     @CheckResult
     protected abstract fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *>
 }
+
+@CheckResult
+inline fun <reified VM : UiViewModel<*, *, *>> onlyFactory(
+    debug: Boolean,
+    crossinline provider: (debug: Boolean) -> VM
+): ViewModelProvider.Factory {
+    return object : UiViewModelFactory(debug = debug) {
+
+        override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
+            return when (modelClass) {
+                VM::class -> provider(debug)
+                else -> fail()
+            }
+        }
+
+    }
+}

@@ -25,19 +25,21 @@ object OssLibraries {
     private val libraries: MutableSet<OssLibrary> = LinkedHashSet()
 
     var UTIL = true
-    var BOOTSTRAP = true
 
     // These libraries are disabled by default and should be enabled at runtime
     var ARCH = false
-    var UI = false
     var LOADER = false
+    var UI = false
+        set(value) {
+            if (value) {
+                field = value
+                ARCH = true
+                LOADER = true
+                UTIL = true
+            }
+        }
 
     private fun addBuildLibraries() {
-        add(
-            "Dexcount Gradle Plugin",
-            "https://github.com/KeepSafe/dexcount-gradle-plugin",
-            "A Gradle plugin to report the number of method references in your APK on every build."
-        )
         add(
             "Gradle Versions Plugin",
             "https://github.com/ben-manes/gradle-versions-plugin",
@@ -219,11 +221,11 @@ object OssLibraries {
         addCoreLibraries()
         addBuildLibraries()
 
+        // Bootstrap always added because we are bootstrap
+        addBootstrapLibraries()
+
         if (UTIL) {
             addUtilLibraries()
-        }
-        if (BOOTSTRAP) {
-            addBootstrapLibraries()
         }
         if (UI) {
             addUiLibraries()

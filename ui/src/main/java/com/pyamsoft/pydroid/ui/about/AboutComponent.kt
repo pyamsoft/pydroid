@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.about
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface AboutComponent {
@@ -61,6 +62,7 @@ internal interface AboutComponent {
                 parent: ViewGroup,
                 owner: LifecycleOwner
             ): AboutComponent {
+                OssLibraries.UI = true
                 return Impl(parent, owner, params)
             }
         }

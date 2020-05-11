@@ -59,6 +59,5 @@ inline fun <reified VM : UiViewModel<*, *, *>> onlyFactory(
                 else -> fail()
             }
         }
-
     }
 }

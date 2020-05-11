@@ -31,7 +31,8 @@ internal interface AppSettingsPopoutComponent {
         @CheckResult
         fun create(
             name: String,
-            background: Drawable, parent: ViewGroup
+            background: Drawable,
+            parent: ViewGroup
         ): AppSettingsPopoutComponent
 
         data class Parameters internal constructor(

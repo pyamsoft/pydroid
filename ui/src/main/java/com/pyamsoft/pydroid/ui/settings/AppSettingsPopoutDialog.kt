@@ -195,4 +195,3 @@ internal abstract class AppSettingsPopoutDialog protected constructor() : Dialog
         stateSaver = null
     }
 }
-

@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.AppSettingsPopoutFrameBinding
 
-
 internal class AppSettingsPopoutFrame internal constructor(
     parent: ViewGroup
 ) : BaseUiView<AppSettingsPopoutViewState, AppSettingsPopoutViewEvent, AppSettingsPopoutFrameBinding>(

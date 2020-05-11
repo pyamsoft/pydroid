@@ -17,5 +17,4 @@ internal class AboutDialog : AppSettingsPopoutDialog() {
 
         internal const val TAG = "AboutDialog"
     }
-
 }

@@ -36,5 +36,4 @@ internal class AppSettingsPopoutViewModel internal constructor(
             is AppSettingsPopoutViewEvent.ClosePopout -> publish(AppSettingsPopoutControllerEvent.ClosePopout)
         }
     }
-
 }

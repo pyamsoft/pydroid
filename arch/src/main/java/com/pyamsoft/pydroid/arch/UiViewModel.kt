@@ -20,6 +20,9 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +35,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
@@ -440,7 +440,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         fun set(value: S)
 
         suspend fun onChange(withState: suspend (state: S) -> Unit)
-
     }
 
     private class UiVMStateImpl<S : UiViewState> internal constructor(
@@ -464,6 +463,5 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         override suspend fun onChange(withState: suspend (state: S) -> Unit) {
             flow.collect(withState)
         }
-
     }
 }

@@ -33,5 +33,4 @@ sealed class AppSettingsPopoutViewEvent : UiViewEvent {
 sealed class AppSettingsPopoutControllerEvent : UiControllerEvent {
 
     object ClosePopout : AppSettingsPopoutControllerEvent()
-
 }

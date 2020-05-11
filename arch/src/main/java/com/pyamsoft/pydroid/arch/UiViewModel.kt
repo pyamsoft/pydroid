@@ -20,20 +20,24 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.yield
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
-    private val initialState: S,
+    initialState: S,
     private val debug: Boolean
 ) : ViewModel(), SaveableState {
 
@@ -50,14 +54,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val controllerEventBus = EventBus.create<C>()
-    private val stateBus = EventBus.create<S>()
     private val flushQueueBus = EventBus.create<FlushQueueEvent>()
 
     private val mutex = Mutex()
     private val setStateQueue = mutableListOf<S.() -> S>()
     private val withStateQueue = mutableListOf<S.() -> Unit>()
 
-    private var state: S? = null
+    // This useless interface exists just so I don't have to mark everything as experimental
+    private var state: UiVMState<S> = UiVMStateImpl(initialState)
 
     init {
         flushQueueBus.scopedEvent { flushQueues() }
@@ -76,7 +80,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onSaveStateEventDelegate.isInitialized()) {
 
             // Call save state hooks in random order
-            val s = latestState()
+            val s = state.get()
             onSaveStateEvents.forEach { it(outState, s) }
 
             // Don't clear the event list since this lifecycle method can be called many times.
@@ -92,8 +96,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     ): Job = viewModelScope.launch(context = Dispatchers.Main) {
         // Listen for changes
         launch(context = Dispatchers.Default) {
-            stateBus.onEvent { event ->
-                launch(context = Dispatchers.Main) { handleStateChange(views, event) }
+            state.onChange { state ->
+                launch(context = Dispatchers.Main) { handleStateChange(views, state) }
             }
         }
 
@@ -111,7 +115,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         flushQueues()
 
         // Render the latest or initial state
-        handleStateChange(views, latestState())
+        handleStateChange(views, state.get())
     }
 
     final override fun onCleared() {
@@ -137,7 +141,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Clear queues and state
         setStateQueue.clear()
         withStateQueue.clear()
-        state = null
     }
 
     @JvmOverloads
@@ -155,11 +158,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         viewModelScope.launch { controllerEventBus.send(event) }
     }
 
-    @CheckResult
-    private fun latestState(): S {
-        return state ?: initialState
-    }
-
     /**
      * Modify the state from the previous
      *
@@ -171,6 +169,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 setStateQueue.add(func)
             }
 
+            yield()
             flushQueueBus.send(FlushQueueEvent)
         }
     }
@@ -187,6 +186,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 withStateQueue.add(func)
             }
 
+            yield()
             flushQueueBus.send(FlushQueueEvent)
         }
     }
@@ -213,7 +213,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
         mutex.withLock {
             // Capture the state before modifications take place
-            val oldState = latestState()
+            val oldState = state.get()
             var newState = oldState
 
             // Loop over all state changes first, perform but do not actually fire a render to views
@@ -232,8 +232,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // Only send the new state at the end of the state change loop
             if (newState != oldState) {
                 // Replace the old state with this new state
-                state = newState
-                stateBus.send(newState)
+                state.set(newState)
             }
         }
     }
@@ -271,6 +270,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     // Pull a page from the MvRx repo's RealMvRxStateStore :)
     // Mark this function as tailrec to see if the compiler can optimize it
     private tailrec suspend fun flushQueues() {
+        // Wait for anything else first
+        yield()
+
         // Run all pending setStates first
         dequeueAllPendingSetStateChanges()
 
@@ -283,7 +285,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
             // Run the operation
             val withStateOperation = stateQueue.removeAt(0)
-            withStateOperation(latestState())
+            withStateOperation(state.get())
         }
 
         // We must call ourselves as the final operation to be tailrec compatible
@@ -429,4 +431,39 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
            $state2
            """.trimIndent()
     )
+
+    private interface UiVMState<S : UiViewState> {
+
+        @CheckResult
+        fun get(): S
+
+        fun set(value: S)
+
+        suspend fun onChange(withState: suspend (state: S) -> Unit)
+
+    }
+
+    private class UiVMStateImpl<S : UiViewState> internal constructor(
+        initialState: S
+    ) : UiVMState<S> {
+
+        @ExperimentalCoroutinesApi
+        private val flow = MutableStateFlow(initialState)
+
+        @ExperimentalCoroutinesApi
+        override fun get(): S {
+            return flow.value
+        }
+
+        @ExperimentalCoroutinesApi
+        override fun set(value: S) {
+            flow.value = value
+        }
+
+        @ExperimentalCoroutinesApi
+        override suspend fun onChange(withState: suspend (state: S) -> Unit) {
+            flow.collect(withState)
+        }
+
+    }
 }

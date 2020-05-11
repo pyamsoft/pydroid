@@ -1,6 +1,6 @@
 package com.pyamsoft.pydroid.arch
 
-interface SaveableState {
+internal interface SaveableState {
 
     fun saveState(outState: UiBundleWriter)
 }

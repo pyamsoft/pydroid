@@ -19,9 +19,9 @@ package com.pyamsoft.pydroid.arch
 
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : IView<S, V> {
+abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : SaveableState {
 
-    private val viewEventBus by lazy(NONE) { EventBus.create<V>() }
+    private val viewEventBus = EventBus.create<V>()
 
     private val onInflateEventDelegate = lazy(NONE) { mutableListOf<(UiBundleReader) -> Unit>() }
     private val onInflateEvents by onInflateEventDelegate
@@ -38,11 +38,11 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      * This way a UiViewModel can bind event handlers and receive events, and the view can publish()
      * inside of doOnInflate hooks.
      */
-    final override fun init(savedInstanceState: UiBundleReader) {
+    fun init(savedInstanceState: UiBundleReader) {
         onInit(savedInstanceState)
     }
 
-    final override fun inflate(savedInstanceState: UiBundleReader) {
+    fun inflate(savedInstanceState: UiBundleReader) {
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
         if (onInflateEventDelegate.isInitialized()) {
 
@@ -54,7 +54,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         }
     }
 
-    final override fun teardown() {
+    fun teardown() {
         // Only run teardown hooks if they exist, otherwise don't init memory
         if (onTeardownEventDelegate.isInitialized()) {
 
@@ -154,4 +154,6 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     }
 
     protected abstract fun onInit(savedInstanceState: UiBundleReader)
+
+    abstract fun render(state: S)
 }

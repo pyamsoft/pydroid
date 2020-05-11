@@ -49,8 +49,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onTeardownEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveStateEventDelegate =
-        lazy(NONE) { mutableSetOf<UiBundleWriter.(state: S) -> Unit>() }
+    private val onSaveStateEventDelegate = lazy(NONE) { mutableSetOf<UiBundleWriter.(S) -> Unit>() }
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val controllerEventBus = EventBus.create<C>()
@@ -91,7 +90,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @PublishedApi
     internal fun render(
         savedInstanceState: UiBundleReader,
-        vararg views: IView<S, V>,
+        vararg views: UiView<S, V>,
         onControllerEvent: (event: C) -> Unit
     ): Job = viewModelScope.launch(context = Dispatchers.Main) {
         // Listen for changes
@@ -294,7 +293,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private fun handleStateChange(
-        views: Array<out Renderable<S>>,
+        views: Array<out UiView<S, V>>,
         state: S
     ) {
         Timber.d("Render with state: $state")
@@ -327,26 +326,23 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     @CheckResult
-    private fun CoroutineScope.bindViewEvents(views: Iterable<IView<S, V>>): Job =
+    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>): Job =
         launch(context = Dispatchers.Default) {
             views.forEach { view ->
-                if (view is UiView<S, V>) {
-
-                    // Launch another coroutine here for handling view events
-                    launch(context = Dispatchers.Default) {
-                        view.onViewEvent {
-                            // View events must fire onto the main thread
-                            launch(context = Dispatchers.Main) {
-                                handleViewEvent(it)
-                            }
+                // Launch another coroutine here for handling view events
+                launch(context = Dispatchers.Default) {
+                    view.onViewEvent {
+                        // View events must fire onto the main thread
+                        launch(context = Dispatchers.Main) {
+                            handleViewEvent(it)
                         }
                     }
+                }
 
-                    if (view is BaseUiView<S, V, *>) {
-                        val nestedViews = view.nestedViews()
-                        if (nestedViews.isNotEmpty()) {
-                            bindViewEvents(nestedViews)
-                        }
+                if (view is BaseUiView<S, V, *>) {
+                    val nestedViews = view.nestedViews()
+                    if (nestedViews.isNotEmpty()) {
+                        bindViewEvents(nestedViews)
                     }
                 }
             }
@@ -398,6 +394,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * }
      *
      */
+    @Suppress("unused")
     protected fun doOnSaveState(onSaveState: UiBundleWriter.(state: S) -> Unit) {
         onSaveStateEvents.add(onSaveState)
     }

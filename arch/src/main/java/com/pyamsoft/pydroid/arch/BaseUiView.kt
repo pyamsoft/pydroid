@@ -33,7 +33,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
 
     protected abstract val layoutRoot: View
 
-    private val nestedViewDelegate = lazy(NONE) { mutableListOf<IView<S, V>>() }
+    private val nestedViewDelegate = lazy(NONE) { mutableListOf<UiView<S, V>>() }
     private val nestedViews by nestedViewDelegate
 
     private var bound: MutableSet<Bound<*>>? = null
@@ -104,7 +104,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
         }
     }
 
-    private fun prepareNestedViewInit(view: IView<S, V>) {
+    private fun prepareNestedViewInit(view: UiView<S, V>) {
         if (view !is BaseUiView<S, V, *>) {
             return
         }
@@ -129,7 +129,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     }
 
     @CheckResult
-    internal fun nestedViews(): List<IView<S, V>> {
+    internal fun nestedViews(): List<UiView<S, V>> {
         return if (nestedViewDelegate.isInitialized()) nestedViews else emptyList()
     }
 
@@ -172,12 +172,12 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     }
 
     /**
-     * Convenience hook for nested IView<S, V> instances
+     * Convenience hook for nested UiView<S, V> instances
      *
      * Nesting a UiView will make its parent element become this UiView's layoutRoot.
      * This will allow you to embed UiViews inside of other UiView objects.
      */
-    protected fun nest(vararg views: IView<S, V>) {
+    protected fun nest(vararg views: UiView<S, V>) {
         views.forEach { view ->
             nestedViews.add(view)
             doOnInflate { view.inflate(it) }

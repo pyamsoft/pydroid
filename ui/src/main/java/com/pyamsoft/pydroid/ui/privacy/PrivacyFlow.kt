@@ -17,20 +17,23 @@
 
 package com.pyamsoft.pydroid.ui.privacy
 
+import com.pyamsoft.pydroid.arch.EventBus
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-data class PrivacyViewState internal constructor(
+internal val PrivacyEventBus by lazy { EventBus.create<PrivacyEvents>() }
+
+internal data class PrivacyViewState internal constructor(
     val throwable: Throwable?
 ) : UiViewState
 
-sealed class PrivacyViewEvent : UiViewEvent {
+internal sealed class PrivacyViewEvent : UiViewEvent {
 
     object SnackbarHidden : PrivacyViewEvent()
 }
 
-sealed class PrivacyControllerEvent : UiControllerEvent {
+internal sealed class PrivacyControllerEvent : UiControllerEvent {
 
     data class ViewExternalPolicy internal constructor(
         val url: String

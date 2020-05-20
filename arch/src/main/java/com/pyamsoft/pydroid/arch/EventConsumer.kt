@@ -17,11 +17,7 @@
 
 package com.pyamsoft.pydroid.arch
 
-import kotlin.coroutines.CoroutineContext
-
 interface EventConsumer<T : Any> {
 
-    suspend fun onEvent(emitter: suspend (event: T) -> Unit)
-
-    suspend fun onEvent(context: CoroutineContext, emitter: suspend (event: T) -> Unit)
+    suspend fun subscribe(emitter: suspend (event: T) -> Unit)
 }

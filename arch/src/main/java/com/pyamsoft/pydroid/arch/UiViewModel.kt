@@ -149,12 +149,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     ): Job {
         val bus = this
         return viewModelScope.launch(context = context) {
-            bus.onEvent(func)
+            bus.subscribe(func)
         }
     }
 
     protected fun publish(event: C) {
-        viewModelScope.launch { controllerEventBus.send(event) }
+        viewModelScope.launch { controllerEventBus.publish(event) }
     }
 
     /**
@@ -169,7 +169,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             }
 
             yield()
-            flushQueueBus.send(FlushQueueEvent)
+            flushQueueBus.publish(FlushQueueEvent)
         }
     }
 
@@ -186,7 +186,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             }
 
             yield()
-            flushQueueBus.send(FlushQueueEvent)
+            flushQueueBus.publish(FlushQueueEvent)
         }
     }
 
@@ -351,7 +351,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @CheckResult
     private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit): Job =
         launch {
-            controllerEventBus.onEvent {
+            controllerEventBus.subscribe {
                 // Controller events must fire onto the main thread
                 launch(context = Dispatchers.Main) {
                     onControllerEvent(it)

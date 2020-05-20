@@ -20,21 +20,28 @@ package com.pyamsoft.pydroid.ui.privacy
 import androidx.appcompat.widget.Toolbar
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.privacy.PrivacyEvents.ViewPrivacyPolicy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-fun Toolbar.addPrivacy(
+fun CoroutineScope.addPrivacy(
+    toolbar: Toolbar,
     privacyPolicyUrl: String,
     termsConditionsUrl: String
 ) {
-    this.inflateMenu(R.menu.privacy_menu)
+    toolbar.inflateMenu(R.menu.privacy_menu)
 
-    this.menu.apply {
+    toolbar.menu.apply {
         findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener {
-            PrivacyEventBus.publish(ViewPrivacyPolicy(privacyPolicyUrl))
+            launch {
+                PrivacyEventBus.publish(ViewPrivacyPolicy(privacyPolicyUrl))
+            }
             return@setOnMenuItemClickListener true
         }
 
         findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener {
-            PrivacyEventBus.publish(ViewPrivacyPolicy(termsConditionsUrl))
+            launch {
+                PrivacyEventBus.publish(ViewPrivacyPolicy(termsConditionsUrl))
+            }
             return@setOnMenuItemClickListener true
         }
     }

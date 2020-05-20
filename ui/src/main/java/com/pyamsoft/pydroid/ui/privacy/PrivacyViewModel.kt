@@ -34,7 +34,7 @@ internal class PrivacyViewModel internal constructor(
     init {
         doOnInit {
             viewModelScope.launch {
-                PrivacyEventBus.onEvent { publish(ViewExternalPolicy(it.url)) }
+                PrivacyEventBus.subscribe { publish(ViewExternalPolicy(it.url)) }
             }
         }
     }

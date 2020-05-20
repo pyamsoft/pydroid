@@ -17,6 +17,11 @@
 
 package com.pyamsoft.pydroid.arch
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : SaveableState {
@@ -31,6 +36,9 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
+
+    private val scopeDelegate = lazy(NONE) { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
+    protected val viewScope: CoroutineScope by scopeDelegate
 
     /**
      * This is really only used as a hack, so we can inflate the actual Layout before running init hooks.
@@ -74,6 +82,11 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         if (onSaveEventDelegate.isInitialized()) {
             onSaveEvents.clear()
         }
+
+        // Cancel the view scope
+        if (scopeDelegate.isInitialized()) {
+            viewScope.cancel()
+        }
     }
 
     /**
@@ -95,11 +108,13 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     }
 
     internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
-        viewEventBus.onEvent(func)
+        viewEventBus.subscribe(func)
     }
 
     protected fun publish(event: V) {
-        viewEventBus.publish(event)
+        viewScope.launch {
+            viewEventBus.publish(event)
+        }
     }
 
     /**
@@ -156,4 +171,5 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     protected abstract fun onInit(savedInstanceState: UiBundleReader)
 
     abstract fun render(state: S)
+
 }

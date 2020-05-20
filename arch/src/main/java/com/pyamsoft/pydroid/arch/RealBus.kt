@@ -18,40 +18,25 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
-class RealBus<T : Any> internal constructor() : EventBus<T> {
+class RealBus<T : Any> internal constructor(private val context: CoroutineContext) : EventBus<T> {
 
     @ExperimentalCoroutinesApi
     private val bus by lazy { BroadcastChannel<T>(1) }
 
     @ExperimentalCoroutinesApi
-    override fun publish(event: T) {
-        if (!bus.offer(event)) {
-            Timber.w("Failed to publish event onto bus: $event")
-        }
-    }
-
-    @ExperimentalCoroutinesApi
-    override suspend fun send(event: T) = withContext(context = Dispatchers.Default) {
+    override suspend fun publish(event: T) = withContext(context = context) {
         bus.send(event)
     }
 
     @CheckResult
     @ExperimentalCoroutinesApi
-    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
-        return onEvent(context = Dispatchers.Default, emitter = emitter)
-    }
-
-    @CheckResult
-    @ExperimentalCoroutinesApi
-    override suspend fun onEvent(context: CoroutineContext, emitter: suspend (event: T) -> Unit) =
+    override suspend fun subscribe(emitter: suspend (event: T) -> Unit) =
         withContext(context = context) {
             bus.openSubscription()
                 .consumeEach { emitter(it) }

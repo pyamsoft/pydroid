@@ -18,22 +18,27 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.CoroutineContext
 
 interface EventBus<T : Any> : EventConsumer<T> {
 
-    suspend fun publish(event: T)
+    suspend fun send(event: T)
 
     companion object {
 
         private val EMPTY by lazy { create<Unit>() }
 
         @CheckResult
+        @JvmStatic
         @JvmOverloads
-        fun <T : Any> create(context: CoroutineContext = Dispatchers.Default): EventBus<T> = RealBus(context)
+        fun <T : Any> create(
+            context: CoroutineContext = Dispatchers.Default
+        ): EventBus<T> = RealBus(context)
 
         @CheckResult
+        @JvmStatic
+        @Deprecated("Do you really need a Global Unit speaking EventBus? Just create your own.")
         fun empty(): EventBus<Unit> = EMPTY
     }
 }

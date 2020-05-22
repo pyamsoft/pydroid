@@ -30,7 +30,7 @@ class RealBus<T : Any> internal constructor(private val context: CoroutineContex
     private val bus by lazy { BroadcastChannel<T>(1) }
 
     @ExperimentalCoroutinesApi
-    override suspend fun publish(event: T) = withContext(context = context) {
+    override suspend fun send(event: T) = withContext(context = context) {
         bus.send(event)
     }
 

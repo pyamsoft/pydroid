@@ -25,14 +25,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @CheckResult
-suspend fun SharedPreferences.listen(onChange: suspend (key: String) -> Unit): PreferenceListener {
+suspend fun SharedPreferences.onChange(
+    key: String,
+    onChange: suspend () -> Unit
+): PreferenceListener {
     val preferences = this
     return withContext(context = Dispatchers.Default) {
-        val listener = OnSharedPreferenceChangeListener { _, key ->
-            launch { onChange(key) }
+        val listener = OnSharedPreferenceChangeListener { _, changedKey ->
+            if (changedKey == key) {
+                launch { onChange() }
+            }
         }
 
-        preferences.registerOnSharedPreferenceChangeListener(listener)
         return@withContext PreferenceListenerImpl(preferences, listener)
     }
 }
@@ -43,6 +47,10 @@ private class PreferenceListenerImpl internal constructor(
 ) : PreferenceListener {
 
     private var listener: OnSharedPreferenceChangeListener? = listener
+
+    init {
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+    }
 
     override fun cancel() {
         listener?.let { preferences.unregisterOnSharedPreferenceChangeListener(it) }

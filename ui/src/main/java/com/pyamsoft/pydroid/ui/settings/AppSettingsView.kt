@@ -138,7 +138,7 @@ internal class AppSettingsView internal constructor(
     private fun setupPrivacyPolicy() {
         privacyPolicy.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             viewScope.launch {
-                PrivacyEventBus.publish(ViewPrivacyPolicy(privacyPolicyUrl))
+                PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
             }
             return@OnPreferenceClickListener true
         }
@@ -147,7 +147,7 @@ internal class AppSettingsView internal constructor(
     private fun setupTermsConditions() {
         termsConditions.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             viewScope.launch {
-                PrivacyEventBus.publish(ViewTermsAndConditions(termsConditionsUrl))
+                PrivacyEventBus.send(ViewTermsAndConditions(termsConditionsUrl))
             }
             return@OnPreferenceClickListener true
         }

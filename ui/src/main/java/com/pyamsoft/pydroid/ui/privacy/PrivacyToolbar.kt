@@ -33,14 +33,14 @@ fun CoroutineScope.addPrivacy(
     toolbar.menu.apply {
         findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener {
             launch {
-                PrivacyEventBus.publish(ViewPrivacyPolicy(privacyPolicyUrl))
+                PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
             }
             return@setOnMenuItemClickListener true
         }
 
         findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener {
             launch {
-                PrivacyEventBus.publish(ViewPrivacyPolicy(termsConditionsUrl))
+                PrivacyEventBus.send(ViewPrivacyPolicy(termsConditionsUrl))
             }
             return@setOnMenuItemClickListener true
         }

@@ -154,7 +154,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     protected fun publish(event: C) {
-        viewModelScope.launch { controllerEventBus.publish(event) }
+        viewModelScope.launch { controllerEventBus.send(event) }
     }
 
     /**
@@ -169,7 +169,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             }
 
             yield()
-            flushQueueBus.publish(FlushQueueEvent)
+            flushQueueBus.send(FlushQueueEvent)
         }
     }
 
@@ -186,7 +186,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             }
 
             yield()
-            flushQueueBus.publish(FlushQueueEvent)
+            flushQueueBus.send(FlushQueueEvent)
         }
     }
 

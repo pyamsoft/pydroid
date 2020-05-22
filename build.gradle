@@ -61,8 +61,8 @@ buildscript {
 
         // Network
         moshi = "1.9.2"
-        retrofit = '2.8.2'
-        okhttp = "4.7.1"
+        retrofit = '2.9.0'
+        okhttp = "4.7.2"
 
         // Logging
         timber = "4.7.1"

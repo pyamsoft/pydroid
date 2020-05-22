@@ -18,16 +18,24 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import kotlin.coroutines.CoroutineContext
 
 class RealBus<T : Any> internal constructor(private val context: CoroutineContext) : EventBus<T> {
 
     @ExperimentalCoroutinesApi
     private val bus by lazy { BroadcastChannel<T>(1) }
+
+    @ExperimentalCoroutinesApi
+    override fun publish(event: T) {
+        if (!bus.offer(event)) {
+            Timber.w("Failed to publish event: $event")
+        }
+    }
 
     @ExperimentalCoroutinesApi
     override suspend fun send(event: T) = withContext(context = context) {

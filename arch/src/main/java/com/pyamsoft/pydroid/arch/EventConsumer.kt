@@ -19,5 +19,5 @@ package com.pyamsoft.pydroid.arch
 
 interface EventConsumer<T : Any> {
 
-    suspend fun subscribe(emitter: suspend (event: T) -> Unit)
+    suspend fun onEvent(emitter: suspend (event: T) -> Unit)
 }

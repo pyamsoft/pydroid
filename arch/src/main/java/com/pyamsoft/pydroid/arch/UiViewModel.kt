@@ -149,7 +149,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     ): Job {
         val bus = this
         return viewModelScope.launch(context = context) {
-            bus.subscribe(func)
+            bus.onEvent(func)
         }
     }
 
@@ -351,7 +351,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @CheckResult
     private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit): Job =
         launch {
-            controllerEventBus.subscribe {
+            controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
                 launch(context = Dispatchers.Main) {
                     onControllerEvent(it)

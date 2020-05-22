@@ -108,7 +108,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     }
 
     internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
-        viewEventBus.subscribe(func)
+        viewEventBus.onEvent(func)
     }
 
     protected fun publish(event: V) {

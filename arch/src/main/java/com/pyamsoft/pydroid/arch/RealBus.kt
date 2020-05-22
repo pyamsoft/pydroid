@@ -36,7 +36,7 @@ class RealBus<T : Any> internal constructor(private val context: CoroutineContex
 
     @CheckResult
     @ExperimentalCoroutinesApi
-    override suspend fun subscribe(emitter: suspend (event: T) -> Unit) =
+    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) =
         withContext(context = context) {
             bus.openSubscription()
                 .consumeEach { emitter(it) }

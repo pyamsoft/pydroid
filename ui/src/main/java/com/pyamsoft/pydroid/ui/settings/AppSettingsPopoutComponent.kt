@@ -47,7 +47,7 @@ internal interface AppSettingsPopoutComponent {
         params: Factory.Parameters
     ) : AppSettingsPopoutComponent {
 
-        private val factory = onlyFactory(params.debug) { AppSettingsPopoutViewModel(name, it) }
+        private val factory = onlyFactory { AppSettingsPopoutViewModel(name, params.debug) }
 
         override fun inject(dialog: AppSettingsPopoutDialog) {
             dialog.toolbar = AppSettingsPopoutToolbar(parent, background)

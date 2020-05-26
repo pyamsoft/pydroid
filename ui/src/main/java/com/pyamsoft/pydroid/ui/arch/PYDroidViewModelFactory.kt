@@ -36,26 +36,35 @@ import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
     private val params: Parameters
-) : UiViewModelFactory(params.debug) {
+) : UiViewModelFactory() {
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
-            RatingDialogViewModel::class -> RatingDialogViewModel(params.ratingInteractor, debug)
+            RatingDialogViewModel::class -> RatingDialogViewModel(
+                params.ratingInteractor,
+                params.debug
+            )
             VersionUpgradeViewModel::class -> VersionUpgradeViewModel(
                 params.name,
                 params.version,
-                debug
+                params.debug
             )
-            AboutViewModel::class -> AboutViewModel(params.aboutInteractor, debug)
-            RatingViewModel::class -> RatingViewModel(params.ratingInteractor, debug)
             AppSettingsViewModel::class -> AppSettingsViewModel(
                 params.theming,
                 params.otherAppsInteractor,
-                debug
+                params.debug
             )
-            VersionCheckViewModel::class -> VersionCheckViewModel(params.versionInteractor, debug)
-            PrivacyViewModel::class -> PrivacyViewModel(debug)
-            OtherAppsViewModel::class -> OtherAppsViewModel(params.otherAppsInteractor, debug)
+            VersionCheckViewModel::class -> VersionCheckViewModel(
+                params.versionInteractor,
+                params.debug
+            )
+            PrivacyViewModel::class -> PrivacyViewModel(params.debug)
+            OtherAppsViewModel::class -> OtherAppsViewModel(
+                params.otherAppsInteractor,
+                params.debug
+            )
+            AboutViewModel::class -> AboutViewModel(params.aboutInteractor, params.debug)
+            RatingViewModel::class -> RatingViewModel(params.ratingInteractor, params.debug)
             else -> fail()
         }
     }

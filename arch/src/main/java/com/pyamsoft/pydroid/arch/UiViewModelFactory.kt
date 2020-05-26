@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModelProvider
 import kotlin.reflect.KClass
 
 abstract class UiViewModelFactory protected constructor(
-    protected val debug: Boolean
 ) : ViewModelProvider.Factory {
 
     final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -47,15 +46,12 @@ abstract class UiViewModelFactory protected constructor(
 }
 
 @CheckResult
-inline fun <reified VM : UiViewModel<*, *, *>> onlyFactory(
-    debug: Boolean,
-    crossinline provider: (debug: Boolean) -> VM
-): ViewModelProvider.Factory {
-    return object : UiViewModelFactory(debug = debug) {
+inline fun <reified VM : UiViewModel<*, *, *>> onlyFactory(crossinline provider: () -> VM): ViewModelProvider.Factory {
+    return object : UiViewModelFactory() {
 
         override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
             return when (modelClass) {
-                VM::class -> provider(debug)
+                VM::class -> provider()
                 else -> fail()
             }
         }

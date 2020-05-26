@@ -42,5 +42,6 @@ sealed class VersionViewEvent : UiViewEvent {
 
 sealed class VersionControllerEvent : UiControllerEvent {
 
-    data class ShowUpgrade internal constructor(val payload: UpgradePayload) : VersionControllerEvent()
+    data class ShowUpgrade internal constructor(val payload: UpgradePayload) :
+        VersionControllerEvent()
 }

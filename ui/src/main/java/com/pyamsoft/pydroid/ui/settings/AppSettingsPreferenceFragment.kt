@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutDialog
-import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.otherapps.OtherAppsDialog
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
@@ -65,9 +65,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     internal var versionView: VersionView? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val settingsViewModel by factory<AppSettingsViewModel>(activity = true) { factory }
-    private val versionViewModel by factory<VersionCheckViewModel>(activity = true) { factory }
-    private val ratingViewModel by factory<RatingViewModel>(activity = true) { factory }
+    private val settingsViewModel by viewModelFactory<AppSettingsViewModel>(activity = true) { factory }
+    private val versionViewModel by viewModelFactory<VersionCheckViewModel>(activity = true) { factory }
+    private val ratingViewModel by viewModelFactory<RatingViewModel>(activity = true) { factory }
 
     @CallSuper
     override fun onCreatePreferences(

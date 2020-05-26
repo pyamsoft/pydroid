@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
@@ -47,7 +48,7 @@ class RatingDialog : DialogFragment() {
     internal var iconView: RatingIconView? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by factory<RatingDialogViewModel>(activity = true) { factory }
+    private val viewModel by viewModelFactory<RatingDialogViewModel>(activity = true) { factory }
 
     private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
 

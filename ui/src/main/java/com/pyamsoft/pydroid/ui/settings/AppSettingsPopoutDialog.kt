@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
@@ -37,7 +38,7 @@ internal abstract class AppSettingsPopoutDialog protected constructor() : Dialog
     internal var frame: AppSettingsPopoutFrame? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by factory<AppSettingsPopoutViewModel> { factory }
+    private val viewModel by viewModelFactory<AppSettingsPopoutViewModel> { factory }
 
     private var stateSaver: StateSaver? = null
 

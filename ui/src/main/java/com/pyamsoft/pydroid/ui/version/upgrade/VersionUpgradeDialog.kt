@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
-import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
@@ -44,7 +44,7 @@ class VersionUpgradeDialog : DialogFragment() {
     internal var control: VersionUpgradeControlView? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by factory<VersionUpgradeViewModel>(activity = true) { factory }
+    private val viewModel by viewModelFactory<VersionUpgradeViewModel>(activity = true) { factory }
 
     private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
 

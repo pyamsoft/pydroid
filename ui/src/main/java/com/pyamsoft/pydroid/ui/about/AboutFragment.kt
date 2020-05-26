@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.util.hyperlink
 
@@ -41,7 +41,7 @@ internal class AboutFragment : Fragment() {
     internal var spinnerView: AboutSpinnerView? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by factory<AboutViewModel>(activity = true) { factory }
+    private val viewModel by viewModelFactory<AboutViewModel>(activity = true) { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -73,7 +73,7 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     private fun handleAppsLoaded(apps: List<OtherApp>) {
-        setState { copy(apps = listOf(OtherApp.EMPTY) + apps) }
+        setState { copy(apps = apps) }
     }
 
     fun navigationFailed(throwable: ActivityNotFoundException) {

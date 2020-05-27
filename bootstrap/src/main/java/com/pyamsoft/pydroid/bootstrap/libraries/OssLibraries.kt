@@ -45,6 +45,11 @@ object OssLibraries {
             "https://github.com/ben-manes/gradle-versions-plugin",
             "Gradle plugin to discover dependency updates."
         )
+        add(
+            "Gradle Spotless Plugin",
+            "https://github.com/diffplug/spotless/tree/master/plugin-gradle",
+            "Keep your code Spotless with Gradle"
+        )
     }
 
     private fun addCoreLibraries() {

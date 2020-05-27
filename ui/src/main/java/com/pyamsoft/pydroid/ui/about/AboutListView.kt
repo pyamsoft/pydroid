@@ -100,6 +100,43 @@ internal class AboutListView internal constructor(
     }
 
     override fun onRender(state: AboutViewState) {
+        layoutRoot.post { handleLicenses(state) }
+        layoutRoot.post { handleLoading(state) }
+        layoutRoot.post { handleNavigateError(state) }
+        layoutRoot.post { handleLoadError(state) }
+    }
+
+    private fun handleLoadError(state: AboutViewState) {
+        state.loadError.let { throwable ->
+            if (throwable == null) {
+                clearLoadError()
+            } else {
+                showLoadError(throwable)
+            }
+        }
+    }
+
+    private fun handleNavigateError(state: AboutViewState) {
+        state.navigationError.let { throwable ->
+            if (throwable == null) {
+                clearNavigationError()
+            } else {
+                showNavigationError(throwable)
+            }
+        }
+    }
+
+    private fun handleLoading(state: AboutViewState) {
+        state.isLoading.let { loading ->
+            if (loading) {
+                hide()
+            } else {
+                show()
+            }
+        }
+    }
+
+    private fun handleLicenses(state: AboutViewState) {
         state.licenses.let { licenses ->
             val beganEmpty = isEmpty()
             if (licenses.isEmpty()) {
@@ -110,30 +147,6 @@ internal class AboutListView internal constructor(
 
             if (beganEmpty && !isEmpty()) {
                 scrollToLastViewedItem()
-            }
-        }
-
-        state.isLoading.let { loading ->
-            if (loading) {
-                hide()
-            } else {
-                show()
-            }
-        }
-
-        state.navigationError.let { throwable ->
-            if (throwable == null) {
-                clearNavigationError()
-            } else {
-                showNavigationError(throwable)
-            }
-        }
-
-        state.loadError.let { throwable ->
-            if (throwable == null) {
-                clearLoadError()
-            } else {
-                showLoadError(throwable)
             }
         }
     }

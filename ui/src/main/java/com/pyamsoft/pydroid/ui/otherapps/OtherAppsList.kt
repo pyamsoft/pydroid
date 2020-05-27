@@ -97,6 +97,21 @@ internal class OtherAppsList internal constructor(
     }
 
     override fun onRender(state: OtherAppsViewState) {
+        layoutRoot.post { handleApps(state) }
+        layoutRoot.post { handleNavigationError(state) }
+    }
+
+    private fun handleNavigationError(state: OtherAppsViewState) {
+        state.navigationError.let { throwable ->
+            if (throwable == null) {
+                clearNavigationError()
+            } else {
+                showNavigationError(throwable)
+            }
+        }
+    }
+
+    private fun handleApps(state: OtherAppsViewState) {
         state.apps.let { apps ->
             val beganEmpty = isEmpty()
             if (apps.isEmpty()) {
@@ -107,14 +122,6 @@ internal class OtherAppsList internal constructor(
 
             if (beganEmpty && !isEmpty()) {
                 scrollToLastViewedItem()
-            }
-        }
-
-        state.navigationError.let { throwable ->
-            if (throwable == null) {
-                clearNavigationError()
-            } else {
-                showNavigationError(throwable)
             }
         }
     }

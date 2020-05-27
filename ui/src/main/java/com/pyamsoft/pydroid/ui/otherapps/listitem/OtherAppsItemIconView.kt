@@ -46,6 +46,10 @@ internal class OtherAppsItemIconView internal constructor(
     }
 
     override fun onRender(state: OtherAppsItemViewState) {
+        layoutRoot.post { handleApp(state) }
+    }
+
+    private fun handleApp(state: OtherAppsItemViewState) {
         state.app.let { app ->
             clear()
             loaded = imageLoader.load(app.icon).into(binding.otherAppsIcon)

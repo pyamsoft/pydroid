@@ -45,6 +45,10 @@ internal class AboutItemDescriptionView internal constructor(
     }
 
     override fun onRender(state: AboutItemViewState) {
+        layoutRoot.post { handleLibrary(state) }
+    }
+
+    private fun handleLibrary(state: AboutItemViewState) {
         state.library.let { library ->
             binding.aboutDescription.text = library.description
             binding.aboutDescription.isVisible = library.description.isNotBlank()

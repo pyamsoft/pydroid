@@ -43,14 +43,22 @@ internal class VersionUpgradeContentView internal constructor(
     }
 
     override fun onRender(state: VersionUpgradeViewState) {
-        state.applicationName.let { name ->
-            if (name.isNotBlank()) {
-                binding.upgradeMessage.text = getString(R.string.upgrade_available_message, name)
+        layoutRoot.post { handleName(state) }
+        layoutRoot.post { handleCurrentVersion(state) }
+        layoutRoot.post { handleNewVersion(state) }
+    }
+
+    private fun handleNewVersion(state: VersionUpgradeViewState) {
+        state.newVersion.let { version ->
+            if (version == 0) {
+                binding.upgradeNewValue.text = ""
             } else {
-                binding.upgradeMessage.text = ""
+                binding.upgradeNewValue.text = "$version"
             }
         }
+    }
 
+    private fun handleCurrentVersion(state: VersionUpgradeViewState) {
         state.currentVersion.let { version ->
             if (version == 0) {
                 binding.upgradeCurrentValue.text = ""
@@ -58,12 +66,14 @@ internal class VersionUpgradeContentView internal constructor(
                 binding.upgradeCurrentValue.text = "$version"
             }
         }
+    }
 
-        state.newVersion.let { version ->
-            if (version == 0) {
-                binding.upgradeNewValue.text = ""
+    private fun handleName(state: VersionUpgradeViewState) {
+        state.applicationName.let { name ->
+            if (name.isNotBlank()) {
+                binding.upgradeMessage.text = getString(R.string.upgrade_available_message, name)
             } else {
-                binding.upgradeNewValue.text = "$version"
+                binding.upgradeMessage.text = ""
             }
         }
     }

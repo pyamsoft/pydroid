@@ -51,6 +51,10 @@ internal class AppSettingsPopoutToolbar internal constructor(
     }
 
     override fun onRender(state: AppSettingsPopoutViewState) {
+        layoutRoot.post { handleTitle(state) }
+    }
+
+    private fun handleTitle(state: AppSettingsPopoutViewState) {
         binding.settingsPopoutToolbar.title = state.name
     }
 }

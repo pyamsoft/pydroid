@@ -36,9 +36,13 @@ internal class AboutSpinnerView internal constructor(
         }
     }
 
-    override fun onRender(state: AboutViewState) {
+    private fun handleLoading(state: AboutViewState) {
         state.isLoading.let { loading ->
             binding.spinner.isVisible = loading
         }
+    }
+
+    override fun onRender(state: AboutViewState) {
+        layoutRoot.post { handleLoading(state) }
     }
 }

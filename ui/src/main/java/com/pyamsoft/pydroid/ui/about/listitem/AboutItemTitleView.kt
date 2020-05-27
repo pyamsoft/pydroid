@@ -44,6 +44,10 @@ internal class AboutItemTitleView internal constructor(
     }
 
     override fun onRender(state: AboutItemViewState) {
+        layoutRoot.post { handleLibrary(state) }
+    }
+
+    private fun handleLibrary(state: AboutItemViewState) {
         state.library.let { library ->
             binding.title.text = library.name
             binding.license.text = getString(R.string.license_name, library.licenseName)

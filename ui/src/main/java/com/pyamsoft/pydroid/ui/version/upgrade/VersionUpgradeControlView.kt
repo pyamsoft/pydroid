@@ -49,7 +49,7 @@ internal class VersionUpgradeControlView internal constructor(
         }
     }
 
-    override fun onRender(state: VersionUpgradeViewState) {
+    private fun handleError(state: VersionUpgradeViewState) {
         state.throwable.let { throwable ->
             if (throwable == null) {
                 clearError()
@@ -57,6 +57,10 @@ internal class VersionUpgradeControlView internal constructor(
                 showError(throwable)
             }
         }
+    }
+
+    override fun onRender(state: VersionUpgradeViewState) {
+        layoutRoot.post { handleError(state) }
     }
 
     private fun showError(error: Throwable) {

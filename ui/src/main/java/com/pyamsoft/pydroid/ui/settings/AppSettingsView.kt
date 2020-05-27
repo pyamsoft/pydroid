@@ -17,6 +17,7 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
+import android.os.Handler
 import androidx.core.content.ContextCompat
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -67,6 +68,8 @@ internal class AppSettingsView internal constructor(
     private val termsConditions by boundPref<Preference>(R.string.view_terms_key)
     private val applicationGroup by boundPref<Preference>("application_settings")
 
+    private val handler = Handler()
+
     init {
         val self = this
         doOnInflate {
@@ -103,9 +106,17 @@ internal class AppSettingsView internal constructor(
 
             self.preferenceScreen = null
         }
+
+        doOnTeardown {
+            handler.removeCallbacksAndMessages(null)
+        }
     }
 
     override fun onRender(state: AppSettingsViewState) {
+        handler.post { handleDarkTheme(state) }
+    }
+
+    private fun handleDarkTheme(state: AppSettingsViewState) {
         state.isDarkTheme?.let { darkTheme ->
             requireNotNull(preferenceScreen).adjustTint(darkTheme.dark)
         }

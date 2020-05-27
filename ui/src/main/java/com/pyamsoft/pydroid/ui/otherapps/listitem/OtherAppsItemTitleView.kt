@@ -41,6 +41,10 @@ internal class OtherAppsItemTitleView internal constructor(
     }
 
     override fun onRender(state: OtherAppsItemViewState) {
+        layoutRoot.post { handleApp(state) }
+    }
+
+    private fun handleApp(state: OtherAppsItemViewState) {
         state.app.let { app ->
             binding.title.text = app.name
             binding.description.text = app.description

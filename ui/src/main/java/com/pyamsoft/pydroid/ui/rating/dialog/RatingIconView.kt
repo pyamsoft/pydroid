@@ -41,6 +41,10 @@ internal class RatingIconView internal constructor(
     }
 
     override fun onRender(state: RatingDialogViewState) {
+        layoutRoot.post { handleIcon(state) }
+    }
+
+    private fun handleIcon(state: RatingDialogViewState) {
         state.icon.let { icon ->
             clear()
             if (icon != 0) {

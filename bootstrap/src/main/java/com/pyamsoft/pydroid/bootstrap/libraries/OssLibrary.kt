@@ -17,16 +17,10 @@
 
 package com.pyamsoft.pydroid.bootstrap.libraries
 
-data class OssLibrary(
+data class OssLibrary internal constructor(
     val name: String,
     val description: String,
     val libraryUrl: String,
     val licenseName: String,
     val licenseUrl: String
-) {
-    companion object {
-
-        @JvmStatic
-        val EMPTY = OssLibrary("", "", "", "", "")
-    }
-}
+)

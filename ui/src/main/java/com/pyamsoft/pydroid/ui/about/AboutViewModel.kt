@@ -89,7 +89,7 @@ internal class AboutViewModel internal constructor(
     }
 
     private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
-        setState { copy(licenses = listOf(OssLibrary.EMPTY) + licenses, loadError = null) }
+        setState { copy(licenses = licenses, loadError = null) }
     }
 
     private fun handleLicenseLoadError(throwable: Throwable) {

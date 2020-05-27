@@ -216,7 +216,7 @@ object OssLibraries {
         name: String,
         url: String,
         description: String,
-        license: OssLicenses = OssLicenses.APACHE2
+        license: LibraryLicense = OssLicenses.APACHE2
     ) {
         libraries.add(
             OssLibrary(

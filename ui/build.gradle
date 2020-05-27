@@ -22,11 +22,15 @@ dependencies {
     api "androidx.recyclerview:recyclerview:$recyclerView"
     api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
     api "androidx.fragment:fragment:$fragment"
-    api "com.google.android.material:material:$materialDesign"
     api "androidx.preference:preference:$preference"
     api "androidx.constraintlayout:constraintlayout:$constraintLayout"
     api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
 
+    // Material Design
+    api "com.google.android.material:material:$materialDesign"
+
+    // RecyclerView decorations
+    api "io.cabriole:decorator:$decorator"
 
     api project(':arch')
     api project(':bootstrap')

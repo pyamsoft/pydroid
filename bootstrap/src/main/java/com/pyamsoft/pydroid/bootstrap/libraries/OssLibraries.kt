@@ -152,6 +152,16 @@ object OssLibraries {
             "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
             "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way."
         )
+        add(
+            "AndroidX Constraint Layout",
+            "https://android.googlesource.com/platform/frameworks/opt/sherpa/+/studio-master-dev/constraintlayout/",
+            "The AndroidX Jetpack Constraint Layout library. Position and size widgets in a flexible way."
+        )
+        add(
+            "Decorator",
+            "https://github.com/cabriole/decorator",
+            "An Android library that helps creating composable margins and dividers in RecyclerViews"
+        )
     }
 
     private fun addLoaderLibraries() {

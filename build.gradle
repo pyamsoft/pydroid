@@ -69,6 +69,9 @@ buildscript {
 
         // Image loading
         glide = '4.11.0'
+
+        // Recyclerview
+        decorator = "1.1.0"
     }
 
     dependencies {

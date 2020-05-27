@@ -26,48 +26,33 @@ import androidx.recyclerview.widget.ListAdapter
 internal class AboutAdapter internal constructor(
     private val owner: LifecycleOwner,
     private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
-) : ListAdapter<AboutItemViewState, BaseViewHolder<*>>(DIFFER) {
+) : ListAdapter<AboutItemViewState, AboutViewHolder>(DIFFER) {
 
     init {
         setHasStableIds(true)
     }
 
     override fun getItemId(position: Int): Long {
-        return getItem(position).library.libraryUrl.hashCode()
+        return getItem(position).library.hashCode()
             .toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).library.name.isBlank()) {
-            VIEW_TYPE_SPACER
-        } else {
-            VIEW_TYPE_REAL
-        }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseViewHolder<*> {
+    ): AboutViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return if (viewType == VIEW_TYPE_REAL) {
-            AboutViewHolder.create(inflater, parent, owner, callback)
-        } else {
-            SpaceViewHolder.create(inflater, parent)
-        }
+        return AboutViewHolder.create(inflater, parent, owner, callback)
     }
 
     override fun onBindViewHolder(
-        holder: BaseViewHolder<*>,
+        holder: AboutViewHolder,
         position: Int
     ) {
         holder.bind(getItem(position))
     }
 
     companion object {
-
-        private const val VIEW_TYPE_SPACER = 1
-        private const val VIEW_TYPE_REAL = 2
 
         private val DIFFER = object : DiffUtil.ItemCallback<AboutItemViewState>() {
             override fun areItemsTheSame(

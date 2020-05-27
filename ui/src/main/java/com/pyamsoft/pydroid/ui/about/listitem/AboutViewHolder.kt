@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
 import com.pyamsoft.pydroid.arch.bindViews
 import com.pyamsoft.pydroid.arch.doOnDestroy
@@ -32,7 +33,7 @@ internal class AboutViewHolder private constructor(
     binding: AdapterItemAboutLicenseBinding,
     owner: LifecycleOwner,
     callback: (event: AboutItemViewEvent, index: Int) -> Unit
-) : BaseViewHolder<AdapterItemAboutLicenseBinding>(binding) {
+) : RecyclerView.ViewHolder(binding.root) {
 
     private val binder: ViewBinder<AboutItemViewState>
 
@@ -62,7 +63,7 @@ internal class AboutViewHolder private constructor(
         }
     }
 
-    override fun bind(state: AboutItemViewState) {
+    fun bind(state: AboutItemViewState) {
         binder.bind(state)
     }
 

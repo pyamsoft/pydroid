@@ -135,6 +135,10 @@ subprojects {
             target "**/*.kt"
             ktlint()
         }
+        groovyGradle {
+            target "*.gradle", "**/*.gradle"
+            greclipse()
+        }
     }
 
     // Kapt flags

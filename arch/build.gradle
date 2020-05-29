@@ -16,16 +16,16 @@
  */
 
 dependencies {
-    api "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
-    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+	api "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
+	api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
-    // For Lifecycle coroutineScope
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+	// For Lifecycle coroutineScope
+	implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
 
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+	api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 
-    api "com.pyamsoft.highlander:highlander:$highlander"
+	api "com.pyamsoft.highlander:highlander:$highlander"
 
-    api project(':core')
+	api project(':core')
 }
 

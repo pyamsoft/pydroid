@@ -16,23 +16,23 @@
  */
 
 dependencies {
-    // Android support library.
-    api "androidx.core:core-ktx:$core"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
-    api "androidx.recyclerview:recyclerview:$recyclerView"
-    api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
-    api "androidx.fragment:fragment:$fragment"
-    api "androidx.preference:preference:$preference"
-    api "androidx.constraintlayout:constraintlayout:$constraintLayout"
-    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
+	// Android support library.
+	api "androidx.core:core-ktx:$core"
+	api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
+	api "androidx.recyclerview:recyclerview:$recyclerView"
+	api "androidx.vectordrawable:vectordrawable:$vectorDrawable"
+	api "androidx.fragment:fragment:$fragment"
+	api "androidx.preference:preference:$preference"
+	api "androidx.constraintlayout:constraintlayout:$constraintLayout"
+	api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
 
-    // Material Design
-    api "com.google.android.material:material:$materialDesign"
+	// Material Design
+	api "com.google.android.material:material:$materialDesign"
 
-    // RecyclerView decorations
-    api "io.cabriole:decorator:$decorator"
+	// RecyclerView decorations
+	api "io.cabriole:decorator:$decorator"
 
-    api project(':arch')
-    api project(':bootstrap')
-    api project(':loader')
+	api project(':arch')
+	api project(':bootstrap')
+	api project(':loader')
 }

@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.util.show
@@ -45,7 +45,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
 
     private var stateSaver: StateSaver? = null
     internal var ratingFactory: ViewModelProvider.Factory? = null
-    private val viewModel by factory<RatingViewModel> { ratingFactory }
+    private val viewModel by viewModelFactory<RatingViewModel> { ratingFactory }
 
     @get:CheckResult
     protected abstract val changeLogLines: ChangeLogBuilder

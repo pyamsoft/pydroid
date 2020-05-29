@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.arch.factory
+import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
@@ -38,7 +38,7 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
     private var stateSaver: StateSaver? = null
     internal var versionFactory: ViewModelProvider.Factory? = null
     internal var versionView: VersionView? = null
-    private val versionViewModel by factory<VersionCheckViewModel> { versionFactory }
+    private val versionViewModel by viewModelFactory<VersionCheckViewModel> { versionFactory }
 
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {

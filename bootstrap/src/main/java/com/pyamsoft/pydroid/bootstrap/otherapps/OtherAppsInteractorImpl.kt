@@ -28,7 +28,7 @@ internal class OtherAppsInteractorImpl internal constructor(
     private val packageName: String,
     private val otherAppsCache: Cached<List<OtherApp>>,
     private val enforcer: Enforcer
-) : OtherAppsInteractor, Cache {
+) : OtherAppsInteractor, Cache<Any> {
 
     override suspend fun getApps(force: Boolean): List<OtherApp> =
         withContext(context = Dispatchers.IO) {
@@ -48,7 +48,7 @@ internal class OtherAppsInteractorImpl internal constructor(
                 .toList()
         }
 
-    override fun clear() {
+    override suspend fun clear() {
         otherAppsCache.clear()
     }
 }

@@ -28,7 +28,7 @@ internal class VersionCheckInteractorImpl internal constructor(
     private val debug: Boolean,
     private val enforcer: Enforcer,
     private val updateCache: Cached<UpdatePayload>
-) : VersionCheckInteractor, Cache {
+) : VersionCheckInteractor, Cache<Any> {
 
     override suspend fun checkVersion(force: Boolean): UpdatePayload? =
         withContext(context = Dispatchers.IO) {
@@ -46,7 +46,7 @@ internal class VersionCheckInteractorImpl internal constructor(
             }
         }
 
-    override fun clear() {
+    override suspend fun clear() {
         updateCache.clear()
     }
 }

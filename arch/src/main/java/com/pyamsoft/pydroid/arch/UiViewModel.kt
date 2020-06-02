@@ -20,11 +20,7 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -35,6 +31,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
@@ -63,7 +60,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private var state: UiVMState<S> = UiVMStateImpl(initialState)
 
     init {
-        flushQueueBus.scopedEvent { flushQueues() }
+        doOnInit {
+            viewModelScope.launch(context = Dispatchers.Default) {
+                flushQueueBus.onEvent { flushQueues() }
+            }
+        }
     }
 
     protected abstract fun handleViewEvent(event: V)
@@ -140,17 +141,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Clear queues and state
         setStateQueue.clear()
         withStateQueue.clear()
-    }
-
-    @JvmOverloads
-    protected fun <E : Any> EventConsumer<E>.scopedEvent(
-        context: CoroutineContext = EmptyCoroutineContext,
-        func: suspend (event: E) -> Unit
-    ): Job {
-        val bus = this
-        return viewModelScope.launch(context = context) {
-            bus.onEvent(func)
-        }
     }
 
     protected fun publish(event: C) {
@@ -325,32 +315,29 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    @CheckResult
-    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>): Job =
-        launch(context = Dispatchers.Default) {
-            views.forEach { view ->
-                // Launch another coroutine here for handling view events
-                launch(context = Dispatchers.Default) {
-                    view.onViewEvent {
-                        // View events must fire onto the main thread
-                        launch(context = Dispatchers.Main) {
-                            handleViewEvent(it)
-                        }
-                    }
-                }
-
-                if (view is BaseUiView<S, V, *>) {
-                    val nestedViews = view.nestedViews()
-                    if (nestedViews.isNotEmpty()) {
-                        bindViewEvents(nestedViews)
+    private fun bindViewEvents(views: Iterable<UiView<S, V>>) {
+        views.forEach { view ->
+            // Launch another coroutine here for handling view events
+            viewModelScope.launch(context = Dispatchers.Default) {
+                view.onViewEvent {
+                    // View events must fire onto the main thread
+                    launch(context = Dispatchers.Main) {
+                        handleViewEvent(it)
                     }
                 }
             }
-        }
 
-    @CheckResult
-    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit): Job =
-        launch {
+            if (view is BaseUiView<S, V, *>) {
+                val nestedViews = view.nestedViews()
+                if (nestedViews.isNotEmpty()) {
+                    bindViewEvents(nestedViews)
+                }
+            }
+        }
+    }
+
+    private inline fun bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
+        viewModelScope.launch(context = Dispatchers.Default) {
             controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
                 launch(context = Dispatchers.Main) {
@@ -358,6 +345,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 }
             }
         }
+    }
 
     protected inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
         if (this !is CancellationException) {

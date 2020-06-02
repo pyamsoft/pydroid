@@ -17,12 +17,12 @@
 
 package com.pyamsoft.pydroid.arch
 
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : SaveableState {
 

@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.EmptyCoroutineContext
 
 interface EventBus<T : Any> : EventConsumer<T> {
 
@@ -36,7 +37,7 @@ interface EventBus<T : Any> : EventConsumer<T> {
         @JvmStatic
         @JvmOverloads
         fun <T : Any> create(
-            context: CoroutineContext = Dispatchers.Default
+            context: CoroutineContext = EmptyCoroutineContext
         ): EventBus<T> = RealBus(context)
 
         @CheckResult

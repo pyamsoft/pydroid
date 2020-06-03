@@ -41,7 +41,7 @@ object PYDroid {
     @JvmStatic
     @CheckResult
     private fun instance(): PYDroidInitializer {
-        return requireNotNull(instance.get()) { "PYDroid not initialized, call PYDroid.init()" }
+        return requireNotNull(instance.get()) { "PYDroid not initialized, call PYDroid.init() in Application.onCreate()" }
     }
 
     /**
@@ -64,9 +64,13 @@ object PYDroid {
         onInit: (provider: ModuleProvider) -> Unit = DEFAULT_INIT_CALLBACK
     ) {
         if (instance.get() == null) {
-            val pydroid = PYDroidInitializer.create(application, params)
-            if (instance.compareAndSet(null, pydroid)) {
-                onInit(pydroid.moduleProvider)
+            synchronized(this) {
+                if (instance.get() == null) {
+                    val pydroid = PYDroidInitializer.create(application, params)
+                    if (instance.compareAndSet(null, pydroid)) {
+                        onInit(pydroid.moduleProvider)
+                    }
+                }
             }
         }
     }

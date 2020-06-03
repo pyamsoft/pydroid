@@ -31,7 +31,7 @@ object Enforcer {
 
     fun assertNotOnMainThread() {
         if (isMainThread()) {
-            throw AssertionError("Should be off main thread!")
+            throw AssertionError("This operation must be off the Main/UI thread!")
         }
     }
 }

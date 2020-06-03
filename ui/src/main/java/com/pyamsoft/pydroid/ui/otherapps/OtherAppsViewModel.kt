@@ -23,6 +23,7 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class OtherAppsViewModel internal constructor(
@@ -69,7 +70,7 @@ internal class OtherAppsViewModel internal constructor(
 
     private fun loadApps() {
         // This should be cached in many cases
-        viewModelScope.launch { appsRunner.call(false) }
+        viewModelScope.launch(context = Dispatchers.Default) { appsRunner.call(false) }
     }
 
     private fun handleAppsLoaded(apps: List<OtherApp>) {

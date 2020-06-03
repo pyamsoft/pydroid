@@ -26,13 +26,12 @@ import kotlinx.coroutines.withContext
 
 internal class VersionCheckInteractorImpl internal constructor(
     private val debug: Boolean,
-    private val enforcer: Enforcer,
     private val updateCache: Cached<UpdatePayload>
 ) : VersionCheckInteractor, Cache<Any> {
 
     override suspend fun checkVersion(force: Boolean): UpdatePayload? =
         withContext(context = Dispatchers.IO) {
-            enforcer.assertNotOnMainThread()
+            Enforcer.assertNotOnMainThread()
 
             if (force) {
                 updateCache.clear()
@@ -47,6 +46,7 @@ internal class VersionCheckInteractorImpl internal constructor(
         }
 
     override suspend fun clear() {
+        Enforcer.assertNotOnMainThread()
         updateCache.clear()
     }
 }

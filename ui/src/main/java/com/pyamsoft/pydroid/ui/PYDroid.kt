@@ -78,10 +78,10 @@ object PYDroid {
     @CheckResult
     fun getSystemService(name: String): Any? {
         return when (name) {
+            PYDroidComponent::class.java.name -> instance().component
             ImageLoader::class.java.name -> instance().moduleProvider.imageLoader()
             Theming::class.java.name -> instance().moduleProvider.theming()
-            Enforcer::class.java.name -> instance().moduleProvider.enforcer()
-            PYDroidComponent::class.java.name -> instance().component
+            Enforcer::class.java.name -> Enforcer
             else -> null
         }
     }

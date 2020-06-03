@@ -96,8 +96,7 @@ internal interface PYDroidComponent {
     class ComponentImpl private constructor(params: Component.Parameters) : Component {
 
         private val context = params.application
-        private val enforcer = Enforcer(params.debug)
-        private val preferences = PYDroidPreferencesImpl(enforcer, params.application)
+        private val preferences = PYDroidPreferencesImpl(params.application)
         private val theming = Theming(preferences)
         private val packageName = params.application.packageName
 
@@ -107,24 +106,18 @@ internal interface PYDroidComponent {
             )
         )
 
-        private val aboutModule = AboutModule(
-            AboutModule.Parameters(
-                enforcer = enforcer
-            )
-        )
+        private val aboutModule = AboutModule()
 
         private val ratingModule = RatingModule(
             RatingModule.Parameters(
                 version = params.version,
-                enforcer = enforcer,
                 preferences = preferences
             )
         )
 
         private val networkModule = NetworkModule(
             NetworkModule.Parameters(
-                debug = params.debug,
-                enforcer = enforcer
+                debug = params.debug
             )
         )
 
@@ -133,7 +126,6 @@ internal interface PYDroidComponent {
                 debug = params.debug,
                 currentVersion = params.version,
                 packageName = packageName,
-                enforcer = enforcer,
                 serviceCreator = networkModule.provideServiceCreator()
             )
         )
@@ -141,7 +133,6 @@ internal interface PYDroidComponent {
         private val otherAppsModule = OtherAppsModule(
             OtherAppsModule.Parameters(
                 debug = params.debug,
-                enforcer = enforcer,
                 packageName = packageName,
                 serviceCreator = networkModule.provideServiceCreator()
             )
@@ -240,7 +231,7 @@ internal interface PYDroidComponent {
         }
 
         override fun enforcer(): Enforcer {
-            return enforcer
+            return Enforcer
         }
 
         override fun theming(): Theming {

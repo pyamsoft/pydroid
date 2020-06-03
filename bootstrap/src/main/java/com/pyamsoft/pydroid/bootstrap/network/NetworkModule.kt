@@ -33,9 +33,8 @@ class NetworkModule(params: Parameters) {
 
     init {
         val debug = params.debug
-        val enforcer = params.enforcer
         val moshi = createMoshi()
-        val retrofit = createRetrofit(enforcer, moshi) { createOkHttpClient(enforcer, debug) }
+        val retrofit = createRetrofit(moshi) { createOkHttpClient(debug) }
         serviceCreator = object : ServiceCreator {
             override fun <S : Any> createService(serviceClass: Class<S>): S {
                 return retrofit.create(serviceClass)
@@ -62,8 +61,8 @@ class NetworkModule(params: Parameters) {
 
         @JvmStatic
         @CheckResult
-        private fun createOkHttpClient(enforcer: Enforcer, debug: Boolean): OkHttpClient {
-            enforcer.assertNotOnMainThread()
+        private fun createOkHttpClient(debug: Boolean): OkHttpClient {
+            Enforcer.assertNotOnMainThread()
 
             return OkHttpClient.Builder()
                 .socketFactory(DelegatingSocketFactory.create())
@@ -80,33 +79,30 @@ class NetworkModule(params: Parameters) {
         @JvmStatic
         @CheckResult
         private fun createRetrofit(
-            enforcer: Enforcer,
             moshi: Moshi,
             clientProvider: () -> OkHttpClient
         ): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-                .callFactory(OkHttpClientLazyCallFactory(enforcer, clientProvider))
+                .callFactory(OkHttpClientLazyCallFactory(clientProvider))
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .build()
         }
 
         private class OkHttpClientLazyCallFactory(
-            private val enforcer: Enforcer,
             provider: () -> OkHttpClient
         ) : Call.Factory {
 
             private val client by lazy { provider() }
 
             override fun newCall(request: Request): Call {
-                enforcer.assertNotOnMainThread()
+                Enforcer.assertNotOnMainThread()
                 return client.newCall(request)
             }
         }
     }
 
     data class Parameters(
-        internal val debug: Boolean,
-        internal val enforcer: Enforcer
+        internal val debug: Boolean
     )
 }

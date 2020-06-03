@@ -26,13 +26,12 @@ import kotlinx.coroutines.withContext
 
 internal class OtherAppsInteractorImpl internal constructor(
     private val packageName: String,
-    private val otherAppsCache: Cached<List<OtherApp>>,
-    private val enforcer: Enforcer
+    private val otherAppsCache: Cached<List<OtherApp>>
 ) : OtherAppsInteractor, Cache<Any> {
 
     override suspend fun getApps(force: Boolean): List<OtherApp> =
         withContext(context = Dispatchers.IO) {
-            enforcer.assertNotOnMainThread()
+            Enforcer.assertNotOnMainThread()
 
             if (force) {
                 otherAppsCache.clear()
@@ -49,6 +48,7 @@ internal class OtherAppsInteractorImpl internal constructor(
         }
 
     override suspend fun clear() {
+        Enforcer.assertNotOnMainThread()
         otherAppsCache.clear()
     }
 }

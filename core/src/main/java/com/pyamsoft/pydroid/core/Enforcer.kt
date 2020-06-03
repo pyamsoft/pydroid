@@ -15,16 +15,14 @@
  *
  */
 
-@file:JvmName("Enforcer")
-
 package com.pyamsoft.pydroid.core
 
 import android.os.Looper
 import androidx.annotation.CheckResult
 
-class Enforcer(private val debug: Boolean) {
+object Enforcer {
 
-    private val mainLooper = Looper.getMainLooper()
+    private val mainLooper by lazy { Looper.getMainLooper() }
 
     @CheckResult
     fun isMainThread(): Boolean {
@@ -32,12 +30,6 @@ class Enforcer(private val debug: Boolean) {
     }
 
     fun assertNotOnMainThread() {
-        // No enforcement in production mode - we will deal with things being slow instead
-        // of flat out crashing
-        if (!debug) {
-            return
-        }
-
         if (isMainThread()) {
             throw AssertionError("Should be off main thread!")
         }

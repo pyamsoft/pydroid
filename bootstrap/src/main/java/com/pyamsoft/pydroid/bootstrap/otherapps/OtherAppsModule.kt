@@ -24,7 +24,6 @@ import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.network.ServiceCreator
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
-import com.pyamsoft.pydroid.core.Enforcer
 import java.util.concurrent.TimeUnit.HOURS
 
 class OtherAppsModule(params: Parameters) {
@@ -33,10 +32,9 @@ class OtherAppsModule(params: Parameters) {
 
     init {
         val debug = params.debug
-        val enforcer = params.enforcer
         val otherAppsService = params.serviceCreator.createService(OtherAppsService::class.java)
-        val network = OtherAppsInteractorNetwork(enforcer, otherAppsService)
-        impl = OtherAppsInteractorImpl(params.packageName, createCache(debug, network), enforcer)
+        val network = OtherAppsInteractorNetwork(otherAppsService)
+        impl = OtherAppsInteractorImpl(params.packageName, createCache(debug, network))
     }
 
     @CheckResult
@@ -61,7 +59,6 @@ class OtherAppsModule(params: Parameters) {
 
     data class Parameters(
         internal val debug: Boolean,
-        internal val enforcer: Enforcer,
         internal val packageName: String,
         internal val serviceCreator: ServiceCreator
     )

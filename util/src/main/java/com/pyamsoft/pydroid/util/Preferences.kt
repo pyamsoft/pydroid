@@ -33,7 +33,7 @@ suspend fun SharedPreferences.onChange(
     return withContext(context = Dispatchers.Default) {
         val listener = OnSharedPreferenceChangeListener { _, changedKey ->
             if (changedKey == key) {
-                launch { onChange() }
+                launch(context = Dispatchers.Default) { onChange() }
             }
         }
 

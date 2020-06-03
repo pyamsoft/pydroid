@@ -24,6 +24,12 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 
 interface ModuleProvider {
 
+    @Deprecated(
+        "Enforcer is now an object", replaceWith = ReplaceWith(
+            expression = "Enforcer",
+            imports = ["com.pyamsoft.pydroid.core.Enforcer"]
+        )
+    )
     @CheckResult
     fun enforcer(): Enforcer
 

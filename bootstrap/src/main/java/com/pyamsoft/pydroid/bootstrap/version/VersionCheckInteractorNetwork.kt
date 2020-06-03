@@ -29,7 +29,6 @@ import kotlinx.coroutines.withContext
 internal class VersionCheckInteractorNetwork internal constructor(
     private val currentVersion: Int,
     private val packageName: String,
-    private val enforcer: Enforcer,
     private val minimumApiProvider: MinimumApiProvider,
     private val service: VersionCheckService
 ) : VersionCheckInteractor {
@@ -38,7 +37,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
     private fun versionCodeForApi(
         response: VersionCheckResponse
     ): Int {
-        enforcer.assertNotOnMainThread()
+        Enforcer.assertNotOnMainThread()
         val minApi = minimumApiProvider.minApi()
         var versionCode = 0
         response.responseObjects()
@@ -54,7 +53,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
 
     override suspend fun checkVersion(force: Boolean): UpdatePayload =
         withContext(context = Dispatchers.IO) {
-            enforcer.assertNotOnMainThread()
+            Enforcer.assertNotOnMainThread()
             val targetName = if (packageName.endsWith(".dev")) {
                 packageName.substringBefore(".dev")
             } else {

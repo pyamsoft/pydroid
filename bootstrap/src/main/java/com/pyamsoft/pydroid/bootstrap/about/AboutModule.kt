@@ -18,16 +18,13 @@
 package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.Enforcer
 
-class AboutModule(params: Parameters) {
+class AboutModule() {
 
-    private val impl = AboutInteractorImpl(params.enforcer)
+    private val impl = AboutInteractorImpl()
 
     @CheckResult
     fun provideInteractor(): AboutInteractor {
         return impl
     }
-
-    data class Parameters(internal val enforcer: Enforcer)
 }

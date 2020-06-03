@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -84,6 +85,6 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     internal fun checkForUpdates(force: Boolean) {
-        viewModelScope.launch { checkUpdateRunner.call(force) }
+        viewModelScope.launch(context = Dispatchers.Default) { checkUpdateRunner.call(force) }
     }
 }

@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class RatingViewModel internal constructor(
@@ -51,6 +52,6 @@ internal class RatingViewModel internal constructor(
     }
 
     internal fun load(force: Boolean) {
-        viewModelScope.launch { loadRunner.call(force) }
+        viewModelScope.launch(context = Dispatchers.Default) { loadRunner.call(force) }
     }
 }

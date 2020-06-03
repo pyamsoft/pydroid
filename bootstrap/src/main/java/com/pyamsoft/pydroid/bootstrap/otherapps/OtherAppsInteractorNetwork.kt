@@ -25,13 +25,12 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class OtherAppsInteractorNetwork internal constructor(
-    private val enforcer: Enforcer,
     private val service: OtherAppsService
 ) : OtherAppsInteractor {
 
     override suspend fun getApps(force: Boolean): List<OtherApp> =
         withContext(context = Dispatchers.IO) {
-            enforcer.assertNotOnMainThread()
+            Enforcer.assertNotOnMainThread()
             val result = service.getApps()
             return@withContext try {
                 result.apps().map { entry ->
@@ -46,6 +45,7 @@ internal class OtherAppsInteractorNetwork internal constructor(
                 }
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Unable to fetch other apps payload")
+                // Even though IDE says this is not needed, compiler needs it.
                 emptyList<OtherApp>()
             }
         }

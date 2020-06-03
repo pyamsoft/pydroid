@@ -27,6 +27,7 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelD
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Cancel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewEvent.Rate
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class RatingDialogViewModel internal constructor(
@@ -57,7 +58,7 @@ internal class RatingDialogViewModel internal constructor(
     }
 
     private fun save(link: String) {
-        viewModelScope.launch { saveRunner.call(link) }
+        viewModelScope.launch(context = Dispatchers.Default) { saveRunner.call(link) }
     }
 
     private fun handleRate(link: String) {

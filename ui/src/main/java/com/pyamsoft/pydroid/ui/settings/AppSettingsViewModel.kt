@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -54,7 +55,7 @@ internal class AppSettingsViewModel internal constructor(
 
     init {
         doOnInit {
-            viewModelScope.launch { otherAppsRunner.call(false) }
+            viewModelScope.launch(context = Dispatchers.Default) { otherAppsRunner.call(false) }
         }
     }
 

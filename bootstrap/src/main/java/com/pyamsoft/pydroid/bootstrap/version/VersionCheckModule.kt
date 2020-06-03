@@ -25,7 +25,6 @@ import com.pyamsoft.pydroid.bootstrap.network.ServiceCreator
 import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
 import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
 import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
-import com.pyamsoft.pydroid.core.Enforcer
 import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(params: Parameters) {
@@ -34,7 +33,6 @@ class VersionCheckModule(params: Parameters) {
 
     init {
         val debug = params.debug
-        val enforcer = params.enforcer
         val currentVersion = params.currentVersion
         val packageName = params.packageName
 
@@ -45,12 +43,11 @@ class VersionCheckModule(params: Parameters) {
         val network = VersionCheckInteractorNetwork(
             currentVersion,
             packageName,
-            enforcer,
             minimumApiProvider,
             versionCheckService
         )
 
-        impl = VersionCheckInteractorImpl(debug, enforcer, createCache(debug, network))
+        impl = VersionCheckInteractorImpl(debug, createCache(debug, network))
     }
 
     @CheckResult
@@ -77,7 +74,6 @@ class VersionCheckModule(params: Parameters) {
         internal val debug: Boolean,
         internal val currentVersion: Int,
         internal val packageName: String,
-        internal val enforcer: Enforcer,
         internal val serviceCreator: ServiceCreator
     )
 }

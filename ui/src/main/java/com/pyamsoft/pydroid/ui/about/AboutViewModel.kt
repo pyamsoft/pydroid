@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.about.AboutControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLibrary
 import com.pyamsoft.pydroid.ui.about.AboutViewEvent.OpenLicense
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -81,7 +82,7 @@ internal class AboutViewModel internal constructor(
     }
 
     private fun loadLicenses() {
-        viewModelScope.launch { licenseRunner.call(false) }
+        viewModelScope.launch(context = Dispatchers.Default) { licenseRunner.call(false) }
     }
 
     private fun handleLicenseLoadBegin() {

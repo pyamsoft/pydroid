@@ -29,9 +29,25 @@ object Enforcer {
         return mainLooper.thread == Thread.currentThread()
     }
 
+    @Deprecated(
+        "Use assertOffMainThread()", replaceWith = ReplaceWith(
+            "Enforcer.assertOffMainThread()",
+            imports = ["com.pyamsoft.pydroid.core.Enforcer"]
+        )
+    )
     fun assertNotOnMainThread() {
+        assertOffMainThread()
+    }
+
+    fun assertOffMainThread() {
         if (isMainThread()) {
-            throw AssertionError("This operation must be off the Main/UI thread!")
+            throw AssertionError("This operation must be OFF the Main/UI thread!")
+        }
+    }
+
+    fun assertOnMainThread() {
+        if (!isMainThread()) {
+            throw AssertionError("This operation must be ON the Main/UI thread!")
         }
     }
 }

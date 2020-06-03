@@ -56,8 +56,8 @@ buildscript {
         materialDesign = "1.1.0"
 
         // Us
-        cachify = "0.0.9"
-        highlander = "0.0.7"
+        cachify = "0.0.10"
+        highlander = "0.0.8"
 
         // Network
         moshi = "1.9.2"
@@ -107,7 +107,7 @@ subprojects {
     apply plugin: "com.diffplug.gradle.spotless"
 
     final String POM_GROUP = "com.pyamsoft.pydroid"
-    final String POM_VERSION = "21.0.4-SNAPSHOT"
+    final String POM_VERSION = "21.0.4"
 
     group = POM_GROUP
     version = POM_VERSION

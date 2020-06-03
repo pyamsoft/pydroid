@@ -112,7 +112,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     }
 
     protected fun publish(event: V) {
-        viewScope.launch {
+        viewScope.launch(context = Dispatchers.Default) {
             viewEventBus.send(event)
         }
     }

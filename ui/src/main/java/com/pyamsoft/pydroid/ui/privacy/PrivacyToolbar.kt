@@ -21,6 +21,7 @@ import androidx.appcompat.widget.Toolbar
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.privacy.PrivacyEvents.ViewPrivacyPolicy
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun CoroutineScope.addPrivacy(
@@ -32,14 +33,14 @@ fun CoroutineScope.addPrivacy(
 
     toolbar.menu.apply {
         findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener {
-            launch {
+            launch(context = Dispatchers.Default) {
                 PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
             }
             return@setOnMenuItemClickListener true
         }
 
         findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener {
-            launch {
+            launch(context = Dispatchers.Default) {
                 PrivacyEventBus.send(ViewPrivacyPolicy(termsConditionsUrl))
             }
             return@setOnMenuItemClickListener true

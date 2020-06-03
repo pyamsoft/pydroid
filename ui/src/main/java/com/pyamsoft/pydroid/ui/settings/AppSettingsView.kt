@@ -38,6 +38,7 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class AppSettingsView internal constructor(
@@ -148,7 +149,7 @@ internal class AppSettingsView internal constructor(
 
     private fun setupPrivacyPolicy() {
         privacyPolicy.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            viewScope.launch {
+            viewScope.launch(context = Dispatchers.Default) {
                 PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
             }
             return@OnPreferenceClickListener true
@@ -157,7 +158,7 @@ internal class AppSettingsView internal constructor(
 
     private fun setupTermsConditions() {
         termsConditions.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            viewScope.launch {
+            viewScope.launch(context = Dispatchers.Default) {
                 PrivacyEventBus.send(ViewTermsAndConditions(termsConditionsUrl))
             }
             return@OnPreferenceClickListener true

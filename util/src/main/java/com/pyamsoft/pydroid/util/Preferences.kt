@@ -27,11 +27,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 @CheckResult
-fun SharedPreferences.onChange(
-    key: String,
-    onChange: suspend () -> Unit
-): PreferenceListener {
-    val preferences = this
+fun SharedPreferences.onChange(key: String, onChange: suspend () -> Unit): PreferenceListener {
     val listener = object : ScopedPreferenceChangeListener(key) {
 
         override suspend fun onChange() {
@@ -39,11 +35,12 @@ fun SharedPreferences.onChange(
         }
     }
 
-    return PreferenceListenerImpl(preferences, listener)
+    return PreferenceListenerImpl(this, listener)
 }
 
-private abstract class ScopedPreferenceChangeListener(private val watchKey: String) :
-    OnSharedPreferenceChangeListener {
+private abstract class ScopedPreferenceChangeListener internal constructor(
+    private val watchKey: String
+) : OnSharedPreferenceChangeListener {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 

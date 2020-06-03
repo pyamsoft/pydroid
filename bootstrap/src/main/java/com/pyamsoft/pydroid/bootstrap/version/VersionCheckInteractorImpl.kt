@@ -31,7 +31,7 @@ internal class VersionCheckInteractorImpl internal constructor(
 
     override suspend fun checkVersion(force: Boolean): UpdatePayload? =
         withContext(context = Dispatchers.IO) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
 
             if (force) {
                 updateCache.clear()
@@ -46,7 +46,7 @@ internal class VersionCheckInteractorImpl internal constructor(
         }
 
     override suspend fun clear() {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         updateCache.clear()
     }
 }

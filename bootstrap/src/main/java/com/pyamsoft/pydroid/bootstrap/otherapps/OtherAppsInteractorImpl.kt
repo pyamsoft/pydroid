@@ -31,7 +31,7 @@ internal class OtherAppsInteractorImpl internal constructor(
 
     override suspend fun getApps(force: Boolean): List<OtherApp> =
         withContext(context = Dispatchers.IO) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
 
             if (force) {
                 otherAppsCache.clear()
@@ -48,7 +48,7 @@ internal class OtherAppsInteractorImpl internal constructor(
         }
 
     override suspend fun clear() {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         otherAppsCache.clear()
     }
 }

@@ -37,7 +37,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
     private fun versionCodeForApi(
         response: VersionCheckResponse
     ): Int {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         val minApi = minimumApiProvider.minApi()
         var versionCode = 0
         response.responseObjects()
@@ -53,7 +53,7 @@ internal class VersionCheckInteractorNetwork internal constructor(
 
     override suspend fun checkVersion(force: Boolean): UpdatePayload =
         withContext(context = Dispatchers.IO) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             val targetName = if (packageName.endsWith(".dev")) {
                 packageName.substringBefore(".dev")
             } else {

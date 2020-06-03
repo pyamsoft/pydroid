@@ -29,7 +29,7 @@ internal class RatingInteractorImpl internal constructor(
 
     override suspend fun needsToViewRating(force: Boolean): Boolean =
         withContext(context = Dispatchers.Default) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             if (force) {
                 Timber.d("Force view rating")
                 return@withContext true
@@ -59,7 +59,7 @@ internal class RatingInteractorImpl internal constructor(
     }
 
     private suspend fun commitVersion(version: Int) {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         preferences.applyRatingAcceptedVersion(version)
     }
 }

@@ -62,7 +62,7 @@ class NetworkModule(params: Parameters) {
         @JvmStatic
         @CheckResult
         private fun createOkHttpClient(debug: Boolean): OkHttpClient {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
 
             return OkHttpClient.Builder()
                 .socketFactory(DelegatingSocketFactory.create())
@@ -96,7 +96,7 @@ class NetworkModule(params: Parameters) {
             private val client by lazy { provider() }
 
             override fun newCall(request: Request): Call {
-                Enforcer.assertNotOnMainThread()
+                Enforcer.assertOffMainThread()
                 return client.newCall(request)
             }
         }

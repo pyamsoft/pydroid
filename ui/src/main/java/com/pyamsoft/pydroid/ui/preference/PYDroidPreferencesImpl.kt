@@ -36,13 +36,13 @@ internal class PYDroidPreferencesImpl internal constructor(
 
     private val darkModeKey = context.getString(R.string.dark_mode_key)
     private val prefs by lazy {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     }
 
     override suspend fun getRatingAcceptedVersion(): Int =
         withContext(context = Dispatchers.Default) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             return@withContext prefs.getInt(
                 RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
             )
@@ -50,7 +50,7 @@ internal class PYDroidPreferencesImpl internal constructor(
 
     override suspend fun applyRatingAcceptedVersion(version: Int) =
         withContext(context = Dispatchers.Default) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             prefs.edit {
                 putInt(RATING_ACCEPTED_VERSION, version)
             }
@@ -58,7 +58,7 @@ internal class PYDroidPreferencesImpl internal constructor(
 
     override suspend fun initializeDarkMode(onInit: (mode: Mode) -> Unit) =
         withContext(context = Dispatchers.Default) {
-            Enforcer.assertNotOnMainThread()
+            Enforcer.assertOffMainThread()
             if (!prefs.contains(darkModeKey)) {
                 val mode = SYSTEM
                 prefs.edit { putString(darkModeKey, mode.toRawString()) }
@@ -67,7 +67,7 @@ internal class PYDroidPreferencesImpl internal constructor(
         }
 
     override suspend fun getDarkMode(): Mode = withContext(context = Dispatchers.Default) {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         return@withContext requireNotNull(
             prefs.getString(
                 darkModeKey,

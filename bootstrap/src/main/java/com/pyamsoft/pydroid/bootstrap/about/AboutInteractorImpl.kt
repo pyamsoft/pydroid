@@ -29,7 +29,7 @@ internal class AboutInteractorImpl internal constructor() : AboutInteractor {
 
     @CheckResult
     private fun createLicenseStream(): Set<OssLibrary> {
-        Enforcer.assertNotOnMainThread()
+        Enforcer.assertOffMainThread()
         return OssLibraries.libraries()
     }
 

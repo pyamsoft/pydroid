@@ -25,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @CheckResult
 fun SharedPreferences.onChange(
@@ -36,7 +35,6 @@ fun SharedPreferences.onChange(
     val listener = object : ScopedPreferenceChangeListener(key) {
 
         override suspend fun onChange() {
-            Timber.d("Fire on change: $key")
             onChange()
         }
     }
@@ -53,9 +51,7 @@ private abstract class ScopedPreferenceChangeListener(private val watchKey: Stri
         sharedPreferences: SharedPreferences,
         key: String
     ) {
-        Timber.d("On sharedpreferences changed: $key")
         if (watchKey == key) {
-            Timber.d("Watched key changed: $key")
             scope.launch(context = Dispatchers.Default) {
                 onChange()
             }

@@ -21,7 +21,7 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlin.LazyThreadSafetyMode.NONE
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -317,10 +317,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    private fun bindViewEvents(views: Iterable<UiView<S, V>>) {
+    // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
+    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>) {
         views.forEach { view ->
             // Launch another coroutine here for handling view events
-            viewModelScope.launch(context = Dispatchers.Default) {
+            launch(context = Dispatchers.Default) {
                 view.onViewEvent {
                     // View events must fire onto the main thread
                     launch(context = Dispatchers.Main) {
@@ -338,20 +339,15 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    private inline fun bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
-        viewModelScope.launch(context = Dispatchers.Default) {
+    // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
+    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
+        launch(context = Dispatchers.Default) {
             controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
                 launch(context = Dispatchers.Main) {
                     onControllerEvent(it)
                 }
             }
-        }
-    }
-
-    protected inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
-        if (this !is CancellationException) {
-            func(this)
         }
     }
 

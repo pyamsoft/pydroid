@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
@@ -28,6 +29,7 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.privacy.PrivacyControllerEvent.ViewExternalPolicy
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 
@@ -43,6 +45,11 @@ abstract class PrivacyActivity : ActivityBase() {
      */
     protected abstract val snackbarRoot: ViewGroup
 
+    /**
+     * Used for Activity level snackbars
+     */
+    protected open val customizeSnackbar: Snackbar.() -> Snackbar = Snackbreak.DEFAULT_BUILDER
+
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -51,7 +58,11 @@ abstract class PrivacyActivity : ActivityBase() {
         // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
             .plusPrivacy()
-            .create(this) { snackbarRoot }
+            .create(
+                this,
+                snackbarRootProvider = { snackbarRoot },
+                snackbarCustomizationProvider = customizeSnackbar
+            )
             .inject(this)
 
         stateSaver = createComponent(

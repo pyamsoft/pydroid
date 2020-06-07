@@ -19,7 +19,9 @@ package com.pyamsoft.pydroid.ui.version
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
+import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
@@ -40,6 +42,11 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
     internal var versionView: VersionView? = null
     private val versionViewModel by viewModelFactory<VersionCheckViewModel> { versionFactory }
 
+    @CheckResult
+    internal fun snackbarCustomizationProvider(): Snackbar.() -> Snackbar {
+        return customizeSnackbar
+    }
+
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -48,7 +55,11 @@ abstract class VersionCheckActivity : PrivacyActivity(), VersionCheckProvider {
         // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
             .plusVersion()
-            .create(this) { snackbarRoot }
+            .create(
+                this,
+                snackbarRootProvider = { snackbarRoot },
+                snackbarCustomizationProvider = customizeSnackbar
+            )
             .inject(this)
 
         stateSaver = createComponent(

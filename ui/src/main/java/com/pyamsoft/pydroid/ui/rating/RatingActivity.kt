@@ -110,7 +110,11 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
         // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
             .plusVersion()
-            .create(this) { snackbarRoot }
+            .create(
+                this,
+                snackbarRootProvider = { snackbarRoot },
+                snackbarCustomizationProvider = customizeSnackbar
+            )
             .plusRating()
             .create()
             .inject(this)

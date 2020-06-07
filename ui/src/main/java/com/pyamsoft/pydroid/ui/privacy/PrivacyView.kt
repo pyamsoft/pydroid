@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.privacy
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewEvent.SnackbarHidden
@@ -26,7 +27,8 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class PrivacyView internal constructor(
     private val owner: LifecycleOwner,
-    private val snackbarRootProvider: () -> ViewGroup
+    private val snackbarRootProvider: () -> ViewGroup,
+    private val snackbarCustomizationProvider: Snackbar.() -> Snackbar
 ) : UiView<PrivacyViewState, PrivacyViewEvent>() {
 
     override fun onInit(savedInstanceState: UiBundleReader) {
@@ -44,9 +46,11 @@ internal class PrivacyView internal constructor(
 
     private fun showError(throwable: Throwable) {
         Snackbreak.bindTo(owner, "error") {
-            short(snackbarRootProvider(),
+            short(
+                snackbarRootProvider(),
                 throwable.message ?: "An error occurred while showing policy.",
-                onHidden = { _, _ -> publish(SnackbarHidden) }
+                onHidden = { _, _ -> publish(SnackbarHidden) },
+                builder = snackbarCustomizationProvider
             )
         }
     }

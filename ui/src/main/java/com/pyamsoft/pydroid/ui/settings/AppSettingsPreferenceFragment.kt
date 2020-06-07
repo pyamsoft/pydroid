@@ -39,7 +39,9 @@ import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
@@ -88,14 +90,23 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
+        val act = requireActivity()
+        val snackbarCustomizationProvider = if (act is VersionCheckActivity) {
+            act.snackbarCustomizationProvider()
+        } else {
+            Snackbreak.DEFAULT_BUILDER
+        }
+
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusSettings()
             .create(
                 viewLifecycleOwner,
                 preferenceScreen,
                 hideClearAll,
-                hideUpgradeInformation
-            ) { listView }
+                hideUpgradeInformation,
+                parentProvider = { listView },
+                snackbarCustomizationProvider = snackbarCustomizationProvider
+            )
             .inject(this)
 
         settingsStateSaver = createComponent(

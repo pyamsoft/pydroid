@@ -38,9 +38,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
 
-    private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
-    private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
-    private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
+    internal val DEFAULT_ON_SHOWN = { _: Snackbar -> }
+    internal val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
+    internal val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
 
     private fun Snackbar.materialMargin() {
         val params = view.layoutParams as? MarginLayoutParams

@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.privacy
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface PrivacyComponent {
@@ -31,7 +32,8 @@ internal interface PrivacyComponent {
         @CheckResult
         fun create(
             owner: LifecycleOwner,
-            snackbarRootProvider: () -> ViewGroup
+            snackbarRootProvider: () -> ViewGroup,
+            snackbarCustomizationProvider: Snackbar.() -> Snackbar
         ): PrivacyComponent
 
         data class Parameters internal constructor(
@@ -41,12 +43,17 @@ internal interface PrivacyComponent {
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
+        private val snackbarCustomizationProvider: Snackbar.() -> Snackbar,
         private val owner: LifecycleOwner,
         private val params: Factory.Parameters
     ) : PrivacyComponent {
 
         override fun inject(activity: PrivacyActivity) {
-            val privacyView = PrivacyView(owner, snackbarRootProvider)
+            val privacyView = PrivacyView(
+                owner,
+                snackbarRootProvider,
+                snackbarCustomizationProvider
+            )
 
             activity.privacyFactory = params.factory
             activity.privacyView = privacyView
@@ -58,9 +65,10 @@ internal interface PrivacyComponent {
 
             override fun create(
                 owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup
+                snackbarRootProvider: () -> ViewGroup,
+                snackbarCustomizationProvider: Snackbar.() -> Snackbar
             ): PrivacyComponent {
-                return Impl(snackbarRootProvider, owner, params)
+                return Impl(snackbarRootProvider, snackbarCustomizationProvider, owner, params)
             }
         }
     }

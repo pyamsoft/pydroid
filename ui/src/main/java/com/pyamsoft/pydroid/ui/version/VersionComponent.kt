@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.version
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 
@@ -35,7 +36,8 @@ internal interface VersionComponent {
         @CheckResult
         fun create(
             owner: LifecycleOwner,
-            snackbarRootProvider: () -> ViewGroup
+            snackbarRootProvider: () -> ViewGroup,
+            snackbarCustomizationProvider: Snackbar.() -> Snackbar
         ): VersionComponent
 
         data class Parameters internal constructor(
@@ -45,6 +47,7 @@ internal interface VersionComponent {
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
+        private val snackbarCustomizationProvider: Snackbar.() -> Snackbar,
         private val owner: LifecycleOwner,
         private val params: Factory.Parameters
     ) : VersionComponent {
@@ -60,7 +63,11 @@ internal interface VersionComponent {
         }
 
         override fun inject(activity: VersionCheckActivity) {
-            val versionView = VersionView(owner, snackbarRootProvider)
+            val versionView = VersionView(
+                owner,
+                snackbarRootProvider,
+                snackbarCustomizationProvider
+            )
 
             activity.versionFactory = params.factory
             activity.versionView = versionView
@@ -72,9 +79,10 @@ internal interface VersionComponent {
 
             override fun create(
                 owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup
+                snackbarRootProvider: () -> ViewGroup,
+                snackbarCustomizationProvider: Snackbar.() -> Snackbar
             ): VersionComponent {
-                return Impl(snackbarRootProvider, owner, params)
+                return Impl(snackbarRootProvider, snackbarCustomizationProvider, owner, params)
             }
         }
     }

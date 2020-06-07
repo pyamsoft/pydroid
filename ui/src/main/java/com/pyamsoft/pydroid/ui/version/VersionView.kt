@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.version
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
@@ -26,7 +27,8 @@ import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
 
 internal class VersionView internal constructor(
     private val owner: LifecycleOwner,
-    private val snackbarRootProvider: () -> ViewGroup
+    private val snackbarRootProvider: () -> ViewGroup,
+    private val snackbarCustomizationProvider: Snackbar.() -> Snackbar
 ) : UiView<VersionViewState, VersionViewEvent>() {
 
     override fun onInit(savedInstanceState: UiBundleReader) {
@@ -54,7 +56,10 @@ internal class VersionView internal constructor(
 
     private fun showUpdating() {
         Snackbreak.bindTo(owner) {
-            make(snackbarRootProvider(), "Checking for updates")
+            make(
+                snackbarRootProvider(), "Checking for updates",
+                builder = snackbarCustomizationProvider
+            )
         }
     }
 
@@ -66,9 +71,11 @@ internal class VersionView internal constructor(
 
     private fun showError(throwable: Throwable) {
         Snackbreak.bindTo(owner, "error") {
-            short(snackbarRootProvider(),
+            short(
+                snackbarRootProvider(),
                 throwable.message ?: "An error occurred while checking for updates.",
-                onHidden = { _, _ -> publish(SnackbarHidden) }
+                onHidden = { _, _ -> publish(SnackbarHidden) },
+                builder = snackbarCustomizationProvider
             )
         }
     }

@@ -21,7 +21,6 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.version.VersionView
 
@@ -37,8 +36,7 @@ internal interface AppSettingsComponent {
             preferenceScreen: PreferenceScreen,
             hideClearAll: Boolean,
             hideUpgradeInformation: Boolean,
-            parentProvider: () -> ViewGroup,
-            snackbarCustomizationProvider: Snackbar.() -> Snackbar
+            parentProvider: () -> ViewGroup
         ): AppSettingsComponent
 
         data class Parameters internal constructor(
@@ -53,7 +51,6 @@ internal interface AppSettingsComponent {
 
     class Impl private constructor(
         private val parentProvider: () -> ViewGroup,
-        private val snackbarCustomizationProvider: Snackbar.() -> Snackbar,
         private val owner: LifecycleOwner,
         private val hideClearAll: Boolean,
         private val hideUpgradeInformation: Boolean,
@@ -62,7 +59,7 @@ internal interface AppSettingsComponent {
     ) : AppSettingsComponent {
 
         override fun inject(fragment: AppSettingsPreferenceFragment) {
-            val versionView = VersionView(owner, parentProvider, snackbarCustomizationProvider)
+            val versionView = VersionView(owner, parentProvider)
             val settingsView = AppSettingsView(
                 params.applicationName, params.bugReportUrl,
                 params.viewSourceUrl, params.privacyPolicyUrl, params.termsConditionsUrl,
@@ -83,12 +80,10 @@ internal interface AppSettingsComponent {
                 preferenceScreen: PreferenceScreen,
                 hideClearAll: Boolean,
                 hideUpgradeInformation: Boolean,
-                parentProvider: () -> ViewGroup,
-                snackbarCustomizationProvider: Snackbar.() -> Snackbar
+                parentProvider: () -> ViewGroup
             ): AppSettingsComponent {
                 return Impl(
                     parentProvider,
-                    snackbarCustomizationProvider,
                     owner,
                     hideClearAll,
                     hideUpgradeInformation,

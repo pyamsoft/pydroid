@@ -32,8 +32,7 @@ internal interface PrivacyComponent {
         @CheckResult
         fun create(
             owner: LifecycleOwner,
-            snackbarRootProvider: () -> ViewGroup,
-            snackbarCustomizationProvider: Snackbar.() -> Snackbar
+            snackbarRootProvider: () -> ViewGroup
         ): PrivacyComponent
 
         data class Parameters internal constructor(
@@ -43,7 +42,6 @@ internal interface PrivacyComponent {
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
-        private val snackbarCustomizationProvider: Snackbar.() -> Snackbar,
         private val owner: LifecycleOwner,
         private val params: Factory.Parameters
     ) : PrivacyComponent {
@@ -51,8 +49,7 @@ internal interface PrivacyComponent {
         override fun inject(activity: PrivacyActivity) {
             val privacyView = PrivacyView(
                 owner,
-                snackbarRootProvider,
-                snackbarCustomizationProvider
+                snackbarRootProvider
             )
 
             activity.privacyFactory = params.factory
@@ -65,10 +62,9 @@ internal interface PrivacyComponent {
 
             override fun create(
                 owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup,
-                snackbarCustomizationProvider: Snackbar.() -> Snackbar
+                snackbarRootProvider: () -> ViewGroup
             ): PrivacyComponent {
-                return Impl(snackbarRootProvider, snackbarCustomizationProvider, owner, params)
+                return Impl(snackbarRootProvider, owner, params)
             }
         }
     }

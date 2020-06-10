@@ -58,11 +58,7 @@ abstract class PrivacyActivity : ActivityBase() {
         // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
             .plusPrivacy()
-            .create(
-                this,
-                snackbarRootProvider = { snackbarRoot },
-                snackbarCustomizationProvider = customizeSnackbar
-            )
+            .create(this){ snackbarRoot }
             .inject(this)
 
         stateSaver = createComponent(

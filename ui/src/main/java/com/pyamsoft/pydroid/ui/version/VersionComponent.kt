@@ -36,8 +36,7 @@ internal interface VersionComponent {
         @CheckResult
         fun create(
             owner: LifecycleOwner,
-            snackbarRootProvider: () -> ViewGroup,
-            snackbarCustomizationProvider: Snackbar.() -> Snackbar
+            snackbarRootProvider: () -> ViewGroup
         ): VersionComponent
 
         data class Parameters internal constructor(
@@ -47,7 +46,6 @@ internal interface VersionComponent {
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
-        private val snackbarCustomizationProvider: Snackbar.() -> Snackbar,
         private val owner: LifecycleOwner,
         private val params: Factory.Parameters
     ) : VersionComponent {
@@ -65,8 +63,7 @@ internal interface VersionComponent {
         override fun inject(activity: VersionCheckActivity) {
             val versionView = VersionView(
                 owner,
-                snackbarRootProvider,
-                snackbarCustomizationProvider
+                snackbarRootProvider
             )
 
             activity.versionFactory = params.factory
@@ -79,10 +76,9 @@ internal interface VersionComponent {
 
             override fun create(
                 owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup,
-                snackbarCustomizationProvider: Snackbar.() -> Snackbar
+                snackbarRootProvider: () -> ViewGroup
             ): VersionComponent {
-                return Impl(snackbarRootProvider, snackbarCustomizationProvider, owner, params)
+                return Impl(snackbarRootProvider, owner, params)
             }
         }
     }

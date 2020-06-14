@@ -39,9 +39,9 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ToggleDarkTheme
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewEvent.ViewLicense
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
+import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.LazyThreadSafetyMode.NONE
 
 internal class AppSettingsView internal constructor(
     private val applicationName: CharSequence,

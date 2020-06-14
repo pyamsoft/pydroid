@@ -36,7 +36,7 @@ buildscript {
 	ext {
 
 		minSdk = 22
-		maxSdk = 29
+		maxSdk = 30
 
 		// Kotlin
 		coroutines = '1.3.7'
@@ -48,7 +48,7 @@ buildscript {
 		vectorDrawable = "1.1.0"
 		preference = "1.1.1"
 		recyclerView = "1.1.0"
-		fragment = "1.2.4"
+		fragment = "1.2.5"
 		appCompat = "1.1.0"
 		swipeRefresh = "1.0.0"
 
@@ -60,7 +60,7 @@ buildscript {
 		highlander = "0.0.10"
 
 		// Network
-		moshi = "1.9.2"
+		moshi = "1.9.3"
 		retrofit = '2.9.0'
 		okhttp = "4.7.2"
 
@@ -78,11 +78,11 @@ buildscript {
 		classpath "com.android.tools.build:gradle:4.0.0"
 
 		// Gradle version checker
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.22.0'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
 
 		// To publish
-		classpath "com.github.dcendents:android-maven-gradle-plugin:2.0"
-		classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
+		classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
+		classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5"
 
 		// Kotlin
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -91,7 +91,7 @@ buildscript {
 		classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
 
 		// Spotless
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:3.27.0"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:4.3.0"
 	}
 }
 

@@ -29,8 +29,8 @@ import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.util.toDp
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
-import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
+import timber.log.Timber
 
 internal abstract class AppSettingsPopoutDialog protected constructor() : DialogFragment() {
 

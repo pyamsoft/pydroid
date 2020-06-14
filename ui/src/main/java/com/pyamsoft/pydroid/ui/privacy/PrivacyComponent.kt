@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.ui.privacy
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
 internal interface PrivacyComponent {

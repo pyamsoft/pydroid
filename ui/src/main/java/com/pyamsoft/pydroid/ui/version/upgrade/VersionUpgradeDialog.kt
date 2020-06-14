@@ -23,12 +23,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
@@ -36,6 +38,8 @@ import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
+import com.pyamsoft.pydroid.util.valueFromCurrentTheme
+import kotlin.LazyThreadSafetyMode.NONE
 
 class VersionUpgradeDialog : DialogFragment() {
 
@@ -46,14 +50,16 @@ class VersionUpgradeDialog : DialogFragment() {
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<VersionUpgradeViewModel>(activity = true) { factory }
 
-    private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
+    private val themeFromAttrs: Int by lazy(NONE) {
+        requireActivity().valueFromCurrentTheme(R.attr.dialogTheme)
+    }
 
     override fun getTheme(): Int {
-        return if (customTheme == 0) super.getTheme() else customTheme
+        return themeFromAttrs
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return Dialog(requireActivity(), theme).noTitle()
+        return Dialog(ContextThemeWrapper(requireActivity(), theme), theme).noTitle()
     }
 
     override fun onCreateView(
@@ -128,15 +134,13 @@ class VersionUpgradeDialog : DialogFragment() {
 
         internal const val TAG = "VersionUpgradeDialog"
         private const val KEY_LATEST_VERSION = "key_latest_version"
-        private const val THEME = "theme"
 
         @JvmStatic
         @CheckResult
-        fun newInstance(latestVersion: Int, theme: Int): DialogFragment {
+        fun newInstance(latestVersion: Int): DialogFragment {
             return VersionUpgradeDialog().apply {
                 arguments = Bundle().apply {
                     putInt(KEY_LATEST_VERSION, latestVersion)
-                    putInt(THEME, theme)
                 }
             }
         }

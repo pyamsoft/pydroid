@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Peter Kenji Yamanaka
+ * Copyright 2020 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,15 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.version
+package com.pyamsoft.pydroid.util
 
+import android.app.Activity
 import androidx.annotation.CheckResult
-import androidx.annotation.StyleRes
 
-interface VersionCheckProvider {
-
-    @get:[CheckResult StyleRes]
-    val versionCheckTheme: Int
+@CheckResult
+fun Activity.valueFromCurrentTheme(attr: Int): Int {
+    val attributes = this.obtainStyledAttributes(intArrayOf(attr))
+    val dimension = attributes.getResourceId(0, 0)
+    attributes.recycle()
+    return dimension
 }

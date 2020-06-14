@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
@@ -38,6 +39,8 @@ import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
 import com.pyamsoft.pydroid.ui.util.MarketLinker
+import com.pyamsoft.pydroid.util.valueFromCurrentTheme
+import kotlin.LazyThreadSafetyMode.NONE
 
 class RatingDialog : DialogFragment() {
 
@@ -49,7 +52,9 @@ class RatingDialog : DialogFragment() {
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<RatingDialogViewModel>(activity = true) { factory }
 
-    private val customTheme by lazy { requireArguments().getInt(THEME, 0) }
+    private val themeFromAttrs: Int by lazy(NONE) {
+        requireActivity().valueFromCurrentTheme(R.attr.dialogTheme)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,11 +62,11 @@ class RatingDialog : DialogFragment() {
     }
 
     override fun getTheme(): Int {
-        return if (customTheme == 0) super.getTheme() else customTheme
+        return themeFromAttrs
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return Dialog(requireActivity(), theme).noTitle()
+        return Dialog(ContextThemeWrapper(requireActivity(), theme), theme).noTitle()
     }
 
     override fun onCreateView(
@@ -149,7 +154,6 @@ class RatingDialog : DialogFragment() {
         private const val CHANGE_LOG_TEXT = "change_log_text"
         private const val CHANGE_LOG_ICON = "change_log_icon"
         private const val RATE_LINK = "rate_link"
-        private const val THEME = "theme"
 
         @JvmStatic
         @CheckResult
@@ -159,7 +163,6 @@ class RatingDialog : DialogFragment() {
                     putString(RATE_LINK, provider.changeLogPackageName)
                     putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
                     putInt(CHANGE_LOG_ICON, provider.applicationIcon)
-                    putInt(THEME, provider.changeLogTheme)
                 }
             }
         }

@@ -40,7 +40,6 @@ import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.version.VersionCheckProvider
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionView
@@ -151,8 +150,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
     private fun showVersionUpgrade(newVersion: Int) {
         val act = requireActivity()
-        val theme = if (act is VersionCheckProvider) act.versionCheckTheme else 0
-        VersionUpgradeDialog.newInstance(newVersion, theme)
+        VersionUpgradeDialog.newInstance(newVersion)
             .show(requireActivity(), VersionUpgradeDialog.TAG)
     }
 

@@ -20,12 +20,8 @@ package com.pyamsoft.pydroid.ui.rating
 import android.text.SpannedString
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
-import androidx.annotation.StyleRes
 
 interface ChangeLogProvider {
-
-    @get:[CheckResult StyleRes]
-    val changeLogTheme: Int
 
     @get:CheckResult
     val changeLogPackageName: String

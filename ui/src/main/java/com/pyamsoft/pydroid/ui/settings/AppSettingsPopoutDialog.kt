@@ -28,7 +28,9 @@ import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.util.toDp
+import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 internal abstract class AppSettingsPopoutDialog protected constructor() : DialogFragment() {
 
@@ -41,17 +43,8 @@ internal abstract class AppSettingsPopoutDialog protected constructor() : Dialog
 
     private var stateSaver: StateSaver? = null
 
-    private val themeFromAttrs: Int by lazy(LazyThreadSafetyMode.NONE) {
-        valueFromCurrentTheme(R.attr.dialogTheme)
-    }
-
-    @CheckResult
-    private fun valueFromCurrentTheme(attr: Int): Int {
-        val context = requireActivity()
-        val attributes = context.obtainStyledAttributes(intArrayOf(attr))
-        val dimension = attributes.getResourceId(0, 0)
-        attributes.recycle()
-        return dimension
+    private val themeFromAttrs: Int by lazy(NONE) {
+        requireActivity().valueFromCurrentTheme(R.attr.dialogTheme)
     }
 
     final override fun onCreateView(
@@ -177,7 +170,7 @@ internal abstract class AppSettingsPopoutDialog protected constructor() : Dialog
         return ColorDrawable(
             ContextCompat.getColor(
                 requireActivity(),
-                valueFromCurrentTheme(R.attr.colorPrimary)
+                requireActivity().valueFromCurrentTheme(R.attr.colorPrimary)
             )
         )
     }

@@ -149,7 +149,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun showVersionUpgrade(newVersion: Int) {
-        val act = requireActivity()
         VersionUpgradeDialog.newInstance(newVersion)
             .show(requireActivity(), VersionUpgradeDialog.TAG)
     }

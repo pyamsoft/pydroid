@@ -17,6 +17,8 @@
 
 package com.pyamsoft.pydroid.util
 
+import android.app.Activity
+import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.ViewGroup
@@ -24,9 +26,25 @@ import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
+@Deprecated("Use Activity.stableLayoutHideNavigation()")
 fun ViewGroup.makeWindowSexy() {
-    this.systemUiVisibility =
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+    this.oldStableLayoutHideNavigation()
+}
+
+fun Activity.stableLayoutHideNavigation() {
+    val w = this.window
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        w.setDecorFitsSystemWindows(false)
+    } else {
+        w.decorView.oldStableLayoutHideNavigation()
+    }
+}
+
+@Suppress("DEPRECATION")
+private fun View.oldStableLayoutHideNavigation() {
+    this.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 }
 
 fun View.doOnApplyWindowInsets(func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit) {

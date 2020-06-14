@@ -18,6 +18,7 @@
 package com.pyamsoft.pydroid.ui.settings
 
 import android.os.Handler
+import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -40,6 +41,7 @@ import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.LazyThreadSafetyMode.NONE
 
 internal class AppSettingsView internal constructor(
     private val applicationName: CharSequence,
@@ -69,7 +71,7 @@ internal class AppSettingsView internal constructor(
     private val termsConditions by boundPref<Preference>(R.string.view_terms_key)
     private val applicationGroup by boundPref<Preference>("application_settings")
 
-    private val handler = Handler()
+    private val handler by lazy(NONE) { Handler(Looper.getMainLooper()) }
 
     init {
         val self = this

@@ -223,7 +223,7 @@ subprojects {
 			name = project.name
 			desc = "PYDroid library: ${project.name}"
 			licenses = ['Apache-2.0']
-			vcsUrl = "${GITHUB_ROOT_URL}/tree/master/${project.name}"
+			vcsUrl = "${GITHUB_ROOT_URL}/tree/main/${project.name}"
 			websiteUrl = "${GITHUB_ROOT_URL}"
 			version {
 				name = POM_VERSION

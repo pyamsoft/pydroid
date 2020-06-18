@@ -132,7 +132,6 @@ internal interface PYDroidComponent {
 
         private val otherAppsModule = OtherAppsModule(
             OtherAppsModule.Parameters(
-                debug = params.debug,
                 packageName = packageName,
                 serviceCreator = networkModule.provideServiceCreator()
             )

@@ -47,7 +47,7 @@ class VersionCheckModule(params: Parameters) {
             versionCheckService
         )
 
-        impl = VersionCheckInteractorImpl(debug, createCache(debug, network))
+        impl = VersionCheckInteractorImpl(debug, createCache(network))
     }
 
     @CheckResult
@@ -60,12 +60,10 @@ class VersionCheckModule(params: Parameters) {
         @JvmStatic
         @CheckResult
         private fun createCache(
-            debug: Boolean,
             network: VersionCheckInteractor
         ): Cached<UpdatePayload> {
             return cachify<UpdatePayload>(
-                storage = MemoryCacheStorage.create(30, MINUTES),
-                debug = debug
+                storage = MemoryCacheStorage.create(30, MINUTES)
             ) { requireNotNull(network.checkVersion(true)) }
         }
     }

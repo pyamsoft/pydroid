@@ -31,10 +31,9 @@ class OtherAppsModule(params: Parameters) {
     private val impl: OtherAppsInteractorImpl
 
     init {
-        val debug = params.debug
         val otherAppsService = params.serviceCreator.createService(OtherAppsService::class.java)
         val network = OtherAppsInteractorNetwork(otherAppsService)
-        impl = OtherAppsInteractorImpl(params.packageName, createCache(debug, network))
+        impl = OtherAppsInteractorImpl(params.packageName, createCache(network))
     }
 
     @CheckResult
@@ -47,18 +46,15 @@ class OtherAppsModule(params: Parameters) {
         @JvmStatic
         @CheckResult
         private fun createCache(
-            debug: Boolean,
             network: OtherAppsInteractor
         ): Cached<List<OtherApp>> {
             return cachify<List<OtherApp>>(
-                storage = MemoryCacheStorage.create(24, HOURS),
-                debug = debug
+                storage = MemoryCacheStorage.create(24, HOURS)
             ) { requireNotNull(network.getApps(true)) }
         }
     }
 
     data class Parameters(
-        internal val debug: Boolean,
         internal val packageName: String,
         internal val serviceCreator: ServiceCreator
     )

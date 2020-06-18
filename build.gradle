@@ -56,7 +56,7 @@ buildscript {
 		materialDesign = "1.1.0"
 
 		// Us
-		cachify = "0.0.13"
+		cachify = "0.0.14-SNAPSHOT"
 		highlander = "0.0.11"
 
 		// Network
@@ -105,7 +105,7 @@ subprojects {
 	apply plugin: 'com.jfrog.bintray'
 
 	final String POM_GROUP = "com.pyamsoft.pydroid"
-	final String POM_VERSION = "21.0.6"
+	final String POM_VERSION = "21.0.7-SNAPSHOT"
 
 	group = POM_GROUP
 	version = POM_VERSION

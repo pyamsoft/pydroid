@@ -56,8 +56,8 @@ buildscript {
 		materialDesign = "1.1.0"
 
 		// Us
-		cachify = "0.0.12"
-		highlander = "0.0.10"
+		cachify = "0.0.13"
+		highlander = "0.0.11"
 
 		// Network
 		moshi = "1.9.3"
@@ -91,7 +91,7 @@ buildscript {
 		classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
 
 		// Spotless
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:4.3.0"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:4.3.1"
 	}
 }
 
@@ -105,7 +105,7 @@ subprojects {
 	apply plugin: 'com.jfrog.bintray'
 
 	final String POM_GROUP = "com.pyamsoft.pydroid"
-	final String POM_VERSION = "21.0.6-SNAPSHOT"
+	final String POM_VERSION = "21.0.6"
 
 	group = POM_GROUP
 	version = POM_VERSION

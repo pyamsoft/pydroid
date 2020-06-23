@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,6 +31,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
@@ -156,9 +156,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      */
     protected fun setState(func: S.() -> S) {
         viewModelScope.launch(context = Dispatchers.Default) {
-            mutex.withLock {
-                setStateQueue.add(func)
-            }
+            mutex.withLock { setStateQueue.add(func) }
 
             yield()
             flushQueueBus.send(FlushQueueEvent)
@@ -173,9 +171,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      */
     protected fun withState(func: S.() -> Unit) {
         viewModelScope.launch(context = Dispatchers.Default) {
-            mutex.withLock {
-                withStateQueue.add(func)
-            }
+            mutex.withLock { withStateQueue.add(func) }
 
             yield()
             flushQueueBus.send(FlushQueueEvent)
@@ -202,29 +198,27 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             return
         }
 
-        mutex.withLock {
-            // Capture the state before modifications take place
-            val oldState = state.get()
-            var newState = oldState
+        // Capture the state before modifications take place
+        val oldState = state.get()
+        var newState = oldState
 
-            // Loop over all state changes first, perform but do not actually fire a render to views
-            stateChanges.forEach { stateChange ->
-                val currentState = newState
-                newState = currentState.stateChange()
+        // Loop over all state changes first, perform but do not actually fire a render to views
+        stateChanges.forEach { stateChange ->
+            val currentState = newState
+            newState = currentState.stateChange()
 
-                // If we are in debug mode, perform the state change twice and make sure that it produces
-                // the same state both times.
-                if (debug) {
-                    val copyNewState = currentState.stateChange()
-                    checkStateEquality(newState, copyNewState)
-                }
+            // If we are in debug mode, perform the state change twice and make sure that it produces
+            // the same state both times.
+            if (debug) {
+                val copyNewState = currentState.stateChange()
+                checkStateEquality(newState, copyNewState)
             }
+        }
 
-            // Only send the new state at the end of the state change loop
-            if (newState != oldState) {
-                // Replace the old state with this new state
-                state.set(newState)
-            }
+        // Only send the new state at the end of the state change loop
+        if (newState != oldState) {
+            // Replace the old state with this new state
+            state.set(newState)
         }
     }
 
@@ -258,6 +252,22 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
+    @CheckResult
+    private suspend fun dequeueNextPendingWithStateChange(): Boolean {
+        return mutex.withLock {
+            // Queue up one withState, or exit the tailrec if there are no more events
+            val stateQueue = withStateQueue
+            if (stateQueue.size <= 0) {
+                return@withLock false
+            }
+
+            // Run the operation
+            val withStateOperation = stateQueue.removeAt(0)
+            withStateOperation(state.get())
+            return@withLock true
+        }
+    }
+
     // Pull a page from the MvRx repo's RealMvRxStateStore :)
     // Mark this function as tailrec to see if the compiler can optimize it
     private tailrec suspend fun flushQueues() {
@@ -267,16 +277,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Run all pending setStates first
         dequeueAllPendingSetStateChanges()
 
-        mutex.withLock {
-            // Queue up one withState, or exit the tailrec if there are no more events
-            val stateQueue = withStateQueue
-            if (stateQueue.size <= 0) {
-                return
-            }
-
-            // Run the operation
-            val withStateOperation = stateQueue.removeAt(0)
-            withStateOperation(state.get())
+        // Run the next withState change, or exit out of the loop if no more work
+        if (!dequeueNextPendingWithStateChange()) {
+            return
         }
 
         // We must call ourselves as the final operation to be tailrec compatible
@@ -292,29 +295,24 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         views.forEach { it.render(state) }
     }
 
-    private suspend fun initialize(savedInstanceState: UiBundleReader) {
+    private fun initialize(savedInstanceState: UiBundleReader) {
         if (isInitialized) {
             Timber.w("Initialization is already complete.")
             return
         }
 
-        mutex.withLock {
-            if (isInitialized) {
-                Timber.w("Initialization is already complete.")
-                return
-            }
+        // Only run the init hooks if they exist, otherwise we don't need to init the memory
+        if (onInitEventDelegate.isInitialized()) {
 
-            isInitialized = true
-            // Only run the init hooks if they exist, otherwise we don't need to init the memory
-            if (onInitEventDelegate.isInitialized()) {
+            // Call init hooks in random order
+            onInitEvents.forEach { it(savedInstanceState) }
 
-                // Call init hooks in random order
-                onInitEvents.forEach { it(savedInstanceState) }
-
-                // Clear the init hooks list to free up memory
-                onInitEvents.clear()
-            }
+            // Clear the init hooks list to free up memory
+            onInitEvents.clear()
         }
+
+        // Initialization is complete
+        isInitialized = true
     }
 
     // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels

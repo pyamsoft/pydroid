@@ -32,13 +32,28 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.properties.Delegates
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
     private val debug: Boolean
 ) : ViewModel(), SaveableState {
 
-    private var isInitialized = false
+    private var isInitialized: Boolean by Delegates.observable(false) { _, oldValue, newValue ->
+        // If the initialization is done, and we have already received the clear event, we will
+        // commence with teardown
+        if (!oldValue && newValue && isCleared) {
+            teardown()
+        }
+    }
+
+    private var isCleared: Boolean by Delegates.observable(false) { _, oldValue, newValue ->
+        // If the teardown is done, and we have already received the initialize event, we will
+        // commence with teardown
+        if (!oldValue && newValue && isInitialized) {
+            teardown()
+        }
+    }
 
     private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
@@ -119,6 +134,17 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     final override fun onCleared() {
+        if (isCleared) {
+            Timber.w("Teardown is already complete.")
+            return
+        }
+
+        Timber.d("Queue up teardown")
+        isCleared = true
+    }
+
+    private fun teardown() {
+        Timber.d("Commence UiViewModel teardown")
         if (onTeardownEventDelegate.isInitialized()) {
 
             // Call teardown hooks in random order

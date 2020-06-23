@@ -32,28 +32,11 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.properties.Delegates
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
     private val debug: Boolean
 ) : ViewModel(), SaveableState {
-
-    private var isInitialized: Boolean by Delegates.observable(false) { _, oldValue, newValue ->
-        // If the initialization is done, and we have already received the clear event, we will
-        // commence with teardown
-        if (!oldValue && newValue && isCleared) {
-            teardown()
-        }
-    }
-
-    private var isCleared: Boolean by Delegates.observable(false) { _, oldValue, newValue ->
-        // If the teardown is done, and we have already received the initialize event, we will
-        // commence with teardown
-        if (!oldValue && newValue && isInitialized) {
-            teardown()
-        }
-    }
 
     private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
@@ -121,6 +104,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         bindViewEvents(views.asIterable())
 
         // Initialize before first render
+        // Generally, since you will add your doOnInit hooks in the ViewModel init {} block,
+        // they will only run once - which is when the object is created.
+        //
+        // If you wanna do some strange kind of stuff though, you do you.
         initialize(savedInstanceState)
 
         // Inflate the views
@@ -134,17 +121,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     final override fun onCleared() {
-        if (isCleared) {
-            Timber.w("Teardown is already complete.")
-            return
-        }
-
-        Timber.d("Queue up teardown")
-        isCleared = true
-    }
-
-    private fun teardown() {
-        Timber.d("Commence UiViewModel teardown")
         if (onTeardownEventDelegate.isInitialized()) {
 
             // Call teardown hooks in random order
@@ -322,11 +298,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private fun initialize(savedInstanceState: UiBundleReader) {
-        if (isInitialized) {
-            Timber.w("Initialization is already complete.")
-            return
-        }
-
         // Only run the init hooks if they exist, otherwise we don't need to init the memory
         if (onInitEventDelegate.isInitialized()) {
 
@@ -336,9 +307,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // Clear the init hooks list to free up memory
             onInitEvents.clear()
         }
-
-        // Initialization is complete
-        isInitialized = true
     }
 
     // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels

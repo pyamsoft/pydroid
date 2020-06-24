@@ -32,18 +32,21 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     vararg views: UiView<S, V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ): StateSaver {
-    val reader = UiBundleReader.create(savedInstanceState)
+    // Make sure we are only running this on the created state
+    owner.doOnCreate {
+        val reader = UiBundleReader.create(savedInstanceState)
 
-    // Init first
-    views.forEach { it.init(reader) }
+        // Init first
+        views.forEach { it.init(reader) }
 
-    // Bind view event listeners, inflate and attach
-    val viewModelBinding = viewModel.render(reader, *views) { onControllerEvent(it) }
+        // Bind view event listeners, inflate and attach
+        val viewModelBinding = viewModel.render(reader, *views) { onControllerEvent(it) }
 
-    // Teardown on destroy
-    owner.doOnDestroy {
-        viewModelBinding.cancel()
-        views.forEach { it.teardown() }
+        // Teardown on destroy
+        owner.doOnDestroy {
+            viewModelBinding.cancel()
+            views.forEach { it.teardown() }
+        }
     }
 
     // State saver
@@ -63,23 +66,25 @@ inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     vararg views: UiView<S, V>,
     crossinline onViewEvent: (event: V) -> Unit
 ): ViewBinder<S> {
-    val reader = UiBundleReader.create(null)
+    owner.doOnCreate {
+        val reader = UiBundleReader.create(null)
 
-    // Bind view event listeners
-    views.forEach { v ->
-        owner.lifecycleScope.launch(context = Dispatchers.Default) {
-            v.onViewEvent { onViewEvent(it) }
+        // Bind view event listeners
+        views.forEach { v ->
+            owner.lifecycleScope.launch(context = Dispatchers.Default) {
+                v.onViewEvent { onViewEvent(it) }
+            }
         }
-    }
 
-    // Init first
-    views.forEach { it.init(reader) }
-    // Inflate and attach
-    views.forEach { it.inflate(reader) }
+        // Init first
+        views.forEach { it.init(reader) }
+        // Inflate and attach
+        views.forEach { it.inflate(reader) }
 
-    // Teardown on destroy
-    owner.doOnDestroy {
-        views.forEach { it.teardown() }
+        // Teardown on destroy
+        owner.doOnDestroy {
+            views.forEach { it.teardown() }
+        }
     }
 
     // State saver

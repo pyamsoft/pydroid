@@ -77,7 +77,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     @CheckResult
-    @PublishedApi
     internal fun render(
         savedInstanceState: UiBundleReader,
         vararg views: UiView<S, V>,

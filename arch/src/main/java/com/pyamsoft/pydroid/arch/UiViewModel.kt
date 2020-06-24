@@ -48,6 +48,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val controllerEventBus = EventBus.create<C>()
+    private val processOperationBus = EventBus.create<ProcessOperationsRequest>()
 
     private val mutex = Mutex()
     private val setStateQueue = mutableListOf<S.() -> S>()
@@ -55,6 +56,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     // This useless interface exists just so I don't have to mark everything as experimental
     private var state: UiVMState<S> = UiVMStateImpl(initialState)
+
+    init {
+        doOnInit {
+            viewModelScope.launch(context = Dispatchers.IO) {
+                processOperationBus.onEvent { processStateOperations() }
+            }
+        }
+    }
 
     protected abstract fun handleViewEvent(event: V)
 
@@ -156,7 +165,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             mutex.withLock { setStateQueue.add(func) }
 
             yield()
-            processStateOperations()
+            processOperationBus.send(ProcessOperationsRequest)
         }
     }
 
@@ -171,7 +180,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             mutex.withLock { withStateQueue.add(func) }
 
             yield()
-            processStateOperations()
+            processOperationBus.send(ProcessOperationsRequest)
         }
     }
 
@@ -442,4 +451,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             flow.collect(withState)
         }
     }
+
+    private object ProcessOperationsRequest
 }

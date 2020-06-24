@@ -78,7 +78,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
             // We place a check for the id here because at the point that the binding is used
             // the layoutRoot must not be null and must be resolved so that the teardown works
             // correctly - otherwise you will get a state error.
-            assert(id() != 0) { "id() must not equal 0! " }
+            require(id() != 0) { "id() must not equal 0! " }
         }
 
         doOnTeardown {
@@ -152,7 +152,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     @CheckResult
     fun id(): Int {
         val id = layoutRoot.id
-        assert(id != 0) { "id() must not equal 0! " }
+        require(id != 0) { "id() must not equal 0! " }
         return id
     }
 
@@ -263,7 +263,6 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
 
         private fun View.teardown(parent: ViewGroup) {
             // Clear all messages on the view handler before removing it from the view group
-            this.handler?.removeCallbacksAndMessages(null)
             parent.removeView(this)
         }
     }

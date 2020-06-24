@@ -60,7 +60,7 @@ internal class VersionUpgradeControlView internal constructor(
     }
 
     override fun onRender(state: VersionUpgradeViewState) {
-        layoutRoot.post { handleError(state) }
+        handleError(state)
     }
 
     private fun showError(error: Throwable) {

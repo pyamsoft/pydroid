@@ -45,7 +45,7 @@ internal class AboutItemDescriptionView internal constructor(
     }
 
     override fun onRender(state: AboutItemViewState) {
-        layoutRoot.post { handleLibrary(state) }
+        handleLibrary(state)
     }
 
     private fun handleLibrary(state: AboutItemViewState) {

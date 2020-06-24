@@ -24,11 +24,15 @@ object OssLibraries {
 
     private val libraries: MutableSet<OssLibrary> = LinkedHashSet()
 
+    @JvmField
     var UTIL = true
 
     // These libraries are disabled by default and should be enabled at runtime
+    @JvmField
     var ARCH = false
+    @JvmField
     var LOADER = false
+
     var UI = false
         set(value) {
             if (value) {

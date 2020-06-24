@@ -97,8 +97,8 @@ internal class OtherAppsList internal constructor(
     }
 
     override fun onRender(state: OtherAppsViewState) {
-        layoutRoot.post { handleApps(state) }
-        layoutRoot.post { handleNavigationError(state) }
+        handleApps(state)
+        handleNavigationError(state)
     }
 
     private fun handleNavigationError(state: OtherAppsViewState) {

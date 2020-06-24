@@ -24,7 +24,6 @@ import com.pyamsoft.pydroid.bootstrap.network.NetworkModule
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
@@ -227,10 +226,6 @@ internal interface PYDroidComponent {
 
         override fun plusSettings(): AppSettingsComponent.Factory {
             return AppSettingsComponent.Impl.FactoryImpl(appSettingsParams)
-        }
-
-        override fun enforcer(): Enforcer {
-            return Enforcer
         }
 
         override fun theming(): Theming {

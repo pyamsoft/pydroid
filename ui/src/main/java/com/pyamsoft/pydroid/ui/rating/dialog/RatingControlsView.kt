@@ -49,7 +49,7 @@ internal class RatingControlsView internal constructor(
     }
 
     override fun onRender(state: RatingDialogViewState) {
-        layoutRoot.post { handleError(state) }
+        handleError(state)
     }
 
     private fun handleError(state: RatingDialogViewState) {

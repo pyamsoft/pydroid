@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.ui.theme
 import androidx.annotation.CheckResult
 
 @CheckResult
+@Suppress("FunctionName")
 inline fun ThemeProvider(crossinline realProvider: () -> Boolean): ThemeProvider {
 
     return object : ThemeProvider {

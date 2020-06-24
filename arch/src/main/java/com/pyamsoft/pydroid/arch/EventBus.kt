@@ -23,9 +23,6 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 interface EventBus<T : Any> : EventConsumer<T> {
 
-    @Deprecated("Use send() which is the suspending version of this function")
-    fun publish(event: T)
-
     suspend fun send(event: T)
 
     companion object {

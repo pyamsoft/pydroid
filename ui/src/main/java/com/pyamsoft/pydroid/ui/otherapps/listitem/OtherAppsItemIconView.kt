@@ -46,7 +46,7 @@ internal class OtherAppsItemIconView internal constructor(
     }
 
     override fun onRender(state: OtherAppsItemViewState) {
-        layoutRoot.post { handleApp(state) }
+        handleApp(state)
     }
 
     private fun handleApp(state: OtherAppsItemViewState) {

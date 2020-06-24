@@ -43,6 +43,6 @@ internal class AboutSpinnerView internal constructor(
     }
 
     override fun onRender(state: AboutViewState) {
-        layoutRoot.post { handleLoading(state) }
+        handleLoading(state)
     }
 }

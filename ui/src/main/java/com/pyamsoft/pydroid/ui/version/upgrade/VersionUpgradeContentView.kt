@@ -43,9 +43,9 @@ internal class VersionUpgradeContentView internal constructor(
     }
 
     override fun onRender(state: VersionUpgradeViewState) {
-        layoutRoot.post { handleName(state) }
-        layoutRoot.post { handleCurrentVersion(state) }
-        layoutRoot.post { handleNewVersion(state) }
+        handleName(state)
+        handleCurrentVersion(state)
+        handleNewVersion(state)
     }
 
     private fun handleNewVersion(state: VersionUpgradeViewState) {

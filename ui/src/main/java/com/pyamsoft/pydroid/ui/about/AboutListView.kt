@@ -100,10 +100,10 @@ internal class AboutListView internal constructor(
     }
 
     override fun onRender(state: AboutViewState) {
-        layoutRoot.post { handleLicenses(state) }
-        layoutRoot.post { handleLoading(state) }
-        layoutRoot.post { handleNavigateError(state) }
-        layoutRoot.post { handleLoadError(state) }
+        handleLicenses(state)
+        handleLoading(state)
+        handleNavigateError(state)
+        handleLoadError(state)
     }
 
     private fun handleLoadError(state: AboutViewState) {

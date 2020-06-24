@@ -36,7 +36,7 @@ internal class RatingChangelogView internal constructor(
     }
 
     override fun onRender(state: RatingDialogViewState) {
-        layoutRoot.post { handleChangelog(state) }
+        handleChangelog(state)
     }
 
     private fun handleChangelog(state: RatingDialogViewState) {

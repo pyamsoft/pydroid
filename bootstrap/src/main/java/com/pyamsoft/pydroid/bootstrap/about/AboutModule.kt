@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
 
-class AboutModule() {
+class AboutModule {
 
     private val impl = AboutInteractorImpl()
 

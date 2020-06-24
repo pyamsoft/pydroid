@@ -41,7 +41,7 @@ internal class RatingIconView internal constructor(
     }
 
     override fun onRender(state: RatingDialogViewState) {
-        layoutRoot.post { handleIcon(state) }
+        handleIcon(state)
     }
 
     private fun handleIcon(state: RatingDialogViewState) {

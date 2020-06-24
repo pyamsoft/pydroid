@@ -18,20 +18,10 @@
 package com.pyamsoft.pydroid.ui
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 interface ModuleProvider {
-
-    @Deprecated(
-        "Enforcer is now an object", replaceWith = ReplaceWith(
-            expression = "Enforcer",
-            imports = ["com.pyamsoft.pydroid.core.Enforcer"]
-        )
-    )
-    @CheckResult
-    fun enforcer(): Enforcer
 
     @CheckResult
     fun theming(): Theming

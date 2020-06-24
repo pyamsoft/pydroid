@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,6 +31,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
@@ -48,7 +48,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val controllerEventBus = EventBus.create<C>()
-    private val flushQueueBus = EventBus.create<FlushQueueEvent>()
 
     private val mutex = Mutex()
     private val setStateQueue = mutableListOf<S.() -> S>()
@@ -56,14 +55,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     // This useless interface exists just so I don't have to mark everything as experimental
     private var state: UiVMState<S> = UiVMStateImpl(initialState)
-
-    init {
-        doOnInit {
-            viewModelScope.launch(context = Dispatchers.Default) {
-                flushQueueBus.onEvent { flushQueues() }
-            }
-        }
-    }
 
     protected abstract fun handleViewEvent(event: V)
 
@@ -92,12 +83,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         vararg views: UiView<S, V>,
         onControllerEvent: (event: C) -> Unit
     ): Job = viewModelScope.launch(context = Dispatchers.Main) {
-        // Listen for changes
-        launch(context = Dispatchers.Default) {
-            state.onChange { state ->
-                launch(context = Dispatchers.Main) { handleStateChange(views, state) }
-            }
-        }
 
         // Bind ViewModel
         bindControllerEvents(onControllerEvent)
@@ -114,7 +99,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         views.forEach { it.inflate(savedInstanceState) }
 
         // Flush the queue before we begin
-        flushQueues()
+        // This will make sure that the first render uses the most up to date state
+        // This will also avoid firing render events to the views since it occurs all before the view
+        // layer is bound
+        processStateOperations()
+
+        // Listen for any further state changes at this point
+        bindStateEvents(views)
 
         // Render the latest or initial state
         handleStateChange(views, state.get())
@@ -161,7 +152,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             mutex.withLock { setStateQueue.add(func) }
 
             yield()
-            flushQueueBus.send(FlushQueueEvent)
+            processStateOperations()
         }
     }
 
@@ -176,7 +167,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             mutex.withLock { withStateQueue.add(func) }
 
             yield()
-            flushQueueBus.send(FlushQueueEvent)
+            processStateOperations()
         }
     }
 
@@ -272,7 +263,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     // Pull a page from the MvRx repo's RealMvRxStateStore :)
     // Mark this function as tailrec to see if the compiler can optimize it
-    private tailrec suspend fun flushQueues() {
+    private tailrec suspend fun processStateOperations() {
         // Wait for anything else first
         yield()
 
@@ -286,7 +277,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
         // We must call ourselves as the final operation to be tailrec compatible
         // Recur until we return out by having no more withState operations
-        flushQueues()
+        processStateOperations()
     }
 
     private fun handleStateChange(
@@ -310,6 +301,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
+    private fun CoroutineScope.bindStateEvents(views: Array<out UiView<S, V>>) {
+        launch(context = Dispatchers.Default) {
+            state.onChange { state ->
+                launch(context = Dispatchers.Main) { handleStateChange(views, state) }
+            }
+        }
+    }
+
     private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>) {
         views.forEach { view ->
             // Launch another coroutine here for handling view events

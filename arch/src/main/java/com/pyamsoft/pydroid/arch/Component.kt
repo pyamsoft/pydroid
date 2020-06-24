@@ -39,6 +39,8 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
 
     // Bind view event listeners, inflate and attach
     val viewModelBinding = viewModel.render(reader, *views) { onControllerEvent(it) }
+
+    // Teardown on destroy
     owner.doOnDestroy {
         viewModelBinding.cancel()
         views.forEach { it.teardown() }
@@ -56,26 +58,29 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
 }
 
 @CheckResult
-fun <S : UiViewState, V : UiViewEvent> bindViews(
+inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     owner: LifecycleOwner,
     vararg views: UiView<S, V>,
-    onViewEvent: suspend (event: V) -> Unit
+    crossinline onViewEvent: (event: V) -> Unit
 ): ViewBinder<S> {
     val reader = UiBundleReader.create(null)
 
-    // Init first
-    views.forEach { it.init(reader) }
-
     // Bind view event listeners
-    views.forEach {
+    views.forEach { v ->
         owner.lifecycleScope.launch(context = Dispatchers.Default) {
-            it.onViewEvent(onViewEvent)
+            v.onViewEvent { onViewEvent(it) }
         }
     }
 
+    // Init first
+    views.forEach { it.init(reader) }
     // Inflate and attach
     views.forEach { it.inflate(reader) }
-    owner.doOnDestroy { views.forEach { it.teardown() } }
+
+    // Teardown on destroy
+    owner.doOnDestroy {
+        views.forEach { it.teardown() }
+    }
 
     // State saver
     return object : ViewBinder<S> {

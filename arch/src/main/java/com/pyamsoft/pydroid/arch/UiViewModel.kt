@@ -76,7 +76,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
+    // Need PublishedApi so createComponent can be inline
     @CheckResult
+    @PublishedApi
     internal fun render(
         savedInstanceState: UiBundleReader,
         vararg views: UiView<S, V>,
@@ -135,6 +137,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         withStateQueue.clear()
     }
 
+    /**
+     * Fire a controller event
+     */
     protected fun publish(event: C) {
         viewModelScope.launch(context = Dispatchers.Default) {
             controllerEventBus.send(event)
@@ -391,8 +396,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         onTeardownEvents.add(onTeardown)
     }
 
-    private object FlushQueueEvent
-
     private class DeterministicStateError internal constructor(
         state1: Any?,
         state2: Any?,
@@ -405,6 +408,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
            """.trimIndent()
     )
 
+    // Exists as a useless interface just so that when using the implementation in the UiViewModel
+    // I don't need to mark everything as experimental
     private interface UiVMState<S : UiViewState> {
 
         @CheckResult

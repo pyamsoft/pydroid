@@ -107,6 +107,8 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         }
     }
 
+    // Need PublishedApi so bindViews can be inline
+    @PublishedApi
     internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
         viewEventBus.onEvent(func)
     }

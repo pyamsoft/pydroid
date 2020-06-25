@@ -128,4 +128,3 @@ inline fun Lifecycle.doOnPause(crossinline func: () -> Unit) {
         }
     })
 }
-

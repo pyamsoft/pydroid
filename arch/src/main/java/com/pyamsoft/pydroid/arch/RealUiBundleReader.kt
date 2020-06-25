@@ -21,13 +21,17 @@ import android.os.Bundle
 
 class RealUiBundleReader internal constructor(private val bundle: Bundle?) : UiBundleReader {
 
+    // Captures the common if (savedInstanceState == null) case
+    override fun isEmpty(): Boolean {
+        return bundle == null
+    }
+
     override fun <T : Any> get(key: String): T? {
         @Suppress("UNCHECKED_CAST")
         return bundle?.get(key) as? T
     }
 
     override fun <T : Any> getOrDefault(key: String, defaultValue: T): T {
-        @Suppress("UNCHECKED_CAST")
         return get(key) ?: defaultValue
     }
 

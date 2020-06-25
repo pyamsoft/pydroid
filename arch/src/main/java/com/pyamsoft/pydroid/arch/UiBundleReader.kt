@@ -23,8 +23,12 @@ import androidx.annotation.CheckResult
 interface UiBundleReader {
 
     @CheckResult
+    fun isEmpty(): Boolean
+
+    @CheckResult
     fun <T : Any> get(key: String): T?
 
+    @CheckResult
     fun <T : Any> getOrDefault(key: String, defaultValue: T): T
 
     fun <T : Any> useIfAvailable(key: String, func: (value: T) -> Unit)

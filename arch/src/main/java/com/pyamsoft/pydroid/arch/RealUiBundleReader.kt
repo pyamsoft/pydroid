@@ -22,7 +22,7 @@ import android.os.Bundle
 class RealUiBundleReader internal constructor(private val bundle: Bundle?) : UiBundleReader {
 
     // Captures the common if (savedInstanceState == null) case
-    override fun isEmpty(): Boolean {
+    override fun hasNoSavedState(): Boolean {
         return bundle == null
     }
 

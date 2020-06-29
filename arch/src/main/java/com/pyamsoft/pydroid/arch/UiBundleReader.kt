@@ -23,7 +23,7 @@ import androidx.annotation.CheckResult
 interface UiBundleReader {
 
     @CheckResult
-    fun isEmpty(): Boolean
+    fun hasNoSavedState(): Boolean
 
     @CheckResult
     fun <T : Any> get(key: String): T?

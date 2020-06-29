@@ -17,12 +17,13 @@
 
 package com.pyamsoft.pydroid.arch
 
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : SaveableState {
 
@@ -109,12 +110,18 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     // Need PublishedApi so bindViews can be inline
     @PublishedApi
-    internal suspend fun onViewEvent(func: suspend (event: V) -> Unit) {
-        viewEventBus.onEvent(func)
+    internal fun onViewEvent(func: suspend (event: V) -> Unit) {
+        viewScope.launch(context = Dispatchers.IO) {
+            viewEventBus.onEvent { event ->
+                withContext(context = Dispatchers.Main) {
+                    func(event)
+                }
+            }
+        }
     }
 
     protected fun publish(event: V) {
-        viewScope.launch(context = Dispatchers.Default) {
+        viewScope.launch(context = Dispatchers.IO) {
             viewEventBus.send(event)
         }
     }

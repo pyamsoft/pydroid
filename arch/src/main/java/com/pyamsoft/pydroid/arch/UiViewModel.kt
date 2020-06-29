@@ -20,7 +20,6 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,6 +31,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
@@ -150,7 +150,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * Fire a controller event
      */
     protected fun publish(event: C) {
-        viewModelScope.launch(context = Dispatchers.Default) {
+        viewModelScope.launch(context = Dispatchers.IO) {
             controllerEventBus.send(event)
         }
     }
@@ -161,7 +161,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
     protected fun setState(func: S.() -> S) {
-        viewModelScope.launch(context = Dispatchers.Default) {
+        viewModelScope.launch(context = Dispatchers.IO) {
             mutex.withLock { setStateQueue.add(func) }
 
             yield()
@@ -176,7 +176,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * may not be up to date with the latest setState() call.
      */
     protected fun withState(func: S.() -> Unit) {
-        viewModelScope.launch(context = Dispatchers.Default) {
+        viewModelScope.launch(context = Dispatchers.IO) {
             mutex.withLock { withStateQueue.add(func) }
 
             yield()
@@ -315,7 +315,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
     private fun CoroutineScope.bindStateEvents(views: Array<out UiView<S, V>>) {
-        launch(context = Dispatchers.Default) {
+        launch(context = Dispatchers.IO) {
             state.onChange { state ->
                 launch(context = Dispatchers.Main) { handleStateChange(views, state) }
             }
@@ -323,21 +323,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>) {
-        views.forEach { view ->
-            // Launch another coroutine here for handling view events
-            launch(context = Dispatchers.Default) {
-                view.onViewEvent {
-                    // View events must fire onto the main thread
-                    launch(context = Dispatchers.Main) {
-                        handleViewEvent(it)
+        launch(context = Dispatchers.IO) {
+            views.forEach { view ->
+                view.onViewEvent { handleViewEvent(it) }
+                if (view is BaseUiView<S, V, *>) {
+                    val nestedViews = view.nestedViews()
+                    if (nestedViews.isNotEmpty()) {
+                        bindViewEvents(nestedViews)
                     }
-                }
-            }
-
-            if (view is BaseUiView<S, V, *>) {
-                val nestedViews = view.nestedViews()
-                if (nestedViews.isNotEmpty()) {
-                    bindViewEvents(nestedViews)
                 }
             }
         }
@@ -345,7 +338,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
     private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
-        launch(context = Dispatchers.Default) {
+        launch(context = Dispatchers.IO) {
             controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
                 launch(context = Dispatchers.Main) {

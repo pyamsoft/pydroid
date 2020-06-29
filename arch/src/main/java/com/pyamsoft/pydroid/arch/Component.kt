@@ -20,9 +20,6 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @CheckResult
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
@@ -67,9 +64,7 @@ inline fun <S : UiViewState, V : UiViewEvent> bindViews(
 
     // Bind view event listeners
     views.forEach { v ->
-        owner.lifecycleScope.launch(context = Dispatchers.Default) {
-            v.onViewEvent { onViewEvent(it) }
-        }
+        v.onViewEvent { onViewEvent(it) }
     }
 
     // Init first

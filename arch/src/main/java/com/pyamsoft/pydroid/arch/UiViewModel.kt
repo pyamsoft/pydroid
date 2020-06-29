@@ -322,6 +322,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
+    // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
     private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>) {
         launch(context = Dispatchers.IO) {
             views.forEach { view ->

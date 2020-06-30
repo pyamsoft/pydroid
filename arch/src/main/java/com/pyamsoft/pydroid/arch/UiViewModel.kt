@@ -200,7 +200,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private suspend fun dequeueAllPendingSetStateChanges() {
         val stateChanges = dequeueAllPendingStateChanges()
         if (stateChanges.isEmpty()) {
-            Timber.w("State queue is empty, ignore flush.")
             return
         }
 
@@ -209,7 +208,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         var newState = oldState
 
         // Loop over all state changes first, perform but do not actually fire a render to views
-        stateChanges.forEach { stateChange ->
+        for (stateChange in stateChanges) {
             val currentState = newState
             newState = currentState.stateChange()
 

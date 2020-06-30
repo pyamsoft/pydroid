@@ -22,7 +22,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.IdRes
+import androidx.annotation.UiThread
 import androidx.viewbinding.ViewBinding
+import com.pyamsoft.pydroid.core.Enforcer
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -162,6 +164,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
         nestedViews().forEach { it.render(state) }
     }
 
+    @UiThread
     protected abstract fun onRender(state: S)
 
     private fun inflateAndAddToParent(
@@ -176,7 +179,10 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
      *
      * Nesting a UiView will make its parent element become this UiView's layoutRoot.
      * This will allow you to embed UiViews inside of other UiView objects.
+     *
+     * NOTE: Not thread safe, Main thread only for now.
      */
+    @UiThread
     protected fun nest(vararg views: UiView<S, V>) {
         views.forEach { view ->
             nestedViews.add(view)
@@ -203,7 +209,10 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     }
 
     @CheckResult
+    @UiThread
     protected fun <V : View> boundView(func: B.() -> V): Bound<V> {
+        Enforcer.assertOnMainThread()
+
         assertValidState()
         return Bound(parent()) { func(binding) }.also { trackBound(it) }
     }

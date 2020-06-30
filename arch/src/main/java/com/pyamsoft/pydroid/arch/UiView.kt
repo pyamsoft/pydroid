@@ -17,6 +17,9 @@
 
 package com.pyamsoft.pydroid.arch
 
+import androidx.annotation.MainThread
+import androidx.annotation.UiThread
+import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -38,20 +41,34 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
     private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
-    private val scopeDelegate = lazy(NONE) { CoroutineScope(SupervisorJob() + Dispatchers.Main) }
-    protected val viewScope: CoroutineScope by scopeDelegate
+    protected val viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     /**
      * This is really only used as a hack, so we can inflate the actual Layout before running init hooks.
      *
      * This way a UiViewModel can bind event handlers and receive events, and the view can publish()
      * inside of doOnInflate hooks.
+     *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
+    @UiThread
     fun init(savedInstanceState: UiBundleReader) {
+        // We better be UI
+        Enforcer.assertOnMainThread()
+
         onInit(savedInstanceState)
     }
 
+    /**
+     * Inflate this view
+     *
+     * NOTE: Not thread safe. Main thread only for the time being
+     */
+    @UiThread
     fun inflate(savedInstanceState: UiBundleReader) {
+        // We better be UI
+        Enforcer.assertOnMainThread()
+
         // Only run the inflation hooks if they exist, otherwise we don't need to init the memory
         if (onInflateEventDelegate.isInitialized()) {
 
@@ -63,7 +80,16 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         }
     }
 
+    /**
+     * Destroy this view
+     *
+     * NOTE: Not thread safe. Main thread only for the time being
+     */
+    @UiThread
     fun teardown() {
+        // We better be UI
+        Enforcer.assertOnMainThread()
+
         // Only run teardown hooks if they exist, otherwise don't init memory
         if (onTeardownEventDelegate.isInitialized()) {
 
@@ -85,9 +111,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
         }
 
         // Cancel the view scope
-        if (scopeDelegate.isInitialized()) {
-            viewScope.cancel()
-        }
+        viewScope.cancel()
     }
 
     /**
@@ -95,8 +119,14 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      *
      * NOTE: While not deprecated, do your best to use StateSaver.saveState to bundle state
      * saving of entire components in a safe way
+     *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
+    @UiThread
     final override fun saveState(outState: UiBundleWriter) {
+        // We better be UI
+        Enforcer.assertOnMainThread()
+
         // Only run save state hooks if they exist, otherwise don't init memory
         if (onSaveEventDelegate.isInitialized()) {
 
@@ -138,8 +168,13 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      *     }
      * }
      *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
+    @UiThread
     protected fun doOnTeardown(onTeardown: () -> Unit) {
+        // We better be UI
+        Enforcer.assertOnMainThread()
+
         onTeardownEvents.add(onTeardown)
     }
 
@@ -155,8 +190,13 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      *     }
      * }
      *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
+    @UiThread
     protected fun doOnInflate(onInflate: (savedInstanceState: UiBundleReader) -> Unit) {
+        // We better be UI
+        Enforcer.assertOnMainThread()
+
         onInflateEvents.add(onInflate)
     }
 
@@ -172,12 +212,19 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
      *     }
      * }
      *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
+    @UiThread
     protected fun doOnSaveState(onSaveState: (outState: UiBundleWriter) -> Unit) {
+        // We better be UI
+        Enforcer.assertOnMainThread()
+
         onSaveEvents.add(onSaveState)
     }
 
+    @UiThread
     protected abstract fun onInit(savedInstanceState: UiBundleReader)
 
+    @UiThread
     abstract fun render(state: S)
 }

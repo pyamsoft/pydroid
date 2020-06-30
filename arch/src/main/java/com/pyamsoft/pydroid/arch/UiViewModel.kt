@@ -18,8 +18,10 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
+import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -72,8 +74,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      *
      * NOTE: While not deprecated, do your best to use StateSaver.saveState to bundle state
      * saving of entire components in a safe way
+     *
+     * NOTE: Not thread safe, Main thread only for now
      */
+    @UiThread
     override fun saveState(outState: UiBundleWriter) {
+        Enforcer.assertOnMainThread()
+
         // Only run the save state hooks if they exist, otherwise we don't need to init the memory
         if (onSaveStateEventDelegate.isInitialized()) {
 
@@ -86,6 +93,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     // Need PublishedApi so createComponent can be inline
+    @UiThread
     @CheckResult
     @PublishedApi
     internal fun render(
@@ -121,7 +129,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         handleStateChange(views, state.get())
     }
 
+    @UiThread
     final override fun onCleared() {
+        Enforcer.assertOnMainThread()
+
         if (onTeardownEventDelegate.isInitialized()) {
 
             // Call teardown hooks in random order
@@ -359,8 +370,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      *     }
      * }
      *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
+    @UiThread
     protected fun doOnInit(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
+        Enforcer.assertOnMainThread()
+
         onInitEvents.add(onInit)
     }
 
@@ -376,9 +391,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      *     }
      * }
      *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
-    @Suppress("unused")
+    @UiThread
     protected fun doOnSaveState(onSaveState: UiBundleWriter.(state: S) -> Unit) {
+        Enforcer.assertOnMainThread()
+
         onSaveStateEvents.add(onSaveState)
     }
 
@@ -393,8 +411,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      *     }
      * }
      *
+     * NOTE: Not thread safe. Main thread only for the time being
      */
+    @UiThread
     protected fun doOnTeardown(onTeardown: () -> Unit) {
+        Enforcer.assertOnMainThread()
+
         onTeardownEvents.add(onTeardown)
     }
 

@@ -50,7 +50,7 @@ buildscript {
 		recyclerView = "1.1.0"
 		fragment = "1.2.5"
 		appCompat = "1.1.0"
-		swipeRefresh = "1.0.0"
+		swipeRefresh = "1.1.0"
 
 		// Material Design
 		materialDesign = "1.1.0"
@@ -105,18 +105,20 @@ subprojects {
 	apply plugin: 'com.jfrog.bintray'
 
 	final String POM_GROUP = "com.pyamsoft.pydroid"
-	final String POM_VERSION = "21.1.2-SNAPSHOT"
+	final String POM_VERSION = "21.2.0"
 
 	group = POM_GROUP
 	version = POM_VERSION
 
 	task androidSourcesJar(type: Jar) {
-		classifier = 'sources'
+		archiveClassifier.convention('sources')
+		archiveClassifier.set('sources')
 		from android.sourceSets.main.java.source
 	}
 
 	task androidJavadocsJar(type: Jar, dependsOn: dokka) {
-		classifier = 'javadoc'
+		archiveClassifier.convention('javadoc')
+		archiveClassifier.set('javadoc')
 		from "$buildDir/dokka"
 	}
 

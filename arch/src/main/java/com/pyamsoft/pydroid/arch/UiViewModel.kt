@@ -29,6 +29,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
@@ -49,23 +51,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val controllerEventBus = EventBus.create<C>()
-    private val processOperationBus = EventBus.create<ProcessOperationsRequest>()
 
-    private val jobQueue = JobQueue<S>()
+    private val mutex = Mutex()
 
     // This useless interface exists just so I don't have to mark everything as experimental
     private var state: UiVMState<S> = UiVMStateImpl(initialState)
-
-    init {
-        doOnInit {
-            viewModelScope.launch(context = Dispatchers.IO) {
-                processOperationBus.onEvent {
-                    yield()
-                    processStateOperations()
-                }
-            }
-        }
-    }
 
     protected abstract fun handleViewEvent(event: V)
 
@@ -116,12 +106,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Inflate the views
         views.forEach { it.inflate(savedInstanceState) }
 
-        // Flush the queue before we begin
-        // This will make sure that the first render uses the most up to date state
-        // This will also avoid firing render events to the views since it occurs all before the view
-        // layer is bound
-        processStateOperations()
-
         // Listen for any further state changes at this point
         bindStateEvents(views)
 
@@ -151,8 +135,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onSaveStateEventDelegate.isInitialized()) {
             onSaveStateEvents.clear()
         }
-
-        jobQueue.clear()
     }
 
     /**
@@ -169,12 +151,26 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    protected fun setState(func: SetStateBlock<S>) {
+    protected fun setState(func: S.() -> S) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            jobQueue.enqueueSetState(func)
-
             yield()
-            processOperationBus.send(ProcessOperationsRequest)
+            mutex.withLock {
+
+                // Yield to any other coroutines
+                yield()
+
+                val oldState = state.get()
+                val newState = oldState.func()
+
+                // If we are in debug mode, perform the state change twice and make sure that it produces
+                // the same state both times.
+                if (debug) {
+                    val copyNewState = oldState.func()
+                    checkStateEquality(newState, copyNewState)
+                }
+
+                state.set(newState)
+            }
         }
     }
 
@@ -184,46 +180,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * Note that like accessing state in React using this.state.<var>, this is immediate and
      * may not be up to date with the latest setState() call.
      */
-    protected fun withState(func: WithStateBlock<S>) {
-        viewModelScope.launch(context = Dispatchers.IO) {
-            jobQueue.enqueueWithState(func)
-
-            yield()
-            processOperationBus.send(ProcessOperationsRequest)
-        }
-    }
-
-    @CheckResult
-    private fun processAllSetStateChanges(): Boolean {
-        val stateChanges = jobQueue.dequeueAllSetStateBlocks()
-        if (stateChanges.isEmpty()) {
-            return false
-        }
-
-        // Capture the state before modifications take place
-        val oldState = state.get()
-        var newState = oldState
-
-        // Loop over all state changes first, perform but do not actually fire a render to views
-        for (stateChange in stateChanges) {
-            val currentState = newState
-            newState = currentState.stateChange()
-
-            // If we are in debug mode, perform the state change twice and make sure that it produces
-            // the same state both times.
-            if (debug) {
-                val copyNewState = currentState.stateChange()
-                checkStateEquality(newState, copyNewState)
-            }
-        }
-
-        // Only send the new state at the end of the state change loop
-        if (newState != oldState) {
-            // Replace the old state with this new state
-            state.set(newState)
-        }
-
-        return true
+    protected fun withState(func: S.() -> Unit) {
+        setState { this.apply(func) }
     }
 
     /**
@@ -254,42 +212,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 throw DeterministicStateError(prop1, prop2, changedProp.name)
             }
         }
-    }
-
-    @CheckResult
-    private fun processNextWithStateChange(): Boolean {
-        val operation = jobQueue.dequeueWithStateBlock() ?: return false
-        operation(state.get())
-        return true
-    }
-
-    // Pull a page from the MvRx repo's RealMvRxStateStore :)
-    // Mark this function as tailrec to see if the compiler can optimize it
-    private tailrec suspend fun processStateOperations() {
-        // Wait for anything else first
-        yield()
-
-        var setStateCompleted = false
-        var withStateCompleted = false
-
-        // Run all pending setStates first
-        if (!processAllSetStateChanges()) {
-            setStateCompleted = true
-        }
-
-        // Run the next withState change
-        if (!processNextWithStateChange()) {
-            withStateCompleted = true
-        }
-
-        // exit out of the loop if no more work
-        if (setStateCompleted && withStateCompleted) {
-            return
-        }
-
-        // We must call ourselves as the final operation to be tailrec compatible
-        // Recur until we return out by having no more withState operations
-        processStateOperations()
     }
 
     private fun handleStateChange(
@@ -455,61 +377,5 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             flow.collect(withState)
         }
     }
-
-    private object ProcessOperationsRequest
-
-    private class JobQueue<S : UiViewState> {
-
-        private val setStateQueue = mutableListOf<SetStateBlock<S>>()
-        private val withStateQueue = mutableListOf<WithStateBlock<S>>()
-
-        fun clear() {
-            synchronized(this) {
-                setStateQueue.clear()
-                withStateQueue.clear()
-            }
-        }
-
-        @CheckResult
-        fun dequeueWithStateBlock(): WithStateBlock<S>? {
-            return synchronized(this) {
-                val stateQueue = withStateQueue
-                if (stateQueue.size <= 0) {
-                    return@synchronized null
-                }
-
-                // Remove the most recent withState operation
-                return@synchronized stateQueue.removeAt(0)
-            }
-        }
-
-        @CheckResult
-        fun dequeueAllSetStateBlocks(): List<SetStateBlock<S>> {
-            return synchronized(this) {
-                if (setStateQueue.isEmpty()) {
-                    return@synchronized emptyList()
-                }
-
-                val queue = setStateQueue.toList()
-                setStateQueue.clear()
-                return@synchronized queue
-            }
-        }
-
-        fun enqueueWithState(block: WithStateBlock<S>) {
-            return synchronized(this) {
-                withStateQueue.add(block)
-            }
-        }
-
-        fun enqueueSetState(block: SetStateBlock<S>) {
-            return synchronized(this) {
-                setStateQueue.add(block)
-            }
-        }
-    }
 }
-
-typealias SetStateBlock<S> = S.() -> S
-typealias WithStateBlock<S> = S.() -> Unit
 

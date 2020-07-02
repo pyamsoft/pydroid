@@ -56,6 +56,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private val controllerEventBus = EventBus.create<C>()
 
+    // NOTE(Peter): Since state events run on their own single threaded dispatcher, we may not
+    // need a mutex since there will only ever be one thread at a time.
     private val mutex = Mutex()
 
     // This useless interface exists just so I don't have to mark everything as experimental

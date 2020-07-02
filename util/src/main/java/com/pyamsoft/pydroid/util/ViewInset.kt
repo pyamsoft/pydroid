@@ -42,9 +42,10 @@ fun Activity.stableLayoutHideNavigation() {
 
 @Suppress("DEPRECATION")
 private fun View.oldStableLayoutHideNavigation() {
-    this.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+    this.systemUiVisibility = this.systemUiVisibility or
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 }
 
 fun View.doOnApplyWindowInsets(func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit) {

@@ -26,6 +26,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -34,12 +35,15 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import java.util.concurrent.Executors
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
     private val debug: Boolean
 ) : ViewModel(), SaveableState {
+
+    private val stateCoroutineContext = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
     private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
@@ -135,6 +139,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onSaveStateEventDelegate.isInitialized()) {
             onSaveStateEvents.clear()
         }
+
+        // Close the dispatcher
+        stateCoroutineContext.close()
     }
 
     /**
@@ -152,25 +159,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
     protected fun setState(func: S.() -> S) {
-        viewModelScope.launch(context = Dispatchers.IO) {
-            yield()
-            mutex.withLock {
-
-                // Yield to any other coroutines
-                yield()
-
-                val oldState = state.get()
-                val newState = oldState.func()
-
-                // If we are in debug mode, perform the state change twice and make sure that it produces
-                // the same state both times.
-                if (debug) {
-                    val copyNewState = oldState.func()
-                    checkStateEquality(newState, copyNewState)
-                }
-
-                state.set(newState)
-            }
+        viewModelScope.launch(context = stateCoroutineContext) {
+            handleStateChange(func)
         }
     }
 
@@ -181,7 +171,28 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * may not be up to date with the latest setState() call.
      */
     protected fun withState(func: S.() -> Unit) {
-        setState { this.apply(func) }
+        viewModelScope.launch(context = stateCoroutineContext) {
+            // Yield to any setState calls happening at this point
+            yield()
+
+            handleStateChange { this.apply(func) }
+        }
+    }
+
+    private suspend inline fun handleStateChange(stateChange: S.() -> S) {
+        mutex.withLock {
+            val oldState = state.get()
+            val newState = oldState.stateChange()
+
+            // If we are in debug mode, perform the state change twice and make sure that it produces
+            // the same state both times.
+            if (debug) {
+                val copyNewState = oldState.stateChange()
+                checkStateEquality(newState, copyNewState)
+            }
+
+            state.set(newState)
+        }
     }
 
     /**

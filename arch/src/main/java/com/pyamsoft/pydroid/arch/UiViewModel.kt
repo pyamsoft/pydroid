@@ -22,7 +22,6 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,6 +33,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
@@ -62,7 +62,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     init {
         doOnInit {
             viewModelScope.launch(context = Dispatchers.IO) {
-                processOperationBus.onEvent { processStateOperations() }
+                processOperationBus.onEvent {
+                    yield()
+                    processStateOperations()
+                }
             }
         }
     }
@@ -196,22 +199,21 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     @CheckResult
-    private suspend fun dequeueAllPendingStateChanges(): List<S.() -> S> {
-        return mutex.withLock {
-            if (setStateQueue.isEmpty()) {
-                return@withLock emptyList()
-            }
-
-            val queue = setStateQueue.toList()
-            setStateQueue.clear()
-            return@withLock queue
+    private fun dequeueAllPendingSetStateChanges(): List<S.() -> S> {
+        if (setStateQueue.isEmpty()) {
+            return emptyList()
         }
+
+        val queue = setStateQueue.toList()
+        setStateQueue.clear()
+        return queue
     }
 
-    private suspend fun dequeueAllPendingSetStateChanges() {
-        val stateChanges = dequeueAllPendingStateChanges()
+    @CheckResult
+    private suspend fun processSetStateChanges(): Boolean = mutex.withLock {
+        val stateChanges = dequeueAllPendingSetStateChanges()
         if (stateChanges.isEmpty()) {
-            return
+            return@withLock false
         }
 
         // Capture the state before modifications take place
@@ -236,6 +238,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // Replace the old state with this new state
             state.set(newState)
         }
+
+        return@withLock true
     }
 
     /**
@@ -290,11 +294,21 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         // Wait for anything else first
         yield()
 
-        // Run all pending setStates first
-        dequeueAllPendingSetStateChanges()
+        var setStateCompleted = false
+        var withStateCompleted = false
 
-        // Run the next withState change, or exit out of the loop if no more work
+        // Run all pending setStates first
+        if (!processSetStateChanges()) {
+            setStateCompleted = true
+        }
+
+        // Run the next withState change
         if (!dequeueNextPendingWithStateChange()) {
+            withStateCompleted = true
+        }
+
+        // exit out of the loop if no more work
+        if (setStateCompleted && withStateCompleted) {
             return
         }
 

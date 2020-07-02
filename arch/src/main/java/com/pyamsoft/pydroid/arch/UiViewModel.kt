@@ -162,7 +162,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      */
     protected fun setState(func: S.() -> S) {
         viewModelScope.launch(context = stateCoroutineContext) {
-            handleStateChange(func)
+            processStateChange(isDebuggable = true) { func() }
         }
     }
 
@@ -177,18 +177,18 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // Yield to any setState calls happening at this point
             yield()
 
-            handleStateChange { this.apply(func) }
+            processStateChange(isDebuggable = false) { this.apply(func) }
         }
     }
 
-    private suspend inline fun handleStateChange(stateChange: S.() -> S) {
+    private suspend inline fun processStateChange(isDebuggable: Boolean, stateChange: S.() -> S) {
         mutex.withLock {
             val oldState = state.get()
             val newState = oldState.stateChange()
 
             // If we are in debug mode, perform the state change twice and make sure that it produces
             // the same state both times.
-            if (debug) {
+            if (debug && isDebuggable) {
                 val copyNewState = oldState.stateChange()
                 checkStateEquality(newState, copyNewState)
             }

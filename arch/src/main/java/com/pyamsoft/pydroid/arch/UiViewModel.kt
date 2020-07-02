@@ -22,8 +22,6 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
-import java.util.concurrent.Executors
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,6 +35,8 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import java.util.concurrent.Executors
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
@@ -51,7 +51,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onTeardownEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveStateEventDelegate = lazy(NONE) { mutableSetOf<UiBundleWriter.(S) -> Unit>() }
+    private val onSaveStateEventDelegate =
+        lazy(NONE) { mutableSetOf<(UiBundleWriter, S) -> Unit>() }
     private val onSaveStateEvents by onSaveStateEventDelegate
 
     private val controllerEventBus = EventBus.create<C>()
@@ -289,7 +290,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * This is generally used in something like the constructor
      *
      * init {
-     *     doOnInit {
+     *     doOnInit { savedInstanceState ->
      *         ...
      *     }
      * }
@@ -309,16 +310,16 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * This is generally used in something like the constructor
      *
      * init {
-     *     doOnSaveState { state ->
-     *          putInt(...)
-     *          putString(...)
+     *     doOnSaveState { outState, state ->
+     *          outState.putInt(...)
+     *          outState.putString(...)
      *     }
      * }
      *
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    protected fun doOnSaveState(onSaveState: UiBundleWriter.(state: S) -> Unit) {
+    protected fun doOnSaveState(onSaveState: (outState: UiBundleWriter, state: S) -> Unit) {
         Enforcer.assertOnMainThread()
 
         onSaveStateEvents.add(onSaveState)

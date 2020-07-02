@@ -29,6 +29,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
@@ -315,7 +316,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private fun CoroutineScope.bindStateEvents(views: Array<out UiView<S, V>>) {
         launch(context = Dispatchers.IO) {
             state.onChange { state ->
-                launch(context = Dispatchers.Main) { handleStateChange(views, state) }
+                withContext(context = Dispatchers.Main) { handleStateChange(views, state) }
             }
         }
     }
@@ -340,7 +341,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         launch(context = Dispatchers.IO) {
             controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
-                launch(context = Dispatchers.Main) {
+                withContext(context = Dispatchers.Main) {
                     onControllerEvent(it)
                 }
             }

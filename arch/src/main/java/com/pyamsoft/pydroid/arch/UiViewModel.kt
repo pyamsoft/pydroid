@@ -29,8 +29,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.yield
 import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
@@ -52,9 +50,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val controllerEventBus = EventBus.create<C>()
     private val processOperationBus = EventBus.create<ProcessOperationsRequest>()
 
-    private val mutex = Mutex()
-    private val setStateQueue = mutableListOf<S.() -> S>()
-    private val withStateQueue = mutableListOf<S.() -> Unit>()
+    private val jobQueue = JobQueue<S>()
 
     // This useless interface exists just so I don't have to mark everything as experimental
     private var state: UiVMState<S> = UiVMStateImpl(initialState)
@@ -155,9 +151,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             onSaveStateEvents.clear()
         }
 
-        // Clear queues and state
-        setStateQueue.clear()
-        withStateQueue.clear()
+        jobQueue.clear()
     }
 
     /**
@@ -174,9 +168,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    protected fun setState(func: S.() -> S) {
+    protected fun setState(func: SetStateBlock<S>) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            mutex.withLock { setStateQueue.add(func) }
+            jobQueue.enqueueSetState(func)
 
             yield()
             processOperationBus.send(ProcessOperationsRequest)
@@ -189,9 +183,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * Note that like accessing state in React using this.state.<var>, this is immediate and
      * may not be up to date with the latest setState() call.
      */
-    protected fun withState(func: S.() -> Unit) {
+    protected fun withState(func: WithStateBlock<S>) {
         viewModelScope.launch(context = Dispatchers.IO) {
-            mutex.withLock { withStateQueue.add(func) }
+            jobQueue.enqueueWithState(func)
 
             yield()
             processOperationBus.send(ProcessOperationsRequest)
@@ -199,21 +193,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     @CheckResult
-    private fun dequeueAllPendingSetStateChanges(): List<S.() -> S> {
-        if (setStateQueue.isEmpty()) {
-            return emptyList()
-        }
-
-        val queue = setStateQueue.toList()
-        setStateQueue.clear()
-        return queue
-    }
-
-    @CheckResult
-    private suspend fun processSetStateChanges(): Boolean = mutex.withLock {
-        val stateChanges = dequeueAllPendingSetStateChanges()
+    private fun processAllSetStateChanges(): Boolean {
+        val stateChanges = jobQueue.dequeueAllSetStateBlocks()
         if (stateChanges.isEmpty()) {
-            return@withLock false
+            return false
         }
 
         // Capture the state before modifications take place
@@ -239,7 +222,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             state.set(newState)
         }
 
-        return@withLock true
+        return true
     }
 
     /**
@@ -273,19 +256,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     @CheckResult
-    private suspend fun dequeueNextPendingWithStateChange(): Boolean {
-        return mutex.withLock {
-            // Queue up one withState, or exit the tailrec if there are no more events
-            val stateQueue = withStateQueue
-            if (stateQueue.size <= 0) {
-                return@withLock false
-            }
-
-            // Run the operation
-            val withStateOperation = stateQueue.removeAt(0)
-            withStateOperation(state.get())
-            return@withLock true
-        }
+    private fun processNextWithStateChange(): Boolean {
+        val operation = jobQueue.dequeueWithStateBlock() ?: return false
+        operation(state.get())
+        return true
     }
 
     // Pull a page from the MvRx repo's RealMvRxStateStore :)
@@ -298,12 +272,12 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         var withStateCompleted = false
 
         // Run all pending setStates first
-        if (!processSetStateChanges()) {
+        if (!processAllSetStateChanges()) {
             setStateCompleted = true
         }
 
         // Run the next withState change
-        if (!dequeueNextPendingWithStateChange()) {
+        if (!processNextWithStateChange()) {
             withStateCompleted = true
         }
 
@@ -482,4 +456,59 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     private object ProcessOperationsRequest
+
+    private class JobQueue<S : UiViewState> {
+
+        private val setStateQueue = mutableListOf<SetStateBlock<S>>()
+        private val withStateQueue = mutableListOf<WithStateBlock<S>>()
+
+        fun clear() {
+            synchronized(this) {
+                setStateQueue.clear()
+                withStateQueue.clear()
+            }
+        }
+
+        @CheckResult
+        fun dequeueWithStateBlock(): WithStateBlock<S>? {
+            return synchronized(this) {
+                val stateQueue = withStateQueue
+                if (stateQueue.size <= 0) {
+                    return@synchronized null
+                }
+
+                // Remove the most recent withState operation
+                return@synchronized stateQueue.removeAt(0)
+            }
+        }
+
+        @CheckResult
+        fun dequeueAllSetStateBlocks(): List<SetStateBlock<S>> {
+            return synchronized(this) {
+                if (setStateQueue.isEmpty()) {
+                    return@synchronized emptyList()
+                }
+
+                val queue = setStateQueue.toList()
+                setStateQueue.clear()
+                return@synchronized queue
+            }
+        }
+
+        fun enqueueWithState(block: WithStateBlock<S>) {
+            return synchronized(this) {
+                withStateQueue.add(block)
+            }
+        }
+
+        fun enqueueSetState(block: SetStateBlock<S>) {
+            return synchronized(this) {
+                setStateQueue.add(block)
+            }
+        }
+    }
 }
+
+typealias SetStateBlock<S> = S.() -> S
+typealias WithStateBlock<S> = S.() -> Unit
+

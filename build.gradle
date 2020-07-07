@@ -182,6 +182,7 @@ subprojects {
 
 		buildFeatures {
 			viewBinding true
+			buildConfig false
 		}
 	}
 

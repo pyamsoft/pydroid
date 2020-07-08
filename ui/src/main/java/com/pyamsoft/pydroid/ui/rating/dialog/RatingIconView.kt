@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.ui.rating.dialog
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.loader.Loaded
+import com.pyamsoft.pydroid.loader.imageLoaded
 import com.pyamsoft.pydroid.ui.databinding.RatingIconBinding
 
 internal class RatingIconView internal constructor(
@@ -32,11 +32,11 @@ internal class RatingIconView internal constructor(
 
     override val layoutRoot by boundView { ratingIconRoot }
 
-    private var iconLoaded: Loaded? = null
+    private var iconLoaded by imageLoaded()
 
     init {
         doOnTeardown {
-            clear()
+            iconLoaded?.dispose()
         }
     }
 
@@ -46,16 +46,10 @@ internal class RatingIconView internal constructor(
 
     private fun handleIcon(state: RatingDialogViewState) {
         state.icon.let { icon ->
-            clear()
             if (icon != 0) {
                 iconLoaded = imageLoader.load(icon)
                     .into(binding.icon)
             }
         }
-    }
-
-    private fun clear() {
-        iconLoaded?.dispose()
-        iconLoaded = null
     }
 }

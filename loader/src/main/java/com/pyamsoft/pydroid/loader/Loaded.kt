@@ -20,6 +20,8 @@ package com.pyamsoft.pydroid.loader
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 interface Loaded {
 
@@ -32,4 +34,20 @@ fun Loaded.disposeOnDestroy(owner: LifecycleOwner) {
 
 fun Loaded.disposeOnDestroy(lifecycle: Lifecycle) {
     lifecycle.doOnDestroy { this.dispose() }
+}
+
+fun imageLoaded(): ReadWriteProperty<Any, Loaded?> {
+    return object : ReadWriteProperty<Any, Loaded?> {
+
+        private var loaded: Loaded? = null
+
+        override fun getValue(thisRef: Any, property: KProperty<*>): Loaded? {
+            return loaded
+        }
+
+        override fun setValue(thisRef: Any, property: KProperty<*>, value: Loaded?) {
+            loaded?.dispose()
+            loaded = value
+        }
+    }
 }

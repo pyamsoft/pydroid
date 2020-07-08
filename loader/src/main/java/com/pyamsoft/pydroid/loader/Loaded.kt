@@ -17,7 +17,19 @@
 
 package com.pyamsoft.pydroid.loader
 
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.util.doOnDestroy
+
 interface Loaded {
 
     fun dispose()
+}
+
+fun Loaded.disposeOnDestroy(owner: LifecycleOwner) {
+    this.disposeOnDestroy(owner.lifecycle)
+}
+
+fun Loaded.disposeOnDestroy(lifecycle: Lifecycle) {
+    lifecycle.doOnDestroy { this.dispose() }
 }

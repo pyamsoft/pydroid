@@ -24,6 +24,6 @@ dependencies {
 	// AppCompat
 	api "androidx.appcompat:appcompat:$appCompat"
 
-	api project(':core')
+	api project(':util')
 }
 

@@ -105,7 +105,7 @@ subprojects {
 	apply plugin: 'com.jfrog.bintray'
 
 	final String POM_GROUP = "com.pyamsoft.pydroid"
-	final String POM_VERSION = "21.3.1-SNAPSHOT"
+	final String POM_VERSION = "21.3.1"
 
 	group = POM_GROUP
 	version = POM_VERSION

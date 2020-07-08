@@ -32,6 +32,13 @@ import androidx.lifecycle.OnLifecycleEvent
 /**
  * Execute func() on ON_START
  */
+@Deprecated(
+    message = "Use doOnStart",
+    replaceWith = ReplaceWith(
+        expression = "owner.doOnStart(func)",
+        imports = ["com.pyamsoft.pydroid.util.doOnStart"]
+    )
+)
 inline fun runWhenReady(
     owner: LifecycleOwner,
     crossinline func: () -> Unit
@@ -42,6 +49,13 @@ inline fun runWhenReady(
 /**
  * Execute func() on ON_START
  */
+@Deprecated(
+    message = "Use doOnStart",
+    replaceWith = ReplaceWith(
+        expression = "lifecycle.doOnStart(func)",
+        imports = ["com.pyamsoft.pydroid.util.doOnStart"]
+    )
+)
 inline fun runWhenReady(
     lifecycle: Lifecycle,
     crossinline func: () -> Unit
@@ -62,6 +76,13 @@ inline fun runWhenReady(
 /**
  * Execute func() on ON_RESUME
  */
+@Deprecated(
+    message = "Use doOnResume",
+    replaceWith = ReplaceWith(
+        expression = "owner.doOnResume(func)",
+        imports = ["com.pyamsoft.pydroid.util.doOnResume"]
+    )
+)
 inline fun runAfterReady(
     owner: LifecycleOwner,
     crossinline func: () -> Unit
@@ -72,6 +93,13 @@ inline fun runAfterReady(
 /**
  * Execute func() on ON_RESUME
  */
+@Deprecated(
+    message = "Use doOnResume",
+    replaceWith = ReplaceWith(
+        expression = "lifecycle.doOnResume(func)",
+        imports = ["com.pyamsoft.pydroid.util.doOnResume"]
+    )
+)
 inline fun runAfterReady(
     lifecycle: Lifecycle,
     crossinline func: () -> Unit
@@ -89,14 +117,118 @@ inline fun runAfterReady(
     lifecycle.addObserver(observer)
 }
 
+@Deprecated("If you need this, then your RecyclerView.ViewHolder is acting like a Controller which is not recommended.")
 fun LifecycleRegistry.fakeBind() {
     handleLifecycleEvent(ON_CREATE)
     handleLifecycleEvent(ON_START)
     handleLifecycleEvent(ON_RESUME)
 }
 
+@Deprecated("If you need this, then your RecyclerView.ViewHolder is acting like a Controller which is not recommended.")
 fun LifecycleRegistry.fakeUnbind() {
     handleLifecycleEvent(ON_PAUSE)
     handleLifecycleEvent(ON_STOP)
     handleLifecycleEvent(ON_DESTROY)
+}
+
+inline fun LifecycleOwner.doOnDestroy(crossinline func: () -> Unit) {
+    this.lifecycle.doOnDestroy(func)
+}
+
+inline fun Lifecycle.doOnDestroy(crossinline func: () -> Unit) {
+    val self = this
+    self.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_DESTROY)
+        fun onDestroy() {
+            self.removeObserver(this)
+            func()
+        }
+    })
+}
+
+inline fun LifecycleOwner.doOnCreate(crossinline func: () -> Unit) {
+    this.lifecycle.doOnCreate(func)
+}
+
+inline fun Lifecycle.doOnCreate(crossinline func: () -> Unit) {
+    val self = this
+    self.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_CREATE)
+        fun onDestroy() {
+            self.removeObserver(this)
+            func()
+        }
+    })
+}
+
+inline fun LifecycleOwner.doOnStart(crossinline func: () -> Unit) {
+    this.lifecycle.doOnStart(func)
+}
+
+inline fun Lifecycle.doOnStart(crossinline func: () -> Unit) {
+    val self = this
+    self.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_START)
+        fun onDestroy() {
+            self.removeObserver(this)
+            func()
+        }
+    })
+}
+
+inline fun LifecycleOwner.doOnStop(crossinline func: () -> Unit) {
+    this.lifecycle.doOnStop(func)
+}
+
+inline fun Lifecycle.doOnStop(crossinline func: () -> Unit) {
+    val self = this
+    self.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_STOP)
+        fun onDestroy() {
+            self.removeObserver(this)
+            func()
+        }
+    })
+}
+
+inline fun LifecycleOwner.doOnResume(crossinline func: () -> Unit) {
+    this.lifecycle.doOnResume(func)
+}
+
+inline fun Lifecycle.doOnResume(crossinline func: () -> Unit) {
+    val self = this
+    self.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_RESUME)
+        fun onDestroy() {
+            self.removeObserver(this)
+            func()
+        }
+    })
+}
+
+inline fun LifecycleOwner.doOnPause(crossinline func: () -> Unit) {
+    this.lifecycle.doOnPause(func)
+}
+
+inline fun Lifecycle.doOnPause(crossinline func: () -> Unit) {
+    val self = this
+    self.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(ON_STOP)
+        fun onDestroy() {
+            self.removeObserver(this)
+            func()
+        }
+    })
 }

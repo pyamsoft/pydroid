@@ -21,7 +21,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.util.runWhenReady
+import com.pyamsoft.pydroid.util.doOnStart
 
 @JvmOverloads
 inline fun FragmentManager.commit(
@@ -38,7 +38,7 @@ inline fun FragmentManager.commit(
     immediate: Boolean = false,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-    runWhenReady(lifecycle) {
+    lifecycle.doOnStart {
         this.beginTransaction()
             .run(transaction)
             .commit()
@@ -60,7 +60,7 @@ inline fun FragmentManager.commitNow(
     lifecycle: Lifecycle,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-    runWhenReady(lifecycle) {
+    lifecycle.doOnStart {
         this.beginTransaction()
             .run(transaction)
             .commitNow()

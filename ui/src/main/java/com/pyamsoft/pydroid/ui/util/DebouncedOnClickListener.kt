@@ -36,8 +36,9 @@ abstract class DebouncedOnClickListener protected constructor() : View.OnClickLi
     abstract fun doClick(view: View)
 
     companion object {
-        private var enabled: Boolean = true
-        private var enableAgain: Runnable = Runnable { enabled = true }
+
+        private var enabled = true
+        private val enableAgain = Runnable { enabled = true }
 
         @CheckResult
         @JvmStatic

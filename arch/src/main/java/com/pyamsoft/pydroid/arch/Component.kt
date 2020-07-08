@@ -20,6 +20,7 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.util.doOnDestroy
 
 @CheckResult
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(

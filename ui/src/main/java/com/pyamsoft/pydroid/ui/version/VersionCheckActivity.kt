@@ -29,7 +29,7 @@ import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
-import com.pyamsoft.pydroid.util.runWhenReady
+import com.pyamsoft.pydroid.util.doOnStart
 
 abstract class VersionCheckActivity : PrivacyActivity() {
 
@@ -72,7 +72,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     }
 
     private fun forceCheckForUpdate() {
-        runWhenReady(this) { versionViewModel.checkForUpdates(false) }
+        doOnStart { versionViewModel.checkForUpdates(false) }
     }
 
     // Keep public for app consumers

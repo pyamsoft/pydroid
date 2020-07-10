@@ -36,22 +36,3 @@ fun Loaded.disposeOnDestroy(lifecycle: Lifecycle) {
     lifecycle.doOnDestroy { this.dispose() }
 }
 
-fun imageLoaded(): ReadWriteProperty<Any, Loaded?> {
-    return object : ReadWriteProperty<Any, Loaded?> {
-
-        private var loaded: Loaded? = null
-
-        override fun getValue(thisRef: Any, property: KProperty<*>): Loaded? {
-            return loaded
-        }
-
-        override fun setValue(thisRef: Any, property: KProperty<*>, value: Loaded?) {
-            // Clear out the value set previous
-            loaded?.dispose()
-            loaded = null
-
-            // Assign a new value
-            loaded = value
-        }
-    }
-}

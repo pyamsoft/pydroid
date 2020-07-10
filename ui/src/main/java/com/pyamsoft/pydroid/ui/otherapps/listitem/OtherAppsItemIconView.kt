@@ -20,7 +20,7 @@ package com.pyamsoft.pydroid.ui.otherapps.listitem
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.loader.imageLoaded
+import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemIconBinding
 
 internal class OtherAppsItemIconView internal constructor(
@@ -32,12 +32,17 @@ internal class OtherAppsItemIconView internal constructor(
 
     override val layoutRoot by boundView { otherAppsIconRoot }
 
-    private var loaded by imageLoaded()
+    private var loaded: Loaded? = null
 
     init {
         doOnTeardown {
-            loaded = null
+            clear()
         }
+    }
+
+    private fun clear() {
+        loaded?.dispose()
+        loaded = null
     }
 
     override fun onRender(state: OtherAppsItemViewState) {
@@ -46,6 +51,7 @@ internal class OtherAppsItemIconView internal constructor(
 
     private fun handleApp(state: OtherAppsItemViewState) {
         state.app.let { app ->
+            clear()
             loaded = imageLoader.load(app.icon).into(binding.otherAppsIcon)
         }
     }

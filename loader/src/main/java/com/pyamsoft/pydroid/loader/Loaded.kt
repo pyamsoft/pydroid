@@ -46,7 +46,11 @@ fun imageLoaded(): ReadWriteProperty<Any, Loaded?> {
         }
 
         override fun setValue(thisRef: Any, property: KProperty<*>, value: Loaded?) {
+            // Clear out the value set previous
             loaded?.dispose()
+            loaded = null
+
+            // Assign a new value
             loaded = value
         }
     }

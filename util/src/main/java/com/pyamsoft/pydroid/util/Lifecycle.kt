@@ -154,7 +154,7 @@ inline fun LifecycleOwner.doOnCreate(crossinline func: () -> Unit) {
 
 inline fun Lifecycle.doOnCreate(crossinline func: () -> Unit) {
     val self = this
-    self.addObserver(object : LifecycleObserver {
+    val observer = object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_CREATE)
@@ -162,7 +162,12 @@ inline fun Lifecycle.doOnCreate(crossinline func: () -> Unit) {
             self.removeObserver(this)
             func()
         }
-    })
+    }
+
+    self.addObserver(observer)
+    self.doOnDestroy {
+        self.removeObserver(observer)
+    }
 }
 
 @JvmOverloads
@@ -173,7 +178,7 @@ inline fun LifecycleOwner.doOnStart(repeat: Boolean = false, crossinline func: (
 @JvmOverloads
 inline fun Lifecycle.doOnStart(repeat: Boolean = false, crossinline func: () -> Unit) {
     val self = this
-    self.addObserver(object : LifecycleObserver {
+    val observer = object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_START)
@@ -183,7 +188,12 @@ inline fun Lifecycle.doOnStart(repeat: Boolean = false, crossinline func: () -> 
             }
             func()
         }
-    })
+    }
+
+    self.addObserver(observer)
+    self.doOnDestroy {
+        self.removeObserver(observer)
+    }
 }
 
 @JvmOverloads
@@ -194,7 +204,7 @@ inline fun LifecycleOwner.doOnStop(repeat: Boolean = false, crossinline func: ()
 @JvmOverloads
 inline fun Lifecycle.doOnStop(repeat: Boolean = false, crossinline func: () -> Unit) {
     val self = this
-    self.addObserver(object : LifecycleObserver {
+    val observer = object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_STOP)
@@ -204,7 +214,12 @@ inline fun Lifecycle.doOnStop(repeat: Boolean = false, crossinline func: () -> U
             }
             func()
         }
-    })
+    }
+
+    self.addObserver(observer)
+    self.doOnDestroy {
+        self.removeObserver(observer)
+    }
 }
 
 @JvmOverloads
@@ -215,7 +230,7 @@ inline fun LifecycleOwner.doOnResume(repeat: Boolean = false, crossinline func: 
 @JvmOverloads
 inline fun Lifecycle.doOnResume(repeat: Boolean = false, crossinline func: () -> Unit) {
     val self = this
-    self.addObserver(object : LifecycleObserver {
+    val observer = object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_RESUME)
@@ -225,7 +240,12 @@ inline fun Lifecycle.doOnResume(repeat: Boolean = false, crossinline func: () ->
             }
             func()
         }
-    })
+    }
+
+    self.addObserver(observer)
+    self.doOnDestroy {
+        self.removeObserver(observer)
+    }
 }
 
 @JvmOverloads
@@ -236,7 +256,7 @@ inline fun LifecycleOwner.doOnPause(repeat: Boolean = false, crossinline func: (
 @JvmOverloads
 inline fun Lifecycle.doOnPause(repeat: Boolean = false, crossinline func: () -> Unit) {
     val self = this
-    self.addObserver(object : LifecycleObserver {
+    val observer = object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_PAUSE)
@@ -246,6 +266,11 @@ inline fun Lifecycle.doOnPause(repeat: Boolean = false, crossinline func: () -> 
             }
             func()
         }
-    })
+    }
+
+    self.addObserver(observer)
+    self.doOnDestroy {
+        self.removeObserver(observer)
+    }
 }
 

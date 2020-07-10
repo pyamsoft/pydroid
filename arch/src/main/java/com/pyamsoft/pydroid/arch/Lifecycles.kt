@@ -51,7 +51,7 @@ inline fun Lifecycle.doOnDestroy(crossinline func: () -> Unit) {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_DESTROY)
-        fun onDestroy() {
+        fun onEvent() {
             self.removeObserver(this)
             func()
         }
@@ -82,7 +82,7 @@ inline fun Lifecycle.doOnCreate(crossinline func: () -> Unit) {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_CREATE)
-        fun onDestroy() {
+        fun onEvent() {
             self.removeObserver(this)
             func()
         }
@@ -113,7 +113,7 @@ inline fun Lifecycle.doOnStart(crossinline func: () -> Unit) {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_START)
-        fun onDestroy() {
+        fun onEvent() {
             self.removeObserver(this)
             func()
         }
@@ -144,7 +144,7 @@ inline fun Lifecycle.doOnStop(crossinline func: () -> Unit) {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_STOP)
-        fun onDestroy() {
+        fun onEvent() {
             self.removeObserver(this)
             func()
         }
@@ -175,7 +175,7 @@ inline fun Lifecycle.doOnResume(crossinline func: () -> Unit) {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_RESUME)
-        fun onDestroy() {
+        fun onEvent() {
             self.removeObserver(this)
             func()
         }
@@ -206,7 +206,7 @@ inline fun Lifecycle.doOnPause(crossinline func: () -> Unit) {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_STOP)
-        fun onDestroy() {
+        fun onEvent() {
             self.removeObserver(this)
             func()
         }

@@ -36,7 +36,7 @@ internal class RatingIconView internal constructor(
 
     init {
         doOnTeardown {
-            iconLoaded?.dispose()
+            iconLoaded = null
         }
     }
 

@@ -36,7 +36,7 @@ internal class OtherAppsItemIconView internal constructor(
 
     init {
         doOnTeardown {
-            loaded?.dispose()
+            loaded = null
         }
     }
 

@@ -33,4 +33,3 @@ fun Loaded.disposeOnDestroy(owner: LifecycleOwner) {
 fun Loaded.disposeOnDestroy(lifecycle: Lifecycle) {
     lifecycle.doOnDestroy { this.dispose() }
 }
-

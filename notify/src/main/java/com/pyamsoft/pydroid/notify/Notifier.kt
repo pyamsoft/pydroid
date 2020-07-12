@@ -65,5 +65,4 @@ class Notifier(private val dispatchers: Set<NotifyDispatcher<*>>, context: Conte
             return rawId.asNotifyId()
         }
     }
-
 }

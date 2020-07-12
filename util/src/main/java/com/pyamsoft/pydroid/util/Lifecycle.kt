@@ -176,4 +176,3 @@ inline fun Lifecycle.doOnPause(repeat: Boolean = false, crossinline func: () -> 
         }
     }
 }
-

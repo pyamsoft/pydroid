@@ -30,6 +30,7 @@ object OssLibraries {
     // These libraries are disabled by default and should be enabled at runtime
     @JvmField
     var ARCH = false
+
     @JvmField
     var LOADER = false
 

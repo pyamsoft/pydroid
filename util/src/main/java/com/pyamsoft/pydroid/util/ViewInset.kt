@@ -21,15 +21,9 @@ import android.app.Activity
 import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
-@Deprecated("Use Activity.stableLayoutHideNavigation()")
-fun ViewGroup.makeWindowSexy() {
-    this.oldStableLayoutHideNavigation()
-}
 
 fun Activity.stableLayoutHideNavigation() {
     val w = this.window

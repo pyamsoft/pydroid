@@ -27,18 +27,11 @@ interface EventBus<T : Any> : EventConsumer<T> {
 
     companion object {
 
-        private val EMPTY by lazy { create<Unit>() }
-
         @CheckResult
         @JvmStatic
         @JvmOverloads
         fun <T : Any> create(
             context: CoroutineContext = EmptyCoroutineContext
         ): EventBus<T> = RealBus(context)
-
-        @CheckResult
-        @JvmStatic
-        @Deprecated("Do you really need a Global Unit speaking EventBus? Just create your own.")
-        fun empty(): EventBus<Unit> = EMPTY
     }
 }

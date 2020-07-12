@@ -26,27 +26,9 @@ import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromActivity
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromFragment
+import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import timber.log.Timber
-
-/**
- * Allow nullable for easier caller API
- */
-@CheckResult
-@Deprecated(
-    message = "Use viewModelFactory",
-    replaceWith = ReplaceWith(
-        expression = "viewModelFactory<T>(store, factoryProvider)",
-        imports = ["com.pyamsoft.pydroid.ui.arch.viewModelFactory"]
-    )
-)
-inline fun <reified T : UiViewModel<*, *, *>> factory(
-    store: ViewModelStore,
-    crossinline factoryProvider: () -> Factory?
-): ViewModelFactory<T> {
-    return viewModelFactory(store, factoryProvider)
-}
 
 /**
  * Allow nullable for easier caller API
@@ -64,46 +46,12 @@ inline fun <reified T : UiViewModel<*, *, *>> viewModelFactory(
  */
 @CheckResult
 @JvmOverloads
-@Deprecated(
-    message = "Use viewModelFactory",
-    replaceWith = ReplaceWith(
-        expression = "viewModelFactory<T>(activity, factoryProvider)",
-        imports = ["com.pyamsoft.pydroid.ui.arch.viewModelFactory"]
-    )
-)
-inline fun <reified T : UiViewModel<*, *, *>> Fragment.factory(
-    activity: Boolean = false,
-    crossinline factoryProvider: () -> Factory?
-): ViewModelFactory<T> {
-    return viewModelFactory(activity, factoryProvider)
-}
-
-/**
- * Allow nullable for easier caller API
- */
-@CheckResult
-@JvmOverloads
 inline fun <reified T : UiViewModel<*, *, *>> Fragment.viewModelFactory(
     activity: Boolean = false,
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
     val factory = if (activity) FromActivity(this) else FromFragment(this)
     return ViewModelFactory(factory, T::class.java) { requireNotNull(factoryProvider()) }
-}
-
-/**
- * Allow nullable for easier caller API
- */
-@CheckResult
-@Deprecated(
-    message = "Use viewModelFactory",
-    replaceWith = ReplaceWith(
-        expression = "viewModelFactory<T>(factoryProvider)",
-        imports = ["com.pyamsoft.pydroid.ui.arch.viewModelFactory"]
-    )
-)
-inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.factory(crossinline factoryProvider: () -> Factory?): ViewModelFactory<T> {
-    return viewModelFactory(factoryProvider)
 }
 
 /**

@@ -9,10 +9,24 @@ class Notifier(private val dispatchers: Set<NotifyDispatcher<*>>, context: Conte
     private val manager by lazy { NotificationManagerCompat.from(context.applicationContext) }
 
     @CheckResult
-    @JvmOverloads
+    fun <T : NotifyData> show(notification: T): NotifyId {
+        return show(generateNotificationId(), NOTIFY_EMPTY_TAG, notification)
+    }
+
+    @CheckResult
+    fun <T : NotifyData> show(id: NotifyId, notification: T): NotifyId {
+        return show(id, NOTIFY_EMPTY_TAG, notification)
+    }
+
+    @CheckResult
+    fun <T : NotifyData> show(tag: NotifyTag, notification: T): NotifyId {
+        return show(generateNotificationId(), tag, notification)
+    }
+
+    @CheckResult
     fun <T : NotifyData> show(
-        id: NotifyId = generateNotificationId(),
-        tag: NotifyTag = NOTIFY_EMPTY_TAG,
+        id: NotifyId,
+        tag: NotifyTag,
         notification: T
     ): NotifyId {
         val dispatcher = dispatchers
@@ -28,7 +42,7 @@ class Notifier(private val dispatchers: Set<NotifyDispatcher<*>>, context: Conte
             .firstOrNull()
             ?: throw MissingDispatcherException(dispatchers, notification)
 
-        val newNotification = dispatcher.build(notification)
+        val newNotification = dispatcher.build(id, notification)
 
         if (tag.tag.isNotBlank()) {
             manager.notify(tag.tag, id.id, newNotification)
@@ -39,10 +53,13 @@ class Notifier(private val dispatchers: Set<NotifyDispatcher<*>>, context: Conte
         return id
     }
 
-    @JvmOverloads
+    fun cancel(id: NotifyId) {
+        cancel(id, NOTIFY_EMPTY_TAG)
+    }
+
     fun cancel(
-        tag: NotifyTag = NOTIFY_EMPTY_TAG,
-        id: NotifyId
+        id: NotifyId,
+        tag: NotifyTag
     ) {
         if (tag.tag.isNotBlank()) {
             manager.cancel(tag.tag, id.id)

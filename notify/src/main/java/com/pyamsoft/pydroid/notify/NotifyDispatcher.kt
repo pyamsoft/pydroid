@@ -9,5 +9,8 @@ interface NotifyDispatcher<T : NotifyData> {
     fun canShow(notification: NotifyData): Boolean
 
     @CheckResult
-    fun build(notification: T): Notification
+    fun build(
+        id: NotifyId,
+        notification: T
+    ): Notification
 }

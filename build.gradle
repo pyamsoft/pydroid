@@ -62,7 +62,7 @@ buildscript {
 		// Network
 		moshi = "1.9.3"
 		retrofit = '2.9.0'
-		okhttp = "4.7.2"
+		okhttp = "4.8.0"
 
 		// Logging
 		timber = "4.7.1"
@@ -91,7 +91,7 @@ buildscript {
 		classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
 
 		// Spotless
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:4.4.0"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:4.5.1"
 	}
 }
 

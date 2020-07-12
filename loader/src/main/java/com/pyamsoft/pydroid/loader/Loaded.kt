@@ -20,8 +20,6 @@ package com.pyamsoft.pydroid.loader
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 interface Loaded {
 

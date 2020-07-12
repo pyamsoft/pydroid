@@ -22,10 +22,8 @@ import android.widget.Toast
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.concurrent.ConcurrentHashMap
 
 object Toaster {
@@ -71,16 +69,10 @@ object Toaster {
         val instance = Instance()
         cache[lifecycle] = instance
 
-        lifecycle.addObserver(object : LifecycleObserver {
-
-            @Suppress("unused")
-            @OnLifecycleEvent(ON_DESTROY)
-            fun onDestroy() {
-                lifecycle.removeObserver(this)
-                cache.remove(lifecycle)
-                instance.onDestroy()
-            }
-        })
+        lifecycle.doOnDestroy {
+            cache.remove(lifecycle)
+            instance.onDestroy()
+        }
 
         return instance
     }

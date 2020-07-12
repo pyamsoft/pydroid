@@ -26,13 +26,11 @@ import androidx.core.view.setMargins
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
+import com.pyamsoft.pydroid.util.doOnDestroy
 import com.pyamsoft.pydroid.util.toDp
 import java.util.concurrent.ConcurrentHashMap
 
@@ -158,19 +156,9 @@ object Snackbreak {
 
         val instance = Instance()
         cache.getOrPut(lifecycle) {
-            lifecycle.addObserver(object : LifecycleObserver {
-
-                @Suppress("unused")
-                @OnLifecycleEvent(ON_DESTROY)
-                fun onDestroy() {
-                    lifecycle.removeObserver(this)
-                    cache.remove(lifecycle)
-                        ?.forEach { entry ->
-                            entry.instance.onDestroy()
-                        }
-                }
-            })
-
+            lifecycle.doOnDestroy {
+                cache.remove(lifecycle)?.forEach { it.instance.onDestroy() }
+            }
             return@getOrPut mutableSetOf()
         }
             .add(CacheEntry(instance, id))

@@ -16,6 +16,8 @@
  */
 
 dependencies {
+	// Timber logging
+	api "com.jakewharton.timber:timber:$timber"
 
 	// Moshi
 	implementation "com.squareup.moshi:moshi:$moshi"

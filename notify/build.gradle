@@ -16,7 +16,6 @@
  */
 
 dependencies {
-	api "androidx.core:core-ktx:$core"
 	api "androidx.core:core:$core"
 
 	api project(':core')

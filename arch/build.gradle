@@ -16,6 +16,9 @@
  */
 
 dependencies {
+	// Timber logging
+	api "com.jakewharton.timber:timber:$timber"
+
 	// For ViewModel
 	api "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
 	api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"

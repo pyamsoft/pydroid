@@ -1,15 +1,12 @@
 package com.pyamsoft.pydroid.notify
 
-import android.app.NotificationManager
 import android.content.Context
 import androidx.annotation.CheckResult
-import androidx.core.content.getSystemService
+import androidx.core.app.NotificationManagerCompat
 
 class Notifier(private val dispatchers: Set<NotifyDispatcher<*>>, context: Context) {
 
-    private val manager by lazy {
-        requireNotNull(context.applicationContext.getSystemService<NotificationManager>())
-    }
+    private val manager by lazy { NotificationManagerCompat.from(context.applicationContext) }
 
     @CheckResult
     @JvmOverloads

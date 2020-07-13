@@ -17,11 +17,4 @@
 
 package com.pyamsoft.pydroid.notify
 
-import androidx.annotation.CheckResult
-
-data class NotifyTag internal constructor(val tag: String)
-
-@CheckResult
-fun String.toNotifyTag(): NotifyTag {
-    return NotifyTag(this)
-}
+data class NotifyChannelInfo(val id: String, val title: String, val description: String)

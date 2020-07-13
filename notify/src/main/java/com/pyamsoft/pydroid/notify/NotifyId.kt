@@ -22,6 +22,6 @@ import androidx.annotation.CheckResult
 data class NotifyId internal constructor(val id: Int)
 
 @CheckResult
-fun Int.asNotifyId(): NotifyId {
+fun Int.toNotifyId(): NotifyId {
     return NotifyId(this)
 }

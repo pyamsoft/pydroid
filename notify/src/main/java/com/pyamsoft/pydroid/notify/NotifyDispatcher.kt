@@ -28,6 +28,7 @@ interface NotifyDispatcher<T : NotifyData> {
     @CheckResult
     fun build(
         id: NotifyId,
+        channelInfo: NotifyChannelInfo,
         notification: T
     ): Notification
 }

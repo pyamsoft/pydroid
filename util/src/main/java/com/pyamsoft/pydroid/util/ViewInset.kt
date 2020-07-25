@@ -17,29 +17,51 @@
 
 package com.pyamsoft.pydroid.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.res.Configuration
 import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
+import android.view.Window
+import android.view.WindowInsetsController
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 fun Activity.stableLayoutHideNavigation() {
+    val isLandscape =
+        this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val w = this.window
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        w.setDecorFitsSystemWindows(false)
+        w.newStableLayoutHideNavigation(isLandscape)
     } else {
-        w.decorView.oldStableLayoutHideNavigation()
+        w.oldStableLayoutHideNavigation(isLandscape)
+    }
+}
+
+@SuppressLint("NewApi")
+private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
+    this.setDecorFitsSystemWindows(false)
+    if (isLandscape) {
+        this.insetsController?.systemBarsBehavior =
+            WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     }
 }
 
 @Suppress("DEPRECATION")
-private fun View.oldStableLayoutHideNavigation() {
-    this.systemUiVisibility = this.systemUiVisibility or
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
+    this.decorView.systemUiVisibility = this.decorView.systemUiVisibility or
+        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+    if (isLandscape) {
+        // In landscape mode, navbar is marked immersive sticky
+        this.decorView.systemUiVisibility = this.decorView.systemUiVisibility or
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+    }
 }
 
 fun View.doOnApplyWindowInsets(func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit) {

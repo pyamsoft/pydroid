@@ -29,13 +29,6 @@ object OssLibraries {
     var usingLoader = false
     var usingNotify = false
     var usingUi = false
-        set(value) {
-            if (value) {
-                field = value
-                usingArch = true
-                usingLoader = true
-            }
-        }
 
     private fun addBuildLibraries() {
         add(
@@ -248,19 +241,26 @@ object OssLibraries {
         // Util always added because it is a dependency of bootstrap
         addUtilLibraries()
 
+        // Ui adds all of these libraries
         if (usingUi) {
             addUiLibraries()
-        }
-        if (usingArch) {
             addArchLibraries()
-        }
-        if (usingLoader) {
             addLoaderLibraries()
+        } else {
+            // If we aren't using UI, look at individual flags
+            if (usingArch) {
+                addArchLibraries()
+            }
+            if (usingLoader) {
+                addLoaderLibraries()
+            }
         }
 
+        // Nothing directly uses this
         if (usingNotify) {
             addNotifyLibraries()
         }
+
         return Collections.unmodifiableSet(libraries)
     }
 }

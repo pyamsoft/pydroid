@@ -39,10 +39,10 @@ buildscript {
 		maxSdk = 30
 
 		// Kotlin
-		coroutines = '1.3.7'
+		coroutines = '1.3.8'
 
 		// AndroidX
-		core = "1.3.0"
+		core = "1.3.1"
 		constraintLayout = "1.1.3"
 		lifecycle = "2.2.0"
 		vectorDrawable = "1.1.0"
@@ -78,7 +78,7 @@ buildscript {
 		classpath "com.android.tools.build:gradle:4.0.0"
 
 		// Gradle version checker
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.29.0'
 
 		// To publish
 		classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
@@ -91,7 +91,7 @@ buildscript {
 		classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
 
 		// Spotless
-		classpath "com.diffplug.spotless:spotless-plugin-gradle:4.5.1"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:5.1.0"
 	}
 }
 
@@ -240,19 +240,19 @@ subprojects {
 }
 
 allprojects {
-	apply plugin: "com.diffplug.gradle.spotless"
+	apply plugin: "com.diffplug.spotless"
 	apply plugin: 'com.github.ben-manes.versions'
 
 	spotless {
 		java {
-			target "**/*.java"
+			target "src/**/*.java"
 		}
 		kotlin {
-			target "**/*.kt"
+			target "src/**/*.kt"
 			ktlint()
 		}
 		groovyGradle {
-			target "*.gradle", "**/*.gradle"
+			target "*.gradle"
 			greclipse()
 		}
 	}

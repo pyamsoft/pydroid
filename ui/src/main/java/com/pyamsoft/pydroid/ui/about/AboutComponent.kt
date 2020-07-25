@@ -62,7 +62,7 @@ internal interface AboutComponent {
                 parent: ViewGroup,
                 owner: LifecycleOwner
             ): AboutComponent {
-                OssLibraries.UI = true
+                OssLibraries.usingUi = true
                 return Impl(parent, owner, params)
             }
         }

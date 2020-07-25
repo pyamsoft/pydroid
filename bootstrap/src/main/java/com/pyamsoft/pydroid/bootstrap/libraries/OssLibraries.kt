@@ -24,23 +24,16 @@ object OssLibraries {
 
     private val libraries: MutableSet<OssLibrary> = LinkedHashSet()
 
-    @JvmField
-    var UTIL = true
-
     // These libraries are disabled by default and should be enabled at runtime
-    @JvmField
-    var ARCH = false
-
-    @JvmField
-    var LOADER = false
-
-    var UI = false
+    var usingArch = false
+    var usingLoader = false
+    var usingNotify = false
+    var usingUi = false
         set(value) {
             if (value) {
                 field = value
-                ARCH = true
-                LOADER = true
-                UTIL = true
+                usingArch = true
+                usingLoader = true
             }
         }
 
@@ -215,6 +208,14 @@ object OssLibraries {
         )
     }
 
+    private fun addNotifyLibraries() {
+        add(
+            "PYDroid Notify",
+            "https://github.com/pyamsoft/pydroid",
+            "PYDroid notification management abstraction library"
+        )
+    }
+
     @JvmOverloads
     @JvmStatic
     fun add(
@@ -244,17 +245,21 @@ object OssLibraries {
         // Bootstrap always added because we are bootstrap
         addBootstrapLibraries()
 
-        if (UTIL) {
-            addUtilLibraries()
-        }
-        if (UI) {
+        // Util always added because it is a dependency of bootstrap
+        addUtilLibraries()
+
+        if (usingUi) {
             addUiLibraries()
         }
-        if (ARCH) {
+        if (usingArch) {
             addArchLibraries()
         }
-        if (LOADER) {
+        if (usingLoader) {
             addLoaderLibraries()
+        }
+
+        if (usingNotify) {
+            addNotifyLibraries()
         }
         return Collections.unmodifiableSet(libraries)
     }

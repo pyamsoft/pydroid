@@ -53,7 +53,7 @@ buildscript {
 		swipeRefresh = "1.1.0"
 
 		// Material Design
-		materialDesign = "1.1.0"
+		materialDesign = "1.2.0"
 
 		// Us
 		cachify = "0.0.14"
@@ -75,7 +75,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:4.0.0"
+		classpath "com.android.tools.build:gradle:4.0.1"
 
 		// Gradle version checker
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.29.0'

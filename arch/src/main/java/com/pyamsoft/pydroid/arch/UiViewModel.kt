@@ -22,13 +22,10 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
-import java.util.concurrent.Executors
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -37,13 +34,12 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
     private val debug: Boolean
 ) : ViewModel(), SaveableState {
-
-    private val stateCoroutineContext = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
     private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onInitEvents by onInitEventDelegate
@@ -65,6 +61,66 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private var state: UiVMState<S> = UiVMStateImpl(initialState)
 
     protected abstract fun handleViewEvent(event: V)
+
+    // Need PublishedApi so createComponent can be inline
+    @UiThread
+    @CheckResult
+    @PublishedApi
+    internal fun render(
+        savedInstanceState: UiBundleReader,
+        vararg views: UiView<S, V>,
+        onControllerEvent: (event: C) -> Unit
+    ): Job = viewModelScope.launch(context = Dispatchers.Main) {
+
+        // Bind ViewModel
+        queueInOrder { bindControllerEvents(onControllerEvent) }
+        queueInOrder { bindViewEvents(views.asIterable()) }
+
+        // Use launch here so that we re-claim the Main context and have these run after the
+        // controller and view events are finished binding
+        queueInOrder {
+            // Initialize before first render
+            // Generally, since you will add your doOnInit hooks in the ViewModel init {} block,
+            // they will only run once - which is when the object is created.
+            //
+            // If you wanna do some strange kind of stuff though, you do you.
+            initialize(savedInstanceState)
+
+            // Inflate the views
+            views.forEach { it.inflate(savedInstanceState) }
+
+            // Listen for any further state changes at this point
+            queueInOrder { bindStateEvents(views) }
+
+            // Render the latest or initial state
+            queueInOrder {
+                handleStateChange(views, state.get())
+            }
+        }
+    }
+
+    /**
+     * Launches this coroutine on the single threaded main context
+     * This ensures that the operation queued will run in order before any of the other operations after it
+     *
+     * Must be CoroutineScope extension to cancel correctly
+     */
+    private inline fun CoroutineScope.queueInOrder(crossinline func: suspend CoroutineScope.() -> Unit) {
+        launch(context = Dispatchers.Main) { func() }
+    }
+
+    @UiThread
+    private fun initialize(savedInstanceState: UiBundleReader) {
+        // Only run the init hooks if they exist, otherwise we don't need to init the memory
+        if (onInitEventDelegate.isInitialized()) {
+
+            // Call init hooks in random order
+            onInitEvents.forEach { it(savedInstanceState) }
+
+            // Clear the init hooks list to free up memory
+            onInitEvents.clear()
+        }
+    }
 
     /**
      * Used for saving state in persistent lifecycle
@@ -89,37 +145,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    // Need PublishedApi so createComponent can be inline
-    @UiThread
-    @CheckResult
-    @PublishedApi
-    internal fun render(
-        savedInstanceState: UiBundleReader,
-        vararg views: UiView<S, V>,
-        onControllerEvent: (event: C) -> Unit
-    ): Job = viewModelScope.launch(context = Dispatchers.Main) {
-
-        // Bind ViewModel
-        bindControllerEvents(onControllerEvent)
-        bindViewEvents(views.asIterable())
-
-        // Initialize before first render
-        // Generally, since you will add your doOnInit hooks in the ViewModel init {} block,
-        // they will only run once - which is when the object is created.
-        //
-        // If you wanna do some strange kind of stuff though, you do you.
-        initialize(savedInstanceState)
-
-        // Inflate the views
-        views.forEach { it.inflate(savedInstanceState) }
-
-        // Listen for any further state changes at this point
-        bindStateEvents(views)
-
-        // Render the latest or initial state
-        handleStateChange(views, state.get())
-    }
-
     @UiThread
     final override fun onCleared() {
         Enforcer.assertOnMainThread()
@@ -142,17 +167,16 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onSaveStateEventDelegate.isInitialized()) {
             onSaveStateEvents.clear()
         }
-
-        // Close the dispatcher
-        stateCoroutineContext.close()
     }
 
     /**
      * Fire a controller event
      */
     protected fun publish(event: C) {
-        viewModelScope.launch(context = Dispatchers.IO) {
-            controllerEventBus.send(event)
+        viewModelScope.queueInOrder {
+            withContext(context = Dispatchers.IO) {
+                controllerEventBus.send(event)
+            }
         }
     }
 
@@ -162,8 +186,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
     protected fun setState(func: S.() -> S) {
-        viewModelScope.launch(context = stateCoroutineContext) {
-            processStateChange(isDebuggable = true) { func() }
+        viewModelScope.queueInOrder {
+            withContext(context = Dispatchers.Default) {
+                processStateChange(isDebuggable = true) { func() }
+
+            }
         }
     }
 
@@ -174,11 +201,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * may not be up to date with the latest setState() call.
      */
     protected fun withState(func: S.() -> Unit) {
-        viewModelScope.launch(context = stateCoroutineContext) {
+        viewModelScope.queueInOrder {
             // Yield to any setState calls happening at this point
             yield()
 
-            processStateChange(isDebuggable = false) { this.apply(func) }
+            withContext(context = Dispatchers.Default) {
+                processStateChange(isDebuggable = false) { this.apply(func) }
+            }
         }
     }
 
@@ -236,30 +265,16 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         views.forEach { it.render(state) }
     }
 
-    private fun initialize(savedInstanceState: UiBundleReader) {
-        // Only run the init hooks if they exist, otherwise we don't need to init the memory
-        if (onInitEventDelegate.isInitialized()) {
-
-            // Call init hooks in random order
-            onInitEvents.forEach { it(savedInstanceState) }
-
-            // Clear the init hooks list to free up memory
-            onInitEvents.clear()
-        }
-    }
-
-    // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
-    private fun CoroutineScope.bindStateEvents(views: Array<out UiView<S, V>>) {
-        launch(context = Dispatchers.IO) {
+    private suspend fun bindStateEvents(views: Array<out UiView<S, V>>) {
+        withContext(context = Dispatchers.IO) {
             state.onChange { state ->
                 withContext(context = Dispatchers.Main) { handleStateChange(views, state) }
             }
         }
     }
 
-    // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
-    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>) {
-        launch(context = Dispatchers.IO) {
+    private suspend fun bindViewEvents(views: Iterable<UiView<S, V>>) {
+        withContext(context = Dispatchers.IO) {
             views.forEach { view ->
                 view.onViewEvent { handleViewEvent(it) }
                 if (view is BaseUiView<S, V, *>) {
@@ -272,9 +287,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    // This must be an extension on the CoroutineScope or it will not cancel when the scope cancels
-    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
-        launch(context = Dispatchers.IO) {
+    private suspend inline fun bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
+        withContext(context = Dispatchers.IO) {
             controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
                 withContext(context = Dispatchers.Main) {

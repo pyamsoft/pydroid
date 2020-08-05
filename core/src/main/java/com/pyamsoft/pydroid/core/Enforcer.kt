@@ -20,21 +20,33 @@ package com.pyamsoft.pydroid.core
 import android.os.Looper
 import androidx.annotation.CheckResult
 
+/**
+ * Enforce expected threading contexts
+ */
 object Enforcer {
 
     private val mainLooper by lazy { Looper.getMainLooper() }
 
+    /**
+     * Check if the current thread is the Main or UI thread
+     */
     @CheckResult
     fun isMainThread(): Boolean {
         return mainLooper.thread == Thread.currentThread()
     }
 
+    /**
+     * Throws an exception if the current thread is the Main or UI thread
+     */
     fun assertOffMainThread() {
         if (isMainThread()) {
             throw AssertionError("This operation must be OFF the Main/UI thread!")
         }
     }
 
+    /**
+     * Throws an exception if the current thread is not the Main or UI thread
+     */
     fun assertOnMainThread() {
         if (!isMainThread()) {
             throw AssertionError("This operation must be ON the Main/UI thread!")

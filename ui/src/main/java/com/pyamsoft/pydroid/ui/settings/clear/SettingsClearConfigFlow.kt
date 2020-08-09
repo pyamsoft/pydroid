@@ -33,5 +33,4 @@ sealed class SettingsClearConfigViewEvent : UiViewEvent {
 sealed class SettingsClearConfigControllerEvent : UiControllerEvent {
 
     object CancelPrompt : SettingsClearConfigControllerEvent()
-
 }

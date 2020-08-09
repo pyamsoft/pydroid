@@ -109,4 +109,3 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
         }
     }
 }
-

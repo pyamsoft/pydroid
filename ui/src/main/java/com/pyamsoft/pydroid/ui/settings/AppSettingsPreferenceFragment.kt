@@ -182,6 +182,17 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun openClearDataDialog() {
+        onClearAllPrompt()
+    }
+
+    /**
+     * Logs when the Clear All option is clicked, override to use unique implementation
+     *
+     * NOTE: In the future this method will be going away as the clear all flow will be handled by the library.
+     * Custom clear logic in the middle will be supported but the UI for the prompt, and the end result of clearing
+     * user application data will be enforced by the library.
+     */
+    protected open fun onClearAllPrompt() {
         SettingsClearConfigDialog.newInstance()
             .show(requireActivity(), SettingsClearConfigDialog.TAG)
     }

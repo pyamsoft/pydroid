@@ -15,22 +15,22 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.app.dialog
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
-import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.arch.UiViewState
+import android.view.ViewGroup
+import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.databinding.ThemeDialogFrameBinding
 
-data class AppSettingsPopoutViewState(
-    val name: String
-) : UiViewState
+internal class ThemeDialogFrame internal constructor(
+    parent: ViewGroup
+) : BaseUiView<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogFrameBinding>(
+    parent
+) {
 
-sealed class AppSettingsPopoutViewEvent : UiViewEvent {
+    override val viewBinding = ThemeDialogFrameBinding::inflate
 
-    object ClosePopout : AppSettingsPopoutViewEvent()
-}
+    override val layoutRoot by boundView { appSettingsFrame }
 
-sealed class AppSettingsPopoutControllerEvent : UiControllerEvent {
-
-    object ClosePopout : AppSettingsPopoutControllerEvent()
+    override fun onRender(state: ThemeDialogViewState) {
+    }
 }

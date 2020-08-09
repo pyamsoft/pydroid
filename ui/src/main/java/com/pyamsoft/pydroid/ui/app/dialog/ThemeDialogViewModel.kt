@@ -15,25 +15,28 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.app.dialog
 
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogViewEvent.Close
 import timber.log.Timber
 
-internal class AppSettingsPopoutViewModel internal constructor(
+internal class ThemeDialogViewModel internal constructor(
     initialName: String,
     debug: Boolean
-) : UiViewModel<AppSettingsPopoutViewState, AppSettingsPopoutViewEvent, AppSettingsPopoutControllerEvent>(
-    initialState = AppSettingsPopoutViewState(
+) : UiViewModel<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogControllerEvent>(
+    initialState = ThemeDialogViewState(
         name = initialName
     ),
     debug = debug
 ) {
 
-    override fun handleViewEvent(event: AppSettingsPopoutViewEvent) {
+    override fun handleViewEvent(event: ThemeDialogViewEvent) {
         Timber.d("View event: $event")
         return when (event) {
-            is AppSettingsPopoutViewEvent.ClosePopout -> publish(AppSettingsPopoutControllerEvent.ClosePopout)
+            is Close -> publish(
+                ThemeDialogControllerEvent.Close
+            )
         }
     }
 }

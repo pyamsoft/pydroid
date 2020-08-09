@@ -18,9 +18,9 @@
 package com.pyamsoft.pydroid.ui.otherapps
 
 import androidx.fragment.app.Fragment
-import com.pyamsoft.pydroid.ui.settings.AppSettingsPopoutDialog
+import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
 
-internal class OtherAppsDialog : AppSettingsPopoutDialog() {
+internal class OtherAppsDialog : ThemeDialog() {
 
     override fun getContents(): Fragment {
         return OtherAppsFragment.newInstance()

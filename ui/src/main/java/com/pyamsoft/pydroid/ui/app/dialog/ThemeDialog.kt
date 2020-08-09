@@ -15,7 +15,7 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.app.dialog
 
 import android.app.Dialog
 import android.graphics.drawable.ColorDrawable
@@ -41,6 +41,7 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
+import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogControllerEvent.Close
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
@@ -49,14 +50,14 @@ import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import kotlin.LazyThreadSafetyMode.NONE
 import timber.log.Timber
 
-internal abstract class AppSettingsPopoutDialog protected constructor() : DialogFragment() {
+internal abstract class ThemeDialog protected constructor() : DialogFragment() {
 
-    internal var toolbar: AppSettingsPopoutToolbar? = null
+    internal var toolbar: ThemeDialogToolbar? = null
 
-    internal var frame: AppSettingsPopoutFrame? = null
+    internal var frame: ThemeDialogFrame? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<AppSettingsPopoutViewModel> { factory }
+    private val viewModel by viewModelFactory<ThemeDialogViewModel> { factory }
 
     private var stateSaver: StateSaver? = null
 
@@ -108,7 +109,7 @@ internal abstract class AppSettingsPopoutDialog protected constructor() : Dialog
 
         val toolbar = requireNotNull(toolbar)
         val dropshadow =
-            DropshadowView.createTyped<AppSettingsPopoutViewState, AppSettingsPopoutViewEvent>(
+            DropshadowView.createTyped<ThemeDialogViewState, ThemeDialogViewEvent>(
                 binding.layoutConstraint
             )
         val frame = requireNotNull(frame)
@@ -121,7 +122,7 @@ internal abstract class AppSettingsPopoutDialog protected constructor() : Dialog
         ) {
             Timber.d("Controller event: $it")
             return@createComponent when (it) {
-                is AppSettingsPopoutControllerEvent.ClosePopout -> requireActivity().onBackPressed()
+                is Close -> requireActivity().onBackPressed()
             }
         }
 

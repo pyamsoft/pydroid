@@ -181,7 +181,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun openClearDataDialog() {
-        onClearAllClicked()
     }
 
     private fun openLicensesPage() {
@@ -207,14 +206,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         settingsStateSaver?.saveState(outState)
         ratingStateSaver?.saveState(outState)
         versionStateSaver?.saveState(outState)
-    }
-
-    /**
-     * Logs when the Clear All option is clicked, override to use unique implementation
-     */
-    @CallSuper
-    protected open fun onClearAllClicked() {
-        Timber.d("Clear all preferences clicked")
     }
 
     /**

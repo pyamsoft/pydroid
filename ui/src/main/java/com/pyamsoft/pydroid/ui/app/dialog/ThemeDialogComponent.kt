@@ -15,16 +15,17 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.settings
+package com.pyamsoft.pydroid.ui.app.dialog
 
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.onlyFactory
+import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogComponent.Factory.Parameters
 
-internal interface AppSettingsPopoutComponent {
+internal interface ThemeDialogComponent {
 
-    fun inject(dialog: AppSettingsPopoutDialog)
+    fun inject(dialog: ThemeDialog)
 
     interface Factory {
 
@@ -33,7 +34,7 @@ internal interface AppSettingsPopoutComponent {
             name: String,
             background: Drawable,
             parent: ViewGroup
-        ): AppSettingsPopoutComponent
+        ): ThemeDialogComponent
 
         data class Parameters internal constructor(
             internal val debug: Boolean
@@ -44,27 +45,42 @@ internal interface AppSettingsPopoutComponent {
         private val parent: ViewGroup,
         private val background: Drawable,
         name: String,
-        params: Factory.Parameters
-    ) : AppSettingsPopoutComponent {
+        params: Parameters
+    ) : ThemeDialogComponent {
 
-        private val factory = onlyFactory { AppSettingsPopoutViewModel(name, params.debug) }
+        private val factory = onlyFactory {
+            ThemeDialogViewModel(
+                name,
+                params.debug
+            )
+        }
 
-        override fun inject(dialog: AppSettingsPopoutDialog) {
-            dialog.toolbar = AppSettingsPopoutToolbar(parent, background)
-            dialog.frame = AppSettingsPopoutFrame(parent)
+        override fun inject(dialog: ThemeDialog) {
+            dialog.toolbar =
+                ThemeDialogToolbar(
+                    parent,
+                    background
+                )
+            dialog.frame =
+                ThemeDialogFrame(parent)
             dialog.factory = factory
         }
 
         internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
+            private val params: Parameters
         ) : Factory {
 
             override fun create(
                 name: String,
                 background: Drawable,
                 parent: ViewGroup
-            ): AppSettingsPopoutComponent {
-                return Impl(parent, background, name, params)
+            ): ThemeDialogComponent {
+                return Impl(
+                    parent,
+                    background,
+                    name,
+                    params
+                )
             }
         }
     }

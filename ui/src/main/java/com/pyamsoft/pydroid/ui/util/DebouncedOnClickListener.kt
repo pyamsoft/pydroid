@@ -51,3 +51,8 @@ abstract class DebouncedOnClickListener protected constructor() : View.OnClickLi
         }
     }
 }
+
+@CheckResult
+fun View.OnClickListener.debounce(): View.OnClickListener {
+    return DebouncedOnClickListener.create { this.onClick(it) }
+}

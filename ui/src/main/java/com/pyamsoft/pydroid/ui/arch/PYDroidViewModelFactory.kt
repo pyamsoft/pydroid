@@ -29,6 +29,8 @@ import com.pyamsoft.pydroid.ui.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel
+import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigInteractor
+import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
@@ -41,7 +43,7 @@ internal class PYDroidViewModelFactory internal constructor(
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
             RatingDialogViewModel::class -> RatingDialogViewModel(
-                params.ratingInteractor,
+                params.interactors.rating,
                 params.debug
             )
             VersionUpgradeViewModel::class -> VersionUpgradeViewModel(
@@ -51,20 +53,24 @@ internal class PYDroidViewModelFactory internal constructor(
             )
             AppSettingsViewModel::class -> AppSettingsViewModel(
                 params.theming,
-                params.otherAppsInteractor,
+                params.interactors.otherApps,
                 params.debug
             )
             VersionCheckViewModel::class -> VersionCheckViewModel(
-                params.versionInteractor,
+                params.interactors.version,
                 params.debug
             )
             PrivacyViewModel::class -> PrivacyViewModel(params.debug)
             OtherAppsViewModel::class -> OtherAppsViewModel(
-                params.otherAppsInteractor,
+                params.interactors.otherApps,
                 params.debug
             )
-            AboutViewModel::class -> AboutViewModel(params.aboutInteractor, params.debug)
-            RatingViewModel::class -> RatingViewModel(params.ratingInteractor, params.debug)
+            SettingsClearConfigViewModel::class -> SettingsClearConfigViewModel(
+                params.interactors.settingsClearConfig,
+                params.debug
+            )
+            AboutViewModel::class -> AboutViewModel(params.interactors.about, params.debug)
+            RatingViewModel::class -> RatingViewModel(params.interactors.rating, params.debug)
             else -> fail()
         }
     }
@@ -72,11 +78,16 @@ internal class PYDroidViewModelFactory internal constructor(
     internal data class Parameters internal constructor(
         internal val name: CharSequence,
         internal val version: Int,
-        internal val ratingInteractor: RatingInteractor,
-        internal val aboutInteractor: AboutInteractor,
-        internal val versionInteractor: VersionCheckInteractor,
-        internal val otherAppsInteractor: OtherAppsInteractor,
         internal val theming: Theming,
-        internal val debug: Boolean
-    )
+        internal val debug: Boolean,
+        internal val interactors: Interactors
+    ) {
+        internal data class Interactors internal constructor(
+            internal val rating: RatingInteractor,
+            internal val about: AboutInteractor,
+            internal val version: VersionCheckInteractor,
+            internal val otherApps: OtherAppsInteractor,
+            internal val settingsClearConfig: SettingsClearConfigInteractor
+        )
+    }
 }

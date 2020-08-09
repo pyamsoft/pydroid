@@ -18,9 +18,9 @@
 package com.pyamsoft.pydroid.ui.otherapps
 
 import androidx.fragment.app.Fragment
-import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
+import com.pyamsoft.pydroid.ui.app.dialog.FullscreenThemeDialog
 
-internal class OtherAppsDialog : ThemeDialog() {
+internal class OtherAppsDialog : FullscreenThemeDialog() {
 
     override fun getContents(): Fragment {
         return OtherAppsFragment.newInstance()

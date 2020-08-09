@@ -37,6 +37,7 @@ import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
+import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigDialog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
@@ -181,6 +182,8 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun openClearDataDialog() {
+        SettingsClearConfigDialog.newInstance()
+            .show(requireActivity(), SettingsClearConfigDialog.TAG)
     }
 
     private fun openLicensesPage() {

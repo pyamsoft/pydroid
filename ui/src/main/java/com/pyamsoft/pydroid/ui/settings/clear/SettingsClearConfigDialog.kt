@@ -15,10 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.rating.dialog
+package com.pyamsoft.pydroid.ui.settings.clear
 
 import android.os.Bundle
-import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,25 +32,16 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
-import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.CancelDialog
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogControllerEvent.NavigateRating
-import com.pyamsoft.pydroid.ui.util.MarketLinker
+import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigControllerEvent.CancelPrompt
 
-class RatingDialog : ThemeDialog() {
+internal class SettingsClearConfigDialog : ThemeDialog() {
 
     private var stateSaver: StateSaver? = null
-    internal var changelogView: RatingChangelogView? = null
-    internal var controlsView: RatingControlsView? = null
-    internal var iconView: RatingIconView? = null
+    internal var message: SettingsClearConfigMessage? = null
+    internal var actions: SettingsClearConfigActions? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<RatingDialogViewModel>(activity = true) { factory }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isCancelable = false
-    }
+    private val viewModel by viewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,43 +56,28 @@ class RatingDialog : ThemeDialog() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-
-        val rateLink = requireArguments().getString(RATE_LINK, "")
-        val changeLogIcon = requireArguments().getInt(CHANGE_LOG_ICON, 0)
-        val changelog = requireArguments().getCharSequence(CHANGE_LOG_TEXT, "") as? SpannedString
-        requireNotNull(rateLink)
-        requireNotNull(changelog)
-        require(rateLink.isNotBlank())
-        require(changeLogIcon > 0)
-        require(changelog.isNotBlank())
-
         val binding = LayoutLinearVerticalBinding.bind(view)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
-            .plusRatingDialog()
-            .create(binding.layoutLinearV, viewLifecycleOwner, rateLink)
+            .plusClearConfirmDialog()
+            .create(binding.layoutLinearV)
             .inject(this)
 
         stateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             viewModel,
-            requireNotNull(iconView),
-            requireNotNull(changelogView),
-            requireNotNull(controlsView)
+            requireNotNull(message),
+            requireNotNull(actions)
         ) {
             return@createComponent when (it) {
-                is NavigateRating -> navigateToApplicationPage(it.link)
-                is CancelDialog -> dismiss()
+                is CancelPrompt -> dismiss()
             }
         }
-
-        viewModel.initialize(changelog, changeLogIcon)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        changelogView = null
-        controlsView = null
-        iconView = null
+        message = null
+        actions = null
         factory = null
         stateSaver = null
     }
@@ -121,34 +96,17 @@ class RatingDialog : ThemeDialog() {
         )
     }
 
-    private fun navigateToApplicationPage(link: String) {
-        val error = MarketLinker.linkToMarketPage(requireContext(), link)
-
-        if (error != null) {
-            viewModel.navigationFailed(error)
-        } else {
-            viewModel.navigationSuccess()
-            dismiss()
-        }
-    }
-
     companion object {
 
-        internal const val TAG = "RatingDialog"
-        private const val CHANGE_LOG_TEXT = "change_log_text"
-        private const val CHANGE_LOG_ICON = "change_log_icon"
-        private const val RATE_LINK = "rate_link"
+        internal const val TAG = "SettingsClearConfigDialog"
 
         @JvmStatic
         @CheckResult
-        fun newInstance(provider: ChangeLogProvider): DialogFragment {
-            return RatingDialog().apply {
-                arguments = Bundle().apply {
-                    putString(RATE_LINK, provider.changeLogPackageName)
-                    putCharSequence(CHANGE_LOG_TEXT, provider.changelog)
-                    putInt(CHANGE_LOG_ICON, provider.applicationIcon)
-                }
+        fun newInstance(): DialogFragment {
+            return SettingsClearConfigDialog().apply {
+                arguments = Bundle().apply {}
             }
         }
     }
 }
+

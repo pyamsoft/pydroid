@@ -15,24 +15,9 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.settings.clear
 
-import androidx.fragment.app.Fragment
-import com.pyamsoft.pydroid.ui.app.dialog.FullscreenThemeDialog
-import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
+internal interface SettingsClearConfigInteractor {
 
-internal class AboutDialog : FullscreenThemeDialog() {
-
-    override fun getContents(): Fragment {
-        return AboutFragment.newInstance()
-    }
-
-    override fun getInitialTitle(): String {
-        return "Open Source Licenses"
-    }
-
-    companion object {
-
-        internal const val TAG = "AboutDialog"
-    }
+    suspend fun clear()
 }

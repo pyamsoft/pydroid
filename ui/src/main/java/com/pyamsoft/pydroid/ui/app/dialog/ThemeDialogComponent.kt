@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogComponent.Factory.Parameter
 
 internal interface ThemeDialogComponent {
 
-    fun inject(dialog: ThemeDialog)
+    fun inject(dialog: FullscreenThemeDialog)
 
     interface Factory {
 
@@ -55,7 +55,7 @@ internal interface ThemeDialogComponent {
             )
         }
 
-        override fun inject(dialog: ThemeDialog) {
+        override fun inject(dialog: FullscreenThemeDialog) {
             dialog.toolbar =
                 ThemeDialogToolbar(
                     parent,

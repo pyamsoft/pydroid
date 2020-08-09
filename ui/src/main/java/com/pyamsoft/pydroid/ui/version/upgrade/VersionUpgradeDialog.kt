@@ -17,31 +17,26 @@
 
 package com.pyamsoft.pydroid.ui.version.upgrade
 
-import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.R.layout
-import com.pyamsoft.pydroid.ui.app.noTitle
+import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.CancelDialog
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeControllerEvent.OpenMarket
-import com.pyamsoft.pydroid.util.valueFromCurrentTheme
-import kotlin.LazyThreadSafetyMode.NONE
 
-class VersionUpgradeDialog : DialogFragment() {
+class VersionUpgradeDialog : ThemeDialog() {
 
     private var stateSaver: StateSaver? = null
     internal var content: VersionUpgradeContentView? = null
@@ -49,18 +44,6 @@ class VersionUpgradeDialog : DialogFragment() {
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<VersionUpgradeViewModel>(activity = true) { factory }
-
-    private val themeFromAttrs: Int by lazy(NONE) {
-        requireActivity().valueFromCurrentTheme(R.attr.dialogTheme)
-    }
-
-    override fun getTheme(): Int {
-        return themeFromAttrs
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return Dialog(ContextThemeWrapper(requireActivity(), theme), theme).noTitle()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

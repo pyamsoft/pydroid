@@ -15,24 +15,23 @@
  *
  */
 
-package com.pyamsoft.pydroid.ui.about
+package com.pyamsoft.pydroid.ui.settings.clear
 
-import androidx.fragment.app.Fragment
-import com.pyamsoft.pydroid.ui.app.dialog.FullscreenThemeDialog
-import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
+import android.app.ActivityManager
+import android.content.Context
+import androidx.core.content.getSystemService
+import timber.log.Timber
 
-internal class AboutDialog : FullscreenThemeDialog() {
+internal class SettingsClearConfigInteractorImpl internal constructor(
+    context: Context
+) : SettingsClearConfigInteractor {
 
-    override fun getContents(): Fragment {
-        return AboutFragment.newInstance()
+    private val activityManager by lazy {
+        requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
     }
 
-    override fun getInitialTitle(): String {
-        return "Open Source Licenses"
-    }
-
-    companion object {
-
-        internal const val TAG = "AboutDialog"
+    override suspend fun clear() {
+        Timber.d("Resetting all application user data")
+        activityManager.clearApplicationUserData()
     }
 }

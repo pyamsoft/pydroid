@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.about.AboutComponent
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
+import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogComponent
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemComponent
@@ -35,7 +36,8 @@ import com.pyamsoft.pydroid.ui.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.privacy.PrivacyComponent
 import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
-import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogComponent
+import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigComponent
+import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigModule
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionComponent
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
@@ -61,6 +63,9 @@ internal interface PYDroidComponent {
     fun plusRatingDialog(): RatingDialogComponent.Factory
 
     @CheckResult
+    fun plusClearConfirmDialog(): SettingsClearConfigComponent.Factory
+
+    @CheckResult
     fun plusVersion(): VersionComponent.Factory
 
     @CheckResult
@@ -70,7 +75,7 @@ internal interface PYDroidComponent {
     fun plusSettings(): AppSettingsComponent.Factory
 
     @CheckResult
-    fun plusSettingsPopout(): ThemeDialogComponent.Factory
+    fun plusThemeDialog(): ThemeDialogComponent.Factory
 
     interface Factory {
 
@@ -101,6 +106,12 @@ internal interface PYDroidComponent {
 
         private val loaderModule = LoaderModule(
             LoaderModule.Parameters(
+                context = context
+            )
+        )
+
+        private val settingsClearConfigModule = SettingsClearConfigModule(
+            SettingsClearConfigModule.Parameters(
                 context = context
             )
         )
@@ -141,12 +152,15 @@ internal interface PYDroidComponent {
                 PYDroidViewModelFactory.Parameters(
                     name = params.name,
                     version = params.version,
-                    ratingInteractor = ratingModule.provideInteractor(),
-                    aboutInteractor = aboutModule.provideInteractor(),
-                    versionInteractor = versionCheckModule.provideInteractor(),
-                    otherAppsInteractor = otherAppsModule.provideInteractor(),
                     theming = theming,
-                    debug = params.debug
+                    debug = params.debug,
+                    interactors = PYDroidViewModelFactory.Parameters.Interactors(
+                        rating = ratingModule.provideInteractor(),
+                        about = aboutModule.provideInteractor(),
+                        version = versionCheckModule.provideInteractor(),
+                        otherApps = otherAppsModule.provideInteractor(),
+                        settingsClearConfig = settingsClearConfigModule.provideInteractor()
+                    )
                 )
             )
 
@@ -184,12 +198,16 @@ internal interface PYDroidComponent {
             module = loaderModule
         )
 
-        private val settingsPopoutParams = ThemeDialogComponent.Factory.Parameters(
+        private val themeDialogParams = ThemeDialogComponent.Factory.Parameters(
             debug = params.debug
         )
 
-        override fun plusSettingsPopout(): ThemeDialogComponent.Factory {
-            return ThemeDialogComponent.Impl.FactoryImpl(settingsPopoutParams)
+        private val settingsClearConfigParams = SettingsClearConfigComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        override fun plusThemeDialog(): ThemeDialogComponent.Factory {
+            return ThemeDialogComponent.Impl.FactoryImpl(themeDialogParams)
         }
 
         override fun plusPrivacy(): PrivacyComponent.Factory {
@@ -214,6 +232,10 @@ internal interface PYDroidComponent {
 
         override fun plusRatingDialog(): RatingDialogComponent.Factory {
             return RatingDialogComponent.Impl.FactoryImpl(ratingDialogParams)
+        }
+
+        override fun plusClearConfirmDialog(): SettingsClearConfigComponent.Factory {
+            return SettingsClearConfigComponent.Impl.FactoryImpl(settingsClearConfigParams)
         }
 
         override fun plusVersion(): VersionComponent.Factory {

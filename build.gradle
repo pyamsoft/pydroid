@@ -49,7 +49,7 @@ buildscript {
 		preference = "1.1.1"
 		recyclerView = "1.1.0"
 		fragment = "1.2.5"
-		appCompat = "1.1.0"
+		appCompat = "1.2.0"
 		swipeRefresh = "1.1.0"
 
 		// Material Design

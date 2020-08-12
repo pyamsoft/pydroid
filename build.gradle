@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -105,7 +104,7 @@ subprojects {
 	apply plugin: 'com.jfrog.bintray'
 
 	final String POM_GROUP = "com.pyamsoft.pydroid"
-	final String POM_VERSION = "22.0.3"
+	final String POM_VERSION = "22.0.4-SNAPSHOT"
 
 	group = POM_GROUP
 	version = POM_VERSION

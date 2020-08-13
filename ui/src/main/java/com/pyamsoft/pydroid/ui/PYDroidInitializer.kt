@@ -53,7 +53,7 @@ internal data class PYDroidInitializer internal constructor(
                 )
             )
 
-            return PYDroidInitializer(impl, impl)
+            return PYDroidInitializer(impl, impl.moduleProvider())
         }
 
         @JvmStatic

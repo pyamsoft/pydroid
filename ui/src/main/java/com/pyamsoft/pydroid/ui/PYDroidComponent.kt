@@ -82,7 +82,10 @@ internal interface PYDroidComponent {
         fun create(params: Component.Parameters): Component
     }
 
-    interface Component : PYDroidComponent, ModuleProvider {
+    interface Component : PYDroidComponent {
+
+        @CheckResult
+        fun moduleProvider(): ModuleProvider
 
         data class Parameters internal constructor(
             internal val application: Application,
@@ -205,6 +208,16 @@ internal interface PYDroidComponent {
             factory = viewModelFactory
         )
 
+        private val provider = object : ModuleProvider {
+            override fun theming(): Theming {
+                return theming
+            }
+
+            override fun imageLoader(): ImageLoader {
+                return loaderModule.provideLoader()
+            }
+        }
+
         override fun plusThemeDialog(): ThemeDialogComponent.Factory {
             return ThemeDialogComponent.Impl.FactoryImpl(themeDialogParams)
         }
@@ -222,7 +235,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusOtherAppsItem(): OtherAppsItemComponent.Factory {
-            return OtherAppsItemComponent.Impl.FactoryImpl(imageLoader())
+            return OtherAppsItemComponent.Impl.FactoryImpl(loaderModule.provideLoader())
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -249,12 +262,8 @@ internal interface PYDroidComponent {
             return AppSettingsComponent.Impl.FactoryImpl(appSettingsParams)
         }
 
-        override fun theming(): Theming {
-            return theming
-        }
-
-        override fun imageLoader(): ImageLoader {
-            return loaderModule.provideLoader()
+        override fun moduleProvider(): ModuleProvider {
+            return provider
         }
 
         class FactoryImpl internal constructor() : Factory {

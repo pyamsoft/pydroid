@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.network
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 import com.squareup.moshi.Moshi
+import javax.net.SocketFactory
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -26,18 +27,15 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.net.SocketFactory
 
 class NetworkModule(params: Parameters) {
 
     private val serviceCreator: ServiceCreator
-    private val callFactory: Call.Factory
-    private val converterFactory: Converter.Factory
 
     init {
         val debug = params.debug
-        callFactory = OkHttpClientLazyCallFactory(debug)
-        converterFactory = MoshiConverterFactory.create(createMoshi())
+        val callFactory = OkHttpClientLazyCallFactory(debug)
+        val converterFactory = MoshiConverterFactory.create(createMoshi())
         val retrofit = createRetrofit(callFactory, converterFactory)
 
         serviceCreator = object : ServiceCreator {
@@ -52,16 +50,6 @@ class NetworkModule(params: Parameters) {
         return serviceCreator
     }
 
-    @CheckResult
-    fun provideCallFactory(): Call.Factory {
-        return callFactory
-    }
-
-    @CheckResult
-    fun provideConverterFactory(): Converter.Factory {
-        return converterFactory
-    }
-
     companion object {
 
         private const val CURRENT_VERSION_REPO_BASE_URL =
@@ -70,8 +58,7 @@ class NetworkModule(params: Parameters) {
         @JvmStatic
         @CheckResult
         private fun createMoshi(): Moshi {
-            return Moshi.Builder()
-                .build()
+            return Moshi.Builder().build()
         }
 
         @JvmStatic

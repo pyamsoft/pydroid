@@ -23,17 +23,23 @@ import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.net.SocketFactory
 
 class NetworkModule(params: Parameters) {
 
     private val serviceCreator: ServiceCreator
+    private val callFactory: Call.Factory
+    private val converterFactory: Converter.Factory
 
     init {
         val debug = params.debug
-        val moshi = createMoshi()
-        val retrofit = createRetrofit(moshi) { createOkHttpClient(debug) }
+        callFactory = OkHttpClientLazyCallFactory(debug)
+        converterFactory = MoshiConverterFactory.create(createMoshi())
+        val retrofit = createRetrofit(callFactory, converterFactory)
+
         serviceCreator = object : ServiceCreator {
             override fun <S : Any> createService(serviceClass: Class<S>): S {
                 return retrofit.create(serviceClass)
@@ -44,6 +50,16 @@ class NetworkModule(params: Parameters) {
     @CheckResult
     fun provideServiceCreator(): ServiceCreator {
         return serviceCreator
+    }
+
+    @CheckResult
+    fun provideCallFactory(): Call.Factory {
+        return callFactory
+    }
+
+    @CheckResult
+    fun provideConverterFactory(): Converter.Factory {
+        return converterFactory
     }
 
     companion object {
@@ -60,43 +76,52 @@ class NetworkModule(params: Parameters) {
 
         @JvmStatic
         @CheckResult
-        private fun createOkHttpClient(debug: Boolean): OkHttpClient {
-            Enforcer.assertOffMainThread()
-
-            return OkHttpClient.Builder()
-                .socketFactory(DelegatingSocketFactory.create())
-                .also {
-                    if (debug) {
-                        val logging = HttpLoggingInterceptor()
-                        logging.level = HttpLoggingInterceptor.Level.BODY
-                        it.addInterceptor(logging)
-                    }
-                }
-                .build()
-        }
-
-        @JvmStatic
-        @CheckResult
         private fun createRetrofit(
-            moshi: Moshi,
-            clientProvider: () -> OkHttpClient
+            callFactory: Call.Factory,
+            converterFactory: Converter.Factory
         ): Retrofit {
             return Retrofit.Builder()
                 .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-                .callFactory(OkHttpClientLazyCallFactory(clientProvider))
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .callFactory(callFactory)
+                .addConverterFactory(converterFactory)
                 .build()
         }
 
-        private class OkHttpClientLazyCallFactory(
-            provider: () -> OkHttpClient
-        ) : Call.Factory {
+        /**
+         * Creates the OkHttpClient lazily to avoid small main thread work
+         */
+        private class OkHttpClientLazyCallFactory(debug: Boolean) : Call.Factory {
 
-            private val client by lazy { provider() }
+            private val client by lazy {
+                createOkHttpClient(debug, DelegatingSocketFactory.create())
+            }
 
             override fun newCall(request: Request): Call {
                 Enforcer.assertOffMainThread()
                 return client.newCall(request)
+            }
+
+            companion object {
+
+                @JvmStatic
+                @CheckResult
+                private fun createOkHttpClient(
+                    debug: Boolean,
+                    socketFactory: SocketFactory
+                ): OkHttpClient {
+                    Enforcer.assertOffMainThread()
+
+                    return OkHttpClient.Builder()
+                        .socketFactory(socketFactory)
+                        .also {
+                            if (debug) {
+                                val logging = HttpLoggingInterceptor()
+                                logging.level = HttpLoggingInterceptor.Level.BODY
+                                it.addInterceptor(logging)
+                            }
+                        }
+                        .build()
+                }
             }
         }
     }

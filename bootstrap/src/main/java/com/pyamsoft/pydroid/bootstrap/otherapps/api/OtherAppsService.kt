@@ -21,7 +21,7 @@ import retrofit2.http.GET
 
 internal interface OtherAppsService {
 
-    @GET("other-apps")
     @CheckResult
+    @GET("other-apps")
     suspend fun getApps(): OtherAppsResponse
 }

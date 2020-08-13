@@ -18,11 +18,11 @@ package com.pyamsoft.pydroid.bootstrap.version.api
 
 import androidx.annotation.CheckResult
 import retrofit2.http.GET
-import retrofit2.http.Url
+import retrofit2.http.Path
 
 internal interface VersionCheckService {
 
-    @GET
     @CheckResult
-    suspend fun checkVersion(@Url packageName: String): VersionCheckResponse
+    @GET("{packageName}")
+    suspend fun checkVersion(@Path("packageName") packageName: String): VersionCheckResponse
 }

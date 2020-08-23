@@ -33,6 +33,6 @@ dependencies {
 	// Highlander
 	api "com.pyamsoft.highlander:highlander:$highlander"
 
-	api project(':util')
+	implementation project(':util')
 }
 

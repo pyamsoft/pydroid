@@ -25,6 +25,6 @@ dependencies {
 	// For Lifecycle coroutineScope
 	implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
 
-	api project(':util')
+	implementation project(':util')
 }
 

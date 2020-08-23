@@ -55,8 +55,8 @@ buildscript {
 		materialDesign = "1.2.0"
 
 		// Us
-		cachify = "0.0.14"
-		highlander = "0.0.12"
+		cachify = "0.0.15-SNAPSHOT"
+		highlander = "0.0.13-SNAPSHOT"
 
 		// Network
 		moshi = "1.9.3"

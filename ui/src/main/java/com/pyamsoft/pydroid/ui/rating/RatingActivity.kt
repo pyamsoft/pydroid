@@ -73,7 +73,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
                 val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
                 inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                    appendln("What's New in version $versionName")
+                    appendLine("What's New in version $versionName")
                 }
             }
 
@@ -89,7 +89,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
                 val color: Int = getColor(indexOfColor, RESOURCE_NOT_FOUND).validate("color")
 
                 inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                    changeLogLines.build().forEach { appendln(it) }
+                    changeLogLines.build().forEach { appendLine(it) }
                 }
             }
         }

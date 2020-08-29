@@ -59,7 +59,7 @@ buildscript {
 		highlander = "0.0.13"
 
 		// Network
-		moshi = "1.9.3"
+		moshi = "1.10.0"
 		retrofit = '2.9.0'
 		okhttp = "4.8.1"
 

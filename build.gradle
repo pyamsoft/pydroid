@@ -52,7 +52,7 @@ buildscript {
 		swipeRefresh = "1.1.0"
 
 		// Material Design
-		materialDesign = "1.2.0"
+		materialDesign = "1.2.1"
 
 		// Us
 		cachify = "0.0.15"

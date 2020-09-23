@@ -38,7 +38,7 @@ buildscript {
 		maxSdk = 30
 
 		// Kotlin
-		coroutines = '1.3.9'
+		coroutines = '1.3.9-native-mt-2'
 
 		// AndroidX
 		core = "1.3.1"

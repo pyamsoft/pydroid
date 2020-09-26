@@ -101,7 +101,7 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
     protected fun setState(func: S.() -> S) {
         viewModelScope.queueInOrder {
             withContext(context = Dispatchers.Default) {
-                processStateChange(isDebuggable = true) { func() }
+                processStateChange(isSetState = true) { func() }
             }
         }
     }
@@ -118,12 +118,12 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
             yield()
 
             withContext(context = Dispatchers.Default) {
-                processStateChange(isDebuggable = false) { this.apply(func) }
+                processStateChange(isSetState = false) { this.apply(func) }
             }
         }
     }
 
-    private suspend inline fun processStateChange(isDebuggable: Boolean, stateChange: S.() -> S) {
+    private suspend inline fun processStateChange(isSetState: Boolean, stateChange: S.() -> S) {
         Enforcer.assertOffMainThread()
 
         mutex.withLock {
@@ -132,7 +132,7 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
 
             // If we are in debug mode, perform the state change twice and make sure that it produces
             // the same state both times.
-            if (debug && isDebuggable) {
+            if (debug && isSetState) {
                 val copyNewState = oldState.stateChange()
                 checkStateEquality(newState, copyNewState)
             }

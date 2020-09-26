@@ -64,6 +64,7 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
 
     @UiThread
     @CheckResult
+    // internal instead of protected so that only callers in the module can use this
     internal fun getCurrentState(): S {
         Enforcer.assertOnMainThread()
         return state.get()
@@ -110,6 +111,8 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
     }
 
     private suspend inline fun processStateChange(isDebuggable: Boolean, stateChange: S.() -> S) {
+        Enforcer.assertOffMainThread()
+        
         mutex.withLock {
             val oldState = state.get()
             val newState = oldState.stateChange()

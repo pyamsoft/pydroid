@@ -34,11 +34,8 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
 ): StateSaver {
     val reader = UiBundleReader.create(savedInstanceState)
 
-    // Init first
-    views.forEach { it.init(reader) }
-
     // Bind view event listeners, inflate and attach
-    val viewModelBinding = viewModel.bindToComponent(reader, *views) { onControllerEvent(it) }
+    val viewModelBinding = viewModel.bindToComponent(reader, views) { onControllerEvent(it) }
 
     // Teardown on destroy
     owner.doOnDestroy {
@@ -72,6 +69,7 @@ inline fun <S : UiViewState, V : UiViewEvent> bindViews(
 
     // Init first
     views.forEach { it.init(reader) }
+
     // Inflate and attach
     views.forEach { it.inflate(reader) }
 
@@ -80,6 +78,6 @@ inline fun <S : UiViewState, V : UiViewEvent> bindViews(
         views.forEach { it.teardown() }
     }
 
-    // State saver
+    // ViewBinder
     return ViewBinder { state -> views.forEach { it.render(state) } }
 }

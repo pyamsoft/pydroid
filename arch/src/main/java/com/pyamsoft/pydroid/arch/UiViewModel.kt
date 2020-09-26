@@ -49,9 +49,14 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     @PublishedApi
     internal fun bindToComponent(
         savedInstanceState: UiBundleReader,
-        vararg views: UiView<S, V>,
+        views: Array<out UiView<S, V>>,
         onControllerEvent: (event: C) -> Unit
     ): Job {
+
+        // Guarantee views are initialized
+        // Run this outside of the view model scope to guarantee that it executes immediately
+        views.forEach { it.init(savedInstanceState) }
+
         return viewModelScope.launch(context = Dispatchers.Main) {
 
             // Bind ViewModel
@@ -61,8 +66,9 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // Use launch here so that we re-claim the Main context and have these run after the
             // controller and view events are finished binding
             queueInOrder {
+
                 // Initialize before first render
-                // Generally, since you will add your doOnInit hooks in the ViewModel init {} block,
+                // Generally, since you will add your doOnBind hooks in the ViewModel init {} block,
                 // they will only run once - which is when the object is created.
                 //
                 // If you wanna do some strange kind of stuff though, you do you.

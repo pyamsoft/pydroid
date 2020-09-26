@@ -51,7 +51,8 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
         bindState { onRender(it) }
     }
 
-    protected fun CoroutineScope.bindState(onRender: (S) -> Unit) {
+    // internal instead of protected so that only callers in the module can use this
+    internal fun CoroutineScope.bindState(onRender: (S) -> Unit) {
         // Listen for any further state changes at this point
         queueInOrder { bindStateEvents { onRender(it) } }
 
@@ -61,12 +62,9 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
         }
     }
 
-    /**
-     * Get the current state
-     */
     @UiThread
     @CheckResult
-    protected fun getCurrentState(): S {
+    internal fun getCurrentState(): S {
         Enforcer.assertOnMainThread()
         return state.get()
     }
@@ -77,7 +75,7 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
      *
      * Must be CoroutineScope extension to cancel correctly
      */
-    protected inline fun CoroutineScope.queueInOrder(crossinline func: suspend CoroutineScope.() -> Unit) {
+    internal inline fun CoroutineScope.queueInOrder(crossinline func: suspend CoroutineScope.() -> Unit) {
         launch(context = Dispatchers.Main) { func() }
     }
 

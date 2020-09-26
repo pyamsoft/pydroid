@@ -58,7 +58,7 @@ internal class AboutViewModel internal constructor(
     }
 
     init {
-        doOnInit {
+        doOnBind {
             loadLicenses()
         }
     }

@@ -42,7 +42,7 @@ internal class RatingViewModel internal constructor(
     }
 
     init {
-        doOnInit {
+        doOnBind {
             load(false)
         }
     }

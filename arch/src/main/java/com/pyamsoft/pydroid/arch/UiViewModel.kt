@@ -190,9 +190,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         replaceWith = ReplaceWith(expression = "doOnBind(onInit)")
     )
     protected fun doOnInit(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
-        Enforcer.assertOnMainThread()
-
-        onBindEvents.add(onInit)
+        doOnBind(onInit)
     }
 
     /**

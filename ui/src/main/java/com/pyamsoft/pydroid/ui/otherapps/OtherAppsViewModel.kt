@@ -41,7 +41,7 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     init {
-        doOnInit {
+        doOnBind {
             loadApps()
         }
     }

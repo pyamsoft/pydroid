@@ -112,7 +112,7 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
 
     private suspend inline fun processStateChange(isDebuggable: Boolean, stateChange: S.() -> S) {
         Enforcer.assertOffMainThread()
-        
+
         mutex.withLock {
             val oldState = state.get()
             val newState = oldState.stateChange()

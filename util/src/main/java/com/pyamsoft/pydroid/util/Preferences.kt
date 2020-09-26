@@ -37,7 +37,7 @@ fun SharedPreferences.onChange(key: String, onChange: suspend () -> Unit): Prefe
     return PreferenceListenerImpl(this, listener)
 }
 
-private abstract class ScopedPreferenceChangeListener internal constructor(
+private abstract class ScopedPreferenceChangeListener(
     private val watchKey: String
 ) : OnSharedPreferenceChangeListener {
 
@@ -61,7 +61,7 @@ private abstract class ScopedPreferenceChangeListener internal constructor(
     }
 }
 
-private class PreferenceListenerImpl internal constructor(
+private class PreferenceListenerImpl(
     private val preferences: SharedPreferences,
     listener: ScopedPreferenceChangeListener
 ) : PreferenceListener {

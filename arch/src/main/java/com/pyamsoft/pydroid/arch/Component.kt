@@ -35,7 +35,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     views.forEach { it.init(reader) }
 
     // Bind view event listeners, inflate and attach
-    val viewModelBinding = viewModel.render(reader, *views) { onControllerEvent(it) }
+    val viewModelBinding = viewModel.bindToComponent(reader, *views) { onControllerEvent(it) }
 
     // Teardown on destroy
     owner.doOnDestroy {

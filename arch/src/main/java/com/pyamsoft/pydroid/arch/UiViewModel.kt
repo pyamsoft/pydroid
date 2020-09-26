@@ -18,30 +18,21 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlin.LazyThreadSafetyMode.NONE
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
-import timber.log.Timber
+import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
-    private val debug: Boolean
-) : ViewModel(), SaveableState {
+    debug: Boolean
+) : UiStateViewModel<S, V, C>(initialState, debug), SaveableState {
 
-    private val onInitEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
-    private val onInitEvents by onInitEventDelegate
+    private val onBindEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
+    private val onBindEvents by onBindEventDelegate
 
     private val onTeardownEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
@@ -52,20 +43,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
     private val controllerEventBus = EventBus.create<C>()
 
-    // NOTE(Peter): Since state events run on their own single threaded dispatcher, we may not
-    // need a mutex since there will only ever be one thread at a time.
-    private val mutex = Mutex()
-
-    // This useless interface exists just so I don't have to mark everything as experimental
-    private var state: UiVMState<S> = UiVMStateImpl(initialState)
-
-    protected abstract fun handleViewEvent(event: V)
-
     // Need PublishedApi so createComponent can be inline
     @UiThread
     @CheckResult
     @PublishedApi
-    internal fun render(
+    internal fun bindToComponent(
         savedInstanceState: UiBundleReader,
         vararg views: UiView<S, V>,
         onControllerEvent: (event: C) -> Unit
@@ -88,36 +70,21 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             // Inflate the views
             views.forEach { it.inflate(savedInstanceState) }
 
-            // Listen for any further state changes at this point
-            queueInOrder { bindStateEvents(views) }
-
-            // Render the latest or initial state
-            queueInOrder {
-                handleStateChange(views, state.get())
-            }
+            // Bind state
+            bindState { state -> views.forEach { it.render(state) } }
         }
-    }
-
-    /**
-     * Launches this coroutine on the single threaded main context
-     * This ensures that the operation queued will run in order before any of the other operations after it
-     *
-     * Must be CoroutineScope extension to cancel correctly
-     */
-    private inline fun CoroutineScope.queueInOrder(crossinline func: suspend CoroutineScope.() -> Unit) {
-        launch(context = Dispatchers.Main) { func() }
     }
 
     @UiThread
     private fun initialize(savedInstanceState: UiBundleReader) {
         // Only run the init hooks if they exist, otherwise we don't need to init the memory
-        if (onInitEventDelegate.isInitialized()) {
+        if (onBindEventDelegate.isInitialized()) {
 
             // Call init hooks in random order
-            onInitEvents.forEach { it(savedInstanceState) }
+            onBindEvents.forEach { it(savedInstanceState) }
 
             // Clear the init hooks list to free up memory
-            onInitEvents.clear()
+            onBindEvents.clear()
         }
     }
 
@@ -137,7 +104,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onSaveStateEventDelegate.isInitialized()) {
 
             // Call save state hooks in random order
-            val s = state.get()
+            val s = getCurrentState()
             onSaveStateEvents.forEach { it(outState, s) }
 
             // Don't clear the event list since this lifecycle method can be called many times.
@@ -158,8 +125,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
 
         // If there are any init event hooks hanging around, clear them out too
-        if (onInitEventDelegate.isInitialized()) {
-            onInitEvents.clear()
+        if (onBindEventDelegate.isInitialized()) {
+            onBindEvents.clear()
         }
 
         // If there are save state hooks around, clear them out
@@ -175,98 +142,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         viewModelScope.queueInOrder {
             withContext(context = Dispatchers.IO) {
                 controllerEventBus.send(event)
-            }
-        }
-    }
-
-    /**
-     * Modify the state from the previous
-     *
-     * Note that, like calling this.setState() in React, this operation does not happen immediately.
-     */
-    protected fun setState(func: S.() -> S) {
-        viewModelScope.queueInOrder {
-            withContext(context = Dispatchers.Default) {
-                processStateChange(isDebuggable = true) { func() }
-            }
-        }
-    }
-
-    /**
-     * Act upon the current state
-     *
-     * Note that like accessing state in React using this.state.<var>, this is immediate and
-     * may not be up to date with the latest setState() call.
-     */
-    protected fun withState(func: S.() -> Unit) {
-        viewModelScope.queueInOrder {
-            // Yield to any setState calls happening at this point
-            yield()
-
-            withContext(context = Dispatchers.Default) {
-                processStateChange(isDebuggable = false) { this.apply(func) }
-            }
-        }
-    }
-
-    private suspend inline fun processStateChange(isDebuggable: Boolean, stateChange: S.() -> S) {
-        mutex.withLock {
-            val oldState = state.get()
-            val newState = oldState.stateChange()
-
-            // If we are in debug mode, perform the state change twice and make sure that it produces
-            // the same state both times.
-            if (debug && isDebuggable) {
-                val copyNewState = oldState.stateChange()
-                checkStateEquality(newState, copyNewState)
-            }
-
-            state.set(newState)
-        }
-    }
-
-    /**
-     * If we are in debug mode, perform the state change twice and make sure that it produces
-     * the same state both times.
-     */
-    private fun checkStateEquality(state1: S, state2: S) {
-        if (state1 != state2) {
-            // Pull a page from the MvRx repo's BaseMvRxViewModel :)
-            val changedProp = state1::class.java.declaredFields.asSequence()
-                .onEach { it.isAccessible = true }
-                .firstOrNull { property ->
-                    try {
-                        val prop1 = property.get(state1)
-                        val prop2 = property.get(state2)
-                        prop1 != prop2
-                    } catch (e: Throwable) {
-                        // Failed but we don't care
-                        false
-                    }
-                }
-
-            if (changedProp == null) {
-                throw DeterministicStateError(state1, state2, null)
-            } else {
-                val prop1 = changedProp.get(state1)
-                val prop2 = changedProp.get(state2)
-                throw DeterministicStateError(prop1, prop2, changedProp.name)
-            }
-        }
-    }
-
-    private fun handleStateChange(
-        views: Array<out UiView<S, V>>,
-        state: S
-    ) {
-        Timber.d("Render with state: $state")
-        views.forEach { it.render(state) }
-    }
-
-    private suspend fun bindStateEvents(views: Array<out UiView<S, V>>) {
-        withContext(context = Dispatchers.IO) {
-            state.onChange { state ->
-                withContext(context = Dispatchers.Main) { handleStateChange(views, state) }
             }
         }
     }
@@ -310,10 +185,34 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
+    @Deprecated(
+        message = "Use doOnBind",
+        replaceWith = ReplaceWith(expression = "doOnBind(onInit)")
+    )
     protected fun doOnInit(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
         Enforcer.assertOnMainThread()
 
-        onInitEvents.add(onInit)
+        onBindEvents.add(onInit)
+    }
+
+    /**
+     * Use this to run an event after UiViewModel binding has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnBind { savedInstanceState ->
+     *         ...
+     *     }
+     * }
+     *
+     * NOTE: Not thread safe. Main thread only for the time being
+     */
+    @UiThread
+    protected fun doOnBind(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
+        Enforcer.assertOnMainThread()
+
+        onBindEvents.add(onInit)
     }
 
     /**
@@ -357,50 +256,5 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         onTeardownEvents.add(onTeardown)
     }
 
-    private class DeterministicStateError internal constructor(
-        state1: Any?,
-        state2: Any?,
-        prop: String?
-    ) : IllegalStateException(
-        """State changes must be deterministic
-           ${if (prop != null) "Property '$prop' changed:" else ""}
-           $state1
-           $state2
-           """.trimIndent()
-    )
-
-    // Exists as a useless interface just so that when using the implementation in the UiViewModel
-    // I don't need to mark everything as experimental
-    private interface UiVMState<S : UiViewState> {
-
-        @CheckResult
-        fun get(): S
-
-        fun set(value: S)
-
-        suspend fun onChange(withState: suspend (state: S) -> Unit)
-    }
-
-    private class UiVMStateImpl<S : UiViewState> internal constructor(
-        initialState: S
-    ) : UiVMState<S> {
-
-        @ExperimentalCoroutinesApi
-        private val flow = MutableStateFlow(initialState)
-
-        @ExperimentalCoroutinesApi
-        override fun get(): S {
-            return flow.value
-        }
-
-        @ExperimentalCoroutinesApi
-        override fun set(value: S) {
-            flow.value = value
-        }
-
-        @ExperimentalCoroutinesApi
-        override suspend fun onChange(withState: suspend (state: S) -> Unit) {
-            flow.collect(withState)
-        }
-    }
+    protected abstract fun handleViewEvent(event: V)
 }

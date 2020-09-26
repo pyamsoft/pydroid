@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.internal.RealUiBundleReader
 
 interface UiBundleReader {
 

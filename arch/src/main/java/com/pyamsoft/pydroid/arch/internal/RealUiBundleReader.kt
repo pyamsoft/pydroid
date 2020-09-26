@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.arch.internal
 
 import android.os.Bundle
+import com.pyamsoft.pydroid.arch.UiBundleReader
 
-class RealUiBundleReader internal constructor(private val bundle: Bundle?) : UiBundleReader {
+internal class RealUiBundleReader internal constructor(
+    private val bundle: Bundle?
+) : UiBundleReader {
 
     // Captures the common if (savedInstanceState == null) case
     override fun hasNoSavedState(): Boolean {

@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.arch.internal
 
 import androidx.annotation.CheckResult
-import kotlin.coroutines.CoroutineContext
+import com.pyamsoft.pydroid.arch.EventBus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
-class RealBus<T : Any> internal constructor(private val context: CoroutineContext) : EventBus<T> {
+internal class RealBus<T : Any> internal constructor(
+    private val context: CoroutineContext
+) : EventBus<T> {
 
     @ExperimentalCoroutinesApi
     private val bus by lazy { BroadcastChannel<T>(1) }

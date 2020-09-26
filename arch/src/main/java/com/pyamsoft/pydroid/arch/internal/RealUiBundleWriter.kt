@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.arch.internal
 
 import android.os.Binder
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
+import com.pyamsoft.pydroid.arch.UiBundleWriter
 import java.io.Serializable
 
-class RealUiBundleWriter internal constructor(private val bundle: Bundle) : UiBundleWriter {
+internal class RealUiBundleWriter internal constructor(
+    private val bundle: Bundle
+) : UiBundleWriter {
 
     override fun <T : Any> put(key: String, value: T) {
         // Pulled from core-ktx bundleOf

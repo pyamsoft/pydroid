@@ -18,15 +18,16 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.UiThread
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() : SaveableState {
+abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
+) : Renderable<S>, SaveableState {
 
     private val viewEventBus = EventBus.create<V>()
 
@@ -222,7 +223,4 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor() 
 
     @UiThread
     protected abstract fun onInit(savedInstanceState: UiBundleReader)
-
-    @UiThread
-    abstract fun render(state: S)
 }

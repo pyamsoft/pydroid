@@ -21,6 +21,9 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
 
+/**
+ * Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller
+ */
 @CheckResult
 inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
     savedInstanceState: Bundle?,
@@ -44,16 +47,16 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
     }
 
     // State saver
-    return object : StateSaver {
-
-        override fun saveState(outState: Bundle) {
-            val writer = UiBundleWriter.create(outState)
-            viewModel.saveState(writer)
-            views.forEach { it.saveState(writer) }
-        }
+    return StateSaver { outState ->
+        val writer = UiBundleWriter.create(outState)
+        viewModel.saveState(writer)
+        views.forEach { it.saveState(writer) }
     }
 }
 
+/**
+ * Bind a ViewHolder to the pydroid-arch style using one or more UiViews
+ */
 @CheckResult
 inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     owner: LifecycleOwner,
@@ -78,9 +81,5 @@ inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     }
 
     // State saver
-    return object : ViewBinder<S> {
-        override fun bind(state: S) {
-            views.forEach { it.render(state) }
-        }
-    }
+    return ViewBinder { state -> views.forEach { it.render(state) } }
 }

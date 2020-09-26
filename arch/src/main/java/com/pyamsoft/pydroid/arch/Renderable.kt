@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.theme
+package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CheckResult
+import androidx.annotation.UiThread
 
-fun interface ThemeProvider {
+fun interface Renderable<S : UiViewState> {
 
-    @CheckResult
-    fun isDarkTheme(): Boolean
+    /**
+     * Render a state
+     */
+    @UiThread
+    fun render(state: S)
 }

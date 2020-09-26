@@ -47,18 +47,23 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
 
     @UiThread
     @CheckResult
-    fun bind(onRender: (S) -> Unit) = viewModelScope.launch(context = Dispatchers.Main) {
-        bindState { onRender(it) }
+    fun bind(vararg renderables: Renderable<S>) =
+        viewModelScope.launch(context = Dispatchers.Main) {
+            bindState(renderables)
+        }
+
+    private fun onRender(renderables: Array<out Renderable<S>>, state: S) {
+        renderables.forEach { it.render(state) }
     }
 
     // internal instead of protected so that only callers in the module can use this
-    internal fun CoroutineScope.bindState(onRender: (S) -> Unit) {
+    internal fun CoroutineScope.bindState(renderables: Array<out Renderable<S>>) {
         // Listen for any further state changes at this point
-        queueInOrder { bindStateEvents { onRender(it) } }
+        queueInOrder { bindStateEvents { onRender(renderables, it) } }
 
         // Render the latest or initial state
         queueInOrder {
-            handleStateChange(getCurrentState()) { onRender(it) }
+            handleStateChange(state.get()) { onRender(renderables, it) }
         }
     }
 

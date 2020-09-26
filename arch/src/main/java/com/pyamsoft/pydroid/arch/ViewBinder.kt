@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface ViewBinder<S : UiViewState> {
+fun interface ViewBinder<S : UiViewState> {
 
     fun bind(state: S)
 }

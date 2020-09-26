@@ -71,7 +71,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
             views.forEach { it.inflate(savedInstanceState) }
 
             // Bind state
-            bindState { state -> views.forEach { it.render(state) } }
+            bindState(views)
         }
     }
 

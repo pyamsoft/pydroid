@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 
-interface StateSaver {
+fun interface StateSaver {
 
     fun saveState(outState: Bundle)
 }

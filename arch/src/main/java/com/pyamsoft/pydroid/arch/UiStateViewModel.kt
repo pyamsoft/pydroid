@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -47,10 +48,17 @@ abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControll
 
     @UiThread
     @CheckResult
-    fun bind(vararg renderables: Renderable<S>) =
-        viewModelScope.launch(context = Dispatchers.Main) {
+    fun bind(vararg renderables: Renderable<S>): Job {
+        return viewModelScope.launch(context = Dispatchers.Main) {
             bindState(renderables)
         }
+    }
+
+    @UiThread
+    @CheckResult
+    inline fun bind(crossinline onRender: (S) -> Unit): Job {
+        return bind(Renderable { onRender(it) })
+    }
 
     private fun onRender(renderables: Array<out Renderable<S>>, state: S) {
         renderables.forEach { it.render(state) }

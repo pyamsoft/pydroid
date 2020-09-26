@@ -51,27 +51,29 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         savedInstanceState: UiBundleReader,
         vararg views: UiView<S, V>,
         onControllerEvent: (event: C) -> Unit
-    ): Job = viewModelScope.launch(context = Dispatchers.Main) {
+    ): Job {
+        return viewModelScope.launch(context = Dispatchers.Main) {
 
-        // Bind ViewModel
-        queueInOrder { bindControllerEvents(onControllerEvent) }
-        queueInOrder { bindViewEvents(views.asIterable()) }
+            // Bind ViewModel
+            queueInOrder { bindControllerEvents(onControllerEvent) }
+            queueInOrder { bindViewEvents(views.asIterable()) }
 
-        // Use launch here so that we re-claim the Main context and have these run after the
-        // controller and view events are finished binding
-        queueInOrder {
-            // Initialize before first render
-            // Generally, since you will add your doOnInit hooks in the ViewModel init {} block,
-            // they will only run once - which is when the object is created.
-            //
-            // If you wanna do some strange kind of stuff though, you do you.
-            initialize(savedInstanceState)
+            // Use launch here so that we re-claim the Main context and have these run after the
+            // controller and view events are finished binding
+            queueInOrder {
+                // Initialize before first render
+                // Generally, since you will add your doOnInit hooks in the ViewModel init {} block,
+                // they will only run once - which is when the object is created.
+                //
+                // If you wanna do some strange kind of stuff though, you do you.
+                initialize(savedInstanceState)
 
-            // Inflate the views
-            views.forEach { it.inflate(savedInstanceState) }
+                // Inflate the views
+                views.forEach { it.inflate(savedInstanceState) }
 
-            // Bind state
-            bindState(views)
+                // Bind state
+                bindState(views)
+            }
         }
     }
 

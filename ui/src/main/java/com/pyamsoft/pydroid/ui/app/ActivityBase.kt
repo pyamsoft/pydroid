@@ -16,13 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.app
 
-import android.os.Build
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
-import timber.log.Timber
 
 abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
 
@@ -42,65 +38,6 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
 
         // Clear captured Toolbar
         capturedToolbar = null
-    }
-
-    @CallSuper
-    override fun onBackPressed() {
-        Timber.d("On back pressed")
-        onAndroid10BackPressed()
-    }
-
-    /**
-     * Android 10 leaks Activity on back pressed....
-     * https://twitter.com/Piwai/status/1169274622614704129
-     */
-    private fun onAndroid10BackPressed() {
-        // Copied from FragmentActivity
-        val fragmentManager = supportFragmentManager
-        val isStateSaved = fragmentManager.isStateSaved
-        if (isStateSaved && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
-            // Older versions will throw an exception from the framework
-            // FragmentManager.popBackStackImmediate(), so we'll just
-            // return here. The Activity is likely already on its way out
-            // since the fragmentManager has already been saved.
-            return
-        }
-
-        if (isStateSaved || !fragmentManager.popBackStackImmediate()) {
-            // Using finishAfterTransition instead of onBackPressed() should fix leak
-            if (isTaskRoot) {
-                fixAndroid10MemoryLeak(isStateSaved, fragmentManager)
-            } else {
-                Timber.d("Normal onBackPressed")
-                super.onBackPressed()
-            }
-        }
-    }
-
-    private fun fixAndroid10MemoryLeak(
-        stateLossAllowed: Boolean,
-        fragmentManager: FragmentManager
-    ) {
-        val fragments = fragmentManager.fragments
-
-        var dismissedDialog = false
-        for (fragment in fragments) {
-            if (fragment is DialogFragment) {
-                Timber.w("Android 10 leak avoid - dismiss dialog")
-                if (stateLossAllowed) {
-                    fragment.dismissAllowingStateLoss()
-                } else {
-                    fragment.dismiss()
-                }
-                dismissedDialog = true
-                break
-            }
-        }
-
-        if (!dismissedDialog) {
-            Timber.w("Android 10 leak avoid - finishAfterTransition")
-            supportFinishAfterTransition()
-        }
     }
 
     final override fun withToolbar(func: (Toolbar) -> Unit) {

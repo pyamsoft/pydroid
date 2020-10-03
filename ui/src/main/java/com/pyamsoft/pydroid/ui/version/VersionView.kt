@@ -49,16 +49,38 @@ internal class VersionView internal constructor(
                 showError(throwable)
             }
         }
+
+        state.isUpdateAvailable.let { isUpdateAvailable ->
+            if (isUpdateAvailable) {
+                showUpdatePrompt()
+            } else {
+                clearUpdatePrompt()
+            }
+        }
+    }
+
+    private fun showUpdatePrompt() {
+        Snackbreak.bindTo(owner, "update_restart") {
+            make(snackbarRootProvider(), "A new update is ready!") {
+                setAction("RESTART") { publish(VersionViewEvent.UpdateRestart) }
+            }
+        }
+    }
+
+    private fun clearUpdatePrompt() {
+        Snackbreak.bindTo(owner, "update_restart") {
+            dismiss()
+        }
     }
 
     private fun showUpdating() {
-        Snackbreak.bindTo(owner) {
+        Snackbreak.bindTo(owner, "check_update") {
             make(snackbarRootProvider(), "Checking for updates")
         }
     }
 
     private fun dismissUpdating() {
-        Snackbreak.bindTo(owner) {
+        Snackbreak.bindTo(owner, "check_update") {
             dismiss()
         }
     }

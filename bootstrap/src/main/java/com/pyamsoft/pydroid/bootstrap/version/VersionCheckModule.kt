@@ -16,14 +16,13 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
+import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.cachify.Cached
 import com.pyamsoft.cachify.MemoryCacheStorage
 import com.pyamsoft.cachify.cachify
-import com.pyamsoft.pydroid.bootstrap.network.ServiceCreator
-import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProviderImpl
-import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
-import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdaterImpl
 import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(params: Parameters) {
@@ -31,22 +30,9 @@ class VersionCheckModule(params: Parameters) {
     private val impl: VersionCheckInteractorImpl
 
     init {
-        val debug = params.debug
-        val currentVersion = params.currentVersion
-        val packageName = params.packageName
-
-        val versionCheckService =
-            params.serviceCreator.createService(VersionCheckService::class.java)
-        val minimumApiProvider = MinimumApiProviderImpl()
-
-        val network = VersionCheckInteractorNetwork(
-            currentVersion,
-            packageName,
-            minimumApiProvider,
-            versionCheckService
-        )
-
-        impl = VersionCheckInteractorImpl(debug, createCache(network))
+        val updater = AppUpdaterImpl(params.context.applicationContext)
+        val network = VersionCheckInteractorNetwork(updater)
+        impl = VersionCheckInteractorImpl(updater, createCache(network))
     }
 
     @CheckResult
@@ -58,19 +44,12 @@ class VersionCheckModule(params: Parameters) {
 
         @JvmStatic
         @CheckResult
-        private fun createCache(
-            network: VersionCheckInteractor
-        ): Cached<UpdatePayload> {
-            return cachify<UpdatePayload>(
+        private fun createCache(network: VersionCheckInteractor): Cached<AppUpdateLauncher> {
+            return cachify<AppUpdateLauncher>(
                 storage = MemoryCacheStorage.create(30, MINUTES)
             ) { requireNotNull(network.checkVersion(true)) }
         }
     }
 
-    data class Parameters(
-        internal val debug: Boolean,
-        internal val currentVersion: Int,
-        internal val packageName: String,
-        internal val serviceCreator: ServiceCreator
-    )
+    data class Parameters(internal val context: Context)
 }

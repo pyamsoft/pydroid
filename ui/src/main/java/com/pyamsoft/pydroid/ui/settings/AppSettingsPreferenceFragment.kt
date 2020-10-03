@@ -26,6 +26,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -40,10 +41,10 @@ import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigDialog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionView
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
@@ -121,7 +122,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             requireNotNull(versionView)
         ) {
             return@createComponent when (it) {
-                is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
+                is ShowUpgrade -> showVersionUpgrade(it.launcher)
             }
         }
 
@@ -148,9 +149,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             .show(requireActivity(), RatingDialog.TAG)
     }
 
-    private fun showVersionUpgrade(newVersion: Int) {
-        VersionUpgradeDialog.newInstance(newVersion)
-            .show(requireActivity(), VersionUpgradeDialog.TAG)
+    private fun showVersionUpgrade(launcher: AppUpdateLauncher) {
+        val act = requireActivity() as VersionCheckActivity
+        act.showVersionUpgrade(launcher)
     }
 
     override fun onDestroyView() {

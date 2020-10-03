@@ -16,19 +16,20 @@
 
 package com.pyamsoft.pydroid.ui.version
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
-import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.doOnStart
+import timber.log.Timber
 
 abstract class VersionCheckActivity : PrivacyActivity() {
 
@@ -56,7 +57,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
             requireNotNull(versionView)
         ) {
             return@createComponent when (it) {
-                is ShowUpgrade -> showVersionUpgrade(it.payload.newVersion)
+                is ShowUpgrade -> showVersionUpgrade(it.launcher)
             }
         }
     }
@@ -94,8 +95,26 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         stateSaver = null
     }
 
-    private fun showVersionUpgrade(newVersion: Int) {
-        VersionUpgradeDialog.newInstance(newVersion)
-            .show(this, VersionUpgradeDialog.TAG)
+    @CallSuper
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_APP_UPDATE) {
+            if (resultCode == RESULT_OK) {
+                Timber.d("Update flow succeeded!")
+            } else {
+                Timber.d("User has cancelled or denied the update")
+            }
+        }
+    }
+
+    // Used by AppSettingsPreferenceFragment too
+    internal fun showVersionUpgrade(launcher: AppUpdateLauncher) {
+        launcher.update(this, RC_APP_UPDATE)
+    }
+
+    companion object {
+
+        private const val RC_APP_UPDATE = 176923
     }
 }

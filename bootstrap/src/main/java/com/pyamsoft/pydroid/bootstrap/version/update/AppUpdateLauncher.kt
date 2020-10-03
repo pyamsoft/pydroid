@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.api
+package com.pyamsoft.pydroid.bootstrap.version.update
 
-data class UpdatePayload internal constructor(
-    val currentVersion: Int,
-    val newVersion: Int
-)
+import android.app.Activity
+import androidx.annotation.CheckResult
+
+fun interface AppUpdateLauncher {
+
+    fun update(activity: Activity, requestCode: Int)
+
+    companion object {
+
+        @JvmStatic
+        @CheckResult
+        fun empty(): AppUpdateLauncher {
+            return AppUpdateLauncher { _, _ -> }
+        }
+    }
+}

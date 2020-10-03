@@ -16,49 +16,26 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.version.api.MinimumApiProvider
-import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
-import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckResponse
-import com.pyamsoft.pydroid.bootstrap.version.api.VersionCheckService
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class VersionCheckInteractorNetwork internal constructor(
-    private val currentVersion: Int,
-    private val packageName: String,
-    private val minimumApiProvider: MinimumApiProvider,
-    private val service: VersionCheckService
+    private val updater: AppUpdater
 ) : VersionCheckInteractor {
 
-    @CheckResult
-    private fun versionCodeForApi(
-        response: VersionCheckResponse
-    ): Int {
-        Enforcer.assertOffMainThread()
-        val minApi = minimumApiProvider.minApi()
-        var versionCode = 0
-        response.responseObjects()
-            .asSequence()
-            .sortedBy { it.minApi() }
-            .forEach {
-                if (it.minApi() <= minApi) {
-                    versionCode = it.version()
-                }
-            }
-        return versionCode
-    }
+    override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
+        throw IllegalStateException("This should never be called directly")
 
-    override suspend fun checkVersion(force: Boolean): UpdatePayload =
+    override suspend fun completeUpdate() =
+        throw IllegalStateException("This should never be called directly")
+
+    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
-            val targetName = if (packageName.endsWith(".dev")) {
-                packageName.substringBefore(".dev")
-            } else {
-                packageName
-            }
-            val result = service.checkVersion(targetName)
-            return@withContext UpdatePayload(currentVersion, versionCodeForApi(result))
+
+            return@withContext updater.checkForUpdate()
         }
 }

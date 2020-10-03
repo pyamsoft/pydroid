@@ -21,34 +21,31 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
+import com.pyamsoft.pydroid.ui.version.VersionViewEvent.UpdateRestart
 import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
-import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
-    interactor: VersionCheckInteractor,
+    private val interactor: VersionCheckInteractor,
     debug: Boolean
 ) : UiViewModel<VersionViewState, VersionViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
         isLoading = null,
-        throwable = null
+        throwable = null,
+        isUpdateAvailable = false
     ), debug = debug
 ) {
-
-    private var notifyUpgrade: Boolean = true
 
     private val checkUpdateRunner = highlander<Unit, Boolean> { force ->
         handleVersionCheckBegin(force)
         try {
-            val version = interactor.checkVersion(force)
-            if (version != null && (force || notifyUpgrade)) {
-                notifyUpgrade = false
-                handleVersionCheckFound(version.currentVersion, version.newVersion)
-            }
+            val launcher = interactor.checkVersion(force)
+            handleVersionCheckFound(launcher)
         } catch (error: Throwable) {
             error.onActualError { e ->
                 Timber.e(e, "Error checking for latest version")
@@ -59,9 +56,41 @@ internal class VersionCheckViewModel internal constructor(
         }
     }
 
+    init {
+        doOnBind {
+            viewModelScope.launch(context = Dispatchers.Default) {
+                interactor.watchForDownloadComplete {
+                    Timber.d("App update download ready!")
+                    setState { copy(isUpdateAvailable = true) }
+                }
+            }
+        }
+
+        doOnBind { savedInstanceState ->
+            savedInstanceState.useIfAvailable<Boolean>(KEY_UPDATE_AVAILABLE) { isUpdateAvailable ->
+                if (isUpdateAvailable) {
+                    Timber.d("Restore update available status from savedInstanceState")
+                    setState { copy(isUpdateAvailable = isUpdateAvailable) }
+                }
+            }
+        }
+
+        doOnSaveState { outState, state ->
+            outState.put(KEY_UPDATE_AVAILABLE, state.isUpdateAvailable)
+        }
+    }
+
     override fun handleViewEvent(event: VersionViewEvent) {
         return when (event) {
             is SnackbarHidden -> setState { copy(throwable = null) }
+            is UpdateRestart -> handleUpdateRestart()
+        }
+    }
+
+    private fun handleUpdateRestart() {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            Timber.d("Updating app, restart via update manager!")
+            interactor.completeUpdate()
         }
     }
 
@@ -69,11 +98,8 @@ internal class VersionCheckViewModel internal constructor(
         setState { copy(isLoading = Loading(forced)) }
     }
 
-    private fun handleVersionCheckFound(
-        currentVersion: Int,
-        newVersion: Int
-    ) {
-        publish(ShowUpgrade(UpgradePayload(currentVersion, newVersion)))
+    private fun handleVersionCheckFound(launcher: AppUpdateLauncher) {
+        publish(ShowUpgrade(launcher))
     }
 
     private fun handleVersionCheckError(throwable: Throwable) {
@@ -86,5 +112,9 @@ internal class VersionCheckViewModel internal constructor(
 
     internal fun checkForUpdates(force: Boolean) {
         viewModelScope.launch(context = Dispatchers.Default) { checkUpdateRunner.call(force) }
+    }
+
+    companion object {
+        private const val KEY_UPDATE_AVAILABLE = "version_is_update_available"
     }
 }

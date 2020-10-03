@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-data class AboutViewState(
+data class AboutViewState internal constructor(
     val isLoading: Boolean,
     val licenses: List<OssLibrary>,
     val loadError: Throwable?,

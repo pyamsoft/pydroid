@@ -32,7 +32,6 @@ import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigInteractor
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
@@ -43,11 +42,6 @@ internal class PYDroidViewModelFactory internal constructor(
         return when (modelClass) {
             RatingDialogViewModel::class -> RatingDialogViewModel(
                 params.interactors.rating,
-                params.debug
-            )
-            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(
-                params.name,
-                params.version,
                 params.debug
             )
             AppSettingsViewModel::class -> AppSettingsViewModel(

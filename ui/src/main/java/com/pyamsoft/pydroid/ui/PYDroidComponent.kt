@@ -39,7 +39,6 @@ import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigComponent
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigModule
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionComponent
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 
 internal interface PYDroidComponent {
 
@@ -66,9 +65,6 @@ internal interface PYDroidComponent {
 
     @CheckResult
     fun plusVersion(): VersionComponent.Factory
-
-    @CheckResult
-    fun plusUpgrade(): VersionUpgradeComponent.Factory
 
     @CheckResult
     fun plusSettings(): AppSettingsComponent.Factory
@@ -108,13 +104,13 @@ internal interface PYDroidComponent {
 
         private val loaderModule = LoaderModule(
             LoaderModule.Parameters(
-                context = context
+                context = context.applicationContext
             )
         )
 
         private val settingsClearConfigModule = SettingsClearConfigModule(
             SettingsClearConfigModule.Parameters(
-                context = context
+                context = context.applicationContext
             )
         )
 
@@ -135,10 +131,7 @@ internal interface PYDroidComponent {
 
         private val versionCheckModule = VersionCheckModule(
             VersionCheckModule.Parameters(
-                debug = params.debug,
-                currentVersion = params.version,
-                packageName = packageName,
-                serviceCreator = networkModule.provideServiceCreator()
+                context = context.applicationContext
             )
         )
 
@@ -172,10 +165,6 @@ internal interface PYDroidComponent {
             viewSourceUrl = params.sourceUrl,
             privacyPolicyUrl = params.privacyPolicyUrl,
             termsConditionsUrl = params.termsConditionsUrl,
-            factory = viewModelFactory
-        )
-
-        private val versionUpgradeParams = VersionUpgradeComponent.Factory.Parameters(
             factory = viewModelFactory
         )
 
@@ -252,10 +241,6 @@ internal interface PYDroidComponent {
 
         override fun plusVersion(): VersionComponent.Factory {
             return VersionComponent.Impl.FactoryImpl(versionCheckParams)
-        }
-
-        override fun plusUpgrade(): VersionUpgradeComponent.Factory {
-            return VersionUpgradeComponent.Impl.FactoryImpl(versionUpgradeParams)
         }
 
         override fun plusSettings(): AppSettingsComponent.Factory {

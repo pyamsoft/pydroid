@@ -17,10 +17,15 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 
 interface VersionCheckInteractor {
 
     @CheckResult
-    suspend fun checkVersion(force: Boolean): UpdatePayload?
+    suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit)
+
+    @CheckResult
+    suspend fun checkVersion(force: Boolean): AppUpdateLauncher
+
+    suspend fun completeUpdate()
 }

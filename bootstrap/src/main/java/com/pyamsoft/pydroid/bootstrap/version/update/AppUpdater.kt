@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.api
+package com.pyamsoft.pydroid.bootstrap.version.update
 
-import android.os.Build
+import androidx.annotation.CheckResult
 
-internal class MinimumApiProviderImpl internal constructor() : MinimumApiProvider {
+interface AppUpdater {
 
-    override fun minApi(): Int {
-        return Build.VERSION.SDK_INT
-    }
+    suspend fun watchForDownloadComplete(onDownloadComplete: () -> Unit)
+
+    @CheckResult
+    suspend fun checkForUpdate(): AppUpdateLauncher
+
+    suspend fun complete()
 }

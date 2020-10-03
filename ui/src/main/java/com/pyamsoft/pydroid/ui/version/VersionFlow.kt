@@ -19,28 +19,27 @@ package com.pyamsoft.pydroid.ui.version
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.ui.version.VersionViewState.UpgradePayload
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 
-data class VersionViewState(
+data class VersionViewState internal constructor(
     val isLoading: Loading?,
-    val throwable: Throwable?
+    val throwable: Throwable?,
+    val isUpdateAvailable: Boolean,
 ) : UiViewState {
 
-    data class Loading(val forced: Boolean)
-
-    data class UpgradePayload(
-        val currentVersion: Int,
-        val newVersion: Int
-    )
+    data class Loading internal constructor(val forced: Boolean)
 }
 
 sealed class VersionViewEvent : UiViewEvent {
 
     object SnackbarHidden : VersionViewEvent()
+
+    object UpdateRestart : VersionViewEvent()
 }
 
 sealed class VersionControllerEvent : UiControllerEvent {
 
-    data class ShowUpgrade internal constructor(val payload: UpgradePayload) :
-        VersionControllerEvent()
+    data class ShowUpgrade internal constructor(
+        val launcher: AppUpdateLauncher
+    ) : VersionControllerEvent()
 }

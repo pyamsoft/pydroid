@@ -18,17 +18,33 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
-import com.pyamsoft.pydroid.bootstrap.version.api.UpdatePayload
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 internal class VersionCheckInteractorImpl internal constructor(
-    private val debug: Boolean,
-    private val updateCache: Cached<UpdatePayload>
+    private val updater: AppUpdater,
+    private val updateCache: Cached<AppUpdateLauncher>
 ) : VersionCheckInteractor, Cache<Any> {
 
-    override suspend fun checkVersion(force: Boolean): UpdatePayload? =
+    override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
+        withContext(context = Dispatchers.IO) {
+            Enforcer.assertOffMainThread()
+
+            return@withContext updater.watchForDownloadComplete(onDownloadCompleted)
+        }
+
+    override suspend fun completeUpdate() = withContext(context = Dispatchers.Main){
+        Enforcer.assertOnMainThread()
+
+        Timber.d("GOING DOWN FOR UPDATE")
+        updater.complete()
+    }
+
+    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -36,12 +52,7 @@ internal class VersionCheckInteractorImpl internal constructor(
                 updateCache.clear()
             }
 
-            val result = requireNotNull(updateCache.call())
-            if (result.currentVersion < result.newVersion || (debug && force)) {
-                return@withContext result
-            } else {
-                return@withContext null
-            }
+            return@withContext requireNotNull(updateCache.call())
         }
 
     override suspend fun clear() {

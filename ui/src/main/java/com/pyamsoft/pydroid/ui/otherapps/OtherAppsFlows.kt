@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-data class OtherAppsViewState(
+data class OtherAppsViewState internal constructor(
     val apps: List<OtherApp>,
     val navigationError: Throwable?
 ) : UiViewState

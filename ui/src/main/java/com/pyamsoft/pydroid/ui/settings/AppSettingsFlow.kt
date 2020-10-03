@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
-data class AppSettingsViewState(
+data class AppSettingsViewState internal constructor(
     val isDarkTheme: DarkTheme?,
     val throwable: Throwable?,
     val otherApps: List<OtherApp>

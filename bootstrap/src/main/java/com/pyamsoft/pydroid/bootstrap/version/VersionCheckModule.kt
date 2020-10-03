@@ -30,7 +30,7 @@ class VersionCheckModule(params: Parameters) {
     private val impl: VersionCheckInteractorImpl
 
     init {
-        val updater = AppUpdaterImpl(params.context.applicationContext)
+        val updater = AppUpdaterImpl(params.context.applicationContext, params.debug)
         val network = VersionCheckInteractorNetwork(updater)
         impl = VersionCheckInteractorImpl(updater, createCache(network))
     }
@@ -51,5 +51,8 @@ class VersionCheckModule(params: Parameters) {
         }
     }
 
-    data class Parameters(internal val context: Context)
+    data class Parameters(
+        internal val context: Context,
+        internal val debug: Boolean
+    )
 }

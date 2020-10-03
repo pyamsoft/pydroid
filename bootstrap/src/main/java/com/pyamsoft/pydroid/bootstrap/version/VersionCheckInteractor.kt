@@ -21,7 +21,6 @@ import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 
 interface VersionCheckInteractor {
 
-    @CheckResult
     suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit)
 
     @CheckResult

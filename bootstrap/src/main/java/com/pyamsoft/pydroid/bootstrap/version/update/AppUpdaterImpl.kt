@@ -31,7 +31,10 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import kotlin.coroutines.resume
 
-internal class AppUpdaterImpl internal constructor(private val context: Context) : AppUpdater {
+internal class AppUpdaterImpl internal constructor(
+    private val context: Context,
+    private val debug: Boolean
+) : AppUpdater {
 
     private val manager by lazy {
         AppUpdateManagerFactory.create(context.applicationContext)
@@ -58,6 +61,12 @@ internal class AppUpdaterImpl internal constructor(private val context: Context)
             Enforcer.assertOffMainThread()
 
             return@withContext suspendCancellableCoroutine<Unit> { continuation ->
+                if (debug) {
+                    Timber.d("Cannot listen for in-app updates in DEBUG mode")
+                    continuation.cancel()
+                    return@suspendCancellableCoroutine
+                }
+
                 val listener = createStatusListener(onDownloadComplete)
 
                 Timber.d("Listen for install status DOWNLOADED")
@@ -75,6 +84,12 @@ internal class AppUpdaterImpl internal constructor(private val context: Context)
             Enforcer.assertOffMainThread()
 
             return@withContext suspendCancellableCoroutine { continuation ->
+                if (debug) {
+                    Timber.d("Cannot check for in-app updates in DEBUG mode")
+                    continuation.cancel()
+                    return@suspendCancellableCoroutine
+                }
+
                 manager.appUpdateInfo
                     .addOnFailureListener { error ->
                         Timber.e(error, "Failed to resolve app update info task")

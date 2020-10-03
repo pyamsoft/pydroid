@@ -109,6 +109,15 @@ object OssLibraries {
             "https://github.com/pyamsoft/cachify",
             "Simple in-memory caching of all the things"
         )
+        OssLibraries.add(
+            "Google Play Core Library",
+            "https://developers.google.com/android/",
+            "Google Play Services Core library for Android.",
+            license = OssLicenses.custom(
+                license = "Custom Google License",
+                location = "https://developer.android.com/distribute/play-services"
+            )
+        )
     }
 
     private fun addUiLibraries() {

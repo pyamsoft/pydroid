@@ -71,6 +71,10 @@ buildscript {
 
 		// Recyclerview
 		decorator = "1.2.0"
+
+		// In app updates and reviews
+		playCore = "1.8.2"
+		playCoreKtx = "1.8.1"
 	}
 
 	dependencies {

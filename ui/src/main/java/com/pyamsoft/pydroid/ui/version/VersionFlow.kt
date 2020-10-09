@@ -22,13 +22,10 @@ import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 
 data class VersionViewState internal constructor(
-    val isLoading: Loading?,
+    val isLoading: Boolean,
     val throwable: Throwable?,
     val isUpdateAvailable: Boolean,
-) : UiViewState {
-
-    data class Loading internal constructor(val forced: Boolean)
-}
+) : UiViewState
 
 sealed class VersionViewEvent : UiViewEvent {
 

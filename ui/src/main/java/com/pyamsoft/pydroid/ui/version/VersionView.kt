@@ -32,16 +32,22 @@ internal class VersionView internal constructor(
     }
 
     override fun render(state: VersionViewState) {
+        handleLoading(state)
+        handleError(state)
+        handleUpdateAvailable(state)
+    }
+
+    private fun handleLoading(state: VersionViewState) {
         state.isLoading.let { loading ->
-            if (loading != null) {
-                if (loading.forced) {
-                    showUpdating()
-                }
+            if (loading) {
+                showUpdating()
             } else {
                 dismissUpdating()
             }
         }
+    }
 
+    private fun handleError(state: VersionViewState) {
         state.throwable.let { throwable ->
             if (throwable == null) {
                 clearError()
@@ -49,7 +55,9 @@ internal class VersionView internal constructor(
                 showError(throwable)
             }
         }
+    }
 
+    private fun handleUpdateAvailable(state: VersionViewState) {
         state.isUpdateAvailable.let { isUpdateAvailable ->
             if (isUpdateAvailable) {
                 showUpdatePrompt()

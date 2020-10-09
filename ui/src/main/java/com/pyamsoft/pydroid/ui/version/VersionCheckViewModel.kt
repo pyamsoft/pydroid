@@ -25,7 +25,6 @@ import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
 import com.pyamsoft.pydroid.ui.version.VersionViewEvent.UpdateRestart
-import com.pyamsoft.pydroid.ui.version.VersionViewState.Loading
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -35,14 +34,14 @@ internal class VersionCheckViewModel internal constructor(
     debug: Boolean
 ) : UiViewModel<VersionViewState, VersionViewEvent, VersionControllerEvent>(
     initialState = VersionViewState(
-        isLoading = null,
+        isLoading = false,
         throwable = null,
         isUpdateAvailable = false
     ), debug = debug
 ) {
 
     private val checkUpdateRunner = highlander<Unit, Boolean> { force ->
-        handleVersionCheckBegin(force)
+        handleVersionCheckBegin()
         try {
             val launcher = interactor.checkVersion(force)
             handleVersionCheckFound(launcher)
@@ -94,8 +93,8 @@ internal class VersionCheckViewModel internal constructor(
         }
     }
 
-    private fun handleVersionCheckBegin(forced: Boolean) {
-        setState { copy(isLoading = Loading(forced)) }
+    private fun handleVersionCheckBegin() {
+        setState { copy(isLoading = true) }
     }
 
     private fun handleVersionCheckFound(launcher: AppUpdateLauncher) {
@@ -107,7 +106,7 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     private fun handleVersionCheckComplete() {
-        setState { copy(isLoading = null) }
+        setState { copy(isLoading = false) }
     }
 
     internal fun checkForUpdates(force: Boolean) {

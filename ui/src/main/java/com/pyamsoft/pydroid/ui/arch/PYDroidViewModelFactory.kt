@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.ui.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogViewModel
 import com.pyamsoft.pydroid.ui.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigInteractor
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigViewModel
@@ -40,7 +39,6 @@ internal class PYDroidViewModelFactory internal constructor(
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
-            RatingDialogViewModel::class -> RatingDialogViewModel(params.debug)
             AppSettingsViewModel::class -> AppSettingsViewModel(
                 params.theming,
                 params.interactors.otherApps,

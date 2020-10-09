@@ -21,8 +21,8 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -35,15 +35,18 @@ internal class RatingViewModel internal constructor(
 ) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->
-        if (interactor.askForRating(force)) {
-            publish(LoadRating)
-        }
+        val launcher = interactor.askForRating(force)
+        handleRatingLaunch(launcher)
     }
 
     init {
         doOnBind {
             load(false)
         }
+    }
+
+    private fun handleRatingLaunch(launcher: AppReviewLauncher) {
+        publish(RatingControllerEvent.LoadRating(launcher))
     }
 
     override fun handleViewEvent(event: UnitViewEvent) {

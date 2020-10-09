@@ -16,11 +16,18 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating
 
+import android.content.Context
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.rating.store.PlayStoreRateMyApp
 
 class RatingModule(params: Parameters) {
 
-    private val impl = RatingInteractorImpl(params.preferences)
+    private val impl: RatingInteractor
+
+    init {
+        val rateMyApp: RateMyApp = PlayStoreRateMyApp(params.context, params.debug)
+        impl = RatingInteractorImpl(rateMyApp, params.preferences)
+    }
 
     @CheckResult
     fun provideInteractor(): RatingInteractor {
@@ -28,7 +35,8 @@ class RatingModule(params: Parameters) {
     }
 
     data class Parameters(
-        internal val version: Int,
+        internal val context: Context,
+        internal val debug: Boolean,
         internal val preferences: RatingPreferences
     )
 }

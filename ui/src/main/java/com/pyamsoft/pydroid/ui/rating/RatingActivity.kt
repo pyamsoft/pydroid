@@ -30,13 +30,12 @@ import androidx.core.text.inSpans
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
-import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 
@@ -119,7 +118,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
             viewModel
         ) {
             return@createComponent when (it) {
-                is LoadRating -> showRating()
+                is LoadRating -> showRating(it.launcher)
             }
         }
     }
@@ -137,9 +136,8 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
         stateSaver = null
     }
 
-    private fun showRating() {
-        RatingDialog.newInstance(this)
-            .show(this, RatingDialog.TAG)
+    private fun showRating(launcher: AppReviewLauncher) {
+        launcher.review(this)
     }
 
     companion object {

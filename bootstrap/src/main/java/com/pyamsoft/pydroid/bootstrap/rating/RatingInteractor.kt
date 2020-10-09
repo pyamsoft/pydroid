@@ -21,6 +21,6 @@ import androidx.annotation.CheckResult
 interface RatingInteractor {
 
     @CheckResult
-    suspend fun askForRating(force: Boolean): Boolean
+    suspend fun askForRating(force: Boolean): AppReviewLauncher
 
 }

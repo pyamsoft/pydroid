@@ -33,7 +33,6 @@ import com.pyamsoft.pydroid.ui.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemComponent
 import com.pyamsoft.pydroid.ui.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.privacy.PrivacyComponent
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialogComponent
 import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigComponent
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigModule
@@ -56,9 +55,6 @@ internal interface PYDroidComponent {
 
     @CheckResult
     fun plusOtherAppsItem(): OtherAppsItemComponent.Factory
-
-    @CheckResult
-    fun plusRatingDialog(): RatingDialogComponent.Factory
 
     @CheckResult
     fun plusClearConfirmDialog(): SettingsClearConfigComponent.Factory
@@ -118,7 +114,8 @@ internal interface PYDroidComponent {
 
         private val ratingModule = RatingModule(
             RatingModule.Parameters(
-                version = params.version,
+                context = context.applicationContext,
+                debug = params.debug,
                 preferences = preferences
             )
         )
@@ -186,11 +183,6 @@ internal interface PYDroidComponent {
             factory = viewModelFactory
         )
 
-        private val ratingDialogParams = RatingDialogComponent.Factory.Parameters(
-            factory = viewModelFactory,
-            module = loaderModule
-        )
-
         private val themeDialogParams = ThemeDialogComponent.Factory.Parameters(
             debug = params.debug
         )
@@ -231,10 +223,6 @@ internal interface PYDroidComponent {
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
             return AboutItemComponent.Impl.FactoryImpl()
-        }
-
-        override fun plusRatingDialog(): RatingDialogComponent.Factory {
-            return RatingDialogComponent.Impl.FactoryImpl(ratingDialogParams)
         }
 
         override fun plusClearConfirmDialog(): SettingsClearConfigComponent.Factory {

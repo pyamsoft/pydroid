@@ -26,6 +26,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
@@ -33,10 +34,9 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.about.AboutDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.otherapps.OtherAppsDialog
-import com.pyamsoft.pydroid.ui.rating.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.rating.RatingActivity
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.rating.RatingViewModel
-import com.pyamsoft.pydroid.ui.rating.dialog.RatingDialog
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigDialog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
@@ -131,7 +131,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             ratingViewModel
         ) {
             return@createComponent when (it) {
-                is LoadRating -> openUpdateInfo()
+                is LoadRating -> openUpdateInfo(it.launcher)
             }
         }
 
@@ -144,9 +144,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
     }
 
-    private fun openUpdateInfo() {
-        RatingDialog.newInstance(requireActivity() as ChangeLogProvider)
-            .show(requireActivity(), RatingDialog.TAG)
+    private fun openUpdateInfo(launcher: AppReviewLauncher) {
+        val act = requireActivity() as RatingActivity
+        launcher.review(act)
     }
 
     private fun showVersionUpgrade(launcher: AppUpdateLauncher) {

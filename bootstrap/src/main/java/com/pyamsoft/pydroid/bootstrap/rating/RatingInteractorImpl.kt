@@ -19,20 +19,19 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 internal class RatingInteractorImpl internal constructor(
+    private val rateMyApp: RateMyApp,
     private val preferences: RatingPreferences
 ) : RatingInteractor {
 
-    override suspend fun askForRating(force: Boolean): Boolean =
+    override suspend fun askForRating(force: Boolean): AppReviewLauncher =
         withContext(context = Dispatchers.Default) {
             Enforcer.assertOffMainThread()
-            return@withContext if (force) {
-                Timber.d("Force view rating")
-                true
+            return@withContext if (force || preferences.showRatingDialog()) {
+                rateMyApp.startReview()
             } else {
-                preferences.showRatingDialog()
+                AppReviewLauncher.empty()
             }
         }
 }

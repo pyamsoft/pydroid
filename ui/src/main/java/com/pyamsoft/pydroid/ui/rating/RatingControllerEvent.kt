@@ -17,8 +17,11 @@
 package com.pyamsoft.pydroid.ui.rating
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 
 sealed class RatingControllerEvent : UiControllerEvent {
 
-    object LoadRating : RatingControllerEvent()
+    data class LoadRating internal constructor(
+        val launcher: AppReviewLauncher
+    ) : RatingControllerEvent()
 }

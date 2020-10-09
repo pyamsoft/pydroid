@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.rating.store
 
+import android.app.Activity
 import androidx.annotation.CheckResult
 
-interface RatingInteractor {
+fun interface AppReviewLauncher {
 
-    @CheckResult
-    suspend fun askForRating(force: Boolean): Boolean
+    fun review(activity: Activity)
 
+    companion object {
+
+        @JvmStatic
+        @CheckResult
+        fun empty(): AppReviewLauncher {
+            return AppReviewLauncher { }
+        }
+    }
 }

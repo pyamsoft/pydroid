@@ -132,7 +132,8 @@ internal interface PYDroidComponent {
         private val versionCheckModule = VersionCheckModule(
             VersionCheckModule.Parameters(
                 context = context.applicationContext,
-                debug = params.debug
+                debug = params.debug,
+                version = params.version
             )
         )
 

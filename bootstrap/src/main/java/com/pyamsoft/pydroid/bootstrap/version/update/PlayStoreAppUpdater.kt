@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version.update
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
@@ -31,13 +32,20 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import kotlin.coroutines.resume
 
-internal class AppUpdaterImpl internal constructor(
-    private val context: Context,
-    private val debug: Boolean
+internal class PlayStoreAppUpdater internal constructor(
+    context: Context,
+    debug: Boolean,
+    version: Int,
 ) : AppUpdater {
 
     private val manager by lazy {
-        AppUpdateManagerFactory.create(context.applicationContext)
+        if (debug) {
+            FakeAppUpdateManager(context.applicationContext).apply {
+                setUpdateAvailable(version + 1)
+            }
+        } else {
+            AppUpdateManagerFactory.create(context.applicationContext)
+        }
     }
 
     @CheckResult
@@ -61,12 +69,6 @@ internal class AppUpdaterImpl internal constructor(
             Enforcer.assertOffMainThread()
 
             return@withContext suspendCancellableCoroutine<Unit> { continuation ->
-                if (debug) {
-                    Timber.d("Cannot listen for in-app updates in DEBUG mode")
-                    continuation.cancel()
-                    return@suspendCancellableCoroutine
-                }
-
                 val listener = createStatusListener(onDownloadComplete)
 
                 Timber.d("Listen for install status DOWNLOADED")
@@ -84,12 +86,6 @@ internal class AppUpdaterImpl internal constructor(
             Enforcer.assertOffMainThread()
 
             return@withContext suspendCancellableCoroutine { continuation ->
-                if (debug) {
-                    Timber.d("Cannot check for in-app updates in DEBUG mode")
-                    continuation.cancel()
-                    return@suspendCancellableCoroutine
-                }
-
                 manager.appUpdateInfo
                     .addOnFailureListener { error ->
                         Timber.e(error, "Failed to resolve app update info task")

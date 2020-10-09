@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.rating.store
 
+import android.app.Activity
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-internal class RatingInteractorImpl internal constructor(
-    private val preferences: RatingPreferences
-) : RatingInteractor {
+internal class PlayStoreAppReviewLauncher internal constructor(
+    private val manager: ReviewManager,
+    private val info: ReviewInfo
+) : AppReviewLauncher {
 
-    override suspend fun askForRating(force: Boolean): Boolean =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            return@withContext if (force) {
-                Timber.d("Force view rating")
-                true
-            } else {
-                preferences.showRatingDialog()
+    override fun review(activity: Activity) {
+        Enforcer.assertOnMainThread()
+
+        manager.launchReviewFlow(activity, info)
+            .addOnCompleteListener {
+                Timber.d("Review flow completed")
             }
-        }
+    }
 }
-

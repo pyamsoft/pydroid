@@ -40,10 +40,7 @@ internal class PYDroidViewModelFactory internal constructor(
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
-            RatingDialogViewModel::class -> RatingDialogViewModel(
-                params.interactors.rating,
-                params.debug
-            )
+            RatingDialogViewModel::class -> RatingDialogViewModel(params.debug)
             AppSettingsViewModel::class -> AppSettingsViewModel(
                 params.theming,
                 params.interactors.otherApps,

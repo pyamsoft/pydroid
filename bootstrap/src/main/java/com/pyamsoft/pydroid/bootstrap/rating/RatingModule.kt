@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 
 class RatingModule(params: Parameters) {
 
-    private val impl = RatingInteractorImpl(params.version, params.preferences)
+    private val impl = RatingInteractorImpl(params.preferences)
 
     @CheckResult
     fun provideInteractor(): RatingInteractor {

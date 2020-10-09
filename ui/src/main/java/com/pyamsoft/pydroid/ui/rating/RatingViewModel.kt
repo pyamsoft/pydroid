@@ -35,8 +35,7 @@ internal class RatingViewModel internal constructor(
 ) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->
-        val show = interactor.needsToViewRating(force)
-        if (show) {
+        if (interactor.askForRating(force)) {
             publish(LoadRating)
         }
     }

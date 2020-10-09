@@ -22,7 +22,7 @@ import com.pyamsoft.cachify.Cached
 import com.pyamsoft.cachify.MemoryCacheStorage
 import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdaterImpl
+import com.pyamsoft.pydroid.bootstrap.version.update.PlayStoreAppUpdater
 import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(params: Parameters) {
@@ -30,7 +30,7 @@ class VersionCheckModule(params: Parameters) {
     private val impl: VersionCheckInteractorImpl
 
     init {
-        val updater = AppUpdaterImpl(params.context.applicationContext, params.debug)
+        val updater = PlayStoreAppUpdater(params.context, params.debug, params.version)
         val network = VersionCheckInteractorNetwork(updater)
         impl = VersionCheckInteractorImpl(updater, createCache(network))
     }
@@ -53,6 +53,7 @@ class VersionCheckModule(params: Parameters) {
 
     data class Parameters(
         internal val context: Context,
+        internal val version: Int,
         internal val debug: Boolean
     )
 }

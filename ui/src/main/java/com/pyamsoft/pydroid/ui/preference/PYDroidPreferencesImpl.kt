@@ -39,24 +39,16 @@ internal class PYDroidPreferencesImpl internal constructor(
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     }
 
-    override suspend fun getRatingAcceptedVersion(): Int =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            return@withContext prefs.getInt(
-                RATING_ACCEPTED_VERSION, RatingPreferences.DEFAULT_RATING_ACCEPTED_VERSION
-            )
-        }
-
-    override suspend fun applyRatingAcceptedVersion(version: Int) =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            prefs.edit {
-                putInt(RATING_ACCEPTED_VERSION, version)
-            }
-        }
+    override suspend fun showRatingDialog(): Boolean = withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+        val shown = prefs.getInt(SHOW_RATING, 0)
+        val showRating = shown >= SHOW_RATING_AT
+        prefs.edit { putInt(SHOW_RATING, if (showRating) 0 else shown + 1) }
+        return@withContext showRating
+    }
 
     override suspend fun initializeDarkMode(onInit: (mode: Mode) -> Unit) =
-        withContext(context = Dispatchers.Default) {
+        withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
             if (!prefs.contains(darkModeKey)) {
                 val mode = SYSTEM
@@ -65,7 +57,7 @@ internal class PYDroidPreferencesImpl internal constructor(
             }
         }
 
-    override suspend fun getDarkMode(): Mode = withContext(context = Dispatchers.Default) {
+    override suspend fun getDarkMode(): Mode = withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
         return@withContext requireNotNull(
             prefs.getString(
@@ -77,6 +69,7 @@ internal class PYDroidPreferencesImpl internal constructor(
 
     companion object {
 
-        private const val RATING_ACCEPTED_VERSION = "rating_dialog_accepted_version"
+        private const val SHOW_RATING_AT = 5
+        private const val SHOW_RATING = "show_rating"
     }
 }

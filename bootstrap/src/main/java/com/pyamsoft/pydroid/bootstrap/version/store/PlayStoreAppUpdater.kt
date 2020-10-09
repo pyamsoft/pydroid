@@ -71,12 +71,6 @@ internal class PlayStoreAppUpdater internal constructor(
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
-            if (debug) {
-                Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
-                delay(2000L)
-            }
-
-
             return@withContext suspendCancellableCoroutine<Unit> { continuation ->
                 val listener = createStatusListener(onDownloadComplete)
 
@@ -93,6 +87,11 @@ internal class PlayStoreAppUpdater internal constructor(
     override suspend fun checkForUpdate(): AppUpdateLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
+
+            if (debug) {
+                Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+                delay(2000L)
+            }
 
             return@withContext suspendCancellableCoroutine { continuation ->
                 manager.appUpdateInfo

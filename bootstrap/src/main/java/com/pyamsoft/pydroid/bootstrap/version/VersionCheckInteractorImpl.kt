@@ -18,8 +18,6 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

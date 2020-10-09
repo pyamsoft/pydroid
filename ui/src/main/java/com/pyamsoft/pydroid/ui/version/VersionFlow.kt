@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.version
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 
 data class VersionViewState internal constructor(
     val isLoading: Loading?,

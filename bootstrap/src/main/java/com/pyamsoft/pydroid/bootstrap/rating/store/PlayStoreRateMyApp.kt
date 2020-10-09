@@ -19,7 +19,9 @@ package com.pyamsoft.pydroid.bootstrap.rating.store
 import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
-import com.pyamsoft.pydroid.bootstrap.rating.store.AppReviewLauncher.Companion
+import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
+import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher.Companion
+import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine

@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.version.update
+package com.pyamsoft.pydroid.bootstrap.rating
 
-import android.app.Activity
 import androidx.annotation.CheckResult
 
-fun interface AppUpdateLauncher {
+interface RateMyApp {
 
-    fun update(activity: Activity, requestCode: Int)
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        fun empty(): AppUpdateLauncher {
-            return AppUpdateLauncher { _, _ -> }
-        }
-    }
+    @CheckResult
+    suspend fun startReview(): AppReviewLauncher
 }

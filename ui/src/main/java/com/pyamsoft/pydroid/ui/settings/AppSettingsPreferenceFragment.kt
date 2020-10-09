@@ -26,7 +26,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R

@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating.store
+package com.pyamsoft.pydroid.bootstrap.version
 
-import android.app.Activity
 import androidx.annotation.CheckResult
 
-fun interface AppReviewLauncher {
+interface AppUpdater {
 
-    fun review(activity: Activity)
+    suspend fun watchForDownloadComplete(onDownloadComplete: () -> Unit)
 
-    companion object {
+    @CheckResult
+    suspend fun checkForUpdate(): AppUpdateLauncher
 
-        @JvmStatic
-        @CheckResult
-        fun empty(): AppReviewLauncher {
-            return AppReviewLauncher { }
-        }
-    }
+    suspend fun complete()
 }

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.rating.store
 import android.app.Activity
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
+import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 import com.pyamsoft.pydroid.core.Enforcer
 import timber.log.Timber
 

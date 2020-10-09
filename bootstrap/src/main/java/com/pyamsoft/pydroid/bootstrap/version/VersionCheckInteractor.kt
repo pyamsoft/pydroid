@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.bootstrap.version.update.AppUpdateLauncher
 
 interface VersionCheckInteractor {
 

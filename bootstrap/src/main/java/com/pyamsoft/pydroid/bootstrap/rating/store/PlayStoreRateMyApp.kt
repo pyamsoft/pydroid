@@ -20,10 +20,10 @@ import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
-import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher.Companion
 import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -31,7 +31,7 @@ import kotlin.coroutines.resume
 
 internal class PlayStoreRateMyApp internal constructor(
     context: Context,
-    debug: Boolean
+    private val debug: Boolean
 ) : RateMyApp {
 
     private val manager by lazy {
@@ -45,6 +45,12 @@ internal class PlayStoreRateMyApp internal constructor(
     override suspend fun startReview(): AppReviewLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
+
+            if (debug) {
+                Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+                delay(2000L)
+            }
+
             return@withContext suspendCancellableCoroutine { continuation ->
                 manager.requestReviewFlow()
                     .addOnFailureListener { error ->
@@ -63,10 +69,10 @@ internal class PlayStoreRateMyApp internal constructor(
                             )
                             return@addOnCompleteListener
                         }
-                    }
 
-                Timber.d("Review is not available")
-                continuation.resume(Companion.empty())
+                        Timber.d("Review is not available")
+                        continuation.resume(AppReviewLauncher.empty())
+                    }
             }
         }
 }

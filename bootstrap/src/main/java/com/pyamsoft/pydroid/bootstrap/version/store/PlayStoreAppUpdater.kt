@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdater
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -36,7 +37,7 @@ import kotlin.coroutines.resume
 
 internal class PlayStoreAppUpdater internal constructor(
     context: Context,
-    debug: Boolean,
+    private val debug: Boolean,
     version: Int,
 ) : AppUpdater {
 
@@ -69,6 +70,12 @@ internal class PlayStoreAppUpdater internal constructor(
     override suspend fun watchForDownloadComplete(onDownloadComplete: () -> Unit) =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
+
+            if (debug) {
+                Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+                delay(2000L)
+            }
+
 
             return@withContext suspendCancellableCoroutine<Unit> { continuation ->
                 val listener = createStatusListener(onDownloadComplete)

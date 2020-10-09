@@ -32,6 +32,10 @@ internal class PrivacyView internal constructor(
     }
 
     override fun render(state: PrivacyViewState) {
+        handleError(state)
+    }
+
+    private fun handleError(state: PrivacyViewState) {
         state.throwable.let { throwable ->
             if (throwable == null) {
                 clearError()

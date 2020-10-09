@@ -56,7 +56,7 @@ object Snackbreak {
             // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
             // and adjusting for bottom padding - it adds the bottom padding from the insets
             // into the snackbar as well.
-            view.doOnApplyWindowInsets { v, _, _ -> fixSnackbar(v) }
+            view.doOnApplyWindowInsets { v, _, _ -> fixSnackbar(v, margin) }
         }
     }
 

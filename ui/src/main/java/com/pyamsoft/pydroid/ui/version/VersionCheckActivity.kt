@@ -67,18 +67,24 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         super.onResume()
 
         if (checkForUpdates) {
-            forceCheckForUpdate()
+            doCheckForUpdate()
         }
     }
 
-    private fun forceCheckForUpdate() {
-        doOnStart { versionViewModel.checkForUpdates(false) }
+    private fun doCheckForUpdate() {
+        Timber.d("Queue check for update onStart")
+        doOnStart {
+            Timber.d("Activity started, check for updates")
+            versionViewModel.checkForUpdates(false)
+        }
     }
 
     // Keep public for app consumers
     fun checkForUpdate() {
+        // In case somebody calls this when the auto update check is still enabled
         check(!checkForUpdates) { "Do not call this method manually, updates are automatically checked onResume" }
-        forceCheckForUpdate()
+
+        doCheckForUpdate()
     }
 
     @CallSuper

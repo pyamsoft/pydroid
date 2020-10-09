@@ -20,8 +20,8 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
 import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
 import com.pyamsoft.pydroid.ui.version.VersionViewEvent.UpdateRestart
@@ -111,6 +111,7 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     internal fun checkForUpdates(force: Boolean) {
+        Timber.d("Begin check for updates")
         viewModelScope.launch(context = Dispatchers.Default) { checkUpdateRunner.call(force) }
     }
 

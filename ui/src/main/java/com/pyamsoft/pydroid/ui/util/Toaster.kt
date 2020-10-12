@@ -27,26 +27,6 @@ import java.util.concurrent.ConcurrentHashMap
 
 object Toaster {
 
-    @JvmStatic
-    @CheckResult
-    private fun make(
-        context: Context,
-        @StringRes resId: Int,
-        duration: Int
-    ): Toast {
-        return Toast.makeText(context.applicationContext, resId, duration)
-    }
-
-    @JvmStatic
-    @CheckResult
-    private fun make(
-        context: Context,
-        message: CharSequence,
-        duration: Int
-    ): Toast {
-        return Toast.makeText(context.applicationContext, message, duration)
-    }
-
     private val cache: MutableMap<Lifecycle, Instance> by lazy { ConcurrentHashMap<Lifecycle, Instance>() }
 
     @CheckResult
@@ -56,20 +36,17 @@ object Toaster {
 
     @CheckResult
     fun bindTo(lifecycle: Lifecycle): Instance {
-        return if (cache.containsKey(lifecycle)) {
-            requireNotNull(cache[lifecycle])
-        } else {
-            cacheInstance(lifecycle)
-        }
+        return cache[lifecycle] ?: cacheInstance(lifecycle)
     }
 
     @CheckResult
     private fun cacheInstance(lifecycle: Lifecycle): Instance {
         val instance = Instance()
-        cache[lifecycle] = instance
+        val c = cache
 
+        c[lifecycle] = instance
         lifecycle.doOnDestroy {
-            cache.remove(lifecycle)
+            c.remove(lifecycle)
             instance.onDestroy()
         }
 
@@ -78,61 +55,138 @@ object Toaster {
 
     class Instance internal constructor() {
 
-        private var alive = true
         private var toast: Toast? = null
+        private var toastCallback: Toast.Callback? = null
 
         internal fun onDestroy() {
             dismiss()
-            alive = false
         }
 
-        private fun requireStillAlive() {
-            require(alive) { "This Toaster.${Instance::class.java.simpleName} is Dead" }
+        private fun removeCallback(toast: Toast, callback: Toast.Callback) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                toast.removeCallback(callback)
+            }
+        }
+
+        private inline fun addCallback(
+            toast: Toast,
+            crossinline onShown: (toast: Toast) -> Unit,
+            crossinline onHidden: (toast: Toast) -> Unit
+        ) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                toast.addCallback(object : Toast.Callback() {
+
+                    override fun onToastShown() {
+                        super.onToastShown()
+                        onShown(toast)
+                    }
+
+                    override fun onToastHidden() {
+                        super.onToastHidden()
+                        onHidden(toast)
+
+                        toast.removeCallback(this)
+                        clearRefs()
+                    }
+
+                })
+            }
         }
 
         fun dismiss() {
-            toast?.cancel()
+            toast?.also { t ->
+                toastCallback?.also { removeCallback(t, it) }
+                t.cancel()
+            }
+            clearRefs()
+        }
+
+        private fun clearRefs() {
             toast = null
+            toastCallback = null
         }
 
-        @CheckResult
+        @JvmOverloads
         fun short(
             context: Context,
-            message: CharSequence
-        ): Toast {
-            requireStillAlive()
+            message: CharSequence,
+            onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (toast: Toast) -> Unit = DEFAULT_ON_HIDDEN,
+        ) {
             dismiss()
-            return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
+            make(context, message, Toast.LENGTH_SHORT)
+                .also { toast = it }
+                .also { addCallback(it, onShown, onHidden) }
+                .also { it.show() }
         }
 
-        @CheckResult
+        @JvmOverloads
         fun short(
             context: Context,
-            @StringRes message: Int
-        ): Toast {
-            requireStillAlive()
+            @StringRes message: Int,
+            onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (toast: Toast) -> Unit = DEFAULT_ON_HIDDEN,
+        ) {
             dismiss()
-            return make(context, message, Toast.LENGTH_SHORT).also { toast = it }
+            make(context, message, Toast.LENGTH_SHORT)
+                .also { toast = it }
+                .also { addCallback(it, onShown, onHidden) }
+                .also { it.show() }
         }
 
-        @CheckResult
+        @JvmOverloads
         fun long(
             context: Context,
-            message: CharSequence
-        ): Toast {
-            requireStillAlive()
+            message: CharSequence,
+            onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (toast: Toast) -> Unit = DEFAULT_ON_HIDDEN,
+        ) {
             dismiss()
-            return make(context, message, Toast.LENGTH_LONG).also { toast = it }
+            make(context, message, Toast.LENGTH_LONG)
+                .also { toast = it }
+                .also { addCallback(it, onShown, onHidden) }
+                .also { it.show() }
         }
 
-        @CheckResult
+        @JvmOverloads
         fun long(
             context: Context,
-            @StringRes message: Int
-        ): Toast {
-            requireStillAlive()
+            @StringRes message: Int,
+            onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
+            onHidden: (toast: Toast) -> Unit = DEFAULT_ON_HIDDEN,
+        ) {
             dismiss()
-            return make(context, message, Toast.LENGTH_LONG).also { toast = it }
+            make(context, message, Toast.LENGTH_LONG)
+                .also { toast = it }
+                .also { addCallback(it, onShown, onHidden) }
+                .also { it.show() }
+        }
+
+        companion object {
+
+            private val DEFAULT_ON_SHOWN = { _: Toast -> }
+            private val DEFAULT_ON_HIDDEN = { _: Toast -> }
+
+            @JvmStatic
+            @CheckResult
+            private fun make(
+                context: Context,
+                @StringRes resId: Int,
+                duration: Int
+            ): Toast {
+                return Toast.makeText(context.applicationContext, resId, duration)
+            }
+
+            @JvmStatic
+            @CheckResult
+            private fun make(
+                context: Context,
+                message: CharSequence,
+                duration: Int
+            ): Toast {
+                return Toast.makeText(context.applicationContext, message, duration)
+            }
+
         }
     }
 }

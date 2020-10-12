@@ -35,67 +35,6 @@ import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
 
-    internal val DEFAULT_ON_SHOWN = { _: Snackbar -> }
-    internal val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
-    internal val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
-
-    private fun fixSnackbar(view: View, margin: Int) {
-        view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
-        view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
-    }
-
-    private fun Snackbar.materialMargin() {
-        val params = view.layoutParams as? MarginLayoutParams
-        if (params != null) {
-            val margin = 8.toDp(view.context)
-
-            // Fix the margins to be material-y
-            fixSnackbar(view, margin)
-
-            // The Snackbar in material library sets a Material design theme but
-            // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
-            // and adjusting for bottom padding - it adds the bottom padding from the insets
-            // into the snackbar as well.
-            view.doOnApplyWindowInsets { v, _, _ -> fixSnackbar(v, margin) }
-        }
-    }
-
-    private fun Snackbar.materialElevation() {
-        ViewCompat.setElevation(view, 6.toDp(context).toFloat())
-    }
-
-    private fun Snackbar.materialDesign() {
-        materialMargin()
-        materialElevation()
-    }
-
-    @JvmStatic
-    @CheckResult
-    private fun make(
-        view: View,
-        @StringRes resId: Int,
-        duration: Int
-    ): Snackbar {
-        return Snackbar.make(view, resId, duration)
-            .also { it.materialDesign() }
-    }
-
-    @JvmStatic
-    @CheckResult
-    private fun make(
-        view: View,
-        message: CharSequence,
-        duration: Int
-    ): Snackbar {
-        return Snackbar.make(view, message, duration)
-            .also { it.materialDesign() }
-    }
-
-    private data class CacheEntry(
-        val instance: Instance,
-        val id: String?
-    )
-
     private val cache: MutableMap<Lifecycle, MutableSet<CacheEntry>> by lazy {
         ConcurrentHashMap<Lifecycle, MutableSet<CacheEntry>>()
     }
@@ -104,7 +43,7 @@ object Snackbreak {
         owner: LifecycleOwner,
         crossinline withInstance: Instance.() -> Unit
     ) {
-        return bindTo(owner.lifecycle) { withInstance() }
+        return bindTo(owner.lifecycle, withInstance)
     }
 
     inline fun bindTo(
@@ -112,7 +51,7 @@ object Snackbreak {
         id: String,
         crossinline withInstance: Instance.() -> Unit
     ) {
-        return bindTo(owner.lifecycle, id) { withInstance() }
+        return bindTo(owner.lifecycle, id, withInstance)
     }
 
     inline fun bindTo(
@@ -136,54 +75,55 @@ object Snackbreak {
         id: String?,
         withInstance: Instance.() -> Unit
     ) {
-        val instance = cache[lifecycle]
-            ?.find { id == it.id }
-            ?.instance
-        if (instance == null) {
-            cacheInstance(lifecycle, id, withInstance)
-        } else {
-            withInstance(instance)
-        }
-    }
-
-    @PublishedApi
-    internal fun cacheInstance(
-        lifecycle: Lifecycle,
-        id: String?,
-        withInstance: Instance.() -> Unit
-    ) {
         if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
             return
         }
 
+        val instance = cache[lifecycle]
+            ?.find { id == it.id }
+            ?.instance ?: cacheInstance(lifecycle, id)
+
+        withInstance(instance)
+    }
+
+    @CheckResult
+    private fun cacheInstance(
+        lifecycle: Lifecycle,
+        id: String?
+    ): Instance {
         val instance = Instance()
-        cache.getOrPut(lifecycle) {
-            lifecycle.doOnDestroy {
-                cache.remove(lifecycle)?.forEach { it.instance.onDestroy() }
-            }
+        val c = cache
+
+        val cached = c.getOrPut(lifecycle) {
+            // Set up the lifecycle listener to destroy when out of scope
+            lifecycle.doOnDestroy { c.remove(lifecycle)?.forEach { it.instance.onDestroy() } }
             return@getOrPut mutableSetOf()
         }
-            .add(CacheEntry(instance, id))
-        withInstance(instance)
+
+        cached.add(CacheEntry(instance, id))
+        return instance
     }
 
     class Instance internal constructor() {
 
-        private var alive = true
         private var snackbar: Snackbar? = null
+        private var barCallback: BaseCallback<Snackbar>? = null
 
         internal fun onDestroy() {
             dismiss()
-            alive = false
         }
 
-        private fun requireStillAlive() {
-            require(alive) { "This Snackbreak.${Instance::class.java.simpleName} is Dead" }
+        private fun clearRefs() {
+            barCallback = null
+            snackbar = null
         }
 
         fun dismiss() {
-            snackbar?.dismiss()
-            snackbar = null
+            snackbar?.also { bar ->
+                barCallback?.also { bar.removeCallback(it) }
+                bar.dismiss()
+            }
+            clearRefs()
         }
 
         @CheckResult
@@ -200,33 +140,34 @@ object Snackbreak {
             builder: Snackbar.() -> Snackbar,
             snack: () -> Snackbar
         ) {
-            requireStillAlive()
             if (canShowNewSnackbar(force)) {
                 dismiss()
                 snackbar = snack()
                     .run(builder)
                     .let { bar ->
-                        return@let bar.addCallback(object : BaseCallback<Snackbar>() {
+                        val callback = object : BaseCallback<Snackbar>() {
 
                             override fun onShown(transientBottomBar: Snackbar?) {
                                 super.onShown(transientBottomBar)
-                                bar.removeCallback(this)
                                 onShown(bar)
                             }
-                        })
-                    }
-                    .let { bar ->
-                        return@let bar.addCallback(object : BaseCallback<Snackbar>() {
 
                             override fun onDismissed(
                                 transientBottomBar: Snackbar?,
                                 event: Int
                             ) {
                                 super.onDismissed(transientBottomBar, event)
-                                bar.removeCallback(this)
                                 onHidden(bar, event)
+
+                                // Clear out the long refs on dismiss
+                                bar.removeCallback(this)
+                                clearRefs()
                             }
-                        })
+                        }
+
+                        // Track the callback for full death
+                        barCallback = callback
+                        return@let bar.addCallback(callback)
                     }
                     .also { it.show() }
             }
@@ -313,5 +254,70 @@ object Snackbreak {
                 make(view, message, Snackbar.LENGTH_INDEFINITE)
             }
         }
+
+        companion object {
+
+            private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
+            private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
+            private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
+
+
+            private fun fixSnackbar(view: View, margin: Int) {
+                view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
+                view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+            }
+
+            private fun Snackbar.materialMargin() {
+                val params = view.layoutParams as? MarginLayoutParams
+                if (params != null) {
+                    val margin = 8.toDp(view.context)
+
+                    // Fix the margins to be material-y
+                    fixSnackbar(view, margin)
+
+                    // The Snackbar in material library sets a Material design theme but
+                    // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
+                    // and adjusting for bottom padding - it adds the bottom padding from the insets
+                    // into the snackbar as well.
+                    view.doOnApplyWindowInsets { v, _, _ -> fixSnackbar(v, margin) }
+                }
+            }
+
+            private fun Snackbar.materialElevation() {
+                ViewCompat.setElevation(view, 6.toDp(context).toFloat())
+            }
+
+            private fun Snackbar.materialDesign() {
+                materialMargin()
+                materialElevation()
+            }
+
+            @JvmStatic
+            @CheckResult
+            private fun make(
+                view: View,
+                @StringRes resId: Int,
+                duration: Int
+            ): Snackbar {
+                return Snackbar.make(view, resId, duration)
+                    .also { it.materialDesign() }
+            }
+
+            @JvmStatic
+            @CheckResult
+            private fun make(
+                view: View,
+                message: CharSequence,
+                duration: Int
+            ): Snackbar {
+                return Snackbar.make(view, message, duration)
+                    .also { it.materialDesign() }
+            }
+        }
     }
+
+    private data class CacheEntry(
+        val instance: Instance,
+        val id: String?
+    )
 }

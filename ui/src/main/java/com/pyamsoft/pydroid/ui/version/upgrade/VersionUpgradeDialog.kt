@@ -44,7 +44,7 @@ internal class VersionUpgradeDialog internal constructor() : ThemeDialog() {
             .plusVersionUpgrade()
             .inject(this)
 
-        stateSaver = createComponent(savedInstanceState, viewLifecycleOwner, viewModel) {
+        stateSaver = createComponent(savedInstanceState, this, viewModel) {
             return@createComponent when (it) {
                 is VersionUpgradeControllerEvent.FinishedUpgrade -> dismiss()
             }
@@ -68,8 +68,8 @@ internal class VersionUpgradeDialog internal constructor() : ThemeDialog() {
         stateSaver?.saveState(outState)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
 
         stateSaver = null
         factory = null

@@ -43,7 +43,7 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
             .plusClearConfirmDialog()
             .inject(this)
 
-        stateSaver = createComponent(savedInstanceState, viewLifecycleOwner, viewModel) {
+        stateSaver = createComponent(savedInstanceState, this, viewModel) {
             return@createComponent when (it) {
                 is CancelPrompt -> dismiss()
             }
@@ -63,8 +63,8 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
             .create()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         factory = null
         stateSaver = null
     }

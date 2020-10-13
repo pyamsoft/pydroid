@@ -42,9 +42,11 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import com.pyamsoft.pydroid.ui.version.VersionCheckControllerEvent.LaunchUpdate
+import com.pyamsoft.pydroid.ui.version.VersionCheckControllerEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
-import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
-import com.pyamsoft.pydroid.ui.version.VersionView
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
@@ -62,7 +64,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
     internal var settingsView: AppSettingsView? = null
 
-    internal var versionView: VersionView? = null
+    internal var versionCheckView: VersionCheckView? = null
 
     internal var factory: ViewModelProvider.Factory? = null
     private val settingsViewModel by viewModelFactory<AppSettingsViewModel>(activity = true) { factory }
@@ -119,10 +121,11 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         versionStateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             versionViewModel,
-            requireNotNull(versionView)
+            requireNotNull(versionCheckView)
         ) {
             return@createComponent when (it) {
-                is ShowUpgrade -> showVersionUpgrade(it.launcher)
+                is LaunchUpdate -> handleLaunchUpdate(it.launcher)
+                is ShowUpgrade -> handleShowUpgrade()
             }
         }
 
@@ -138,6 +141,15 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         settingsViewModel.syncDarkThemeState(requireActivity())
     }
 
+    private fun handleShowUpgrade() {
+        val act = requireActivity()
+        if (act is VersionCheckActivity) {
+            Timber.d("ShowUpgrade event handled by activity")
+        } else {
+            VersionUpgradeDialog.show(act)
+        }
+    }
+
     private fun openOtherAppsPage(apps: List<OtherApp>) {
         onViewMorePyamsoftAppsClicked(false)
         Timber.d("Show other apps fragment: $apps")
@@ -149,7 +161,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         launcher.review(act)
     }
 
-    private fun showVersionUpgrade(launcher: AppUpdateLauncher) {
+    private fun handleLaunchUpdate(launcher: AppUpdateLauncher) {
         val act = requireActivity() as VersionCheckActivity
         act.showVersionUpgrade(launcher)
     }

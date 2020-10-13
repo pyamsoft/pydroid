@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import androidx.annotation.CheckResult
 
-interface VersionCheckInteractor {
+interface VersionInteractor {
 
     suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit)
 

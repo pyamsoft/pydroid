@@ -20,9 +20,9 @@ import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class VersionCheckInteractorNetwork internal constructor(
+internal class VersionInteractorNetwork internal constructor(
     private val updater: AppUpdater
-) : VersionCheckInteractor {
+) : VersionInteractor {
 
     override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
         throw IllegalStateException("This should never be called directly")

@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.settings.clear
+package com.pyamsoft.pydroid.ui.version.upgrade
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 
-sealed class SettingsClearConfigControllerEvent : UiControllerEvent {
+internal interface VersionUpgradeComponent {
 
-    object CancelPrompt : SettingsClearConfigControllerEvent()
+    fun inject(dialog: VersionUpgradeDialog)
+
+    class Impl internal constructor(
+        private val factory: PYDroidViewModelFactory
+    ) : VersionUpgradeComponent {
+
+        override fun inject(dialog: VersionUpgradeDialog) {
+            dialog.factory = factory
+        }
+    }
 }

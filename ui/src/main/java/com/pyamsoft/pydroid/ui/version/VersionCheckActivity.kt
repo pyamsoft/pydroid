@@ -27,7 +27,9 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
-import com.pyamsoft.pydroid.ui.version.VersionControllerEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.version.VersionCheckControllerEvent.LaunchUpdate
+import com.pyamsoft.pydroid.ui.version.VersionCheckControllerEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.doOnStart
 import timber.log.Timber
 
@@ -36,8 +38,10 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     protected open val checkForUpdates: Boolean = true
 
     private var stateSaver: StateSaver? = null
+
+    internal var versionCheckView: VersionCheckView? = null
+
     internal var versionFactory: ViewModelProvider.Factory? = null
-    internal var versionView: VersionView? = null
     private val versionViewModel by viewModelFactory<VersionCheckViewModel> { versionFactory }
 
     @CallSuper
@@ -47,17 +51,18 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         // Need to do this in onPostCreate because the snackbarRoot will not be available until
         // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
-            .plusVersion()
+            .plusVersionCheck()
             .create(this) { snackbarRoot }
             .inject(this)
 
         stateSaver = createComponent(
             savedInstanceState, this,
             versionViewModel,
-            requireNotNull(versionView)
+            requireNotNull(versionCheckView)
         ) {
             return@createComponent when (it) {
-                is ShowUpgrade -> showVersionUpgrade(it.launcher)
+                is LaunchUpdate -> showVersionUpgrade(it.launcher)
+                ShowUpgrade -> VersionUpgradeDialog.show(this)
             }
         }
     }
@@ -96,7 +101,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()
-        versionView = null
+        versionCheckView = null
         versionFactory = null
         stateSaver = null
     }

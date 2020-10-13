@@ -26,16 +26,16 @@ import java.util.concurrent.TimeUnit.MINUTES
 
 class VersionCheckModule(params: Parameters) {
 
-    private val impl: VersionCheckInteractorImpl
+    private val impl: VersionInteractorImpl
 
     init {
         val updater = PlayStoreAppUpdater(params.context, params.debug, params.version)
-        val network = VersionCheckInteractorNetwork(updater)
-        impl = VersionCheckInteractorImpl(updater, createCache(network))
+        val network = VersionInteractorNetwork(updater)
+        impl = VersionInteractorImpl(updater, createCache(network))
     }
 
     @CheckResult
-    fun provideInteractor(): VersionCheckInteractor {
+    fun provideInteractor(): VersionInteractor {
         return impl
     }
 
@@ -43,7 +43,7 @@ class VersionCheckModule(params: Parameters) {
 
         @JvmStatic
         @CheckResult
-        private fun createCache(network: VersionCheckInteractor): Cached<AppUpdateLauncher> {
+        private fun createCache(network: VersionInteractor): Cached<AppUpdateLauncher> {
             return cachify<AppUpdateLauncher>(
                 storage = MemoryCacheStorage.create(30, MINUTES)
             ) { requireNotNull(network.checkVersion(true)) }

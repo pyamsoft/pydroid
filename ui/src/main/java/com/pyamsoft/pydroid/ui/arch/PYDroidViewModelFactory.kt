@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckInteractor
+import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.ui.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.privacy.PrivacyViewModel
@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigInteractor
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeViewModel
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
@@ -39,6 +40,10 @@ internal class PYDroidViewModelFactory internal constructor(
 
     override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
         return when (modelClass) {
+            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(
+                params.interactors.version,
+                params.debug
+            )
             AppSettingsViewModel::class -> AppSettingsViewModel(
                 params.theming,
                 params.interactors.otherApps,
@@ -73,7 +78,7 @@ internal class PYDroidViewModelFactory internal constructor(
         internal data class Interactors internal constructor(
             internal val rating: RatingInteractor,
             internal val about: AboutInteractor,
-            internal val version: VersionCheckInteractor,
+            internal val version: VersionInteractor,
             internal val otherApps: OtherAppsInteractor,
             internal val settingsClearConfig: SettingsClearConfigInteractor
         )

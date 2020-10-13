@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.settings.clear
+package com.pyamsoft.pydroid.ui.version.upgrade
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiViewEvent
 
-sealed class SettingsClearConfigControllerEvent : UiControllerEvent {
+sealed class VersionUpgradeControllerEvent : UiControllerEvent {
 
-    object CancelPrompt : SettingsClearConfigControllerEvent()
+    object FinishedUpgrade : VersionUpgradeControllerEvent()
 }

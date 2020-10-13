@@ -23,10 +23,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-internal class VersionCheckInteractorImpl internal constructor(
+internal class VersionInteractorImpl internal constructor(
     private val updater: AppUpdater,
     private val updateCache: Cached<AppUpdateLauncher>
-) : VersionCheckInteractor, Cache<Any> {
+) : VersionInteractor, Cache<Any> {
 
     override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
         withContext(context = Dispatchers.IO) {

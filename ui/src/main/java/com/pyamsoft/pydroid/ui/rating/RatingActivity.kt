@@ -107,7 +107,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
         // Need to do this in onPostCreate because the snackbarRoot will not be available until
         // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
-            .plusVersion()
+            .plusVersionCheck()
             .create(this) { snackbarRoot }
             .plusRating()
             .create()

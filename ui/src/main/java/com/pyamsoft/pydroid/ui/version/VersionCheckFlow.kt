@@ -21,22 +21,21 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 
-data class VersionViewState internal constructor(
+data class VersionCheckViewState internal constructor(
     val isLoading: Boolean,
-    val throwable: Throwable?,
-    val isUpdateAvailable: Boolean,
+    val throwable: Throwable?
 ) : UiViewState
 
-sealed class VersionViewEvent : UiViewEvent {
+sealed class VersionCheckViewEvent : UiViewEvent {
 
-    object SnackbarHidden : VersionViewEvent()
-
-    object UpdateRestart : VersionViewEvent()
+    object SnackbarHidden : VersionCheckViewEvent()
 }
 
-sealed class VersionControllerEvent : UiControllerEvent {
+sealed class VersionCheckControllerEvent : UiControllerEvent {
 
-    data class ShowUpgrade internal constructor(
+    data class LaunchUpdate internal constructor(
         val launcher: AppUpdateLauncher
-    ) : VersionControllerEvent()
+    ) : VersionCheckControllerEvent()
+
+    object ShowUpgrade : VersionCheckControllerEvent()
 }

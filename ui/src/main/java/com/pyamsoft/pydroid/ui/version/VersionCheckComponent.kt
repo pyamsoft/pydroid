@@ -22,7 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingComponent
 
-internal interface VersionComponent {
+internal interface VersionCheckComponent {
 
     @CheckResult
     fun plusRating(): RatingComponent.Factory
@@ -35,7 +35,7 @@ internal interface VersionComponent {
         fun create(
             owner: LifecycleOwner,
             snackbarRootProvider: () -> ViewGroup
-        ): VersionComponent
+        ): VersionCheckComponent
 
         data class Parameters internal constructor(
             internal val factory: PYDroidViewModelFactory
@@ -46,7 +46,7 @@ internal interface VersionComponent {
         private val snackbarRootProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
         private val params: Factory.Parameters
-    ) : VersionComponent {
+    ) : VersionCheckComponent {
 
         private val ratingParams by lazy {
             RatingComponent.Factory.Parameters(
@@ -59,13 +59,13 @@ internal interface VersionComponent {
         }
 
         override fun inject(activity: VersionCheckActivity) {
-            val versionView = VersionView(
+            val versionView = VersionCheckView(
                 owner,
                 snackbarRootProvider
             )
 
             activity.versionFactory = params.factory
-            activity.versionView = versionView
+            activity.versionCheckView = versionView
         }
 
         internal class FactoryImpl internal constructor(
@@ -75,7 +75,7 @@ internal interface VersionComponent {
             override fun create(
                 owner: LifecycleOwner,
                 snackbarRootProvider: () -> ViewGroup
-            ): VersionComponent {
+            ): VersionCheckComponent {
                 return Impl(snackbarRootProvider, owner, params)
             }
         }

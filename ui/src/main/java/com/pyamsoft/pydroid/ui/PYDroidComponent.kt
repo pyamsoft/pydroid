@@ -37,7 +37,8 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigComponent
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigModule
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionComponent
+import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
 
 internal interface PYDroidComponent {
 
@@ -57,10 +58,13 @@ internal interface PYDroidComponent {
     fun plusOtherAppsItem(): OtherAppsItemComponent.Factory
 
     @CheckResult
-    fun plusClearConfirmDialog(): SettingsClearConfigComponent.Factory
+    fun plusClearConfirmDialog(): SettingsClearConfigComponent
 
     @CheckResult
-    fun plusVersion(): VersionComponent.Factory
+    fun plusVersionCheck(): VersionCheckComponent.Factory
+
+    @CheckResult
+    fun plusVersionUpgrade(): VersionUpgradeComponent
 
     @CheckResult
     fun plusSettings(): AppSettingsComponent.Factory
@@ -167,7 +171,7 @@ internal interface PYDroidComponent {
             factory = viewModelFactory
         )
 
-        private val versionCheckParams = VersionComponent.Factory.Parameters(
+        private val versionCheckParams = VersionCheckComponent.Factory.Parameters(
             factory = viewModelFactory
         )
 
@@ -185,10 +189,6 @@ internal interface PYDroidComponent {
 
         private val themeDialogParams = ThemeDialogComponent.Factory.Parameters(
             debug = params.debug
-        )
-
-        private val settingsClearConfigParams = SettingsClearConfigComponent.Factory.Parameters(
-            factory = viewModelFactory
         )
 
         private val provider = object : ModuleProvider {
@@ -225,12 +225,16 @@ internal interface PYDroidComponent {
             return AboutItemComponent.Impl.FactoryImpl()
         }
 
-        override fun plusClearConfirmDialog(): SettingsClearConfigComponent.Factory {
-            return SettingsClearConfigComponent.Impl.FactoryImpl(settingsClearConfigParams)
+        override fun plusClearConfirmDialog(): SettingsClearConfigComponent {
+            return SettingsClearConfigComponent.Impl(viewModelFactory)
         }
 
-        override fun plusVersion(): VersionComponent.Factory {
-            return VersionComponent.Impl.FactoryImpl(versionCheckParams)
+        override fun plusVersionCheck(): VersionCheckComponent.Factory {
+            return VersionCheckComponent.Impl.FactoryImpl(versionCheckParams)
+        }
+
+        override fun plusVersionUpgrade(): VersionUpgradeComponent {
+            return VersionUpgradeComponent.Impl(viewModelFactory)
         }
 
         override fun plusSettings(): AppSettingsComponent.Factory {

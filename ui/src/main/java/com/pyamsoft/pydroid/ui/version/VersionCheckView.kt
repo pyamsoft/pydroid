@@ -21,23 +21,22 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.ui.version.VersionViewEvent.SnackbarHidden
+import com.pyamsoft.pydroid.ui.version.VersionCheckViewEvent.SnackbarHidden
 
-internal class VersionView internal constructor(
+internal class VersionCheckView internal constructor(
     private val owner: LifecycleOwner,
     private val snackbarRootProvider: () -> ViewGroup
-) : UiView<VersionViewState, VersionViewEvent>() {
+) : UiView<VersionCheckViewState, VersionCheckViewEvent>() {
 
     override fun onInit(savedInstanceState: UiBundleReader) {
     }
 
-    override fun render(state: VersionViewState) {
+    override fun render(state: VersionCheckViewState) {
         handleLoading(state)
         handleError(state)
-        handleUpdateAvailable(state)
     }
 
-    private fun handleLoading(state: VersionViewState) {
+    private fun handleLoading(state: VersionCheckViewState) {
         state.isLoading.let { loading ->
             if (loading) {
                 showUpdating()
@@ -47,37 +46,13 @@ internal class VersionView internal constructor(
         }
     }
 
-    private fun handleError(state: VersionViewState) {
+    private fun handleError(state: VersionCheckViewState) {
         state.throwable.let { throwable ->
             if (throwable == null) {
                 clearError()
             } else {
                 showError(throwable)
             }
-        }
-    }
-
-    private fun handleUpdateAvailable(state: VersionViewState) {
-        state.isUpdateAvailable.let { isUpdateAvailable ->
-            if (isUpdateAvailable) {
-                showUpdatePrompt()
-            } else {
-                clearUpdatePrompt()
-            }
-        }
-    }
-
-    private fun showUpdatePrompt() {
-        Snackbreak.bindTo(owner, "update_restart") {
-            make(snackbarRootProvider(), "A new update is ready!") {
-                setAction("RESTART") { publish(VersionViewEvent.UpdateRestart) }
-            }
-        }
-    }
-
-    private fun clearUpdatePrompt() {
-        Snackbreak.bindTo(owner, "update_restart") {
-            dismiss()
         }
     }
 

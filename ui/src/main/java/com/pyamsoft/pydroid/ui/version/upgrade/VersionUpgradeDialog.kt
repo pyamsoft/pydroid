@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.settings.clear
+package com.pyamsoft.pydroid.ui.version.upgrade
 
 import android.app.Dialog
 import android.os.Bundle
@@ -22,6 +22,7 @@ import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
@@ -29,44 +30,37 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
-import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigControllerEvent.CancelPrompt
+import com.pyamsoft.pydroid.ui.util.show
 
-internal class SettingsClearConfigDialog : ThemeDialog() {
+internal class VersionUpgradeDialog internal constructor() : ThemeDialog() {
 
     private var stateSaver: StateSaver? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
+    private val viewModel by viewModelFactory<VersionUpgradeViewModel> { factory }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Injector.obtain<PYDroidComponent>(requireContext().applicationContext)
-            .plusClearConfirmDialog()
+            .plusVersionUpgrade()
             .inject(this)
 
         stateSaver = createComponent(savedInstanceState, viewLifecycleOwner, viewModel) {
             return@createComponent when (it) {
-                is CancelPrompt -> dismiss()
+                is VersionUpgradeControllerEvent.FinishedUpgrade -> dismiss()
             }
         }
 
         return AlertDialog.Builder(ContextThemeWrapper(requireActivity(), theme), theme)
+            .setTitle("Upgrade Available")
             .setMessage(
                 """
-        Really reset all application settings?
-        
-        All saved data will be cleared and all settings reset to default.
-        The app act as if you are launching it for the first time. This cannot be undone.
-            """.trimIndent()
+                    |A new version has been downloaded!
+                    |
+                    |Click to restart the app and upgrade to the latest version!""".trimMargin()
             )
-            .setNegativeButton("Cancel") { _, _ -> viewModel.cancel() }
-            .setPositiveButton("Reset") { _, _ -> viewModel.reset() }
+            .setNegativeButton("Cancel") { _, _ -> dismiss() }
+            .setPositiveButton("Restart") { _, _ -> viewModel.completeUpgrade() }
             .create()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        factory = null
-        stateSaver = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -74,16 +68,28 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
         stateSaver?.saveState(outState)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        stateSaver = null
+        factory = null
+    }
+
     companion object {
 
-        internal const val TAG = "SettingsClearConfigDialog"
+        private const val TAG = "VersionUpgradeDialog"
 
         @JvmStatic
         @CheckResult
-        fun newInstance(): DialogFragment {
-            return SettingsClearConfigDialog().apply {
-                arguments = Bundle().apply {}
+        private fun newInstance(): DialogFragment {
+            return VersionUpgradeDialog().apply {
+                arguments = Bundle().apply { }
             }
+        }
+
+        @JvmStatic
+        fun show(activity: FragmentActivity) {
+            return newInstance().show(activity, TAG)
         }
     }
 }

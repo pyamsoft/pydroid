@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.version.store
 import android.app.Activity
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import com.google.android.play.core.install.model.AppUpdateType
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.core.Enforcer
@@ -36,6 +37,16 @@ internal class PlayStoreAppUpdateLauncher internal constructor(
         Timber.d("Begin update flow $requestCode $info")
         if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
             Timber.d("Update flow has started")
+            if (manager is FakeAppUpdateManager) {
+                Timber.d("User accepts fake update")
+                manager.userAcceptsUpdate()
+
+                Timber.d("Start a fake download")
+                manager.downloadStarts()
+
+                Timber.d("Complete a fake download")
+                manager.downloadCompletes()
+            }
         }
     }
 }

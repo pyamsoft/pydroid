@@ -54,7 +54,9 @@ internal class PlayStoreAppUpdater internal constructor(
     @CheckResult
     private inline fun createStatusListener(crossinline onDownloadComplete: () -> Unit): InstallStateUpdatedListener {
         return InstallStateUpdatedListener { state ->
+            Timber.d("Install state changed: ${state.installStatus()}")
             if (state.installStatus() == InstallStatus.DOWNLOADED) {
+                Timber.d("Download completed!")
                 onDownloadComplete()
             }
         }

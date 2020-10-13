@@ -21,14 +21,13 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
 
 /**
  * PYDroid library entry point
  */
 object PYDroid {
-
-    private val DEFAULT_INIT_CALLBACK: (provider: ModuleProvider) -> Unit = {}
 
     private val instance = AtomicReference<PYDroidInitializer?>(null)
 
@@ -56,22 +55,20 @@ object PYDroid {
      * ))
      */
     @JvmStatic
-    @JvmOverloads
-    fun init(
-        application: Application,
-        params: Parameters,
-        onInit: (provider: ModuleProvider) -> Unit = DEFAULT_INIT_CALLBACK
-    ) {
+    @CheckResult
+    fun init(application: Application, params: Parameters): ModuleProvider {
         if (instance.get() == null) {
             synchronized(this) {
                 if (instance.get() == null) {
                     val pydroid = PYDroidInitializer.create(application, params)
                     if (instance.compareAndSet(null, pydroid)) {
-                        onInit(pydroid.moduleProvider)
+                        Timber.d("PYDroid is initialized.")
                     }
                 }
             }
         }
+
+        return instance().moduleProvider
     }
 
     /**

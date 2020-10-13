@@ -233,11 +233,12 @@ object Snackbreak {
         fun make(
             view: View,
             message: CharSequence,
+            force: Boolean = false,
             onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
             onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
             builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
         ) {
-            snack(false, onShown, onHidden, builder) {
+            snack(force, onShown, onHidden, builder) {
                 make(view, message, Snackbar.LENGTH_INDEFINITE)
             }
         }
@@ -246,11 +247,12 @@ object Snackbreak {
         fun make(
             view: View,
             @StringRes message: Int,
+            force: Boolean = false,
             onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
             onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
             builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
         ) {
-            snack(false, onShown, onHidden, builder) {
+            snack(force, onShown, onHidden, builder) {
                 make(view, message, Snackbar.LENGTH_INDEFINITE)
             }
         }
@@ -260,7 +262,6 @@ object Snackbreak {
             private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
             private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
             private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
-
 
             private fun fixSnackbar(view: View, margin: Int) {
                 view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }

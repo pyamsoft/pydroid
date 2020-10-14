@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.arch
 
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UiStateViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
@@ -38,7 +38,7 @@ internal class PYDroidViewModelFactory internal constructor(
     private val params: Parameters
 ) : UiViewModelFactory() {
 
-    override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
+    override fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*> {
         return when (modelClass) {
             VersionUpgradeViewModel::class -> VersionUpgradeViewModel(
                 params.interactors.version,

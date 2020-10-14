@@ -24,17 +24,14 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.util.show
+import timber.log.Timber
 
 internal class VersionUpgradeDialog internal constructor() : ThemeDialog() {
-
-    private var stateSaver: StateSaver? = null
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<VersionUpgradeViewModel> { factory }
@@ -43,12 +40,6 @@ internal class VersionUpgradeDialog internal constructor() : ThemeDialog() {
         Injector.obtain<PYDroidComponent>(requireContext().applicationContext)
             .plusVersionUpgrade()
             .inject(this)
-
-        stateSaver = createComponent(savedInstanceState, this, viewModel) {
-            return@createComponent when (it) {
-                is VersionUpgradeControllerEvent.FinishedUpgrade -> dismiss()
-            }
-        }
 
         return AlertDialog.Builder(ContextThemeWrapper(requireActivity(), theme), theme)
             .setTitle("Upgrade Available")
@@ -59,19 +50,18 @@ internal class VersionUpgradeDialog internal constructor() : ThemeDialog() {
                     |Click to restart the app and upgrade to the latest version!""".trimMargin()
             )
             .setNegativeButton("Cancel") { _, _ -> dismiss() }
-            .setPositiveButton("Restart") { _, _ -> viewModel.completeUpgrade() }
+            .setPositiveButton("Restart") { _, _ ->
+                viewModel.completeUpgrade {
+                    Timber.d("Upgrade completed, dismiss")
+                    dismiss()
+                }
+            }
             .create()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        stateSaver = null
         factory = null
     }
 

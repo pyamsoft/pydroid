@@ -24,9 +24,9 @@ import kotlin.reflect.KClass
 abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
     final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (UiViewModel::class.java.isAssignableFrom(modelClass)) {
+        if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            val viewModelClass = modelClass as Class<out UiViewModel<*, *, *>>
+            val viewModelClass = modelClass as Class<out UiStateViewModel<*>>
 
             @Suppress("UNCHECKED_CAST")
             return viewModel(viewModelClass.kotlin) as T
@@ -40,14 +40,14 @@ abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Fa
     }
 
     @CheckResult
-    protected abstract fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *>
+    protected abstract fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*>
 }
 
 @CheckResult
-inline fun <reified VM : UiViewModel<*, *, *>> onlyFactory(crossinline provider: () -> VM): ViewModelProvider.Factory {
+inline fun <reified VM : UiStateViewModel<*>> onlyFactory(crossinline provider: () -> VM): ViewModelProvider.Factory {
     return object : UiViewModelFactory() {
 
-        override fun <T : UiViewModel<*, *, *>> viewModel(modelClass: KClass<T>): UiViewModel<*, *, *> {
+        override fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*> {
             return when (modelClass) {
                 VM::class -> provider()
                 else -> fail()

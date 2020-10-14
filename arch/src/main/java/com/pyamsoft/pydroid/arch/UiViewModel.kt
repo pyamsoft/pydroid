@@ -29,7 +29,7 @@ import kotlin.LazyThreadSafetyMode.NONE
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S,
     debug: Boolean
-) : UiStateViewModel<S, V, C>(initialState, debug), SaveableState {
+) : UiStateViewModel<S>(initialState, debug), SaveableState {
 
     private val onBindEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onBindEvents by onBindEventDelegate

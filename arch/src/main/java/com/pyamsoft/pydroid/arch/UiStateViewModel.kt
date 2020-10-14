@@ -34,7 +34,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
 
-abstract class UiStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
+abstract class UiStateViewModel<S : UiViewState> protected constructor(
     initialState: S,
     private val debug: Boolean
 ) : ViewModel() {

@@ -17,8 +17,7 @@
 package com.pyamsoft.pydroid.ui.settings.clear
 
 import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UiStateViewModel
 import com.pyamsoft.pydroid.arch.UnitViewState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,18 +25,9 @@ import kotlinx.coroutines.launch
 internal class SettingsClearConfigViewModel internal constructor(
     private val interactor: SettingsClearConfigInteractor,
     debug: Boolean
-) : UiViewModel<UnitViewState, UnitViewEvent, SettingsClearConfigControllerEvent>(
+) : UiStateViewModel<UnitViewState>(
     initialState = UnitViewState, debug = debug
 ) {
-
-    override fun handleViewEvent(event: UnitViewEvent) {
-    }
-
-    internal fun cancel() {
-        viewModelScope.launch(context = Dispatchers.Main) {
-            publish(SettingsClearConfigControllerEvent.CancelPrompt)
-        }
-    }
 
     internal fun reset() {
         viewModelScope.launch(context = Dispatchers.Default) {

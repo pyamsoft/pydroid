@@ -22,18 +22,18 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelStore
-import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UiStateViewModel
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromActivity
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromFragment
+import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
-import timber.log.Timber
 
 /**
  * Allow nullable for easier caller API
  */
 @CheckResult
-inline fun <reified T : UiViewModel<*, *, *>> viewModelFactory(
+inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
@@ -45,7 +45,7 @@ inline fun <reified T : UiViewModel<*, *, *>> viewModelFactory(
  */
 @CheckResult
 @JvmOverloads
-inline fun <reified T : UiViewModel<*, *, *>> Fragment.viewModelFactory(
+inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
     activity: Boolean = false,
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
@@ -57,13 +57,13 @@ inline fun <reified T : UiViewModel<*, *, *>> Fragment.viewModelFactory(
  * Allow nullable for easier caller API
  */
 @CheckResult
-inline fun <reified T : UiViewModel<*, *, *>> FragmentActivity.viewModelFactory(
+inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
     return ViewModelFactory(this, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
-class ViewModelFactory<T : UiViewModel<*, *, *>> private constructor(
+class ViewModelFactory<T : UiStateViewModel<*>> private constructor(
     type: Class<T>,
     store: ViewModelStore?,
     fragment: FragmentFactoryProvider?,

@@ -23,17 +23,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
-import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigControllerEvent.CancelPrompt
 
 internal class SettingsClearConfigDialog : ThemeDialog() {
-
-    private var stateSaver: StateSaver? = null
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
@@ -42,12 +37,6 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
         Injector.obtain<PYDroidComponent>(requireContext().applicationContext)
             .plusClearConfirmDialog()
             .inject(this)
-
-        stateSaver = createComponent(savedInstanceState, this, viewModel) {
-            return@createComponent when (it) {
-                is CancelPrompt -> dismiss()
-            }
-        }
 
         return AlertDialog.Builder(ContextThemeWrapper(requireActivity(), theme), theme)
             .setMessage(
@@ -58,7 +47,7 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
         The app act as if you are launching it for the first time. This cannot be undone.
             """.trimIndent()
             )
-            .setNegativeButton("Cancel") { _, _ -> viewModel.cancel() }
+            .setNegativeButton("Cancel") { _, _ -> dismiss() }
             .setPositiveButton("Reset") { _, _ -> viewModel.reset() }
             .create()
     }
@@ -66,12 +55,6 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
     override fun onDestroy() {
         super.onDestroy()
         factory = null
-        stateSaver = null
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
     }
 
     companion object {

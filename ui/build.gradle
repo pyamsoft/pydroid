@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+android {
+
+	buildFeatures {
+		viewBinding true
+	}
+}
+
 dependencies {
 	// Android support library.
 	implementation "androidx.core:core-ktx:$core"

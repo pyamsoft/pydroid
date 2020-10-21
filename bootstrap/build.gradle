@@ -15,28 +15,28 @@
  */
 
 dependencies {
-    // Timber logging
-    api "com.jakewharton.timber:timber:$timber"
+	// Timber logging
+	api "com.jakewharton.timber:timber:$timber"
 
-    // Moshi
-    implementation "com.squareup.moshi:moshi:$moshi"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
+	// Moshi
+	implementation "com.squareup.moshi:moshi:$moshi"
+	kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
+	// Retrofit
+	implementation "com.squareup.retrofit2:retrofit:$retrofit"
+	implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
+	implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
 
-    // Play Core for in app updates and reviews
-    implementation "com.google.android.play:core:$playCore"
-    implementation "com.google.android.play:core-ktx:$playCoreKtx"
+	// Play Core for in app updates and reviews
+	implementation "com.google.android.play:core:$playCore"
+	implementation "com.google.android.play:core-ktx:$playCoreKtx"
 
-    // Cachify
-    api "com.pyamsoft.cachify:cachify:$cachify"
+	// Cachify
+	api "com.pyamsoft.cachify:cachify:$cachify"
 
-    // Highlander
-    api "com.pyamsoft.highlander:highlander:$highlander"
+	// Highlander
+	api "com.pyamsoft.highlander:highlander:$highlander"
 
-    implementation project(':util')
+	implementation project(':util')
 }
 

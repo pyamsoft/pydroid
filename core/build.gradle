@@ -15,6 +15,7 @@
  */
 
 dependencies {
+	api "androidx.annotation:annotation:$annotation"
 	api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 	api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }

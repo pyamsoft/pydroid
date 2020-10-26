@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':autopsy'
-include ':arch'
-include ':bootstrap'
-include ':core'
-include ':loader'
-include ':notify'
-include ':ui'
-include ':util'
+
+android {
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    api project(':core')
+}
+

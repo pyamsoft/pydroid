@@ -28,9 +28,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
+import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.doOnDestroy
-import com.pyamsoft.pydroid.util.toDp
 import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
@@ -271,7 +271,7 @@ object Snackbreak {
             private fun Snackbar.materialMargin() {
                 val params = view.layoutParams as? MarginLayoutParams
                 if (params != null) {
-                    val margin = 8.toDp(view.context)
+                    val margin = 8.asDp(view.context)
 
                     // Fix the margins to be material-y
                     fixSnackbar(view, margin)
@@ -285,7 +285,7 @@ object Snackbreak {
             }
 
             private fun Snackbar.materialElevation() {
-                ViewCompat.setElevation(view, 6.toDp(context).toFloat())
+                ViewCompat.setElevation(view, 6.asDp(context).toFloat())
             }
 
             private fun Snackbar.materialDesign() {

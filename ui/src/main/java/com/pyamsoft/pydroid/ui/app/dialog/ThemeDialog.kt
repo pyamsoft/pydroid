@@ -26,7 +26,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
-import com.pyamsoft.pydroid.util.toDp
+import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import kotlin.LazyThreadSafetyMode.NONE
 
@@ -37,7 +37,7 @@ abstract class ThemeDialog protected constructor() : DialogFragment() {
     }
 
     private fun applyDialogMargins(view: View) {
-        val margin = 16.toDp(view.context)
+        val margin = 16.asDp(view.context)
         val params = view.layoutParams
         if (params == null) {
             view.layoutParams = ViewGroup.MarginLayoutParams(margin, margin)

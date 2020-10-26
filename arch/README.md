@@ -112,3 +112,11 @@ running logic in your hook itself.
 
 Any hooks added after the runpoint in the lifecycle will not be executed.
 
+## Install
+
+In your module's `build.gradle`:
+```
+dependencies {
+    implementation "com.pyamsoft.pydroid:arch:<version>"
+}
+```

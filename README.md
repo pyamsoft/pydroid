@@ -6,7 +6,17 @@ PYDroid library for pyamsoft applications
 PYDroid is the **py**amsoft An**droid** library. It contains common  
 functions and classes that are used in multiple pyamsoft projects.  
 It is an always changing, always actively developed library, and as  
-such is not meant for use outside of pyamsoft projects.  
+such is not meant for use outside of pyamsoft projects.
+
+## PYDroid Family
+[arch](https://github.com/pyamsoft/pydroid/tree/main/arch)
+[autopsy](https://github.com/pyamsoft/pydroid/tree/main/autopsy)
+[bootstrap](https://github.com/pyamsoft/pydroid/tree/main/bootstrap)
+[core](https://github.com/pyamsoft/pydroid/tree/main/core)
+[loader](https://github.com/pyamsoft/pydroid/tree/main/loader)
+[notify](https://github.com/pyamsoft/pydroid/tree/main/notify)
+[ui](https://github.com/pyamsoft/pydroid/tree/main/ui)
+[util](https://github.com/pyamsoft/pydroid/tree/main/util)
 
 ## Contributions
 

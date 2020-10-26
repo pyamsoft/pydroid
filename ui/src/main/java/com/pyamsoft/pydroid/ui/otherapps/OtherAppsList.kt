@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewEvent.OpenSto
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewEvent.ViewSource
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewState
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.util.toDp
+import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 
 internal class OtherAppsList internal constructor(
@@ -60,7 +60,7 @@ internal class OtherAppsList internal constructor(
         }
 
         doOnInflate {
-            val margin = 8.toDp(binding.otherAppsList.context)
+            val margin = 8.asDp(binding.otherAppsList.context)
             LinearMarginDecoration.create(margin = margin).apply {
                 binding.otherAppsList.addItemDecoration(this)
                 doOnTeardown { binding.otherAppsList.removeItemDecoration(this) }

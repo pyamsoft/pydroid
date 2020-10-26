@@ -29,21 +29,31 @@ private val cachedDP: SparseIntArray by lazy {
 }
 
 @CheckResult
-private fun toDp(c: Context, @Px px: Int): Int {
-    return if (px <= 0) 0 else {
-        val cached: Int = cachedDP[px, 0]
-        if (cached != 0) {
-            cached
-        } else {
-            val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
-            val dp: Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
-                .roundToInt()
-            cachedDP.put(px, dp)
-            // Return
-            dp
-        }
+@Deprecated(message = "Use asDp(Context, Int)", replaceWith = ReplaceWith("asDp(c, px)"))
+private fun toDp(c: Context, @Px px: Int): Int = asDp(c, px)
+
+@CheckResult
+@Deprecated(
+    message = "Use Number.asDp(Context, Int)",
+    replaceWith = ReplaceWith("this.asDp(c)")
+)
+fun Number.toDp(c: Context): Int = asDp(c, this.toInt())
+
+@CheckResult
+private inline fun SparseIntArray.getOrElse(key: Int, block: (array: SparseIntArray) -> Int): Int {
+    val fallbackValue = -1;
+    val result = this.get(key, fallbackValue)
+    return if (result != fallbackValue) result else block(this)
+}
+
+@CheckResult
+private fun asDp(c: Context, @Px px: Int): Int {
+    return if (px <= 0) 0 else cachedDP.getOrElse(px) { array ->
+        val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
+        return@getOrElse TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
+            .roundToInt().also { array.put(px, it) }
     }
 }
 
 @CheckResult
-fun Number.toDp(c: Context): Int = toDp(c, this.toInt())
+fun Number.asDp(c: Context): Int = asDp(c, this.toInt())

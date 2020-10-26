@@ -31,7 +31,7 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewState
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.util.toDp
+import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 
 internal class AboutListView internal constructor(
@@ -63,7 +63,7 @@ internal class AboutListView internal constructor(
         }
 
         doOnInflate {
-            val margin = 8.toDp(binding.aboutList.context)
+            val margin = 8.asDp(binding.aboutList.context)
             LinearMarginDecoration.create(margin = margin).apply {
                 binding.aboutList.addItemDecoration(this)
                 doOnTeardown { binding.aboutList.removeItemDecoration(this) }

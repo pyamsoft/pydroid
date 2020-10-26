@@ -5,13 +5,6 @@ PYDroid Notification management system
 
 A simple scalable notification system.
 
-Notifications are dealt with via a `Notifier` instance, which knows of one or more
-`NotifyDispatchers`. A `NotifyDispatcher` has a validation function to check if
-the given dispatcher can handle a request to post a notification, as well as an acting function
-to take a payload of information and turn it into a native system Notification.
-
-A `DefaultNotifier` is provided for convenience.
-
 ## Install
 
 In your module's `build.gradle`:
@@ -21,3 +14,11 @@ dependencies {
 }
 ```
 
+## How to Use
+
+Notifications are dealt with via a `Notifier` instance, which knows of one or more
+`NotifyDispatchers`. A `NotifyDispatcher` has a validation function to check if
+the given dispatcher can handle a request to post a notification, as well as an acting function
+to take a payload of information and turn it into a native system Notification.
+
+A `DefaultNotifier` is provided for convenience.

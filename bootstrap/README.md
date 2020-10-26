@@ -6,6 +6,17 @@ like version checking and library attribution.
 
 The data layers for bootstrapping a new application quickly
 
+## Install
+
+In your module's `build.gradle`:
+```
+dependencies {
+    implementation "com.pyamsoft.pydroid:bootstrap:<version>"
+}
+```
+
+## How to Use
+
 pydroid-bootstrap includes pre-built data layer logic for creating:
 
 - An "About This Application" or "Open Source Libraries" screen
@@ -15,12 +26,3 @@ pydroid-bootstrap includes pre-built data layer logic for creating:
 
 This module only provides the data models and use case layer. It does not provide presentation
 logic or UI on its own.
-
-## Install
-
-In your module's `build.gradle`:
-```
-dependencies {
-    implementation "com.pyamsoft.pydroid:bootstrap:<version>"
-}
-```

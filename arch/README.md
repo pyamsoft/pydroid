@@ -1,9 +1,19 @@
 # pydroid-arch
 Architecture framework for a UiComponent based, ViewModel driven, reactive MVI UI design pattern
 
+
 ## What is this
 
 The strict MVI based architecture framework for PYDroid applications
+
+## Install
+
+In your module's `build.gradle`:
+```
+dependencies {
+    implementation "com.pyamsoft.pydroid:arch:<version>"
+}
+```
 
 ## How to Use
 
@@ -111,12 +121,3 @@ There is no way to peek or remove queued hooks though, so be sure that you have 
 running logic in your hook itself.
 
 Any hooks added after the runpoint in the lifecycle will not be executed.
-
-## Install
-
-In your module's `build.gradle`:
-```
-dependencies {
-    implementation "com.pyamsoft.pydroid:arch:<version>"
-}
-```

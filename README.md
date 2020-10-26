@@ -16,7 +16,7 @@ such is not meant for use outside of pyamsoft projects.
 [loader](https://github.com/pyamsoft/pydroid/tree/main/loader)
 [notify](https://github.com/pyamsoft/pydroid/tree/main/notify)
 [ui](https://github.com/pyamsoft/pydroid/tree/main/ui)
-[util](https://github.com/pyamsoft/pydroid/tree/main/util)  
+[util](https://github.com/pyamsoft/pydroid/tree/main/util)
 
 ## Contributions
 

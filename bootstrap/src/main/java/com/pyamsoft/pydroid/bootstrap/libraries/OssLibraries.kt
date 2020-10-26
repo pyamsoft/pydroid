@@ -25,6 +25,7 @@ object OssLibraries {
 
     // These libraries are disabled by default and should be enabled at runtime
     var usingArch = false
+    var usingAutopsy = false
     var usingLoader = false
     var usingNotify = false
     var usingUi = false
@@ -109,7 +110,7 @@ object OssLibraries {
             "https://github.com/pyamsoft/cachify",
             "Simple in-memory caching of all the things"
         )
-        OssLibraries.add(
+        add(
             "Google Play Core Library",
             "https://developers.google.com/android/",
             "Google Play Services Core library for Android.",
@@ -217,6 +218,14 @@ object OssLibraries {
         )
     }
 
+    private fun addAutopsyLibraries() {
+        add(
+            "PYDroid Autopsy",
+            "https://github.com/pyamsoft/pydroid",
+            "PYDroid development crash reporting screen"
+        )
+    }
+
     @JvmOverloads
     @JvmStatic
     fun add(
@@ -267,6 +276,11 @@ object OssLibraries {
         // Nothing directly uses this
         if (usingNotify) {
             addNotifyLibraries()
+        }
+
+        // Nothing directly uses this
+        if (usingAutopsy) {
+            addAutopsyLibraries()
         }
 
         return Collections.unmodifiableSet(libraries)

@@ -26,12 +26,15 @@ dependencies {
 	implementation "com.jakewharton.timber:timber:$timber"
 
 	// Android support library.
+
+	// These need to be API since they are used as base classes for Activity and Fragment
+	api "androidx.fragment:fragment:$fragment"
+	api "androidx.preference:preference:$preference"
+
 	implementation "androidx.core:core-ktx:$core"
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle"
 	implementation "androidx.recyclerview:recyclerview:$recyclerView"
 	implementation "androidx.vectordrawable:vectordrawable:$vectorDrawable"
-	implementation "androidx.fragment:fragment:$fragment"
-	implementation "androidx.preference:preference:$preference"
 	implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
 

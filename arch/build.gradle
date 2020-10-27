@@ -21,10 +21,10 @@ dependencies {
 	// View Binding
 	implementation "androidx.databinding:viewbinding:$agp_version"
 
-	// For ViewModel
-	implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle"
-	implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
-	implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+	// ViewModel
+	// We publish these one since consumers use it to access a coroutine scope
+	api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+	api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
 
 	api project(':util')
 }

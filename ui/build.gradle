@@ -44,11 +44,6 @@ dependencies {
 	// RecyclerView decorations
 	implementation "io.cabriole:decorator:$decorator"
 
-	// For ViewModel
-	implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
-	implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
-	implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
-
 	// Cachify
 	implementation "com.pyamsoft.cachify:cachify:$cachify"
 

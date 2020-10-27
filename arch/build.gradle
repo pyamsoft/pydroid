@@ -22,6 +22,7 @@ dependencies {
 	implementation "androidx.databinding:viewbinding:$agp_version"
 
 	// For ViewModel
+	implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle"
 	implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
 	implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 

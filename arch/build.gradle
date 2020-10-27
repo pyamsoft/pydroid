@@ -16,18 +16,15 @@
 
 dependencies {
 	// Timber logging
-	api "com.jakewharton.timber:timber:$timber"
+	implementation "com.jakewharton.timber:timber:$timber"
 
 	// View Binding
 	implementation "androidx.databinding:viewbinding:$agp_version"
 
 	// For ViewModel
-	api "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
-	api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+	implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
+	implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
-	// For Lifecycle coroutineScope
-	implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
-
-	implementation project(':util')
+	api project(':util')
 }
 

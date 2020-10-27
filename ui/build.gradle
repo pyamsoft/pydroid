@@ -22,6 +22,9 @@ android {
 }
 
 dependencies {
+	// Timber logging
+	implementation "com.jakewharton.timber:timber:$timber"
+
 	// Android support library.
 	implementation "androidx.core:core-ktx:$core"
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle"
@@ -38,8 +41,19 @@ dependencies {
 	// RecyclerView decorations
 	implementation "io.cabriole:decorator:$decorator"
 
-	implementation project(':arch')
-	implementation project(':bootstrap')
-	implementation project(':loader')
-	implementation project(':util')
+	// For ViewModel
+	implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle"
+	implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+	implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+
+	// Cachify
+	implementation "com.pyamsoft.cachify:cachify:$cachify"
+
+	// Highlander
+	implementation "com.pyamsoft.highlander:highlander:$highlander"
+
+	api project(':arch')
+	api project(':bootstrap')
+	api project(':loader')
+	api project(':util')
 }

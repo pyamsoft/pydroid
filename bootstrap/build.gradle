@@ -15,8 +15,6 @@
  */
 
 dependencies {
-	// Timber logging
-	api "com.jakewharton.timber:timber:$timber"
 
 	// Moshi
 	implementation "com.squareup.moshi:moshi:$moshi"
@@ -32,11 +30,11 @@ dependencies {
 	implementation "com.google.android.play:core-ktx:$playCoreKtx"
 
 	// Cachify
-	api "com.pyamsoft.cachify:cachify:$cachify"
+	implementation "com.pyamsoft.cachify:cachify:$cachify"
 
 	// Highlander
-	api "com.pyamsoft.highlander:highlander:$highlander"
+	implementation "com.pyamsoft.highlander:highlander:$highlander"
 
-	implementation project(':util')
+	api project(':util')
 }
 

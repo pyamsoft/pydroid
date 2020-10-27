@@ -20,8 +20,7 @@ import android.content.Context
 import kotlin.system.exitProcess
 
 internal data class CrashHandler internal constructor(
-    private val context: Context,
-    private val fallbackHandler: Thread.UncaughtExceptionHandler?
+    private val context: Context
 ) : Thread.UncaughtExceptionHandler {
 
     private val logger = Logger.tag(this)
@@ -34,14 +33,8 @@ internal data class CrashHandler internal constructor(
         } catch (throwable: Throwable) {
             logger.e(throwable, "Error during exception processing")
         } finally {
-            val handler = fallbackHandler
-            if (handler == null) {
-                logger.d("Completed exception processing")
-                exitProcess(1)
-            } else {
-                logger.d("Delegating to fallback handler")
-                handler.uncaughtException(t, e)
-            }
+            logger.d("Completed exception processing")
+            exitProcess(1)
         }
     }
 }

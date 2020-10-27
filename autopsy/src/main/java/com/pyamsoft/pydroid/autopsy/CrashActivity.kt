@@ -29,6 +29,7 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
 import com.pyamsoft.pydroid.autopsy.databinding.ActivityCrashBinding
+import kotlin.system.exitProcess
 
 internal class CrashActivity internal constructor() : Activity() {
 
@@ -66,6 +67,16 @@ internal class CrashActivity internal constructor() : Activity() {
             isVerticalScrollBarEnabled = true
             movementMethod = ScrollingMovementMethod()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        exitProcess(0)
     }
 
     companion object {

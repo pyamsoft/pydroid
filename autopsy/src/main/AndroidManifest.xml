@@ -25,8 +25,7 @@
             android:enabled="true"
             android:excludeFromRecents="true"
             android:exported="false"
-            android:noHistory="true"
-            android:process=":crashreporter" />
+            android:noHistory="true" />
 
         <provider
             android:name=".AutopsyInitializer"

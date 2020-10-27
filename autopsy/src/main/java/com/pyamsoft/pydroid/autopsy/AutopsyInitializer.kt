@@ -26,13 +26,8 @@ internal class AutopsyInitializer internal constructor() : ContentProvider() {
 
     override fun onCreate(): Boolean {
         logger.d("Creating initializer and overriding crash handler")
-        val unexistingUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler()
-        Thread.setDefaultUncaughtExceptionHandler(
-            CrashHandler(
-                requireNotNull(context).applicationContext,
-                unexistingUncaughtHandler
-            )
-        )
+        val handler = CrashHandler(requireNotNull(context).applicationContext)
+        Thread.setDefaultUncaughtExceptionHandler(handler)
         return true
     }
 

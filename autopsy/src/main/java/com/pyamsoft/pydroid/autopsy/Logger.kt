@@ -31,7 +31,9 @@ internal object Logger {
     }
 }
 
-internal class Logging internal constructor(private val tag: String) {
+internal class Logging internal constructor(tag: String) {
+
+    private val tag = "pydroid-autopsy[$tag]"
 
     fun d(throwable: Throwable? = null, message: String) {
         Log.d(tag, message, throwable)

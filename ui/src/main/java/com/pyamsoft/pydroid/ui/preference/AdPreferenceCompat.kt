@@ -32,7 +32,7 @@ class AdPreferenceCompat : PreferenceCompat {
         attrs: AttributeSet?
     ) : this(
         context, attrs, context.getStyledAttr(
-            R.attr.preferenceStyle,
+            androidx.preference.R.attr.preferenceStyle,
             android.R.attr.preferenceStyle
         )
     )

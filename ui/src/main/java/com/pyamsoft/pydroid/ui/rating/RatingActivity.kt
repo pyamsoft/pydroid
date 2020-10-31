@@ -33,7 +33,6 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -61,7 +60,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
             val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
             val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
             withStyledAttributes(
-                R.style.TextAppearance_MaterialComponents_Headline5,
+                com.google.android.material.R.style.TextAppearance_MaterialComponents_Headline5,
                 attrArray.copyOf()
             ) {
                 val size: Int =
@@ -77,7 +76,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
             }
 
             withStyledAttributes(
-                R.style.TextAppearance_MaterialComponents_Body2,
+                com.google.android.material.R.style.TextAppearance_MaterialComponents_Body2,
                 attrArray.copyOf()
             ) {
                 val size: Int =

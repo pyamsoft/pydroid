@@ -22,7 +22,6 @@ package com.pyamsoft.pydroid.ui.preference
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.ListPreference
-import com.pyamsoft.pydroid.ui.R
 
 open class ListPreferenceCompat : ListPreference {
 
@@ -33,7 +32,7 @@ open class ListPreferenceCompat : ListPreference {
         attrs: AttributeSet?
     ) : this(
         context, attrs, context.getStyledAttr(
-            R.attr.dialogPreferenceStyle,
+            androidx.preference.R.attr.dialogPreferenceStyle,
             android.R.attr.dialogPreferenceStyle
         )
     )

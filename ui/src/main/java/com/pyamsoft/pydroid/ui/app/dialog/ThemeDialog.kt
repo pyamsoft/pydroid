@@ -24,7 +24,6 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
-import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.noTitle
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
@@ -33,7 +32,7 @@ import kotlin.LazyThreadSafetyMode.NONE
 abstract class ThemeDialog protected constructor() : DialogFragment() {
 
     private val themeFromAttrs: Int by lazy(NONE) {
-        requireActivity().valueFromCurrentTheme(R.attr.dialogTheme)
+        requireActivity().valueFromCurrentTheme(com.google.android.material.R.attr.dialogTheme)
     }
 
     private fun applyDialogMargins(view: View) {

@@ -88,7 +88,7 @@ internal abstract class FullscreenThemeDialog protected constructor() : ThemeDia
         ) {
             Timber.d("Controller event: $it")
             return@createComponent when (it) {
-                is Close -> requireActivity().onBackPressed()
+                is Close -> dismiss()
             }
         }
 
@@ -167,7 +167,7 @@ internal abstract class FullscreenThemeDialog protected constructor() : ThemeDia
         return ColorDrawable(
             ContextCompat.getColor(
                 requireActivity(),
-                requireActivity().valueFromCurrentTheme(R.attr.colorPrimary)
+                requireActivity().valueFromCurrentTheme(com.google.android.material.R.attr.colorPrimary)
             )
         )
     }

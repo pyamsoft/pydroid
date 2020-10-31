@@ -18,9 +18,8 @@ package com.pyamsoft.pydroid.arch.internal
 
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.EventBus
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -28,19 +27,15 @@ internal class RealBus<T : Any> internal constructor(
     private val context: CoroutineContext
 ) : EventBus<T> {
 
-    @ExperimentalCoroutinesApi
-    private val bus by lazy { BroadcastChannel<T>(1) }
+    private val bus by lazy { MutableSharedFlow<T>() }
 
-    @ExperimentalCoroutinesApi
     override suspend fun send(event: T) = withContext(context = context) {
-        bus.send(event)
+        bus.emit(event)
     }
 
     @CheckResult
-    @ExperimentalCoroutinesApi
     override suspend fun onEvent(emitter: suspend (event: T) -> Unit) =
         withContext(context = context) {
-            bus.openSubscription()
-                .consumeEach { emitter(it) }
+            bus.collect(emitter)
         }
 }

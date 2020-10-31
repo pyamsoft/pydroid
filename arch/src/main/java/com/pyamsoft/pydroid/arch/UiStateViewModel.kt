@@ -23,7 +23,6 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -217,20 +216,16 @@ abstract class UiStateViewModel<S : UiViewState> protected constructor(
         initialState: S
     ) : UiVMState<S> {
 
-        @ExperimentalCoroutinesApi
-        private val flow = MutableStateFlow(initialState)
+        private val flow by lazy { MutableStateFlow(initialState) }
 
-        @ExperimentalCoroutinesApi
         override fun get(): S {
             return flow.value
         }
 
-        @ExperimentalCoroutinesApi
         override fun set(value: S) {
             flow.value = value
         }
 
-        @ExperimentalCoroutinesApi
         override suspend fun onChange(withState: suspend (state: S) -> Unit) {
             flow.collect(withState)
         }

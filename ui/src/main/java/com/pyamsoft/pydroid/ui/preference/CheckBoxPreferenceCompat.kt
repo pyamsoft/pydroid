@@ -22,6 +22,7 @@ package com.pyamsoft.pydroid.ui.preference
 import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.CheckBoxPreference
+import androidx.preference.R
 
 open class CheckBoxPreferenceCompat : CheckBoxPreference {
 
@@ -32,7 +33,7 @@ open class CheckBoxPreferenceCompat : CheckBoxPreference {
         attrs: AttributeSet?
     ) : this(
         context, attrs, context.getStyledAttr(
-            androidx.preference.R.attr.checkBoxPreferenceStyle,
+            R.attr.checkBoxPreferenceStyle,
             android.R.attr.checkBoxPreferenceStyle
         )
     )

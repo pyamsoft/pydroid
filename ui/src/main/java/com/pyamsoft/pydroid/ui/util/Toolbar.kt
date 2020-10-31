@@ -24,6 +24,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.withStyledAttributes
+import com.google.android.material.R
 import com.pyamsoft.pydroid.util.tintWith
 
 private var cachedIcon: Drawable? = null
@@ -36,10 +37,10 @@ private fun Toolbar.loadIcon(@ColorRes customColor: Int): Drawable? {
     if (icon == null) {
         // If no icon is available, resolve it from the current theme
         context.withStyledAttributes(
-            com.google.android.material.R.attr.toolbarStyle,
+            R.attr.toolbarStyle,
             intArrayOf(
-                com.google.android.material.R.attr.homeAsUpIndicator,
-                com.google.android.material.R.attr.titleTextColor
+                R.attr.homeAsUpIndicator,
+                R.attr.titleTextColor
             )
         ) {
             @DrawableRes val iconId = getResourceId(0, 0)

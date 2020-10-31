@@ -42,6 +42,7 @@ import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import timber.log.Timber
+import com.google.android.material.R as R2
 
 internal abstract class FullscreenThemeDialog protected constructor() : ThemeDialog() {
 
@@ -167,7 +168,7 @@ internal abstract class FullscreenThemeDialog protected constructor() : ThemeDia
         return ColorDrawable(
             ContextCompat.getColor(
                 requireActivity(),
-                requireActivity().valueFromCurrentTheme(com.google.android.material.R.attr.colorPrimary)
+                requireActivity().valueFromCurrentTheme(R2.attr.colorPrimary)
             )
         )
     }

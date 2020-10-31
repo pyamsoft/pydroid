@@ -28,6 +28,7 @@ import androidx.core.content.withStyledAttributes
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.R
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
@@ -60,7 +61,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
             val indexOfSize = attrArray.indexOf(android.R.attr.textSize)
             val indexOfColor = attrArray.indexOf(android.R.attr.textColor)
             withStyledAttributes(
-                com.google.android.material.R.style.TextAppearance_MaterialComponents_Headline5,
+                R.style.TextAppearance_MaterialComponents_Headline5,
                 attrArray.copyOf()
             ) {
                 val size: Int =
@@ -76,7 +77,7 @@ abstract class RatingActivity : VersionCheckActivity(), ChangeLogProvider {
             }
 
             withStyledAttributes(
-                com.google.android.material.R.style.TextAppearance_MaterialComponents_Body2,
+                R.style.TextAppearance_MaterialComponents_Body2,
                 attrArray.copyOf()
             ) {
                 val size: Int =

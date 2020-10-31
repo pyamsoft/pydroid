@@ -34,7 +34,6 @@ dependencies {
 	implementation "androidx.core:core-ktx:$core"
 	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle"
 	implementation "androidx.recyclerview:recyclerview:$recyclerView"
-	implementation "androidx.vectordrawable:vectordrawable:$vectorDrawable"
 	implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
 	implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
 

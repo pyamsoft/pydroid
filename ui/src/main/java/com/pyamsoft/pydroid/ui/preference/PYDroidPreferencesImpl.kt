@@ -47,16 +47,6 @@ internal class PYDroidPreferencesImpl internal constructor(
         return@withContext showRating
     }
 
-    override suspend fun initializeDarkMode(onInit: (mode: Mode) -> Unit) =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
-            if (!prefs.contains(darkModeKey)) {
-                val mode = SYSTEM
-                prefs.edit { putString(darkModeKey, mode.toRawString()) }
-                onInit(mode)
-            }
-        }
-
     override suspend fun getDarkMode(): Mode = withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
         return@withContext requireNotNull(

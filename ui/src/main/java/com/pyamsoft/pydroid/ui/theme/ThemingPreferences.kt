@@ -21,8 +21,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 
 interface ThemingPreferences {
 
-    suspend fun initializeDarkMode(onInit: (mode: Mode) -> Unit)
-
     @CheckResult
     suspend fun getDarkMode(): Mode
 }

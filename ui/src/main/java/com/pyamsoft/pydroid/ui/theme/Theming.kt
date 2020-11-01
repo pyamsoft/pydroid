@@ -21,11 +21,11 @@ import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class Theming internal constructor(preferences: ThemingPreferences) {
 
@@ -33,14 +33,10 @@ class Theming internal constructor(preferences: ThemingPreferences) {
         // NOTE: We use GlobalScope here because this is an application level thing
         // Maybe its an anti-pattern but I think in controlled use, its okay.
         GlobalScope.launch(context = Dispatchers.Default) {
-            preferences.initializeDarkMode { mode ->
-                setDarkTheme(mode) { newMode ->
-                    Timber.d("Theming initialized mode: $newMode")
-                }
-            }
-
             val mode = preferences.getDarkMode()
-            setDarkTheme(mode)
+            withContext(context = Dispatchers.Main) {
+                setDarkTheme(mode)
+            }
         }
     }
 
@@ -50,13 +46,8 @@ class Theming internal constructor(preferences: ThemingPreferences) {
         return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     }
 
-    @JvmOverloads
-    fun setDarkTheme(
-        mode: Mode,
-        onSet: (mode: Mode) -> Unit = DEFAULT_ON_SET_CALLBACK
-    ) {
+    fun setDarkTheme(mode: Mode) {
         AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
-        onSet(mode)
     }
 
     enum class Mode {
@@ -85,10 +76,5 @@ class Theming internal constructor(preferences: ThemingPreferences) {
         private fun supportsFollowSystem(): Boolean {
             return Build.VERSION.SDK_INT >= 28
         }
-    }
-
-    companion object {
-
-        private val DEFAULT_ON_SET_CALLBACK: (mode: Mode) -> Unit = {}
     }
 }

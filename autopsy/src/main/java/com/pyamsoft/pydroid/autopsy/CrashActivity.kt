@@ -29,6 +29,7 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
 import com.pyamsoft.pydroid.autopsy.databinding.ActivityCrashBinding
+import timber.log.Timber
 import kotlin.system.exitProcess
 
 internal class CrashActivity internal constructor() : Activity() {
@@ -53,7 +54,7 @@ internal class CrashActivity internal constructor() : Activity() {
 
         val threadName = requireNotNull(intent.getStringExtra(KEY_THREAD_NAME))
         val throwableName = requireNotNull(intent.getStringExtra(KEY_THROWABLE))
-        val stackTrace = requireNotNull(intent.getStringExtra(KEY_TRACE))
+        val stackTrace = requireNotNull(intent.getSerializableExtra(KEY_TRACE) as Throwable)
 
         // Set the thread name
         setText(binding.crashThreadName, "Uncaught exception in $threadName thread")
@@ -62,11 +63,15 @@ internal class CrashActivity internal constructor() : Activity() {
         setText(binding.crashException, throwableName)
 
         // Allow the stack trace to scroll
-        setText(binding.crashTrace, stackTrace)
+        setText(binding.crashTrace, stackTrace.stackTraceToString())
         binding.crashTrace.apply {
             isVerticalScrollBarEnabled = true
             movementMethod = ScrollingMovementMethod()
         }
+
+        Timber.e("===================")
+        Timber.e(stackTrace, "APPLICATION CRASHED")
+        Timber.e("===================")
     }
 
     override fun onStop() {
@@ -107,7 +112,7 @@ internal class CrashActivity internal constructor() : Activity() {
             return Intent(context.applicationContext, CrashActivity::class.java).apply {
                 putExtra(KEY_THREAD_NAME, threadName)
                 putExtra(KEY_THROWABLE, throwable::class.java.simpleName)
-                putExtra(KEY_TRACE, throwable.stackTraceToString())
+                putExtra(KEY_TRACE, throwable)
                 flags =
                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
             }

@@ -22,9 +22,6 @@ android {
 }
 
 dependencies {
-	// Timber logging
-	implementation "com.jakewharton.timber:timber:$timber"
-
 	api project(':core')
 }
 

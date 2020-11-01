@@ -29,10 +29,11 @@ import android.widget.TextView
 import androidx.annotation.CheckResult
 import androidx.annotation.ColorRes
 import com.pyamsoft.pydroid.autopsy.databinding.ActivityCrashBinding
-import timber.log.Timber
 import kotlin.system.exitProcess
 
 internal class CrashActivity internal constructor() : Activity() {
+
+    private val logger = Logger.tag(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,9 +70,9 @@ internal class CrashActivity internal constructor() : Activity() {
             movementMethod = ScrollingMovementMethod()
         }
 
-        Timber.e("===================")
-        Timber.e(stackTrace, "APPLICATION CRASHED")
-        Timber.e("===================")
+        logger.e("===================")
+        logger.e(stackTrace, "APPLICATION CRASHED")
+        logger.e("===================")
     }
 
     override fun onStop() {

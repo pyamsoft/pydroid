@@ -71,6 +71,10 @@ fun View.doOnApplyWindowInsets(func: (v: View, insets: WindowInsetsCompat, paddi
     // lambda, also passing in the original padding state
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
         func(v, insets, initialPadding)
+
+        // Unset the listener after the first call, as this is a doOn which expects it to happen once
+        ViewCompat.setOnApplyWindowInsetsListener(v, null)
+
         // Always return the insets, so that children can also use them
         return@setOnApplyWindowInsetsListener insets
     }

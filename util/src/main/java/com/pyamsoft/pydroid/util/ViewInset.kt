@@ -63,17 +63,20 @@ private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
     }
 }
 
-fun View.doOnApplyWindowInsets(func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit) {
+inline fun View.doOnApplyWindowInsets(
+    crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
+) {
     // Create a snapshot of the view's padding state
     val initialPadding = recordInitialPaddingForView(this)
 
     // Set an actual OnApplyWindowInsetsListener which proxies to the given
     // lambda, also passing in the original padding state
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-        func(v, insets, initialPadding)
-
         // Unset the listener after the first call, as this is a doOn which expects it to happen once
         ViewCompat.setOnApplyWindowInsetsListener(v, null)
+
+        // Do the thing
+        func(v, insets, initialPadding)
 
         // Always return the insets, so that children can also use them
         return@setOnApplyWindowInsetsListener insets
@@ -91,13 +94,15 @@ data class InitialPadding internal constructor(
 )
 
 @CheckResult
-private fun recordInitialPaddingForView(view: View): InitialPadding {
+@PublishedApi
+internal fun recordInitialPaddingForView(view: View): InitialPadding {
     return InitialPadding(
         view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
     )
 }
 
-private fun View.requestApplyInsetsWhenAttached() {
+@PublishedApi
+internal fun View.requestApplyInsetsWhenAttached() {
     if (isAttachedToWindow) {
         // We're already attached, just request as normal
         this.requestApplyInsets()

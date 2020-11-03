@@ -50,6 +50,11 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
     init {
         doOnInflate {
             assertValidState()
+
+            // We place a check for the id here because at the point that the binding is used
+            // the layoutRoot must not be null and must be resolved so that the teardown works
+            // correctly - otherwise you will get a state error.
+            require(id() != 0) { "id() must not equal 0! " }
         }
 
         doOnTeardown {
@@ -73,13 +78,6 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
             if (nestedViewDelegate.isInitialized()) {
                 nestedViews.clear()
             }
-        }
-
-        doOnInflate {
-            // We place a check for the id here because at the point that the binding is used
-            // the layoutRoot must not be null and must be resolved so that the teardown works
-            // correctly - otherwise you will get a state error.
-            require(id() != 0) { "id() must not equal 0! " }
         }
 
         doOnTeardown {

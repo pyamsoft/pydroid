@@ -24,6 +24,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.UiThread
 import androidx.viewbinding.ViewBinding
 import com.pyamsoft.pydroid.core.Enforcer
+import timber.log.Timber
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -79,10 +80,11 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
                 nestedViews.clear()
             }
         }
+    }
 
-        doOnTeardown {
-            _binding = null
-        }
+    final override fun onFinalTeardown() {
+        Timber.d("Teardown complete, unbind")
+        _binding = null
     }
 
     final override fun onInit(savedInstanceState: UiBundleReader) {

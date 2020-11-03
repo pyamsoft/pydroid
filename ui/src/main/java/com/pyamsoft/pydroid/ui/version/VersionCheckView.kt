@@ -31,6 +31,9 @@ internal class VersionCheckView internal constructor(
     override fun onInit(savedInstanceState: UiBundleReader) {
     }
 
+    override fun onFinalTeardown() {
+    }
+
     override fun render(state: VersionCheckViewState) {
         handleLoading(state)
         handleError(state)

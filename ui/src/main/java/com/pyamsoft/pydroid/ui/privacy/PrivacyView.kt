@@ -31,6 +31,9 @@ internal class PrivacyView internal constructor(
     override fun onInit(savedInstanceState: UiBundleReader) {
     }
 
+    override fun onFinalTeardown() {
+    }
+
     override fun render(state: PrivacyViewState) {
         handleError(state)
     }

@@ -111,6 +111,9 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 
         // Cancel the view scope
         viewScope.cancel()
+
+        // Final teardown
+        onFinalTeardown()
     }
 
     /**
@@ -223,4 +226,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 
     @UiThread
     protected abstract fun onInit(savedInstanceState: UiBundleReader)
+
+    @UiThread
+    protected abstract fun onFinalTeardown()
 }

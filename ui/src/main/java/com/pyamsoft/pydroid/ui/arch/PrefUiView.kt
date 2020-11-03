@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
+import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -40,13 +41,16 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
             boundPrefs?.forEach { it.teardown() }
             boundPrefs?.clear()
-
             boundPrefs = null
-            _parent = null
         }
     }
 
-    override fun onInit(savedInstanceState: UiBundleReader) {
+    final override fun onFinalTeardown() {
+        Timber.d("Teardown complete, unbind")
+        _parent = null
+    }
+
+    final override fun onInit(savedInstanceState: UiBundleReader) {
     }
 
     @CheckResult

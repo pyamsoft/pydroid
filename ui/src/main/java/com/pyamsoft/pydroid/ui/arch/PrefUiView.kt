@@ -51,6 +51,7 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
     }
 
     final override fun onInit(savedInstanceState: UiBundleReader) {
+        // Intentionally blank
     }
 
     @CheckResult

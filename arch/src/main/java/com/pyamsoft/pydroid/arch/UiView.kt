@@ -224,9 +224,19 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
         onSaveEvents.add(onSaveState)
     }
 
+    /**
+     * This runs onInit and before any onInflate hooks have happened
+     */
     @UiThread
-    protected abstract fun onInit(savedInstanceState: UiBundleReader)
+    protected open fun onInit(savedInstanceState: UiBundleReader) {
+        // Intentionally blank
+    }
 
+    /**
+     * This runs after all onTeardown hooks have ran
+     */
     @UiThread
-    protected abstract fun onFinalTeardown()
+    protected open fun onFinalTeardown() {
+        // Intentionally blank
+    }
 }

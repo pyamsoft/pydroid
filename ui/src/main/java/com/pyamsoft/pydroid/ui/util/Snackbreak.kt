@@ -29,7 +29,6 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.util.asDp
-import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
 import com.pyamsoft.pydroid.util.doOnDestroy
 import java.util.concurrent.ConcurrentHashMap
 
@@ -157,6 +156,10 @@ object Snackbreak {
                                 event: Int
                             ) {
                                 super.onDismissed(transientBottomBar, event)
+
+                                // Remove the listener on bar dismiss
+                                ViewCompat.setOnApplyWindowInsetsListener(bar.view, null)
+
                                 onHidden(bar, event)
 
                                 // Clear out the long refs on dismiss
@@ -263,24 +266,11 @@ object Snackbreak {
             private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
             private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
 
-            private fun fixSnackbar(view: View, margin: Int) {
-                view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
-                view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
-            }
-
             private fun Snackbar.materialMargin() {
                 val params = view.layoutParams as? MarginLayoutParams
                 if (params != null) {
                     val margin = 8.asDp(view.context)
-
-                    // Fix the margins to be material-y
-                    fixSnackbar(view, margin)
-
-                    // The Snackbar in material library sets a Material design theme but
-                    // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
-                    // and adjusting for bottom padding - it adds the bottom padding from the insets
-                    // into the snackbar as well.
-                    view.doOnApplyWindowInsets { v, _, _ -> fixSnackbar(v, margin) }
+                    view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
                 }
             }
 
@@ -288,9 +278,22 @@ object Snackbreak {
                 ViewCompat.setElevation(view, 6.asDp(context).toFloat())
             }
 
+            private fun Snackbar.materialPadding() {
+                // The Snackbar in material library sets a Material design theme but
+                // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
+                // and adjusting for bottom padding - it adds the bottom padding from the insets
+                // into the snackbar as well.
+                view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+                ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+                    v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+                    return@setOnApplyWindowInsetsListener insets
+                }
+            }
+
             private fun Snackbar.materialDesign() {
-                materialMargin()
                 materialElevation()
+                materialMargin()
+                materialPadding()
             }
 
             @JvmStatic

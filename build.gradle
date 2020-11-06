@@ -39,7 +39,7 @@ buildscript {
 		maxSdk = 30
 
 		// Kotlin
-		coroutines = '1.4.0'
+		coroutines = '1.4.1'
 
 		// AndroidX
 		annotation = "1.1.0"

@@ -20,15 +20,13 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
-import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 
-internal class SettingsClearConfigDialog : ThemeDialog() {
+internal class SettingsClearConfigDialog : DialogFragment() {
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
@@ -38,7 +36,7 @@ internal class SettingsClearConfigDialog : ThemeDialog() {
             .plusClearConfirmDialog()
             .inject(this)
 
-        return AlertDialog.Builder(ContextThemeWrapper(requireActivity(), theme), theme)
+        return AlertDialog.Builder(requireActivity())
             .setMessage(
                 """
         Really reset all application settings?

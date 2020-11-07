@@ -20,16 +20,16 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-data class ThemeDialogViewState internal constructor(
+internal data class ThemeDialogViewState internal constructor(
     val name: String
 ) : UiViewState
 
-sealed class ThemeDialogViewEvent : UiViewEvent {
+internal sealed class ThemeDialogViewEvent : UiViewEvent {
 
     object Close : ThemeDialogViewEvent()
 }
 
-sealed class ThemeDialogControllerEvent : UiControllerEvent {
+internal sealed class ThemeDialogControllerEvent : UiControllerEvent {
 
     object Close : ThemeDialogControllerEvent()
 }

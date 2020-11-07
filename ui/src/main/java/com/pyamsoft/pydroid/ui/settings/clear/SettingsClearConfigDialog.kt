@@ -20,13 +20,14 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 
-internal class SettingsClearConfigDialog : DialogFragment() {
+internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }

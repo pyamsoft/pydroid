@@ -20,6 +20,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
@@ -29,7 +30,7 @@ import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
-internal class VersionUpgradeDialog internal constructor() : DialogFragment() {
+internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<VersionUpgradeViewModel> { factory }

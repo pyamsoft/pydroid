@@ -24,9 +24,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.BaseUiView
@@ -45,7 +45,7 @@ import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import timber.log.Timber
 import com.google.android.material.R as R2
 
-internal abstract class FullscreenThemeDialog protected constructor() : DialogFragment() {
+internal abstract class FullscreenThemeDialog protected constructor() : AppCompatDialogFragment() {
 
     internal var toolbar: ThemeDialogToolbar? = null
 

@@ -21,14 +21,20 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import me.zhanghai.android.fastscroll.PopupTextProvider
 
 internal class AboutAdapter internal constructor(
     private val owner: LifecycleOwner,
     private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
-) : ListAdapter<AboutItemViewState, AboutViewHolder>(DIFFER) {
+) : ListAdapter<AboutItemViewState, AboutViewHolder>(DIFFER), PopupTextProvider {
 
     init {
         setHasStableIds(true)
+    }
+
+    override fun getPopupText(position: Int): String {
+        val item = getItem(position)
+        return item.library.name.first().toUpperCase().toString()
     }
 
     override fun getItemId(position: Int): Long {
@@ -48,7 +54,8 @@ internal class AboutAdapter internal constructor(
         holder: AboutViewHolder,
         position: Int
     ) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        holder.bind(item)
     }
 
     companion object {

@@ -31,8 +31,10 @@ import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.about.listitem.AboutItemViewState
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class AboutListView internal constructor(
     private val owner: LifecycleOwner,
@@ -66,8 +68,11 @@ internal class AboutListView internal constructor(
             val margin = 8.asDp(binding.aboutList.context)
             LinearMarginDecoration.create(margin = margin).apply {
                 binding.aboutList.addItemDecoration(this)
-                doOnTeardown { binding.aboutList.removeItemDecoration(this) }
             }
+        }
+
+        doOnTeardown {
+            binding.aboutList.removeAllItemDecorations()
         }
 
         doOnSaveState { outState ->
@@ -96,6 +101,11 @@ internal class AboutListView internal constructor(
                 isItemPrefetchEnabled = false
             }
         }
+
+        FastScrollerBuilder(binding.aboutList)
+            .useMd2Style()
+            .setPopupTextProvider(aboutAdapter)
+            .build()
     }
 
     override fun onRender(state: AboutViewState) {

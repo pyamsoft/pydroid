@@ -42,6 +42,7 @@ dependencies {
 
 	// RecyclerView decorations
 	implementation "io.cabriole:decorator:$decorator"
+	implementation "me.zhanghai.android.fastscroll:library:$fastscroll"
 
 	// Cachify
 	implementation "com.pyamsoft.cachify:cachify:$cachify"

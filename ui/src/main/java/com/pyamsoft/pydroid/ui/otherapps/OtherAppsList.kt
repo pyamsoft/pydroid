@@ -28,8 +28,10 @@ import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewEvent.OpenSto
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewEvent.ViewSource
 import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemViewState
 import com.pyamsoft.pydroid.ui.util.Snackbreak
+import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class OtherAppsList internal constructor(
     private val owner: LifecycleOwner,
@@ -63,8 +65,11 @@ internal class OtherAppsList internal constructor(
             val margin = 8.asDp(binding.otherAppsList.context)
             LinearMarginDecoration.create(margin = margin).apply {
                 binding.otherAppsList.addItemDecoration(this)
-                doOnTeardown { binding.otherAppsList.removeItemDecoration(this) }
             }
+        }
+
+        doOnTeardown {
+            binding.otherAppsList.removeAllItemDecorations()
         }
 
         doOnSaveState { outState ->
@@ -93,6 +98,11 @@ internal class OtherAppsList internal constructor(
                 isItemPrefetchEnabled = false
             }
         }
+
+        FastScrollerBuilder(binding.otherAppsList)
+            .useMd2Style()
+            .setPopupTextProvider(listAdapter)
+            .build()
     }
 
     override fun onRender(state: OtherAppsViewState) {

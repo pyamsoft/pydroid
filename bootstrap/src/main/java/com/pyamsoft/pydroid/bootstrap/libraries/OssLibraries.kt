@@ -167,6 +167,11 @@ object OssLibraries {
             "https://github.com/cabriole/decorator",
             "An Android library that helps creating composable margins and dividers in RecyclerViews"
         )
+        OssLibraries.add(
+            "AndroidFastScroll",
+            "https://github.com/zhanghai/AndroidFastScroll",
+            "Fast scroll for Android RecyclerView and more"
+        )
     }
 
     private fun addLoaderLibraries() {

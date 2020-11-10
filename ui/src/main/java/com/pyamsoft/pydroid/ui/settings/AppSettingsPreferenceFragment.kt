@@ -40,6 +40,7 @@ import com.pyamsoft.pydroid.ui.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigDialog
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.MarketLinker
+import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.ui.version.VersionCheckControllerEvent.LaunchUpdate
@@ -48,6 +49,7 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.HyperlinkIntent
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import timber.log.Timber
 
 abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
@@ -139,6 +141,18 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         }
 
         settingsViewModel.syncDarkThemeState(requireActivity())
+
+        setupPreferenceListView()
+    }
+
+    private fun setupPreferenceListView() {
+        val list = listView ?: return
+        list.isHorizontalScrollBarEnabled = false
+        list.isVerticalScrollBarEnabled = false
+
+        FastScrollerBuilder(list)
+            .useMd2Style()
+            .build()
     }
 
     private fun handleShowUpgrade() {
@@ -173,6 +187,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         settingsStateSaver = null
         ratingStateSaver = null
         versionStateSaver = null
+
+        // Clear list view
+        listView?.removeAllItemDecorations()
     }
 
     private fun failedNavigation(error: ActivityNotFoundException?) {

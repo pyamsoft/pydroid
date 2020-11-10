@@ -22,6 +22,7 @@
         android:id="@+id/about_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="none"
         android:visibility="invisible"
         tools:visibility="visible" />
 

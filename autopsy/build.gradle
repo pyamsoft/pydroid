@@ -15,16 +15,16 @@
  */
 
 android {
-    buildFeatures {
-        viewBinding true
-    }
+	buildFeatures {
+		viewBinding true
+	}
 
-    kotlinOptions {
-        freeCompilerArgs += '-Xexplicit-api=strict'
-    }
+	kotlinOptions {
+		freeCompilerArgs += '-Xexplicit-api=strict'
+	}
 }
 
 dependencies {
-    api project(':core')
+	api project(':core')
 }
 

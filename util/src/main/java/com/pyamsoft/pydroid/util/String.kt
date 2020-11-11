@@ -22,8 +22,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.CheckResult
 
+/**
+ * Turn a string into a hyperlink intent
+ */
 @CheckResult
-fun String.hyperlink(c: Context): HyperlinkIntent {
+public fun String.hyperlink(c: Context): HyperlinkIntent {
     val intent = Intent(Intent.ACTION_VIEW).also {
         it.data = Uri.parse(this)
     }
@@ -31,12 +34,23 @@ fun String.hyperlink(c: Context): HyperlinkIntent {
     return HyperlinkIntent(c.applicationContext, intent)
 }
 
-data class HyperlinkIntent internal constructor(
-    val context: Context,
-    val intent: Intent
+/**
+ * Intent class that knows how to navigate to a given hyperlink
+ */
+public data class HyperlinkIntent internal constructor(
+    private val context: Context,
+    private val intent: Intent
 ) {
 
-    fun navigate(): ActivityNotFoundException? {
+    /**
+     * Navigate to the hyperlink.
+     *
+     * If an error occurs this will return an exception
+     *
+     * TODO(Peter): Just throw
+     */
+    @CheckResult
+    public fun navigate(): ActivityNotFoundException? {
         val appContext = context.applicationContext
         return try {
             appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
@@ -46,7 +60,15 @@ data class HyperlinkIntent internal constructor(
         }
     }
 
-    inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit): ActivityNotFoundException? {
+    /**
+     * Navigate to the hyperlink. Handle any errors that may occur
+     *
+     * If an error occurs this will return an exception
+     *
+     * TODO(Peter): Just throw
+     */
+    @CheckResult
+    public inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit): ActivityNotFoundException? {
         return navigate()?.also(onNavigateError)
     }
 }

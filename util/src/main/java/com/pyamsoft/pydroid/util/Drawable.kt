@@ -25,14 +25,20 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 
+/**
+ * Tint a Drawable with a Color
+ */
 @CheckResult
-fun Drawable.tintWith(@ColorInt c: Int): Drawable {
+public fun Drawable.tintWith(@ColorInt c: Int): Drawable {
     return mutate().apply {
         colorFilter = PorterDuffColorFilter(c, PorterDuff.Mode.SRC_IN)
     }
 }
 
+/**
+ * Tint a Drawable with a Color resource
+ */
 @CheckResult
-fun Drawable.tintWith(c: Context, @ColorRes cl: Int): Drawable {
+public fun Drawable.tintWith(c: Context, @ColorRes cl: Int): Drawable {
     return tintWith(ContextCompat.getColor(c, cl))
 }

@@ -21,14 +21,20 @@ import androidx.annotation.CheckResult
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 
+/**
+ * Lighten a color by a ratio
+ */
 @ColorInt
 @CheckResult
-fun @receiver:ColorInt Int.lighter(ratio: Float): Int {
+public fun @receiver:ColorInt Int.lighter(ratio: Float): Int {
     return ColorUtils.blendARGB(this, Color.WHITE, ratio)
 }
 
+/**
+ * Darken a color by a ratio
+ */
 @ColorInt
 @CheckResult
-fun @receiver:ColorInt Int.darker(ratio: Float): Int {
+public fun @receiver:ColorInt Int.darker(ratio: Float): Int {
     return ColorUtils.blendARGB(this, Color.BLACK, ratio)
 }

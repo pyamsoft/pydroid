@@ -32,12 +32,15 @@ private val cachedDP: SparseIntArray by lazy {
 @Deprecated(message = "Use asDp(Context, Int)", replaceWith = ReplaceWith("asDp(c, px)"))
 private fun toDp(c: Context, @Px px: Int): Int = asDp(c, px)
 
+/**
+ * Convert a number in pixels to DP
+ */
 @CheckResult
 @Deprecated(
     message = "Use Number.asDp(Context, Int)",
     replaceWith = ReplaceWith("this.asDp(c)")
 )
-fun Number.toDp(c: Context): Int = asDp(c, this.toInt())
+public fun Number.toDp(c: Context): Int = asDp(c, this.toInt())
 
 @CheckResult
 private inline fun SparseIntArray.getOrElse(key: Int, block: (array: SparseIntArray) -> Int): Int {
@@ -55,5 +58,8 @@ private fun asDp(c: Context, @Px px: Int): Int {
     }
 }
 
+/**
+ * Convert a number in pixels to DP
+ */
 @CheckResult
-fun Number.asDp(c: Context): Int = asDp(c, this.toInt())
+public fun Number.asDp(c: Context): Int = asDp(c, this.toInt())

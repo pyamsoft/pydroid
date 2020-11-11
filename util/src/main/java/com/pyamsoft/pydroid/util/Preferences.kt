@@ -25,8 +25,14 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
+/**
+ * Create a preference listener for when a shared preference changes
+ */
 @CheckResult
-fun SharedPreferences.onChange(key: String, onChange: suspend () -> Unit): PreferenceListener {
+public fun SharedPreferences.onChange(
+    key: String,
+    onChange: suspend () -> Unit
+): PreferenceListener {
     val listener = object : ScopedPreferenceChangeListener(key) {
 
         override suspend fun onChange() {
@@ -81,7 +87,13 @@ private class PreferenceListenerImpl(
     }
 }
 
-interface PreferenceListener {
+/**
+ * The PreferenceListener interface
+ */
+public interface PreferenceListener {
 
-    fun cancel()
+    /**
+     * Stop listening to the preference
+     */
+    public fun cancel()
 }

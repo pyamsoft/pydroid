@@ -20,13 +20,19 @@ import android.app.Application
 import android.content.pm.ApplicationInfo
 import androidx.annotation.CheckResult
 
+/**
+ * The application is in debug mode if the DEBUGGABLE flag is set
+ */
 @CheckResult
-fun Application.isDebugMode(): Boolean {
+public fun Application.isDebugMode(): Boolean {
     val flags = this.applicationInfo.flags
     return flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
 }
 
-val Application.displayName: CharSequence
+/**
+ * Load the name of the Application from the package manager
+ */
+public val Application.displayName: CharSequence
     @get:CheckResult get() {
         return this.applicationInfo.loadLabel(this.packageManager).toString()
     }

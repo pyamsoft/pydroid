@@ -20,3 +20,8 @@ dependencies {
 	api project(':core')
 }
 
+android {
+	kotlinOptions {
+		freeCompilerArgs += '-Xexplicit-api=strict'
+	}
+}

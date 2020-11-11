@@ -28,7 +28,12 @@ import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-fun Activity.stableLayoutHideNavigation() {
+/**
+ * Places the Activity into Stable Layout and allows the app to draw behind the navbar and status bar.
+ *
+ * You must handle insets on your own.
+ */
+public fun Activity.stableLayoutHideNavigation() {
     val isLandscape =
         this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val w = this.window
@@ -51,19 +56,22 @@ private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
 @Suppress("DEPRECATION")
 private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
     this.decorView.systemUiVisibility = this.decorView.systemUiVisibility or
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
     if (isLandscape) {
         // In landscape mode, navbar is marked immersive sticky
         this.decorView.systemUiVisibility = this.decorView.systemUiVisibility or
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
     }
 }
 
-inline fun View.doOnApplyWindowInsets(
+/**
+ * Run a block once when the WindowInsets are applied
+ */
+public inline fun View.doOnApplyWindowInsets(
     crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
 ) {
     // Create a snapshot of the view's padding state
@@ -86,18 +94,53 @@ inline fun View.doOnApplyWindowInsets(
     this.requestApplyInsetsWhenAttached()
 }
 
-data class InitialPadding internal constructor(
+/**
+ * The representation of the originalk padding of the application before it was modified
+ */
+public data class InitialPadding internal constructor(
+    /**
+     * Left padding
+     */
+    @Deprecated(message = "Use start or end depending on RTL")
     val left: Int,
+
+    /**
+     * Top padding
+     */
     val top: Int,
+
+    /**
+     * Right padding
+     */
+    @Deprecated(message = "Use start or end depending on RTL")
     val right: Int,
-    val bottom: Int
+
+    /**
+     * Bottom padding
+     */
+    val bottom: Int,
+
+    /**
+     * Start padding
+     */
+    val start: Int,
+
+    /**
+     * End padding
+     */
+    val end: Int,
 )
 
 @CheckResult
 @PublishedApi
 internal fun recordInitialPaddingForView(view: View): InitialPadding {
     return InitialPadding(
-        view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
+        left = view.paddingLeft,
+        top = view.paddingTop,
+        right = view.paddingRight,
+        bottom = view.paddingBottom,
+        start = view.paddingStart,
+        end = view.paddingEnd
     )
 }
 

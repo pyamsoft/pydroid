@@ -16,4 +16,22 @@
 
 package com.pyamsoft.pydroid.notify
 
-data class NotifyChannelInfo(val id: String, val title: String, val description: String)
+/**
+ * Notification channel info
+ *
+ * All notifications require a notification channel
+ */
+public data class NotifyChannelInfo(
+    /**
+     * Channel id
+     */
+    val id: String,
+    /**
+     * Human readable channel name
+     */
+    val title: String,
+    /**
+     * Human readable channel description
+     */
+    val description: String
+)

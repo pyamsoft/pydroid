@@ -19,47 +19,86 @@ package com.pyamsoft.pydroid.notify
 import android.content.Context
 import androidx.annotation.CheckResult
 
-interface Notifier {
+/**
+ * Notifier manages various dispatchers and dispatches notification payloads to them
+ */
+public interface Notifier {
 
+    /**
+     * Show a notification
+     */
     @CheckResult
-    fun <T : NotifyData> show(
+    public fun <T : NotifyData> show(
         channelInfo: NotifyChannelInfo,
         notification: T
     ): NotifyId
 
+    /**
+     * Show a notification with a given id
+     */
     @CheckResult
-    fun <T : NotifyData> show(
+    public fun <T : NotifyData> show(
         id: NotifyId,
         channelInfo: NotifyChannelInfo,
         notification: T
     ): NotifyId
 
+    /**
+     * Show a notification with a given tag
+     */
     @CheckResult
-    fun <T : NotifyData> show(
+    public fun <T : NotifyData> show(
         tag: NotifyTag,
         channelInfo: NotifyChannelInfo,
         notification: T
     ): NotifyId
 
+    /**
+     * Show a notification with a given id and tag
+     */
     @CheckResult
-    fun <T : NotifyData> show(
+    public fun <T : NotifyData> show(
         id: NotifyId,
         tag: NotifyTag,
         channelInfo: NotifyChannelInfo,
         notification: T
     ): NotifyId
 
-    fun cancel(id: NotifyId)
+    /**
+     * Cancel a notification by id
+     */
+    public fun cancel(id: NotifyId)
 
-    fun cancel(
+    /**
+     * Cancel a notification by id and tag
+     */
+    public fun cancel(
         id: NotifyId,
         tag: NotifyTag
     )
 
-    companion object {
+    public companion object {
 
+        /**
+         * Create a new instance of a Notifier
+         */
         @CheckResult
-        fun create(context: Context, dispatchers: Set<NotifyDispatcher<*>>): Notifier {
+        @Deprecated(
+            message = "Use createDefault",
+            replaceWith = ReplaceWith("createDefault(context, dispatchers)")
+        )
+        public fun create(context: Context, dispatchers: Set<NotifyDispatcher<*>>): Notifier {
+            return createDefault(context, dispatchers)
+        }
+
+        /**
+         * Create a new instance of a default Notifier
+         */
+        @CheckResult
+        public fun createDefault(
+            context: Context,
+            dispatchers: Set<NotifyDispatcher<*>>
+        ): Notifier {
             return DefaultNotifier(
                 context = context.applicationContext,
                 dispatchers = dispatchers

@@ -16,4 +16,7 @@
 
 package com.pyamsoft.pydroid.notify
 
-interface NotifyData
+/**
+ * Common interface for notification payload structure
+ */
+public interface NotifyData

@@ -18,9 +18,20 @@ package com.pyamsoft.pydroid.notify
 
 import androidx.annotation.CheckResult
 
-data class NotifyId internal constructor(val id: Int)
+/**
+ * Represents a Notification ID for a NotifyDispatcher
+ */
+public data class NotifyId internal constructor(
+    /**
+     * Notification ID
+     */
+    val id: Int
+)
 
+/**
+ * Converts an Android system Notification ID to a NotifyId
+ */
 @CheckResult
-fun Int.toNotifyId(): NotifyId {
+public fun Int.toNotifyId(): NotifyId {
     return NotifyId(this)
 }

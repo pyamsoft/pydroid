@@ -16,7 +16,10 @@
 
 package com.pyamsoft.pydroid.notify
 
-class MissingDispatcherException internal constructor(
+/**
+ * Exception thrown when no NotifyDispatcher can handle a given notification
+ */
+public class MissingDispatcherException internal constructor(
     dispatchers: Set<NotifyDispatcher<*>>,
     notification: NotifyData
 ) : IllegalArgumentException(

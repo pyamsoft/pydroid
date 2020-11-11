@@ -19,13 +19,22 @@ package com.pyamsoft.pydroid.notify
 import android.app.Notification
 import androidx.annotation.CheckResult
 
-interface NotifyDispatcher<T : NotifyData> {
+/**
+ * A NotifyDispatcher handles a type of NotifyData and shows notifications for that data
+ */
+public interface NotifyDispatcher<T : NotifyData> {
 
+    /**
+     * Whether or not this dispatcher instance can handle the given notify data
+     */
     @CheckResult
-    fun canShow(notification: NotifyData): Boolean
+    public fun canShow(notification: NotifyData): Boolean
 
+    /**
+     * Build a notification from the given notify data and channel information
+     */
     @CheckResult
-    fun build(
+    public fun build(
         id: NotifyId,
         channelInfo: NotifyChannelInfo,
         notification: T

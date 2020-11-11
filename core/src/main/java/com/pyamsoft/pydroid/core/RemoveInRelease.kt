@@ -15,7 +15,6 @@ import androidx.annotation.Keep
  *  - methods that return other primitives are removed so long as their return
  *    values are not used.
  */
-
 @Keep
 @Target(AnnotationTarget.FUNCTION)
-annotation class RemoveInRelease
+public annotation class RemoveInRelease

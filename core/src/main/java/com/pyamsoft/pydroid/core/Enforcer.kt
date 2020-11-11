@@ -22,7 +22,7 @@ import androidx.annotation.CheckResult
 /**
  * Enforce expected threading contexts
  */
-object Enforcer {
+public object Enforcer {
 
     private val mainLooper by lazy { Looper.getMainLooper() }
 
@@ -30,14 +30,14 @@ object Enforcer {
      * Check if the current thread is the Main or UI thread
      */
     @CheckResult
-    fun isMainThread(): Boolean {
+    public fun isMainThread(): Boolean {
         return mainLooper.thread == Thread.currentThread()
     }
 
     /**
      * Throws an exception if the current thread is the Main or UI thread
      */
-    fun assertOffMainThread() {
+    public fun assertOffMainThread() {
         if (isMainThread()) {
             throw AssertionError("This operation must be OFF the Main/UI thread!")
         }
@@ -46,7 +46,7 @@ object Enforcer {
     /**
      * Throws an exception if the current thread is not the Main or UI thread
      */
-    fun assertOnMainThread() {
+    public fun assertOnMainThread() {
         if (!isMainThread()) {
             throw AssertionError("This operation must be ON the Main/UI thread!")
         }

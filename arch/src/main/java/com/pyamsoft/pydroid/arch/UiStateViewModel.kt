@@ -39,7 +39,10 @@ abstract class UiStateViewModel<S : UiViewState> protected constructor(
 ) : ViewModel() {
 
     @Suppress("UNUSED_PARAMETER")
-    @Deprecated("\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.")
+    @Deprecated(
+        "\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.",
+        replaceWith = ReplaceWith("UiStateViewModel<S>(initialState)")
+    )
     protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
     // NOTE(Peter): Since state events run on their own single threaded dispatcher, we may not

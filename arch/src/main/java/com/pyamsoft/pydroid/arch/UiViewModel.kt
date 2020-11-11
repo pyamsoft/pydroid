@@ -31,7 +31,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 ) : UiStateViewModel<S>(initialState), SaveableState {
 
     @Suppress("UNUSED_PARAMETER")
-    @Deprecated("\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.")
+    @Deprecated(
+        "\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.",
+        replaceWith = ReplaceWith("UiViewModel<S, V, C>(initialState)")
+    )
     protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
     private val onBindEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }

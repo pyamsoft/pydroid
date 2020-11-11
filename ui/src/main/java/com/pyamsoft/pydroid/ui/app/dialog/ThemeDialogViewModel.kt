@@ -22,12 +22,10 @@ import timber.log.Timber
 
 internal class ThemeDialogViewModel internal constructor(
     initialName: String,
-    debug: Boolean
 ) : UiViewModel<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogControllerEvent>(
     initialState = ThemeDialogViewState(
         name = initialName
-    ),
-    debug = debug
+    )
 ) {
 
     override fun handleViewEvent(event: ThemeDialogViewEvent) {

@@ -24,10 +24,7 @@ import kotlinx.coroutines.launch
 
 internal class SettingsClearConfigViewModel internal constructor(
     private val interactor: SettingsClearConfigInteractor,
-    debug: Boolean
-) : UiStateViewModel<UnitViewState>(
-    initialState = UnitViewState, debug = debug
-) {
+) : UiStateViewModel<UnitViewState>(initialState = UnitViewState) {
 
     internal fun reset() {
         viewModelScope.launch(context = Dispatchers.Default) {

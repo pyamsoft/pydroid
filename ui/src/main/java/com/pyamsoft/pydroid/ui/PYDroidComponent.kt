@@ -151,7 +151,6 @@ internal interface PYDroidComponent {
                     name = params.name,
                     version = params.version,
                     theming = theming,
-                    debug = params.debug,
                     interactors = PYDroidViewModelFactory.Parameters.Interactors(
                         rating = ratingModule.provideInteractor(),
                         about = aboutModule.provideInteractor(),
@@ -187,10 +186,6 @@ internal interface PYDroidComponent {
             factory = viewModelFactory
         )
 
-        private val themeDialogParams = ThemeDialogComponent.Factory.Parameters(
-            debug = params.debug
-        )
-
         private val provider = object : ModuleProvider {
             override fun theming(): Theming {
                 return theming
@@ -202,7 +197,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusThemeDialog(): ThemeDialogComponent.Factory {
-            return ThemeDialogComponent.Impl.FactoryImpl(themeDialogParams)
+            return ThemeDialogComponent.Impl.FactoryImpl()
         }
 
         override fun plusPrivacy(): PrivacyComponent.Factory {

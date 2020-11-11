@@ -32,14 +32,13 @@ import timber.log.Timber
 
 internal class AboutViewModel internal constructor(
     interactor: AboutInteractor,
-    debug: Boolean
 ) : UiViewModel<AboutViewState, AboutViewEvent, AboutControllerEvent>(
     initialState = AboutViewState(
         isLoading = false,
         licenses = emptyList(),
         loadError = null,
         navigationError = null
-    ), debug = debug
+    )
 ) {
 
     private val licenseRunner = highlander<Unit, Boolean> { force ->

@@ -27,8 +27,7 @@ import timber.log.Timber
 
 internal class VersionUpgradeViewModel internal constructor(
     private val interactor: VersionInteractor,
-    debug: Boolean
-) : UiStateViewModel<UnitViewState>(initialState = UnitViewState, debug = debug) {
+) : UiStateViewModel<UnitViewState>(initialState = UnitViewState) {
 
     internal inline fun completeUpgrade(crossinline onComplete: () -> Unit) {
         viewModelScope.launch(context = Dispatchers.Default) {

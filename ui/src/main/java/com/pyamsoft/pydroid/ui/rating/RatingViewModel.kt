@@ -28,11 +28,7 @@ import kotlinx.coroutines.launch
 
 internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
-    debug: Boolean
-) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(
-    initialState = UnitViewState,
-    debug = debug
-) {
+) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->
         val launcher = interactor.askForRating(force)

@@ -28,13 +28,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
-    private val interactor: VersionInteractor,
-    debug: Boolean
+    private val interactor: VersionInteractor
 ) : UiViewModel<VersionCheckViewState, VersionCheckViewEvent, VersionCheckControllerEvent>(
     initialState = VersionCheckViewState(
         isLoading = false,
         throwable = null,
-    ), debug = debug
+    )
 ) {
 
     private val checkUpdateRunner = highlander<Unit, Boolean> { force ->

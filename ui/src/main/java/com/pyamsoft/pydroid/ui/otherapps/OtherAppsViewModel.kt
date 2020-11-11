@@ -27,12 +27,11 @@ import kotlinx.coroutines.launch
 
 internal class OtherAppsViewModel internal constructor(
     interactor: OtherAppsInteractor,
-    debug: Boolean
 ) : UiViewModel<OtherAppsViewState, OtherAppsViewEvent, OtherAppsControllerEvent>(
     initialState = OtherAppsViewState(
         apps = emptyList(),
         navigationError = null
-    ), debug = debug
+    )
 ) {
 
     private val appsRunner = highlander<Unit, Boolean> { force ->

@@ -39,31 +39,19 @@ internal class PYDroidViewModelFactory internal constructor(
 ) : UiViewModelFactory() {
 
     override fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*> {
+        val interactors = params.interactors
         return when (modelClass) {
-            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(
-                params.interactors.version,
-                params.debug
-            )
+            VersionUpgradeViewModel::class -> VersionUpgradeViewModel(interactors.version)
             AppSettingsViewModel::class -> AppSettingsViewModel(
                 params.theming,
-                params.interactors.otherApps,
-                params.debug
+                interactors.otherApps,
             )
-            VersionCheckViewModel::class -> VersionCheckViewModel(
-                params.interactors.version,
-                params.debug
-            )
-            PrivacyViewModel::class -> PrivacyViewModel(params.debug)
-            OtherAppsViewModel::class -> OtherAppsViewModel(
-                params.interactors.otherApps,
-                params.debug
-            )
-            SettingsClearConfigViewModel::class -> SettingsClearConfigViewModel(
-                params.interactors.settingsClearConfig,
-                params.debug
-            )
-            AboutViewModel::class -> AboutViewModel(params.interactors.about, params.debug)
-            RatingViewModel::class -> RatingViewModel(params.interactors.rating, params.debug)
+            VersionCheckViewModel::class -> VersionCheckViewModel(interactors.version)
+            PrivacyViewModel::class -> PrivacyViewModel()
+            OtherAppsViewModel::class -> OtherAppsViewModel(interactors.otherApps)
+            SettingsClearConfigViewModel::class -> SettingsClearConfigViewModel(interactors.settingsClearConfig)
+            AboutViewModel::class -> AboutViewModel(interactors.about)
+            RatingViewModel::class -> RatingViewModel(interactors.rating)
             else -> fail()
         }
     }
@@ -72,7 +60,6 @@ internal class PYDroidViewModelFactory internal constructor(
         internal val name: CharSequence,
         internal val version: Int,
         internal val theming: Theming,
-        internal val debug: Boolean,
         internal val interactors: Interactors
     ) {
         internal data class Interactors internal constructor(

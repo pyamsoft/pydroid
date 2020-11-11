@@ -20,7 +20,6 @@ import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.onlyFactory
-import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogComponent.Factory.Parameters
 
 internal interface ThemeDialogComponent {
 
@@ -34,25 +33,15 @@ internal interface ThemeDialogComponent {
             background: Drawable,
             parent: ViewGroup
         ): ThemeDialogComponent
-
-        data class Parameters internal constructor(
-            internal val debug: Boolean
-        )
     }
 
     class Impl private constructor(
         private val parent: ViewGroup,
         private val background: Drawable,
-        name: String,
-        params: Parameters
+        name: String
     ) : ThemeDialogComponent {
 
-        private val factory = onlyFactory {
-            ThemeDialogViewModel(
-                name,
-                params.debug
-            )
-        }
+        private val factory = onlyFactory { ThemeDialogViewModel(name) }
 
         override fun inject(dialog: FullscreenThemeDialog) {
             dialog.toolbar =
@@ -65,9 +54,7 @@ internal interface ThemeDialogComponent {
             dialog.factory = factory
         }
 
-        internal class FactoryImpl internal constructor(
-            private val params: Parameters
-        ) : Factory {
+        internal class FactoryImpl internal constructor() : Factory {
 
             override fun create(
                 name: String,
@@ -77,8 +64,7 @@ internal interface ThemeDialogComponent {
                 return Impl(
                     parent,
                     background,
-                    name,
-                    params
+                    name
                 )
             }
         }

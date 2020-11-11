@@ -32,14 +32,12 @@ import timber.log.Timber
 internal class AppSettingsViewModel internal constructor(
     private val theming: Theming,
     interactor: OtherAppsInteractor,
-    debug: Boolean
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
     initialState = AppSettingsViewState(
         isDarkTheme = null,
         throwable = null,
         otherApps = emptyList()
     ),
-    debug = debug
 ) {
 
     private val otherAppsRunner = highlander<Unit, Boolean> { force ->

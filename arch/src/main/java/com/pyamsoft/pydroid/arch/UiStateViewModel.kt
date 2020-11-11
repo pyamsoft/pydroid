@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pyamsoft.pydroid.arch.debug.UiViewStateDebug
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -35,15 +36,17 @@ import timber.log.Timber
 
 abstract class UiStateViewModel<S : UiViewState> protected constructor(
     initialState: S,
-    private val debug: Boolean
 ) : ViewModel() {
+
+    @Suppress("UNUSED_PARAMETER")
+    @Deprecated("\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.")
+    protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
     // NOTE(Peter): Since state events run on their own single threaded dispatcher, we may not
     // need a mutex since there will only ever be one thread at a time.
     private val mutex = Mutex()
 
-    // This useless interface exists just so I don't have to mark everything as experimental
-    private var state: UiVMState<S> = UiVMStateImpl(initialState)
+    private var state = UiVMState(initialState)
 
     @UiThread
     @CheckResult
@@ -131,42 +134,11 @@ abstract class UiStateViewModel<S : UiViewState> protected constructor(
 
             // If we are in debug mode, perform the state change twice and make sure that it produces
             // the same state both times.
-            if (debug && isSetState) {
-                val copyNewState = oldState.stateChange()
-                checkStateEquality(newState, copyNewState)
+            if (isSetState) {
+                UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
             }
 
             state.set(newState)
-        }
-    }
-
-    /**
-     * If we are in debug mode, perform the state change twice and make sure that it produces
-     * the same state both times.
-     */
-    private fun checkStateEquality(state1: S, state2: S) {
-        if (state1 != state2) {
-            // Pull a page from the MvRx repo's BaseMvRxViewModel :)
-            val changedProp = state1::class.java.declaredFields.asSequence()
-                .onEach { it.isAccessible = true }
-                .firstOrNull { property ->
-                    try {
-                        val prop1 = property.get(state1)
-                        val prop2 = property.get(state2)
-                        prop1 != prop2
-                    } catch (e: Throwable) {
-                        // Failed but we don't care
-                        false
-                    }
-                }
-
-            if (changedProp == null) {
-                throw DeterministicStateError(state1, state2, null)
-            } else {
-                val prop1 = changedProp.get(state1)
-                val prop2 = changedProp.get(state2)
-                throw DeterministicStateError(prop1, prop2, changedProp.name)
-            }
         }
     }
 
@@ -188,45 +160,20 @@ abstract class UiStateViewModel<S : UiViewState> protected constructor(
         }
     }
 
-    private class DeterministicStateError(
-        state1: Any?,
-        state2: Any?,
-        prop: String?
-    ) : IllegalStateException(
-        """State changes must be deterministic
-           ${if (prop != null) "Property '$prop' changed:" else ""}
-           $state1
-           $state2
-           """.trimIndent()
-    )
-
-    // Exists as a useless interface just so that when using the implementation in the UiViewModel
-    // I don't need to mark everything as experimental
-    private interface UiVMState<S : UiViewState> {
-
-        @CheckResult
-        fun get(): S
-
-        fun set(value: S)
-
-        suspend fun onChange(withState: suspend (state: S) -> Unit)
-    }
-
-    private class UiVMStateImpl<S : UiViewState>(
-        initialState: S
-    ) : UiVMState<S> {
+    private class UiVMState<S : UiViewState>(initialState: S) {
 
         private val flow by lazy { MutableStateFlow(initialState) }
 
-        override fun get(): S {
+        @CheckResult
+        fun get(): S {
             return flow.value
         }
 
-        override fun set(value: S) {
+        fun set(value: S) {
             flow.value = value
         }
 
-        override suspend fun onChange(withState: suspend (state: S) -> Unit) {
+        suspend fun onChange(withState: suspend (state: S) -> Unit) {
             flow.collect(withState)
         }
     }

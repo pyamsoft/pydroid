@@ -27,9 +27,12 @@ import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
-    initialState: S,
-    debug: Boolean
-) : UiStateViewModel<S>(initialState, debug), SaveableState {
+    initialState: S
+) : UiStateViewModel<S>(initialState), SaveableState {
+
+    @Suppress("UNUSED_PARAMETER")
+    @Deprecated("\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.")
+    protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
     private val onBindEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onBindEvents by onBindEventDelegate

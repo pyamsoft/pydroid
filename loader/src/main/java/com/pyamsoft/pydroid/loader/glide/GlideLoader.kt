@@ -47,17 +47,17 @@ internal abstract class GlideLoader<T : Any> protected constructor(
 
             override fun onLoadFailed(errorDrawable: Drawable?) {
                 imageView.setImageDrawable(null)
-                errorAction?.invoke()
+                notifyError()
             }
 
             override fun onResourceLoading(placeholder: Drawable?) {
-                startAction?.invoke()
+                notifyLoading()
             }
 
             override fun onResourceReady(resource: T, transition: Transition<in T>?) {
-                val mutated: T = mutator?.invoke(mutateImage(resource)) ?: resource
+                val mutated: T = executeMutator(mutateImage(resource))
                 setImage(imageView, mutated)
-                completeAction?.invoke(mutated)
+                notifySuccess(mutated)
             }
         })
     }
@@ -71,17 +71,17 @@ internal abstract class GlideLoader<T : Any> protected constructor(
 
             override fun onLoadFailed(errorDrawable: Drawable?) {
                 target.clear()
-                errorAction?.invoke()
+                notifyError()
             }
 
             override fun onLoadStarted(placeholder: Drawable?) {
-                startAction?.invoke()
+                notifyLoading()
             }
 
             override fun onResourceReady(resource: T, transition: Transition<in T>?) {
-                val mutated: T = mutator?.invoke(mutateImage(resource)) ?: resource
+                val mutated: T = executeMutator(mutateImage(resource))
                 target.setImage(mutated)
-                completeAction?.invoke(mutated)
+                notifySuccess(mutated)
             }
         })
     }

@@ -19,26 +19,60 @@ package com.pyamsoft.pydroid.loader
 import android.widget.ImageView
 import androidx.annotation.CheckResult
 
-interface Loader<T : Any> {
+/**
+ * The Loader interface which deals with how to format image loading requests into a specific backend
+ */
+public interface Loader<T : Any> {
 
+    /**
+     * Called when the request begins running
+     *
+     * Not guaranteed in immediate() mode
+     */
     @CheckResult
-    fun onRequest(action: () -> Unit): Loader<T>
+    public fun onRequest(action: () -> Unit): Loader<T>
 
+    /**
+     * Called when an error occurs during loading
+     *
+     * Not guaranteed in immediate() mode
+     */
     @CheckResult
-    fun onError(action: () -> Unit): Loader<T>
+    public fun onError(action: () -> Unit): Loader<T>
 
+    /**
+     * Called when the resource is loaded into the target
+     *
+     * Not guaranteed in immediate() mode
+     */
     @CheckResult
-    fun onLoaded(action: (T) -> Unit): Loader<T>
+    public fun onLoaded(action: (T) -> Unit): Loader<T>
 
+    /**
+     * Mutate the loaded resource
+     *
+     * Not guaranteed in immediate() mode
+     */
     @CheckResult
-    fun mutate(action: (T) -> T): Loader<T>
+    public fun mutate(action: (T) -> T): Loader<T>
 
+    /**
+     * Load the resource into an ImageView
+     */
     @CheckResult
-    fun into(imageView: ImageView): Loaded
+    public fun into(imageView: ImageView): Loaded
 
+    /**
+     * Load the resource into a target
+     */
     @CheckResult
-    fun into(target: ImageTarget<T>): Loaded
+    public fun into(target: ImageTarget<T>): Loaded
 
+    /**
+     * Perform all loading work in a blocking manner and return the resource immediately
+     *
+     * Not all ImageLoader parameters support immediate loading and will return null
+     */
     @CheckResult
-    fun immediate(): T?
+    public fun immediate(): T?
 }

@@ -19,20 +19,62 @@ package com.pyamsoft.pydroid.loader
 import android.widget.ImageView
 import androidx.annotation.CheckResult
 
-abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
+/**
+ * The base loader class. Specific implementations are backed by an image loader backend, like
+ * Glide, Picasso, or Coil
+ */
+public abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 
-    protected var startAction: (() -> Unit)? = null
-    protected var errorAction: (() -> Unit)? = null
-    protected var completeAction: ((T) -> Unit)? = null
-    protected var mutator: ((T) -> T)? = null
+    private var startAction: (() -> Unit)? = null
+    private var errorAction: (() -> Unit)? = null
+    private var completeAction: ((T) -> Unit)? = null
+    private var mutator: ((T) -> T)? = null
 
+    /**
+     * Mutate a resource and return the mutated copy
+     */
     @CheckResult
     protected abstract fun mutateImage(resource: T): T
 
+    /**
+     * Set an image resource onto an ImageView
+     */
     protected abstract fun setImage(view: ImageView, image: T)
 
+    /**
+     * Load a resource immediately via blocking call
+     */
     @CheckResult
     protected abstract fun immediateResource(): T?
+
+    /**
+     * Run a configured loading callback
+     */
+    protected fun notifyLoading() {
+        startAction?.invoke()
+    }
+
+    /**
+     * Run a configured error callback
+     */
+    protected fun notifyError() {
+        errorAction?.invoke()
+    }
+
+    /**
+     * Run a configured completion callback
+     */
+    protected fun notifySuccess(result: T) {
+        completeAction?.invoke(result)
+    }
+
+    /**
+     * Execute a configured mutator, or the identity if none exists
+     */
+    @CheckResult
+    protected fun executeMutator(data: T): T {
+        return mutator?.invoke(data) ?: data
+    }
 
     final override fun onRequest(action: () -> Unit): Loader<T> {
         return this.also { it.startAction = action }
@@ -51,18 +93,18 @@ abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
     }
 
     final override fun immediate(): T? {
-        startAction?.invoke()
+        notifyLoading()
         try {
             val resource: T? = immediateResource()
             if (resource == null) {
-                errorAction?.invoke()
+                notifyError()
             } else {
-                val mutated = mutator?.invoke(mutateImage(resource)) ?: resource
-                completeAction?.invoke(mutated)
+                val mutated = executeMutator(mutateImage(resource))
+                notifySuccess(mutated)
                 return mutated
             }
         } catch (e: Exception) {
-            errorAction?.invoke()
+            notifyError()
         }
 
         return null

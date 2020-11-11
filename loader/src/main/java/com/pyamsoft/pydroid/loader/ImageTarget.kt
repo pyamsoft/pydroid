@@ -16,9 +16,18 @@
 
 package com.pyamsoft.pydroid.loader
 
-interface ImageTarget<T : Any> {
+/**
+ * An ImageTarget is anything that an ImageLoader can load images into
+ */
+public interface ImageTarget<T : Any> {
 
-    fun clear()
+    /**
+     * Clear the image target
+     */
+    public fun clear()
 
-    fun setImage(image: T)
+    /**
+     * Load the image into the image target
+     */
+    public fun setImage(image: T)
 }

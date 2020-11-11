@@ -19,14 +19,25 @@ package com.pyamsoft.pydroid.loader
 import android.content.Context
 import androidx.annotation.CheckResult
 
-class LoaderModule(params: Parameters) {
+/**
+ * LoaderModule is a self contained class which exposes the public API of the library in
+ * an expected format. You do not need to consume the library via the module, but it is a
+ * quick easy way to get started.
+ */
+public class LoaderModule(params: Parameters) {
 
     private val impl = ImageLoaderImpl(params.context.applicationContext)
 
+    /**
+     * Provide an ImageLoader instance for public consumption
+     */
     @CheckResult
-    fun provideLoader(): ImageLoader {
+    public fun provideLoader(): ImageLoader {
         return impl
     }
 
-    data class Parameters(internal val context: Context)
+    /**
+     * LoaderModule parameters
+     */
+    public data class Parameters(internal val context: Context)
 }

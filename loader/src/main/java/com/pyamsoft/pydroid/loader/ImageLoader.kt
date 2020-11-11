@@ -21,17 +21,35 @@ import android.graphics.drawable.Drawable
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 
-interface ImageLoader {
+/**
+ * Generic ImageLoader
+ *
+ * Loads image resources in the background and loads data into ImageViews or other containers once
+ * the image is ready
+ */
+public interface ImageLoader {
 
+    /**
+     * Load a drawable resource
+     */
     @CheckResult
-    fun load(@DrawableRes resource: Int): Loader<Drawable>
+    public fun load(@DrawableRes resource: Int): Loader<Drawable>
 
+    /**
+     * Load a url resource
+     */
     @CheckResult
-    fun load(url: String): Loader<Drawable>
+    public fun load(url: String): Loader<Drawable>
 
+    /**
+     * Load a byte array resource
+     */
     @CheckResult
-    fun load(data: ByteArray): Loader<Bitmap>
+    public fun load(data: ByteArray): Loader<Bitmap>
 
+    /**
+     * Load a bitmap resource
+     */
     @CheckResult
-    fun load(bitmap: Bitmap): Loader<Bitmap>
+    public fun load(bitmap: Bitmap): Loader<Bitmap>
 }

@@ -21,11 +21,6 @@ import android.util.Log
 internal object Logger {
 
     @JvmStatic
-    fun tag(tag: String): Logging {
-        return Logging(tag)
-    }
-
-    @JvmStatic
     fun tag(instance: Any): Logging {
         return Logging(instance::class.java.simpleName)
     }
@@ -35,28 +30,8 @@ internal class Logging internal constructor(tag: String) {
 
     private val tag = "pydroid-autopsy[$tag]"
 
-    fun d(throwable: Throwable? = null, message: String) {
-        Log.d(tag, message, throwable)
-    }
-
     fun d(message: String) {
         Log.d(tag, message)
-    }
-
-    fun w(throwable: Throwable? = null, message: String) {
-        Log.w(tag, message, throwable)
-    }
-
-    fun w(message: String) {
-        Log.w(tag, message)
-    }
-
-    fun i(throwable: Throwable? = null, message: String) {
-        Log.i(tag, message, throwable)
-    }
-
-    fun i(message: String) {
-        Log.i(tag, message)
     }
 
     fun e(throwable: Throwable? = null, message: String) {

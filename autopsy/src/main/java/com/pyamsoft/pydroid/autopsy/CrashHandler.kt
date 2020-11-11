@@ -34,6 +34,8 @@ internal data class CrashHandler internal constructor(
             logger.e(throwable, "Error during exception processing")
         } finally {
             logger.d("Completed exception processing")
+
+            // NOTE: Sometimes this exit will occur before the Activity launches correctly.
             exitProcess(1)
         }
     }

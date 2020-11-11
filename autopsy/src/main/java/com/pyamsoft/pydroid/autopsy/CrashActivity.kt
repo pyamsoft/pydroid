@@ -31,6 +31,11 @@ import androidx.annotation.ColorRes
 import com.pyamsoft.pydroid.autopsy.databinding.ActivityCrashBinding
 import kotlin.system.exitProcess
 
+/**
+ * The screen that will show up on device when a crash occurs
+ *
+ * Will also log the crash to logcat
+ */
 internal class CrashActivity internal constructor() : Activity() {
 
     private val logger = Logger.tag(this)

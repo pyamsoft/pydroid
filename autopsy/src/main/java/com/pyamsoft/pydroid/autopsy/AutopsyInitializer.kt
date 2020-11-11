@@ -21,6 +21,11 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 
+/**
+ * Automatically initialized itself on startup via ContentProvider in AndroidManifest
+ *
+ * Overrides the default thread exception handler to instead launch the CrashActivity
+ */
 internal class AutopsyInitializer internal constructor() : ContentProvider() {
     private val logger = Logger.tag(this)
 

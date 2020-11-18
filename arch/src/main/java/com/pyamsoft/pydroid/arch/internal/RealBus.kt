@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.EventBus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -74,8 +75,9 @@ internal class RealBus<T : Any> internal constructor(
     @CheckResult
     override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
         withContext(context) {
-            emitQueuedEvents { emitter(it) }
-            bus.collect(emitter)
+            bus
+                .onSubscription { emitQueuedEvents { emit(it) } }
+                .collect(emitter)
         }
     }
 }

@@ -41,7 +41,7 @@ interface EventBus<T : Any> : EventConsumer<T> {
         )
         fun <T : Any> create(
             context: CoroutineContext = EmptyCoroutineContext
-        ): EventBus<T> = create(emitOnlyWhenActive = false, context)
+        ): EventBus<T> = create(emitOnlyWhenActive = false, context = context)
 
         /**
          * The EventBus will event the event in the following cases
@@ -55,7 +55,8 @@ interface EventBus<T : Any> : EventConsumer<T> {
         @JvmOverloads
         fun <T : Any> create(
             emitOnlyWhenActive: Boolean,
+            replayCount: Int = 0,
             context: CoroutineContext = EmptyCoroutineContext
-        ): EventBus<T> = RealBus(emitOnlyWhenActive, context)
+        ): EventBus<T> = RealBus(emitOnlyWhenActive, replayCount, context)
     }
 }

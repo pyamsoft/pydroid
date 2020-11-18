@@ -28,11 +28,12 @@ import kotlin.coroutines.CoroutineContext
 
 internal class RealBus<T : Any> internal constructor(
     private val emitOnlyWhenActive: Boolean,
+    private val replayCount: Int,
     private val context: CoroutineContext
 ) : EventBus<T> {
 
     // Backing bus
-    private val bus by lazy { MutableSharedFlow<T>() }
+    private val bus by lazy { MutableSharedFlow<T>(replay = replayCount) }
 
     // Keep around items which have not been emitted yet because of no active subscribers
     private val mutex = Mutex()

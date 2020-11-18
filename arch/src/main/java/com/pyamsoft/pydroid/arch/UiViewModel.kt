@@ -20,6 +20,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -69,8 +70,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         return viewModelScope.launch(context = Dispatchers.Main) {
 
             // Bind ViewModel
-            queueInOrder { bindControllerEvents(onControllerEvent) }
-            queueInOrder { bindViewEvents(views.asIterable()) }
+            bindControllerEvents(onControllerEvent)
+            bindViewEvents(views.asIterable())
 
             // Use launch here so that we re-claim the Main context and have these run after the
             // controller and view events are finished binding
@@ -181,8 +182,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    private suspend fun bindViewEvents(views: Iterable<UiView<S, V>>) {
-        withContext(context = Dispatchers.IO) {
+    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>) {
+        launch(context = Dispatchers.IO) {
             views.forEach { view ->
                 view.onViewEvent { handleViewEvent(it) }
                 if (view is BaseUiView<S, V, *>) {
@@ -195,8 +196,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         }
     }
 
-    private suspend inline fun bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
-        withContext(context = Dispatchers.IO) {
+    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
+        launch(context = Dispatchers.IO) {
             controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
                 withContext(context = Dispatchers.Main) {
@@ -318,7 +319,6 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
 
         onClearEvents.add(onTeardown)
     }
-
 
     /**
      * Use this to run an event after UiViewModel onCleared has successfully finished.

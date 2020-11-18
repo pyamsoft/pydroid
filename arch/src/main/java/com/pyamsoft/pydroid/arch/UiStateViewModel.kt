@@ -72,7 +72,7 @@ abstract class UiStateViewModel<S : UiViewState> protected constructor(
     // internal instead of protected so that only callers in the module can use this
     internal fun CoroutineScope.bindState(renderables: Array<out Renderable<S>>) {
         // Listen for any further state changes at this point
-        queueInOrder { bindStateEvents { onRender(renderables, it) } }
+        bindStateEvents { onRender(renderables, it) }
 
         // Render the latest or initial state
         queueInOrder {
@@ -153,8 +153,8 @@ abstract class UiStateViewModel<S : UiViewState> protected constructor(
         onRender(state)
     }
 
-    private suspend inline fun bindStateEvents(crossinline onRender: (S) -> Unit) {
-        withContext(context = Dispatchers.IO) {
+    private inline fun CoroutineScope.bindStateEvents(crossinline onRender: (S) -> Unit) {
+        launch(context = Dispatchers.IO) {
             state.onChange { state ->
                 withContext(context = Dispatchers.Main) {
                     handleStateChange(state) { onRender(it) }

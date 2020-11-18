@@ -56,8 +56,8 @@ buildscript {
 		materialDesign = "1.2.1"
 
 		// Us
-		cachify = "0.0.16-SNAPSHOT"
-		highlander = "0.0.14-SNAPSHOT"
+		cachify = "0.0.16"
+		highlander = "0.0.14"
 
 		// Network
 		moshi = "1.11.0"
@@ -83,7 +83,7 @@ buildscript {
 		classpath "com.android.tools.build:gradle:$agp_version"
 
 		// Gradle version checker
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.33.0'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.36.0'
 
 		// To publish
 		classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"

@@ -30,10 +30,8 @@ internal class PrivacyViewModel internal constructor(
 ) {
 
     init {
-        doOnBind {
-            viewModelScope.launch(context = Dispatchers.Default) {
-                PrivacyEventBus.onEvent { publish(ViewExternalPolicy(it.url)) }
-            }.also { doOnUnbind { it.cancel() } }
+        viewModelScope.launch(context = Dispatchers.Default) {
+            PrivacyEventBus.onEvent { publish(ViewExternalPolicy(it.url)) }
         }
     }
 

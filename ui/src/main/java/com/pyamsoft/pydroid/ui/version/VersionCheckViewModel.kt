@@ -52,13 +52,11 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     init {
-        doOnBind {
-            viewModelScope.launch(context = Dispatchers.Default) {
-                interactor.watchForDownloadComplete {
-                    Timber.d("App update download ready!")
-                    publish(VersionCheckControllerEvent.ShowUpgrade)
-                }
-            }.also { doOnUnbind { it.cancel() } }
+        viewModelScope.launch(context = Dispatchers.Default) {
+            interactor.watchForDownloadComplete {
+                Timber.d("App update download ready!")
+                publish(VersionCheckControllerEvent.ShowUpgrade)
+            }
         }
     }
 

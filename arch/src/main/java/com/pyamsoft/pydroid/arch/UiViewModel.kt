@@ -40,8 +40,11 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     private val onBindEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onBindEvents by onBindEventDelegate
 
-    private val onTeardownEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
-    private val onTeardownEvents by onTeardownEventDelegate
+    private val onUnbindEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
+    private val onUnbindEvents by onUnbindEventDelegate
+
+    private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
+    private val onClearEvents by onClearEventDelegate
 
     private val onSaveStateEventDelegate =
         lazy(NONE) { mutableSetOf<(UiBundleWriter, S) -> Unit>() }
@@ -86,6 +89,22 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
                 // Bind state
                 bindState(views)
             }
+        }.also { job -> job.invokeOnCompletion { onUnbind() } }
+    }
+
+    /**
+     * Run onBind counter teardown hooks onUnbind
+     */
+    @UiThread
+    private fun onUnbind() {
+        // Only run the cleanup hooks if they exist, otherwise we don't need to init the memory
+        if (onUnbindEventDelegate.isInitialized()) {
+
+            // Call cleanup hooks in random order
+            onUnbindEvents.forEach { it() }
+
+            // Clear the init hooks list to free up memory
+            onUnbindEvents.clear()
         }
     }
 
@@ -129,13 +148,13 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     final override fun onCleared() {
         Enforcer.assertOnMainThread()
 
-        if (onTeardownEventDelegate.isInitialized()) {
+        if (onClearEventDelegate.isInitialized()) {
 
             // Call teardown hooks in random order
-            onTeardownEvents.forEach { it() }
+            onClearEvents.forEach { it() }
 
             // Clear the teardown hooks list to free up memory
-            onTeardownEvents.clear()
+            onClearEvents.clear()
         }
 
         // If there are any init event hooks hanging around, clear them out too
@@ -147,6 +166,8 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         if (onSaveStateEventDelegate.isInitialized()) {
             onSaveStateEvents.clear()
         }
+
+        // Don't clear unbind hooks here since they should be cleared via the completion hook on the bind event
     }
 
     /**
@@ -225,10 +246,32 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    protected fun doOnBind(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
+    protected fun doOnBind(onBind: (savedInstanceState: UiBundleReader) -> Unit) {
         Enforcer.assertOnMainThread()
 
-        onBindEvents.add(onInit)
+        onBindEvents.add(onBind)
+    }
+
+    /**
+     * Use this to run an event after UiViewModel unbinding has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnBind { savedInstanceState ->
+     *         val listener = ...
+     *         doOnUnbind {
+     *           listener.cancel()
+     *         }
+     *     }
+     * }
+     *
+     * NOTE: Not thread safe. Main thread only for the time being
+     */
+    @UiThread
+    protected fun doOnUnbind(onUnbind: () -> Unit) {
+        Enforcer.assertOnMainThread()
+        onUnbindEvents.add(onUnbind)
     }
 
     /**
@@ -253,7 +296,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
     }
 
     /**
-     * Use this to run an event after UiViewModel teardown has successfully finished.
+     * Use this to run an event after UiViewModel onCleared has successfully finished.
      *
      * This is generally used in something like the constructor
      *
@@ -266,10 +309,35 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
+    @Deprecated(
+        message = "Use doOnCleared",
+        replaceWith = ReplaceWith(expression = "doOnCleared(onTeardown)")
+    )
     protected fun doOnTeardown(onTeardown: () -> Unit) {
         Enforcer.assertOnMainThread()
 
-        onTeardownEvents.add(onTeardown)
+        onClearEvents.add(onTeardown)
+    }
+
+
+    /**
+     * Use this to run an event after UiViewModel onCleared has successfully finished.
+     *
+     * This is generally used in something like the constructor
+     *
+     * init {
+     *     doOnCleared {
+     *         ...
+     *     }
+     * }
+     *
+     * NOTE: Not thread safe. Main thread only for the time being
+     */
+    @UiThread
+    protected fun doOnCleared(onTeardown: () -> Unit) {
+        Enforcer.assertOnMainThread()
+
+        onClearEvents.add(onTeardown)
     }
 
     protected abstract fun handleViewEvent(event: V)

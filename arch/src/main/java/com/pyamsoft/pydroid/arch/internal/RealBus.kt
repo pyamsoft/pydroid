@@ -20,9 +20,8 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.EventBus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
@@ -31,25 +30,52 @@ internal class RealBus<T : Any> internal constructor(
     private val context: CoroutineContext
 ) : EventBus<T> {
 
+    // Backing bus
     private val bus by lazy { MutableSharedFlow<T>() }
 
-    private suspend fun emit(event: T) {
-        bus.emit(event)
+    // Keep around items which have not been emitted yet because of no active subscribers
+    private val mutex = Mutex()
+    private val waitingQueue by lazy { mutableListOf<T>() }
+
+    @CheckResult
+    private fun isBusReady(): Boolean {
+        return bus.subscriptionCount.value > 0
     }
 
-    override suspend fun send(event: T) = withContext(context) {
+    private suspend fun sendOrQueue(event: T) {
+        mutex.withLock {
+            if (isBusReady()) {
+                bus.emit(event)
+            } else {
+                waitingQueue.add(event)
+            }
+        }
+    }
+
+    override suspend fun send(event: T) {
+        withContext(context) {
+            if (emitOnlyWhenActive) {
+                sendOrQueue(event)
+            } else {
+                bus.emit(event)
+            }
+        }
+    }
+
+    private suspend inline fun emitQueuedEvents(emitter: (event: T) -> Unit) {
         if (emitOnlyWhenActive) {
-            bus.subscriptionCount.map { it > 0 }
-                .distinctUntilChanged()
-                .filter { it }
-                .collect { emit(event) }
-        } else {
-            emit(event)
+            mutex.withLock {
+                waitingQueue.forEach(emitter)
+                waitingQueue.clear()
+            }
         }
     }
 
     @CheckResult
-    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) = withContext(context) {
-        bus.collect(emitter)
+    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
+        withContext(context) {
+            emitQueuedEvents { emitter(it) }
+            bus.collect(emitter)
+        }
     }
 }

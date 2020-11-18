@@ -27,6 +27,11 @@ interface EventBus<T : Any> : EventConsumer<T> {
 
     companion object {
 
+        /**
+         * The EventBus will event the event in the following cases
+         *
+         * The event will always emit immediately
+         */
         @CheckResult
         @JvmStatic
         @JvmOverloads
@@ -36,18 +41,18 @@ interface EventBus<T : Any> : EventConsumer<T> {
         )
         fun <T : Any> create(
             context: CoroutineContext = EmptyCoroutineContext
-        ): EventBus<T> = RealBus(emitOnlyWhenActive = false, context)
+        ): EventBus<T> = create(emitOnlyWhenActive = false, context)
 
+        /**
+         * The EventBus will event the event in the following cases
+         *
+         * If [emitOnlyWhenActive] is false, the event will always emit immediately
+         * If [emitOnlyWhenActive] is true, the event will be emitted if/once a subscriber is listening
+         * on the bus
+         */
         @CheckResult
         @JvmStatic
         @JvmOverloads
-            /**
-             * The EventBus will event the event in the following cases
-             *
-             * If [emitOnlyWhenActive] is false, the event will always emit immediately
-             * If [emitOnlyWhenActive] is true, the event will be emitted if/once a subscriber is listening
-             * on the bus
-             */
         fun <T : Any> create(
             emitOnlyWhenActive: Boolean,
             context: CoroutineContext = EmptyCoroutineContext

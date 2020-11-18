@@ -257,7 +257,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     @CallSuper
     protected open fun onDarkThemeClicked(mode: Theming.Mode) {
         Timber.d("Dark theme set: $mode")
-        requireActivity().recreate()
     }
 
     /**

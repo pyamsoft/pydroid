@@ -59,9 +59,7 @@ internal class AppSettingsViewModel internal constructor(
         return when (event) {
             is AppSettingsViewEvent.MoreApps -> seeMoreApps()
             is AppSettingsViewEvent.Hyperlink -> publish(
-                AppSettingsControllerEvent.NavigateHyperlink(
-                    event.hyperlinkIntent
-                )
+                AppSettingsControllerEvent.NavigateHyperlink(event.hyperlinkIntent)
             )
             is AppSettingsViewEvent.RateApp -> publish(AppSettingsControllerEvent.NavigateRateApp)
             is AppSettingsViewEvent.ViewLicense -> publish(AppSettingsControllerEvent.ShowLicense)

@@ -58,7 +58,7 @@ internal class VersionCheckViewModel internal constructor(
                     Timber.d("App update download ready!")
                     publish(VersionCheckControllerEvent.ShowUpgrade)
                 }
-            }
+            }.also { doOnTeardown { it.cancel() } }
         }
     }
 

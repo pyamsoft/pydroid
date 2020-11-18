@@ -36,9 +36,7 @@ internal class RatingViewModel internal constructor(
     }
 
     init {
-        doOnBind {
-            load(false)
-        }
+        load(false)
     }
 
     private fun handleRatingLaunch(launcher: AppReviewLauncher) {

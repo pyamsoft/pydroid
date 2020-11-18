@@ -52,9 +52,7 @@ internal class AppSettingsViewModel internal constructor(
     }
 
     init {
-        doOnBind {
-            viewModelScope.launch(context = Dispatchers.Default) { otherAppsRunner.call(false) }
-        }
+        viewModelScope.launch(context = Dispatchers.Default) { otherAppsRunner.call(false) }
     }
 
     override fun handleViewEvent(event: AppSettingsViewEvent) {

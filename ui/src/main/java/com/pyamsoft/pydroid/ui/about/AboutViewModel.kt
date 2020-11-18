@@ -57,9 +57,7 @@ internal class AboutViewModel internal constructor(
     }
 
     init {
-        doOnBind {
-            loadLicenses()
-        }
+        loadLicenses()
     }
 
     override fun handleViewEvent(event: AboutViewEvent) {

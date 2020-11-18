@@ -40,9 +40,7 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     init {
-        doOnBind {
-            loadApps()
-        }
+        loadApps()
     }
 
     override fun handleViewEvent(event: OtherAppsViewEvent) {

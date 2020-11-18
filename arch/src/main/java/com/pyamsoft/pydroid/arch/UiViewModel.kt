@@ -212,6 +212,10 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
      *
      * This is generally used in something like the constructor
      *
+     * You will want to use this when you are running code which uses publish()
+     * as this will guarantee that your Controller is bound at the time of calling,
+     * or if you are running code each time this ViewModel is bound to a View.
+     *
      * init {
      *     doOnBind { savedInstanceState ->
      *         ...

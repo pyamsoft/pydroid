@@ -29,7 +29,7 @@ import kotlin.LazyThreadSafetyMode.NONE
 abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) : Renderable<S>, SaveableState {
 
-    private val viewEventBus = EventBus.create<V>()
+    private val viewEventBus = EventBus.create<V>(emitOnlyWhenActive = true)
 
     private val onInflateEventDelegate = lazy(NONE) { mutableListOf<(UiBundleReader) -> Unit>() }
     private val onInflateEvents by onInflateEventDelegate

@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 
-internal val PrivacyEventBus by lazy { EventBus.create<PrivacyEvents>() }
+internal val PrivacyEventBus by lazy { EventBus.create<PrivacyEvents>(emitOnlyWhenActive = true) }
 
 internal data class PrivacyViewState internal constructor(
     val throwable: Throwable?

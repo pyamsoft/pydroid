@@ -20,22 +20,36 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.EventBus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 internal class RealBus<T : Any> internal constructor(
+    private val emitOnlyWhenActive: Boolean,
     private val context: CoroutineContext
 ) : EventBus<T> {
 
     private val bus by lazy { MutableSharedFlow<T>() }
 
-    override suspend fun send(event: T) = withContext(context = context) {
+    private suspend fun emit(event: T) {
         bus.emit(event)
     }
 
-    @CheckResult
-    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) =
-        withContext(context = context) {
-            bus.collect(emitter)
+    override suspend fun send(event: T) = withContext(context) {
+        if (emitOnlyWhenActive) {
+            bus.subscriptionCount.map { it > 0 }
+                .distinctUntilChanged()
+                .filter { it }
+                .collect { emit(event) }
+        } else {
+            emit(event)
         }
+    }
+
+    @CheckResult
+    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) = withContext(context) {
+        bus.collect(emitter)
+    }
 }

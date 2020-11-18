@@ -85,7 +85,7 @@ public interface Notifier {
         @CheckResult
         @Deprecated(
             message = "Use createDefault",
-            replaceWith = ReplaceWith("createDefault(context, dispatchers)")
+            replaceWith = ReplaceWith("Notifier.createDefault(context, dispatchers)")
         )
         public fun create(context: Context, dispatchers: Set<NotifyDispatcher<*>>): Notifier {
             return createDefault(context, dispatchers)

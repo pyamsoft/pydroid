@@ -26,6 +26,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S
@@ -51,7 +52,7 @@ abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEve
         lazy(NONE) { mutableSetOf<(UiBundleWriter, S) -> Unit>() }
     private val onSaveStateEvents by onSaveStateEventDelegate
 
-    private val controllerEventBus = EventBus.create<C>()
+    private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
 
     // Need PublishedApi so createComponent can be inline
     @UiThread

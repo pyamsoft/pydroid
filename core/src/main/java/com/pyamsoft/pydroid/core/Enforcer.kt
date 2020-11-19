@@ -21,7 +21,6 @@ import androidx.annotation.CheckResult
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 
-
 /**
  * Interface for the enforcer
  */
@@ -36,7 +35,6 @@ public interface Associate {
      * Throws an exception if the current thread is not the Main or UI thread
      */
     public fun assertOnMainThread()
-
 }
 
 /**
@@ -68,7 +66,6 @@ internal class Reggie : Associate {
             throw AssertionError("This operation must be ON the Main/UI thread!")
         }
     }
-
 }
 
 /**

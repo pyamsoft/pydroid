@@ -18,26 +18,42 @@ package com.pyamsoft.pydroid.core
 
 import android.os.Looper
 import androidx.annotation.CheckResult
+import androidx.annotation.VisibleForTesting
+
 
 /**
- * Enforce expected threading contexts
+ * Interface for the enforcer
  */
-public object Enforcer {
-
-    private val mainLooper by lazy { Looper.getMainLooper() }
+public interface Associate {
 
     /**
-     * Check if the current thread is the Main or UI thread
+     * Throws an exception if the current thread is the Main or UI thread
      */
+    public fun assertOffMainThread()
+
+    /**
+     * Throws an exception if the current thread is not the Main or UI thread
+     */
+    public fun assertOnMainThread()
+
+}
+
+/**
+ * Reggie is the normal enforcer, he expects correctly threaded contexts of execution
+ */
+internal class Reggie : Associate {
+
+    private val mainLooper by lazy { requireNotNull(Looper.getMainLooper()) }
+
     @CheckResult
-    public fun isMainThread(): Boolean {
+    private fun isMainThread(): Boolean {
         return mainLooper.thread == Thread.currentThread()
     }
 
     /**
      * Throws an exception if the current thread is the Main or UI thread
      */
-    public fun assertOffMainThread() {
+    override fun assertOffMainThread() {
         if (isMainThread()) {
             throw AssertionError("This operation must be OFF the Main/UI thread!")
         }
@@ -46,9 +62,34 @@ public object Enforcer {
     /**
      * Throws an exception if the current thread is not the Main or UI thread
      */
-    public fun assertOnMainThread() {
+    override fun assertOnMainThread() {
         if (!isMainThread()) {
             throw AssertionError("This operation must be ON the Main/UI thread!")
         }
+    }
+
+}
+
+/**
+ * Enforce expected threading contexts
+ */
+public object Enforcer : Associate {
+
+    private var associate: Associate = Reggie()
+
+    override fun assertOffMainThread() {
+        return associate.assertOffMainThread()
+    }
+
+    override fun assertOnMainThread() {
+        return associate.assertOnMainThread()
+    }
+
+    /**
+     * Assign a different associate for tests
+     */
+    @VisibleForTesting
+    internal fun setAssociate(associate: Associate) {
+        this.associate = associate
     }
 }

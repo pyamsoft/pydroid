@@ -91,7 +91,7 @@ internal interface PYDroidComponent {
             internal val privacyPolicyUrl: String,
             internal val termsConditionsUrl: String,
             internal val version: Int,
-            internal val debug: PYDroid.Parameters.DebugParameters,
+            internal val debug: PYDroid.DebugParameters,
         )
     }
 

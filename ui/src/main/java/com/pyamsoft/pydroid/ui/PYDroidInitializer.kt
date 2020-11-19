@@ -49,7 +49,7 @@ internal data class PYDroidInitializer internal constructor(
                     privacyPolicyUrl = params.privacyPolicyUrl,
                     termsConditionsUrl = params.termsConditionsUrl,
                     version = params.version,
-                    debug = PYDroid.Parameters.DebugParameters(
+                    debug = PYDroid.DebugParameters(
                         enabled = enabled,
                         upgradeAvailable = params.debug?.upgradeAvailable ?: false
                     )

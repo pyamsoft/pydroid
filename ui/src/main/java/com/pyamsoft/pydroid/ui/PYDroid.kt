@@ -93,11 +93,10 @@ object PYDroid {
         internal val termsConditionsUrl: String,
         internal val version: Int,
         internal val debug: DebugParameters? = null
-    ) {
+    )
 
-        data class DebugParameters(
-            internal val enabled: Boolean,
-            internal val upgradeAvailable: Boolean
-        )
-    }
+    data class DebugParameters(
+        internal val enabled: Boolean,
+        internal val upgradeAvailable: Boolean
+    )
 }

@@ -92,6 +92,12 @@ object PYDroid {
         internal val privacyPolicyUrl: String,
         internal val termsConditionsUrl: String,
         internal val version: Int,
-        internal val debug: Boolean? = null
-    )
+        internal val debug: DebugParameters? = null
+    ) {
+
+        data class DebugParameters(
+            internal val enabled: Boolean,
+            internal val upgradeAvailable: Boolean
+        )
+    }
 }

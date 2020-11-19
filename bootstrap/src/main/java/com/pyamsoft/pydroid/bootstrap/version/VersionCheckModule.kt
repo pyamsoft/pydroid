@@ -29,7 +29,12 @@ class VersionCheckModule(params: Parameters) {
     private val impl: VersionInteractorImpl
 
     init {
-        val updater = PlayStoreAppUpdater(params.context, params.debug, params.version)
+        val updater = PlayStoreAppUpdater(
+            params.isFakeUpgradeChecker,
+            params.context,
+            params.version,
+            params.isFakeUpgradeAvailable,
+        )
         val network = VersionInteractorNetwork(updater)
         impl = VersionInteractorImpl(updater, createCache(network))
     }
@@ -53,6 +58,7 @@ class VersionCheckModule(params: Parameters) {
     data class Parameters(
         internal val context: Context,
         internal val version: Int,
-        internal val debug: Boolean
+        internal val isFakeUpgradeChecker: Boolean,
+        internal val isFakeUpgradeAvailable: Boolean
     )
 }

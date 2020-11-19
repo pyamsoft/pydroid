@@ -36,15 +36,18 @@ import timber.log.Timber
 import kotlin.coroutines.resume
 
 internal class PlayStoreAppUpdater internal constructor(
+    private val isFake: Boolean,
     context: Context,
-    private val debug: Boolean,
     version: Int,
+    isFakeUpgradeAvailable: Boolean,
 ) : AppUpdater {
 
     private val manager by lazy {
-        if (debug) {
+        if (isFake) {
             FakeAppUpdateManager(context.applicationContext).apply {
-                setUpdateAvailable(version + 1)
+                if (isFakeUpgradeAvailable) {
+                    setUpdateAvailable(version + 1)
+                }
             }
         } else {
             AppUpdateManagerFactory.create(context.applicationContext)
@@ -90,7 +93,7 @@ internal class PlayStoreAppUpdater internal constructor(
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
-            if (debug) {
+            if (isFake) {
                 Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
                 delay(2000L)
             }

@@ -30,12 +30,12 @@ import timber.log.Timber
 import kotlin.coroutines.resume
 
 internal class PlayStoreRateMyApp internal constructor(
+    private val isFake: Boolean,
     context: Context,
-    private val debug: Boolean
 ) : RateMyApp {
 
     private val manager by lazy {
-        if (debug) {
+        if (isFake) {
             FakeReviewManager(context.applicationContext)
         } else {
             ReviewManagerFactory.create(context.applicationContext)
@@ -46,7 +46,7 @@ internal class PlayStoreRateMyApp internal constructor(
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
-            if (debug) {
+            if (isFake) {
                 Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
                 delay(2000L)
             }
@@ -61,12 +61,7 @@ internal class PlayStoreRateMyApp internal constructor(
                         Timber.d("App Review info received: $request")
                         if (request.isSuccessful) {
                             val info = request.result
-                            continuation.resume(
-                                PlayStoreAppReviewLauncher(
-                                    manager,
-                                    info,
-                                )
-                            )
+                            continuation.resume(PlayStoreAppReviewLauncher(manager, info))
                             return@addOnCompleteListener
                         }
 

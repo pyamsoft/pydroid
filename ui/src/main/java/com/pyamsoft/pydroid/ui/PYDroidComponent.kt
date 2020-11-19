@@ -85,13 +85,13 @@ internal interface PYDroidComponent {
 
         data class Parameters internal constructor(
             internal val application: Application,
-            internal val debug: Boolean,
             internal val name: CharSequence,
             internal val sourceUrl: String,
             internal val reportUrl: String,
             internal val privacyPolicyUrl: String,
             internal val termsConditionsUrl: String,
-            internal val version: Int
+            internal val version: Int,
+            internal val debug: PYDroid.Parameters.DebugParameters,
         )
     }
 
@@ -119,22 +119,23 @@ internal interface PYDroidComponent {
         private val ratingModule = RatingModule(
             RatingModule.Parameters(
                 context = context.applicationContext,
-                debug = params.debug,
+                isFake = params.debug.enabled,
                 preferences = preferences
             )
         )
 
         private val networkModule = NetworkModule(
             NetworkModule.Parameters(
-                debug = params.debug
+                addLoggingInterceptor = params.debug.enabled
             )
         )
 
         private val versionCheckModule = VersionCheckModule(
             VersionCheckModule.Parameters(
                 context = context.applicationContext,
-                debug = params.debug,
-                version = params.version
+                version = params.version,
+                isFakeUpgradeChecker = params.debug.enabled,
+                isFakeUpgradeAvailable = params.debug.upgradeAvailable
             )
         )
 

@@ -19,21 +19,22 @@ package com.pyamsoft.pydroid.bootstrap.network
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 import com.squareup.moshi.Moshi
-import javax.net.SocketFactory
 import okhttp3.Call
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.net.SocketFactory
 
 class NetworkModule(params: Parameters) {
 
     private val serviceCreator: ServiceCreator
 
     init {
-        val debug = params.debug
+        val debug = params.addLoggingInterceptor
         val callFactory = OkHttpClientLazyCallFactory(debug)
         val converterFactory = MoshiConverterFactory.create(createMoshi())
         val retrofit = createRetrofit(callFactory, converterFactory)
@@ -92,6 +93,12 @@ class NetworkModule(params: Parameters) {
 
                 @JvmStatic
                 @CheckResult
+                private fun createInterceptor(): Interceptor {
+                    return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+                }
+
+                @JvmStatic
+                @CheckResult
                 private fun createOkHttpClient(
                     debug: Boolean,
                     socketFactory: SocketFactory
@@ -100,11 +107,9 @@ class NetworkModule(params: Parameters) {
 
                     return OkHttpClient.Builder()
                         .socketFactory(socketFactory)
-                        .also {
+                        .apply {
                             if (debug) {
-                                val logging = HttpLoggingInterceptor()
-                                logging.level = HttpLoggingInterceptor.Level.BODY
-                                it.addInterceptor(logging)
+                                addInterceptor(createInterceptor())
                             }
                         }
                         .build()
@@ -114,6 +119,6 @@ class NetworkModule(params: Parameters) {
     }
 
     data class Parameters(
-        internal val debug: Boolean
+        internal val addLoggingInterceptor: Boolean
     )
 }

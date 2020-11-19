@@ -35,7 +35,10 @@ import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
-import com.pyamsoft.pydroid.ui.rating.RatingControllerEvent.LoadRating
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import timber.log.Timber
 

@@ -16,10 +16,21 @@
 
 package com.pyamsoft.pydroid.ui.theme
 
+import android.app.Activity
 import androidx.annotation.CheckResult
 
 fun interface ThemeProvider {
 
     @CheckResult
     fun isDarkTheme(): Boolean
+}
+
+@CheckResult
+fun Activity.asThemeProvider(theming: Theming): ThemeProvider {
+    return ThemeProvider { theming.isDarkTheme(this) }
+}
+
+@CheckResult
+fun Theming.asThemeProvider(activity: Activity): ThemeProvider {
+    return ThemeProvider { this.isDarkTheme(activity) }
 }

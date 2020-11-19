@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming.Mode.LIGHT
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode.SYSTEM
 
 @CheckResult
-fun String.toMode(): Mode {
+internal fun String.toMode(): Mode {
     return when (this) {
         "light" -> LIGHT
         "dark" -> DARK

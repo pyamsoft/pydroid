@@ -30,13 +30,10 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnDestroy
-import java.util.concurrent.ConcurrentHashMap
 
 object Snackbreak {
 
-    private val cache: MutableMap<Lifecycle, MutableSet<CacheEntry>> by lazy {
-        ConcurrentHashMap<Lifecycle, MutableSet<CacheEntry>>()
-    }
+    private val cache by lazy { mutableMapOf<Lifecycle, MutableSet<CacheEntry>>() }
 
     inline fun bindTo(
         owner: LifecycleOwner,

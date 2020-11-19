@@ -27,9 +27,11 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
-import com.pyamsoft.pydroid.ui.version.VersionCheckControllerEvent.LaunchUpdate
-import com.pyamsoft.pydroid.ui.version.VersionCheckControllerEvent.ShowUpgrade
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.ShowUpgrade
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.util.doOnStart
 import timber.log.Timber
 

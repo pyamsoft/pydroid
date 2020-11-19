@@ -94,7 +94,7 @@
         android:key="@string/more_apps_from_pyamsoft"
         android:title="@string/more_apps_from_pyamsoft">
 
-        <com.pyamsoft.pydroid.ui.preference.AdPreferenceCompat
+        <com.pyamsoft.pydroid.ui.internal.preference.AdPreferenceCompat
             android:key="@string/more_apps_key"
             android:summary="@string/more_apps_summary"
             android:title="@string/more_apps_title"

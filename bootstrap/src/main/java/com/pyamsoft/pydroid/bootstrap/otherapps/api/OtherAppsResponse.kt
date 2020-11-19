@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.bootstrap.otherapps.api
 import androidx.annotation.CheckResult
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.util.Collections
 
 @JsonClass(generateAdapter = true)
 internal data class OtherAppsResponse internal constructor(
@@ -29,9 +28,7 @@ internal data class OtherAppsResponse internal constructor(
 
     @CheckResult
     fun apps(): List<OtherAppsResponseEntry> {
-        return apps.let {
-            if (it == null) emptyList() else Collections.unmodifiableList(it)
-        }
+        return apps ?: emptyList()
     }
 
     // Needed so we can generate a static adapter

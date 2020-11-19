@@ -23,11 +23,10 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
-import java.util.concurrent.ConcurrentHashMap
 
 object Toaster {
 
-    private val cache: MutableMap<Lifecycle, Instance> by lazy { ConcurrentHashMap<Lifecycle, Instance>() }
+    private val cache by lazy { mutableMapOf<Lifecycle, Instance>() }
 
     @CheckResult
     fun bindTo(owner: LifecycleOwner): Instance {

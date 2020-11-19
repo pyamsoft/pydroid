@@ -17,11 +17,10 @@
 package com.pyamsoft.pydroid.bootstrap.libraries
 
 import androidx.annotation.CheckResult
-import java.util.Collections
 
 object OssLibraries {
 
-    private val libraries: MutableSet<OssLibrary> = LinkedHashSet()
+    private val libraries = mutableSetOf<OssLibrary>()
 
     // These libraries are disabled by default and should be enabled at runtime
     var usingArch = false
@@ -288,6 +287,6 @@ object OssLibraries {
             addAutopsyLibraries()
         }
 
-        return Collections.unmodifiableSet(libraries)
+        return libraries
     }
 }

@@ -25,20 +25,20 @@ import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.about.AboutComponent
-import com.pyamsoft.pydroid.ui.about.listitem.AboutItemComponent
-import com.pyamsoft.pydroid.ui.app.dialog.ThemeDialogComponent
-import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
-import com.pyamsoft.pydroid.ui.otherapps.OtherAppsComponent
-import com.pyamsoft.pydroid.ui.otherapps.listitem.OtherAppsItemComponent
-import com.pyamsoft.pydroid.ui.preference.PYDroidPreferencesImpl
-import com.pyamsoft.pydroid.ui.privacy.PrivacyComponent
-import com.pyamsoft.pydroid.ui.settings.AppSettingsComponent
-import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigComponent
-import com.pyamsoft.pydroid.ui.settings.clear.SettingsClearConfigModule
+import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
+import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
+import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogComponent
+import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
+import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemComponent
+import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
+import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyComponent
+import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
+import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigComponent
+import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigModule
 import com.pyamsoft.pydroid.ui.theme.Theming
-import com.pyamsoft.pydroid.ui.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.version.upgrade.VersionUpgradeComponent
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 
 internal interface PYDroidComponent {
 

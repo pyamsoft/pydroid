@@ -18,7 +18,8 @@ package com.pyamsoft.pydroid.ui.privacy
 
 import androidx.appcompat.widget.Toolbar
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.privacy.PrivacyEvents.ViewPrivacyPolicy
+import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEventBus
+import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEvents.ViewPrivacyPolicy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

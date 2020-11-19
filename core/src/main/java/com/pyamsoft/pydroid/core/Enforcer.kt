@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.core
 
 import android.os.Looper
 import androidx.annotation.CheckResult
+import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 
 
@@ -88,8 +89,9 @@ public object Enforcer : Associate {
     /**
      * Assign a different associate for tests
      */
-    @VisibleForTesting
-    internal fun setAssociate(associate: Associate) {
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    public fun setAssociate(associate: Associate) {
         this.associate = associate
     }
 }

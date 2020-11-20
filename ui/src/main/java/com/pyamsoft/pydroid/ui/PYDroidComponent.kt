@@ -27,18 +27,20 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
-import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogComponent
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
+import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemComponent
 import com.pyamsoft.pydroid.ui.internal.preference.PYDroidPreferencesImpl
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyComponent
+import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigComponent
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigModule
-import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface PYDroidComponent {
 
@@ -64,6 +66,9 @@ internal interface PYDroidComponent {
     fun plusVersionCheck(): VersionCheckComponent.Factory
 
     @CheckResult
+    fun plusChangeLog(): ChangeLogComponent.Factory
+
+    @CheckResult
     fun plusVersionUpgrade(): VersionUpgradeComponent
 
     @CheckResult
@@ -71,6 +76,9 @@ internal interface PYDroidComponent {
 
     @CheckResult
     fun plusThemeDialog(): ThemeDialogComponent.Factory
+
+    @CheckResult
+    fun plusRating(): RatingComponent.Factory
 
     interface Factory {
 
@@ -171,10 +179,6 @@ internal interface PYDroidComponent {
             factory = viewModelFactory
         )
 
-        private val versionCheckParams = VersionCheckComponent.Factory.Parameters(
-            factory = viewModelFactory
-        )
-
         private val privacyParams = PrivacyComponent.Factory.Parameters(
             factory = viewModelFactory
         )
@@ -184,6 +188,18 @@ internal interface PYDroidComponent {
         )
 
         private val otherAppsParams = OtherAppsComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        private val ratingParams = RatingComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        private val versionParams = VersionCheckComponent.Factory.Parameters(
+            factory = viewModelFactory
+        )
+
+        private val changeLogParams = ChangeLogComponent.Factory.Parameters(
             factory = viewModelFactory
         )
 
@@ -226,15 +242,23 @@ internal interface PYDroidComponent {
         }
 
         override fun plusVersionCheck(): VersionCheckComponent.Factory {
-            return VersionCheckComponent.Impl.FactoryImpl(versionCheckParams)
+            return VersionCheckComponent.Impl.FactoryImpl(versionParams)
         }
 
         override fun plusVersionUpgrade(): VersionUpgradeComponent {
             return VersionUpgradeComponent.Impl(viewModelFactory)
         }
 
+        override fun plusRating(): RatingComponent.Factory {
+            return RatingComponent.Impl.FactoryImpl(ratingParams)
+        }
+
         override fun plusSettings(): AppSettingsComponent.Factory {
             return AppSettingsComponent.Impl.FactoryImpl(appSettingsParams)
+        }
+
+        override fun plusChangeLog(): ChangeLogComponent.Factory {
+            return ChangeLogComponent.Impl.FactoryImpl(changeLogParams)
         }
 
         override fun moduleProvider(): ModuleProvider {

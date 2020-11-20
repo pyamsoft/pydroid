@@ -20,13 +20,9 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
-import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 
 internal interface VersionCheckComponent {
-
-    @CheckResult
-    fun plusRating(): RatingComponent.Factory
 
     fun inject(activity: VersionCheckActivity)
 
@@ -41,6 +37,7 @@ internal interface VersionCheckComponent {
         data class Parameters internal constructor(
             internal val factory: PYDroidViewModelFactory
         )
+
     }
 
     class Impl private constructor(
@@ -49,24 +46,12 @@ internal interface VersionCheckComponent {
         private val params: Factory.Parameters
     ) : VersionCheckComponent {
 
-        private val ratingParams by lazy {
-            RatingComponent.Factory.Parameters(
-                factory = params.factory
-            )
-        }
-
-        override fun plusRating(): RatingComponent.Factory {
-            return RatingComponent.Impl.FactoryImpl(ratingParams)
-        }
-
         override fun inject(activity: VersionCheckActivity) {
-            val versionView = VersionCheckView(
+            activity.versionFactory = params.factory
+            activity.versionCheckView = VersionCheckView(
                 owner,
                 snackbarRootProvider
             )
-
-            activity.versionFactory = params.factory
-            activity.versionCheckView = versionView
         }
 
         internal class FactoryImpl internal constructor(

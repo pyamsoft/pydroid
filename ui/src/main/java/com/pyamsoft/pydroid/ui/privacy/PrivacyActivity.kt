@@ -35,8 +35,10 @@ import com.pyamsoft.pydroid.util.hyperlink
 abstract class PrivacyActivity : ActivityBase() {
 
     private var stateSaver: StateSaver? = null
-    internal var privacyFactory: ViewModelProvider.Factory? = null
+
     internal var privacyView: PrivacyView? = null
+
+    internal var privacyFactory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<PrivacyViewModel> { privacyFactory }
 
     /**

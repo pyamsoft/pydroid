@@ -17,28 +17,32 @@
 package com.pyamsoft.pydroid.ui.changelog
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
+import com.pyamsoft.pydroid.ui.internal.changelog.asBugfix
+import com.pyamsoft.pydroid.ui.internal.changelog.asChange
+import com.pyamsoft.pydroid.ui.internal.changelog.asFeature
 
 class ChangeLogBuilder {
 
-    private val builder = mutableListOf<String>()
+    private val builder = mutableListOf<ChangeLogLine>()
 
     @CheckResult
     fun bugfix(line: String): ChangeLogBuilder {
-        return this.also { builder.add("BUGFIX: $line") }
+        return this.also { builder.add(line.asBugfix()) }
     }
 
     @CheckResult
     fun change(line: String): ChangeLogBuilder {
-        return this.also { builder.add("CHANGE: $line") }
+        return this.also { builder.add(line.asChange()) }
     }
 
     @CheckResult
     fun feature(line: String): ChangeLogBuilder {
-        return this.also { builder.add("FEATURE: $line") }
+        return this.also { builder.add(line.asFeature()) }
     }
 
     @CheckResult
-    fun build(): List<String> {
+    internal fun build(): List<ChangeLogLine> {
         return builder
     }
 }

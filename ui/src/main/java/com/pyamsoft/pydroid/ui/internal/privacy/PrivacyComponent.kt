@@ -46,13 +46,11 @@ internal interface PrivacyComponent {
     ) : PrivacyComponent {
 
         override fun inject(activity: PrivacyActivity) {
-            val privacyView = PrivacyView(
+            activity.privacyFactory = params.factory
+            activity.privacyView = PrivacyView(
                 owner,
                 snackbarRootProvider
             )
-
-            activity.privacyFactory = params.factory
-            activity.privacyView = privacyView
         }
 
         internal class FactoryImpl internal constructor(

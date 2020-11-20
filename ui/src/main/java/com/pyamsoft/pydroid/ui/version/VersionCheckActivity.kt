@@ -26,12 +26,12 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
-import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.util.doOnStart
 import timber.log.Timber
 
@@ -103,8 +103,8 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()
-        versionCheckView = null
         versionFactory = null
+        versionCheckView = null
         stateSaver = null
     }
 

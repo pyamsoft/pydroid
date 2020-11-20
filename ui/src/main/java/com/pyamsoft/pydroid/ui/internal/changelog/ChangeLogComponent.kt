@@ -14,40 +14,39 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.rating
+package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
-import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
-internal interface RatingComponent {
+internal interface ChangeLogComponent {
 
-    fun inject(activity: RatingActivity)
+    fun inject(activity: ChangeLogActivity)
 
     interface Factory {
 
         @CheckResult
-        fun create(): RatingComponent
+        fun create(): ChangeLogComponent
 
         data class Parameters internal constructor(
             internal val factory: PYDroidViewModelFactory
         )
-
     }
 
     class Impl private constructor(
         private val params: Factory.Parameters
-    ) : RatingComponent {
+    ) : ChangeLogComponent {
 
-        override fun inject(activity: RatingActivity) {
-            activity.ratingFactory = params.factory
+        override fun inject(activity: ChangeLogActivity) {
+            activity.changeLogFactory = params.factory
         }
 
         internal class FactoryImpl internal constructor(
             private val params: Factory.Parameters
         ) : Factory {
 
-            override fun create(): RatingComponent {
+            override fun create(): ChangeLogComponent {
                 return Impl(params)
             }
         }

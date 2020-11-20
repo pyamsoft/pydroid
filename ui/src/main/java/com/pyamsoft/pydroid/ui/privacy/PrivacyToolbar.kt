@@ -24,23 +24,36 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@Deprecated(
+    "Use Toolbar.addPrivacy() instead", replaceWith = ReplaceWith(
+        "toolbar.addPrivacy(this, privacyPolicyUrl, termsConditionsUrl)"
+    )
+)
 fun CoroutineScope.addPrivacy(
     toolbar: Toolbar,
     privacyPolicyUrl: String,
     termsConditionsUrl: String
 ) {
-    toolbar.inflateMenu(R.menu.privacy_menu)
+    toolbar.addPrivacy(this, privacyPolicyUrl, termsConditionsUrl)
+}
 
-    toolbar.menu.apply {
+fun Toolbar.addPrivacy(
+    scope: CoroutineScope,
+    privacyPolicyUrl: String,
+    termsConditionsUrl: String
+) {
+    this.inflateMenu(R.menu.privacy_menu)
+
+    this.menu.apply {
         findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener {
-            launch(context = Dispatchers.Default) {
+            scope.launch(context = Dispatchers.Default) {
                 PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
             }
             return@setOnMenuItemClickListener true
         }
 
         findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener {
-            launch(context = Dispatchers.Default) {
+            scope.launch(context = Dispatchers.Default) {
                 PrivacyEventBus.send(ViewPrivacyPolicy(termsConditionsUrl))
             }
             return@setOnMenuItemClickListener true

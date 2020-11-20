@@ -20,20 +20,31 @@ import android.app.Activity
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
+import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class PlayStoreAppReviewLauncher internal constructor(
+    private val preferences: RatingPreferences,
     private val manager: ReviewManager,
     private val info: ReviewInfo
 ) : AppReviewLauncher {
 
-    override fun review(activity: Activity) {
-        Enforcer.assertOnMainThread()
+    override suspend fun review(activity: Activity) = withContext(context = Dispatchers.Main) {
+        withContext(context = Dispatchers.IO) {
+            Enforcer.assertOffMainThread()
+            preferences.markRatingShown()
+        }
 
+        Enforcer.assertOnMainThread()
         manager.launchReviewFlow(activity, info)
             .addOnCompleteListener {
                 Timber.d("Review flow completed")
             }
+
+        // Unit
+        return@withContext
     }
 }

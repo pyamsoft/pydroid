@@ -31,7 +31,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class PYDroidPreferencesImpl internal constructor(
-    context: Context
+    context: Context,
+    private val versionCode: Int
 ) : RatingPreferences, ThemingPreferences, ChangeLogPreferences {
 
     private val darkModeKey = context.getString(R.string.dark_mode_key)
@@ -40,7 +41,7 @@ internal class PYDroidPreferencesImpl internal constructor(
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     }
 
-    override suspend fun showChangelog(versionCode: Int): Boolean =
+    override suspend fun showChangelog(): Boolean =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -48,7 +49,7 @@ internal class PYDroidPreferencesImpl internal constructor(
             return@withContext prefs.getInt(LAST_SHOWN_CHANGELOG, 0) < versionCode
         }
 
-    override suspend fun markChangelogShown(versionCode: Int) =
+    override suspend fun markChangelogShown() =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -58,7 +59,7 @@ internal class PYDroidPreferencesImpl internal constructor(
             }
         }
 
-    override suspend fun showRating(versionCode: Int): Boolean =
+    override suspend fun showRating(): Boolean =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -71,7 +72,7 @@ internal class PYDroidPreferencesImpl internal constructor(
             }
         }
 
-    override suspend fun markRatingShown(versionCode: Int) = withContext(context = Dispatchers.IO) {
+    override suspend fun markRatingShown() = withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
         // Mark the rating as seen for this version

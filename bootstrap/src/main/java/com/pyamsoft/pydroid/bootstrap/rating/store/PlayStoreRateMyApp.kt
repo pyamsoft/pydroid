@@ -21,6 +21,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
+import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,6 +31,7 @@ import timber.log.Timber
 import kotlin.coroutines.resume
 
 internal class PlayStoreRateMyApp internal constructor(
+    private val preferences: RatingPreferences,
     private val isFake: Boolean,
     context: Context,
 ) : RateMyApp {
@@ -61,7 +63,13 @@ internal class PlayStoreRateMyApp internal constructor(
                         Timber.d("App Review info received: $request")
                         if (request.isSuccessful) {
                             val info = request.result
-                            continuation.resume(PlayStoreAppReviewLauncher(manager, info))
+                            continuation.resume(
+                                PlayStoreAppReviewLauncher(
+                                    preferences,
+                                    manager,
+                                    info
+                                )
+                            )
                             return@addOnCompleteListener
                         }
 

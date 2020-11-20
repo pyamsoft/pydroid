@@ -21,8 +21,8 @@ import androidx.annotation.CheckResult
 interface RatingPreferences {
 
     @CheckResult
-    suspend fun showRating(versionCode: Int): Boolean
+    suspend fun showRating(): Boolean
 
-    suspend fun markRatingShown(versionCode: Int)
+    suspend fun markRatingShown()
 }
 

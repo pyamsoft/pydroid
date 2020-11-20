@@ -107,7 +107,7 @@ internal interface PYDroidComponent {
     class ComponentImpl private constructor(params: Component.Parameters) : Component {
 
         private val context = params.application
-        private val preferences = PYDroidPreferencesImpl(params.application)
+        private val preferences = PYDroidPreferencesImpl(params.application, params.version)
         private val theming = Theming(preferences)
         private val packageName = params.application.packageName
 
@@ -128,7 +128,6 @@ internal interface PYDroidComponent {
         private val ratingModule = RatingModule(
             RatingModule.Parameters(
                 context = context.applicationContext,
-                versionCode = params.version,
                 isFake = params.debug.enabled,
                 preferences = preferences
             )
@@ -157,7 +156,7 @@ internal interface PYDroidComponent {
         )
 
         private val changeLogModule = ChangeLogModule(
-            ChangeLogModule.Parameters(versionCode = params.version, preferences = preferences)
+            ChangeLogModule.Parameters(preferences = preferences)
         )
 
         private val viewModelFactory =
@@ -172,7 +171,7 @@ internal interface PYDroidComponent {
                         version = versionCheckModule.provideInteractor(),
                         otherApps = otherAppsModule.provideInteractor(),
                         settings = settingsModule.provideInteractor(),
-                    changeLog = changeLogModule.provideInteractor()
+                        changeLog = changeLogModule.provideInteractor()
                     )
                 )
             )

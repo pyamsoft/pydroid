@@ -25,8 +25,8 @@ class RatingModule(params: Parameters) {
     private val impl: RatingInteractor
 
     init {
-        val rateMyApp: RateMyApp = PlayStoreRateMyApp(params.isFake, params.context)
-        impl = RatingInteractorImpl(params.versionCode, rateMyApp, params.preferences)
+        val rateMyApp = PlayStoreRateMyApp(params.preferences, params.isFake, params.context)
+        impl = RatingInteractorImpl(rateMyApp, params.preferences)
     }
 
     @CheckResult
@@ -36,7 +36,6 @@ class RatingModule(params: Parameters) {
 
     data class Parameters(
         internal val context: Context,
-        internal val versionCode: Int,
         internal val isFake: Boolean,
         internal val preferences: RatingPreferences
     )

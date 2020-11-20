@@ -21,7 +21,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class RatingInteractorImpl internal constructor(
-    private val versionCode: Int,
     private val rateMyApp: RateMyApp,
     private val ratingPreferences: RatingPreferences,
 ) : RatingInteractor {
@@ -30,8 +29,7 @@ internal class RatingInteractorImpl internal constructor(
         withContext(context = Dispatchers.Default) {
             Enforcer.assertOffMainThread()
 
-            return@withContext if (force || ratingPreferences.showRating(versionCode)) {
-                ratingPreferences.markRatingShown(versionCode)
+            return@withContext if (force || ratingPreferences.showRating()) {
                 rateMyApp.startReview()
             } else {
                 AppReviewLauncher.empty()

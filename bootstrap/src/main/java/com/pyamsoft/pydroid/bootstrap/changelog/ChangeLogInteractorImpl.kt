@@ -21,16 +21,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class ChangeLogInteractorImpl internal constructor(
-    private val versionCode: Int,
     private val preferences: ChangeLogPreferences
 ) : ChangeLogInteractor {
 
     override suspend fun showChangelog(force: Boolean): Boolean =
         withContext(context = Dispatchers.Default) {
             Enforcer.assertOffMainThread()
-            return@withContext (force || preferences.showChangelog(versionCode)).also { show ->
+            return@withContext (force || preferences.showChangelog()).also { show ->
                 if (show) {
-                    preferences.markChangelogShown(versionCode)
+                    preferences.markChangelogShown()
                 }
             }
         }

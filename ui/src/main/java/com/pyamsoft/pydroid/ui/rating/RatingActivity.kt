@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.rating
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
@@ -29,6 +30,8 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 abstract class RatingActivity : VersionCheckActivity() {
 
@@ -70,7 +73,10 @@ abstract class RatingActivity : VersionCheckActivity() {
 
     private fun showRating(launcher: AppReviewLauncher) {
         if (ChangeLogDialog.isNotShown(this)) {
-            launcher.review(this)
+            val activity = this
+            lifecycleScope.launch(context = Dispatchers.Main) {
+                launcher.review(activity)
+            }
         }
     }
 }

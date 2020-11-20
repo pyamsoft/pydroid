@@ -21,7 +21,7 @@ import androidx.annotation.CheckResult
 interface ChangeLogPreferences {
 
     @CheckResult
-    suspend fun showChangelog(versionCode: Int): Boolean
+    suspend fun showChangelog(): Boolean
 
-    suspend fun markChangelogShown(versionCode: Int)
+    suspend fun markChangelogShown()
 }

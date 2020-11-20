@@ -20,7 +20,7 @@ import androidx.annotation.CheckResult
 
 class ChangeLogModule(params: Parameters) {
 
-    private val impl = ChangeLogInteractorImpl(params.versionCode, params.preferences)
+    private val impl = ChangeLogInteractorImpl(params.preferences)
 
     @CheckResult
     fun provideInteractor(): ChangeLogInteractor {
@@ -28,7 +28,6 @@ class ChangeLogModule(params: Parameters) {
     }
 
     data class Parameters(
-        internal val versionCode: Int,
         internal val preferences: ChangeLogPreferences
     )
 }

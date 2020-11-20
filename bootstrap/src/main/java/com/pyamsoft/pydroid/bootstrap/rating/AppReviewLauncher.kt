@@ -19,16 +19,19 @@ package com.pyamsoft.pydroid.bootstrap.rating
 import android.app.Activity
 import androidx.annotation.CheckResult
 
-fun interface AppReviewLauncher {
+interface AppReviewLauncher {
 
-    fun review(activity: Activity)
+    suspend fun review(activity: Activity)
 
     companion object {
 
         @JvmStatic
         @CheckResult
         fun empty(): AppReviewLauncher {
-            return AppReviewLauncher { }
+            return object : AppReviewLauncher {
+                override suspend fun review(activity: Activity) {
+                }
+            }
         }
     }
 }

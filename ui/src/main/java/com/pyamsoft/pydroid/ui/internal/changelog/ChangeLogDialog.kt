@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.changelog
 
 import android.os.Bundle
+import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import com.pyamsoft.pydroid.ui.internal.dialog.FullscreenDialog
 import com.pyamsoft.pydroid.ui.util.show
@@ -32,6 +33,12 @@ internal class ChangeLogDialog : FullscreenDialog() {
             ChangeLogDialog().apply {
                 arguments = Bundle().apply { }
             }.show(activity, TAG)
+        }
+
+        @JvmStatic
+        @CheckResult
+        fun isNotShown(activity: FragmentActivity): Boolean {
+            return activity.supportFragmentManager.findFragmentByTag(TAG) == null
         }
     }
 

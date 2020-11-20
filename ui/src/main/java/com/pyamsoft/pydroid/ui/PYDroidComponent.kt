@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigComponent
-import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigModule
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsClearConfigModule
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming

@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.settings.clear
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiStateViewModel
 import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsClearConfigInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

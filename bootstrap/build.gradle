@@ -37,6 +37,8 @@ dependencies {
 	// Highlander
 	implementation "com.pyamsoft.highlander:highlander:$highlander"
 
+	implementation "androidx.core:core-ktx:$core"
+
 	api project(':util')
 }
 

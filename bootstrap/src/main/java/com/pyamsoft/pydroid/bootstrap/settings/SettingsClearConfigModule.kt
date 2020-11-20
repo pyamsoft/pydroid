@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings.clear
+package com.pyamsoft.pydroid.bootstrap.settings
 
 import android.content.Context
 import androidx.annotation.CheckResult
 
-internal class SettingsClearConfigModule(params: Parameters) {
+class SettingsClearConfigModule(params: Parameters) {
 
     private val impl = SettingsClearConfigInteractorImpl(params.context)
 

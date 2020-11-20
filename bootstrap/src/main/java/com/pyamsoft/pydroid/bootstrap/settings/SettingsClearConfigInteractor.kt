@@ -14,23 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.settings.clear
+package com.pyamsoft.pydroid.bootstrap.settings
 
-import android.app.ActivityManager
-import android.content.Context
-import androidx.core.content.getSystemService
-import timber.log.Timber
+interface SettingsClearConfigInteractor {
 
-internal class SettingsClearConfigInteractorImpl internal constructor(
-    context: Context
-) : SettingsClearConfigInteractor {
-
-    private val activityManager by lazy {
-        requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
-    }
-
-    override suspend fun clear() {
-        Timber.d("Resetting all application user data")
-        activityManager.clearApplicationUserData()
-    }
+    suspend fun clear()
 }

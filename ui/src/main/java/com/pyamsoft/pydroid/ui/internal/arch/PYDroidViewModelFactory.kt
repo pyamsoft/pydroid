@@ -27,7 +27,7 @@ import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
-import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigInteractor
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsClearConfigInteractor
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel

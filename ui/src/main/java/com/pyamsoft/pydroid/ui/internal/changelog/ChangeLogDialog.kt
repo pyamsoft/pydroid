@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.ui.internal.changelog
 
-import androidx.annotation.CheckResult
+import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
+import com.pyamsoft.pydroid.ui.internal.dialog.FullscreenDialog
+import com.pyamsoft.pydroid.ui.util.show
 
-interface RatingPreferences {
+internal class ChangeLogDialog : FullscreenDialog() {
 
-    @CheckResult
-    suspend fun showRating(versionCode: Int): Boolean
+    companion object {
 
-    suspend fun markRatingShown(versionCode: Int)
+        private const val TAG = "ChangeLogDialog"
+
+        @JvmStatic
+        fun open(activity: FragmentActivity) {
+            ChangeLogDialog().apply {
+                arguments = Bundle().apply { }
+            }.show(activity, TAG)
+        }
+    }
+
 }
-

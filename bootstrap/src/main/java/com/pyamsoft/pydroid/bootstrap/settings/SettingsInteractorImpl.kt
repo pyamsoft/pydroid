@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.settings
 
-import androidx.annotation.CheckResult
+import android.app.ActivityManager
+import android.content.Context
+import androidx.core.content.getSystemService
+import timber.log.Timber
 
-interface RatingPreferences {
+internal class SettingsInteractorImpl internal constructor(
+    context: Context
+) : SettingsInteractor {
 
-    @CheckResult
-    suspend fun showRating(versionCode: Int): Boolean
+    private val activityManager by lazy {
+        requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
+    }
 
-    suspend fun markRatingShown(versionCode: Int)
+    override suspend fun clear() {
+        Timber.d("Resetting all application user data")
+        activityManager.clearApplicationUserData()
+    }
 }
-

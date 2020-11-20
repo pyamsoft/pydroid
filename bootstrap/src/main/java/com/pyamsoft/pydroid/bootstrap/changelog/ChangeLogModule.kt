@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.settings
+package com.pyamsoft.pydroid.bootstrap.changelog
 
-import android.app.ActivityManager
-import android.content.Context
-import androidx.core.content.getSystemService
-import timber.log.Timber
+import androidx.annotation.CheckResult
 
-internal class SettingsClearConfigInteractorImpl internal constructor(
-    context: Context
-) : SettingsClearConfigInteractor {
+class ChangeLogModule(params: Parameters) {
 
-    private val activityManager by lazy {
-        requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
+    private val impl = ChangeLogInteractorImpl(params.versionCode, params.preferences)
+
+    @CheckResult
+    fun provideInteractor(): ChangeLogInteractor {
+        return impl
     }
 
-    override suspend fun clear() {
-        Timber.d("Resetting all application user data")
-        activityManager.clearApplicationUserData()
-    }
+    data class Parameters(
+        internal val versionCode: Int,
+        internal val preferences: ChangeLogPreferences
+    )
 }

@@ -19,9 +19,11 @@ package com.pyamsoft.pydroid.ui
 import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.about.AboutModule
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.network.NetworkModule
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
@@ -37,7 +39,6 @@ import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyComponent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigComponent
-import com.pyamsoft.pydroid.bootstrap.settings.SettingsClearConfigModule
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -116,8 +117,8 @@ internal interface PYDroidComponent {
             )
         )
 
-        private val settingsClearConfigModule = SettingsClearConfigModule(
-            SettingsClearConfigModule.Parameters(
+        private val settingsModule = SettingsModule(
+            SettingsModule.Parameters(
                 context = context.applicationContext
             )
         )
@@ -127,6 +128,7 @@ internal interface PYDroidComponent {
         private val ratingModule = RatingModule(
             RatingModule.Parameters(
                 context = context.applicationContext,
+                versionCode = params.version,
                 isFake = params.debug.enabled,
                 preferences = preferences
             )
@@ -154,6 +156,10 @@ internal interface PYDroidComponent {
             )
         )
 
+        private val changeLogModule = ChangeLogModule(
+            ChangeLogModule.Parameters(versionCode = params.version, preferences = preferences)
+        )
+
         private val viewModelFactory =
             PYDroidViewModelFactory(
                 PYDroidViewModelFactory.Parameters(
@@ -165,7 +171,8 @@ internal interface PYDroidComponent {
                         about = aboutModule.provideInteractor(),
                         version = versionCheckModule.provideInteractor(),
                         otherApps = otherAppsModule.provideInteractor(),
-                        settingsClearConfig = settingsClearConfigModule.provideInteractor()
+                        settings = settingsModule.provideInteractor(),
+                    changeLog = changeLogModule.provideInteractor()
                     )
                 )
             )

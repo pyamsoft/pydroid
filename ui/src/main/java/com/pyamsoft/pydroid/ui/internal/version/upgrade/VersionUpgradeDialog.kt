@@ -33,7 +33,7 @@ import timber.log.Timber
 internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<VersionUpgradeViewModel> { factory }
+    private val viewModel by viewModelFactory<VersionUpgradeViewModel>(activity = true) { factory }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Injector.obtain<PYDroidComponent>(requireContext().applicationContext)

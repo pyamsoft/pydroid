@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.changelog
 
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class RatingInteractorImpl internal constructor(
+internal class ChangeLogInteractorImpl internal constructor(
     private val versionCode: Int,
-    private val rateMyApp: RateMyApp,
-    private val ratingPreferences: RatingPreferences,
-) : RatingInteractor {
+    private val preferences: ChangeLogPreferences
+) : ChangeLogInteractor {
 
-    override suspend fun askForRating(force: Boolean): AppReviewLauncher =
+    override suspend fun showChangelog(force: Boolean): Boolean =
         withContext(context = Dispatchers.Default) {
             Enforcer.assertOffMainThread()
-
-            return@withContext if (force || ratingPreferences.showRating(versionCode)) {
-                ratingPreferences.markRatingShown(versionCode)
-                rateMyApp.startReview()
-            } else {
-                AppReviewLauncher.empty()
+            return@withContext (force || preferences.showChangelog(versionCode)).also { show ->
+                if (show) {
+                    preferences.markChangelogShown(versionCode)
+                }
             }
         }
 }

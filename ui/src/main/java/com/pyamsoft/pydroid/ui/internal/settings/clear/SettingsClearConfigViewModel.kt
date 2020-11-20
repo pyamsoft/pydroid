@@ -19,12 +19,12 @@ package com.pyamsoft.pydroid.ui.internal.settings.clear
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiStateViewModel
 import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.bootstrap.settings.SettingsClearConfigInteractor
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class SettingsClearConfigViewModel internal constructor(
-    private val interactor: SettingsClearConfigInteractor,
+    private val interactor: SettingsInteractor,
 ) : UiStateViewModel<UnitViewState>(initialState = UnitViewState) {
 
     internal fun reset() {

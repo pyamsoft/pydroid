@@ -26,31 +26,23 @@ import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
-import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
-import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
-import com.pyamsoft.pydroid.ui.rating.RatingActivity
-import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
-import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
-import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
-import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
+import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import timber.log.Timber
@@ -74,7 +66,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     internal var factory: ViewModelProvider.Factory? = null
     private val settingsViewModel by viewModelFactory<AppSettingsViewModel>(activity = true) { factory }
     private val versionViewModel by viewModelFactory<VersionCheckViewModel>(activity = true) { factory }
-    private val ratingViewModel by viewModelFactory<RatingViewModel>(activity = true) { factory }
+    private val changeLogViewModel by viewModelFactory<ChangeLogViewModel>(activity = true) { factory }
 
     @CallSuper
     override fun onCreatePreferences(
@@ -117,29 +109,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 is AppSettingsControllerEvent.ShowLicense -> openLicensesPage()
                 is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(true)
                 is AppSettingsControllerEvent.AttemptClearData -> openClearDataDialog()
-                is AppSettingsControllerEvent.OpenShowUpgrade -> ratingViewModel.load(true)
+                is AppSettingsControllerEvent.OpenShowUpgrade -> changeLogViewModel.show(true)
                 is AppSettingsControllerEvent.ChangeDarkTheme -> darkThemeChanged(it.newMode)
                 is AppSettingsControllerEvent.OpenOtherAppsPage -> openOtherAppsPage(it.apps)
-            }
-        }
-
-        versionStateSaver = createComponent(
-            savedInstanceState, viewLifecycleOwner,
-            versionViewModel,
-            requireNotNull(versionCheckView)
-        ) {
-            return@createComponent when (it) {
-                is LaunchUpdate -> handleLaunchUpdate(it.launcher)
-                is ShowUpgrade -> handleShowUpgrade()
-            }
-        }
-
-        ratingStateSaver = createComponent(
-            savedInstanceState, viewLifecycleOwner,
-            ratingViewModel
-        ) {
-            return@createComponent when (it) {
-                is LoadRating -> openUpdateInfo(it.launcher)
             }
         }
 
@@ -158,29 +130,10 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             .build()
     }
 
-    private fun handleShowUpgrade() {
-        val act = requireActivity()
-        if (act is VersionCheckActivity) {
-            Timber.d("ShowUpgrade event handled by activity")
-        } else {
-            VersionUpgradeDialog.show(act)
-        }
-    }
-
     private fun openOtherAppsPage(apps: List<OtherApp>) {
         onViewMorePyamsoftAppsClicked(false)
         Timber.d("Show other apps fragment: $apps")
         OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
-    }
-
-    private fun openUpdateInfo(launcher: AppReviewLauncher) {
-        val act = requireActivity() as RatingActivity
-        launcher.review(act)
-    }
-
-    private fun handleLaunchUpdate(launcher: AppUpdateLauncher) {
-        val act = requireActivity() as VersionCheckActivity
-        act.showVersionUpgrade(launcher)
     }
 
     override fun onDestroyView() {

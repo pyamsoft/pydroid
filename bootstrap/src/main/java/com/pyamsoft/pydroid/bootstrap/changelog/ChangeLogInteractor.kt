@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.changelog
 
 import androidx.annotation.CheckResult
 
-interface RatingPreferences {
+interface ChangeLogInteractor {
 
     @CheckResult
-    suspend fun showRating(versionCode: Int): Boolean
+    suspend fun showChangelog(force: Boolean): Boolean
 
-    suspend fun markRatingShown(versionCode: Int)
 }
-

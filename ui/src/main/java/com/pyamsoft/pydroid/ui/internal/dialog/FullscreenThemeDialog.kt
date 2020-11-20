@@ -19,12 +19,10 @@ package com.pyamsoft.pydroid.ui.internal.dialog
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -35,9 +33,9 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogControllerEvent.Close
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
+import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogControllerEvent.Close
 import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
@@ -45,14 +43,14 @@ import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import timber.log.Timber
 import com.google.android.material.R as R2
 
-internal abstract class FullscreenThemeDialog protected constructor() : AppCompatDialogFragment() {
+internal abstract class FullscreenThemeDialog protected constructor() : FullscreenDialog() {
 
     internal var toolbar: ThemeDialogToolbar? = null
 
     internal var frame: ThemeDialogFrame? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<ThemeDialogViewModel> { factory }
+    private val viewModel by viewModelFactory<ThemeDialogViewModel>(activity = true) { factory }
 
     private var stateSaver: StateSaver? = null
 
@@ -125,14 +123,6 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
         }
 
         pushContents(frame)
-    }
-
-    final override fun onResume() {
-        super.onResume()
-        dialog?.window?.apply {
-            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            setGravity(Gravity.CENTER)
-        }
     }
 
     private fun pushContents(container: BaseUiView<*, *, *>) {

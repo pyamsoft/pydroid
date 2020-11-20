@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.ui.internal.changelog
 
-import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.UiControllerEvent
 
-interface RatingPreferences {
+internal sealed class ChangeLogControllerEvent : UiControllerEvent {
 
-    @CheckResult
-    suspend fun showRating(versionCode: Int): Boolean
-
-    suspend fun markRatingShown(versionCode: Int)
+    object LoadChangelog : ChangeLogControllerEvent()
 }
-

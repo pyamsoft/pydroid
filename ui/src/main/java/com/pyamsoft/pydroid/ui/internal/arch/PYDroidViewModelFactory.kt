@@ -19,19 +19,21 @@ package com.pyamsoft.pydroid.ui.internal.arch
 import com.pyamsoft.pydroid.arch.UiStateViewModel
 import com.pyamsoft.pydroid.arch.UiViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewModel
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
-import com.pyamsoft.pydroid.bootstrap.settings.SettingsClearConfigInteractor
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigViewModel
-import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
+import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlin.reflect.KClass
 
 internal class PYDroidViewModelFactory internal constructor(
@@ -49,9 +51,10 @@ internal class PYDroidViewModelFactory internal constructor(
             VersionCheckViewModel::class -> VersionCheckViewModel(interactors.version)
             PrivacyViewModel::class -> PrivacyViewModel()
             OtherAppsViewModel::class -> OtherAppsViewModel(interactors.otherApps)
-            SettingsClearConfigViewModel::class -> SettingsClearConfigViewModel(interactors.settingsClearConfig)
+            SettingsClearConfigViewModel::class -> SettingsClearConfigViewModel(interactors.settings)
             AboutViewModel::class -> AboutViewModel(interactors.about)
             RatingViewModel::class -> RatingViewModel(interactors.rating)
+            ChangeLogViewModel::class -> ChangeLogViewModel(interactors.changeLog)
             else -> fail()
         }
     }
@@ -67,7 +70,8 @@ internal class PYDroidViewModelFactory internal constructor(
             internal val about: AboutInteractor,
             internal val version: VersionInteractor,
             internal val otherApps: OtherAppsInteractor,
-            internal val settingsClearConfig: SettingsClearConfigInteractor
+            internal val settings: SettingsInteractor,
+            internal val changeLog: ChangeLogInteractor,
         )
     }
 }

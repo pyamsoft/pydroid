@@ -34,6 +34,8 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogControllerEvent
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
@@ -100,7 +102,9 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
             savedInstanceState, this,
             viewModel
         ) {
-            // TODO(Peter)
+            return@createComponent when (it) {
+                is ChangeLogControllerEvent.LoadChangelog -> ChangeLogDialog.open(this)
+            }
         }
     }
 

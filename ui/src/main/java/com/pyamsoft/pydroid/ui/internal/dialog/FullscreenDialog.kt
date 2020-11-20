@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.settings
+package com.pyamsoft.pydroid.ui.internal.dialog
 
-interface SettingsClearConfigInteractor {
+import android.view.Gravity
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDialogFragment
 
-    suspend fun clear()
+internal abstract class FullscreenDialog protected constructor() : AppCompatDialogFragment() {
+
+    final override fun onResume() {
+        super.onResume()
+        dialog?.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            setGravity(Gravity.CENTER)
+        }
+    }
+
 }

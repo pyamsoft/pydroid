@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.rating
+package com.pyamsoft.pydroid.bootstrap.settings
 
-import androidx.annotation.CheckResult
+interface SettingsInteractor {
 
-interface RatingPreferences {
-
-    @CheckResult
-    suspend fun showRating(versionCode: Int): Boolean
-
-    suspend fun markRatingShown(versionCode: Int)
+    suspend fun clear()
 }
-

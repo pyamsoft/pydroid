@@ -24,6 +24,9 @@ import android.util.SizeF
 import com.pyamsoft.pydroid.arch.UiBundleWriter
 import java.io.Serializable
 
+/**
+ * Bundle backed implementation of a UiBundleWriter
+ */
 internal class RealUiBundleWriter internal constructor(
     private val bundle: Bundle
 ) : UiBundleWriter {

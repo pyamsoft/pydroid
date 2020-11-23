@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.util.doOnDestroy
  * Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller
  */
 @CheckResult
-inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
+public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
     savedInstanceState: Bundle?,
     owner: LifecycleOwner,
     viewModel: UiViewModel<S, V, C>,
@@ -56,7 +56,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
  */
 @Deprecated("Use createViewBinder and manually call teardown at the end of the Controller scope instead of using a LifecycleOwner.")
 @CheckResult
-inline fun <S : UiViewState, V : UiViewEvent> bindViews(
+public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     owner: LifecycleOwner,
     vararg views: UiView<S, V>,
     crossinline onViewEvent: (event: V) -> Unit
@@ -95,7 +95,7 @@ inline fun <S : UiViewState, V : UiViewEvent> bindViews(
  * Bind a ViewHolder to the pydroid-arch style using one or more UiViews
  */
 @CheckResult
-inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
+public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     vararg views: UiView<S, V>,
     crossinline onViewEvent: (event: V) -> Unit
 ): ViewBinder<S> {

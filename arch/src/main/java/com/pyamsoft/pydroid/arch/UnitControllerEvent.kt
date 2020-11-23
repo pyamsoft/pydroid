@@ -16,4 +16,7 @@
 
 package com.pyamsoft.pydroid.arch
 
-object UnitControllerEvent : UiControllerEvent
+/**
+ * A no-op UiControllerEvent
+ */
+public object UnitControllerEvent : UiControllerEvent

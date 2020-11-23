@@ -20,25 +20,44 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.internal.RealUiBundleReader
 
-interface UiBundleReader {
+public interface UiBundleReader {
 
+    /**
+     * This will be false if the Activity/Fragment/View is being created for the first time.
+     */
     @CheckResult
-    fun hasNoSavedState(): Boolean
+    public fun hasNoSavedState(): Boolean
 
+    /**
+     * Return the bundled value if one exists
+     */
     @CheckResult
-    fun <T : Any> get(key: String): T?
+    public fun <T : Any> get(key: String): T?
 
+    /**
+     * Return the bundled value, or a default
+     */
     @CheckResult
-    fun <T : Any> getOrDefault(key: String, defaultValue: T): T
+    public fun <T : Any> getOrDefault(key: String, defaultValue: T): T
 
-    fun <T : Any> useIfAvailable(key: String, func: (value: T) -> Unit)
+    /**
+     * Consume the bundled value if one exists
+     */
+    public fun <T : Any> useIfAvailable(key: String, func: (value: T) -> Unit)
 
-    fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit)
+    /**
+     * Consume the bundled value, or a default.
+     */
+    public fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit)
 
-    companion object {
+    public companion object {
 
+        /**
+         * Create an implementation of the UiBundleReader
+         */
+        @JvmStatic
         @CheckResult
-        fun create(bundle: Bundle?): UiBundleReader {
+        public fun create(bundle: Bundle?): UiBundleReader {
             return RealUiBundleReader(bundle)
         }
     }

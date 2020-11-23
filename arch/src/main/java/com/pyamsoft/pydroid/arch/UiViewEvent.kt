@@ -16,4 +16,9 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface UiViewEvent
+/**
+ * An event which is sent from the View layer up to the Presentation layer
+ *
+ * Usually sent via a UiView.publish() call
+ */
+public interface UiViewEvent

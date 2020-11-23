@@ -16,4 +16,7 @@
 
 package com.pyamsoft.pydroid.arch
 
-object UnitViewEvent : UiViewEvent
+/**
+ * A no-op UiViewEvent
+ */
+public object UnitViewEvent : UiViewEvent

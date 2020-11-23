@@ -20,16 +20,29 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.internal.RealUiBundleWriter
 
-interface UiBundleWriter {
+/**
+ * Abstraction over saving data into an Android Bundle object
+ */
+public interface UiBundleWriter {
 
-    fun <T : Any> put(key: String, value: T)
+    /**
+     * Add a value to the bundle
+     */
+    public fun <T : Any> put(key: String, value: T)
 
-    fun remove(key: String)
+    /**
+     * Remove a value from the bundle
+     */
+    public fun remove(key: String)
 
-    companion object {
+    public companion object {
 
+        /**
+         * Create a bundle backed UiBundleWriter instance
+         */
+        @JvmStatic
         @CheckResult
-        fun create(bundle: Bundle): UiBundleWriter {
+        public fun create(bundle: Bundle): UiBundleWriter {
             return RealUiBundleWriter(bundle)
         }
     }

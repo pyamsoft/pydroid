@@ -21,7 +21,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import kotlin.reflect.KClass
 
-abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
+/**
+ * A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances.
+ */
+public abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
     final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
@@ -43,8 +46,11 @@ abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Fa
     protected abstract fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*>
 }
 
+/**
+ * A simple builder for a Factory which only holds one type of ViewModel
+ */
 @CheckResult
-inline fun <reified VM : UiStateViewModel<*>> onlyFactory(crossinline provider: () -> VM): ViewModelProvider.Factory {
+public inline fun <reified VM : UiStateViewModel<*>> onlyFactory(crossinline provider: () -> VM): ViewModelProvider.Factory {
     return object : UiViewModelFactory() {
 
         override fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*> {

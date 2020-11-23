@@ -18,8 +18,10 @@ package com.pyamsoft.pydroid.arch
 
 import kotlinx.coroutines.CancellationException
 
-// Ignores CancellationException
-inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
+/**
+ * Only handle the throwable if it is not a Coroutine cancellation exception
+ */
+public inline fun Throwable.onActualError(func: (throwable: Throwable) -> Unit) {
     if (this !is CancellationException) {
         func(this)
     }

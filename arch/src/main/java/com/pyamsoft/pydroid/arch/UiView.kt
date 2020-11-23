@@ -26,7 +26,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
 
-abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
+/**
+ * A basic interface representing a UiView
+ *
+ * The UiView can render a UiViewState object, and can also publish View level events to a Presentation layer.
+ */
+public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
 ) : Renderable<S>, SaveableState {
 
     private val viewEventBus = EventBus.create<V>(emitOnlyWhenActive = true)
@@ -40,7 +45,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
     private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
-    protected val viewScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    protected val viewScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     /**
      * This is really only used as a hack, so we can inflate the actual Layout before running init hooks.
@@ -51,7 +56,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    fun init(savedInstanceState: UiBundleReader) {
+    public fun init(savedInstanceState: UiBundleReader) {
         // We better be UI
         Enforcer.assertOnMainThread()
 
@@ -64,7 +69,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    fun inflate(savedInstanceState: UiBundleReader) {
+    public fun inflate(savedInstanceState: UiBundleReader) {
         // We better be UI
         Enforcer.assertOnMainThread()
 
@@ -85,7 +90,7 @@ abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    fun teardown() {
+    public fun teardown() {
         // We better be UI
         Enforcer.assertOnMainThread()
 

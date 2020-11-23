@@ -26,6 +26,9 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Real implementation of the EventBus
+ */
 internal class RealBus<T : Any> internal constructor(
     private val emitOnlyWhenActive: Boolean,
     private val replayCount: Int,

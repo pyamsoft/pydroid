@@ -34,7 +34,13 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import timber.log.Timber
 
-abstract class UiStateViewModel<S : UiViewState> protected constructor(
+/**
+ * A ViewModel implementation which models a single state object.
+ *
+ * Access the current state via withState and manipulate it via setState.
+ * These calls are asynchronous.
+ */
+public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     initialState: S,
 ) : ViewModel() {
 
@@ -51,17 +57,27 @@ abstract class UiStateViewModel<S : UiViewState> protected constructor(
 
     private var state = UiVMState(initialState)
 
+    /**
+     * Bind renderables to this ViewModel.
+     *
+     * Once bound, any changes to the ViewModel.state will be sent to these renderables.
+     */
     @UiThread
     @CheckResult
-    fun bind(vararg renderables: Renderable<S>): Job {
+    public fun bind(vararg renderables: Renderable<S>): Job {
         return viewModelScope.launch(context = Dispatchers.Main) {
             bindState(renderables)
         }
     }
 
+    /**
+     * Bind a renderable to this ViewModel.
+     *
+     * Once bound, any changes to the ViewModel.state will be sent to this renderable.
+     */
     @UiThread
     @CheckResult
-    inline fun bind(crossinline onRender: (S) -> Unit): Job {
+    public inline fun bind(crossinline onRender: (S) -> Unit): Job {
         return bind(Renderable { onRender(it) })
     }
 

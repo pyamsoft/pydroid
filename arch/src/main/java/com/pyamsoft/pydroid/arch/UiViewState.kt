@@ -16,4 +16,10 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface UiViewState
+/**
+ * A representation of a view state.
+ *
+ * This can hold one or many different pieces of data which collectively make up the state of a view.
+ * This is usually handled via a Renderable object.
+ */
+public interface UiViewState

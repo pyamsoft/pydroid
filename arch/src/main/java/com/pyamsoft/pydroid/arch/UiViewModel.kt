@@ -28,7 +28,10 @@ import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.coroutines.EmptyCoroutineContext
 
-abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
+/**
+ * A default implementation of a UiStateViewModel which knows how to set up along with UiViews and a UiController to become a full UiComponent
+ */
+public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S
 ) : UiStateViewModel<S>(initialState), SaveableState {
 

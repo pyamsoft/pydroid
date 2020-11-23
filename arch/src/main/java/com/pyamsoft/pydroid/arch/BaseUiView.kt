@@ -29,7 +29,10 @@ import kotlin.LazyThreadSafetyMode.NONE
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> protected constructor(
+/**
+ * A basic Android View based implementation of a UiView
+ */
+public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> protected constructor(
     parent: ViewGroup
 ) : UiView<S, V>() {
 
@@ -149,9 +152,12 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
         }
     }
 
+    /**
+     * Get the Android View ID for this UiView, used for View system things like ConstraintLayout
+     */
     @IdRes
     @CheckResult
-    fun id(): Int {
+    public fun id(): Int {
         val id = layoutRoot.id
         require(id != 0) { "id() must not equal 0! " }
         return id
@@ -267,7 +273,7 @@ abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBinding> pro
         }
     }
 
-    companion object {
+    public companion object {
 
         private fun View.teardown(parent: ViewGroup) {
             // Clear all messages on the view handler before removing it from the view group

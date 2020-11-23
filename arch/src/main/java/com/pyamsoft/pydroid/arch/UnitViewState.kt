@@ -16,4 +16,7 @@
 
 package com.pyamsoft.pydroid.arch
 
-object UnitViewState : UiViewState
+/**
+ * A stateless UiViewState
+ */
+public object UnitViewState : UiViewState

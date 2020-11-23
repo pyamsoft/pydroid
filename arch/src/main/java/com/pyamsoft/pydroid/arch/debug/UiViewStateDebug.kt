@@ -3,7 +3,10 @@ package com.pyamsoft.pydroid.arch.debug
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.core.RemoveInRelease
 
-object UiViewStateDebug {
+/**
+ * Debugging functions for UiViewState processing
+ */
+internal object UiViewStateDebug {
 
     /**
      * If we are in debug mode, perform the state change twice and make sure that it produces
@@ -36,17 +39,5 @@ object UiViewStateDebug {
             }
         }
     }
-
-    private class DeterministicStateError(
-        state1: Any?,
-        state2: Any?,
-        prop: String?
-    ) : IllegalStateException(
-        """State changes must be deterministic
-           ${if (prop != null) "Property '$prop' changed:" else ""}
-           $state1
-           $state2
-           """.trimIndent()
-    )
 
 }

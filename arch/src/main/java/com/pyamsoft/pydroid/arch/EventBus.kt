@@ -21,11 +21,17 @@ import com.pyamsoft.pydroid.arch.internal.RealBus
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-interface EventBus<T : Any> : EventConsumer<T> {
+/**
+ * A basic EventBus interface with send and receive methods
+ */
+public interface EventBus<T : Any> : EventConsumer<T> {
 
-    suspend fun send(event: T)
+    /**
+     * Emit an event to the event bus, suspend if needed by the implementation
+     */
+    public suspend fun send(event: T)
 
-    companion object {
+    public companion object {
 
         /**
          * The EventBus will event the event in the following cases
@@ -39,7 +45,7 @@ interface EventBus<T : Any> : EventConsumer<T> {
             "This constructor uses emitOnlyWhenActive = false",
             replaceWith = ReplaceWith("EventBus.create<T>(false, context)")
         )
-        fun <T : Any> create(
+        public fun <T : Any> create(
             context: CoroutineContext = EmptyCoroutineContext
         ): EventBus<T> = create(emitOnlyWhenActive = false, context = context)
 
@@ -53,7 +59,7 @@ interface EventBus<T : Any> : EventConsumer<T> {
         @CheckResult
         @JvmStatic
         @JvmOverloads
-        fun <T : Any> create(
+        public fun <T : Any> create(
             emitOnlyWhenActive: Boolean,
             replayCount: Int = 0,
             context: CoroutineContext = EmptyCoroutineContext

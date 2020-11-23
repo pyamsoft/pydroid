@@ -16,4 +16,9 @@
 
 package com.pyamsoft.pydroid.arch
 
-interface UiControllerEvent
+/**
+ * An event which is sent from the Presentation layer up to the Controller layer
+ *
+ * Usually sent via a UiViewModel.publish() call
+ */
+public interface UiControllerEvent

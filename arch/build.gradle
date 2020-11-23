@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+android {
+    kotlinOptions {
+        freeCompilerArgs += '-Xexplicit-api=strict'
+    }
+}
+
 dependencies {
 	// Timber logging
 	implementation "com.jakewharton.timber:timber:$timber"

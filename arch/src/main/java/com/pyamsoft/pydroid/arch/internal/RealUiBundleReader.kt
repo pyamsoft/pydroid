@@ -19,6 +19,9 @@ package com.pyamsoft.pydroid.arch.internal
 import android.os.Bundle
 import com.pyamsoft.pydroid.arch.UiBundleReader
 
+/**
+ * Bundle backed implementation of a UiBundleReader
+ */
 internal class RealUiBundleReader internal constructor(
     private val bundle: Bundle?
 ) : UiBundleReader {

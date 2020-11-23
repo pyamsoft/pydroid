@@ -121,6 +121,14 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
         stateSaver = null
     }
 
+    @CallSuper
+    override fun onPostResume() {
+        super.onPostResume()
+
+        // Called in onPostResume so that the DialogFragment can be shown correctly.
+        viewModel.show(false)
+    }
+
     companion object {
 
         private const val INVALID = 0

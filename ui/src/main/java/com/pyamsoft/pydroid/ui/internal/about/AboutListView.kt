@@ -23,13 +23,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
+import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLibrary
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLicense
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewState
-import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
@@ -87,7 +87,7 @@ internal class AboutListView internal constructor(
     }
 
     private fun setupListView() {
-        aboutAdapter = AboutAdapter(owner) { event, index ->
+        aboutAdapter = AboutAdapter { event, index ->
             return@AboutAdapter when (event) {
                 is OpenLicenseUrl -> publish(OpenLicense(index))
                 is OpenLibraryUrl -> publish(OpenLibrary(index))

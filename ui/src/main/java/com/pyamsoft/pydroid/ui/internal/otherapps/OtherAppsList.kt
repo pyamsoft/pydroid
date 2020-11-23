@@ -84,7 +84,7 @@ internal class OtherAppsList internal constructor(
     }
 
     private fun setupListView() {
-        listAdapter = OtherAppsAdapter(owner) { event, index ->
+        listAdapter = OtherAppsAdapter { event, index ->
             return@OtherAppsAdapter when (event) {
                 is OpenStore -> publish(OtherAppsViewEvent.OpenStore(index))
                 is ViewSource -> publish(OtherAppsViewEvent.ViewSource(index))

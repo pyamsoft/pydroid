@@ -54,6 +54,7 @@ inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createCompo
 /**
  * Bind a ViewHolder to the pydroid-arch style using one or more UiViews
  */
+@Deprecated("Use createViewBinder and manually call teardown at the end of the Controller scope instead of using a LifecycleOwner.")
 @CheckResult
 inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     owner: LifecycleOwner,
@@ -78,6 +79,46 @@ inline fun <S : UiViewState, V : UiViewEvent> bindViews(
         views.forEach { it.teardown() }
     }
 
-    // ViewBinder
-    return ViewBinder { state -> views.forEach { it.render(state) } }
+    return object : ViewBinder<S> {
+        override fun bind(state: S) {
+            views.forEach { it.render(state) }
+        }
+
+        override fun teardown() {
+            // Intentionally blank
+            // Kept blank for API compatibility
+        }
+    }
+}
+
+/**
+ * Bind a ViewHolder to the pydroid-arch style using one or more UiViews
+ */
+@CheckResult
+inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
+    vararg views: UiView<S, V>,
+    crossinline onViewEvent: (event: V) -> Unit
+): ViewBinder<S> {
+    val reader = UiBundleReader.create(null)
+
+    // Bind view event listeners
+    views.forEach { v ->
+        v.onViewEvent { onViewEvent(it) }
+    }
+
+    // Init first
+    views.forEach { it.init(reader) }
+
+    // Inflate and attach
+    views.forEach { it.inflate(reader) }
+
+    return object : ViewBinder<S> {
+        override fun bind(state: S) {
+            views.forEach { it.render(state) }
+        }
+
+        override fun teardown() {
+            views.forEach { it.teardown() }
+        }
+    }
 }

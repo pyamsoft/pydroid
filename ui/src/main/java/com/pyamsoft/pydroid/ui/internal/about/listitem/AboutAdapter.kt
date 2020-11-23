@@ -18,13 +18,13 @@ package com.pyamsoft.pydroid.ui.internal.about.listitem
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.pyamsoft.pydroid.arch.ViewBinder
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
 internal class AboutAdapter internal constructor(
-    private val owner: LifecycleOwner,
     private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
 ) : ListAdapter<AboutItemViewState, AboutViewHolder>(DIFFER), PopupTextProvider {
 
@@ -47,7 +47,7 @@ internal class AboutAdapter internal constructor(
         viewType: Int
     ): AboutViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return AboutViewHolder.create(inflater, parent, owner, callback)
+        return AboutViewHolder.create(inflater, parent, callback)
     }
 
     override fun onBindViewHolder(
@@ -56,6 +56,17 @@ internal class AboutAdapter internal constructor(
     ) {
         val item = getItem(position)
         holder.bind(item)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+
+        for (index in 0 until itemCount) {
+            val holder = recyclerView.findViewHolderForAdapterPosition(index)
+            if (holder is ViewBinder<*>) {
+                holder.teardown()
+            }
+        }
     }
 
     companion object {

@@ -19,20 +19,17 @@ package com.pyamsoft.pydroid.ui.internal.about.listitem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.arch.bindViews
+import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
-import com.pyamsoft.pydroid.util.doOnDestroy
 
 internal class AboutViewHolder private constructor(
     binding: AdapterItemAboutLicenseBinding,
-    owner: LifecycleOwner,
     callback: (event: AboutItemViewEvent, index: Int) -> Unit
-) : RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root), ViewBinder<AboutItemViewState> {
 
     private val binder: ViewBinder<AboutItemViewState>
 
@@ -46,24 +43,24 @@ internal class AboutViewHolder private constructor(
             .create(binding.aboutListitemRoot)
             .inject(this)
 
-        binder = bindViews(
-            owner,
+        binder = createViewBinder(
             requireNotNull(titleView),
             requireNotNull(descriptionView),
             requireNotNull(actionView)
         ) {
             callback(it, adapterPosition)
         }
-
-        owner.doOnDestroy {
-            titleView = null
-            descriptionView = null
-            actionView = null
-        }
     }
 
-    fun bind(state: AboutItemViewState) {
+    override fun bind(state: AboutItemViewState) {
         binder.bind(state)
+    }
+
+    override fun teardown() {
+        binder.teardown()
+        titleView = null
+        descriptionView = null
+        actionView = null
     }
 
     companion object {
@@ -73,11 +70,10 @@ internal class AboutViewHolder private constructor(
         fun create(
             inflater: LayoutInflater,
             container: ViewGroup,
-            owner: LifecycleOwner,
             callback: (event: AboutItemViewEvent, index: Int) -> Unit
         ): AboutViewHolder {
             val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
-            return AboutViewHolder(binding, owner, callback)
+            return AboutViewHolder(binding, callback)
         }
     }
 }

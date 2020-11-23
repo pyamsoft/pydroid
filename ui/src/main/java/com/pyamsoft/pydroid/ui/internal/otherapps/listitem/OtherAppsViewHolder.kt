@@ -20,21 +20,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.arch.ViewBinder
-import com.pyamsoft.pydroid.arch.bindViews
+import com.pyamsoft.pydroid.arch.createViewBinder
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
 import com.pyamsoft.pydroid.ui.util.layout
-import com.pyamsoft.pydroid.util.doOnDestroy
+import timber.log.Timber
 
 internal class OtherAppsViewHolder private constructor(
     binding: AdapterItemOtherAppsBinding,
-    owner: LifecycleOwner,
     callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
-) : RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root), ViewBinder<OtherAppsItemViewState> {
 
     private val binder: ViewBinder<OtherAppsItemViewState>
 
@@ -51,8 +49,7 @@ internal class OtherAppsViewHolder private constructor(
         val title = requireNotNull(titleView)
         val icon = requireNotNull(iconView)
         val action = requireNotNull(actionView)
-        binder = bindViews(
-            owner,
+        binder = createViewBinder(
             icon,
             title,
             action
@@ -93,15 +90,17 @@ internal class OtherAppsViewHolder private constructor(
                 constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
             }
         }
-
-        owner.doOnDestroy {
-            titleView = null
-            iconView = null
-        }
     }
 
-    fun bind(state: OtherAppsItemViewState) {
+    override fun bind(state: OtherAppsItemViewState) {
         binder.bind(state)
+    }
+
+    override fun teardown() {
+        binder.teardown()
+        titleView = null
+        iconView = null
+        actionView = null
     }
 
     companion object {
@@ -111,11 +110,10 @@ internal class OtherAppsViewHolder private constructor(
         fun create(
             inflater: LayoutInflater,
             container: ViewGroup,
-            owner: LifecycleOwner,
             callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
         ): OtherAppsViewHolder {
             val binding = AdapterItemOtherAppsBinding.inflate(inflater, container, false)
-            return OtherAppsViewHolder(binding, owner, callback)
+            return OtherAppsViewHolder(binding, callback)
         }
     }
 }

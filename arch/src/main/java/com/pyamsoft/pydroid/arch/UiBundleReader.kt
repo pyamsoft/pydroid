@@ -20,6 +20,9 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.internal.RealUiBundleReader
 
+/**
+ * Reads saved state from a Bundle
+ */
 public interface UiBundleReader {
 
     /**

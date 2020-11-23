@@ -16,7 +16,13 @@
 
 package com.pyamsoft.pydroid.arch
 
+/**
+ * Represents an object that has State that can be saved to a UiBundleWriter
+ */
 internal fun interface SaveableState {
 
+    /**
+     * Save state to a UiBundleWriter
+     */
     fun saveState(outState: UiBundleWriter)
 }

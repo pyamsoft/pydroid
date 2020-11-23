@@ -26,6 +26,9 @@ import kotlin.reflect.KClass
  */
 public abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
+    /**
+     * Resolve the requested UiViewModel
+     */
     final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
@@ -38,10 +41,16 @@ public abstract class UiViewModelFactory protected constructor() : ViewModelProv
         }
     }
 
+    /**
+     * Factory fails to return a value
+     */
     protected fun fail(): Nothing {
         throw IllegalArgumentException("Factory can only handle classes that extend UiViewModel")
     }
 
+    /**
+     * Resolve the requested UiViewModel
+     */
     @CheckResult
     protected abstract fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*>
 }

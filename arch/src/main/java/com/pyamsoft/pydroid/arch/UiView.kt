@@ -45,6 +45,11 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
     private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
+    /**
+     * CoroutineScope for the View level
+     *
+     * Really should only be used to power the viewEventBus
+     */
     protected val viewScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     /**
@@ -157,6 +162,9 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
         }
     }
 
+    /**
+     * Publish View level events
+     */
     protected fun publish(event: V) {
         viewScope.launch(context = Dispatchers.IO) {
             viewEventBus.send(event)

@@ -36,7 +36,17 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
     parent: ViewGroup
 ) : UiView<S, V>() {
 
+    /**
+     * The root view of this UiView
+     */
     protected abstract val layoutRoot: View
+
+    /**
+     * This expects the B::inflate method on a <layout> with a <merge> tag.
+     *
+     * If you do not include the <merge> tag in your layout, the method signature will not match.
+     */
+    protected abstract val viewBinding: (LayoutInflater, ViewGroup) -> B
 
     private val nestedViewDelegate = lazy(NONE) { mutableListOf<UiView<S, V>>() }
     private val nestedViews by nestedViewDelegate
@@ -45,9 +55,11 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
 
     private var _parent: ViewGroup? = parent
 
-    protected abstract val viewBinding: (LayoutInflater, ViewGroup) -> B
-
     private var _binding: B? = null
+
+    /**
+     * Get the current ViewBinding
+     */
     protected val binding: B
         get() = _binding ?: die("Null binding")
 
@@ -169,6 +181,9 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         nestedViews().forEach { it.render(state) }
     }
 
+    /**
+     * Called each time a new UiViewState needs to be rendered
+     */
     @UiThread
     protected abstract fun onRender(state: S)
 
@@ -213,6 +228,11 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         mutateMe.add(v)
     }
 
+    /**
+     * Bind a given Android View to the lifecycle of this UiView component.
+     *
+     * Lazily fetches the Android View at first access and correctly releases it when the UiView is torn down.
+     */
     @CheckResult
     @UiThread
     protected fun <V : View> boundView(func: B.() -> V): Bound<V> {
@@ -222,6 +242,9 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         return Bound(parent()) { func(binding) }.also { trackBound(it) }
     }
 
+    /**
+     * A Bound view is lazily fetched on first access and released upon UiView teardown.
+     */
     protected data class Bound<V : View> internal constructor(
         private var parent: ViewGroup?,
         private var resolver: ((View) -> V)?
@@ -239,6 +262,9 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
             }
         }
 
+        /**
+         * Get the View if it has already been resolved, else resolve it and then return it
+         */
         override fun getValue(
             thisRef: Any,
             property: KProperty<*>

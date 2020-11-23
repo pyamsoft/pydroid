@@ -149,6 +149,9 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         }
     }
 
+    /**
+     * Called when the UiViewModel is being cleared for good.
+     */
     @UiThread
     final override fun onCleared() {
         Enforcer.assertOnMainThread()
@@ -344,5 +347,8 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         onClearEvents.add(onTeardown)
     }
 
+    /**
+     * Handle a UiViewEvent
+     */
     protected abstract fun handleViewEvent(event: V)
 }

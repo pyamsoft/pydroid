@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.pyamsoft.pydroid.arch.ViewBinder
+import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
 internal class OtherAppsAdapter internal constructor(
@@ -60,13 +60,7 @@ internal class OtherAppsAdapter internal constructor(
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
-
-        for (index in 0 until itemCount) {
-            val holder = recyclerView.findViewHolderForAdapterPosition(index)
-            if (holder is ViewBinder<*>) {
-                holder.teardown()
-            }
-        }
+        teardownAdapter(recyclerView)
     }
 
     companion object {

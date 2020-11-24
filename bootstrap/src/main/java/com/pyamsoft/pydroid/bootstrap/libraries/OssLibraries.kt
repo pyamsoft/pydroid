@@ -18,16 +18,38 @@ package com.pyamsoft.pydroid.bootstrap.libraries
 
 import androidx.annotation.CheckResult
 
-object OssLibraries {
+/**
+ * Manage the various open source libraries
+ */
+public object OssLibraries {
 
     private val libraries = mutableSetOf<OssLibrary>()
 
     // These libraries are disabled by default and should be enabled at runtime
-    var usingArch = false
-    var usingAutopsy = false
-    var usingLoader = false
-    var usingNotify = false
-    var usingUi = false
+    /**
+     * Using pydroid-arch library
+     */
+    public var usingArch: Boolean = false
+
+    /**
+     * Using pydroid-autopsy library
+     */
+    public var usingAutopsy: Boolean = false
+
+    /**
+     * Using pydroid-loader library
+     */
+    public var usingLoader: Boolean = false
+
+    /**
+     * Using pydroid-notify library
+     */
+    public var usingNotify: Boolean = false
+
+    /**
+     * Using pydroid-ui library
+     */
+    public var usingUi: Boolean = false
 
     private fun addBuildLibraries() {
         add(
@@ -230,9 +252,12 @@ object OssLibraries {
         )
     }
 
-    @JvmOverloads
+    /**
+     * Add a new library to the list of libraries used by the application
+     */
     @JvmStatic
-    fun add(
+    @JvmOverloads
+    public fun add(
         name: String,
         url: String,
         description: String,
@@ -249,9 +274,12 @@ object OssLibraries {
         )
     }
 
+    /**
+     * Get the list of libraries used in the application
+     */
     @JvmStatic
     @CheckResult
-    fun libraries(): Set<OssLibrary> {
+    public fun libraries(): Set<OssLibrary> {
         // Core and Build is always added if you're using any PYDroid
         addCoreLibraries()
         addBuildLibraries()

@@ -24,7 +24,10 @@ import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.version.store.PlayStoreAppUpdater
 import java.util.concurrent.TimeUnit.MINUTES
 
-class VersionCheckModule(params: Parameters) {
+/**
+ * In-App update module
+ */
+public class VersionCheckModule(params: Parameters) {
 
     private val impl: VersionInteractorImpl
 
@@ -39,12 +42,15 @@ class VersionCheckModule(params: Parameters) {
         impl = VersionInteractorImpl(updater, createCache(network))
     }
 
+    /**
+     * Provide version interactor
+     */
     @CheckResult
-    fun provideInteractor(): VersionInteractor {
+    public fun provideInteractor(): VersionInteractor {
         return impl
     }
 
-    companion object {
+    public companion object {
 
         @JvmStatic
         @CheckResult
@@ -55,7 +61,10 @@ class VersionCheckModule(params: Parameters) {
         }
     }
 
-    data class Parameters(
+    /**
+     * Module parameters
+     */
+    public data class Parameters(
         internal val context: Context,
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,

@@ -29,7 +29,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.net.SocketFactory
 
-class NetworkModule(params: Parameters) {
+/**
+ * Module to provide network related helpers
+ */
+public class NetworkModule(params: Parameters) {
 
     private val serviceCreator: ServiceCreator
 
@@ -46,12 +49,15 @@ class NetworkModule(params: Parameters) {
         }
     }
 
+    /**
+     * Provide a network service creator
+     */
     @CheckResult
-    fun provideServiceCreator(): ServiceCreator {
+    public fun provideServiceCreator(): ServiceCreator {
         return serviceCreator
     }
 
-    companion object {
+    public companion object {
 
         private const val CURRENT_VERSION_REPO_BASE_URL =
             "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/"
@@ -118,7 +124,10 @@ class NetworkModule(params: Parameters) {
         }
     }
 
-    data class Parameters(
+    /**
+     * Network module parameters
+     */
+    public data class Parameters(
         internal val addLoggingInterceptor: Boolean
     )
 }

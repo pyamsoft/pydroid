@@ -29,7 +29,7 @@ internal class ChangeLogInteractorImpl internal constructor(
             Enforcer.assertOffMainThread()
             return@withContext (force || preferences.showChangelog()).also { show ->
                 if (show) {
-                    preferences.markChangelogShown()
+                    preferences.markChangeLogShown()
                 }
             }
         }

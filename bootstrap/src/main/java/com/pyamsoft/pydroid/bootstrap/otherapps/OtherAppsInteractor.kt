@@ -19,8 +19,14 @@ package com.pyamsoft.pydroid.bootstrap.otherapps
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-interface OtherAppsInteractor {
+/**
+ * Interactor for other pyamsoft applications
+ */
+public interface OtherAppsInteractor {
 
+    /**
+     * Retrieve the other pyamsoft application data
+     */
     @CheckResult
-    suspend fun getApps(force: Boolean): List<OtherApp>
+    public suspend fun getApps(force: Boolean): List<OtherApp>
 }

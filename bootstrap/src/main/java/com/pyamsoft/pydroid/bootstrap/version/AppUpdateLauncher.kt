@@ -19,15 +19,24 @@ package com.pyamsoft.pydroid.bootstrap.version
 import android.app.Activity
 import androidx.annotation.CheckResult
 
-fun interface AppUpdateLauncher {
+/**
+ * In app update launcher
+ */
+public fun interface AppUpdateLauncher {
 
-    fun update(activity: Activity, requestCode: Int)
+    /**
+     * Begin an update
+     */
+    public fun update(activity: Activity, requestCode: Int)
 
-    companion object {
+    public companion object {
 
+        /**
+         * A no-op implementation
+         */
         @JvmStatic
         @CheckResult
-        fun empty(): AppUpdateLauncher {
+        public fun empty(): AppUpdateLauncher {
             return AppUpdateLauncher { _, _ -> }
         }
     }

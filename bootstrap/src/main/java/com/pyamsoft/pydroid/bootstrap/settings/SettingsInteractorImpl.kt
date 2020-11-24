@@ -29,7 +29,7 @@ internal class SettingsInteractorImpl internal constructor(
         requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
     }
 
-    override suspend fun clear() {
+    override suspend fun wipeData() {
         Timber.d("Resetting all application user data")
         activityManager.clearApplicationUserData()
     }

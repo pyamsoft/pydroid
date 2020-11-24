@@ -25,7 +25,10 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
 import java.util.concurrent.TimeUnit.HOURS
 
-class OtherAppsModule(params: Parameters) {
+/**
+ * Module for other pyamsoft applications
+ */
+public class OtherAppsModule(params: Parameters) {
 
     private val impl: OtherAppsInteractorImpl
 
@@ -35,12 +38,15 @@ class OtherAppsModule(params: Parameters) {
         impl = OtherAppsInteractorImpl(params.packageName, createCache(network))
     }
 
+    /**
+     * Provide an interactor for other pyamsoft applications
+     */
     @CheckResult
-    fun provideInteractor(): OtherAppsInteractor {
+    public fun provideInteractor(): OtherAppsInteractor {
         return impl
     }
 
-    companion object {
+    public companion object {
 
         @JvmStatic
         @CheckResult
@@ -53,7 +59,10 @@ class OtherAppsModule(params: Parameters) {
         }
     }
 
-    data class Parameters(
+    /**
+     * Module parameters
+     */
+    public data class Parameters(
         internal val packageName: String,
         internal val serviceCreator: ServiceCreator
     )

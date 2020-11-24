@@ -29,7 +29,7 @@ internal class SettingsClearConfigViewModel internal constructor(
 
     internal fun reset() {
         viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.clear()
+            interactor.wipeData()
         }
     }
 }

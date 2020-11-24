@@ -22,15 +22,24 @@ import java.net.InetAddress
 import java.net.Socket
 import javax.net.SocketFactory
 
-open class DelegatingSocketFactory protected constructor(
+/**
+ * Delegates which tags sockets for Android O Strict-Mode compatibility
+ */
+public open class DelegatingSocketFactory protected constructor(
     private val delegate: SocketFactory
 ) : SocketFactory() {
 
+    /**
+     * See [SocketFactory.createSocket]
+     */
     final override fun createSocket(): Socket {
         return delegate.createSocket()
             .also { configureSocket(it) }
     }
 
+    /**
+     * See [SocketFactory.createSocket]
+     */
     final override fun createSocket(
         host: String?,
         port: Int
@@ -39,6 +48,9 @@ open class DelegatingSocketFactory protected constructor(
             .also { configureSocket(it) }
     }
 
+    /**
+     * See [SocketFactory.createSocket]
+     */
     final override fun createSocket(
         host: String?,
         port: Int,
@@ -49,6 +61,9 @@ open class DelegatingSocketFactory protected constructor(
             .also { configureSocket(it) }
     }
 
+    /**
+     * See [SocketFactory.createSocket]
+     */
     final override fun createSocket(
         host: InetAddress?,
         port: Int
@@ -57,6 +72,9 @@ open class DelegatingSocketFactory protected constructor(
             .also { configureSocket(it) }
     }
 
+    /**
+     * See [SocketFactory.createSocket]
+     */
     final override fun createSocket(
         host: InetAddress?,
         port: Int,
@@ -67,6 +85,9 @@ open class DelegatingSocketFactory protected constructor(
             .also { configureSocket(it) }
     }
 
+    /**
+     * Tag each socket with traffic stats for StrictMode compliance on Android O
+     */
     @CheckResult
     protected open fun configureSocket(socket: Socket): Socket {
         // On Android O and above, StrictMode causes untagged socket errors
@@ -76,12 +97,15 @@ open class DelegatingSocketFactory protected constructor(
         return socket
     }
 
-    companion object {
+    public companion object {
 
+        /**
+         * Create a new socket factory
+         */
         @JvmStatic
         @CheckResult
         @JvmOverloads
-        fun create(factory: SocketFactory = getDefault()): SocketFactory {
+        public fun create(factory: SocketFactory = getDefault()): SocketFactory {
             return DelegatingSocketFactory(factory)
         }
     }

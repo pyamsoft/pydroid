@@ -18,8 +18,15 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
 
-interface RateMyApp {
+/**
+ * A in-app rating interface
+ */
+public interface RateMyApp {
 
+    /**
+     * Potentially start a new in-app review, depending on implementation details
+     */
     @CheckResult
-    suspend fun startReview(): AppReviewLauncher
+    public suspend fun startReview(): AppReviewLauncher
+
 }

@@ -16,7 +16,17 @@
 
 package com.pyamsoft.pydroid.bootstrap.libraries
 
-interface LibraryLicense {
-    val license: String
-    val location: String
+/**
+ * Interface for a library's license
+ */
+public interface LibraryLicense {
+    /**
+     * License name
+     */
+    public val license: String
+
+    /**
+     * License URL
+     */
+    public val location: String
 }

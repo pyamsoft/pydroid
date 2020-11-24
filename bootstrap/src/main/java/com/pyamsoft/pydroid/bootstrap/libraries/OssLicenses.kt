@@ -18,19 +18,42 @@ package com.pyamsoft.pydroid.bootstrap.libraries
 
 import androidx.annotation.CheckResult
 
-enum class OssLicenses(
+/**
+ * Enum about supported open source licenses
+ */
+public enum class OssLicenses(
     override val license: String,
     override val location: String
 ) : LibraryLicense {
+
+    /**
+     * The Apache v2.0 License
+     */
     APACHE2("Apache v2", "https://www.apache.org/licenses/LICENSE-2.0.html"),
+
+    /**
+     * The MIT License
+     */
     MIT("MIT", "https://mit-license.org/"),
+
+    /**
+     * The BSD 2-Clause or Simplified BSD License
+     */
     BSD2("Simplified BSD", "https://opensource.org/licenses/BSD-2-Clause"),
+
+    /**
+     * The BSD 3-Clause License
+     */
     BSD3("BSD 3-Clause", "https://opensource.org/licenses/BSD-3-Clause");
 
-    companion object {
+    public companion object {
+
+        /**
+         * A custom license
+         */
         @JvmStatic
         @CheckResult
-        fun custom(license: String, location: String): LibraryLicense {
+        public fun custom(license: String, location: String): LibraryLicense {
             return object : LibraryLicense {
                 override val license = license
                 override val location = location

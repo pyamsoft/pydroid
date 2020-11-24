@@ -18,10 +18,19 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 
 import androidx.annotation.CheckResult
 
-interface ChangeLogPreferences {
+/**
+ * Preferences for change log
+ */
+public interface ChangeLogPreferences {
 
+    /**
+     * Return if the changelog should be shown or not
+     */
     @CheckResult
-    suspend fun showChangelog(): Boolean
+    public suspend fun showChangelog(): Boolean
 
-    suspend fun markChangelogShown()
+    /**
+     * Mark the changelog as shown for the current application state
+     */
+    public suspend fun markChangeLogShown()
 }

@@ -16,11 +16,37 @@
 
 package com.pyamsoft.pydroid.bootstrap.otherapps.api
 
-data class OtherApp internal constructor(
+/**
+ * A representation of an other pyamsoft application
+ */
+public data class OtherApp internal constructor(
+    /**
+     * Package name
+     */
     val packageName: String,
+
+    /**
+     * Application name
+     */
     val name: String,
+
+    /**
+     * Description
+     */
     val description: String,
+
+    /**
+     * Application icon url
+     */
     val icon: String,
+
+    /**
+     * Application play store URL
+     */
     val storeUrl: String,
+
+    /**
+     * Application source code URL
+     */
     val sourceUrl: String
 )

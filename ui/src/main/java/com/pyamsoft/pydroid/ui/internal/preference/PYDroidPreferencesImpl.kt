@@ -49,7 +49,7 @@ internal class PYDroidPreferencesImpl internal constructor(
             return@withContext prefs.getInt(LAST_SHOWN_CHANGELOG, 0) < versionCode
         }
 
-    override suspend fun markChangelogShown() =
+    override suspend fun markChangeLogShown() =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 

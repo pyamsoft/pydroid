@@ -56,7 +56,7 @@ internal class ChangeLogDialog : FullscreenDialog() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.layout_constraint, container, false)
+        return inflater.inflate(R.layout.layout_linear_vertical, container, false)
     }
 
     override fun onViewCreated(

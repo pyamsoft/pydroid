@@ -17,10 +17,13 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
@@ -29,10 +32,12 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
-import com.pyamsoft.pydroid.ui.databinding.LayoutLinearVerticalBinding
+import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.FullscreenDialog
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.util.asDp
+import com.google.android.material.R as R2
 
 internal class ChangeLogDialog : FullscreenDialog() {
 
@@ -56,7 +61,15 @@ internal class ChangeLogDialog : FullscreenDialog() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.layout_linear_vertical, container, false)
+        // Load the original dialog theme into the "rest" of the dialog content
+        val dialogTheme = TypedValue().run {
+            requireActivity().theme.resolveAttribute(R2.attr.dialogTheme, this, true)
+            return@run resourceId
+        }
+
+        val newContext = ContextThemeWrapper(requireActivity(), dialogTheme)
+        val newInflater = inflater.cloneInContext(newContext)
+        return newInflater.inflate(R.layout.changelog_dialog, container, false)
     }
 
     override fun onViewCreated(
@@ -65,10 +78,15 @@ internal class ChangeLogDialog : FullscreenDialog() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding = LayoutLinearVerticalBinding.bind(view)
+        val binding = ChangelogDialogBinding.bind(view)
+        ViewCompat.setElevation(binding.changelogIcon, 8.asDp(view.context).toFloat())
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusChangeLogDialog()
-            .create(binding.layoutLinearV, getChangelogProvider())
+            .create(
+                binding.dialogRoot,
+                binding.changelogIcon,
+                getChangelogProvider()
+            )
             .inject(this)
 
         stateSaver = createComponent(
@@ -83,6 +101,11 @@ internal class ChangeLogDialog : FullscreenDialog() {
                 is ChangeLogDialogControllerEvent.Close -> dismiss()
             }
         }
+    }
+
+    // Custom transparent theme for this Dialog
+    override fun getTheme(): Int {
+        return R.style.ThemeOverlay_PYDroid_Changelog
     }
 
     override fun onDestroyView() {

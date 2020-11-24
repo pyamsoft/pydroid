@@ -16,21 +16,17 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
-import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.BaseUiView
+import android.widget.ImageView
+import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
-import com.pyamsoft.pydroid.ui.databinding.ChangelogIconBinding
 
 internal class ChangeLogIcon internal constructor(
-    parent: ViewGroup,
-    private val imageLoader: ImageLoader
-) : BaseUiView<ChangeLogDialogViewState, ChangeLogDialogViewEvent, ChangelogIconBinding>(parent) {
+    private val imageLoader: ImageLoader,
+    icon: ImageView
+) : UiView<ChangeLogDialogViewState, ChangeLogDialogViewEvent>() {
 
-    override val viewBinding = ChangelogIconBinding::inflate
-
-    override val layoutRoot by boundView { changelogIcon }
-
+    private var iconView: ImageView? = icon
     private var loaded: Loaded? = null
 
     init {
@@ -39,7 +35,11 @@ internal class ChangeLogIcon internal constructor(
         }
     }
 
-    override fun onRender(state: ChangeLogDialogViewState) {
+    override fun onFinalTeardown() {
+        iconView = null
+    }
+
+    override fun render(state: ChangeLogDialogViewState) {
         handleIcon(state)
     }
 
@@ -47,7 +47,7 @@ internal class ChangeLogIcon internal constructor(
         state.icon.let { icon ->
             clear()
             if (icon != 0) {
-                loaded = imageLoader.load(icon).into(binding.changelogIcon)
+                loaded = imageLoader.load(icon).into(requireNotNull(iconView))
             }
         }
     }

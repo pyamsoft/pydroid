@@ -21,14 +21,20 @@
         android:id="@+id/changelog_close_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/changelog_close"
             style="?attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
+            android:layout_gravity="center_vertical"
             android:text="@string/close"
             android:textAppearance="?attr/textAppearanceBody2" />
 

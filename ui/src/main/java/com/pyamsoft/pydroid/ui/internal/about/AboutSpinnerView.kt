@@ -19,13 +19,13 @@ package com.pyamsoft.pydroid.ui.internal.about
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.databinding.LoadingSpinnerBinding
+import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesLoadingBinding
 
 internal class AboutSpinnerView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutViewState, AboutViewEvent, LoadingSpinnerBinding>(parent) {
+) : BaseUiView<AboutViewState, AboutViewEvent, AboutLibrariesLoadingBinding>(parent) {
 
-    override val viewBinding = LoadingSpinnerBinding::inflate
+    override val viewBinding = AboutLibrariesLoadingBinding::inflate
 
     override val layoutRoot by boundView { spinnerRoot }
 

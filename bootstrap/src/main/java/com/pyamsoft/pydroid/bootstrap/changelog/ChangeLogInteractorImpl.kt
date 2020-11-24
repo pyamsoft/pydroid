@@ -16,13 +16,24 @@
 
 package com.pyamsoft.pydroid.bootstrap.changelog
 
+import android.content.Context
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class ChangeLogInteractorImpl internal constructor(
+    context: Context,
     private val preferences: ChangeLogPreferences
 ) : ChangeLogInteractor {
+
+    private val packageManager by lazy { context.applicationContext.packageManager }
+
+    override suspend fun getDisplayName(packageName: String): CharSequence =
+        withContext(context = Dispatchers.Default) {
+            Enforcer.assertOffMainThread()
+            val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+            return@withContext applicationInfo.loadLabel(packageManager)
+        }
 
     override suspend fun showChangelog(force: Boolean): Boolean =
         withContext(context = Dispatchers.Default) {

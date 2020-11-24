@@ -24,6 +24,12 @@ import androidx.annotation.CheckResult
 public interface ChangeLogInteractor {
 
     /**
+     * Gets the application display name
+     */
+    @CheckResult
+    public suspend fun getDisplayName(packageName: String): CharSequence
+
+    /**
      * Show a changelog if allowed.
      */
     @CheckResult

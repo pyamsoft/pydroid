@@ -28,16 +28,20 @@ internal interface OtherAppsItemComponent {
 
         @CheckResult
         fun create(parent: ViewGroup): OtherAppsItemComponent
+
+        data class Parameters internal constructor(
+            internal val imageLoader: ImageLoader,
+        )
     }
 
     class Impl private constructor(
         private val parent: ViewGroup,
-        private val imageLoader: ImageLoader
+        private val params: Factory.Parameters
     ) : OtherAppsItemComponent {
 
         override fun inject(viewHolder: OtherAppsViewHolder) {
             val title = OtherAppsItemTitleView(parent)
-            val icon = OtherAppsItemIconView(imageLoader, parent)
+            val icon = OtherAppsItemIconView(params.imageLoader, parent)
             val action = OtherAppsItemActionView(parent)
             viewHolder.titleView = title
             viewHolder.iconView = icon
@@ -45,11 +49,11 @@ internal interface OtherAppsItemComponent {
         }
 
         class FactoryImpl internal constructor(
-            private val imageLoader: ImageLoader
+            private val params: Factory.Parameters
         ) : Factory {
 
             override fun create(parent: ViewGroup): OtherAppsItemComponent {
-                return Impl(parent, imageLoader)
+                return Impl(parent, params)
             }
         }
     }

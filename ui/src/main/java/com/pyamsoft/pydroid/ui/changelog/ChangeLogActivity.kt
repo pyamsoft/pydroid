@@ -16,27 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.changelog
 
-import android.graphics.Typeface.BOLD
 import android.os.Bundle
-import android.text.SpannedString
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
-import androidx.core.content.withStyledAttributes
-import androidx.core.text.buildSpannedString
-import androidx.core.text.inSpans
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.R
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogControllerEvent
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogDialog
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
+import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
 abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
@@ -46,43 +38,10 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
     internal var changeLogFactory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<ChangeLogViewModel> { changeLogFactory }
 
-    protected abstract val changeLogLines: ChangeLogBuilder
-
     protected abstract val versionName: String
 
     final override val changeLogPackageName: String
         get() = requireNotNull(packageName)
-
-    final override val changelog: SpannedString
-        get() = buildSpannedString {
-            val attrArray = intArrayOf(android.R.attr.textSize, android.R.attr.textColor)
-
-            val indexOfSize = 0
-            val indexOfColor = 1
-
-            withStyledAttributes(R.style.TextAppearance_MaterialComponents_Headline5, attrArray) {
-                val size =
-                    getDimensionPixelSize(indexOfSize, INVALID).validate("dimensionPixelSize")
-                val color: Int = getColor(indexOfColor, INVALID).validate("color")
-
-                inSpans(StyleSpan(BOLD), AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                    appendLine("What's New in version $versionName")
-                }
-            }
-
-            withStyledAttributes(R.style.TextAppearance_MaterialComponents_Body2, attrArray) {
-                val size: Int =
-                    getDimensionPixelSize(indexOfSize, INVALID).validate("dimensionPixelSize")
-                val color: Int = getColor(indexOfColor, INVALID).validate("color")
-
-                inSpans(AbsoluteSizeSpan(size), ForegroundColorSpan(color)) {
-                    changeLogLines.build().forEach {
-                        // TODO(Peter): New style
-                        appendLine(it.line)
-                    }
-                }
-            }
-        }
 
     @CheckResult
     private fun Int.validate(what: String): Int {

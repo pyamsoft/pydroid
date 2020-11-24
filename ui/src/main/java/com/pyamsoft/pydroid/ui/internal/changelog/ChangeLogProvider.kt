@@ -14,31 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.bootstrap.changelog
+package com.pyamsoft.pydroid.ui.internal.changelog
 
-import android.content.Context
 import androidx.annotation.CheckResult
+import androidx.annotation.DrawableRes
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogBuilder
 
-/**
- * Change log module
- */
-public class ChangeLogModule(params: Parameters) {
+internal interface ChangeLogProvider {
 
-    private val impl = ChangeLogInteractorImpl(params.context, params.preferences)
+    @get:CheckResult
+    val changeLogPackageName: String
 
-    /**
-     * Provide a change log interactor
-     */
-    @CheckResult
-    public fun provideInteractor(): ChangeLogInteractor {
-        return impl
-    }
+    @get:CheckResult
+    val changelog: ChangeLogBuilder
 
-    /**
-     * ChangeLogModule parameters
-     */
-    public data class Parameters(
-        internal val context: Context,
-        internal val preferences: ChangeLogPreferences
-    )
+    @get:[CheckResult DrawableRes]
+    val applicationIcon: Int
 }

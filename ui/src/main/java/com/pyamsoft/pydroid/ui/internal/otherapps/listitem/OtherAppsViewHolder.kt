@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
 import com.pyamsoft.pydroid.ui.util.layout
-import timber.log.Timber
 
 internal class OtherAppsViewHolder private constructor(
     binding: AdapterItemOtherAppsBinding,

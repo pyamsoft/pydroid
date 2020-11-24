@@ -31,6 +31,8 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
+import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
+import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogDialogItemComponent
 import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsComponent
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemComponent
@@ -64,10 +66,16 @@ internal interface PYDroidComponent {
     fun plusClearConfirmDialog(): SettingsClearConfigComponent
 
     @CheckResult
-    fun plusVersionCheck(): VersionCheckComponent.Factory
+    fun plusChangeLog(): ChangeLogComponent.Factory
 
     @CheckResult
-    fun plusChangeLog(): ChangeLogComponent.Factory
+    fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory
+
+    @CheckResult
+    fun plusChangeLogDialogItem(): ChangeLogDialogItemComponent.Factory
+
+    @CheckResult
+    fun plusVersionCheck(): VersionCheckComponent.Factory
 
     @CheckResult
     fun plusVersionUpgrade(): VersionUpgradeComponent
@@ -156,7 +164,10 @@ internal interface PYDroidComponent {
         )
 
         private val changeLogModule = ChangeLogModule(
-            ChangeLogModule.Parameters(preferences = preferences)
+            ChangeLogModule.Parameters(
+                context = context.applicationContext,
+                preferences = preferences
+            )
         )
 
         private val viewModelFactory =
@@ -197,6 +208,10 @@ internal interface PYDroidComponent {
             factory = viewModelFactory
         )
 
+        private val otherAppItemParams = OtherAppsItemComponent.Factory.Parameters(
+            imageLoader = loaderModule.provideLoader()
+        )
+
         private val ratingParams = RatingComponent.Factory.Parameters(
             factory = viewModelFactory
         )
@@ -207,6 +222,11 @@ internal interface PYDroidComponent {
 
         private val changeLogParams = ChangeLogComponent.Factory.Parameters(
             factory = viewModelFactory
+        )
+
+        private val changeLogDialogParams = ChangeLogDialogComponent.Factory.Parameters(
+            imageLoader = loaderModule.provideLoader(),
+            interactor = changeLogModule.provideInteractor()
         )
 
         private val provider = object : ModuleProvider {
@@ -236,7 +256,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusOtherAppsItem(): OtherAppsItemComponent.Factory {
-            return OtherAppsItemComponent.Impl.FactoryImpl(loaderModule.provideLoader())
+            return OtherAppsItemComponent.Impl.FactoryImpl(otherAppItemParams)
         }
 
         override fun plusAboutItem(): AboutItemComponent.Factory {
@@ -265,6 +285,14 @@ internal interface PYDroidComponent {
 
         override fun plusChangeLog(): ChangeLogComponent.Factory {
             return ChangeLogComponent.Impl.FactoryImpl(changeLogParams)
+        }
+
+        override fun plusChangeLogDialog(): ChangeLogDialogComponent.Factory {
+            return ChangeLogDialogComponent.Impl.FactoryImpl(changeLogDialogParams)
+        }
+
+        override fun plusChangeLogDialogItem(): ChangeLogDialogItemComponent.Factory {
+            return ChangeLogDialogItemComponent.Impl.FactoryImpl()
         }
 
         override fun moduleProvider(): ModuleProvider {

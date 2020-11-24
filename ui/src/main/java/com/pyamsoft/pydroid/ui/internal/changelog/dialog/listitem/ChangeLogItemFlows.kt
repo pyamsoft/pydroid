@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.changelog
+package com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem
 
-import android.text.SpannedString
-import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
-interface ChangeLogProvider {
+internal data class ChangeLogItemViewState internal constructor(
+    val line: ChangeLogLine
+) : UiViewState
 
-    @get:CheckResult
-    val changeLogPackageName: String
-
-    @get:CheckResult
-    val changelog: SpannedString
-
-    @get:[CheckResult DrawableRes]
-    val applicationIcon: Int
-}

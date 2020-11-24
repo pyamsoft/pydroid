@@ -35,5 +35,6 @@
     <string name="open_store">Play Store</string>
     <string name="view_source">Source Code</string>
     <string name="ad_badge">AD</string>
+    <string name="close">Close</string>
 
 </resources>

@@ -23,7 +23,10 @@
         android:layout_width="88dp"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="8dp">
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/changelog_item_type"

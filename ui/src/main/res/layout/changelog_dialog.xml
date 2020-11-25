@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
-    android:clipToPadding="false"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -13,8 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="56dp"
         android:background="?android:attr/windowBackground"
-        android:orientation="vertical"
-        android:paddingTop="8dp" />
+        android:orientation="vertical" />
 
     <ImageView
         android:id="@+id/changelog_icon"

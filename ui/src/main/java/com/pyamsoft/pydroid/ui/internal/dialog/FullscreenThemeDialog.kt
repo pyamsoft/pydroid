@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,6 +34,7 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.app.makeFullscreen
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogControllerEvent.Close
@@ -43,7 +45,7 @@ import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import timber.log.Timber
 import com.google.android.material.R as R2
 
-internal abstract class FullscreenThemeDialog protected constructor() : FullscreenDialog() {
+internal abstract class FullscreenThemeDialog protected constructor() : AppCompatDialogFragment() {
 
     internal var toolbar: ThemeDialogToolbar? = null
 
@@ -67,6 +69,8 @@ internal abstract class FullscreenThemeDialog protected constructor() : Fullscre
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
+        makeFullscreen()
+
         val binding = LayoutConstraintBinding.bind(view)
         Injector.obtain<PYDroidComponent>(view.context.applicationContext)
             .plusThemeDialog()

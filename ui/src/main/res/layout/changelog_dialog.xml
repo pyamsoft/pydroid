@@ -13,14 +13,15 @@
         android:layout_height="match_parent"
         android:layout_marginTop="56dp"
         android:background="?android:attr/windowBackground"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:paddingTop="8dp" />
 
     <ImageView
         android:id="@+id/changelog_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_gravity="center|top"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:contentDescription="@string/blank" />
 
 </FrameLayout>

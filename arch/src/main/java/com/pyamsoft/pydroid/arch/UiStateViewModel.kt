@@ -51,10 +51,6 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     )
     protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
-    // NOTE(Peter): Since state events run on their own single threaded dispatcher, we may not
-    // need a mutex since there will only ever be one thread at a time.
-    private val mutex = Mutex()
-
     private var modelState = UiVMState(initialState)
 
     /**
@@ -162,27 +158,25 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
         }
     }
 
-    private suspend inline fun processStateChange(
+    private inline fun processStateChange(
         isSetState: Boolean,
         stateChange: S.() -> S,
         andThen: (newState: S) -> Unit
     ) {
         Enforcer.assertOffMainThread()
 
-        mutex.withLock {
-            val oldState = state
-            val newState = oldState.stateChange()
+        val oldState = state
+        val newState = oldState.stateChange()
 
-            // If we are in debug mode, perform the state change twice and make sure that it produces
-            // the same state both times.
-            if (isSetState) {
-                UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
-            }
-
-            modelState.set(newState)
-
-            andThen(newState)
+        // If we are in debug mode, perform the state change twice and make sure that it produces
+        // the same state both times.
+        if (isSetState) {
+            UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
         }
+
+        modelState.set(newState)
+
+        andThen(newState)
     }
 
     private inline fun handleStateChange(

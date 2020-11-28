@@ -55,7 +55,17 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     // need a mutex since there will only ever be one thread at a time.
     private val mutex = Mutex()
 
-    private var state = UiVMState(initialState)
+    private var modelState = UiVMState(initialState)
+
+    /**
+     * The current state
+     *
+     * The StateFlow implementation should be thread/coroutine safe, so this can be called from anywhere.
+     */
+    protected val state: S
+        @get:CheckResult get() {
+            return modelState.get()
+        }
 
     /**
      * Bind renderables to this ViewModel.
@@ -92,16 +102,8 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
 
         // Render the latest or initial state
         queueInOrder {
-            handleStateChange(state.get()) { onRender(renderables, it) }
+            handleStateChange(state) { onRender(renderables, it) }
         }
-    }
-
-    @UiThread
-    @CheckResult
-    // internal instead of protected so that only callers in the module can use this
-    internal fun getCurrentState(): S {
-        Enforcer.assertOnMainThread()
-        return state.get()
     }
 
     /**
@@ -119,10 +121,20 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    protected fun setState(func: S.() -> S) {
+    protected fun setState(stateChange: S.() -> S) {
+        setState(stateChange = stateChange, andThen = {})
+    }
+
+    /**
+     * Modify the state from the previous
+     *
+     * Note that, like calling this.setState() in React, this operation does not happen immediately.
+     * Once the state change has been performed and the view has been notified, the andThen call will be run.
+     */
+    protected fun setState(stateChange: S.() -> S, andThen: (newState: S) -> Unit) {
         viewModelScope.queueInOrder {
             withContext(context = Dispatchers.Default) {
-                processStateChange(isSetState = true) { func() }
+                processStateChange(isSetState = true, stateChange = stateChange, andThen = andThen)
             }
         }
     }
@@ -130,25 +142,34 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     /**
      * Act upon the current state
      *
-     * Note that like accessing state in React using this.state.<var>, this is immediate and
+     * Note that like accessing state in React using this.state.<var>, this is not immediate and
      * may not be up to date with the latest setState() call.
      */
+    @Deprecated("Use the state variable directly to access the current state. To access state after a setState call, chain a follow up andThen() call")
     protected fun withState(func: S.() -> Unit) {
         viewModelScope.queueInOrder {
             // Yield to any setState calls happening at this point
             yield()
 
             withContext(context = Dispatchers.Default) {
-                processStateChange(isSetState = false) { this.apply(func) }
+                processStateChange(
+                    isSetState = false,
+                    stateChange = { this.apply(func) },
+                    andThen = {}
+                )
             }
         }
     }
 
-    private suspend inline fun processStateChange(isSetState: Boolean, stateChange: S.() -> S) {
+    private suspend inline fun processStateChange(
+        isSetState: Boolean,
+        stateChange: S.() -> S,
+        andThen: (newState: S) -> Unit
+    ) {
         Enforcer.assertOffMainThread()
 
         mutex.withLock {
-            val oldState = state.get()
+            val oldState = state
             val newState = oldState.stateChange()
 
             // If we are in debug mode, perform the state change twice and make sure that it produces
@@ -157,7 +178,9 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
                 UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
             }
 
-            state.set(newState)
+            modelState.set(newState)
+
+            andThen(newState)
         }
     }
 
@@ -171,7 +194,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
 
     private inline fun CoroutineScope.bindStateEvents(crossinline onRender: (S) -> Unit) {
         launch(context = Dispatchers.IO) {
-            state.onChange { state ->
+            modelState.onChange { state ->
                 withContext(context = Dispatchers.Main) {
                     handleStateChange(state) { onRender(it) }
                 }

@@ -54,12 +54,10 @@ internal class OtherAppsViewModel internal constructor(
         index: Int,
         crossinline func: (app: OtherApp) -> String
     ) {
-        withState {
-            val a = apps
-            if (a.isNotEmpty()) {
-                a.getOrNull(index)?.let { app ->
-                    publish(OtherAppsControllerEvent.ExternalUrl(func(app)))
-                }
+        val a = state.apps
+        if (a.isNotEmpty()) {
+            a.getOrNull(index)?.let { app ->
+                publish(OtherAppsControllerEvent.ExternalUrl(func(app)))
             }
         }
     }

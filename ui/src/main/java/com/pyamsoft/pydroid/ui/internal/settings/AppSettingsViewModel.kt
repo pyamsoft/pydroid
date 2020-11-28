@@ -71,13 +71,11 @@ internal class AppSettingsViewModel internal constructor(
     }
 
     private fun seeMoreApps() {
-        withState {
-            otherApps.let { others ->
-                if (others.isEmpty()) {
-                    publish(AppSettingsControllerEvent.NavigateMoreApps)
-                } else {
-                    publish(AppSettingsControllerEvent.OpenOtherAppsPage(others))
-                }
+        state.otherApps.let { others ->
+            if (others.isEmpty()) {
+                publish(AppSettingsControllerEvent.NavigateMoreApps)
+            } else {
+                publish(AppSettingsControllerEvent.OpenOtherAppsPage(others))
             }
         }
     }

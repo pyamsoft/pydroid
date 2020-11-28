@@ -68,12 +68,10 @@ internal class AboutViewModel internal constructor(
     }
 
     private inline fun openUrl(index: Int, crossinline func: (library: OssLibrary) -> String) {
-        withState {
-            val l = licenses
-            if (l.isNotEmpty()) {
-                l.getOrNull(index)?.let { lib ->
-                    publish(ExternalUrl(func(lib)))
-                }
+        val l = state.licenses
+        if (l.isNotEmpty()) {
+            l.getOrNull(index)?.let { lib ->
+                publish(ExternalUrl(func(lib)))
             }
         }
     }

@@ -142,7 +142,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         if (onSaveStateEventDelegate.isInitialized()) {
 
             // Call save state hooks in random order
-            val s = getCurrentState()
+            val s = state
             onSaveStateEvents.forEach { it(outState, s) }
 
             // Don't clear the event list since this lifecycle method can be called many times.

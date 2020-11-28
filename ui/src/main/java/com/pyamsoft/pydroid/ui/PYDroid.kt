@@ -84,6 +84,9 @@ object PYDroid {
         }
     }
 
+    /**
+     * PYDroid parameters
+     */
     data class Parameters @JvmOverloads constructor(
         internal val viewSourceUrl: String,
         internal val bugReportUrl: String,
@@ -93,6 +96,9 @@ object PYDroid {
         internal val debug: DebugParameters? = null
     )
 
+    /**
+     * PYDroid debugging parameters
+     */
     data class DebugParameters(
         internal val enabled: Boolean,
         internal val upgradeAvailable: Boolean

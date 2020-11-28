@@ -20,8 +20,14 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.annotation.CheckResult
 
+/**
+ * Injects PYDroid and its managed services into a context
+ */
 object Injector {
 
+    /**
+     * Obtain an object, like a Component from the Context service locator
+     */
     @JvmStatic
     @CheckResult
     @SuppressLint("WrongConstant")
@@ -29,6 +35,9 @@ object Injector {
         return obtain(context, T::class.java)
     }
 
+    /**
+     * Obtain an object, like a Component from the Context service locator
+     */
     @JvmStatic
     @CheckResult
     @SuppressLint("WrongConstant")
@@ -44,6 +53,6 @@ object Injector {
     }
 }
 
-class ServiceLookupException internal constructor(
+private class ServiceLookupException(
     name: String
 ) : IllegalStateException("Unable to location service: $name")

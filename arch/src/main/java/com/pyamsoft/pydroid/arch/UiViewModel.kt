@@ -77,23 +77,19 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
             bindControllerEvents(onControllerEvent)
             bindViewEvents(views.asIterable())
 
-            // Use launch here so that we re-claim the Main context and have these run after the
-            // controller and view events are finished binding
-            queueInOrder {
+            // Initialize before first render
+            // Generally, since you will add your doOnBind hooks in the ViewModel init {} block,
+            // they will only run once - which is when the object is created.
+            //
+            // If you wanna do some strange kind of stuff though, you do you.
+            initialize(savedInstanceState)
 
-                // Initialize before first render
-                // Generally, since you will add your doOnBind hooks in the ViewModel init {} block,
-                // they will only run once - which is when the object is created.
-                //
-                // If you wanna do some strange kind of stuff though, you do you.
-                initialize(savedInstanceState)
+            // Inflate the views
+            views.forEach { it.inflate(savedInstanceState) }
 
-                // Inflate the views
-                views.forEach { it.inflate(savedInstanceState) }
+            // Bind state
+            bindState(views)
 
-                // Bind state
-                bindState(views)
-            }
         }.also { job -> job.invokeOnCompletion { onUnbind() } }
     }
 
@@ -182,10 +178,8 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
      * Fire a controller event
      */
     protected fun publish(event: C) {
-        viewModelScope.queueInOrder {
-            withContext(context = Dispatchers.IO) {
-                controllerEventBus.send(event)
-            }
+        viewModelScope.launch(context = Dispatchers.IO) {
+            controllerEventBus.send(event)
         }
     }
 

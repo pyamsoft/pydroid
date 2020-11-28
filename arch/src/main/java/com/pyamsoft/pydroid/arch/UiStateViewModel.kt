@@ -101,9 +101,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
         bindStateEvents { onRender(renderables, it) }
 
         // Render the latest or initial state
-        queueInOrder {
-            handleStateChange(state) { onRender(renderables, it) }
-        }
+        handleStateChange(state) { onRender(renderables, it) }
     }
 
     /**
@@ -111,6 +109,9 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      * This ensures that the operation queued will run in order before any of the other operations after it
      *
      * Must be CoroutineScope extension to cancel correctly
+     *
+     * Remove once withState is removed, since setState can just immediately start a Dispatchers.Default
+     * coroutine calling processStateChange
      */
     internal inline fun CoroutineScope.queueInOrder(crossinline func: suspend CoroutineScope.() -> Unit) {
         launch(context = Dispatchers.Main) { func() }

@@ -51,6 +51,9 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     )
     protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
+    // Mutex to make sure that setState operations happen in order
+    private val mutex = Mutex()
+
     private var modelState = UiVMState(initialState)
 
     /**
@@ -129,11 +132,16 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      *
      * The andThen callback will be fired after the state has changed and the view has been notified.
      * If the stateChange payload does not cause a state update, the andThen call will not be fired.
+     *
+     * There is no threading guarantee for the andThen callback
      */
-    protected fun setState(stateChange: S.() -> S, andThen: (newState: S) -> Unit) {
+    protected fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
         viewModelScope.queueInOrder {
             withContext(context = Dispatchers.Default) {
-                processStateChange(isSetState = true, stateChange = stateChange, andThen = andThen)
+                processStateChange(
+                    isSetState = true,
+                    stateChange = stateChange,
+                )?.also { andThen(it) }
             }
         }
     }
@@ -154,31 +162,34 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
                 processStateChange(
                     isSetState = false,
                     stateChange = { this.apply(func) },
-                    andThen = {}
                 )
             }
         }
     }
 
-    private inline fun processStateChange(
+    /**
+     * Return the newState if it has changed or null if it has not
+     */
+    private suspend inline fun processStateChange(
         isSetState: Boolean,
-        stateChange: S.() -> S,
-        andThen: (newState: S) -> Unit
-    ) {
+        stateChange: S.() -> S
+    ): S? {
         Enforcer.assertOffMainThread()
 
-        val oldState = state
-        val newState = oldState.stateChange()
+        // Use this mutex to make sure that setState changes happen in the order they are called.
+        return mutex.withLock {
+            val oldState = state
+            val newState = oldState.stateChange()
 
-        // If we are in debug mode, perform the state change twice and make sure that it produces
-        // the same state both times.
-        if (isSetState) {
-            UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
-        }
+            // If we are in debug mode, perform the state change twice and make sure that it produces
+            // the same state both times.
+            if (isSetState) {
+                UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
+            }
 
-        if (oldState != newState) {
-            modelState.set(newState)
-            andThen(newState)
+            return@withLock if (oldState == newState) null else {
+                newState.also { modelState.set(it) }
+            }
         }
     }
 

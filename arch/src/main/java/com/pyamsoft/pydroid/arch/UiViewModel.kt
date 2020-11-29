@@ -26,7 +26,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
-import kotlin.coroutines.EmptyCoroutineContext
 
 /**
  * A default implementation of a UiStateViewModel which knows how to set up along with UiViews and a UiController to become a full UiComponent
@@ -51,9 +50,8 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onClearEvents by onClearEventDelegate
 
-    private val onSaveStateEventDelegate =
-        lazy(NONE) { mutableSetOf<(UiBundleWriter, S) -> Unit>() }
-    private val onSaveStateEvents by onSaveStateEventDelegate
+    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter, S) -> Unit>() }
+    private val onSaveEvents by onSaveEventDelegate
 
     private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
 
@@ -103,9 +101,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
 
             // Call cleanup hooks in random order
             onUnbindEvents.forEach { it() }
-
-            // Clear the init hooks list to free up memory
-            onUnbindEvents.clear()
         }
     }
 
@@ -116,9 +111,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
 
             // Call init hooks in random order
             onBindEvents.forEach { it(savedInstanceState) }
-
-            // Clear the init hooks list to free up memory
-            onBindEvents.clear()
         }
     }
 
@@ -135,13 +127,11 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         Enforcer.assertOnMainThread()
 
         // Only run the save state hooks if they exist, otherwise we don't need to init the memory
-        if (onSaveStateEventDelegate.isInitialized()) {
+        if (onSaveEventDelegate.isInitialized()) {
 
             // Call save state hooks in random order
             val s = state
-            onSaveStateEvents.forEach { it(outState, s) }
-
-            // Don't clear the event list since this lifecycle method can be called many times.
+            onSaveEvents.forEach { it(outState, s) }
         }
     }
 
@@ -161,17 +151,20 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
             onClearEvents.clear()
         }
 
-        // If there are any init event hooks hanging around, clear them out too
+        // If there are any bind event hooks hanging around, clear them out too
         if (onBindEventDelegate.isInitialized()) {
             onBindEvents.clear()
         }
 
-        // If there are save state hooks around, clear them out
-        if (onSaveStateEventDelegate.isInitialized()) {
-            onSaveStateEvents.clear()
+        // If there are any unbind event hooks hanging around, clear them out too
+        if (onUnbindEventDelegate.isInitialized()) {
+            onUnbindEvents.clear()
         }
 
-        // Don't clear unbind hooks here since they should be cleared via the completion hook on the bind event
+        // If there are save state hooks around, clear them out
+        if (onSaveEventDelegate.isInitialized()) {
+            onSaveEvents.clear()
+        }
     }
 
     /**
@@ -250,7 +243,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     @UiThread
     protected fun doOnBind(onBind: (savedInstanceState: UiBundleReader) -> Unit) {
         Enforcer.assertOnMainThread()
-
         onBindEvents.add(onBind)
     }
 
@@ -293,8 +285,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     @UiThread
     protected fun doOnSaveState(onSaveState: (outState: UiBundleWriter, state: S) -> Unit) {
         Enforcer.assertOnMainThread()
-
-        onSaveStateEvents.add(onSaveState)
+        onSaveEvents.add(onSaveState)
     }
 
     /**
@@ -316,9 +307,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         replaceWith = ReplaceWith(expression = "doOnCleared(onTeardown)")
     )
     protected fun doOnTeardown(onTeardown: () -> Unit) {
-        Enforcer.assertOnMainThread()
-
-        onClearEvents.add(onTeardown)
+        doOnCleared(onTeardown)
     }
 
     /**
@@ -337,7 +326,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     @UiThread
     protected fun doOnCleared(onTeardown: () -> Unit) {
         Enforcer.assertOnMainThread()
-
         onClearEvents.add(onTeardown)
     }
 

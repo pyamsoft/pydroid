@@ -126,7 +126,9 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      * Modify the state from the previous
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
-     * Once the state change has been performed and the view has been notified, the andThen call will be run.
+     *
+     * The andThen callback will be fired after the state has changed and the view has been notified.
+     * If the stateChange payload does not cause a state update, the andThen call will not be fired.
      */
     protected fun setState(stateChange: S.() -> S, andThen: (newState: S) -> Unit) {
         viewModelScope.queueInOrder {
@@ -174,9 +176,10 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
             UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
         }
 
-        modelState.set(newState)
-
-        andThen(newState)
+        if (oldState != newState) {
+            modelState.set(newState)
+            andThen(newState)
+        }
     }
 
     private inline fun handleStateChange(

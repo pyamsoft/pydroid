@@ -52,7 +52,7 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
     internal var frame: ThemeDialogFrame? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<ThemeDialogViewModel>(activity = true) { factory }
+    private val viewModel by viewModelFactory<ThemeDialogViewModel> { factory }
 
     private var stateSaver: StateSaver? = null
 

@@ -124,6 +124,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
      */
     @UiThread
     final override fun onCleared() {
+        super.onCleared()
         Enforcer.assertOnMainThread()
 
         if (onClearEventDelegate.isInitialized()) {

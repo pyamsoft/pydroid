@@ -16,23 +16,14 @@
 
 package com.pyamsoft.pydroid.arch
 
+import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.arch.debug.UiViewStateDebug
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
-import timber.log.Timber
 
 /**
  * A ViewModel implementation which models a single state object.
@@ -51,10 +42,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     )
     protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
-    // Mutex to make sure that setState operations happen in order
-    private val mutex = Mutex()
-
-    private var modelState = UiVMState(initialState)
+    private val delegate = UiStateModel(initialState, viewModelScope)
 
     /**
      * The current state
@@ -63,7 +51,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     protected val state: S
         @get:CheckResult get() {
-            return modelState.get()
+            return delegate.state
         }
 
     /**
@@ -74,9 +62,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     @UiThread
     @CheckResult
     public fun bind(vararg renderables: Renderable<S>): Job {
-        return viewModelScope.launch(context = Dispatchers.Main) {
-            bindState(renderables)
-        }
+        return delegate.bind(*renderables)
     }
 
     /**
@@ -90,30 +76,9 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
         return bind(Renderable { onRender(it) })
     }
 
-    private fun onRender(renderables: Array<out Renderable<S>>, state: S) {
-        renderables.forEach { it.render(state) }
-    }
-
     // internal instead of protected so that only callers in the module can use this
     internal fun CoroutineScope.bindState(renderables: Array<out Renderable<S>>) {
-        // Listen for any further state changes at this point
-        bindStateEvents { onRender(renderables, it) }
-
-        // Render the latest or initial state
-        handleStateChange(state) { onRender(renderables, it) }
-    }
-
-    /**
-     * Launches this coroutine on the single threaded main context
-     * This ensures that the operation queued will run in order before any of the other operations after it
-     *
-     * Must be CoroutineScope extension to cancel correctly
-     *
-     * Remove once withState is removed, since setState can just immediately start a Dispatchers.Default
-     * coroutine calling processStateChange
-     */
-    internal inline fun CoroutineScope.queueInOrder(crossinline func: suspend CoroutineScope.() -> Unit) {
-        launch(context = Dispatchers.Main) { func() }
+        delegate.bindState(this, renderables)
     }
 
     /**
@@ -122,7 +87,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
     protected fun setState(stateChange: S.() -> S) {
-        setState(stateChange = stateChange, andThen = {})
+        delegate.setState(stateChange)
     }
 
     /**
@@ -136,14 +101,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      * There is no threading guarantee for the andThen callback
      */
     protected fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
-        viewModelScope.queueInOrder {
-            withContext(context = Dispatchers.Default) {
-                processStateChange(
-                    isSetState = true,
-                    stateChange = stateChange,
-                )?.also { andThen(it) }
-            }
-        }
+        delegate.setState(stateChange, andThen)
     }
 
     /**
@@ -154,78 +112,18 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @Deprecated("Use the state variable directly to access the current state. To access state after a setState call, chain a follow up andThen() call")
     protected fun withState(func: S.() -> Unit) {
-        viewModelScope.queueInOrder {
-            // Yield to any setState calls happening at this point
-            yield()
-
-            withContext(context = Dispatchers.Default) {
-                processStateChange(
-                    isSetState = false,
-                    stateChange = { this.apply(func) },
-                )
-            }
-        }
+        delegate.withState(func)
     }
 
     /**
-     * Return the newState if it has changed or null if it has not
+     * Clear the view model
      */
-    private suspend inline fun processStateChange(
-        isSetState: Boolean,
-        stateChange: S.() -> S
-    ): S? {
-        Enforcer.assertOffMainThread()
+    @CallSuper
+    override fun onCleared() {
+        super.onCleared()
+        Enforcer.assertOnMainThread()
 
-        // Use this mutex to make sure that setState changes happen in the order they are called.
-        return mutex.withLock {
-            val oldState = state
-            val newState = oldState.stateChange()
-
-            // If we are in debug mode, perform the state change twice and make sure that it produces
-            // the same state both times.
-            if (isSetState) {
-                UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
-            }
-
-            return@withLock if (oldState == newState) null else {
-                newState.also { modelState.set(it) }
-            }
-        }
+        delegate.clear()
     }
 
-    private inline fun handleStateChange(
-        state: S,
-        onRender: (S) -> Unit
-    ) {
-        Timber.d("Render with state: $state")
-        onRender(state)
-    }
-
-    private inline fun CoroutineScope.bindStateEvents(crossinline onRender: (S) -> Unit) {
-        launch(context = Dispatchers.IO) {
-            modelState.onChange { state ->
-                withContext(context = Dispatchers.Main) {
-                    handleStateChange(state) { onRender(it) }
-                }
-            }
-        }
-    }
-
-    private class UiVMState<S : UiViewState>(initialState: S) {
-
-        private val flow by lazy { MutableStateFlow(initialState) }
-
-        @CheckResult
-        fun get(): S {
-            return flow.value
-        }
-
-        fun set(value: S) {
-            flow.value = value
-        }
-
-        suspend fun onChange(withState: suspend (state: S) -> Unit) {
-            flow.collect(withState)
-        }
-    }
 }

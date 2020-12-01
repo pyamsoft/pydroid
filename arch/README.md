@@ -105,8 +105,8 @@ and a `Controller` or be bound into list items. Remember to save state and resto
 ##### Hooks
 
 Hooks are provided for `UiView` and `UiViewModel` classes to run code on certain
-lifecycle events. The `doOnBind { Bundle? -> }` hook will be run whenever the `UiViewModel` is
-bound either to a component or a view.
+lifecycle events. The `doOnRestoreState { Bundle? -> }` hook will be run whenever the savedInstanceState
+is restored for the `UiViewModel`. `doOnCleared` is called when the ViewModel is being cleared.
 
 For views, the `doOnInflate { Bundle? -> }` acts similarly when the view is first inflated.
 

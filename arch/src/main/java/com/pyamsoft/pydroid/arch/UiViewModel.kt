@@ -41,11 +41,8 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     )
     protected constructor(initialState: S, debug: Boolean) : this(initialState)
 
-    private val onBindEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
-    private val onBindEvents by onBindEventDelegate
-
-    private val onUnbindEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
-    private val onUnbindEvents by onUnbindEventDelegate
+    private val onRestoreEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
+    private val onRestoreEvents by onRestoreEventDelegate
 
     private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onClearEvents by onClearEventDelegate
@@ -88,29 +85,16 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
             // Bind state
             bindState(views)
 
-        }.also { job -> job.invokeOnCompletion { onUnbind() } }
-    }
-
-    /**
-     * Run onBind counter teardown hooks onUnbind
-     */
-    @UiThread
-    private fun onUnbind() {
-        // Only run the cleanup hooks if they exist, otherwise we don't need to init the memory
-        if (onUnbindEventDelegate.isInitialized()) {
-
-            // Call cleanup hooks in random order
-            onUnbindEvents.forEach { it() }
         }
     }
 
     @UiThread
     private fun initialize(savedInstanceState: UiBundleReader) {
         // Only run the init hooks if they exist, otherwise we don't need to init the memory
-        if (onBindEventDelegate.isInitialized()) {
+        if (onRestoreEventDelegate.isInitialized()) {
 
             // Call init hooks in random order
-            onBindEvents.forEach { it(savedInstanceState) }
+            onRestoreEvents.forEach { it(savedInstanceState) }
         }
     }
 
@@ -152,13 +136,8 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         }
 
         // If there are any bind event hooks hanging around, clear them out too
-        if (onBindEventDelegate.isInitialized()) {
-            onBindEvents.clear()
-        }
-
-        // If there are any unbind event hooks hanging around, clear them out too
-        if (onUnbindEventDelegate.isInitialized()) {
-            onUnbindEvents.clear()
+        if (onRestoreEventDelegate.isInitialized()) {
+            onRestoreEvents.clear()
         }
 
         // If there are save state hooks around, clear them out
@@ -215,12 +194,9 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    @Deprecated(
-        message = "Use doOnBind",
-        replaceWith = ReplaceWith(expression = "doOnBind(onInit)")
-    )
+    @Deprecated("Use doOnRestoreState", ReplaceWith("doOnRestoreState(onInit)"))
     protected fun doOnInit(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
-        doOnBind(onInit)
+        doOnRestoreState(onInit)
     }
 
     /**
@@ -241,31 +217,28 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
+    @Deprecated("Use doOnRestoreState instead", ReplaceWith("doOnRestoreState(onBind)"))
     protected fun doOnBind(onBind: (savedInstanceState: UiBundleReader) -> Unit) {
-        Enforcer.assertOnMainThread()
-        onBindEvents.add(onBind)
+        doOnRestoreState(onBind)
     }
 
     /**
-     * Use this to run an event after UiViewModel unbinding has successfully finished.
+     * Use this to run an event when the savedInstanceState is being restored
      *
      * This is generally used in something like the constructor
      *
      * init {
-     *     doOnBind { savedInstanceState ->
-     *         val listener = ...
-     *         doOnUnbind {
-     *           listener.cancel()
-     *         }
+     *     doOnRestore { savedInstanceState ->
+     *         ...
      *     }
      * }
      *
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    protected fun doOnUnbind(onUnbind: () -> Unit) {
+    protected fun doOnRestoreState(onRestore: (savedInstanceState: UiBundleReader) -> Unit) {
         Enforcer.assertOnMainThread()
-        onUnbindEvents.add(onUnbind)
+        onRestoreEvents.add(onRestore)
     }
 
     /**
@@ -302,10 +275,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    @Deprecated(
-        message = "Use doOnCleared",
-        replaceWith = ReplaceWith(expression = "doOnCleared(onTeardown)")
-    )
+    @Deprecated("Use doOnCleared", ReplaceWith("doOnCleared(onTeardown)"))
     protected fun doOnTeardown(onTeardown: () -> Unit) {
         doOnCleared(onTeardown)
     }

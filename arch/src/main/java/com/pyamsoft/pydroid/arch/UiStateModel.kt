@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -40,7 +41,7 @@ import timber.log.Timber
  * Access the current state via withState and manipulate it via setState.
  * These calls are asynchronous.
  */
-public open class UiStateModel<S : UiViewState>(
+public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     /**
      * Initial state
      */
@@ -49,7 +50,7 @@ public open class UiStateModel<S : UiViewState>(
     /**
      * Coroutine Scope
      */
-    public val stateModelScope: CoroutineScope
+    public val stateModelScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 ) {
 
     // Mutex to make sure that setState operations happen in order

@@ -203,7 +203,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
      * NOTE: Not thread safe, Main thread only for now.
      */
     @UiThread
-    protected fun nest(vararg views: UiView<S, V>) {
+    public fun nest(vararg views: UiView<S, V>) {
         views.forEach { view ->
             nestedViews.add(view)
             doOnInflate { view.inflate(it) }

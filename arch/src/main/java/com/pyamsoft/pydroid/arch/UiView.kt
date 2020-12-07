@@ -99,16 +99,6 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
         // We better be UI
         Enforcer.assertOnMainThread()
 
-        // Only run teardown hooks if they exist, otherwise don't init memory
-        if (onTeardownEventDelegate.isInitialized()) {
-
-            // Reverse the list order so that we teardown in LIFO order
-            onTeardownEvents.reversed().forEach { it() }
-
-            // Clear the teardown hooks list to free up memory
-            onTeardownEvents.clear()
-        }
-
         // If there are any inflate event hooks hanging around, clear them out too
         if (onInflateEventDelegate.isInitialized()) {
             onInflateEvents.clear()
@@ -117,6 +107,16 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
         // If there are any save state event hooks hanging around, clear them out too
         if (onSaveEventDelegate.isInitialized()) {
             onSaveEvents.clear()
+        }
+
+        // Only run teardown hooks if they exist, otherwise don't init memory
+        if (onTeardownEventDelegate.isInitialized()) {
+
+            // Reverse the list order so that we teardown in LIFO order
+            onTeardownEvents.reversed().forEach { it() }
+
+            // Clear the teardown hooks list to free up memory
+            onTeardownEvents.clear()
         }
 
         // Cancel the view scope

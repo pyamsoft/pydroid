@@ -41,7 +41,4 @@ internal class ChangeLogClose internal constructor(
         }
     }
 
-    override fun onRender(state: ChangeLogDialogViewState) {
-    }
-
 }

@@ -20,6 +20,8 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
@@ -42,15 +44,13 @@ internal class AboutItemTitleView internal constructor(
         binding.license.text = ""
     }
 
-    override fun onRender(state: AboutItemViewState) {
-        handleLibrary(state)
+    override fun onRender(state: UiRender<AboutItemViewState>) {
+        state.distinctBy { it.library }.render { handleLibrary(it) }
     }
 
-    private fun handleLibrary(state: AboutItemViewState) {
-        state.library.let { library ->
-            binding.title.text = library.name
-            binding.license.text = getString(R.string.license_name, library.licenseName)
-        }
+    private fun handleLibrary(library: OssLibrary) {
+        binding.title.text = library.name
+        binding.license.text = getString(R.string.license_name, library.licenseName)
     }
 
     @CheckResult

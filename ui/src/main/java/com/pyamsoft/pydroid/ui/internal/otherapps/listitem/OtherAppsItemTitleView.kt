@@ -18,6 +18,8 @@ package com.pyamsoft.pydroid.ui.internal.otherapps.listitem
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemTitleBinding
 
 internal class OtherAppsItemTitleView internal constructor(
@@ -39,14 +41,12 @@ internal class OtherAppsItemTitleView internal constructor(
         binding.description.text = ""
     }
 
-    override fun onRender(state: OtherAppsItemViewState) {
-        handleApp(state)
+    override fun onRender(state: UiRender<OtherAppsItemViewState>) {
+        state.distinctBy { it.app }.render { handleApp(it) }
     }
 
-    private fun handleApp(state: OtherAppsItemViewState) {
-        state.app.let { app ->
-            binding.title.text = app.name
-            binding.description.text = app.description
-        }
+    private fun handleApp(app: OtherApp) {
+        binding.title.text = app.name
+        binding.description.text = app.description
     }
 }

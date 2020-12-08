@@ -20,6 +20,8 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
 internal class AboutItemDescriptionView internal constructor(
@@ -43,14 +45,12 @@ internal class AboutItemDescriptionView internal constructor(
         }
     }
 
-    override fun onRender(state: AboutItemViewState) {
-        handleLibrary(state)
+    override fun onRender(state: UiRender<AboutItemViewState>) {
+        state.distinctBy { it.library }.render { handleLibrary(it) }
     }
 
-    private fun handleLibrary(state: AboutItemViewState) {
-        state.library.let { library ->
-            binding.aboutDescription.text = library.description
-            binding.aboutDescription.isVisible = library.description.isNotBlank()
-        }
+    private fun handleLibrary(library: OssLibrary) {
+        binding.aboutDescription.text = library.description
+        binding.aboutDescription.isVisible = library.description.isNotBlank()
     }
 }

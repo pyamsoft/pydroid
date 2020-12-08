@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -193,13 +194,13 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
 
     }
 
-    private open class UiVMState<S : UiViewState>(
+    private open class UiVMState<S>(
         private val scope: CoroutineScope,
         private val flow: Flow<S>,
     ) : UiRender<S> {
 
-        final override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<S> {
-            return UiVMState(scope, flow.distinctUntilChangedBy(distinctBy))
+        final override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
+            return UiVMState(scope, flow.distinctUntilChangedBy(distinctBy).map { distinctBy(it) })
         }
 
         final override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {

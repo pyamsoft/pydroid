@@ -44,7 +44,4 @@ internal class OtherAppsItemActionView internal constructor(
             binding.actionOpenStore.setOnDebouncedClickListener(null)
         }
     }
-
-    override fun onRender(state: OtherAppsItemViewState) {
-    }
 }

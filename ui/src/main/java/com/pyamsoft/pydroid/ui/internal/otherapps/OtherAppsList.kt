@@ -21,6 +21,7 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsListBinding
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsAdapter
@@ -105,33 +106,29 @@ internal class OtherAppsList internal constructor(
             .build()
     }
 
-    override fun onRender(state: OtherAppsViewState) {
-        handleApps(state)
-        handleNavigationError(state)
+    override fun onRender(state: UiRender<OtherAppsViewState>) {
+        state.distinctBy { it.apps }.render { handleApps(it) }
+        state.distinctBy { it.navigationError }.render { handleNavigationError(it) }
     }
 
-    private fun handleNavigationError(state: OtherAppsViewState) {
-        state.navigationError.let { throwable ->
-            if (throwable == null) {
-                clearNavigationError()
-            } else {
-                showNavigationError(throwable)
-            }
+    private fun handleNavigationError(throwable: Throwable?) {
+        if (throwable == null) {
+            clearNavigationError()
+        } else {
+            showNavigationError(throwable)
         }
     }
 
-    private fun handleApps(state: OtherAppsViewState) {
-        state.apps.let { apps ->
-            val beganEmpty = isEmpty()
-            if (apps.isEmpty()) {
-                clearApps()
-            } else {
-                loadApps(apps)
-            }
+    private fun handleApps(apps: List<OtherApp>) {
+        val beganEmpty = isEmpty()
+        if (apps.isEmpty()) {
+            clearApps()
+        } else {
+            loadApps(apps)
+        }
 
-            if (beganEmpty && !isEmpty()) {
-                scrollToLastViewedItem()
-            }
+        if (beganEmpty && !isEmpty()) {
+            scrollToLastViewedItem()
         }
     }
 

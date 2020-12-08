@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesLoadingBinding
 
 internal class AboutSpinnerView internal constructor(
@@ -35,13 +36,11 @@ internal class AboutSpinnerView internal constructor(
         }
     }
 
-    private fun handleLoading(state: AboutViewState) {
-        state.isLoading.let { loading ->
-            binding.spinner.isVisible = loading
-        }
+    private fun handleLoading(loading: Boolean) {
+        binding.spinner.isVisible = loading
     }
 
-    override fun onRender(state: AboutViewState) {
-        handleLoading(state)
+    override fun onRender(state: UiRender<AboutViewState>) {
+        state.distinctBy { it.isLoading }.render { handleLoading(it) }
     }
 }

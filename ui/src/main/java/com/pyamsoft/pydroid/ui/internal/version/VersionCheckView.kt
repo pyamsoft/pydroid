@@ -33,23 +33,19 @@ internal class VersionCheckView internal constructor(
         state.distinctBy { it.throwable }.render { handleError(it) }
     }
 
-    private fun handleLoading(state: VersionCheckViewState) {
-        state.isLoading.let { loading ->
-            if (loading) {
-                showUpdating()
-            } else {
-                dismissUpdating()
-            }
+    private fun handleLoading(loading: Boolean) {
+        if (loading) {
+            showUpdating()
+        } else {
+            dismissUpdating()
         }
     }
 
-    private fun handleError(state: VersionCheckViewState) {
-        state.throwable.let { throwable ->
-            if (throwable == null) {
-                clearError()
-            } else {
-                showError(throwable)
-            }
+    private fun handleError(throwable: Throwable?) {
+        if (throwable == null) {
+            clearError()
+        } else {
+            showError(throwable)
         }
     }
 

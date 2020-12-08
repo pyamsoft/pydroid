@@ -44,12 +44,10 @@ internal class ChangeLogIcon internal constructor(
         state.distinctBy { it.icon }.render { handleIcon(it) }
     }
 
-    private fun handleIcon(state: ChangeLogDialogViewState) {
-        state.icon.let { icon ->
-            clear()
-            if (icon != 0) {
-                loaded = imageLoader.load(icon).into(requireNotNull(iconView))
-            }
+    private fun handleIcon(icon: Int) {
+        clear()
+        if (icon != 0) {
+            loaded = imageLoader.load(icon).into(requireNotNull(iconView))
         }
     }
 

@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.databinding.ChangelogNameBinding
 
 internal class ChangeLogName internal constructor(
@@ -34,17 +35,15 @@ internal class ChangeLogName internal constructor(
         }
     }
 
-    override fun onRender(state: ChangeLogDialogViewState) {
-        handleName(state)
+    override fun onRender(state: UiRender<ChangeLogDialogViewState>) {
+        state.distinctBy { it.name }.render { handleName(it) }
     }
 
-    private fun handleName(state: ChangeLogDialogViewState) {
-        state.name.let { name ->
-            if (name.isBlank()) {
-                clear()
-            } else {
-                binding.changelogName.text = name
-            }
+    private fun handleName(name: CharSequence) {
+        if (name.isBlank()) {
+            clear()
+        } else {
+            binding.changelogName.text = name
         }
     }
 

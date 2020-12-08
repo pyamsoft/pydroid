@@ -19,8 +19,9 @@ package com.pyamsoft.pydroid.ui.internal.dialog
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogViewEvent.Close
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.databinding.ThemeDialogToolbarBinding
+import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogViewEvent.Close
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
@@ -54,11 +55,11 @@ internal class ThemeDialogToolbar internal constructor(
         }
     }
 
-    override fun onRender(state: ThemeDialogViewState) {
-        handleTitle(state)
+    override fun onRender(state: UiRender<ThemeDialogViewState>) {
+        state.distinctBy { it.name }.render { handleTitle(it) }
     }
 
-    private fun handleTitle(state: ThemeDialogViewState) {
-        binding.themeDialogToolbar.title = state.name
+    private fun handleTitle(name: String) {
+        binding.themeDialogToolbar.title = name
     }
 }

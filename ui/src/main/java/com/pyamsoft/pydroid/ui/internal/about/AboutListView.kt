@@ -22,6 +22,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLibrary
@@ -108,55 +109,48 @@ internal class AboutListView internal constructor(
             .build()
     }
 
-    override fun onRender(state: AboutViewState) {
-        handleLicenses(state)
-        handleLoading(state)
-        handleNavigateError(state)
-        handleLoadError(state)
+    override fun onRender(state: UiRender<AboutViewState>) {
+        state.distinctBy { it.isLoading }.render { handleLoading(it) }
+        state.distinctBy { it.loadError }.render { handleLoadError(it) }
+        state.distinctBy { it.navigationError }.render { handleNavigateError(it) }
+        state.distinctBy { it.licenses }.render { handleLicenses(it) }
+
     }
 
-    private fun handleLoadError(state: AboutViewState) {
-        state.loadError.let { throwable ->
-            if (throwable == null) {
-                clearLoadError()
-            } else {
-                showLoadError(throwable)
-            }
+    private fun handleLoadError(throwable: Throwable?) {
+        if (throwable == null) {
+            clearLoadError()
+        } else {
+            showLoadError(throwable)
         }
     }
 
-    private fun handleNavigateError(state: AboutViewState) {
-        state.navigationError.let { throwable ->
-            if (throwable == null) {
-                clearNavigationError()
-            } else {
-                showNavigationError(throwable)
-            }
+    private fun handleNavigateError(throwable: Throwable?) {
+        if (throwable == null) {
+            clearNavigationError()
+        } else {
+            showNavigationError(throwable)
         }
     }
 
-    private fun handleLoading(state: AboutViewState) {
-        state.isLoading.let { loading ->
-            if (loading) {
-                hide()
-            } else {
-                show()
-            }
+    private fun handleLoading(loading: Boolean) {
+        if (loading) {
+            hide()
+        } else {
+            show()
         }
     }
 
-    private fun handleLicenses(state: AboutViewState) {
-        state.licenses.let { licenses ->
-            val beganEmpty = isEmpty()
-            if (licenses.isEmpty()) {
-                clearLicenses()
-            } else {
-                loadLicenses(licenses)
-            }
+    private fun handleLicenses(licenses: List<OssLibrary>) {
+        val beganEmpty = isEmpty()
+        if (licenses.isEmpty()) {
+            clearLicenses()
+        } else {
+            loadLicenses(licenses)
+        }
 
-            if (beganEmpty && !isEmpty()) {
-                scrollToLastViewedItem()
-            }
+        if (beganEmpty && !isEmpty()) {
+            scrollToLastViewedItem()
         }
     }
 

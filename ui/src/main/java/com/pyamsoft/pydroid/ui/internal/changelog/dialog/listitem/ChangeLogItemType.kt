@@ -18,8 +18,10 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.databinding.ChangelogItemTypeBinding
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
 internal class ChangeLogItemType internal constructor(
     parent: ViewGroup
@@ -39,13 +41,11 @@ internal class ChangeLogItemType internal constructor(
         binding.changelogItemType.text = ""
     }
 
-    override fun onRender(state: ChangeLogItemViewState) {
-        handleLine(state)
+    override fun onRender(state: UiRender<ChangeLogItemViewState>) {
+        state.distinctBy { it.line }.render { handleLine(it) }
     }
 
-    private fun handleLine(state: ChangeLogItemViewState) {
-        state.line.let { line ->
-            binding.changelogItemType.text = line.type.name
-        }
+    private fun handleLine(line: ChangeLogLine) {
+        binding.changelogItemType.text = line.type.name
     }
 }

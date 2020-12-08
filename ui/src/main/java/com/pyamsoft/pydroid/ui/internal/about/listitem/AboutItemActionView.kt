@@ -18,9 +18,9 @@ package com.pyamsoft.pydroid.ui.internal.about.listitem
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.ui.databinding.AboutItemActionsBinding
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLicenseUrl
-import com.pyamsoft.pydroid.ui.databinding.AboutItemActionsBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal class AboutItemActionView internal constructor(
@@ -42,6 +42,4 @@ internal class AboutItemActionView internal constructor(
         }
     }
 
-    override fun onRender(state: AboutItemViewState) {
-    }
 }

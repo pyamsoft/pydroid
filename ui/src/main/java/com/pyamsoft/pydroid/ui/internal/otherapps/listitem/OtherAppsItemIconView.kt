@@ -18,6 +18,8 @@ package com.pyamsoft.pydroid.ui.internal.otherapps.listitem
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemIconBinding
@@ -44,14 +46,12 @@ internal class OtherAppsItemIconView internal constructor(
         loaded = null
     }
 
-    override fun onRender(state: OtherAppsItemViewState) {
-        handleApp(state)
+    override fun onRender(state: UiRender<OtherAppsItemViewState>) {
+        state.distinctBy { it.app }.render { handleApp(it) }
     }
 
-    private fun handleApp(state: OtherAppsItemViewState) {
-        state.app.let { app ->
-            clear()
-            loaded = imageLoader.load(app.icon).into(binding.otherAppsIcon)
-        }
+    private fun handleApp(app: OtherApp) {
+        clear()
+        loaded = imageLoader.load(app.icon).into(binding.otherAppsIcon)
     }
 }

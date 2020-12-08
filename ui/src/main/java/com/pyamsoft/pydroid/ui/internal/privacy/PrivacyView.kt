@@ -32,13 +32,11 @@ internal class PrivacyView internal constructor(
         state.distinctBy { it.throwable }.render { handleError(it) }
     }
 
-    private fun handleError(state: PrivacyViewState) {
-        state.throwable.let { throwable ->
-            if (throwable == null) {
-                clearError()
-            } else {
-                showError(throwable)
-            }
+    private fun handleError(throwable: Throwable?) {
+        if (throwable == null) {
+            clearError()
+        } else {
+            showError(throwable)
         }
     }
 

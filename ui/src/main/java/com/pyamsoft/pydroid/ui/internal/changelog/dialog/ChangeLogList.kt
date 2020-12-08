@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.databinding.ChangelogListBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogAdapter
@@ -79,28 +80,26 @@ internal class ChangeLogList internal constructor(
             .build()
     }
 
-    override fun onRender(state: ChangeLogDialogViewState) {
-        handleLoading(state)
-        handleChangeLog(state)
-    }
-
-    private fun handleLoading(state: ChangeLogDialogViewState) {
-        state.changeLog.let { log ->
-            if (log.isEmpty()) {
-                hide()
-            } else {
-                show()
-            }
+    override fun onRender(state: UiRender<ChangeLogDialogViewState>) {
+        state.distinctBy { it.changeLog }.render { log ->
+            handleLoading(log)
+            handleChangeLog(log)
         }
     }
 
-    private fun handleChangeLog(state: ChangeLogDialogViewState) {
-        state.changeLog.let { log ->
-            if (log.isEmpty()) {
-                clear()
-            } else {
-                loadChangeLog(log)
-            }
+    private fun handleLoading(log: List<ChangeLogLine>) {
+        if (log.isEmpty()) {
+            hide()
+        } else {
+            show()
+        }
+    }
+
+    private fun handleChangeLog(log: List<ChangeLogLine>) {
+        if (log.isEmpty()) {
+            clear()
+        } else {
+            loadChangeLog(log)
         }
     }
 

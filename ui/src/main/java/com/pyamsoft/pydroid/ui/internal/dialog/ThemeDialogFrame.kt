@@ -29,7 +29,4 @@ internal class ThemeDialogFrame internal constructor(
     override val viewBinding = ThemeDialogFrameBinding::inflate
 
     override val layoutRoot by boundView { appSettingsFrame }
-
-    override fun onRender(state: ThemeDialogViewState) {
-    }
 }

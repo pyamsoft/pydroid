@@ -148,8 +148,9 @@ private class BoundUiRender<S : UiViewState>(private val state: S) : UiRender<S>
         onRender(state)
     }
 
-    override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<S> {
-        return this
+    override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
+        @Suppress("UNCHECKED_CAST")
+        return this as UiRender<T>
     }
 
     override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {

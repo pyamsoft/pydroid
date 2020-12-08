@@ -33,9 +33,6 @@ class DropshadowView<S : UiViewState, E : UiViewEvent> private constructor(
 
     override val layoutRoot by boundView { dropshadowView }
 
-    override fun onRender(state: S) {
-    }
-
     companion object {
 
         @JvmStatic

@@ -29,8 +29,8 @@ internal class VersionCheckView internal constructor(
 ) : UiView<VersionCheckViewState, VersionCheckViewEvent>() {
 
     override fun render(state: UiRender<VersionCheckViewState>) {
-        state.distinctBy { it.isLoading }.render { handleLoading(it) }
-        state.distinctBy { it.throwable }.render { handleError(it) }
+        state.distinctBy { it.isLoading }.render(viewScope) { handleLoading(it) }
+        state.distinctBy { it.throwable }.render(viewScope) { handleError(it) }
     }
 
     private fun handleLoading(loading: Boolean) {

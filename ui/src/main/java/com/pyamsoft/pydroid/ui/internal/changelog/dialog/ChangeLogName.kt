@@ -36,7 +36,7 @@ internal class ChangeLogName internal constructor(
     }
 
     override fun onRender(state: UiRender<ChangeLogDialogViewState>) {
-        state.distinctBy { it.name }.render { handleName(it) }
+        state.distinctBy { it.name }.render(viewScope) { handleName(it) }
     }
 
     private fun handleName(name: CharSequence) {

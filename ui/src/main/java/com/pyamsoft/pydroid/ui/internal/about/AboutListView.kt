@@ -110,10 +110,10 @@ internal class AboutListView internal constructor(
     }
 
     override fun onRender(state: UiRender<AboutViewState>) {
-        state.distinctBy { it.isLoading }.render { handleLoading(it) }
-        state.distinctBy { it.loadError }.render { handleLoadError(it) }
-        state.distinctBy { it.navigationError }.render { handleNavigateError(it) }
-        state.distinctBy { it.licenses }.render { handleLicenses(it) }
+        state.distinctBy { it.isLoading }.render(viewScope) { handleLoading(it) }
+        state.distinctBy { it.loadError }.render(viewScope) { handleLoadError(it) }
+        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigateError(it) }
+        state.distinctBy { it.licenses }.render(viewScope) { handleLicenses(it) }
 
     }
 

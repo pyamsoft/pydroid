@@ -59,7 +59,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     // Mutex to make sure that setState operations happen in order
     private val mutex = Mutex()
 
-    private var modelState = MutableUiVMState(stateModelScope, MutableStateFlow(initialState))
+    private var modelState = MutableUiVMState(MutableStateFlow(initialState))
 
     /**
      * The current state
@@ -179,9 +179,8 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     }
 
     private class MutableUiVMState<S : UiViewState>(
-        scope: CoroutineScope,
         private val flow: MutableStateFlow<S>
-    ) : UiVMState<S>(scope, flow), UiRender<S> {
+    ) : UiVMState<S>(flow), UiRender<S> {
 
         @CheckResult
         fun get(): S {
@@ -195,24 +194,21 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     }
 
     private open class UiVMState<S>(
-        private val scope: CoroutineScope,
         private val flow: Flow<S>,
     ) : UiRender<S> {
 
         final override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
-            return UiVMState(scope, flow.distinctUntilChangedBy(distinctBy).map { distinctBy(it) })
+            return UiVMState(flow.distinctUntilChangedBy(distinctBy).map { distinctBy(it) })
         }
 
         final override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {
-            return UiVMState(scope, flow.distinctUntilChanged(areEquivalent))
+            return UiVMState(flow.distinctUntilChanged(areEquivalent))
         }
 
-        final override fun render(onRender: (state: S) -> Unit) {
+        final override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {
             scope.launch(context = Dispatchers.IO) {
                 flow.collect { state ->
-                    withContext(context = Dispatchers.Main) {
-                        onRender(state)
-                    }
+                    withContext(context = Dispatchers.Main) { onRender(state) }
                 }
             }
         }

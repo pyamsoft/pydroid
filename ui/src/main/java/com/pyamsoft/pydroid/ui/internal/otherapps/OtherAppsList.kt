@@ -107,8 +107,8 @@ internal class OtherAppsList internal constructor(
     }
 
     override fun onRender(state: UiRender<OtherAppsViewState>) {
-        state.distinctBy { it.apps }.render { handleApps(it) }
-        state.distinctBy { it.navigationError }.render { handleNavigationError(it) }
+        state.distinctBy { it.apps }.render(viewScope) { handleApps(it) }
+        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
     }
 
     private fun handleNavigationError(throwable: Throwable?) {

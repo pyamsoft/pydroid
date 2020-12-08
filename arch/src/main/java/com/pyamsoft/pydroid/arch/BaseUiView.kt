@@ -186,7 +186,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
      */
     @UiThread
     protected open fun onRender(state: UiRender<S>) {
-        state.render { onRender(it) }
+        state.render(viewScope) { onRender(it) }
     }
 
     /**

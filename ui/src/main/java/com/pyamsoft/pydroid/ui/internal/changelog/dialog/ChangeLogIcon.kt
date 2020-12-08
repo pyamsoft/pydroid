@@ -41,7 +41,7 @@ internal class ChangeLogIcon internal constructor(
     }
 
     override fun render(state: UiRender<ChangeLogDialogViewState>) {
-        state.distinctBy { it.icon }.render { handleIcon(it) }
+        state.distinctBy { it.icon }.render(viewScope) { handleIcon(it) }
     }
 
     private fun handleIcon(icon: Int) {

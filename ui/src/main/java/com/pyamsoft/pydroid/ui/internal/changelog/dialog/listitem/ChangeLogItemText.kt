@@ -42,7 +42,7 @@ internal class ChangeLogItemText internal constructor(
     }
 
     override fun onRender(state: UiRender<ChangeLogItemViewState>) {
-        state.distinctBy { it.line }.render { handleLine(it) }
+        state.distinctBy { it.line }.render(viewScope) { handleLine(it) }
     }
 
     private fun handleLine(line: ChangeLogLine) {

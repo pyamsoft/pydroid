@@ -81,7 +81,7 @@ internal class ChangeLogList internal constructor(
     }
 
     override fun onRender(state: UiRender<ChangeLogDialogViewState>) {
-        state.distinctBy { it.changeLog }.render { log ->
+        state.distinctBy { it.changeLog }.render(viewScope) { log ->
             handleLoading(log)
             handleChangeLog(log)
         }

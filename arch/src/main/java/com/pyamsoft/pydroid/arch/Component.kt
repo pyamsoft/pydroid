@@ -20,6 +20,9 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller
@@ -144,8 +147,10 @@ internal fun <S : UiViewState> S.bind(): UiRender<S> {
  */
 private class BoundUiRender<S>(private val state: S) : UiRender<S> {
 
-    override fun render(onRender: (state: S) -> Unit) {
-        onRender(state)
+    override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {
+        scope.launch(context = Dispatchers.Main) {
+            onRender(state)
+        }
     }
 
     override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {

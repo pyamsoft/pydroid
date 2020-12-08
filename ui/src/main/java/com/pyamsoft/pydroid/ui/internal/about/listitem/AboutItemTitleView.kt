@@ -45,7 +45,7 @@ internal class AboutItemTitleView internal constructor(
     }
 
     override fun onRender(state: UiRender<AboutItemViewState>) {
-        state.distinctBy { it.library }.render { handleLibrary(it) }
+        state.distinctBy { it.library }.render(viewScope) { handleLibrary(it) }
     }
 
     private fun handleLibrary(library: OssLibrary) {

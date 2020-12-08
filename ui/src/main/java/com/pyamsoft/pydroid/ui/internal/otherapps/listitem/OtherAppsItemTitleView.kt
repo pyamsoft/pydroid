@@ -42,7 +42,7 @@ internal class OtherAppsItemTitleView internal constructor(
     }
 
     override fun onRender(state: UiRender<OtherAppsItemViewState>) {
-        state.distinctBy { it.app }.render { handleApp(it) }
+        state.distinctBy { it.app }.render(viewScope) { handleApp(it) }
     }
 
     private fun handleApp(app: OtherApp) {

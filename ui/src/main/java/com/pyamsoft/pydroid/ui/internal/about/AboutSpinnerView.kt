@@ -41,6 +41,6 @@ internal class AboutSpinnerView internal constructor(
     }
 
     override fun onRender(state: UiRender<AboutViewState>) {
-        state.distinctBy { it.isLoading }.render { handleLoading(it) }
+        state.distinctBy { it.isLoading }.render(viewScope) { handleLoading(it) }
     }
 }

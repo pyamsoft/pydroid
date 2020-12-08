@@ -76,7 +76,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     }
 
     // internal instead of protected so that only callers in the module can use this
-    internal fun bindState(renderables: Array<out Renderable<S>>) {
+    internal suspend fun bindState(renderables: Array<out Renderable<S>>) {
         delegate.bindState(renderables)
     }
 

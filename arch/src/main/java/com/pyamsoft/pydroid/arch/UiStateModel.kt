@@ -144,9 +144,11 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     }
 
     // internal instead of protected so that only callers in the module can use this
-    internal fun bindState(renderables: Array<out Renderable<S>>) {
-        val state = modelState
-        renderables.forEach { it.render(state) }
+    internal suspend fun bindState(renderables: Array<out Renderable<S>>) {
+        withContext(context = Dispatchers.Main) {
+            val state = modelState
+            renderables.forEach { it.render(state) }
+        }
     }
 
     /**

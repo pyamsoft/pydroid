@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.widget.shadow
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.BaseUiView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
@@ -32,9 +33,6 @@ class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     override val viewBinding = TopshadowBinding::inflate
 
     override val layoutRoot by boundView { topshadowView }
-
-    override fun onRender(state: S) {
-    }
 
     companion object {
 

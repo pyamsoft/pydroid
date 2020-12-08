@@ -142,15 +142,14 @@ internal fun <S : UiViewState> S.bind(): UiRender<S> {
  *
  * We can just apply the state as is to all bound views.
  */
-private class BoundUiRender<S : UiViewState>(private val state: S) : UiRender<S> {
+private class BoundUiRender<S>(private val state: S) : UiRender<S> {
 
     override fun render(onRender: (state: S) -> Unit) {
         onRender(state)
     }
 
     override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
-        @Suppress("UNCHECKED_CAST")
-        return this as UiRender<T>
+        return BoundUiRender(distinctBy(state))
     }
 
     override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {

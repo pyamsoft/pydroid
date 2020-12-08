@@ -26,14 +26,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
-import timber.log.Timber
 
 /**
  * A State model managing a single state object.
@@ -56,7 +58,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     // Mutex to make sure that setState operations happen in order
     private val mutex = Mutex()
 
-    private var modelState = UiVMState(initialState)
+    private var modelState = MutableUiVMState(stateModelScope, MutableStateFlow(initialState))
 
     /**
      * The current state
@@ -137,21 +139,14 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     @CheckResult
     public fun bind(vararg renderables: Renderable<S>): Job {
         return stateModelScope.launch(context = Dispatchers.Main) {
-            bindState(this, renderables)
+            bindState(renderables)
         }
     }
 
-    private fun onRender(renderables: Array<out Renderable<S>>, state: S) {
-        renderables.forEach { it.render(state) }
-    }
-
     // internal instead of protected so that only callers in the module can use this
-    internal fun bindState(scope: CoroutineScope, renderables: Array<out Renderable<S>>) {
-        // Listen for any further state changes at this point
-        scope.bindStateEvents { onRender(renderables, it) }
-
-        // Render the latest or initial state
-        handleStateChange(state) { onRender(renderables, it) }
+    internal fun bindState(renderables: Array<out Renderable<S>>) {
+        val state = modelState
+        renderables.forEach { it.render(state) }
     }
 
     /**
@@ -180,27 +175,10 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
         }
     }
 
-    private inline fun handleStateChange(
-        state: S,
-        onRender: (S) -> Unit
-    ) {
-        Timber.d("Render with state: $state")
-        onRender(state)
-    }
-
-    private inline fun CoroutineScope.bindStateEvents(crossinline onRender: (S) -> Unit) {
-        launch(context = Dispatchers.IO) {
-            modelState.onChange { state ->
-                withContext(context = Dispatchers.Main) {
-                    handleStateChange(state) { onRender(it) }
-                }
-            }
-        }
-    }
-
-    private class UiVMState<S : UiViewState>(initialState: S) {
-
-        private val flow by lazy { MutableStateFlow(initialState) }
+    private class MutableUiVMState<S : UiViewState>(
+        scope: CoroutineScope,
+        private val flow: MutableStateFlow<S>
+    ) : UiVMState<S>(scope, flow), UiRender<S> {
 
         @CheckResult
         fun get(): S {
@@ -211,8 +189,29 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
             flow.value = value
         }
 
-        suspend fun onChange(withState: suspend (state: S) -> Unit) {
-            flow.collect(withState)
+    }
+
+    private open class UiVMState<S : UiViewState>(
+        private val scope: CoroutineScope,
+        private val flow: Flow<S>,
+    ) : UiRender<S> {
+
+        final override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<S> {
+            return UiVMState(scope, flow.distinctUntilChangedBy(distinctBy))
+        }
+
+        final override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {
+            return UiVMState(scope, flow.distinctUntilChanged(areEquivalent))
+        }
+
+        final override fun render(onRender: (state: S) -> Unit) {
+            scope.launch(context = Dispatchers.Default) {
+                flow.collect { state ->
+                    withContext(context = Dispatchers.Main) {
+                        onRender(state)
+                    }
+                }
+            }
         }
     }
 }

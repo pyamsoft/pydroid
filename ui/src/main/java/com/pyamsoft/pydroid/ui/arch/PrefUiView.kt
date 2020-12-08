@@ -18,9 +18,11 @@ package com.pyamsoft.pydroid.ui.arch
 
 import androidx.annotation.CheckResult
 import androidx.annotation.StringRes
+import androidx.annotation.UiThread
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.arch.UiBundleReader
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
@@ -69,12 +71,21 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
-    final override fun render(state: S) {
+    override fun render(state: UiRender<S>) {
         assertValidState()
         onRender(state)
     }
 
-    protected abstract fun onRender(state: S)
+    @UiThread
+    protected open fun onRender(state: UiRender<S>) {
+        state.render { onRender(it) }
+    }
+
+    @UiThread
+    @Deprecated("Use onRender(UiRender<S>)")
+    protected open fun onRender(state: S) {
+
+    }
 
     @CheckResult
     protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {

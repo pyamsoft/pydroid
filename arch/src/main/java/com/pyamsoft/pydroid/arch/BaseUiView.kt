@@ -175,7 +175,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         return id
     }
 
-    final override fun render(state: S) {
+    override fun render(state: UiRender<S>) {
         assertValidState()
         onRender(state)
         nestedViews().forEach { it.render(state) }
@@ -185,7 +185,17 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
      * Called each time a new UiViewState needs to be rendered
      */
     @UiThread
-    protected abstract fun onRender(state: S)
+    protected open fun onRender(state: UiRender<S>) {
+        state.render { onRender(it) }
+    }
+
+    /**
+     * Called each time a new UiViewState needs to be rendered
+     */
+    @UiThread
+    @Deprecated("Use onRender(UiRender<S>)")
+    protected open fun onRender(state: S) {
+    }
 
     private fun inflateAndAddToParent(
         inflater: LayoutInflater,

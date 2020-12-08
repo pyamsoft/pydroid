@@ -22,7 +22,6 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
 /**
@@ -72,13 +71,13 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
-    public inline fun bind(crossinline onRender: (S) -> Unit): Job {
+    public inline fun bind(crossinline onRender: (UiRender<S>) -> Unit): Job {
         return bind(Renderable { onRender(it) })
     }
 
     // internal instead of protected so that only callers in the module can use this
-    internal fun CoroutineScope.bindState(renderables: Array<out Renderable<S>>) {
-        delegate.bindState(this, renderables)
+    internal fun bindState(renderables: Array<out Renderable<S>>) {
+        delegate.bindState(renderables)
     }
 
     /**

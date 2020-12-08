@@ -18,18 +18,19 @@ package com.pyamsoft.pydroid.ui.internal.version
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.SnackbarHidden
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class VersionCheckView internal constructor(
     private val owner: LifecycleOwner,
     private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<VersionCheckViewState, VersionCheckViewEvent>() {
 
-    override fun render(state: VersionCheckViewState) {
-        handleLoading(state)
-        handleError(state)
+    override fun render(state: UiRender<VersionCheckViewState>) {
+        state.distinctBy { it.isLoading }.render { handleLoading(it) }
+        state.distinctBy { it.throwable }.render { handleError(it) }
     }
 
     private fun handleLoading(state: VersionCheckViewState) {

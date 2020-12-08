@@ -27,5 +27,5 @@ public fun interface Renderable<S : UiViewState> {
      * Render a state
      */
     @UiThread
-    public fun render(state: S)
+    public fun render(state: UiRender<S>)
 }

@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import android.widget.ImageView
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
@@ -39,8 +40,8 @@ internal class ChangeLogIcon internal constructor(
         iconView = null
     }
 
-    override fun render(state: ChangeLogDialogViewState) {
-        handleIcon(state)
+    override fun render(state: UiRender<ChangeLogDialogViewState>) {
+        state.distinctBy { it.icon }.render { handleIcon(it) }
     }
 
     private fun handleIcon(state: ChangeLogDialogViewState) {

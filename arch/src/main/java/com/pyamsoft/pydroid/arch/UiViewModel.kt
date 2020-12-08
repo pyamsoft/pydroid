@@ -84,7 +84,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
 
             // Bind state
             bindState(views)
-
         }
     }
 

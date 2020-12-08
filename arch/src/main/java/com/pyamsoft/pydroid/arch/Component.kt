@@ -80,8 +80,10 @@ public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     }
 
     return object : ViewBinder<S> {
+
         override fun bind(state: S) {
-            views.forEach { it.render(state) }
+            val bound = state.bind()
+            views.forEach { it.render(bound) }
         }
 
         override fun teardown() {
@@ -113,12 +115,45 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     views.forEach { it.inflate(reader) }
 
     return object : ViewBinder<S> {
+
         override fun bind(state: S) {
-            views.forEach { it.render(state) }
+            val bound = state.bind()
+            views.forEach { it.render(bound) }
         }
 
         override fun teardown() {
             views.forEach { it.teardown() }
         }
     }
+}
+
+/**
+ * Convert a state to a BoundUiRender<S>
+ */
+@CheckResult
+@PublishedApi
+internal fun <S : UiViewState> S.bind(): UiRender<S> {
+    return BoundUiRender(this)
+}
+
+/**
+ * Since a view holder is bound from its own list lifecycle, we do not need to
+ * pull changes from a stream, since the List handles the stream itself.
+ *
+ * We can just apply the state as is to all bound views.
+ */
+private class BoundUiRender<S : UiViewState>(private val state: S) : UiRender<S> {
+
+    override fun render(onRender: (state: S) -> Unit) {
+        onRender(state)
+    }
+
+    override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<S> {
+        return this
+    }
+
+    override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {
+        return this
+    }
+
 }

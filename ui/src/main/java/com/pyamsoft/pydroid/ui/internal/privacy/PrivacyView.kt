@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.privacy
 
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewEvent.SnackbarHidden
 import com.pyamsoft.pydroid.ui.util.Snackbreak
@@ -27,8 +28,8 @@ internal class PrivacyView internal constructor(
     private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<PrivacyViewState, PrivacyViewEvent>() {
 
-    override fun render(state: PrivacyViewState) {
-        handleError(state)
+    override fun render(state: UiRender<PrivacyViewState>) {
+        state.distinctBy { it.throwable }.render { handleError(it) }
     }
 
     private fun handleError(state: PrivacyViewState) {

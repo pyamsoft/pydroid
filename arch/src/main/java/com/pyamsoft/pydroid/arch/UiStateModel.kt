@@ -92,7 +92,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      */
     public fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
         stateModelScope.launch(context = Dispatchers.Main) {
-            withContext(context = Dispatchers.Default) {
+            withContext(context = Dispatchers.IO) {
                 processStateChange(
                     isSetState = true,
                     stateChange = stateChange,
@@ -113,7 +113,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
             // Yield to any setState calls happening at this point
             yield()
 
-            withContext(context = Dispatchers.Default) {
+            withContext(context = Dispatchers.IO) {
                 processStateChange(
                     isSetState = false,
                     stateChange = { this.apply(func) },
@@ -208,7 +208,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
         }
 
         final override fun render(onRender: (state: S) -> Unit) {
-            scope.launch(context = Dispatchers.Default) {
+            scope.launch(context = Dispatchers.IO) {
                 flow.collect { state ->
                     withContext(context = Dispatchers.Main) {
                         onRender(state)

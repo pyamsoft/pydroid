@@ -61,7 +61,6 @@ internal class AboutListView internal constructor(
 
         doOnTeardown {
             binding.aboutList.adapter = null
-            clearLicenses()
             aboutAdapter = null
         }
 

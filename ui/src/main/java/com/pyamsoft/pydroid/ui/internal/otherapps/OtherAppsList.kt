@@ -58,7 +58,6 @@ internal class OtherAppsList internal constructor(
 
         doOnTeardown {
             binding.otherAppsList.adapter = null
-            clearApps()
             listAdapter = null
         }
 

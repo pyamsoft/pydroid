@@ -47,7 +47,6 @@ internal class ChangeLogList internal constructor(
 
         doOnTeardown {
             binding.changelogList.adapter = null
-            clear()
             changeLogAdapter = null
         }
 

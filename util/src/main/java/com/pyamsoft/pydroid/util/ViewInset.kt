@@ -27,6 +27,10 @@ import android.view.WindowInsetsController
 import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 
 /**
  * Places the Activity into Stable Layout and allows the app to draw behind the navbar and status bar.
@@ -74,14 +78,47 @@ private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
 public inline fun View.doOnApplyWindowInsets(
     crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
 ) {
+    this.doOnApplyWindowInsets(null, func)
+}
+
+/**
+ * Run a block once when the WindowInsets are applied
+ */
+public inline fun View.doOnApplyWindowInsets(
+    owner: LifecycleOwner,
+    crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
+) {
+    this.doOnApplyWindowInsets(owner.lifecycle, func)
+}
+
+@PublishedApi
+internal inline fun View.doOnApplyWindowInsets(
+    lifecycle: Lifecycle?,
+    crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
+) {
+    val view = this
     // Create a snapshot of the view's padding state
-    val initialPadding = recordInitialPaddingForView(this)
+    val initialPadding = recordInitialPaddingForView(view)
+
+    lifecycle?.addObserver(object : LifecycleObserver {
+
+        @Suppress("unused")
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        fun onDestroy() {
+            // Unset the listener after the first call, as this is a doOn which expects it to happen once
+            ViewCompat.setOnApplyWindowInsetsListener(view, null)
+            lifecycle.removeObserver(this)
+        }
+
+    })
 
     // Set an actual OnApplyWindowInsetsListener which proxies to the given
     // lambda, also passing in the original padding state
-    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-        // Unset the listener after the first call, as this is a doOn which expects it to happen once
-        ViewCompat.setOnApplyWindowInsetsListener(v, null)
+    ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+        if (lifecycle == null) {
+            // Unset the listener after the first call, as this is a doOn which expects it to happen once
+            ViewCompat.setOnApplyWindowInsetsListener(v, null)
+        }
 
         // Do the thing
         func(v, insets, initialPadding)
@@ -91,7 +128,7 @@ public inline fun View.doOnApplyWindowInsets(
     }
 
     // request some insets
-    this.requestApplyInsetsWhenAttached()
+    view.requestApplyInsetsWhenAttached()
 }
 
 /**

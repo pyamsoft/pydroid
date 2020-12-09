@@ -55,6 +55,24 @@ public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> crea
 }
 
 /**
+ * Bind view events to the UiView list, and bind the nested UiViews if they exist
+ */
+@PublishedApi
+internal fun <S : UiViewState, V : UiViewEvent> bindViewEvents(
+    views: List<UiView<S, V>>,
+    onViewEvent: (event: V) -> Unit
+) {
+    views.forEach { v ->
+        v.onViewEvent { onViewEvent(it) }
+
+        if (v is BaseUiView<S, V, *>) {
+            val nestedViews = v.nestedViews()
+            bindViewEvents(nestedViews, onViewEvent)
+        }
+    }
+}
+
+/**
  * Bind a ViewHolder to the pydroid-arch style using one or more UiViews
  */
 @Deprecated("Use createViewBinder and manually call teardown at the end of the Controller scope instead of using a LifecycleOwner.")
@@ -67,9 +85,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     val reader = UiBundleReader.create(null)
 
     // Bind view event listeners
-    views.forEach { v ->
-        v.onViewEvent { onViewEvent(it) }
-    }
+    bindViewEvents(views.toList()) { onViewEvent(it) }
 
     // Init first
     views.forEach { it.init(reader) }
@@ -107,9 +123,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     val reader = UiBundleReader.create(null)
 
     // Bind view event listeners
-    views.forEach { v ->
-        v.onViewEvent { onViewEvent(it) }
-    }
+    bindViewEvents(views.toList()) { onViewEvent(it) }
 
     // Init first
     views.forEach { it.init(reader) }

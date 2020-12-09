@@ -144,7 +144,9 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         assertValidState()
     }
 
+    // PublishedApi so it can be used from Component.kt
     @CheckResult
+    @PublishedApi
     internal fun nestedViews(): List<UiView<S, V>> {
         return if (nestedViewDelegate.isInitialized()) nestedViews else emptyList()
     }

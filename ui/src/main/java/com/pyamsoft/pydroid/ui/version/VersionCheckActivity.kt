@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
+import com.pyamsoft.pydroid.util.doOnStart
 import timber.log.Timber
 
 abstract class VersionCheckActivity : PrivacyActivity() {
@@ -115,7 +116,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
     // Used by AppSettingsPreferenceFragment too
     internal fun showVersionUpgrade(launcher: AppUpdateLauncher) {
-        launcher.update(this, RC_APP_UPDATE)
+        doOnStart { launcher.update(this, RC_APP_UPDATE) }
     }
 
     companion object {

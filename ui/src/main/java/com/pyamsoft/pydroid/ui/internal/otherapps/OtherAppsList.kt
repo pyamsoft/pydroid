@@ -149,13 +149,13 @@ internal class OtherAppsList internal constructor(
     }
 
     private fun showNavigationError(error: Throwable) {
-        Snackbreak.bindTo(owner, "navigate") {
+        Snackbreak.bindTo(owner) {
             make(layoutRoot, error.message ?: "An unexpected error occurred.")
         }
     }
 
     private fun clearNavigationError() {
-        Snackbreak.bindTo(owner, "navigate") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }

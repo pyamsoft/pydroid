@@ -41,7 +41,7 @@ internal class PrivacyView internal constructor(
     }
 
     private fun showError(throwable: Throwable) {
-        Snackbreak.bindTo(owner, "error") {
+        Snackbreak.bindTo(owner) {
             short(
                 snackbarRootProvider(),
                 throwable.message ?: "An error occurred while showing policy.",
@@ -51,7 +51,7 @@ internal class PrivacyView internal constructor(
     }
 
     private fun clearError() {
-        Snackbreak.bindTo(owner, "error") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }

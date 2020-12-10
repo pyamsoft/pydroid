@@ -30,10 +30,12 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnDestroy
+import timber.log.Timber
+import java.util.UUID
 
 object Snackbreak {
 
-    private val cache by lazy { mutableMapOf<Lifecycle, MutableSet<CacheEntry>>() }
+    private var cached: Snacky? = null
 
     inline fun bindTo(
         owner: LifecycleOwner,
@@ -43,69 +45,51 @@ object Snackbreak {
     }
 
     inline fun bindTo(
-        owner: LifecycleOwner,
-        id: String,
-        crossinline withInstance: Instance.() -> Unit
-    ) {
-        return bindTo(owner.lifecycle, id, withInstance)
-    }
-
-    inline fun bindTo(
         lifecycle: Lifecycle,
         crossinline withInstance: Instance.() -> Unit
     ) {
-        return realBindTo(lifecycle, null) { withInstance() }
-    }
-
-    inline fun bindTo(
-        lifecycle: Lifecycle,
-        id: String,
-        crossinline withInstance: Instance.() -> Unit
-    ) {
-        return realBindTo(lifecycle, id) { withInstance() }
+        return realBindTo(lifecycle) { withInstance() }
     }
 
     @PublishedApi
     internal fun realBindTo(
         lifecycle: Lifecycle,
-        id: String?,
         withInstance: Instance.() -> Unit
     ) {
         if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
             return
         }
 
-        val instance = cache[lifecycle]
-            ?.find { id == it.id }
-            ?.instance ?: cacheInstance(lifecycle, id)
-
-        withInstance(instance)
+        withInstance(cacheInstance(lifecycle))
     }
 
     @CheckResult
-    private fun cacheInstance(
-        lifecycle: Lifecycle,
-        id: String?
-    ): Instance {
+    private fun cacheInstance(lifecycle: Lifecycle): Instance {
         val instance = Instance()
-        val c = cache
 
-        val cached = c.getOrPut(lifecycle) {
-            // Set up the lifecycle listener to destroy when out of scope
-            lifecycle.doOnDestroy { c.remove(lifecycle)?.forEach { it.instance.onDestroy() } }
-            return@getOrPut mutableSetOf()
+        lifecycle.doOnDestroy {
+            instance.destroy()
+
+            // If this is the cache, null it out
+            if (cached?.instance?.id == instance.id) {
+                Timber.d("Clear Snackbreak cached instance.")
+                cached = null
+            }
         }
 
-        cached.add(CacheEntry(instance, id))
+        cached?.instance?.destroy()
+        cached = Snacky(lifecycle, instance)
         return instance
     }
 
     class Instance internal constructor() {
 
+        internal val id = UUID.randomUUID().toString()
+
         private var snackbar: Snackbar? = null
         private var barCallback: BaseCallback<Snackbar>? = null
 
-        internal fun onDestroy() {
+        internal fun destroy() {
             dismiss()
         }
 
@@ -317,8 +301,8 @@ object Snackbreak {
         }
     }
 
-    private data class CacheEntry(
-        val instance: Instance,
-        val id: String?
+    private data class Snacky(
+        val lifecycle: Lifecycle,
+        val instance: Instance
     )
 }

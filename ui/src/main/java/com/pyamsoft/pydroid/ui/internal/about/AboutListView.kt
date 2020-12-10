@@ -179,25 +179,25 @@ internal class AboutListView internal constructor(
     }
 
     private fun showNavigationError(error: Throwable) {
-        Snackbreak.bindTo(owner, "navigate") {
+        Snackbreak.bindTo(owner) {
             make(layoutRoot, error.message ?: "An unexpected error occurred.")
         }
     }
 
     private fun clearNavigationError() {
-        Snackbreak.bindTo(owner, "navigate") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }
 
     private fun showLoadError(error: Throwable) {
-        Snackbreak.bindTo(owner, "load") {
+        Snackbreak.bindTo(owner) {
             make(layoutRoot, error.message ?: "An unexpected error occurred.")
         }
     }
 
     private fun clearLoadError() {
-        Snackbreak.bindTo(owner, "load") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }

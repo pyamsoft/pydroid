@@ -41,7 +41,7 @@ internal class RatingView internal constructor(
     }
 
     private fun showRating(launcher: AppRatingLauncher) {
-        Snackbreak.bindTo(owner, "rating") {
+        Snackbreak.bindTo(owner) {
             long(snackbarRootProvider(), "Enjoying the app?", onHidden = { _, _ ->
                 publish(RatingViewEvent.HideRating)
             }) {
@@ -51,7 +51,7 @@ internal class RatingView internal constructor(
     }
 
     private fun clearRating() {
-        Snackbreak.bindTo(owner, "rating") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }

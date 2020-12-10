@@ -59,19 +59,19 @@ internal class VersionCheckView internal constructor(
     }
 
     private fun showUpdating() {
-        Snackbreak.bindTo(owner, "check_update") {
+        Snackbreak.bindTo(owner) {
             make(snackbarRootProvider(), "Checking for updates")
         }
     }
 
     private fun dismissUpdating() {
-        Snackbreak.bindTo(owner, "check_update") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }
 
     private fun showError(throwable: Throwable) {
-        Snackbreak.bindTo(owner, "error") {
+        Snackbreak.bindTo(owner) {
             short(
                 snackbarRootProvider(),
                 throwable.message ?: "An error occurred while checking for updates.",
@@ -81,13 +81,13 @@ internal class VersionCheckView internal constructor(
     }
 
     private fun clearError() {
-        Snackbreak.bindTo(owner, "error") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }
 
     private fun showUpdater(launcher: AppUpdateLauncher) {
-        Snackbreak.bindTo(owner, "updater") {
+        Snackbreak.bindTo(owner) {
             make(snackbarRootProvider(), "A new update is available!") {
                 setAction("Update") { publish(VersionCheckViewEvent.LaunchUpdate(launcher)) }
             }
@@ -95,7 +95,7 @@ internal class VersionCheckView internal constructor(
     }
 
     private fun clearUpdater() {
-        Snackbreak.bindTo(owner, "updater") {
+        Snackbreak.bindTo(owner) {
             dismiss()
         }
     }

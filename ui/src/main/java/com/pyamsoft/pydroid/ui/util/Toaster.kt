@@ -23,10 +23,12 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
+import timber.log.Timber
+import java.util.UUID
 
 object Toaster {
 
-    private val cache by lazy { mutableMapOf<Lifecycle, Instance>() }
+    private var cached: Toasty? = null
 
     @CheckResult
     fun bindTo(owner: LifecycleOwner): Instance {
@@ -35,29 +37,36 @@ object Toaster {
 
     @CheckResult
     fun bindTo(lifecycle: Lifecycle): Instance {
-        return cache[lifecycle] ?: cacheInstance(lifecycle)
+        return cacheInstance(lifecycle)
     }
 
     @CheckResult
     private fun cacheInstance(lifecycle: Lifecycle): Instance {
         val instance = Instance()
-        val c = cache
 
-        c[lifecycle] = instance
         lifecycle.doOnDestroy {
-            c.remove(lifecycle)
-            instance.onDestroy()
+            instance.destroy()
+
+            // If this is the cache, null it out
+            if (cached?.instance?.id == instance.id) {
+                Timber.d("Clear Toaster cached instance.")
+                cached = null
+            }
         }
 
+        cached?.instance?.destroy()
+        cached = Toasty(lifecycle, instance)
         return instance
     }
 
     class Instance internal constructor() {
 
+        internal val id = UUID.randomUUID().toString()
+
         private var toast: Toast? = null
         private var toastCallback: Toast.Callback? = null
 
-        internal fun onDestroy() {
+        internal fun destroy() {
             dismiss()
         }
 
@@ -188,4 +197,9 @@ object Toaster {
 
         }
     }
+
+    private data class Toasty(
+        val lifecycle: Lifecycle,
+        val instance: Instance
+    )
 }

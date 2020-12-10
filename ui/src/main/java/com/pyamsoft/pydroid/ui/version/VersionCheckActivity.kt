@@ -32,7 +32,6 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
-import com.pyamsoft.pydroid.util.doOnStart
 import timber.log.Timber
 
 abstract class VersionCheckActivity : PrivacyActivity() {
@@ -67,11 +66,6 @@ abstract class VersionCheckActivity : PrivacyActivity() {
                 ShowUpgrade -> VersionUpgradeDialog.show(this)
             }
         }
-    }
-
-    @CallSuper
-    override fun onResume() {
-        super.onResume()
 
         if (checkForUpdates) {
             doCheckForUpdate()
@@ -80,10 +74,8 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
     private fun doCheckForUpdate() {
         Timber.d("Queue check for update onStart")
-        doOnStart {
-            Timber.d("Activity started, check for updates")
-            versionViewModel.checkForUpdates(false)
-        }
+        Timber.d("Activity started, check for updates")
+        versionViewModel.checkForUpdates(false)
     }
 
     // Keep public for app consumers

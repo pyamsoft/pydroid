@@ -128,6 +128,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
     companion object {
 
-        private const val RC_APP_UPDATE = 176923
+        // Only bottom 16 bits.
+        private const val RC_APP_UPDATE = 146
     }
 }

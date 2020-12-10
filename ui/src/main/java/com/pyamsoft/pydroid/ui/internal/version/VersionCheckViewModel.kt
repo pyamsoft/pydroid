@@ -22,7 +22,6 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -33,6 +32,7 @@ internal class VersionCheckViewModel internal constructor(
     initialState = VersionCheckViewState(
         isLoading = false,
         throwable = null,
+        updater = null
     )
 ) {
 
@@ -40,7 +40,7 @@ internal class VersionCheckViewModel internal constructor(
         handleVersionCheckBegin()
         try {
             val launcher = interactor.checkVersion(force)
-            handleVersionCheckFound(launcher)
+            handleVersionCheckFound(force, launcher)
         } catch (error: Throwable) {
             error.onActualError { e ->
                 Timber.e(e, "Error checking for latest version")
@@ -62,16 +62,31 @@ internal class VersionCheckViewModel internal constructor(
 
     override fun handleViewEvent(event: VersionCheckViewEvent) {
         return when (event) {
-            is VersionCheckViewEvent.SnackbarHidden -> setState { copy(throwable = null) }
+            is VersionCheckViewEvent.SnackbarHidden -> clearError()
+            is VersionCheckViewEvent.LaunchUpdate -> launchUpdate(event.launcher)
         }
+    }
+
+    private fun clearError() {
+        setState { copy(throwable = null) }
+    }
+
+    private fun launchUpdate(launcher: AppUpdateLauncher) {
+        setState(stateChange = { copy(updater = null) }, andThen = {
+            publish(VersionCheckControllerEvent.LaunchUpdate(launcher))
+        })
     }
 
     private fun handleVersionCheckBegin() {
         setState { copy(isLoading = true) }
     }
 
-    private fun handleVersionCheckFound(launcher: AppUpdateLauncher) {
-        publish(LaunchUpdate(launcher))
+    private fun handleVersionCheckFound(force: Boolean, launcher: AppUpdateLauncher) {
+        if (force) {
+            launchUpdate(launcher)
+        } else {
+            setState { copy(updater = launcher) }
+        }
     }
 
     private fun handleVersionCheckError(throwable: Throwable) {

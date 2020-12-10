@@ -66,6 +66,10 @@ abstract class VersionCheckActivity : PrivacyActivity() {
                 ShowUpgrade -> VersionUpgradeDialog.show(this)
             }
         }
+
+        if (checkForUpdates) {
+            checkUpdates()
+        }
     }
 
     @CallSuper
@@ -93,6 +97,17 @@ abstract class VersionCheckActivity : PrivacyActivity() {
                 Timber.d("User has cancelled or denied the update")
             }
         }
+    }
+
+    private fun checkUpdates() {
+        require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually."}
+        versionViewModel.checkForUpdates(false)
+    }
+
+    // Expose for applications to call manually
+    fun checkForUpdates() {
+        require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic."}
+        versionViewModel.checkForUpdates(false)
     }
 
     private fun showVersionUpgrade(launcher: AppUpdateLauncher) {

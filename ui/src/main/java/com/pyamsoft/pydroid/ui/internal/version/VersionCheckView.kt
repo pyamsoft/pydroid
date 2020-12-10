@@ -20,7 +20,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.SnackbarHidden
+import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
 internal class VersionCheckView internal constructor(
@@ -31,6 +31,7 @@ internal class VersionCheckView internal constructor(
     override fun render(state: UiRender<VersionCheckViewState>) {
         state.distinctBy { it.isLoading }.render(viewScope) { handleLoading(it) }
         state.distinctBy { it.throwable }.render(viewScope) { handleError(it) }
+        state.distinctBy { it.updater }.render(viewScope) { handleUpdater(it) }
     }
 
     private fun handleLoading(loading: Boolean) {
@@ -38,6 +39,14 @@ internal class VersionCheckView internal constructor(
             showUpdating()
         } else {
             dismissUpdating()
+        }
+    }
+
+    private fun handleUpdater(launcher: AppUpdateLauncher?) {
+        if (launcher == null) {
+            clearUpdater()
+        } else {
+            showUpdater(launcher)
         }
     }
 
@@ -66,13 +75,27 @@ internal class VersionCheckView internal constructor(
             short(
                 snackbarRootProvider(),
                 throwable.message ?: "An error occurred while checking for updates.",
-                onHidden = { _, _ -> publish(SnackbarHidden) }
+                onHidden = { _, _ -> publish(VersionCheckViewEvent.SnackbarHidden) }
             )
         }
     }
 
     private fun clearError() {
         Snackbreak.bindTo(owner, "error") {
+            dismiss()
+        }
+    }
+
+    private fun showUpdater(launcher: AppUpdateLauncher) {
+        Snackbreak.bindTo(owner, "updater") {
+            make(snackbarRootProvider(), "A new update is available!") {
+                setAction("Update") { publish(VersionCheckViewEvent.LaunchUpdate(launcher)) }
+            }
+        }
+    }
+
+    private fun clearUpdater() {
+        Snackbreak.bindTo(owner, "updater") {
             dismiss()
         }
     }

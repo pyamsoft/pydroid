@@ -23,12 +23,17 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 
 internal data class VersionCheckViewState internal constructor(
     val isLoading: Boolean,
-    val throwable: Throwable?
+    val throwable: Throwable?,
+    val updater: AppUpdateLauncher?
 ) : UiViewState
 
 internal sealed class VersionCheckViewEvent : UiViewEvent {
 
     object SnackbarHidden : VersionCheckViewEvent()
+
+    data class LaunchUpdate internal constructor(
+        val launcher: AppUpdateLauncher
+    ): VersionCheckViewEvent()
 }
 
 internal sealed class VersionCheckControllerEvent : UiControllerEvent {

@@ -27,6 +27,6 @@ public interface RatingInteractor {
      * Ask for a review if the current context allows it to be queued.
      */
     @CheckResult
-    public suspend fun askForRating(force: Boolean): AppReviewLauncher
+    public suspend fun askForRating(force: Boolean): AppRatingLauncher
 
 }

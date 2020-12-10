@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.rating.store
 import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
-import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
+import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.core.Enforcer
@@ -44,7 +44,7 @@ internal class PlayStoreRateMyApp internal constructor(
         }
     }
 
-    override suspend fun startReview(): AppReviewLauncher =
+    override suspend fun startReview(): AppRatingLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -57,14 +57,14 @@ internal class PlayStoreRateMyApp internal constructor(
                 manager.requestReviewFlow()
                     .addOnFailureListener { error ->
                         Timber.e(error, "Failed to resolve app review info task")
-                        continuation.resume(AppReviewLauncher.empty())
+                        continuation.resume(AppRatingLauncher.empty())
                     }
                     .addOnCompleteListener { request ->
                         Timber.d("App Review info received: $request")
                         if (request.isSuccessful) {
                             val info = request.result
                             continuation.resume(
-                                PlayStoreAppReviewLauncher(
+                                PlayStoreAppRatingLauncher(
                                     preferences,
                                     manager,
                                     info
@@ -74,7 +74,7 @@ internal class PlayStoreRateMyApp internal constructor(
                         }
 
                         Timber.d("Review is not available")
-                        continuation.resume(AppReviewLauncher.empty())
+                        continuation.resume(AppRatingLauncher.empty())
                     }
             }
         }

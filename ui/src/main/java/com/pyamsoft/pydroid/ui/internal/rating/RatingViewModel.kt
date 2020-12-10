@@ -19,31 +19,47 @@ package com.pyamsoft.pydroid.ui.internal.rating
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.UnitViewState
-import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
+import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
-) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(initialState = UnitViewState) {
+) : UiViewModel<RatingViewState, RatingViewEvent, RatingControllerEvent>(
+    initialState = RatingViewState(
+        rating = null
+    )
+) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->
         val launcher = interactor.askForRating(force)
-        handleRatingLaunch(launcher)
+        handleRatingLaunch(force, launcher)
     }
 
-    init {
-        load(false)
+    private fun handleRatingLaunch(force: Boolean, launcher: AppRatingLauncher) {
+        if (force) {
+            launchRating(launcher)
+        } else {
+            setState { copy(rating = launcher) }
+        }
     }
 
-    private fun handleRatingLaunch(launcher: AppReviewLauncher) {
-        publish(RatingControllerEvent.LoadRating(launcher))
+    private fun launchRating(launcher: AppRatingLauncher) {
+        setState(stateChange = { copy(rating = null) }, andThen = {
+            publish(RatingControllerEvent.LoadRating(launcher))
+        })
     }
 
-    override fun handleViewEvent(event: UnitViewEvent) {
+    private fun clearRating() {
+        setState { copy(rating = null) }
+    }
+
+    override fun handleViewEvent(event: RatingViewEvent) {
+        return when (event) {
+            is RatingViewEvent.LaunchRating -> launchRating(event.launcher)
+            is RatingViewEvent.HideRating -> clearRating()
+        }
     }
 
     internal fun load(force: Boolean) {

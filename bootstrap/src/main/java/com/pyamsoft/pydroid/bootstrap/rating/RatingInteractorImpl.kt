@@ -25,14 +25,14 @@ internal class RatingInteractorImpl internal constructor(
     private val ratingPreferences: RatingPreferences,
 ) : RatingInteractor {
 
-    override suspend fun askForRating(force: Boolean): AppReviewLauncher =
+    override suspend fun askForRating(force: Boolean): AppRatingLauncher =
         withContext(context = Dispatchers.Default) {
             Enforcer.assertOffMainThread()
 
             return@withContext if (force || ratingPreferences.showRating()) {
                 rateMyApp.startReview()
             } else {
-                AppReviewLauncher.empty()
+                AppRatingLauncher.empty()
             }
         }
 }

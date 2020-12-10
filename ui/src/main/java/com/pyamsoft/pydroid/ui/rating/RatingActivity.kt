@@ -22,12 +22,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.bootstrap.rating.AppReviewLauncher
+import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
+import com.pyamsoft.pydroid.ui.internal.rating.RatingView
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import kotlinx.coroutines.Dispatchers
@@ -37,25 +38,33 @@ abstract class RatingActivity : VersionCheckActivity() {
 
     private var stateSaver: StateSaver? = null
 
+    internal var ratingView: RatingView? = null
+
     internal var ratingFactory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<RatingViewModel> { ratingFactory }
 
     @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+
+        // Need to do this in onPostCreate because the snackbarRoot will not be available until
+        // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
             .plusRating()
-            .create()
+            .create(this) { snackbarRoot }
             .inject(this)
 
         stateSaver = createComponent(
             savedInstanceState, this,
-            viewModel
+            viewModel,
+            requireNotNull(ratingView)
         ) {
             return@createComponent when (it) {
                 is LoadRating -> showRating(it.launcher)
             }
         }
+
+        viewModel.load(false)
     }
 
     @CallSuper
@@ -69,12 +78,15 @@ abstract class RatingActivity : VersionCheckActivity() {
         super.onDestroy()
         ratingFactory = null
         stateSaver = null
+        ratingView = null
     }
 
-    private fun showRating(launcher: AppReviewLauncher) {
-        if (ChangeLogDialog.isNotShown(this)) {
-            val activity = this
-            lifecycleScope.launch(context = Dispatchers.Main) {
+    private fun showRating(launcher: AppRatingLauncher) {
+        val activity = this
+
+        // Enforce that we do this on the Main thread
+        lifecycleScope.launch(context = Dispatchers.Main) {
+            if (ChangeLogDialog.isNotShown(activity)) {
                 launcher.review(activity)
             }
         }

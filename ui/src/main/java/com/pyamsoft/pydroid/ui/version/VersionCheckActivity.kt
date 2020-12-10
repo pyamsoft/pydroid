@@ -20,6 +20,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
@@ -32,6 +33,8 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 abstract class VersionCheckActivity : PrivacyActivity() {
@@ -111,7 +114,12 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     }
 
     private fun showVersionUpgrade(launcher: AppUpdateLauncher) {
-        launcher.update(this, RC_APP_UPDATE)
+        val activity = this
+
+        // Enforce that we do this on the Main thread
+        lifecycleScope.launch(context = Dispatchers.Main) {
+            launcher.update(activity, RC_APP_UPDATE)
+        }
     }
 
     companion object {

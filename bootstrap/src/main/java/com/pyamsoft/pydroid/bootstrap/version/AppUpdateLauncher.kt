@@ -22,12 +22,12 @@ import androidx.annotation.CheckResult
 /**
  * In app update launcher
  */
-public fun interface AppUpdateLauncher {
+public interface AppUpdateLauncher {
 
     /**
      * Begin an update
      */
-    public fun update(activity: Activity, requestCode: Int)
+    public suspend fun update(activity: Activity, requestCode: Int)
 
     public companion object {
 
@@ -37,7 +37,10 @@ public fun interface AppUpdateLauncher {
         @JvmStatic
         @CheckResult
         public fun empty(): AppUpdateLauncher {
-            return AppUpdateLauncher { _, _ -> }
+            return object : AppUpdateLauncher {
+                override suspend fun update(activity: Activity, requestCode: Int) {
+                }
+            }
         }
     }
 }

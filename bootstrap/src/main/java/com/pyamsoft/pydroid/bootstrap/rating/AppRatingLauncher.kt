@@ -22,7 +22,7 @@ import androidx.annotation.CheckResult
 /**
  * In-App review launcher
  */
-public interface AppReviewLauncher {
+public interface AppRatingLauncher {
 
     /**
      * Possibly launch an in-app review, not guaranteed due to implementation details
@@ -36,8 +36,8 @@ public interface AppReviewLauncher {
          */
         @JvmStatic
         @CheckResult
-        public fun empty(): AppReviewLauncher {
-            return object : AppReviewLauncher {
+        public fun empty(): AppRatingLauncher {
+            return object : AppRatingLauncher {
                 override suspend fun review(activity: Activity) {
                 }
             }

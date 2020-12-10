@@ -32,7 +32,6 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
-import com.pyamsoft.pydroid.util.doOnStart
 import timber.log.Timber
 
 abstract class VersionCheckActivity : PrivacyActivity() {
@@ -67,24 +66,6 @@ abstract class VersionCheckActivity : PrivacyActivity() {
                 ShowUpgrade -> VersionUpgradeDialog.show(this)
             }
         }
-
-        if (checkForUpdates) {
-            doCheckForUpdate()
-        }
-    }
-
-    private fun doCheckForUpdate() {
-        Timber.d("Queue check for update onStart")
-        Timber.d("Activity started, check for updates")
-        versionViewModel.checkForUpdates(false)
-    }
-
-    // Keep public for app consumers
-    fun checkForUpdate() {
-        // In case somebody calls this when the auto update check is still enabled
-        check(!checkForUpdates) { "Do not call this method manually, updates are automatically checked onResume" }
-
-        doCheckForUpdate()
     }
 
     @CallSuper
@@ -114,9 +95,8 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         }
     }
 
-    // Used by AppSettingsPreferenceFragment too
-    internal fun showVersionUpgrade(launcher: AppUpdateLauncher) {
-        doOnStart { launcher.update(this, RC_APP_UPDATE) }
+    private fun showVersionUpgrade(launcher: AppUpdateLauncher) {
+        launcher.update(this, RC_APP_UPDATE)
     }
 
     companion object {

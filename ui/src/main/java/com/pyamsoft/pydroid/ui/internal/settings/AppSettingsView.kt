@@ -250,6 +250,7 @@ internal class AppSettingsView internal constructor(
 
     private fun setupApplicationTitle() {
         applicationGroup.title = "$applicationName Settings"
+        rate.title = "Review $applicationName"
     }
 
     companion object {

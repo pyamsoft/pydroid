@@ -33,7 +33,6 @@
     <string name="check_version_summary">Always have the fanciest stuff!</string>
 
     <string name="rating_key">rate_application</string>
-    <string name="rating_title">Rate Application</string>
     <string name="rating_summary">Liking the App? Leave a Review!</string>
 
     <string name="bugreport_key">bugreport</string>

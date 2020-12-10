@@ -61,7 +61,6 @@
         <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
             android:key="@string/rating_key"
             android:summary="@string/rating_summary"
-            android:title="@string/rating_title"
             app:iconCompat="@drawable/ic_star_24dp" />
 
         <com.pyamsoft.pydroid.ui.preference.PreferenceCompat

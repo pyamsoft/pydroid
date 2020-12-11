@@ -41,6 +41,7 @@ import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
@@ -121,11 +122,8 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun openPlayStore() {
-        requireContext().applicationContext.also { c ->
-            val link = c.packageName
-            val error = MarketLinker.linkToMarketPage(c, link)
-            failedNavigation(error)
-        }
+        val error = MarketLinker.openAppPage(requireContext())
+        failedNavigation(error)
     }
 
     private fun setupPreferenceListView() {

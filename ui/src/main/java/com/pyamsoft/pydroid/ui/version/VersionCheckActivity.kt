@@ -27,12 +27,14 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
+import com.pyamsoft.pydroid.ui.util.openAppPage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -46,7 +48,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     internal var versionCheckView: VersionCheckView? = null
 
     internal var versionFactory: ViewModelProvider.Factory? = null
-    private val versionViewModel by viewModelFactory<VersionCheckViewModel> { versionFactory }
+    private val viewModel by viewModelFactory<VersionCheckViewModel> { versionFactory }
 
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -61,7 +63,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
         stateSaver = createComponent(
             savedInstanceState, this,
-            versionViewModel,
+            viewModel,
             requireNotNull(versionCheckView)
         ) {
             return@createComponent when (it) {
@@ -103,14 +105,14 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     }
 
     private fun checkUpdates() {
-        require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually."}
-        versionViewModel.checkForUpdates(false)
+        require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually." }
+        viewModel.checkForUpdates(false)
     }
 
     // Expose for applications to call manually
     fun checkForUpdates() {
-        require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic."}
-        versionViewModel.checkForUpdates(false)
+        require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
+        viewModel.checkForUpdates(false)
     }
 
     private fun showVersionUpgrade(launcher: AppUpdateLauncher) {
@@ -118,7 +120,17 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
         // Enforce that we do this on the Main thread
         lifecycleScope.launch(context = Dispatchers.Main) {
-            launcher.update(activity, RC_APP_UPDATE)
+            try {
+                launcher.update(activity, RC_APP_UPDATE)
+            } catch (throwable: Throwable) {
+                Timber.e(throwable, "Unable to launch in-app update flow")
+                val error = MarketLinker.openAppPage(activity)
+                if (error == null) {
+                    viewModel.navigationSuccess()
+                } else {
+                    viewModel.navigationFailed(error)
+                }
+            }
         }
     }
 

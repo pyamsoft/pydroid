@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
@@ -26,6 +27,7 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.ClearUpdat
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.ErrorHidden
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.LaunchUpdate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.LoadingHidden
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.NavigationHidden
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,6 +38,7 @@ internal class VersionCheckViewModel internal constructor(
     initialState = VersionCheckViewState(
         isLoading = false,
         throwable = null,
+        navigationError = null,
         updater = null
     )
 ) {
@@ -70,6 +73,7 @@ internal class VersionCheckViewModel internal constructor(
             is LaunchUpdate -> launchUpdate(event.launcher)
             is LoadingHidden -> handleVersionCheckComplete()
             is ClearUpdate -> clearUpdate()
+            is NavigationHidden -> clearNavigationError()
         }
     }
 
@@ -108,8 +112,20 @@ internal class VersionCheckViewModel internal constructor(
         setState { copy(isLoading = false) }
     }
 
+    private fun clearNavigationError() {
+        setState { copy(navigationError = null) }
+    }
+
     internal fun checkForUpdates(force: Boolean) {
         Timber.d("Begin check for updates")
         viewModelScope.launch(context = Dispatchers.Default) { checkUpdateRunner.call(force) }
+    }
+
+    internal fun navigationSuccess() {
+        clearNavigationError()
+    }
+
+    internal fun navigationFailed(error: ActivityNotFoundException) {
+        setState { copy(navigationError = error) }
     }
 }

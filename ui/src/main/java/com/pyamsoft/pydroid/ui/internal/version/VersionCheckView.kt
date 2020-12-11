@@ -30,7 +30,8 @@ internal class VersionCheckView internal constructor(
 
     override fun render(state: UiRender<VersionCheckViewState>) {
         state.distinctBy { it.isLoading }.render(viewScope) { handleLoading(it) }
-        state.distinctBy { it.throwable }.render(viewScope) { handleError(it) }
+        state.distinctBy { it.throwable }.render(viewScope) { handleUpdateError(it) }
+        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
         state.distinctBy { it.updater }.render(viewScope) { handleUpdater(it) }
     }
 
@@ -46,9 +47,15 @@ internal class VersionCheckView internal constructor(
         }
     }
 
-    private fun handleError(throwable: Throwable?) {
+    private fun handleUpdateError(throwable: Throwable?) {
         if (throwable != null) {
-            showError(throwable)
+            showUpdatingError(throwable)
+        }
+    }
+
+    private fun handleNavigationError(throwable: Throwable?) {
+        if (throwable != null) {
+            showNavigationError(throwable)
         }
     }
 
@@ -62,12 +69,22 @@ internal class VersionCheckView internal constructor(
         }
     }
 
-    private fun showError(throwable: Throwable) {
+    private fun showUpdatingError(throwable: Throwable) {
         Snackbreak.bindTo(owner) {
             long(
                 snackbarRootProvider(),
                 throwable.message ?: "An error occurred while checking for updates.",
                 onHidden = { _, _ -> publish(VersionCheckViewEvent.ErrorHidden) }
+            )
+        }
+    }
+
+    private fun showNavigationError(throwable: Throwable) {
+        Snackbreak.bindTo(owner) {
+            long(
+                snackbarRootProvider(),
+                throwable.message ?: "An unexpected error occurred.",
+                onHidden = { _, _ -> publish(VersionCheckViewEvent.NavigationHidden) }
             )
         }
     }

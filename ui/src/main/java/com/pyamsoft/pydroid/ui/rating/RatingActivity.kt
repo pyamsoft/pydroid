@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity() {
 
@@ -82,7 +83,11 @@ abstract class RatingActivity : VersionCheckActivity() {
         // Enforce that we do this on the Main thread
         lifecycleScope.launch(context = Dispatchers.Main) {
             if (ChangeLogDialog.isNotShown(activity)) {
-                launcher.rate(activity)
+                try {
+                    launcher.rate(activity)
+                } catch (throwable: Throwable) {
+                    Timber.e(throwable, "Unable to launch in-app rating")
+                }
             }
         }
     }

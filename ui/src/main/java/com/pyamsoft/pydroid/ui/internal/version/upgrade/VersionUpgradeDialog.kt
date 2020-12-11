@@ -35,6 +35,11 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<VersionUpgradeViewModel>(activity = true) { factory }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isCancelable = false
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Injector.obtain<PYDroidComponent>(requireContext().applicationContext)
             .plusVersionUpgrade()
@@ -48,13 +53,14 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
                     |
                     |Click to restart the app and upgrade to the latest version!""".trimMargin()
             )
-            .setNegativeButton("Cancel") { _, _ -> dismiss() }
+            .setNegativeButton("Later") { _, _ -> dismiss() }
             .setPositiveButton("Restart") { _, _ ->
                 viewModel.completeUpgrade {
                     Timber.d("Upgrade completed, dismiss")
                     dismiss()
                 }
             }
+            .setCancelable(false)
             .create()
     }
 

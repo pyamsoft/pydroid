@@ -54,7 +54,11 @@ internal class VersionCheckView internal constructor(
 
     private fun showUpdating() {
         Snackbreak.bindTo(owner) {
-            long(snackbarRootProvider(), "Checking for updates")
+            long(
+                snackbarRootProvider(),
+                "Checking for updates",
+                onHidden = { _, _ -> publish(VersionCheckViewEvent.LoadingHidden) }
+            )
         }
     }
 
@@ -63,7 +67,7 @@ internal class VersionCheckView internal constructor(
             long(
                 snackbarRootProvider(),
                 throwable.message ?: "An error occurred while checking for updates.",
-                onHidden = { _, _ -> publish(VersionCheckViewEvent.SnackbarHidden) }
+                onHidden = { _, _ -> publish(VersionCheckViewEvent.ErrorHidden) }
             )
         }
     }
@@ -71,7 +75,10 @@ internal class VersionCheckView internal constructor(
     private fun showUpdater(launcher: AppUpdateLauncher) {
         Snackbreak.bindTo(owner) {
             // Basically leave this on screen until the user has addressed it.
-            make(snackbarRootProvider(), "A new update is available!") {
+            make(snackbarRootProvider(),
+                "A new update is available!",
+                onHidden = { _, _ -> publish(VersionCheckViewEvent.ClearUpdate)}
+            ) {
                 setAction("Update") { publish(VersionCheckViewEvent.LaunchUpdate(launcher)) }
             }
         }

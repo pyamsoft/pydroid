@@ -33,6 +33,10 @@ internal sealed class AboutViewEvent : UiViewEvent {
     data class OpenLibrary internal constructor(val index: Int) : AboutViewEvent()
 
     data class OpenLicense internal constructor(val index: Int) : AboutViewEvent()
+
+    object HideNavigationError : AboutViewEvent()
+
+    object HideLoadError : AboutViewEvent()
 }
 
 internal sealed class AboutControllerEvent : UiControllerEvent {

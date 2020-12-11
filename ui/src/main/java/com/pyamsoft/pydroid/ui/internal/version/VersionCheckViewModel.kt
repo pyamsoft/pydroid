@@ -22,6 +22,10 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.ClearUpdate
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.ErrorHidden
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.LaunchUpdate
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.LoadingHidden
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -62,13 +66,19 @@ internal class VersionCheckViewModel internal constructor(
 
     override fun handleViewEvent(event: VersionCheckViewEvent) {
         return when (event) {
-            is VersionCheckViewEvent.SnackbarHidden -> clearError()
-            is VersionCheckViewEvent.LaunchUpdate -> launchUpdate(event.launcher)
+            is ErrorHidden -> clearError()
+            is LaunchUpdate -> launchUpdate(event.launcher)
+            is LoadingHidden -> handleVersionCheckComplete()
+            is ClearUpdate -> clearUpdate()
         }
     }
 
     private fun clearError() {
         setState { copy(throwable = null) }
+    }
+
+    private fun clearUpdate() {
+        setState { copy(updater = null) }
     }
 
     private fun launchUpdate(launcher: AppUpdateLauncher) {

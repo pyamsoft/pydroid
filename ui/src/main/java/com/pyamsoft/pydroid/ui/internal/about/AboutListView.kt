@@ -175,13 +175,21 @@ internal class AboutListView internal constructor(
 
     private fun showNavigationError(error: Throwable) {
         Snackbreak.bindTo(owner) {
-            long(layoutRoot, error.message ?: "An unexpected error occurred.")
+            long(
+                layoutRoot,
+                error.message ?: "An unexpected error occurred.",
+                onHidden = { _, _ -> publish(AboutViewEvent.HideNavigationError) }
+            )
         }
     }
 
     private fun showLoadError(error: Throwable) {
         Snackbreak.bindTo(owner) {
-            long(layoutRoot, error.message ?: "An unexpected error occurred.")
+            long(
+                layoutRoot,
+                error.message ?: "An unexpected error occurred.",
+                onHidden = { _, _ -> publish(AboutViewEvent.HideLoadError) }
+            )
         }
     }
 

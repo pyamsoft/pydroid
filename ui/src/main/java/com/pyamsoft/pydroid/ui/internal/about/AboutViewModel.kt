@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.internal.about.AboutControllerEvent.ExternalUrl
+import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.HideLoadError
+import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.HideNavigationError
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLibrary
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLicense
 import kotlinx.coroutines.Dispatchers
@@ -64,6 +66,8 @@ internal class AboutViewModel internal constructor(
         return when (event) {
             is OpenLibrary -> openUrl(event.index) { it.libraryUrl }
             is OpenLicense -> openUrl(event.index) { it.licenseUrl }
+            is HideNavigationError -> clearNavigationError()
+            is HideLoadError -> handleLicenseLoadComplete()
         }
     }
 
@@ -101,6 +105,10 @@ internal class AboutViewModel internal constructor(
     }
 
     fun navigationSuccess() {
+        clearNavigationError()
+    }
+
+    private fun clearNavigationError() {
         setState { copy(navigationError = null) }
     }
 }

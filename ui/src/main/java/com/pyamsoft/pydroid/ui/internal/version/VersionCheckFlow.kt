@@ -29,11 +29,15 @@ internal data class VersionCheckViewState internal constructor(
 
 internal sealed class VersionCheckViewEvent : UiViewEvent {
 
-    object SnackbarHidden : VersionCheckViewEvent()
+    object LoadingHidden : VersionCheckViewEvent()
+
+    object ErrorHidden : VersionCheckViewEvent()
+
+    object ClearUpdate : VersionCheckViewEvent()
 
     data class LaunchUpdate internal constructor(
         val launcher: AppUpdateLauncher
-    ): VersionCheckViewEvent()
+    ) : VersionCheckViewEvent()
 }
 
 internal sealed class VersionCheckControllerEvent : UiControllerEvent {

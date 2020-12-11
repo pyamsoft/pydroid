@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.preference
 
 import android.content.Context
+import androidx.annotation.CheckResult
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogPreferences
@@ -64,6 +65,31 @@ internal class PYDroidPreferencesImpl internal constructor(
             }
         }
 
+    @CheckResult
+    private fun getDefaultLastSeenDateString(): String {
+        // Grab a date ten days ago
+        val tenDaysAgo = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -10)
+        }
+
+        val formatter = requireNotNull(lastShownDateFormatter.get())
+        return requireNotNull(formatter.format(tenDaysAgo))
+    }
+
+    @CheckResult
+    private fun getLastSeenDate(defaultDateString: String): Calendar {
+        val formatter = requireNotNull(lastShownDateFormatter.get())
+
+        val lastSeenDateAsString =
+            requireNotNull(prefs.getString(LAST_SHOWN_RATING_DATE, defaultDateString))
+        val lastSeenDate = requireNotNull(formatter.parse(lastSeenDateAsString))
+
+        // If it has been at least a month, then when we add the date to last seen it will still be before today
+        return Calendar.getInstance().apply {
+            time = lastSeenDate
+        }
+    }
+
     override suspend fun showRating(): Boolean =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
@@ -75,37 +101,28 @@ internal class PYDroidPreferencesImpl internal constructor(
                 return@withContext false
             }
 
-            // Grab a date ten days ago
-            val tenDaysAgo = Calendar.getInstance().apply {
-                add(Calendar.DAY_OF_MONTH, -10)
-            }
-
-            val formatter = requireNotNull(lastShownDateFormatter.get())
-            val tenDaysAgoAsString = requireNotNull(formatter.format(tenDaysAgo))
+            val defaultDateString = getDefaultLastSeenDateString()
 
             // Initialize the last shown date to ten days ago
             if (!prefs.contains(LAST_SHOWN_RATING_DATE)) {
-                Timber.d("Initialize last shown date to: $tenDaysAgoAsString")
-                prefs.edit { putString(LAST_SHOWN_RATING_DATE, tenDaysAgoAsString) }
+                Timber.d("Initialize last shown date to: $defaultDateString")
+                prefs.edit { putString(LAST_SHOWN_RATING_DATE, defaultDateString) }
             }
 
-            // Make sure it has been at least a month since we have last seen the review dialog
-            val lastSeenDateAsString =
-                requireNotNull(prefs.getString(LAST_SHOWN_RATING_DATE, tenDaysAgoAsString))
-            val lastSeenDate = requireNotNull(formatter.parse(lastSeenDateAsString))
+            val lastSeenCalendar = getLastSeenDate(defaultDateString)
 
+            // Make sure it has been at least a month since we have last seen the review dialog
             // If it has been at least a month, then when we add the date to last seen it will still be before today
-            val lastSeenCalendar = Calendar.getInstance().apply {
-                time = lastSeenDate
-                set(Calendar.MONTH, 1)
+            val adjustedLastSeenCalendar = Calendar.getInstance().apply {
+                time = lastSeenCalendar.time
+                add(Calendar.MONTH, 1)
             }
 
             val today = Calendar.getInstance()
-            val todayAsString = formatter.format(today.time)
-
             Timber.d("Last show stats")
-            Timber.d("Last seen date: $lastSeenDateAsString")
-            Timber.d("Today as string: $todayAsString")
+            Timber.d("Last seen date: ${lastSeenCalendar.time}")
+            Timber.d("Adjusted date: ${adjustedLastSeenCalendar.time}")
+            Timber.d("Today : $today")
 
             return@withContext forceShowRating || lastSeenCalendar.before(today)
         }

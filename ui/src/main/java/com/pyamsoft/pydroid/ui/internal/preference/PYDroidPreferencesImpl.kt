@@ -66,28 +66,32 @@ internal class PYDroidPreferencesImpl internal constructor(
         }
 
     @CheckResult
+    private fun formatCalendar(calendar: Calendar): String {
+        val formatter = requireNotNull(lastShownDateFormatter.get())
+        return requireNotNull(formatter.format(calendar.time))
+    }
+
+    @CheckResult
+    private fun parseCalendar(string: String): Calendar {
+        val formatter = requireNotNull(lastShownDateFormatter.get())
+        val date = requireNotNull(formatter.parse(string))
+        return Calendar.getInstance().apply { time = date }
+    }
+
+    @CheckResult
     private fun getDefaultLastSeenDateString(): String {
         // Grab a date ten days ago
         val tenDaysAgo = Calendar.getInstance().apply {
             add(Calendar.DAY_OF_MONTH, -10)
         }
-
-        val formatter = requireNotNull(lastShownDateFormatter.get())
-        return requireNotNull(formatter.format(tenDaysAgo))
+        return formatCalendar(tenDaysAgo)
     }
 
     @CheckResult
     private fun getLastSeenDate(defaultDateString: String): Calendar {
-        val formatter = requireNotNull(lastShownDateFormatter.get())
-
-        val lastSeenDateAsString =
-            requireNotNull(prefs.getString(LAST_SHOWN_RATING_DATE, defaultDateString))
-        val lastSeenDate = requireNotNull(formatter.parse(lastSeenDateAsString))
-
-        // If it has been at least a month, then when we add the date to last seen it will still be before today
-        return Calendar.getInstance().apply {
-            time = lastSeenDate
-        }
+        val prefString = prefs.getString(LAST_SHOWN_RATING_DATE, defaultDateString)
+        val lastSeenDateAsString = requireNotNull(prefString)
+        return parseCalendar(lastSeenDateAsString)
     }
 
     override suspend fun showRating(): Boolean =
@@ -122,7 +126,7 @@ internal class PYDroidPreferencesImpl internal constructor(
             Timber.d("Last show stats")
             Timber.d("Last seen date: ${lastSeenCalendar.time}")
             Timber.d("Adjusted date: ${adjustedLastSeenCalendar.time}")
-            Timber.d("Today : $today")
+            Timber.d("Today : ${today.time}")
 
             return@withContext forceShowRating || lastSeenCalendar.before(today)
         }
@@ -130,9 +134,8 @@ internal class PYDroidPreferencesImpl internal constructor(
     override suspend fun markRatingShown() = withContext(context = Dispatchers.IO) {
         Enforcer.assertOffMainThread()
 
-        val formatter = requireNotNull(lastShownDateFormatter.get())
         val today = Calendar.getInstance()
-        val todayAsString = formatter.format(today.time)
+        val todayAsString = formatCalendar(today)
 
         Timber.d("Mark today as shown $todayAsString $versionCode")
 

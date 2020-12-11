@@ -82,16 +82,10 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     private fun launchUpdate(launcher: AppUpdateLauncher) {
-        val updater = state.updater
+        setState { copy(updater = null) }
 
-        // If this has already been nulled out by the snackbar hiding, just launch
-        if (updater == null) {
-            publish(VersionCheckControllerEvent.LaunchUpdate(launcher))
-        } else {
-            setState(stateChange = { copy(updater = null) }, andThen = {
-                publish(VersionCheckControllerEvent.LaunchUpdate(launcher))
-            })
-        }
+        // Do this regardless of current state
+        publish(VersionCheckControllerEvent.LaunchUpdate(launcher))
     }
 
     private fun handleVersionCheckBegin() {

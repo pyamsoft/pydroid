@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
@@ -67,6 +68,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     private val settingsViewModel by viewModelFactory<AppSettingsViewModel>(activity = true) { factory }
     private val versionViewModel by viewModelFactory<VersionCheckViewModel>(activity = true) { factory }
     private val changeLogViewModel by viewModelFactory<ChangeLogViewModel>(activity = true) { factory }
+    private val ratingViewModel by viewModelFactory<RatingViewModel>(activity = true) { factory }
 
     @CallSuper
     override fun onCreatePreferences(
@@ -105,7 +107,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
             return@createComponent when (it) {
                 is AppSettingsControllerEvent.NavigateMoreApps -> viewMorePyamsoftApps()
                 is AppSettingsControllerEvent.NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
-                is AppSettingsControllerEvent.NavigateRateApp -> openMarkForRating()
+                is AppSettingsControllerEvent.NavigateRateApp -> ratingViewModel.load(true)
                 is AppSettingsControllerEvent.ShowLicense -> openLicensesPage()
                 is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(true)
                 is AppSettingsControllerEvent.AttemptClearData -> openClearDataDialog()
@@ -184,14 +186,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
     private fun openLicensesPage() {
         onLicenseItemClicked()
-    }
-
-    private fun openMarkForRating() {
-        requireContext().also { c ->
-            val link = c.packageName
-            val error = MarketLinker.linkToMarketPage(c, link)
-            failedNavigation(error)
-        }
     }
 
     private fun navigateHyperlink(link: HyperlinkIntent) {

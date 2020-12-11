@@ -46,16 +46,10 @@ internal class RatingViewModel internal constructor(
     }
 
     private fun launchRating(launcher: AppRatingLauncher) {
-        val rating = state.rating
+        setState { copy(rating = null) }
 
-        // If this has already been nulled out by the snackbar hiding, just launch
-        if (rating == null) {
-            publish(RatingControllerEvent.LoadRating(launcher))
-        } else {
-            setState(stateChange = { copy(rating = null) }, andThen = {
-                publish(RatingControllerEvent.LoadRating(launcher))
-            })
-        }
+        // Do this regardless of current state
+        publish(RatingControllerEvent.LoadRating(launcher))
     }
 
     private fun clearRating() {

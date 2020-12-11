@@ -64,13 +64,14 @@ internal class PYDroidPreferencesImpl internal constructor(
             Enforcer.assertOffMainThread()
 
             // If the rating has already been seen for this one, don't show it
-            return@withContext if (prefs.getInt(LAST_SHOWN_RATING, 0) >= versionCode) false else {
+            val lastShown = prefs.getInt(LAST_SHOWN_RATING, 0)
+            return@withContext if (lastShown >= versionCode) false else {
                 val shown = prefs.getInt(SHOW_RATING, 0)
                 val showRating = shown >= SHOW_RATING_AT
 
                 // Reset the count once it is shown
                 prefs.edit { putInt(SHOW_RATING, if (showRating) 0 else shown + 1) }
-               
+
                 showRating
             }
         }

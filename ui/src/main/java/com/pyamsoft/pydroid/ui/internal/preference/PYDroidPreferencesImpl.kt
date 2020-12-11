@@ -98,7 +98,7 @@ internal class PYDroidPreferencesImpl internal constructor(
 
     companion object {
 
-        private const val SHOW_RATING_AT = 5
+        private const val SHOW_RATING_AT = 10
         private const val SHOW_RATING = "show_rating"
         private const val LAST_SHOWN_RATING = "last_shown_rating"
 

@@ -30,9 +30,11 @@ import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.internal.rating.RatingView
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
+import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 abstract class RatingActivity : VersionCheckActivity() {
 
@@ -87,7 +89,15 @@ abstract class RatingActivity : VersionCheckActivity() {
         // Enforce that we do this on the Main thread
         lifecycleScope.launch(context = Dispatchers.Main) {
             if (ChangeLogDialog.isNotShown(activity)) {
-                launcher.rate(activity)
+                try {
+                    launcher.rate(activity)
+                } catch (e: Throwable) {
+                    Timber.e(e, "Failed to launch in-app review, fall back to market linker")
+                    val context = activity.applicationContext
+                    val packageName = context.packageName
+                    val navError = MarketLinker.linkToMarketPage(context, packageName)
+                    viewModel.navigationError(navError)
+                }
             }
         }
     }

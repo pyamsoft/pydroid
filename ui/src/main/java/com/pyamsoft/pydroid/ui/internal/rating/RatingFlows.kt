@@ -21,11 +21,16 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 
-internal data class RatingViewState(val rating: AppRatingLauncher?) : UiViewState
+internal data class RatingViewState(
+    val navigationError: Throwable?,
+    val rating: AppRatingLauncher?
+) : UiViewState
 
 internal sealed class RatingViewEvent : UiViewEvent {
 
     object HideRating : RatingViewEvent()
+
+    object HideError : RatingViewEvent()
 
     data class LaunchRating internal constructor(
         val launcher: AppRatingLauncher

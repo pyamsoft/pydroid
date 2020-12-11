@@ -42,9 +42,8 @@ internal class PlayStoreAppRatingLauncher internal constructor(
 
         Enforcer.assertOnMainThread()
         manager.launchReviewFlow(activity, info)
-            .addOnCompleteListener {
-                Timber.d("Review flow completed")
-            }
+            .addOnSuccessListener { Timber.d("In-app Review was a success") }
+            .addOnFailureListener { throw it }
 
         // Unit
         return@withContext

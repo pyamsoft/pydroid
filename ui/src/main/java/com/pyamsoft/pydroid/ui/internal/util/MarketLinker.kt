@@ -22,8 +22,30 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 internal object MarketLinker {
 
+    private const val BASE_MARKET = "market://details?id="
     private const val DEVELOPER_PAGE =
         "https://play.google.com/store/apps/dev?id=5257476342110165153"
+
+    @JvmStatic
+    @JvmOverloads
+    fun linkToMarketPage(
+        context: Context,
+        packageName: String,
+        onError: ((error: ActivityNotFoundException) -> Unit)? = null
+    ): ActivityNotFoundException? {
+        val targetName = if (packageName.endsWith(".dev")) {
+            packageName.substringBefore(".dev")
+        } else {
+            packageName
+        }
+
+        val hyperlink = "$BASE_MARKET$targetName".hyperlink(context)
+        return if (onError == null) {
+            hyperlink.navigate()
+        } else {
+            hyperlink.navigate(onError)
+        }
+    }
 
     @JvmStatic
     @JvmOverloads

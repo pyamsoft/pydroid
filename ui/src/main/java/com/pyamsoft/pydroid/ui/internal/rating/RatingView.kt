@@ -30,11 +30,18 @@ internal class RatingView internal constructor(
 
     override fun render(state: UiRender<RatingViewState>) {
         state.distinctBy { it.rating }.render(viewScope) { handleRating(it) }
+        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
     }
 
     private fun handleRating(launcher: AppRatingLauncher?) {
         if (launcher != null) {
             showRating(launcher)
+        }
+    }
+
+    private fun handleNavigationError(throwable: Throwable?) {
+        if (throwable != null) {
+            showNavigationError(throwable)
         }
     }
 
@@ -46,6 +53,16 @@ internal class RatingView internal constructor(
                 onHidden = { _, _ -> publish(RatingViewEvent.HideRating) }) {
                 setAction("Rate") { publish(RatingViewEvent.LaunchRating(launcher)) }
             }
+        }
+    }
+
+    private fun showNavigationError(throwable: Throwable) {
+        Snackbreak.bindTo(owner) {
+            long(
+                snackbarRootProvider(),
+                throwable.message ?: "An unexpected error occurred.",
+                onHidden = { _, _ -> publish(RatingViewEvent.HideError) }
+            )
         }
     }
 }

@@ -21,6 +21,9 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.HideError
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.HideRating
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.LaunchRating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -28,7 +31,8 @@ internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
 ) : UiViewModel<RatingViewState, RatingViewEvent, RatingControllerEvent>(
     initialState = RatingViewState(
-        rating = null
+        rating = null,
+        navigationError = null
     )
 ) {
 
@@ -58,9 +62,14 @@ internal class RatingViewModel internal constructor(
 
     override fun handleViewEvent(event: RatingViewEvent) {
         return when (event) {
-            is RatingViewEvent.LaunchRating -> launchRating(event.launcher)
-            is RatingViewEvent.HideRating -> clearRating()
+            is LaunchRating -> launchRating(event.launcher)
+            is HideRating -> clearRating()
+            is HideError -> navigationError(null)
         }
+    }
+
+    internal fun navigationError(throwable: Throwable?) {
+        setState { copy(navigationError = throwable) }
     }
 
     internal fun load(force: Boolean) {

@@ -128,7 +128,7 @@ internal class PYDroidPreferencesImpl internal constructor(
             Timber.d("Adjusted date: ${adjustedLastSeenCalendar.time}")
             Timber.d("Today : ${today.time}")
 
-            return@withContext forceShowRating || lastSeenCalendar.before(today)
+            return@withContext forceShowRating || adjustedLastSeenCalendar.before(today)
         }
 
     override suspend fun markRatingShown() = withContext(context = Dispatchers.IO) {

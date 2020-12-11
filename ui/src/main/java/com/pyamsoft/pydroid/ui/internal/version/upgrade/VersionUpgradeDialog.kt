@@ -25,8 +25,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.ui.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.util.show
 import timber.log.Timber
 
@@ -41,8 +41,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Injector.obtain<PYDroidComponent>(requireContext().applicationContext)
-            .plusVersionUpgrade()
+        Injector.obtain<VersionCheckComponent>(requireActivity())
             .inject(this)
 
         return AlertDialog.Builder(requireActivity())

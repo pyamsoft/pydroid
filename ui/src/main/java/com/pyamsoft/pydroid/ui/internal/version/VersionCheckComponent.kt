@@ -16,15 +16,23 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import android.content.Context
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
+import androidx.lifecycle.ViewModelProvider
+import com.pyamsoft.pydroid.arch.onlyFactory
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule.Parameters
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
+import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 
 internal interface VersionCheckComponent {
 
     fun inject(activity: VersionCheckActivity)
+
+    fun inject(dialog: VersionUpgradeDialog)
 
     interface Factory {
 
@@ -35,23 +43,45 @@ internal interface VersionCheckComponent {
         ): VersionCheckComponent
 
         data class Parameters internal constructor(
-            internal val factory: PYDroidViewModelFactory
+            internal val context: Context,
+            internal val version: Int,
+            internal val isFakeUpgradeChecker: Boolean,
+            internal val isFakeUpgradeAvailable: Boolean
         )
-
     }
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
-        private val params: Factory.Parameters
+        params: Factory.Parameters
     ) : VersionCheckComponent {
 
+        private val checkFactory: ViewModelProvider.Factory
+        private val upgradeFactory: ViewModelProvider.Factory
+
+        init {
+            val module = VersionCheckModule(
+                Parameters(
+                    context = params.context.applicationContext,
+                    version = params.version,
+                    isFakeUpgradeChecker = params.isFakeUpgradeChecker,
+                    isFakeUpgradeAvailable = params.isFakeUpgradeAvailable
+                )
+            )
+            checkFactory = onlyFactory { VersionCheckViewModel(module.provideInteractor()) }
+            upgradeFactory = onlyFactory { VersionUpgradeViewModel(module.provideInteractor()) }
+        }
+
         override fun inject(activity: VersionCheckActivity) {
-            activity.versionFactory = params.factory
+            activity.versionFactory = checkFactory
             activity.versionCheckView = VersionCheckView(
                 owner,
                 snackbarRootProvider
             )
+        }
+
+        override fun inject(dialog: VersionUpgradeDialog) {
+            dialog.factory = upgradeFactory
         }
 
         internal class FactoryImpl internal constructor(

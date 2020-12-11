@@ -22,9 +22,7 @@ import com.pyamsoft.pydroid.bootstrap.about.AboutModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.network.NetworkModule
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
-import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
@@ -42,7 +40,6 @@ import com.pyamsoft.pydroid.ui.internal.rating.RatingComponent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface PYDroidComponent {
@@ -76,9 +73,6 @@ internal interface PYDroidComponent {
 
     @CheckResult
     fun plusVersionCheck(): VersionCheckComponent.Factory
-
-    @CheckResult
-    fun plusVersionUpgrade(): VersionUpgradeComponent
 
     @CheckResult
     fun plusSettings(): AppSettingsComponent.Factory
@@ -137,28 +131,12 @@ internal interface PYDroidComponent {
 
         private val aboutModule = AboutModule()
 
-        private val ratingModule = RatingModule(
-            RatingModule.Parameters(
-                context = context.applicationContext,
-                isFake = params.debug.enabled,
-                preferences = preferences
-            )
-        )
-
         private val networkModule = NetworkModule(
             NetworkModule.Parameters(
                 addLoggingInterceptor = params.debug.enabled
             )
         )
 
-        private val versionCheckModule = VersionCheckModule(
-            VersionCheckModule.Parameters(
-                context = context.applicationContext,
-                version = params.version,
-                isFakeUpgradeChecker = params.debug.enabled,
-                isFakeUpgradeAvailable = params.debug.upgradeAvailable
-            )
-        )
 
         private val otherAppsModule = OtherAppsModule(
             OtherAppsModule.Parameters(
@@ -181,9 +159,7 @@ internal interface PYDroidComponent {
                     version = params.version,
                     theming = theming,
                     interactors = PYDroidViewModelFactory.Parameters.Interactors(
-                        rating = ratingModule.provideInteractor(),
                         about = aboutModule.provideInteractor(),
-                        version = versionCheckModule.provideInteractor(),
                         otherApps = otherAppsModule.provideInteractor(),
                         settings = settingsModule.provideInteractor(),
                         changeLog = changeLogModule.provideInteractor()
@@ -217,11 +193,16 @@ internal interface PYDroidComponent {
         )
 
         private val ratingParams = RatingComponent.Factory.Parameters(
-            factory = viewModelFactory
+            context = context.applicationContext,
+            isFake = params.debug.enabled,
+            preferences = preferences
         )
 
         private val versionParams = VersionCheckComponent.Factory.Parameters(
-            factory = viewModelFactory
+            context = context.applicationContext,
+            version = params.version,
+            isFakeUpgradeChecker = params.debug.enabled,
+            isFakeUpgradeAvailable = params.debug.upgradeAvailable
         )
 
         private val changeLogParams = ChangeLogComponent.Factory.Parameters(
@@ -273,10 +254,6 @@ internal interface PYDroidComponent {
 
         override fun plusVersionCheck(): VersionCheckComponent.Factory {
             return VersionCheckComponent.Impl.FactoryImpl(versionParams)
-        }
-
-        override fun plusVersionUpgrade(): VersionUpgradeComponent {
-            return VersionUpgradeComponent.Impl(viewModelFactory)
         }
 
         override fun plusRating(): RatingComponent.Factory {

@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
@@ -50,16 +51,19 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     internal var versionFactory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<VersionCheckViewModel> { versionFactory }
 
+    private var injector: VersionCheckComponent? = null
+
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
         // Need to do this in onPostCreate because the snackbarRoot will not be available until
         // after subclass onCreate
-        Injector.obtain<PYDroidComponent>(applicationContext)
+        injector = Injector.obtain<PYDroidComponent>(applicationContext)
             .plusVersionCheck()
-            .create(this) { snackbarRoot }
-            .inject(this)
+            .create(this) { snackbarRoot }.also { component ->
+                component.inject(this)
+            }
 
         stateSaver = createComponent(
             savedInstanceState, this,
@@ -74,6 +78,15 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
         if (checkForUpdates) {
             checkUpdates()
+        }
+    }
+
+    // Provide this graph as a service injector
+    @CallSuper
+    override fun getSystemService(name: String): Any? {
+        return when (name) {
+            VersionCheckComponent::class.java.name -> requireNotNull(injector)
+            else -> super.getSystemService(name)
         }
     }
 

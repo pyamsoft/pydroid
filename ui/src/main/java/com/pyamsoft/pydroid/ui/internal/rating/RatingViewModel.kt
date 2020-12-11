@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
@@ -33,8 +34,12 @@ internal class RatingViewModel internal constructor(
 ) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->
-        val launcher = interactor.askForRating(force)
-        handleRatingLaunch(launcher)
+        try {
+            val launcher = interactor.askForRating(force)
+            handleRatingLaunch(launcher)
+        } catch (throwable: Throwable) {
+            Timber.e(throwable, "Unable to launch rating flow")
+        }
     }
 
     private fun handleRatingLaunch(launcher: AppRatingLauncher?) {

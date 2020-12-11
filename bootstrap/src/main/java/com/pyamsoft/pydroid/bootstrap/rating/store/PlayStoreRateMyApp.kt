@@ -44,7 +44,7 @@ internal class PlayStoreRateMyApp internal constructor(
         }
     }
 
-    override suspend fun startReview(): AppRatingLauncher =
+    override suspend fun startRating(): AppRatingLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 

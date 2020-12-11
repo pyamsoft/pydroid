@@ -29,6 +29,12 @@ public interface AppUpdateLauncher {
      */
     public suspend fun update(activity: Activity, requestCode: Int)
 
+    /**
+     * Does this launcher contain a real update?
+     */
+    @CheckResult
+    public fun canUpdate(): Boolean
+
     public companion object {
 
         /**
@@ -39,6 +45,10 @@ public interface AppUpdateLauncher {
         public fun empty(): AppUpdateLauncher {
             return object : AppUpdateLauncher {
                 override suspend fun update(activity: Activity, requestCode: Int) {
+                }
+
+                override fun canUpdate(): Boolean {
+                    return false
                 }
             }
         }

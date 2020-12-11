@@ -30,7 +30,7 @@ internal class RatingInteractorImpl internal constructor(
             Enforcer.assertOffMainThread()
 
             return@withContext if (force || ratingPreferences.showRating()) {
-                rateMyApp.startReview()
+                rateMyApp.startRating()
             } else {
                 AppRatingLauncher.empty()
             }

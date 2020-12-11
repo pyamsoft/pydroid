@@ -27,6 +27,6 @@ public interface RateMyApp {
      * Potentially start a new in-app review, depending on implementation details
      */
     @CheckResult
-    public suspend fun startReview(): AppRatingLauncher
+    public suspend fun startRating(): AppRatingLauncher
 
 }

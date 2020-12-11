@@ -52,4 +52,8 @@ internal class PlayStoreAppUpdateLauncher internal constructor(
                 }
             }
         }
+
+    override fun canUpdate(): Boolean {
+        return true
+    }
 }

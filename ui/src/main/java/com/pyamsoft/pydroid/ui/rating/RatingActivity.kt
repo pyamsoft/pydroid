@@ -87,7 +87,7 @@ abstract class RatingActivity : VersionCheckActivity() {
         // Enforce that we do this on the Main thread
         lifecycleScope.launch(context = Dispatchers.Main) {
             if (ChangeLogDialog.isNotShown(activity)) {
-                launcher.review(activity)
+                launcher.rate(activity)
             }
         }
     }

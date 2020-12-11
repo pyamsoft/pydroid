@@ -32,7 +32,7 @@ internal class PlayStoreAppRatingLauncher internal constructor(
     private val info: ReviewInfo
 ) : AppRatingLauncher {
 
-    override suspend fun review(activity: Activity) = withContext(context = Dispatchers.Main) {
+    override suspend fun rate(activity: Activity) = withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
         withContext(context = Dispatchers.IO) {
@@ -48,5 +48,9 @@ internal class PlayStoreAppRatingLauncher internal constructor(
 
         // Unit
         return@withContext
+    }
+
+    override fun canRate(): Boolean {
+        return true
     }
 }

@@ -27,7 +27,13 @@ public interface AppRatingLauncher {
     /**
      * Possibly launch an in-app review, not guaranteed due to implementation details
      */
-    public suspend fun review(activity: Activity)
+    public suspend fun rate(activity: Activity)
+
+    /**
+     * Will this launcher actually launch something or is it a noop
+     */
+    @CheckResult
+    public fun canRate(): Boolean
 
     public companion object {
 
@@ -38,7 +44,11 @@ public interface AppRatingLauncher {
         @CheckResult
         public fun empty(): AppRatingLauncher {
             return object : AppRatingLauncher {
-                override suspend fun review(activity: Activity) {
+                override suspend fun rate(activity: Activity) {
+                }
+
+                override fun canRate(): Boolean {
+                    return false
                 }
             }
         }

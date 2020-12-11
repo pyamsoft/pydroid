@@ -36,7 +36,11 @@ internal class RatingView internal constructor(
         if (launcher == null) {
             clearRating()
         } else {
-            showRating(launcher)
+            if (launcher.canRate()) {
+                showRating(launcher)
+            } else {
+                clearRating()
+            }
         }
     }
 

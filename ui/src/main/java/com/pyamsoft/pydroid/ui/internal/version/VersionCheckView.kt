@@ -46,7 +46,11 @@ internal class VersionCheckView internal constructor(
         if (launcher == null) {
             clearUpdater()
         } else {
-            showUpdater(launcher)
+            if (launcher.canUpdate()) {
+                showUpdater(launcher)
+            } else {
+                clearUpdater()
+            }
         }
     }
 

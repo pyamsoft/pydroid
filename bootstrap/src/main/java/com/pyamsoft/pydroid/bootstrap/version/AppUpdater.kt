@@ -32,7 +32,7 @@ public interface AppUpdater {
      * Check for a new update
      */
     @CheckResult
-    public suspend fun checkForUpdate(): AppUpdateLauncher
+    public suspend fun checkForUpdate(): AppUpdateLauncher?
 
     /**
      * Complete the update, which will restart the application

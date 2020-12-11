@@ -54,10 +54,10 @@ public class VersionCheckModule(params: Parameters) {
 
         @JvmStatic
         @CheckResult
-        private fun createCache(network: VersionInteractor): Cached<AppUpdateLauncher> {
-            return cachify<AppUpdateLauncher>(
+        private fun createCache(network: VersionInteractor): Cached<CacheResultWrapper> {
+            return cachify<CacheResultWrapper>(
                 storage = MemoryCacheStorage.create(30, MINUTES)
-            ) { requireNotNull(network.checkVersion(true)) }
+            ) { CacheResultWrapper(network.checkVersion(true)) }
         }
     }
 
@@ -69,5 +69,12 @@ public class VersionCheckModule(params: Parameters) {
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
         internal val isFakeUpgradeAvailable: Boolean
+    )
+
+    /**
+     * Wrap a cached result to allow it to be null
+     */
+    internal data class CacheResultWrapper internal constructor(
+        val result: AppUpdateLauncher?
     )
 }

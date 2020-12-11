@@ -32,7 +32,7 @@ public interface VersionInteractor {
      * Check for a new version update
      */
     @CheckResult
-    public suspend fun checkVersion(force: Boolean): AppUpdateLauncher
+    public suspend fun checkVersion(force: Boolean): AppUpdateLauncher?
 
     /**
      * Complete the update, which will restart the application

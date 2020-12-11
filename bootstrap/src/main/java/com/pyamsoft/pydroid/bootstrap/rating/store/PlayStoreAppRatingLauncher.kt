@@ -49,8 +49,4 @@ internal class PlayStoreAppRatingLauncher internal constructor(
         // Unit
         return@withContext
     }
-
-    override fun canRate(): Boolean {
-        return true
-    }
 }

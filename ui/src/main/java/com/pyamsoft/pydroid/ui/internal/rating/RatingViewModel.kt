@@ -37,8 +37,8 @@ internal class RatingViewModel internal constructor(
         handleRatingLaunch(force, launcher)
     }
 
-    private fun handleRatingLaunch(force: Boolean, launcher: AppRatingLauncher) {
-        if (force) {
+    private fun handleRatingLaunch(force: Boolean, launcher: AppRatingLauncher?) {
+        if (force && launcher != null) {
             launchRating(launcher)
         } else {
             setState { copy(rating = launcher) }

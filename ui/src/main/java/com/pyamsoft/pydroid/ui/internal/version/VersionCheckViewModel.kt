@@ -81,8 +81,8 @@ internal class VersionCheckViewModel internal constructor(
         setState { copy(isLoading = true) }
     }
 
-    private fun handleVersionCheckFound(force: Boolean, launcher: AppUpdateLauncher) {
-        if (force) {
+    private fun handleVersionCheckFound(force: Boolean, launcher: AppUpdateLauncher?) {
+        if (force && launcher != null) {
             launchUpdate(launcher)
         } else {
             setState { copy(updater = launcher) }

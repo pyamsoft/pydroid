@@ -37,46 +37,30 @@ internal class VersionCheckView internal constructor(
     private fun handleLoading(loading: Boolean) {
         if (loading) {
             showUpdating()
-        } else {
-            dismissUpdating()
         }
     }
 
     private fun handleUpdater(launcher: AppUpdateLauncher?) {
-        if (launcher == null) {
-            clearUpdater()
-        } else {
-            if (launcher.canUpdate()) {
-                showUpdater(launcher)
-            } else {
-                clearUpdater()
-            }
+        if (launcher != null) {
+            showUpdater(launcher)
         }
     }
 
     private fun handleError(throwable: Throwable?) {
-        if (throwable == null) {
-            clearError()
-        } else {
+        if (throwable != null) {
             showError(throwable)
         }
     }
 
     private fun showUpdating() {
         Snackbreak.bindTo(owner) {
-            make(snackbarRootProvider(), "Checking for updates")
-        }
-    }
-
-    private fun dismissUpdating() {
-        Snackbreak.bindTo(owner) {
-            dismiss()
+            long(snackbarRootProvider(), "Checking for updates")
         }
     }
 
     private fun showError(throwable: Throwable) {
         Snackbreak.bindTo(owner) {
-            short(
+            long(
                 snackbarRootProvider(),
                 throwable.message ?: "An error occurred while checking for updates.",
                 onHidden = { _, _ -> publish(VersionCheckViewEvent.SnackbarHidden) }
@@ -84,23 +68,12 @@ internal class VersionCheckView internal constructor(
         }
     }
 
-    private fun clearError() {
-        Snackbreak.bindTo(owner) {
-            dismiss()
-        }
-    }
-
     private fun showUpdater(launcher: AppUpdateLauncher) {
         Snackbreak.bindTo(owner) {
+            // Basically leave this on screen until the user has addressed it.
             make(snackbarRootProvider(), "A new update is available!") {
                 setAction("Update") { publish(VersionCheckViewEvent.LaunchUpdate(launcher)) }
             }
-        }
-    }
-
-    private fun clearUpdater() {
-        Snackbreak.bindTo(owner) {
-            dismiss()
         }
     }
 }

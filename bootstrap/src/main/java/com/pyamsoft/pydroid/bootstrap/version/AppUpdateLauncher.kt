@@ -17,7 +17,6 @@
 package com.pyamsoft.pydroid.bootstrap.version
 
 import android.app.Activity
-import androidx.annotation.CheckResult
 
 /**
  * In app update launcher
@@ -28,29 +27,4 @@ public interface AppUpdateLauncher {
      * Begin an update
      */
     public suspend fun update(activity: Activity, requestCode: Int)
-
-    /**
-     * Does this launcher contain a real update?
-     */
-    @CheckResult
-    public fun canUpdate(): Boolean
-
-    public companion object {
-
-        /**
-         * A no-op implementation
-         */
-        @JvmStatic
-        @CheckResult
-        public fun empty(): AppUpdateLauncher {
-            return object : AppUpdateLauncher {
-                override suspend fun update(activity: Activity, requestCode: Int) {
-                }
-
-                override fun canUpdate(): Boolean {
-                    return false
-                }
-            }
-        }
-    }
 }

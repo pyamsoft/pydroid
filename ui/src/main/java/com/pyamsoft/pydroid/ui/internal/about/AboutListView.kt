@@ -113,21 +113,16 @@ internal class AboutListView internal constructor(
         state.distinctBy { it.loadError }.render(viewScope) { handleLoadError(it) }
         state.distinctBy { it.navigationError }.render(viewScope) { handleNavigateError(it) }
         state.distinctBy { it.licenses }.render(viewScope) { handleLicenses(it) }
-
     }
 
     private fun handleLoadError(throwable: Throwable?) {
-        if (throwable == null) {
-            clearLoadError()
-        } else {
+        if (throwable != null) {
             showLoadError(throwable)
         }
     }
 
     private fun handleNavigateError(throwable: Throwable?) {
-        if (throwable == null) {
-            clearNavigationError()
-        } else {
+        if (throwable != null) {
             showNavigationError(throwable)
         }
     }
@@ -180,25 +175,13 @@ internal class AboutListView internal constructor(
 
     private fun showNavigationError(error: Throwable) {
         Snackbreak.bindTo(owner) {
-            make(layoutRoot, error.message ?: "An unexpected error occurred.")
-        }
-    }
-
-    private fun clearNavigationError() {
-        Snackbreak.bindTo(owner) {
-            dismiss()
+            long(layoutRoot, error.message ?: "An unexpected error occurred.")
         }
     }
 
     private fun showLoadError(error: Throwable) {
         Snackbreak.bindTo(owner) {
-            make(layoutRoot, error.message ?: "An unexpected error occurred.")
-        }
-    }
-
-    private fun clearLoadError() {
-        Snackbreak.bindTo(owner) {
-            dismiss()
+            long(layoutRoot, error.message ?: "An unexpected error occurred.")
         }
     }
 

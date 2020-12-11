@@ -44,7 +44,7 @@ internal class PlayStoreRateMyApp internal constructor(
         }
     }
 
-    override suspend fun startRating(): AppRatingLauncher =
+    override suspend fun startRating(): AppRatingLauncher? =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -57,7 +57,7 @@ internal class PlayStoreRateMyApp internal constructor(
                 manager.requestReviewFlow()
                     .addOnFailureListener { error ->
                         Timber.e(error, "Failed to resolve app review info task")
-                        continuation.resume(AppRatingLauncher.empty())
+                        continuation.resume(null)
                     }
                     .addOnCompleteListener { request ->
                         Timber.d("App Review info received: $request")
@@ -74,7 +74,7 @@ internal class PlayStoreRateMyApp internal constructor(
                         }
 
                         Timber.d("Review is not available")
-                        continuation.resume(AppRatingLauncher.empty())
+                        continuation.resume(null)
                     }
             }
         }

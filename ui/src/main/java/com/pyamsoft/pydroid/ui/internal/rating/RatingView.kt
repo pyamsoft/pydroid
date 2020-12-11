@@ -33,14 +33,8 @@ internal class RatingView internal constructor(
     }
 
     private fun handleRating(launcher: AppRatingLauncher?) {
-        if (launcher == null) {
-            clearRating()
-        } else {
-            if (launcher.canRate()) {
-                showRating(launcher)
-            } else {
-                clearRating()
-            }
+        if (launcher != null) {
+            showRating(launcher)
         }
     }
 
@@ -51,12 +45,6 @@ internal class RatingView internal constructor(
             }) {
                 setAction("Rate") { publish(RatingViewEvent.LaunchRating(launcher)) }
             }
-        }
-    }
-
-    private fun clearRating() {
-        Snackbreak.bindTo(owner) {
-            dismiss()
         }
     }
 }

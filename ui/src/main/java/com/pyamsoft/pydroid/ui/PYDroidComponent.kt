@@ -115,7 +115,11 @@ internal interface PYDroidComponent {
     class ComponentImpl private constructor(params: Component.Parameters) : Component {
 
         private val context = params.application
-        private val preferences = PYDroidPreferencesImpl(params.application, params.version)
+        private val preferences = PYDroidPreferencesImpl(
+            params.application,
+            params.version,
+            params.debug.ratingAvailable
+        )
         private val theming = Theming(preferences)
         private val packageName = params.application.packageName
 

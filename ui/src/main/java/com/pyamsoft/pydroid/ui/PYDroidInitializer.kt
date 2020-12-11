@@ -51,7 +51,8 @@ internal data class PYDroidInitializer internal constructor(
                     version = params.version,
                     debug = PYDroid.DebugParameters(
                         enabled = enabled,
-                        upgradeAvailable = params.debug?.upgradeAvailable ?: false
+                        upgradeAvailable = params.debug?.upgradeAvailable ?: false,
+                        ratingAvailable = params.debug?.ratingAvailable ?: false
                     )
                 )
             )

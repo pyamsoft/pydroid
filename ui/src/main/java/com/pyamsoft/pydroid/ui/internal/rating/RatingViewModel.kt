@@ -19,57 +19,31 @@ package com.pyamsoft.pydroid.ui.internal.rating
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.HideError
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.HideRating
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.LaunchRating
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
-) : UiViewModel<RatingViewState, RatingViewEvent, RatingControllerEvent>(
-    initialState = RatingViewState(
-        rating = null,
-        navigationError = null
-    )
+) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(
+    initialState = UnitViewState
 ) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->
         val launcher = interactor.askForRating(force)
-        handleRatingLaunch(force, launcher)
+        handleRatingLaunch(launcher)
     }
 
-    private fun handleRatingLaunch(force: Boolean, launcher: AppRatingLauncher?) {
-        if (force && launcher != null) {
-            launchRating(launcher)
-        } else {
-            setState { copy(rating = launcher) }
+    private fun handleRatingLaunch(launcher: AppRatingLauncher?) {
+        if (launcher != null) {
+            publish(RatingControllerEvent.LoadRating(launcher))
         }
     }
 
-    private fun launchRating(launcher: AppRatingLauncher) {
-        setState { copy(rating = null) }
-
-        // Do this regardless of current state
-        publish(RatingControllerEvent.LoadRating(launcher))
-    }
-
-    private fun clearRating() {
-        setState { copy(rating = null) }
-    }
-
-    override fun handleViewEvent(event: RatingViewEvent) {
-        return when (event) {
-            is LaunchRating -> launchRating(event.launcher)
-            is HideRating -> clearRating()
-            is HideError -> navigationError(null)
-        }
-    }
-
-    internal fun navigationError(throwable: Throwable?) {
-        setState { copy(navigationError = throwable) }
+    override fun handleViewEvent(event: UnitViewEvent) {
     }
 
     internal fun load(force: Boolean) {

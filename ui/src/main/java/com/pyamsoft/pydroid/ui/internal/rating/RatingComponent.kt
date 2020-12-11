@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
@@ -29,25 +27,18 @@ internal interface RatingComponent {
     interface Factory {
 
         @CheckResult
-        fun create(
-            owner: LifecycleOwner,
-            snackbarRootProvider: () -> ViewGroup
-        ): RatingComponent
+        fun create(): RatingComponent
 
         data class Parameters internal constructor(
             internal val factory: PYDroidViewModelFactory
         )
-
     }
 
     class Impl private constructor(
         private val params: Factory.Parameters,
-        private val owner: LifecycleOwner,
-        private val snackbarRootProvider: () -> ViewGroup
     ) : RatingComponent {
 
         override fun inject(activity: RatingActivity) {
-            activity.ratingView = RatingView(owner, snackbarRootProvider)
             activity.ratingFactory = params.factory
         }
 
@@ -55,11 +46,8 @@ internal interface RatingComponent {
             private val params: Factory.Parameters
         ) : Factory {
 
-            override fun create(
-                owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup
-            ): RatingComponent {
-                return Impl(params, owner, snackbarRootProvider)
+            override fun create(): RatingComponent {
+                return Impl(params)
             }
         }
     }

@@ -67,7 +67,10 @@ internal class PYDroidPreferencesImpl internal constructor(
             return@withContext if (prefs.getInt(LAST_SHOWN_RATING, 0) >= versionCode) false else {
                 val shown = prefs.getInt(SHOW_RATING, 0)
                 val showRating = shown >= SHOW_RATING_AT
-                prefs.edit { putInt(SHOW_RATING, shown + 1) }
+
+                // Reset the count once it is shown
+                prefs.edit { putInt(SHOW_RATING, if (showRating) 0 else shown + 1) }
+               
                 showRating
             }
         }

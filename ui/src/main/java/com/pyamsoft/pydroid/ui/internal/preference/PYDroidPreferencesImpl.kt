@@ -80,9 +80,10 @@ internal class PYDroidPreferencesImpl internal constructor(
 
     @CheckResult
     private fun getDefaultLastSeenDateString(): String {
-        // Grab a date ten days ago
+        // Grab a date that positions the app to notify in a week
         val tenDaysAgo = Calendar.getInstance().apply {
-            add(Calendar.DAY_OF_MONTH, -10)
+            add(Calendar.MONTH, -1)
+            add(Calendar.WEEK_OF_MONTH, 1)
         }
         return formatCalendar(tenDaysAgo)
     }

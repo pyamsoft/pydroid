@@ -64,11 +64,7 @@ internal class PlayStoreRateMyApp internal constructor(
                         if (request.isSuccessful) {
                             val info = request.result
                             continuation.resume(
-                                PlayStoreAppRatingLauncher(
-                                    preferences,
-                                    manager,
-                                    info
-                                )
+                                PlayStoreAppRatingLauncher(preferences, manager, info)
                             )
                             return@addOnCompleteListener
                         }

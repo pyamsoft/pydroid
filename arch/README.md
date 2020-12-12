@@ -38,19 +38,19 @@ a function of the state held by your `UiStateViewModel`. View states can be rebu
 crafting a `state` in your `UiStateViewModel` and then passing it to your `Renderable` to render.
 
 The `UiStateViewModel` is a JetPack view model
-which has been extended to easily handle the management of a `state`. The view model controls the
-understanding of `state` via the `UiViewState` interface. This `state` can only be accessed using
-the functions `setState(UiViewState) -> UiViewState` which provides you with the current `state`
-and requires you to modify and return a new `state`, and `withState(UiViewState) -> UiViewState`
+which has been extended to easily handle the management of a `UiViewState`. The view model controls the
+understanding of `state` via the `UiViewState` interface. This `UiViewState` can only be accessed using
+the functions `setState(UiViewState) -> UiViewState` which provides you with the current `UiViewState`
+and requires you to modify and return a new `UiViewState`, and exposes the state via a variable called `state`
 which only provides the state to you but does not allow for modification.
-`state` is not required to be immutable, but you really are shooting yourself in the foot if you
+`UiViewState` is not required to be immutable, but you really are shooting yourself in the foot if you
 do not follow the immutable state recommendation that so many MVI frameworks propose -
 pydroid-arch suggests that you make all of your `UiViewState` as Kotlin `data classes`. Like other
 frameworks, accessing and mutating state are not synchronous operations - they will not happen
 immediately, but will happen as soon as possible.
 
 Since `Renderable` is just an interface, anything can implement it. For a `UiStateViewModel` you
-may need to either provide the required `initialState` and `debug` parameters in the constructor, or
+may need to either provide the required `initialState` parameter in the constructor, or
 use a dependency injection solution with a custom ViewModel Factory.
 
 While the simple lightweight adoption style will always be fully supported as a first class citizen,
@@ -61,7 +61,7 @@ the pydroid reference libraries are all developed following the opinionated full
 The full adoption way is more opinionated.
 
 pydroid-arch wants you to think of your code as modular `Components`. A component is a grouping of
-a `UiViewModel`, one or more `UiViews`, and a `UiController`. 
+a `UiViewModel`, one or more `UiViews`, and a `UiController`.
 
 The `UiViewModel` is the `UiStateViewModel` class, extended with some small extras.
 The UiViewModel is the middleman between a View and a Controller - and requires you to override a
@@ -72,7 +72,7 @@ function, which can be called to pass events to the Controller.
 The `UiView` class is NOT Android's representation of a View. The `UiView` is a `Renderable` and can
 be one or more views in a logical grouping, such as a RecyclerView and FloatingActionButton, or
 TabLayout and ViewPager. The `UiView` provides a `publish(UiViewEvent) -> Unit` function which will
-pass events to the `UiViewModel`. 
+pass events to the `UiViewModel`.
 
 The `UiController` has only one job, which is to synchronously handle `UiControllerEvents`. These
 events are published by the `UiViewModel` and are generally one-off operations which do not affect
@@ -89,14 +89,13 @@ For most expected setups, `createComponent` is called in `Activity.onCreate` or
 recommends that you treat your Android Activities and Fragments as component controllers.
 
 For `ListView` and `RecyclerView` `ViewHolder` items, pydroid-arch provides a simpler component
-model using `bindViews(LifecycleOwner, vararg UiViewState, (UiViewEvent) -> Unit) -> ViewBinder`.
+model using `createViewBinder(vararg UiViewState, (UiViewEvent) -> Unit) -> ViewBinder`.
 Because list items are meant to be simple, they do not bind a `UiViewModel` or
 handle `UiControllerEvents`. They are expected handle view events only, and most always will do so
 by passing the event up to the ListView or RecyclerView itself, which will have its own
 `UiViewModel` and `UiControllerEvent` handler. They also do not need to save or restore from
-`Bundle` state. The call to `bindViews` returns a ViewBinder, which has just one
-method - `bind(UiViewState)` - which you can call in `onBindViewHolder` to bind your state
-to your items.
+`Bundle` state. The call to `bindViews` returns a ViewBinder, can bind view state in `onBindViewHolder()`
+via the `bind(UiViewState)` and can teardown view state in `onDetachedFromRecyclerView()` via the `teardownAdapter` extension.
 
 It sounds like a lot, and to be fair, it is - but hey - its Android. Just remember - your
 `UiViews` are modular. They can either be grouped into a `Component` with a `UiViewModel`

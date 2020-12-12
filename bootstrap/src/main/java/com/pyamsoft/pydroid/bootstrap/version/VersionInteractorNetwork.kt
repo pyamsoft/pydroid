@@ -30,7 +30,7 @@ internal class VersionInteractorNetwork internal constructor(
     override suspend fun completeUpdate() =
         throw IllegalStateException("This should never be called directly")
 
-    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher? =
+    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 

@@ -16,42 +16,55 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
+import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitViewEvent
-import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.HideNavigation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
-) : UiViewModel<UnitViewState, UnitViewEvent, RatingControllerEvent>(
-    initialState = UnitViewState
+) : UiViewModel<RatingViewState, RatingViewEvent, RatingControllerEvent>(
+    initialState = RatingViewState(navigationError = null)
 ) {
 
     private val loadRunner = highlander<Unit, Boolean> { force ->
         try {
             val launcher = interactor.askForRating(force)
-            handleRatingLaunch(launcher)
+            handleRatingLaunch(force, launcher)
         } catch (throwable: Throwable) {
             Timber.e(throwable, "Unable to launch rating flow")
         }
     }
 
-    private fun handleRatingLaunch(launcher: AppRatingLauncher?) {
-        if (launcher != null) {
-            publish(RatingControllerEvent.LoadRating(launcher))
-        }
+    private fun handleRatingLaunch(isFallbackEnabled: Boolean, launcher: AppRatingLauncher) {
+        publish(RatingControllerEvent.LoadRating(isFallbackEnabled, launcher))
     }
 
-    override fun handleViewEvent(event: UnitViewEvent) {
+    override fun handleViewEvent(event: RatingViewEvent) {
+        return when (event) {
+            is HideNavigation -> clearNavigationError()
+        }
     }
 
     internal fun load(force: Boolean) {
         viewModelScope.launch(context = Dispatchers.Default) { loadRunner.call(force) }
+    }
+
+    private fun clearNavigationError() {
+        setState { copy(navigationError = null) }
+    }
+
+    internal fun navigationSuccess() {
+        clearNavigationError()
+    }
+
+    internal fun navigationFailed(error: ActivityNotFoundException) {
+        setState { copy(navigationError = error) }
     }
 }

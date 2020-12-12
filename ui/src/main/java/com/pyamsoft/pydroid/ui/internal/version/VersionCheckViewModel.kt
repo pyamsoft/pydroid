@@ -23,9 +23,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.ClearUpdate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.ErrorHidden
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.LaunchUpdate
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.LoadingHidden
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.NavigationHidden
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +37,6 @@ internal class VersionCheckViewModel internal constructor(
         isLoading = false,
         throwable = null,
         navigationError = null,
-        updater = null
     )
 ) {
 
@@ -70,9 +67,7 @@ internal class VersionCheckViewModel internal constructor(
     override fun handleViewEvent(event: VersionCheckViewEvent) {
         return when (event) {
             is ErrorHidden -> clearError()
-            is LaunchUpdate -> launchUpdate(event.launcher)
             is LoadingHidden -> handleVersionCheckComplete()
-            is ClearUpdate -> clearUpdate()
             is NavigationHidden -> clearNavigationError()
         }
     }
@@ -81,27 +76,12 @@ internal class VersionCheckViewModel internal constructor(
         setState { copy(throwable = null) }
     }
 
-    private fun clearUpdate() {
-        setState { copy(updater = null) }
-    }
-
-    private fun launchUpdate(launcher: AppUpdateLauncher) {
-        setState { copy(updater = null) }
-
-        // Do this regardless of current state
-        publish(VersionCheckControllerEvent.LaunchUpdate(launcher))
-    }
-
     private fun handleVersionCheckBegin() {
         setState { copy(isLoading = true) }
     }
 
-    private fun handleVersionCheckFound(force: Boolean, launcher: AppUpdateLauncher?) {
-        if (force && launcher != null) {
-            launchUpdate(launcher)
-        } else {
-            setState { copy(updater = launcher) }
-        }
+    private fun handleVersionCheckFound(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) {
+        publish(VersionCheckControllerEvent.LaunchUpdate(isFallbackEnabled, launcher))
     }
 
     private fun handleVersionCheckError(throwable: Throwable) {

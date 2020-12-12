@@ -71,7 +71,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
             requireNotNull(versionCheckView)
         ) {
             return@createComponent when (it) {
-                is LaunchUpdate -> showVersionUpgrade(it.launcher)
+                is LaunchUpdate -> showVersionUpgrade(it.isFallbackEnabled, it.launcher)
                 ShowUpgrade -> VersionUpgradeDialog.show(this)
             }
         }
@@ -128,7 +128,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         viewModel.checkForUpdates(false)
     }
 
-    private fun showVersionUpgrade(launcher: AppUpdateLauncher) {
+    private fun showVersionUpgrade(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) {
         val activity = this
 
         // Enforce that we do this on the Main thread
@@ -137,11 +137,13 @@ abstract class VersionCheckActivity : PrivacyActivity() {
                 launcher.update(activity, RC_APP_UPDATE)
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Unable to launch in-app update flow")
-                val error = MarketLinker.openAppPage(activity)
-                if (error == null) {
-                    viewModel.navigationSuccess()
-                } else {
-                    viewModel.navigationFailed(error)
+                if (isFallbackEnabled) {
+                    val error = MarketLinker.openAppPage(activity)
+                    if (error == null) {
+                        viewModel.navigationSuccess()
+                    } else {
+                        viewModel.navigationFailed(error)
+                    }
                 }
             }
         }

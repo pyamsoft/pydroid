@@ -39,7 +39,7 @@ internal class PlayStoreAppUpdater internal constructor(
     private val isFake: Boolean,
     activity: Activity,
     version: Int,
-    isFakeUpgradeAvailable: Boolean,
+    isFakeUpgradeAvailable: Boolean
 ) : AppUpdater {
 
     private val manager by lazy {
@@ -89,7 +89,7 @@ internal class PlayStoreAppUpdater internal constructor(
             }
         }
 
-    override suspend fun checkForUpdate(): AppUpdateLauncher? =
+    override suspend fun checkForUpdate(): AppUpdateLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -102,7 +102,7 @@ internal class PlayStoreAppUpdater internal constructor(
                 manager.appUpdateInfo
                     .addOnFailureListener { error ->
                         Timber.e(error, "Failed to resolve app update info task")
-                        continuation.resume(null)
+                        continuation.resume(AppUpdateLauncher.empty())
                     }
                     .addOnSuccessListener { info ->
                         Timber.d("App Update info received: $info")
@@ -118,7 +118,7 @@ internal class PlayStoreAppUpdater internal constructor(
                         }
 
                         Timber.d("Update is not available")
-                        continuation.resume(null)
+                        continuation.resume(AppUpdateLauncher.empty())
                     }
             }
         }

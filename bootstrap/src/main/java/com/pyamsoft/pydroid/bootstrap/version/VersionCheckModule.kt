@@ -37,7 +37,7 @@ public class VersionCheckModule(params: Parameters) {
             params.isFakeUpgradeChecker,
             params.activity,
             params.version,
-            params.isFakeUpgradeAvailable,
+            params.isFakeUpgradeAvailable
         )
         val network = VersionInteractorNetwork(updater)
         impl = VersionInteractorImpl(updater, createCache(network))
@@ -55,10 +55,10 @@ public class VersionCheckModule(params: Parameters) {
 
         @JvmStatic
         @CheckResult
-        private fun createCache(network: VersionInteractor): Cached<CacheResultWrapper> {
-            return cachify<CacheResultWrapper>(
+        private fun createCache(network: VersionInteractor): Cached<AppUpdateLauncher> {
+            return cachify<AppUpdateLauncher>(
                 storage = MemoryCacheStorage.create(30, MINUTES)
-            ) { CacheResultWrapper(network.checkVersion(true)) }
+            ) { network.checkVersion(true) }
         }
     }
 
@@ -69,13 +69,6 @@ public class VersionCheckModule(params: Parameters) {
         internal val activity: Activity,
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
-        internal val isFakeUpgradeAvailable: Boolean
-    )
-
-    /**
-     * Wrap a cached result to allow it to be null
-     */
-    internal data class CacheResultWrapper internal constructor(
-        val result: AppUpdateLauncher?
+        internal val isFakeUpgradeAvailable: Boolean,
     )
 }

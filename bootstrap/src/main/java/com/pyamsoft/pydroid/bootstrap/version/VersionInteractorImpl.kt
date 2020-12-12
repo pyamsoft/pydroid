@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.bootstrap.version
 
 import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule.CacheResultWrapper
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,7 +25,7 @@ import timber.log.Timber
 
 internal class VersionInteractorImpl internal constructor(
     private val updater: AppUpdater,
-    private val updateCache: Cached<CacheResultWrapper>
+    private val updateCache: Cached<AppUpdateLauncher>
 ) : VersionInteractor, Cache<Any> {
 
     override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
@@ -43,7 +42,7 @@ internal class VersionInteractorImpl internal constructor(
         updater.complete()
     }
 
-    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher? =
+    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -51,7 +50,7 @@ internal class VersionInteractorImpl internal constructor(
                 updateCache.clear()
             }
 
-            return@withContext updateCache.call().result
+            return@withContext updateCache.call()
         }
 
     override suspend fun clear() {

@@ -28,7 +28,10 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
+import com.pyamsoft.pydroid.ui.internal.rating.RatingView
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
+import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
+import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,6 +40,8 @@ import timber.log.Timber
 abstract class RatingActivity : VersionCheckActivity() {
 
     private var stateSaver: StateSaver? = null
+
+    internal var ratingView: RatingView? = null
 
     internal var ratingFactory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<RatingViewModel> { ratingFactory }
@@ -55,9 +60,10 @@ abstract class RatingActivity : VersionCheckActivity() {
         stateSaver = createComponent(
             savedInstanceState, this,
             viewModel,
+            requireNotNull(ratingView)
         ) {
             return@createComponent when (it) {
-                is LoadRating -> showRating(it.launcher)
+                is LoadRating -> showRating(it.isFallbackEnabled, it.launcher)
             }
         }
 
@@ -77,7 +83,7 @@ abstract class RatingActivity : VersionCheckActivity() {
         stateSaver = null
     }
 
-    private fun showRating(launcher: AppRatingLauncher) {
+    private fun showRating(isFallbackEnabled: Boolean, launcher: AppRatingLauncher) {
         val activity = this
 
         // Enforce that we do this on the Main thread
@@ -87,6 +93,14 @@ abstract class RatingActivity : VersionCheckActivity() {
                     launcher.rate(activity)
                 } catch (throwable: Throwable) {
                     Timber.e(throwable, "Unable to launch in-app rating")
+                    if (isFallbackEnabled) {
+                        val error = MarketLinker.openAppPage(activity)
+                        if (error == null) {
+                            viewModel.navigationSuccess()
+                        } else {
+                            viewModel.navigationFailed(error)
+                        }
+                    }
                 }
             }
         }

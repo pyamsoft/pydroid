@@ -25,7 +25,6 @@ internal data class VersionCheckViewState internal constructor(
     val isLoading: Boolean,
     val throwable: Throwable?,
     val navigationError: Throwable?,
-    val updater: AppUpdateLauncher?
 ) : UiViewState
 
 internal sealed class VersionCheckViewEvent : UiViewEvent {
@@ -35,17 +34,12 @@ internal sealed class VersionCheckViewEvent : UiViewEvent {
     object ErrorHidden : VersionCheckViewEvent()
 
     object NavigationHidden : VersionCheckViewEvent()
-
-    object ClearUpdate : VersionCheckViewEvent()
-
-    data class LaunchUpdate internal constructor(
-        val launcher: AppUpdateLauncher
-    ) : VersionCheckViewEvent()
 }
 
 internal sealed class VersionCheckControllerEvent : UiControllerEvent {
 
     data class LaunchUpdate internal constructor(
+        val isFallbackEnabled: Boolean,
         val launcher: AppUpdateLauncher
     ) : VersionCheckControllerEvent()
 

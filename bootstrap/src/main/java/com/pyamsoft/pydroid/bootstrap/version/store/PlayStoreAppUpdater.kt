@@ -107,14 +107,11 @@ internal class PlayStoreAppUpdater internal constructor(
                     .addOnSuccessListener { info ->
                         Timber.d("App Update info received: $info")
                         if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
-                            if (info.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                            val updateType = AppUpdateType.FLEXIBLE
+                            if (info.isUpdateTypeAllowed(updateType)) {
                                 Timber.d("Update is available and flexible")
                                 continuation.resume(
-                                    PlayStoreAppUpdateLauncher(
-                                        manager,
-                                        info,
-                                        AppUpdateType.FLEXIBLE
-                                    )
+                                    PlayStoreAppUpdateLauncher(manager, info, updateType)
                                 )
                                 return@addOnSuccessListener
                             }

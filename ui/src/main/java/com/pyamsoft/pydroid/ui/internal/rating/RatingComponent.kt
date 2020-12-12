@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import android.content.Context
+import android.app.Activity
 import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.onlyFactory
@@ -31,10 +31,9 @@ internal interface RatingComponent {
     interface Factory {
 
         @CheckResult
-        fun create(): RatingComponent
+        fun create(activity: Activity): RatingComponent
 
         data class Parameters internal constructor(
-            internal val context: Context,
             internal val isFake: Boolean,
             internal val preferences: RatingPreferences
         )
@@ -42,6 +41,7 @@ internal interface RatingComponent {
 
     class Impl private constructor(
         params: Factory.Parameters,
+        activity: Activity,
     ) : RatingComponent {
 
         private val factory: ViewModelProvider.Factory
@@ -49,7 +49,7 @@ internal interface RatingComponent {
         init {
             val module = RatingModule(
                 RatingModule.Parameters(
-                    context = params.context.applicationContext,
+                    activity = activity,
                     isFake = params.isFake,
                     preferences = params.preferences
                 )
@@ -65,8 +65,8 @@ internal interface RatingComponent {
             private val params: Factory.Parameters
         ) : Factory {
 
-            override fun create(): RatingComponent {
-                return Impl(params)
+            override fun create(activity: Activity): RatingComponent {
+                return Impl(params, activity)
             }
         }
     }

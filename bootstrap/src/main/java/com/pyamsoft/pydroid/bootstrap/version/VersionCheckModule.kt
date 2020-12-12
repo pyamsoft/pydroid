@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
+import android.app.Activity
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.cachify.Cached
@@ -34,7 +35,7 @@ public class VersionCheckModule(params: Parameters) {
     init {
         val updater = PlayStoreAppUpdater(
             params.isFakeUpgradeChecker,
-            params.context,
+            params.activity,
             params.version,
             params.isFakeUpgradeAvailable,
         )
@@ -65,7 +66,7 @@ public class VersionCheckModule(params: Parameters) {
      * Module parameters
      */
     public data class Parameters(
-        internal val context: Context,
+        internal val activity: Activity,
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
         internal val isFakeUpgradeAvailable: Boolean

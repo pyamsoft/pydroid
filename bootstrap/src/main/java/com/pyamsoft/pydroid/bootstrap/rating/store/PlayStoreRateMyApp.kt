@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.bootstrap.rating.store
 
-import android.content.Context
+import android.app.Activity
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.android.play.core.review.testing.FakeReviewManager
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
@@ -33,14 +33,14 @@ import kotlin.coroutines.resume
 internal class PlayStoreRateMyApp internal constructor(
     private val preferences: RatingPreferences,
     private val isFake: Boolean,
-    context: Context,
+    activity: Activity
 ) : RateMyApp {
 
     private val manager by lazy {
         if (isFake) {
-            FakeReviewManager(context.applicationContext)
+            FakeReviewManager(activity)
         } else {
-            ReviewManagerFactory.create(context.applicationContext)
+            ReviewManagerFactory.create(activity)
         }
     }
 

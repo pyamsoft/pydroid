@@ -49,7 +49,7 @@ abstract class RatingActivity : VersionCheckActivity() {
         // after subclass onCreate
         Injector.obtain<PYDroidComponent>(applicationContext)
             .plusRating()
-            .create()
+            .create(this)
             .inject(this)
 
         stateSaver = createComponent(

@@ -193,13 +193,11 @@ internal interface PYDroidComponent {
         )
 
         private val ratingParams = RatingComponent.Factory.Parameters(
-            context = context.applicationContext,
             isFake = params.debug.enabled,
             preferences = preferences
         )
 
         private val versionParams = VersionCheckComponent.Factory.Parameters(
-            context = context.applicationContext,
             version = params.version,
             isFakeUpgradeChecker = params.debug.enabled,
             isFakeUpgradeAvailable = params.debug.upgradeAvailable

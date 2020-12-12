@@ -66,11 +66,10 @@ internal class PlayStoreRateMyApp internal constructor(
                             continuation.resume(
                                 PlayStoreAppRatingLauncher(preferences, manager, info)
                             )
-                            return@addOnCompleteListener
+                        } else {
+                            Timber.d("Review is not available")
+                            continuation.resume(null)
                         }
-
-                        Timber.d("Review is not available")
-                        continuation.resume(null)
                     }
             }
         }

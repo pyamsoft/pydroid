@@ -233,14 +233,27 @@ allprojects {
 	spotless {
 		java {
 			target "src/**/*.java"
+
+			removeUnusedImports()
+			trimTrailingWhitespace()
+			endWithNewline()
+			indentWithSpaces(2)
 		}
 		kotlin {
 			target "src/**/*.kt"
 			ktlint()
+
+			trimTrailingWhitespace()
+			endWithNewline()
+			indentWithSpaces(2)
 		}
 		groovyGradle {
 			target "*.gradle"
 			greclipse()
+
+			trimTrailingWhitespace()
+			endWithNewline()
+			indentWithSpaces(2)
 		}
 	}
 

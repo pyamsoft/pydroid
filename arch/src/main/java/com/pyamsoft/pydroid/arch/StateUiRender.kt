@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
  *
  * Used for Android view compatibility
  */
-public class StateUiRender<S>(private val state: S) : UiRender<S> {
+private class StateUiRender<S>(private val state: S) : UiRender<S> {
 
     override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {
         scope.launch(context = Dispatchers.Main) {

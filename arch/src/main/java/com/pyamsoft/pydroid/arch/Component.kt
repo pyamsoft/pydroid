@@ -98,7 +98,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     return object : ViewBinder<S> {
 
         override fun bind(state: S) {
-            val bound = StateUiRender(state)
+            val bound = state.asUiRender()
             views.forEach { it.render(bound) }
         }
 
@@ -131,7 +131,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     return object : ViewBinder<S> {
 
         override fun bind(state: S) {
-            val bound = StateUiRender(state)
+            val bound = state.asUiRender()
             views.forEach { it.render(bound) }
         }
 

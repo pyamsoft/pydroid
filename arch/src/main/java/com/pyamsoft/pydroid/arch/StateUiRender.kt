@@ -18,11 +18,18 @@ public class StateUiRender<S>(private val state: S) : UiRender<S> {
     }
 
     override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
-        return StateUiRender(distinctBy(state))
+        return distinctBy(state).asUiRender()
     }
 
     override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {
         return this
     }
 
+}
+
+/**
+ * Convert data into a UiRender<S>
+ */
+public fun <S> S.asUiRender(): UiRender<S> {
+    return StateUiRender(this)
 }

@@ -20,9 +20,6 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller
@@ -101,7 +98,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     return object : ViewBinder<S> {
 
         override fun bind(state: S) {
-            val bound = state.bind()
+            val bound = StateUiRender(state)
             views.forEach { it.render(bound) }
         }
 
@@ -134,7 +131,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     return object : ViewBinder<S> {
 
         override fun bind(state: S) {
-            val bound = state.bind()
+            val bound = StateUiRender(state)
             views.forEach { it.render(bound) }
         }
 
@@ -144,35 +141,3 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     }
 }
 
-/**
- * Convert a state to a BoundUiRender<S>
- */
-@CheckResult
-@PublishedApi
-internal fun <S : UiViewState> S.bind(): UiRender<S> {
-    return BoundUiRender(this)
-}
-
-/**
- * Since a view holder is bound from its own list lifecycle, we do not need to
- * pull changes from a stream, since the List handles the stream itself.
- *
- * We can just apply the state as is to all bound views.
- */
-private class BoundUiRender<S>(private val state: S) : UiRender<S> {
-
-    override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {
-        scope.launch(context = Dispatchers.Main) {
-            onRender(state)
-        }
-    }
-
-    override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
-        return BoundUiRender(distinctBy(state))
-    }
-
-    override fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S> {
-        return this
-    }
-
-}

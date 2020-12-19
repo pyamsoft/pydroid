@@ -28,9 +28,9 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.internal.about.AboutControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
+import com.pyamsoft.pydroid.ui.internal.about.AboutControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutFragment : Fragment() {
@@ -38,6 +38,7 @@ internal class AboutFragment : Fragment() {
     private var stateSaver: StateSaver? = null
     internal var listView: AboutListView? = null
     internal var spinnerView: AboutSpinnerView? = null
+    internal var errorView: AboutErrors? = null
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<AboutViewModel>(activity = true) { factory }
@@ -66,7 +67,8 @@ internal class AboutFragment : Fragment() {
             savedInstanceState, viewLifecycleOwner,
             viewModel,
             requireNotNull(listView),
-            requireNotNull(spinnerView)
+            requireNotNull(spinnerView),
+            requireNotNull(errorView)
         ) {
             return@createComponent when (it) {
                 is ExternalUrl -> navigateToExternalUrl(it.url)

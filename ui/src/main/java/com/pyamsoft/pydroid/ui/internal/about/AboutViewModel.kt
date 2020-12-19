@@ -24,10 +24,6 @@ import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.internal.about.AboutControllerEvent.ExternalUrl
-import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.HideLoadError
-import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.HideNavigationError
-import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLibrary
-import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLicense
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -64,10 +60,10 @@ internal class AboutViewModel internal constructor(
 
     override fun handleViewEvent(event: AboutViewEvent) {
         return when (event) {
-            is OpenLibrary -> openUrl(event.index) { it.libraryUrl }
-            is OpenLicense -> openUrl(event.index) { it.licenseUrl }
-            is HideNavigationError -> clearNavigationError()
-            is HideLoadError -> handleLicenseLoadComplete()
+            is AboutViewEvent.ListItemEvents.OpenLibrary -> openUrl(event.index) { it.libraryUrl }
+            is AboutViewEvent.ListItemEvents.OpenLicense -> openUrl(event.index) { it.licenseUrl }
+            is AboutViewEvent.ErrorEvents.HideNavigationError -> clearNavigationError()
+            is AboutViewEvent.ErrorEvents.HideLoadError -> handleLicenseLoadComplete()
         }
     }
 

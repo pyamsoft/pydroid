@@ -19,28 +19,23 @@ package com.pyamsoft.pydroid.ui.internal.about
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.databinding.AboutLibrariesListBinding
-import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLibrary
-import com.pyamsoft.pydroid.ui.internal.about.AboutViewEvent.OpenLicense
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutAdapter
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLibraryUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewState
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class AboutListView internal constructor(
-    private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BaseUiView<AboutViewState, AboutViewEvent, AboutLibrariesListBinding>(parent) {
+) : BaseUiView<AboutViewState, AboutViewEvent.ListItemEvents, AboutLibrariesListBinding>(parent) {
 
     override val viewBinding = AboutLibrariesListBinding::inflate
 
@@ -89,8 +84,8 @@ internal class AboutListView internal constructor(
     private fun setupListView() {
         aboutAdapter = AboutAdapter { event, index ->
             return@AboutAdapter when (event) {
-                is OpenLicenseUrl -> publish(OpenLicense(index))
-                is OpenLibraryUrl -> publish(OpenLibrary(index))
+                is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvents.OpenLicense(index))
+                is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvents.OpenLibrary(index))
             }
         }
 
@@ -110,21 +105,7 @@ internal class AboutListView internal constructor(
 
     override fun onRender(state: UiRender<AboutViewState>) {
         state.distinctBy { it.isLoading }.render(viewScope) { handleLoading(it) }
-        state.distinctBy { it.loadError }.render(viewScope) { handleLoadError(it) }
-        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigateError(it) }
         state.distinctBy { it.licenses }.render(viewScope) { handleLicenses(it) }
-    }
-
-    private fun handleLoadError(throwable: Throwable?) {
-        if (throwable != null) {
-            showLoadError(throwable)
-        }
-    }
-
-    private fun handleNavigateError(throwable: Throwable?) {
-        if (throwable != null) {
-            showNavigationError(throwable)
-        }
     }
 
     private fun handleLoading(loading: Boolean) {
@@ -171,26 +152,6 @@ internal class AboutListView internal constructor(
 
     private fun loadLicenses(libraries: List<OssLibrary>) {
         requireNotNull(aboutAdapter).submitList(libraries.map { AboutItemViewState(it) })
-    }
-
-    private fun showNavigationError(error: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                layoutRoot,
-                error.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(AboutViewEvent.HideNavigationError) }
-            )
-        }
-    }
-
-    private fun showLoadError(error: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                layoutRoot,
-                error.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(AboutViewEvent.HideLoadError) }
-            )
-        }
     }
 
     private fun clearLicenses() {

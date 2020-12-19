@@ -29,7 +29,7 @@ public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> crea
     savedInstanceState: Bundle?,
     owner: LifecycleOwner,
     viewModel: UiViewModel<S, V, C>,
-    vararg views: UiView<S, V>,
+    vararg views: UiView<S, out V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ): StateSaver {
     val reader = UiBundleReader.create(savedInstanceState)
@@ -56,13 +56,13 @@ public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> crea
  */
 @PublishedApi
 internal fun <S : UiViewState, V : UiViewEvent> bindViewEvents(
-    views: List<UiView<S, V>>,
+    views: List<UiView<S, out V>>,
     onViewEvent: (event: V) -> Unit
 ) {
     views.forEach { v ->
         v.onViewEvent { onViewEvent(it) }
 
-        if (v is BaseUiView<S, V, *>) {
+        if (v is BaseUiView<S, out V, *>) {
             val nestedViews = v.nestedViews()
             bindViewEvents(nestedViews, onViewEvent)
         }
@@ -76,9 +76,9 @@ internal fun <S : UiViewState, V : UiViewEvent> bindViewEvents(
 @CheckResult
 public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
     owner: LifecycleOwner,
-    vararg views: UiView<S, V>,
+    vararg views: UiView<S, out V>,
     crossinline onViewEvent: (event: V) -> Unit
-): ViewBinder<S> {
+): ViewBinder<out S> {
     val reader = UiBundleReader.create(null)
 
     // Bind view event listeners
@@ -114,7 +114,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
  */
 @CheckResult
 public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
-    vararg views: UiView<S, V>,
+    vararg views: UiView<S, out V>,
     crossinline onViewEvent: (event: V) -> Unit
 ): ViewBinder<S> {
     val reader = UiBundleReader.create(null)

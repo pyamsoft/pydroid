@@ -58,7 +58,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     @PublishedApi
     internal fun bindToComponent(
         savedInstanceState: UiBundleReader,
-        views: Array<out UiView<S, V>>,
+        views: Array<out UiView<S, out V>>,
         onControllerEvent: (event: C) -> Unit
     ): Job {
 
@@ -155,11 +155,11 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         }
     }
 
-    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, V>>) {
+    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, out V>>) {
         launch(context = Dispatchers.IO) {
             views.forEach { view ->
                 view.onViewEvent { handleViewEvent(it) }
-                if (view is BaseUiView<S, V, *>) {
+                if (view is BaseUiView<S, out V, *>) {
                     val nestedViews = view.nestedViews()
                     if (nestedViews.isNotEmpty()) {
                         bindViewEvents(nestedViews)

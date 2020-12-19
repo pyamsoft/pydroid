@@ -48,7 +48,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
      */
     protected abstract val viewBinding: (LayoutInflater, ViewGroup) -> B
 
-    private val nestedViewDelegate = lazy(NONE) { mutableListOf<UiView<S, V>>() }
+    private val nestedViewDelegate = lazy(NONE) { mutableListOf<UiView<S, out V>>() }
     private val nestedViews by nestedViewDelegate
 
     private var bound: MutableSet<Bound<*>>? = null
@@ -120,8 +120,8 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         }
     }
 
-    private fun prepareNestedViewInit(view: UiView<S, V>) {
-        if (view !is BaseUiView<S, V, *>) {
+    private fun prepareNestedViewInit(view: UiView<S, out V>) {
+        if (view !is BaseUiView<S, out V, *>) {
             return
         }
 
@@ -147,7 +147,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
     // PublishedApi so it can be used from Component.kt
     @CheckResult
     @PublishedApi
-    internal fun nestedViews(): List<UiView<S, V>> {
+    internal fun nestedViews(): List<UiView<S, out V>> {
         return if (nestedViewDelegate.isInitialized()) nestedViews else emptyList()
     }
 
@@ -215,7 +215,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
      * NOTE: Not thread safe, Main thread only for now.
      */
     @UiThread
-    public fun nest(vararg views: UiView<S, V>) {
+    public fun nest(vararg views: UiView<S, out V>) {
         views.forEach { view ->
             nestedViews.add(view)
             doOnInflate { view.inflate(it) }

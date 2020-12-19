@@ -36,8 +36,9 @@ internal sealed class AppSettingsViewEvent : UiViewEvent {
 
     object MoreApps : AppSettingsViewEvent()
 
-    data class Hyperlink internal constructor(val hyperlinkIntent: HyperlinkIntent) :
-        AppSettingsViewEvent()
+    data class Hyperlink internal constructor(
+        val hyperlinkIntent: HyperlinkIntent
+    ) : AppSettingsViewEvent()
 
     object RateApp : AppSettingsViewEvent()
 

@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
@@ -28,16 +27,14 @@ import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsAdapter
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewEvent.OpenStore
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewEvent.ViewSource
 import com.pyamsoft.pydroid.ui.internal.otherapps.listitem.OtherAppsItemViewState
-import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class OtherAppsList internal constructor(
-    private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BaseUiView<OtherAppsViewState, OtherAppsViewEvent, OtherAppsListBinding>(parent) {
+) : BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvents, OtherAppsListBinding>(parent) {
 
     override val viewBinding = OtherAppsListBinding::inflate
 
@@ -86,8 +83,8 @@ internal class OtherAppsList internal constructor(
     private fun setupListView() {
         listAdapter = OtherAppsAdapter { event, index ->
             return@OtherAppsAdapter when (event) {
-                is OpenStore -> publish(OtherAppsViewEvent.OpenStore(index))
-                is ViewSource -> publish(OtherAppsViewEvent.ViewSource(index))
+                is OpenStore -> publish(OtherAppsViewEvent.ListEvents.OpenStore(index))
+                is ViewSource -> publish(OtherAppsViewEvent.ListEvents.ViewSource(index))
             }
         }
 
@@ -107,13 +104,6 @@ internal class OtherAppsList internal constructor(
 
     override fun onRender(state: UiRender<OtherAppsViewState>) {
         state.distinctBy { it.apps }.render(viewScope) { handleApps(it) }
-        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
-    }
-
-    private fun handleNavigationError(throwable: Throwable?) {
-        if (throwable != null) {
-            showNavigationError(throwable)
-        }
     }
 
     private fun handleApps(apps: List<OtherApp>) {
@@ -144,16 +134,6 @@ internal class OtherAppsList internal constructor(
 
     private fun loadApps(apps: List<OtherApp>) {
         requireNotNull(listAdapter).submitList(apps.map { OtherAppsItemViewState(it) })
-    }
-
-    private fun showNavigationError(error: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                layoutRoot,
-                error.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(OtherAppsViewEvent.HideNavigationError) }
-            )
-        }
     }
 
     private fun clearApps() {

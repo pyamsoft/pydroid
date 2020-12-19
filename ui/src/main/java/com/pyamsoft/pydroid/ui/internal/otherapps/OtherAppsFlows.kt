@@ -28,11 +28,20 @@ internal data class OtherAppsViewState internal constructor(
 
 internal sealed class OtherAppsViewEvent : UiViewEvent {
 
-    object HideNavigationError : OtherAppsViewEvent()
+    internal sealed class ListEvents : OtherAppsViewEvent() {
 
-    data class OpenStore internal constructor(val index: Int) : OtherAppsViewEvent()
+        data class OpenStore internal constructor(val index: Int) : ListEvents()
 
-    data class ViewSource internal constructor(val index: Int) : OtherAppsViewEvent()
+        data class ViewSource internal constructor(val index: Int) : ListEvents()
+
+    }
+
+    internal sealed class ErrorEvents : OtherAppsViewEvent() {
+
+        object HideNavigationError : ErrorEvents()
+
+    }
+
 }
 
 internal sealed class OtherAppsControllerEvent : UiControllerEvent {

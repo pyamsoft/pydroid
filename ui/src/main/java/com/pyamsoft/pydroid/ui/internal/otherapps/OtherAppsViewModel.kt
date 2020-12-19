@@ -22,9 +22,6 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
-import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewEvent.HideNavigationError
-import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewEvent.OpenStore
-import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewEvent.ViewSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -48,9 +45,9 @@ internal class OtherAppsViewModel internal constructor(
 
     override fun handleViewEvent(event: OtherAppsViewEvent) {
         return when (event) {
-            is OpenStore -> openUrl(event.index) { it.storeUrl }
-            is ViewSource -> openUrl(event.index) { it.sourceUrl }
-            is HideNavigationError -> clearNavigationError()
+            is OtherAppsViewEvent.ListEvents.OpenStore -> openUrl(event.index) { it.storeUrl }
+            is OtherAppsViewEvent.ListEvents.ViewSource -> openUrl(event.index) { it.sourceUrl }
+            is OtherAppsViewEvent.ErrorEvents.HideNavigationError -> clearNavigationError()
         }
     }
 

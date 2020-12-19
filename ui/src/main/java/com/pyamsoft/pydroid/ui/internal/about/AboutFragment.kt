@@ -37,7 +37,6 @@ internal class AboutFragment : Fragment() {
 
     private var stateSaver: StateSaver? = null
     internal var listView: AboutListView? = null
-    internal var spinnerView: AboutSpinnerView? = null
     internal var errorView: AboutErrors? = null
 
     internal var factory: ViewModelProvider.Factory? = null
@@ -67,7 +66,6 @@ internal class AboutFragment : Fragment() {
             savedInstanceState, viewLifecycleOwner,
             viewModel,
             requireNotNull(listView),
-            requireNotNull(spinnerView),
             requireNotNull(errorView)
         ) {
             return@createComponent when (it) {
@@ -80,6 +78,7 @@ internal class AboutFragment : Fragment() {
         super.onDestroyView()
         listView = null
         factory = null
+        errorView = null
         stateSaver = null
     }
 

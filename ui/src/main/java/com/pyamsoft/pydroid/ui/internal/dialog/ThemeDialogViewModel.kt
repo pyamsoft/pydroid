@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.dialog
 
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogViewEvent.Close
-import timber.log.Timber
 
 internal class ThemeDialogViewModel internal constructor(
     initialName: String,
@@ -29,11 +28,8 @@ internal class ThemeDialogViewModel internal constructor(
 ) {
 
     override fun handleViewEvent(event: ThemeDialogViewEvent) {
-        Timber.d("View event: $event")
         return when (event) {
-            is Close -> publish(
-                ThemeDialogControllerEvent.Close
-            )
+            is Close -> publish(ThemeDialogControllerEvent.Close)
         }
     }
 }

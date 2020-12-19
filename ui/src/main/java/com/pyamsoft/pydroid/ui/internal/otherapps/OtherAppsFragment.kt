@@ -36,6 +36,7 @@ internal class OtherAppsFragment : Fragment() {
 
     private var stateSaver: StateSaver? = null
     internal var listView: OtherAppsList? = null
+    internal var errorView: OtherAppsErrors? = null
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<OtherAppsViewModel>(activity = true) { factory }
@@ -63,7 +64,8 @@ internal class OtherAppsFragment : Fragment() {
         stateSaver = createComponent(
             savedInstanceState, viewLifecycleOwner,
             viewModel,
-            requireNotNull(listView)
+            requireNotNull(listView),
+            requireNotNull(errorView),
         ) {
             return@createComponent when (it) {
                 is OtherAppsControllerEvent.ExternalUrl -> navigateToExternalUrl(it.url)
@@ -74,6 +76,7 @@ internal class OtherAppsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         listView = null
+        errorView = null
         factory = null
         stateSaver = null
     }

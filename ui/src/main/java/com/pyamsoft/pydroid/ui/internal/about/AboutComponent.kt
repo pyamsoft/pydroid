@@ -47,12 +47,10 @@ internal interface AboutComponent {
 
         override fun inject(fragment: AboutFragment) {
             val listView = AboutListView(parent)
-            val spinnerView = AboutSpinnerView(parent)
             val errorView = AboutErrors(owner, parent)
             fragment.factory = params.factory
             fragment.errorView = errorView
             fragment.listView = listView
-            fragment.spinnerView = spinnerView
         }
 
         class FactoryImpl internal constructor(

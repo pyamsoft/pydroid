@@ -26,5 +26,7 @@ android {
 
 dependencies {
 	api project(':core')
+
+	implementation "androidx.startup:startup-runtime:$startup"
 }
 

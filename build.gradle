@@ -51,6 +51,7 @@ buildscript {
 		fragment = "1.2.5"
 		appCompat = "1.2.0"
 		swipeRefresh = "1.1.0"
+		startup = "1.0.0"
 
 		// Material Design
 		materialDesign = "1.2.1"

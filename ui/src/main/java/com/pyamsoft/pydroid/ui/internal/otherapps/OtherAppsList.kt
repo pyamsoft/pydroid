@@ -34,7 +34,7 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class OtherAppsList internal constructor(
     parent: ViewGroup
-) : BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvents, OtherAppsListBinding>(parent) {
+) : BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvent, OtherAppsListBinding>(parent) {
 
     override val viewBinding = OtherAppsListBinding::inflate
 
@@ -83,8 +83,8 @@ internal class OtherAppsList internal constructor(
     private fun setupListView() {
         listAdapter = OtherAppsAdapter { event, index ->
             return@OtherAppsAdapter when (event) {
-                is OpenStore -> publish(OtherAppsViewEvent.ListEvents.OpenStore(index))
-                is ViewSource -> publish(OtherAppsViewEvent.ListEvents.ViewSource(index))
+                is OpenStore -> publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
+                is ViewSource -> publish(OtherAppsViewEvent.ListEvent.ViewSource(index))
             }
         }
 

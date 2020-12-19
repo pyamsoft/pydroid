@@ -30,19 +30,19 @@ internal data class AboutViewState internal constructor(
 
 internal sealed class AboutViewEvent : UiViewEvent {
 
-    internal sealed class ListItemEvents : AboutViewEvent() {
+    internal sealed class ListItemEvent : AboutViewEvent() {
 
-        data class OpenLibrary internal constructor(val index: Int) : ListItemEvents()
+        data class OpenLibrary internal constructor(val index: Int) : ListItemEvent()
 
-        data class OpenLicense internal constructor(val index: Int) : ListItemEvents()
+        data class OpenLicense internal constructor(val index: Int) : ListItemEvent()
 
     }
 
-    internal sealed class ErrorEvents : AboutViewEvent() {
+    internal sealed class ErrorEvent : AboutViewEvent() {
 
-        object HideNavigationError : ErrorEvents()
+        object HideNavigationError : ErrorEvent()
 
-        object HideLoadError : ErrorEvents()
+        object HideLoadError : ErrorEvent()
 
     }
 

@@ -60,10 +60,10 @@ internal class AboutViewModel internal constructor(
 
     override fun handleViewEvent(event: AboutViewEvent) {
         return when (event) {
-            is AboutViewEvent.ListItemEvents.OpenLibrary -> openUrl(event.index) { it.libraryUrl }
-            is AboutViewEvent.ListItemEvents.OpenLicense -> openUrl(event.index) { it.licenseUrl }
-            is AboutViewEvent.ErrorEvents.HideNavigationError -> clearNavigationError()
-            is AboutViewEvent.ErrorEvents.HideLoadError -> handleLicenseLoadComplete()
+            is AboutViewEvent.ListItemEvent.OpenLibrary -> openUrl(event.index) { it.libraryUrl }
+            is AboutViewEvent.ListItemEvent.OpenLicense -> openUrl(event.index) { it.licenseUrl }
+            is AboutViewEvent.ErrorEvent.HideNavigationError -> clearNavigationError()
+            is AboutViewEvent.ErrorEvent.HideLoadError -> handleLicenseLoadComplete()
         }
     }
 

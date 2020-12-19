@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.ui.util.Snackbreak
 internal class OtherAppsErrors internal constructor(
     private val owner: LifecycleOwner,
     private val parent: ViewGroup
-) : UiView<OtherAppsViewState, OtherAppsViewEvent.ErrorEvents>() {
+) : UiView<OtherAppsViewState, OtherAppsViewEvent.ErrorEvent>() {
 
     override fun render(state: UiRender<OtherAppsViewState>) {
         state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
@@ -43,7 +43,7 @@ internal class OtherAppsErrors internal constructor(
             long(
                 parent,
                 error.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(OtherAppsViewEvent.ErrorEvents.HideNavigationError) }
+                onHidden = { _, _ -> publish(OtherAppsViewEvent.ErrorEvent.HideNavigationError) }
             )
         }
     }

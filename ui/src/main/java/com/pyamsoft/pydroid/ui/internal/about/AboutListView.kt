@@ -35,7 +35,7 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 internal class AboutListView internal constructor(
     parent: ViewGroup
-) : BaseUiView<AboutViewState, AboutViewEvent.ListItemEvents, AboutLibrariesListBinding>(parent) {
+) : BaseUiView<AboutViewState, AboutViewEvent.ListItemEvent, AboutLibrariesListBinding>(parent) {
 
     override val viewBinding = AboutLibrariesListBinding::inflate
 
@@ -84,8 +84,8 @@ internal class AboutListView internal constructor(
     private fun setupListView() {
         aboutAdapter = AboutAdapter { event, index ->
             return@AboutAdapter when (event) {
-                is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvents.OpenLicense(index))
-                is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvents.OpenLibrary(index))
+                is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvent.OpenLicense(index))
+                is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvent.OpenLibrary(index))
             }
         }
 

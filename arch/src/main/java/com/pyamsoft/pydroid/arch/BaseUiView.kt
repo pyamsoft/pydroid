@@ -188,15 +188,6 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
      */
     @UiThread
     protected open fun onRender(state: UiRender<S>) {
-        state.render(viewScope) { onRender(it) }
-    }
-
-    /**
-     * Called each time a new UiViewState needs to be rendered
-     */
-    @UiThread
-    @Deprecated("Use onRender(UiRender<S>)")
-    protected open fun onRender(state: S) {
     }
 
     private fun inflateAndAddToParent(

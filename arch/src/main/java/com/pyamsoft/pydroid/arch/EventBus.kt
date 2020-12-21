@@ -36,22 +36,6 @@ public interface EventBus<T : Any> : EventConsumer<T> {
         /**
          * The EventBus will event the event in the following cases
          *
-         * The event will always emit immediately
-         */
-        @CheckResult
-        @JvmStatic
-        @JvmOverloads
-        @Deprecated(
-            "This constructor uses emitOnlyWhenActive = false",
-            replaceWith = ReplaceWith("EventBus.create<T>(false, context)")
-        )
-        public fun <T : Any> create(
-            context: CoroutineContext = EmptyCoroutineContext
-        ): EventBus<T> = create(emitOnlyWhenActive = false, context = context)
-
-        /**
-         * The EventBus will event the event in the following cases
-         *
          * If [emitOnlyWhenActive] is false, the event will always emit immediately
          * If [emitOnlyWhenActive] is true, the event will be emitted if/once a subscriber is listening
          * on the bus

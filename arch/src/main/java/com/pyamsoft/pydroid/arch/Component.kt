@@ -72,46 +72,6 @@ internal fun <S : UiViewState, V : UiViewEvent> bindViewEvents(
 /**
  * Bind a ViewHolder to the pydroid-arch style using one or more UiViews
  */
-@Deprecated("Use createViewBinder and manually call teardown at the end of the Controller scope instead of using a LifecycleOwner.")
-@CheckResult
-public inline fun <S : UiViewState, V : UiViewEvent> bindViews(
-    owner: LifecycleOwner,
-    vararg views: UiView<S, out V>,
-    crossinline onViewEvent: (event: V) -> Unit
-): ViewBinder<out S> {
-    val reader = UiBundleReader.create(null)
-
-    // Bind view event listeners
-    bindViewEvents(views.toList()) { onViewEvent(it) }
-
-    // Init first
-    views.forEach { it.init(reader) }
-
-    // Inflate and attach
-    views.forEach { it.inflate(reader) }
-
-    // Teardown on destroy
-    owner.doOnDestroy {
-        views.forEach { it.teardown() }
-    }
-
-    return object : ViewBinder<S> {
-
-        override fun bind(state: S) {
-            val bound = state.asUiRender()
-            views.forEach { it.render(bound) }
-        }
-
-        override fun teardown() {
-            // Intentionally blank
-            // Kept blank for API compatibility
-        }
-    }
-}
-
-/**
- * Bind a ViewHolder to the pydroid-arch style using one or more UiViews
- */
 @CheckResult
 public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     vararg views: UiView<S, out V>,

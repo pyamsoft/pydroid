@@ -24,23 +24,7 @@ import androidx.annotation.CheckResult
 import androidx.annotation.Px
 import kotlin.math.roundToInt
 
-private val cachedDP: SparseIntArray by lazy {
-    SparseIntArray(10)
-}
-
-@CheckResult
-@Deprecated(message = "Use asDp(Context, Int)", replaceWith = ReplaceWith("asDp(c, px)"))
-private fun toDp(c: Context, @Px px: Int): Int = asDp(c, px)
-
-/**
- * Convert a number in pixels to DP
- */
-@CheckResult
-@Deprecated(
-    message = "Use Number.asDp(Context, Int)",
-    replaceWith = ReplaceWith("this.asDp(c)")
-)
-public fun Number.toDp(c: Context): Int = asDp(c, this.toInt())
+private val cachedDP by lazy { SparseIntArray(10) }
 
 @CheckResult
 private inline fun SparseIntArray.getOrElse(key: Int, block: (array: SparseIntArray) -> Int): Int {

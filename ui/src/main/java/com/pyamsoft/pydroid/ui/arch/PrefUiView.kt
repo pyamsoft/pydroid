@@ -78,13 +78,6 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
 
     @UiThread
     protected open fun onRender(state: UiRender<S>) {
-        state.render(viewScope) { onRender(it) }
-    }
-
-    @UiThread
-    @Deprecated("Use onRender(UiRender<S>)")
-    protected open fun onRender(state: S) {
-
     }
 
     @CheckResult

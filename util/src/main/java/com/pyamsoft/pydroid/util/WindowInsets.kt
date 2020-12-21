@@ -136,21 +136,9 @@ internal inline fun View.doOnApplyWindowInsets(
  */
 public data class InitialPadding internal constructor(
     /**
-     * Left padding
-     */
-    @Deprecated(message = "Use start or end depending on RTL")
-    val left: Int,
-
-    /**
      * Top padding
      */
     val top: Int,
-
-    /**
-     * Right padding
-     */
-    @Deprecated(message = "Use start or end depending on RTL")
-    val right: Int,
 
     /**
      * Bottom padding
@@ -172,9 +160,7 @@ public data class InitialPadding internal constructor(
 @PublishedApi
 internal fun recordInitialPaddingForView(view: View): InitialPadding {
     return InitialPadding(
-        left = view.paddingLeft,
         top = view.paddingTop,
-        right = view.paddingRight,
         bottom = view.paddingBottom,
         start = view.paddingStart,
         end = view.paddingEnd

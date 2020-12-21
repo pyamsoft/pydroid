@@ -36,7 +36,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.yield
 
 /**
  * A State model managing a single state object.
@@ -97,27 +96,6 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
                     isSetState = true,
                     stateChange = stateChange,
                 )?.also { andThen(it) }
-            }
-        }
-    }
-
-    /**
-     * Act upon the current state
-     *
-     * Note that like accessing state in React using this.state.<var>, this is not immediate and
-     * may not be up to date with the latest setState() call.
-     */
-    @Deprecated("Use the state variable directly to access the current state. To access state after a setState call, chain a follow up andThen() call")
-    public fun withState(func: S.() -> Unit) {
-        stateModelScope.launch(context = Dispatchers.Main) {
-            // Yield to any setState calls happening at this point
-            yield()
-
-            withContext(context = Dispatchers.IO) {
-                processStateChange(
-                    isSetState = false,
-                    stateChange = { this.apply(func) },
-                )
             }
         }
     }

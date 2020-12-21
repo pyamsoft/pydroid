@@ -34,13 +34,6 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     initialState: S,
 ) : ViewModel() {
 
-    @Suppress("UNUSED_PARAMETER")
-    @Deprecated(
-        "\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.",
-        replaceWith = ReplaceWith("UiStateViewModel<S>(initialState)")
-    )
-    protected constructor(initialState: S, debug: Boolean) : this(initialState)
-
     private val delegate = UiStateModel(initialState, viewModelScope)
 
     /**
@@ -101,17 +94,6 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     protected fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
         delegate.setState(stateChange, andThen)
-    }
-
-    /**
-     * Act upon the current state
-     *
-     * Note that like accessing state in React using this.state.<var>, this is not immediate and
-     * may not be up to date with the latest setState() call.
-     */
-    @Deprecated("Use the state variable directly to access the current state. To access state after a setState call, chain a follow up andThen() call")
-    protected fun withState(func: S.() -> Unit) {
-        delegate.withState(func)
     }
 
     /**

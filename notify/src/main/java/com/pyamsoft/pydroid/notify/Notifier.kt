@@ -80,18 +80,6 @@ public interface Notifier {
     public companion object {
 
         /**
-         * Create a new instance of a Notifier
-         */
-        @CheckResult
-        @Deprecated(
-            message = "Use createDefault",
-            replaceWith = ReplaceWith("Notifier.createDefault(context, dispatchers)")
-        )
-        public fun create(context: Context, dispatchers: Set<NotifyDispatcher<*>>): Notifier {
-            return createDefault(context, dispatchers)
-        }
-
-        /**
          * Create a new instance of a default Notifier
          */
         @CheckResult

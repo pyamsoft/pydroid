@@ -24,19 +24,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Deprecated(
-    "Use Toolbar.addPrivacy() instead", replaceWith = ReplaceWith(
-        "toolbar.addPrivacy(this, privacyPolicyUrl, termsConditionsUrl)"
-    )
-)
-fun CoroutineScope.addPrivacy(
-    toolbar: Toolbar,
-    privacyPolicyUrl: String,
-    termsConditionsUrl: String
-) {
-    toolbar.addPrivacy(this, privacyPolicyUrl, termsConditionsUrl)
-}
-
 fun Toolbar.addPrivacy(
     scope: CoroutineScope,
     privacyPolicyUrl: String,

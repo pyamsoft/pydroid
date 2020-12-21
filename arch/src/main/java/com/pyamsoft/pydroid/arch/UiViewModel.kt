@@ -34,13 +34,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     initialState: S
 ) : UiStateViewModel<S>(initialState), SaveableState {
 
-    @Suppress("UNUSED_PARAMETER")
-    @Deprecated(
-        "\"debug\" parameter will be removed soon. Instead of a debug check to determine whether to run extra debug code, the debug check and code are removed via ProGuard rules. Be sure to assemble your release builds using ProGuard minification.",
-        replaceWith = ReplaceWith("UiViewModel<S, V, C>(initialState)")
-    )
-    protected constructor(initialState: S, debug: Boolean) : this(initialState)
-
     private val onRestoreEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
     private val onRestoreEvents by onRestoreEventDelegate
 
@@ -181,48 +174,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     }
 
     /**
-     * Use this to run an event after UiViewModel initialization has successfully finished.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnInit { savedInstanceState ->
-     *         ...
-     *     }
-     * }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
-     */
-    @UiThread
-    @Deprecated("Use doOnRestoreState", ReplaceWith("doOnRestoreState(onInit)"))
-    protected fun doOnInit(onInit: (savedInstanceState: UiBundleReader) -> Unit) {
-        doOnRestoreState(onInit)
-    }
-
-    /**
-     * Use this to run an event after UiViewModel binding has successfully finished.
-     *
-     * This is generally used in something like the constructor
-     *
-     * You will want to use this when you are running code which uses publish()
-     * as this will guarantee that your Controller is bound at the time of calling,
-     * or if you are running code each time this ViewModel is bound to a View.
-     *
-     * init {
-     *     doOnBind { savedInstanceState ->
-     *         ...
-     *     }
-     * }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
-     */
-    @UiThread
-    @Deprecated("Use doOnRestoreState instead", ReplaceWith("doOnRestoreState(onBind)"))
-    protected fun doOnBind(onBind: (savedInstanceState: UiBundleReader) -> Unit) {
-        doOnRestoreState(onBind)
-    }
-
-    /**
      * Use this to run an event when the savedInstanceState is being restored
      *
      * This is generally used in something like the constructor
@@ -259,25 +210,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     protected fun doOnSaveState(onSaveState: (outState: UiBundleWriter, state: S) -> Unit) {
         Enforcer.assertOnMainThread()
         onSaveEvents.add(onSaveState)
-    }
-
-    /**
-     * Use this to run an event after UiViewModel onCleared has successfully finished.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnTeardown {
-     *         ...
-     *     }
-     * }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
-     */
-    @UiThread
-    @Deprecated("Use doOnCleared", ReplaceWith("doOnCleared(onTeardown)"))
-    protected fun doOnTeardown(onTeardown: () -> Unit) {
-        doOnCleared(onTeardown)
     }
 
     /**

@@ -16,6 +16,10 @@
 
 android {
 
+	kotlinOptions {
+		freeCompilerArgs += '-Xallow-result-return-type'
+	}
+
 	buildFeatures {
 		viewBinding true
 	}

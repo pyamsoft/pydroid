@@ -27,12 +27,12 @@ internal class OtherAppsInteractorNetwork internal constructor(
     private val service: OtherAppsService
 ) : OtherAppsInteractor {
 
-    override suspend fun getApps(force: Boolean): List<OtherApp> =
+    override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
-            val result = service.getApps()
+            val result = service.getApps().apps()
             return@withContext try {
-                result.apps().map { entry ->
+                Result.success(result.map { entry ->
                     OtherApp(
                         entry.packageName(),
                         entry.name(),
@@ -41,11 +41,10 @@ internal class OtherAppsInteractorNetwork internal constructor(
                         entry.url(),
                         entry.source()
                     )
-                }
+                })
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Unable to fetch other apps payload")
-                // Even though IDE says this is not needed, compiler needs it.
-                emptyList<OtherApp>()
+                Result.failure(throwable)
             }
         }
 }

@@ -25,10 +25,10 @@ import kotlinx.coroutines.withContext
 
 internal class OtherAppsInteractorImpl internal constructor(
     private val packageName: String,
-    private val otherAppsCache: Cached<List<OtherApp>>
+    private val otherAppsCache: Cached<Result<List<OtherApp>>>
 ) : OtherAppsInteractor, Cache<Any> {
 
-    override suspend fun getApps(force: Boolean): List<OtherApp> =
+    override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
 
@@ -36,14 +36,12 @@ internal class OtherAppsInteractorImpl internal constructor(
                 otherAppsCache.clear()
             }
 
-            val apps = requireNotNull(otherAppsCache.call())
-
             // Ignore the app we have open right now in the list
-            return@withContext apps
-                .asSequence()
-                .filterNot { it.packageName == packageName }
-                .sortedBy { it.name }
-                .toList()
+            return@withContext otherAppsCache.call()
+                .map { it.asSequence() }
+                .map { apps -> apps.filterNot { it.packageName == packageName } }
+                .map { apps -> apps.sortedBy { it.name } }
+                .map { it.toList() }
         }
 
     override suspend fun clear() {

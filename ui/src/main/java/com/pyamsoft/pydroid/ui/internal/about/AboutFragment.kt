@@ -88,13 +88,9 @@ internal class AboutFragment : Fragment() {
     }
 
     private fun navigateToExternalUrl(url: String) {
-        val error = url.hyperlink(requireActivity())
-            .navigate()
-        if (error == null) {
-            viewModel.navigationSuccess()
-        } else {
-            viewModel.navigationFailed(error)
-        }
+        url.hyperlink(requireActivity()).navigate()
+            .onSuccess { viewModel.navigationSuccess() }
+            .onFailure { viewModel.navigationFailed(it) }
     }
 
     companion object {

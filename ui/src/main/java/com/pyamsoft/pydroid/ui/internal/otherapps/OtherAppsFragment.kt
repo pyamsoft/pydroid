@@ -30,6 +30,8 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
+import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
+import com.pyamsoft.pydroid.ui.util.openDevPage
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class OtherAppsFragment : Fragment() {
@@ -69,6 +71,7 @@ internal class OtherAppsFragment : Fragment() {
         ) {
             return@createComponent when (it) {
                 is OtherAppsControllerEvent.ExternalUrl -> navigateToExternalUrl(it.url)
+                is OtherAppsControllerEvent.FallbackEvent -> openDeveloperPage()
             }
         }
     }
@@ -86,14 +89,17 @@ internal class OtherAppsFragment : Fragment() {
         stateSaver?.saveState(outState)
     }
 
+    private fun Result<Unit>.handleNavigation() {
+        this.onSuccess { viewModel.navigationSuccess() }
+            .onFailure { viewModel.navigationFailed(it) }
+    }
+
+    private fun openDeveloperPage() {
+        MarketLinker.openDevPage(requireActivity()).handleNavigation()
+    }
+
     private fun navigateToExternalUrl(url: String) {
-        val error = url.hyperlink(requireActivity())
-            .navigate()
-        if (error == null) {
-            viewModel.navigationSuccess()
-        } else {
-            viewModel.navigationFailed(error)
-        }
+        url.hyperlink(requireActivity()).navigate().handleNavigation()
     }
 
     companion object {

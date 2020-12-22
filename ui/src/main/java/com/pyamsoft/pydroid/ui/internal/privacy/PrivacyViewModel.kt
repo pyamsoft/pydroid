@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.privacy
 
-import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent.ViewExternalPolicy
@@ -41,7 +40,7 @@ internal class PrivacyViewModel internal constructor(
         }
     }
 
-    fun navigationFailed(error: ActivityNotFoundException) {
+    fun navigationFailed(error: Throwable) {
         setState { copy(throwable = error) }
     }
 

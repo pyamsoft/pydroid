@@ -16,14 +16,19 @@
 
 package com.pyamsoft.pydroid.ui.util
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 
 @CheckResult
-internal fun MarketLinker.openAppPage(context: Context): ActivityNotFoundException? {
+internal fun MarketLinker.openAppPage(context: Context): Result<Unit> {
     val app = context.applicationContext
     val link = app.packageName
     return linkToMarketPage(app, link)
+}
+
+@CheckResult
+internal fun MarketLinker.openDevPage(context: Context): Result<Unit> {
+    val app = context.applicationContext
+    return linkToDeveloperPage(app)
 }

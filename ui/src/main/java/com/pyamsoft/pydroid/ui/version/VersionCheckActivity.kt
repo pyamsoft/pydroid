@@ -138,12 +138,9 @@ abstract class VersionCheckActivity : PrivacyActivity() {
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Unable to launch in-app update flow")
                 if (isFallbackEnabled) {
-                    val error = MarketLinker.openAppPage(activity)
-                    if (error == null) {
-                        viewModel.navigationSuccess()
-                    } else {
-                        viewModel.navigationFailed(error)
-                    }
+                    MarketLinker.openAppPage(activity)
+                        .onSuccess { viewModel.navigationSuccess() }
+                        .onFailure { viewModel.navigationFailed(it) }
                 }
             }
         }

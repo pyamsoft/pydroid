@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps
 
-import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
@@ -30,13 +29,15 @@ internal class OtherAppsViewModel internal constructor(
 ) : UiViewModel<OtherAppsViewState, OtherAppsViewEvent, OtherAppsControllerEvent>(
     initialState = OtherAppsViewState(
         apps = emptyList(),
+        appsError = null,
         navigationError = null
     )
 ) {
 
     private val appsRunner = highlander<Unit, Boolean> { force ->
-        val apps = interactor.getApps(force)
-        handleAppsLoaded(apps)
+        interactor.getApps(force)
+            .onSuccess { handleAppsLoaded(it) }
+            .onFailure { handleAppsError(it) }
     }
 
     init {
@@ -48,7 +49,14 @@ internal class OtherAppsViewModel internal constructor(
             is OtherAppsViewEvent.ListEvent.OpenStore -> openUrl(event.index) { it.storeUrl }
             is OtherAppsViewEvent.ListEvent.ViewSource -> openUrl(event.index) { it.sourceUrl }
             is OtherAppsViewEvent.ErrorEvent.HideNavigationError -> clearNavigationError()
+            is OtherAppsViewEvent.ErrorEvent.HideAppsError -> hideAppsErrorAndLaunchFallback()
         }
+    }
+
+    private fun hideAppsErrorAndLaunchFallback() {
+        setState(stateChange = { copy(appsError = null) }, andThen = {
+            publish(OtherAppsControllerEvent.FallbackEvent)
+        })
     }
 
     private inline fun openUrl(
@@ -72,7 +80,11 @@ internal class OtherAppsViewModel internal constructor(
         setState { copy(apps = apps) }
     }
 
-    fun navigationFailed(throwable: ActivityNotFoundException) {
+    private fun handleAppsError(throwable: Throwable) {
+        setState { copy(appsError = throwable) }
+    }
+
+    fun navigationFailed(throwable: Throwable) {
         setState { copy(navigationError = throwable) }
     }
 

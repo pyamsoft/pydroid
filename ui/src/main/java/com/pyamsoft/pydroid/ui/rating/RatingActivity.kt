@@ -94,12 +94,9 @@ abstract class RatingActivity : VersionCheckActivity() {
                 } catch (throwable: Throwable) {
                     Timber.e(throwable, "Unable to launch in-app rating")
                     if (isFallbackEnabled) {
-                        val error = MarketLinker.openAppPage(activity)
-                        if (error == null) {
-                            viewModel.navigationSuccess()
-                        } else {
-                            viewModel.navigationFailed(error)
-                        }
+                        MarketLinker.openAppPage(activity)
+                            .onSuccess { viewModel.navigationSuccess() }
+                            .onFailure { viewModel.navigationFailed(it) }
                     }
                 }
             }

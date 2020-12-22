@@ -38,37 +38,33 @@ public fun String.hyperlink(c: Context): HyperlinkIntent {
  * Intent class that knows how to navigate to a given hyperlink
  */
 public data class HyperlinkIntent internal constructor(
-    private val context: Context,
-    private val intent: Intent
+    /**
+     * PublishedApi internal for navigate() inline
+     */
+    @PublishedApi
+    internal val context: Context,
+
+    /**
+     * PublishedApi internal for navigate() inline
+     */
+    @PublishedApi
+    internal val intent: Intent
 ) {
 
     /**
      * Navigate to the hyperlink.
      *
-     * If an error occurs this will return an exception
-     *
-     * TODO(Peter): Just throw
+     * On success, this will return Unit and perform navigation
+     * On failure, this will return the ActivityNotFound exception.
      */
     @CheckResult
-    public fun navigate(): ActivityNotFoundException? {
+    public fun navigate(): Result<Unit> {
         val appContext = context.applicationContext
         return try {
-            appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            null
+            val result = appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            Result.success(result)
         } catch (e: ActivityNotFoundException) {
-            e
+            Result.failure(e)
         }
-    }
-
-    /**
-     * Navigate to the hyperlink. Handle any errors that may occur
-     *
-     * If an error occurs this will return an exception
-     *
-     * TODO(Peter): Just throw
-     */
-    @CheckResult
-    public inline fun navigate(onNavigateError: (ActivityNotFoundException) -> Unit): ActivityNotFoundException? {
-        return navigate()?.also(onNavigateError)
     }
 }

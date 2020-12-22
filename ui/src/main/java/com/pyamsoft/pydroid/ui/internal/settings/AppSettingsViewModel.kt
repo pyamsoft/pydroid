@@ -17,17 +17,14 @@
 package com.pyamsoft.pydroid.ui.internal.settings
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 internal class AppSettingsViewModel internal constructor(
     private val theming: Theming,
@@ -41,32 +38,27 @@ internal class AppSettingsViewModel internal constructor(
 ) {
 
     private val otherAppsRunner = highlander<Unit, Boolean> { force ->
-        try {
-            val otherApps = interactor.getApps(force)
-            setState { copy(otherApps = otherApps) }
-        } catch (error: Throwable) {
-            error.onActualError { e ->
-                Timber.e(e, "Error checking for other apps")
-            }
-        }
+        interactor.getApps(force)
+            .onSuccess { setState { copy(otherApps = it) } }
+            .onFailure { setState { copy(otherApps = emptyList()) } }
     }
 
     init {
-        viewModelScope.launch(context = Dispatchers.Default) { otherAppsRunner.call(false) }
+        viewModelScope.launch(context = Dispatchers.Default) {
+            otherAppsRunner.call(false)
+        }
     }
 
     override fun handleViewEvent(event: AppSettingsViewEvent) {
         return when (event) {
             is AppSettingsViewEvent.MoreApps -> seeMoreApps()
-            is AppSettingsViewEvent.Hyperlink -> publish(
-                AppSettingsControllerEvent.NavigateHyperlink(event.hyperlinkIntent)
-            )
             is AppSettingsViewEvent.RateApp -> publish(AppSettingsControllerEvent.NavigateRateApp)
             is AppSettingsViewEvent.ViewLicense -> publish(AppSettingsControllerEvent.ShowLicense)
             is AppSettingsViewEvent.CheckUpgrade -> publish(AppSettingsControllerEvent.CheckUpgrade)
             is AppSettingsViewEvent.ClearData -> publish(AppSettingsControllerEvent.AttemptClearData)
             is AppSettingsViewEvent.ShowUpgrade -> publish(AppSettingsControllerEvent.OpenShowUpgrade)
             is AppSettingsViewEvent.ToggleDarkTheme -> changeDarkMode(event.mode)
+            is AppSettingsViewEvent.Hyperlink -> publish(AppSettingsControllerEvent.Navigate(event.hyperlinkIntent))
         }
     }
 
@@ -81,7 +73,9 @@ internal class AppSettingsViewModel internal constructor(
     }
 
     fun syncDarkThemeState(activity: Activity) {
-        setState { copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity))) }
+        setState {
+            copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity)))
+        }
     }
 
     private fun changeDarkMode(mode: String) {
@@ -92,7 +86,7 @@ internal class AppSettingsViewModel internal constructor(
         }
     }
 
-    fun navigationFailed(error: ActivityNotFoundException) {
+    fun navigationFailed(error: Throwable) {
         setState { copy(throwable = error) }
     }
 

@@ -57,7 +57,7 @@ internal sealed class AppSettingsControllerEvent : UiControllerEvent {
 
     object NavigateMoreApps : AppSettingsControllerEvent()
 
-    data class NavigateHyperlink internal constructor(
+    data class Navigate internal constructor(
         val hyperlinkIntent: HyperlinkIntent
     ) : AppSettingsControllerEvent()
 

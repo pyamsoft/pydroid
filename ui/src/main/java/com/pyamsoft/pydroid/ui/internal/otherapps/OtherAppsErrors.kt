@@ -29,6 +29,13 @@ internal class OtherAppsErrors internal constructor(
 
     override fun render(state: UiRender<OtherAppsViewState>) {
         state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
+        state.distinctBy { it.appsError }.render(viewScope) { handleAppsError(it) }
+    }
+
+    private fun handleAppsError(throwable: Throwable?) {
+        if (throwable != null) {
+            showAppsError(throwable)
+        }
     }
 
     private fun handleNavigationError(throwable: Throwable?) {
@@ -37,6 +44,19 @@ internal class OtherAppsErrors internal constructor(
         }
     }
 
+    private fun showAppsError(throwable: Throwable) {
+        Snackbreak.bindTo(owner) {
+            short(
+                parent,
+                throwable.message ?: "An unexpected error occurred.",
+                onHidden = { _, _ -> publish(OtherAppsViewEvent.ErrorEvent.HideAppsError) }
+            ) {
+                setAction("Go to Store") {
+                    publish(OtherAppsViewEvent.ErrorEvent.HideAppsError)
+                }
+            }
+        }
+    }
 
     private fun showNavigationError(error: Throwable) {
         Snackbreak.bindTo(owner) {

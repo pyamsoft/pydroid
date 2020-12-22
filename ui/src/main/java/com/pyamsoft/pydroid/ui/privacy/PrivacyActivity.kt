@@ -69,12 +69,9 @@ abstract class PrivacyActivity : ActivityBase() {
     }
 
     private fun openExternalPolicyPage(link: HyperlinkIntent) {
-        val error = link.navigate()
-        if (error == null) {
-            viewModel.navigationSuccess()
-        } else {
-            viewModel.navigationFailed(error)
-        }
+        link.navigate()
+            .onSuccess { viewModel.navigationSuccess() }
+            .onFailure { viewModel.navigationFailed(it) }
     }
 
     @CallSuper

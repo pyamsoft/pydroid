@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.settings
 
-import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
@@ -105,7 +104,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         ) {
             return@createComponent when (it) {
                 is AppSettingsControllerEvent.NavigateMoreApps -> viewMorePyamsoftApps()
-                is AppSettingsControllerEvent.NavigateHyperlink -> navigateHyperlink(it.hyperlinkIntent)
+                is AppSettingsControllerEvent.Navigate -> navigateHyperlink(it.hyperlinkIntent)
                 is AppSettingsControllerEvent.NavigateRateApp -> openPlayStore()
                 is AppSettingsControllerEvent.ShowLicense -> openLicensesPage()
                 is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(true)
@@ -122,8 +121,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun openPlayStore() {
-        val error = MarketLinker.openAppPage(requireContext())
-        failedNavigation(error)
+        MarketLinker.openAppPage(requireContext()).handleNavigation()
     }
 
     private fun setupPreferenceListView() {
@@ -154,18 +152,15 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         listView?.removeAllItemDecorations()
     }
 
-    private fun failedNavigation(error: ActivityNotFoundException?) {
-        if (error == null) {
-            settingsViewModel.navigationSuccess()
-        } else {
-            settingsViewModel.navigationFailed(error)
-        }
+    private fun Result<Unit>.handleNavigation() {
+        this
+            .onSuccess { settingsViewModel.navigationSuccess() }
+            .onFailure { settingsViewModel.navigationFailed(it) }
     }
 
     private fun viewMorePyamsoftApps() {
         onViewMorePyamsoftAppsClicked(true)
-        val error = MarketLinker.linkToDeveloperPage(requireContext())
-        failedNavigation(error)
+        MarketLinker.linkToDeveloperPage(requireContext()).handleNavigation()
     }
 
     private fun darkThemeChanged(mode: Theming.Mode) {
@@ -193,8 +188,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     }
 
     private fun navigateHyperlink(link: HyperlinkIntent) {
-        val error = link.navigate()
-        failedNavigation(error)
+        link.navigate().handleNavigation()
     }
 
     @CallSuper

@@ -16,48 +16,33 @@
 
 package com.pyamsoft.pydroid.ui.internal.util
 
-import android.content.ActivityNotFoundException
 import android.content.Context
+import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal object MarketLinker {
 
-    private const val BASE_MARKET = "market://details?id="
-    private const val DEVELOPER_PAGE =
-        "https://play.google.com/store/apps/dev?id=5257476342110165153"
+    private const val MARKET_URL = "market://details?id="
+    private const val DEV_PAGE_URL = "https://play.google.com/store/apps/dev?id=5257476342110165153"
 
     @JvmStatic
-    @JvmOverloads
+    @CheckResult
     fun linkToMarketPage(
         context: Context,
         packageName: String,
-        onError: ((error: ActivityNotFoundException) -> Unit)? = null
-    ): ActivityNotFoundException? {
+    ): Result<Unit> {
         val targetName = if (packageName.endsWith(".dev")) {
             packageName.substringBefore(".dev")
         } else {
             packageName
         }
 
-        val hyperlink = "$BASE_MARKET$targetName".hyperlink(context)
-        return if (onError == null) {
-            hyperlink.navigate()
-        } else {
-            hyperlink.navigate(onError)
-        }
+        return "$MARKET_URL$targetName".hyperlink(context).navigate()
     }
 
     @JvmStatic
-    @JvmOverloads
-    fun linkToDeveloperPage(
-        context: Context,
-        onError: ((error: ActivityNotFoundException) -> Unit)? = null
-    ): ActivityNotFoundException? {
-        val hyperlink = DEVELOPER_PAGE.hyperlink(context)
-        return if (onError == null) {
-            hyperlink.navigate()
-        } else {
-            hyperlink.navigate(onError)
-        }
+    @CheckResult
+    fun linkToDeveloperPage(context: Context): Result<Unit> {
+        return DEV_PAGE_URL.hyperlink(context).navigate()
     }
 }

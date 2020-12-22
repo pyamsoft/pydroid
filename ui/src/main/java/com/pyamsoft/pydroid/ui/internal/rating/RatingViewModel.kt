@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
@@ -64,7 +63,7 @@ internal class RatingViewModel internal constructor(
         clearNavigationError()
     }
 
-    internal fun navigationFailed(error: ActivityNotFoundException) {
+    internal fun navigationFailed(error: Throwable) {
         setState { copy(navigationError = error) }
     }
 }

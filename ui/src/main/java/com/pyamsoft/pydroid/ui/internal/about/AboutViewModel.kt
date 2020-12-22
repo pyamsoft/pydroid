@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import android.content.ActivityNotFoundException
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
@@ -96,7 +95,7 @@ internal class AboutViewModel internal constructor(
         setState { copy(isLoading = false) }
     }
 
-    fun navigationFailed(throwable: ActivityNotFoundException) {
+    fun navigationFailed(throwable: Throwable) {
         setState { copy(navigationError = throwable) }
     }
 

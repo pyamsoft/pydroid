@@ -28,5 +28,5 @@ public interface OtherAppsInteractor {
      * Retrieve the other pyamsoft application data
      */
     @CheckResult
-    public suspend fun getApps(force: Boolean): List<OtherApp>
+    public suspend fun getApps(force: Boolean): Result<List<OtherApp>>
 }

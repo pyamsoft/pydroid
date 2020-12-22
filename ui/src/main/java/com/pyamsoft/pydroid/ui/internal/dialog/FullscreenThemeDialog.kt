@@ -42,7 +42,6 @@ import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
-import timber.log.Timber
 import com.google.android.material.R as R2
 
 internal abstract class FullscreenThemeDialog protected constructor() : AppCompatDialogFragment() {
@@ -90,7 +89,6 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
             toolbar,
             dropshadow
         ) {
-            Timber.d("Controller event: $it")
             return@createComponent when (it) {
                 is Close -> dismiss()
             }

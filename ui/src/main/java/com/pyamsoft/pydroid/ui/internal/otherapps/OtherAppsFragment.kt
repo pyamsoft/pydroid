@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
@@ -95,7 +96,17 @@ internal class OtherAppsFragment : Fragment() {
     }
 
     private fun openDeveloperPage() {
-        MarketLinker.openDevPage(requireActivity()).handleNavigation()
+        MarketLinker.openDevPage(requireActivity())
+            // If we cannot load we have nothing to do here
+            .onFailure { closeParent() }
+            .handleNavigation()
+    }
+
+    private fun closeParent() {
+        val parent = parentFragment
+        if (parent is DialogFragment) {
+            parent.dismiss()
+        }
     }
 
     private fun navigateToExternalUrl(url: String) {

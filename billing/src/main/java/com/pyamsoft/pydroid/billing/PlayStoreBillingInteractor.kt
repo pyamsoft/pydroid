@@ -2,13 +2,11 @@ package com.pyamsoft.pydroid.billing
 
 import android.app.Activity
 import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
-import com.android.billingclient.api.ConsumeResponseListener
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,19 +19,19 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.lang.ref.WeakReference
 
 internal class PlayStoreBillingInteractor internal constructor(
     activity: Activity,
 ) : BillingInteractor,
     BillingConnector,
-    BillingClientStateListener,
-    ConsumeResponseListener,
-    BillingPurchase,
-    PurchasesUpdatedListener {
+    BillingPurchase, PlayStoreListeners {
+
+    private val listeners = LeakProofListener(this)
 
     private val client by lazy {
         BillingClient.newBuilder(activity)
-            .setListener(this)
+            .setListener(listeners)
             .enablePendingPurchases()
             .build()
     }
@@ -61,7 +59,7 @@ internal class PlayStoreBillingInteractor internal constructor(
     override fun connect() {
         if (!client.isReady) {
             Timber.d("Connect to Billing Client")
-            client.startConnection(this)
+            client.startConnection(listeners)
         }
     }
 
@@ -91,15 +89,17 @@ internal class PlayStoreBillingInteractor internal constructor(
             .setSkusList(appSkuList)
             .build()
 
-        client.querySkuDetailsAsync(params) { result, skuDetailsList ->
-            if (result.isOk()) {
-                billingScope.launch(context = Dispatchers.IO) {
-                    val skuList = skuDetailsList?.map { PlayBillingSku(it) } ?: emptyList()
-                    skuFlow.value = skuList
-                }
-            } else {
-                Timber.w("SKU response not OK: ${result.debugMessage}")
+        client.querySkuDetailsAsync(params, listeners)
+    }
+
+    override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {
+        if (result.isOk()) {
+            billingScope.launch(context = Dispatchers.IO) {
+                val skuList = skuDetails?.map { PlayBillingSku(it) } ?: emptyList()
+                skuFlow.value = skuList
             }
+        } else {
+            Timber.w("SKU response not OK: ${result.debugMessage}")
         }
     }
 
@@ -180,5 +180,47 @@ internal class PlayStoreBillingInteractor internal constructor(
         } else {
             Timber.w("Consume response not OK: ${result.debugMessage}")
         }
+    }
+
+
+    private class LeakProofListener(listeners: PlayStoreListeners) : PlayStoreListeners {
+
+        // Keep a reference to the actual listener as a weak reference.
+        // https://stackoverflow.com/questions/65180072/android-billing-client-causes-memory-leak
+        private val ref = WeakReference(listeners)
+
+        private inline fun withRef(block: (PlayStoreListeners) -> Unit) {
+            ref.get().let { strong ->
+                if (strong == null) {
+                    Timber.w("WeakReference for Play Store Listeners was requested, but was null!")
+                } else {
+                    block(strong)
+                }
+            }
+        }
+
+        override fun onBillingSetupFinished(result: BillingResult) {
+            withRef { it.onBillingSetupFinished(result) }
+        }
+
+        override fun onBillingServiceDisconnected() {
+            withRef { it.onBillingServiceDisconnected() }
+        }
+
+        override fun onConsumeResponse(result: BillingResult, token: String) {
+            withRef { it.onConsumeResponse(result, token) }
+        }
+
+        override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
+            withRef { it.onPurchasesUpdated(result, purchases) }
+        }
+
+        override fun onSkuDetailsResponse(
+            result: BillingResult,
+            skuDetails: MutableList<SkuDetails>?
+        ) {
+            withRef { it.onSkuDetailsResponse(result, skuDetails) }
+        }
+
     }
 }

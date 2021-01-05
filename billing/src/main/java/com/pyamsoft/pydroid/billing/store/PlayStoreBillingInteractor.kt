@@ -2,12 +2,16 @@ package com.pyamsoft.pydroid.billing.store
 
 import android.app.Activity
 import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.ConsumeResponseListener
 import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.SkuDetailsResponseListener
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
@@ -30,13 +34,14 @@ internal class PlayStoreBillingInteractor internal constructor(
 ) : BillingInteractor,
     BillingConnector,
     BillingPurchase,
-    PlayStoreListeners {
-
-    private val listeners = LeakProofListener(this)
+    BillingClientStateListener,
+    SkuDetailsResponseListener,
+    ConsumeResponseListener,
+    PurchasesUpdatedListener {
 
     private val client by lazy {
         BillingClient.newBuilder(activity.applicationContext)
-            .setListener(listeners)
+            .setListener(this)
             .enablePendingPurchases()
             .build()
     }
@@ -64,7 +69,7 @@ internal class PlayStoreBillingInteractor internal constructor(
     override fun connect() {
         if (!client.isReady) {
             Timber.d("Connect to Billing Client")
-            client.startConnection(listeners)
+            client.startConnection(this)
         }
     }
 
@@ -94,7 +99,7 @@ internal class PlayStoreBillingInteractor internal constructor(
             .setSkusList(appSkuList)
             .build()
 
-        client.querySkuDetailsAsync(params, listeners)
+        client.querySkuDetailsAsync(params, this)
     }
 
     override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {
@@ -175,7 +180,7 @@ internal class PlayStoreBillingInteractor internal constructor(
                 .newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
                 .build()
-            client.consumeAsync(params, listeners)
+            client.consumeAsync(params, this)
         }
     }
 

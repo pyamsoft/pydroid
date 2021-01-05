@@ -13,12 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':billing'
-include ':autopsy'
-include ':arch'
-include ':bootstrap'
-include ':core'
-include ':loader'
-include ':notify'
-include ':ui'
-include ':util'
+
+package com.pyamsoft.pydroid.billing
+
+import android.app.Activity
+import androidx.annotation.CheckResult
+
+/**
+ * Billing module
+ */
+public class BillingModule(params: Parameters) {
+
+    private val impl: BillingInteractor = PlayStoreBillingInteractor(params.activity)
+
+    /**
+     * Provide a billing instance
+     */
+    @CheckResult
+    public fun provideInteractor(): BillingInteractor {
+        return impl
+    }
+
+    /**
+     * Module parameters
+     */
+    public data class Parameters(
+        internal val activity: Activity,
+    )
+}

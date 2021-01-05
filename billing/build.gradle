@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include ':billing'
-include ':autopsy'
-include ':arch'
-include ':bootstrap'
-include ':core'
-include ':loader'
-include ':notify'
-include ':ui'
-include ':util'
+
+android {
+    kotlinOptions {
+        freeCompilerArgs += '-Xexplicit-api=strict'
+    }
+}
+
+dependencies {
+    api project(':core')
+
+    // Timber logging
+    implementation "com.jakewharton.timber:timber:$timber"
+
+    implementation "androidx.annotation:annotation:$annotation"
+    implementation "com.android.billingclient:billing:$playBilling"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+}
+

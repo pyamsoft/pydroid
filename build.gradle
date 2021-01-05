@@ -78,6 +78,9 @@ buildscript {
 		// In app updates and reviews
 		playCore = "1.9.0"
 		playCoreKtx = "1.8.1"
+
+		// In app billing
+		playBilling = "3.0.2"
 	}
 
 	dependencies {

@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogDialogItemComponent
@@ -43,6 +44,9 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface PYDroidComponent {
+
+    @CheckResult
+    fun plusBilling(): BillingComponent.Factory
 
     @CheckResult
     fun plusPrivacy(): PrivacyComponent.Factory
@@ -212,6 +216,11 @@ internal interface PYDroidComponent {
             interactor = changeLogModule.provideInteractor()
         )
 
+        private val billingParams = BillingComponent.Factory.Parameters(
+            imageLoader = loaderModule.provideLoader(),
+            interactor = changeLogModule.provideInteractor()
+        )
+
         private val provider = object : ModuleProvider {
             override fun theming(): Theming {
                 return theming
@@ -256,6 +265,10 @@ internal interface PYDroidComponent {
 
         override fun plusRating(): RatingComponent.Factory {
             return RatingComponent.Impl.FactoryImpl(ratingParams)
+        }
+
+        override fun plusBilling(): BillingComponent.Factory {
+            return BillingComponent.Impl.FactoryImpl(billingParams)
         }
 
         override fun plusSettings(): AppSettingsComponent.Factory {

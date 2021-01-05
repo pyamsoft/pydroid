@@ -55,6 +55,7 @@ dependencies {
 	implementation "com.pyamsoft.highlander:highlander:$highlander"
 
 	api project(':arch')
+	api project(':billing')
 	api project(':bootstrap')
 	api project(':loader')
 	api project(':util')

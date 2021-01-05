@@ -14,33 +14,38 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog.dialog
+package com.pyamsoft.pydroid.ui.internal.billing
 
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.billing.BillingPurchase
+import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.Injector
-import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
 import com.pyamsoft.pydroid.ui.util.show
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
-internal class ChangeLogDialog : IconDialog() {
+internal class BillingDialog : IconDialog() {
 
     private var stateSaver: StateSaver? = null
 
-    internal var listView: ChangeLogList? = null
-    internal var nameView: ChangeLogName? = null
-    internal var closeView: ChangeLogClose? = null
-    internal var iconView: ChangeLogIcon? = null
+    internal var nameView: BillingName? = null
+    internal var iconView: BillingIcon? = null
+
+    internal var purchaseClient: BillingPurchase? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<ChangeLogDialogViewModel>(activity = true) { factory }
+    private val viewModel by viewModelFactory<BillingViewModel>(activity = true) { factory }
 
     @CheckResult
     private fun getChangelogProvider(): ChangeLogProvider {
@@ -48,12 +53,12 @@ internal class ChangeLogDialog : IconDialog() {
     }
 
     override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
-        Injector.obtain<PYDroidComponent>(binding.root.context.applicationContext)
-            .plusChangeLogDialog()
+        Injector.obtain<BillingComponent>(requireActivity())
+            .plusDialog()
             .create(
                 binding.dialogRoot,
                 binding.changelogIcon,
-                getChangelogProvider()
+                getChangelogProvider(),
             )
             .inject(this)
 
@@ -63,12 +68,18 @@ internal class ChangeLogDialog : IconDialog() {
             viewModel,
             requireNotNull(iconView),
             requireNotNull(nameView),
-            requireNotNull(listView),
-            requireNotNull(closeView)
         ) {
             return@createComponent when (it) {
-                is ChangeLogDialogControllerEvent.Close -> dismiss()
+                is BillingDialogControllerEvent.Close -> dismiss()
+                is BillingDialogControllerEvent.LaunchPurchase -> launchPurchase(it.sku)
             }
+        }
+    }
+
+    private fun launchPurchase(sku: BillingSku) {
+        viewLifecycleOwner.lifecycleScope.launch(context = Dispatchers.Main) {
+            Timber.d("Start purchase flow for $sku")
+            requireNotNull(purchaseClient).purchase(requireActivity(), sku)
         }
     }
 
@@ -76,11 +87,10 @@ internal class ChangeLogDialog : IconDialog() {
         super.onDestroyView()
         factory = null
         stateSaver = null
+        purchaseClient = null
 
-        listView = null
         nameView = null
         iconView = null
-        closeView = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -90,11 +100,11 @@ internal class ChangeLogDialog : IconDialog() {
 
     companion object {
 
-        private const val TAG = "ChangeLogDialog"
+        private const val TAG = "BillingDialog"
 
         @JvmStatic
         fun open(activity: FragmentActivity) {
-            ChangeLogDialog().apply {
+            BillingDialog().apply {
                 arguments = Bundle().apply { }
             }.show(activity, TAG)
         }

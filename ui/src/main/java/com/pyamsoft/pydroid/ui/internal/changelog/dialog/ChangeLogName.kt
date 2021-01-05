@@ -17,37 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiRender
-import com.pyamsoft.pydroid.ui.databinding.ChangelogNameBinding
+import com.pyamsoft.pydroid.ui.internal.app.AppName
 
 internal class ChangeLogName internal constructor(
     parent: ViewGroup
-) : BaseUiView<ChangeLogDialogViewState, ChangeLogDialogViewEvent, ChangelogNameBinding>(parent) {
-
-    override val viewBinding = ChangelogNameBinding::inflate
-
-    override val layoutRoot by boundView { changelogName }
-
-    init {
-        doOnTeardown {
-            clear()
-        }
-    }
-
-    override fun onRender(state: UiRender<ChangeLogDialogViewState>) {
-        state.distinctBy { it.name }.render(viewScope) { handleName(it) }
-    }
-
-    private fun handleName(name: CharSequence) {
-        if (name.isBlank()) {
-            clear()
-        } else {
-            binding.changelogName.text = name
-        }
-    }
-
-    private fun clear() {
-        binding.changelogName.text = ""
-    }
-}
+) : AppName<ChangeLogDialogViewState>(parent)

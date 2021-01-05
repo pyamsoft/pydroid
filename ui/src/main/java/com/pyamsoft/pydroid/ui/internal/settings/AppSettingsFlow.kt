@@ -50,6 +50,8 @@ internal sealed class AppSettingsViewEvent : UiViewEvent {
 
     object ShowUpgrade : AppSettingsViewEvent()
 
+    object ShowDonate : AppSettingsViewEvent()
+
     data class ToggleDarkTheme(val mode: String) : AppSettingsViewEvent()
 }
 
@@ -70,6 +72,8 @@ internal sealed class AppSettingsControllerEvent : UiControllerEvent {
     object AttemptClearData : AppSettingsControllerEvent()
 
     object OpenShowUpgrade : AppSettingsControllerEvent()
+
+    object OpenDonation : AppSettingsControllerEvent()
 
     data class ChangeDarkTheme internal constructor(val newMode: Theming.Mode) :
         AppSettingsControllerEvent()

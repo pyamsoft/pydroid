@@ -14,26 +14,35 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog.dialog
+package com.pyamsoft.pydroid.ui.internal.billing
 
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.arch.UiViewState
+import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.internal.app.AppState
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
-internal data class ChangeLogDialogViewState internal constructor(
+internal data class BillingDialogViewState internal constructor(
     override val icon: Int,
     override val name: CharSequence,
-    val changeLog: List<ChangeLogLine>,
+    val skuList: List<BillingSku>,
+    val error: Throwable?
 ) : AppState
 
-internal sealed class ChangeLogDialogViewEvent : UiViewEvent {
+internal sealed class BillingDialogViewEvent : UiViewEvent {
 
-    object Close : ChangeLogDialogViewEvent()
+    object Close : BillingDialogViewEvent()
+
+    data class Purchase internal constructor(
+        val index: Int
+    ) : BillingDialogViewEvent()
 }
 
-internal sealed class ChangeLogDialogControllerEvent : UiControllerEvent {
+internal sealed class BillingDialogControllerEvent : UiControllerEvent {
 
-    object Close : ChangeLogDialogControllerEvent()
+    object Close : BillingDialogControllerEvent()
+
+    data class LaunchPurchase internal constructor(
+        val sku: BillingSku
+    ) : BillingDialogControllerEvent()
+
 }

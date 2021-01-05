@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
+import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
@@ -77,7 +78,11 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         if (xmlResId != 0) {
             addPreferencesFromResource(xmlResId)
         }
-        addPreferencesFromResource(R.xml.pydroid)
+
+        addPreferencesFromResource(R.xml.settings)
+        addPreferencesFromResource(R.xml.support)
+        addPreferencesFromResource(R.xml.ad)
+        addPreferencesFromResource(R.xml.social)
     }
 
     @CallSuper
@@ -112,12 +117,18 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
                 is AppSettingsControllerEvent.OpenShowUpgrade -> changeLogViewModel.show(true)
                 is AppSettingsControllerEvent.ChangeDarkTheme -> darkThemeChanged(it.newMode)
                 is AppSettingsControllerEvent.OpenOtherAppsPage -> openOtherAppsPage(it.apps)
+                is AppSettingsControllerEvent.OpenDonation -> openDonationDialog()
             }
         }
 
         settingsViewModel.syncDarkThemeState(requireActivity())
 
         setupPreferenceListView()
+    }
+
+    private fun openDonationDialog() {
+        Timber.d("Launch donation dialog")
+        BillingDialog.open(requireActivity())
     }
 
     private fun openPlayStore() {

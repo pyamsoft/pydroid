@@ -25,16 +25,7 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.PrefUiView
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEventBus
-import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEvents.ViewPrivacyPolicy
-import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEvents.ViewTermsAndConditions
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.CheckUpgrade
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.ClearData
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.Hyperlink
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.MoreApps
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.RateApp
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.ShowUpgrade
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.ToggleDarkTheme
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent.ViewLicense
+import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyEvents
 import com.pyamsoft.pydroid.util.hyperlink
 import com.pyamsoft.pydroid.util.tintWith
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +57,7 @@ internal class AppSettingsView internal constructor(
     private val theme by boundPref<ListPreference>(R.string.dark_mode_key)
     private val privacyPolicy by boundPref<Preference>(R.string.view_privacy_key)
     private val termsConditions by boundPref<Preference>(R.string.view_terms_key)
+    private val donate by boundPref<Preference>(R.string.donate_key)
     private val applicationGroup by boundPref<Preference>("application_settings")
 
     init {
@@ -85,6 +77,7 @@ internal class AppSettingsView internal constructor(
             setupSocial()
             setupPrivacyPolicy()
             setupTermsConditions()
+            setupDonate()
         }
 
         doOnTeardown {
@@ -101,6 +94,7 @@ internal class AppSettingsView internal constructor(
             theme.onPreferenceClickListener = null
             privacyPolicy.onPreferenceClickListener = null
             termsConditions.onPreferenceClickListener = null
+            donate.onPreferenceClickListener = null
 
             self.preferenceScreen = null
         }
@@ -138,10 +132,17 @@ internal class AppSettingsView internal constructor(
         }
     }
 
+    private fun setupDonate() {
+        donate.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            publish(AppSettingsViewEvent.ShowDonate)
+            return@OnPreferenceClickListener true
+        }
+    }
+
     private fun setupPrivacyPolicy() {
         privacyPolicy.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             viewScope.launch(context = Dispatchers.Default) {
-                PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
+                PrivacyEventBus.send(PrivacyEvents.ViewPrivacyPolicy(privacyPolicyUrl))
             }
             return@OnPreferenceClickListener true
         }
@@ -150,7 +151,7 @@ internal class AppSettingsView internal constructor(
     private fun setupTermsConditions() {
         termsConditions.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             viewScope.launch(context = Dispatchers.Default) {
-                PrivacyEventBus.send(ViewTermsAndConditions(termsConditionsUrl))
+                PrivacyEventBus.send(PrivacyEvents.ViewTermsAndConditions(termsConditionsUrl))
             }
             return@OnPreferenceClickListener true
         }
@@ -159,14 +160,14 @@ internal class AppSettingsView internal constructor(
     private fun setupViewSource() {
         val sourceLink = viewSourceUrl.hyperlink(viewSource.context)
         viewSource.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(Hyperlink(sourceLink))
+            publish(AppSettingsViewEvent.Hyperlink(sourceLink))
             return@OnPreferenceClickListener true
         }
     }
 
     private fun setupMoreApps() {
         moreApps.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(MoreApps)
+            publish(AppSettingsViewEvent.MoreApps)
             return@OnPreferenceClickListener true
         }
     }
@@ -174,7 +175,7 @@ internal class AppSettingsView internal constructor(
     private fun setupSocial() {
         val socialLink = FACEBOOK.hyperlink(social.context)
         social.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(Hyperlink(socialLink))
+            publish(AppSettingsViewEvent.Hyperlink(socialLink))
             return@OnPreferenceClickListener true
         }
     }
@@ -182,14 +183,14 @@ internal class AppSettingsView internal constructor(
     private fun setupBlog() {
         val blogLink = BLOG.hyperlink(followBlog.context)
         followBlog.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(Hyperlink(blogLink))
+            publish(AppSettingsViewEvent.Hyperlink(blogLink))
             return@OnPreferenceClickListener true
         }
     }
 
     private fun setupRateApp() {
         rate.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(RateApp)
+            publish(AppSettingsViewEvent.RateApp)
             return@OnPreferenceClickListener true
         }
     }
@@ -197,21 +198,21 @@ internal class AppSettingsView internal constructor(
     private fun setupBugReport() {
         val reportLink = bugReportUrl.hyperlink(bugReport.context)
         bugReport.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(Hyperlink(reportLink))
+            publish(AppSettingsViewEvent.Hyperlink(reportLink))
             return@OnPreferenceClickListener true
         }
     }
 
     private fun setupLicenses() {
         licenses.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(ViewLicense)
+            publish(AppSettingsViewEvent.ViewLicense)
             return@OnPreferenceClickListener true
         }
     }
 
     private fun setupCheckUpgrade() {
         version.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-            publish(CheckUpgrade)
+            publish(AppSettingsViewEvent.CheckUpgrade)
             return@OnPreferenceClickListener true
         }
     }
@@ -221,7 +222,7 @@ internal class AppSettingsView internal constructor(
             clearAll.isVisible = false
         } else {
             clearAll.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                publish(ClearData)
+                publish(AppSettingsViewEvent.ClearData)
                 return@OnPreferenceClickListener true
             }
         }
@@ -232,7 +233,7 @@ internal class AppSettingsView internal constructor(
             upgradeInfo.isVisible = false
         } else {
             upgradeInfo.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                publish(ShowUpgrade)
+                publish(AppSettingsViewEvent.ShowUpgrade)
                 return@OnPreferenceClickListener true
             }
         }
@@ -241,7 +242,7 @@ internal class AppSettingsView internal constructor(
     private fun setupDarkTheme() {
         theme.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             if (newValue is String) {
-                publish(ToggleDarkTheme(newValue))
+                publish(AppSettingsViewEvent.ToggleDarkTheme(newValue))
                 return@OnPreferenceChangeListener true
             }
             return@OnPreferenceChangeListener false

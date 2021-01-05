@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.internal.rating.RatingView
@@ -88,7 +89,7 @@ abstract class RatingActivity : VersionCheckActivity() {
 
         // Enforce that we do this on the Main thread
         lifecycleScope.launch(context = Dispatchers.Main) {
-            if (ChangeLogDialog.isNotShown(activity)) {
+            if (ChangeLogDialog.isNotShown(activity) && BillingDialog.isNotShown(activity)) {
                 try {
                     launcher.rate(activity)
                 } catch (throwable: Throwable) {

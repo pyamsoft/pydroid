@@ -24,14 +24,39 @@ import androidx.annotation.CheckResult
  */
 public class BillingModule(params: Parameters) {
 
-    private val impl: BillingInteractor = PlayStoreBillingInteractor(params.activity)
+    private val interactor: BillingInteractor
+    private val purchase: BillingPurchase
+    private val connector: BillingConnector
+
+    init {
+        val impl = PlayStoreBillingInteractor(params.activity)
+        interactor = impl
+        purchase = impl
+        connector = impl
+    }
 
     /**
      * Provide a billing instance
      */
     @CheckResult
     public fun provideInteractor(): BillingInteractor {
-        return impl
+        return interactor
+    }
+
+    /**
+     * Provide a purchase instance
+     */
+    @CheckResult
+    public fun providePurchase(): BillingPurchase {
+        return purchase
+    }
+
+    /**
+     * Provide a connector instance
+     */
+    @CheckResult
+    public fun provideConnector(): BillingConnector {
+        return connector
     }
 
     /**

@@ -12,7 +12,6 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.SkuDetailsParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -24,11 +23,13 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class PlayStoreBillingInteractor internal constructor(
-    activity: Activity
+    activity: Activity,
 ) : BillingInteractor,
-    PurchasesUpdatedListener,
+    BillingConnector,
     BillingClientStateListener,
-    ConsumeResponseListener {
+    ConsumeResponseListener,
+    BillingPurchase,
+    PurchasesUpdatedListener {
 
     private val client by lazy {
         BillingClient.newBuilder(activity)
@@ -57,62 +58,11 @@ internal class PlayStoreBillingInteractor internal constructor(
         )
     }
 
-    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
-        if (result.isOk()) {
-            if (purchases != null) {
-                Timber.d("Purchase succeeded! $purchases")
-                handlePurchases(purchases)
-            } else {
-                Timber.w("Purchase list was null!")
-            }
-        } else {
-            if (result.isUserCancelled()) {
-                Timber.d("User has cancelled purchase flow.")
-            } else {
-                Timber.w("Purchase response not OK: ${result.debugMessage}")
-                billingScope.launch(context = Dispatchers.IO) {
-                    errorBus.emit(BillingError(result.debugMessage))
-                }
-            }
-        }
-    }
-
-    override fun watchErrors(onErrorReceived: (BillingError) -> Unit) {
-        billingScope.launch(context = Dispatchers.IO) {
-            errorBus.collect {
-                withContext(context = Dispatchers.Main) {
-                    onErrorReceived(it)
-                }
-            }
-        }
-    }
-
-    private fun handlePurchases(purchases: List<Purchase>) {
-        for (purchase in purchases) {
-            Timber.d("Consume purchase: $purchase")
-            val params = ConsumeParams
-                .newBuilder()
-                .setPurchaseToken(purchase.purchaseToken)
-                .build()
-            client.consumeAsync(params, this)
-        }
-    }
-
-    override fun onConsumeResponse(result: BillingResult, token: String) {
-        if (result.isOk()) {
-            Timber.d("Purchase consumed $token")
-        } else {
-            Timber.w("Consume response not OK: ${result.debugMessage}")
-        }
-    }
-
     override fun connect() {
         val self = this
-        billingScope.launch(context = Dispatchers.Main) {
-            if (!client.isReady) {
-                Timber.d("Connect to Billing Client")
-                client.startConnection(self)
-            }
+        if (!client.isReady) {
+            Timber.d("Connect to Billing Client")
+            client.startConnection(self)
         }
     }
 
@@ -126,7 +76,6 @@ internal class PlayStoreBillingInteractor internal constructor(
         }
     }
 
-    @ExperimentalCoroutinesApi
     override fun onBillingSetupFinished(result: BillingResult) {
         if (result.isOk()) {
             Timber.d("Billing client is ready, query products!")
@@ -154,29 +103,10 @@ internal class PlayStoreBillingInteractor internal constructor(
         }
     }
 
-    override fun watchSkuList(onSkuListReceived: (List<BillingSku>) -> Unit) {
-        billingScope.launch(context = Dispatchers.IO) {
-            skuFlow.collect { list ->
-                withContext(context = Dispatchers.Main) {
-                    onSkuListReceived(list)
-                }
-            }
+    override suspend fun watchSkuList(onSkuListReceived: (List<BillingSku>) -> Unit) =
+        withContext(context = Dispatchers.IO) {
+            skuFlow.collect { onSkuListReceived(it) }
         }
-    }
-
-    override fun purchase(activity: Activity, sku: BillingSku) {
-        billingScope.launch(context = Dispatchers.Default) {
-            val billingSku = sku as PlayBillingSku
-            val params = BillingFlowParams.newBuilder()
-                .setSkuDetails(billingSku.sku)
-                .build()
-
-            withContext(context = Dispatchers.Main) {
-                Timber.d("Launch purchase flow ${sku.id}")
-                client.launchBillingFlow(activity, params)
-            }
-        }
-    }
 
     override fun onBillingServiceDisconnected() {
         Timber.e("Billing client was disconnected!")
@@ -190,6 +120,65 @@ internal class PlayStoreBillingInteractor internal constructor(
 
             Timber.d("Try connecting again")
             connect()
+        }
+    }
+
+    override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
+        if (result.isOk()) {
+            if (purchases != null) {
+                Timber.d("Purchase succeeded! $purchases")
+                handlePurchases(purchases)
+            } else {
+                Timber.w("Purchase list was null!")
+            }
+        } else {
+            if (result.isUserCancelled()) {
+                Timber.d("User has cancelled purchase flow.")
+            } else {
+                Timber.w("Purchase response not OK: ${result.debugMessage}")
+                errorBus.tryEmit(BillingError(result.debugMessage))
+            }
+        }
+    }
+
+    override suspend fun purchase(activity: Activity, sku: BillingSku): Unit =
+        withContext(context = Dispatchers.Default) {
+            val billingSku = sku as PlayBillingSku
+            val params = BillingFlowParams.newBuilder()
+                .setSkuDetails(billingSku.sku)
+                .build()
+
+            withContext(context = Dispatchers.Main) {
+                Timber.d("Launch purchase flow ${sku.id}")
+                client.launchBillingFlow(activity, params)
+            }
+        }
+
+    override suspend fun watchErrors(onErrorReceived: (BillingError) -> Unit) =
+        withContext(context = Dispatchers.IO) {
+            errorBus.collect {
+                withContext(context = Dispatchers.Main) {
+                    onErrorReceived(it)
+                }
+            }
+        }
+
+    private fun handlePurchases(purchases: List<Purchase>) {
+        for (purchase in purchases) {
+            Timber.d("Consume purchase: $purchase")
+            val params = ConsumeParams
+                .newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+            client.consumeAsync(params, this)
+        }
+    }
+
+    override fun onConsumeResponse(result: BillingResult, token: String) {
+        if (result.isOk()) {
+            Timber.d("Purchase consumed $token")
+        } else {
+            Timber.w("Consume response not OK: ${result.debugMessage}")
         }
     }
 }

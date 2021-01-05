@@ -59,6 +59,7 @@ internal class AppSettingsViewModel internal constructor(
             is AppSettingsViewEvent.ShowUpgrade -> publish(AppSettingsControllerEvent.OpenShowUpgrade)
             is AppSettingsViewEvent.ToggleDarkTheme -> changeDarkMode(event.mode)
             is AppSettingsViewEvent.Hyperlink -> publish(AppSettingsControllerEvent.Navigate(event.hyperlinkIntent))
+            is AppSettingsViewEvent.ShowDonate -> publish(AppSettingsControllerEvent.OpenDonation)
         }
     }
 

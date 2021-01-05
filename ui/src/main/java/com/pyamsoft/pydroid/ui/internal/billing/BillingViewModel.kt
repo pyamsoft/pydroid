@@ -1,0 +1,81 @@
+/*
+ * Copyright 2020 Peter Kenji Yamanaka
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.pyamsoft.pydroid.ui.internal.billing
+
+import androidx.lifecycle.viewModelScope
+import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.billing.BillingError
+import com.pyamsoft.pydroid.billing.BillingInteractor
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
+
+internal class BillingViewModel internal constructor(
+    private val changeLogInteractor: ChangeLogInteractor,
+    private val interactor: BillingInteractor,
+    provider: ChangeLogProvider,
+) : UiViewModel<BillingDialogViewState, BillingDialogViewEvent, BillingDialogControllerEvent>(
+    initialState = BillingDialogViewState(
+        skuList = emptyList(),
+        error = null,
+        icon = 0,
+        name = "",
+    )
+) {
+
+    init {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            val displayName = changeLogInteractor.getDisplayName(provider.changeLogPackageName)
+            setState {
+                copy(
+                    name = displayName,
+                    icon = provider.applicationIcon,
+                )
+            }
+        }
+
+        viewModelScope.launch(context = Dispatchers.Default) {
+            interactor.watchSkuList { list ->
+                Timber.d("SKU list updated: $list")
+                setState { copy(skuList = list) }
+            }
+        }
+    }
+
+    override fun handleViewEvent(event: BillingDialogViewEvent) {
+        return when (event) {
+            is BillingDialogViewEvent.Close -> publish(BillingDialogControllerEvent.Close)
+            is BillingDialogViewEvent.Purchase -> purchase(event.index)
+        }
+    }
+
+    private fun purchase(index: Int) {
+        val skuList = state.skuList
+        if (skuList.isEmpty() || skuList.size <= index) {
+            Timber.e("SKU index out of bounds: $index ${skuList.size}")
+            setState { copy(error = BillingError("Unable to purchase in-app item")) }
+            return
+        }
+
+        val sku = skuList[index]
+        publish(BillingDialogControllerEvent.LaunchPurchase(sku))
+    }
+
+}
+

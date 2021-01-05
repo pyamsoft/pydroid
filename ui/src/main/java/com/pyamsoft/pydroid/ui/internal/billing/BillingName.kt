@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog.dialog
+package com.pyamsoft.pydroid.ui.internal.billing
 
-import android.widget.ImageView
-import com.pyamsoft.pydroid.loader.ImageLoader
-import com.pyamsoft.pydroid.ui.internal.app.AppIcon
+import android.view.ViewGroup
+import com.pyamsoft.pydroid.ui.internal.app.AppName
 
-internal class ChangeLogIcon internal constructor(
-    imageLoader: ImageLoader,
-    icon: ImageView
-) : AppIcon<ChangeLogDialogViewState>(imageLoader, icon)
+internal class BillingName internal constructor(
+    parent: ViewGroup
+) : AppName<BillingDialogViewState>(parent)

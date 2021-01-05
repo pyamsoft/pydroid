@@ -23,9 +23,14 @@ import androidx.appcompat.widget.Toolbar
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 
-abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider {
+abstract class ActivityBase constructor(
+) : AppCompatActivity(),
+    ToolbarActivity,
+    ToolbarActivityProvider,
+    AppProvider {
 
     /**
      * The activity scoped component graph for the BillingDialog
@@ -46,6 +51,9 @@ abstract class ActivityBase : AppCompatActivity(), ToolbarActivity, ToolbarActiv
      * Activity level toolbar, similar to ActionBar
      */
     private var capturedToolbar: Toolbar? = null
+
+    final override val applicationPackageName: String
+        get() = requireNotNull(packageName)
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {

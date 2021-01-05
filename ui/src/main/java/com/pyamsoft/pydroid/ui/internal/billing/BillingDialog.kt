@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
 import com.pyamsoft.pydroid.ui.util.show
 import kotlinx.coroutines.Dispatchers
@@ -48,8 +48,8 @@ internal class BillingDialog : IconDialog() {
     private val viewModel by viewModelFactory<BillingViewModel>(activity = true) { factory }
 
     @CheckResult
-    private fun getChangelogProvider(): ChangeLogProvider {
-        return requireActivity() as ChangeLogProvider
+    private fun getApplicationProvider(): AppProvider {
+        return requireActivity() as AppProvider
     }
 
     override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ internal class BillingDialog : IconDialog() {
             .create(
                 binding.dialogRoot,
                 binding.changelogIcon,
-                getChangelogProvider(),
+                getApplicationProvider(),
             )
             .inject(this)
 

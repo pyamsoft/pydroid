@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.ActivityBase
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
+import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 
 internal interface BillingComponent {
 
@@ -44,7 +44,7 @@ internal interface BillingComponent {
             fun create(
                 parent: ViewGroup,
                 imageView: ImageView,
-                provider: ChangeLogProvider,
+                provider: AppProvider,
             ): DialogComponent
         }
 
@@ -53,7 +53,7 @@ internal interface BillingComponent {
             private val params: BillingComponent.Factory.Parameters,
             private val imageView: ImageView,
             private val parent: ViewGroup,
-            provider: ChangeLogProvider,
+            provider: AppProvider,
         ) : DialogComponent {
 
             private val factory = onlyFactory {
@@ -75,7 +75,7 @@ internal interface BillingComponent {
                 override fun create(
                     parent: ViewGroup,
                     imageView: ImageView,
-                    provider: ChangeLogProvider,
+                    provider: AppProvider,
                 ): DialogComponent {
                     return Impl(module, params, imageView, parent, provider)
                 }

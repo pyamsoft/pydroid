@@ -14,43 +14,47 @@
   ~ limitations under the License.
   -->
 
-<androidx.preference.PreferenceCategory xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:key="@string/support_pyamsoft"
-    android:title="@string/support_pyamsoft">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/rating_key"
-        android:summary="@string/rating_summary"
-        app:iconCompat="@drawable/ic_star_24dp" />
+    <androidx.preference.PreferenceCategory
+        android:key="@string/support_pyamsoft"
+        android:title="@string/support_pyamsoft">
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/donate_key"
-        android:summary="@string/donate_summary"
-        app:iconCompat="@drawable/ic_gift_24dp" />
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/rating_key"
+            android:summary="@string/rating_summary"
+            app:iconCompat="@drawable/ic_star_24dp" />
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/bugreport_key"
-        android:summary="@string/bugreport_summary"
-        android:title="@string/bugreport_title"
-        app:iconCompat="@drawable/ic_bug_report_24dp" />
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/donate_key"
+            android:summary="@string/donate_summary"
+            app:iconCompat="@drawable/ic_gift_24dp" />
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/view_source_key"
-        android:summary="@string/view_source_summary"
-        android:title="@string/view_source_title"
-        app:iconCompat="@drawable/ic_code_24dp" />
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/bugreport_key"
+            android:summary="@string/bugreport_summary"
+            android:title="@string/bugreport_title"
+            app:iconCompat="@drawable/ic_bug_report_24dp" />
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/view_privacy_key"
-        android:summary="@string/view_privacy_summary"
-        android:title="@string/view_privacy_title"
-        app:iconCompat="@drawable/ic_policy_24dp" />
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/view_source_key"
+            android:summary="@string/view_source_summary"
+            android:title="@string/view_source_title"
+            app:iconCompat="@drawable/ic_code_24dp" />
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/view_terms_key"
-        android:summary="@string/view_terms_summary"
-        android:title="@string/view_terms_title"
-        app:iconCompat="@drawable/ic_terms_24dp" />
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/view_privacy_key"
+            android:summary="@string/view_privacy_summary"
+            android:title="@string/view_privacy_title"
+            app:iconCompat="@drawable/ic_policy_24dp" />
 
-</androidx.preference.PreferenceCategory>
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/view_terms_key"
+            android:summary="@string/view_terms_summary"
+            android:title="@string/view_terms_title"
+            app:iconCompat="@drawable/ic_terms_24dp" />
+
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

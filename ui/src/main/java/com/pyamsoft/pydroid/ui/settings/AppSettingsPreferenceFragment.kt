@@ -45,7 +45,6 @@ import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
-import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import timber.log.Timber
 
 abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
@@ -122,8 +121,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         }
 
         settingsViewModel.syncDarkThemeState(requireActivity())
-
-        setupPreferenceListView()
     }
 
     private fun openDonationDialog() {
@@ -133,16 +130,6 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
     private fun openPlayStore() {
         MarketLinker.openAppPage(requireContext()).handleNavigation()
-    }
-
-    private fun setupPreferenceListView() {
-        val list = listView ?: return
-        list.isHorizontalScrollBarEnabled = false
-        list.isVerticalScrollBarEnabled = false
-
-        FastScrollerBuilder(list)
-            .useMd2Style()
-            .build()
     }
 
     private fun openOtherAppsPage(apps: List<OtherApp>) {

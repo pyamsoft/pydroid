@@ -15,18 +15,22 @@
   -->
 
 
-<androidx.preference.PreferenceCategory xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="@string/follow_pyamsoft_around_the_web"
-    android:title="@string/follow_pyamsoft_around_the_web">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/social_media_f_key"
-        android:summary="@string/social_media_f_summary"
-        android:title="@string/social_media_f_title" />
+    <androidx.preference.PreferenceCategory
+        android:key="@string/follow_pyamsoft_around_the_web"
+        android:title="@string/follow_pyamsoft_around_the_web">
 
-    <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
-        android:key="@string/social_media_b_key"
-        android:summary="@string/social_media_b_summary"
-        android:title="@string/social_media_b_title" />
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/social_media_f_key"
+            android:summary="@string/social_media_f_summary"
+            android:title="@string/social_media_f_title" />
 
-</androidx.preference.PreferenceCategory>
+        <com.pyamsoft.pydroid.ui.preference.PreferenceCompat
+            android:key="@string/social_media_b_key"
+            android:summary="@string/social_media_b_summary"
+            android:title="@string/social_media_b_title" />
+
+    </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

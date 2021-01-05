@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +30,7 @@ import timber.log.Timber
 internal class BillingViewModel internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
-    provider: ChangeLogProvider,
+    provider: AppProvider,
 ) : UiViewModel<BillingDialogViewState, BillingDialogViewEvent, BillingDialogControllerEvent>(
     initialState = BillingDialogViewState(
         skuList = emptyList(),
@@ -41,7 +42,7 @@ internal class BillingViewModel internal constructor(
 
     init {
         viewModelScope.launch(context = Dispatchers.Default) {
-            val displayName = changeLogInteractor.getDisplayName(provider.changeLogPackageName)
+            val displayName = changeLogInteractor.getDisplayName(provider.applicationPackageName)
             setState {
                 copy(
                     name = displayName,

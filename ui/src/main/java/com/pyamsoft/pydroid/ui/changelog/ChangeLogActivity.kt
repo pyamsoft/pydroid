@@ -40,9 +40,6 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
 
     protected abstract val versionName: String
 
-    final override val changeLogPackageName: String
-        get() = requireNotNull(packageName)
-
     @CheckResult
     private fun Int.validate(what: String): Int {
         return this.also { require(it != INVALID) { "Value for $what is: $it" } }

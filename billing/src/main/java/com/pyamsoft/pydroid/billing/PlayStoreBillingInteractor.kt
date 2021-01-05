@@ -66,12 +66,9 @@ internal class PlayStoreBillingInteractor internal constructor(
     }
 
     override fun disconnect() {
-        if (client.isReady) {
-            Timber.d("Disconnect from billing client")
-            client.endConnection()
-        }
+        Timber.d("Disconnect from billing client")
+        client.endConnection()
 
-        Timber.d("Cancel billing scope")
         billingScope.cancel()
     }
 

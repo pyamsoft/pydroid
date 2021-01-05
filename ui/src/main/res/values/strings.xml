@@ -33,7 +33,9 @@
     <string name="follow_pyamsoft_around_the_web">Follow pyamsoft around the web</string>
     <string name="open_store">Play Store</string>
     <string name="view_source">Source Code</string>
-    <string name="ad_badge">AD</string>
     <string name="close">Close</string>
+
+    <string name="ad_badge">AD</string>
+    <string name="in_app_badge">IN-APP</string>
 
 </resources>

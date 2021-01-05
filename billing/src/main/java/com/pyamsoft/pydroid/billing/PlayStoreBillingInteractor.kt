@@ -59,10 +59,9 @@ internal class PlayStoreBillingInteractor internal constructor(
     }
 
     override fun connect() {
-        val self = this
         if (!client.isReady) {
             Timber.d("Connect to Billing Client")
-            client.startConnection(self)
+            client.startConnection(this)
         }
     }
 
@@ -70,15 +69,19 @@ internal class PlayStoreBillingInteractor internal constructor(
         if (client.isReady) {
             Timber.d("Disconnect from billing client")
             client.endConnection()
-
-            billingScope.cancel()
-            backoffCount = 1
         }
+
+        Timber.d("Cancel billing scope")
+        billingScope.cancel()
     }
 
     override fun onBillingSetupFinished(result: BillingResult) {
         if (result.isOk()) {
             Timber.d("Billing client is ready, query products!")
+
+            // Reset the backoff to 1
+            backoffCount = 1
+
             querySkus()
         } else {
             Timber.w("Billing setup not OK: ${result.debugMessage}")

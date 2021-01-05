@@ -35,7 +35,8 @@
     <string name="rating_key">rate_application</string>
     <string name="rating_summary">Liking the App? Leave a Review!</string>
 
-    <string name="donate_key">donate_applicatiojn</string>
+    <string name="donate_key">donate_application</string>
+    <string name="donate_title">Donate</string>
     <string name="donate_summary">Support pyamsoft with a one-time donation!</string>
 
     <string name="bugreport_key">bugreport</string>

@@ -1,6 +1,7 @@
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.billing.store
 
 import com.android.billingclient.api.SkuDetails
+import com.pyamsoft.pydroid.billing.BillingSku
 
 internal data class PlayBillingSku internal constructor(
     internal val sku: SkuDetails

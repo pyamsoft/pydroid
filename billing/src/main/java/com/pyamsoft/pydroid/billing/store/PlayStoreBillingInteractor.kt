@@ -1,4 +1,4 @@
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.billing.store
 
 import android.app.Activity
 import com.android.billingclient.api.BillingClient
@@ -8,6 +8,11 @@ import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsParams
+import com.pyamsoft.pydroid.billing.BillingConnector
+import com.pyamsoft.pydroid.billing.BillingError
+import com.pyamsoft.pydroid.billing.BillingInteractor
+import com.pyamsoft.pydroid.billing.BillingPurchase
+import com.pyamsoft.pydroid.billing.BillingSku
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -19,18 +24,18 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.lang.ref.WeakReference
 
 internal class PlayStoreBillingInteractor internal constructor(
     activity: Activity,
 ) : BillingInteractor,
     BillingConnector,
-    BillingPurchase, PlayStoreListeners {
+    BillingPurchase,
+    PlayStoreListeners {
 
     private val listeners = LeakProofListener(this)
 
     private val client by lazy {
-        BillingClient.newBuilder(activity)
+        BillingClient.newBuilder(activity.applicationContext)
             .setListener(listeners)
             .enablePendingPurchases()
             .build()
@@ -170,7 +175,7 @@ internal class PlayStoreBillingInteractor internal constructor(
                 .newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
                 .build()
-            client.consumeAsync(params, this)
+            client.consumeAsync(params, listeners)
         }
     }
 
@@ -183,44 +188,4 @@ internal class PlayStoreBillingInteractor internal constructor(
     }
 
 
-    private class LeakProofListener(listeners: PlayStoreListeners) : PlayStoreListeners {
-
-        // Keep a reference to the actual listener as a weak reference.
-        // https://stackoverflow.com/questions/65180072/android-billing-client-causes-memory-leak
-        private val ref = WeakReference(listeners)
-
-        private inline fun withRef(block: (PlayStoreListeners) -> Unit) {
-            ref.get().let { strong ->
-                if (strong == null) {
-                    Timber.w("WeakReference for Play Store Listeners was requested, but was null!")
-                } else {
-                    block(strong)
-                }
-            }
-        }
-
-        override fun onBillingSetupFinished(result: BillingResult) {
-            withRef { it.onBillingSetupFinished(result) }
-        }
-
-        override fun onBillingServiceDisconnected() {
-            withRef { it.onBillingServiceDisconnected() }
-        }
-
-        override fun onConsumeResponse(result: BillingResult, token: String) {
-            withRef { it.onConsumeResponse(result, token) }
-        }
-
-        override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
-            withRef { it.onPurchasesUpdated(result, purchases) }
-        }
-
-        override fun onSkuDetailsResponse(
-            result: BillingResult,
-            skuDetails: MutableList<SkuDetails>?
-        ) {
-            withRef { it.onSkuDetailsResponse(result, skuDetails) }
-        }
-
-    }
 }

@@ -44,13 +44,13 @@ internal class PlayStoreAppUpdater internal constructor(
 
     private val manager by lazy {
         if (isFake) {
-            FakeAppUpdateManager(activity).apply {
+            FakeAppUpdateManager(activity.applicationContext).apply {
                 if (isFakeUpgradeAvailable) {
                     setUpdateAvailable(version + 1)
                 }
             }
         } else {
-            AppUpdateManagerFactory.create(activity)
+            AppUpdateManagerFactory.create(activity.applicationContext)
         }
     }
 

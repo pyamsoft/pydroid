@@ -38,9 +38,9 @@ internal class PlayStoreRateMyApp internal constructor(
 
     private val manager by lazy {
         if (isFake) {
-            FakeReviewManager(activity)
+            FakeReviewManager(activity.applicationContext)
         } else {
-            ReviewManagerFactory.create(activity)
+            ReviewManagerFactory.create(activity.applicationContext)
         }
     }
 

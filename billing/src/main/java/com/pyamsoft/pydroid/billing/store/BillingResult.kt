@@ -1,4 +1,4 @@
-package com.pyamsoft.pydroid.billing
+package com.pyamsoft.pydroid.billing.store
 
 import androidx.annotation.CheckResult
 import com.android.billingclient.api.BillingClient

@@ -16,11 +16,14 @@ import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingPurchase
+import com.pyamsoft.pydroid.billing.BillingPurchaseListener
 import com.pyamsoft.pydroid.billing.BillingSku
+import com.pyamsoft.pydroid.billing.BillingState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +37,7 @@ internal class PlayStoreBillingInteractor internal constructor(
 ) : BillingInteractor,
     BillingConnector,
     BillingPurchase,
+    BillingPurchaseListener,
     BillingClientStateListener,
     SkuDetailsResponseListener,
     ConsumeResponseListener,
@@ -48,7 +52,7 @@ internal class PlayStoreBillingInteractor internal constructor(
 
     private val appSkuList: List<String>
 
-    private val skuFlow = MutableStateFlow<List<BillingSku>>(emptyList())
+    private val skuFlow = MutableStateFlow(State(BillingState.LOADING, emptyList()))
 
     private val errorBus = MutableSharedFlow<BillingError>()
 
@@ -90,6 +94,7 @@ internal class PlayStoreBillingInteractor internal constructor(
             querySkus()
         } else {
             Timber.w("Billing setup not OK: ${result.debugMessage}")
+            skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
         }
     }
 
@@ -103,19 +108,21 @@ internal class PlayStoreBillingInteractor internal constructor(
     }
 
     override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {
+
         if (result.isOk()) {
             billingScope.launch(context = Dispatchers.IO) {
                 val skuList = skuDetails?.map { PlayBillingSku(it) } ?: emptyList()
-                skuFlow.value = skuList
+                skuFlow.value = State(BillingState.CONNECTED, skuList)
             }
         } else {
             Timber.w("SKU response not OK: ${result.debugMessage}")
+            skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
         }
     }
 
-    override suspend fun watchSkuList(onSkuListReceived: (List<BillingSku>) -> Unit) =
+    override suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit) =
         withContext(context = Dispatchers.IO) {
-            skuFlow.collect { onSkuListReceived(it) }
+            skuFlow.collect { event -> onSkuListReceived(event.state, event.list) }
         }
 
     override fun onBillingServiceDisconnected() {
@@ -192,5 +199,8 @@ internal class PlayStoreBillingInteractor internal constructor(
         }
     }
 
-
+    private data class State constructor(
+        val state: BillingState,
+        val list: List<BillingSku>
+    )
 }

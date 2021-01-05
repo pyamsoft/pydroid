@@ -59,6 +59,7 @@ internal class BillingDialog : IconDialog() {
             .plusDialog()
             .create(
                 binding.dialogRoot,
+                viewLifecycleOwner,
                 binding.changelogIcon,
                 getApplicationProvider(),
             )

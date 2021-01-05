@@ -20,6 +20,7 @@ import android.app.Activity
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.CheckResult
+import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.onlyFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
@@ -43,6 +44,7 @@ internal interface BillingComponent {
             @CheckResult
             fun create(
                 parent: ViewGroup,
+                owner: LifecycleOwner,
                 imageView: ImageView,
                 provider: AppProvider,
             ): DialogComponent
@@ -51,13 +53,19 @@ internal interface BillingComponent {
         class Impl private constructor(
             private val module: BillingModule,
             private val params: BillingComponent.Factory.Parameters,
+            private val owner: LifecycleOwner,
             private val imageView: ImageView,
             private val parent: ViewGroup,
             provider: AppProvider,
         ) : DialogComponent {
 
             private val factory = onlyFactory {
-                BillingViewModel(params.interactor, module.provideInteractor(), provider)
+                BillingViewModel(
+                    params.interactor,
+                    module.provideListener(),
+                    module.provideInteractor(),
+                    provider
+                )
             }
 
             override fun inject(dialog: BillingDialog) {
@@ -65,7 +73,7 @@ internal interface BillingComponent {
                 dialog.factory = factory
 
                 dialog.iconView = BillingIcon(params.imageLoader, imageView)
-                dialog.listView = BillingList(parent)
+                dialog.listView = BillingList(owner, parent)
                 dialog.closeView = BillingClose(parent)
                 dialog.nameView = BillingName(parent)
             }
@@ -77,10 +85,11 @@ internal interface BillingComponent {
 
                 override fun create(
                     parent: ViewGroup,
+                    owner: LifecycleOwner,
                     imageView: ImageView,
                     provider: AppProvider,
                 ): DialogComponent {
-                    return Impl(module, params, imageView, parent, provider)
+                    return Impl(module, params, owner, imageView, parent, provider)
                 }
             }
 

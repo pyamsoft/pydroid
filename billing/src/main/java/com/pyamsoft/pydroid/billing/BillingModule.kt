@@ -28,12 +28,14 @@ public class BillingModule(params: Parameters) {
     private val interactor: BillingInteractor
     private val purchase: BillingPurchase
     private val connector: BillingConnector
+    private val listener: BillingPurchaseListener
 
     init {
         val impl = PlayStoreBillingInteractor(params.activity)
         interactor = impl
         purchase = impl
         connector = impl
+        listener = impl
     }
 
     /**
@@ -58,6 +60,14 @@ public class BillingModule(params: Parameters) {
     @CheckResult
     public fun provideConnector(): BillingConnector {
         return connector
+    }
+
+    /**
+     * Provide a listener instance
+     */
+    @CheckResult
+    public fun provideListener(): BillingPurchaseListener {
+        return listener
     }
 
     /**

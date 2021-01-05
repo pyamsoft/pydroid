@@ -8,11 +8,6 @@ import android.app.Activity
 public interface BillingPurchase {
 
     /**
-     * Watch for errors in the billing client
-     */
-    public suspend fun watchErrors(onErrorReceived: (BillingError) -> Unit)
-
-    /**
      * Purchase an in-app item
      */
     public suspend fun purchase(activity: Activity, sku: BillingSku)

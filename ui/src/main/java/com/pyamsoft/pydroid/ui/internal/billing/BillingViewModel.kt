@@ -20,20 +20,23 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
+import com.pyamsoft.pydroid.billing.BillingPurchaseListener
+import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
-import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class BillingViewModel internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
+    private val listener: BillingPurchaseListener,
     private val interactor: BillingInteractor,
     provider: AppProvider,
 ) : UiViewModel<BillingDialogViewState, BillingDialogViewEvent, BillingDialogControllerEvent>(
     initialState = BillingDialogViewState(
         skuList = emptyList(),
+        connected = BillingState.LOADING,
         error = null,
         icon = 0,
         name = "",
@@ -52,9 +55,21 @@ internal class BillingViewModel internal constructor(
         }
 
         viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.watchSkuList { list ->
-                Timber.d("SKU list updated: $list")
-                setState { copy(skuList = list) }
+            interactor.watchSkuList { connected, list ->
+                Timber.d("SKU list updated: $connected $list")
+                setState {
+                    copy(
+                        connected = connected,
+                        skuList = list,
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch(context = Dispatchers.Default) {
+            listener.watchErrors { error ->
+                Timber.e(error, "Billing error received")
+                setState { copy(error = error) }
             }
         }
     }
@@ -63,6 +78,7 @@ internal class BillingViewModel internal constructor(
         return when (event) {
             is BillingDialogViewEvent.Close -> publish(BillingDialogControllerEvent.Close)
             is BillingDialogViewEvent.Purchase -> purchase(event.index)
+            is BillingDialogViewEvent.ClearError -> setState { copy(error = null) }
         }
     }
 

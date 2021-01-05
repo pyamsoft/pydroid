@@ -37,5 +37,6 @@
 
     <string name="ad_badge">AD</string>
     <string name="in_app_badge">IN-APP</string>
+    <string name="billing_error_message">Sorry, there was an error connecting to the In-App Billing service. Please try again later.</string>
 
 </resources>

@@ -17,25 +17,31 @@
 package com.pyamsoft.pydroid.ui.internal.billing
 
 import android.view.ViewGroup
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.billing.BillingSku
-import com.pyamsoft.pydroid.ui.databinding.ChangelogListBinding
+import com.pyamsoft.pydroid.billing.BillingState
+import com.pyamsoft.pydroid.ui.databinding.BillingListBinding
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingAdapter
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingItemViewState
+import com.pyamsoft.pydroid.ui.util.Snackbreak
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 
 internal class BillingList internal constructor(
+    private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BaseUiView<BillingDialogViewState, BillingDialogViewEvent, ChangelogListBinding>(parent) {
+) : BaseUiView<BillingDialogViewState, BillingDialogViewEvent, BillingListBinding>(parent) {
 
-    override val viewBinding = ChangelogListBinding::inflate
+    override val viewBinding = BillingListBinding::inflate
 
-    override val layoutRoot by boundView { changelogList }
+    override val layoutRoot by boundView { billingListRoot }
 
     private var billingAdapter: BillingAdapter? = null
 
@@ -45,19 +51,19 @@ internal class BillingList internal constructor(
         }
 
         doOnTeardown {
-            binding.changelogList.adapter = null
+            binding.billingList.adapter = null
             billingAdapter = null
         }
 
         doOnInflate {
-            val margin = 8.asDp(binding.changelogList.context)
+            val margin = 8.asDp(binding.billingList.context)
             LinearMarginDecoration.create(margin = margin).apply {
-                binding.changelogList.addItemDecoration(this)
+                binding.billingList.addItemDecoration(this)
             }
         }
 
         doOnTeardown {
-            binding.changelogList.removeAllItemDecorations()
+            binding.billingList.removeAllItemDecorations()
         }
     }
 
@@ -66,7 +72,7 @@ internal class BillingList internal constructor(
             publish(BillingDialogViewEvent.Purchase(it))
         }
 
-        binding.changelogList.apply {
+        binding.billingList.apply {
             adapter = billingAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 initialPrefetchItemCount = 3
@@ -76,17 +82,37 @@ internal class BillingList internal constructor(
     }
 
     override fun onRender(state: UiRender<BillingDialogViewState>) {
-        state.distinctBy { it.skuList }.render(viewScope) { skuList ->
-            handleLoading(skuList)
-            handleSkus(skuList)
+        state.distinctBy { it.connected }.render(viewScope) { handleConnected(it) }
+        state.distinctBy { it.skuList }.render(viewScope) { handleSkus(it) }
+        state.distinctBy { it.error }.render(viewScope) { handleError(it) }
+    }
+
+    private fun handleConnected(state: BillingState) {
+        return when (state) {
+            BillingState.LOADING -> {
+                binding.billingList.isInvisible = true
+                binding.billingError.isInvisible = true
+            }
+            BillingState.CONNECTED -> {
+                binding.billingList.isVisible = true
+                binding.billingError.isGone = true
+            }
+            BillingState.DISCONNECTED -> {
+                binding.billingList.isGone = true
+                binding.billingError.isVisible = true
+            }
         }
     }
 
-    private fun handleLoading(skuList: List<BillingSku>) {
-        if (skuList.isEmpty()) {
-            hide()
-        } else {
-            show()
+    private fun handleError(throwable: Throwable?) {
+        if (throwable != null) {
+            Snackbreak.bindTo(owner) {
+                short(
+                    layoutRoot,
+                    throwable.message ?: "Error during purchase flow.",
+                    onHidden = { _, _ -> publish(BillingDialogViewEvent.ClearError) }
+                )
+            }
         }
     }
 
@@ -96,14 +122,6 @@ internal class BillingList internal constructor(
         } else {
             loadSkus(skuList)
         }
-    }
-
-    private fun show() {
-        layoutRoot.isVisible = true
-    }
-
-    private fun hide() {
-        layoutRoot.isVisible = false
     }
 
     private fun loadSkus(skuList: List<BillingSku>) {

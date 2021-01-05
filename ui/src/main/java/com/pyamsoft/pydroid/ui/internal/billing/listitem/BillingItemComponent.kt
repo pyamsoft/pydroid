@@ -14,35 +14,37 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem
+package com.pyamsoft.pydroid.ui.internal.billing.listitem
 
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 
-internal interface ChangeLogDialogItemComponent {
+internal interface BillingItemComponent {
 
-    fun inject(viewHolder: ChangeLogViewHolder)
+    fun inject(viewHolder: BillingViewHolder)
 
     interface Factory {
 
         @CheckResult
-        fun create(parent: ViewGroup): ChangeLogDialogItemComponent
+        fun create(parent: ViewGroup): BillingItemComponent
     }
 
     class Impl private constructor(
         private val parent: ViewGroup,
-    ) : ChangeLogDialogItemComponent {
+    ) : BillingItemComponent {
 
-        override fun inject(viewHolder: ChangeLogViewHolder) {
-            val text = ChangeLogItemText(parent)
-            val type = ChangeLogItemType(parent)
-            viewHolder.textView = text
-            viewHolder.typeView = type
+        override fun inject(viewHolder: BillingViewHolder) {
+            val content = BillingItemContent(parent)
+            val price = BillingItemPrice(parent)
+            val click = BillingItemClick(parent)
+            viewHolder.clickView = click
+            viewHolder.contentView = content
+            viewHolder.priceView = price
         }
 
         class FactoryImpl internal constructor() : Factory {
 
-            override fun create(parent: ViewGroup): ChangeLogDialogItemComponent {
+            override fun create(parent: ViewGroup): BillingItemComponent {
                 return Impl(parent)
             }
         }

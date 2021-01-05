@@ -18,36 +18,30 @@ package com.pyamsoft.pydroid.ui.internal.app
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiRender
-import com.pyamsoft.pydroid.ui.databinding.ChangelogNameBinding
+import com.pyamsoft.pydroid.arch.UiViewEvent
+import com.pyamsoft.pydroid.ui.databinding.ChangelogCloseBinding
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal abstract class AppName<S : AppState> protected constructor(
+internal abstract class AppClose<S : AppState, V : UiViewEvent> protected constructor(
     parent: ViewGroup
-) : BaseUiView<S, Nothing, ChangelogNameBinding>(parent) {
+) : BaseUiView<S, V, ChangelogCloseBinding>(parent) {
 
-    final override val viewBinding = ChangelogNameBinding::inflate
+    final override val viewBinding = ChangelogCloseBinding::inflate
 
-    final override val layoutRoot by boundView { changelogName }
+    final override val layoutRoot by boundView { changelogCloseRoot }
 
     init {
         doOnTeardown {
-            clear()
+            binding.changelogClose.setOnDebouncedClickListener(null)
+        }
+
+        doOnInflate {
+            binding.changelogClose.setOnDebouncedClickListener {
+                publishClose()
+            }
         }
     }
 
-    final override fun onRender(state: UiRender<S>) {
-        state.distinctBy { it.name }.render(viewScope) { handleName(it) }
-    }
+    protected abstract fun publishClose()
 
-    private fun handleName(name: CharSequence) {
-        if (name.isBlank()) {
-            clear()
-        } else {
-            binding.changelogName.text = name
-        }
-    }
-
-    private fun clear() {
-        binding.changelogName.text = ""
-    }
 }

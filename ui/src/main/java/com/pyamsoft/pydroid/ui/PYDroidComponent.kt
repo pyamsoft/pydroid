@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
+import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingItemComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialogComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogDialogItemComponent
@@ -47,6 +48,9 @@ internal interface PYDroidComponent {
 
     @CheckResult
     fun plusBilling(): BillingComponent.Factory
+
+    @CheckResult
+    fun plusBillingItem(): BillingItemComponent.Factory
 
     @CheckResult
     fun plusPrivacy(): PrivacyComponent.Factory
@@ -269,6 +273,10 @@ internal interface PYDroidComponent {
 
         override fun plusBilling(): BillingComponent.Factory {
             return BillingComponent.Impl.FactoryImpl(billingParams)
+        }
+
+        override fun plusBillingItem(): BillingItemComponent.Factory {
+            return BillingItemComponent.Impl.FactoryImpl()
         }
 
         override fun plusSettings(): AppSettingsComponent.Factory {

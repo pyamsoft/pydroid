@@ -41,6 +41,8 @@ internal class BillingDialog : IconDialog() {
 
     internal var nameView: BillingName? = null
     internal var iconView: BillingIcon? = null
+    internal var listView: BillingList? = null
+    internal var closeView: BillingClose? = null
 
     internal var purchaseClient: BillingPurchase? = null
 
@@ -68,6 +70,8 @@ internal class BillingDialog : IconDialog() {
             viewModel,
             requireNotNull(iconView),
             requireNotNull(nameView),
+            requireNotNull(listView),
+            requireNotNull(closeView),
         ) {
             return@createComponent when (it) {
                 is BillingDialogControllerEvent.Close -> dismiss()
@@ -91,6 +95,8 @@ internal class BillingDialog : IconDialog() {
 
         nameView = null
         iconView = null
+        listView = null
+        closeView = null
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

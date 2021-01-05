@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 
-internal abstract class AppIcon<S : AppState> internal constructor(
+internal abstract class AppIcon<S : AppState> protected constructor(
     private val imageLoader: ImageLoader,
     icon: ImageView
 ) : UiView<S, Nothing>() {

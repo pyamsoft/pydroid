@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.app
+package com.pyamsoft.pydroid.ui.internal.billing.listitem
 
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
-import com.pyamsoft.pydroid.ui.databinding.ChangelogNameBinding
+import com.pyamsoft.pydroid.billing.BillingSku
+import com.pyamsoft.pydroid.ui.databinding.BillingItemPriceBinding
 
-internal abstract class AppName<S : AppState> protected constructor(
+internal class BillingItemPrice internal constructor(
     parent: ViewGroup
-) : BaseUiView<S, Nothing, ChangelogNameBinding>(parent) {
+) : BaseUiView<BillingItemViewState, Nothing, BillingItemPriceBinding>(parent) {
 
-    final override val viewBinding = ChangelogNameBinding::inflate
+    override val viewBinding = BillingItemPriceBinding::inflate
 
-    final override val layoutRoot by boundView { changelogName }
+    override val layoutRoot by boundView { billingItemPriceRoot }
 
     init {
         doOnTeardown {
@@ -35,19 +36,15 @@ internal abstract class AppName<S : AppState> protected constructor(
         }
     }
 
-    final override fun onRender(state: UiRender<S>) {
-        state.distinctBy { it.name }.render(viewScope) { handleName(it) }
-    }
-
-    private fun handleName(name: CharSequence) {
-        if (name.isBlank()) {
-            clear()
-        } else {
-            binding.changelogName.text = name
-        }
-    }
-
     private fun clear() {
-        binding.changelogName.text = ""
+        binding.billingItemPrice.text = ""
+    }
+
+    override fun onRender(state: UiRender<BillingItemViewState>) {
+        state.distinctBy { it.sku }.render(viewScope) { handleSku(it) }
+    }
+
+    private fun handleSku(sku: BillingSku) {
+        binding.billingItemPrice.text = sku.price
     }
 }

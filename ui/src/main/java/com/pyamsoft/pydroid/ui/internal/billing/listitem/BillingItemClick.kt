@@ -14,17 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.changelog.dialog
+package com.pyamsoft.pydroid.ui.internal.billing.listitem
 
 import android.view.ViewGroup
-import com.pyamsoft.pydroid.ui.internal.app.AppClose
+import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.arch.UiView
+import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal class ChangeLogClose internal constructor(
+internal class BillingItemClick internal constructor(
     parent: ViewGroup
-) : AppClose<ChangeLogDialogViewState, ChangeLogDialogViewEvent>(parent) {
+) : UiView<BillingItemViewState, BillingItemViewEvent>() {
 
-    override fun publishClose() {
-        publish(ChangeLogDialogViewEvent.Close)
+    init {
+        doOnInflate {
+            parent.setOnDebouncedClickListener {
+                publish(BillingItemViewEvent.Purchase)
+            }
+        }
+
+        doOnTeardown {
+            parent.setOnDebouncedClickListener(null)
+        }
     }
 
+    override fun render(state: UiRender<BillingItemViewState>) {
+    }
 }

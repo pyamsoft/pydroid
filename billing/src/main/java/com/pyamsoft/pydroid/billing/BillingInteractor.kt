@@ -9,4 +9,9 @@ public interface BillingInteractor {
      * Get the list of SKU
      */
     public suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit)
+
+    /**
+     * Refresh the SKU list
+     */
+    public suspend fun refreshSkuList()
 }

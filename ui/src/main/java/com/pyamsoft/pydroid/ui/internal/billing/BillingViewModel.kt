@@ -82,6 +82,12 @@ internal class BillingViewModel internal constructor(
         }
     }
 
+    internal fun refreshSkus() {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            interactor.refreshSkuList()
+        }
+    }
+
     private fun purchase(index: Int) {
         val skuList = state.skuList
         if (skuList.isEmpty() || skuList.size <= index) {

@@ -23,7 +23,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -99,12 +98,20 @@ internal class PlayStoreBillingInteractor internal constructor(
     }
 
     private fun querySkus() {
+        Timber.d("Querying for SKUs")
+
         val params = SkuDetailsParams.newBuilder()
             .setType(BillingClient.SkuType.INAPP)
             .setSkusList(appSkuList)
             .build()
 
         client.querySkuDetailsAsync(params, this)
+    }
+
+    override suspend fun refreshSkuList() = withContext(context = Dispatchers.Main) {
+        if (client.isReady) {
+            querySkus()
+        }
     }
 
     override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {

@@ -13,7 +13,7 @@ public interface BillingInteractor {
     /**
      * Watch for errors in the billing client
      */
-    public suspend fun watchErrors(onErrorReceived: (BillingError) -> Unit)
+    public suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit)
 
     /**
      * Refresh the SKU list

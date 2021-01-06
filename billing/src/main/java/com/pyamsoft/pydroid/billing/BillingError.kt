@@ -3,7 +3,7 @@ package com.pyamsoft.pydroid.billing
 /**
  * A Billing error
  */
-public data class BillingError(
+internal data class BillingError internal constructor(
     /**
      * The billing error message
      */

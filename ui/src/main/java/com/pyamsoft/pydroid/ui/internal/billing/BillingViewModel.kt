@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
@@ -90,7 +89,7 @@ internal class BillingViewModel internal constructor(
         val skuList = state.skuList
         if (skuList.isEmpty() || skuList.size <= index) {
             Timber.e("SKU index out of bounds: $index ${skuList.size}")
-            setState { copy(error = BillingError("Unable to purchase in-app item")) }
+            setState { copy(error = IllegalStateException("Unable to purchase in-app item")) }
             return
         }
 

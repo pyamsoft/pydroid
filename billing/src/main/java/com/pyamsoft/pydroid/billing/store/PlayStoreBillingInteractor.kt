@@ -187,7 +187,7 @@ internal class PlayStoreBillingInteractor internal constructor(
             }
         }
 
-    override suspend fun watchErrors(onErrorReceived: (BillingError) -> Unit) =
+    override suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit) =
         withContext(context = Dispatchers.IO) {
             errorBus.collect {
                 withContext(context = Dispatchers.Main) {

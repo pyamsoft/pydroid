@@ -82,26 +82,8 @@ internal class BillingList internal constructor(
     }
 
     override fun onRender(state: UiRender<BillingDialogViewState>) {
-        state.distinctBy { it.connected }.render(viewScope) { handleConnected(it) }
-        state.distinctBy { it.skuList }.render(viewScope) { handleSkus(it) }
+        state.render(viewScope) { handleSkus(it) }
         state.distinctBy { it.error }.render(viewScope) { handleError(it) }
-    }
-
-    private fun handleConnected(state: BillingState) {
-        return when (state) {
-            BillingState.LOADING -> {
-                binding.billingList.isInvisible = true
-                binding.billingError.isInvisible = true
-            }
-            BillingState.CONNECTED -> {
-                binding.billingList.isVisible = true
-                binding.billingError.isGone = true
-            }
-            BillingState.DISCONNECTED -> {
-                binding.billingList.isGone = true
-                binding.billingError.isVisible = true
-            }
-        }
     }
 
     private fun handleError(throwable: Throwable?) {
@@ -116,19 +98,30 @@ internal class BillingList internal constructor(
         }
     }
 
-    private fun handleSkus(skuList: List<BillingSku>) {
-        if (skuList.isEmpty()) {
-            clear()
+    private fun handleSkus(state: BillingDialogViewState) {
+        val billingState = state.connected
+        val skuList = state.skuList
+        if (billingState == BillingState.LOADING) {
+            binding.billingList.isInvisible = true
+            binding.billingError.isInvisible = true
         } else {
-            loadSkus(skuList)
+            if (billingState == BillingState.DISCONNECTED || skuList.isEmpty()) {
+                clear()
+            } else {
+                loadSkus(skuList)
+            }
         }
     }
 
     private fun loadSkus(skuList: List<BillingSku>) {
         requireNotNull(billingAdapter).submitList(skuList.map { BillingItemViewState(it) })
+        binding.billingList.isVisible = true
+        binding.billingError.isGone = true
     }
 
     private fun clear() {
         requireNotNull(billingAdapter).submitList(null)
+        binding.billingList.isGone = true
+        binding.billingError.isVisible = true
     }
 }

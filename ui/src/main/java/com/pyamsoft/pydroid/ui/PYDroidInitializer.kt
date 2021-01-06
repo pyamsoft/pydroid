@@ -35,12 +35,9 @@ internal data class PYDroidInitializer internal constructor(
             params: PYDroid.Parameters
         ): PYDroidInitializer {
             val enabled = params.debug?.enabled ?: application.isDebugMode()
-            
+
             if (enabled) {
                 setStrictMode()
-            }
-
-            if (enabled || params.debug?.loggingEnabled == true) {
                 Timber.plant(Timber.DebugTree())
             }
 

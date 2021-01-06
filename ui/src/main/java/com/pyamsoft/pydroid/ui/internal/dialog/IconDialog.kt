@@ -67,5 +67,4 @@ internal abstract class IconDialog : AppCompatDialogFragment() {
         binding: ChangelogDialogBinding,
         savedInstanceState: Bundle?
     )
-
 }

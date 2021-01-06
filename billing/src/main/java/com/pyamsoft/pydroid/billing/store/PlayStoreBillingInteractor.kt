@@ -98,7 +98,7 @@ internal class PlayStoreBillingInteractor internal constructor(
     }
 
     private fun querySkus() {
-        Timber.d("Querying for SKUs")
+        Timber.d("Querying for SKUs $appSkuList")
 
         val params = SkuDetailsParams.newBuilder()
             .setType(BillingClient.SkuType.INAPP)
@@ -124,8 +124,8 @@ internal class PlayStoreBillingInteractor internal constructor(
     }
 
     override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {
-
         if (result.isOk()) {
+            Timber.d("Sku response: $skuDetails")
             billingScope.launch(context = Dispatchers.IO) {
                 val skuList = skuDetails?.map { PlayBillingSku(it) } ?: emptyList()
                 skuFlow.value = State(BillingState.CONNECTED, skuList)
@@ -235,7 +235,5 @@ internal class PlayStoreBillingInteractor internal constructor(
         private fun BillingResult.isOk(): Boolean {
             return this.responseCode == BillingClient.BillingResponseCode.OK
         }
-
     }
-
 }

@@ -27,7 +27,6 @@
             android:id="@+id/billing_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none"
             android:visibility="invisible" />
 
         <TextView
@@ -36,7 +35,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:padding="8dp"
-            android:scrollbars="none"
             android:text="@string/billing_error_message"
             android:textAppearance="?attr/textAppearanceBody1"
             android:visibility="invisible" />

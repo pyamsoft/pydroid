@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.bootstrap.version.store
 
-import android.app.Activity
+import android.content.Context
 import androidx.annotation.CheckResult
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
@@ -37,20 +37,20 @@ import kotlin.coroutines.resume
 
 internal class PlayStoreAppUpdater internal constructor(
     private val isFake: Boolean,
-    activity: Activity,
+    context: Context,
     version: Int,
     isFakeUpgradeAvailable: Boolean
 ) : AppUpdater {
 
     private val manager by lazy {
         if (isFake) {
-            FakeAppUpdateManager(activity.applicationContext).apply {
+            FakeAppUpdateManager(context.applicationContext).apply {
                 if (isFakeUpgradeAvailable) {
                     setUpdateAvailable(version + 1)
                 }
             }
         } else {
-            AppUpdateManagerFactory.create(activity.applicationContext)
+            AppUpdateManagerFactory.create(context.applicationContext)
         }
     }
 

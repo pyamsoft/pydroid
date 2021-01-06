@@ -28,14 +28,14 @@ import java.util.concurrent.TimeUnit.MINUTES
 /**
  * In-App update module
  */
-public class VersionCheckModule(params: Parameters) {
+public class VersionModule(params: Parameters) {
 
     private val impl: VersionInteractorImpl
 
     init {
         val updater = PlayStoreAppUpdater(
             params.isFakeUpgradeChecker,
-            params.activity,
+            params.context.applicationContext,
             params.version,
             params.isFakeUpgradeAvailable
         )
@@ -66,7 +66,7 @@ public class VersionCheckModule(params: Parameters) {
      * Module parameters
      */
     public data class Parameters(
-        internal val activity: Activity,
+        internal val context: Context,
         internal val version: Int,
         internal val isFakeUpgradeChecker: Boolean,
         internal val isFakeUpgradeAvailable: Boolean,

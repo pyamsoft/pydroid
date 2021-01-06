@@ -61,7 +61,8 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         // after subclass onCreate
         injector = Injector.obtain<PYDroidComponent>(applicationContext)
             .plusVersionCheck()
-            .create(this, this) { snackbarRoot }.also { component ->
+            .create(this) { snackbarRoot }
+            .also { component ->
                 component.inject(this)
             }
 

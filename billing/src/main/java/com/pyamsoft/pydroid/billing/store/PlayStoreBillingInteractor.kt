@@ -1,6 +1,7 @@
 package com.pyamsoft.pydroid.billing.store
 
 import android.app.Activity
+import android.content.Context
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -16,7 +17,6 @@ import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingPurchase
-import com.pyamsoft.pydroid.billing.BillingPurchaseListener
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import kotlinx.coroutines.CoroutineScope
@@ -32,18 +32,17 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class PlayStoreBillingInteractor internal constructor(
-    activity: Activity,
+    context: Context
 ) : BillingInteractor,
     BillingConnector,
     BillingPurchase,
-    BillingPurchaseListener,
     BillingClientStateListener,
     SkuDetailsResponseListener,
     ConsumeResponseListener,
     PurchasesUpdatedListener {
 
     private val client by lazy {
-        BillingClient.newBuilder(activity.applicationContext)
+        BillingClient.newBuilder(context.applicationContext)
             .setListener(this)
             .enablePendingPurchases()
             .build()
@@ -60,7 +59,7 @@ internal class PlayStoreBillingInteractor internal constructor(
     private var backoffCount = 1
 
     init {
-        val packageName = activity.applicationContext.packageName
+        val packageName = context.applicationContext.packageName
         appSkuList = listOf(
             "$packageName-ONE",
             "$packageName-THREE",

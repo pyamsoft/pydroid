@@ -16,14 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import android.app.Activity
+import android.content.Context
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.onlyFactory
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule
-import com.pyamsoft.pydroid.bootstrap.version.VersionCheckModule.Parameters
+import com.pyamsoft.pydroid.bootstrap.version.VersionModule
+import com.pyamsoft.pydroid.bootstrap.version.VersionModule.Parameters
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
 import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
@@ -38,12 +38,12 @@ internal interface VersionCheckComponent {
 
         @CheckResult
         fun create(
-            activity: Activity,
             owner: LifecycleOwner,
             snackbarRootProvider: () -> ViewGroup
         ): VersionCheckComponent
 
         data class Parameters internal constructor(
+            internal val context: Context,
             internal val version: Int,
             internal val isFakeUpgradeChecker: Boolean,
             internal val isFakeUpgradeAvailable: Boolean
@@ -54,16 +54,15 @@ internal interface VersionCheckComponent {
         private val snackbarRootProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
         params: Factory.Parameters,
-        activity: Activity
     ) : VersionCheckComponent {
 
         private val checkFactory: ViewModelProvider.Factory
         private val upgradeFactory: ViewModelProvider.Factory
 
         init {
-            val module = VersionCheckModule(
+            val module = VersionModule(
                 Parameters(
-                    activity = activity,
+                    context = params.context.applicationContext,
                     version = params.version,
                     isFakeUpgradeChecker = params.isFakeUpgradeChecker,
                     isFakeUpgradeAvailable = params.isFakeUpgradeAvailable
@@ -90,11 +89,10 @@ internal interface VersionCheckComponent {
         ) : Factory {
 
             override fun create(
-                activity: Activity,
                 owner: LifecycleOwner,
                 snackbarRootProvider: () -> ViewGroup
             ): VersionCheckComponent {
-                return Impl(snackbarRootProvider, owner, params, activity)
+                return Impl(snackbarRootProvider, owner, params)
             }
         }
     }

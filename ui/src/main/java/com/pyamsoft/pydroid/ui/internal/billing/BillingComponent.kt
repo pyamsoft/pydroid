@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import android.app.Activity
+import android.content.Context
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.CheckResult
@@ -62,7 +62,6 @@ internal interface BillingComponent {
             private val factory = onlyFactory {
                 BillingViewModel(
                     params.interactor,
-                    module.provideListener(),
                     module.provideInteractor(),
                     provider
                 )
@@ -99,9 +98,10 @@ internal interface BillingComponent {
     interface Factory {
 
         @CheckResult
-        fun create(activity: Activity): BillingComponent
+        fun create(): BillingComponent
 
         data class Parameters internal constructor(
+            internal val context: Context,
             internal val imageLoader: ImageLoader,
             internal val interactor: ChangeLogInteractor,
         )
@@ -109,12 +109,11 @@ internal interface BillingComponent {
 
     class Impl private constructor(
         private val params: Factory.Parameters,
-        activity: Activity
     ) : BillingComponent {
 
         private val module = BillingModule(
             BillingModule.Parameters(
-                activity = activity
+                context = params.context.applicationContext
             )
         )
 
@@ -130,8 +129,8 @@ internal interface BillingComponent {
             private val params: Factory.Parameters
         ) : Factory {
 
-            override fun create(activity: Activity): BillingComponent {
-                return Impl(params, activity)
+            override fun create(): BillingComponent {
+                return Impl(params)
             }
         }
     }

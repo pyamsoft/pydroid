@@ -20,7 +20,6 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
-import com.pyamsoft.pydroid.billing.BillingPurchaseListener
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
@@ -30,7 +29,6 @@ import timber.log.Timber
 
 internal class BillingViewModel internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
-    private val listener: BillingPurchaseListener,
     private val interactor: BillingInteractor,
     provider: AppProvider,
 ) : UiViewModel<BillingDialogViewState, BillingDialogViewEvent, BillingDialogControllerEvent>(
@@ -67,7 +65,7 @@ internal class BillingViewModel internal constructor(
         }
 
         viewModelScope.launch(context = Dispatchers.Default) {
-            listener.watchErrors { error ->
+            interactor.watchErrors { error ->
                 Timber.e(error, "Billing error received")
                 setState { copy(error = error) }
             }

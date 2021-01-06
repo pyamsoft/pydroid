@@ -61,7 +61,8 @@ abstract class ActivityBase constructor(
 
         injector = Injector.obtain<PYDroidComponent>(applicationContext)
             .plusBilling()
-            .create(this).also { component ->
+            .create()
+            .also { component ->
                 component.inject(this)
             }
 

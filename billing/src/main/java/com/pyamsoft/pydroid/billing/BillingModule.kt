@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.billing
 
-import android.app.Activity
+import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 
@@ -28,14 +28,12 @@ public class BillingModule(params: Parameters) {
     private val interactor: BillingInteractor
     private val purchase: BillingPurchase
     private val connector: BillingConnector
-    private val listener: BillingPurchaseListener
 
     init {
-        val impl = PlayStoreBillingInteractor(params.activity)
+        val impl = PlayStoreBillingInteractor(params.context.applicationContext)
         interactor = impl
         purchase = impl
         connector = impl
-        listener = impl
     }
 
     /**
@@ -63,17 +61,9 @@ public class BillingModule(params: Parameters) {
     }
 
     /**
-     * Provide a listener instance
-     */
-    @CheckResult
-    public fun provideListener(): BillingPurchaseListener {
-        return listener
-    }
-
-    /**
      * Module parameters
      */
     public data class Parameters(
-        internal val activity: Activity,
+        internal val context: Context,
     )
 }

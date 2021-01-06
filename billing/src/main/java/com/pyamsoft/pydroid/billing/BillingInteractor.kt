@@ -13,5 +13,5 @@ public interface BillingInteractor {
     /**
      * Refresh the SKU list
      */
-    public suspend fun refreshSkuList()
+    public suspend fun refresh()
 }

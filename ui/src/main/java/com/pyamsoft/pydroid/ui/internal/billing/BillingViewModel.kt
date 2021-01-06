@@ -82,9 +82,9 @@ internal class BillingViewModel internal constructor(
         }
     }
 
-    internal fun refreshSkus() {
+    internal fun refresh() {
         viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.refreshSkuList()
+            interactor.refresh()
         }
     }
 

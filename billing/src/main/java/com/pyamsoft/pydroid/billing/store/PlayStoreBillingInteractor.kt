@@ -91,6 +91,7 @@ internal class PlayStoreBillingInteractor internal constructor(
             backoffCount = 1
 
             querySkus()
+            queryPurchases()
         } else {
             Timber.w("Billing setup not OK: ${result.debugMessage}")
             skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
@@ -108,10 +109,19 @@ internal class PlayStoreBillingInteractor internal constructor(
         client.querySkuDetailsAsync(params, this)
     }
 
-    override suspend fun refreshSkuList() = withContext(context = Dispatchers.Main) {
-        if (client.isReady) {
-            querySkus()
+    override suspend fun refresh() = withContext(context = Dispatchers.Main) {
+        if (!client.isReady) {
+            Timber.w("Client is not ready yet, so we are not refreshing sku and purchases")
+            return@withContext
         }
+
+        querySkus()
+        queryPurchases()
+    }
+
+    private fun queryPurchases() {
+        Timber.d("Querying for past purchases")
+        client.queryPurchases(BillingClient.SkuType.INAPP)
     }
 
     override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {

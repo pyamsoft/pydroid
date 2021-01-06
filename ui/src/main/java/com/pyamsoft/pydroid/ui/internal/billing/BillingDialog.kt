@@ -79,8 +79,11 @@ internal class BillingDialog : IconDialog() {
                 is BillingDialogControllerEvent.LaunchPurchase -> launchPurchase(it.sku)
             }
         }
+    }
 
-        viewModel.refreshSkus()
+    override fun onResume() {
+        super.onResume()
+        viewModel.refresh()
     }
 
     private fun launchPurchase(sku: BillingSku) {

@@ -25,23 +25,14 @@ import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
  */
 public class BillingModule(params: Parameters) {
 
-    private val interactor: BillingInteractor
-    private val launcher: BillingLauncher
-    private val connector: BillingConnector
-
-    init {
-        val impl = PlayStoreBillingInteractor(params.context.applicationContext)
-        interactor = impl
-        launcher = impl
-        connector = impl
-    }
+    private val impl = PlayStoreBillingInteractor(params.context.applicationContext)
 
     /**
      * Provide a billing instance
      */
     @CheckResult
     public fun provideInteractor(): BillingInteractor {
-        return interactor
+        return impl
     }
 
     /**
@@ -49,7 +40,7 @@ public class BillingModule(params: Parameters) {
      */
     @CheckResult
     public fun provideLauncher(): BillingLauncher {
-        return launcher
+        return impl
     }
 
     /**
@@ -57,7 +48,7 @@ public class BillingModule(params: Parameters) {
      */
     @CheckResult
     public fun provideConnector(): BillingConnector {
-        return connector
+        return impl
     }
 
     /**

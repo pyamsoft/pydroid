@@ -16,7 +16,6 @@
 
 dependencies {
 	implementation "androidx.core:core:$core"
-	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 	api project(':core')
 }
 

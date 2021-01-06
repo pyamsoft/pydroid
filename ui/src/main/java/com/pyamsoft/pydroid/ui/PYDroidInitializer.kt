@@ -41,6 +41,8 @@ internal data class PYDroidInitializer internal constructor(
                 Timber.plant(Timber.DebugTree())
             }
 
+            Timber.d("Initializing PYDroid")
+
             val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
                 PYDroidComponent.Component.Parameters(
                     application = application,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.core
 
 /**
  * A simple receive side implementation of an EventBus

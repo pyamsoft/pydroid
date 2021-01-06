@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.core
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.internal.RealBus
+import com.pyamsoft.pydroid.core.internal.RealBus
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 

@@ -33,7 +33,7 @@ import timber.log.Timber
 import java.util.UUID
 
 internal class PlayStoreBillingInteractor internal constructor(
-    context: Context
+    context: Context,
 ) : BillingInteractor,
     BillingConnector,
     BillingLauncher,
@@ -60,6 +60,8 @@ internal class PlayStoreBillingInteractor internal constructor(
     private var backoffCount = 1
 
     init {
+        Timber.d("Construct new interactor and billing client")
+
         val packageName = context.applicationContext.packageName
         appSkuList = listOf(
             "$packageName.iap_one",
@@ -192,11 +194,7 @@ internal class PlayStoreBillingInteractor internal constructor(
 
     override suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit) =
         withContext(context = Dispatchers.IO) {
-            errorBus.collect {
-                withContext(context = Dispatchers.Main) {
-                    onErrorReceived(it.throwable)
-                }
-            }
+            errorBus.collect { onErrorReceived(it.throwable) }
         }
 
     private fun handlePurchases(purchases: List<Purchase>) {

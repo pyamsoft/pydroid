@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch.internal
+package com.pyamsoft.pydroid.core.internal
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.EventBus
+import com.pyamsoft.pydroid.core.EventBus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onSubscription

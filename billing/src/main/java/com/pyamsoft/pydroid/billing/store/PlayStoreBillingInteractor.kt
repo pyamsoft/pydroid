@@ -61,10 +61,10 @@ internal class PlayStoreBillingInteractor internal constructor(
     init {
         val packageName = context.applicationContext.packageName
         appSkuList = listOf(
-            "$packageName.iap-one",
-            "$packageName.iap-three",
-            "$packageName.iap-five",
-            "$packageName.iap-ten",
+            "$packageName.iap_one",
+            "$packageName.iap_three",
+            "$packageName.iap_five",
+            "$packageName.iap_ten",
         )
     }
 

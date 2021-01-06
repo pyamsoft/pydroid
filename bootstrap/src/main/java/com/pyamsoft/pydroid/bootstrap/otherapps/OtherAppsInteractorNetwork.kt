@@ -30,8 +30,8 @@ internal class OtherAppsInteractorNetwork internal constructor(
     override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
         withContext(context = Dispatchers.IO) {
             Enforcer.assertOffMainThread()
-            val result = service.getApps().apps()
             return@withContext try {
+                val result = service.getApps().apps()
                 Result.success(result.map { entry ->
                     OtherApp(
                         entry.packageName(),

@@ -102,6 +102,7 @@ object PYDroid {
     data class DebugParameters(
         internal val enabled: Boolean,
         internal val upgradeAvailable: Boolean,
-        internal val ratingAvailable: Boolean
+        internal val ratingAvailable: Boolean,
+        internal val loggingEnabled: Boolean
     )
 }

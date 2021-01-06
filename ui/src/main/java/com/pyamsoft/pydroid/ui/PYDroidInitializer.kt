@@ -35,9 +35,13 @@ internal data class PYDroidInitializer internal constructor(
             params: PYDroid.Parameters
         ): PYDroidInitializer {
             val enabled = params.debug?.enabled ?: application.isDebugMode()
+            
             if (enabled) {
-                Timber.plant(Timber.DebugTree())
                 setStrictMode()
+            }
+
+            if (enabled || params.debug?.loggingEnabled == true) {
+                Timber.plant(Timber.DebugTree())
             }
 
             val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
@@ -49,7 +53,7 @@ internal data class PYDroidInitializer internal constructor(
                     privacyPolicyUrl = params.privacyPolicyUrl,
                     termsConditionsUrl = params.termsConditionsUrl,
                     version = params.version,
-                    debug = PYDroid.DebugParameters(
+                    debug = PYDroidComponent.Component.DebugParameters(
                         enabled = enabled,
                         upgradeAvailable = params.debug?.upgradeAvailable ?: false,
                         ratingAvailable = params.debug?.ratingAvailable ?: false

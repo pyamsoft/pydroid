@@ -110,7 +110,13 @@ internal interface PYDroidComponent {
             internal val privacyPolicyUrl: String,
             internal val termsConditionsUrl: String,
             internal val version: Int,
-            internal val debug: PYDroid.DebugParameters,
+            internal val debug: DebugParameters,
+        )
+
+        data class DebugParameters(
+            internal val enabled: Boolean,
+            internal val upgradeAvailable: Boolean,
+            internal val ratingAvailable: Boolean,
         )
     }
 
@@ -144,7 +150,6 @@ internal interface PYDroidComponent {
                 addLoggingInterceptor = params.debug.enabled
             )
         )
-
 
         private val otherAppsModule = OtherAppsModule(
             OtherAppsModule.Parameters(

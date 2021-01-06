@@ -9,7 +9,9 @@ internal data class PlayBillingSku internal constructor(
 
     override val id: String = sku.sku
 
-    override val price: String = sku.price
+    override val displayPrice: String = sku.price
+
+    override val price: Long = sku.priceAmountMicros
 
     override val title: String = sku.title
 

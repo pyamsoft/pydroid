@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.UUID
 
 internal class PlayStoreBillingInteractor internal constructor(
     context: Context
@@ -52,7 +53,7 @@ internal class PlayStoreBillingInteractor internal constructor(
 
     private val skuFlow = MutableStateFlow(State(BillingState.LOADING, emptyList()))
 
-    private val errorBus = MutableSharedFlow<Throwable>()
+    private val errorBus = MutableSharedFlow<Error>()
 
     private val billingScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -170,7 +171,7 @@ internal class PlayStoreBillingInteractor internal constructor(
             } else {
                 billingScope.launch(context = Dispatchers.IO) {
                     Timber.w("Purchase response not OK: ${result.debugMessage}")
-                    errorBus.emit(RuntimeException(result.debugMessage))
+                    errorBus.emit(Error(RuntimeException(result.debugMessage)))
                 }
             }
         }
@@ -193,7 +194,7 @@ internal class PlayStoreBillingInteractor internal constructor(
         withContext(context = Dispatchers.IO) {
             errorBus.collect {
                 withContext(context = Dispatchers.Main) {
-                    onErrorReceived(it)
+                    onErrorReceived(it.throwable)
                 }
             }
         }
@@ -220,6 +221,11 @@ internal class PlayStoreBillingInteractor internal constructor(
     private data class State constructor(
         val state: BillingState,
         val list: List<BillingSku>
+    )
+
+    private data class Error @JvmOverloads constructor(
+        val throwable: Throwable,
+        private val id: String = UUID.randomUUID().toString()
     )
 
     companion object {

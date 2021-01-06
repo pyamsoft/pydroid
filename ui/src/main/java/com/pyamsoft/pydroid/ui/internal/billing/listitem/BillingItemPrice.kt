@@ -45,6 +45,6 @@ internal class BillingItemPrice internal constructor(
     }
 
     private fun handleSku(sku: BillingSku) {
-        binding.billingItemPrice.text = sku.price
+        binding.billingItemPrice.text = sku.displayPrice
     }
 }

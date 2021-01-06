@@ -11,9 +11,14 @@ public interface BillingSku {
     public val id: String
 
     /**
+     * SKU price human readable
+     */
+    public val displayPrice: String
+
+    /**
      * SKU price
      */
-    public val price: String
+    public val price: Long
 
     /**
      * SKU name

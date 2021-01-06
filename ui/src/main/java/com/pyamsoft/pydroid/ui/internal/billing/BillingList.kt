@@ -89,9 +89,10 @@ internal class BillingList internal constructor(
     private fun handleError(throwable: Throwable?) {
         if (throwable != null) {
             Snackbreak.bindTo(owner) {
+                val msg = throwable.message
                 short(
                     layoutRoot,
-                    throwable.message ?: "Error during purchase flow.",
+                    if (msg.isNullOrBlank()) "Error during purchase flow." else msg,
                     onHidden = { _, _ -> publish(BillingDialogViewEvent.ClearError) }
                 )
             }

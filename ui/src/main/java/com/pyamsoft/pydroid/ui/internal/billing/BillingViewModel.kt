@@ -57,7 +57,7 @@ internal class BillingViewModel internal constructor(
                 setState {
                     copy(
                         connected = connected,
-                        skuList = list,
+                        skuList = list.sortedBy { it.price },
                     )
                 }
             }
@@ -96,6 +96,5 @@ internal class BillingViewModel internal constructor(
         val sku = skuList[index]
         publish(BillingDialogControllerEvent.LaunchPurchase(sku))
     }
-
 }
 

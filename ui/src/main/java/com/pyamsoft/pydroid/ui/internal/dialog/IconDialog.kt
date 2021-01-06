@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -34,19 +35,26 @@ import com.google.android.material.R as R2
 
 internal abstract class IconDialog : AppCompatDialogFragment() {
 
-    final override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private val themedContext by lazy {
         // Load the original dialog theme into the "rest" of the dialog content
         val dialogTheme = TypedValue().run {
             requireActivity().theme.resolveAttribute(R2.attr.dialogTheme, this, true)
             return@run resourceId
         }
 
-        val newContext = ContextThemeWrapper(requireActivity(), dialogTheme)
-        val newInflater = inflater.cloneInContext(newContext)
+        ContextThemeWrapper(requireActivity(), dialogTheme)
+    }
+
+    override fun getContext(): Context? {
+        return if (activity == null) super.getContext() else themedContext
+    }
+
+    final override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val newInflater = inflater.cloneInContext(themedContext)
         return newInflater.inflate(R.layout.changelog_dialog, container, false)
     }
 

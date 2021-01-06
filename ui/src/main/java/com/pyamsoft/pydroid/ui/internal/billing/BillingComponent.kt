@@ -68,7 +68,7 @@ internal interface BillingComponent {
             }
 
             override fun inject(dialog: BillingDialog) {
-                dialog.purchaseClient = module.providePurchase()
+                dialog.purchaseClient = module.provideLauncher()
                 dialog.factory = factory
 
                 dialog.iconView = BillingIcon(params.imageLoader, imageView)

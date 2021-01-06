@@ -2,6 +2,7 @@ package com.pyamsoft.pydroid.billing.store
 
 import android.app.Activity
 import android.content.Context
+import androidx.annotation.CheckResult
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
@@ -15,9 +16,9 @@ import com.android.billingclient.api.SkuDetailsParams
 import com.android.billingclient.api.SkuDetailsResponseListener
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.billing.BillingInteractor
-import com.pyamsoft.pydroid.billing.PurchaseLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
+import com.pyamsoft.pydroid.billing.BillingLauncher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -34,7 +35,7 @@ internal class PlayStoreBillingInteractor internal constructor(
     context: Context
 ) : BillingInteractor,
     BillingConnector,
-    PurchaseLauncher,
+    BillingLauncher,
     BillingClientStateListener,
     SkuDetailsResponseListener,
     ConsumeResponseListener,
@@ -220,4 +221,21 @@ internal class PlayStoreBillingInteractor internal constructor(
         val state: BillingState,
         val list: List<BillingSku>
     )
+
+    companion object {
+
+        @JvmStatic
+        @CheckResult
+        private fun BillingResult.isUserCancelled(): Boolean {
+            return this.responseCode == BillingClient.BillingResponseCode.USER_CANCELED
+        }
+
+        @JvmStatic
+        @CheckResult
+        private fun BillingResult.isOk(): Boolean {
+            return this.responseCode == BillingClient.BillingResponseCode.OK
+        }
+
+    }
+
 }

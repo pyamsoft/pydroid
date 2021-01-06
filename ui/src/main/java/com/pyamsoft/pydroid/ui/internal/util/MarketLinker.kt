@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.util.hyperlink
 internal object MarketLinker {
 
     private const val MARKET_URL = "market://details?id="
-    private const val DEV_PAGE_URL = "https://play.google.com/store/apps/dev?id=5257476342110165153"
+    private const val DEV_PAGE_URL = "https://play.google.com/store/apps/dev?id=8240502725675466993"
 
     @JvmStatic
     @CheckResult

@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.billing.BillingPurchase
+import com.pyamsoft.pydroid.billing.PurchaseLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
@@ -44,7 +44,7 @@ internal class BillingDialog : IconDialog() {
     internal var listView: BillingList? = null
     internal var closeView: BillingClose? = null
 
-    internal var purchaseClient: BillingPurchase? = null
+    internal var purchaseClient: PurchaseLauncher? = null
 
     internal var factory: ViewModelProvider.Factory? = null
     private val viewModel by viewModelFactory<BillingViewModel>(activity = true) { factory }

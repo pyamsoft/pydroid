@@ -14,9 +14,8 @@ import com.android.billingclient.api.SkuDetails
 import com.android.billingclient.api.SkuDetailsParams
 import com.android.billingclient.api.SkuDetailsResponseListener
 import com.pyamsoft.pydroid.billing.BillingConnector
-import com.pyamsoft.pydroid.billing.BillingError
 import com.pyamsoft.pydroid.billing.BillingInteractor
-import com.pyamsoft.pydroid.billing.BillingPurchase
+import com.pyamsoft.pydroid.billing.PurchaseLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +34,7 @@ internal class PlayStoreBillingInteractor internal constructor(
     context: Context
 ) : BillingInteractor,
     BillingConnector,
-    BillingPurchase,
+    PurchaseLauncher,
     BillingClientStateListener,
     SkuDetailsResponseListener,
     ConsumeResponseListener,
@@ -52,7 +51,7 @@ internal class PlayStoreBillingInteractor internal constructor(
 
     private val skuFlow = MutableStateFlow(State(BillingState.LOADING, emptyList()))
 
-    private val errorBus = MutableSharedFlow<BillingError>()
+    private val errorBus = MutableSharedFlow<Throwable>()
 
     private val billingScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -168,8 +167,10 @@ internal class PlayStoreBillingInteractor internal constructor(
             if (result.isUserCancelled()) {
                 Timber.d("User has cancelled purchase flow.")
             } else {
-                Timber.w("Purchase response not OK: ${result.debugMessage}")
-                errorBus.tryEmit(BillingError(result.debugMessage))
+                billingScope.launch(context = Dispatchers.IO) {
+                    Timber.w("Purchase response not OK: ${result.debugMessage}")
+                    errorBus.emit(RuntimeException(result.debugMessage))
+                }
             }
         }
     }

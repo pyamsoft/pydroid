@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 public class BillingModule(params: Parameters) {
 
     private val interactor: BillingInteractor
-    private val purchase: BillingPurchase
+    private val purchase: PurchaseLauncher
     private val connector: BillingConnector
 
     init {
@@ -48,7 +48,7 @@ public class BillingModule(params: Parameters) {
      * Provide a purchase instance
      */
     @CheckResult
-    public fun providePurchase(): BillingPurchase {
+    public fun providePurchase(): PurchaseLauncher {
         return purchase
     }
 

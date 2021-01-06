@@ -5,7 +5,7 @@ import android.app.Activity
 /**
  * Purchase client
  */
-public interface BillingPurchase {
+public interface PurchaseLauncher {
 
     /**
      * Purchase an in-app item

@@ -57,7 +57,7 @@ buildscript {
 		materialDesign = "1.2.1"
 
 		// Us
-		cachify = "0.0.19"
+		cachify = "0.0.20"
 		highlander = "0.0.15"
 
 		// Network
@@ -114,7 +114,7 @@ subprojects {
 	apply plugin: 'com.jfrog.bintray'
 
 	final String POM_GROUP = "com.pyamsoft.pydroid"
-	final String POM_VERSION = "22.4.2"
+	final String POM_VERSION = "22.4.3"
 
 	// Kapt flags
 	kapt {

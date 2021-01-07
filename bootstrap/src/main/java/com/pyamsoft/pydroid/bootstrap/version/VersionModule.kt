@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.bootstrap.version
 
-import android.app.Activity
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.cachify.Cached
@@ -57,7 +56,7 @@ public class VersionModule(params: Parameters) {
         @CheckResult
         private fun createCache(network: VersionInteractor): Cached<AppUpdateLauncher> {
             return cachify<AppUpdateLauncher>(
-                storage = MemoryCacheStorage.create(30, MINUTES)
+                storage = { listOf(MemoryCacheStorage.create(30, MINUTES)) }
             ) { network.checkVersion(true) }
         }
     }

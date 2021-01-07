@@ -54,7 +54,7 @@ public class OtherAppsModule(params: Parameters) {
             network: OtherAppsInteractor
         ): Cached<Result<List<OtherApp>>> {
             return cachify<Result<List<OtherApp>>>(
-                storage = MemoryCacheStorage.create(24, HOURS)
+                storage = { listOf(MemoryCacheStorage.create(24, HOURS)) }
             ) { requireNotNull(network.getApps(true)) }
         }
     }

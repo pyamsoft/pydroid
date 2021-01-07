@@ -19,13 +19,17 @@ package com.pyamsoft.pydroid.billing
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
+import com.pyamsoft.pydroid.core.EventBus
 
 /**
  * Billing module
  */
 public class BillingModule(params: Parameters) {
 
-    private val impl = PlayStoreBillingInteractor(params.context.applicationContext)
+    private val impl = PlayStoreBillingInteractor(
+        params.context.applicationContext,
+        params.errorBus,
+    )
 
     /**
      * Provide a billing instance
@@ -56,5 +60,6 @@ public class BillingModule(params: Parameters) {
      */
     public data class Parameters(
         internal val context: Context,
+        internal val errorBus: EventBus<Throwable>
     )
 }

@@ -24,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.onlyFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
+import com.pyamsoft.pydroid.core.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
@@ -91,7 +92,6 @@ internal interface BillingComponent {
                     return Impl(module, params, owner, imageView, parent, provider)
                 }
             }
-
         }
     }
 
@@ -102,6 +102,7 @@ internal interface BillingComponent {
 
         data class Parameters internal constructor(
             internal val context: Context,
+            internal val errorBus: EventBus<Throwable>,
             internal val imageLoader: ImageLoader,
             internal val interactor: ChangeLogInteractor,
         )
@@ -113,7 +114,8 @@ internal interface BillingComponent {
 
         private val module = BillingModule(
             BillingModule.Parameters(
-                context = params.context.applicationContext
+                context = params.context.applicationContext,
+                errorBus = params.errorBus
             )
         )
 

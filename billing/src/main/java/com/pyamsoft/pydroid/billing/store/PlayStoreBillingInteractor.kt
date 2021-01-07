@@ -19,21 +19,21 @@ import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
+import com.pyamsoft.pydroid.core.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.util.UUID
 
 internal class PlayStoreBillingInteractor internal constructor(
     context: Context,
+    private val errorBus: EventBus<Throwable>
 ) : BillingInteractor,
     BillingConnector,
     BillingLauncher,
@@ -52,8 +52,6 @@ internal class PlayStoreBillingInteractor internal constructor(
     private val appSkuList: List<String>
 
     private val skuFlow = MutableStateFlow(State(BillingState.LOADING, emptyList()))
-
-    private val errorBus = MutableSharedFlow<Error>()
 
     private val billingScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -173,7 +171,7 @@ internal class PlayStoreBillingInteractor internal constructor(
             } else {
                 billingScope.launch(context = Dispatchers.IO) {
                     Timber.w("Purchase response not OK: ${result.debugMessage}")
-                    errorBus.emit(Error(RuntimeException(result.debugMessage)))
+                    errorBus.send(RuntimeException(result.debugMessage))
                 }
             }
         }
@@ -194,7 +192,7 @@ internal class PlayStoreBillingInteractor internal constructor(
 
     override suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit) =
         withContext(context = Dispatchers.IO) {
-            errorBus.collect { onErrorReceived(it.throwable) }
+            errorBus.onEvent { onErrorReceived(it) }
         }
 
     private fun handlePurchases(purchases: List<Purchase>) {
@@ -219,11 +217,6 @@ internal class PlayStoreBillingInteractor internal constructor(
     private data class State constructor(
         val state: BillingState,
         val list: List<BillingSku>
-    )
-
-    private data class Error @JvmOverloads constructor(
-        val throwable: Throwable,
-        private val id: String = UUID.randomUUID().toString()
     )
 
     companion object {

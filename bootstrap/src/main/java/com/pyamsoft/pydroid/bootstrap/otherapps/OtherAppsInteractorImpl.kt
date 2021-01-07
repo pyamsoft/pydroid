@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
 internal class OtherAppsInteractorImpl internal constructor(
     private val packageName: String,
     private val otherAppsCache: Cached<Result<List<OtherApp>>>
-) : OtherAppsInteractor, Cache<Any> {
+) : OtherAppsInteractor, Cache {
 
     override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
         withContext(context = Dispatchers.IO) {

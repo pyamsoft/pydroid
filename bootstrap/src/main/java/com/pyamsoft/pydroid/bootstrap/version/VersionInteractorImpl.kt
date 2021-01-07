@@ -26,7 +26,7 @@ import timber.log.Timber
 internal class VersionInteractorImpl internal constructor(
     private val updater: AppUpdater,
     private val updateCache: Cached<AppUpdateLauncher>
-) : VersionInteractor, Cache<Any> {
+) : VersionInteractor, Cache {
 
     override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
         withContext(context = Dispatchers.IO) {

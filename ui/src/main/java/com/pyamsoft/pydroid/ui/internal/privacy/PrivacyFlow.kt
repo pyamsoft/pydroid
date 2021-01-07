@@ -16,7 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.privacy
 
-import com.pyamsoft.pydroid.core.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState

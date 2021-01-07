@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-android {
-	kotlinOptions {
-		freeCompilerArgs += '-Xexplicit-api=strict'
-	}
-}
-
 dependencies {
-	// Timber logging
-	implementation "com.jakewharton.timber:timber:$timber"
+    api project(':core')
 
-	// View Binding
-	implementation "androidx.databinding:viewbinding:$agp_version"
+    implementation "androidx.annotation:annotation:$annotation"
 
-	// ViewModel
-	// We publish these one since consumers use it to access a coroutine scope
-	api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
-	api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
-
-	api project(':bus')
-	api project(':util')
+    // Expose coroutines
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 }
 
+android {
+    kotlinOptions {
+        freeCompilerArgs += '-Xexplicit-api=strict'
+    }
+}

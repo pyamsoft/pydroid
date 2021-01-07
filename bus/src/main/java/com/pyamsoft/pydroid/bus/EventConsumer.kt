@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.core
+package com.pyamsoft.pydroid.bus
 
 /**
  * A simple receive side implementation of an EventBus

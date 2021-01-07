@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.billing
 import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
-import com.pyamsoft.pydroid.core.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 
 /**
  * Billing module

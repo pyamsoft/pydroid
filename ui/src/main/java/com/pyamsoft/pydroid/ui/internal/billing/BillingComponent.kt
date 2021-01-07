@@ -24,7 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.arch.onlyFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
-import com.pyamsoft.pydroid.core.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider

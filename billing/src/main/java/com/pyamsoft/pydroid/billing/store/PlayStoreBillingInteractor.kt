@@ -19,7 +19,7 @@ import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
-import com.pyamsoft.pydroid.core.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

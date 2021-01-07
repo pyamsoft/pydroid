@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.core.internal
+package com.pyamsoft.pydroid.bus.internal
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onSubscription

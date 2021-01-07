@@ -23,7 +23,7 @@ import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogModule
 import com.pyamsoft.pydroid.bootstrap.network.NetworkModule
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsModule
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
-import com.pyamsoft.pydroid.core.EventBus
+import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.core
+package com.pyamsoft.pydroid.bus
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.core.internal.RealBus
+import com.pyamsoft.pydroid.bus.internal.RealBus
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 

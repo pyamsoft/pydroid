@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.bootstrap.otherapps
 
+import android.content.Context
 import androidx.annotation.CheckResult
 import com.pyamsoft.cachify.Cached
 import com.pyamsoft.cachify.MemoryCacheStorage
@@ -34,8 +35,17 @@ public class OtherAppsModule(params: Parameters) {
 
     init {
         val otherAppsService = params.serviceCreator.createService(OtherAppsService::class.java)
-        val network = OtherAppsInteractorNetwork(otherAppsService)
-        impl = OtherAppsInteractorImpl(params.packageName, createCache(network))
+
+        val network = OtherAppsInteractorNetwork(
+            params.context.applicationContext,
+            otherAppsService
+        )
+
+        impl = OtherAppsInteractorImpl(
+            params.context.applicationContext,
+            params.packageName,
+            createCache(network)
+        )
     }
 
     /**
@@ -63,6 +73,7 @@ public class OtherAppsModule(params: Parameters) {
      * Module parameters
      */
     public data class Parameters(
+        internal val context: Context,
         internal val packageName: String,
         internal val serviceCreator: ServiceCreator
     )

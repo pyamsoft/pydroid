@@ -16,6 +16,8 @@
 
 package com.pyamsoft.pydroid.bootstrap.otherapps
 
+import android.content.Context
+import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherAppsService
 import com.pyamsoft.pydroid.core.Enforcer
@@ -24,8 +26,9 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 internal class OtherAppsInteractorNetwork internal constructor(
+    context: Context,
     private val service: OtherAppsService
-) : OtherAppsInteractor {
+) : AppInteractorImpl(context), OtherAppsInteractor {
 
     override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
         withContext(context = Dispatchers.IO) {

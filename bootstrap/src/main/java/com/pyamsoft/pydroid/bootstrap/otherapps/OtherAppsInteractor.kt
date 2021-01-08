@@ -17,12 +17,13 @@
 package com.pyamsoft.pydroid.bootstrap.otherapps
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.bootstrap.app.AppInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
 /**
  * Interactor for other pyamsoft applications
  */
-public interface OtherAppsInteractor {
+public interface OtherAppsInteractor : AppInteractor {
 
     /**
      * Retrieve the other pyamsoft application data

@@ -16,17 +16,20 @@
 
 package com.pyamsoft.pydroid.bootstrap.otherapps
 
+import android.content.Context
 import com.pyamsoft.cachify.Cache
 import com.pyamsoft.cachify.Cached
+import com.pyamsoft.pydroid.bootstrap.app.AppInteractorImpl
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class OtherAppsInteractorImpl internal constructor(
+    context: Context,
     private val packageName: String,
     private val otherAppsCache: Cached<Result<List<OtherApp>>>
-) : OtherAppsInteractor, Cache {
+) : AppInteractorImpl(context), OtherAppsInteractor, Cache {
 
     override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
         withContext(context = Dispatchers.IO) {

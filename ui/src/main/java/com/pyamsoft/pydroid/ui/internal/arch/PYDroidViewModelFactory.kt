@@ -22,15 +22,12 @@ import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
-import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewModel
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigViewModel
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
-import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlin.reflect.KClass
 
@@ -55,7 +52,6 @@ internal class PYDroidViewModelFactory internal constructor(
     }
 
     internal data class Parameters internal constructor(
-        internal val name: CharSequence,
         internal val version: Int,
         internal val theming: Theming,
         internal val interactors: Interactors

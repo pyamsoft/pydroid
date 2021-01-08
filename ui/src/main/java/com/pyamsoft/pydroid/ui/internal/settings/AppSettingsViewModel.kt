@@ -31,6 +31,7 @@ internal class AppSettingsViewModel internal constructor(
     interactor: OtherAppsInteractor,
 ) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
     initialState = AppSettingsViewState(
+        applicationName = "",
         isDarkTheme = null,
         throwable = null,
         otherApps = emptyList()
@@ -46,6 +47,11 @@ internal class AppSettingsViewModel internal constructor(
     init {
         viewModelScope.launch(context = Dispatchers.Default) {
             otherAppsRunner.call(false)
+        }
+
+        viewModelScope.launch(context = Dispatchers.Default) {
+            val name = interactor.getDisplayName()
+            setState { copy(applicationName = name) }
         }
     }
 

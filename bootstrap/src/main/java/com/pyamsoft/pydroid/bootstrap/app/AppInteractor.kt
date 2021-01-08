@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.util
+package com.pyamsoft.pydroid.bootstrap.app
 
-import android.app.Application
-import android.content.pm.ApplicationInfo
 import androidx.annotation.CheckResult
 
 /**
- * The application is in debug mode if the DEBUGGABLE flag is set
+ * App level interactor
  */
-@CheckResult
-public fun Application.isDebugMode(): Boolean {
-    val flags = this.applicationInfo.flags
-    return flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-}
+public interface AppInteractor {
 
-/**
- * Load the name of the Application from the package manager
- */
-public val Application.displayName: CharSequence
-    @get:CheckResult get() {
-        return this.applicationInfo.loadLabel(this.packageManager).toString()
-    }
+    /**
+     * Gets the application display name
+     */
+    @CheckResult
+    public suspend fun getDisplayName(): CharSequence
+}

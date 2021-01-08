@@ -32,7 +32,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class AppSettingsView internal constructor(
-    private val applicationName: CharSequence,
     private val bugReportUrl: String,
     private val viewSourceUrl: String,
     private val privacyPolicyUrl: String,
@@ -63,7 +62,6 @@ internal class AppSettingsView internal constructor(
     init {
         val self = this
         doOnInflate {
-            setupApplicationTitle()
             setupBugReport()
             setupViewSource()
             setupClearAppData()
@@ -102,6 +100,7 @@ internal class AppSettingsView internal constructor(
 
     override fun onRender(state: UiRender<AppSettingsViewState>) {
         state.distinctBy { it.isDarkTheme }.render(viewScope) { handleDarkTheme(it) }
+        state.distinctBy { it.applicationName }.render(viewScope) { handleApplicationName(it) }
     }
 
     private fun handleDarkTheme(darkTheme: AppSettingsViewState.DarkTheme?) {
@@ -249,9 +248,9 @@ internal class AppSettingsView internal constructor(
         }
     }
 
-    private fun setupApplicationTitle() {
-        applicationGroup.title = "$applicationName Settings"
-        rate.title = "Rate $applicationName"
+    private fun handleApplicationName(name: CharSequence) {
+        applicationGroup.title = "$name Settings"
+        rate.title = "Rate $name"
     }
 
     companion object {

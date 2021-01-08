@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.internal.app
+package com.pyamsoft.pydroid.bootstrap.app
 
-import androidx.annotation.CheckResult
-import androidx.annotation.DrawableRes
+import android.content.Context
+import com.pyamsoft.pydroid.core.Enforcer
+import com.pyamsoft.pydroid.util.applicationDisplayName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-internal interface AppProvider {
+internal abstract class AppInteractorImpl protected constructor(
+    private val context: Context,
+) : AppInteractor {
 
-    @get:[CheckResult DrawableRes]
-    val applicationIcon: Int
+    final override suspend fun getDisplayName(): CharSequence =
+        withContext(context = Dispatchers.Default) {
+            Enforcer.assertOffMainThread()
+            return@withContext context.applicationDisplayName
+        }
 }
+

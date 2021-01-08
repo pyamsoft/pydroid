@@ -25,7 +25,6 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
-import timber.log.Timber
 
 abstract class ActivityBase constructor(
 ) : AppCompatActivity(),
@@ -52,9 +51,6 @@ abstract class ActivityBase constructor(
      * Activity level toolbar, similar to ActionBar
      */
     private var capturedToolbar: Toolbar? = null
-
-    final override val applicationPackageName: String
-        get() = requireNotNull(packageName)
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {

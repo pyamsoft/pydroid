@@ -42,7 +42,7 @@ internal class BillingViewModel internal constructor(
 
     init {
         viewModelScope.launch(context = Dispatchers.Default) {
-            val displayName = changeLogInteractor.getDisplayName(provider.applicationPackageName)
+            val displayName = changeLogInteractor.getDisplayName()
             setState {
                 copy(
                     name = displayName,

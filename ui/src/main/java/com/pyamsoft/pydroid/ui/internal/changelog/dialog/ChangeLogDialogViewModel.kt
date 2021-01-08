@@ -36,7 +36,7 @@ internal class ChangeLogDialogViewModel internal constructor(
 
     init {
         viewModelScope.launch(context = Dispatchers.Default) {
-            val displayName = interactor.getDisplayName(provider.applicationPackageName)
+            val displayName = interactor.getDisplayName()
             setState {
                 copy(
                     name = displayName,
@@ -52,6 +52,5 @@ internal class ChangeLogDialogViewModel internal constructor(
             is ChangeLogDialogViewEvent.Close -> publish(ChangeLogDialogControllerEvent.Close)
         }
     }
-
 }
 

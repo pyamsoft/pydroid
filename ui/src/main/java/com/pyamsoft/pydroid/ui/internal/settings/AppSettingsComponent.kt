@@ -21,8 +21,8 @@ import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
 import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
-import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
+import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
 internal interface AppSettingsComponent {
 
@@ -40,7 +40,6 @@ internal interface AppSettingsComponent {
         ): AppSettingsComponent
 
         data class Parameters internal constructor(
-            internal val applicationName: CharSequence,
             internal val bugReportUrl: String,
             internal val viewSourceUrl: String,
             internal val privacyPolicyUrl: String,
@@ -61,7 +60,7 @@ internal interface AppSettingsComponent {
         override fun inject(fragment: AppSettingsPreferenceFragment) {
             val versionView = VersionCheckView(owner, parentProvider)
             val settingsView = AppSettingsView(
-                params.applicationName, params.bugReportUrl,
+                params.bugReportUrl,
                 params.viewSourceUrl, params.privacyPolicyUrl, params.termsConditionsUrl,
                 hideClearAll, hideUpgradeInformation, preferenceScreen
             )

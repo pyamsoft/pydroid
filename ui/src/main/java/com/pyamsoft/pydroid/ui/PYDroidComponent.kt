@@ -105,7 +105,6 @@ internal interface PYDroidComponent {
 
         data class Parameters internal constructor(
             internal val application: Application,
-            internal val name: CharSequence,
             internal val sourceUrl: String,
             internal val reportUrl: String,
             internal val privacyPolicyUrl: String,
@@ -154,6 +153,7 @@ internal interface PYDroidComponent {
 
         private val otherAppsModule = OtherAppsModule(
             OtherAppsModule.Parameters(
+                context = context.applicationContext,
                 packageName = packageName,
                 serviceCreator = networkModule.provideServiceCreator()
             )
@@ -169,7 +169,6 @@ internal interface PYDroidComponent {
         private val viewModelFactory =
             PYDroidViewModelFactory(
                 PYDroidViewModelFactory.Parameters(
-                    name = params.name,
                     version = params.version,
                     theming = theming,
                     interactors = PYDroidViewModelFactory.Parameters.Interactors(
@@ -182,7 +181,6 @@ internal interface PYDroidComponent {
             )
 
         private val appSettingsParams = AppSettingsComponent.Factory.Parameters(
-            applicationName = params.name,
             bugReportUrl = params.reportUrl,
             viewSourceUrl = params.sourceUrl,
             privacyPolicyUrl = params.privacyPolicyUrl,

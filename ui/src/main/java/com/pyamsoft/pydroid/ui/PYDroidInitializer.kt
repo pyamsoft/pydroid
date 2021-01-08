@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.ui
 
 import android.app.Application
 import android.os.StrictMode
-import com.pyamsoft.pydroid.util.displayName
 import com.pyamsoft.pydroid.util.isDebugMode
 import timber.log.Timber
 
@@ -46,7 +45,6 @@ internal data class PYDroidInitializer internal constructor(
             val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
                 PYDroidComponent.Component.Parameters(
                     application = application,
-                    name = application.displayName,
                     sourceUrl = params.viewSourceUrl,
                     reportUrl = params.bugReportUrl,
                     privacyPolicyUrl = params.privacyPolicyUrl,

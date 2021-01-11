@@ -11,7 +11,9 @@ such is not meant for use outside of pyamsoft projects.
 ## PYDroid Family
 [arch](https://github.com/pyamsoft/pydroid/tree/main/arch)
 [autopsy](https://github.com/pyamsoft/pydroid/tree/main/autopsy)
+[billing](https://github.com/pyamsoft/pydroid/tree/main/billing)
 [bootstrap](https://github.com/pyamsoft/pydroid/tree/main/bootstrap)
+[bus](https://github.com/pyamsoft/pydroid/tree/main/bus)
 [core](https://github.com/pyamsoft/pydroid/tree/main/core)
 [loader](https://github.com/pyamsoft/pydroid/tree/main/loader)
 [notify](https://github.com/pyamsoft/pydroid/tree/main/notify)

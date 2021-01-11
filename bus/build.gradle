@@ -18,9 +18,6 @@ dependencies {
     api project(':core')
 
     implementation "androidx.annotation:annotation:$annotation"
-
-    // Expose coroutines
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 }
 
 android {

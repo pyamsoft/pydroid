@@ -31,6 +31,7 @@ public interface UiBundleReader {
      * This will be false if the Activity/Fragment/View is being created for the first time.
      */
     @CheckResult
+    @Deprecated("Use get(key): T? and handle the null case")
     public fun hasNoSavedState(): Boolean
 
     /**
@@ -43,16 +44,19 @@ public interface UiBundleReader {
      * Return the bundled value, or a default
      */
     @CheckResult
+    @Deprecated("Use get(key): T?")
     public fun <T : Any> getOrDefault(key: String, defaultValue: T): T
 
     /**
      * Consume the bundled value if one exists
      */
+    @Deprecated("Use get(key): T?")
     public fun <T : Any> useIfAvailable(key: String, func: (value: T) -> Unit)
 
     /**
      * Consume the bundled value, or a default.
      */
+    @Deprecated("Use get(key): T?")
     public fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit)
 
     public companion object {

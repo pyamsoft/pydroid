@@ -12,7 +12,14 @@ public interface UiRender<S> {
      * Unique stream by the specific piece of a state
      */
     @CheckResult
+    @Deprecated("Use onChanged", replaceWith = ReplaceWith("onChanged(distinctBy)"))
     public fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T>
+
+    /**
+     * Unique stream by the specific piece of a state
+     */
+    @CheckResult
+    public fun <T> onChanged(change: (state: S) -> T): UiRender<T>
 
     /**
      * Render a state

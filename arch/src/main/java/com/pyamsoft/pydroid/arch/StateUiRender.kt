@@ -17,8 +17,12 @@ private class StateUiRender<S>(private val state: S) : UiRender<S> {
         }
     }
 
+    override fun <T> onChanged(change: (state: S) -> T): UiRender<T> {
+        return StateUiRender(change(state))
+    }
+
     override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
-        return StateUiRender(distinctBy(state))
+        return onChanged(distinctBy)
     }
 }
 

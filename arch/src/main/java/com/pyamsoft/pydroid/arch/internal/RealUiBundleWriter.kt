@@ -27,6 +27,7 @@ import java.io.Serializable
 /**
  * Bundle backed implementation of a UiBundleWriter
  */
+@Deprecated("Remove in next major version")
 internal class RealUiBundleWriter internal constructor(
     private val bundle: Bundle
 ) : UiBundleWriter {

@@ -16,36 +16,16 @@
 
 package com.pyamsoft.pydroid.arch
 
-import android.os.Bundle
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.internal.RealUiBundleWriter
 
 /**
- * Abstraction over saving data into an Android Bundle object
- *
- * TODO(Peter): Remove in favor of UiSavedStateWriter
+ * Abstraction over restoring data from save-restore lifecycle
  */
-public interface UiBundleWriter {
+public interface UiSavedStateReader {
 
     /**
-     * Add a value to the bundle
+     * Get a saved value at key, null if not present
      */
-    public fun <T : Any> put(key: String, value: T)
-
-    /**
-     * Remove a value from the bundle
-     */
-    public fun remove(key: String)
-
-    public companion object {
-
-        /**
-         * Create a bundle backed UiBundleWriter instance
-         */
-        @JvmStatic
-        @CheckResult
-        public fun create(bundle: Bundle): UiBundleWriter {
-            return RealUiBundleWriter(bundle)
-        }
-    }
+    @CheckResult
+    public fun <T : Any> get(key: String): T?
 }

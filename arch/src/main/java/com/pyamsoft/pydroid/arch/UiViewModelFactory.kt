@@ -23,6 +23,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
+import com.pyamsoft.pydroid.arch.internal.RealUiSavedState
 import kotlin.reflect.KClass
 
 /**
@@ -79,7 +80,7 @@ public abstract class UiViewModelSavedStateFactory @JvmOverloads protected const
             val viewModelClass = modelClass as Class<out UiStateViewModel<*>>
 
             @Suppress("UNCHECKED_CAST")
-            return viewModel(viewModelClass.kotlin, handle) as T
+            return viewModel(viewModelClass.kotlin, RealUiSavedState(handle)) as T
         } else {
             fail()
         }
@@ -98,7 +99,7 @@ public abstract class UiViewModelSavedStateFactory @JvmOverloads protected const
     @CheckResult
     protected abstract fun <T : UiStateViewModel<*>> viewModel(
         modelClass: KClass<T>,
-        handle: SavedStateHandle,
+        savedState: UiSavedState,
     ): UiStateViewModel<*>
 }
 
@@ -132,7 +133,7 @@ public inline fun <reified VM : UiStateViewModel<*>> onlySavedStateFactory(
 
         override fun <T : UiStateViewModel<*>> viewModel(
             modelClass: KClass<T>,
-            handle: SavedStateHandle
+            savedState: UiSavedState
         ): UiStateViewModel<*> {
             return when (modelClass) {
                 VM::class -> provider()

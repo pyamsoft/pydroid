@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.arch.UiBundleReader
 /**
  * Bundle backed implementation of a UiBundleReader
  */
+@Deprecated("Remove in next major version")
 internal class RealUiBundleReader internal constructor(
     private val bundle: Bundle?
 ) : UiBundleReader {

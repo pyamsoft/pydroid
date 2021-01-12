@@ -22,6 +22,8 @@ import com.pyamsoft.pydroid.arch.internal.RealUiBundleReader
 
 /**
  * Reads saved state from a Bundle
+ *
+ * TODO(Peter): Remove in favor of UiSavedStateReader
  */
 public interface UiBundleReader {
 

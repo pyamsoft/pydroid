@@ -18,7 +18,6 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Enforcer
@@ -37,12 +36,12 @@ import kotlin.LazyThreadSafetyMode.NONE
  * TODO(Peter): Once the doOnSaveState hook is removed from UiViewModel, we can have this class extend UiViewModel. Check ABI compatibility.
  */
 public abstract class UiSaveStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
-    handle: SavedStateHandle,
+    savedState: UiSavedState,
     initialState: S
 ) : UiStateViewModel<S>(initialState) {
 
     @PublishedApi
-    internal var handle: SavedStateHandle? = handle
+    internal var savedState: UiSavedState? = savedState
 
     private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onClearEvents by onClearEventDelegate
@@ -52,7 +51,7 @@ public abstract class UiSaveStateViewModel<S : UiViewState, V : UiViewEvent, C :
     init {
         doOnCleared {
             // Clear out ref to handle
-            this.handle = null
+            this.savedState = null
         }
     }
 
@@ -167,7 +166,7 @@ public abstract class UiSaveStateViewModel<S : UiViewState, V : UiViewEvent, C :
     @UiThread
     @CheckResult
     protected inline fun <T : Any> restoreState(key: String, defaultValue: () -> T): T {
-        return requireNotNull(handle).get<T>(key) ?: defaultValue()
+        return requireNotNull(savedState).get(key) ?: defaultValue()
     }
 
     /**
@@ -182,7 +181,7 @@ public abstract class UiSaveStateViewModel<S : UiViewState, V : UiViewEvent, C :
      */
     @UiThread
     protected fun <T : Any> saveState(key: String, value: T) {
-        return requireNotNull(handle).set(key, value)
+        return requireNotNull(savedState).put(key, value)
     }
 
     /**

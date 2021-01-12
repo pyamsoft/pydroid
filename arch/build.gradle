@@ -15,27 +15,26 @@
  */
 
 android {
-	kotlinOptions {
-		freeCompilerArgs += '-Xexplicit-api=strict'
-	}
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
 }
 
 dependencies {
-	// Timber logging
-	implementation "com.jakewharton.timber:timber:$timber"
+  // Timber logging
+  implementation "com.jakewharton.timber:timber:$timber"
 
-	// View Binding
-	implementation "androidx.databinding:viewbinding:$agp_version"
+  // View Binding
+  implementation "androidx.databinding:viewbinding:$agp_version"
 
-	// ViewModel
-	// We publish these one since consumers use it to access a coroutine scope
-	api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
-	api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+  // ViewModel
+  // We publish these one since consumers use it to access a coroutine scope
+  api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+  api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
 
-	// ViewModel SavedState
-	implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle"
+  // ViewModel SavedState
+  implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle"
 
-	api project(':bus')
-	api project(':util')
+  api project(':bus')
+  api project(':util')
 }
-

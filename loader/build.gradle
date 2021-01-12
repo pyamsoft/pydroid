@@ -15,19 +15,18 @@
  */
 
 dependencies {
-	// Glide
-	implementation "com.github.bumptech.glide:glide:$glide"
-	kapt "com.github.bumptech.glide:compiler:$glide"
+  // Glide
+  implementation "com.github.bumptech.glide:glide:$glide"
+  kapt "com.github.bumptech.glide:compiler:$glide"
 
-	// AppCompat
-	implementation "androidx.appcompat:appcompat:$appCompat"
+  // AppCompat
+  implementation "androidx.appcompat:appcompat:$appCompat"
 
-	api project(':util')
+  api project(':util')
 }
 
 android {
-	kotlinOptions {
-		freeCompilerArgs += '-Xexplicit-api=strict'
-	}
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
 }
-

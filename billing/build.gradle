@@ -15,18 +15,17 @@
  */
 
 android {
-    kotlinOptions {
-        freeCompilerArgs += '-Xexplicit-api=strict'
-    }
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
 }
 
 dependencies {
-    api project(':bus')
+  api project(':bus')
 
-    // Timber logging
-    implementation "com.jakewharton.timber:timber:$timber"
+  // Timber logging
+  implementation "com.jakewharton.timber:timber:$timber"
 
-    implementation "androidx.annotation:annotation:$annotation"
-    implementation "com.android.billingclient:billing:$playBilling"
+  implementation "androidx.annotation:annotation:$annotation"
+  implementation "com.android.billingclient:billing:$playBilling"
 }
-

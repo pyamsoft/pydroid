@@ -15,14 +15,13 @@
  */
 
 dependencies {
-	implementation "androidx.core:core:$core"
+  implementation "androidx.core:core:$core"
 
-	api project(':core')
+  api project(':core')
 }
 
 android {
-	kotlinOptions {
-		freeCompilerArgs += '-Xexplicit-api=strict'
-	}
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
 }
-

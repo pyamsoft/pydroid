@@ -15,18 +15,17 @@
  */
 
 android {
-	buildFeatures {
-		viewBinding true
-	}
+  buildFeatures {
+    viewBinding true
+  }
 
-	kotlinOptions {
-		freeCompilerArgs += '-Xexplicit-api=strict'
-	}
+  kotlinOptions {
+    freeCompilerArgs += '-Xexplicit-api=strict'
+  }
 }
 
 dependencies {
-	api project(':core')
+  api project(':core')
 
-	implementation "androidx.startup:startup-runtime:$startup"
+  implementation "androidx.startup:startup-runtime:$startup"
 }
-

@@ -16,47 +16,47 @@
 
 android {
 
-	kotlinOptions {
-		freeCompilerArgs += '-Xallow-result-return-type'
-	}
+  kotlinOptions {
+    freeCompilerArgs += '-Xallow-result-return-type'
+  }
 
-	buildFeatures {
-		viewBinding true
-	}
+  buildFeatures {
+    viewBinding true
+  }
 }
 
 dependencies {
-	// Timber logging
-	implementation "com.jakewharton.timber:timber:$timber"
+  // Timber logging
+  implementation "com.jakewharton.timber:timber:$timber"
 
-	// Android support library.
+  // Android support library.
 
-	// These need to be API since they are used as base classes for Activity and Fragment
-	api "androidx.fragment:fragment:$fragment"
-	api "androidx.preference:preference:$preference"
+  // These need to be API since they are used as base classes for Activity and Fragment
+  api "androidx.fragment:fragment:$fragment"
+  api "androidx.preference:preference:$preference"
 
-	implementation "androidx.core:core-ktx:$core"
-	implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle"
-	implementation "androidx.recyclerview:recyclerview:$recyclerView"
-	implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
-	implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
+  implementation "androidx.core:core-ktx:$core"
+  implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle"
+  implementation "androidx.recyclerview:recyclerview:$recyclerView"
+  implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+  implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
 
-	// Material Design
-	implementation "com.google.android.material:material:$materialDesign"
+  // Material Design
+  implementation "com.google.android.material:material:$materialDesign"
 
-	// RecyclerView decorations
-	implementation "io.cabriole:decorator:$decorator"
-	implementation "me.zhanghai.android.fastscroll:library:$fastscroll"
+  // RecyclerView decorations
+  implementation "io.cabriole:decorator:$decorator"
+  implementation "me.zhanghai.android.fastscroll:library:$fastscroll"
 
-	// Cachify
-	implementation "com.pyamsoft.cachify:cachify:$cachify"
+  // Cachify
+  implementation "com.pyamsoft.cachify:cachify:$cachify"
 
-	// Highlander
-	implementation "com.pyamsoft.highlander:highlander:$highlander"
+  // Highlander
+  implementation "com.pyamsoft.highlander:highlander:$highlander"
 
-	api project(':arch')
-	api project(':billing')
-	api project(':bootstrap')
-	api project(':loader')
-	api project(':util')
+  api project(':arch')
+  api project(':billing')
+  api project(':bootstrap')
+  api project(':loader')
+  api project(':util')
 }

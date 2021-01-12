@@ -16,9 +16,13 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
 import androidx.annotation.CheckResult
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
 import kotlin.reflect.KClass
 
 /**
@@ -56,6 +60,49 @@ public abstract class UiViewModelFactory protected constructor() : ViewModelProv
 }
 
 /**
+ * A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances.
+ *
+ * Integrated with androidx.savedstate
+ */
+public abstract class UiViewModelSavedStateFactory @JvmOverloads protected constructor(
+    owner: SavedStateRegistryOwner,
+    defaultArgs: Bundle? = null
+) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+
+    final override fun <T : ViewModel?> create(
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle
+    ): T {
+        if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
+            @Suppress("UNCHECKED_CAST")
+            val viewModelClass = modelClass as Class<out UiStateViewModel<*>>
+
+            @Suppress("UNCHECKED_CAST")
+            return viewModel(viewModelClass.kotlin, handle) as T
+        } else {
+            fail()
+        }
+    }
+
+    /**
+     * Factory fails to return a value
+     */
+    protected fun fail(): Nothing {
+        throw IllegalArgumentException("Factory can only handle classes that extend UiViewModel")
+    }
+
+    /**
+     * Resolve the requested UiViewModel
+     */
+    @CheckResult
+    protected abstract fun <T : UiStateViewModel<*>> viewModel(
+        modelClass: KClass<T>,
+        handle: SavedStateHandle,
+    ): UiStateViewModel<*>
+}
+
+/**
  * A simple builder for a Factory which only holds one type of ViewModel
  */
 @CheckResult
@@ -63,6 +110,30 @@ public inline fun <reified VM : UiStateViewModel<*>> onlyFactory(crossinline pro
     return object : UiViewModelFactory() {
 
         override fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*> {
+            return when (modelClass) {
+                VM::class -> provider()
+                else -> fail()
+            }
+        }
+    }
+}
+
+/**
+ * A simple builder for a Factory which only holds one type of ViewModel
+ */
+@CheckResult
+@JvmOverloads
+public inline fun <reified VM : UiStateViewModel<*>> onlySavedStateFactory(
+    owner: SavedStateRegistryOwner,
+    defaultArgs: Bundle? = null,
+    crossinline provider: () -> VM
+): ViewModelProvider.Factory {
+    return object : UiViewModelSavedStateFactory(owner, defaultArgs) {
+
+        override fun <T : UiStateViewModel<*>> viewModel(
+            modelClass: KClass<T>,
+            handle: SavedStateHandle
+        ): UiStateViewModel<*> {
             return when (modelClass) {
                 VM::class -> provider()
                 else -> fail()

@@ -32,6 +32,9 @@ dependencies {
 	api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 	api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
 
+	// ViewModel SavedState
+	implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle"
+
 	api project(':bus')
 	api project(':util')
 }

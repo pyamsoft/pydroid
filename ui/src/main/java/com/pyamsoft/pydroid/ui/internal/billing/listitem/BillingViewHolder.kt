@@ -38,7 +38,7 @@ internal class BillingViewHolder private constructor(
     internal var priceView: BillingItemPrice? = null
 
     init {
-        Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
             .plusBillingItem()
             .create(binding.listitemLinearH)
             .inject(this)
@@ -55,7 +55,6 @@ internal class BillingViewHolder private constructor(
                 is BillingItemViewEvent.Purchase -> callback.onPurchase(adapterPosition)
             }
         }
-
     }
 
     override fun bind(state: BillingItemViewState) {

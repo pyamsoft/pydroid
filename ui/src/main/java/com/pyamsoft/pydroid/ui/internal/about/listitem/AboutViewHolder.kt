@@ -38,7 +38,7 @@ internal class AboutViewHolder private constructor(
     internal var actionView: AboutItemActionView? = null
 
     init {
-        Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
             .plusAboutItem()
             .create(binding.aboutListitemRoot)
             .inject(this)

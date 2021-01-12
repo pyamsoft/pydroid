@@ -33,7 +33,7 @@ internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
     private val viewModel by viewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Injector.obtain<PYDroidComponent>(requireContext().applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(requireContext())
             .plusClearConfirmDialog()
             .inject(this)
 

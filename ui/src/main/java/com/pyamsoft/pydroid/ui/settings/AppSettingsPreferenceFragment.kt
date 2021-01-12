@@ -91,7 +91,7 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        Injector.obtain<PYDroidComponent>(view.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(view.context)
             .plusSettings()
             .create(
                 viewLifecycleOwner,

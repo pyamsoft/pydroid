@@ -59,7 +59,7 @@ internal class OtherAppsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = LayoutFrameBinding.bind(view)
-        Injector.obtain<PYDroidComponent>(view.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(view.context)
             .plusOtherApps()
             .create(binding.layoutFrame, viewLifecycleOwner)
             .inject(this)

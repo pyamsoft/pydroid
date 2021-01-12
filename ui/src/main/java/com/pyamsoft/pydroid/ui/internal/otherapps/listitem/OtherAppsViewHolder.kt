@@ -40,7 +40,7 @@ internal class OtherAppsViewHolder private constructor(
     internal var actionView: OtherAppsItemActionView? = null
 
     init {
-        Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
             .plusOtherAppsItem()
             .create(binding.otherAppsListitemRoot)
             .inject(this)

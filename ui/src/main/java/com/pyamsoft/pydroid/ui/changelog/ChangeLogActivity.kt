@@ -49,7 +49,7 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Injector.obtain<PYDroidComponent>(applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusChangeLog()
             .create()
             .inject(this)
@@ -88,6 +88,5 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
     companion object {
 
         private const val INVALID = 0
-
     }
 }

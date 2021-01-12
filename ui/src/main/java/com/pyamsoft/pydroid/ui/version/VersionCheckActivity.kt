@@ -59,7 +59,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
         // Need to do this in onPostCreate because the snackbarRoot will not be available until
         // after subclass onCreate
-        injector = Injector.obtain<PYDroidComponent>(applicationContext)
+        injector = Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusVersionCheck()
             .create(this) { snackbarRoot }
             .also { component ->

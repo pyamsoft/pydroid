@@ -36,7 +36,7 @@ internal class ChangeLogViewHolder private constructor(
     internal var textView: ChangeLogItemText? = null
 
     init {
-        Injector.obtain<PYDroidComponent>(itemView.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
             .plusChangeLogDialogItem()
             .create(binding.listitemLinearH)
             .inject(this)
@@ -49,7 +49,6 @@ internal class ChangeLogViewHolder private constructor(
         ) {
 
         }
-
     }
 
     override fun bind(state: ChangeLogItemViewState) {

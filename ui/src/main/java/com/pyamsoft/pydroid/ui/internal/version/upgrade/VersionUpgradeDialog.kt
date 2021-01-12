@@ -41,7 +41,7 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Injector.obtain<VersionCheckComponent>(requireActivity())
+        Injector.obtainFromActivity<VersionCheckComponent>(requireActivity())
             .inject(this)
 
         return AlertDialog.Builder(requireActivity())

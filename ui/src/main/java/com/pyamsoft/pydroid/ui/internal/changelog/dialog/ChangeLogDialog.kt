@@ -48,7 +48,7 @@ internal class ChangeLogDialog : IconDialog() {
     }
 
     override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
-        Injector.obtain<PYDroidComponent>(binding.root.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(binding.root.context)
             .plusChangeLogDialog()
             .create(
                 binding.dialogRoot,

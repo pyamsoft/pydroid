@@ -55,7 +55,7 @@ internal class BillingDialog : IconDialog() {
     }
 
     override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
-        Injector.obtain<BillingComponent>(requireActivity())
+        Injector.obtainFromActivity<BillingComponent>(requireActivity())
             .plusDialog()
             .create(
                 binding.dialogRoot,
@@ -127,5 +127,4 @@ internal class BillingDialog : IconDialog() {
             return activity.supportFragmentManager.findFragmentByTag(TAG) == null
         }
     }
-
 }

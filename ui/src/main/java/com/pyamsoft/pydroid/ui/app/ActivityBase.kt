@@ -56,7 +56,7 @@ abstract class ActivityBase constructor(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        injector = Injector.obtain<PYDroidComponent>(applicationContext)
+        injector = Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusBilling()
             .create()
             .also { component ->

@@ -71,7 +71,7 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
         makeFullscreen()
 
         val binding = LayoutConstraintBinding.bind(view)
-        Injector.obtain<PYDroidComponent>(view.context.applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(view.context)
             .plusThemeDialog()
             .create(getInitialTitle(), getToolbarBackground(), binding.layoutConstraint)
             .inject(this)

@@ -52,7 +52,7 @@ abstract class PrivacyActivity : ActivityBase() {
 
         // Need to do this in onPostCreate because the snackbarRoot will not be available until
         // after subclass onCreate
-        Injector.obtain<PYDroidComponent>(applicationContext)
+        Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusPrivacy()
             .create(this) { snackbarRoot }
             .inject(this)

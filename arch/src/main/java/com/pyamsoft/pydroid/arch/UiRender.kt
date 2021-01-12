@@ -15,15 +15,8 @@ public interface UiRender<S> {
     public fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T>
 
     /**
-     * Unique stream by the specific piece of a state having changed from old to new
-     */
-    @CheckResult
-    public fun distinct(areEquivalent: (old: S, new: S) -> Boolean): UiRender<S>
-
-    /**
      * Render a state
      */
     public fun render(scope: CoroutineScope, onRender: (state: S) -> Unit)
-
 }
 

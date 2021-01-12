@@ -35,7 +35,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  *
  * TODO(Peter): Once the doOnSaveState hook is removed from UiViewModel, we can have this class extend UiViewModel. Check ABI compatibility.
  */
-public abstract class UiSaveStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
+public abstract class UiSavedStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     savedState: UiSavedState,
     initialState: S
 ) : UiStateViewModel<S>(initialState) {

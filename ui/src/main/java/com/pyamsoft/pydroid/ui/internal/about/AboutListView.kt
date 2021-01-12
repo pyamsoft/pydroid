@@ -51,7 +51,7 @@ internal class AboutListView internal constructor(
         }
 
         doOnInflate { savedInstanceState ->
-            lastViewed = savedInstanceState.getOrDefault(KEY_CURRENT, 0)
+            lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0
         }
 
         doOnTeardown {

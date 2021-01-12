@@ -99,8 +99,8 @@ internal class AppSettingsView internal constructor(
     }
 
     override fun onRender(state: UiRender<AppSettingsViewState>) {
-        state.distinctBy { it.isDarkTheme }.render(viewScope) { handleDarkTheme(it) }
-        state.distinctBy { it.applicationName }.render(viewScope) { handleApplicationName(it) }
+        state.mapChanged { it.isDarkTheme }.render(viewScope) { handleDarkTheme(it) }
+        state.mapChanged { it.applicationName }.render(viewScope) { handleApplicationName(it) }
     }
 
     private fun handleDarkTheme(darkTheme: AppSettingsViewState.DarkTheme?) {

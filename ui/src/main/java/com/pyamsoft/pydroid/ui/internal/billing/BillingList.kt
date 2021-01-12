@@ -83,7 +83,7 @@ internal class BillingList internal constructor(
 
     override fun onRender(state: UiRender<BillingDialogViewState>) {
         state.render(viewScope) { handleSkus(it) }
-        state.distinctBy { it.error }.render(viewScope) { handleError(it) }
+        state.mapChanged { it.error }.render(viewScope) { handleError(it) }
     }
 
     private fun handleError(throwable: Throwable?) {

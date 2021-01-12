@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.billing.listitem
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
-import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.databinding.BillingItemContentBinding
 
@@ -43,7 +42,7 @@ internal class BillingItemContent internal constructor(
     }
 
     override fun onRender(state: UiRender<BillingItemViewState>) {
-        state.distinctBy { it.sku }.render(viewScope) { handleSku(it) }
+        state.mapChanged { it.sku }.render(viewScope) { handleSku(it) }
     }
 
     private fun handleSku(sku: BillingSku) {

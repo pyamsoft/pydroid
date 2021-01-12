@@ -46,7 +46,7 @@ internal class AboutItemDescriptionView internal constructor(
     }
 
     override fun onRender(state: UiRender<AboutItemViewState>) {
-        state.distinctBy { it.library }.render(viewScope) { handleLibrary(it) }
+        state.mapChanged { it.library }.render(viewScope) { handleLibrary(it) }
     }
 
     private fun handleLibrary(library: OssLibrary) {

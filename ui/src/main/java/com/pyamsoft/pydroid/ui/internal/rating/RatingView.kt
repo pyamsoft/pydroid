@@ -28,7 +28,7 @@ internal class RatingView internal constructor(
 ) : UiView<RatingViewState, RatingViewEvent>() {
 
     override fun render(state: UiRender<RatingViewState>) {
-        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
+        state.mapChanged { it.navigationError }.render(viewScope) { handleNavigationError(it) }
     }
 
     private fun handleNavigationError(throwable: Throwable?) {

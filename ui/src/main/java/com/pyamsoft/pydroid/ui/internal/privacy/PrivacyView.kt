@@ -28,7 +28,7 @@ internal class PrivacyView internal constructor(
 ) : UiView<PrivacyViewState, PrivacyViewEvent>() {
 
     override fun render(state: UiRender<PrivacyViewState>) {
-        state.distinctBy { it.throwable }.render(viewScope) { handleError(it) }
+        state.mapChanged { it.throwable }.render(viewScope) { handleError(it) }
     }
 
     private fun handleError(throwable: Throwable?) {

@@ -41,7 +41,7 @@ internal abstract class AppIcon<S : AppState> protected constructor(
     }
 
     final override fun render(state: UiRender<S>) {
-        state.distinctBy { it.icon }.render(viewScope) { handleIcon(it) }
+        state.mapChanged { it.icon }.render(viewScope) { handleIcon(it) }
     }
 
     private fun handleIcon(icon: Int) {

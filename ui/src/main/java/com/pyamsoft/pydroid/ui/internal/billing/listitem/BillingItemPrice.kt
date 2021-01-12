@@ -41,7 +41,7 @@ internal class BillingItemPrice internal constructor(
     }
 
     override fun onRender(state: UiRender<BillingItemViewState>) {
-        state.distinctBy { it.sku }.render(viewScope) { handleSku(it) }
+        state.mapChanged { it.sku }.render(viewScope) { handleSku(it) }
     }
 
     private fun handleSku(sku: BillingSku) {

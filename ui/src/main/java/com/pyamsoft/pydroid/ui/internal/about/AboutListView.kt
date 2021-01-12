@@ -104,8 +104,8 @@ internal class AboutListView internal constructor(
     }
 
     override fun onRender(state: UiRender<AboutViewState>) {
-        state.distinctBy { it.isLoading }.render(viewScope) { handleLoading(it) }
-        state.distinctBy { it.licenses }.render(viewScope) { handleLicenses(it) }
+        state.mapChanged { it.isLoading }.render(viewScope) { handleLoading(it) }
+        state.mapChanged { it.licenses }.render(viewScope) { handleLicenses(it) }
     }
 
     private fun handleLoading(loading: Boolean) {

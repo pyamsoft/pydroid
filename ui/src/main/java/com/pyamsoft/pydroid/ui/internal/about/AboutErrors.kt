@@ -28,8 +28,8 @@ internal class AboutErrors internal constructor(
 ) : UiView<AboutViewState, AboutViewEvent.ErrorEvent>() {
 
     override fun render(state: UiRender<AboutViewState>) {
-        state.distinctBy { it.loadError }.render(viewScope) { handleLoadError(it) }
-        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigateError(it) }
+        state.mapChanged { it.loadError }.render(viewScope) { handleLoadError(it) }
+        state.mapChanged { it.navigationError }.render(viewScope) { handleNavigateError(it) }
     }
 
     private fun handleLoadError(throwable: Throwable?) {

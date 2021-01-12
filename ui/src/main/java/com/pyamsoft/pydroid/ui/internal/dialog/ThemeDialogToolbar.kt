@@ -56,7 +56,7 @@ internal class ThemeDialogToolbar internal constructor(
     }
 
     override fun onRender(state: UiRender<ThemeDialogViewState>) {
-        state.distinctBy { it.name }.render(viewScope) { handleTitle(it) }
+        state.mapChanged { it.name }.render(viewScope) { handleTitle(it) }
     }
 
     private fun handleTitle(name: String) {

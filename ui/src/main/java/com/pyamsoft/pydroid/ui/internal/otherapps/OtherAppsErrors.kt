@@ -28,8 +28,8 @@ internal class OtherAppsErrors internal constructor(
 ) : UiView<OtherAppsViewState, OtherAppsViewEvent.ErrorEvent>() {
 
     override fun render(state: UiRender<OtherAppsViewState>) {
-        state.distinctBy { it.navigationError }.render(viewScope) { handleNavigationError(it) }
-        state.distinctBy { it.appsError }.render(viewScope) { handleAppsError(it) }
+        state.mapChanged { it.navigationError }.render(viewScope) { handleNavigationError(it) }
+        state.mapChanged { it.appsError }.render(viewScope) { handleAppsError(it) }
     }
 
     private fun handleAppsError(throwable: Throwable?) {

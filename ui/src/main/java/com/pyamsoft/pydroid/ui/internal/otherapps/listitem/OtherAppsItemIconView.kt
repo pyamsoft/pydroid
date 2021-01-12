@@ -47,7 +47,7 @@ internal class OtherAppsItemIconView internal constructor(
     }
 
     override fun onRender(state: UiRender<OtherAppsItemViewState>) {
-        state.distinctBy { it.app }.render(viewScope) { handleApp(it) }
+        state.mapChanged { it.app }.render(viewScope) { handleApp(it) }
     }
 
     private fun handleApp(app: OtherApp) {

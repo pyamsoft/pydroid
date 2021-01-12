@@ -103,7 +103,7 @@ internal class OtherAppsList internal constructor(
     }
 
     override fun onRender(state: UiRender<OtherAppsViewState>) {
-        state.distinctBy { it.apps }.render(viewScope) { handleApps(it) }
+        state.mapChanged { it.apps }.render(viewScope) { handleApps(it) }
     }
 
     private fun handleApps(apps: List<OtherApp>) {

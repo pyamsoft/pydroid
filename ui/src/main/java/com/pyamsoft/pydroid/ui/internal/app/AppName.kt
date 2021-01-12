@@ -36,7 +36,7 @@ internal abstract class AppName<S : AppState> protected constructor(
     }
 
     final override fun onRender(state: UiRender<S>) {
-        state.distinctBy { it.name }.render(viewScope) { handleName(it) }
+        state.mapChanged { it.name }.render(viewScope) { handleName(it) }
     }
 
     private fun handleName(name: CharSequence) {

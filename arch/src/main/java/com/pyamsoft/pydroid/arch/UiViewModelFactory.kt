@@ -70,6 +70,9 @@ public abstract class UiViewModelSavedStateFactory @JvmOverloads protected const
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
+    /**
+     * Resolve the requested UiViewModel
+     */
     final override fun <T : ViewModel?> create(
         key: String,
         modelClass: Class<T>,

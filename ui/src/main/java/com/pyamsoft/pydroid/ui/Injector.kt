@@ -125,31 +125,6 @@ object Injector {
     }
 
     /**
-     * Obtain a component from the Activity context
-     *
-     * Calls through to Activity.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    inline fun <reified T : Any> obtainFromActivity(context: Context): T {
-        return obtainFromActivity(context, T::class.java)
-    }
-
-    /**
-     * Obtain a component from the Activity context
-     *
-     * Calls through to Activity.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    fun <T : Any> obtainFromActivity(
-        context: Context,
-        targetClass: Class<T>
-    ): T {
-        return resolve(context, targetClass)
-    }
-
-    /**
      * Obtain a component from the Service
      *
      * Calls through to Service.getSystemService()
@@ -172,31 +147,6 @@ object Injector {
         targetClass: Class<T>
     ): T {
         return resolve(service, targetClass)
-    }
-
-    /**
-     * Obtain a component from the Service context
-     *
-     * Calls through to Service.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    inline fun <reified T : Any> obtainFromService(context: Context): T {
-        return obtainFromService(context, T::class.java)
-    }
-
-    /**
-     * Obtain a component from the Service context
-     *
-     * Calls through to Service.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    fun <T : Any> obtainFromService(
-        context: Context,
-        targetClass: Class<T>
-    ): T {
-        return resolve(context, targetClass)
     }
 
     @JvmStatic

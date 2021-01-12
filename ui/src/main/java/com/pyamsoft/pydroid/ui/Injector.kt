@@ -30,26 +30,6 @@ import timber.log.Timber
 object Injector {
 
     /**
-     * Obtain an object, like a Component from the Context service locator
-     */
-    @JvmStatic
-    @CheckResult
-    @Deprecated("Use the more specific obtainFrom* functions")
-    inline fun <reified T : Any> obtain(context: Context): T {
-        return obtain(context, T::class.java)
-    }
-
-    /**
-     * Obtain an object, like a Component from the Context service locator
-     */
-    @JvmStatic
-    @CheckResult
-    @Deprecated("Use the more specific obtainFrom* functions")
-    fun <T : Any> obtain(context: Context, targetClass: Class<T>): T {
-        return resolve(context, targetClass)
-    }
-
-    /**
      * Obtain a component from the Application
      *
      * Calls through to Application.getSystemService()

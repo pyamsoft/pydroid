@@ -20,7 +20,6 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelStore
 import com.pyamsoft.pydroid.arch.UiStateViewModel
 import com.pyamsoft.pydroid.ui.arch.FragmentFactoryProvider.FromActivity
@@ -35,7 +34,7 @@ import kotlin.reflect.KProperty
 @CheckResult
 inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
     store: ViewModelStore,
-    crossinline factoryProvider: () -> Factory?
+    crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
     return ViewModelFactoryImpl(store, T::class.java) { requireNotNull(factoryProvider()) }
 }
@@ -47,7 +46,7 @@ inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
 @JvmOverloads
 inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
     activity: Boolean = false,
-    crossinline factoryProvider: () -> Factory?
+    crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
     val factory = if (activity) FromActivity(this) else FromFragment(this)
     return ViewModelFactoryImpl(factory, T::class.java) { requireNotNull(factoryProvider()) }
@@ -58,7 +57,7 @@ inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
  */
 @CheckResult
 inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
-    crossinline factoryProvider: () -> Factory?
+    crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
     return ViewModelFactoryImpl(this, T::class.java) { requireNotNull(factoryProvider()) }
 }
@@ -75,28 +74,28 @@ internal class ViewModelFactoryImpl<T : UiStateViewModel<*>> private constructor
     store: ViewModelStore?,
     fragment: FragmentFactoryProvider?,
     activity: FragmentActivity?,
-    factoryProvider: () -> Factory
+    factoryProvider: () -> ViewModelProvider.Factory
 ) : ViewModelFactory<T> {
 
     @PublishedApi
     internal constructor(
         store: ViewModelStore,
         type: Class<T>,
-        factoryProvider: () -> Factory
+        factoryProvider: () -> ViewModelProvider.Factory
     ) : this(type, store, null, null, factoryProvider)
 
     @PublishedApi
     internal constructor(
         fragment: FragmentFactoryProvider,
         type: Class<T>,
-        factoryProvider: () -> Factory
+        factoryProvider: () -> ViewModelProvider.Factory
     ) : this(type, null, fragment, null, factoryProvider)
 
     @PublishedApi
     internal constructor(
         activity: FragmentActivity,
         type: Class<T>,
-        factoryProvider: () -> Factory
+        factoryProvider: () -> ViewModelProvider.Factory
     ) : this(type, null, null, activity, factoryProvider)
 
     private val lock = Any()

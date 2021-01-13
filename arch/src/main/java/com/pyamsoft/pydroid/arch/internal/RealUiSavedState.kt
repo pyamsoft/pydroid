@@ -30,8 +30,8 @@ internal class RealUiSavedState internal constructor(
         handle.set(key, value)
     }
 
-    override fun remove(key: String) {
-        handle.remove<Nothing>(key)
+    override fun <T : Any> remove(key: String): T? {
+        return handle.remove(key)
     }
 
     override fun <T : Any> get(key: String): T? {

@@ -159,14 +159,15 @@ public abstract class UiSavedStateViewModel<S : UiViewState, V : UiViewEvent, C 
      *
      * This is generally used at a variable declaration site
      *
-     * private val userId = restoreState("user_id") { 0 }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
+     * private val userId = restoreSavedState("user_id") { 0 }
      */
     @UiThread
     @CheckResult
-    protected inline fun <T : Any> restoreState(key: String, defaultValue: () -> T): T {
-        return requireNotNull(savedState).get(key) ?: defaultValue()
+    protected suspend inline fun <T : Any> restoreSavedState(
+        key: String,
+        crossinline defaultValue: () -> T
+    ): T = withContext(context = Dispatchers.Main) {
+        return@withContext requireNotNull(savedState).get(key) ?: defaultValue()
     }
 
     /**
@@ -174,15 +175,24 @@ public abstract class UiSavedStateViewModel<S : UiViewState, V : UiViewEvent, C 
      *
      * fun doThing() {
      *   val result = doStuff()
-     *   saveState("stuff", result)
+     *   putSavedState("stuff", result)
      * }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    protected fun <T : Any> saveState(key: String, value: T) {
-        return requireNotNull(savedState).put(key, value)
-    }
+    protected suspend fun <T : Any> putSavedState(key: String, value: T): Unit =
+        withContext(context = Dispatchers.Main) {
+            requireNotNull(savedState).put(key, value)
+        }
+
+
+    /**
+     * Use this to remove data from a SavedStateHandle
+     */
+    @UiThread
+    protected suspend fun <T : Any> removeSavedState(key: String): T? =
+        withContext(context = Dispatchers.Main) {
+            return@withContext requireNotNull(savedState).remove(key)
+        }
 
     /**
      * Handle a UiViewEvent

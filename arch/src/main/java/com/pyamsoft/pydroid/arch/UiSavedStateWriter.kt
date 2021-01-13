@@ -16,10 +16,6 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CheckResult
-import androidx.lifecycle.SavedStateHandle
-import com.pyamsoft.pydroid.arch.internal.RealUiSavedState
-
 /**
  * Abstraction over saving data into the save-restore lifecycle
  */
@@ -33,6 +29,6 @@ public interface UiSavedStateWriter {
     /**
      * Remove a value at key
      */
-    public fun remove(key: String)
+    public fun <T : Any> remove(key: String): T?
 
 }

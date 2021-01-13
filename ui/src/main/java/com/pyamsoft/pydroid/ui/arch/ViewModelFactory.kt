@@ -37,7 +37,7 @@ inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-    return ViewModelFactory(store, T::class.java) { requireNotNull(factoryProvider()) }
+    return ViewModelFactoryImpl(store, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
 /**
@@ -50,7 +50,7 @@ inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
     val factory = if (activity) FromActivity(this) else FromFragment(this)
-    return ViewModelFactory(factory, T::class.java) { requireNotNull(factoryProvider()) }
+    return ViewModelFactoryImpl(factory, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
 /**
@@ -60,30 +60,40 @@ inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
 inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
     crossinline factoryProvider: () -> Factory?
 ): ViewModelFactory<T> {
-    return ViewModelFactory(this, T::class.java) { requireNotNull(factoryProvider()) }
+    return ViewModelFactoryImpl(this, T::class.java) { requireNotNull(factoryProvider()) }
 }
 
-class ViewModelFactory<T : UiStateViewModel<*>> private constructor(
+
+/**
+ * The ViewModelFactory interface
+ */
+interface ViewModelFactory<T : UiStateViewModel<*>> : ReadOnlyProperty<Any, T>
+
+@PublishedApi
+internal class ViewModelFactoryImpl<T : UiStateViewModel<*>> private constructor(
     type: Class<T>,
     store: ViewModelStore?,
     fragment: FragmentFactoryProvider?,
     activity: FragmentActivity?,
     factoryProvider: () -> Factory
-) : ReadOnlyProperty<Any, T> {
+) : ViewModelFactory<T> {
 
-    constructor(
+    @PublishedApi
+    internal constructor(
         store: ViewModelStore,
         type: Class<T>,
         factoryProvider: () -> Factory
     ) : this(type, store, null, null, factoryProvider)
 
-    constructor(
+    @PublishedApi
+    internal constructor(
         fragment: FragmentFactoryProvider,
         type: Class<T>,
         factoryProvider: () -> Factory
     ) : this(type, null, fragment, null, factoryProvider)
 
-    constructor(
+    @PublishedApi
+    internal constructor(
         activity: FragmentActivity,
         type: Class<T>,
         factoryProvider: () -> Factory
@@ -98,37 +108,19 @@ class ViewModelFactory<T : UiStateViewModel<*>> private constructor(
     private var value: T? = null
 
     init {
-        modelResolver = resolver@{
-            return@resolver when {
-                store != null -> {
-                    Timber.d("Store init() ViewModel with type: $type")
-                    ViewModelProvider(store, factoryProvider())
-                        .get(type)
-                }
+        modelResolver = {
+            when {
+                store != null -> ViewModelProvider(store, factoryProvider())
+                activity != null -> ViewModelProvider(activity, factoryProvider())
                 fragment != null -> {
-                    return@resolver when (fragment) {
-                        is FromFragment -> {
-                            Timber.d("Fragment init() ViewModel with type: $type")
-                            ViewModelProvider(fragment.fragment, factoryProvider())
-                                .get(type)
-                        }
-                        is FromActivity -> {
-                            Timber.d("FragmentActivity init() ViewModel with type: $type")
-                            ViewModelProvider(
-                                fragment.fragment.requireActivity(),
-                                factoryProvider()
-                            )
-                                .get(type)
-                        }
+                    val f = fragment.fragment
+                    when (fragment) {
+                        is FromFragment -> ViewModelProvider(f, factoryProvider())
+                        is FromActivity -> ViewModelProvider(f.requireActivity(), factoryProvider())
                     }
                 }
-                activity != null -> {
-                    Timber.d("Activity init() ViewModel with type: $type")
-                    ViewModelProvider(activity, factoryProvider())
-                        .get(type)
-                }
                 else -> throw ResolverException("Unable to create model resolver - ViewModelStore, Activity, and Fragment are NULL")
-            }
+            }.get(type)
         }
     }
 
@@ -173,9 +165,9 @@ class ResolverException internal constructor(
     message: String
 ) : IllegalStateException(message)
 
-sealed class FragmentFactoryProvider {
+sealed class FragmentFactoryProvider(internal val fragment: Fragment) {
 
-    data class FromFragment(internal val fragment: Fragment) : FragmentFactoryProvider()
+    class FromFragment(fragment: Fragment) : FragmentFactoryProvider(fragment)
 
-    data class FromActivity(internal val fragment: Fragment) : FragmentFactoryProvider()
+    class FromActivity(fragment: Fragment) : FragmentFactoryProvider(fragment)
 }

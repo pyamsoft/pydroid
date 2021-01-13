@@ -165,7 +165,7 @@ public abstract class UiSavedStateViewModel<S : UiViewState, V : UiViewEvent, C 
     @CheckResult
     protected suspend inline fun <T : Any> restoreSavedState(
         key: String,
-        crossinline defaultValue: () -> T
+        crossinline defaultValue: suspend () -> T
     ): T = withContext(context = Dispatchers.Main) {
         return@withContext requireNotNull(savedState).get(key) ?: defaultValue()
     }

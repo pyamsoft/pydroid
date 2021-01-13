@@ -14,12 +14,82 @@
  * limitations under the License.
  */
 
+@file:JvmName("Component")
+
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
+import kotlinx.coroutines.Job
+
+
+/**
+ * Component internals
+ */
+@PublishedApi
+internal object Internals {
+
+    /**
+     * Empty save stae no-op
+     */
+    @JvmStatic
+    @PublishedApi
+    internal val EMPTY_SAVE_STATE: (UiBundleWriter) -> Unit = {}
+
+    /**
+     * Plumbing for creating a pydroid-arch Component
+     */
+    @JvmStatic
+    @CheckResult
+    @PublishedApi
+    internal inline fun <S : UiViewState, V : UiViewEvent> performCreateComponent(
+        savedInstanceState: Bundle?,
+        owner: LifecycleOwner,
+        views: Array<out UiView<S, out V>>,
+        bindToComponent: (UiBundleReader, Array<out UiView<S, out V>>) -> Job,
+        crossinline performSaveState: (UiBundleWriter) -> Unit,
+    ): StateSaver {
+        val reader = UiBundleReader.create(savedInstanceState)
+
+        // Bind view event listeners, inflate and attach
+        val viewModelBinding = bindToComponent(reader, views)
+
+        // Teardown on destroy
+        owner.doOnDestroy {
+            viewModelBinding.cancel()
+            views.forEach { it.teardown() }
+        }
+
+        // State saver
+        return StateSaver { outState ->
+            val writer = UiBundleWriter.create(outState)
+            views.forEach { it.saveState(writer) }
+            performSaveState.invoke(writer)
+        }
+    }
+
+    /**
+     * Bind view events to the UiView list, and bind the nested UiViews if they exist
+     */
+    @JvmStatic
+    @PublishedApi
+    internal fun <S : UiViewState, V : UiViewEvent> bindViewEvents(
+        views: List<UiView<S, out V>>,
+        onViewEvent: (event: V) -> Unit
+    ) {
+        views.forEach { v ->
+            v.onViewEvent { onViewEvent(it) }
+
+            if (v is BaseUiView<S, out V, *>) {
+                val nestedViews = v.nestedViews()
+                bindViewEvents(nestedViews, onViewEvent)
+            }
+        }
+    }
+
+}
 
 /**
  * Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller
@@ -32,41 +102,31 @@ public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> crea
     vararg views: UiView<S, out V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ): StateSaver {
-    val reader = UiBundleReader.create(savedInstanceState)
-
-    // Bind view event listeners, inflate and attach
-    val viewModelBinding = viewModel.bindToComponent(reader, views) { onControllerEvent(it) }
-
-    // Teardown on destroy
-    owner.doOnDestroy {
-        viewModelBinding.cancel()
-        views.forEach { it.teardown() }
-    }
-
-    // State saver
-    return StateSaver { outState ->
-        val writer = UiBundleWriter.create(outState)
-        viewModel.saveState(writer)
-        views.forEach { it.saveState(writer) }
-    }
+    return Internals.performCreateComponent(savedInstanceState, owner, views,
+        bindToComponent = { reader, uiViews ->
+            viewModel.bindToComponent(reader, uiViews) { onControllerEvent(it) }
+        },
+        performSaveState = { viewModel.saveState(it) })
 }
 
-/**
- * Bind view events to the UiView list, and bind the nested UiViews if they exist
- */
-@PublishedApi
-internal fun <S : UiViewState, V : UiViewEvent> bindViewEvents(
-    views: List<UiView<S, out V>>,
-    onViewEvent: (event: V) -> Unit
-) {
-    views.forEach { v ->
-        v.onViewEvent { onViewEvent(it) }
 
-        if (v is BaseUiView<S, out V, *>) {
-            val nestedViews = v.nestedViews()
-            bindViewEvents(nestedViews, onViewEvent)
-        }
-    }
+/**
+ * Create a pydroid-arch Component using a UiSavedStateViewModel, one or more UiViews, and a Controller
+ */
+@CheckResult
+public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
+    savedInstanceState: Bundle?,
+    owner: LifecycleOwner,
+    viewModel: UiSavedStateViewModel<S, V, C>,
+    vararg views: UiView<S, out V>,
+    crossinline onControllerEvent: (event: C) -> Unit
+): StateSaver {
+    return Internals.performCreateComponent(
+        savedInstanceState, owner, views,
+        bindToComponent = { reader, uiViews ->
+            viewModel.bindToComponent(reader, uiViews) { onControllerEvent(it) }
+        }, performSaveState = Internals.EMPTY_SAVE_STATE
+    )
 }
 
 /**
@@ -80,7 +140,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     val reader = UiBundleReader.create(null)
 
     // Bind view event listeners
-    bindViewEvents(views.toList()) { onViewEvent(it) }
+    Internals.bindViewEvents(views.toList()) { onViewEvent(it) }
 
     // Init first
     views.forEach { it.init(reader) }

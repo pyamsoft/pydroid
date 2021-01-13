@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.onlyFactory
+import com.pyamsoft.pydroid.arch.createFactory
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule
 import com.pyamsoft.pydroid.bootstrap.version.VersionModule.Parameters
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
@@ -68,8 +68,8 @@ internal interface VersionCheckComponent {
                     isFakeUpgradeAvailable = params.isFakeUpgradeAvailable
                 )
             )
-            checkFactory = onlyFactory { VersionCheckViewModel(module.provideInteractor()) }
-            upgradeFactory = onlyFactory { VersionUpgradeViewModel(module.provideInteractor()) }
+            checkFactory = createFactory { VersionCheckViewModel(module.provideInteractor()) }
+            upgradeFactory = createFactory { VersionUpgradeViewModel(module.provideInteractor()) }
         }
 
         override fun inject(activity: VersionCheckActivity) {

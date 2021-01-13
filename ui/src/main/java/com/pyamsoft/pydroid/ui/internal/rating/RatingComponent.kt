@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import com.pyamsoft.pydroid.arch.onlyFactory
+import com.pyamsoft.pydroid.arch.createFactory
 import com.pyamsoft.pydroid.bootstrap.rating.RatingModule
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
@@ -58,7 +58,7 @@ internal interface RatingComponent {
                     preferences = params.preferences
                 )
             )
-            factory = onlyFactory { RatingViewModel(module.provideInteractor()) }
+            factory = createFactory { RatingViewModel(module.provideInteractor()) }
         }
 
         override fun inject(activity: RatingActivity) {

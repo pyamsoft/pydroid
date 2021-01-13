@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:JvmName("UiViewModelFactories")
+
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
@@ -107,41 +109,44 @@ public abstract class UiSavedStateViewModelFactory @JvmOverloads protected const
 }
 
 /**
- * A simple builder for a Factory which only holds one type of ViewModel
+ * Create a save state aware view model factory
  */
 @CheckResult
-public inline fun <reified VM : UiStateViewModel<*>> onlyFactory(crossinline provider: () -> VM): ViewModelProvider.Factory {
-    return object : UiViewModelFactory() {
+@JvmOverloads
+@JvmName("createSavedStateFactory")
+public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createFactory(
+    provider: SavedStateViewModelProvider<T>?,
+    defaultArgs: Bundle? = null
+): ViewModelProvider.Factory {
+    return object : UiSavedStateViewModelFactory(this, defaultArgs) {
+        override fun <T : UiStateViewModel<*>> viewModel(
+            modelClass: KClass<T>,
+            savedState: UiSavedState
+        ): UiStateViewModel<*> {
+            @Suppress("UNCHECKED_CAST")
+            return requireNotNull(provider).create(savedState) as? T ?: fail()
+        }
 
+    }
+}
+
+/**
+ * Create a view model factory
+ */
+@CheckResult
+public inline fun <reified T : ViewModel> createFactory(crossinline provider: () -> T?): ViewModelProvider.Factory {
+    return object : UiViewModelFactory() {
         override fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*> {
-            return when (modelClass) {
-                VM::class -> provider()
-                else -> fail()
-            }
+            @Suppress("UNCHECKED_CAST")
+            return provider() as? T ?: fail()
         }
     }
 }
 
 /**
- * A simple builder for a Factory which only holds one type of ViewModel
+ * The interface around a factory with saved state
  */
-@CheckResult
-@JvmOverloads
-public inline fun <reified VM : UiStateViewModel<*>> onlySavedStateFactory(
-    owner: SavedStateRegistryOwner,
-    defaultArgs: Bundle? = null,
-    crossinline provider: () -> VM
-): ViewModelProvider.Factory {
-    return object : UiSavedStateViewModelFactory(owner, defaultArgs) {
+public interface SavedStateViewModelProvider<T : ViewModel> {
 
-        override fun <T : UiStateViewModel<*>> viewModel(
-            modelClass: KClass<T>,
-            savedState: UiSavedState
-        ): UiStateViewModel<*> {
-            return when (modelClass) {
-                VM::class -> provider()
-                else -> fail()
-            }
-        }
-    }
+    public fun create(savedState: UiSavedState): T
 }

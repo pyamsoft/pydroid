@@ -228,7 +228,7 @@ internal interface PYDroidComponent {
 
         private val billingParams = BillingComponent.Factory.Parameters(
             context = context.applicationContext,
-            errorBus = EventBus.create<Throwable>(emitOnlyWhenActive = false),
+            errorBus = EventBus.create(emitOnlyWhenActive = false),
             imageLoader = loaderModule.provideLoader(),
             interactor = changeLogModule.provideInteractor()
         )

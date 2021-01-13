@@ -65,7 +65,7 @@ public abstract class UiViewModelFactory protected constructor() : ViewModelProv
  *
  * Integrated with androidx.savedstate
  */
-public abstract class UiViewModelSavedStateFactory @JvmOverloads protected constructor(
+public abstract class UiSavedStateViewModelFactory @JvmOverloads protected constructor(
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -132,7 +132,7 @@ public inline fun <reified VM : UiStateViewModel<*>> onlySavedStateFactory(
     defaultArgs: Bundle? = null,
     crossinline provider: () -> VM
 ): ViewModelProvider.Factory {
-    return object : UiViewModelSavedStateFactory(owner, defaultArgs) {
+    return object : UiSavedStateViewModelFactory(owner, defaultArgs) {
 
         override fun <T : UiStateViewModel<*>> viewModel(
             modelClass: KClass<T>,

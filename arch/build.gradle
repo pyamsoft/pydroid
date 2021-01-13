@@ -28,12 +28,10 @@ dependencies {
   implementation "androidx.databinding:viewbinding:$agp_version"
 
   // ViewModel
-  // We publish these one since consumers use it to access a coroutine scope
+  // We publish these one since consumers use it to access a coroutine scope and view model saved state
   api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
   api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
-
-  // ViewModel SavedState
-  implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle"
+  api "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle"
 
   api project(':bus')
   api project(':util')

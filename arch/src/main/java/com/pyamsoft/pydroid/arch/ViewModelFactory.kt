@@ -31,18 +31,15 @@ import kotlin.reflect.KClass
 /**
  * A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances.
  */
-public abstract class UiViewModelFactory protected constructor() : ViewModelProvider.Factory {
+public abstract class ViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
     /**
      * Resolve the requested UiViewModel
      */
-    final override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
+    final override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (ViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            val viewModelClass = modelClass as Class<out UiStateViewModel<*>>
-
-            @Suppress("UNCHECKED_CAST")
-            return viewModel(viewModelClass.kotlin) as T
+            return viewModel(modelClass.kotlin) as T
         } else {
             fail()
         }
@@ -59,7 +56,7 @@ public abstract class UiViewModelFactory protected constructor() : ViewModelProv
      * Resolve the requested UiViewModel
      */
     @CheckResult
-    protected abstract fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*>
+    protected abstract fun <T : ViewModel> viewModel(modelClass: KClass<T>): ViewModel
 }
 
 /**
@@ -67,25 +64,22 @@ public abstract class UiViewModelFactory protected constructor() : ViewModelProv
  *
  * Integrated with androidx.savedstate
  */
-public abstract class UiSavedStateViewModelFactory @JvmOverloads protected constructor(
+public abstract class SavedStateViewModelFactory protected constructor(
     owner: SavedStateRegistryOwner,
-    defaultArgs: Bundle? = null
+    defaultArgs: Bundle?
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
     /**
      * Resolve the requested UiViewModel
      */
-    final override fun <T : ViewModel?> create(
+    final override fun <T : ViewModel> create(
         key: String,
         modelClass: Class<T>,
         handle: SavedStateHandle
     ): T {
         if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            val viewModelClass = modelClass as Class<out UiStateViewModel<*>>
-
-            @Suppress("UNCHECKED_CAST")
-            return viewModel(viewModelClass.kotlin, RealUiSavedState(handle)) as T
+            return viewModel(modelClass.kotlin, RealUiSavedState(handle)) as T
         } else {
             fail()
         }
@@ -102,10 +96,10 @@ public abstract class UiSavedStateViewModelFactory @JvmOverloads protected const
      * Resolve the requested UiViewModel
      */
     @CheckResult
-    protected abstract fun <T : UiStateViewModel<*>> viewModel(
+    protected abstract fun <T : ViewModel> viewModel(
         modelClass: KClass<T>,
         savedState: UiSavedState,
-    ): UiStateViewModel<*>
+    ): ViewModel
 }
 
 /**
@@ -115,14 +109,14 @@ public abstract class UiSavedStateViewModelFactory @JvmOverloads protected const
 @JvmOverloads
 @JvmName("createSavedStateFactory")
 public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createFactory(
-    provider: SavedStateViewModelProvider<T>?,
+    provider: UiSavedStateViewModelProvider<T>?,
     defaultArgs: Bundle? = null
 ): ViewModelProvider.Factory {
-    return object : UiSavedStateViewModelFactory(this, defaultArgs) {
-        override fun <T : UiStateViewModel<*>> viewModel(
+    return object : SavedStateViewModelFactory(this, defaultArgs) {
+        override fun <T : ViewModel> viewModel(
             modelClass: KClass<T>,
             savedState: UiSavedState
-        ): UiStateViewModel<*> {
+        ): ViewModel {
             @Suppress("UNCHECKED_CAST")
             return requireNotNull(provider).create(savedState) as? T ?: fail()
         }
@@ -134,9 +128,11 @@ public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createFactory(
  * Create a view model factory
  */
 @CheckResult
-public inline fun <reified T : ViewModel> createFactory(crossinline provider: () -> T?): ViewModelProvider.Factory {
-    return object : UiViewModelFactory() {
-        override fun <T : UiStateViewModel<*>> viewModel(modelClass: KClass<T>): UiStateViewModel<*> {
+public inline fun <reified T : ViewModel> createFactory(
+    crossinline provider: () -> T?
+): ViewModelProvider.Factory {
+    return object : ViewModelFactory() {
+        override fun <T : ViewModel> viewModel(modelClass: KClass<T>): ViewModel {
             @Suppress("UNCHECKED_CAST")
             return provider() as? T ?: fail()
         }
@@ -146,7 +142,7 @@ public inline fun <reified T : ViewModel> createFactory(crossinline provider: ()
 /**
  * The interface around a factory with saved state
  */
-public interface SavedStateViewModelProvider<T : ViewModel> {
+public interface UiSavedStateViewModelProvider<T : ViewModel> {
 
     public fun create(savedState: UiSavedState): T
 }

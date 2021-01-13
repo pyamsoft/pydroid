@@ -119,7 +119,7 @@ internal class ViewModelFactoryImpl<T : UiStateViewModel<*>> private constructor
                         is FromActivity -> ViewModelProvider(f.requireActivity(), factoryProvider())
                     }
                 }
-                else -> throw ResolverException("Unable to create model resolver - ViewModelStore, Activity, and Fragment are NULL")
+                else -> throw IllegalArgumentException("Unable to create model resolver - ViewModelStore, Activity, and Fragment are NULL")
             }.get(type)
         }
     }
@@ -127,7 +127,7 @@ internal class ViewModelFactoryImpl<T : UiStateViewModel<*>> private constructor
     @CheckResult
     private fun resolveValue(): T {
         val resolver = modelResolver
-            ?: throw ResolverException("Cannot resolve ViewModel - resolver is NULL")
+            ?: throw IllegalStateException("Cannot resolve ViewModel - resolver is NULL")
 
         modelResolver = null
         val vm = resolver()
@@ -135,8 +135,10 @@ internal class ViewModelFactoryImpl<T : UiStateViewModel<*>> private constructor
         return vm
     }
 
-    @CheckResult
-    fun get(): T {
+    override fun getValue(
+        thisRef: Any,
+        property: KProperty<*>
+    ): T {
         val v = value
         if (v != null) {
             return v
@@ -152,22 +154,18 @@ internal class ViewModelFactoryImpl<T : UiStateViewModel<*>> private constructor
 
         return requireNotNull(value)
     }
-
-    override fun getValue(
-        thisRef: Any,
-        property: KProperty<*>
-    ): T {
-        return get()
-    }
 }
 
-class ResolverException internal constructor(
-    message: String
-) : IllegalStateException(message)
+@PublishedApi
+internal sealed class FragmentFactoryProvider(internal val fragment: Fragment) {
 
-sealed class FragmentFactoryProvider(internal val fragment: Fragment) {
+    @PublishedApi
+    internal class FromFragment @PublishedApi internal constructor(
+        fragment: Fragment
+    ) : FragmentFactoryProvider(fragment)
 
-    class FromFragment(fragment: Fragment) : FragmentFactoryProvider(fragment)
-
-    class FromActivity(fragment: Fragment) : FragmentFactoryProvider(fragment)
+    @PublishedApi
+    internal class FromActivity @PublishedApi internal constructor(
+        fragment: Fragment
+    ) : FragmentFactoryProvider(fragment)
 }

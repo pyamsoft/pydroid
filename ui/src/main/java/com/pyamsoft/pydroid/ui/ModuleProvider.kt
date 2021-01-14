@@ -26,14 +26,25 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 public interface ModuleProvider {
 
     /**
-     * Provide a dark-light theming interface
+     * Provide modules
      */
     @CheckResult
-    public fun theming(): Theming
+    public fun get(): Modules
 
-    /**
-     * Provide an image loader interface
-     */
-    @CheckResult
-    public fun imageLoader(): ImageLoader
+    public interface Modules {
+
+        /**
+         * Provide a dark-light theming interface
+         */
+        @CheckResult
+        public fun theming(): Theming
+
+        /**
+         * Provide an image loader interface
+         */
+        @CheckResult
+        public fun imageLoader(): ImageLoader
+
+    }
+
 }

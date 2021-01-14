@@ -273,12 +273,21 @@ internal interface PYDroidComponent {
 
         private val provider by lazy(LazyThreadSafetyMode.NONE) {
             object : ModuleProvider {
-                override fun theming(): Theming {
-                    return theming
+
+                private val modules by lazy(LazyThreadSafetyMode.NONE) {
+                    object : ModuleProvider.Modules {
+                        override fun theming(): Theming {
+                            return theming
+                        }
+
+                        override fun imageLoader(): ImageLoader {
+                            return loaderModule.provideLoader()
+                        }
+                    }
                 }
 
-                override fun imageLoader(): ImageLoader {
-                    return loaderModule.provideLoader()
+                override fun get(): ModuleProvider.Modules {
+                    return modules
                 }
             }
         }

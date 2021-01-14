@@ -17,7 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.settings.clear
 
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 
 internal interface SettingsClearConfigComponent {
@@ -38,7 +38,7 @@ internal interface SettingsClearConfigComponent {
         private val params: Factory.Parameters
     ) : SettingsClearConfigComponent {
 
-        private val factory = createFactory {
+        private val factory = createViewModelFactory {
             SettingsClearConfigViewModel(params.settingsInteractor)
         }
 

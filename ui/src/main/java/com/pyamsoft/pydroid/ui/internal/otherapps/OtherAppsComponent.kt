@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 
 internal interface OtherAppsComponent {
@@ -45,7 +45,7 @@ internal interface OtherAppsComponent {
         private val params: Factory.Parameters
     ) : OtherAppsComponent {
 
-        private val factory = createFactory { OtherAppsViewModel(params.otherAppsInteractor) }
+        private val factory = createViewModelFactory { OtherAppsViewModel(params.otherAppsInteractor) }
 
         override fun inject(fragment: OtherAppsFragment) {
             val listView = OtherAppsList(parent)

@@ -21,7 +21,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.billing.BillingModule
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.bus.EventBus
@@ -60,7 +60,7 @@ internal interface BillingComponent {
             provider: AppProvider,
         ) : DialogComponent {
 
-            private val factory = createFactory {
+            private val factory = createViewModelFactory {
                 BillingViewModel(
                     params.interactor,
                     module.provideInteractor(),

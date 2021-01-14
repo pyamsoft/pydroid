@@ -20,7 +20,7 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
@@ -60,7 +60,7 @@ internal interface AppSettingsComponent {
         private val params: Factory.Parameters
     ) : AppSettingsComponent {
 
-        private val factory = createFactory {
+        private val factory = createViewModelFactory {
             AppSettingsViewModel(params.theming, params.otherAppsInteractor)
         }
 

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
@@ -51,7 +51,7 @@ internal interface ChangeLogDialogComponent {
     ) : ChangeLogDialogComponent {
 
         override fun inject(dialog: ChangeLogDialog) {
-            dialog.factory = createFactory { ChangeLogDialogViewModel(params.interactor, provider) }
+            dialog.factory = createViewModelFactory { ChangeLogDialogViewModel(params.interactor, provider) }
             dialog.listView = ChangeLogList(parent)
             dialog.nameView = ChangeLogName(parent)
             dialog.closeView = ChangeLogClose(parent)

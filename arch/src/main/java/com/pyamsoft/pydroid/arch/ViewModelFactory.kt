@@ -39,7 +39,7 @@ public abstract class ViewModelFactory protected constructor() : ViewModelProvid
     final override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (ViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            return viewModel(modelClass.kotlin) as T
+            return createViewModel(modelClass.kotlin) as T
         } else {
             fail()
         }
@@ -48,15 +48,15 @@ public abstract class ViewModelFactory protected constructor() : ViewModelProvid
     /**
      * Factory fails to return a value
      */
-    protected fun fail(): Nothing {
-        throw IllegalArgumentException("Factory can only handle classes that extend UiViewModel")
+    internal fun fail(): Nothing {
+        throw IllegalArgumentException("Factory can only handle classes that extend ViewModel")
     }
 
     /**
      * Resolve the requested UiViewModel
      */
     @CheckResult
-    protected abstract fun <T : ViewModel> viewModel(modelClass: KClass<T>): ViewModel
+    protected abstract fun <T : ViewModel> createViewModel(modelClass: KClass<T>): ViewModel
 }
 
 /**
@@ -79,7 +79,7 @@ public abstract class SavedStateViewModelFactory protected constructor(
     ): T {
         if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            return viewModel(modelClass.kotlin, RealUiSavedState(handle)) as T
+            return createViewModel(modelClass.kotlin, RealUiSavedState(handle)) as T
         } else {
             fail()
         }
@@ -88,15 +88,15 @@ public abstract class SavedStateViewModelFactory protected constructor(
     /**
      * Factory fails to return a value
      */
-    protected fun fail(): Nothing {
-        throw IllegalArgumentException("Factory can only handle classes that extend UiViewModel")
+    internal fun fail(): Nothing {
+        throw IllegalArgumentException("Factory can only handle classes that extend ViewModel")
     }
 
     /**
      * Resolve the requested UiViewModel
      */
     @CheckResult
-    protected abstract fun <T : ViewModel> viewModel(
+    protected abstract fun <T : ViewModel> createViewModel(
         modelClass: KClass<T>,
         savedState: UiSavedState,
     ): ViewModel
@@ -108,12 +108,12 @@ public abstract class SavedStateViewModelFactory protected constructor(
 @CheckResult
 @JvmOverloads
 @JvmName("createSavedStateFactory")
-public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createFactory(
+public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createSavedStateViewModelFactory(
     provider: UiSavedStateViewModelProvider<T>?,
     defaultArgs: Bundle? = null
 ): ViewModelProvider.Factory {
     return object : SavedStateViewModelFactory(this, defaultArgs) {
-        override fun <T : ViewModel> viewModel(
+        override fun <T : ViewModel> createViewModel(
             modelClass: KClass<T>,
             savedState: UiSavedState
         ): ViewModel {
@@ -128,11 +128,11 @@ public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createFactory(
  * Create a view model factory
  */
 @CheckResult
-public inline fun <reified T : ViewModel> createFactory(
+public inline fun <reified T : ViewModel> createViewModelFactory(
     crossinline provider: () -> T?
 ): ViewModelProvider.Factory {
     return object : ViewModelFactory() {
-        override fun <T : ViewModel> viewModel(modelClass: KClass<T>): ViewModel {
+        override fun <T : ViewModel> createViewModel(modelClass: KClass<T>): ViewModel {
             @Suppress("UNCHECKED_CAST")
             return provider() as? T ?: fail()
         }

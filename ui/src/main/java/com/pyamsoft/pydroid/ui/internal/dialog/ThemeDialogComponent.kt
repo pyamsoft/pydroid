@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.dialog
 import android.graphics.drawable.Drawable
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
-import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 
 internal interface ThemeDialogComponent {
 
@@ -41,7 +41,7 @@ internal interface ThemeDialogComponent {
         name: String
     ) : ThemeDialogComponent {
 
-        private val factory = createFactory { ThemeDialogViewModel(name) }
+        private val factory = createViewModelFactory { ThemeDialogViewModel(name) }
 
         override fun inject(dialog: FullscreenThemeDialog) {
             dialog.toolbar =

@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.about
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.arch.createViewModelFactory
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 
@@ -46,7 +46,7 @@ internal interface AboutComponent {
         private val params: Factory.Parameters
     ) : AboutComponent {
 
-        private val factory = createFactory { AboutViewModel(params.aboutInteractor) }
+        private val factory = createViewModelFactory { AboutViewModel(params.aboutInteractor) }
 
         override fun inject(fragment: AboutFragment) {
             val listView = AboutListView(parent)

@@ -23,6 +23,8 @@ import com.pyamsoft.pydroid.arch.internal.RealUiBundleWriter
 /**
  * Abstraction over saving data into an Android Bundle object
  *
+ * NOTE: This class will be going away in favor of UiSavedStateWriter.
+ *
  * TODO(Peter): Remove in favor of UiSavedStateWriter
  */
 public interface UiBundleWriter {

@@ -23,6 +23,11 @@ import com.pyamsoft.pydroid.arch.internal.RealUiBundleReader
 /**
  * Reads saved state from a Bundle
  *
+ * NOTE: This class will be going away in favor of UiSavedStateReader.
+ *       That class only supports the get(String): T? function. Migrate
+ *       all existing UiViews and other code to only use the get(String): T?
+ *       function from this class to prepare for future updates.
+ *
  * TODO(Peter): Remove in favor of UiSavedStateReader
  */
 public interface UiBundleReader {

@@ -144,5 +144,8 @@ public inline fun <reified T : ViewModel> createFactory(
  */
 public interface UiSavedStateViewModelProvider<T : ViewModel> {
 
+    /**
+     * Create a new view model
+     */
     public fun create(savedState: UiSavedState): T
 }

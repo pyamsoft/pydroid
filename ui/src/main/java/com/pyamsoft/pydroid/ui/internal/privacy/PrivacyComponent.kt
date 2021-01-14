@@ -19,7 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.privacy
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
-import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.arch.createFactory
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 
 internal interface PrivacyComponent {
@@ -33,35 +33,30 @@ internal interface PrivacyComponent {
             owner: LifecycleOwner,
             snackbarRootProvider: () -> ViewGroup
         ): PrivacyComponent
-
-        data class Parameters internal constructor(
-            internal val factory: PYDroidViewModelFactory
-        )
     }
 
     class Impl private constructor(
         private val snackbarRootProvider: () -> ViewGroup,
         private val owner: LifecycleOwner,
-        private val params: Factory.Parameters
     ) : PrivacyComponent {
 
+        private val factory = createFactory { PrivacyViewModel() }
+
         override fun inject(activity: PrivacyActivity) {
-            activity.privacyFactory = params.factory
+            activity.privacyFactory = factory
             activity.privacyView = PrivacyView(
                 owner,
                 snackbarRootProvider
             )
         }
 
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
+        internal class FactoryImpl internal constructor() : Factory {
 
             override fun create(
                 owner: LifecycleOwner,
                 snackbarRootProvider: () -> ViewGroup
             ): PrivacyComponent {
-                return Impl(snackbarRootProvider, owner, params)
+                return Impl(snackbarRootProvider, owner)
             }
         }
     }

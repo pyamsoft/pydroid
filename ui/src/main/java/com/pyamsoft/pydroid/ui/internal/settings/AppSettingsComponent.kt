@@ -20,9 +20,11 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface AppSettingsComponent {
 
@@ -44,7 +46,8 @@ internal interface AppSettingsComponent {
             internal val viewSourceUrl: String,
             internal val privacyPolicyUrl: String,
             internal val termsConditionsUrl: String,
-            internal val factory: PYDroidViewModelFactory
+            internal val theming: Theming,
+            internal val otherAppsInteractor: OtherAppsInteractor
         )
     }
 
@@ -57,6 +60,10 @@ internal interface AppSettingsComponent {
         private val params: Factory.Parameters
     ) : AppSettingsComponent {
 
+        private val factory = createFactory {
+            AppSettingsViewModel(params.theming, params.otherAppsInteractor)
+        }
+
         override fun inject(fragment: AppSettingsPreferenceFragment) {
             val versionView = VersionCheckView(owner, parentProvider)
             val settingsView = AppSettingsView(
@@ -67,7 +74,7 @@ internal interface AppSettingsComponent {
 
             fragment.versionCheckView = versionView
             fragment.settingsView = settingsView
-            fragment.factory = params.factory
+            fragment.factory = factory
         }
 
         internal class FactoryImpl internal constructor(

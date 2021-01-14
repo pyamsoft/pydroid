@@ -34,7 +34,8 @@ internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Injector.obtainFromApplication<PYDroidComponent>(requireContext())
-            .plusClearConfirmDialog()
+            .plusClearConfirm()
+            .create()
             .inject(this)
 
         return AlertDialog.Builder(requireActivity())

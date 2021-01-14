@@ -28,7 +28,6 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
-import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingItemComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
@@ -69,7 +68,7 @@ internal interface PYDroidComponent {
     fun plusOtherAppsItem(): OtherAppsItemComponent.Factory
 
     @CheckResult
-    fun plusClearConfirmDialog(): SettingsClearConfigComponent
+    fun plusClearConfirm(): SettingsClearConfigComponent.Factory
 
     @CheckResult
     fun plusChangeLog(): ChangeLogComponent.Factory
@@ -166,42 +165,33 @@ internal interface PYDroidComponent {
             )
         )
 
-        private val viewModelFactory =
-            PYDroidViewModelFactory(
-                PYDroidViewModelFactory.Parameters(
-                    version = params.version,
-                    theming = theming,
-                    interactors = PYDroidViewModelFactory.Parameters.Interactors(
-                        about = aboutModule.provideInteractor(),
-                        otherApps = otherAppsModule.provideInteractor(),
-                        settings = settingsModule.provideInteractor(),
-                        changeLog = changeLogModule.provideInteractor()
-                    )
-                )
-            )
-
         private val appSettingsParams = AppSettingsComponent.Factory.Parameters(
             bugReportUrl = params.reportUrl,
             viewSourceUrl = params.sourceUrl,
             privacyPolicyUrl = params.privacyPolicyUrl,
             termsConditionsUrl = params.termsConditionsUrl,
-            factory = viewModelFactory
-        )
-
-        private val privacyParams = PrivacyComponent.Factory.Parameters(
-            factory = viewModelFactory
+            theming = theming,
+            otherAppsInteractor = otherAppsModule.provideInteractor()
         )
 
         private val aboutParams = AboutComponent.Factory.Parameters(
-            factory = viewModelFactory
+            aboutInteractor = aboutModule.provideInteractor()
+        )
+
+        private val clearSettingsParams = SettingsClearConfigComponent.Factory.Parameters(
+            settingsInteractor = settingsModule.provideInteractor()
         )
 
         private val otherAppsParams = OtherAppsComponent.Factory.Parameters(
-            factory = viewModelFactory
+            otherAppsInteractor = otherAppsModule.provideInteractor()
         )
 
         private val otherAppItemParams = OtherAppsItemComponent.Factory.Parameters(
             imageLoader = loaderModule.provideLoader()
+        )
+
+        private val changeLogParams = ChangeLogComponent.Factory.Parameters(
+            changeLogInteractor = changeLogModule.provideInteractor()
         )
 
         private val ratingParams = RatingComponent.Factory.Parameters(
@@ -215,10 +205,6 @@ internal interface PYDroidComponent {
             version = params.version,
             isFakeUpgradeChecker = params.debug.enabled,
             isFakeUpgradeAvailable = params.debug.upgradeAvailable
-        )
-
-        private val changeLogParams = ChangeLogComponent.Factory.Parameters(
-            factory = viewModelFactory
         )
 
         private val changeLogDialogParams = ChangeLogDialogComponent.Factory.Parameters(
@@ -248,7 +234,7 @@ internal interface PYDroidComponent {
         }
 
         override fun plusPrivacy(): PrivacyComponent.Factory {
-            return PrivacyComponent.Impl.FactoryImpl(privacyParams)
+            return PrivacyComponent.Impl.FactoryImpl()
         }
 
         override fun plusAbout(): AboutComponent.Factory {
@@ -267,8 +253,8 @@ internal interface PYDroidComponent {
             return AboutItemComponent.Impl.FactoryImpl()
         }
 
-        override fun plusClearConfirmDialog(): SettingsClearConfigComponent {
-            return SettingsClearConfigComponent.Impl(viewModelFactory)
+        override fun plusClearConfirm(): SettingsClearConfigComponent.Factory {
+            return SettingsClearConfigComponent.Impl.FactoryImpl(clearSettingsParams)
         }
 
         override fun plusVersionCheck(): VersionCheckComponent.Factory {

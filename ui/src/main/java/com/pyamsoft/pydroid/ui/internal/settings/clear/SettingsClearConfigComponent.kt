@@ -16,18 +16,42 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings.clear
 
-import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 
 internal interface SettingsClearConfigComponent {
 
     fun inject(dialog: SettingsClearConfigDialog)
 
+    interface Factory {
+
+        @CheckResult
+        fun create(): SettingsClearConfigComponent
+
+        data class Parameters internal constructor(
+            internal val settingsInteractor: SettingsInteractor
+        )
+    }
+
     class Impl internal constructor(
-        private val factory: PYDroidViewModelFactory
+        private val params: Factory.Parameters
     ) : SettingsClearConfigComponent {
+
+        private val factory = createFactory {
+            SettingsClearConfigViewModel(params.settingsInteractor)
+        }
 
         override fun inject(dialog: SettingsClearConfigDialog) {
             dialog.factory = factory
         }
+
+        class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
+
+            override fun create(): SettingsClearConfigComponent {
+                return Impl(params)
+            }
+        }
     }
+
 }

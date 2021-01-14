@@ -17,8 +17,9 @@
 package com.pyamsoft.pydroid.ui.internal.changelog
 
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.createFactory
+import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
-import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 
 internal interface ChangeLogComponent {
 
@@ -30,7 +31,7 @@ internal interface ChangeLogComponent {
         fun create(): ChangeLogComponent
 
         data class Parameters internal constructor(
-            internal val factory: PYDroidViewModelFactory
+            internal val changeLogInteractor: ChangeLogInteractor
         )
     }
 
@@ -38,8 +39,10 @@ internal interface ChangeLogComponent {
         private val params: Factory.Parameters
     ) : ChangeLogComponent {
 
+        private val factory = createFactory { ChangeLogViewModel(params.changeLogInteractor) }
+
         override fun inject(activity: ChangeLogActivity) {
-            activity.changeLogFactory = params.factory
+            activity.changeLogFactory = factory
         }
 
         internal class FactoryImpl internal constructor(

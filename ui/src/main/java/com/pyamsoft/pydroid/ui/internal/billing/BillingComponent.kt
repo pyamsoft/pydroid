@@ -112,6 +112,8 @@ internal interface BillingComponent {
         private val params: Factory.Parameters,
     ) : BillingComponent {
 
+        // Make this module each time since if it falls out of scope, the in-app billing system
+        // will crash
         private val module = BillingModule(
             BillingModule.Parameters(
                 context = params.context.applicationContext,

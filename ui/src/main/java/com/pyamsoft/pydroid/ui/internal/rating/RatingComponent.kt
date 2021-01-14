@@ -51,6 +51,8 @@ internal interface RatingComponent {
         private val factory: ViewModelProvider.Factory
 
         init {
+            // Make this module each time since if it falls out of scope, the in-app rating system
+            // will crash
             val module = RatingModule(
                 RatingModule.Parameters(
                     context = params.context.applicationContext,

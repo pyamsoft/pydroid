@@ -50,8 +50,12 @@ internal interface ChangeLogDialogComponent {
         private val params: Factory.Parameters,
     ) : ChangeLogDialogComponent {
 
+        private val factory = createViewModelFactory {
+            ChangeLogDialogViewModel(params.interactor, provider)
+        }
+
         override fun inject(dialog: ChangeLogDialog) {
-            dialog.factory = createViewModelFactory { ChangeLogDialogViewModel(params.interactor, provider) }
+            dialog.factory = factory
             dialog.listView = ChangeLogList(parent)
             dialog.nameView = ChangeLogName(parent)
             dialog.closeView = ChangeLogClose(parent)

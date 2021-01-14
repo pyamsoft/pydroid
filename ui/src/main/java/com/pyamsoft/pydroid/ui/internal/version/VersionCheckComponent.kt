@@ -60,6 +60,8 @@ internal interface VersionCheckComponent {
         private val upgradeFactory: ViewModelProvider.Factory
 
         init {
+            // Make this module each time since if it falls out of scope, the in-app update system
+            // will crash
             val module = VersionModule(
                 Parameters(
                     context = params.context.applicationContext,
@@ -68,8 +70,12 @@ internal interface VersionCheckComponent {
                     isFakeUpgradeAvailable = params.isFakeUpgradeAvailable
                 )
             )
-            checkFactory = createViewModelFactory { VersionCheckViewModel(module.provideInteractor()) }
-            upgradeFactory = createViewModelFactory { VersionUpgradeViewModel(module.provideInteractor()) }
+            checkFactory = createViewModelFactory {
+                VersionCheckViewModel(module.provideInteractor())
+            }
+            upgradeFactory = createViewModelFactory {
+                VersionUpgradeViewModel(module.provideInteractor())
+            }
         }
 
         override fun inject(activity: VersionCheckActivity) {

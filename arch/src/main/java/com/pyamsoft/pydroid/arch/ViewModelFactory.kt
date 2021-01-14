@@ -26,7 +26,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import com.pyamsoft.pydroid.arch.internal.RealUiSavedState
-import kotlin.reflect.KClass
 
 /**
  * A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances.
@@ -39,24 +38,25 @@ public abstract class ViewModelFactory protected constructor() : ViewModelProvid
     final override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (ViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            return createViewModel(modelClass.kotlin) as T
+            return createViewModel(modelClass) as T
         } else {
-            fail()
+            fail(modelClass)
         }
     }
+
 
     /**
      * Factory fails to return a value
      */
-    internal fun fail(): Nothing {
-        throw IllegalArgumentException("Factory can only handle classes that extend ViewModel")
+    protected fun <T : ViewModel> fail(modelClass: Class<T>): Nothing {
+        throw IllegalArgumentException("Factory cannot handle ViewModel class: ${modelClass.simpleName}")
     }
 
     /**
      * Resolve the requested UiViewModel
      */
     @CheckResult
-    protected abstract fun <T : ViewModel> createViewModel(modelClass: KClass<T>): ViewModel
+    protected abstract fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel
 }
 
 /**
@@ -79,17 +79,17 @@ public abstract class SavedStateViewModelFactory protected constructor(
     ): T {
         if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            return createViewModel(modelClass.kotlin, RealUiSavedState(handle)) as T
+            return createViewModel(modelClass, RealUiSavedState(handle)) as T
         } else {
-            fail()
+            fail(modelClass)
         }
     }
 
     /**
      * Factory fails to return a value
      */
-    internal fun fail(): Nothing {
-        throw IllegalArgumentException("Factory can only handle classes that extend ViewModel")
+    protected fun <T : ViewModel> fail(modelClass: Class<T>): Nothing {
+        throw IllegalArgumentException("Factory cannot handle ViewModel class: ${modelClass.simpleName}")
     }
 
     /**
@@ -97,7 +97,7 @@ public abstract class SavedStateViewModelFactory protected constructor(
      */
     @CheckResult
     protected abstract fun <T : ViewModel> createViewModel(
-        modelClass: KClass<T>,
+        modelClass: Class<T>,
         savedState: UiSavedState,
     ): ViewModel
 }
@@ -114,11 +114,11 @@ public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createSavedSta
 ): ViewModelProvider.Factory {
     return object : SavedStateViewModelFactory(this, defaultArgs) {
         override fun <T : ViewModel> createViewModel(
-            modelClass: KClass<T>,
+            modelClass: Class<T>,
             savedState: UiSavedState
         ): ViewModel {
             @Suppress("UNCHECKED_CAST")
-            return requireNotNull(provider).create(savedState) as? T ?: fail()
+            return requireNotNull(provider).create(savedState) as? T ?: fail(modelClass)
         }
 
     }
@@ -132,9 +132,9 @@ public inline fun <reified T : ViewModel> createViewModelFactory(
     crossinline provider: () -> T?
 ): ViewModelProvider.Factory {
     return object : ViewModelFactory() {
-        override fun <T : ViewModel> createViewModel(modelClass: KClass<T>): ViewModel {
+        override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
             @Suppress("UNCHECKED_CAST")
-            return provider() as? T ?: fail()
+            return provider() as? T ?: fail(modelClass)
         }
     }
 }

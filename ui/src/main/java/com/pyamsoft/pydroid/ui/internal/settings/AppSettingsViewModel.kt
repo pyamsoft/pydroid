@@ -55,18 +55,16 @@ internal class AppSettingsViewModel internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: AppSettingsViewEvent) {
-        return when (event) {
-            is AppSettingsViewEvent.MoreApps -> seeMoreApps()
-            is AppSettingsViewEvent.RateApp -> publish(AppSettingsControllerEvent.NavigateRateApp)
-            is AppSettingsViewEvent.ViewLicense -> publish(AppSettingsControllerEvent.ShowLicense)
-            is AppSettingsViewEvent.CheckUpgrade -> publish(AppSettingsControllerEvent.CheckUpgrade)
-            is AppSettingsViewEvent.ClearData -> publish(AppSettingsControllerEvent.AttemptClearData)
-            is AppSettingsViewEvent.ShowUpgrade -> publish(AppSettingsControllerEvent.OpenShowUpgrade)
-            is AppSettingsViewEvent.ToggleDarkTheme -> changeDarkMode(event.mode)
-            is AppSettingsViewEvent.Hyperlink -> publish(AppSettingsControllerEvent.Navigate(event.hyperlinkIntent))
-            is AppSettingsViewEvent.ShowDonate -> publish(AppSettingsControllerEvent.OpenDonation)
-        }
+    override fun handleViewEvent(event: AppSettingsViewEvent) = when (event) {
+        is AppSettingsViewEvent.MoreApps -> seeMoreApps()
+        is AppSettingsViewEvent.RateApp -> publish(AppSettingsControllerEvent.NavigateRateApp)
+        is AppSettingsViewEvent.ViewLicense -> publish(AppSettingsControllerEvent.ShowLicense)
+        is AppSettingsViewEvent.CheckUpgrade -> publish(AppSettingsControllerEvent.CheckUpgrade)
+        is AppSettingsViewEvent.ClearData -> publish(AppSettingsControllerEvent.AttemptClearData)
+        is AppSettingsViewEvent.ShowUpgrade -> publish(AppSettingsControllerEvent.OpenShowUpgrade)
+        is AppSettingsViewEvent.ToggleDarkTheme -> changeDarkMode(event.mode)
+        is AppSettingsViewEvent.Hyperlink -> publish(AppSettingsControllerEvent.Navigate(event.hyperlinkIntent))
+        is AppSettingsViewEvent.ShowDonate -> publish(AppSettingsControllerEvent.OpenDonation)
     }
 
     private fun seeMoreApps() {

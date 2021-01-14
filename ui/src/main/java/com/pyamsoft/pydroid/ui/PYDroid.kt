@@ -75,13 +75,11 @@ public object PYDroid {
      */
     @JvmStatic
     @CheckResult
-    public fun getSystemService(name: String): Any? {
-        return when (name) {
-            PYDroidComponent::class.java.name -> instance().component
-            ImageLoader::class.java.name -> instance().moduleProvider.get().imageLoader()
-            Theming::class.java.name -> instance().moduleProvider.get().theming()
-            else -> null
-        }
+    public fun getSystemService(name: String): Any? = when (name) {
+        PYDroidComponent::class.java.name -> instance().component
+        ImageLoader::class.java.name -> instance().moduleProvider.get().imageLoader()
+        Theming::class.java.name -> instance().moduleProvider.get().theming()
+        else -> null
     }
 
     /**

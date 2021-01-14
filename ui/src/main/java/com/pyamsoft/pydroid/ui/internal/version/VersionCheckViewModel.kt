@@ -63,12 +63,10 @@ internal class VersionCheckViewModel internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: VersionCheckViewEvent) {
-        return when (event) {
-            is ErrorHidden -> clearError()
-            is LoadingHidden -> handleVersionCheckComplete()
-            is NavigationHidden -> clearNavigationError()
-        }
+    override fun handleViewEvent(event: VersionCheckViewEvent) = when (event) {
+        is ErrorHidden -> clearError()
+        is LoadingHidden -> handleVersionCheckComplete()
+        is NavigationHidden -> clearNavigationError()
     }
 
     private fun clearError() {

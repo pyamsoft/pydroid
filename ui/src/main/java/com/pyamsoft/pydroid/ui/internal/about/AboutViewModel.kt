@@ -57,13 +57,11 @@ internal class AboutViewModel internal constructor(
         loadLicenses()
     }
 
-    override fun handleViewEvent(event: AboutViewEvent) {
-        return when (event) {
-            is AboutViewEvent.ListItemEvent.OpenLibrary -> openUrl(event.index) { it.libraryUrl }
-            is AboutViewEvent.ListItemEvent.OpenLicense -> openUrl(event.index) { it.licenseUrl }
-            is AboutViewEvent.ErrorEvent.HideNavigationError -> clearNavigationError()
-            is AboutViewEvent.ErrorEvent.HideLoadError -> handleLicenseLoadComplete()
-        }
+    override fun handleViewEvent(event: AboutViewEvent) = when (event) {
+        is AboutViewEvent.ListItemEvent.OpenLibrary -> openUrl(event.index) { it.libraryUrl }
+        is AboutViewEvent.ListItemEvent.OpenLicense -> openUrl(event.index) { it.licenseUrl }
+        is AboutViewEvent.ErrorEvent.HideNavigationError -> clearNavigationError()
+        is AboutViewEvent.ErrorEvent.HideLoadError -> handleLicenseLoadComplete()
     }
 
     private inline fun openUrl(index: Int, crossinline func: (library: OssLibrary) -> String) {

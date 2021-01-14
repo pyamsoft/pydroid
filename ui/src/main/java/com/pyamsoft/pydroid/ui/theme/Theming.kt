@@ -17,16 +17,9 @@
 package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
-import android.content.res.Configuration
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Locale
 
 /**
@@ -70,14 +63,12 @@ public interface Theming {
         }
 
         @CheckResult
-        internal fun toAppCompatMode(): Int {
-            return when (this) {
-                LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-                DARK -> AppCompatDelegate.MODE_NIGHT_YES
-                else -> when {
-                    supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                    else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                }
+        internal fun toAppCompatMode(): Int = when (this) {
+            LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+            DARK -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> when {
+                supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
         }
 

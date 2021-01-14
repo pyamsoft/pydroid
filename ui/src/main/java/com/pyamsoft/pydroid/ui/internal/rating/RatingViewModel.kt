@@ -45,10 +45,8 @@ internal class RatingViewModel internal constructor(
         publish(RatingControllerEvent.LoadRating(isFallbackEnabled, launcher))
     }
 
-    override fun handleViewEvent(event: RatingViewEvent) {
-        return when (event) {
-            is HideNavigation -> clearNavigationError()
-        }
+    override fun handleViewEvent(event: RatingViewEvent) = when (event) {
+        is HideNavigation -> clearNavigationError()
     }
 
     internal fun load(force: Boolean) {

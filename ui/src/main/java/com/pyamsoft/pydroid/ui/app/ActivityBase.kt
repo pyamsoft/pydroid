@@ -77,11 +77,9 @@ public abstract class ActivityBase : AppCompatActivity(),
      * Get system service
      */
     @CallSuper
-    override fun getSystemService(name: String): Any? {
-        return when (name) {
-            BillingComponent::class.java.name -> requireNotNull(injector)
-            else -> super.getSystemService(name)
-        }
+    override fun getSystemService(name: String): Any? = when (name) {
+        BillingComponent::class.java.name -> requireNotNull(injector)
+        else -> super.getSystemService(name)
     }
 
     /**

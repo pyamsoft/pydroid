@@ -96,11 +96,9 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
      */
     // Provide this graph as a service injector
     @CallSuper
-    override fun getSystemService(name: String): Any? {
-        return when (name) {
-            VersionCheckComponent::class.java.name -> requireNotNull(injector)
-            else -> super.getSystemService(name)
-        }
+    override fun getSystemService(name: String): Any? = when (name) {
+        VersionCheckComponent::class.java.name -> requireNotNull(injector)
+        else -> super.getSystemService(name)
     }
 
     /**

@@ -27,9 +27,7 @@ internal class ThemeDialogViewModel internal constructor(
     )
 ) {
 
-    override fun handleViewEvent(event: ThemeDialogViewEvent) {
-        return when (event) {
-            is Close -> publish(ThemeDialogControllerEvent.Close)
-        }
+    override fun handleViewEvent(event: ThemeDialogViewEvent) = when (event) {
+        is Close -> publish(ThemeDialogControllerEvent.Close)
     }
 }

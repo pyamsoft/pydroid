@@ -34,10 +34,8 @@ internal class PrivacyViewModel internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: PrivacyViewEvent) {
-        return when (event) {
-            is SnackbarHidden -> setState { copy(throwable = null) }
-        }
+    override fun handleViewEvent(event: PrivacyViewEvent) = when (event) {
+        is SnackbarHidden -> setState { copy(throwable = null) }
     }
 
     fun navigationFailed(error: Throwable) {

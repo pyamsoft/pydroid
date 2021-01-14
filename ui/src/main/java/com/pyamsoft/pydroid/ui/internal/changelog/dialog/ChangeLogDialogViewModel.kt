@@ -47,10 +47,8 @@ internal class ChangeLogDialogViewModel internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: ChangeLogDialogViewEvent) {
-        return when (event) {
-            is ChangeLogDialogViewEvent.Close -> publish(ChangeLogDialogControllerEvent.Close)
-        }
+    override fun handleViewEvent(event: ChangeLogDialogViewEvent) = when (event) {
+        is ChangeLogDialogViewEvent.Close -> publish(ChangeLogDialogControllerEvent.Close)
     }
 }
 

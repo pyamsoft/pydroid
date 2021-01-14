@@ -32,42 +32,18 @@ import java.util.Locale
 /**
  * Handles getting current dark mode state and setting dark mode state
  */
-public class Theming internal constructor(preferences: ThemingPreferences) {
-
-    init {
-        // NOTE: We use GlobalScope here because this is an application level thing
-        // Maybe its an anti-pattern but I think in controlled use, its okay.
-        //
-        // https://medium.com/specto/android-startup-tip-dont-use-kotlin-coroutines-a7b3f7176fe5
-        //
-        // Coroutine start up is slow. What we can do instead is create a handler, which is cheap, and post
-        // to the main thread to defer this work until after start up is done
-        Handler(Looper.getMainLooper()).post {
-            // Now even though this will take work, it will defer until all other handler work is done
-            GlobalScope.launch(context = Dispatchers.Default) {
-                val mode = preferences.getDarkMode()
-                withContext(context = Dispatchers.Main) {
-                    setDarkTheme(mode)
-                }
-            }
-        }
-    }
+public interface Theming {
 
     /**
      * Is activity dark mode
      */
     @CheckResult
-    public fun isDarkTheme(activity: Activity): Boolean {
-        val uiMode = activity.resources.configuration.uiMode
-        return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    }
+    public fun isDarkTheme(activity: Activity): Boolean
 
     /**
      * Set application wide dark mode
      */
-    public fun setDarkTheme(mode: Mode) {
-        AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
-    }
+    public fun setDarkTheme(mode: Mode)
 
     /**
      * Dark mode enum

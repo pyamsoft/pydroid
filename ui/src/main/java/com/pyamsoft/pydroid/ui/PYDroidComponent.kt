@@ -44,6 +44,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsComponent
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
+import com.pyamsoft.pydroid.ui.theme.ThemingImpl
 
 internal interface PYDroidComponent {
 
@@ -123,7 +124,16 @@ internal interface PYDroidComponent {
     class ComponentImpl private constructor(params: Component.Parameters) : Component {
 
         private val context = params.application
-        private val packageName = params.application.packageName
+
+        private val preferences by lazy {
+            PYDroidPreferencesImpl(
+                params.application,
+                params.version,
+                params.debug.ratingAvailable
+            )
+        }
+
+        private val theming: Theming by lazy { ThemingImpl(preferences) }
 
         private val viewModelFactory by lazy {
             PYDroidViewModelFactory(
@@ -136,16 +146,6 @@ internal interface PYDroidComponent {
                 )
             )
         }
-
-        private val preferences by lazy {
-            PYDroidPreferencesImpl(
-                params.application,
-                params.version,
-                params.debug.ratingAvailable
-            )
-        }
-
-        private val theming by lazy { Theming(preferences) }
 
         private val loaderModule by lazy(LazyThreadSafetyMode.NONE) {
             LoaderModule(
@@ -177,7 +177,7 @@ internal interface PYDroidComponent {
             OtherAppsModule(
                 OtherAppsModule.Parameters(
                     context = context.applicationContext,
-                    packageName = packageName,
+                    packageName = context.applicationContext.packageName,
                     serviceCreator = networkModule.provideServiceCreator()
                 )
             )

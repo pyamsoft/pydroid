@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.arch.ViewBinder
 /**
  * Remove all item decorations from a recyclerview
  */
-fun RecyclerView.removeAllItemDecorations() {
+public fun RecyclerView.removeAllItemDecorations() {
     val totalCount = this.itemDecorationCount - 1
     if (totalCount <= 0) {
         return
@@ -36,7 +36,7 @@ fun RecyclerView.removeAllItemDecorations() {
 /**
  * Call the ViewBinder.teardown() on all view holders
  */
-fun RecyclerView.Adapter<*>.teardownAdapter(recyclerView: RecyclerView) {
+public fun RecyclerView.Adapter<*>.teardownAdapter(recyclerView: RecyclerView) {
     val itemSize = itemCount
     if (itemSize <= 0) {
         return

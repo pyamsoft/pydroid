@@ -26,14 +26,16 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent.ViewExternalPolicy
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyView
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import com.pyamsoft.pydroid.util.hyperlink
 
-abstract class PrivacyActivity : ActivityBase() {
+/**
+ * Activity which handles displaying a privacy policy via menu items
+ */
+public abstract class PrivacyActivity : ActivityBase() {
 
     private var stateSaver: StateSaver? = null
 
@@ -47,6 +49,9 @@ abstract class PrivacyActivity : ActivityBase() {
      */
     protected abstract val snackbarRoot: ViewGroup
 
+    /**
+     * On post create before start
+     */
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -75,6 +80,9 @@ abstract class PrivacyActivity : ActivityBase() {
             .onFailure { viewModel.navigationFailed(it) }
     }
 
+    /**
+     * On destroy
+     */
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()
@@ -83,6 +91,9 @@ abstract class PrivacyActivity : ActivityBase() {
         stateSaver = null
     }
 
+    /**
+     * On save instance state
+     */
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

@@ -19,7 +19,11 @@ package com.pyamsoft.pydroid.ui.util
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-fun FloatingActionButton.withBehavior(behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()): FloatingActionButton {
+/**
+ * Apply behavior to a FAB
+ */
+@JvmOverloads
+public fun FloatingActionButton.withBehavior(behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()): FloatingActionButton {
     return this.also {
         val params = it.layoutParams
         if (params is CoordinatorLayout.LayoutParams) {
@@ -28,7 +32,10 @@ fun FloatingActionButton.withBehavior(behavior: FloatingActionButton.Behavior = 
     }
 }
 
-inline fun FloatingActionButton.hide(crossinline func: FloatingActionButton.() -> Unit) {
+/**
+ * Hide FAB
+ */
+public inline fun FloatingActionButton.hide(crossinline func: FloatingActionButton.() -> Unit) {
     this.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
 
         override fun onHidden(fab: FloatingActionButton?) {
@@ -40,7 +47,10 @@ inline fun FloatingActionButton.hide(crossinline func: FloatingActionButton.() -
     })
 }
 
-inline fun FloatingActionButton.show(crossinline func: FloatingActionButton.() -> Unit) {
+/**
+ * Show FAB
+ */
+public inline fun FloatingActionButton.show(crossinline func: FloatingActionButton.() -> Unit) {
     this.show(object : FloatingActionButton.OnVisibilityChangedListener() {
 
         override fun onShown(fab: FloatingActionButton?) {

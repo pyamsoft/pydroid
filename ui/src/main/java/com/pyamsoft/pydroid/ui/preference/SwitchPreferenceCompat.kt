@@ -24,22 +24,37 @@ import android.util.AttributeSet
 import androidx.preference.R
 import androidx.preference.SwitchPreferenceCompat
 
-open class SwitchPreferenceCompat : SwitchPreferenceCompat {
+/**
+ * SwitchPreference that uses vector drawables
+ */
+public open class SwitchPreferenceCompat : SwitchPreferenceCompat {
 
-    constructor(context: Context) : this(context, null)
+    /**
+     * Construct
+     */
+    public constructor(context: Context) : this(context, null)
 
-    constructor(
+    /**
+     * Construct
+     */
+    public constructor(
         context: Context,
         attrs: AttributeSet?
     ) : this(context, attrs, R.attr.switchPreferenceCompatStyle)
 
-    constructor(
+    /**
+     * Construct
+     */
+    public constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
     ) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(
+    /**
+     * Construct
+     */
+    public constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,

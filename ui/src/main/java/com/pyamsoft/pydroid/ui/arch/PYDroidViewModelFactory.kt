@@ -31,6 +31,11 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlin.reflect.KClass
 
 
+/**
+ * Internal
+ *
+ * The main view model factory
+ */
 internal class PYDroidViewModelFactory internal constructor(
     private val params: Parameters,
 ) : ViewModelFactory() {

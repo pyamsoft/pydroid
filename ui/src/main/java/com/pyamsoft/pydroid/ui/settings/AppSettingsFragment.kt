@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
@@ -27,10 +28,17 @@ import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.LayoutCoordinatorBinding
 import com.pyamsoft.pydroid.ui.util.commit
 
-abstract class AppSettingsFragment : Fragment() {
+/**
+ * Fragment for displaying a settings page
+ */
+public abstract class AppSettingsFragment : Fragment() {
 
     private var coordinatorLayout: CoordinatorLayout? = null
 
+    /**
+     * Inflate view
+     */
+    @CallSuper
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,6 +47,10 @@ abstract class AppSettingsFragment : Fragment() {
         return inflater.inflate(R.layout.layout_coordinator, container, false)
     }
 
+    /**
+     * Created view
+     */
+    @CallSuper
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?
@@ -59,14 +71,23 @@ abstract class AppSettingsFragment : Fragment() {
         }
     }
 
+    /**
+     * Destroy view
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         coordinatorLayout = null
     }
 
+    /**
+     * Create a new settings fragment
+     */
     @CheckResult
-    abstract fun provideSettingsFragment(): AppSettingsPreferenceFragment
+    protected abstract fun provideSettingsFragment(): AppSettingsPreferenceFragment
 
+    /**
+     * Create a settings tag
+     */
     @CheckResult
-    abstract fun provideSettingsTag(): String
+    protected abstract fun provideSettingsTag(): String
 }

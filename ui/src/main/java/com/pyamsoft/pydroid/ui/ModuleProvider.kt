@@ -23,17 +23,17 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 /**
  * Provide constructed objects from PYDroid to outside consumers
  */
-interface ModuleProvider {
+public interface ModuleProvider {
 
     /**
      * Provide a dark-light theming interface
      */
     @CheckResult
-    fun theming(): Theming
+    public fun theming(): Theming
 
     /**
      * Provide an image loader interface
      */
     @CheckResult
-    fun imageLoader(): ImageLoader
+    public fun imageLoader(): ImageLoader
 }

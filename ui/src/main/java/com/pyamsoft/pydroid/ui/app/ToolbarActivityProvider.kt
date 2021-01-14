@@ -18,7 +18,13 @@ package com.pyamsoft.pydroid.ui.app
 
 import androidx.appcompat.widget.Toolbar
 
-interface ToolbarActivityProvider {
+/**
+ * Provide a toolbar to the global Activity level
+ */
+public interface ToolbarActivityProvider {
 
-    fun setToolbar(toolbar: Toolbar?)
+    /**
+     * Set or clear the global toolbar instance
+     */
+    public fun setToolbar(toolbar: Toolbar?)
 }

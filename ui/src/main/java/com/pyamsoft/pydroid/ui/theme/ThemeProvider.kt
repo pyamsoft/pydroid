@@ -19,18 +19,30 @@ package com.pyamsoft.pydroid.ui.theme
 import android.app.Activity
 import androidx.annotation.CheckResult
 
-fun interface ThemeProvider {
+/**
+ * Determines current dark mode status
+ */
+public fun interface ThemeProvider {
 
+    /**
+     * Is activity currently in dark mode
+     */
     @CheckResult
-    fun isDarkTheme(): Boolean
+    public fun isDarkTheme(): Boolean
 }
 
+/**
+ * Convert activity as theme provider
+ */
 @CheckResult
-fun Activity.asThemeProvider(theming: Theming): ThemeProvider {
+public fun Activity.asThemeProvider(theming: Theming): ThemeProvider {
     return ThemeProvider { theming.isDarkTheme(this) }
 }
 
+/**
+ * Convert theming as theme provider
+ */
 @CheckResult
-fun Theming.asThemeProvider(activity: Activity): ThemeProvider {
+public fun Theming.asThemeProvider(activity: Activity): ThemeProvider {
     return ThemeProvider { this.isDarkTheme(activity) }
 }

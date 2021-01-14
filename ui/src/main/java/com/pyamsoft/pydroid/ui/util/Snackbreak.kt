@@ -33,18 +33,27 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 import timber.log.Timber
 import java.util.UUID
 
-object Snackbreak {
+/**
+ * Snackbar manager with lifecycle
+ */
+public object Snackbreak {
 
     private var cached: Snacky? = null
 
-    inline fun bindTo(
+    /**
+     * Bind to a lifecycle, automatically dismisses on lifecycle destroy
+     */
+    public inline fun bindTo(
         owner: LifecycleOwner,
         crossinline withInstance: Instance.() -> Unit
     ) {
         return bindTo(owner.lifecycle, withInstance)
     }
 
-    inline fun bindTo(
+    /**
+     * Bind to a lifecycle, automatically dismisses on lifecycle destroy
+     */
+    public inline fun bindTo(
         lifecycle: Lifecycle,
         crossinline withInstance: Instance.() -> Unit
     ) {
@@ -82,7 +91,10 @@ object Snackbreak {
         return instance
     }
 
-    class Instance internal constructor() {
+    /**
+     * Bound snackbar instance handler
+     */
+    public class Instance internal constructor() {
 
         internal val id = UUID.randomUUID().toString()
 
@@ -96,14 +108,6 @@ object Snackbreak {
         private fun clearRefs() {
             barCallback = null
             snackbar = null
-        }
-
-        fun dismiss() {
-            snackbar?.also { bar ->
-                barCallback?.also { bar.removeCallback(it) }
-                bar.dismiss()
-            }
-            clearRefs()
         }
 
         @CheckResult
@@ -157,8 +161,22 @@ object Snackbreak {
             }
         }
 
+        /**
+         * Dismiss snackbar
+         */
+        public fun dismiss() {
+            snackbar?.also { bar ->
+                barCallback?.also { bar.removeCallback(it) }
+                bar.dismiss()
+            }
+            clearRefs()
+        }
+
+        /**
+         * Show for short time
+         */
         @JvmOverloads
-        fun short(
+        public fun short(
             view: View,
             message: CharSequence,
             force: Boolean = false,
@@ -171,8 +189,11 @@ object Snackbreak {
             }
         }
 
+        /**
+         * Show for short time
+         */
         @JvmOverloads
-        fun short(
+        public fun short(
             view: View,
             @StringRes message: Int,
             force: Boolean = false,
@@ -185,8 +206,11 @@ object Snackbreak {
             }
         }
 
+        /**
+         * Show for long time
+         */
         @JvmOverloads
-        fun long(
+        public fun long(
             view: View,
             message: CharSequence,
             force: Boolean = false,
@@ -199,8 +223,11 @@ object Snackbreak {
             }
         }
 
+        /**
+         * Show for long time
+         */
         @JvmOverloads
-        fun long(
+        public fun long(
             view: View,
             @StringRes message: Int,
             force: Boolean = false,
@@ -213,8 +240,11 @@ object Snackbreak {
             }
         }
 
+        /**
+         * Show until dismissed manually, or until another snackbar instance is bound
+         */
         @JvmOverloads
-        fun make(
+        public fun make(
             view: View,
             message: CharSequence,
             force: Boolean = false,
@@ -227,8 +257,11 @@ object Snackbreak {
             }
         }
 
+        /**
+         * Show until dismissed manually, or until another snackbar instance is bound
+         */
         @JvmOverloads
-        fun make(
+        public fun make(
             view: View,
             @StringRes message: Int,
             force: Boolean = false,
@@ -241,7 +274,7 @@ object Snackbreak {
             }
         }
 
-        companion object {
+        public companion object {
 
             private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
             private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }

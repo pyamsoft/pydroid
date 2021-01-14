@@ -30,7 +30,10 @@ import timber.log.Timber
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructor(
+/**
+ * A UiView which handles Preference screen entries.
+ */
+public abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructor(
     parent: PreferenceScreen
 ) : UiView<S, V>() {
 
@@ -47,11 +50,17 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
+    /**
+     * After teardown is complete
+     */
     final override fun onFinalTeardown() {
         Timber.d("Teardown complete, unbind")
         _parent = null
     }
 
+    /**
+     * On initialize
+     */
     final override fun onInit(savedInstanceState: UiBundleReader) {
         // Intentionally blank
     }
@@ -71,18 +80,19 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         }
     }
 
-    override fun render(state: UiRender<S>) {
+    /**
+     * Render
+     */
+    final override fun render(state: UiRender<S>) {
         assertValidState()
         onRender(state)
     }
 
+    /**
+     * On render
+     */
     @UiThread
     protected open fun onRender(state: UiRender<S>) {
-    }
-
-    @CheckResult
-    protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {
-        return boundPref(parent().context.getString(id))
     }
 
     private fun trackBound(v: BoundPref<*>) {
@@ -101,17 +111,31 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
         mutateMe.add(v)
     }
 
+    /**
+     * Bind preference view to UiView
+     */
+    @CheckResult
+    protected fun <V : Preference> boundPref(@StringRes id: Int): BoundPref<V> {
+        return boundPref(parent().context.getString(id))
+    }
+
+    /**
+     * Bind preference view to UiView
+     */
     @CheckResult
     protected fun <V : Preference> boundPref(key: String): BoundPref<V> {
         return createBoundPref { requireNotNull(parent().findPreference<V>(key)) }
     }
 
     @CheckResult
-    protected fun <V : Preference> createBoundPref(resolver: () -> V): BoundPref<V> {
+    private fun <V : Preference> createBoundPref(resolver: () -> V): BoundPref<V> {
         assertValidState()
         return BoundPref(resolver).also { trackBound(it) }
     }
 
+    /**
+     * Bound preference, frees up memory on destroy
+     */
     protected class BoundPref<V : Preference> internal constructor(
         resolver: () -> V
     ) : ReadOnlyProperty<Any, V> {
@@ -129,6 +153,9 @@ abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected constructo
             }
         }
 
+        /**
+         * Get value
+         */
         override fun getValue(
             thisRef: Any,
             property: KProperty<*>

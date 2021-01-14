@@ -24,11 +24,20 @@ import android.util.AttributeSet
 import androidx.preference.ListPreference
 import androidx.preference.R
 
-open class ListPreferenceCompat : ListPreference {
+/**
+ * ListPreference that uses vector drawables
+ */
+public open class ListPreferenceCompat : ListPreference {
 
-    constructor(context: Context) : this(context, null)
+    /**
+     * Construct
+     */
+    public constructor(context: Context) : this(context, null)
 
-    constructor(
+    /**
+     * Construct
+     */
+    public constructor(
         context: Context,
         attrs: AttributeSet?
     ) : this(
@@ -38,13 +47,19 @@ open class ListPreferenceCompat : ListPreference {
         )
     )
 
-    constructor(
+    /**
+     * Construct
+     */
+    public constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
     ) : this(context, attrs, defStyleAttr, 0)
 
-    constructor(
+    /**
+     * Construct
+     */
+    public constructor(
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int,

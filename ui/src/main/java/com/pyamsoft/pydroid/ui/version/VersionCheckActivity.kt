@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
@@ -41,8 +40,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class VersionCheckActivity : PrivacyActivity() {
+/**
+ * Activity that handles checking for a new version update
+ */
+public abstract class VersionCheckActivity : PrivacyActivity() {
 
+    /**
+     * Check for updates automatically
+     */
     protected open val checkForUpdates: Boolean = true
 
     private var stateSaver: StateSaver? = null
@@ -54,6 +59,9 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
     private var injector: VersionCheckComponent? = null
 
+    /**
+     * On post create
+     */
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -83,6 +91,9 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         }
     }
 
+    /**
+     * Get system service
+     */
     // Provide this graph as a service injector
     @CallSuper
     override fun getSystemService(name: String): Any? {
@@ -92,12 +103,18 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         }
     }
 
+    /**
+     * On save instance state
+     */
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         stateSaver?.saveState(outState)
     }
 
+    /**
+     * On destroy
+     */
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()
@@ -106,6 +123,9 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         stateSaver = null
     }
 
+    /**
+     * On activity result
+     */
     @CallSuper
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -121,12 +141,6 @@ abstract class VersionCheckActivity : PrivacyActivity() {
 
     private fun checkUpdates() {
         require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually." }
-        viewModel.checkForUpdates(false)
-    }
-
-    // Expose for applications to call manually
-    fun checkForUpdates() {
-        require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
         viewModel.checkForUpdates(false)
     }
 
@@ -148,7 +162,15 @@ abstract class VersionCheckActivity : PrivacyActivity() {
         }
     }
 
-    companion object {
+    /**
+     * Call for an update manually
+     */
+    public fun checkForUpdates() {
+        require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
+        viewModel.checkForUpdates(false)
+    }
+
+    public companion object {
 
         // Only bottom 16 bits.
         private const val RC_APP_UPDATE = 146

@@ -18,34 +18,36 @@ package com.pyamsoft.pydroid.ui.changelog
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
-import androidx.annotation.CheckResult
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogControllerEvent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
-abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
+/**
+ * An activity which displays an in-app changelog
+ */
+public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
 
     private var stateSaver: StateSaver? = null
 
     internal var changeLogFactory: ViewModelProvider.Factory? = null
     private val viewModel by fromViewModelFactory<ChangeLogViewModel> { changeLogFactory }
 
+    /**
+     * Version name of application
+     */
     protected abstract val versionName: String
 
-    @CheckResult
-    private fun Int.validate(what: String): Int {
-        return this.also { require(it != INVALID) { "Value for $what is: $it" } }
-    }
-
+    /**
+     * On activity create
+     */
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +67,18 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
         }
     }
 
+    /**
+     * On save instance state
+     */
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         stateSaver?.saveState(outState)
     }
 
+    /**
+     * On destroy
+     */
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()
@@ -78,16 +86,14 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
         stateSaver = null
     }
 
+    /**
+     * On post resume, we can show Dialogs
+     */
     @CallSuper
     override fun onPostResume() {
         super.onPostResume()
 
         // Called in onPostResume so that the DialogFragment can be shown correctly.
         viewModel.show(false)
-    }
-
-    companion object {
-
-        private const val INVALID = 0
     }
 }

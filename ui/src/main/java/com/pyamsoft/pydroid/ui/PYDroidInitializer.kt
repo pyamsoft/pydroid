@@ -70,6 +70,7 @@ internal data class PYDroidInitializer internal constructor(
                     .penaltyFlashScreen()
                     .build()
             )
+
             StrictMode.setVmPolicy(
                 StrictMode.VmPolicy.Builder()
                     .detectAll()

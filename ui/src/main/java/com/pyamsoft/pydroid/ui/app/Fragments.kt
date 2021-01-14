@@ -19,13 +19,19 @@ package com.pyamsoft.pydroid.ui.app
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 
-val Fragment.toolbarActivity: ToolbarActivity?
+/**
+ * Return the ToolbarActivity or null
+ */
+public val Fragment.toolbarActivity: ToolbarActivity?
     @get:CheckResult get() {
         val a = activity
         return if (a is ToolbarActivity) a else null
     }
 
+/**
+ * Return the ToolbarActivity or throw
+ */
 @CheckResult
-fun Fragment.requireToolbarActivity(): ToolbarActivity {
+public fun Fragment.requireToolbarActivity(): ToolbarActivity {
     return requireNotNull(toolbarActivity) { "ToolbarActivity is required and cannot be null." }
 }

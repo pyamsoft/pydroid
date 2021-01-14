@@ -26,17 +26,26 @@ import com.pyamsoft.pydroid.util.doOnDestroy
 import timber.log.Timber
 import java.util.UUID
 
-object Toaster {
+/**
+ * Global toast manager
+ */
+public object Toaster {
 
     private var cached: Toasty? = null
 
+    /**
+     * Binds toast to lifecycle, dismiss on destroy
+     */
     @CheckResult
-    fun bindTo(owner: LifecycleOwner): Instance {
+    public fun bindTo(owner: LifecycleOwner): Instance {
         return bindTo(owner.lifecycle)
     }
 
+    /**
+     * Binds toast to lifecycle, dismiss on destroy
+     */
     @CheckResult
-    fun bindTo(lifecycle: Lifecycle): Instance {
+    public fun bindTo(lifecycle: Lifecycle): Instance {
         return cacheInstance(lifecycle)
     }
 
@@ -59,7 +68,10 @@ object Toaster {
         return instance
     }
 
-    class Instance internal constructor() {
+    /**
+     * Toast instance manager
+     */
+    public class Instance internal constructor() {
 
         internal val id = UUID.randomUUID().toString()
 
@@ -101,7 +113,15 @@ object Toaster {
             }
         }
 
-        fun dismiss() {
+        private fun clearRefs() {
+            toast = null
+            toastCallback = null
+        }
+
+        /**
+         * Dismiss instance
+         */
+        public fun dismiss() {
             toast?.also { t ->
                 toastCallback?.also { removeCallback(t, it) }
                 t.cancel()
@@ -109,13 +129,11 @@ object Toaster {
             clearRefs()
         }
 
-        private fun clearRefs() {
-            toast = null
-            toastCallback = null
-        }
-
+        /**
+         * Show for a short time
+         */
         @JvmOverloads
-        fun short(
+        public fun short(
             context: Context,
             message: CharSequence,
             onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
@@ -128,8 +146,11 @@ object Toaster {
                 .also { it.show() }
         }
 
+        /**
+         * Show for a short time
+         */
         @JvmOverloads
-        fun short(
+        public fun short(
             context: Context,
             @StringRes message: Int,
             onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
@@ -142,8 +163,11 @@ object Toaster {
                 .also { it.show() }
         }
 
+        /**
+         * Show for a long time
+         */
         @JvmOverloads
-        fun long(
+        public fun long(
             context: Context,
             message: CharSequence,
             onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
@@ -156,8 +180,11 @@ object Toaster {
                 .also { it.show() }
         }
 
+        /**
+         * Show for a long time
+         */
         @JvmOverloads
-        fun long(
+        public fun long(
             context: Context,
             @StringRes message: Int,
             onShown: (toast: Toast) -> Unit = DEFAULT_ON_SHOWN,
@@ -170,7 +197,7 @@ object Toaster {
                 .also { it.show() }
         }
 
-        companion object {
+        public companion object {
 
             private val DEFAULT_ON_SHOWN = { _: Toast -> }
             private val DEFAULT_ON_HIDDEN = { _: Toast -> }

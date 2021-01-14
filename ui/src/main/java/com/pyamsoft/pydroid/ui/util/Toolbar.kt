@@ -83,8 +83,11 @@ private fun Toolbar.showUpIcon(customIcon: Drawable? = null, @ColorRes customCol
     }
 }
 
+/**
+ * Show the toolbar up arrow
+ */
 @JvmOverloads
-fun Toolbar.setUpEnabled(
+public fun Toolbar.setUpEnabled(
     up: Boolean,
     customIcon: Drawable? = null
 ) {

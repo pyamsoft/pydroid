@@ -28,10 +28,7 @@ import timber.log.Timber
  * Because of doOnResume this also guarantees that any children fragments are also
  * ready
  */
-fun DialogFragment.show(
-    activity: FragmentActivity,
-    tag: String
-) {
+public fun DialogFragment.show(activity: FragmentActivity, tag: String) {
     require(tag.isNotBlank()) { "Cannot use blank tag" }
 
     activity.doOnResume {

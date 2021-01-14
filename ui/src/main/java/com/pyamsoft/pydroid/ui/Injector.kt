@@ -27,7 +27,7 @@ import timber.log.Timber
 /**
  * Injects PYDroid and its managed services into a context
  */
-object Injector {
+public object Injector {
 
     /**
      * Obtain a component from the Application
@@ -36,7 +36,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    inline fun <reified T : Any> obtainFromApplication(application: Application): T {
+    public inline fun <reified T : Any> obtainFromApplication(application: Application): T {
         return obtainFromApplication(application, T::class.java)
     }
 
@@ -47,7 +47,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    fun <T : Any> obtainFromApplication(
+    public fun <T : Any> obtainFromApplication(
         application: Application,
         targetClass: Class<T>
     ): T {
@@ -61,7 +61,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    inline fun <reified T : Any> obtainFromApplication(context: Context): T {
+    public inline fun <reified T : Any> obtainFromApplication(context: Context): T {
         return obtainFromApplication(context, T::class.java)
     }
 
@@ -72,7 +72,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    fun <T : Any> obtainFromApplication(
+    public fun <T : Any> obtainFromApplication(
         context: Context,
         targetClass: Class<T>
     ): T {
@@ -86,7 +86,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    inline fun <reified T : Any> obtainFromActivity(activity: Activity): T {
+    public inline fun <reified T : Any> obtainFromActivity(activity: Activity): T {
         return obtainFromActivity(activity, T::class.java)
     }
 
@@ -97,7 +97,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    fun <T : Any> obtainFromActivity(
+    public fun <T : Any> obtainFromActivity(
         activity: Activity,
         targetClass: Class<T>
     ): T {
@@ -111,7 +111,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    inline fun <reified T : Any> obtainFromService(service: Service): T {
+    public inline fun <reified T : Any> obtainFromService(service: Service): T {
         return obtainFromService(service, T::class.java)
     }
 
@@ -122,7 +122,7 @@ object Injector {
      */
     @JvmStatic
     @CheckResult
-    fun <T : Any> obtainFromService(
+    public fun <T : Any> obtainFromService(
         service: Service,
         targetClass: Class<T>
     ): T {

@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty
     "Use fromViewModelFactory",
     replaceWith = ReplaceWith("fromViewModelFactory<T>(store, factoryProvider)")
 )
-inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
+public inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
@@ -52,7 +52,7 @@ inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
     "Use fromViewModelFactory",
     replaceWith = ReplaceWith("fromViewModelFactory<T>(activity, factoryProvider)")
 )
-inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
+public inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
     activity: Boolean = false,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
@@ -67,7 +67,7 @@ inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
     "Use fromViewModelFactory",
     replaceWith = ReplaceWith("fromViewModelFactory<T>(factoryProvider)")
 )
-inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
+public inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
     return fromViewModelFactory(factoryProvider)
@@ -77,7 +77,7 @@ inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
  * Allow nullable for easier caller API
  */
 @CheckResult
-inline fun <reified T : UiStateViewModel<*>> fromViewModelFactory(
+public inline fun <reified T : UiStateViewModel<*>> fromViewModelFactory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
@@ -89,7 +89,7 @@ inline fun <reified T : UiStateViewModel<*>> fromViewModelFactory(
  */
 @CheckResult
 @JvmOverloads
-inline fun <reified T : UiStateViewModel<*>> Fragment.fromViewModelFactory(
+public inline fun <reified T : UiStateViewModel<*>> Fragment.fromViewModelFactory(
     activity: Boolean = false,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
@@ -101,7 +101,7 @@ inline fun <reified T : UiStateViewModel<*>> Fragment.fromViewModelFactory(
  * Allow nullable for easier caller API
  */
 @CheckResult
-inline fun <reified T : UiStateViewModel<*>> FragmentActivity.fromViewModelFactory(
+public inline fun <reified T : UiStateViewModel<*>> FragmentActivity.fromViewModelFactory(
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
     return ViewModelFactoryImpl(this, T::class.java) { requireNotNull(factoryProvider()) }
@@ -111,8 +111,11 @@ inline fun <reified T : UiStateViewModel<*>> FragmentActivity.fromViewModelFacto
 /**
  * The ViewModelFactory interface
  */
-interface ViewModelFactory<T : UiStateViewModel<*>> : ReadOnlyProperty<Any, T>
+public interface ViewModelFactory<T : UiStateViewModel<*>> : ReadOnlyProperty<Any, T>
 
+/**
+ * ViewModelFactory implementation
+ */
 @PublishedApi
 internal class ViewModelFactoryImpl<T : UiStateViewModel<*>> private constructor(
     type: Class<T>,

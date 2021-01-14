@@ -19,8 +19,14 @@ package com.pyamsoft.pydroid.ui.theme
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.ui.theme.Theming.Mode
 
-interface ThemingPreferences {
+/**
+ * Preferences for dark mode
+ */
+public interface ThemingPreferences {
 
+    /**
+     * Is application in dark mode
+     */
     @CheckResult
-    suspend fun getDarkMode(): Mode
+    public suspend fun getDarkMode(): Mode
 }

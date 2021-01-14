@@ -22,8 +22,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnStart
 
+/**
+ * Commit a transaction
+ *
+ * Guaranteed safe via lifecycle
+ */
 @JvmOverloads
-inline fun FragmentManager.commit(
+public inline fun FragmentManager.commit(
     owner: LifecycleOwner,
     immediate: Boolean = false,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
@@ -31,8 +36,13 @@ inline fun FragmentManager.commit(
     return this.commit(owner.lifecycle, immediate, transaction)
 }
 
+/**
+ * Commit a transaction
+ *
+ * Guaranteed safe via lifecycle
+ */
 @JvmOverloads
-inline fun FragmentManager.commit(
+public inline fun FragmentManager.commit(
     lifecycle: Lifecycle,
     immediate: Boolean = false,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
@@ -48,14 +58,24 @@ inline fun FragmentManager.commit(
     }
 }
 
-inline fun FragmentManager.commitNow(
+/**
+ * Commit a transaction now
+ *
+ * Guaranteed safe via lifecycle
+ */
+public inline fun FragmentManager.commitNow(
     owner: LifecycleOwner,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
     return this.commitNow(owner.lifecycle, transaction)
 }
 
-inline fun FragmentManager.commitNow(
+/**
+ * Commit a transaction now
+ *
+ * Guaranteed safe via lifecycle
+ */
+public inline fun FragmentManager.commitNow(
     lifecycle: Lifecycle,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {

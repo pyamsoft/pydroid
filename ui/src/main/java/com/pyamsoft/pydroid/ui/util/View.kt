@@ -41,9 +41,12 @@ private fun getAccelCubicInterpolator(context: Context): Interpolator {
     )
 }
 
+/**
+ * Pop a view into visible state
+ */
 @CheckResult
 @JvmOverloads
-fun View.popShow(
+public fun View.popShow(
     startDelay: Long = 300L,
     duration: Long = 500L
 ): ViewPropertyAnimatorCompat {
@@ -72,9 +75,12 @@ fun View.popShow(
         })
 }
 
+/**
+ * Pop a view out of visible state
+ */
 @CheckResult
 @JvmOverloads
-fun View.popHide(
+public fun View.popHide(
     startDelay: Long = 300L,
     duration: Long = 500L
 ): ViewPropertyAnimatorCompat {
@@ -103,8 +109,11 @@ fun View.popHide(
         })
 }
 
+/**
+ * Fade view in animation
+ */
 @CheckResult
-fun View.fadeIn(): ViewPropertyAnimatorCompat {
+public fun View.fadeIn(): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
     alpha = 0f
     scaleX = 0.8f
@@ -130,8 +139,11 @@ fun View.fadeIn(): ViewPropertyAnimatorCompat {
         })
 }
 
+/**
+ * Fade view out animation
+ */
 @CheckResult
-fun View.fadeAway(): ViewPropertyAnimatorCompat {
+public fun View.fadeAway(): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
     alpha = 1f
     scaleX = 1f
@@ -155,8 +167,11 @@ fun View.fadeAway(): ViewPropertyAnimatorCompat {
         })
 }
 
+/**
+ * Flip a view vertically
+ */
 @CheckResult
-fun View.flipVertical(): ViewPropertyAnimatorCompat {
+public fun View.flipVertical(): ViewPropertyAnimatorCompat {
     val i: Interpolator = getAccelCubicInterpolator(context)
     return ViewCompat.animate(this)
         .scaleY(-scaleY)
@@ -165,10 +180,16 @@ fun View.flipVertical(): ViewPropertyAnimatorCompat {
         .setInterpolator(i)
 }
 
-fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?) {
+/**
+ * Set a debounced on click listener
+ */
+public fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?) {
     setOnClickListener(listener)
 }
 
-inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> Unit) {
+/**
+ * Set a debounced on click listener
+ */
+public inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> Unit) {
     setOnClickListener(DebouncedOnClickListener.create(func))
 }

@@ -16,35 +16,53 @@
 
 package com.pyamsoft.pydroid.ui.widget.shadow
 
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.databinding.TopshadowBinding
 
-class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
+/**
+ * Topshadow UiView
+ */
+public class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
     parent: ViewGroup
 ) : BaseUiView<S, E, TopshadowBinding>(parent) {
 
-    override val viewBinding = TopshadowBinding::inflate
+    /**
+     * Binding inflater
+     */
+    override val viewBinding: (LayoutInflater, ViewGroup) -> TopshadowBinding =
+        TopshadowBinding::inflate
 
-    override val layoutRoot by boundView { topshadowView }
+    /**
+     * Root layout
+     */
+    override val layoutRoot: View by boundView { topshadowView }
 
-    companion object {
+    public companion object {
 
+        /**
+         * Create a typed dropshadow view
+         */
         @JvmStatic
         @CheckResult
-        fun create(parent: ViewGroup): TopshadowView<UnitViewState, UnitViewEvent> {
+        public fun create(parent: ViewGroup): BaseUiView<UnitViewState, UnitViewEvent, *> {
             return createTyped(parent)
         }
 
+        /**
+         * Create a typed dropshadow view
+         */
         @JvmStatic
         @CheckResult
-        fun <S : UiViewState, E : UiViewEvent> createTyped(parent: ViewGroup): TopshadowView<S, E> {
+        public fun <S : UiViewState, E : UiViewEvent> createTyped(parent: ViewGroup): BaseUiView<S, E, *> {
             return TopshadowView(parent)
         }
     }

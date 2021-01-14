@@ -47,17 +47,29 @@ import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
-abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
+/**
+ * Preference fragment level for displaying a preference screen
+ */
+public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
+
+    /**
+     * XML resource id
+     */
+    protected open val preferenceXmlResId: Int = 0
+
+    /**
+     * Hide upgrade
+     */
+    protected open val hideUpgradeInformation: Boolean = false
+
+    /**
+     * Hide clear button
+     */
+    protected open val hideClearAll: Boolean = false
 
     private var settingsStateSaver: StateSaver? = null
     private var ratingStateSaver: StateSaver? = null
     private var versionStateSaver: StateSaver? = null
-
-    protected open val preferenceXmlResId: Int = 0
-
-    protected open val hideUpgradeInformation: Boolean = false
-
-    protected open val hideClearAll: Boolean = false
 
     internal var settingsView: AppSettingsView? = null
 
@@ -68,6 +80,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     private val versionViewModel by fromViewModelFactory<VersionCheckViewModel>(activity = true) { factory }
     private val changeLogViewModel by fromViewModelFactory<ChangeLogViewModel>(activity = true) { factory }
 
+    /**
+     * On inflate preferences
+     */
     @CallSuper
     override fun onCreatePreferences(
         savedInstanceState: Bundle?,
@@ -84,6 +99,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         addPreferencesFromResource(R.xml.social)
     }
 
+    /**
+     * On create
+     */
     @CallSuper
     override fun onViewCreated(
         view: View,
@@ -138,6 +156,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
     }
 
+    /**
+     * On destroy
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         settingsView = null
@@ -189,6 +210,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
         link.navigate().handleNavigation()
     }
 
+    /**
+     * On save instance state
+     */
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

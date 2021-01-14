@@ -19,7 +19,10 @@ package com.pyamsoft.pydroid.ui.util
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 
-inline fun ConstraintLayout.layout(func: ConstraintSet.() -> Unit) {
+/**
+ * Layout a set of constraints
+ */
+public inline fun ConstraintLayout.layout(func: ConstraintSet.() -> Unit) {
     val set = ConstraintSet()
     set.clone(this)
     func(set)

@@ -26,8 +26,12 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 
-abstract class ActivityBase constructor(
-) : AppCompatActivity(),
+/**
+ * The base Activity class for PYDroid.
+ *
+ * You are required to extend this class so that other ui bits work.
+ */
+public abstract class ActivityBase : AppCompatActivity(),
     ToolbarActivity,
     ToolbarActivityProvider,
     AppProvider {
@@ -45,13 +49,16 @@ abstract class ActivityBase constructor(
     /**
      * The main view container for all page level fragment transactions
      */
-    abstract val fragmentContainerId: Int
+    public abstract val fragmentContainerId: Int
 
     /**
      * Activity level toolbar, similar to ActionBar
      */
     private var capturedToolbar: Toolbar? = null
 
+    /**
+     * On activity create
+     */
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +73,9 @@ abstract class ActivityBase constructor(
         requireNotNull(billingConnector).connect()
     }
 
+    /**
+     * Get system service
+     */
     @CallSuper
     override fun getSystemService(name: String): Any? {
         return when (name) {
@@ -74,6 +84,9 @@ abstract class ActivityBase constructor(
         }
     }
 
+    /**
+     * On activity destroy
+     */
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()

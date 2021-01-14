@@ -26,30 +26,33 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 
+/**
+ * Remove the title from a dialog
+ */
 @CheckResult
-fun Dialog.noTitle(): Dialog {
+public fun Dialog.noTitle(): Dialog {
     requestWindowFeature(Window.FEATURE_NO_TITLE)
     return this
 }
 
 /**
- * Call this from at least onViewCreated() but before onResume()
+ * Call this from at least onCreate() but before onResume()
  */
-fun DialogFragment.makeFullscreen() {
+public fun DialogFragment.makeFullscreen() {
     setSizes(fullHeight = true, fullWidth = true)
 }
 
 /**
- * Call this from at least onViewCreated() but before onResume()
+ * Call this from at least onCreate() but before onResume()
  */
-fun DialogFragment.makeFullWidth() {
+public fun DialogFragment.makeFullWidth() {
     setSizes(fullHeight = false, fullWidth = true)
 }
 
 /**
- * Call this from at least onViewCreated() but before onResume()
+ * Call this from at least onCreate() but before onResume()
  */
-fun DialogFragment.makeFullHeight() {
+public fun DialogFragment.makeFullHeight() {
     setSizes(fullHeight = true, fullWidth = false)
 }
 

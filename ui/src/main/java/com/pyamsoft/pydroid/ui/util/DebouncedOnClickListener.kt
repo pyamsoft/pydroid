@@ -22,8 +22,11 @@ import androidx.annotation.CheckResult
 /**
  * Click listener which debounces all other click events for the frame
  */
-abstract class DebouncedOnClickListener protected constructor() : View.OnClickListener {
+public abstract class DebouncedOnClickListener protected constructor() : View.OnClickListener {
 
+    /**
+     * On click
+     */
     final override fun onClick(view: View) {
         if (enabled) {
             enabled = false
@@ -32,16 +35,22 @@ abstract class DebouncedOnClickListener protected constructor() : View.OnClickLi
         }
     }
 
-    abstract fun doClick(view: View)
+    /**
+     * On click
+     */
+    protected abstract fun doClick(view: View)
 
-    companion object {
+    public companion object {
 
         private var enabled = true
         private val enableAgain = Runnable { enabled = true }
 
+        /**
+         * Create a new debouncing click listener
+         */
         @CheckResult
         @JvmStatic
-        inline fun create(crossinline func: (View) -> Unit): View.OnClickListener {
+        public inline fun create(crossinline func: (View) -> Unit): View.OnClickListener {
             return object : DebouncedOnClickListener() {
                 override fun doClick(view: View) {
                     func(view)
@@ -51,7 +60,10 @@ abstract class DebouncedOnClickListener protected constructor() : View.OnClickLi
     }
 }
 
+/**
+ * Convert a click listener into a debouncing one.
+ */
 @CheckResult
-fun View.OnClickListener.debounce(): View.OnClickListener {
+public fun View.OnClickListener.debounce(): View.OnClickListener {
     return DebouncedOnClickListener.create { this.onClick(it) }
 }

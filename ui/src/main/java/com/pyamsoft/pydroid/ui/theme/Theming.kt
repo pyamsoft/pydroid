@@ -29,7 +29,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class Theming internal constructor(preferences: ThemingPreferences) {
+/**
+ * Handles getting current dark mode state and setting dark mode state
+ */
+public class Theming internal constructor(preferences: ThemingPreferences) {
 
     init {
         // NOTE: We use GlobalScope here because this is an application level thing
@@ -50,28 +53,48 @@ class Theming internal constructor(preferences: ThemingPreferences) {
         }
     }
 
+    /**
+     * Is activity dark mode
+     */
     @CheckResult
-    fun isDarkTheme(activity: Activity): Boolean {
+    public fun isDarkTheme(activity: Activity): Boolean {
         val uiMode = activity.resources.configuration.uiMode
         return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
     }
 
-    fun setDarkTheme(mode: Mode) {
+    /**
+     * Set application wide dark mode
+     */
+    public fun setDarkTheme(mode: Mode) {
         AppCompatDelegate.setDefaultNightMode(mode.toAppCompatMode())
     }
 
-    enum class Mode {
+    /**
+     * Dark mode enum
+     */
+    public enum class Mode {
+        /**
+         * Light mode
+         */
         LIGHT,
+
+        /**
+         * Dark mode
+         */
         DARK,
+
+        /**
+         * System mode
+         */
         SYSTEM;
 
         @CheckResult
-        fun toRawString(): String {
+        internal fun toRawString(): String {
             return name.toLowerCase(Locale.getDefault())
         }
 
         @CheckResult
-        fun toAppCompatMode(): Int {
+        internal fun toAppCompatMode(): Int {
             return when (this) {
                 LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
                 DARK -> AppCompatDelegate.MODE_NIGHT_YES
@@ -82,7 +105,7 @@ class Theming internal constructor(preferences: ThemingPreferences) {
             }
         }
 
-        companion object {
+        public companion object {
 
             @JvmStatic
             @CheckResult

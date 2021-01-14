@@ -22,22 +22,34 @@ import com.pyamsoft.pydroid.ui.internal.changelog.asBugfix
 import com.pyamsoft.pydroid.ui.internal.changelog.asChange
 import com.pyamsoft.pydroid.ui.internal.changelog.asFeature
 
-class ChangeLogBuilder {
+/**
+ * Constructs a formatted change log
+ */
+public class ChangeLogBuilder {
 
     private val builder = mutableListOf<ChangeLogLine>()
 
+    /**
+     * Adds a line about a bug fix
+     */
     @CheckResult
-    fun bugfix(line: String): ChangeLogBuilder {
+    public fun bugfix(line: String): ChangeLogBuilder {
         return this.also { builder.add(line.asBugfix()) }
     }
 
+    /**
+     * Adds a line about a behavior change
+     */
     @CheckResult
-    fun change(line: String): ChangeLogBuilder {
+    public fun change(line: String): ChangeLogBuilder {
         return this.also { builder.add(line.asChange()) }
     }
 
+    /**
+     * Adds a line about a new feature
+     */
     @CheckResult
-    fun feature(line: String): ChangeLogBuilder {
+    public fun feature(line: String): ChangeLogBuilder {
         return this.also { builder.add(line.asFeature()) }
     }
 
@@ -47,7 +59,10 @@ class ChangeLogBuilder {
     }
 }
 
+/**
+ * Construct a changelog from a builder DSL
+ */
 @CheckResult
-inline fun buildChangeLog(crossinline func: ChangeLogBuilder.() -> Unit): ChangeLogBuilder {
+public inline fun buildChangeLog(crossinline func: ChangeLogBuilder.() -> Unit): ChangeLogBuilder {
     return ChangeLogBuilder().apply(func)
 }

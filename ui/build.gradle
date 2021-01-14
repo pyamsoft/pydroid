@@ -18,6 +18,7 @@ android {
 
   kotlinOptions {
     freeCompilerArgs += '-Xallow-result-return-type'
+    freeCompilerArgs += '-Xexplicit-api=strict'
   }
 
   buildFeatures {

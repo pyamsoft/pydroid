@@ -29,7 +29,10 @@ import androidx.core.content.withStyledAttributes
 import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
 
-fun Preference.loadIconCompat(attrs: AttributeSet?) {
+/**
+ * Load a vector drawable icon from XML
+ */
+internal fun Preference.loadIconCompat(attrs: AttributeSet?) {
     if (attrs != null) {
         context.withStyledAttributes(attrs, R.styleable.PreferenceCompat) {
             val iconResId = getResourceId(R.styleable.PreferenceCompat_iconCompat, 0)
@@ -41,9 +44,12 @@ fun Preference.loadIconCompat(attrs: AttributeSet?) {
     }
 }
 
-@CheckResult
+/**
+ * Get an attribute from a style
+ */
 @AttrRes
-fun Context.getStyledAttr(
+@CheckResult
+internal fun Context.getStyledAttr(
     @AttrRes attr: Int,
     @AttrRes fallbackAttr: Int
 ): Int {

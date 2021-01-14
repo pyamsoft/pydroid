@@ -26,7 +26,6 @@ import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
@@ -39,7 +38,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class RatingActivity : VersionCheckActivity() {
+/**
+ * Activity which handles displaying an in-app rating prompt
+ */
+public abstract class RatingActivity : VersionCheckActivity() {
 
     private var stateSaver: StateSaver? = null
 
@@ -48,6 +50,9 @@ abstract class RatingActivity : VersionCheckActivity() {
     internal var ratingFactory: ViewModelProvider.Factory? = null
     private val viewModel by fromViewModelFactory<RatingViewModel> { ratingFactory }
 
+    /**
+     * On post create
+     */
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
@@ -72,12 +77,18 @@ abstract class RatingActivity : VersionCheckActivity() {
         viewModel.load(false)
     }
 
+    /**
+     * On save instance state
+     */
     @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         stateSaver?.saveState(outState)
     }
 
+    /**
+     * On destroy
+     */
     @CallSuper
     override fun onDestroy() {
         super.onDestroy()

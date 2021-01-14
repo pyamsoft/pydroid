@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference
 /**
  * PYDroid library entry point
  */
-object PYDroid {
+public object PYDroid {
 
     private val instance = AtomicReference<PYDroidInitializer?>(null)
 
@@ -55,7 +55,7 @@ object PYDroid {
      */
     @JvmStatic
     @CheckResult
-    fun init(application: Application, params: Parameters): ModuleProvider {
+    public fun init(application: Application, params: Parameters): ModuleProvider {
         if (instance.get() == null) {
             synchronized(this) {
                 if (instance.get() == null) {
@@ -75,7 +75,7 @@ object PYDroid {
      */
     @JvmStatic
     @CheckResult
-    fun getSystemService(name: String): Any? {
+    public fun getSystemService(name: String): Any? {
         return when (name) {
             PYDroidComponent::class.java.name -> instance().component
             ImageLoader::class.java.name -> instance().moduleProvider.imageLoader()
@@ -87,7 +87,7 @@ object PYDroid {
     /**
      * PYDroid parameters
      */
-    data class Parameters @JvmOverloads constructor(
+    public data class Parameters @JvmOverloads constructor(
         internal val viewSourceUrl: String,
         internal val bugReportUrl: String,
         internal val privacyPolicyUrl: String,
@@ -99,7 +99,7 @@ object PYDroid {
     /**
      * PYDroid debugging parameters
      */
-    data class DebugParameters(
+    public data class DebugParameters(
         internal val enabled: Boolean,
         internal val upgradeAvailable: Boolean,
         internal val ratingAvailable: Boolean,

@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
@@ -40,7 +41,7 @@ internal class ChangeLogDialog : IconDialog() {
     internal var iconView: ChangeLogIcon? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<ChangeLogDialogViewModel>(activity = true) { factory }
+    private val viewModel by fromViewModelFactory<ChangeLogDialogViewModel>(activity = true) { factory }
 
     @CheckResult
     private fun getChangelogProvider(): ChangeLogProvider {

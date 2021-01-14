@@ -32,7 +32,52 @@ import kotlin.reflect.KProperty
  * Allow nullable for easier caller API
  */
 @CheckResult
+@Deprecated(
+    "Use fromViewModelFactory",
+    replaceWith = ReplaceWith("fromViewModelFactory<T>(store, factoryProvider)")
+)
 inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
+    store: ViewModelStore,
+    crossinline factoryProvider: () -> ViewModelProvider.Factory?
+): ViewModelFactory<T> {
+    return fromViewModelFactory(store, factoryProvider)
+}
+
+/**
+ * Allow nullable for easier caller API
+ */
+@CheckResult
+@JvmOverloads
+@Deprecated(
+    "Use fromViewModelFactory",
+    replaceWith = ReplaceWith("fromViewModelFactory<T>(activity, factoryProvider)")
+)
+inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
+    activity: Boolean = false,
+    crossinline factoryProvider: () -> ViewModelProvider.Factory?
+): ViewModelFactory<T> {
+    return fromViewModelFactory(activity, factoryProvider)
+}
+
+/**
+ * Allow nullable for easier caller API
+ */
+@CheckResult
+@Deprecated(
+    "Use fromViewModelFactory",
+    replaceWith = ReplaceWith("fromViewModelFactory<T>(factoryProvider)")
+)
+inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
+    crossinline factoryProvider: () -> ViewModelProvider.Factory?
+): ViewModelFactory<T> {
+    return fromViewModelFactory(factoryProvider)
+}
+
+/**
+ * Allow nullable for easier caller API
+ */
+@CheckResult
+inline fun <reified T : UiStateViewModel<*>> fromViewModelFactory(
     store: ViewModelStore,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
@@ -44,7 +89,7 @@ inline fun <reified T : UiStateViewModel<*>> viewModelFactory(
  */
 @CheckResult
 @JvmOverloads
-inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
+inline fun <reified T : UiStateViewModel<*>> Fragment.fromViewModelFactory(
     activity: Boolean = false,
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
@@ -56,7 +101,7 @@ inline fun <reified T : UiStateViewModel<*>> Fragment.viewModelFactory(
  * Allow nullable for easier caller API
  */
 @CheckResult
-inline fun <reified T : UiStateViewModel<*>> FragmentActivity.viewModelFactory(
+inline fun <reified T : UiStateViewModel<*>> FragmentActivity.fromViewModelFactory(
     crossinline factoryProvider: () -> ViewModelProvider.Factory?
 ): ViewModelFactory<T> {
     return ViewModelFactoryImpl(this, T::class.java) { requireNotNull(factoryProvider()) }

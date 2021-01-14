@@ -25,12 +25,13 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 
 internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
+    private val viewModel by fromViewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Injector.obtainFromApplication<PYDroidComponent>(requireContext())

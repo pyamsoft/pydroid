@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
@@ -45,7 +46,7 @@ abstract class RatingActivity : VersionCheckActivity() {
     internal var ratingView: RatingView? = null
 
     internal var ratingFactory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<RatingViewModel> { ratingFactory }
+    private val viewModel by fromViewModelFactory<RatingViewModel> { ratingFactory }
 
     @CallSuper
     override fun onPostCreate(savedInstanceState: Bundle?) {

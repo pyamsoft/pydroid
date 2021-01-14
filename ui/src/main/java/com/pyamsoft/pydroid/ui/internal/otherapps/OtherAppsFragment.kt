@@ -29,6 +29,7 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
@@ -42,7 +43,7 @@ internal class OtherAppsFragment : Fragment() {
     internal var errorView: OtherAppsErrors? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<OtherAppsViewModel>(activity = true) { factory }
+    private val viewModel by fromViewModelFactory<OtherAppsViewModel>(activity = true) { factory }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -24,6 +24,7 @@ import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogControllerEvent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
@@ -36,7 +37,7 @@ abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
     private var stateSaver: StateSaver? = null
 
     internal var changeLogFactory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<ChangeLogViewModel> { changeLogFactory }
+    private val viewModel by fromViewModelFactory<ChangeLogViewModel> { changeLogFactory }
 
     protected abstract val versionName: String
 

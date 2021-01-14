@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullscreen
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutConstraintBinding
 import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogControllerEvent.Close
@@ -51,7 +52,7 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
     internal var frame: ThemeDialogFrame? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<ThemeDialogViewModel> { factory }
+    private val viewModel by fromViewModelFactory<ThemeDialogViewModel> { factory }
 
     private var stateSaver: StateSaver? = null
 

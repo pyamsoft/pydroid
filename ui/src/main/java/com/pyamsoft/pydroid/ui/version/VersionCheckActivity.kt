@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
@@ -49,7 +50,7 @@ abstract class VersionCheckActivity : PrivacyActivity() {
     internal var versionCheckView: VersionCheckView? = null
 
     internal var versionFactory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<VersionCheckViewModel> { versionFactory }
+    private val viewModel by fromViewModelFactory<VersionCheckViewModel> { versionFactory }
 
     private var injector: VersionCheckComponent? = null
 

@@ -28,7 +28,7 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
@@ -64,9 +64,9 @@ abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
     internal var versionCheckView: VersionCheckView? = null
 
     internal var factory: ViewModelProvider.Factory? = null
-    private val settingsViewModel by viewModelFactory<AppSettingsViewModel>(activity = true) { factory }
-    private val versionViewModel by viewModelFactory<VersionCheckViewModel>(activity = true) { factory }
-    private val changeLogViewModel by viewModelFactory<ChangeLogViewModel>(activity = true) { factory }
+    private val settingsViewModel by fromViewModelFactory<AppSettingsViewModel>(activity = true) { factory }
+    private val versionViewModel by fromViewModelFactory<VersionCheckViewModel>(activity = true) { factory }
+    private val changeLogViewModel by fromViewModelFactory<ChangeLogViewModel>(activity = true) { factory }
 
     @CallSuper
     override fun onCreatePreferences(

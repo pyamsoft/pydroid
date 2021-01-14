@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
+import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent.ViewExternalPolicy
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyView
@@ -39,7 +40,7 @@ abstract class PrivacyActivity : ActivityBase() {
     internal var privacyView: PrivacyView? = null
 
     internal var privacyFactory: ViewModelProvider.Factory? = null
-    private val viewModel by viewModelFactory<PrivacyViewModel> { privacyFactory }
+    private val viewModel by fromViewModelFactory<PrivacyViewModel> { privacyFactory }
 
     /**
      * Used for Activity level snackbars

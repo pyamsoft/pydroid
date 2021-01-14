@@ -31,6 +31,9 @@ public interface ModuleProvider {
     @CheckResult
     public fun get(): Modules
 
+    /**
+     * Modules from PYDroid
+     */
     public interface Modules {
 
         /**

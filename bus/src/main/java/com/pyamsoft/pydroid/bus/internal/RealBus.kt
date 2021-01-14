@@ -39,6 +39,9 @@ internal class RealBus<T : Any> internal constructor(
     private val bus by lazy { MutableSharedFlow<T>(replay = replayCount) }
 
     // Keep around items which have not been emitted yet because of no active subscribers
+    //
+    // As far as I know, we can't use any of the shared flow built in behaviors
+    // because we want a queue that replays all items to only the first subscriber.
     private val mutex = Mutex()
     private val waitingQueue by lazy { mutableListOf<T>() }
 
@@ -47,41 +50,41 @@ internal class RealBus<T : Any> internal constructor(
         return bus.subscriptionCount.value > 0
     }
 
-    private suspend fun sendOrQueue(event: T) {
-        mutex.withLock {
-            if (isBusReady()) {
-                bus.emit(event)
-            } else {
-                waitingQueue.add(event)
-            }
-        }
+    private suspend inline fun withQueue(func: MutableList<T>.() -> Unit): Unit = mutex.withLock {
+        func(waitingQueue)
     }
 
-    override suspend fun send(event: T) {
-        withContext(context) {
-            if (emitOnlyWhenActive) {
-                sendOrQueue(event)
-            } else {
-                bus.emit(event)
-            }
+    private suspend fun sendOrQueue(event: T) {
+        if (isBusReady()) {
+            bus.emit(event)
+        } else {
+            withQueue { add(event) }
         }
     }
 
     private suspend inline fun emitQueuedEvents(emitter: (event: T) -> Unit) {
-        if (emitOnlyWhenActive) {
-            mutex.withLock {
-                waitingQueue.forEach(emitter)
-                waitingQueue.clear()
+        if (!emitOnlyWhenActive) {
+            return
+        }
+
+        withQueue {
+            while (isNotEmpty()) {
+                val pastEvent = removeAt(0)
+                emitter(pastEvent)
             }
         }
     }
 
-    @CheckResult
-    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) {
-        withContext(context) {
-            bus
-                .onSubscription { emitQueuedEvents { emit(it) } }
-                .collect(emitter)
+    override suspend fun send(event: T) = withContext(context) {
+        if (emitOnlyWhenActive) {
+            sendOrQueue(event)
+        } else {
+            bus.emit(event)
         }
+    }
+
+    @CheckResult
+    override suspend fun onEvent(emitter: suspend (event: T) -> Unit) = withContext(context) {
+        bus.onSubscription { emitQueuedEvents { emit(it) } }.collect(emitter)
     }
 }

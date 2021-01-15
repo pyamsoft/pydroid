@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.ui.arch
+package com.pyamsoft.pydroid.ui.internal.arch
 
 import androidx.lifecycle.ViewModel
 import com.pyamsoft.pydroid.arch.ViewModelFactory

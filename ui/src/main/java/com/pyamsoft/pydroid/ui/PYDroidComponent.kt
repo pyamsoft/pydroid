@@ -26,7 +26,7 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.arch.PYDroidViewModelFactory
+import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent

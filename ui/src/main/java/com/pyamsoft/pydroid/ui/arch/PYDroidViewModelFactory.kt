@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import com.pyamsoft.pydroid.ui.internal.about.AboutViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsViewModel
+import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigViewModel
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -44,6 +45,7 @@ internal class PYDroidViewModelFactory internal constructor(
         AboutViewModel::class to { AboutViewModel(params.aboutInteractor) },
         ChangeLogViewModel::class to { ChangeLogViewModel(params.changeLogInteractor) },
         OtherAppsViewModel::class to { OtherAppsViewModel(params.otherAppsInteractor) },
+        PrivacyViewModel::class to { PrivacyViewModel() },
         AppSettingsViewModel::class to {
             AppSettingsViewModel(params.theming, params.otherAppsInteractor)
         },

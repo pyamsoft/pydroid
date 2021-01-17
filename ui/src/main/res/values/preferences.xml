@@ -36,8 +36,8 @@
     <string name="rating_summary">Liking the App? Leave a Review!</string>
 
     <string name="donate_key">donate_application</string>
-    <string name="donate_title">Donate</string>
-    <string name="donate_summary">Support pyamsoft with a one-time donation!</string>
+    <string name="donate_title">Say Thanks</string>
+    <string name="donate_summary">pyamsoft works hard to bring you open-source Android applications. Show your support for my work with a tip!</string>
 
     <string name="bugreport_key">bugreport</string>
     <string name="bugreport_title">Submit a Bug Report</string>

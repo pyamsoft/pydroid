@@ -45,21 +45,32 @@ internal class RealBus<T : Any> internal constructor(
     private val mutex = Mutex()
     private val waitingQueue by lazy { mutableListOf<T>() }
 
-    @CheckResult
-    private fun isBusReady(): Boolean {
-        return bus.subscriptionCount.value > 0
+    private suspend inline fun withBusReadyState(
+        crossinline onReady: suspend () -> Unit,
+        crossinline onNotReady: suspend () -> Unit
+    ) {
+        bus.subscriptionCount.collect { count ->
+            if (count > 0) {
+                onReady()
+            } else {
+                onNotReady()
+            }
+        }
     }
 
     private suspend inline fun withQueue(func: MutableList<T>.() -> Unit): Unit = mutex.withLock {
         func(waitingQueue)
     }
 
+    private suspend fun publish(event: T) {
+        bus.emit(event)
+    }
+
     private suspend fun sendOrQueue(event: T) {
-        if (isBusReady()) {
-            bus.emit(event)
-        } else {
-            withQueue { add(event) }
-        }
+        withBusReadyState(
+            onReady = { publish(event) },
+            onNotReady = { withQueue { add(event) } }
+        )
     }
 
     private suspend inline fun emitQueuedEvents(emitter: (event: T) -> Unit) {
@@ -79,7 +90,7 @@ internal class RealBus<T : Any> internal constructor(
         if (emitOnlyWhenActive) {
             sendOrQueue(event)
         } else {
-            bus.emit(event)
+            publish(event)
         }
     }
 

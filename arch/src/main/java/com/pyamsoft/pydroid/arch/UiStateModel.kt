@@ -89,13 +89,11 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      * There is no threading guarantee for the andThen callback
      */
     public fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
-        stateModelScope.launch(context = Dispatchers.Main) {
-            withContext(context = Dispatchers.IO) {
-                processStateChange(
-                    isSetState = true,
-                    stateChange = stateChange,
-                )?.also { andThen(it) }
-            }
+        stateModelScope.launch(context = Dispatchers.IO) {
+            processStateChange(
+                isSetState = true,
+                stateChange = stateChange,
+            )?.also { andThen(it) }
         }
     }
 
@@ -123,8 +121,9 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
 
     // internal instead of protected so that only callers in the module can use this
     internal suspend fun bindState(renderables: Array<out Renderable<S>>) {
+        val state = modelState
+
         withContext(context = Dispatchers.Main) {
-            val state = modelState
             renderables.forEach { it.render(state) }
         }
     }

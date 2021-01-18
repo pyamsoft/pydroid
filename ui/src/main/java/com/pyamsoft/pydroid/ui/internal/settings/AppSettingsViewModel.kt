@@ -84,8 +84,9 @@ internal class AppSettingsViewModel internal constructor(
     }
 
     private fun changeDarkMode(mode: String) {
+        val newMode = mode.toMode()
+
         viewModelScope.launch(context = Dispatchers.Main) {
-            val newMode = mode.toMode()
             theming.setDarkTheme(newMode)
             publish(AppSettingsControllerEvent.ChangeDarkTheme(newMode))
         }

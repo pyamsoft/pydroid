@@ -40,18 +40,17 @@ internal class VersionCheckViewModel internal constructor(
 ) {
 
     private val checkUpdateRunner = highlander<Unit, Boolean> { force ->
-        handleVersionCheckBegin()
-        try {
-            val launcher = interactor.checkVersion(force)
-            handleVersionCheckFound(force, launcher)
-        } catch (error: Throwable) {
-            error.onActualError { e ->
-                Timber.e(e, "Error checking for latest version")
-                handleVersionCheckError(e)
+        setState(stateChange = { copy(isLoading = true) }, andThen = {
+            try {
+                val launcher = interactor.checkVersion(force)
+                handleVersionCheckFound(force, launcher)
+            } catch (error: Throwable) {
+                error.onActualError { e ->
+                    Timber.e(e, "Error checking for latest version")
+                    handleVersionCheckError(e)
+                }
             }
-        } finally {
-            handleVersionCheckComplete()
-        }
+        })
     }
 
     init {
@@ -71,10 +70,6 @@ internal class VersionCheckViewModel internal constructor(
 
     private fun clearError() {
         setState { copy(throwable = null) }
-    }
-
-    private fun handleVersionCheckBegin() {
-        setState { copy(isLoading = true) }
     }
 
     private fun handleVersionCheckFound(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) {

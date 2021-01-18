@@ -82,6 +82,15 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      * Modify the state from the previous
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
+     */
+    public fun CoroutineScope.setState(stateChange: S.() -> S) {
+        this.setState(stateChange = stateChange, andThen = {})
+    }
+
+    /**
+     * Modify the state from the previous
+     *
+     * Note that, like calling this.setState() in React, this operation does not happen immediately.
      *
      * The andThen callback will be fired after the state has changed and the view has been notified.
      * If the stateChange payload does not cause a state update, the andThen call will not be fired.
@@ -89,7 +98,24 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      * There is no threading guarantee for the andThen callback
      */
     public fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
-        stateModelScope.launch(context = Dispatchers.IO) {
+        stateModelScope.setState(stateChange, andThen)
+    }
+
+    /**
+     * Modify the state from the previous
+     *
+     * Note that, like calling this.setState() in React, this operation does not happen immediately.
+     *
+     * The andThen callback will be fired after the state has changed and the view has been notified.
+     * If the stateChange payload does not cause a state update, the andThen call will not be fired.
+     *
+     * There is no threading guarantee for the andThen callback
+     */
+    public fun CoroutineScope.setState(
+        stateChange: S.() -> S,
+        andThen: suspend (newState: S) -> Unit
+    ) {
+        this.launch(context = Dispatchers.IO) {
             processStateChange(
                 isSetState = true,
                 stateChange = stateChange,

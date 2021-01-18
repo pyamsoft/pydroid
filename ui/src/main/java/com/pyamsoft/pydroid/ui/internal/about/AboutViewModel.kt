@@ -39,18 +39,19 @@ internal class AboutViewModel internal constructor(
 ) {
 
     private val licenseRunner = highlander<Unit, Boolean> { force ->
-        handleLicenseLoadBegin()
-        try {
-            val licenses = interactor.loadLicenses(force)
-            handleLicensesLoaded(licenses)
-        } catch (error: Throwable) {
-            error.onActualError { e ->
-                Timber.e(e, "Error loading licenses")
-                handleLicenseLoadError(e)
+        setState(stateChange = { copy(isLoading = true) }, andThen = {
+            try {
+                val licenses = interactor.loadLicenses(force)
+                handleLicensesLoaded(licenses)
+            } catch (error: Throwable) {
+                error.onActualError { e ->
+                    Timber.e(e, "Error loading licenses")
+                    handleLicenseLoadError(e)
+                }
+            } finally {
+                setState { copy(isLoading = false) }
             }
-        } finally {
-            handleLicenseLoadComplete()
-        }
+        })
     }
 
     init {
@@ -61,7 +62,7 @@ internal class AboutViewModel internal constructor(
         is AboutViewEvent.ListItemEvent.OpenLibrary -> openUrl(event.index) { it.libraryUrl }
         is AboutViewEvent.ListItemEvent.OpenLicense -> openUrl(event.index) { it.licenseUrl }
         is AboutViewEvent.ErrorEvent.HideNavigationError -> clearNavigationError()
-        is AboutViewEvent.ErrorEvent.HideLoadError -> handleLicenseLoadComplete()
+        is AboutViewEvent.ErrorEvent.HideLoadError -> clearLoadError()
     }
 
     private inline fun openUrl(index: Int, crossinline func: (library: OssLibrary) -> String) {
@@ -77,20 +78,12 @@ internal class AboutViewModel internal constructor(
         viewModelScope.launch(context = Dispatchers.Default) { licenseRunner.call(false) }
     }
 
-    private fun handleLicenseLoadBegin() {
-        setState { copy(isLoading = true) }
-    }
-
     private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
-        setState { copy(licenses = licenses, loadError = null) }
+        setState { copy(licenses = licenses) }
     }
 
     private fun handleLicenseLoadError(throwable: Throwable) {
-        setState { copy(licenses = emptyList(), loadError = throwable) }
-    }
-
-    private fun handleLicenseLoadComplete() {
-        setState { copy(isLoading = false) }
+        setState { copy(loadError = throwable) }
     }
 
     fun navigationFailed(throwable: Throwable) {
@@ -99,6 +92,10 @@ internal class AboutViewModel internal constructor(
 
     fun navigationSuccess() {
         clearNavigationError()
+    }
+
+    private fun clearLoadError() {
+        setState { copy(loadError = null) }
     }
 
     private fun clearNavigationError() {

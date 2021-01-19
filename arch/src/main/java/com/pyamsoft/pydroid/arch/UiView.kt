@@ -33,7 +33,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  * The UiView can render a UiViewState object, and can also publish View level events to a Presentation layer.
  */
 public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constructor(
-) : Renderable<S>, SaveableState {
+) : Renderable<S> {
 
     private val viewEventBus = EventBus.create<V>(emitOnlyWhenActive = true)
 
@@ -137,7 +137,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    final override fun saveState(outState: UiSavedStateWriter) {
+    public fun saveState(outState: UiSavedStateWriter) {
         // We better be UI
         Enforcer.assertOnMainThread()
 

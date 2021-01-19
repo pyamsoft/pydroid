@@ -29,12 +29,8 @@ import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
 
 /**
- * A default implementation of a UiStateViewModel which knows how to set up along with UiViews and a UiController to become a full UiComponent
- *
- * NOTE: The doOnRestore and doOnSave hooks will be going away in the future in favor of using
- *       UiSavedStateViewModel which has support for androidx.SavedState. Migrate existing models to
- *       the new class and implement the SavedState operations.
- *
+ * A default implementation of a UiStateViewModel which knows how to set up along
+ * with UiViews and a UiController to become a full UiComponent
  */
 public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S

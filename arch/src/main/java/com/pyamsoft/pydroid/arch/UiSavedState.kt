@@ -18,7 +18,7 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 import androidx.lifecycle.SavedStateHandle
-import com.pyamsoft.pydroid.arch.internal.RealUiSavedState
+import com.pyamsoft.pydroid.arch.internal.HandleUiSavedState
 
 /**
  * Abstraction over saving and restoring data via save-restore lifecycle
@@ -33,7 +33,7 @@ public interface UiSavedState : UiSavedStateReader, UiSavedStateWriter {
         @JvmStatic
         @CheckResult
         public fun create(handle: SavedStateHandle): UiSavedState {
-            return RealUiSavedState(handle)
+            return HandleUiSavedState(handle)
         }
     }
 }

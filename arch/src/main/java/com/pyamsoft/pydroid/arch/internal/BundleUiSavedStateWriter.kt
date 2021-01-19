@@ -21,16 +21,16 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Size
 import android.util.SizeF
-import com.pyamsoft.pydroid.arch.UiBundleWriter
+import com.pyamsoft.pydroid.arch.UiSavedStateWriter
 import java.io.Serializable
 
 /**
- * Bundle backed implementation of a UiBundleWriter
+ * Bundle backed implementation of a UiSavedStateReader
  */
-@Deprecated("Remove in next major version")
-internal class RealUiBundleWriter internal constructor(
+@PublishedApi
+internal class BundleUiSavedStateWriter @PublishedApi internal constructor(
     private val bundle: Bundle
-) : UiBundleWriter {
+) : UiSavedStateWriter {
 
     override fun <T : Any> put(key: String, value: T) {
         // Pulled from core-ktx bundleOf
@@ -107,7 +107,13 @@ internal class RealUiBundleWriter internal constructor(
         }
     }
 
-    override fun remove(key: String) {
-        bundle.remove(key)
+    override fun <T : Any> remove(key: String): T? {
+        val storedValue: Any? = bundle.get(key)
+        if (storedValue != null) {
+            bundle.remove(key)
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        return storedValue as? T
     }
 }

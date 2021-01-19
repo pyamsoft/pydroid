@@ -102,7 +102,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         _binding = null
     }
 
-    final override fun onInit(savedInstanceState: UiBundleReader) {
+    final override fun onInit(savedInstanceState: UiSavedStateReader) {
         assertValidState()
 
         val parent = parent()
@@ -112,7 +112,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         initNestedViews(savedInstanceState)
     }
 
-    private fun initNestedViews(savedInstanceState: UiBundleReader) {
+    private fun initNestedViews(savedInstanceState: UiSavedStateReader) {
         // Only run the initialization hooks if they exist, otherwise we don't need to init the memory
         nestedViews().forEach { nestedView ->
             prepareNestedViewInit(nestedView)

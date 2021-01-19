@@ -15,16 +15,6 @@ public interface UiRender<S> {
      * This maps the resulting stream into a stream of T
      */
     @CheckResult
-    @Deprecated("Use mapChanged", replaceWith = ReplaceWith("mapChanged(distinctBy)"))
-    public fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T>
-
-    /**
-     * Unique stream by the specific piece of a state
-     *
-     * The stream will emit only when the value T which is derived from state S changes.
-     * This maps the resulting stream into a stream of T
-     */
-    @CheckResult
     public fun <T> mapChanged(change: (state: S) -> T): UiRender<T>
 
     /**

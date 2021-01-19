@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.internal.about.AboutControllerEvent.ExternalUrl
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -78,11 +79,11 @@ internal class AboutViewModel internal constructor(
         viewModelScope.launch(context = Dispatchers.Default) { licenseRunner.call(false) }
     }
 
-    private fun handleLicensesLoaded(licenses: List<OssLibrary>) {
+    private fun CoroutineScope.handleLicensesLoaded(licenses: List<OssLibrary>) {
         setState { copy(licenses = licenses) }
     }
 
-    private fun handleLicenseLoadError(throwable: Throwable) {
+    private fun CoroutineScope.handleLicenseLoadError(throwable: Throwable) {
         setState { copy(loadError = throwable) }
     }
 

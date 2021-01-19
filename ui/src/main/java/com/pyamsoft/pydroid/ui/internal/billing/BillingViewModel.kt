@@ -74,7 +74,11 @@ internal class BillingViewModel internal constructor(
     override fun handleViewEvent(event: BillingDialogViewEvent) = when (event) {
         is BillingDialogViewEvent.Close -> publish(BillingDialogControllerEvent.Close)
         is BillingDialogViewEvent.Purchase -> purchase(event.index)
-        is BillingDialogViewEvent.ClearError -> setState { copy(error = null) }
+        is BillingDialogViewEvent.ClearError -> clearError()
+    }
+
+    private fun clearError() {
+        setState { copy(error = null) }
     }
 
     internal fun refresh() {

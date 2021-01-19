@@ -198,10 +198,6 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
         private val flow: Flow<S>,
     ) : UiRender<S> {
 
-        final override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
-            return mapChanged(distinctBy)
-        }
-
         override fun <T> mapChanged(change: (state: S) -> T): UiRender<T> {
             return UiVMState(flow.distinctUntilChangedBy(change).map { change(it) })
         }

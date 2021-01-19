@@ -20,10 +20,6 @@ private class StateUiRender<S>(private val state: S) : UiRender<S> {
     override fun <T> mapChanged(change: (state: S) -> T): UiRender<T> {
         return StateUiRender(change(state))
     }
-
-    override fun <T> distinctBy(distinctBy: (state: S) -> T): UiRender<T> {
-        return mapChanged(distinctBy)
-    }
 }
 
 /**

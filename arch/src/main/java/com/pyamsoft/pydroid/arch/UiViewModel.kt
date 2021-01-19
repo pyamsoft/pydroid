@@ -19,8 +19,8 @@ package com.pyamsoft.pydroid.arch
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
 import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,16 +38,10 @@ import kotlin.LazyThreadSafetyMode.NONE
  */
 public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
     initialState: S
-) : UiStateViewModel<S>(initialState), SaveableState {
-
-    private val onRestoreEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleReader) -> Unit>() }
-    private val onRestoreEvents by onRestoreEventDelegate
+) : UiStateViewModel<S>(initialState) {
 
     private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onClearEvents by onClearEventDelegate
-
-    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter, S) -> Unit>() }
-    private val onSaveEvents by onSaveEventDelegate
 
     private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
 
@@ -56,7 +50,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     @CheckResult
     @PublishedApi
     internal fun bindToComponent(
-        savedInstanceState: UiBundleReader,
+        savedInstanceState: UiSavedStateReader,
         views: Array<out UiView<S, out V>>,
         onControllerEvent: (event: C) -> Unit
     ): Job {
@@ -71,47 +65,11 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
             bindControllerEvents(onControllerEvent)
             bindViewEvents(views.asIterable())
 
-            // Initialize before first render
-            // Generally, since you will add your doOnBind hooks in the ViewModel init {} block,
-            // they will only run once - which is when the object is created.
-            //
-            // If you wanna do some strange kind of stuff though, you do you.
-            initialize(savedInstanceState)
-
             // Inflate the views
             views.forEach { it.inflate(savedInstanceState) }
 
             // Bind state
             bindState(views)
-        }
-    }
-
-    @UiThread
-    private fun initialize(savedInstanceState: UiBundleReader) {
-        // Only run the init hooks if they exist, otherwise we don't need to init the memory
-        if (onRestoreEventDelegate.isInitialized()) {
-
-            // Call init hooks in random order
-            onRestoreEvents.forEach { it(savedInstanceState) }
-        }
-    }
-
-    /**
-     * Used for saving state in persistent lifecycle
-     *
-     * NOTE: Not thread safe, Main thread only for now
-     */
-    @UiThread
-    @Deprecated("To save state use SavedStateHandle and extend UiSaveStateViewModel")
-    override fun saveState(outState: UiBundleWriter) {
-        Enforcer.assertOnMainThread()
-
-        // Only run the save state hooks if they exist, otherwise we don't need to init the memory
-        if (onSaveEventDelegate.isInitialized()) {
-
-            // Call save state hooks in random order
-            val s = state
-            onSaveEvents.forEach { it(outState, s) }
         }
     }
 
@@ -130,16 +88,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
 
             // Clear the teardown hooks list to free up memory
             onClearEvents.clear()
-        }
-
-        // If there are any bind event hooks hanging around, clear them out too
-        if (onRestoreEventDelegate.isInitialized()) {
-            onRestoreEvents.clear()
-        }
-
-        // If there are save state hooks around, clear them out
-        if (onSaveEventDelegate.isInitialized()) {
-            onSaveEvents.clear()
         }
     }
 
@@ -175,47 +123,6 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
                 }
             }
         }
-    }
-
-    /**
-     * Use this to run an event when the savedInstanceState is being restored
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnRestore { savedInstanceState ->
-     *         ...
-     *     }
-     * }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
-     */
-    @UiThread
-    @Deprecated("To restore state use SavedStateHandle and extend UiSaveStateViewModel")
-    protected fun doOnRestoreState(onRestore: (savedInstanceState: UiBundleReader) -> Unit) {
-        Enforcer.assertOnMainThread()
-        onRestoreEvents.add(onRestore)
-    }
-
-    /**
-     * Use this to run an event when lifecycle is saving state
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnSaveState { outState, state ->
-     *          outState.putInt(...)
-     *          outState.putString(...)
-     *     }
-     * }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
-     */
-    @UiThread
-    @Deprecated("To save state use SavedStateHandle and extend UiSaveStateViewModel")
-    protected fun doOnSaveState(onSaveState: (outState: UiBundleWriter, state: S) -> Unit) {
-        Enforcer.assertOnMainThread()
-        onSaveEvents.add(onSaveState)
     }
 
     /**

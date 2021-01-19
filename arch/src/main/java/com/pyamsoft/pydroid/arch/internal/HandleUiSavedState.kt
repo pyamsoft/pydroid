@@ -20,9 +20,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.pyamsoft.pydroid.arch.UiSavedState
 
 /**
- * Bundle backed implementation of a UiBundleWriter
+ * SavedStateHandle backed implementation of a UiSavedState
  */
-internal class RealUiSavedState internal constructor(
+internal class HandleUiSavedState internal constructor(
     private val handle: SavedStateHandle
 ) : UiSavedState {
 

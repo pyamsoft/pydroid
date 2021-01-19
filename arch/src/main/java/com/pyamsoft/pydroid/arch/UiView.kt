@@ -17,8 +17,8 @@
 package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.UiThread
-import com.pyamsoft.pydroid.core.Enforcer
 import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -37,13 +37,14 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
 
     private val viewEventBus = EventBus.create<V>(emitOnlyWhenActive = true)
 
-    private val onInflateEventDelegate = lazy(NONE) { mutableListOf<(UiBundleReader) -> Unit>() }
+    private val onInflateEventDelegate =
+        lazy(NONE) { mutableListOf<(UiSavedStateReader) -> Unit>() }
     private val onInflateEvents by onInflateEventDelegate
 
     private val onTeardownEventDelegate = lazy(NONE) { mutableListOf<() -> Unit>() }
     private val onTeardownEvents by onTeardownEventDelegate
 
-    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiBundleWriter) -> Unit>() }
+    private val onSaveEventDelegate = lazy(NONE) { mutableSetOf<(UiSavedStateWriter) -> Unit>() }
     private val onSaveEvents by onSaveEventDelegate
 
     /**
@@ -62,7 +63,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    public fun init(savedInstanceState: UiBundleReader) {
+    public fun init(savedInstanceState: UiSavedStateReader) {
         // We better be UI
         Enforcer.assertOnMainThread()
 
@@ -75,7 +76,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    public fun inflate(savedInstanceState: UiBundleReader) {
+    public fun inflate(savedInstanceState: UiSavedStateReader) {
         // We better be UI
         Enforcer.assertOnMainThread()
 
@@ -136,7 +137,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    final override fun saveState(outState: UiBundleWriter) {
+    final override fun saveState(outState: UiSavedStateWriter) {
         // We better be UI
         Enforcer.assertOnMainThread()
 
@@ -209,7 +210,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    protected fun doOnInflate(onInflate: (savedInstanceState: UiBundleReader) -> Unit) {
+    protected fun doOnInflate(onInflate: (savedInstanceState: UiSavedStateReader) -> Unit) {
         // We better be UI
         Enforcer.assertOnMainThread()
 
@@ -231,7 +232,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      * NOTE: Not thread safe. Main thread only for the time being
      */
     @UiThread
-    protected fun doOnSaveState(onSaveState: (outState: UiBundleWriter) -> Unit) {
+    protected fun doOnSaveState(onSaveState: (outState: UiSavedStateWriter) -> Unit) {
         // We better be UI
         Enforcer.assertOnMainThread()
 
@@ -242,7 +243,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      * This runs onInit and before any onInflate hooks have happened
      */
     @UiThread
-    protected open fun onInit(savedInstanceState: UiBundleReader) {
+    protected open fun onInit(savedInstanceState: UiSavedStateReader) {
         // Intentionally blank
     }
 

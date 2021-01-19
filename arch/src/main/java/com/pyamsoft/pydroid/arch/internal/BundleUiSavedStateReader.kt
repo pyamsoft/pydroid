@@ -17,39 +17,18 @@
 package com.pyamsoft.pydroid.arch.internal
 
 import android.os.Bundle
-import com.pyamsoft.pydroid.arch.UiBundleReader
+import com.pyamsoft.pydroid.arch.UiSavedStateReader
 
 /**
- * Bundle backed implementation of a UiBundleReader
+ * Bundle backed implementation of a UiSavedStateReader
  */
-@Deprecated("Remove in next major version")
-internal class RealUiBundleReader internal constructor(
+@PublishedApi
+internal class BundleUiSavedStateReader @PublishedApi internal constructor(
     private val bundle: Bundle?
-) : UiBundleReader {
-
-    // Captures the common if (savedInstanceState == null) case
-    override fun hasNoSavedState(): Boolean {
-        return bundle == null
-    }
+) : UiSavedStateReader {
 
     override fun <T : Any> get(key: String): T? {
         @Suppress("UNCHECKED_CAST")
         return bundle?.get(key) as? T
-    }
-
-    override fun <T : Any> getOrDefault(key: String, defaultValue: T): T {
-        return get(key) ?: defaultValue
-    }
-
-    override fun <T : Any> useIfAvailable(key: String, func: (value: T) -> Unit) {
-        val value: T? = get(key)
-        if (value != null) {
-            func(value)
-        }
-    }
-
-    override fun <T : Any> use(key: String, defaultValue: T, func: (value: T) -> Unit) {
-        val value = getOrDefault(key, defaultValue)
-        func(value)
     }
 }

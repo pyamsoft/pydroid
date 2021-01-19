@@ -24,5 +24,5 @@ internal fun interface SaveableState {
     /**
      * Save state to a UiBundleWriter
      */
-    fun saveState(outState: UiBundleWriter)
+    fun saveState(outState: UiSavedStateWriter)
 }

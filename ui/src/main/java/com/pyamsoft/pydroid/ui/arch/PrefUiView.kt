@@ -21,8 +21,8 @@ import androidx.annotation.StringRes
 import androidx.annotation.UiThread
 import androidx.preference.Preference
 import androidx.preference.PreferenceScreen
-import com.pyamsoft.pydroid.arch.UiBundleReader
 import com.pyamsoft.pydroid.arch.UiRender
+import com.pyamsoft.pydroid.arch.UiSavedStateReader
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
@@ -61,7 +61,7 @@ public abstract class PrefUiView<S : UiViewState, V : UiViewEvent> protected con
     /**
      * On initialize
      */
-    final override fun onInit(savedInstanceState: UiBundleReader) {
+    final override fun onInit(savedInstanceState: UiSavedStateReader) {
         // Intentionally blank
     }
 

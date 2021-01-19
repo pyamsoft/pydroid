@@ -25,6 +25,7 @@ import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.ErrorHidden
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.LoadingHidden
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent.NavigationHidden
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -76,7 +77,7 @@ internal class VersionCheckViewModel internal constructor(
         publish(VersionCheckControllerEvent.LaunchUpdate(isFallbackEnabled, launcher))
     }
 
-    private fun handleVersionCheckError(throwable: Throwable) {
+    private fun CoroutineScope.handleVersionCheckError(throwable: Throwable) {
         setState { copy(throwable = throwable) }
     }
 

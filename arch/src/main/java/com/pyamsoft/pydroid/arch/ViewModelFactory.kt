@@ -25,7 +25,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
-import com.pyamsoft.pydroid.arch.internal.RealUiSavedState
+import com.pyamsoft.pydroid.arch.internal.HandleUiSavedState
 
 /**
  * A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances.
@@ -79,7 +79,7 @@ public abstract class SavedStateViewModelFactory protected constructor(
     ): T {
         if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
             @Suppress("UNCHECKED_CAST")
-            return createViewModel(modelClass, RealUiSavedState(handle)) as T
+            return createViewModel(modelClass, HandleUiSavedState(handle)) as T
         } else {
             fail(modelClass)
         }

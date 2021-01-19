@@ -26,7 +26,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.arch.viewModelFactory
 
 internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
 

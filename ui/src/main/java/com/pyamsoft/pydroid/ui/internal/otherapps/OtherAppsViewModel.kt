@@ -21,6 +21,7 @@ import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -52,9 +53,11 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     private fun hideAppsErrorAndLaunchFallback() {
-        setState(stateChange = { copy(appsError = null) }, andThen = {
-            publish(OtherAppsControllerEvent.FallbackEvent)
-        })
+        viewModelScope.launch(context = Dispatchers.Default) {
+            setState(stateChange = { copy(appsError = null) }, andThen = {
+                publish(OtherAppsControllerEvent.FallbackEvent)
+            })
+        }
     }
 
     private inline fun openUrl(
@@ -74,15 +77,15 @@ internal class OtherAppsViewModel internal constructor(
         viewModelScope.launch(context = Dispatchers.Default) { appsRunner.call(false) }
     }
 
-    private fun handleAppsLoaded(apps: List<OtherApp>) {
+    private fun CoroutineScope.handleAppsLoaded(apps: List<OtherApp>) {
         setState { copy(apps = apps) }
     }
 
-    private fun handleAppsError(throwable: Throwable) {
+    private fun CoroutineScope.handleAppsError(throwable: Throwable) {
         setState { copy(appsError = throwable) }
     }
 
-    fun navigationFailed(throwable: Throwable) {
+    internal fun navigationFailed(throwable: Throwable) {
         setState { copy(navigationError = throwable) }
     }
 

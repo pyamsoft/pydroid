@@ -21,9 +21,11 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.arch.Internals.EMPTY_READER
+import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateReader
+import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateWriter
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.Job
-
 
 /**
  * Component internals
@@ -32,11 +34,11 @@ import kotlinx.coroutines.Job
 internal object Internals {
 
     /**
-     * Empty save stae no-op
+     * A bundle reader with no data
      */
     @JvmStatic
     @PublishedApi
-    internal val EMPTY_SAVE_STATE: (UiBundleWriter) -> Unit = {}
+    internal val EMPTY_READER: UiSavedStateReader = BundleUiSavedStateReader(null)
 
     /**
      * Plumbing for creating a pydroid-arch Component
@@ -48,10 +50,9 @@ internal object Internals {
         savedInstanceState: Bundle?,
         owner: LifecycleOwner,
         views: Array<out UiView<S, out V>>,
-        bindToComponent: (UiBundleReader, Array<out UiView<S, out V>>) -> Job,
-        crossinline performSaveState: (UiBundleWriter) -> Unit,
+        bindToComponent: (UiSavedStateReader, Array<out UiView<S, out V>>) -> Job,
     ): StateSaver {
-        val reader = UiBundleReader.create(savedInstanceState)
+        val reader = BundleUiSavedStateReader(savedInstanceState)
 
         // Bind view event listeners, inflate and attach
         val viewModelBinding = bindToComponent(reader, views)
@@ -64,9 +65,8 @@ internal object Internals {
 
         // State saver
         return StateSaver { outState ->
-            val writer = UiBundleWriter.create(outState)
+            val writer = BundleUiSavedStateWriter(outState)
             views.forEach { it.saveState(writer) }
-            performSaveState.invoke(writer)
         }
     }
 
@@ -88,7 +88,6 @@ internal object Internals {
             }
         }
     }
-
 }
 
 /**
@@ -102,31 +101,9 @@ public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> crea
     vararg views: UiView<S, out V>,
     crossinline onControllerEvent: (event: C) -> Unit
 ): StateSaver {
-    return Internals.performCreateComponent(savedInstanceState, owner, views,
-        bindToComponent = { reader, uiViews ->
-            viewModel.bindToComponent(reader, uiViews) { onControllerEvent(it) }
-        },
-        performSaveState = { viewModel.saveState(it) })
-}
-
-
-/**
- * Create a pydroid-arch Component using a UiSavedStateViewModel, one or more UiViews, and a Controller
- */
-@CheckResult
-public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
-    savedInstanceState: Bundle?,
-    owner: LifecycleOwner,
-    viewModel: UiSavedStateViewModel<S, V, C>,
-    vararg views: UiView<S, out V>,
-    crossinline onControllerEvent: (event: C) -> Unit
-): StateSaver {
-    return Internals.performCreateComponent(
-        savedInstanceState, owner, views,
-        bindToComponent = { reader, uiViews ->
-            viewModel.bindToComponent(reader, uiViews) { onControllerEvent(it) }
-        }, performSaveState = Internals.EMPTY_SAVE_STATE
-    )
+    return Internals.performCreateComponent(savedInstanceState, owner, views) { reader, uiViews ->
+        viewModel.bindToComponent(reader, uiViews) { onControllerEvent(it) }
+    }
 }
 
 /**
@@ -137,7 +114,7 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
     vararg views: UiView<S, out V>,
     crossinline onViewEvent: (event: V) -> Unit
 ): ViewBinder<S> {
-    val reader = UiBundleReader.create(null)
+    val reader = EMPTY_READER
 
     // Bind view event listeners
     Internals.bindViewEvents(views.toList()) { onViewEvent(it) }

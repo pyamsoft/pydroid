@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-@file:JvmName("UiViewModelFactories")
-
 package com.pyamsoft.pydroid.arch
 
 import android.os.Bundle
@@ -44,7 +42,6 @@ public abstract class ViewModelFactory protected constructor() : ViewModelProvid
         }
     }
 
-
     /**
      * Factory fails to return a value
      */
@@ -64,9 +61,9 @@ public abstract class ViewModelFactory protected constructor() : ViewModelProvid
  *
  * Integrated with androidx.savedstate
  */
-public abstract class SavedStateViewModelFactory protected constructor(
+public abstract class SavedStateViewModelFactory @JvmOverloads protected constructor(
     owner: SavedStateRegistryOwner,
-    defaultArgs: Bundle?
+    defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
     /**
@@ -107,7 +104,6 @@ public abstract class SavedStateViewModelFactory protected constructor(
  */
 @CheckResult
 @JvmOverloads
-@JvmName("createSavedStateFactory")
 public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createSavedStateViewModelFactory(
     provider: UiSavedStateViewModelProvider<T>?,
     defaultArgs: Bundle? = null
@@ -120,7 +116,6 @@ public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createSavedSta
             @Suppress("UNCHECKED_CAST")
             return requireNotNull(provider).create(savedState) as? T ?: fail(modelClass)
         }
-
     }
 }
 

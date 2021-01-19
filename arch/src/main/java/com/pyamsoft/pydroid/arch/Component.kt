@@ -52,7 +52,7 @@ internal object Internals {
         views: Array<out UiView<S, out V>>,
         bindToComponent: (UiSavedStateReader, Array<out UiView<S, out V>>) -> Job,
     ): StateSaver {
-        val reader = BundleUiSavedStateReader(savedInstanceState)
+        val reader: UiSavedStateReader = BundleUiSavedStateReader(savedInstanceState)
 
         // Bind view event listeners, inflate and attach
         val viewModelBinding = bindToComponent(reader, views)
@@ -65,7 +65,7 @@ internal object Internals {
 
         // State saver
         return StateSaver { outState ->
-            val writer = BundleUiSavedStateWriter(outState)
+            val writer: UiSavedStateWriter = BundleUiSavedStateWriter(outState)
             views.forEach { it.saveState(writer) }
         }
     }

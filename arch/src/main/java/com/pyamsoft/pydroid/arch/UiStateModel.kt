@@ -194,6 +194,10 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
         }
     }
 
+    /**
+     * This is a separate interface so that mapChanged will not expose the implementation
+     * MutableUiVMState get() or set() functions
+     */
     private open class UiVMState<S>(
         private val flow: Flow<S>,
     ) : UiRender<S> {

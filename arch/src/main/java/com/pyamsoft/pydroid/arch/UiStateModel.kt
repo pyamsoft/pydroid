@@ -93,7 +93,6 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      *
      * The andThen callback will be fired after the state has changed and the view has been notified.
-     * If the stateChange payload does not cause a state update, the andThen call will not be fired.
      *
      * There is no threading guarantee for the andThen callback
      */
@@ -107,7 +106,6 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      *
      * The andThen callback will be fired after the state has changed and the view has been notified.
-     * If the stateChange payload does not cause a state update, the andThen call will not be fired.
      *
      * There is no threading guarantee for the andThen callback
      */
@@ -116,10 +114,29 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
         andThen: suspend (newState: S) -> Unit
     ) {
         this.launch(context = Dispatchers.IO) {
-            processStateChange(
-                isSetState = true,
-                stateChange = stateChange,
-            )?.also { andThen(it) }
+            processStateChange(stateChange).also { andThen(it) }
+        }
+    }
+
+    /**
+     * Return the new state, which may be the same as the old state
+     */
+    @CheckResult
+    private suspend inline fun processStateChange(stateChange: S.() -> S): S {
+        Enforcer.assertOffMainThread()
+
+        // Use this mutex to make sure that setState changes happen in the order they are called.
+        return mutex.withLock {
+            val oldState = state
+            val newState = oldState.stateChange()
+
+            // If we are in debug mode, perform the state change twice and make sure that it produces
+            // the same state both times.
+            UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
+
+            return@withLock if (oldState == newState) newState else {
+                newState.also { modelState.set(it) }
+            }
         }
     }
 
@@ -151,32 +168,6 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
 
         withContext(context = Dispatchers.Main) {
             renderables.forEach { it.render(state) }
-        }
-    }
-
-    /**
-     * Return the newState if it has changed or null if it has not
-     */
-    private suspend inline fun processStateChange(
-        isSetState: Boolean,
-        stateChange: S.() -> S
-    ): S? {
-        Enforcer.assertOffMainThread()
-
-        // Use this mutex to make sure that setState changes happen in the order they are called.
-        return mutex.withLock {
-            val oldState = state
-            val newState = oldState.stateChange()
-
-            // If we are in debug mode, perform the state change twice and make sure that it produces
-            // the same state both times.
-            if (isSetState) {
-                UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
-            }
-
-            return@withLock if (oldState == newState) null else {
-                newState.also { modelState.set(it) }
-            }
         }
     }
 

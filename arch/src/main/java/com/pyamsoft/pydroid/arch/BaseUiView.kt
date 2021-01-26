@@ -177,7 +177,7 @@ public abstract class BaseUiView<S : UiViewState, V : UiViewEvent, B : ViewBindi
         return id
     }
 
-    override fun render(state: UiRender<S>) {
+    final override fun render(state: UiRender<S>) {
         assertValidState()
         onRender(state)
         nestedViews().forEach { it.render(state) }

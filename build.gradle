@@ -69,7 +69,7 @@ buildscript {
     timber = "4.7.1"
 
     // Image loading
-    glide = '4.11.0'
+    glide = '4.12.0'
 
     // Recyclerview
     decorator = "1.3.0"

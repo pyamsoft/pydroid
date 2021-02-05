@@ -54,7 +54,7 @@ buildscript {
     startup = "1.0.0"
 
     // Material Design
-    materialDesign = "1.2.1"
+    materialDesign = "1.3.0"
 
     // Us
     cachify = "0.0.20"

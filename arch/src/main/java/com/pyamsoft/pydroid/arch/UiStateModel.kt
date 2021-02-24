@@ -74,7 +74,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    public fun setState(stateChange: S.() -> S) {
+    public fun setState(stateChange: suspend S.() -> S) {
         setState(stateChange = stateChange, andThen = {})
     }
 
@@ -83,7 +83,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    public fun CoroutineScope.setState(stateChange: S.() -> S) {
+    public fun CoroutineScope.setState(stateChange: suspend S.() -> S) {
         this.setState(stateChange = stateChange, andThen = {})
     }
 
@@ -96,7 +96,7 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      *
      * There is no threading guarantee for the andThen callback
      */
-    public fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
+    public fun setState(stateChange: suspend S.() -> S, andThen: suspend (newState: S) -> Unit) {
         stateModelScope.setState(stateChange, andThen)
     }
 
@@ -110,11 +110,12 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      * There is no threading guarantee for the andThen callback
      */
     public fun CoroutineScope.setState(
-        stateChange: S.() -> S,
+        stateChange: suspend S.() -> S,
         andThen: suspend (newState: S) -> Unit
     ) {
         this.launch(context = Dispatchers.IO) {
-            processStateChange(stateChange).also { andThen(it) }
+            val newState = processStateChange { stateChange(it) }
+            andThen(newState)
         }
     }
 
@@ -122,17 +123,17 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      * Return the new state, which may be the same as the old state
      */
     @CheckResult
-    private suspend inline fun processStateChange(stateChange: S.() -> S): S {
+    private suspend inline fun processStateChange(handleChange: (S) -> S): S {
         Enforcer.assertOffMainThread()
 
         // Use this mutex to make sure that setState changes happen in the order they are called.
         return mutex.withLock {
             val oldState = state
-            val newState = oldState.stateChange()
+            val newState = handleChange(oldState)
 
             // If we are in debug mode, perform the state change twice and make sure that it produces
             // the same state both times.
-            UiViewStateDebug.checkStateEquality(newState, oldState.stateChange())
+            UiViewStateDebug.checkStateEquality(newState, handleChange(oldState))
 
             return@withLock if (oldState == newState) newState else {
                 newState.also { modelState.set(it) }

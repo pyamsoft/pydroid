@@ -79,7 +79,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    protected fun setState(stateChange: S.() -> S) {
+    protected fun setState(stateChange: suspend S.() -> S) {
         delegate.setState(stateChange)
     }
 
@@ -88,7 +88,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    protected fun CoroutineScope.setState(stateChange: S.() -> S) {
+    protected fun CoroutineScope.setState(stateChange: suspend S.() -> S) {
         val scope = this
 
         // Call the extension on the delegate
@@ -107,7 +107,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      *
      * There is no threading guarantee for the andThen callback
      */
-    protected fun setState(stateChange: S.() -> S, andThen: suspend (newState: S) -> Unit) {
+    protected fun setState(stateChange: suspend S.() -> S, andThen: suspend (newState: S) -> Unit) {
         delegate.setState(stateChange, andThen)
     }
 
@@ -122,7 +122,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      * There is no threading guarantee for the andThen callback
      */
     protected fun CoroutineScope.setState(
-        stateChange: S.() -> S,
+        stateChange: suspend S.() -> S,
         andThen: suspend (newState: S) -> Unit
     ) {
         val scope = this

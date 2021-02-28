@@ -50,10 +50,10 @@ dependencies {
   implementation "me.zhanghai.android.fastscroll:library:$fastscroll"
 
   // Cachify
-  implementation "com.pyamsoft.cachify:cachify:$cachify"
+  implementation "com.github.pyamsoft.cachify:cachify:$cachify"
 
   // Highlander
-  implementation "com.pyamsoft.highlander:highlander:$highlander"
+  implementation "com.github.pyamsoft.highlander:highlander:$highlander"
 
   api project(':arch')
   api project(':billing')

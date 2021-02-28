@@ -39,10 +39,10 @@ dependencies {
   implementation "com.google.android.play:core-ktx:$playCoreKtx"
 
   // Cachify
-  implementation "com.pyamsoft.cachify:cachify:$cachify"
+  implementation "com.github.pyamsoft.cachify:cachify:$cachify"
 
   // Highlander
-  implementation "com.pyamsoft.highlander:highlander:$highlander"
+  implementation "com.github.pyamsoft.highlander:highlander:$highlander"
 
   implementation "androidx.core:core-ktx:$core"
 

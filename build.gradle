@@ -29,6 +29,10 @@ buildscript {
     jcenter()
 
     maven {
+      url "https://jitpack.io/"
+    }
+
+    maven {
       url "https://plugins.gradle.org/m2/"
     }
   }
@@ -111,10 +115,9 @@ subprojects {
   apply plugin: 'com.github.dcendents.android-maven'
   apply plugin: 'org.jetbrains.dokka-android'
   apply plugin: 'maven-publish'
-  apply plugin: 'com.jfrog.bintray'
 
-  final String POM_GROUP = "com.pyamsoft.pydroid"
-  final String POM_VERSION = "22.6.1"
+  final String POM_GROUP = "com.github.pyamsoft.pydroid"
+  final String POM_VERSION = "22.6.2"
 
   // Kapt flags
   kapt {
@@ -205,29 +208,6 @@ subprojects {
       }
     }
   }
-
-  final String GITHUB_ROOT_URL = "https://github.com/pyamsoft/pydroid"
-  bintray {
-    user = 'pyamsoft'
-    key = BINTRAY_API_KEY
-    publications = ['PYDroid']
-    override = true
-    pkg {
-      repo = 'PYDroid'
-      name = project.name
-      desc = "PYDroid library: ${project.name}"
-      licenses = ['Apache-2.0']
-      vcsUrl = "${GITHUB_ROOT_URL}/tree/main/${project.name}"
-      websiteUrl = "${GITHUB_ROOT_URL}"
-      version {
-        name = POM_VERSION
-        issueTrackerUrl = "${GITHUB_ROOT_URL}/issues"
-        desc = "PYDroid library: ${project.name}"
-        released = new Date()
-        vcsTag = POM_VERSION
-      }
-    }
-  }
 }
 
 allprojects {
@@ -261,33 +241,15 @@ allprojects {
     }
   }
 
-  // Ignore non-release libraries
-  dependencyUpdates.resolutionStrategy {
-    componentSelection { rules ->
-      rules.all { selection ->
-        boolean rejected = [
-          'alpha',
-          'beta',
-          'rc',
-          'eap',
-          'cr',
-          'm',
-          'preview'
-        ].any { qualifier ->
-          selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-        }
-        if (rejected) {
-          selection.reject('Release candidate')
-        }
-      }
-    }
-  }
-
   repositories {
     mavenLocal()
     google()
     mavenCentral()
     jcenter()
+
+    maven {
+      url "https://jitpack.io/"
+    }
 
     maven {
       url "https://plugins.gradle.org/m2/"

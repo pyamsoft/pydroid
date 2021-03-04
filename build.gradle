@@ -80,7 +80,7 @@ buildscript {
     fastscroll = "1.1.5"
 
     // In app updates and reviews
-    playCore = "1.9.1"
+    playCore = "1.10.0"
     playCoreKtx = "1.8.1"
 
     // In app billing

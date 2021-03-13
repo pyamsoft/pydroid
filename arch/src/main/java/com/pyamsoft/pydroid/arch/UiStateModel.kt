@@ -24,8 +24,6 @@ import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -42,16 +40,11 @@ import kotlinx.coroutines.withContext
  * Access the current state via withState and manipulate it via setState.
  * These calls are asynchronous.
  */
-public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
+public open class UiStateModel<S : UiViewState> constructor(
     /**
      * Initial state
      */
     public val initialState: S,
-
-    /**
-     * Coroutine Scope
-     */
-    public val stateModelScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 ) {
 
     // Mutex to make sure that setState operations happen in order
@@ -74,30 +67,8 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      *
      * Note that, like calling this.setState() in React, this operation does not happen immediately.
      */
-    public fun setState(stateChange: suspend S.() -> S) {
-        setState(stateChange = stateChange, andThen = {})
-    }
-
-    /**
-     * Modify the state from the previous
-     *
-     * Note that, like calling this.setState() in React, this operation does not happen immediately.
-     */
     public fun CoroutineScope.setState(stateChange: suspend S.() -> S) {
         this.setState(stateChange = stateChange, andThen = {})
-    }
-
-    /**
-     * Modify the state from the previous
-     *
-     * Note that, like calling this.setState() in React, this operation does not happen immediately.
-     *
-     * The andThen callback will be fired after the state has changed and the view has been notified.
-     *
-     * There is no threading guarantee for the andThen callback
-     */
-    public fun setState(stateChange: suspend S.() -> S, andThen: suspend (newState: S) -> Unit) {
-        stateModelScope.setState(stateChange, andThen)
     }
 
     /**
@@ -147,7 +118,6 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     @UiThread
     @CallSuper
     public open fun clear() {
-        stateModelScope.cancel()
     }
 
     /**
@@ -158,8 +128,8 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
     @UiThread
     @CheckResult
     @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(renderables)"))
-    public fun bind(vararg renderables: Renderable<S>): Job {
-        return bindState(*renderables)
+    public fun bind(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
+        return bindState(scope, *renderables)
     }
 
     /**
@@ -169,8 +139,8 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      */
     @UiThread
     @CheckResult
-    public fun bindState(vararg renderables: Renderable<S>): Job {
-        return stateModelScope.launch(context = Dispatchers.Main) {
+    public fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
+        return scope.launch(context = Dispatchers.Main) {
             internalBindState(renderables)
         }
     }

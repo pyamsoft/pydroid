@@ -75,18 +75,18 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
      * Bind one or more UiViews to be driven by this UiViewModel
      */
     @UiThread
-    @CheckResult
     public fun bindViews(
+        scope: CoroutineScope,
         savedInstanceState: UiSavedStateReader,
         vararg views: UiView<S, out V>,
         onEvent: suspend (event: V) -> Unit
-    ): Job {
+    ) {
 
         // Guarantee views are initialized
         // Run this outside of the view model scope to guarantee that it executes immediately
         views.forEach { it.init(savedInstanceState) }
 
-        return viewModelScope.launch(context = Dispatchers.Main) {
+        scope.launch(context = Dispatchers.Main) {
 
             // Bind ViewModel
             bindViewEvents(views.asIterable(), onEvent)

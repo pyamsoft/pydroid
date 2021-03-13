@@ -21,10 +21,12 @@ package com.pyamsoft.pydroid.arch
 import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.Internals.EMPTY_READER
 import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateReader
 import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateWriter
 import com.pyamsoft.pydroid.util.doOnDestroy
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
 /**
@@ -60,6 +62,36 @@ internal object Internals {
         // Teardown on destroy
         owner.doOnDestroy {
             viewModelBinding.cancel()
+            views.forEach { it.teardown() }
+        }
+
+        // State saver
+        return StateSaver { outState ->
+            val writer: UiSavedStateWriter = BundleUiSavedStateWriter(outState)
+            views.forEach { it.saveState(writer) }
+        }
+    }
+
+
+    /**
+     * Plumbing for creating a pydroid-arch Component
+     */
+    @JvmStatic
+    @CheckResult
+    @PublishedApi
+    internal inline fun <S : UiViewState, V : UiViewEvent> performBindController(
+        savedInstanceState: Bundle?,
+        owner: LifecycleOwner,
+        views: Array<out UiView<S, out V>>,
+        bindToController: (CoroutineScope, UiSavedStateReader, Array<out UiView<S, out V>>) -> Unit,
+    ): StateSaver {
+        val reader: UiSavedStateReader = savedInstanceState.toReader()
+
+        // Bind view event listeners, inflate and attach
+        bindToController(owner.lifecycleScope, reader, views)
+
+        // Teardown on destroy
+        owner.doOnDestroy {
             views.forEach { it.teardown() }
         }
 
@@ -117,8 +149,12 @@ public inline fun <S : UiViewState, V : UiViewEvent> UiViewModel<S, V, *>.bindCo
     vararg views: UiView<S, out V>,
     crossinline onEvent: (event: V) -> Unit
 ): StateSaver {
-    return Internals.performCreateComponent(savedInstanceState, owner, views) { reader, uiViews ->
-        this.bindViews(reader, *uiViews) { onEvent(it) }
+    return Internals.performBindController(
+        savedInstanceState,
+        owner,
+        views
+    ) { scope, reader, uiViews ->
+        this.bindViews(scope, reader, *uiViews) { onEvent(it) }
     }
 }
 

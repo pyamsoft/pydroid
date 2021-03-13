@@ -20,7 +20,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -35,7 +34,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
     initialState: S,
 ) : ViewModel() {
 
-    private val delegate = UiStateModel(initialState, viewModelScope)
+    private val delegate = UiStateModel(initialState)
 
     /**
      * The current state
@@ -54,9 +53,8 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
-    @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(renderables)"))
-    public fun bind(vararg renderables: Renderable<S>): Job {
-        return bindState(*renderables)
+    public fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
+        return delegate.bindState(scope, *renderables)
     }
 
     /**
@@ -66,45 +64,16 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
-    @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(onRender)"))
-    public inline fun bind(crossinline onRender: (UiRender<S>) -> Unit): Job {
-        return bindState(onRender)
-    }
-
-    /**
-     * Bind renderables to this ViewModel.
-     *
-     * Once bound, any changes to the ViewModel.state will be sent to these renderables.
-     */
-    @UiThread
-    @CheckResult
-    public fun bindState(vararg renderables: Renderable<S>): Job {
-        return delegate.bindState(*renderables)
-    }
-
-    /**
-     * Bind a renderable to this ViewModel.
-     *
-     * Once bound, any changes to the ViewModel.state will be sent to this renderable.
-     */
-    @UiThread
-    @CheckResult
-    public inline fun bindState(crossinline onRender: (UiRender<S>) -> Unit): Job {
-        return bindState(Renderable { onRender(it) })
+    public inline fun bindState(
+        scope: CoroutineScope,
+        crossinline onRender: (UiRender<S>) -> Unit
+    ): Job {
+        return bindState(scope, Renderable { onRender(it) })
     }
 
     // internal instead of protected so that only callers in the module can use this
     internal suspend fun internalBindState(renderables: Array<out Renderable<S>>) {
         delegate.internalBindState(renderables)
-    }
-
-    /**
-     * Modify the state from the previous
-     *
-     * Note that, like calling this.setState() in React, this operation does not happen immediately.
-     */
-    protected fun setState(stateChange: suspend S.() -> S) {
-        delegate.setState(stateChange)
     }
 
     /**
@@ -119,20 +88,6 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
         delegate.apply {
             scope.setState(stateChange)
         }
-    }
-
-    /**
-     * Modify the state from the previous
-     *
-     * Note that, like calling this.setState() in React, this operation does not happen immediately.
-     *
-     * The andThen callback will be fired after the state has changed and the view has been notified.
-     * If the stateChange payload does not cause a state update, the andThen call will not be fired.
-     *
-     * There is no threading guarantee for the andThen callback
-     */
-    protected fun setState(stateChange: suspend S.() -> S, andThen: suspend (newState: S) -> Unit) {
-        delegate.setState(stateChange, andThen)
     }
 
     /**

@@ -16,12 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent.HideNavigation
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -32,36 +31,42 @@ internal class RatingViewModel internal constructor(
     initialState = RatingViewState(navigationError = null)
 ) {
 
-    private val loadRunner = highlander<Unit, Boolean> { force ->
+    private val loadRunner = highlander<LoadResult?, Boolean> { force ->
         try {
             val launcher = interactor.askForRating(force)
-            handleRatingLaunch(force, launcher)
+            return@highlander LoadResult(force, launcher)
         } catch (throwable: Throwable) {
             Timber.e(throwable, "Unable to launch rating flow")
+            return@highlander null
         }
     }
 
-    private fun handleRatingLaunch(isFallbackEnabled: Boolean, launcher: AppRatingLauncher) {
-        publish(RatingControllerEvent.LoadRating(isFallbackEnabled, launcher))
+    internal inline fun load(
+        scope: CoroutineScope,
+        force: Boolean,
+        crossinline onLaunch: (isFallbackEnabled: Boolean, launcher: AppRatingLauncher) -> Unit
+    ) {
+        scope.launch(context = Dispatchers.Default) {
+            loadRunner.call(force)?.let { result ->
+                onLaunch(result.isFallbackEnabled, result.launcher)
+            }
+        }
     }
 
-    override fun handleViewEvent(event: RatingViewEvent) = when (event) {
-        is HideNavigation -> clearNavigationError()
-    }
-
-    internal fun load(force: Boolean) {
-        viewModelScope.launch(context = Dispatchers.Default) { loadRunner.call(force) }
-    }
-
-    private fun clearNavigationError() {
+    internal fun handleClearNavigationError() {
         setState { copy(navigationError = null) }
     }
 
     internal fun navigationSuccess() {
-        clearNavigationError()
+        handleClearNavigationError()
     }
 
     internal fun navigationFailed(error: Throwable) {
         setState { copy(navigationError = error) }
     }
+
+    internal data class LoadResult internal constructor(
+        val isFallbackEnabled: Boolean,
+        val launcher: AppRatingLauncher
+    )
 }

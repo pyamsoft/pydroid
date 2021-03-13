@@ -120,6 +120,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     /**
      * Fire a controller event
      */
+    @Deprecated("To be removed in favor of Controller driven architecture")
     protected fun publish(event: C) {
         viewModelScope.launch(context = Dispatchers.IO) {
             controllerEventBus.send(event)

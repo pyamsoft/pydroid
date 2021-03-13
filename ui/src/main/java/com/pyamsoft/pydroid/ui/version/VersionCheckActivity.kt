@@ -22,16 +22,15 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.LaunchUpdate
-import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent.ShowUpgrade
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
@@ -75,15 +74,20 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
                 component.inject(this)
             }
 
-        stateSaver = createComponent(
-            savedInstanceState, this,
-            viewModel,
+        stateSaver = viewModel.bindController(
+            savedInstanceState,
+            this,
             requireNotNull(versionCheckView)
         ) {
-            return@createComponent when (it) {
-                is LaunchUpdate -> showVersionUpgrade(it.isFallbackEnabled, it.launcher)
-                ShowUpgrade -> VersionUpgradeDialog.show(this)
+            return@bindController when (it) {
+                is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
+                is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
+                is VersionCheckViewEvent.NavigationHidden -> viewModel.handleClearNavigationError()
             }
+        }
+
+        viewModel.watchForDownloadCompletion(lifecycleScope) {
+            VersionUpgradeDialog.show(this)
         }
 
         if (checkForUpdates) {
@@ -139,10 +143,13 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
 
     private fun checkUpdates() {
         require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually." }
-        viewModel.checkForUpdates(false)
+        viewModel.checkForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
+            showVersionUpgrade(isFallbackEnabled, launcher)
+        }
     }
 
-    private fun showVersionUpgrade(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) {
+    // Called by AppSettingsPreferenceFragment
+    internal fun showVersionUpgrade(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) {
         val activity = this
 
         // Enforce that we do this on the Main thread
@@ -165,7 +172,9 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
      */
     public fun checkForUpdates() {
         require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
-        viewModel.checkForUpdates(false)
+        viewModel.checkForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
+            showVersionUpgrade(isFallbackEnabled, launcher)
+        }
     }
 
     public companion object {

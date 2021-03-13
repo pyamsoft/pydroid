@@ -21,15 +21,15 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
-import com.pyamsoft.pydroid.ui.internal.rating.RatingControllerEvent.LoadRating
 import com.pyamsoft.pydroid.ui.internal.rating.RatingView
+import com.pyamsoft.pydroid.ui.internal.rating.RatingViewEvent
 import com.pyamsoft.pydroid.ui.internal.rating.RatingViewModel
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.openAppPage
@@ -64,17 +64,19 @@ public abstract class RatingActivity : VersionCheckActivity() {
             .create(this) { snackbarRoot }
             .inject(this)
 
-        stateSaver = createComponent(
-            savedInstanceState, this,
-            viewModel,
+        stateSaver = viewModel.bindController(
+            savedInstanceState,
+            this,
             requireNotNull(ratingView)
         ) {
-            return@createComponent when (it) {
-                is LoadRating -> showRating(it.isFallbackEnabled, it.launcher)
+            return@bindController when (it) {
+                is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
             }
         }
 
-        viewModel.load(false)
+        viewModel.load(lifecycleScope, false) { isFallbackEnabled, launcher ->
+            showRating(isFallbackEnabled, launcher)
+        }
     }
 
     /**

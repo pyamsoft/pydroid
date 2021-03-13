@@ -21,6 +21,7 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.XmlRes
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.createComponent
@@ -44,6 +45,7 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.ui.util.show
+import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
@@ -129,12 +131,20 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
                 is AppSettingsControllerEvent.Navigate -> navigateHyperlink(it.hyperlinkIntent)
                 is AppSettingsControllerEvent.NavigateRateApp -> openPlayStore()
                 is AppSettingsControllerEvent.ShowLicense -> openLicensesPage()
-                is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(true)
                 is AppSettingsControllerEvent.AttemptClearData -> openClearDataDialog()
                 is AppSettingsControllerEvent.OpenShowUpgrade -> changeLogViewModel.show(true)
                 is AppSettingsControllerEvent.ChangeDarkTheme -> darkThemeChanged(it.newMode)
                 is AppSettingsControllerEvent.OpenOtherAppsPage -> openOtherAppsPage(it.apps)
                 is AppSettingsControllerEvent.OpenDonation -> openDonationDialog()
+                is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(
+                    viewLifecycleOwner.lifecycleScope,
+                    true
+                ) { isFallbackEnabled, launcher ->
+                    val act = activity
+                    if (act is VersionCheckActivity) {
+                        act.showVersionUpgrade(isFallbackEnabled, launcher)
+                    }
+                }
             }
         }
 

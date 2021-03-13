@@ -54,6 +54,30 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
+    @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(renderables)"))
+    public fun bind(vararg renderables: Renderable<S>): Job {
+        return bindState(*renderables)
+    }
+
+    /**
+     * Bind a renderable to this ViewModel.
+     *
+     * Once bound, any changes to the ViewModel.state will be sent to this renderable.
+     */
+    @UiThread
+    @CheckResult
+    @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(onRender)"))
+    public inline fun bind(crossinline onRender: (UiRender<S>) -> Unit): Job {
+        return bindState(onRender)
+    }
+
+    /**
+     * Bind renderables to this ViewModel.
+     *
+     * Once bound, any changes to the ViewModel.state will be sent to these renderables.
+     */
+    @UiThread
+    @CheckResult
     public fun bindState(vararg renderables: Renderable<S>): Job {
         return delegate.bindState(*renderables)
     }

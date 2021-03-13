@@ -24,6 +24,14 @@ public interface ViewBinder<S : UiViewState> {
     /**
      * Binds a UiViewState to one or more view components
      */
+    @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(state)"))
+    public fun bind(state: S) {
+        bindState(state)
+    }
+
+    /**
+     * Binds a UiViewState to one or more view components
+     */
     public fun bindState(state: S)
 
     /**

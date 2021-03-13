@@ -157,6 +157,18 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      */
     @UiThread
     @CheckResult
+    @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(renderables)"))
+    public fun bind(vararg renderables: Renderable<S>): Job {
+        return bindState(*renderables)
+    }
+
+    /**
+     * Bind renderables to this ViewModel.
+     *
+     * Once bound, any changes to the ViewModel.state will be sent to these renderables.
+     */
+    @UiThread
+    @CheckResult
     public fun bindState(vararg renderables: Renderable<S>): Job {
         return stateModelScope.launch(context = Dispatchers.Main) {
             internalBindState(renderables)

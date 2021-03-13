@@ -35,6 +35,7 @@ import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.ui.util.openAppPage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -78,11 +79,11 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
             savedInstanceState,
             this,
             requireNotNull(versionCheckView)
-        ) {
-            return@bindController when (it) {
-                is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
-                is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
-                is VersionCheckViewEvent.NavigationHidden -> viewModel.handleClearNavigationError()
+        ) { scope, event ->
+            return@bindController when (event) {
+                is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError(scope)
+                is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete(scope)
+                is VersionCheckViewEvent.NavigationHidden -> viewModel.handleHideNavigation(scope)
             }
         }
 
@@ -143,25 +144,29 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
 
     private fun checkUpdates() {
         require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually." }
-        viewModel.checkForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
-            showVersionUpgrade(isFallbackEnabled, launcher)
+        viewModel.checkForUpdates(lifecycleScope, false) { scope, isFallbackEnabled, launcher ->
+            showVersionUpgrade(scope, isFallbackEnabled, launcher)
         }
     }
 
     // Called by AppSettingsPreferenceFragment
-    internal fun showVersionUpgrade(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) {
+    internal fun showVersionUpgrade(
+        scope: CoroutineScope,
+        isFallbackEnabled: Boolean,
+        launcher: AppUpdateLauncher
+    ) {
         val activity = this
 
         // Enforce that we do this on the Main thread
-        lifecycleScope.launch(context = Dispatchers.Main) {
+        scope.launch(context = Dispatchers.Main) {
             try {
                 launcher.update(activity, RC_APP_UPDATE)
             } catch (throwable: Throwable) {
                 Timber.e(throwable, "Unable to launch in-app update flow")
                 if (isFallbackEnabled) {
                     MarketLinker.openAppPage(activity)
-                        .onSuccess { viewModel.navigationSuccess() }
-                        .onFailure { viewModel.navigationFailed(it) }
+                        .onSuccess { viewModel.navigationSuccess(scope) }
+                        .onFailure { viewModel.navigationFailed(scope, it) }
                 }
             }
         }
@@ -172,8 +177,8 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
      */
     public fun checkForUpdates() {
         require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
-        viewModel.checkForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
-            showVersionUpgrade(isFallbackEnabled, launcher)
+        viewModel.checkForUpdates(lifecycleScope, false) { scope, isFallbackEnabled, launcher ->
+            showVersionUpgrade(scope, isFallbackEnabled, launcher)
         }
     }
 

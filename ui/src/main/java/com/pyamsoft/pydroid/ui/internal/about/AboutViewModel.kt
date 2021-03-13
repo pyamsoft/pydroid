@@ -89,19 +89,19 @@ internal class AboutViewModel internal constructor(
         setState { copy(loadError = throwable) }
     }
 
-    fun navigationFailed(throwable: Throwable) {
-        setState { copy(navigationError = throwable) }
+    fun navigationFailed(scope: CoroutineScope, throwable: Throwable) {
+        scope.setState { copy(navigationError = throwable) }
     }
 
-    fun navigationSuccess() {
-        handleClearNavigationError()
+    fun navigationSuccess(scope: CoroutineScope) {
+        handleHideNavigation(scope)
     }
 
-    internal fun handleClearLoadError() {
-        setState { copy(loadError = null) }
+    internal fun handleClearLoadError(scope: CoroutineScope) {
+        scope.setState { copy(loadError = null) }
     }
 
-    internal fun handleClearNavigationError() {
-        setState { copy(navigationError = null) }
+    internal fun handleHideNavigation(scope: CoroutineScope) {
+        scope.setState { copy(navigationError = null) }
     }
 }

@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.ui.Injector
@@ -65,17 +66,18 @@ public abstract class PrivacyActivity : ActivityBase() {
         stateSaver = viewModel.bindController(
             savedInstanceState, this,
             requireNotNull(privacyView)
-        ) {
-            return@bindController when (it) {
-                is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar()
+        ) { scope, event ->
+            return@bindController when (event) {
+                is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar(scope)
             }
         }
     }
 
     private fun openExternalPolicyPage(link: HyperlinkIntent) {
+        val scope = lifecycleScope
         link.navigate()
-            .onSuccess { viewModel.navigationSuccess() }
-            .onFailure { viewModel.navigationFailed(it) }
+            .onSuccess { viewModel.navigationSuccess(scope) }
+            .onFailure { viewModel.navigationFailed(scope, it) }
     }
 
     /**

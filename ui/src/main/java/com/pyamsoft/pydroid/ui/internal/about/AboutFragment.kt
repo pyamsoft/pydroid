@@ -67,14 +67,16 @@ internal class AboutFragment : Fragment() {
             viewLifecycleOwner,
             requireNotNull(listView),
             requireNotNull(errorView)
-        ) {
-            return@bindController when (it) {
-                is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError()
-                is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleClearNavigationError()
-                is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.openLibrary(it.index) { url ->
-                    openUrl(url)
+        ) { scope, event ->
+            return@bindController when (event) {
+                is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError(scope)
+                is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation(
+                    scope
+                )
+                is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.openLibrary(event.index) {
+                    openUrl(it)
                 }
-                is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.openLicense(it.index) { url ->
+                is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.openLicense(event.index) { url ->
                     openUrl(url)
                 }
             }
@@ -97,9 +99,10 @@ internal class AboutFragment : Fragment() {
     }
 
     private fun openUrl(url: String) {
+        val scope = viewLifecycleOwner.lifecycleScope
         url.hyperlink(requireActivity()).navigate()
-            .onSuccess { viewModel.navigationSuccess() }
-            .onFailure { viewModel.navigationFailed(it) }
+            .onSuccess { viewModel.navigationSuccess(scope) }
+            .onFailure { viewModel.navigationFailed(scope, it) }
     }
 
     companion object {

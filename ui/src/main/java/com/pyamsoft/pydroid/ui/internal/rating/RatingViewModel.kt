@@ -53,16 +53,16 @@ internal class RatingViewModel internal constructor(
         }
     }
 
-    internal fun handleClearNavigationError() {
-        setState { copy(navigationError = null) }
+    internal fun handleClearNavigationError(scope: CoroutineScope) {
+        scope.setState { copy(navigationError = null) }
     }
 
-    internal fun navigationSuccess() {
-        handleClearNavigationError()
+    internal fun navigationSuccess(scope: CoroutineScope) {
+        handleClearNavigationError(scope)
     }
 
-    internal fun navigationFailed(error: Throwable) {
-        setState { copy(navigationError = error) }
+    internal fun navigationFailed(scope: CoroutineScope, error: Throwable) {
+        scope.setState { copy(navigationError = error) }
     }
 
     internal data class LoadResult internal constructor(

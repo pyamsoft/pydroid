@@ -102,7 +102,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     protected fun CoroutineScope.setState(
         stateChange: suspend S.() -> S,
-        andThen: suspend (newState: S) -> Unit
+        andThen: suspend CoroutineScope.(newState: S) -> Unit
     ) {
         val scope = this
         delegate.apply {

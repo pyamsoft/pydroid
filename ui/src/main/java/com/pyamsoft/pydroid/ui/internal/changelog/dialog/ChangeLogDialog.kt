@@ -64,8 +64,8 @@ internal class ChangeLogDialog : IconDialog() {
             requireNotNull(nameView),
             requireNotNull(listView),
             requireNotNull(closeView)
-        ) {
-            return@bindController when (it) {
+        ) { scope, event ->
+            return@bindController when (event) {
                 is ChangeLogDialogViewEvent.Close -> dismiss()
             }
         }

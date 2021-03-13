@@ -78,7 +78,7 @@ internal class BillingViewModel internal constructor(
     }
 
     private fun clearError() {
-        setState { copy(error = null) }
+        viewModelScope.setState { copy(error = null) }
     }
 
     internal fun refresh() {
@@ -91,7 +91,7 @@ internal class BillingViewModel internal constructor(
         val skuList = state.skuList
         if (skuList.isEmpty() || skuList.size <= index) {
             Timber.e("SKU index out of bounds: $index ${skuList.size}")
-            setState { copy(error = IllegalStateException("Unable to purchase in-app item")) }
+            viewModelScope.setState { copy(error = IllegalStateException("Unable to purchase in-app item")) }
             return
         }
 

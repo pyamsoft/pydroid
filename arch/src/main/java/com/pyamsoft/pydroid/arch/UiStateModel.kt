@@ -82,7 +82,7 @@ public open class UiStateModel<S : UiViewState> constructor(
      */
     public fun CoroutineScope.setState(
         stateChange: suspend S.() -> S,
-        andThen: suspend (newState: S) -> Unit
+        andThen: suspend CoroutineScope.(newState: S) -> Unit
     ) {
         this.launch(context = Dispatchers.IO) {
             val newState = processStateChange { stateChange(it) }

@@ -139,10 +139,10 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
                 is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(
                     viewLifecycleOwner.lifecycleScope,
                     true
-                ) { isFallbackEnabled, launcher ->
+                ) { scope, isFallbackEnabled, launcher ->
                     val act = activity
                     if (act is VersionCheckActivity) {
-                        act.showVersionUpgrade(isFallbackEnabled, launcher)
+                        act.showVersionUpgrade(scope, isFallbackEnabled, launcher)
                     }
                 }
             }

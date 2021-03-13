@@ -78,7 +78,7 @@ internal class AppSettingsViewModel internal constructor(
     }
 
     internal fun syncDarkThemeState(activity: Activity) {
-        setState {
+        viewModelScope.setState {
             copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity)))
         }
     }
@@ -93,10 +93,10 @@ internal class AppSettingsViewModel internal constructor(
     }
 
     internal fun navigationFailed(error: Throwable) {
-        setState { copy(throwable = error) }
+        viewModelScope.setState { copy(throwable = error) }
     }
 
     internal fun navigationSuccess() {
-        setState { copy(throwable = null) }
+        viewModelScope.setState { copy(throwable = null) }
     }
 }

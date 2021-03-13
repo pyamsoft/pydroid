@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.privacy
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent.ViewExternalPolicy
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -33,15 +34,15 @@ internal class PrivacyViewModel internal constructor(
         }
     }
 
-    internal fun handleHideSnackbar() {
-        setState { copy(throwable = null) }
+    internal fun handleHideSnackbar(scope: CoroutineScope) {
+        scope.setState { copy(throwable = null) }
     }
 
-    fun navigationFailed(error: Throwable) {
-        setState { copy(throwable = error) }
+    fun navigationFailed(scope: CoroutineScope, error: Throwable) {
+        scope.setState { copy(throwable = error) }
     }
 
-    fun navigationSuccess() {
-        setState { copy(throwable = null) }
+    fun navigationSuccess(scope: CoroutineScope) {
+        scope.setState { copy(throwable = null) }
     }
 }

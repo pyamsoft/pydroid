@@ -147,14 +147,14 @@ public inline fun <S : UiViewState, V : UiViewEvent> UiViewModel<S, V, *>.bindCo
     savedInstanceState: Bundle?,
     owner: LifecycleOwner,
     vararg views: UiView<S, out V>,
-    crossinline onEvent: (event: V) -> Unit
+    crossinline onEvent: (scope: CoroutineScope, event: V) -> Unit
 ): StateSaver {
     return Internals.performBindController(
         savedInstanceState,
         owner,
         views
     ) { scope, reader, uiViews ->
-        this.bindViews(scope, reader, *uiViews) { onEvent(it) }
+        this.bindViews(scope, reader, *uiViews) { onEvent(scope, it) }
     }
 }
 

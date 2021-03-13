@@ -16,16 +16,12 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
-import com.pyamsoft.pydroid.ui.internal.about.AboutControllerEvent.ExternalUrl
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class AboutViewModel internal constructor(
@@ -40,43 +36,49 @@ internal class AboutViewModel internal constructor(
 ) {
 
     private val licenseRunner = highlander<Unit, Boolean> { force ->
-        setState(stateChange = { copy(isLoading = true) }, andThen = {
-            try {
-                val licenses = interactor.loadLicenses(force)
-                handleLicensesLoaded(licenses)
-            } catch (error: Throwable) {
-                error.onActualError { e ->
-                    Timber.e(e, "Error loading licenses")
-                    handleLicenseLoadError(e)
-                }
-            } finally {
-                setState { copy(isLoading = false) }
-            }
-        })
-    }
-
-    init {
-        loadLicenses()
-    }
-
-    override fun handleViewEvent(event: AboutViewEvent) = when (event) {
-        is AboutViewEvent.ListItemEvent.OpenLibrary -> openUrl(event.index) { it.libraryUrl }
-        is AboutViewEvent.ListItemEvent.OpenLicense -> openUrl(event.index) { it.licenseUrl }
-        is AboutViewEvent.ErrorEvent.HideNavigationError -> clearNavigationError()
-        is AboutViewEvent.ErrorEvent.HideLoadError -> clearLoadError()
-    }
-
-    private inline fun openUrl(index: Int, crossinline func: (library: OssLibrary) -> String) {
-        val l = state.licenses
-        if (l.isNotEmpty()) {
-            l.getOrNull(index)?.let { lib ->
-                publish(ExternalUrl(func(lib)))
+        try {
+            val licenses = interactor.loadLicenses(force)
+            handleLicensesLoaded(licenses)
+        } catch (error: Throwable) {
+            error.onActualError { e ->
+                Timber.e(e, "Error loading licenses")
+                handleLicenseLoadError(e)
             }
         }
     }
 
-    private fun loadLicenses() {
-        viewModelScope.launch(context = Dispatchers.Default) { licenseRunner.call(false) }
+    internal inline fun openLibrary(
+        index: Int,
+        crossinline onOpen: (String) -> Unit
+    ) {
+        return openUrl(index, resolveUrl = { it.libraryUrl }, onOpen)
+    }
+
+    internal inline fun openLicense(
+        index: Int,
+        crossinline onOpen: (String) -> Unit
+    ) {
+        return openUrl(index, resolveUrl = { it.licenseUrl }, onOpen)
+    }
+
+    private inline fun openUrl(
+        index: Int,
+        crossinline resolveUrl: (library: OssLibrary) -> String,
+        crossinline onOpen: (String) -> Unit
+    ) {
+        val l = state.licenses
+        if (l.isNotEmpty()) {
+            l.getOrNull(index)?.let { lib ->
+                onOpen(resolveUrl(lib))
+            }
+        }
+    }
+
+    internal fun loadLicenses(scope: CoroutineScope) {
+        scope.setState(stateChange = { copy(isLoading = true) }, andThen = {
+            licenseRunner.call(false)
+            setState { copy(isLoading = false) }
+        })
     }
 
     private fun CoroutineScope.handleLicensesLoaded(licenses: List<OssLibrary>) {
@@ -92,14 +94,14 @@ internal class AboutViewModel internal constructor(
     }
 
     fun navigationSuccess() {
-        clearNavigationError()
+        handleClearNavigationError()
     }
 
-    private fun clearLoadError() {
+    internal fun handleClearLoadError() {
         setState { copy(loadError = null) }
     }
 
-    private fun clearNavigationError() {
+    internal fun handleClearNavigationError() {
         setState { copy(navigationError = null) }
     }
 }

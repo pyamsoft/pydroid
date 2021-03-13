@@ -23,14 +23,14 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
-import com.pyamsoft.pydroid.ui.internal.about.AboutControllerEvent.ExternalUrl
 import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutFragment : Fragment() {
@@ -62,16 +62,25 @@ internal class AboutFragment : Fragment() {
             .create(binding.layoutFrame, viewLifecycleOwner)
             .inject(this)
 
-        stateSaver = createComponent(
-            savedInstanceState, viewLifecycleOwner,
-            viewModel,
+        stateSaver = viewModel.bindController(
+            savedInstanceState,
+            viewLifecycleOwner,
             requireNotNull(listView),
             requireNotNull(errorView)
         ) {
-            return@createComponent when (it) {
-                is ExternalUrl -> navigateToExternalUrl(it.url)
+            return@bindController when (it) {
+                is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError()
+                is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleClearNavigationError()
+                is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.openLibrary(it.index) { url ->
+                    openUrl(url)
+                }
+                is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.openLicense(it.index) { url ->
+                    openUrl(url)
+                }
             }
         }
+
+        viewModel.loadLicenses(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {
@@ -87,7 +96,7 @@ internal class AboutFragment : Fragment() {
         stateSaver?.saveState(outState)
     }
 
-    private fun navigateToExternalUrl(url: String) {
+    private fun openUrl(url: String) {
         url.hyperlink(requireActivity()).navigate()
             .onSuccess { viewModel.navigationSuccess() }
             .onFailure { viewModel.navigationFailed(it) }

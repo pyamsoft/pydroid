@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.privacy
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent.ViewExternalPolicy
-import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewEvent.SnackbarHidden
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -34,11 +33,7 @@ internal class PrivacyViewModel internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: PrivacyViewEvent) = when (event) {
-        is SnackbarHidden -> hideSnackbar()
-    }
-
-    private fun hideSnackbar() {
+    internal fun handleHideSnackbar() {
         setState { copy(throwable = null) }
     }
 

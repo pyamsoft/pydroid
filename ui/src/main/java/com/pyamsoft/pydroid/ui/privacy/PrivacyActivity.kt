@@ -21,16 +21,15 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent.ViewExternalPolicy
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyView
+import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewEvent
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.util.HyperlinkIntent
-import com.pyamsoft.pydroid.util.hyperlink
 
 /**
  * Activity which handles displaying a privacy policy via menu items
@@ -63,13 +62,12 @@ public abstract class PrivacyActivity : ActivityBase() {
             .create(this) { snackbarRoot }
             .inject(this)
 
-        stateSaver = createComponent(
+        stateSaver = viewModel.bindController(
             savedInstanceState, this,
-            viewModel,
             requireNotNull(privacyView)
         ) {
-            return@createComponent when (it) {
-                is ViewExternalPolicy -> openExternalPolicyPage(it.url.hyperlink(this))
+            return@bindController when (it) {
+                is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar()
             }
         }
     }

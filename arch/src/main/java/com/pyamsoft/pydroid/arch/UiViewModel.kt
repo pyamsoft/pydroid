@@ -39,12 +39,14 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onClearEvents by onClearEventDelegate
 
+    @Deprecated("To be removed in favor of Controller driven architecture")
     private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
 
     // Need PublishedApi so createComponent can be inline
     @UiThread
     @CheckResult
     @PublishedApi
+    @Deprecated("Replace with bindViews as we are moving to a Controller driven architecture.")
     internal fun bindToComponent(
         savedInstanceState: UiSavedStateReader,
         views: Array<out UiView<S, out V>>,
@@ -60,6 +62,34 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
             // Bind ViewModel
             bindControllerEvents(onControllerEvent)
             bindViewEvents(views.asIterable())
+
+            // Inflate the views
+            views.forEach { it.inflate(savedInstanceState) }
+
+            // Bind state
+            internalBindState(views)
+        }
+    }
+
+    /**
+     * Bind one or more UiViews to be driven by this UiViewModel
+     */
+    @UiThread
+    @CheckResult
+    public fun bindViews(
+        savedInstanceState: UiSavedStateReader,
+        vararg views: UiView<S, out V>,
+        onEvent: suspend (event: V) -> Unit
+    ): Job {
+
+        // Guarantee views are initialized
+        // Run this outside of the view model scope to guarantee that it executes immediately
+        views.forEach { it.init(savedInstanceState) }
+
+        return viewModelScope.launch(context = Dispatchers.Main) {
+
+            // Bind ViewModel
+            bindViewEvents(views.asIterable(), onEvent)
 
             // Inflate the views
             views.forEach { it.inflate(savedInstanceState) }
@@ -96,6 +126,24 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         }
     }
 
+    private fun CoroutineScope.bindViewEvents(
+        views: Iterable<UiView<S, out V>>,
+        onEvent: suspend (event: V) -> Unit
+    ) {
+        launch(context = Dispatchers.IO) {
+            views.forEach { view ->
+                view.onViewEvent(onEvent)
+                if (view is BaseUiView<S, out V, *>) {
+                    val nestedViews = view.nestedViews()
+                    if (nestedViews.isNotEmpty()) {
+                        bindViewEvents(nestedViews, onEvent)
+                    }
+                }
+            }
+        }
+    }
+
+    @Deprecated("To be removed in favor of Controller driven architecture")
     private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, out V>>) {
         launch(context = Dispatchers.IO) {
             views.forEach { view ->
@@ -110,6 +158,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         }
     }
 
+    @Deprecated("To be removed in favor of Controller driven architecture")
     private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
         launch(context = Dispatchers.IO) {
             controllerEventBus.onEvent {
@@ -143,5 +192,8 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     /**
      * Handle a UiViewEvent
      */
-    protected abstract fun handleViewEvent(event: V)
+    @Deprecated("To be removed in favor of Controller driven architecture")
+    protected open fun handleViewEvent(event: V) {
+
+    }
 }

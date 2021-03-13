@@ -21,4 +21,5 @@ package com.pyamsoft.pydroid.arch
  *
  * Usually sent via a UiViewModel.publish() call
  */
+@Deprecated("Will be removed in the future")
 public interface UiControllerEvent

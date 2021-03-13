@@ -65,7 +65,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
             views.forEach { it.inflate(savedInstanceState) }
 
             // Bind state
-            bindState(views)
+            internalBindState(views)
         }
     }
 

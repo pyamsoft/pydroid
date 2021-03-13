@@ -157,14 +157,14 @@ public open class UiStateModel<S : UiViewState> @JvmOverloads constructor(
      */
     @UiThread
     @CheckResult
-    public fun bind(vararg renderables: Renderable<S>): Job {
+    public fun bindState(vararg renderables: Renderable<S>): Job {
         return stateModelScope.launch(context = Dispatchers.Main) {
-            bindState(renderables)
+            internalBindState(renderables)
         }
     }
 
     // internal instead of protected so that only callers in the module can use this
-    internal suspend fun bindState(renderables: Array<out Renderable<S>>) {
+    internal suspend fun internalBindState(renderables: Array<out Renderable<S>>) {
         val state = modelState
 
         withContext(context = Dispatchers.Main) {

@@ -91,8 +91,8 @@ internal class OtherAppsViewHolder private constructor(
         }
     }
 
-    override fun bind(state: OtherAppsItemViewState) {
-        binder.bind(state)
+    override fun bindState(state: OtherAppsItemViewState) {
+        binder.bindState(state)
     }
 
     override fun teardown() {

@@ -57,8 +57,8 @@ internal class BillingViewHolder private constructor(
         }
     }
 
-    override fun bind(state: BillingItemViewState) {
-        binder.bind(state)
+    override fun bindState(state: BillingItemViewState) {
+        binder.bindState(state)
     }
 
     override fun teardown() {

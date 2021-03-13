@@ -24,7 +24,7 @@ public interface ViewBinder<S : UiViewState> {
     /**
      * Binds a UiViewState to one or more view components
      */
-    public fun bind(state: S)
+    public fun bindState(state: S)
 
     /**
      * Called when the ViewHolder is detached from the List and effectively destroyed.

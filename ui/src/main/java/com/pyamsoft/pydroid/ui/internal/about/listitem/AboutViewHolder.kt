@@ -52,8 +52,8 @@ internal class AboutViewHolder private constructor(
         }
     }
 
-    override fun bind(state: AboutItemViewState) {
-        binder.bind(state)
+    override fun bindState(state: AboutItemViewState) {
+        binder.bindState(state)
     }
 
     override fun teardown() {

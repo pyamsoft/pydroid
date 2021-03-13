@@ -49,7 +49,7 @@ internal class BillingAdapter internal constructor(
         position: Int
     ) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bindState(item)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {

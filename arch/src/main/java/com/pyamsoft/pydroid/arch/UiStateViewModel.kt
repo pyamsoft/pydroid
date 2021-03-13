@@ -54,8 +54,8 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
-    public fun bind(vararg renderables: Renderable<S>): Job {
-        return delegate.bind(*renderables)
+    public fun bindState(vararg renderables: Renderable<S>): Job {
+        return delegate.bindState(*renderables)
     }
 
     /**
@@ -65,13 +65,13 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
-    public inline fun bind(crossinline onRender: (UiRender<S>) -> Unit): Job {
-        return bind(Renderable { onRender(it) })
+    public inline fun bindState(crossinline onRender: (UiRender<S>) -> Unit): Job {
+        return bindState(Renderable { onRender(it) })
     }
 
     // internal instead of protected so that only callers in the module can use this
-    internal suspend fun bindState(renderables: Array<out Renderable<S>>) {
-        delegate.bindState(renderables)
+    internal suspend fun internalBindState(renderables: Array<out Renderable<S>>) {
+        delegate.internalBindState(renderables)
     }
 
     /**

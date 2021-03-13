@@ -51,8 +51,8 @@ internal class ChangeLogViewHolder private constructor(
         }
     }
 
-    override fun bind(state: ChangeLogItemViewState) {
-        binder.bind(state)
+    override fun bindState(state: ChangeLogItemViewState) {
+        binder.bindState(state)
     }
 
     override fun teardown() {

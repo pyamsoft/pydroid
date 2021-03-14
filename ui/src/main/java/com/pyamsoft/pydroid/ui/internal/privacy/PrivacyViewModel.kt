@@ -16,14 +16,14 @@
 
 package com.pyamsoft.pydroid.ui.internal.privacy
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 internal class PrivacyViewModel internal constructor(
-) : UiViewModel<PrivacyViewState, PrivacyViewEvent, PrivacyControllerEvent>(
+) : UiViewModel<PrivacyViewState, PrivacyViewEvent, UnitControllerEvent>(
     initialState = PrivacyViewState(throwable = null)
 ) {
 

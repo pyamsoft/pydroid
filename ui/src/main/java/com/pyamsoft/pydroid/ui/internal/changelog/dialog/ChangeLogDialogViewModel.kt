@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
 internal class ChangeLogDialogViewModel internal constructor(
     interactor: ChangeLogInteractor,
     provider: ChangeLogProvider
-) : UiViewModel<ChangeLogDialogViewState, ChangeLogDialogViewEvent, ChangeLogDialogControllerEvent>(
+) : UiViewModel<ChangeLogDialogViewState, ChangeLogDialogViewEvent, UnitControllerEvent>(
     initialState = ChangeLogDialogViewState(
         icon = 0,
         name = "",

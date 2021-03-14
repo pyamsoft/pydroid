@@ -64,26 +64,22 @@ pydroid-arch wants you to think of your code as modular `Components`. A componen
 a `UiViewModel`, one or more `UiViews`, and a `UiController`.
 
 The `UiViewModel` is the `UiStateViewModel` class, extended with some small extras.
-The UiViewModel is the middleman between a View and a Controller - and requires you to override a
-function called `handleViewEvent(UiViewEvent) -> Unit` which is called in response to any event
-fired from any UiView. The UiViewModel also provides a `publish(UiControllerEvent) -> Unit`
-function, which can be called to pass events to the Controller.
+The UiViewModel is the middleman between a View and a Controller - UiView events are published to
+the Controller, which can then decide how to handle the event. In many cases, it will delegate the
+event to the ViewModel, though in the case of single events like Navigation, the Controller will
+handle it.
 
 The `UiView` class is NOT Android's representation of a View. The `UiView` is a `Renderable` and can
 be one or more views in a logical grouping, such as a RecyclerView and FloatingActionButton, or
 TabLayout and ViewPager. The `UiView` provides a `publish(UiViewEvent) -> Unit` function which will
 pass events to the `UiViewModel`.
 
-The `UiController` has only one job, which is to synchronously handle `UiControllerEvents`. These
-events are published by the `UiViewModel` and are generally one-off operations which do not affect
-what is rendered on screen, such as navigation or alerts.
-
 These three pieces come together to make a component via
-`createComponent(Bundle?, LifecycleOwner, UiViewModel, vararg UiViewState, (UiControllerEvent) -> Unit) -> StateSaver`.
+`UiViewModel.bindController(Bundle?, LifecycleOwner, vararg UiViewState, (UiViewEvent) -> Unit) -> StateSaver`.
 It takes a saved instance state bundle, a lifecycle owner, and then your component members.
 What it returns for use is a `StateSaver` class, which has one function called `saveState(Bundle)`
 which takes a `Bundle` and will save any requested state bits to it.
-For most expected setups, `createComponent` is called in `Activity.onCreate` or
+For most expected setups, `UiViewModel.bindController` is called in `Activity.onCreate` or
 `Fragment.onViewCreated` and the `StateSaver.saveState(Bundle)` is called in
 `onSaveInstanceState(Bundle)`. This means that, while not required, pydroid-arch generally
 recommends that you treat your Android Activities and Fragments as component controllers.

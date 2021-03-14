@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -46,9 +45,4 @@ internal sealed class AboutViewEvent : UiViewEvent {
 
     }
 
-}
-
-internal sealed class AboutControllerEvent : UiControllerEvent {
-
-    data class ExternalUrl internal constructor(val url: String) : AboutControllerEvent()
 }

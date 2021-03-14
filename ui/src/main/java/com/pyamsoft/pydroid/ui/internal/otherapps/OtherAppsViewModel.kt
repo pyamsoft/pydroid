@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 
 internal class OtherAppsViewModel internal constructor(
     interactor: OtherAppsInteractor,
-) : UiViewModel<OtherAppsViewState, OtherAppsViewEvent, OtherAppsControllerEvent>(
+) : UiViewModel<OtherAppsViewState, OtherAppsViewEvent, UnitControllerEvent>(
     initialState = OtherAppsViewState(
         apps = emptyList(),
         appsError = null,

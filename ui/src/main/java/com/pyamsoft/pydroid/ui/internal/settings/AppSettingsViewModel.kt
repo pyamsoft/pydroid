@@ -20,6 +20,7 @@ import android.app.Activity
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
@@ -31,7 +32,7 @@ import kotlinx.coroutines.launch
 internal class AppSettingsViewModel internal constructor(
     private val theming: Theming,
     interactor: OtherAppsInteractor,
-) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, AppSettingsControllerEvent>(
+) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, UnitControllerEvent>(
     initialState = AppSettingsViewState(
         applicationName = "",
         isDarkTheme = null,

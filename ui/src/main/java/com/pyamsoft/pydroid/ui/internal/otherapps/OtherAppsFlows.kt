@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.otherapps
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
@@ -47,9 +46,3 @@ internal sealed class OtherAppsViewEvent : UiViewEvent {
 
 }
 
-internal sealed class OtherAppsControllerEvent : UiControllerEvent {
-
-    data class ExternalUrl internal constructor(val url: String) : OtherAppsControllerEvent()
-
-    object FallbackEvent : OtherAppsControllerEvent()
-}

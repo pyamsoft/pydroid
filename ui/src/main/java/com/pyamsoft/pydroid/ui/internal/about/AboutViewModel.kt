@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -27,7 +27,7 @@ import timber.log.Timber
 
 internal class AboutViewModel internal constructor(
     interactor: AboutInteractor,
-) : UiViewModel<AboutViewState, AboutViewEvent, AboutControllerEvent>(
+) : UiViewModel<AboutViewState, AboutViewEvent, UnitControllerEvent>(
     initialState = AboutViewState(
         isLoading = false,
         licenses = emptyList(),

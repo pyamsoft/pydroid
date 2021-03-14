@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.billing.BillingInteractor
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
@@ -32,7 +33,7 @@ internal class BillingViewModel internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
     provider: AppProvider,
-) : UiViewModel<BillingDialogViewState, BillingDialogViewEvent, BillingDialogControllerEvent>(
+) : UiViewModel<BillingDialogViewState, BillingDialogViewEvent, UnitControllerEvent>(
     initialState = BillingDialogViewState(
         skuList = emptyList(),
         connected = BillingState.LOADING,

@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
@@ -29,7 +29,7 @@ import timber.log.Timber
 
 internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
-) : UiViewModel<RatingViewState, RatingViewEvent, RatingControllerEvent>(
+) : UiViewModel<RatingViewState, RatingViewEvent, UnitControllerEvent>(
     initialState = RatingViewState(navigationError = null)
 ) {
 

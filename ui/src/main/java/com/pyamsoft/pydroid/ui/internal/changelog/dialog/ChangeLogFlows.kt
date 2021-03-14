@@ -16,9 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
-import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.ui.internal.app.AppState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
@@ -33,7 +31,3 @@ internal sealed class ChangeLogDialogViewEvent : UiViewEvent {
     object Close : ChangeLogDialogViewEvent()
 }
 
-internal sealed class ChangeLogDialogControllerEvent : UiControllerEvent {
-
-    object Close : ChangeLogDialogControllerEvent()
-}

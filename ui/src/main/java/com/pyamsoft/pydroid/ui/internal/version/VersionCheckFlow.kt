@@ -16,10 +16,8 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
-import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 
 internal data class VersionCheckViewState internal constructor(
     val isLoading: Boolean,
@@ -36,12 +34,3 @@ internal sealed class VersionCheckViewEvent : UiViewEvent {
     object NavigationHidden : VersionCheckViewEvent()
 }
 
-internal sealed class VersionCheckControllerEvent : UiControllerEvent {
-
-    data class LaunchUpdate internal constructor(
-        val isFallbackEnabled: Boolean,
-        val launcher: AppUpdateLauncher
-    ) : VersionCheckControllerEvent()
-
-    object ShowUpgrade : VersionCheckControllerEvent()
-}

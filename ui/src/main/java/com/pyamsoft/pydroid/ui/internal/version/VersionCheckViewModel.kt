@@ -16,9 +16,9 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
-import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
@@ -29,7 +29,7 @@ import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
     private val interactor: VersionInteractor
-) : UiViewModel<VersionCheckViewState, VersionCheckViewEvent, VersionCheckControllerEvent>(
+) : UiViewModel<VersionCheckViewState, VersionCheckViewEvent, UnitControllerEvent>(
     initialState = VersionCheckViewState(
         isLoading = false,
         throwable = null,

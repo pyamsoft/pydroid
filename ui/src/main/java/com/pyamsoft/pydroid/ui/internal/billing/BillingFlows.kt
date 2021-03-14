@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.internal.billing
 
-import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
@@ -42,12 +41,3 @@ internal sealed class BillingDialogViewEvent : UiViewEvent {
     ) : BillingDialogViewEvent()
 }
 
-internal sealed class BillingDialogControllerEvent : UiControllerEvent {
-
-    object Close : BillingDialogControllerEvent()
-
-    data class LaunchPurchase internal constructor(
-        val sku: BillingSku
-    ) : BillingDialogControllerEvent()
-
-}

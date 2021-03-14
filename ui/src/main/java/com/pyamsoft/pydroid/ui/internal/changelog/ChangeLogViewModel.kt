@@ -17,6 +17,7 @@
 package com.pyamsoft.pydroid.ui.internal.changelog
 
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
@@ -27,7 +28,7 @@ import kotlinx.coroutines.withContext
 
 internal class ChangeLogViewModel internal constructor(
     private val interactor: ChangeLogInteractor
-) : UiViewModel<UnitViewState, UnitViewEvent, ChangeLogControllerEvent>(
+) : UiViewModel<UnitViewState, UnitViewEvent, UnitControllerEvent>(
     initialState = UnitViewState
 ) {
 

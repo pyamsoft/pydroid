@@ -76,7 +76,7 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun handleLoadLicenses() {
-        viewModelScope.setState(stateChange = { copy(isLoading = true) }, andThen = {
+        setState(stateChange = { copy(isLoading = true) }, andThen = {
             licenseRunner.call(false)
             setState { copy(isLoading = false) }
         })
@@ -91,7 +91,7 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun navigationFailed(throwable: Throwable) {
-        viewModelScope.setState { copy(navigationError = throwable) }
+        setState { copy(navigationError = throwable) }
     }
 
     internal fun navigationSuccess() {
@@ -99,10 +99,10 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun handleClearLoadError() {
-        viewModelScope.setState { copy(loadError = null) }
+        setState { copy(loadError = null) }
     }
 
     internal fun handleHideNavigation() {
-        viewModelScope.setState { copy(navigationError = null) }
+        setState { copy(navigationError = null) }
     }
 }

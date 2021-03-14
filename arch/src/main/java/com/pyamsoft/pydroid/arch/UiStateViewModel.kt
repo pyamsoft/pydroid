@@ -20,6 +20,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -76,6 +77,20 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
         delegate.internalBindState(renderables)
     }
 
+
+    /**
+     * Modify the state from the previous
+     *
+     * Note that, like calling this.setState() in React, this operation does not happen immediately.
+     *
+     * NOTE: Be aware that this function is scoped to the viewModelScope. You may wish to use
+     * the CoroutineScope.setState(stateChange) function instead as it is explicitly scoped.
+     * If you decide to use this convenience function, be sure to not leak a shorter lived context.
+     */
+    protected fun setState(stateChange: suspend S.() -> S) {
+        viewModelScope.setState(stateChange)
+    }
+
     /**
      * Modify the state from the previous
      *
@@ -88,6 +103,27 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
         delegate.apply {
             scope.setState(stateChange)
         }
+    }
+
+    /**
+     * Modify the state from the previous
+     *
+     * Note that, like calling this.setState() in React, this operation does not happen immediately.
+     *
+     * The andThen callback will be fired after the state has changed and the view has been notified.
+     * If the stateChange payload does not cause a state update, the andThen call will not be fired.
+     *
+     * There is no threading guarantee for the andThen callback
+     *
+     * NOTE: Be aware that this function is scoped to the viewModelScope. You may wish to use
+     * the CoroutineScope.setState(stateChange, andThen) function instead as it is explicitly scoped.
+     * If you decide to use this convenience function, be sure to not leak a shorter lived context.
+     */
+    protected fun setState(
+        stateChange: suspend S.() -> S,
+        andThen: suspend CoroutineScope.(newState: S) -> Unit
+    ) {
+        viewModelScope.setState(stateChange, andThen)
     }
 
     /**

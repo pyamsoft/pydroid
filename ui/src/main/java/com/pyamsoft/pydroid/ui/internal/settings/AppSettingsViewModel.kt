@@ -90,10 +90,10 @@ internal class AppSettingsViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        viewModelScope.setState { copy(throwable = error) }
+        setState { copy(throwable = error) }
     }
 
     internal fun handleNavigationSuccess() {
-        viewModelScope.setState { copy(throwable = null) }
+        setState { copy(throwable = null) }
     }
 }

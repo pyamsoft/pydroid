@@ -55,15 +55,15 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     internal fun handleClearError() {
-        viewModelScope.setState { copy(throwable = null) }
+        setState { copy(throwable = null) }
     }
 
     internal fun handleVersionCheckComplete() {
-        viewModelScope.setState { copy(isLoading = false) }
+        setState { copy(isLoading = false) }
     }
 
     internal fun handleHideNavigation() {
-        viewModelScope.setState { copy(navigationError = null) }
+        setState { copy(navigationError = null) }
     }
 
     internal fun handleNavigationSuccess() {
@@ -71,7 +71,7 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        viewModelScope.setState { copy(navigationError = error) }
+        setState { copy(navigationError = error) }
     }
 
     internal inline fun handleCheckForUpdates(

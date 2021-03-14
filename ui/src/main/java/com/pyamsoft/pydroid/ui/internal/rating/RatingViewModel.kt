@@ -58,7 +58,7 @@ internal class RatingViewModel internal constructor(
     }
 
     internal fun handleClearNavigationError() {
-        viewModelScope.setState { copy(navigationError = null) }
+        setState { copy(navigationError = null) }
     }
 
     internal fun handleNavigationSuccess() {
@@ -66,7 +66,7 @@ internal class RatingViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        viewModelScope.setState { copy(navigationError = error) }
+        setState { copy(navigationError = error) }
     }
 
     internal data class LoadResult internal constructor(

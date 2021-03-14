@@ -37,14 +37,14 @@ internal class PrivacyViewModel internal constructor(
     }
 
     internal fun handleHideSnackbar() {
-        viewModelScope.setState { copy(throwable = null) }
+        setState { copy(throwable = null) }
     }
 
     fun handleNavigationFailed(error: Throwable) {
-        viewModelScope.setState { copy(throwable = error) }
+        setState { copy(throwable = error) }
     }
 
     fun handleNavigationSuccess() {
-        viewModelScope.setState { copy(throwable = null) }
+        setState { copy(throwable = null) }
     }
 }

@@ -79,15 +79,15 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
             savedInstanceState,
             this,
             requireNotNull(versionCheckView)
-        ) { scope, event ->
-            return@bindController when (event) {
-                is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError(scope)
-                is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete(scope)
-                is VersionCheckViewEvent.NavigationHidden -> viewModel.handleHideNavigation(scope)
+        ) {
+            return@bindController when (it) {
+                is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
+                is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
+                is VersionCheckViewEvent.NavigationHidden -> viewModel.handleHideNavigation()
             }
         }
 
-        viewModel.watchForDownloadCompletion(lifecycleScope) {
+        viewModel.handleWatchForDownloadCompletion(lifecycleScope) {
             VersionUpgradeDialog.show(this)
         }
 
@@ -144,8 +144,8 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
 
     private fun checkUpdates() {
         require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually." }
-        viewModel.checkForUpdates(lifecycleScope, false) { scope, isFallbackEnabled, launcher ->
-            showVersionUpgrade(scope, isFallbackEnabled, launcher)
+        viewModel.handleCheckForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
+            showVersionUpgrade(this, isFallbackEnabled, launcher)
         }
     }
 
@@ -165,8 +165,8 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
                 Timber.e(throwable, "Unable to launch in-app update flow")
                 if (isFallbackEnabled) {
                     MarketLinker.openAppPage(activity)
-                        .onSuccess { viewModel.navigationSuccess(scope) }
-                        .onFailure { viewModel.navigationFailed(scope, it) }
+                        .onSuccess { viewModel.handleNavigationSuccess() }
+                        .onFailure { viewModel.handleNavigationFailed(it) }
                 }
             }
         }
@@ -177,8 +177,8 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
      */
     public fun checkForUpdates() {
         require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
-        viewModel.checkForUpdates(lifecycleScope, false) { scope, isFallbackEnabled, launcher ->
-            showVersionUpgrade(scope, isFallbackEnabled, launcher)
+        viewModel.handleCheckForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
+            showVersionUpgrade(this, isFallbackEnabled, launcher)
         }
     }
 

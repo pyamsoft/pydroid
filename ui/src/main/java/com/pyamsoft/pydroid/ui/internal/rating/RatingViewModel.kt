@@ -16,8 +16,10 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +38,9 @@ internal class RatingViewModel internal constructor(
             val launcher = interactor.askForRating(force)
             return@highlander LoadResult(force, launcher)
         } catch (throwable: Throwable) {
-            Timber.e(throwable, "Unable to launch rating flow")
+            throwable.onActualError {
+                Timber.e(throwable, "Unable to launch rating flow")
+            }
             return@highlander null
         }
     }
@@ -53,16 +57,16 @@ internal class RatingViewModel internal constructor(
         }
     }
 
-    internal fun handleClearNavigationError(scope: CoroutineScope) {
-        scope.setState { copy(navigationError = null) }
+    internal fun handleClearNavigationError() {
+        viewModelScope.setState { copy(navigationError = null) }
     }
 
-    internal fun navigationSuccess(scope: CoroutineScope) {
-        handleClearNavigationError(scope)
+    internal fun handleNavigationSuccess() {
+        handleClearNavigationError()
     }
 
-    internal fun navigationFailed(scope: CoroutineScope, error: Throwable) {
-        scope.setState { copy(navigationError = error) }
+    internal fun handleNavigationFailed(error: Throwable) {
+        viewModelScope.setState { copy(navigationError = error) }
     }
 
     internal data class LoadResult internal constructor(

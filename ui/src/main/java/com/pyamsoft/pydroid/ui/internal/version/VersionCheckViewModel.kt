@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
@@ -53,42 +54,40 @@ internal class VersionCheckViewModel internal constructor(
         setState { copy(throwable = throwable) }
     }
 
-    internal fun handleClearError(scope: CoroutineScope) {
-        scope.setState { copy(throwable = null) }
+    internal fun handleClearError() {
+        viewModelScope.setState { copy(throwable = null) }
     }
 
-    internal fun handleVersionCheckComplete(scope: CoroutineScope) {
-        scope.setState { copy(isLoading = false) }
+    internal fun handleVersionCheckComplete() {
+        viewModelScope.setState { copy(isLoading = false) }
     }
 
-    internal fun handleHideNavigation(scope: CoroutineScope) {
-        scope.setState { copy(navigationError = null) }
+    internal fun handleHideNavigation() {
+        viewModelScope.setState { copy(navigationError = null) }
     }
 
-    internal inline fun checkForUpdates(
+    internal fun handleNavigationSuccess() {
+        handleHideNavigation()
+    }
+
+    internal fun handleNavigationFailed(error: Throwable) {
+        viewModelScope.setState { copy(navigationError = error) }
+    }
+
+    internal inline fun handleCheckForUpdates(
         scope: CoroutineScope,
         force: Boolean,
-        crossinline onLaunch: (scope: CoroutineScope, isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) -> Unit
+        crossinline onLaunch: CoroutineScope.(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) -> Unit
     ) {
         Timber.d("Begin check for updates")
-        scope.launch(context = Dispatchers.Default) {
-            setState(stateChange = { copy(isLoading = true) }, andThen = {
-                checkUpdateRunner.call(force)?.let { result ->
-                    onLaunch(this, result.isFallbackEnabled, result.launcher)
-                }
-            })
-        }
+        scope.setState(stateChange = { copy(isLoading = true) }, andThen = {
+            checkUpdateRunner.call(force)?.let { result ->
+                onLaunch(result.isFallbackEnabled, result.launcher)
+            }
+        })
     }
 
-    internal fun navigationSuccess(scope: CoroutineScope) {
-        handleHideNavigation(scope)
-    }
-
-    internal fun navigationFailed(scope: CoroutineScope, error: Throwable) {
-        scope.setState { copy(navigationError = error) }
-    }
-
-    internal inline fun watchForDownloadCompletion(
+    internal inline fun handleWatchForDownloadCompletion(
         scope: CoroutineScope,
         crossinline onComplete: () -> Unit
     ) {

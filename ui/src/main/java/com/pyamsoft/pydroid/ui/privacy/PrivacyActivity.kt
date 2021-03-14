@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyView
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewEvent
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
-import com.pyamsoft.pydroid.util.HyperlinkIntent
+import com.pyamsoft.pydroid.util.hyperlink
 
 /**
  * Activity which handles displaying a privacy policy via menu items
@@ -66,18 +66,19 @@ public abstract class PrivacyActivity : ActivityBase() {
         stateSaver = viewModel.bindController(
             savedInstanceState, this,
             requireNotNull(privacyView)
-        ) { scope, event ->
-            return@bindController when (event) {
-                is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar(scope)
+        ) {
+            return@bindController when (it) {
+                is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar()
             }
         }
+
+        viewModel.handlePrivacyNavigationEvent(lifecycleScope) { openExternalPolicyPage(it) }
     }
 
-    private fun openExternalPolicyPage(link: HyperlinkIntent) {
-        val scope = lifecycleScope
-        link.navigate()
-            .onSuccess { viewModel.navigationSuccess(scope) }
-            .onFailure { viewModel.navigationFailed(scope, it) }
+    private fun openExternalPolicyPage(url: String) {
+        url.hyperlink(this).navigate()
+            .onSuccess { viewModel.handleNavigationSuccess() }
+            .onFailure { viewModel.handleNavigationFailed(it) }
     }
 
     /**

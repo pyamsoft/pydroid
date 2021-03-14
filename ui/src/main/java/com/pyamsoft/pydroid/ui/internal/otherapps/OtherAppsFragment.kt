@@ -25,7 +25,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -64,15 +64,23 @@ internal class OtherAppsFragment : Fragment() {
             .create(binding.layoutFrame, viewLifecycleOwner)
             .inject(this)
 
-        stateSaver = createComponent(
-            savedInstanceState, viewLifecycleOwner,
-            viewModel,
+        stateSaver = viewModel.bindController(
+            savedInstanceState,
+            viewLifecycleOwner,
             requireNotNull(listView),
             requireNotNull(errorView),
         ) {
-            return@createComponent when (it) {
-                is OtherAppsControllerEvent.ExternalUrl -> navigateToExternalUrl(it.url)
-                is OtherAppsControllerEvent.FallbackEvent -> openDeveloperPage()
+            return@bindController when (it) {
+                is OtherAppsViewEvent.ErrorEvent.HideAppsError -> viewModel.handleHideError(this) {
+                    openDeveloperPage()
+                }
+                is OtherAppsViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
+                is OtherAppsViewEvent.ListEvent.OpenStore -> viewModel.handleOpenStoreUrl(it.index) { url ->
+                    navigateToExternalUrl(url)
+                }
+                is OtherAppsViewEvent.ListEvent.ViewSource -> viewModel.handleOpenSourceCodeUrl(it.index) { url ->
+                    navigateToExternalUrl(url)
+                }
             }
         }
     }
@@ -91,8 +99,8 @@ internal class OtherAppsFragment : Fragment() {
     }
 
     private fun Result<Unit>.handleNavigation() {
-        this.onSuccess { viewModel.navigationSuccess() }
-            .onFailure { viewModel.navigationFailed(it) }
+        this.onSuccess { viewModel.handleNavigationSuccess() }
+            .onFailure { viewModel.handleNavigationFailed(it) }
     }
 
     private fun openDeveloperPage() {

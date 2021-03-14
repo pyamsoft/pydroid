@@ -21,8 +21,10 @@ import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
+import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -55,48 +57,43 @@ internal class AppSettingsViewModel internal constructor(
         }
     }
 
-    override fun handleViewEvent(event: AppSettingsViewEvent) = when (event) {
-        is AppSettingsViewEvent.MoreApps -> seeMoreApps()
-        is AppSettingsViewEvent.RateApp -> publish(AppSettingsControllerEvent.NavigateRateApp)
-        is AppSettingsViewEvent.ViewLicense -> publish(AppSettingsControllerEvent.ShowLicense)
-        is AppSettingsViewEvent.CheckUpgrade -> publish(AppSettingsControllerEvent.CheckUpgrade)
-        is AppSettingsViewEvent.ClearData -> publish(AppSettingsControllerEvent.AttemptClearData)
-        is AppSettingsViewEvent.ShowUpgrade -> publish(AppSettingsControllerEvent.OpenShowUpgrade)
-        is AppSettingsViewEvent.ToggleDarkTheme -> changeDarkMode(event.mode)
-        is AppSettingsViewEvent.Hyperlink -> publish(AppSettingsControllerEvent.Navigate(event.hyperlinkIntent))
-        is AppSettingsViewEvent.ShowDonate -> publish(AppSettingsControllerEvent.OpenDonation)
-    }
-
-    private fun seeMoreApps() {
+    internal inline fun handleSeeMoreApps(
+        onOpenDeveloperPage: () -> Unit,
+        onOpenOtherAppsPage: (List<OtherApp>) -> Unit
+    ) {
         state.otherApps.let { others ->
             if (others.isEmpty()) {
-                publish(AppSettingsControllerEvent.NavigateMoreApps)
+                onOpenDeveloperPage()
             } else {
-                publish(AppSettingsControllerEvent.OpenOtherAppsPage(others))
+                onOpenOtherAppsPage(others)
             }
         }
     }
 
-    internal fun syncDarkThemeState(activity: Activity) {
-        viewModelScope.setState {
+    internal fun handleSyncDarkThemeState(scope: CoroutineScope, activity: Activity) {
+        scope.setState {
             copy(isDarkTheme = AppSettingsViewState.DarkTheme(theming.isDarkTheme(activity)))
         }
     }
 
-    private fun changeDarkMode(mode: String) {
+    internal inline fun handleChangeDarkMode(
+        scope: CoroutineScope,
+        mode: String,
+        crossinline onDarkModeChanged: (Theming.Mode) -> Unit
+    ) {
         val newMode = mode.toMode()
 
-        viewModelScope.launch(context = Dispatchers.Main) {
+        scope.launch(context = Dispatchers.Main) {
             theming.setDarkTheme(newMode)
-            publish(AppSettingsControllerEvent.ChangeDarkTheme(newMode))
+            onDarkModeChanged(newMode)
         }
     }
 
-    internal fun navigationFailed(error: Throwable) {
+    internal fun handleNavigationFailed(error: Throwable) {
         viewModelScope.setState { copy(throwable = error) }
     }
 
-    internal fun navigationSuccess() {
+    internal fun handleNavigationSuccess() {
         viewModelScope.setState { copy(throwable = null) }
     }
 }

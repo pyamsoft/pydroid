@@ -17,17 +17,9 @@
 package com.pyamsoft.pydroid.ui.internal.dialog
 
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogViewEvent.Close
 
 internal class ThemeDialogViewModel internal constructor(
     initialName: String,
 ) : UiViewModel<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogControllerEvent>(
-    initialState = ThemeDialogViewState(
-        name = initialName
-    )
-) {
-
-    override fun handleViewEvent(event: ThemeDialogViewEvent) = when (event) {
-        is Close -> publish(ThemeDialogControllerEvent.Close)
-    }
-}
+    initialState = ThemeDialogViewState(name = initialName)
+)

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.onActualError
@@ -47,14 +48,14 @@ internal class AboutViewModel internal constructor(
         }
     }
 
-    internal inline fun openLibrary(
+    internal inline fun handleOpenLibrary(
         index: Int,
         crossinline onOpen: (String) -> Unit
     ) {
         return openUrl(index, resolveUrl = { it.libraryUrl }, onOpen)
     }
 
-    internal inline fun openLicense(
+    internal inline fun handleOpenLicense(
         index: Int,
         crossinline onOpen: (String) -> Unit
     ) {
@@ -74,8 +75,8 @@ internal class AboutViewModel internal constructor(
         }
     }
 
-    internal fun loadLicenses(scope: CoroutineScope) {
-        scope.setState(stateChange = { copy(isLoading = true) }, andThen = {
+    internal fun handleLoadLicenses() {
+        viewModelScope.setState(stateChange = { copy(isLoading = true) }, andThen = {
             licenseRunner.call(false)
             setState { copy(isLoading = false) }
         })
@@ -89,19 +90,19 @@ internal class AboutViewModel internal constructor(
         setState { copy(loadError = throwable) }
     }
 
-    fun navigationFailed(scope: CoroutineScope, throwable: Throwable) {
-        scope.setState { copy(navigationError = throwable) }
+    internal fun navigationFailed(throwable: Throwable) {
+        viewModelScope.setState { copy(navigationError = throwable) }
     }
 
-    fun navigationSuccess(scope: CoroutineScope) {
-        handleHideNavigation(scope)
+    internal fun navigationSuccess() {
+        handleHideNavigation()
     }
 
-    internal fun handleClearLoadError(scope: CoroutineScope) {
-        scope.setState { copy(loadError = null) }
+    internal fun handleClearLoadError() {
+        viewModelScope.setState { copy(loadError = null) }
     }
 
-    internal fun handleHideNavigation(scope: CoroutineScope) {
-        scope.setState { copy(navigationError = null) }
+    internal fun handleHideNavigation() {
+        viewModelScope.setState { copy(navigationError = null) }
     }
 }

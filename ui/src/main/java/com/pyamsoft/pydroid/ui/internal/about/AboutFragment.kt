@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.ui.Injector
@@ -67,22 +66,20 @@ internal class AboutFragment : Fragment() {
             viewLifecycleOwner,
             requireNotNull(listView),
             requireNotNull(errorView)
-        ) { scope, event ->
-            return@bindController when (event) {
-                is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError(scope)
-                is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation(
-                    scope
-                )
-                is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.openLibrary(event.index) {
-                    openUrl(it)
+        ) {
+            return@bindController when (it) {
+                is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError()
+                is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
+                is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.handleOpenLibrary(it.index) { url ->
+                    openUrl(url)
                 }
-                is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.openLicense(event.index) { url ->
+                is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.handleOpenLicense(it.index) { url ->
                     openUrl(url)
                 }
             }
         }
 
-        viewModel.loadLicenses(viewLifecycleOwner.lifecycleScope)
+        viewModel.handleLoadLicenses()
     }
 
     override fun onDestroyView() {
@@ -99,10 +96,9 @@ internal class AboutFragment : Fragment() {
     }
 
     private fun openUrl(url: String) {
-        val scope = viewLifecycleOwner.lifecycleScope
         url.hyperlink(requireActivity()).navigate()
-            .onSuccess { viewModel.navigationSuccess(scope) }
-            .onFailure { viewModel.navigationFailed(scope, it) }
+            .onSuccess { viewModel.navigationSuccess() }
+            .onFailure { viewModel.navigationFailed(it) }
     }
 
     companion object {

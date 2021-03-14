@@ -20,9 +20,8 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.Injector
@@ -31,6 +30,7 @@ import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
 import com.pyamsoft.pydroid.ui.util.show
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -65,29 +65,34 @@ internal class BillingDialog : IconDialog() {
             )
             .inject(this)
 
-        stateSaver = createComponent(
+        stateSaver = viewModel.bindController(
             savedInstanceState,
             viewLifecycleOwner,
-            viewModel,
             requireNotNull(iconView),
             requireNotNull(nameView),
             requireNotNull(listView),
             requireNotNull(closeView),
         ) {
-            return@createComponent when (it) {
-                is BillingDialogControllerEvent.Close -> dismiss()
-                is BillingDialogControllerEvent.LaunchPurchase -> launchPurchase(it.sku)
+            return@bindController when (it) {
+                is BillingDialogViewEvent.Close -> dismiss()
+                is BillingDialogViewEvent.ClearError -> viewModel.handleClearError()
+                is BillingDialogViewEvent.Purchase -> viewModel.handlePurchase(
+                    this,
+                    it.index
+                ) { sku ->
+                    launchPurchase(sku)
+                }
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh()
+        viewModel.handleRefresh()
     }
 
-    private fun launchPurchase(sku: BillingSku) {
-        viewLifecycleOwner.lifecycleScope.launch(context = Dispatchers.Main) {
+    private fun CoroutineScope.launchPurchase(sku: BillingSku) {
+        launch(context = Dispatchers.Main) {
             Timber.d("Start purchase flow for $sku")
             requireNotNull(purchaseClient).purchase(requireActivity(), sku)
         }

@@ -68,9 +68,9 @@ public abstract class RatingActivity : VersionCheckActivity() {
             savedInstanceState,
             this,
             requireNotNull(ratingView)
-        ) { scope, event ->
-            return@bindController when (event) {
-                is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError(scope)
+        ) {
+            return@bindController when (it) {
+                is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
             }
         }
 
@@ -110,8 +110,8 @@ public abstract class RatingActivity : VersionCheckActivity() {
                     Timber.e(throwable, "Unable to launch in-app rating")
                     if (isFallbackEnabled) {
                         MarketLinker.openAppPage(activity)
-                            .onSuccess { viewModel.navigationSuccess(this) }
-                            .onFailure { viewModel.navigationFailed(this, it) }
+                            .onSuccess { viewModel.handleNavigationSuccess() }
+                            .onFailure { viewModel.handleNavigationFailed(it) }
                     }
                 }
             }

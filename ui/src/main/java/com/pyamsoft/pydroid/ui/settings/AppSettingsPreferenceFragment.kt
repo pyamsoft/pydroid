@@ -24,18 +24,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.bindController
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
+import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
-import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
+import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
 import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigDialog
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
@@ -121,34 +122,49 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
             ) { listView }
             .inject(this)
 
-        settingsStateSaver = createComponent(
-            savedInstanceState, viewLifecycleOwner,
-            settingsViewModel,
+        settingsStateSaver = settingsViewModel.bindController(
+            savedInstanceState,
+            viewLifecycleOwner,
             requireNotNull(settingsView)
         ) {
-            return@createComponent when (it) {
-                is AppSettingsControllerEvent.NavigateMoreApps -> viewMorePyamsoftApps()
-                is AppSettingsControllerEvent.Navigate -> navigateHyperlink(it.hyperlinkIntent)
-                is AppSettingsControllerEvent.NavigateRateApp -> openPlayStore()
-                is AppSettingsControllerEvent.ShowLicense -> openLicensesPage()
-                is AppSettingsControllerEvent.AttemptClearData -> openClearDataDialog()
-                is AppSettingsControllerEvent.OpenShowUpgrade -> changeLogViewModel.show(true)
-                is AppSettingsControllerEvent.ChangeDarkTheme -> darkThemeChanged(it.newMode)
-                is AppSettingsControllerEvent.OpenOtherAppsPage -> openOtherAppsPage(it.apps)
-                is AppSettingsControllerEvent.OpenDonation -> openDonationDialog()
-                is AppSettingsControllerEvent.CheckUpgrade -> versionViewModel.checkForUpdates(
-                    viewLifecycleOwner.lifecycleScope,
+            return@bindController when (it) {
+                is AppSettingsViewEvent.CheckUpgrade -> versionViewModel.handleCheckForUpdates(
+                    this,
                     true
-                ) { scope, isFallbackEnabled, launcher ->
+                ) { isFallbackEnabled, launcher ->
                     val act = activity
                     if (act is VersionCheckActivity) {
-                        act.showVersionUpgrade(scope, isFallbackEnabled, launcher)
+                        act.showVersionUpgrade(this, isFallbackEnabled, launcher)
                     }
                 }
+                is AppSettingsViewEvent.ClearData -> openClearDataDialog()
+                is AppSettingsViewEvent.Hyperlink -> navigateHyperlink(it.hyperlinkIntent)
+                is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps(
+                    onOpenDeveloperPage = { openDeveloperPage() },
+                    onOpenOtherAppsPage = { apps -> openOtherAppsPage(apps) }
+                )
+                is AppSettingsViewEvent.RateApp -> openPlayStore()
+                is AppSettingsViewEvent.ShowDonate -> openDonationDialog()
+                is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(this, true) {
+                    val act = activity
+                    if (act is ChangeLogActivity) {
+                        act.handleOpenChangeLog()
+                    }
+                }
+                is AppSettingsViewEvent.ToggleDarkTheme -> settingsViewModel.handleChangeDarkMode(
+                    this,
+                    it.mode
+                ) { newMode ->
+                    darkThemeChanged(newMode)
+                }
+                is AppSettingsViewEvent.ViewLicense -> openLicensesPage()
             }
         }
 
-        settingsViewModel.syncDarkThemeState(requireActivity())
+        settingsViewModel.handleSyncDarkThemeState(
+            viewLifecycleOwner.lifecycleScope,
+            requireActivity()
+        )
     }
 
     private fun openDonationDialog() {
@@ -183,11 +199,11 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
 
     private fun Result<Unit>.handleNavigation() {
         this
-            .onSuccess { settingsViewModel.navigationSuccess() }
-            .onFailure { settingsViewModel.navigationFailed(it) }
+            .onSuccess { settingsViewModel.handleNavigationSuccess() }
+            .onFailure { settingsViewModel.handleNavigationFailed(it) }
     }
 
-    private fun viewMorePyamsoftApps() {
+    private fun openDeveloperPage() {
         onViewMorePyamsoftAppsClicked(true)
         MarketLinker.linkToDeveloperPage(requireContext()).handleNavigation()
     }

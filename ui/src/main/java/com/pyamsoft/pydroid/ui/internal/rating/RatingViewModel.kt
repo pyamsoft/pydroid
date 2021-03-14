@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.rating
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
@@ -58,7 +59,7 @@ internal class RatingViewModel internal constructor(
     }
 
     internal fun handleClearNavigationError() {
-        setState { copy(navigationError = null) }
+        viewModelScope.setState { copy(navigationError = null) }
     }
 
     internal fun handleNavigationSuccess() {
@@ -66,7 +67,7 @@ internal class RatingViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        setState { copy(navigationError = error) }
+        viewModelScope.setState { copy(navigationError = error) }
     }
 
     internal data class LoadResult internal constructor(

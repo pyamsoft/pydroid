@@ -75,7 +75,7 @@ internal class BillingViewModel internal constructor(
     }
 
     internal fun handleClearError() {
-        setState { copy(error = null) }
+        viewModelScope.setState { copy(error = null) }
     }
 
     internal fun handleRefresh() {

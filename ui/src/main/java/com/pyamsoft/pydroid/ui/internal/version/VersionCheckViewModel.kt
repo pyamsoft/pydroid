@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.version
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
@@ -55,15 +56,15 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     internal fun handleClearError() {
-        setState { copy(throwable = null) }
+        viewModelScope.setState { copy(throwable = null) }
     }
 
     internal fun handleVersionCheckComplete() {
-        setState { copy(isLoading = false) }
+        viewModelScope.setState { copy(isLoading = false) }
     }
 
     internal fun handleHideNavigation() {
-        setState { copy(navigationError = null) }
+        viewModelScope.setState { copy(navigationError = null) }
     }
 
     internal fun handleNavigationSuccess() {
@@ -71,7 +72,7 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        setState { copy(navigationError = error) }
+        viewModelScope.setState { copy(navigationError = error) }
     }
 
     internal inline fun handleCheckForUpdates(

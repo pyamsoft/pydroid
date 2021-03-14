@@ -88,7 +88,7 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(throwable: Throwable) {
-        setState { copy(navigationError = throwable) }
+        viewModelScope.setState { copy(navigationError = throwable) }
     }
 
     fun handleNavigationSuccess() {
@@ -96,6 +96,6 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     internal fun handleHideNavigation() {
-        setState { copy(navigationError = null) }
+        viewModelScope.setState { copy(navigationError = null) }
     }
 }

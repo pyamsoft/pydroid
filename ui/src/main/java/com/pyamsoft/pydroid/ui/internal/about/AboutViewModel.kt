@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.about
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
@@ -76,7 +77,7 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun handleLoadLicenses() {
-        setState(stateChange = { copy(isLoading = true) }, andThen = {
+        viewModelScope.setState(stateChange = { copy(isLoading = true) }, andThen = {
             licenseRunner.call(false)
             setState { copy(isLoading = false) }
         })
@@ -91,7 +92,7 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun navigationFailed(throwable: Throwable) {
-        setState { copy(navigationError = throwable) }
+        viewModelScope.setState { copy(navigationError = throwable) }
     }
 
     internal fun navigationSuccess() {
@@ -99,10 +100,10 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun handleClearLoadError() {
-        setState { copy(loadError = null) }
+        viewModelScope.setState { copy(loadError = null) }
     }
 
     internal fun handleHideNavigation() {
-        setState { copy(navigationError = null) }
+        viewModelScope.setState { copy(navigationError = null) }
     }
 }

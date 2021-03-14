@@ -16,7 +16,6 @@
 
 package com.pyamsoft.pydroid.ui.version
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
@@ -124,22 +123,6 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
         versionFactory = null
         versionCheckView = null
         stateSaver = null
-    }
-
-    /**
-     * On activity result
-     */
-    @CallSuper
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_APP_UPDATE) {
-            if (resultCode == RESULT_OK) {
-                Timber.d("Update flow succeeded!")
-            } else {
-                Timber.d("User has cancelled or denied the update")
-            }
-        }
     }
 
     private fun checkUpdates() {

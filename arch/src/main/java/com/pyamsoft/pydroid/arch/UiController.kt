@@ -23,6 +23,9 @@ import androidx.annotation.CheckResult
  */
 public interface UiController<C : UiControllerEvent> {
 
+    /**
+     * Respond to a published UiControllerEvent
+     */
     public fun onControllerEvent(event: C)
 }
 

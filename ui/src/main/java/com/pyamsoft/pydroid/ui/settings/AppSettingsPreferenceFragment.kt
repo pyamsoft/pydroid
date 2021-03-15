@@ -24,17 +24,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceFragmentCompat
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
-import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 import com.pyamsoft.pydroid.ui.internal.about.AboutDialog
 import com.pyamsoft.pydroid.ui.internal.billing.BillingDialog
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.otherapps.OtherAppsDialog
+import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsControllerEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsView
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewEvent
 import com.pyamsoft.pydroid.ui.internal.settings.AppSettingsViewModel
@@ -46,7 +47,6 @@ import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.ui.util.show
-import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
@@ -122,41 +122,28 @@ public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat()
             ) { listView }
             .inject(this)
 
-        settingsStateSaver = settingsViewModel.bindController(
+        settingsStateSaver = createComponent(
             savedInstanceState,
             viewLifecycleOwner,
+            settingsViewModel,
+            controller = newUiController {
+                return@newUiController when (it) {
+                    is AppSettingsControllerEvent.DarkModeChanged -> darkThemeChanged(it.newMode)
+                    is AppSettingsControllerEvent.NavigateDeveloperPage -> openDeveloperPage()
+                    is AppSettingsControllerEvent.OpenOtherAppsScreen -> openOtherAppsPage(it.others)
+                }
+            },
             requireNotNull(settingsView)
         ) {
-            return@bindController when (it) {
-                is AppSettingsViewEvent.CheckUpgrade -> versionViewModel.handleCheckForUpdates(
-                    this,
-                    true
-                ) { isFallbackEnabled, launcher ->
-                    val act = activity
-                    if (act is VersionCheckActivity) {
-                        act.showVersionUpgrade(this, isFallbackEnabled, launcher)
-                    }
-                }
+            return@createComponent when (it) {
+                is AppSettingsViewEvent.CheckUpgrade -> versionViewModel.handleCheckForUpdates(true)
                 is AppSettingsViewEvent.ClearData -> openClearDataDialog()
                 is AppSettingsViewEvent.Hyperlink -> navigateHyperlink(it.hyperlinkIntent)
-                is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps(
-                    onOpenDeveloperPage = { openDeveloperPage() },
-                    onOpenOtherAppsPage = { apps -> openOtherAppsPage(apps) }
-                )
+                is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps()
                 is AppSettingsViewEvent.RateApp -> openPlayStore()
                 is AppSettingsViewEvent.ShowDonate -> openDonationDialog()
-                is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(this, true) {
-                    val act = activity
-                    if (act is ChangeLogActivity) {
-                        act.handleOpenChangeLog()
-                    }
-                }
-                is AppSettingsViewEvent.ToggleDarkTheme -> settingsViewModel.handleChangeDarkMode(
-                    this,
-                    it.mode
-                ) { newMode ->
-                    darkThemeChanged(newMode)
-                }
+                is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(true)
+                is AppSettingsViewEvent.ToggleDarkTheme -> settingsViewModel.handleChangeDarkMode(it.mode)
                 is AppSettingsViewEvent.ViewLicense -> openLicensesPage()
             }
         }

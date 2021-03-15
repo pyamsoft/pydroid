@@ -18,13 +18,10 @@ package com.pyamsoft.pydroid.ui.internal.billing
 
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.billing.BillingInteractor
-import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -33,8 +30,8 @@ internal class BillingViewModel internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
     provider: AppProvider,
-) : UiViewModel<BillingDialogViewState, BillingDialogViewEvent, UnitControllerEvent>(
-    initialState = BillingDialogViewState(
+) : UiViewModel<BillingViewState, BillingControllerEvent>(
+    initialState = BillingViewState(
         skuList = emptyList(),
         connected = BillingState.LOADING,
         error = null,
@@ -75,7 +72,7 @@ internal class BillingViewModel internal constructor(
     }
 
     internal fun handleClearError() {
-        viewModelScope.setState { copy(error = null) }
+        setState { copy(error = null) }
     }
 
     internal fun handleRefresh() {
@@ -84,23 +81,21 @@ internal class BillingViewModel internal constructor(
         }
     }
 
-    internal inline fun handlePurchase(
-        scope: CoroutineScope,
+    internal fun handlePurchase(
         index: Int,
-        crossinline onPurchased: (BillingSku) -> Unit
     ) {
         val skuList = state.skuList
         if (skuList.isEmpty() || skuList.size <= index) {
             Timber.e("SKU index out of bounds: $index ${skuList.size}")
-            scope.setState {
+            setState {
                 copy(error = IllegalStateException("Unable to purchase in-app item"))
             }
             return
         }
 
-        scope.setState({ copy(error = null) }, andThen = {
+        setState({ copy(error = null) }, andThen = {
             val sku = skuList[index]
-            onPurchased(sku)
+            publish(BillingControllerEvent.Purchase(sku))
         })
     }
 }

@@ -16,9 +16,11 @@
 
 package com.pyamsoft.pydroid.ui.internal.settings
 
+import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
+import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
 internal data class AppSettingsViewState internal constructor(
@@ -52,5 +54,18 @@ internal sealed class AppSettingsViewEvent : UiViewEvent {
     object ShowDonate : AppSettingsViewEvent()
 
     data class ToggleDarkTheme(val mode: String) : AppSettingsViewEvent()
+}
+
+internal sealed class AppSettingsControllerEvent : UiControllerEvent {
+
+    object NavigateDeveloperPage : AppSettingsControllerEvent()
+
+    data class OpenOtherAppsScreen internal constructor(
+        val others: List<OtherApp>
+    ) : AppSettingsControllerEvent()
+
+    data class DarkModeChanged internal constructor(
+        val newMode: Theming.Mode
+    ) : AppSettingsControllerEvent()
 }
 

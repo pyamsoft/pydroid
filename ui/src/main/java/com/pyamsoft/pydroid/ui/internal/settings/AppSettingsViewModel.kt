@@ -20,9 +20,7 @@ import android.app.Activity
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
-import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.toMode
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +30,7 @@ import kotlinx.coroutines.launch
 internal class AppSettingsViewModel internal constructor(
     private val theming: Theming,
     interactor: OtherAppsInteractor,
-) : UiViewModel<AppSettingsViewState, AppSettingsViewEvent, UnitControllerEvent>(
+) : UiViewModel<AppSettingsViewState, AppSettingsControllerEvent>(
     initialState = AppSettingsViewState(
         applicationName = "",
         isDarkTheme = null,
@@ -58,15 +56,12 @@ internal class AppSettingsViewModel internal constructor(
         }
     }
 
-    internal inline fun handleSeeMoreApps(
-        onOpenDeveloperPage: () -> Unit,
-        onOpenOtherAppsPage: (List<OtherApp>) -> Unit
-    ) {
+    internal fun handleSeeMoreApps() {
         state.otherApps.let { others ->
             if (others.isEmpty()) {
-                onOpenDeveloperPage()
+                publish(AppSettingsControllerEvent.NavigateDeveloperPage)
             } else {
-                onOpenOtherAppsPage(others)
+                publish(AppSettingsControllerEvent.OpenOtherAppsScreen(others))
             }
         }
     }
@@ -77,24 +72,20 @@ internal class AppSettingsViewModel internal constructor(
         }
     }
 
-    internal inline fun handleChangeDarkMode(
-        scope: CoroutineScope,
-        mode: String,
-        crossinline onDarkModeChanged: (Theming.Mode) -> Unit
-    ) {
+    internal fun handleChangeDarkMode(mode: String) {
         val newMode = mode.toMode()
 
-        scope.launch(context = Dispatchers.Main) {
+        viewModelScope.launch(context = Dispatchers.Main) {
             theming.setDarkTheme(newMode)
-            onDarkModeChanged(newMode)
+            publish(AppSettingsControllerEvent.DarkModeChanged(newMode))
         }
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        viewModelScope.setState { copy(throwable = error) }
+        setState { copy(throwable = error) }
     }
 
     internal fun handleNavigationSuccess() {
-        viewModelScope.setState { copy(throwable = null) }
+        setState { copy(throwable = null) }
     }
 }

@@ -27,7 +27,6 @@ import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateReader
 import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateWriter
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 
 /**
  * Component internals
@@ -48,47 +47,17 @@ internal object Internals {
     @JvmStatic
     @CheckResult
     @PublishedApi
-    internal inline fun <S : UiViewState, V : UiViewEvent> performCreateComponent(
+    internal inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> performCreateComponent(
         savedInstanceState: Bundle?,
         owner: LifecycleOwner,
+        controller: UiController<C>,
         views: Array<out UiView<S, out V>>,
-        bindToComponent: (UiSavedStateReader, Array<out UiView<S, out V>>) -> Job,
+        onCreateComponent: CoroutineScope.(UiController<C>, UiSavedStateReader, Array<out UiView<S, out V>>) -> Unit,
     ): StateSaver {
         val reader: UiSavedStateReader = savedInstanceState.toReader()
 
         // Bind view event listeners, inflate and attach
-        val viewModelBinding = bindToComponent(reader, views)
-
-        // Teardown on destroy
-        owner.doOnDestroy {
-            viewModelBinding.cancel()
-            views.forEach { it.teardown() }
-        }
-
-        // State saver
-        return StateSaver { outState ->
-            val writer: UiSavedStateWriter = BundleUiSavedStateWriter(outState)
-            views.forEach { it.saveState(writer) }
-        }
-    }
-
-
-    /**
-     * Plumbing for creating a pydroid-arch Component
-     */
-    @JvmStatic
-    @CheckResult
-    @PublishedApi
-    internal inline fun <S : UiViewState, V : UiViewEvent> performBindController(
-        savedInstanceState: Bundle?,
-        owner: LifecycleOwner,
-        views: Array<out UiView<S, out V>>,
-        bindToController: (CoroutineScope, UiSavedStateReader, Array<out UiView<S, out V>>) -> Unit,
-    ): StateSaver {
-        val reader: UiSavedStateReader = savedInstanceState.toReader()
-
-        // Bind view event listeners, inflate and attach
-        bindToController(owner.lifecycleScope, reader, views)
+        owner.lifecycleScope.onCreateComponent(controller, reader, views)
 
         // Teardown on destroy
         owner.doOnDestroy {
@@ -101,6 +70,7 @@ internal object Internals {
             views.forEach { it.saveState(writer) }
         }
     }
+
 
     /**
      * Bind view events to the UiView list, and bind the nested UiViews if they exist
@@ -126,35 +96,22 @@ internal object Internals {
  * Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller
  */
 @CheckResult
-@Deprecated("See UiViewModel.bindController()")
 public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> createComponent(
     savedInstanceState: Bundle?,
     owner: LifecycleOwner,
-    viewModel: UiViewModel<S, V, C>,
+    viewModel: UiViewModel<S, C>,
+    controller: UiController<C>,
     vararg views: UiView<S, out V>,
-    crossinline onControllerEvent: (event: C) -> Unit
+    crossinline onViewEvent: suspend CoroutineScope.(event: V) -> Unit
 ): StateSaver {
-    return Internals.performCreateComponent(savedInstanceState, owner, views) { reader, uiViews ->
-        viewModel.bindToComponent(reader, uiViews) { onControllerEvent(it) }
-    }
-}
-
-/**
- * Create a pydroid-arch Component using a UiViewModel, one or more UiViews, and a Controller
- */
-@CheckResult
-public inline fun <S : UiViewState, V : UiViewEvent> UiViewModel<S, V, *>.bindController(
-    savedInstanceState: Bundle?,
-    owner: LifecycleOwner,
-    vararg views: UiView<S, out V>,
-    crossinline onEvent: CoroutineScope.(event: V) -> Unit
-): StateSaver {
-    return Internals.performBindController(
+    return Internals.performCreateComponent(
         savedInstanceState,
         owner,
+        controller,
         views
-    ) { scope, reader, uiViews ->
-        this.bindViews(scope, reader, *uiViews) { scope.onEvent(it) }
+    ) { uiController, reader, uiViews ->
+        viewModel.bindController(this, uiController)
+        viewModel.bindViews(this, reader, *uiViews) { onViewEvent(it) }
     }
 }
 

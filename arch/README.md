@@ -65,9 +65,10 @@ a `UiViewModel`, one or more `UiViews`, and a `UiController`.
 
 The `UiViewModel` is the `UiStateViewModel` class, extended with some small extras.
 The UiViewModel is the middleman between a View and a Controller - UiView events are published to
-the Controller, which can then decide how to handle the event. In many cases, it will delegate the
-event to the ViewModel, though in the case of single events like Navigation, the Controller will
-handle it.
+the UiController, which can then decide how to handle the event. In many cases, it will delegate the
+event to the ViewModel, though in the case of single events like Navigation, the UiController will
+handle it. The UiViewModel is also able to publish Controller events back to the UiController, which
+are generally things like navigation and one-off operations instead of a persistent view state.
 
 The `UiView` class is NOT Android's representation of a View. The `UiView` is a `Renderable` and can
 be one or more views in a logical grouping, such as a RecyclerView and FloatingActionButton, or
@@ -75,7 +76,7 @@ TabLayout and ViewPager. The `UiView` provides a `publish(UiViewEvent) -> Unit` 
 pass events to the `UiViewModel`.
 
 These three pieces come together to make a component via
-`UiViewModel.bindController(Bundle?, LifecycleOwner, vararg UiViewState, (UiViewEvent) -> Unit) -> StateSaver`.
+`createComponent(Bundle?, LifecycleOwner, UiViewModel, UiController, vararg UiViewState, (UiViewEvent) -> Unit) -> StateSaver`.
 It takes a saved instance state bundle, a lifecycle owner, and then your component members.
 What it returns for use is a `StateSaver` class, which has one function called `saveState(Bundle)`
 which takes a `Bundle` and will save any requested state bits to it.

@@ -21,10 +21,10 @@ import com.pyamsoft.pydroid.ui.internal.app.AppClose
 
 internal class BillingClose internal constructor(
     parent: ViewGroup
-) : AppClose<BillingDialogViewState, BillingDialogViewEvent>(parent) {
+) : AppClose<BillingViewState, BillingViewEvent>(parent) {
 
     override fun publishClose() {
-        publish(BillingDialogViewEvent.Close)
+        publish(BillingViewEvent.Close)
     }
 
 }

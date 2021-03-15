@@ -23,4 +23,4 @@ import com.pyamsoft.pydroid.ui.internal.app.AppIcon
 internal class BillingIcon internal constructor(
     imageLoader: ImageLoader,
     icon: ImageView
-) : AppIcon<BillingDialogViewState>(imageLoader, icon)
+) : AppIcon<BillingViewState>(imageLoader, icon)

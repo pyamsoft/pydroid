@@ -21,7 +21,8 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
@@ -57,15 +58,17 @@ internal class ChangeLogDialog : IconDialog() {
             )
             .inject(this)
 
-        stateSaver = viewModel.bindController(
+        stateSaver = createComponent(
             savedInstanceState,
             viewLifecycleOwner,
+            viewModel,
+            controller = newUiController { },
             requireNotNull(iconView),
             requireNotNull(nameView),
             requireNotNull(listView),
             requireNotNull(closeView)
         ) {
-            return@bindController when (it) {
+            return@createComponent when (it) {
                 is ChangeLogDialogViewEvent.Close -> dismiss()
             }
         }

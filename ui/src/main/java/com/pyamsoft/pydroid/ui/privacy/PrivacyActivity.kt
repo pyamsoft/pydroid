@@ -20,13 +20,14 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
+import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyControllerEvent
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyView
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewEvent
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
@@ -63,16 +64,21 @@ public abstract class PrivacyActivity : ActivityBase() {
             .create(this) { snackbarRoot }
             .inject(this)
 
-        stateSaver = viewModel.bindController(
-            savedInstanceState, this,
+        stateSaver = createComponent(
+            savedInstanceState,
+            this,
+            viewModel,
+            controller = newUiController {
+                return@newUiController when (it) {
+                    is PrivacyControllerEvent.OpenUrl -> openExternalPolicyPage(it.url)
+                }
+            },
             requireNotNull(privacyView)
         ) {
-            return@bindController when (it) {
+            return@createComponent when (it) {
                 is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar()
             }
         }
-
-        viewModel.handlePrivacyNavigationEvent(lifecycleScope) { openExternalPolicyPage(it) }
     }
 
     private fun openExternalPolicyPage(url: String) {

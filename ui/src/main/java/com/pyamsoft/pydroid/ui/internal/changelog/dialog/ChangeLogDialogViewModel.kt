@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 internal class ChangeLogDialogViewModel internal constructor(
     interactor: ChangeLogInteractor,
     provider: ChangeLogProvider
-) : UiViewModel<ChangeLogDialogViewState, ChangeLogDialogViewEvent, UnitControllerEvent>(
+) : UiViewModel<ChangeLogDialogViewState, UnitControllerEvent>(
     initialState = ChangeLogDialogViewState(
         icon = 0,
         name = "",

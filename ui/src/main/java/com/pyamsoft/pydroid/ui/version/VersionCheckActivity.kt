@@ -21,20 +21,21 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
+import com.pyamsoft.pydroid.ui.internal.version.VersionCheckControllerEvent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckView
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewEvent
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckViewModel
 import com.pyamsoft.pydroid.ui.internal.version.upgrade.VersionUpgradeDialog
 import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 import com.pyamsoft.pydroid.ui.util.openAppPage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -74,20 +75,26 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
                 component.inject(this)
             }
 
-        stateSaver = viewModel.bindController(
+        stateSaver = createComponent(
             savedInstanceState,
             this,
+            viewModel,
+            controller = newUiController {
+                return@newUiController when (it) {
+                    is VersionCheckControllerEvent.LaunchUpdate -> showVersionUpgrade(
+                        it.isFallbackEnabled,
+                        it.launcher
+                    )
+                    is VersionCheckControllerEvent.UpgradeReady -> VersionUpgradeDialog.show(this)
+                }
+            },
             requireNotNull(versionCheckView)
         ) {
-            return@bindController when (it) {
+            return@createComponent when (it) {
                 is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
                 is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
                 is VersionCheckViewEvent.NavigationHidden -> viewModel.handleHideNavigation()
             }
-        }
-
-        viewModel.handleWatchForDownloadCompletion(lifecycleScope) {
-            VersionUpgradeDialog.show(this)
         }
 
         if (checkForUpdates) {
@@ -127,21 +134,17 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
 
     private fun checkUpdates() {
         require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually." }
-        viewModel.handleCheckForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
-            showVersionUpgrade(this, isFallbackEnabled, launcher)
-        }
+        viewModel.handleCheckForUpdates(false)
     }
 
-    // Called by AppSettingsPreferenceFragment
-    internal fun showVersionUpgrade(
-        scope: CoroutineScope,
+    private fun showVersionUpgrade(
         isFallbackEnabled: Boolean,
         launcher: AppUpdateLauncher
     ) {
         val activity = this
 
         // Enforce that we do this on the Main thread
-        scope.launch(context = Dispatchers.Main) {
+        lifecycleScope.launch(context = Dispatchers.Main) {
             try {
                 launcher.update(activity, RC_APP_UPDATE)
             } catch (throwable: Throwable) {
@@ -160,9 +163,7 @@ public abstract class VersionCheckActivity : PrivacyActivity() {
      */
     public fun checkForUpdates() {
         require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
-        viewModel.handleCheckForUpdates(lifecycleScope, false) { isFallbackEnabled, launcher ->
-            showVersionUpgrade(this, isFallbackEnabled, launcher)
-        }
+        viewModel.handleCheckForUpdates(false)
     }
 
     public companion object {

@@ -16,31 +16,27 @@
 
 package com.pyamsoft.pydroid.ui.internal.changelog
 
+import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
-import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.changelog.ChangeLogInteractor
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 internal class ChangeLogViewModel internal constructor(
     private val interactor: ChangeLogInteractor
-) : UiViewModel<UnitViewState, UnitViewEvent, UnitControllerEvent>(
+) : UiViewModel<UnitViewState, ChangeLogControllerEvent>(
     initialState = UnitViewState
 ) {
 
-    internal inline fun show(
-        scope: CoroutineScope,
+    internal fun show(
         force: Boolean,
-        crossinline onShow: () -> Unit
     ) {
-        scope.launch(context = Dispatchers.Default) {
+        viewModelScope.launch(context = Dispatchers.Default) {
             if (interactor.showChangelog(force)) {
                 withContext(context = Dispatchers.Main) {
-                    onShow()
+                    publish(ChangeLogControllerEvent.ShowChangeLog)
                 }
             }
         }

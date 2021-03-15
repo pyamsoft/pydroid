@@ -30,7 +30,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -81,14 +82,16 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
                 binding.layoutConstraint
             )
         val frame = requireNotNull(frame)
-        stateSaver = viewModel.bindController(
+        stateSaver = createComponent(
             savedInstanceState,
             viewLifecycleOwner,
+            viewModel,
+            controller = newUiController { },
             frame,
             toolbar,
             dropshadow
         ) {
-            return@bindController when (it) {
+            return@createComponent when (it) {
                 is ThemeDialogViewEvent.Close -> dismiss()
             }
         }

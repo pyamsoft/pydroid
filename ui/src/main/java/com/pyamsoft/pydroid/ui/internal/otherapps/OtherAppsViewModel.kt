@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.otherapps
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.bootstrap.otherapps.OtherAppsInteractor
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
 
 internal class OtherAppsViewModel internal constructor(
     interactor: OtherAppsInteractor,
-) : UiViewModel<OtherAppsViewState, OtherAppsViewEvent, UnitControllerEvent>(
+) : UiViewModel<OtherAppsViewState, OtherAppsControllerEvent>(
     initialState = OtherAppsViewState(
         apps = emptyList(),
         appsError = null,
@@ -49,32 +48,28 @@ internal class OtherAppsViewModel internal constructor(
         }
     }
 
-    internal inline fun handleHideError(
-        scope: CoroutineScope,
-        crossinline onFallbackEvent: () -> Unit
-    ) {
-        scope.setState(stateChange = { copy(appsError = null) }, andThen = {
-            onFallbackEvent()
+    internal fun handleHideError() {
+        viewModelScope.setState(stateChange = { copy(appsError = null) }, andThen = {
+            publish(OtherAppsControllerEvent.LaunchFallback)
         })
     }
 
-    internal inline fun handleOpenStoreUrl(index: Int, crossinline onOpen: (String) -> Unit) {
-        openUrl(index, resolveUrl = { it.storeUrl }, onOpen)
+    internal fun handleOpenStoreUrl(index: Int) {
+        openUrl(index) { it.storeUrl }
     }
 
-    internal inline fun handleOpenSourceCodeUrl(index: Int, crossinline onOpen: (String) -> Unit) {
-        openUrl(index, resolveUrl = { it.sourceUrl }, onOpen)
+    internal fun handleOpenSourceCodeUrl(index: Int) {
+        openUrl(index) { it.sourceUrl }
     }
 
     private inline fun openUrl(
         index: Int,
         crossinline resolveUrl: (app: OtherApp) -> String,
-        crossinline onOpen: (String) -> Unit
     ) {
         val a = state.apps
         if (a.isNotEmpty()) {
             a.getOrNull(index)?.let { app ->
-                onOpen(resolveUrl(app))
+                publish(OtherAppsControllerEvent.OpenUrl(resolveUrl(app)))
             }
         }
     }
@@ -88,7 +83,7 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(throwable: Throwable) {
-        viewModelScope.setState { copy(navigationError = throwable) }
+        setState { copy(navigationError = throwable) }
     }
 
     fun handleNavigationSuccess() {
@@ -96,6 +91,6 @@ internal class OtherAppsViewModel internal constructor(
     }
 
     internal fun handleHideNavigation() {
-        viewModelScope.setState { copy(navigationError = null) }
+        setState { copy(navigationError = null) }
     }
 }

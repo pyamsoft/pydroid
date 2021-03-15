@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.about
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.about.AboutInteractor
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
@@ -28,7 +27,7 @@ import timber.log.Timber
 
 internal class AboutViewModel internal constructor(
     interactor: AboutInteractor,
-) : UiViewModel<AboutViewState, AboutViewEvent, UnitControllerEvent>(
+) : UiViewModel<AboutViewState, AboutControllerEvent>(
     initialState = AboutViewState(
         isLoading = false,
         licenses = emptyList(),
@@ -49,35 +48,28 @@ internal class AboutViewModel internal constructor(
         }
     }
 
-    internal inline fun handleOpenLibrary(
-        index: Int,
-        crossinline onOpen: (String) -> Unit
-    ) {
-        return openUrl(index, resolveUrl = { it.libraryUrl }, onOpen)
+    internal fun handleOpenLibrary(index: Int) {
+        return openUrl(index) { it.libraryUrl }
     }
 
-    internal inline fun handleOpenLicense(
-        index: Int,
-        crossinline onOpen: (String) -> Unit
-    ) {
-        return openUrl(index, resolveUrl = { it.licenseUrl }, onOpen)
+    internal fun handleOpenLicense(index: Int) {
+        return openUrl(index) { it.licenseUrl }
     }
 
     private inline fun openUrl(
         index: Int,
         crossinline resolveUrl: (library: OssLibrary) -> String,
-        crossinline onOpen: (String) -> Unit
     ) {
         val l = state.licenses
         if (l.isNotEmpty()) {
             l.getOrNull(index)?.let { lib ->
-                onOpen(resolveUrl(lib))
+                publish(AboutControllerEvent.OpenUrl(resolveUrl(lib)))
             }
         }
     }
 
     internal fun handleLoadLicenses() {
-        viewModelScope.setState(stateChange = { copy(isLoading = true) }, andThen = {
+        setState(stateChange = { copy(isLoading = true) }, andThen = {
             licenseRunner.call(false)
             setState { copy(isLoading = false) }
         })
@@ -92,7 +84,7 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun navigationFailed(throwable: Throwable) {
-        viewModelScope.setState { copy(navigationError = throwable) }
+        setState { copy(navigationError = throwable) }
     }
 
     internal fun navigationSuccess() {
@@ -100,10 +92,10 @@ internal class AboutViewModel internal constructor(
     }
 
     internal fun handleClearLoadError() {
-        viewModelScope.setState { copy(loadError = null) }
+        setState { copy(loadError = null) }
     }
 
     internal fun handleHideNavigation() {
-        viewModelScope.setState { copy(navigationError = null) }
+        setState { copy(navigationError = null) }
     }
 }

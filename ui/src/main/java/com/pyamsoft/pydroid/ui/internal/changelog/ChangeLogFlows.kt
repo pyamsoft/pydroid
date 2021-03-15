@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.arch
+package com.pyamsoft.pydroid.ui.internal.changelog
 
-/**
- * An event which is sent from the Presentation layer up to the Controller layer
- *
- * Usually sent via a UiViewModel.publish() call
- */
-public interface UiControllerEvent
+import com.pyamsoft.pydroid.arch.UiControllerEvent
+
+internal sealed class ChangeLogControllerEvent : UiControllerEvent {
+
+    object ShowChangeLog : ChangeLogControllerEvent()
+
+}

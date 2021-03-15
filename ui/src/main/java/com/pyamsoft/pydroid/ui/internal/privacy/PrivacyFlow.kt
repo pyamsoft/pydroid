@@ -16,6 +16,7 @@
 
 package com.pyamsoft.pydroid.ui.internal.privacy
 
+import com.pyamsoft.pydroid.arch.UiControllerEvent
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bus.EventBus
@@ -30,4 +31,10 @@ internal sealed class PrivacyViewEvent : UiViewEvent {
 
     object SnackbarHidden : PrivacyViewEvent()
 }
+
+internal sealed class PrivacyControllerEvent : UiControllerEvent {
+
+    data class OpenUrl internal constructor(val url: String) : PrivacyControllerEvent()
+}
+
 

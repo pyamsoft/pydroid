@@ -16,9 +16,26 @@
 
 package com.pyamsoft.pydroid.arch
 
+import androidx.annotation.CheckResult
+
 /**
- * An event which is sent from the Presentation layer up to the Controller layer
- *
- * Usually sent via a UiViewModel.publish() call
+ * The UiController drives the events. It orchestrates events between the UiView and UiViewModel
  */
-public interface UiControllerEvent
+public interface UiController<C : UiControllerEvent> {
+
+    public fun onControllerEvent(event: C)
+}
+
+/**
+ * Create a new anonymous UiController
+ *
+ * For when a single Android component serves as multiple UiControllers
+ */
+@CheckResult
+public inline fun <C : UiControllerEvent> newUiController(crossinline onEvent: (C) -> Unit): UiController<C> {
+    return object : UiController<C> {
+        override fun onControllerEvent(event: C) {
+            return onEvent(event)
+        }
+    }
+}

@@ -21,4 +21,4 @@ import com.pyamsoft.pydroid.ui.internal.app.AppName
 
 internal class BillingName internal constructor(
     parent: ViewGroup
-) : AppName<BillingDialogViewState>(parent)
+) : AppName<BillingViewState>(parent)

@@ -25,7 +25,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -64,23 +65,24 @@ internal class OtherAppsFragment : Fragment() {
             .create(binding.layoutFrame, viewLifecycleOwner)
             .inject(this)
 
-        stateSaver = viewModel.bindController(
+        stateSaver = createComponent(
             savedInstanceState,
             viewLifecycleOwner,
+            viewModel,
+            controller = newUiController {
+                return@newUiController when (it) {
+                    is OtherAppsControllerEvent.LaunchFallback -> openDeveloperPage()
+                    is OtherAppsControllerEvent.OpenUrl -> navigateToExternalUrl(it.url)
+                }
+            },
             requireNotNull(listView),
             requireNotNull(errorView),
         ) {
-            return@bindController when (it) {
-                is OtherAppsViewEvent.ErrorEvent.HideAppsError -> viewModel.handleHideError(this) {
-                    openDeveloperPage()
-                }
+            return@createComponent when (it) {
+                is OtherAppsViewEvent.ErrorEvent.HideAppsError -> viewModel.handleHideError()
                 is OtherAppsViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
-                is OtherAppsViewEvent.ListEvent.OpenStore -> viewModel.handleOpenStoreUrl(it.index) { url ->
-                    navigateToExternalUrl(url)
-                }
-                is OtherAppsViewEvent.ListEvent.ViewSource -> viewModel.handleOpenSourceCodeUrl(it.index) { url ->
-                    navigateToExternalUrl(url)
-                }
+                is OtherAppsViewEvent.ListEvent.OpenStore -> viewModel.handleOpenStoreUrl(it.index)
+                is OtherAppsViewEvent.ListEvent.ViewSource -> viewModel.handleOpenSourceCodeUrl(it.index)
             }
         }
     }

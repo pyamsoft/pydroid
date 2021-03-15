@@ -19,18 +19,16 @@ package com.pyamsoft.pydroid.ui.internal.rating
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RatingInteractor
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 internal class RatingViewModel internal constructor(
     interactor: RatingInteractor,
-) : UiViewModel<RatingViewState, RatingViewEvent, UnitControllerEvent>(
+) : UiViewModel<RatingViewState, RatingControllerEvent>(
     initialState = RatingViewState(navigationError = null)
 ) {
 
@@ -46,20 +44,21 @@ internal class RatingViewModel internal constructor(
         }
     }
 
-    internal inline fun load(
-        scope: CoroutineScope,
-        force: Boolean,
-        crossinline onLaunch: (isFallbackEnabled: Boolean, launcher: AppRatingLauncher) -> Unit
-    ) {
-        scope.launch(context = Dispatchers.Default) {
+    internal fun load(force: Boolean) {
+        viewModelScope.launch(context = Dispatchers.Default) {
             loadRunner.call(force)?.let { result ->
-                onLaunch(result.isFallbackEnabled, result.launcher)
+                publish(
+                    RatingControllerEvent.LaunchRating(
+                        result.isFallbackEnabled,
+                        result.launcher
+                    )
+                )
             }
         }
     }
 
     internal fun handleClearNavigationError() {
-        viewModelScope.setState { copy(navigationError = null) }
+        setState { copy(navigationError = null) }
     }
 
     internal fun handleNavigationSuccess() {
@@ -67,7 +66,7 @@ internal class RatingViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        viewModelScope.setState { copy(navigationError = error) }
+        setState { copy(navigationError = error) }
     }
 
     internal data class LoadResult internal constructor(

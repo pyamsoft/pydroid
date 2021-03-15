@@ -19,7 +19,6 @@ package com.pyamsoft.pydroid.ui.internal.version
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.highlander.highlander
 import com.pyamsoft.pydroid.arch.UiViewModel
-import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.onActualError
 import com.pyamsoft.pydroid.bootstrap.version.AppUpdateLauncher
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
@@ -30,7 +29,7 @@ import timber.log.Timber
 
 internal class VersionCheckViewModel internal constructor(
     private val interactor: VersionInteractor
-) : UiViewModel<VersionCheckViewState, VersionCheckViewEvent, UnitControllerEvent>(
+) : UiViewModel<VersionCheckViewState, VersionCheckControllerEvent>(
     initialState = VersionCheckViewState(
         isLoading = false,
         throwable = null,
@@ -51,20 +50,29 @@ internal class VersionCheckViewModel internal constructor(
         }
     }
 
+    init {
+        viewModelScope.launch(context = Dispatchers.Default) {
+            interactor.watchForDownloadComplete {
+                Timber.d("App update download ready!")
+                publish(VersionCheckControllerEvent.UpgradeReady)
+            }
+        }
+    }
+
     private fun CoroutineScope.handleVersionCheckError(throwable: Throwable) {
         setState { copy(throwable = throwable) }
     }
 
     internal fun handleClearError() {
-        viewModelScope.setState { copy(throwable = null) }
+        setState { copy(throwable = null) }
     }
 
     internal fun handleVersionCheckComplete() {
-        viewModelScope.setState { copy(isLoading = false) }
+        setState { copy(isLoading = false) }
     }
 
     internal fun handleHideNavigation() {
-        viewModelScope.setState { copy(navigationError = null) }
+        setState { copy(navigationError = null) }
     }
 
     internal fun handleNavigationSuccess() {
@@ -72,32 +80,21 @@ internal class VersionCheckViewModel internal constructor(
     }
 
     internal fun handleNavigationFailed(error: Throwable) {
-        viewModelScope.setState { copy(navigationError = error) }
+        setState { copy(navigationError = error) }
     }
 
-    internal inline fun handleCheckForUpdates(
-        scope: CoroutineScope,
-        force: Boolean,
-        crossinline onLaunch: CoroutineScope.(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) -> Unit
-    ) {
+    internal fun handleCheckForUpdates(force: Boolean) {
         Timber.d("Begin check for updates")
-        scope.setState(stateChange = { copy(isLoading = true) }, andThen = {
+        viewModelScope.setState(stateChange = { copy(isLoading = true) }, andThen = {
             checkUpdateRunner.call(force)?.let { result ->
-                onLaunch(result.isFallbackEnabled, result.launcher)
+                publish(
+                    VersionCheckControllerEvent.LaunchUpdate(
+                        result.isFallbackEnabled,
+                        result.launcher
+                    )
+                )
             }
         })
-    }
-
-    internal inline fun handleWatchForDownloadCompletion(
-        scope: CoroutineScope,
-        crossinline onComplete: () -> Unit
-    ) {
-        scope.launch(context = Dispatchers.Default) {
-            interactor.watchForDownloadComplete {
-                Timber.d("App update download ready!")
-                onComplete()
-            }
-        }
     }
 
     internal data class UpdateResult internal constructor(

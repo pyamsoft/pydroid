@@ -26,10 +26,10 @@ import kotlinx.coroutines.withContext
  *
  * Knows how to save and restore state from an androidx.SavedStateHandle
  */
-public abstract class UiSavedStateViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
+public abstract class UiSavedStateViewModel<S : UiViewState, C : UiControllerEvent> protected constructor(
     savedState: UiSavedState,
     initialState: S
-) : UiViewModel<S, V, C>(initialState) {
+) : UiViewModel<S, C>(initialState) {
 
     @PublishedApi
     internal var savedState: UiSavedState? = savedState

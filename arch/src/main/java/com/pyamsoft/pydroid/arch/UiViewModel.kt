@@ -16,14 +16,12 @@
 
 package com.pyamsoft.pydroid.arch
 
-import androidx.annotation.CheckResult
 import androidx.annotation.UiThread
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.LazyThreadSafetyMode.NONE
@@ -32,70 +30,59 @@ import kotlin.LazyThreadSafetyMode.NONE
  * A default implementation of a UiStateViewModel which knows how to set up along
  * with UiViews and a UiController to become a full UiComponent
  */
-public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiControllerEvent> protected constructor(
+public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent> protected constructor(
     initialState: S
 ) : UiStateViewModel<S>(initialState) {
 
     private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
     private val onClearEvents by onClearEventDelegate
 
-    @Deprecated("To be removed in favor of Controller driven architecture")
     private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
 
-    // Need PublishedApi so createComponent can be inline
+    /**
+     * Bind one or more UiViews to be driven by this UiViewModel
+     *
+     * This is automatically scoped to the life of the [scope]
+     */
     @UiThread
-    @CheckResult
-    @PublishedApi
-    @Deprecated("Replace with bindViews as we are moving to a Controller driven architecture.")
-    internal fun bindToComponent(
+    public fun <V : UiViewEvent> bindViews(
+        scope: CoroutineScope,
         savedInstanceState: UiSavedStateReader,
-        views: Array<out UiView<S, out V>>,
-        onControllerEvent: (event: C) -> Unit
-    ): Job {
-
+        vararg views: UiView<S, out V>,
+        onEvent: suspend (event: V) -> Unit
+    ) {
         // Guarantee views are initialized
         // Run this outside of the view model scope to guarantee that it executes immediately
         views.forEach { it.init(savedInstanceState) }
 
-        return viewModelScope.launch(context = Dispatchers.Main) {
-
+        scope.launch(context = Dispatchers.Default) {
             // Bind ViewModel
-            bindControllerEvents(onControllerEvent)
-            bindViewEvents(views.asIterable())
+            bindViewEvents(views.asIterable()) { onEvent(it) }
 
-            // Inflate the views
-            views.forEach { it.inflate(savedInstanceState) }
+            // Inflate the views on main thread
+            withContext(context = Dispatchers.Main) {
+                views.forEach { it.inflate(savedInstanceState) }
+            }
 
             // Bind state
             internalBindState(views)
         }
     }
 
+
     /**
-     * Bind one or more UiViews to be driven by this UiViewModel
+     * Bind this UiViewModel to be driven by a UiController
+     *
+     * This is automatically scoped to the life of the [scope]
      */
     @UiThread
-    public fun bindViews(
+    public fun bindController(
         scope: CoroutineScope,
-        savedInstanceState: UiSavedStateReader,
-        vararg views: UiView<S, out V>,
-        onEvent: suspend (event: V) -> Unit
+        controller: UiController<C>
     ) {
-
-        // Guarantee views are initialized
-        // Run this outside of the view model scope to guarantee that it executes immediately
-        views.forEach { it.init(savedInstanceState) }
-
-        scope.launch(context = Dispatchers.Main) {
-
-            // Bind ViewModel
-            bindViewEvents(views.asIterable(), onEvent)
-
-            // Inflate the views
-            views.forEach { it.inflate(savedInstanceState) }
-
-            // Bind state
-            internalBindState(views)
+        scope.launch(context = Dispatchers.Default) {
+            // Bind Controller
+            bindControllerEvents { controller.onControllerEvent(it) }
         }
     }
 
@@ -120,14 +107,13 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     /**
      * Fire a controller event
      */
-    @Deprecated("To be removed in favor of Controller driven architecture")
     protected fun publish(event: C) {
         viewModelScope.launch(context = Dispatchers.IO) {
             controllerEventBus.send(event)
         }
     }
 
-    private fun CoroutineScope.bindViewEvents(
+    private fun <V : UiViewEvent> CoroutineScope.bindViewEvents(
         views: Iterable<UiView<S, out V>>,
         onEvent: suspend (event: V) -> Unit
     ) {
@@ -144,23 +130,7 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
         }
     }
 
-    @Deprecated("To be removed in favor of Controller driven architecture")
-    private fun CoroutineScope.bindViewEvents(views: Iterable<UiView<S, out V>>) {
-        launch(context = Dispatchers.IO) {
-            views.forEach { view ->
-                view.onViewEvent { handleViewEvent(it) }
-                if (view is BaseUiView<S, out V, *>) {
-                    val nestedViews = view.nestedViews()
-                    if (nestedViews.isNotEmpty()) {
-                        bindViewEvents(nestedViews)
-                    }
-                }
-            }
-        }
-    }
-
-    @Deprecated("To be removed in favor of Controller driven architecture")
-    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: (event: C) -> Unit) {
+    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: suspend (event: C) -> Unit) {
         launch(context = Dispatchers.IO) {
             controllerEventBus.onEvent {
                 // Controller events must fire onto the main thread
@@ -188,13 +158,5 @@ public abstract class UiViewModel<S : UiViewState, V : UiViewEvent, C : UiContro
     protected fun doOnCleared(onTeardown: () -> Unit) {
         Enforcer.assertOnMainThread()
         onClearEvents.add(onTeardown)
-    }
-
-    /**
-     * Handle a UiViewEvent
-     */
-    @Deprecated("To be removed in favor of Controller driven architecture")
-    protected open fun handleViewEvent(event: V) {
-
     }
 }

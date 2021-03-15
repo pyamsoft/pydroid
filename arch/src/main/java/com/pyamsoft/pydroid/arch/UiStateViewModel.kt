@@ -87,7 +87,6 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      * the CoroutineScope.setState(stateChange) function instead as it is explicitly scoped.
      * If you decide to use this convenience function, be sure to not leak a shorter lived context.
      */
-    @Deprecated("Use CoroutineScope.setState(stateChange)")
     protected fun setState(stateChange: suspend S.() -> S) {
         viewModelScope.setState(stateChange)
     }
@@ -120,7 +119,6 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      * the CoroutineScope.setState(stateChange, andThen) function instead as it is explicitly scoped.
      * If you decide to use this convenience function, be sure to not leak a shorter lived context.
      */
-    @Deprecated("Use CoroutineScope.setState(stateChange, andThen)")
     protected fun setState(
         stateChange: suspend S.() -> S,
         andThen: suspend CoroutineScope.(newState: S) -> Unit

@@ -37,7 +37,7 @@ import io.cabriole.decorator.LinearMarginDecoration
 internal class BillingList internal constructor(
     private val owner: LifecycleOwner,
     parent: ViewGroup
-) : BaseUiView<BillingDialogViewState, BillingDialogViewEvent, BillingListBinding>(parent) {
+) : BaseUiView<BillingViewState, BillingViewEvent, BillingListBinding>(parent) {
 
     override val viewBinding = BillingListBinding::inflate
 
@@ -69,7 +69,7 @@ internal class BillingList internal constructor(
 
     private fun setupListView() {
         billingAdapter = BillingAdapter {
-            publish(BillingDialogViewEvent.Purchase(it))
+            publish(BillingViewEvent.Purchase(it))
         }
 
         binding.billingList.apply {
@@ -81,7 +81,7 @@ internal class BillingList internal constructor(
         }
     }
 
-    override fun onRender(state: UiRender<BillingDialogViewState>) {
+    override fun onRender(state: UiRender<BillingViewState>) {
         state.render(viewScope) { handleSkus(it) }
         state.mapChanged { it.error }.render(viewScope) { handleError(it) }
     }
@@ -93,13 +93,13 @@ internal class BillingList internal constructor(
                 short(
                     layoutRoot,
                     if (msg.isNullOrBlank()) "Error during purchase flow." else msg,
-                    onHidden = { _, _ -> publish(BillingDialogViewEvent.ClearError) }
+                    onHidden = { _, _ -> publish(BillingViewEvent.ClearError) }
                 )
             }
         }
     }
 
-    private fun handleSkus(state: BillingDialogViewState) {
+    private fun handleSkus(state: BillingViewState) {
         val billingState = state.connected
         val skuList = state.skuList
         if (billingState == BillingState.LOADING) {

@@ -19,12 +19,15 @@ package com.pyamsoft.pydroid.ui.changelog
 import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
-import com.pyamsoft.pydroid.arch.bindController
+import com.pyamsoft.pydroid.arch.UnitViewEvent
+import com.pyamsoft.pydroid.arch.UnitViewState
+import com.pyamsoft.pydroid.arch.createComponent
+import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
+import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogControllerEvent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
@@ -57,10 +60,18 @@ public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
             .create()
             .inject(this)
 
-        stateSaver = viewModel.bindController(
+        stateSaver = createComponent<UnitViewState, UnitViewEvent, ChangeLogControllerEvent>(
             savedInstanceState,
             this,
-        ) {}
+            viewModel,
+            controller = newUiController {
+                return@newUiController when (it) {
+                    is ChangeLogControllerEvent.ShowChangeLog -> ChangeLogDialog.open(this)
+                }
+            }
+        ) {
+            // Empty
+        }
     }
 
     /**
@@ -90,13 +101,7 @@ public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
         super.onPostResume()
 
         // Called in onPostResume so that the DialogFragment can be shown correctly.
-        viewModel.show(lifecycleScope, false) {
-            handleOpenChangeLog()
-        }
+        viewModel.show(false)
     }
 
-    // Used by AppSettingsPreferenceFragment
-    internal fun handleOpenChangeLog() {
-        ChangeLogDialog.open(this)
-    }
 }

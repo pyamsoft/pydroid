@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.arch
 
 /**
  * A no-op UiControllerEvent
+ *
+ * NOTE: This class is effectively Deprecated.
  */
-@Deprecated("Will be removed in the future")
 public object UnitControllerEvent : UiControllerEvent

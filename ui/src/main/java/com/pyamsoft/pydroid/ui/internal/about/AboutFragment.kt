@@ -24,8 +24,8 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
+import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -33,7 +33,7 @@ import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.LayoutFrameBinding
 import com.pyamsoft.pydroid.util.hyperlink
 
-internal class AboutFragment : Fragment() {
+internal class AboutFragment : Fragment(), UiController<AboutControllerEvent> {
 
     private var stateSaver: StateSaver? = null
     internal var listView: AboutListView? = null
@@ -66,11 +66,7 @@ internal class AboutFragment : Fragment() {
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
-                    is AboutControllerEvent.OpenUrl -> openUrl(it.url)
-                }
-            },
+            controller = this,
             requireNotNull(listView),
             requireNotNull(errorView)
         ) {
@@ -83,6 +79,12 @@ internal class AboutFragment : Fragment() {
         }
 
         viewModel.handleLoadLicenses()
+    }
+
+    override fun onControllerEvent(event: AboutControllerEvent) {
+        return when (event) {
+            is AboutControllerEvent.OpenUrl -> openUrl(event.url)
+        }
     }
 
     override fun onDestroyView() {

@@ -25,6 +25,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
+import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
 import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
@@ -36,7 +37,7 @@ import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 import com.pyamsoft.pydroid.ui.util.openDevPage
 import com.pyamsoft.pydroid.util.hyperlink
 
-internal class OtherAppsFragment : Fragment() {
+internal class OtherAppsFragment : Fragment(), UiController<OtherAppsControllerEvent> {
 
     private var stateSaver: StateSaver? = null
     internal var listView: OtherAppsList? = null
@@ -69,12 +70,7 @@ internal class OtherAppsFragment : Fragment() {
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
-                    is OtherAppsControllerEvent.LaunchFallback -> openDeveloperPage()
-                    is OtherAppsControllerEvent.OpenUrl -> navigateToExternalUrl(it.url)
-                }
-            },
+            this,
             requireNotNull(listView),
             requireNotNull(errorView),
         ) {
@@ -84,6 +80,13 @@ internal class OtherAppsFragment : Fragment() {
                 is OtherAppsViewEvent.ListEvent.OpenStore -> viewModel.handleOpenStoreUrl(it.index)
                 is OtherAppsViewEvent.ListEvent.ViewSource -> viewModel.handleOpenSourceCodeUrl(it.index)
             }
+        }
+    }
+
+    override fun onControllerEvent(event: OtherAppsControllerEvent) {
+        return when (event) {
+            is OtherAppsControllerEvent.LaunchFallback -> openDeveloperPage()
+            is OtherAppsControllerEvent.OpenUrl -> navigateToExternalUrl(event.url)
         }
     }
 

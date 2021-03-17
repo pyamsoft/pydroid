@@ -30,8 +30,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.StateSaver
+import com.pyamsoft.pydroid.arch.UiController
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -44,7 +45,8 @@ import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
 import com.google.android.material.R as R2
 
-internal abstract class FullscreenThemeDialog protected constructor() : AppCompatDialogFragment() {
+internal abstract class FullscreenThemeDialog protected constructor() : AppCompatDialogFragment(),
+    UiController<UnitControllerEvent> {
 
     internal var toolbar: ThemeDialogToolbar? = null
 
@@ -86,7 +88,7 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
-            controller = newUiController { },
+            this,
             frame,
             toolbar,
             dropshadow
@@ -127,6 +129,9 @@ internal abstract class FullscreenThemeDialog protected constructor() : AppCompa
         }
 
         pushContents(frame)
+    }
+
+    final override fun onControllerEvent(event: UnitControllerEvent) {
     }
 
     private fun pushContents(container: BaseUiView<*, *, *>) {

@@ -22,8 +22,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.StateSaver
+import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.Injector
@@ -36,7 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-internal class BillingDialog : IconDialog() {
+internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent> {
 
     private var stateSaver: StateSaver? = null
 
@@ -70,11 +70,7 @@ internal class BillingDialog : IconDialog() {
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
-                    is BillingControllerEvent.Purchase -> launchPurchase(it.sku)
-                }
-            },
+            controller = this,
             requireNotNull(iconView),
             requireNotNull(nameView),
             requireNotNull(listView),
@@ -85,6 +81,12 @@ internal class BillingDialog : IconDialog() {
                 is BillingViewEvent.ClearError -> viewModel.handleClearError()
                 is BillingViewEvent.Purchase -> viewModel.handlePurchase(it.index)
             }
+        }
+    }
+
+    override fun onControllerEvent(event: BillingControllerEvent) {
+        return when (event) {
+            is BillingControllerEvent.Purchase -> launchPurchase(event.sku)
         }
     }
 

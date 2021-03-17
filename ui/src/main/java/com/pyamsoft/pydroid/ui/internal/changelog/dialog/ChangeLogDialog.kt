@@ -21,8 +21,9 @@ import androidx.annotation.CheckResult
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
+import com.pyamsoft.pydroid.arch.UiController
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
@@ -31,7 +32,7 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
 import com.pyamsoft.pydroid.ui.util.show
 
-internal class ChangeLogDialog : IconDialog() {
+internal class ChangeLogDialog : IconDialog(), UiController<UnitControllerEvent> {
 
     private var stateSaver: StateSaver? = null
 
@@ -62,7 +63,7 @@ internal class ChangeLogDialog : IconDialog() {
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
-            controller = newUiController { },
+            this,
             requireNotNull(iconView),
             requireNotNull(nameView),
             requireNotNull(listView),
@@ -72,6 +73,9 @@ internal class ChangeLogDialog : IconDialog() {
                 is ChangeLogDialogViewEvent.Close -> dismiss()
             }
         }
+    }
+
+    override fun onControllerEvent(event: UnitControllerEvent) {
     }
 
     override fun onDestroyView() {

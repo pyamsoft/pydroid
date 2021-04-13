@@ -42,3 +42,21 @@ public inline fun <C : UiControllerEvent> newUiController(crossinline onEvent: (
         }
     }
 }
+
+private object UiControllers {
+
+    /**
+     * An empty Ui Controller singleton
+     */
+    val EMPTY = newUiController<UnitControllerEvent> { }
+
+}
+
+
+/**
+ * Returns the no-op Empty Controller
+ */
+@CheckResult
+public fun emptyController(): UiController<UnitControllerEvent> {
+    return UiControllers.EMPTY
+}

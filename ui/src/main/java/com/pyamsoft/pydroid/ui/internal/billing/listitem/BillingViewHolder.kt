@@ -52,7 +52,7 @@ internal class BillingViewHolder private constructor(
             price
         ) {
             return@createViewBinder when (it) {
-                is BillingItemViewEvent.Purchase -> callback.onPurchase(adapterPosition)
+                is BillingItemViewEvent.Purchase -> callback.onPurchase(bindingAdapterPosition)
             }
         }
     }

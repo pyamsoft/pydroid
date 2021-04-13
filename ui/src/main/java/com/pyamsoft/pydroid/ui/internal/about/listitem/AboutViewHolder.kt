@@ -48,7 +48,7 @@ internal class AboutViewHolder private constructor(
             requireNotNull(descriptionView),
             requireNotNull(actionView)
         ) {
-            callback(it, adapterPosition)
+            callback(it, bindingAdapterPosition)
         }
     }
 

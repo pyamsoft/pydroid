@@ -26,6 +26,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.util.asDp
@@ -38,16 +39,70 @@ import java.util.UUID
  */
 public object Snackbreak {
 
-    private var cached: Snacky? = null
+    private fun <B : BaseTransientBottomBar<B>> B.materialMargin() {
+        val params = view.layoutParams as? MarginLayoutParams
+        if (params != null) {
+            val margin = 8.asDp(view.context)
+            view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
+        }
+    }
+
+    private fun <B : BaseTransientBottomBar<B>> B.materialElevation() {
+        ViewCompat.setElevation(view, 6.asDp(context).toFloat())
+    }
+
+    private fun <B : BaseTransientBottomBar<B>> B.materialPadding() {
+        // The Snackbar in material library sets a Material design theme but
+        // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
+        // and adjusting for bottom padding - it adds the bottom padding from the insets
+        // into the snackbar as well.
+        view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
+            return@setOnApplyWindowInsetsListener insets
+        }
+    }
+
+    @PublishedApi
+    internal fun <B : BaseTransientBottomBar<B>> B.materialDesign() {
+        materialElevation()
+        materialMargin()
+        materialPadding()
+    }
+
+    @PublishedApi
+    internal val snackbarBreaker: Breaker<Snackbar> = Breaker { view, message, duration ->
+        Snackbar.make(view, message, duration).apply {
+            materialDesign()
+        }
+    }
+
+    /**
+     * Create a custom Snackbreak.Breaker
+     */
+    @CheckResult
+    @JvmOverloads
+    public inline fun <reified B : BaseTransientBottomBar<B>> create(
+        options: Options? = null,
+        crossinline createBar: (view: View, message: CharSequence, duration: Int) -> B
+    ): Breaker<B> {
+        return Breaker { view, message, duration ->
+            createBar(view, message, duration).apply {
+                if (options?.applyMaterialDesign == true) {
+                    materialDesign()
+                }
+            }
+        }
+    }
 
     /**
      * Bind to a lifecycle, automatically dismisses on lifecycle destroy
      */
     public inline fun bindTo(
         owner: LifecycleOwner,
-        crossinline withInstance: Instance.() -> Unit
+        crossinline withInstance: Instance<Snackbar>.() -> Unit
     ) {
-        return bindTo(owner.lifecycle, withInstance)
+        return snackbarBreaker.bindTo(owner, withInstance)
     }
 
     /**
@@ -55,51 +110,103 @@ public object Snackbreak {
      */
     public inline fun bindTo(
         lifecycle: Lifecycle,
-        crossinline withInstance: Instance.() -> Unit
+        crossinline withInstance: Instance<Snackbar>.() -> Unit
     ) {
-        return realBindTo(lifecycle) { withInstance() }
-    }
-
-    @PublishedApi
-    internal fun realBindTo(
-        lifecycle: Lifecycle,
-        withInstance: Instance.() -> Unit
-    ) {
-        if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
-            return
-        }
-
-        withInstance(cacheInstance(lifecycle))
-    }
-
-    @CheckResult
-    private fun cacheInstance(lifecycle: Lifecycle): Instance {
-        val instance = Instance()
-
-        lifecycle.doOnDestroy {
-            instance.destroy()
-
-            // If this is the cache, null it out
-            if (cached?.instance?.id == instance.id) {
-                Timber.d("Clear Snackbreak cached instance.")
-                cached = null
-            }
-        }
-
-        cached?.instance?.destroy()
-        cached = Snacky(lifecycle, instance)
-        return instance
+        return snackbarBreaker.bindTo(lifecycle, withInstance)
     }
 
     /**
-     * Bound snackbar instance handler
+     * Snackbreak options
      */
-    public class Instance internal constructor() {
+    public data class Options public constructor(
+        /**
+         * Apply material design to the BottomBar
+         */
+        public val applyMaterialDesign: Boolean
+    )
+
+    /**
+     * Class which handles the creation and lifecycle binding of BaseTransientBottomBar classes
+     */
+    public class Breaker<B : BaseTransientBottomBar<B>> @PublishedApi internal constructor(
+        private val makeBar: (view: View, message: CharSequence, duration: Int) -> B,
+    ) {
+
+        /**
+         * Snackbreak cache
+         */
+        private var cached: Snacky<*>? = null
+
+        /**
+         * Bind to a lifecycle, automatically dismisses on lifecycle destroy
+         */
+        public inline fun bindTo(
+            owner: LifecycleOwner,
+            crossinline withInstance: Instance<B>.() -> Unit
+        ) {
+            return bindTo(owner.lifecycle, withInstance)
+        }
+
+        /**
+         * Bind to a lifecycle, automatically dismisses on lifecycle destroy
+         */
+        public inline fun bindTo(
+            lifecycle: Lifecycle,
+            crossinline withInstance: Instance<B>.() -> Unit
+        ) {
+            return realBindTo(lifecycle) { withInstance() }
+        }
+
+        @PublishedApi
+        internal fun realBindTo(
+            lifecycle: Lifecycle,
+            withInstance: Instance<B>.() -> Unit
+        ) {
+            if (lifecycle.currentState == Lifecycle.State.DESTROYED) {
+                return
+            }
+
+            withInstance(cacheInstance(lifecycle, makeBar))
+        }
+
+        @CheckResult
+        private inline fun <B : BaseTransientBottomBar<B>> cacheInstance(
+            lifecycle: Lifecycle,
+            crossinline makeBar: (View, CharSequence, Int) -> B
+        ): Instance<B> {
+            val instance = Instance { view, message, duration -> makeBar(view, message, duration) }
+
+            lifecycle.doOnDestroy {
+                instance.destroy()
+
+                // If this is the cache, null it out
+                if (cached?.instance?.id == instance.id) {
+                    Timber.d("Clear Snackbreak.Breaker cached instance.")
+                    cached = null
+                }
+            }
+
+            cached?.instance?.destroy()
+            cached = Snacky(lifecycle, instance)
+            return instance
+        }
+    }
+
+    /**
+     * Bound bottom bar instance handler
+     */
+    public class Instance<B : BaseTransientBottomBar<B>> internal constructor(
+        private val makeBar: (view: View, message: CharSequence, duration: Int) -> B,
+    ) {
 
         internal val id = UUID.randomUUID().toString()
 
-        private var snackbar: Snackbar? = null
-        private var barCallback: BaseCallback<Snackbar>? = null
+        private val defaultOnShown = { _: B -> }
+        private val defaultOnHidden = { _: B, _: Int -> }
+        private val defaulltBuilder: B.() -> B = { this }
+
+        private var bottomBar: B? = null
+        private var barCallback: BaseCallback<B>? = null
 
         internal fun destroy() {
             dismiss()
@@ -107,37 +214,37 @@ public object Snackbreak {
 
         private fun clearRefs() {
             barCallback = null
-            snackbar = null
+            bottomBar = null
         }
 
         @CheckResult
         private fun canShowNewSnackbar(force: Boolean): Boolean {
             return if (force) true else {
-                snackbar.let { if (it == null) true else !it.isShownOrQueued }
+                bottomBar.let { if (it == null) true else !it.isShownOrQueued }
             }
         }
 
-        private inline fun snack(
+        private inline fun createBar(
             force: Boolean,
-            crossinline onShown: (snackbar: Snackbar) -> Unit,
-            crossinline onHidden: (snackbar: Snackbar, event: Int) -> Unit,
-            builder: Snackbar.() -> Snackbar,
-            snack: () -> Snackbar
+            crossinline onShown: (bar: B) -> Unit,
+            crossinline onHidden: (bar: B, event: Int) -> Unit,
+            builder: B.() -> B,
+            snack: () -> B
         ) {
             if (canShowNewSnackbar(force)) {
                 dismiss()
-                snackbar = snack()
+                bottomBar = snack()
                     .run(builder)
                     .let { bar ->
-                        val callback = object : BaseCallback<Snackbar>() {
+                        val callback = object : BaseCallback<B>() {
 
-                            override fun onShown(transientBottomBar: Snackbar?) {
+                            override fun onShown(transientBottomBar: B?) {
                                 super.onShown(transientBottomBar)
                                 onShown(bar)
                             }
 
                             override fun onDismissed(
-                                transientBottomBar: Snackbar?,
+                                transientBottomBar: B?,
                                 event: Int
                             ) {
                                 super.onDismissed(transientBottomBar, event)
@@ -165,7 +272,7 @@ public object Snackbreak {
          * Dismiss snackbar
          */
         public fun dismiss() {
-            snackbar?.also { bar ->
+            bottomBar?.also { bar ->
                 barCallback?.also { bar.removeCallback(it) }
                 bar.dismiss()
             }
@@ -180,12 +287,12 @@ public object Snackbreak {
             view: View,
             message: CharSequence,
             force: Boolean = false,
-            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+            onShown: (bar: B) -> Unit = defaultOnShown,
+            onHidden: (bar: B, event: Int) -> Unit = defaultOnHidden,
+            builder: B.() -> B = defaulltBuilder
         ) {
-            snack(force, onShown, onHidden, builder) {
-                make(view, message, Snackbar.LENGTH_SHORT)
+            createBar(force, onShown, onHidden, builder) {
+                makeBar(view, message, BaseTransientBottomBar.LENGTH_SHORT)
             }
         }
 
@@ -197,12 +304,12 @@ public object Snackbreak {
             view: View,
             @StringRes message: Int,
             force: Boolean = false,
-            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+            onShown: (bar: B) -> Unit = defaultOnShown,
+            onHidden: (kbar: B, event: Int) -> Unit = defaultOnHidden,
+            builder: B.() -> B = defaulltBuilder
         ) {
-            snack(force, onShown, onHidden, builder) {
-                make(view, message, Snackbar.LENGTH_SHORT)
+            createBar(force, onShown, onHidden, builder) {
+                makeBar(view, view.resources.getText(message), BaseTransientBottomBar.LENGTH_SHORT)
             }
         }
 
@@ -214,12 +321,12 @@ public object Snackbreak {
             view: View,
             message: CharSequence,
             force: Boolean = false,
-            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+            onShown: (bar: B) -> Unit = defaultOnShown,
+            onHidden: (bar: B, event: Int) -> Unit = defaultOnHidden,
+            builder: B.() -> B = defaulltBuilder
         ) {
-            snack(force, onShown, onHidden, builder) {
-                make(view, message, Snackbar.LENGTH_LONG)
+            createBar(force, onShown, onHidden, builder) {
+                makeBar(view, message, BaseTransientBottomBar.LENGTH_LONG)
             }
         }
 
@@ -231,12 +338,12 @@ public object Snackbreak {
             view: View,
             @StringRes message: Int,
             force: Boolean = false,
-            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+            onShown: (bar: B) -> Unit = defaultOnShown,
+            onHidden: (bar: B, event: Int) -> Unit = defaultOnHidden,
+            builder: B.() -> B = defaulltBuilder
         ) {
-            snack(force, onShown, onHidden, builder) {
-                make(view, message, Snackbar.LENGTH_LONG)
+            createBar(force, onShown, onHidden, builder) {
+                makeBar(view, view.resources.getText(message), BaseTransientBottomBar.LENGTH_LONG)
             }
         }
 
@@ -248,12 +355,12 @@ public object Snackbreak {
             view: View,
             message: CharSequence,
             force: Boolean = false,
-            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+            onShown: (bar: B) -> Unit = defaultOnShown,
+            onHidden: (bar: B, event: Int) -> Unit = defaultOnHidden,
+            builder: B.() -> B = defaulltBuilder
         ) {
-            snack(force, onShown, onHidden, builder) {
-                make(view, message, Snackbar.LENGTH_INDEFINITE)
+            createBar(force, onShown, onHidden, builder) {
+                makeBar(view, message, BaseTransientBottomBar.LENGTH_INDEFINITE)
             }
         }
 
@@ -265,77 +372,22 @@ public object Snackbreak {
             view: View,
             @StringRes message: Int,
             force: Boolean = false,
-            onShown: (snackbar: Snackbar) -> Unit = DEFAULT_ON_SHOWN,
-            onHidden: (snackbar: Snackbar, event: Int) -> Unit = DEFAULT_ON_HIDDEN,
-            builder: Snackbar.() -> Snackbar = DEFAULT_BUILDER
+            onShown: (bar: B) -> Unit = defaultOnShown,
+            onHidden: (bar: B, event: Int) -> Unit = defaultOnHidden,
+            builder: B.() -> B = defaulltBuilder
         ) {
-            snack(force, onShown, onHidden, builder) {
-                make(view, message, Snackbar.LENGTH_INDEFINITE)
-            }
-        }
-
-        public companion object {
-
-            private val DEFAULT_ON_SHOWN = { _: Snackbar -> }
-            private val DEFAULT_ON_HIDDEN = { _: Snackbar, _: Int -> }
-            private val DEFAULT_BUILDER: Snackbar.() -> Snackbar = { this }
-
-            private fun Snackbar.materialMargin() {
-                val params = view.layoutParams as? MarginLayoutParams
-                if (params != null) {
-                    val margin = 8.asDp(view.context)
-                    view.updateLayoutParams<MarginLayoutParams> { setMargins(margin) }
-                }
-            }
-
-            private fun Snackbar.materialElevation() {
-                ViewCompat.setElevation(view, 6.asDp(context).toFloat())
-            }
-
-            private fun Snackbar.materialPadding() {
-                // The Snackbar in material library sets a Material design theme but
-                // it fucks the window insets if your app is using LAYOUT_HIDE_NAVIGATION
-                // and adjusting for bottom padding - it adds the bottom padding from the insets
-                // into the snackbar as well.
-                view.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
-                ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-                    v.updatePadding(left = 0, right = 0, top = 0, bottom = 0)
-                    return@setOnApplyWindowInsetsListener insets
-                }
-            }
-
-            private fun Snackbar.materialDesign() {
-                materialElevation()
-                materialMargin()
-                materialPadding()
-            }
-
-            @JvmStatic
-            @CheckResult
-            private fun make(
-                view: View,
-                @StringRes resId: Int,
-                duration: Int
-            ): Snackbar {
-                return Snackbar.make(view, resId, duration)
-                    .also { it.materialDesign() }
-            }
-
-            @JvmStatic
-            @CheckResult
-            private fun make(
-                view: View,
-                message: CharSequence,
-                duration: Int
-            ): Snackbar {
-                return Snackbar.make(view, message, duration)
-                    .also { it.materialDesign() }
+            createBar(force, onShown, onHidden, builder) {
+                makeBar(
+                    view,
+                    view.resources.getText(message),
+                    BaseTransientBottomBar.LENGTH_INDEFINITE
+                )
             }
         }
     }
 
-    private data class Snacky(
+    private data class Snacky<B : BaseTransientBottomBar<B>>(
         val lifecycle: Lifecycle,
-        val instance: Instance
+        val instance: Instance<B>
     )
 }

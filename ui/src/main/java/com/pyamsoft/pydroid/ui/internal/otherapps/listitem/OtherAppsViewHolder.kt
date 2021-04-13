@@ -53,7 +53,7 @@ internal class OtherAppsViewHolder private constructor(
             title,
             action
         ) {
-            callback(it, adapterPosition)
+            callback(it, bindingAdapterPosition)
         }
 
         binding.otherAppsListitemRoot.layout {

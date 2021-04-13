@@ -88,7 +88,7 @@ public object Snackbreak {
     ): Breaker<B> {
         return Breaker { view, message, duration ->
             createBar(view, message, duration).apply {
-                if (options?.applyMaterialDesign == true) {
+                if (options?.applyMaterialDesign != false) {
                     materialDesign()
                 }
             }

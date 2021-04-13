@@ -102,7 +102,7 @@ public inline fun <S : UiViewState, V : UiViewEvent, C : UiControllerEvent> crea
     viewModel: UiViewModel<S, C>,
     controller: UiController<C>,
     vararg views: UiView<S, out V>,
-    crossinline onViewEvent: suspend CoroutineScope.(event: V) -> Unit
+    crossinline onViewEvent: (event: V) -> Unit
 ): StateSaver {
     return Internals.performCreateComponent(
         savedInstanceState,

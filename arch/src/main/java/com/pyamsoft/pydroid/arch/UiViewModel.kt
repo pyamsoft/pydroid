@@ -49,7 +49,7 @@ public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent> protec
         scope: CoroutineScope,
         savedInstanceState: UiSavedStateReader,
         vararg views: UiView<S, out V>,
-        onEvent: suspend (event: V) -> Unit
+        onEvent: (event: V) -> Unit
     ) {
         // Guarantee views are initialized
         // Run this outside of the view model scope to guarantee that it executes immediately

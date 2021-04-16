@@ -89,6 +89,10 @@ internal class RealBus<T : Any> internal constructor(
 
     @CheckResult
     override suspend fun onEvent(emitter: suspend (event: T) -> Unit) = withContext(context) {
-        bus.onSubscription { emitQueuedEvents { emit(it) } }.collect(emitter)
+        bus.onSubscription {
+            emitQueuedEvents { event ->
+                this.emit(event)
+            }
+        }.collect(emitter)
     }
 }

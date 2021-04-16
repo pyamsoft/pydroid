@@ -39,6 +39,11 @@ public interface EventBus<T : Any> : EventConsumer<T> {
          * If [emitOnlyWhenActive] is false, the event will always emit immediately
          * If [emitOnlyWhenActive] is true, the event will be emitted if/once a subscriber is listening
          * on the bus
+         *
+         * If [emitOnlyWhenActive] is true, and no subscribers are present for an event emission,
+         * the event will be queued. Once a subscriber joins the bus, all subscribers will
+         * then receive all events up to that point that were queued. Once a subscriber joins the
+         * bus, events will always emit immediately.
          */
         @CheckResult
         @JvmStatic

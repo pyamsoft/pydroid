@@ -63,6 +63,11 @@ classes as `UiController` classes.
 
 ### Getting Started
 
+You can use PYDroid-Arch however you like. Nothing is stopping you from constructing your `UiView`
+objects and a `UiViewModel` and binding them together. Nothing is stopping you from connecting a
+`UiViewModel` to a `UiController`. But if you want a slightly easier way, and the way PYDroid uses
+internally to implement it's UI, you're looking for `Components`.
+
 To simplify the creation of these `Components`, library consumers can call the
 `createComponent(Bundle?, LifecycleOwner, UiViewModel<S, C>, UiController<C>, Array<UiView<S, V>>, onViewEvent: (V) -> Unit)`
 method. This is a convenience method which takes all of the inputs, and sets up a `Component` by

@@ -45,8 +45,8 @@ public interface EventBus<T : Any> : EventConsumer<T> {
          * then receive all events up to that point that were queued. Once a subscriber joins the
          * bus, events will always emit immediately.
          */
-        @CheckResult
         @JvmStatic
+        @CheckResult
         @JvmOverloads
         public fun <T : Any> create(
             emitOnlyWhenActive: Boolean,

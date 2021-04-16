@@ -24,7 +24,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.arch.Internals.EMPTY_READER
 import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateReader
-import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateWriter
 import com.pyamsoft.pydroid.util.doOnDestroy
 import kotlinx.coroutines.CoroutineScope
 
@@ -66,7 +65,7 @@ internal object Internals {
 
         // State saver
         return StateSaver { outState ->
-            val writer: UiSavedStateWriter = BundleUiSavedStateWriter(outState)
+            val writer = outState.toWriter()
             views.forEach { it.saveState(writer) }
         }
     }
@@ -145,12 +144,4 @@ public inline fun <S : UiViewState, V : UiViewEvent> createViewBinder(
             views.forEach { it.teardown() }
         }
     }
-}
-
-/**
- * Convenience function for converting a nullable Bundle into a SavedStateReader
- */
-@CheckResult
-public fun Bundle?.toReader(): UiSavedStateReader {
-    return BundleUiSavedStateReader(this)
 }

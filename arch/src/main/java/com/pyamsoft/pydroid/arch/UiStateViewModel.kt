@@ -28,10 +28,12 @@ import kotlinx.coroutines.Job
 /**
  * A ViewModel implementation which models a single state object.
  *
- * Access the current state via withState and manipulate it via setState.
- * These calls are asynchronous.
+ * Access the current state via state.
+ * Manipulate it via setState, which is asynchronous.
+ *
+ * NOTE: You should not use this class directly. You should use UiViewModel which extends this class.
  */
-public abstract class UiStateViewModel<S : UiViewState> protected constructor(
+public abstract class UiStateViewModel<S : UiViewState> internal constructor(
     initialState: S,
 ) : ViewModel() {
 
@@ -54,7 +56,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
-    public fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
+    protected fun bindState(scope: CoroutineScope, vararg renderables: Renderable<S>): Job {
         return delegate.bindState(scope, *renderables)
     }
 
@@ -65,7 +67,7 @@ public abstract class UiStateViewModel<S : UiViewState> protected constructor(
      */
     @UiThread
     @CheckResult
-    public inline fun bindState(
+    protected inline fun bindState(
         scope: CoroutineScope,
         crossinline onRender: (UiRender<S>) -> Unit
     ): Job {

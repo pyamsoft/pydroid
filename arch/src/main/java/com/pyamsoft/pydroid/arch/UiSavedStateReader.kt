@@ -16,7 +16,9 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
 import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateReader
 
 /**
  * Abstraction over restoring data from save-restore lifecycle
@@ -28,4 +30,12 @@ public interface UiSavedStateReader {
      */
     @CheckResult
     public fun <T : Any> get(key: String): T?
+}
+
+/**
+ * Convenience function for converting a nullable Bundle into a SavedStateReader
+ */
+@CheckResult
+public fun Bundle?.toReader(): UiSavedStateReader {
+    return BundleUiSavedStateReader(this)
 }

@@ -91,7 +91,6 @@ public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent> protec
      */
     @UiThread
     final override fun onCleared() {
-        super.onCleared()
         Enforcer.assertOnMainThread()
 
         if (onClearEventDelegate.isInitialized()) {
@@ -102,6 +101,8 @@ public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent> protec
             // Clear the teardown hooks list to free up memory
             onClearEvents.clear()
         }
+
+        super.onCleared()
     }
 
     /**

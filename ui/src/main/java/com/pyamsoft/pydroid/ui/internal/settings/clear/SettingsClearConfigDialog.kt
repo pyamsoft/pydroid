@@ -44,7 +44,9 @@ internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
         Really reset all application settings?
         
         All saved data will be cleared and all settings reset to default.
-        The app act as if you are launching it for the first time. This cannot be undone.
+        The app will act as if you are launching it for the first time.
+        
+        This cannot be undone.
             """.trimIndent()
             )
             .setNegativeButton("Cancel") { _, _ -> dismiss() }
@@ -52,8 +54,8 @@ internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
             .create()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         factory = null
     }
 

@@ -17,7 +17,8 @@
 package com.pyamsoft.pydroid.ui.internal.version.upgrade
 
 import androidx.lifecycle.viewModelScope
-import com.pyamsoft.pydroid.arch.UiStateViewModel
+import com.pyamsoft.pydroid.arch.UiViewModel
+import com.pyamsoft.pydroid.arch.UnitControllerEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.bootstrap.version.VersionInteractor
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +28,7 @@ import timber.log.Timber
 
 internal class VersionUpgradeViewModel internal constructor(
     private val interactor: VersionInteractor,
-) : UiStateViewModel<UnitViewState>(initialState = UnitViewState) {
+) : UiViewModel<UnitViewState, UnitControllerEvent>(initialState = UnitViewState) {
 
     internal inline fun completeUpgrade(crossinline onComplete: () -> Unit) {
         viewModelScope.launch(context = Dispatchers.Default) {

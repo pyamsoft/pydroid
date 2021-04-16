@@ -16,6 +16,10 @@
 
 package com.pyamsoft.pydroid.arch
 
+import android.os.Bundle
+import androidx.annotation.CheckResult
+import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateWriter
+
 /**
  * Abstraction over saving data into the save-restore lifecycle
  */
@@ -31,4 +35,12 @@ public interface UiSavedStateWriter {
      */
     public fun <T : Any> remove(key: String): T?
 
+}
+
+/**
+ * Convenience function for converting a Bundle into a SavedStateWriter
+ */
+@CheckResult
+public fun Bundle.toWriter(): UiSavedStateWriter {
+    return BundleUiSavedStateWriter(this)
 }

@@ -48,9 +48,10 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
             .setTitle("Upgrade Available")
             .setMessage(
                 """
-                    |A new version has been downloaded!
-                    |
-                    |Click to restart the app and upgrade to the latest version!""".trimMargin()
+                    A new version has been downloaded!
+
+                    Click to restart the app and upgrade to the latest version!
+                """.trimIndent()
             )
             .setNegativeButton("Later") { _, _ -> dismiss() }
             .setPositiveButton("Restart") { _, _ ->
@@ -63,9 +64,8 @@ internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFrag
             .create()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
+    override fun onDestroyView() {
+        super.onDestroyView()
         factory = null
     }
 

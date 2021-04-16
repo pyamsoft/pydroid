@@ -115,7 +115,7 @@ subprojects {
   apply plugin: 'org.jetbrains.dokka-android'
   apply plugin: 'maven-publish'
 
-  final String POM_GROUP = "com.github.pyamsoft.pydroid"
+  final String POM_GROUP = "com.github.pyamsoft"
   final String POM_VERSION = "23.0.0"
 
   // Kapt flags
@@ -201,7 +201,7 @@ subprojects {
           from project.components.release
 
           groupId POM_GROUP
-          artifactId project.name
+          artifactId "pydroid-" + project.name
           version POM_VERSION
         }
       }

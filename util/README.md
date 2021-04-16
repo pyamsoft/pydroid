@@ -10,6 +10,6 @@ Simple utility Kotlin extension functions for easier application development
 In your module's `build.gradle`:
 ```
 dependencies {
-    implementation "com.pyamsoft.pydroid:util:<version>"
+    implementation "com.github.pyamsoft.pydroid:util:<version>"
 }
 ```

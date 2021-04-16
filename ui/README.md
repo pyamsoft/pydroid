@@ -10,7 +10,7 @@ The reference UI implementation for PYDroid components
 In your module's `build.gradle`:
 ```
 dependencies {
-    implementation "com.pyamsoft.pydroid:ui:<version>"
+    implementation "com.github.pyamsoft.pydroid:ui:<version>"
 }
 ```
 

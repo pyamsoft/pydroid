@@ -11,7 +11,7 @@ The strict MVI based architecture framework for PYDroid applications
 In your module's `build.gradle`:
 ```
 dependencies {
-    implementation "com.pyamsoft.pydroid:arch:<version>"
+    implementation "com.github.pyamsoft.pydroid:arch:<version>"
 }
 ```
 

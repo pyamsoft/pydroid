@@ -10,7 +10,7 @@ A simple scalable notification system.
 In your module's `build.gradle`:
 ```
 dependencies {
-    implementation "com.pyamsoft.pydroid:notify:<version>"
+    implementation "com.github.pyamsoft.pydroid:notify:<version>"
 }
 ```
 

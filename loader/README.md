@@ -10,6 +10,6 @@ An image loader abstraction with a default Glide implementation
 In your module's `build.gradle`:
 ```
 dependencies {
-    implementation "com.pyamsoft.pydroid:loader:<version>"
+    implementation "com.github.pyamsoft.pydroid:loader:<version>"
 }
 ```

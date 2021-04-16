@@ -10,7 +10,7 @@ This is the core that all other PYDroid libraries are built on.
 In your module's `build.gradle`:
 ```
 dependencies {
-    implementation "com.pyamsoft.pydroid:core:<version>"
+    implementation "com.github.pyamsoft.pydroid:core:<version>"
 }
 ```
 

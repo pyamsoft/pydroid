@@ -11,7 +11,7 @@ The data layers for bootstrapping a new application quickly
 In your module's `build.gradle`:
 ```
 dependencies {
-    implementation "com.pyamsoft.pydroid:bootstrap:<version>"
+    implementation "com.github.pyamsoft.pydroid:bootstrap:<version>"
 }
 ```
 

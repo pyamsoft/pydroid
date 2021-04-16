@@ -10,7 +10,7 @@ A simple event bus powered by coroutines
 In your module's `build.gradle`:
 ```
 dependencies {
-    debugImplementation "com.pyamsoft.pydroid:bus:<version>"
+    implementation "com.github.pyamsoft.pydroid:bus:<version>"
 }
 ```
 

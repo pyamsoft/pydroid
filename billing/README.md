@@ -10,7 +10,7 @@ A simple implementation of Android In-App Billing
 In your module's `build.gradle`:
 ```
 dependencies {
-    debugImplementation "com.pyamsoft.pydroid:billing:<version>"
+    implementation "com.github.pyamsoft.pydroid:billing:<version>"
 }
 ```
 

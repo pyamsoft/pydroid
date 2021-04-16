@@ -10,7 +10,7 @@ A simple crash reporter screen which displays the stack trace.
 In your module's `build.gradle`:
 ```
 dependencies {
-    debugImplementation "com.pyamsoft.pydroid:autopsy:<version>"
+    debugImplementation "com.github.pyamsoft.pydroid:autopsy:<version>"
 }
 ```
 

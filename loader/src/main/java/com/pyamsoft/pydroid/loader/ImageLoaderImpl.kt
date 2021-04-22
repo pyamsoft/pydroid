@@ -19,10 +19,12 @@ package com.pyamsoft.pydroid.loader
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.annotation.DrawableRes
-import com.pyamsoft.pydroid.loader.glide.GlideBitmapLoader
 import com.pyamsoft.pydroid.loader.glide.GlideByteArrayLoader
-import com.pyamsoft.pydroid.loader.glide.GlideDrawableLoader
+import com.pyamsoft.pydroid.loader.glide.GlideLocalBitmapLoader
+import com.pyamsoft.pydroid.loader.glide.GlideLocalDrawableLoader
+import com.pyamsoft.pydroid.loader.glide.GlideUriLoader
 import com.pyamsoft.pydroid.loader.glide.GlideUrlLoader
 
 internal class ImageLoaderImpl internal constructor(
@@ -30,11 +32,15 @@ internal class ImageLoaderImpl internal constructor(
 ) : ImageLoader {
 
     override fun load(@DrawableRes resource: Int): Loader<Drawable> {
-        return GlideDrawableLoader(context.applicationContext, resource)
+        return GlideLocalDrawableLoader(context.applicationContext, resource)
     }
 
     override fun load(url: String): Loader<Drawable> {
         return GlideUrlLoader(context.applicationContext, url)
+    }
+
+    override fun load(uri: Uri): Loader<Drawable> {
+        return GlideUriLoader(context.applicationContext, uri)
     }
 
     override fun load(data: ByteArray): Loader<Bitmap> {
@@ -42,6 +48,6 @@ internal class ImageLoaderImpl internal constructor(
     }
 
     override fun load(bitmap: Bitmap): Loader<Bitmap> {
-        return GlideBitmapLoader(context.applicationContext, bitmap)
+        return GlideLocalBitmapLoader(context.applicationContext, bitmap)
     }
 }

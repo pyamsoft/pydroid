@@ -18,6 +18,7 @@ package com.pyamsoft.pydroid.loader
 
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.annotation.CheckResult
 import androidx.annotation.DrawableRes
 
@@ -34,6 +35,12 @@ public interface ImageLoader {
      */
     @CheckResult
     public fun load(@DrawableRes resource: Int): Loader<Drawable>
+
+    /**
+     * Load a url resource
+     */
+    @CheckResult
+    public fun load(uri: Uri): Loader<Drawable>
 
     /**
      * Load a url resource

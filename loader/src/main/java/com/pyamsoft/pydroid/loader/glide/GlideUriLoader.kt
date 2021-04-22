@@ -17,18 +17,21 @@
 package com.pyamsoft.pydroid.loader.glide
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.widget.ImageView
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.RequestManager
 
-internal abstract class GlideBitmapLoader protected constructor(
-    context: Context
-) : GlideLoader<Bitmap>(context) {
+internal class GlideUriLoader internal constructor(
+    context: Context,
+    private val uri: Uri
+) : GlideDrawableLoader(context) {
 
-    final override fun mutateImage(resource: Bitmap): Bitmap {
-        return resource.copy(resource.config, true)
+    override fun createRequest(request: RequestManager): RequestBuilder<Drawable> {
+        return request.asDrawable().load(uri)
     }
 
-    final override fun setImage(view: ImageView, image: Bitmap) {
-        view.setImageBitmap(image)
+    override fun immediateResource(): Drawable? {
+        return null
     }
 }

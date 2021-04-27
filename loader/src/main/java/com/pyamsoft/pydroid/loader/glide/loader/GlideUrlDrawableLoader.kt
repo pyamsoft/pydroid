@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.glide
+package com.pyamsoft.pydroid.loader.glide.loader
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.net.Uri
+import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.RequestManager
+import com.pyamsoft.pydroid.loader.glide.transform.GlideDrawableTransformer
 
-internal class GlideUriLoader internal constructor(
+internal class GlideUrlDrawableLoader internal constructor(
     context: Context,
-    private val uri: Uri
-) : GlideDrawableLoader(context) {
+    private val url: String
+) : GlideDrawableTransformer(context) {
 
-    override fun createRequest(request: RequestManager): RequestBuilder<Drawable> {
-        return request.asDrawable().load(uri)
+    override fun onCreateRequest(builder: RequestBuilder<Drawable>): RequestBuilder<Drawable> {
+        return builder.load(url)
+    }
+
+    override fun mutateImage(resource: Drawable): Drawable {
+        return resource.mutate()
+    }
+
+    override fun setImage(view: ImageView, image: Drawable) {
+        view.setImageDrawable(image)
     }
 
     override fun immediateResource(): Drawable? {

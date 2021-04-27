@@ -17,8 +17,9 @@
 package com.pyamsoft.pydroid.loader
 
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.annotation.CheckResult
+import androidx.annotation.DrawableRes
 
 /**
  * Generic ImageLoader
@@ -26,17 +27,38 @@ import androidx.annotation.CheckResult
  * Loads image resources in the background and loads data into ImageViews or other containers once
  * the image is ready
  */
-public interface ImageLoader : ImageLoaderApi<Drawable> {
+public interface ImageLoaderApi<I : Any> {
 
     /**
-     * Return all operation results as Drawables
+     * Load a drawable resource
      */
     @CheckResult
-    public fun asDrawable(): ImageLoaderApi<Drawable>
+    public fun load(@DrawableRes resource: Int): Loader<I>
 
     /**
-     * Return all operation results as Bitmaps
+     * Load a url resource
      */
     @CheckResult
-    public fun asBitmap(): ImageLoaderApi<Bitmap>
+    public fun load(uri: Uri): Loader<I>
+
+    /**
+     * Load a url resource
+     */
+    @CheckResult
+    public fun load(url: String): Loader<I>
+
+    /**
+     * Load a byte array resource
+     */
+    @CheckResult
+    public fun load(data: ByteArray): Loader<I>
+
+    /**
+     * Load a bitmap resource
+     *
+     * You almost always want to use something other than this.
+     */
+    @CheckResult
+    @Deprecated("You almost always want to pass something to the loader that it will load, instead of a completely loaded Bitmap.")
+    public fun load(bitmap: Bitmap): Loader<I>
 }

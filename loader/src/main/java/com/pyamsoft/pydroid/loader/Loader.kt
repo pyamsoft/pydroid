@@ -74,5 +74,6 @@ public interface Loader<T : Any> {
      * Not all ImageLoader parameters support immediate loading and will return null
      */
     @CheckResult
+    @Deprecated("You almost always want to use something else")
     public fun immediate(): T?
 }

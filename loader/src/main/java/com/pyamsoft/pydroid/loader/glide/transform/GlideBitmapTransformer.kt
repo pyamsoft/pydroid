@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.glide
+package com.pyamsoft.pydroid.loader.glide.transform
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.widget.ImageView
+import com.pyamsoft.pydroid.loader.glide.loader.GlideRequestTransformer
 
-internal abstract class GlideBitmapLoader protected constructor(
+internal abstract class GlideBitmapTransformer protected constructor(
     context: Context
-) : GlideLoader<Bitmap>(context) {
-
-    final override fun mutateImage(resource: Bitmap): Bitmap {
-        return resource.copy(resource.config, true)
-    }
-
-    final override fun setImage(view: ImageView, image: Bitmap) {
-        view.setImageBitmap(image)
-    }
-}
+) : GlideRequestTransformer<Bitmap>(
+    context = context,
+    transformer = { it.asBitmap() }
+)

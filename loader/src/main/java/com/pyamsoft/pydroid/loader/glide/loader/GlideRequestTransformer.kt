@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.glide
+package com.pyamsoft.pydroid.loader.glide.loader
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
+import com.pyamsoft.pydroid.loader.glide.GlideLoader
 
-internal class GlideUrlLoader internal constructor(
+internal abstract class GlideRequestTransformer<T : Any> protected constructor(
     context: Context,
-    private val url: String
-) : GlideDrawableLoader(context) {
+    private val transformer: (RequestManager) -> RequestBuilder<T>
+) : GlideLoader<T>(context) {
 
-    override fun createRequest(request: RequestManager): RequestBuilder<Drawable> {
-        return request.asDrawable().load(url)
+    final override fun createRequest(request: RequestManager): RequestBuilder<T> {
+        val builder = transformer(request)
+        return onCreateRequest(builder)
     }
 
-    override fun immediateResource(): Drawable? {
-        return null
-    }
+    protected abstract fun onCreateRequest(builder: RequestBuilder<T>): RequestBuilder<T>
+
 }

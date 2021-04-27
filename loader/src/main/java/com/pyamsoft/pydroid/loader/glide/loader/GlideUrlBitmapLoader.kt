@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.glide
+package com.pyamsoft.pydroid.loader.glide.loader
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.RequestManager
+import com.pyamsoft.pydroid.loader.glide.transform.GlideBitmapTransformer
 
-internal class GlideByteArrayLoader internal constructor(
+internal class GlideUrlBitmapLoader internal constructor(
     context: Context,
-    private val data: ByteArray
-) : GlideBitmapLoader(context) {
+    private val url: String
+) : GlideBitmapTransformer(context) {
 
-    override fun createRequest(request: RequestManager): RequestBuilder<Bitmap> {
-        return request
-            .asBitmap()
-            .load(data)
+    override fun onCreateRequest(builder: RequestBuilder<Bitmap>): RequestBuilder<Bitmap> {
+        return builder.load(url)
+    }
+
+    override fun mutateImage(resource: Bitmap): Bitmap {
+        return resource.copy(resource.config, true)
+    }
+
+    override fun setImage(view: ImageView, image: Bitmap) {
+        view.setImageBitmap(image)
     }
 
     override fun immediateResource(): Bitmap? {
-        return BitmapFactory.decodeByteArray(data, 0, data.size)
+        return null
     }
 }

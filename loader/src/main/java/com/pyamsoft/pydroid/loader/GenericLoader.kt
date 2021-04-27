@@ -45,6 +45,7 @@ public abstract class GenericLoader<T : Any> protected constructor() : Loader<T>
      * Load a resource immediately via blocking call
      */
     @CheckResult
+    @Deprecated("You almost always want to use something else.")
     protected abstract fun immediateResource(): T?
 
     /**
@@ -92,9 +93,11 @@ public abstract class GenericLoader<T : Any> protected constructor() : Loader<T>
         return this.also { it.mutator = action }
     }
 
+    @Deprecated("You almost always want to use something else")
     final override fun immediate(): T? {
         notifyLoading()
         try {
+            @Suppress("DEPRECATION")
             val resource: T? = immediateResource()
             if (resource == null) {
                 notifyError()

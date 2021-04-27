@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Peter Kenji Yamanaka
+ * Copyright 2021 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.pydroid.loader.glide
+package com.pyamsoft.pydroid.loader.glide.transform
 
 import android.content.Context
-import android.graphics.Bitmap
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.RequestManager
+import android.graphics.drawable.Drawable
+import com.pyamsoft.pydroid.loader.glide.loader.GlideRequestTransformer
 
-internal class GlideLocalBitmapLoader internal constructor(
+internal abstract class GlideDrawableTransformer protected constructor(
     context: Context,
-    private val bitmap: Bitmap
-) : GlideBitmapLoader(context) {
-
-    override fun createRequest(request: RequestManager): RequestBuilder<Bitmap> {
-        return request
-            .asBitmap()
-            .load(bitmap)
-    }
-
-    override fun immediateResource(): Bitmap {
-        return bitmap
-    }
-}
+) : GlideRequestTransformer<Drawable>(
+    context = context,
+    transformer = { it.asDrawable() }
+)

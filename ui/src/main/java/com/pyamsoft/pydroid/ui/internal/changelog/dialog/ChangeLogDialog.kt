@@ -30,7 +30,10 @@ import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import com.pyamsoft.pydroid.ui.internal.dialog.IconDialog
+import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
+import com.pyamsoft.pydroid.ui.util.openAppPage
 import com.pyamsoft.pydroid.ui.util.show
+import timber.log.Timber
 
 internal class ChangeLogDialog : IconDialog(), UiController<UnitControllerEvent> {
 
@@ -71,8 +74,15 @@ internal class ChangeLogDialog : IconDialog(), UiController<UnitControllerEvent>
         ) {
             return@createComponent when (it) {
                 is ChangeLogDialogViewEvent.Close -> dismiss()
+                is ChangeLogDialogViewEvent.Rate -> rateApplication()
             }
         }
+    }
+
+    private fun rateApplication() {
+        MarketLinker.openAppPage(requireContext())
+            .onSuccess { Timber.d("Opened App page for rating") }
+            .onFailure { Timber.e(it, "Could not open App page for rating") }
     }
 
     override fun onControllerEvent(event: UnitControllerEvent) {

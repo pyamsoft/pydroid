@@ -17,13 +17,15 @@
 package com.pyamsoft.pydroid.ui.internal.app
 
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.ui.databinding.ChangelogCloseBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
 internal abstract class AppClose<S : AppState, V : UiViewEvent> protected constructor(
-    parent: ViewGroup
+    parent: ViewGroup,
+    showRatingButton: Boolean
 ) : BaseUiView<S, V, ChangelogCloseBinding>(parent) {
 
     final override val viewBinding = ChangelogCloseBinding::inflate
@@ -31,6 +33,23 @@ internal abstract class AppClose<S : AppState, V : UiViewEvent> protected constr
     final override val layoutRoot by boundView { changelogCloseRoot }
 
     init {
+
+        doOnTeardown {
+            binding.changelogRate.setOnDebouncedClickListener(null)
+        }
+
+        doOnInflate {
+            if (showRatingButton) {
+                binding.changelogRate.isVisible = true
+            }
+        }
+
+        doOnInflate {
+            binding.changelogRate.setOnDebouncedClickListener {
+                publishRate()
+            }
+        }
+
         doOnTeardown {
             binding.changelogClose.setOnDebouncedClickListener(null)
         }
@@ -41,6 +60,8 @@ internal abstract class AppClose<S : AppState, V : UiViewEvent> protected constr
             }
         }
     }
+
+    protected abstract fun publishRate()
 
     protected abstract fun publishClose()
 

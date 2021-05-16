@@ -29,5 +29,7 @@ internal data class ChangeLogDialogViewState internal constructor(
 internal sealed class ChangeLogDialogViewEvent : UiViewEvent {
 
     object Close : ChangeLogDialogViewEvent()
+
+    object Rate : ChangeLogDialogViewEvent()
 }
 

@@ -24,6 +24,16 @@
         android:orientation="horizontal"
         android:padding="8dp">
 
+        <Button
+            android:id="@+id/changelog_rate"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/rate_app"
+            android:visibility="gone"
+            android:textAppearance="?attr/textAppearanceBody2" />
+
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"

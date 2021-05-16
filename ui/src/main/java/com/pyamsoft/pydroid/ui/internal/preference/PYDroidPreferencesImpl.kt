@@ -47,23 +47,25 @@ internal class PYDroidPreferencesImpl internal constructor(
         PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     }
 
-    override suspend fun showChangelog(): Boolean =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+    override suspend fun showChangelog(): Boolean = withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            // If the changelog has not yet been seen
-            return@withContext prefs.getInt(LAST_SHOWN_CHANGELOG, 0) < versionCode
+        // If the changelog has not yet been seen
+        val lastShown = prefs.getInt(LAST_SHOWN_CHANGELOG, -1)
+        if (lastShown < 0) {
+            return@withContext false
         }
+        return@withContext lastShown < versionCode
+    }
 
-    override suspend fun markChangeLogShown() =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+    override suspend fun markChangeLogShown() = withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            // Mark the changelog as shown for this version
-            return@withContext prefs.edit {
-                putInt(LAST_SHOWN_CHANGELOG, versionCode)
-            }
+        // Mark the changelog as shown for this version
+        return@withContext prefs.edit {
+            putInt(LAST_SHOWN_CHANGELOG, versionCode)
         }
+    }
 
     @CheckResult
     private fun formatCalendar(calendar: Calendar): String {

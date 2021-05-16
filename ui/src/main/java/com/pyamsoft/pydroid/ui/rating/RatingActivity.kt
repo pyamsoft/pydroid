@@ -84,6 +84,10 @@ public abstract class RatingActivity : VersionCheckActivity() {
                 is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
             }
         }
+
+        // Attempt to load rating based on a couple various factors - does not always result
+        // in a call to showRating
+        viewModel.load(false)
     }
 
     /**

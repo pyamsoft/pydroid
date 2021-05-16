@@ -19,7 +19,7 @@
 buildscript {
   ext {
     kotlin_version = '1.5.0'
-    dokka_version = "0.9.18"
+    dokka_version = "1.4.30"
     agp_version = "4.2.1"
   }
   repositories {
@@ -49,6 +49,7 @@ buildscript {
     core = "1.3.2"
     constraintLayout = "2.0.4"
     lifecycle = "2.3.1"
+    lifecycleExtensions = "2.2.0"
     preference = "1.1.1"
     recyclerView = "1.2.0"
     fragment = "1.3.3"
@@ -96,7 +97,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
     // Dokka
-    classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:$dokka_version"
+    classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
 
     // Spotless
     classpath "com.diffplug.spotless:spotless-plugin-gradle:5.12.5"
@@ -107,7 +108,7 @@ subprojects {
   apply plugin: 'com.android.library'
   apply plugin: 'kotlin-android'
   apply plugin: 'kotlin-kapt'
-  apply plugin: 'org.jetbrains.dokka-android'
+  apply plugin: 'org.jetbrains.dokka'
   apply plugin: 'maven-publish'
 
   final String POM_GROUP = "com.github.pyamsoft.pydroid"
@@ -177,7 +178,7 @@ subprojects {
       from android.sourceSets.main.java.source
     }
 
-    task androidJavadocsJar(type: Jar, dependsOn: dokka) {
+    task androidJavadocsJar(type: Jar, dependsOn: dokkaJavadoc) {
       archiveClassifier.convention('javadoc')
       archiveClassifier.set('javadoc')
       from "$buildDir/dokka"

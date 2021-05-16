@@ -37,7 +37,7 @@ dependencies {
   api "androidx.preference:preference:$preference"
 
   implementation "androidx.core:core-ktx:$core"
-  implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle"
+  implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleExtensions"
   implementation "androidx.recyclerview:recyclerview:$recyclerView"
   implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
   implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"

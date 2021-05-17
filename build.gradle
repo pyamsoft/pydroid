@@ -19,7 +19,7 @@
 buildscript {
   ext {
     kotlin_version = '1.5.0'
-    dokka_version = "1.4.30"
+    dokka_version = "1.4.32"
     agp_version = "4.2.1"
   }
   repositories {

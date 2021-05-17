@@ -20,11 +20,14 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import com.pyamsoft.pydroid.billing.BillingConnector
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
+import com.pyamsoft.pydroid.ui.theme.Theming
+import kotlinx.coroutines.launch
 
 /**
  * The base Activity class for PYDroid.
@@ -57,12 +60,16 @@ public abstract class ActivityBase : AppCompatActivity(),
     private var capturedToolbar: Toolbar? = null
 
     /**
+     * Activity theming
+     */
+    internal var theming: Theming? = null
+
+    /**
      * On activity create
      */
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         injector = Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusBilling()
             .create()
@@ -71,6 +78,10 @@ public abstract class ActivityBase : AppCompatActivity(),
             }
 
         requireNotNull(billingConnector).connect()
+
+        lifecycleScope.launch {
+            requireNotNull(theming).init()
+        }
     }
 
     /**

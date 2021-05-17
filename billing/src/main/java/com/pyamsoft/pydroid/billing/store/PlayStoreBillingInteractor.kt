@@ -20,9 +20,8 @@ import com.pyamsoft.pydroid.billing.BillingLauncher
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.bus.EventBus
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +52,7 @@ internal class PlayStoreBillingInteractor internal constructor(
 
     private val skuFlow = MutableStateFlow(State(BillingState.LOADING, emptyList()))
 
-    private val billingScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val billingScope = MainScope()
 
     private var backoffCount = 1
 

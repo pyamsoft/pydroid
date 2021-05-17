@@ -18,35 +18,22 @@ package com.pyamsoft.pydroid.ui.theme
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatDelegate
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
  * Handles getting current dark mode state and setting dark mode state
  */
-internal class ThemingImpl internal constructor(preferences: ThemingPreferences) : Theming {
+internal class ThemingImpl internal constructor(
+    private val preferences: ThemingPreferences
+) : Theming {
 
-    init {
-        // NOTE: We use GlobalScope here because this is an application level thing
-        // Maybe its an anti-pattern but I think in controlled use, its okay.
-        //
-        // https://medium.com/specto/android-startup-tip-dont-use-kotlin-coroutines-a7b3f7176fe5
-        //
-        // Coroutine start up is slow. What we can do instead is create a handler, which is cheap, and post
-        // to the main thread to defer this work until after start up is done
-        Handler(Looper.getMainLooper()).post {
-            // Now even though this will take work, it will defer until all other handler work is done
-            GlobalScope.launch(context = Dispatchers.Default) {
-                val mode = preferences.getDarkMode()
-                withContext(context = Dispatchers.Main) {
-                    setDarkTheme(mode)
-                }
-            }
+    override suspend fun init() = withContext(context = Dispatchers.IO) {
+        // Now even though this will take work, it will defer until all other handler work is done
+        val mode = preferences.getDarkMode()
+        withContext(context = Dispatchers.Main) {
+            setDarkTheme(mode)
         }
     }
 

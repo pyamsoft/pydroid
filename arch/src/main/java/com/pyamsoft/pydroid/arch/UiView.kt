@@ -21,6 +21,7 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -52,7 +53,7 @@ public abstract class UiView<S : UiViewState, V : UiViewEvent> protected constru
      *
      * Really should only be used to power the viewEventBus
      */
-    protected val viewScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    protected val viewScope: CoroutineScope = MainScope()
 
     /**
      * This is really only used as a hack, so we can inflate the actual Layout before running init hooks.

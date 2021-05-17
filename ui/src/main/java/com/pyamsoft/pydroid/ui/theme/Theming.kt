@@ -20,12 +20,18 @@ import android.app.Activity
 import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
+import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
 /**
  * Handles getting current dark mode state and setting dark mode state
  */
 public interface Theming {
+
+    /**
+     * Initialize the Theming module
+     */
+    public suspend fun init()
 
     /**
      * Is activity dark mode

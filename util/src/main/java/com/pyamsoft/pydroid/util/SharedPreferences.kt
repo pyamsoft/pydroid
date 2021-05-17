@@ -21,6 +21,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CheckResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -47,7 +48,7 @@ private abstract class ScopedPreferenceChangeListener(
     private val watchKey: String
 ) : OnSharedPreferenceChangeListener {
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val scope = MainScope()
 
     final override fun onSharedPreferenceChanged(
         sharedPreferences: SharedPreferences,

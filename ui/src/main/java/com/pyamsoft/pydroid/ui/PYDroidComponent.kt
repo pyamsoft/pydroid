@@ -26,9 +26,9 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsModule
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderModule
-import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.about.AboutComponent
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemComponent
+import com.pyamsoft.pydroid.ui.internal.arch.PYDroidViewModelFactory
 import com.pyamsoft.pydroid.ui.internal.billing.BillingComponent
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingItemComponent
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogComponent
@@ -45,6 +45,7 @@ import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigCompon
 import com.pyamsoft.pydroid.ui.internal.version.VersionCheckComponent
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.ui.theme.ThemingImpl
+import kotlinx.coroutines.MainScope
 
 internal interface PYDroidComponent {
 
@@ -123,6 +124,7 @@ internal interface PYDroidComponent {
 
     class ComponentImpl private constructor(params: Component.Parameters) : Component {
 
+        private val scope = MainScope()
         private val context = params.application
 
         private val preferences by lazy {
@@ -133,7 +135,7 @@ internal interface PYDroidComponent {
             )
         }
 
-        private val theming: Theming by lazy { ThemingImpl(preferences) }
+        private val theming: Theming by lazy { ThemingImpl(scope, preferences) }
 
         private val viewModelFactory by lazy {
             PYDroidViewModelFactory(

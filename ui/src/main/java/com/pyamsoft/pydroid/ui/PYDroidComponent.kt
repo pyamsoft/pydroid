@@ -135,7 +135,7 @@ internal interface PYDroidComponent {
             )
         }
 
-        private val theming: Theming by lazy { ThemingImpl(scope, preferences) }
+        private val theming: Theming by lazy { ThemingImpl(preferences) }
 
         private val viewModelFactory by lazy {
             PYDroidViewModelFactory(

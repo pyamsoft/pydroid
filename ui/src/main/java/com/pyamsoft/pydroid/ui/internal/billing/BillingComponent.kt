@@ -28,6 +28,7 @@ import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.app.ActivityBase
 import com.pyamsoft.pydroid.ui.internal.app.AppProvider
+import com.pyamsoft.pydroid.ui.theme.Theming
 
 internal interface BillingComponent {
 
@@ -99,6 +100,7 @@ internal interface BillingComponent {
     data class Parameters
     internal constructor(
         internal val context: Context,
+        internal val theming: Theming,
         internal val errorBus: EventBus<Throwable>,
         internal val imageLoader: ImageLoader,
         internal val interactor: ChangeLogInteractor,
@@ -119,6 +121,7 @@ internal interface BillingComponent {
 
     override fun inject(activity: ActivityBase) {
       activity.billingConnector = module.provideConnector()
+      activity.theming = params.theming
     }
 
     override fun plusDialog(): DialogComponent.Factory {

@@ -212,6 +212,7 @@ internal interface PYDroidComponent {
     private val billingParams by lazy(LazyThreadSafetyMode.NONE) {
       BillingComponent.Factory.Parameters(
           context = context.applicationContext,
+          theming = theming,
           errorBus = EventBus.create(emitOnlyWhenActive = false),
           imageLoader = loaderModule.provideLoader(),
           interactor = changeLogModule.provideInteractor())

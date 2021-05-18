@@ -25,29 +25,28 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-internal class OtherAppsInteractorNetwork internal constructor(
-    context: Context,
-    private val service: OtherAppsService
-) : AppInteractorImpl(context), OtherAppsInteractor {
+internal class OtherAppsInteractorNetwork
+internal constructor(context: Context, private val service: OtherAppsService) :
+    AppInteractorImpl(context), OtherAppsInteractor {
 
-    override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
-            return@withContext try {
-                val result = service.getApps().apps()
-                Result.success(result.map { entry ->
-                    OtherApp(
-                        entry.packageName(),
-                        entry.name(),
-                        entry.description(),
-                        entry.icon(),
-                        entry.url(),
-                        entry.source()
-                    )
-                })
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Unable to fetch other apps payload")
-                Result.failure(throwable)
-            }
+  override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
+        return@withContext try {
+          val result = service.getApps().apps()
+          Result.success(
+              result.map { entry ->
+                OtherApp(
+                    entry.packageName(),
+                    entry.name(),
+                    entry.description(),
+                    entry.icon(),
+                    entry.url(),
+                    entry.source())
+              })
+        } catch (throwable: Throwable) {
+          Timber.e(throwable, "Unable to fetch other apps payload")
+          Result.failure(throwable)
         }
+      }
 }

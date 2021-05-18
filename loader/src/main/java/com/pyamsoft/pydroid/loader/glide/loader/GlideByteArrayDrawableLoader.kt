@@ -24,25 +24,24 @@ import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideDrawableTransformer
 
-internal class GlideByteArrayDrawableLoader internal constructor(
-    context: Context,
-    private val data: ByteArray
-) : GlideDrawableTransformer(context) {
+internal class GlideByteArrayDrawableLoader
+internal constructor(context: Context, private val data: ByteArray) :
+    GlideDrawableTransformer(context) {
 
-    override fun onCreateRequest(builder: RequestBuilder<Drawable>): RequestBuilder<Drawable> {
-        return builder.load(data)
-    }
+  override fun onCreateRequest(builder: RequestBuilder<Drawable>): RequestBuilder<Drawable> {
+    return builder.load(data)
+  }
 
-    override fun mutateImage(resource: Drawable): Drawable {
-        return resource.mutate()
-    }
+  override fun mutateImage(resource: Drawable): Drawable {
+    return resource.mutate()
+  }
 
-    override fun setImage(view: ImageView, image: Drawable) {
-        view.setImageDrawable(image)
-    }
+  override fun setImage(view: ImageView, image: Drawable) {
+    view.setImageDrawable(image)
+  }
 
-    override fun immediateResource(): Drawable {
-        val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-        return BitmapDrawable(context.resources, bitmap)
-    }
+  override fun immediateResource(): Drawable {
+    val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+    return BitmapDrawable(context.resources, bitmap)
+  }
 }

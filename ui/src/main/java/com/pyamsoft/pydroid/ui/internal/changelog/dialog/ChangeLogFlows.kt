@@ -20,7 +20,8 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.ui.internal.app.AppState
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
-internal data class ChangeLogDialogViewState internal constructor(
+internal data class ChangeLogDialogViewState
+internal constructor(
     override val icon: Int,
     override val name: CharSequence,
     val changeLog: List<ChangeLogLine>,
@@ -28,8 +29,7 @@ internal data class ChangeLogDialogViewState internal constructor(
 
 internal sealed class ChangeLogDialogViewEvent : UiViewEvent {
 
-    object Close : ChangeLogDialogViewEvent()
+  object Close : ChangeLogDialogViewEvent()
 
-    object Rate : ChangeLogDialogViewEvent()
+  object Rate : ChangeLogDialogViewEvent()
 }
-

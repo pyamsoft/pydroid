@@ -27,7 +27,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
 import com.pyamsoft.pydroid.arch.createComponent
-import com.pyamsoft.pydroid.arch.newUiController
 import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.R
@@ -39,34 +38,32 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 internal class OtherAppsFragment : Fragment(), UiController<OtherAppsControllerEvent> {
 
-    private var stateSaver: StateSaver? = null
-    internal var listView: OtherAppsList? = null
-    internal var errorView: OtherAppsErrors? = null
+  private var stateSaver: StateSaver? = null
+  internal var listView: OtherAppsList? = null
+  internal var errorView: OtherAppsErrors? = null
 
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<OtherAppsViewModel>(activity = true) { factory }
+  internal var factory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<OtherAppsViewModel>(activity = true) { factory }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.layout_frame, container, false)
-    }
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.layout_frame, container, false)
+  }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onViewCreated(view, savedInstanceState)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-        val binding = LayoutFrameBinding.bind(view)
-        Injector.obtainFromApplication<PYDroidComponent>(view.context)
-            .plusOtherApps()
-            .create(binding.layoutFrame, viewLifecycleOwner)
-            .inject(this)
+    val binding = LayoutFrameBinding.bind(view)
+    Injector.obtainFromApplication<PYDroidComponent>(view.context)
+        .plusOtherApps()
+        .create(binding.layoutFrame, viewLifecycleOwner)
+        .inject(this)
 
-        stateSaver = createComponent(
+    stateSaver =
+        createComponent(
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
@@ -74,66 +71,66 @@ internal class OtherAppsFragment : Fragment(), UiController<OtherAppsControllerE
             requireNotNull(listView),
             requireNotNull(errorView),
         ) {
-            return@createComponent when (it) {
-                is OtherAppsViewEvent.ErrorEvent.HideAppsError -> viewModel.handleHideError()
-                is OtherAppsViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
-                is OtherAppsViewEvent.ListEvent.OpenStore -> viewModel.handleOpenStoreUrl(it.index)
-                is OtherAppsViewEvent.ListEvent.ViewSource -> viewModel.handleOpenSourceCodeUrl(it.index)
-            }
+          return@createComponent when (it) {
+            is OtherAppsViewEvent.ErrorEvent.HideAppsError -> viewModel.handleHideError()
+            is OtherAppsViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
+            is OtherAppsViewEvent.ListEvent.OpenStore -> viewModel.handleOpenStoreUrl(it.index)
+            is OtherAppsViewEvent.ListEvent.ViewSource ->
+                viewModel.handleOpenSourceCodeUrl(it.index)
+          }
         }
-    }
+  }
 
-    override fun onControllerEvent(event: OtherAppsControllerEvent) {
-        return when (event) {
-            is OtherAppsControllerEvent.LaunchFallback -> openDeveloperPage()
-            is OtherAppsControllerEvent.OpenUrl -> navigateToExternalUrl(event.url)
-        }
+  override fun onControllerEvent(event: OtherAppsControllerEvent) {
+    return when (event) {
+      is OtherAppsControllerEvent.LaunchFallback -> openDeveloperPage()
+      is OtherAppsControllerEvent.OpenUrl -> navigateToExternalUrl(event.url)
     }
+  }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        listView = null
-        errorView = null
-        factory = null
-        stateSaver = null
+  override fun onDestroyView() {
+    super.onDestroyView()
+    listView = null
+    errorView = null
+    factory = null
+    stateSaver = null
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
+
+  private fun Result<Unit>.handleNavigation() {
+    this.onSuccess { viewModel.handleNavigationSuccess() }.onFailure {
+      viewModel.handleNavigationFailed(it)
     }
+  }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
+  private fun openDeveloperPage() {
+    MarketLinker.openDevPage(requireActivity())
+        // If we cannot load we have nothing to do here
+        .onFailure { closeParent() }
+        .handleNavigation()
+  }
+
+  private fun closeParent() {
+    val parent = parentFragment
+    if (parent is DialogFragment) {
+      parent.dismiss()
     }
+  }
 
-    private fun Result<Unit>.handleNavigation() {
-        this.onSuccess { viewModel.handleNavigationSuccess() }
-            .onFailure { viewModel.handleNavigationFailed(it) }
+  private fun navigateToExternalUrl(url: String) {
+    url.hyperlink(requireActivity()).navigate().handleNavigation()
+  }
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    internal fun newInstance(): Fragment {
+      return OtherAppsFragment().apply { arguments = Bundle().apply {} }
     }
-
-    private fun openDeveloperPage() {
-        MarketLinker.openDevPage(requireActivity())
-            // If we cannot load we have nothing to do here
-            .onFailure { closeParent() }
-            .handleNavigation()
-    }
-
-    private fun closeParent() {
-        val parent = parentFragment
-        if (parent is DialogFragment) {
-            parent.dismiss()
-        }
-    }
-
-    private fun navigateToExternalUrl(url: String) {
-        url.hyperlink(requireActivity()).navigate().handleNavigation()
-    }
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        internal fun newInstance(): Fragment {
-            return OtherAppsFragment().apply {
-                arguments = Bundle().apply {}
-            }
-        }
-    }
+  }
 }

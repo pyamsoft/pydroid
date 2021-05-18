@@ -16,26 +16,18 @@
 
 package com.pyamsoft.pydroid.arch
 
-/**
- * A simple interface to help abstract List ViewHolder instances into a Renderable-like style
- */
+/** A simple interface to help abstract List ViewHolder instances into a Renderable-like style */
 public interface ViewBinder<S : UiViewState> {
 
-    /**
-     * Binds a UiViewState to one or more view components
-     */
-    @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(state)"))
-    public fun bind(state: S) {
-        bindState(state)
-    }
+  /** Binds a UiViewState to one or more view components */
+  @Deprecated("Use bindState", replaceWith = ReplaceWith("bindState(state)"))
+  public fun bind(state: S) {
+    bindState(state)
+  }
 
-    /**
-     * Binds a UiViewState to one or more view components
-     */
-    public fun bindState(state: S)
+  /** Binds a UiViewState to one or more view components */
+  public fun bindState(state: S)
 
-    /**
-     * Called when the ViewHolder is detached from the List and effectively destroyed.
-     */
-    public fun teardown()
+  /** Called when the ViewHolder is detached from the List and effectively destroyed. */
+  public fun teardown()
 }

@@ -23,38 +23,40 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-internal class VersionInteractorImpl internal constructor(
+internal class VersionInteractorImpl
+internal constructor(
     private val updater: AppUpdater,
     private val updateCache: Cached<AppUpdateLauncher>
 ) : VersionInteractor, Cache {
 
-    override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+  override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            return@withContext updater.watchForDownloadComplete(onDownloadCompleted)
-        }
+        return@withContext updater.watchForDownloadComplete(onDownloadCompleted)
+      }
 
-    override suspend fun completeUpdate() = withContext(context = Dispatchers.Main) {
+  override suspend fun completeUpdate() =
+      withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
         Timber.d("GOING DOWN FOR UPDATE")
         updater.complete()
-    }
+      }
 
-    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+  override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            if (force) {
-                updateCache.clear()
-            }
-
-            return@withContext updateCache.call()
+        if (force) {
+          updateCache.clear()
         }
 
-    override suspend fun clear() {
-        Enforcer.assertOffMainThread()
-        updateCache.clear()
-    }
+        return@withContext updateCache.call()
+      }
+
+  override suspend fun clear() {
+    Enforcer.assertOffMainThread()
+    updateCache.clear()
+  }
 }

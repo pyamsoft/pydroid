@@ -32,116 +32,109 @@ import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
-internal class OtherAppsList internal constructor(
-    parent: ViewGroup
-) : BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvent, OtherAppsListBinding>(parent) {
+internal class OtherAppsList internal constructor(parent: ViewGroup) :
+    BaseUiView<OtherAppsViewState, OtherAppsViewEvent.ListEvent, OtherAppsListBinding>(parent) {
 
-    override val viewBinding = OtherAppsListBinding::inflate
+  override val viewBinding = OtherAppsListBinding::inflate
 
-    override val layoutRoot by boundView { otherAppsList }
+  override val layoutRoot by boundView { otherAppsList }
 
-    private var listAdapter: OtherAppsAdapter? = null
+  private var listAdapter: OtherAppsAdapter? = null
 
-    private var lastViewed: Int = 0
+  private var lastViewed: Int = 0
 
-    init {
-        doOnInflate {
-            setupListView()
-        }
+  init {
+    doOnInflate { setupListView() }
 
-        doOnInflate { savedInstanceState ->
-            lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0
-        }
+    doOnInflate { savedInstanceState -> lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0 }
 
-        doOnTeardown {
-            binding.otherAppsList.adapter = null
-            listAdapter = null
-        }
-
-        doOnInflate {
-            val margin = 8.asDp(binding.otherAppsList.context)
-            LinearMarginDecoration.create(margin = margin).apply {
-                binding.otherAppsList.addItemDecoration(this)
-            }
-        }
-
-        doOnTeardown {
-            binding.otherAppsList.removeAllItemDecorations()
-        }
-
-        doOnSaveState { outState ->
-            outState.put(KEY_CURRENT, getCurrentPosition())
-        }
+    doOnTeardown {
+      binding.otherAppsList.adapter = null
+      listAdapter = null
     }
 
-    @CheckResult
-    private fun getCurrentPosition(): Int {
-        val manager = binding.otherAppsList.layoutManager
-        return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
+    doOnInflate {
+      val margin = 8.asDp(binding.otherAppsList.context)
+      LinearMarginDecoration.create(margin = margin).apply {
+        binding.otherAppsList.addItemDecoration(this)
+      }
     }
 
-    private fun setupListView() {
-        listAdapter = OtherAppsAdapter { event, index ->
-            return@OtherAppsAdapter when (event) {
-                is OpenStore -> publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
-                is ViewSource -> publish(OtherAppsViewEvent.ListEvent.ViewSource(index))
-            }
+    doOnTeardown { binding.otherAppsList.removeAllItemDecorations() }
+
+    doOnSaveState { outState -> outState.put(KEY_CURRENT, getCurrentPosition()) }
+  }
+
+  @CheckResult
+  private fun getCurrentPosition(): Int {
+    val manager = binding.otherAppsList.layoutManager
+    return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
+  }
+
+  private fun setupListView() {
+    listAdapter =
+        OtherAppsAdapter { event, index ->
+          return@OtherAppsAdapter when (event) {
+            is OpenStore -> publish(OtherAppsViewEvent.ListEvent.OpenStore(index))
+            is ViewSource -> publish(OtherAppsViewEvent.ListEvent.ViewSource(index))
+          }
         }
 
-        binding.otherAppsList.apply {
-            adapter = listAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                initialPrefetchItemCount = 3
-                isItemPrefetchEnabled = false
-            }
-        }
-
-        FastScrollerBuilder(binding.otherAppsList)
-            .useMd2Style()
-            .setPopupTextProvider(listAdapter)
-            .build()
+    binding.otherAppsList.apply {
+      adapter = listAdapter
+      layoutManager =
+          LinearLayoutManager(context).apply {
+            initialPrefetchItemCount = 3
+            isItemPrefetchEnabled = false
+          }
     }
 
-    override fun onRender(state: UiRender<OtherAppsViewState>) {
-        state.mapChanged { it.apps }.render(viewScope) { handleApps(it) }
+    FastScrollerBuilder(binding.otherAppsList)
+        .useMd2Style()
+        .setPopupTextProvider(listAdapter)
+        .build()
+  }
+
+  override fun onRender(state: UiRender<OtherAppsViewState>) {
+    state.mapChanged { it.apps }.render(viewScope) { handleApps(it) }
+  }
+
+  private fun handleApps(apps: List<OtherApp>) {
+    val beganEmpty = isEmpty()
+    if (apps.isEmpty()) {
+      clearApps()
+    } else {
+      loadApps(apps)
     }
 
-    private fun handleApps(apps: List<OtherApp>) {
-        val beganEmpty = isEmpty()
-        if (apps.isEmpty()) {
-            clearApps()
-        } else {
-            loadApps(apps)
-        }
-
-        if (beganEmpty && !isEmpty()) {
-            scrollToLastViewedItem()
-        }
+    if (beganEmpty && !isEmpty()) {
+      scrollToLastViewedItem()
     }
+  }
 
-    private fun scrollToLastViewedItem() {
-        val viewed = lastViewed
-        if (viewed > 0) {
-            lastViewed = 0
-            binding.otherAppsList.scrollToPosition(viewed)
-        }
+  private fun scrollToLastViewedItem() {
+    val viewed = lastViewed
+    if (viewed > 0) {
+      lastViewed = 0
+      binding.otherAppsList.scrollToPosition(viewed)
     }
+  }
 
-    @CheckResult
-    private fun isEmpty(): Boolean {
-        return requireNotNull(listAdapter).itemCount == 0
-    }
+  @CheckResult
+  private fun isEmpty(): Boolean {
+    return requireNotNull(listAdapter).itemCount == 0
+  }
 
-    private fun loadApps(apps: List<OtherApp>) {
-        requireNotNull(listAdapter).submitList(apps.map { OtherAppsItemViewState(it) })
-    }
+  private fun loadApps(apps: List<OtherApp>) {
+    requireNotNull(listAdapter).submitList(apps.map { OtherAppsItemViewState(it) })
+  }
 
-    private fun clearApps() {
-        requireNotNull(listAdapter).submitList(null)
-    }
+  private fun clearApps() {
+    requireNotNull(listAdapter).submitList(null)
+  }
 
-    companion object {
+  companion object {
 
-        private const val KEY_CURRENT = "key_current_app"
-    }
+    private const val KEY_CURRENT = "key_current_app"
+  }
 }

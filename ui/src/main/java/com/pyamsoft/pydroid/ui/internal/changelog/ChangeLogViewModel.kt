@@ -24,23 +24,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-internal class ChangeLogViewModel internal constructor(
-    private val interactor: ChangeLogInteractor
-) : UiViewModel<UnitViewState, ChangeLogControllerEvent>(
-    initialState = UnitViewState
-) {
+internal class ChangeLogViewModel
+internal constructor(private val interactor: ChangeLogInteractor) :
+    UiViewModel<UnitViewState, ChangeLogControllerEvent>(initialState = UnitViewState) {
 
-    internal fun show(
-        force: Boolean,
-    ) {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            if (interactor.showChangelog(force)) {
-                withContext(context = Dispatchers.Main) {
-                    publish(ChangeLogControllerEvent.ShowChangeLog)
-                }
-            }
-        }
+  internal fun show(
+      force: Boolean,
+  ) {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      if (interactor.showChangelog(force)) {
+        withContext(context = Dispatchers.Main) { publish(ChangeLogControllerEvent.ShowChangeLog) }
+      }
     }
-
+  }
 }
-

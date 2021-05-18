@@ -33,133 +33,123 @@ import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
-internal class AboutListView internal constructor(
-    parent: ViewGroup
-) : BaseUiView<AboutViewState, AboutViewEvent.ListItemEvent, AboutLibrariesListBinding>(parent) {
+internal class AboutListView internal constructor(parent: ViewGroup) :
+    BaseUiView<AboutViewState, AboutViewEvent.ListItemEvent, AboutLibrariesListBinding>(parent) {
 
-    override val viewBinding = AboutLibrariesListBinding::inflate
+  override val viewBinding = AboutLibrariesListBinding::inflate
 
-    override val layoutRoot by boundView { aboutList }
+  override val layoutRoot by boundView { aboutList }
 
-    private var aboutAdapter: AboutAdapter? = null
+  private var aboutAdapter: AboutAdapter? = null
 
-    private var lastViewed: Int = 0
+  private var lastViewed: Int = 0
 
-    init {
-        doOnInflate {
-            setupListView()
+  init {
+    doOnInflate { setupListView() }
+
+    doOnInflate { savedInstanceState -> lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0 }
+
+    doOnTeardown {
+      binding.aboutList.adapter = null
+      aboutAdapter = null
+    }
+
+    doOnInflate {
+      val margin = 8.asDp(binding.aboutList.context)
+      LinearMarginDecoration.create(margin = margin).apply {
+        binding.aboutList.addItemDecoration(this)
+      }
+    }
+
+    doOnTeardown { binding.aboutList.removeAllItemDecorations() }
+
+    doOnSaveState { outState -> outState.put(KEY_CURRENT, getCurrentPosition()) }
+  }
+
+  @CheckResult
+  private fun getCurrentPosition(): Int {
+    val manager = binding.aboutList.layoutManager
+    return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
+  }
+
+  private fun setupListView() {
+    aboutAdapter =
+        AboutAdapter { event, index ->
+          return@AboutAdapter when (event) {
+            is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvent.OpenLicense(index))
+            is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvent.OpenLibrary(index))
+          }
         }
 
-        doOnInflate { savedInstanceState ->
-            lastViewed = savedInstanceState.get(KEY_CURRENT) ?: 0
-        }
-
-        doOnTeardown {
-            binding.aboutList.adapter = null
-            aboutAdapter = null
-        }
-
-        doOnInflate {
-            val margin = 8.asDp(binding.aboutList.context)
-            LinearMarginDecoration.create(margin = margin).apply {
-                binding.aboutList.addItemDecoration(this)
-            }
-        }
-
-        doOnTeardown {
-            binding.aboutList.removeAllItemDecorations()
-        }
-
-        doOnSaveState { outState ->
-            outState.put(KEY_CURRENT, getCurrentPosition())
-        }
+    binding.aboutList.apply {
+      adapter = aboutAdapter
+      layoutManager =
+          LinearLayoutManager(context).apply {
+            initialPrefetchItemCount = 3
+            isItemPrefetchEnabled = false
+          }
     }
 
-    @CheckResult
-    private fun getCurrentPosition(): Int {
-        val manager = binding.aboutList.layoutManager
-        return if (manager is LinearLayoutManager) manager.findFirstVisibleItemPosition() else 0
+    FastScrollerBuilder(binding.aboutList).useMd2Style().setPopupTextProvider(aboutAdapter).build()
+  }
+
+  override fun onRender(state: UiRender<AboutViewState>) {
+    state.mapChanged { it.isLoading }.render(viewScope) { handleLoading(it) }
+    state.mapChanged { it.licenses }.render(viewScope) { handleLicenses(it) }
+  }
+
+  private fun handleLoading(loading: Boolean) {
+    if (loading) {
+      hide()
+    } else {
+      show()
+    }
+  }
+
+  private fun handleLicenses(licenses: List<OssLibrary>) {
+    val beganEmpty = isEmpty()
+    if (licenses.isEmpty()) {
+      clearLicenses()
+    } else {
+      loadLicenses(licenses)
     }
 
-    private fun setupListView() {
-        aboutAdapter = AboutAdapter { event, index ->
-            return@AboutAdapter when (event) {
-                is OpenLicenseUrl -> publish(AboutViewEvent.ListItemEvent.OpenLicense(index))
-                is OpenLibraryUrl -> publish(AboutViewEvent.ListItemEvent.OpenLibrary(index))
-            }
-        }
-
-        binding.aboutList.apply {
-            adapter = aboutAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                initialPrefetchItemCount = 3
-                isItemPrefetchEnabled = false
-            }
-        }
-
-        FastScrollerBuilder(binding.aboutList)
-            .useMd2Style()
-            .setPopupTextProvider(aboutAdapter)
-            .build()
+    if (beganEmpty && !isEmpty()) {
+      scrollToLastViewedItem()
     }
+  }
 
-    override fun onRender(state: UiRender<AboutViewState>) {
-        state.mapChanged { it.isLoading }.render(viewScope) { handleLoading(it) }
-        state.mapChanged { it.licenses }.render(viewScope) { handleLicenses(it) }
+  private fun scrollToLastViewedItem() {
+    val viewed = lastViewed
+    if (viewed > 0) {
+      lastViewed = 0
+      binding.aboutList.scrollToPosition(viewed)
     }
+  }
 
-    private fun handleLoading(loading: Boolean) {
-        if (loading) {
-            hide()
-        } else {
-            show()
-        }
-    }
+  private fun show() {
+    layoutRoot.isVisible = true
+  }
 
-    private fun handleLicenses(licenses: List<OssLibrary>) {
-        val beganEmpty = isEmpty()
-        if (licenses.isEmpty()) {
-            clearLicenses()
-        } else {
-            loadLicenses(licenses)
-        }
+  private fun hide() {
+    layoutRoot.isVisible = false
+  }
 
-        if (beganEmpty && !isEmpty()) {
-            scrollToLastViewedItem()
-        }
-    }
+  @CheckResult
+  private fun isEmpty(): Boolean {
+    return requireNotNull(aboutAdapter).itemCount == 0
+  }
 
-    private fun scrollToLastViewedItem() {
-        val viewed = lastViewed
-        if (viewed > 0) {
-            lastViewed = 0
-            binding.aboutList.scrollToPosition(viewed)
-        }
-    }
+  private fun loadLicenses(libraries: List<OssLibrary>) {
+    requireNotNull(aboutAdapter).submitList(libraries.map { AboutItemViewState(it) })
+  }
 
-    private fun show() {
-        layoutRoot.isVisible = true
-    }
+  private fun clearLicenses() {
+    requireNotNull(aboutAdapter).submitList(null)
+  }
 
-    private fun hide() {
-        layoutRoot.isVisible = false
-    }
+  companion object {
 
-    @CheckResult
-    private fun isEmpty(): Boolean {
-        return requireNotNull(aboutAdapter).itemCount == 0
-    }
-
-    private fun loadLicenses(libraries: List<OssLibrary>) {
-        requireNotNull(aboutAdapter).submitList(libraries.map { AboutItemViewState(it) })
-    }
-
-    private fun clearLicenses() {
-        requireNotNull(aboutAdapter).submitList(null)
-    }
-
-    companion object {
-
-        private const val KEY_CURRENT = "key_current_license"
-    }
+    private const val KEY_CURRENT = "key_current_license"
+  }
 }

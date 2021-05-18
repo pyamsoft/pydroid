@@ -19,6 +19,5 @@ package com.pyamsoft.pydroid.ui.internal.billing
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.internal.app.AppName
 
-internal class BillingName internal constructor(
-    parent: ViewGroup
-) : AppName<BillingViewState>(parent)
+internal class BillingName internal constructor(parent: ViewGroup) :
+    AppName<BillingViewState>(parent)

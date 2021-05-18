@@ -28,15 +28,9 @@ import androidx.annotation.CheckResult
  */
 public interface ImageLoader : ImageLoaderApi<Drawable> {
 
-    /**
-     * Return all operation results as Drawables
-     */
-    @CheckResult
-    public fun asDrawable(): ImageLoaderApi<Drawable>
+  /** Return all operation results as Drawables */
+  @CheckResult public fun asDrawable(): ImageLoaderApi<Drawable>
 
-    /**
-     * Return all operation results as Bitmaps
-     */
-    @CheckResult
-    public fun asBitmap(): ImageLoaderApi<Bitmap>
+  /** Return all operation results as Bitmaps */
+  @CheckResult public fun asBitmap(): ImageLoaderApi<Bitmap>
 }

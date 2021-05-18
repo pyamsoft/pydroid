@@ -22,25 +22,24 @@ import com.pyamsoft.pydroid.util.doOnResume
 import timber.log.Timber
 
 /**
- * Using the fragment manager to handle transactions, this guarantees that any old
- * versions of the dialog fragment are removed before a new one is added.
+ * Using the fragment manager to handle transactions, this guarantees that any old versions of the
+ * dialog fragment are removed before a new one is added.
  *
- * Because of doOnResume this also guarantees that any children fragments are also
- * ready
+ * Because of doOnResume this also guarantees that any children fragments are also ready
  */
 public fun DialogFragment.show(activity: FragmentActivity, tag: String) {
-    require(tag.isNotBlank()) { "Cannot use blank tag" }
+  require(tag.isNotBlank()) { "Cannot use blank tag" }
 
-    activity.doOnResume {
-        val fragmentManager = activity.supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        val prev = fragmentManager.findFragmentByTag(tag)
-        if (prev != null) {
-            Timber.d("Remove old fragment with tag: $tag")
-            transaction.remove(prev)
-        }
-
-        Timber.d("Add new fragment with tag: $tag")
-        show(transaction, tag)
+  activity.doOnResume {
+    val fragmentManager = activity.supportFragmentManager
+    val transaction = fragmentManager.beginTransaction()
+    val prev = fragmentManager.findFragmentByTag(tag)
+    if (prev != null) {
+      Timber.d("Remove old fragment with tag: $tag")
+      transaction.remove(prev)
     }
+
+    Timber.d("Add new fragment with tag: $tag")
+    show(transaction, tag)
+  }
 }

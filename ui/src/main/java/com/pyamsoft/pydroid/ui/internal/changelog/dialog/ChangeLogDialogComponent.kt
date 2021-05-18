@@ -26,53 +26,54 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 
 internal interface ChangeLogDialogComponent {
 
-    fun inject(dialog: ChangeLogDialog)
+  fun inject(dialog: ChangeLogDialog)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            parent: ViewGroup,
-            imageView: ImageView,
-            provider: ChangeLogProvider
-        ): ChangeLogDialogComponent
+    @CheckResult
+    fun create(
+        parent: ViewGroup,
+        imageView: ImageView,
+        provider: ChangeLogProvider
+    ): ChangeLogDialogComponent
 
-        data class Parameters internal constructor(
-            internal val imageLoader: ImageLoader,
-            internal val interactor: ChangeLogInteractor,
-        )
+    data class Parameters
+    internal constructor(
+        internal val imageLoader: ImageLoader,
+        internal val interactor: ChangeLogInteractor,
+    )
+  }
+
+  class Impl
+  private constructor(
+      private val parent: ViewGroup,
+      private val imageView: ImageView,
+      private val provider: ChangeLogProvider,
+      private val params: Factory.Parameters,
+  ) : ChangeLogDialogComponent {
+
+    private val factory = createViewModelFactory {
+      ChangeLogDialogViewModel(params.interactor, provider)
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup,
-        private val imageView: ImageView,
-        private val provider: ChangeLogProvider,
-        private val params: Factory.Parameters,
-    ) : ChangeLogDialogComponent {
-
-        private val factory = createViewModelFactory {
-            ChangeLogDialogViewModel(params.interactor, provider)
-        }
-
-        override fun inject(dialog: ChangeLogDialog) {
-            dialog.factory = factory
-            dialog.listView = ChangeLogList(parent)
-            dialog.nameView = ChangeLogName(parent)
-            dialog.closeView = ChangeLogClose(parent)
-            dialog.iconView = ChangeLogIcon(params.imageLoader, imageView)
-        }
-
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(
-                parent: ViewGroup,
-                imageView: ImageView,
-                provider: ChangeLogProvider
-            ): ChangeLogDialogComponent {
-                return Impl(parent, imageView, provider, params)
-            }
-        }
+    override fun inject(dialog: ChangeLogDialog) {
+      dialog.factory = factory
+      dialog.listView = ChangeLogList(parent)
+      dialog.nameView = ChangeLogName(parent)
+      dialog.closeView = ChangeLogClose(parent)
+      dialog.iconView = ChangeLogIcon(params.imageLoader, imageView)
     }
+
+    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
+        Factory {
+
+      override fun create(
+          parent: ViewGroup,
+          imageView: ImageView,
+          provider: ChangeLogProvider
+      ): ChangeLogDialogComponent {
+        return Impl(parent, imageView, provider, params)
+      }
+    }
+  }
 }

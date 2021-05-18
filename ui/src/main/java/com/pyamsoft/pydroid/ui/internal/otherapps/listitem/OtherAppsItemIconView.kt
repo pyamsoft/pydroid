@@ -24,34 +24,31 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemIconBinding
 
-internal class OtherAppsItemIconView internal constructor(
-    private val imageLoader: ImageLoader,
-    parent: ViewGroup
-) : BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemIconBinding>(parent) {
+internal class OtherAppsItemIconView
+internal constructor(private val imageLoader: ImageLoader, parent: ViewGroup) :
+    BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemIconBinding>(parent) {
 
-    override val viewBinding = OtherAppsItemIconBinding::inflate
+  override val viewBinding = OtherAppsItemIconBinding::inflate
 
-    override val layoutRoot by boundView { otherAppsIconRoot }
+  override val layoutRoot by boundView { otherAppsIconRoot }
 
-    private var loaded: Loaded? = null
+  private var loaded: Loaded? = null
 
-    init {
-        doOnTeardown {
-            clear()
-        }
-    }
+  init {
+    doOnTeardown { clear() }
+  }
 
-    private fun clear() {
-        loaded?.dispose()
-        loaded = null
-    }
+  private fun clear() {
+    loaded?.dispose()
+    loaded = null
+  }
 
-    override fun onRender(state: UiRender<OtherAppsItemViewState>) {
-        state.mapChanged { it.app }.render(viewScope) { handleApp(it) }
-    }
+  override fun onRender(state: UiRender<OtherAppsItemViewState>) {
+    state.mapChanged { it.app }.render(viewScope) { handleApp(it) }
+  }
 
-    private fun handleApp(app: OtherApp) {
-        clear()
-        loaded = imageLoader.load(app.icon).into(binding.otherAppsIcon)
-    }
+  private fun handleApp(app: OtherApp) {
+    clear()
+    loaded = imageLoader.load(app.icon).into(binding.otherAppsIcon)
+  }
 }

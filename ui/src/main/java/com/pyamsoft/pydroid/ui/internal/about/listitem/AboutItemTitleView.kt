@@ -25,36 +25,33 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.databinding.AboutItemTitleBinding
 
-internal class AboutItemTitleView internal constructor(
-    parent: ViewGroup
-) : BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
+internal class AboutItemTitleView internal constructor(parent: ViewGroup) :
+    BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemTitleBinding>(parent) {
 
-    override val viewBinding = AboutItemTitleBinding::inflate
+  override val viewBinding = AboutItemTitleBinding::inflate
 
-    override val layoutRoot by boundView { aboutTitle }
+  override val layoutRoot by boundView { aboutTitle }
 
-    init {
-        doOnTeardown {
-            clear()
-        }
-    }
+  init {
+    doOnTeardown { clear() }
+  }
 
-    private fun clear() {
-        binding.title.text = ""
-        binding.license.text = ""
-    }
+  private fun clear() {
+    binding.title.text = ""
+    binding.license.text = ""
+  }
 
-    override fun onRender(state: UiRender<AboutItemViewState>) {
-        state.mapChanged { it.library }.render(viewScope) { handleLibrary(it) }
-    }
+  override fun onRender(state: UiRender<AboutItemViewState>) {
+    state.mapChanged { it.library }.render(viewScope) { handleLibrary(it) }
+  }
 
-    private fun handleLibrary(library: OssLibrary) {
-        binding.title.text = library.name
-        binding.license.text = getString(R.string.license_name, library.licenseName)
-    }
+  private fun handleLibrary(library: OssLibrary) {
+    binding.title.text = library.name
+    binding.license.text = getString(R.string.license_name, library.licenseName)
+  }
 
-    @CheckResult
-    private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
-        return layoutRoot.context.getString(id, *formatArgs)
-    }
+  @CheckResult
+  private fun getString(@StringRes id: Int, vararg formatArgs: Any): String {
+    return layoutRoot.context.getString(id, *formatArgs)
+  }
 }

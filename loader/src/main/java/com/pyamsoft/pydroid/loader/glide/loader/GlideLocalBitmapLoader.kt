@@ -25,29 +25,28 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideBitmapTransformer
 
-internal class GlideLocalBitmapLoader internal constructor(
-    context: Context,
-    @DrawableRes private val resId: Int
-) : GlideBitmapTransformer(context) {
+internal class GlideLocalBitmapLoader
+internal constructor(context: Context, @DrawableRes private val resId: Int) :
+    GlideBitmapTransformer(context) {
 
-    override fun onCreateRequest(builder: RequestBuilder<Bitmap>): RequestBuilder<Bitmap> {
-        return builder.load(resId)
+  override fun onCreateRequest(builder: RequestBuilder<Bitmap>): RequestBuilder<Bitmap> {
+    return builder.load(resId)
+  }
+
+  override fun mutateImage(resource: Bitmap): Bitmap {
+    return resource.copy(resource.config, true)
+  }
+
+  override fun setImage(view: ImageView, image: Bitmap) {
+    view.setImageBitmap(image)
+  }
+
+  override fun immediateResource(): Bitmap? {
+    val drawable = AppCompatResources.getDrawable(context, resId)
+    if (drawable is BitmapDrawable) {
+      return drawable.bitmap
     }
 
-    override fun mutateImage(resource: Bitmap): Bitmap {
-        return resource.copy(resource.config, true)
-    }
-
-    override fun setImage(view: ImageView, image: Bitmap) {
-        view.setImageBitmap(image)
-    }
-
-    override fun immediateResource(): Bitmap? {
-        val drawable = AppCompatResources.getDrawable(context, resId)
-        if (drawable is BitmapDrawable) {
-            return drawable.bitmap
-        }
-
-        return null
-    }
+    return null
+  }
 }

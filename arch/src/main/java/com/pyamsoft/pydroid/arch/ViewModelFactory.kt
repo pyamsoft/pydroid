@@ -25,35 +25,27 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import com.pyamsoft.pydroid.arch.internal.HandleUiSavedState
 
-/**
- * A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances.
- */
+/** A ViewModelProvider.Factory which returns UiStateViewModel and UiViewModel instances. */
 public abstract class ViewModelFactory protected constructor() : ViewModelProvider.Factory {
 
-    /**
-     * Resolve the requested UiViewModel
-     */
-    final override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (ViewModel::class.java.isAssignableFrom(modelClass)) {
-            @Suppress("UNCHECKED_CAST")
-            return createViewModel(modelClass) as T
-        } else {
-            fail(modelClass)
-        }
+  /** Resolve the requested UiViewModel */
+  final override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    if (ViewModel::class.java.isAssignableFrom(modelClass)) {
+      @Suppress("UNCHECKED_CAST") return createViewModel(modelClass) as T
+    } else {
+      fail(modelClass)
     }
+  }
 
-    /**
-     * Factory fails to return a value
-     */
-    protected fun <T : ViewModel> fail(modelClass: Class<T>): Nothing {
-        throw IllegalArgumentException("Factory cannot handle ViewModel class: ${modelClass.simpleName}")
-    }
+  /** Factory fails to return a value */
+  protected fun <T : ViewModel> fail(modelClass: Class<T>): Nothing {
+    throw IllegalArgumentException(
+        "Factory cannot handle ViewModel class: ${modelClass.simpleName}")
+  }
 
-    /**
-     * Resolve the requested UiViewModel
-     */
-    @CheckResult
-    protected abstract fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel
+  /** Resolve the requested UiViewModel */
+  @CheckResult
+  protected abstract fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel
 }
 
 /**
@@ -61,86 +53,72 @@ public abstract class ViewModelFactory protected constructor() : ViewModelProvid
  *
  * Integrated with androidx.savedstate
  */
-public abstract class SavedStateViewModelFactory @JvmOverloads protected constructor(
-    owner: SavedStateRegistryOwner,
-    defaultArgs: Bundle? = null
-) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+public abstract class SavedStateViewModelFactory
+@JvmOverloads
+protected constructor(owner: SavedStateRegistryOwner, defaultArgs: Bundle? = null) :
+    AbstractSavedStateViewModelFactory(owner, defaultArgs) {
 
-    /**
-     * Resolve the requested UiViewModel
-     */
-    final override fun <T : ViewModel> create(
-        key: String,
-        modelClass: Class<T>,
-        handle: SavedStateHandle
-    ): T {
-        if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
-            @Suppress("UNCHECKED_CAST")
-            return createViewModel(modelClass, HandleUiSavedState(handle)) as T
-        } else {
-            fail(modelClass)
-        }
+  /** Resolve the requested UiViewModel */
+  final override fun <T : ViewModel> create(
+      key: String,
+      modelClass: Class<T>,
+      handle: SavedStateHandle
+  ): T {
+    if (UiStateViewModel::class.java.isAssignableFrom(modelClass)) {
+      @Suppress("UNCHECKED_CAST")
+      return createViewModel(modelClass, HandleUiSavedState(handle)) as T
+    } else {
+      fail(modelClass)
     }
+  }
 
-    /**
-     * Factory fails to return a value
-     */
-    protected fun <T : ViewModel> fail(modelClass: Class<T>): Nothing {
-        throw IllegalArgumentException("Factory cannot handle ViewModel class: ${modelClass.simpleName}")
-    }
+  /** Factory fails to return a value */
+  protected fun <T : ViewModel> fail(modelClass: Class<T>): Nothing {
+    throw IllegalArgumentException(
+        "Factory cannot handle ViewModel class: ${modelClass.simpleName}")
+  }
 
-    /**
-     * Resolve the requested UiViewModel
-     */
-    @CheckResult
-    protected abstract fun <T : ViewModel> createViewModel(
-        modelClass: Class<T>,
-        savedState: UiSavedState,
-    ): ViewModel
+  /** Resolve the requested UiViewModel */
+  @CheckResult
+  protected abstract fun <T : ViewModel> createViewModel(
+      modelClass: Class<T>,
+      savedState: UiSavedState,
+  ): ViewModel
 }
 
-/**
- * Create a save state aware view model factory
- */
+/** Create a save state aware view model factory */
 @CheckResult
 @JvmOverloads
 public inline fun <reified T : ViewModel> SavedStateRegistryOwner.createSavedStateViewModelFactory(
     provider: UiSavedStateViewModelProvider<T>?,
     defaultArgs: Bundle? = null
 ): ViewModelProvider.Factory {
-    return object : SavedStateViewModelFactory(this, defaultArgs) {
-        override fun <T : ViewModel> createViewModel(
-            modelClass: Class<T>,
-            savedState: UiSavedState
-        ): ViewModel {
-            @Suppress("UNCHECKED_CAST")
-            return requireNotNull(provider).create(savedState) as? T ?: fail(modelClass)
-        }
+  return object : SavedStateViewModelFactory(this, defaultArgs) {
+    override fun <T : ViewModel> createViewModel(
+        modelClass: Class<T>,
+        savedState: UiSavedState
+    ): ViewModel {
+      @Suppress("UNCHECKED_CAST")
+      return requireNotNull(provider).create(savedState) as? T ?: fail(modelClass)
     }
+  }
 }
 
-/**
- * Create a view model factory
- */
+/** Create a view model factory */
 @CheckResult
 public inline fun <reified T : ViewModel> createViewModelFactory(
     crossinline provider: () -> T?
 ): ViewModelProvider.Factory {
-    return object : ViewModelFactory() {
-        override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
-            @Suppress("UNCHECKED_CAST")
-            return provider() as? T ?: fail(modelClass)
-        }
+  return object : ViewModelFactory() {
+    override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
+      @Suppress("UNCHECKED_CAST") return provider() as? T ?: fail(modelClass)
     }
+  }
 }
 
-/**
- * The interface around a factory with saved state
- */
+/** The interface around a factory with saved state */
 public interface UiSavedStateViewModelProvider<T : ViewModel> {
 
-    /**
-     * Create a new view model
-     */
-    public fun create(savedState: UiSavedState): T
+  /** Create a new view model */
+  public fun create(savedState: UiSavedState): T
 }

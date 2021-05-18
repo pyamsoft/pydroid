@@ -40,92 +40,83 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-/**
- * Activity which handles displaying an in-app rating prompt
- */
+/** Activity which handles displaying an in-app rating prompt */
 public abstract class RatingActivity : VersionCheckActivity() {
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    internal var ratingView: RatingView? = null
+  internal var ratingView: RatingView? = null
 
-    internal var ratingFactory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<RatingViewModel> { ratingFactory }
+  internal var ratingFactory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<RatingViewModel> { ratingFactory }
 
-    /**
-     * On post create
-     */
-    @CallSuper
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
+  /** On post create */
+  @CallSuper
+  override fun onPostCreate(savedInstanceState: Bundle?) {
+    super.onPostCreate(savedInstanceState)
 
-        // Need to do this in onPostCreate because the snackbarRoot will not be available until
-        // after subclass onCreate
-        Injector.obtainFromApplication<PYDroidComponent>(this)
-            .plusRating()
-            .create(this) { snackbarRoot }
-            .inject(this)
+    // Need to do this in onPostCreate because the snackbarRoot will not be available until
+    // after subclass onCreate
+    Injector.obtainFromApplication<PYDroidComponent>(this)
+        .plusRating()
+        .create(this) { snackbarRoot }
+        .inject(this)
 
-        stateSaver = createComponent(
+    stateSaver =
+        createComponent(
             savedInstanceState,
             this,
             viewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
-                    is RatingControllerEvent.LaunchRating -> showRating(
-                        it.isFallbackEnabled,
-                        it.launcher
-                    )
-                }
-            },
-            requireNotNull(ratingView)
-        ) {
-            return@createComponent when (it) {
-                is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
-            }
+            controller =
+                newUiController {
+                  return@newUiController when (it) {
+                    is RatingControllerEvent.LaunchRating ->
+                        showRating(it.isFallbackEnabled, it.launcher)
+                  }
+                },
+            requireNotNull(ratingView)) {
+          return@createComponent when (it) {
+            is RatingViewEvent.HideNavigation -> viewModel.handleClearNavigationError()
+          }
         }
 
-        // Attempt to load rating based on a couple various factors - does not always result
-        // in a call to showRating
-        viewModel.load(false)
-    }
+    // Attempt to load rating based on a couple various factors - does not always result
+    // in a call to showRating
+    viewModel.load(false)
+  }
 
-    /**
-     * On save instance state
-     */
-    @CallSuper
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
+  /** On save instance state */
+  @CallSuper
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
 
-    /**
-     * On destroy
-     */
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
-        ratingFactory = null
-        stateSaver = null
-    }
+  /** On destroy */
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    ratingFactory = null
+    stateSaver = null
+  }
 
-    private fun showRating(isFallbackEnabled: Boolean, launcher: AppRatingLauncher) {
-        val activity = this
+  private fun showRating(isFallbackEnabled: Boolean, launcher: AppRatingLauncher) {
+    val activity = this
 
-        // Enforce that we do this on the Main thread
-        lifecycleScope.launch(context = Dispatchers.Main) {
-            if (ChangeLogDialog.isNotShown(activity) && BillingDialog.isNotShown(activity)) {
-                try {
-                    launcher.rate(activity)
-                } catch (throwable: Throwable) {
-                    Timber.e(throwable, "Unable to launch in-app rating")
-                    if (isFallbackEnabled) {
-                        MarketLinker.openAppPage(activity)
-                            .onSuccess { viewModel.handleNavigationSuccess() }
-                            .onFailure { viewModel.handleNavigationFailed(it) }
-                    }
-                }
-            }
+    // Enforce that we do this on the Main thread
+    lifecycleScope.launch(context = Dispatchers.Main) {
+      if (ChangeLogDialog.isNotShown(activity) && BillingDialog.isNotShown(activity)) {
+        try {
+          launcher.rate(activity)
+        } catch (throwable: Throwable) {
+          Timber.e(throwable, "Unable to launch in-app rating")
+          if (isFallbackEnabled) {
+            MarketLinker.openAppPage(activity)
+                .onSuccess { viewModel.handleNavigationSuccess() }
+                .onFailure { viewModel.handleNavigationFailed(it) }
+          }
         }
+      }
     }
+  }
 }

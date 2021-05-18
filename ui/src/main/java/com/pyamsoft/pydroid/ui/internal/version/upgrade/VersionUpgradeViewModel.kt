@@ -26,19 +26,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-internal class VersionUpgradeViewModel internal constructor(
+internal class VersionUpgradeViewModel
+internal constructor(
     private val interactor: VersionInteractor,
 ) : UiViewModel<UnitViewState, UnitControllerEvent>(initialState = UnitViewState) {
 
-    internal inline fun completeUpgrade(crossinline onComplete: () -> Unit) {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            Timber.d("Updating app, restart via update manager!")
-            interactor.completeUpdate()
+  internal inline fun completeUpgrade(crossinline onComplete: () -> Unit) {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      Timber.d("Updating app, restart via update manager!")
+      interactor.completeUpdate()
 
-            withContext(context = Dispatchers.Main) {
-                Timber.d("App update completed, publish finish!")
-                onComplete()
-            }
-        }
+      withContext(context = Dispatchers.Main) {
+        Timber.d("App update completed, publish finish!")
+        onComplete()
+      }
     }
+  }
 }

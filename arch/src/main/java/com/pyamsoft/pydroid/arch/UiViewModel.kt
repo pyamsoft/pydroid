@@ -20,144 +20,133 @@ import androidx.annotation.UiThread
 import androidx.lifecycle.viewModelScope
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlin.LazyThreadSafetyMode.NONE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.LazyThreadSafetyMode.NONE
 
 /**
- * A default implementation of a UiStateViewModel which knows how to set up along
- * with UiViews and a UiController to become a full UiComponent
+ * A default implementation of a UiStateViewModel which knows how to set up along with UiViews and a
+ * UiController to become a full UiComponent
  */
-public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent> protected constructor(
-    initialState: S
-) : UiStateViewModel<S>(initialState) {
+public abstract class UiViewModel<S : UiViewState, C : UiControllerEvent>
+protected constructor(initialState: S) : UiStateViewModel<S>(initialState) {
 
-    private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
-    private val onClearEvents by onClearEventDelegate
+  private val onClearEventDelegate = lazy(NONE) { mutableSetOf<() -> Unit>() }
+  private val onClearEvents by onClearEventDelegate
 
-    private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
+  private val controllerEventBus = EventBus.create<C>(emitOnlyWhenActive = true)
 
-    /**
-     * Bind one or more UiViews to be driven by this UiViewModel
-     *
-     * This is automatically scoped to the life of the [scope]
-     */
-    @UiThread
-    public fun <V : UiViewEvent> bindViews(
-        scope: CoroutineScope,
-        savedInstanceState: UiSavedStateReader,
-        vararg views: UiView<S, out V>,
-        onEvent: (event: V) -> Unit
-    ) {
-        // Guarantee views are initialized
-        // Run this outside of the view model scope to guarantee that it executes immediately
-        views.forEach { it.init(savedInstanceState) }
+  /**
+   * Bind one or more UiViews to be driven by this UiViewModel
+   *
+   * This is automatically scoped to the life of the [scope]
+   */
+  @UiThread
+  public fun <V : UiViewEvent> bindViews(
+      scope: CoroutineScope,
+      savedInstanceState: UiSavedStateReader,
+      vararg views: UiView<S, out V>,
+      onEvent: (event: V) -> Unit
+  ) {
+    // Guarantee views are initialized
+    // Run this outside of the view model scope to guarantee that it executes immediately
+    views.forEach { it.init(savedInstanceState) }
 
-        scope.launch(context = Dispatchers.Default) {
-            // Bind ViewModel
-            bindViewEvents(views.asIterable()) { onEvent(it) }
+    scope.launch(context = Dispatchers.Default) {
+      // Bind ViewModel
+      bindViewEvents(views.asIterable()) { onEvent(it) }
 
-            // Inflate the views on main thread
-            withContext(context = Dispatchers.Main) {
-                views.forEach { it.inflate(savedInstanceState) }
-            }
+      // Inflate the views on main thread
+      withContext(context = Dispatchers.Main) { views.forEach { it.inflate(savedInstanceState) } }
 
-            // Bind state
-            internalBindState(views)
+      // Bind state
+      internalBindState(views)
+    }
+  }
+
+  /**
+   * Bind this UiViewModel to be driven by a UiController
+   *
+   * This is automatically scoped to the life of the [scope]
+   */
+  @UiThread
+  public fun bindController(scope: CoroutineScope, controller: UiController<C>) {
+    scope.launch(context = Dispatchers.Default) {
+      // Bind Controller
+      bindControllerEvents { controller.onControllerEvent(it) }
+    }
+  }
+
+  /** Called when the UiViewModel is being cleared for good. */
+  @UiThread
+  final override fun onCleared() {
+    Enforcer.assertOnMainThread()
+
+    if (onClearEventDelegate.isInitialized()) {
+
+      // Call teardown hooks in random order
+      onClearEvents.forEach { it() }
+
+      // Clear the teardown hooks list to free up memory
+      onClearEvents.clear()
+    }
+
+    super.onCleared()
+  }
+
+  /** Fire a controller event */
+  protected fun publish(event: C) {
+    viewModelScope.launch(context = Dispatchers.IO) { controllerEventBus.send(event) }
+  }
+
+  private fun <V : UiViewEvent> CoroutineScope.bindViewEvents(
+      views: Iterable<UiView<S, out V>>,
+      onEvent: suspend (event: V) -> Unit
+  ) {
+    launch(context = Dispatchers.IO) {
+      views.forEach { view ->
+        view.onViewEvent(onEvent)
+        if (view is BaseUiView<S, out V, *>) {
+          val nestedViews = view.nestedViews()
+          if (nestedViews.isNotEmpty()) {
+            bindViewEvents(nestedViews, onEvent)
+          }
         }
+      }
     }
+  }
 
-
-    /**
-     * Bind this UiViewModel to be driven by a UiController
-     *
-     * This is automatically scoped to the life of the [scope]
-     */
-    @UiThread
-    public fun bindController(
-        scope: CoroutineScope,
-        controller: UiController<C>
-    ) {
-        scope.launch(context = Dispatchers.Default) {
-            // Bind Controller
-            bindControllerEvents { controller.onControllerEvent(it) }
-        }
+  private inline fun CoroutineScope.bindControllerEvents(
+      crossinline onControllerEvent: suspend (event: C) -> Unit
+  ) {
+    launch(context = Dispatchers.IO) {
+      controllerEventBus.onEvent {
+        // Controller events must fire onto the main thread
+        withContext(context = Dispatchers.Main) { onControllerEvent(it) }
+      }
     }
+  }
 
-    /**
-     * Called when the UiViewModel is being cleared for good.
-     */
-    @UiThread
-    final override fun onCleared() {
-        Enforcer.assertOnMainThread()
-
-        if (onClearEventDelegate.isInitialized()) {
-
-            // Call teardown hooks in random order
-            onClearEvents.forEach { it() }
-
-            // Clear the teardown hooks list to free up memory
-            onClearEvents.clear()
-        }
-
-        super.onCleared()
-    }
-
-    /**
-     * Fire a controller event
-     */
-    protected fun publish(event: C) {
-        viewModelScope.launch(context = Dispatchers.IO) {
-            controllerEventBus.send(event)
-        }
-    }
-
-    private fun <V : UiViewEvent> CoroutineScope.bindViewEvents(
-        views: Iterable<UiView<S, out V>>,
-        onEvent: suspend (event: V) -> Unit
-    ) {
-        launch(context = Dispatchers.IO) {
-            views.forEach { view ->
-                view.onViewEvent(onEvent)
-                if (view is BaseUiView<S, out V, *>) {
-                    val nestedViews = view.nestedViews()
-                    if (nestedViews.isNotEmpty()) {
-                        bindViewEvents(nestedViews, onEvent)
-                    }
-                }
-            }
-        }
-    }
-
-    private inline fun CoroutineScope.bindControllerEvents(crossinline onControllerEvent: suspend (event: C) -> Unit) {
-        launch(context = Dispatchers.IO) {
-            controllerEventBus.onEvent {
-                // Controller events must fire onto the main thread
-                withContext(context = Dispatchers.Main) {
-                    onControllerEvent(it)
-                }
-            }
-        }
-    }
-
-    /**
-     * Use this to run an event after UiViewModel onCleared has successfully finished.
-     *
-     * This is generally used in something like the constructor
-     *
-     * init {
-     *     doOnCleared {
-     *         ...
-     *     }
-     * }
-     *
-     * NOTE: Not thread safe. Main thread only for the time being
-     */
-    @UiThread
-    protected fun doOnCleared(onTeardown: () -> Unit) {
-        Enforcer.assertOnMainThread()
-        onClearEvents.add(onTeardown)
-    }
+  /**
+   * Use this to run an event after UiViewModel onCleared has successfully finished.
+   *
+   * This is generally used in something like the constructor
+   *
+   * init {
+   * ```
+   *     doOnCleared {
+   *         ...
+   *     }
+   * ```
+   * }
+   *
+   * NOTE: Not thread safe. Main thread only for the time being
+   */
+  @UiThread
+  protected fun doOnCleared(onTeardown: () -> Unit) {
+    Enforcer.assertOnMainThread()
+    onClearEvents.add(onTeardown)
+  }
 }

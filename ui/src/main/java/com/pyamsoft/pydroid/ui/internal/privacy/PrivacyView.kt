@@ -22,28 +22,28 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
-internal class PrivacyView internal constructor(
+internal class PrivacyView
+internal constructor(
     private val owner: LifecycleOwner,
     private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<PrivacyViewState, PrivacyViewEvent>() {
 
-    override fun render(state: UiRender<PrivacyViewState>) {
-        state.mapChanged { it.throwable }.render(viewScope) { handleError(it) }
-    }
+  override fun render(state: UiRender<PrivacyViewState>) {
+    state.mapChanged { it.throwable }.render(viewScope) { handleError(it) }
+  }
 
-    private fun handleError(throwable: Throwable?) {
-        if (throwable != null) {
-            showError(throwable)
-        }
+  private fun handleError(throwable: Throwable?) {
+    if (throwable != null) {
+      showError(throwable)
     }
+  }
 
-    private fun showError(throwable: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                snackbarRootProvider(),
-                throwable.message ?: "An error occurred while showing policy.",
-                onHidden = { _, _ -> publish(PrivacyViewEvent.SnackbarHidden) }
-            )
-        }
+  private fun showError(throwable: Throwable) {
+    Snackbreak.bindTo(owner) {
+      long(
+          snackbarRootProvider(),
+          throwable.message ?: "An error occurred while showing policy.",
+          onHidden = { _, _ -> publish(PrivacyViewEvent.SnackbarHidden) })
     }
+  }
 }

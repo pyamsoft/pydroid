@@ -16,15 +16,11 @@
 
 package com.pyamsoft.pydroid.notify
 
-/**
- * Exception thrown when no NotifyDispatcher can handle a given notification
- */
-public class MissingDispatcherException internal constructor(
-    dispatchers: Set<NotifyDispatcher<*>>,
-    notification: NotifyData
-) : IllegalArgumentException(
-    """
+/** Exception thrown when no NotifyDispatcher can handle a given notification */
+public class MissingDispatcherException
+internal constructor(dispatchers: Set<NotifyDispatcher<*>>, notification: NotifyData) :
+    IllegalArgumentException(
+        """
     No dispatcher available to handle notification: $notification
     Available dispatchers: $dispatchers
-    """.trimIndent()
-)
+    """.trimIndent())

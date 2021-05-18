@@ -21,27 +21,26 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemActionBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal class OtherAppsItemActionView internal constructor(
-    parent: ViewGroup
-) : BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemActionBinding>(parent) {
+internal class OtherAppsItemActionView internal constructor(parent: ViewGroup) :
+    BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemActionBinding>(parent) {
 
-    override val viewBinding = OtherAppsItemActionBinding::inflate
+  override val viewBinding = OtherAppsItemActionBinding::inflate
 
-    override val layoutRoot by boundView { otherAppsActions }
+  override val layoutRoot by boundView { otherAppsActions }
 
-    init {
-        doOnInflate {
-            binding.actionOpenStore.setOnDebouncedClickListener {
-                publish(OtherAppsItemViewEvent.OpenStore)
-            }
-            binding.actionViewSource.setOnDebouncedClickListener {
-                publish(OtherAppsItemViewEvent.ViewSource)
-            }
-        }
-
-        doOnTeardown {
-            binding.actionViewSource.setOnDebouncedClickListener(null)
-            binding.actionOpenStore.setOnDebouncedClickListener(null)
-        }
+  init {
+    doOnInflate {
+      binding.actionOpenStore.setOnDebouncedClickListener {
+        publish(OtherAppsItemViewEvent.OpenStore)
+      }
+      binding.actionViewSource.setOnDebouncedClickListener {
+        publish(OtherAppsItemViewEvent.ViewSource)
+      }
     }
+
+    doOnTeardown {
+      binding.actionViewSource.setOnDebouncedClickListener(null)
+      binding.actionOpenStore.setOnDebouncedClickListener(null)
+    }
+  }
 }

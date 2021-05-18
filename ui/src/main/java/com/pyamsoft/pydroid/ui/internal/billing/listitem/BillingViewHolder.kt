@@ -26,59 +26,55 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
 
-internal class BillingViewHolder private constructor(
-    binding: ListitemLinearHorizontalBinding,
-    callback: BillingAdapter.Callback
-) : RecyclerView.ViewHolder(binding.root), ViewBinder<BillingItemViewState> {
+internal class BillingViewHolder
+private constructor(binding: ListitemLinearHorizontalBinding, callback: BillingAdapter.Callback) :
+    RecyclerView.ViewHolder(binding.root), ViewBinder<BillingItemViewState> {
 
-    private val binder: ViewBinder<BillingItemViewState>
+  private val binder: ViewBinder<BillingItemViewState>
 
-    internal var clickView: BillingItemClick? = null
-    internal var contentView: BillingItemContent? = null
-    internal var priceView: BillingItemPrice? = null
+  internal var clickView: BillingItemClick? = null
+  internal var contentView: BillingItemContent? = null
+  internal var priceView: BillingItemPrice? = null
 
-    init {
-        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
-            .plusBillingItem()
-            .create(binding.listitemLinearH)
-            .inject(this)
+  init {
+    Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
+        .plusBillingItem()
+        .create(binding.listitemLinearH)
+        .inject(this)
 
-        val click = requireNotNull(clickView)
-        val content = requireNotNull(contentView)
-        val price = requireNotNull(priceView)
-        binder = createViewBinder(
-            click,
-            content,
-            price
-        ) {
-            return@createViewBinder when (it) {
-                is BillingItemViewEvent.Purchase -> callback.onPurchase(bindingAdapterPosition)
-            }
+    val click = requireNotNull(clickView)
+    val content = requireNotNull(contentView)
+    val price = requireNotNull(priceView)
+    binder =
+        createViewBinder(click, content, price) {
+          return@createViewBinder when (it) {
+            is BillingItemViewEvent.Purchase -> callback.onPurchase(bindingAdapterPosition)
+          }
         }
+  }
+
+  override fun bindState(state: BillingItemViewState) {
+    binder.bindState(state)
+  }
+
+  override fun teardown() {
+    binder.teardown()
+
+    contentView = null
+    priceView = null
+  }
+
+  companion object {
+
+    @CheckResult
+    @JvmStatic
+    fun create(
+        inflater: LayoutInflater,
+        container: ViewGroup,
+        callback: BillingAdapter.Callback,
+    ): BillingViewHolder {
+      val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
+      return BillingViewHolder(binding, callback)
     }
-
-    override fun bindState(state: BillingItemViewState) {
-        binder.bindState(state)
-    }
-
-    override fun teardown() {
-        binder.teardown()
-
-        contentView = null
-        priceView = null
-    }
-
-    companion object {
-
-        @CheckResult
-        @JvmStatic
-        fun create(
-            inflater: LayoutInflater,
-            container: ViewGroup,
-            callback: BillingAdapter.Callback,
-        ): BillingViewHolder {
-            val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
-            return BillingViewHolder(binding, callback)
-        }
-    }
+  }
 }

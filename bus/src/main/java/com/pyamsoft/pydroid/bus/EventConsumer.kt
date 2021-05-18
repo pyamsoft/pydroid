@@ -16,16 +16,14 @@
 
 package com.pyamsoft.pydroid.bus
 
-/**
- * A simple receive side implementation of an EventBus
- */
+/** A simple receive side implementation of an EventBus */
 public interface EventConsumer<T : Any> {
 
-    /**
-     * Receive an event from the bus and do things with it.
-     *
-     * Any events sent before this function is called may be replayed or dropped based
-     * on the implementation specifics.
-     */
-    public suspend fun onEvent(emitter: suspend (event: T) -> Unit)
+  /**
+   * Receive an event from the bus and do things with it.
+   *
+   * Any events sent before this function is called may be replayed or dropped based on the
+   * implementation specifics.
+   */
+  public suspend fun onEvent(emitter: suspend (event: T) -> Unit)
 }

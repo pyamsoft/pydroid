@@ -35,85 +35,82 @@ import com.pyamsoft.pydroid.util.hyperlink
 
 internal class AboutFragment : Fragment(), UiController<AboutControllerEvent> {
 
-    private var stateSaver: StateSaver? = null
-    internal var listView: AboutListView? = null
-    internal var errorView: AboutErrors? = null
+  private var stateSaver: StateSaver? = null
+  internal var listView: AboutListView? = null
+  internal var errorView: AboutErrors? = null
 
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<AboutViewModel>(activity = true) { factory }
+  internal var factory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<AboutViewModel>(activity = true) { factory }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.layout_frame, container, false)
-    }
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.layout_frame, container, false)
+  }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onViewCreated(view, savedInstanceState)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-        val binding = LayoutFrameBinding.bind(view)
-        Injector.obtainFromApplication<PYDroidComponent>(view.context)
-            .plusAbout()
-            .create(binding.layoutFrame, viewLifecycleOwner)
-            .inject(this)
+    val binding = LayoutFrameBinding.bind(view)
+    Injector.obtainFromApplication<PYDroidComponent>(view.context)
+        .plusAbout()
+        .create(binding.layoutFrame, viewLifecycleOwner)
+        .inject(this)
 
-        stateSaver = createComponent(
+    stateSaver =
+        createComponent(
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
             controller = this,
             requireNotNull(listView),
-            requireNotNull(errorView)
-        ) {
-            return@createComponent when (it) {
-                is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError()
-                is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
-                is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.handleOpenLibrary(it.index)
-                is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.handleOpenLicense(it.index)
-            }
+            requireNotNull(errorView)) {
+          return@createComponent when (it) {
+            is AboutViewEvent.ErrorEvent.HideLoadError -> viewModel.handleClearLoadError()
+            is AboutViewEvent.ErrorEvent.HideNavigationError -> viewModel.handleHideNavigation()
+            is AboutViewEvent.ListItemEvent.OpenLibrary -> viewModel.handleOpenLibrary(it.index)
+            is AboutViewEvent.ListItemEvent.OpenLicense -> viewModel.handleOpenLicense(it.index)
+          }
         }
 
-        viewModel.handleLoadLicenses()
-    }
+    viewModel.handleLoadLicenses()
+  }
 
-    override fun onControllerEvent(event: AboutControllerEvent) {
-        return when (event) {
-            is AboutControllerEvent.OpenUrl -> openUrl(event.url)
-        }
+  override fun onControllerEvent(event: AboutControllerEvent) {
+    return when (event) {
+      is AboutControllerEvent.OpenUrl -> openUrl(event.url)
     }
+  }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        listView = null
-        factory = null
-        errorView = null
-        stateSaver = null
+  override fun onDestroyView() {
+    super.onDestroyView()
+    listView = null
+    factory = null
+    errorView = null
+    stateSaver = null
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
+
+  private fun openUrl(url: String) {
+    url
+        .hyperlink(requireActivity())
+        .navigate()
+        .onSuccess { viewModel.navigationSuccess() }
+        .onFailure { viewModel.navigationFailed(it) }
+  }
+
+  companion object {
+
+    @JvmStatic
+    @CheckResult
+    internal fun newInstance(): Fragment {
+      return AboutFragment().apply { arguments = Bundle().apply {} }
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
-
-    private fun openUrl(url: String) {
-        url.hyperlink(requireActivity()).navigate()
-            .onSuccess { viewModel.navigationSuccess() }
-            .onFailure { viewModel.navigationFailed(it) }
-    }
-
-    companion object {
-
-        @JvmStatic
-        @CheckResult
-        internal fun newInstance(): Fragment {
-            return AboutFragment().apply {
-                arguments = Bundle().apply {}
-            }
-        }
-    }
+  }
 }

@@ -16,32 +16,21 @@
 
 package com.pyamsoft.pydroid.bootstrap.libraries
 
-/**
- * Representation of an open source library dependency
- */
-public data class OssLibrary internal constructor(
-    /**
-     * Library name
-     */
+/** Representation of an open source library dependency */
+public data class OssLibrary
+internal constructor(
+    /** Library name */
     val name: String,
 
-    /**
-     * Library description
-     */
+    /** Library description */
     val description: String,
 
-    /**
-     * Library source code URL
-     */
+    /** Library source code URL */
     val libraryUrl: String,
 
-    /**
-     * Library license name
-     */
+    /** Library license name */
     val licenseName: String,
 
-    /**
-     * Library license URL
-     */
+    /** Library license URL */
     val licenseUrl: String
 )

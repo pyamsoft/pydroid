@@ -23,49 +23,46 @@ import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.theme.Theming
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 
-internal data class AppSettingsViewState internal constructor(
+internal data class AppSettingsViewState
+internal constructor(
     val applicationName: CharSequence,
     val isDarkTheme: DarkTheme?,
     val throwable: Throwable?,
     val otherApps: List<OtherApp>
 ) : UiViewState {
 
-    data class DarkTheme internal constructor(val dark: Boolean)
+  data class DarkTheme internal constructor(val dark: Boolean)
 }
 
 internal sealed class AppSettingsViewEvent : UiViewEvent {
 
-    object MoreApps : AppSettingsViewEvent()
+  object MoreApps : AppSettingsViewEvent()
 
-    data class Hyperlink internal constructor(
-        val hyperlinkIntent: HyperlinkIntent
-    ) : AppSettingsViewEvent()
+  data class Hyperlink internal constructor(val hyperlinkIntent: HyperlinkIntent) :
+      AppSettingsViewEvent()
 
-    object RateApp : AppSettingsViewEvent()
+  object RateApp : AppSettingsViewEvent()
 
-    object ViewLicense : AppSettingsViewEvent()
+  object ViewLicense : AppSettingsViewEvent()
 
-    object CheckUpgrade : AppSettingsViewEvent()
+  object CheckUpgrade : AppSettingsViewEvent()
 
-    object ClearData : AppSettingsViewEvent()
+  object ClearData : AppSettingsViewEvent()
 
-    object ShowUpgrade : AppSettingsViewEvent()
+  object ShowUpgrade : AppSettingsViewEvent()
 
-    object ShowDonate : AppSettingsViewEvent()
+  object ShowDonate : AppSettingsViewEvent()
 
-    data class ToggleDarkTheme(val mode: String) : AppSettingsViewEvent()
+  data class ToggleDarkTheme(val mode: String) : AppSettingsViewEvent()
 }
 
 internal sealed class AppSettingsControllerEvent : UiControllerEvent {
 
-    object NavigateDeveloperPage : AppSettingsControllerEvent()
+  object NavigateDeveloperPage : AppSettingsControllerEvent()
 
-    data class OpenOtherAppsScreen internal constructor(
-        val others: List<OtherApp>
-    ) : AppSettingsControllerEvent()
+  data class OpenOtherAppsScreen internal constructor(val others: List<OtherApp>) :
+      AppSettingsControllerEvent()
 
-    data class DarkModeChanged internal constructor(
-        val newMode: Theming.Mode
-    ) : AppSettingsControllerEvent()
+  data class DarkModeChanged internal constructor(val newMode: Theming.Mode) :
+      AppSettingsControllerEvent()
 }
-

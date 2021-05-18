@@ -19,26 +19,20 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 import android.content.Context
 import androidx.annotation.CheckResult
 
-/**
- * Change log module
- */
+/** Change log module */
 public class ChangeLogModule(params: Parameters) {
 
-    private val impl = ChangeLogInteractorImpl(params.context, params.preferences)
+  private val impl = ChangeLogInteractorImpl(params.context, params.preferences)
 
-    /**
-     * Provide a change log interactor
-     */
-    @CheckResult
-    public fun provideInteractor(): ChangeLogInteractor {
-        return impl
-    }
+  /** Provide a change log interactor */
+  @CheckResult
+  public fun provideInteractor(): ChangeLogInteractor {
+    return impl
+  }
 
-    /**
-     * ChangeLogModule parameters
-     */
-    public data class Parameters(
-        internal val context: Context,
-        internal val preferences: ChangeLogPreferences
-    )
+  /** ChangeLogModule parameters */
+  public data class Parameters(
+      internal val context: Context,
+      internal val preferences: ChangeLogPreferences
+  )
 }

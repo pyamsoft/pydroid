@@ -24,28 +24,26 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class ChangeLogDialogViewModel internal constructor(
-    interactor: ChangeLogInteractor,
-    provider: ChangeLogProvider
-) : UiViewModel<ChangeLogDialogViewState, UnitControllerEvent>(
-    initialState = ChangeLogDialogViewState(
-        icon = 0,
-        name = "",
-        changeLog = emptyList(),
-    )
-) {
+internal class ChangeLogDialogViewModel
+internal constructor(interactor: ChangeLogInteractor, provider: ChangeLogProvider) :
+    UiViewModel<ChangeLogDialogViewState, UnitControllerEvent>(
+        initialState =
+            ChangeLogDialogViewState(
+                icon = 0,
+                name = "",
+                changeLog = emptyList(),
+            )) {
 
-    init {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            val displayName = interactor.getDisplayName()
-            setState {
-                copy(
-                    name = displayName,
-                    icon = provider.applicationIcon,
-                    changeLog = provider.changelog.build(),
-                )
-            }
-        }
+  init {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      val displayName = interactor.getDisplayName()
+      setState {
+        copy(
+            name = displayName,
+            icon = provider.applicationIcon,
+            changeLog = provider.changelog.build(),
+        )
+      }
     }
+  }
 }
-

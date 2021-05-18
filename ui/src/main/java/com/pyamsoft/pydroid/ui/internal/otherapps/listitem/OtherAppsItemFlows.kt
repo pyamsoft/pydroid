@@ -20,13 +20,11 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-internal data class OtherAppsItemViewState internal constructor(
-    val app: OtherApp
-) : UiViewState
+internal data class OtherAppsItemViewState internal constructor(val app: OtherApp) : UiViewState
 
 internal sealed class OtherAppsItemViewEvent : UiViewEvent {
 
-    object ViewSource : OtherAppsItemViewEvent()
+  object ViewSource : OtherAppsItemViewEvent()
 
-    object OpenStore : OtherAppsItemViewEvent()
+  object OpenStore : OtherAppsItemViewEvent()
 }

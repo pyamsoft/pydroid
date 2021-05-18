@@ -28,91 +28,81 @@ import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemOtherAppsBinding
 import com.pyamsoft.pydroid.ui.util.layout
 
-internal class OtherAppsViewHolder private constructor(
+internal class OtherAppsViewHolder
+private constructor(
     binding: AdapterItemOtherAppsBinding,
     callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<OtherAppsItemViewState> {
 
-    private val binder: ViewBinder<OtherAppsItemViewState>
+  private val binder: ViewBinder<OtherAppsItemViewState>
 
-    internal var titleView: OtherAppsItemTitleView? = null
-    internal var iconView: OtherAppsItemIconView? = null
-    internal var actionView: OtherAppsItemActionView? = null
+  internal var titleView: OtherAppsItemTitleView? = null
+  internal var iconView: OtherAppsItemIconView? = null
+  internal var actionView: OtherAppsItemActionView? = null
 
-    init {
-        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
-            .plusOtherAppsItem()
-            .create(binding.otherAppsListitemRoot)
-            .inject(this)
+  init {
+    Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
+        .plusOtherAppsItem()
+        .create(binding.otherAppsListitemRoot)
+        .inject(this)
 
-        val title = requireNotNull(titleView)
-        val icon = requireNotNull(iconView)
-        val action = requireNotNull(actionView)
-        binder = createViewBinder(
-            icon,
-            title,
-            action
-        ) {
-            callback(it, bindingAdapterPosition)
-        }
+    val title = requireNotNull(titleView)
+    val icon = requireNotNull(iconView)
+    val action = requireNotNull(actionView)
+    binder = createViewBinder(icon, title, action) { callback(it, bindingAdapterPosition) }
 
-        binding.otherAppsListitemRoot.layout {
-            icon.let {
-                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-                connect(
-                    it.id(),
-                    ConstraintSet.BOTTOM,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.BOTTOM
-                )
+    binding.otherAppsListitemRoot.layout {
+      icon.let {
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
 
-                constrainWidth(it.id(), ConstraintSet.WRAP_CONTENT)
-                constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-            }
+        constrainWidth(it.id(), ConstraintSet.WRAP_CONTENT)
+        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
 
-            title.let {
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-                connect(it.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
+      title.let {
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
 
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-                constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
-            }
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+      }
 
-            action.let {
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                connect(it.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
-                connect(it.id(), ConstraintSet.TOP, title.id(), ConstraintSet.BOTTOM)
+      action.let {
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.START, icon.id(), ConstraintSet.END)
+        connect(it.id(), ConstraintSet.TOP, title.id(), ConstraintSet.BOTTOM)
 
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-                constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
-            }
-        }
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainHeight(it.id(), ConstraintSet.WRAP_CONTENT)
+      }
     }
+  }
 
-    override fun bindState(state: OtherAppsItemViewState) {
-        binder.bindState(state)
+  override fun bindState(state: OtherAppsItemViewState) {
+    binder.bindState(state)
+  }
+
+  override fun teardown() {
+    binder.teardown()
+    titleView = null
+    iconView = null
+    actionView = null
+  }
+
+  companion object {
+
+    @CheckResult
+    @JvmStatic
+    fun create(
+        inflater: LayoutInflater,
+        container: ViewGroup,
+        callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
+    ): OtherAppsViewHolder {
+      val binding = AdapterItemOtherAppsBinding.inflate(inflater, container, false)
+      return OtherAppsViewHolder(binding, callback)
     }
-
-    override fun teardown() {
-        binder.teardown()
-        titleView = null
-        iconView = null
-        actionView = null
-    }
-
-    companion object {
-
-        @CheckResult
-        @JvmStatic
-        fun create(
-            inflater: LayoutInflater,
-            container: ViewGroup,
-            callback: (event: OtherAppsItemViewEvent, index: Int) -> Unit
-        ): OtherAppsViewHolder {
-            val binding = AdapterItemOtherAppsBinding.inflate(inflater, container, false)
-            return OtherAppsViewHolder(binding, callback)
-        }
-    }
+  }
 }

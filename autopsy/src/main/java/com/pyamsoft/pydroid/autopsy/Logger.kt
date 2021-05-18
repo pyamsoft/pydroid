@@ -20,25 +20,25 @@ import android.util.Log
 
 internal object Logger {
 
-    @JvmStatic
-    fun tag(instance: Any): Logging {
-        return Logging(instance::class.java.simpleName)
-    }
+  @JvmStatic
+  fun tag(instance: Any): Logging {
+    return Logging(instance::class.java.simpleName)
+  }
 }
 
 internal class Logging internal constructor(tag: String) {
 
-    private val tag = "pydroid-autopsy[$tag]"
+  private val tag = "pydroid-autopsy[$tag]"
 
-    fun d(message: String) {
-        Log.d(tag, message)
-    }
+  fun d(message: String) {
+    Log.d(tag, message)
+  }
 
-    fun e(throwable: Throwable? = null, message: String) {
-        Log.e(tag, message, throwable)
-    }
+  fun e(throwable: Throwable? = null, message: String) {
+    Log.e(tag, message, throwable)
+  }
 
-    fun e(message: String) {
-        Log.e(tag, message)
-    }
+  fun e(message: String) {
+    Log.e(tag, message)
+  }
 }

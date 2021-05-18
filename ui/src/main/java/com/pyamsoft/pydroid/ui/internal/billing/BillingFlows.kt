@@ -22,30 +22,25 @@ import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.billing.BillingState
 import com.pyamsoft.pydroid.ui.internal.app.AppState
 
-internal data class BillingViewState internal constructor(
+internal data class BillingViewState
+internal constructor(
     override val icon: Int,
     override val name: CharSequence,
     val connected: BillingState,
     val skuList: List<BillingSku>,
     val error: Throwable?
-) : AppState {
-}
+) : AppState {}
 
 internal sealed class BillingViewEvent : UiViewEvent {
 
-    object Close : BillingViewEvent()
+  object Close : BillingViewEvent()
 
-    object ClearError : BillingViewEvent()
+  object ClearError : BillingViewEvent()
 
-    data class Purchase internal constructor(
-        val index: Int
-    ) : BillingViewEvent()
+  data class Purchase internal constructor(val index: Int) : BillingViewEvent()
 }
 
 internal sealed class BillingControllerEvent : UiControllerEvent {
 
-    data class Purchase internal constructor(
-        val sku: BillingSku
-    ) : BillingControllerEvent()
+  data class Purchase internal constructor(val sku: BillingSku) : BillingControllerEvent()
 }
-

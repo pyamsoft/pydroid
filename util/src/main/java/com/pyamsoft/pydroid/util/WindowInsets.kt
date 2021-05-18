@@ -33,62 +33,60 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 
 /**
- * Places the Activity into Stable Layout and allows the app to draw behind the navbar and status bar.
+ * Places the Activity into Stable Layout and allows the app to draw behind the navbar and status
+ * bar.
  *
  * You must handle insets on your own.
  */
 public fun Activity.stableLayoutHideNavigation() {
-    val isLandscape =
-        this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val w = this.window
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        w.newStableLayoutHideNavigation(isLandscape)
-    } else {
-        w.oldStableLayoutHideNavigation(isLandscape)
-    }
+  val isLandscape = this.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+  val w = this.window
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    w.newStableLayoutHideNavigation(isLandscape)
+  } else {
+    w.oldStableLayoutHideNavigation(isLandscape)
+  }
 }
 
 @SuppressLint("NewApi")
 private fun Window.newStableLayoutHideNavigation(isLandscape: Boolean) {
-    this.setDecorFitsSystemWindows(false)
-    if (isLandscape) {
-        this.insetsController?.systemBarsBehavior =
-            WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-    }
+  this.setDecorFitsSystemWindows(false)
+  if (isLandscape) {
+    this.insetsController?.systemBarsBehavior =
+        WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+  }
 }
 
 @Suppress("DEPRECATION")
 private fun Window.oldStableLayoutHideNavigation(isLandscape: Boolean) {
-    this.decorView.systemUiVisibility = this.decorView.systemUiVisibility or
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+  this.decorView.systemUiVisibility =
+      this.decorView.systemUiVisibility or
+          View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+          View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+          View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
-    if (isLandscape) {
-        // In landscape mode, navbar is marked immersive sticky
-        this.decorView.systemUiVisibility = this.decorView.systemUiVisibility or
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-    }
+  if (isLandscape) {
+    // In landscape mode, navbar is marked immersive sticky
+    this.decorView.systemUiVisibility =
+        this.decorView.systemUiVisibility or
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+  }
 }
 
-/**
- * Run a block once when the WindowInsets are applied
- */
+/** Run a block once when the WindowInsets are applied */
 public inline fun View.doOnApplyWindowInsets(
     crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
 ) {
-    this.doOnApplyWindowInsets(null, func)
+  this.doOnApplyWindowInsets(null, func)
 }
 
-/**
- * Run a block once when the WindowInsets are applied
- */
+/** Run a block once when the WindowInsets are applied */
 public inline fun View.doOnApplyWindowInsets(
     owner: LifecycleOwner,
     crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
 ) {
-    this.doOnApplyWindowInsets(owner.lifecycle, func)
+  this.doOnApplyWindowInsets(owner.lifecycle, func)
 }
 
 @PublishedApi
@@ -96,92 +94,84 @@ internal inline fun View.doOnApplyWindowInsets(
     lifecycle: Lifecycle?,
     crossinline func: (v: View, insets: WindowInsetsCompat, padding: InitialPadding) -> Unit
 ) {
-    val view = this
-    // Create a snapshot of the view's padding state
-    val initialPadding = recordInitialPaddingForView(view)
+  val view = this
+  // Create a snapshot of the view's padding state
+  val initialPadding = recordInitialPaddingForView(view)
 
-    lifecycle?.addObserver(object : LifecycleObserver {
+  lifecycle?.addObserver(
+      object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         fun onDestroy() {
-            // Unset the listener after the first call, as this is a doOn which expects it to happen once
-            ViewCompat.setOnApplyWindowInsetsListener(view, null)
-            lifecycle.removeObserver(this)
+          // Unset the listener after the first call, as this is a doOn which expects it to happen
+          // once
+          ViewCompat.setOnApplyWindowInsetsListener(view, null)
+          lifecycle.removeObserver(this)
         }
+      })
 
-    })
-
-    // Set an actual OnApplyWindowInsetsListener which proxies to the given
-    // lambda, also passing in the original padding state
-    ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-        if (lifecycle == null) {
-            // Unset the listener after the first call, as this is a doOn which expects it to happen once
-            ViewCompat.setOnApplyWindowInsetsListener(v, null)
-        }
-
-        // Do the thing
-        func(v, insets, initialPadding)
-
-        // Always return the insets, so that children can also use them
-        return@setOnApplyWindowInsetsListener insets
+  // Set an actual OnApplyWindowInsetsListener which proxies to the given
+  // lambda, also passing in the original padding state
+  ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+    if (lifecycle == null) {
+      // Unset the listener after the first call, as this is a doOn which expects it to happen once
+      ViewCompat.setOnApplyWindowInsetsListener(v, null)
     }
 
-    // request some insets
-    view.requestApplyInsetsWhenAttached()
+    // Do the thing
+    func(v, insets, initialPadding)
+
+    // Always return the insets, so that children can also use them
+    return@setOnApplyWindowInsetsListener insets
+  }
+
+  // request some insets
+  view.requestApplyInsetsWhenAttached()
 }
 
-/**
- * The representation of the originalk padding of the application before it was modified
- */
-public data class InitialPadding internal constructor(
-    /**
-     * Top padding
-     */
+/** The representation of the originalk padding of the application before it was modified */
+public data class InitialPadding
+internal constructor(
+    /** Top padding */
     val top: Int,
 
-    /**
-     * Bottom padding
-     */
+    /** Bottom padding */
     val bottom: Int,
 
-    /**
-     * Start padding
-     */
+    /** Start padding */
     val start: Int,
 
-    /**
-     * End padding
-     */
+    /** End padding */
     val end: Int,
 )
 
 @CheckResult
 @PublishedApi
 internal fun recordInitialPaddingForView(view: View): InitialPadding {
-    return InitialPadding(
-        top = view.paddingTop,
-        bottom = view.paddingBottom,
-        start = view.paddingStart,
-        end = view.paddingEnd
-    )
+  return InitialPadding(
+      top = view.paddingTop,
+      bottom = view.paddingBottom,
+      start = view.paddingStart,
+      end = view.paddingEnd)
 }
 
 @PublishedApi
 internal fun View.requestApplyInsetsWhenAttached() {
-    if (isAttachedToWindow) {
-        // We're already attached, just request as normal
-        this.requestApplyInsets()
-    } else {
-        // We're not attached to the hierarchy, add a listener to
-        // request when we are
-        this.addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-            override fun onViewAttachedToWindow(v: View) {
-                v.removeOnAttachStateChangeListener(this)
-                v.requestApplyInsets()
-            }
+  if (isAttachedToWindow) {
+    // We're already attached, just request as normal
+    this.requestApplyInsets()
+  } else {
+    // We're not attached to the hierarchy, add a listener to
+    // request when we are
+    this.addOnAttachStateChangeListener(
+        object : OnAttachStateChangeListener {
+          override fun onViewAttachedToWindow(v: View) {
+            v.removeOnAttachStateChangeListener(this)
+            v.requestApplyInsets()
+          }
 
-            override fun onViewDetachedFromWindow(v: View) {}
+          override fun onViewDetachedFromWindow(v: View) {}
         })
-    }
+  }
 }

@@ -22,33 +22,27 @@ import com.pyamsoft.pydroid.ui.changelog.ChangeLogActivity
 
 internal interface ChangeLogComponent {
 
-    fun inject(activity: ChangeLogActivity)
+  fun inject(activity: ChangeLogActivity)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(): ChangeLogComponent
+    @CheckResult fun create(): ChangeLogComponent
 
-        data class Parameters internal constructor(
-            internal val factory: ViewModelProvider.Factory
-        )
+    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+  }
+
+  class Impl private constructor(private val params: Factory.Parameters) : ChangeLogComponent {
+
+    override fun inject(activity: ChangeLogActivity) {
+      activity.changeLogFactory = params.factory
     }
 
-    class Impl private constructor(
-        private val params: Factory.Parameters
-    ) : ChangeLogComponent {
+    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
+        Factory {
 
-        override fun inject(activity: ChangeLogActivity) {
-            activity.changeLogFactory = params.factory
-        }
-
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(): ChangeLogComponent {
-                return Impl(params)
-            }
-        }
+      override fun create(): ChangeLogComponent {
+        return Impl(params)
+      }
     }
+  }
 }

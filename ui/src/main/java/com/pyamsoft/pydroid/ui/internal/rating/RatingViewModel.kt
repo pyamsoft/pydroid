@@ -26,51 +26,44 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-internal class RatingViewModel internal constructor(
+internal class RatingViewModel
+internal constructor(
     interactor: RatingInteractor,
-) : UiViewModel<RatingViewState, RatingControllerEvent>(
-    initialState = RatingViewState(navigationError = null)
-) {
+) :
+    UiViewModel<RatingViewState, RatingControllerEvent>(
+        initialState = RatingViewState(navigationError = null)) {
 
-    private val loadRunner = highlander<LoadResult?, Boolean> { force ->
+  private val loadRunner =
+      highlander<LoadResult?, Boolean> { force ->
         try {
-            val launcher = interactor.askForRating(force)
-            return@highlander LoadResult(force, launcher)
+          val launcher = interactor.askForRating(force)
+          return@highlander LoadResult(force, launcher)
         } catch (throwable: Throwable) {
-            throwable.onActualError {
-                Timber.e(throwable, "Unable to launch rating flow")
-            }
-            return@highlander null
+          throwable.onActualError { Timber.e(throwable, "Unable to launch rating flow") }
+          return@highlander null
         }
-    }
+      }
 
-    internal fun load(force: Boolean) {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            loadRunner.call(force)?.let { result ->
-                publish(
-                    RatingControllerEvent.LaunchRating(
-                        result.isFallbackEnabled,
-                        result.launcher
-                    )
-                )
-            }
-        }
+  internal fun load(force: Boolean) {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      loadRunner.call(force)?.let { result ->
+        publish(RatingControllerEvent.LaunchRating(result.isFallbackEnabled, result.launcher))
+      }
     }
+  }
 
-    internal fun handleClearNavigationError() {
-        setState { copy(navigationError = null) }
-    }
+  internal fun handleClearNavigationError() {
+    setState { copy(navigationError = null) }
+  }
 
-    internal fun handleNavigationSuccess() {
-        handleClearNavigationError()
-    }
+  internal fun handleNavigationSuccess() {
+    handleClearNavigationError()
+  }
 
-    internal fun handleNavigationFailed(error: Throwable) {
-        setState { copy(navigationError = error) }
-    }
+  internal fun handleNavigationFailed(error: Throwable) {
+    setState { copy(navigationError = error) }
+  }
 
-    internal data class LoadResult internal constructor(
-        val isFallbackEnabled: Boolean,
-        val launcher: AppRatingLauncher
-    )
+  internal data class LoadResult
+  internal constructor(val isFallbackEnabled: Boolean, val launcher: AppRatingLauncher)
 }

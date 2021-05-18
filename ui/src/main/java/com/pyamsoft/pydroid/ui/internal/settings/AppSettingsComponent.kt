@@ -26,71 +26,70 @@ import com.pyamsoft.pydroid.ui.settings.AppSettingsPreferenceFragment
 
 internal interface AppSettingsComponent {
 
-    fun inject(fragment: AppSettingsPreferenceFragment)
+  fun inject(fragment: AppSettingsPreferenceFragment)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            owner: LifecycleOwner,
-            preferenceScreen: PreferenceScreen,
-            hideClearAll: Boolean,
-            hideUpgradeInformation: Boolean,
-            parentProvider: () -> ViewGroup
-        ): AppSettingsComponent
+    @CheckResult
+    fun create(
+        owner: LifecycleOwner,
+        preferenceScreen: PreferenceScreen,
+        hideClearAll: Boolean,
+        hideUpgradeInformation: Boolean,
+        parentProvider: () -> ViewGroup
+    ): AppSettingsComponent
 
-        data class Parameters internal constructor(
-            internal val bugReportUrl: String,
-            internal val viewSourceUrl: String,
-            internal val privacyPolicyUrl: String,
-            internal val termsConditionsUrl: String,
-            internal val factory: ViewModelProvider.Factory
-        )
+    data class Parameters
+    internal constructor(
+        internal val bugReportUrl: String,
+        internal val viewSourceUrl: String,
+        internal val privacyPolicyUrl: String,
+        internal val termsConditionsUrl: String,
+        internal val factory: ViewModelProvider.Factory
+    )
+  }
+
+  class Impl
+  private constructor(
+      private val parentProvider: () -> ViewGroup,
+      private val owner: LifecycleOwner,
+      private val hideClearAll: Boolean,
+      private val hideUpgradeInformation: Boolean,
+      private val preferenceScreen: PreferenceScreen,
+      private val params: Factory.Parameters
+  ) : AppSettingsComponent {
+
+    override fun inject(fragment: AppSettingsPreferenceFragment) {
+      fragment.factory = params.factory
+
+      val versionView = VersionCheckView(owner, parentProvider)
+      val settingsView =
+          AppSettingsView(
+              params.bugReportUrl,
+              params.viewSourceUrl,
+              params.privacyPolicyUrl,
+              params.termsConditionsUrl,
+              hideClearAll,
+              hideUpgradeInformation,
+              preferenceScreen)
+
+      fragment.versionCheckView = versionView
+      fragment.settingsView = settingsView
     }
 
-    class Impl private constructor(
-        private val parentProvider: () -> ViewGroup,
-        private val owner: LifecycleOwner,
-        private val hideClearAll: Boolean,
-        private val hideUpgradeInformation: Boolean,
-        private val preferenceScreen: PreferenceScreen,
-        private val params: Factory.Parameters
-    ) : AppSettingsComponent {
+    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
+        Factory {
 
-        override fun inject(fragment: AppSettingsPreferenceFragment) {
-            fragment.factory = params.factory
-
-            val versionView = VersionCheckView(owner, parentProvider)
-            val settingsView = AppSettingsView(
-                params.bugReportUrl,
-                params.viewSourceUrl, params.privacyPolicyUrl, params.termsConditionsUrl,
-                hideClearAll, hideUpgradeInformation, preferenceScreen
-            )
-
-            fragment.versionCheckView = versionView
-            fragment.settingsView = settingsView
-        }
-
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(
-                owner: LifecycleOwner,
-                preferenceScreen: PreferenceScreen,
-                hideClearAll: Boolean,
-                hideUpgradeInformation: Boolean,
-                parentProvider: () -> ViewGroup
-            ): AppSettingsComponent {
-                return Impl(
-                    parentProvider,
-                    owner,
-                    hideClearAll,
-                    hideUpgradeInformation,
-                    preferenceScreen,
-                    params
-                )
-            }
-        }
+      override fun create(
+          owner: LifecycleOwner,
+          preferenceScreen: PreferenceScreen,
+          hideClearAll: Boolean,
+          hideUpgradeInformation: Boolean,
+          parentProvider: () -> ViewGroup
+      ): AppSettingsComponent {
+        return Impl(
+            parentProvider, owner, hideClearAll, hideUpgradeInformation, preferenceScreen, params)
+      }
     }
+  }
 }

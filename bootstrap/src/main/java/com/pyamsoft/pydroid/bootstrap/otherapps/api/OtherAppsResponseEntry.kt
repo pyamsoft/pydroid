@@ -21,84 +21,82 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-internal data class OtherAppsResponseEntry internal constructor(
-    @field:Json(name = "package")
-    internal val packageName: String?,
+internal data class OtherAppsResponseEntry
+internal constructor(
+    @field:Json(name = "package") internal val packageName: String?,
     internal val name: String?,
     internal val description: String?,
     internal val icon: String?,
-    @field:Json(name = "url")
-    internal val storeUrl: String?,
-    @field:Json(name = "source")
-    internal val sourceUrl: String?
+    @field:Json(name = "url") internal val storeUrl: String?,
+    @field:Json(name = "source") internal val sourceUrl: String?
 ) {
 
-    @CheckResult
-    fun packageName(): String {
-        return packageName.let {
-            if (it == null) {
-                throw RuntimeException("OtherAppsResponseEntry: packageName missing")
-            } else {
-                return@let it
-            }
-        }
+  @CheckResult
+  fun packageName(): String {
+    return packageName.let {
+      if (it == null) {
+        throw RuntimeException("OtherAppsResponseEntry: packageName missing")
+      } else {
+        return@let it
+      }
     }
+  }
 
-    @CheckResult
-    fun name(): String {
-        return name.let {
-            if (it == null) {
-                throw RuntimeException("OtherAppsResponseEntry: name missing")
-            } else {
-                return@let it
-            }
-        }
+  @CheckResult
+  fun name(): String {
+    return name.let {
+      if (it == null) {
+        throw RuntimeException("OtherAppsResponseEntry: name missing")
+      } else {
+        return@let it
+      }
     }
+  }
 
-    @CheckResult
-    fun description(): String {
-        return description.let {
-            if (it == null) {
-                throw RuntimeException("OtherAppsResponseEntry: description missing")
-            } else {
-                return@let it
-            }
-        }
+  @CheckResult
+  fun description(): String {
+    return description.let {
+      if (it == null) {
+        throw RuntimeException("OtherAppsResponseEntry: description missing")
+      } else {
+        return@let it
+      }
     }
+  }
 
-    @CheckResult
-    fun icon(): String {
-        return icon.let {
-            if (it == null) {
-                throw RuntimeException("OtherAppsResponseEntry: icon missing")
-            } else {
-                return@let it
-            }
-        }
+  @CheckResult
+  fun icon(): String {
+    return icon.let {
+      if (it == null) {
+        throw RuntimeException("OtherAppsResponseEntry: icon missing")
+      } else {
+        return@let it
+      }
     }
+  }
 
-    @CheckResult
-    fun url(): String {
-        return storeUrl.let {
-            if (it == null) {
-                throw RuntimeException("OtherAppsResponseEntry: url missing")
-            } else {
-                return@let it
-            }
-        }
+  @CheckResult
+  fun url(): String {
+    return storeUrl.let {
+      if (it == null) {
+        throw RuntimeException("OtherAppsResponseEntry: url missing")
+      } else {
+        return@let it
+      }
     }
+  }
 
-    @CheckResult
-    fun source(): String {
-        return sourceUrl.let {
-            if (it == null) {
-                throw RuntimeException("OtherAppsResponseEntry: source missing")
-            } else {
-                return@let it
-            }
-        }
+  @CheckResult
+  fun source(): String {
+    return sourceUrl.let {
+      if (it == null) {
+        throw RuntimeException("OtherAppsResponseEntry: source missing")
+      } else {
+        return@let it
+      }
     }
+  }
 
-    // Needed so we can generate a static adapter
-    companion object
+  // Needed so we can generate a static adapter
+  companion object
 }

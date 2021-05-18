@@ -21,30 +21,30 @@ import androidx.annotation.CheckResult
 
 internal interface ChangeLogDialogItemComponent {
 
-    fun inject(viewHolder: ChangeLogViewHolder)
+  fun inject(viewHolder: ChangeLogViewHolder)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(parent: ViewGroup): ChangeLogDialogItemComponent
+    @CheckResult fun create(parent: ViewGroup): ChangeLogDialogItemComponent
+  }
+
+  class Impl
+  private constructor(
+      private val parent: ViewGroup,
+  ) : ChangeLogDialogItemComponent {
+
+    override fun inject(viewHolder: ChangeLogViewHolder) {
+      val text = ChangeLogItemText(parent)
+      val type = ChangeLogItemType(parent)
+      viewHolder.textView = text
+      viewHolder.typeView = type
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup,
-    ) : ChangeLogDialogItemComponent {
+    class FactoryImpl internal constructor() : Factory {
 
-        override fun inject(viewHolder: ChangeLogViewHolder) {
-            val text = ChangeLogItemText(parent)
-            val type = ChangeLogItemType(parent)
-            viewHolder.textView = text
-            viewHolder.typeView = type
-        }
-
-        class FactoryImpl internal constructor() : Factory {
-
-            override fun create(parent: ViewGroup): ChangeLogDialogItemComponent {
-                return Impl(parent)
-            }
-        }
+      override fun create(parent: ViewGroup): ChangeLogDialogItemComponent {
+        return Impl(parent)
+      }
     }
+  }
 }

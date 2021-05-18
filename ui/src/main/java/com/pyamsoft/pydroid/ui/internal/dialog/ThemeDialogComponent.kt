@@ -23,50 +23,38 @@ import com.pyamsoft.pydroid.arch.createViewModelFactory
 
 internal interface ThemeDialogComponent {
 
-    fun inject(dialog: FullscreenThemeDialog)
+  fun inject(dialog: FullscreenThemeDialog)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            name: String,
-            background: Drawable,
-            parent: ViewGroup
-        ): ThemeDialogComponent
+    @CheckResult
+    fun create(name: String, background: Drawable, parent: ViewGroup): ThemeDialogComponent
+  }
+
+  class Impl
+  private constructor(
+      private val parent: ViewGroup,
+      private val background: Drawable,
+      name: String
+  ) : ThemeDialogComponent {
+
+    private val factory = createViewModelFactory { ThemeDialogViewModel(name) }
+
+    override fun inject(dialog: FullscreenThemeDialog) {
+      dialog.toolbar = ThemeDialogToolbar(parent, background)
+      dialog.frame = ThemeDialogFrame(parent)
+      dialog.factory = factory
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup,
-        private val background: Drawable,
-        name: String
-    ) : ThemeDialogComponent {
+    internal class FactoryImpl internal constructor() : Factory {
 
-        private val factory = createViewModelFactory { ThemeDialogViewModel(name) }
-
-        override fun inject(dialog: FullscreenThemeDialog) {
-            dialog.toolbar =
-                ThemeDialogToolbar(
-                    parent,
-                    background
-                )
-            dialog.frame =
-                ThemeDialogFrame(parent)
-            dialog.factory = factory
-        }
-
-        internal class FactoryImpl internal constructor() : Factory {
-
-            override fun create(
-                name: String,
-                background: Drawable,
-                parent: ViewGroup
-            ): ThemeDialogComponent {
-                return Impl(
-                    parent,
-                    background,
-                    name
-                )
-            }
-        }
+      override fun create(
+          name: String,
+          background: Drawable,
+          parent: ViewGroup
+      ): ThemeDialogComponent {
+        return Impl(parent, background, name)
+      }
     }
+  }
 }

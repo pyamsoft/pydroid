@@ -20,16 +20,14 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.internal.app.AppClose
 import timber.log.Timber
 
-internal class BillingClose internal constructor(
-    parent: ViewGroup
-) : AppClose<BillingViewState, BillingViewEvent>(parent, showRatingButton = false) {
+internal class BillingClose internal constructor(parent: ViewGroup) :
+    AppClose<BillingViewState, BillingViewEvent>(parent, showRatingButton = false) {
 
-    override fun publishClose() {
-        publish(BillingViewEvent.Close)
-    }
+  override fun publishClose() {
+    publish(BillingViewEvent.Close)
+  }
 
-    override fun publishRate() {
-        Timber.w("Billing does not trigger RATE event")
-    }
-
+  override fun publishRate() {
+    Timber.w("Billing does not trigger RATE event")
+  }
 }

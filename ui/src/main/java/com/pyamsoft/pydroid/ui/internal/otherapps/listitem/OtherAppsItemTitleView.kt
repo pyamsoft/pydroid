@@ -22,31 +22,28 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 import com.pyamsoft.pydroid.ui.databinding.OtherAppsItemTitleBinding
 
-internal class OtherAppsItemTitleView internal constructor(
-    parent: ViewGroup
-) : BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemTitleBinding>(parent) {
+internal class OtherAppsItemTitleView internal constructor(parent: ViewGroup) :
+    BaseUiView<OtherAppsItemViewState, OtherAppsItemViewEvent, OtherAppsItemTitleBinding>(parent) {
 
-    override val viewBinding = OtherAppsItemTitleBinding::inflate
+  override val viewBinding = OtherAppsItemTitleBinding::inflate
 
-    override val layoutRoot by boundView { otherAppsTitle }
+  override val layoutRoot by boundView { otherAppsTitle }
 
-    init {
-        doOnTeardown {
-            clear()
-        }
-    }
+  init {
+    doOnTeardown { clear() }
+  }
 
-    private fun clear() {
-        binding.title.text = ""
-        binding.description.text = ""
-    }
+  private fun clear() {
+    binding.title.text = ""
+    binding.description.text = ""
+  }
 
-    override fun onRender(state: UiRender<OtherAppsItemViewState>) {
-        state.mapChanged { it.app }.render(viewScope) { handleApp(it) }
-    }
+  override fun onRender(state: UiRender<OtherAppsItemViewState>) {
+    state.mapChanged { it.app }.render(viewScope) { handleApp(it) }
+  }
 
-    private fun handleApp(app: OtherApp) {
-        binding.title.text = app.name
-        binding.description.text = app.description
-    }
+  private fun handleApp(app: OtherApp) {
+    binding.title.text = app.name
+    binding.description.text = app.description
+  }
 }

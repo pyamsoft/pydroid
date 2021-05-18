@@ -34,95 +34,88 @@ import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 
-internal class BillingList internal constructor(
-    private val owner: LifecycleOwner,
-    parent: ViewGroup
-) : BaseUiView<BillingViewState, BillingViewEvent, BillingListBinding>(parent) {
+internal class BillingList
+internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
+    BaseUiView<BillingViewState, BillingViewEvent, BillingListBinding>(parent) {
 
-    override val viewBinding = BillingListBinding::inflate
+  override val viewBinding = BillingListBinding::inflate
 
-    override val layoutRoot by boundView { billingListRoot }
+  override val layoutRoot by boundView { billingListRoot }
 
-    private var billingAdapter: BillingAdapter? = null
+  private var billingAdapter: BillingAdapter? = null
 
-    init {
-        doOnInflate {
-            setupListView()
-        }
+  init {
+    doOnInflate { setupListView() }
 
-        doOnTeardown {
-            binding.billingList.adapter = null
-            billingAdapter = null
-        }
-
-        doOnInflate {
-            val margin = 8.asDp(binding.billingList.context)
-            LinearMarginDecoration.create(margin = margin).apply {
-                binding.billingList.addItemDecoration(this)
-            }
-        }
-
-        doOnTeardown {
-            binding.billingList.removeAllItemDecorations()
-        }
+    doOnTeardown {
+      binding.billingList.adapter = null
+      billingAdapter = null
     }
 
-    private fun setupListView() {
-        billingAdapter = BillingAdapter {
-            publish(BillingViewEvent.Purchase(it))
-        }
-
-        binding.billingList.apply {
-            adapter = billingAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                initialPrefetchItemCount = 3
-                isItemPrefetchEnabled = false
-            }
-        }
+    doOnInflate {
+      val margin = 8.asDp(binding.billingList.context)
+      LinearMarginDecoration.create(margin = margin).apply {
+        binding.billingList.addItemDecoration(this)
+      }
     }
 
-    override fun onRender(state: UiRender<BillingViewState>) {
-        state.render(viewScope) { handleSkus(it) }
-        state.mapChanged { it.error }.render(viewScope) { handleError(it) }
-    }
+    doOnTeardown { binding.billingList.removeAllItemDecorations() }
+  }
 
-    private fun handleError(throwable: Throwable?) {
-        if (throwable != null) {
-            Snackbreak.bindTo(owner) {
-                val msg = throwable.message
-                short(
-                    layoutRoot,
-                    if (msg.isNullOrBlank()) "Error during purchase flow." else msg,
-                    onHidden = { _, _ -> publish(BillingViewEvent.ClearError) }
-                )
-            }
-        }
-    }
+  private fun setupListView() {
+    billingAdapter = BillingAdapter { publish(BillingViewEvent.Purchase(it)) }
 
-    private fun handleSkus(state: BillingViewState) {
-        val billingState = state.connected
-        val skuList = state.skuList
-        if (billingState == BillingState.LOADING) {
-            binding.billingList.isInvisible = true
-            binding.billingError.isInvisible = true
-        } else {
-            if (billingState == BillingState.DISCONNECTED || skuList.isEmpty()) {
-                clear()
-            } else {
-                loadSkus(skuList)
-            }
-        }
+    binding.billingList.apply {
+      adapter = billingAdapter
+      layoutManager =
+          LinearLayoutManager(context).apply {
+            initialPrefetchItemCount = 3
+            isItemPrefetchEnabled = false
+          }
     }
+  }
 
-    private fun loadSkus(skuList: List<BillingSku>) {
-        requireNotNull(billingAdapter).submitList(skuList.map { BillingItemViewState(it) })
-        binding.billingList.isVisible = true
-        binding.billingError.isGone = true
-    }
+  override fun onRender(state: UiRender<BillingViewState>) {
+    state.render(viewScope) { handleSkus(it) }
+    state.mapChanged { it.error }.render(viewScope) { handleError(it) }
+  }
 
-    private fun clear() {
-        requireNotNull(billingAdapter).submitList(null)
-        binding.billingList.isGone = true
-        binding.billingError.isVisible = true
+  private fun handleError(throwable: Throwable?) {
+    if (throwable != null) {
+      Snackbreak.bindTo(owner) {
+        val msg = throwable.message
+        short(
+            layoutRoot,
+            if (msg.isNullOrBlank()) "Error during purchase flow." else msg,
+            onHidden = { _, _ -> publish(BillingViewEvent.ClearError) })
+      }
     }
+  }
+
+  private fun handleSkus(state: BillingViewState) {
+    val billingState = state.connected
+    val skuList = state.skuList
+    if (billingState == BillingState.LOADING) {
+      binding.billingList.isInvisible = true
+      binding.billingError.isInvisible = true
+    } else {
+      if (billingState == BillingState.DISCONNECTED || skuList.isEmpty()) {
+        clear()
+      } else {
+        loadSkus(skuList)
+      }
+    }
+  }
+
+  private fun loadSkus(skuList: List<BillingSku>) {
+    requireNotNull(billingAdapter).submitList(skuList.map { BillingItemViewState(it) })
+    binding.billingList.isVisible = true
+    binding.billingError.isGone = true
+  }
+
+  private fun clear() {
+    requireNotNull(billingAdapter).submitList(null)
+    binding.billingList.isGone = true
+    binding.billingError.isVisible = true
+  }
 }

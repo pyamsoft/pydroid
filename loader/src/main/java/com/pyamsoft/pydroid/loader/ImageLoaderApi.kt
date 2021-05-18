@@ -29,36 +29,25 @@ import androidx.annotation.DrawableRes
  */
 public interface ImageLoaderApi<I : Any> {
 
-    /**
-     * Load a drawable resource
-     */
-    @CheckResult
-    public fun load(@DrawableRes resource: Int): Loader<I>
+  /** Load a drawable resource */
+  @CheckResult public fun load(@DrawableRes resource: Int): Loader<I>
 
-    /**
-     * Load a url resource
-     */
-    @CheckResult
-    public fun load(uri: Uri): Loader<I>
+  /** Load a url resource */
+  @CheckResult public fun load(uri: Uri): Loader<I>
 
-    /**
-     * Load a url resource
-     */
-    @CheckResult
-    public fun load(url: String): Loader<I>
+  /** Load a url resource */
+  @CheckResult public fun load(url: String): Loader<I>
 
-    /**
-     * Load a byte array resource
-     */
-    @CheckResult
-    public fun load(data: ByteArray): Loader<I>
+  /** Load a byte array resource */
+  @CheckResult public fun load(data: ByteArray): Loader<I>
 
-    /**
-     * Load a bitmap resource
-     *
-     * You almost always want to use something other than this.
-     */
-    @CheckResult
-    @Deprecated("You almost always want to pass something to the loader that it will load, instead of a completely loaded Bitmap.")
-    public fun load(bitmap: Bitmap): Loader<I>
+  /**
+   * Load a bitmap resource
+   *
+   * You almost always want to use something other than this.
+   */
+  @CheckResult
+  @Deprecated(
+      "You almost always want to pass something to the loader that it will load, instead of a completely loaded Bitmap.")
+  public fun load(bitmap: Bitmap): Loader<I>
 }

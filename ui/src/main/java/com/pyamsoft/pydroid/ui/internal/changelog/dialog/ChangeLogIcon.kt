@@ -20,7 +20,5 @@ import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.internal.app.AppIcon
 
-internal class ChangeLogIcon internal constructor(
-    imageLoader: ImageLoader,
-    icon: ImageView
-) : AppIcon<ChangeLogDialogViewState>(imageLoader, icon)
+internal class ChangeLogIcon internal constructor(imageLoader: ImageLoader, icon: ImageView) :
+    AppIcon<ChangeLogDialogViewState>(imageLoader, icon)

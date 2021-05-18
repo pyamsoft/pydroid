@@ -24,47 +24,36 @@ import com.pyamsoft.pydroid.bootstrap.libraries.OssLibraries
 
 internal interface AboutComponent {
 
-    fun inject(fragment: AboutFragment)
+  fun inject(fragment: AboutFragment)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            parent: ViewGroup,
-            owner: LifecycleOwner
-        ): AboutComponent
+    @CheckResult fun create(parent: ViewGroup, owner: LifecycleOwner): AboutComponent
 
-        data class Parameters internal constructor(
-            internal val factory: ViewModelProvider.Factory
-        )
+    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+  }
+
+  class Impl
+  private constructor(
+      private val parent: ViewGroup,
+      private val owner: LifecycleOwner,
+      private val params: Factory.Parameters
+  ) : AboutComponent {
+
+    override fun inject(fragment: AboutFragment) {
+      val listView = AboutListView(parent)
+      val errorView = AboutErrors(owner, parent)
+      fragment.factory = params.factory
+      fragment.errorView = errorView
+      fragment.listView = listView
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup,
-        private val owner: LifecycleOwner,
-        private val params: Factory.Parameters
-    ) : AboutComponent {
+    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-
-        override fun inject(fragment: AboutFragment) {
-            val listView = AboutListView(parent)
-            val errorView = AboutErrors(owner, parent)
-            fragment.factory = params.factory
-            fragment.errorView = errorView
-            fragment.listView = listView
-        }
-
-        class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(
-                parent: ViewGroup,
-                owner: LifecycleOwner
-            ): AboutComponent {
-                OssLibraries.usingUi = true
-                return Impl(parent, owner, params)
-            }
-        }
+      override fun create(parent: ViewGroup, owner: LifecycleOwner): AboutComponent {
+        OssLibraries.usingUi = true
+        return Impl(parent, owner, params)
+      }
     }
+  }
 }

@@ -22,28 +22,28 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
-internal class RatingView internal constructor(
+internal class RatingView
+internal constructor(
     private val owner: LifecycleOwner,
     private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<RatingViewState, RatingViewEvent>() {
 
-    override fun render(state: UiRender<RatingViewState>) {
-        state.mapChanged { it.navigationError }.render(viewScope) { handleNavigationError(it) }
-    }
+  override fun render(state: UiRender<RatingViewState>) {
+    state.mapChanged { it.navigationError }.render(viewScope) { handleNavigationError(it) }
+  }
 
-    private fun handleNavigationError(throwable: Throwable?) {
-        if (throwable != null) {
-            showNavigationError(throwable)
-        }
+  private fun handleNavigationError(throwable: Throwable?) {
+    if (throwable != null) {
+      showNavigationError(throwable)
     }
+  }
 
-    private fun showNavigationError(throwable: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                snackbarRootProvider(),
-                throwable.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(RatingViewEvent.HideNavigation) }
-            )
-        }
+  private fun showNavigationError(throwable: Throwable) {
+    Snackbreak.bindTo(owner) {
+      long(
+          snackbarRootProvider(),
+          throwable.message ?: "An unexpected error occurred.",
+          onHidden = { _, _ -> publish(RatingViewEvent.HideNavigation) })
     }
+  }
 }

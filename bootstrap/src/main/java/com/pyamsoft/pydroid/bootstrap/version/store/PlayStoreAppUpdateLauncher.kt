@@ -27,29 +27,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-internal class PlayStoreAppUpdateLauncher internal constructor(
+internal class PlayStoreAppUpdateLauncher
+internal constructor(
     private val manager: AppUpdateManager,
     private val info: AppUpdateInfo,
     @AppUpdateType private val type: Int,
 ) : AppUpdateLauncher {
 
-    override suspend fun update(activity: Activity, requestCode: Int) =
-        withContext(context = Dispatchers.Main) {
-            Enforcer.assertOnMainThread()
+  override suspend fun update(activity: Activity, requestCode: Int) =
+      withContext(context = Dispatchers.Main) {
+        Enforcer.assertOnMainThread()
 
-            Timber.d("Begin update flow $requestCode $info")
-            if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
-                Timber.d("Update flow has started")
-                if (manager is FakeAppUpdateManager) {
-                    Timber.d("User accepts fake update")
-                    manager.userAcceptsUpdate()
+        Timber.d("Begin update flow $requestCode $info")
+        if (manager.startUpdateFlowForResult(info, type, activity, requestCode)) {
+          Timber.d("Update flow has started")
+          if (manager is FakeAppUpdateManager) {
+            Timber.d("User accepts fake update")
+            manager.userAcceptsUpdate()
 
-                    Timber.d("Start a fake download")
-                    manager.downloadStarts()
+            Timber.d("Start a fake download")
+            manager.downloadStarts()
 
-                    Timber.d("Complete a fake download")
-                    manager.downloadCompletes()
-                }
-            }
+            Timber.d("Complete a fake download")
+            manager.downloadCompletes()
+          }
         }
+      }
 }

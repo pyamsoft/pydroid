@@ -22,38 +22,34 @@ import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.Loaded
 
-internal abstract class AppIcon<S : AppState> protected constructor(
-    private val imageLoader: ImageLoader,
-    icon: ImageView
-) : UiView<S, Nothing>() {
+internal abstract class AppIcon<S : AppState>
+protected constructor(private val imageLoader: ImageLoader, icon: ImageView) :
+    UiView<S, Nothing>() {
 
-    private var iconView: ImageView? = icon
-    private var loaded: Loaded? = null
+  private var iconView: ImageView? = icon
+  private var loaded: Loaded? = null
 
-    init {
-        doOnTeardown {
-            clear()
-        }
+  init {
+    doOnTeardown { clear() }
+  }
+
+  final override fun onFinalTeardown() {
+    iconView = null
+  }
+
+  final override fun render(state: UiRender<S>) {
+    state.mapChanged { it.icon }.render(viewScope) { handleIcon(it) }
+  }
+
+  private fun handleIcon(icon: Int) {
+    clear()
+    if (icon != 0) {
+      loaded = imageLoader.load(icon).into(requireNotNull(iconView))
     }
+  }
 
-    final override fun onFinalTeardown() {
-        iconView = null
-    }
-
-    final override fun render(state: UiRender<S>) {
-        state.mapChanged { it.icon }.render(viewScope) { handleIcon(it) }
-    }
-
-    private fun handleIcon(icon: Int) {
-        clear()
-        if (icon != 0) {
-            loaded = imageLoader.load(icon).into(requireNotNull(iconView))
-        }
-    }
-
-    private fun clear() {
-        loaded?.dispose()
-        loaded = null
-    }
-
+  private fun clear() {
+    loaded?.dispose()
+    loaded = null
+  }
 }

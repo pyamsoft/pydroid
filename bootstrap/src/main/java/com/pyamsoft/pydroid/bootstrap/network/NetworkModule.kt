@@ -19,6 +19,7 @@ package com.pyamsoft.pydroid.bootstrap.network
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.core.Enforcer
 import com.squareup.moshi.Moshi
+import javax.net.SocketFactory
 import okhttp3.Call
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -27,107 +28,92 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.net.SocketFactory
 
-/**
- * Module to provide network related helpers
- */
+/** Module to provide network related helpers */
 public class NetworkModule(params: Parameters) {
 
-    private val serviceCreator: ServiceCreator
+  private val serviceCreator: ServiceCreator
 
-    init {
-        val debug = params.addLoggingInterceptor
-        val callFactory = OkHttpClientLazyCallFactory(debug)
-        val converterFactory = MoshiConverterFactory.create(createMoshi())
-        val retrofit = createRetrofit(callFactory, converterFactory)
+  init {
+    val debug = params.addLoggingInterceptor
+    val callFactory = OkHttpClientLazyCallFactory(debug)
+    val converterFactory = MoshiConverterFactory.create(createMoshi())
+    val retrofit = createRetrofit(callFactory, converterFactory)
 
-        serviceCreator = object : ServiceCreator {
-            override fun <S : Any> createService(serviceClass: Class<S>): S {
-                return retrofit.create(serviceClass)
-            }
+    serviceCreator =
+        object : ServiceCreator {
+          override fun <S : Any> createService(serviceClass: Class<S>): S {
+            return retrofit.create(serviceClass)
+          }
         }
-    }
+  }
 
-    /**
-     * Provide a network service creator
-     */
+  /** Provide a network service creator */
+  @CheckResult
+  public fun provideServiceCreator(): ServiceCreator {
+    return serviceCreator
+  }
+
+  public companion object {
+
+    private const val CURRENT_VERSION_REPO_BASE_URL =
+        "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/"
+
+    @JvmStatic
     @CheckResult
-    public fun provideServiceCreator(): ServiceCreator {
-        return serviceCreator
+    private fun createMoshi(): Moshi {
+      return Moshi.Builder().build()
     }
 
-    public companion object {
+    @JvmStatic
+    @CheckResult
+    private fun createRetrofit(
+        callFactory: Call.Factory,
+        converterFactory: Converter.Factory
+    ): Retrofit {
+      return Retrofit.Builder()
+          .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
+          .callFactory(callFactory)
+          .addConverterFactory(converterFactory)
+          .build()
+    }
 
-        private const val CURRENT_VERSION_REPO_BASE_URL =
-            "https://raw.githubusercontent.com/pyamsoft/android-project-versions/master/"
+    /** Creates the OkHttpClient lazily to avoid small main thread work */
+    private class OkHttpClientLazyCallFactory(debug: Boolean) : Call.Factory {
+
+      private val client by lazy { createOkHttpClient(debug, DelegatingSocketFactory.create()) }
+
+      override fun newCall(request: Request): Call {
+        Enforcer.assertOffMainThread()
+        return client.newCall(request)
+      }
+
+      companion object {
 
         @JvmStatic
         @CheckResult
-        private fun createMoshi(): Moshi {
-            return Moshi.Builder().build()
+        private fun createInterceptor(): Interceptor {
+          return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         }
 
         @JvmStatic
         @CheckResult
-        private fun createRetrofit(
-            callFactory: Call.Factory,
-            converterFactory: Converter.Factory
-        ): Retrofit {
-            return Retrofit.Builder()
-                .baseUrl(CURRENT_VERSION_REPO_BASE_URL)
-                .callFactory(callFactory)
-                .addConverterFactory(converterFactory)
-                .build()
-        }
+        private fun createOkHttpClient(debug: Boolean, socketFactory: SocketFactory): OkHttpClient {
+          Enforcer.assertOffMainThread()
 
-        /**
-         * Creates the OkHttpClient lazily to avoid small main thread work
-         */
-        private class OkHttpClientLazyCallFactory(debug: Boolean) : Call.Factory {
-
-            private val client by lazy {
-                createOkHttpClient(debug, DelegatingSocketFactory.create())
-            }
-
-            override fun newCall(request: Request): Call {
-                Enforcer.assertOffMainThread()
-                return client.newCall(request)
-            }
-
-            companion object {
-
-                @JvmStatic
-                @CheckResult
-                private fun createInterceptor(): Interceptor {
-                    return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+          return OkHttpClient.Builder()
+              .socketFactory(socketFactory)
+              .apply {
+                if (debug) {
+                  addInterceptor(createInterceptor())
                 }
-
-                @JvmStatic
-                @CheckResult
-                private fun createOkHttpClient(
-                    debug: Boolean,
-                    socketFactory: SocketFactory
-                ): OkHttpClient {
-                    Enforcer.assertOffMainThread()
-
-                    return OkHttpClient.Builder()
-                        .socketFactory(socketFactory)
-                        .apply {
-                            if (debug) {
-                                addInterceptor(createInterceptor())
-                            }
-                        }
-                        .build()
-                }
-            }
+              }
+              .build()
         }
+      }
     }
+  }
 
-    /**
-     * Network module parameters
-     */
-    public data class Parameters(
-        internal val addLoggingInterceptor: Boolean
-    )
+  /** Network module parameters */
+  public data class Parameters(internal val addLoggingInterceptor: Boolean)
 }

@@ -21,7 +21,8 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.otherapps.api.OtherApp
 
-internal data class OtherAppsViewState internal constructor(
+internal data class OtherAppsViewState
+internal constructor(
     val apps: List<OtherApp>,
     val appsError: Throwable?,
     val navigationError: Throwable?
@@ -29,30 +30,24 @@ internal data class OtherAppsViewState internal constructor(
 
 internal sealed class OtherAppsViewEvent : UiViewEvent {
 
-    internal sealed class ListEvent : OtherAppsViewEvent() {
+  internal sealed class ListEvent : OtherAppsViewEvent() {
 
-        data class OpenStore internal constructor(val index: Int) : ListEvent()
+    data class OpenStore internal constructor(val index: Int) : ListEvent()
 
-        data class ViewSource internal constructor(val index: Int) : ListEvent()
+    data class ViewSource internal constructor(val index: Int) : ListEvent()
+  }
 
-    }
+  internal sealed class ErrorEvent : OtherAppsViewEvent() {
 
-    internal sealed class ErrorEvent : OtherAppsViewEvent() {
+    object HideNavigationError : ErrorEvent()
 
-        object HideNavigationError : ErrorEvent()
-
-        object HideAppsError : ErrorEvent()
-
-    }
-
+    object HideAppsError : ErrorEvent()
+  }
 }
-
 
 internal sealed class OtherAppsControllerEvent : UiControllerEvent {
 
-    object LaunchFallback : OtherAppsControllerEvent()
+  object LaunchFallback : OtherAppsControllerEvent()
 
-    data class OpenUrl internal constructor(val url: String) : OtherAppsControllerEvent()
-
+  data class OpenUrl internal constructor(val url: String) : OtherAppsControllerEvent()
 }
-

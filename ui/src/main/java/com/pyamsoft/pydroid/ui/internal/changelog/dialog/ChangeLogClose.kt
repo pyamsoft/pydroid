@@ -19,16 +19,16 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.internal.app.AppClose
 
-internal class ChangeLogClose internal constructor(
+internal class ChangeLogClose
+internal constructor(
     parent: ViewGroup,
 ) : AppClose<ChangeLogDialogViewState, ChangeLogDialogViewEvent>(parent, showRatingButton = true) {
 
-    override fun publishClose() {
-        publish(ChangeLogDialogViewEvent.Close)
-    }
+  override fun publishClose() {
+    publish(ChangeLogDialogViewEvent.Close)
+  }
 
-    override fun publishRate() {
-        publish(ChangeLogDialogViewEvent.Rate)
-    }
-
+  override fun publishRate() {
+    publish(ChangeLogDialogViewEvent.Rate)
+  }
 }

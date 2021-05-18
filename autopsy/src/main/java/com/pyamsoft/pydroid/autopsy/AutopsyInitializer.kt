@@ -26,16 +26,16 @@ import androidx.startup.Initializer
  */
 internal class AutopsyInitializer internal constructor() : Initializer<Boolean> {
 
-    private val logger = Logger.tag(this)
+  private val logger = Logger.tag(this)
 
-    override fun create(context: Context): Boolean {
-        logger.d("Creating initializer and overriding crash handler")
-        val handler = CrashHandler(context.applicationContext)
-        Thread.setDefaultUncaughtExceptionHandler(handler)
-        return true
-    }
+  override fun create(context: Context): Boolean {
+    logger.d("Creating initializer and overriding crash handler")
+    val handler = CrashHandler(context.applicationContext)
+    Thread.setDefaultUncaughtExceptionHandler(handler)
+    return true
+  }
 
-    override fun dependencies(): MutableList<Class<out Initializer<*>>> {
-        return mutableListOf()
-    }
+  override fun dependencies(): MutableList<Class<out Initializer<*>>> {
+    return mutableListOf()
+  }
 }

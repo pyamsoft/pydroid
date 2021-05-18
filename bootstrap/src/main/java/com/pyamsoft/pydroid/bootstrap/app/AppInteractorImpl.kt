@@ -22,14 +22,14 @@ import com.pyamsoft.pydroid.util.applicationDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal abstract class AppInteractorImpl protected constructor(
+internal abstract class AppInteractorImpl
+protected constructor(
     private val context: Context,
 ) : AppInteractor {
 
-    final override suspend fun getDisplayName(): CharSequence =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            return@withContext context.applicationDisplayName
-        }
+  final override suspend fun getDisplayName(): CharSequence =
+      withContext(context = Dispatchers.Default) {
+        Enforcer.assertOffMainThread()
+        return@withContext context.applicationDisplayName
+      }
 }
-

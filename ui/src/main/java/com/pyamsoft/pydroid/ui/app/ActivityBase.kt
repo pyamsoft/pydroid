@@ -34,92 +34,72 @@ import kotlinx.coroutines.launch
  *
  * You are required to extend this class so that other ui bits work.
  */
-public abstract class ActivityBase : AppCompatActivity(),
-    ToolbarActivity,
-    ToolbarActivityProvider,
-    AppProvider {
+public abstract class ActivityBase :
+    AppCompatActivity(), ToolbarActivity, ToolbarActivityProvider, AppProvider {
 
-    /**
-     * The activity scoped component graph for the BillingDialog
-     */
-    private var injector: BillingComponent? = null
+  /** The activity scoped component graph for the BillingDialog */
+  private var injector: BillingComponent? = null
 
-    /**
-     * The connection to the Billing client
-     */
-    internal var billingConnector: BillingConnector? = null
+  /** The connection to the Billing client */
+  internal var billingConnector: BillingConnector? = null
 
-    /**
-     * The main view container for all page level fragment transactions
-     */
-    public abstract val fragmentContainerId: Int
+  /** The main view container for all page level fragment transactions */
+  public abstract val fragmentContainerId: Int
 
-    /**
-     * Activity level toolbar, similar to ActionBar
-     */
-    private var capturedToolbar: Toolbar? = null
+  /** Activity level toolbar, similar to ActionBar */
+  private var capturedToolbar: Toolbar? = null
 
-    /**
-     * Activity theming
-     */
-    internal var theming: Theming? = null
+  /** Activity theming */
+  internal var theming: Theming? = null
 
-    /**
-     * On activity create
-     */
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        injector = Injector.obtainFromApplication<PYDroidComponent>(this)
-            .plusBilling()
-            .create()
-            .also { component ->
-                component.inject(this)
-            }
-
-        requireNotNull(billingConnector).connect()
-
-        lifecycleScope.launch {
-            requireNotNull(theming).init()
+  /** On activity create */
+  @CallSuper
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    injector =
+        Injector.obtainFromApplication<PYDroidComponent>(this).plusBilling().create().also {
+            component ->
+          component.inject(this)
         }
-    }
 
-    /**
-     * Get system service
-     */
-    @CallSuper
-    override fun getSystemService(name: String): Any? = when (name) {
+    requireNotNull(billingConnector).connect()
+
+    lifecycleScope.launch { requireNotNull(theming).init() }
+  }
+
+  /** Get system service */
+  @CallSuper
+  override fun getSystemService(name: String): Any? =
+      when (name) {
         BillingComponent::class.java.name -> requireNotNull(injector)
         else -> super.getSystemService(name)
-    }
+      }
 
-    /**
-     * On activity destroy
-     */
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
+  /** On activity destroy */
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
 
-        // Disconnect billing
-        billingConnector?.disconnect()
+    // Disconnect billing
+    billingConnector?.disconnect()
 
-        // Clear captured Toolbar
-        capturedToolbar = null
+    // Clear captured Toolbar
+    capturedToolbar = null
 
-        // Clear billing
-        injector = null
-        billingConnector = null
-    }
+    // Clear billing
+    injector = null
+    billingConnector = null
+  }
 
-    final override fun withToolbar(func: (Toolbar) -> Unit) {
-        capturedToolbar?.let(func)
-    }
+  final override fun withToolbar(func: (Toolbar) -> Unit) {
+    capturedToolbar?.let(func)
+  }
 
-    final override fun requireToolbar(func: (Toolbar) -> Unit) {
-        requireNotNull(capturedToolbar).let(func)
-    }
+  final override fun requireToolbar(func: (Toolbar) -> Unit) {
+    requireNotNull(capturedToolbar).let(func)
+  }
 
-    final override fun setToolbar(toolbar: Toolbar?) {
-        capturedToolbar = toolbar
-    }
+  final override fun setToolbar(toolbar: Toolbar?) {
+    capturedToolbar = toolbar
+  }
 }

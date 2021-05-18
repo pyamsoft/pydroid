@@ -18,15 +18,11 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.CheckResult
 
-/**
- * The UiController drives the events. It orchestrates events between the UiView and UiViewModel
- */
+/** The UiController drives the events. It orchestrates events between the UiView and UiViewModel */
 public interface UiController<C : UiControllerEvent> {
 
-    /**
-     * Respond to a published UiControllerEvent
-     */
-    public fun onControllerEvent(event: C)
+  /** Respond to a published UiControllerEvent */
+  public fun onControllerEvent(event: C)
 }
 
 /**
@@ -35,28 +31,24 @@ public interface UiController<C : UiControllerEvent> {
  * For when a single Android component serves as multiple UiControllers
  */
 @CheckResult
-public inline fun <C : UiControllerEvent> newUiController(crossinline onEvent: (C) -> Unit): UiController<C> {
-    return object : UiController<C> {
-        override fun onControllerEvent(event: C) {
-            return onEvent(event)
-        }
+public inline fun <C : UiControllerEvent> newUiController(
+    crossinline onEvent: (C) -> Unit
+): UiController<C> {
+  return object : UiController<C> {
+    override fun onControllerEvent(event: C) {
+      return onEvent(event)
     }
+  }
 }
 
 private object UiControllers {
 
-    /**
-     * An empty Ui Controller singleton
-     */
-    val EMPTY = newUiController<UnitControllerEvent> { }
-
+  /** An empty Ui Controller singleton */
+  val EMPTY = newUiController<UnitControllerEvent> {}
 }
 
-
-/**
- * Returns the no-op Empty Controller
- */
+/** Returns the no-op Empty Controller */
 @CheckResult
 public fun emptyController(): UiController<UnitControllerEvent> {
-    return UiControllers.EMPTY
+  return UiControllers.EMPTY
 }

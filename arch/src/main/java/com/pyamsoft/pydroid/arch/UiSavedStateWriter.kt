@@ -20,27 +20,18 @@ import android.os.Bundle
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.internal.BundleUiSavedStateWriter
 
-/**
- * Abstraction over saving data into the save-restore lifecycle
- */
+/** Abstraction over saving data into the save-restore lifecycle */
 public interface UiSavedStateWriter {
 
-    /**
-     * Save a value at key
-     */
-    public fun <T : Any> put(key: String, value: T)
+  /** Save a value at key */
+  public fun <T : Any> put(key: String, value: T)
 
-    /**
-     * Remove a value at key
-     */
-    public fun <T : Any> remove(key: String): T?
-
+  /** Remove a value at key */
+  public fun <T : Any> remove(key: String): T?
 }
 
-/**
- * Convenience function for converting a Bundle into a SavedStateWriter
- */
+/** Convenience function for converting a Bundle into a SavedStateWriter */
 @CheckResult
 public fun Bundle.toWriter(): UiSavedStateWriter {
-    return BundleUiSavedStateWriter(this)
+  return BundleUiSavedStateWriter(this)
 }

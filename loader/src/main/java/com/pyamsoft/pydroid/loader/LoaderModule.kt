@@ -20,24 +20,20 @@ import android.content.Context
 import androidx.annotation.CheckResult
 
 /**
- * LoaderModule is a self contained class which exposes the public API of the library in
- * an expected format. You do not need to consume the library via the module, but it is a
- * quick easy way to get started.
+ * LoaderModule is a self contained class which exposes the public API of the library in an expected
+ * format. You do not need to consume the library via the module, but it is a quick easy way to get
+ * started.
  */
 public class LoaderModule(params: Parameters) {
 
-    private val impl = ImageLoaderImpl(params.context.applicationContext)
+  private val impl = ImageLoaderImpl(params.context.applicationContext)
 
-    /**
-     * Provide an ImageLoader instance for public consumption
-     */
-    @CheckResult
-    public fun provideLoader(): ImageLoader {
-        return impl
-    }
+  /** Provide an ImageLoader instance for public consumption */
+  @CheckResult
+  public fun provideLoader(): ImageLoader {
+    return impl
+  }
 
-    /**
-     * LoaderModule parameters
-     */
-    public data class Parameters(internal val context: Context)
+  /** LoaderModule parameters */
+  public data class Parameters(internal val context: Context)
 }

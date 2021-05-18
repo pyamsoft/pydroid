@@ -27,52 +27,53 @@ import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.ViewCompat
+import com.google.android.material.R as R2
 import com.pyamsoft.pydroid.ui.R
 import com.pyamsoft.pydroid.ui.app.makeFullWidth
 import com.pyamsoft.pydroid.ui.databinding.ChangelogDialogBinding
 import com.pyamsoft.pydroid.util.asDp
-import com.google.android.material.R as R2
 
 internal abstract class IconDialog : AppCompatDialogFragment() {
 
-    private val themedContext by lazy {
-        // Load the original dialog theme into the "rest" of the dialog content
-        val dialogTheme = TypedValue().run {
-            requireActivity().theme.resolveAttribute(R2.attr.dialogTheme, this, true)
-            return@run resourceId
+  private val themedContext by lazy {
+    // Load the original dialog theme into the "rest" of the dialog content
+    val dialogTheme =
+        TypedValue().run {
+          requireActivity().theme.resolveAttribute(R2.attr.dialogTheme, this, true)
+          return@run resourceId
         }
 
-        ContextThemeWrapper(requireActivity(), dialogTheme)
-    }
+    ContextThemeWrapper(requireActivity(), dialogTheme)
+  }
 
-    override fun getContext(): Context? {
-        return if (activity == null) super.getContext() else themedContext
-    }
+  override fun getContext(): Context? {
+    return if (activity == null) super.getContext() else themedContext
+  }
 
-    final override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val newInflater = inflater.cloneInContext(themedContext)
-        return newInflater.inflate(R.layout.changelog_dialog, container, false)
-    }
+  final override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
+    val newInflater = inflater.cloneInContext(themedContext)
+    return newInflater.inflate(R.layout.changelog_dialog, container, false)
+  }
 
-    final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        makeFullWidth()
+  final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    makeFullWidth()
 
-        val binding = ChangelogDialogBinding.bind(view)
-        ViewCompat.setElevation(binding.changelogIcon, 8.asDp(view.context).toFloat())
-        onBindingCreated(binding, savedInstanceState)
-    }
+    val binding = ChangelogDialogBinding.bind(view)
+    ViewCompat.setElevation(binding.changelogIcon, 8.asDp(view.context).toFloat())
+    onBindingCreated(binding, savedInstanceState)
+  }
 
-    final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AppCompatDialog(requireActivity(), R.style.ThemeOverlay_PYDroid_Changelog)
-    }
+  final override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return AppCompatDialog(requireActivity(), R.style.ThemeOverlay_PYDroid_Changelog)
+  }
 
-    protected abstract fun onBindingCreated(
-        binding: ChangelogDialogBinding,
-        savedInstanceState: Bundle?
-    )
+  protected abstract fun onBindingCreated(
+      binding: ChangelogDialogBinding,
+      savedInstanceState: Bundle?
+  )
 }

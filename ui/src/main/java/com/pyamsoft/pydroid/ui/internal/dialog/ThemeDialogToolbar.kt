@@ -25,41 +25,36 @@ import com.pyamsoft.pydroid.ui.internal.dialog.ThemeDialogViewEvent.Close
 import com.pyamsoft.pydroid.ui.util.DebouncedOnClickListener
 import com.pyamsoft.pydroid.ui.util.setUpEnabled
 
-internal class ThemeDialogToolbar internal constructor(
-    parent: ViewGroup,
-    backgroundDrawable: Drawable
-) : BaseUiView<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogToolbarBinding>(
-    parent
-) {
+internal class ThemeDialogToolbar
+internal constructor(parent: ViewGroup, backgroundDrawable: Drawable) :
+    BaseUiView<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogToolbarBinding>(parent) {
 
-    override val viewBinding = ThemeDialogToolbarBinding::inflate
+  override val viewBinding = ThemeDialogToolbarBinding::inflate
 
-    override val layoutRoot by boundView { themeDialogToolbar }
+  override val layoutRoot by boundView { themeDialogToolbar }
 
-    init {
-        doOnInflate {
-            binding.themeDialogToolbar.apply {
-                background = backgroundDrawable
-                setUpEnabled(true)
-                setNavigationOnClickListener(DebouncedOnClickListener.create {
-                    publish(Close)
-                })
-            }
-        }
-
-        doOnTeardown {
-            binding.themeDialogToolbar.apply {
-                setUpEnabled(false)
-                setNavigationOnClickListener(null)
-            }
-        }
+  init {
+    doOnInflate {
+      binding.themeDialogToolbar.apply {
+        background = backgroundDrawable
+        setUpEnabled(true)
+        setNavigationOnClickListener(DebouncedOnClickListener.create { publish(Close) })
+      }
     }
 
-    override fun onRender(state: UiRender<ThemeDialogViewState>) {
-        state.mapChanged { it.name }.render(viewScope) { handleTitle(it) }
+    doOnTeardown {
+      binding.themeDialogToolbar.apply {
+        setUpEnabled(false)
+        setNavigationOnClickListener(null)
+      }
     }
+  }
 
-    private fun handleTitle(name: String) {
-        binding.themeDialogToolbar.title = name
-    }
+  override fun onRender(state: UiRender<ThemeDialogViewState>) {
+    state.mapChanged { it.name }.render(viewScope) { handleTitle(it) }
+  }
+
+  private fun handleTitle(name: String) {
+    binding.themeDialogToolbar.title = name
+  }
 }

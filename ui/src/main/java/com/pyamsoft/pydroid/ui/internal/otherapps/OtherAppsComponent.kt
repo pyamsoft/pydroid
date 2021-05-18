@@ -23,45 +23,35 @@ import androidx.lifecycle.ViewModelProvider
 
 internal interface OtherAppsComponent {
 
-    fun inject(fragment: OtherAppsFragment)
+  fun inject(fragment: OtherAppsFragment)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            parent: ViewGroup,
-            owner: LifecycleOwner
-        ): OtherAppsComponent
+    @CheckResult fun create(parent: ViewGroup, owner: LifecycleOwner): OtherAppsComponent
 
-        data class Parameters internal constructor(
-            internal val factory: ViewModelProvider.Factory
-        )
+    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+  }
+
+  class Impl
+  private constructor(
+      private val parent: ViewGroup,
+      private val owner: LifecycleOwner,
+      private val params: Factory.Parameters
+  ) : OtherAppsComponent {
+
+    override fun inject(fragment: OtherAppsFragment) {
+      val listView = OtherAppsList(parent)
+      val errorView = OtherAppsErrors(owner, parent)
+      fragment.factory = params.factory
+      fragment.listView = listView
+      fragment.errorView = errorView
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup,
-        private val owner: LifecycleOwner,
-        private val params: Factory.Parameters
-    ) : OtherAppsComponent {
+    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-        override fun inject(fragment: OtherAppsFragment) {
-            val listView = OtherAppsList(parent)
-            val errorView = OtherAppsErrors(owner, parent)
-            fragment.factory = params.factory
-            fragment.listView = listView
-            fragment.errorView = errorView
-        }
-
-        class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(
-                parent: ViewGroup,
-                owner: LifecycleOwner
-            ): OtherAppsComponent {
-                return Impl(parent, owner, params)
-            }
-        }
+      override fun create(parent: ViewGroup, owner: LifecycleOwner): OtherAppsComponent {
+        return Impl(parent, owner, params)
+      }
     }
+  }
 }

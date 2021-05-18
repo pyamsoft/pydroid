@@ -22,47 +22,37 @@ import com.pyamsoft.pydroid.ui.internal.changelog.asBugfix
 import com.pyamsoft.pydroid.ui.internal.changelog.asChange
 import com.pyamsoft.pydroid.ui.internal.changelog.asFeature
 
-/**
- * Constructs a formatted change log
- */
+/** Constructs a formatted change log */
 public class ChangeLogBuilder {
 
-    private val builder = mutableListOf<ChangeLogLine>()
+  private val builder = mutableListOf<ChangeLogLine>()
 
-    /**
-     * Adds a line about a bug fix
-     */
-    @CheckResult
-    public fun bugfix(line: String): ChangeLogBuilder {
-        return this.also { builder.add(line.asBugfix()) }
-    }
+  /** Adds a line about a bug fix */
+  @CheckResult
+  public fun bugfix(line: String): ChangeLogBuilder {
+    return this.also { builder.add(line.asBugfix()) }
+  }
 
-    /**
-     * Adds a line about a behavior change
-     */
-    @CheckResult
-    public fun change(line: String): ChangeLogBuilder {
-        return this.also { builder.add(line.asChange()) }
-    }
+  /** Adds a line about a behavior change */
+  @CheckResult
+  public fun change(line: String): ChangeLogBuilder {
+    return this.also { builder.add(line.asChange()) }
+  }
 
-    /**
-     * Adds a line about a new feature
-     */
-    @CheckResult
-    public fun feature(line: String): ChangeLogBuilder {
-        return this.also { builder.add(line.asFeature()) }
-    }
+  /** Adds a line about a new feature */
+  @CheckResult
+  public fun feature(line: String): ChangeLogBuilder {
+    return this.also { builder.add(line.asFeature()) }
+  }
 
-    @CheckResult
-    internal fun build(): List<ChangeLogLine> {
-        return builder
-    }
+  @CheckResult
+  internal fun build(): List<ChangeLogLine> {
+    return builder
+  }
 }
 
-/**
- * Construct a changelog from a builder DSL
- */
+/** Construct a changelog from a builder DSL */
 @CheckResult
 public inline fun buildChangeLog(crossinline func: ChangeLogBuilder.() -> Unit): ChangeLogBuilder {
-    return ChangeLogBuilder().apply(func)
+  return ChangeLogBuilder().apply(func)
 }

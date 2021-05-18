@@ -27,143 +27,122 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 
-/**
- * Run a block once on Lifecycle destroy
- */
+/** Run a block once on Lifecycle destroy */
 public inline fun LifecycleOwner.doOnDestroy(crossinline func: () -> Unit) {
-    this.lifecycle.doOnDestroy(func)
+  this.lifecycle.doOnDestroy(func)
 }
 
-/**
- * Run a block once on Lifecycle destroy
- */
+/** Run a block once on Lifecycle destroy */
 public inline fun Lifecycle.doOnDestroy(crossinline func: () -> Unit) {
-    val self = this
-    self.addObserver(object : LifecycleObserver {
+  val self = this
+  self.addObserver(
+      object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_DESTROY)
         fun onEvent() {
-            self.removeObserver(this)
-            func()
+          self.removeObserver(this)
+          func()
         }
-    })
+      })
 }
 
-/**
- * Run a block once on Lifecycle create
- */
+/** Run a block once on Lifecycle create */
 public inline fun LifecycleOwner.doOnCreate(crossinline func: () -> Unit) {
-    this.lifecycle.doOnCreate(func)
+  this.lifecycle.doOnCreate(func)
 }
 
-/**
- * Run a block once on Lifecycle create
- */
+/** Run a block once on Lifecycle create */
 public inline fun Lifecycle.doOnCreate(crossinline func: () -> Unit) {
-    val self = this
-    self.addObserver(object : LifecycleObserver {
+  val self = this
+  self.addObserver(
+      object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_CREATE)
         fun onEvent() {
-            self.removeObserver(this)
-            func()
+          self.removeObserver(this)
+          func()
         }
-    })
+      })
 }
 
-/**
- * Run a block once on Lifecycle start
- */
+/** Run a block once on Lifecycle start */
 public inline fun LifecycleOwner.doOnStart(crossinline func: () -> Unit) {
-    this.lifecycle.doOnStart(func)
+  this.lifecycle.doOnStart(func)
 }
 
-/**
- * Run a block once on Lifecycle start
- */
+/** Run a block once on Lifecycle start */
 public inline fun Lifecycle.doOnStart(crossinline func: () -> Unit) {
-    val self = this
-    self.addObserver(object : LifecycleObserver {
+  val self = this
+  self.addObserver(
+      object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_START)
         fun onEvent() {
-            self.removeObserver(this)
-            func()
+          self.removeObserver(this)
+          func()
         }
-    })
+      })
 }
 
-/**
- * Run a block once on Lifecycle stop
- */
+/** Run a block once on Lifecycle stop */
 public inline fun LifecycleOwner.doOnStop(crossinline func: () -> Unit) {
-    this.lifecycle.doOnStop(func)
+  this.lifecycle.doOnStop(func)
 }
 
-/**
- * Run a block once on Lifecycle stop
- */
+/** Run a block once on Lifecycle stop */
 public inline fun Lifecycle.doOnStop(crossinline func: () -> Unit) {
-    val self = this
-    self.addObserver(object : LifecycleObserver {
+  val self = this
+  self.addObserver(
+      object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_STOP)
         fun onEvent() {
-            self.removeObserver(this)
-            func()
+          self.removeObserver(this)
+          func()
         }
-    })
+      })
 }
 
-/**
- * Run a block once on Lifecycle resume
- */
+/** Run a block once on Lifecycle resume */
 public inline fun LifecycleOwner.doOnResume(crossinline func: () -> Unit) {
-    this.lifecycle.doOnResume(func)
+  this.lifecycle.doOnResume(func)
 }
 
-/**
- * Run a block once on Lifecycle resume
- */
+/** Run a block once on Lifecycle resume */
 public inline fun Lifecycle.doOnResume(crossinline func: () -> Unit) {
-    val self = this
-    self.addObserver(object : LifecycleObserver {
+  val self = this
+  self.addObserver(
+      object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_RESUME)
         fun onEvent() {
-            self.removeObserver(this)
-            func()
+          self.removeObserver(this)
+          func()
         }
-    }
-    )
+      })
 }
 
-/**
- * Run a block once on Lifecycle pause
- */
+/** Run a block once on Lifecycle pause */
 public inline fun LifecycleOwner.doOnPause(crossinline func: () -> Unit) {
-    this.lifecycle.doOnPause(func)
+  this.lifecycle.doOnPause(func)
 }
 
-/**
- * Run a block once on Lifecycle pause
- */
+/** Run a block once on Lifecycle pause */
 public inline fun Lifecycle.doOnPause(crossinline func: () -> Unit) {
-    val self = this
-    self.addObserver(object : LifecycleObserver {
+  val self = this
+  self.addObserver(
+      object : LifecycleObserver {
 
         @Suppress("unused")
         @OnLifecycleEvent(ON_PAUSE)
         fun onEvent() {
-            self.removeObserver(this)
-            func()
+          self.removeObserver(this)
+          func()
         }
-    }
-
-    )
+      })
 }

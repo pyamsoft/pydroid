@@ -21,32 +21,32 @@ import androidx.annotation.CheckResult
 
 internal interface BillingItemComponent {
 
-    fun inject(viewHolder: BillingViewHolder)
+  fun inject(viewHolder: BillingViewHolder)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(parent: ViewGroup): BillingItemComponent
+    @CheckResult fun create(parent: ViewGroup): BillingItemComponent
+  }
+
+  class Impl
+  private constructor(
+      private val parent: ViewGroup,
+  ) : BillingItemComponent {
+
+    override fun inject(viewHolder: BillingViewHolder) {
+      val content = BillingItemContent(parent)
+      val price = BillingItemPrice(parent)
+      val click = BillingItemClick(parent)
+      viewHolder.clickView = click
+      viewHolder.contentView = content
+      viewHolder.priceView = price
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup,
-    ) : BillingItemComponent {
+    class FactoryImpl internal constructor() : Factory {
 
-        override fun inject(viewHolder: BillingViewHolder) {
-            val content = BillingItemContent(parent)
-            val price = BillingItemPrice(parent)
-            val click = BillingItemClick(parent)
-            viewHolder.clickView = click
-            viewHolder.contentView = content
-            viewHolder.priceView = price
-        }
-
-        class FactoryImpl internal constructor() : Factory {
-
-            override fun create(parent: ViewGroup): BillingItemComponent {
-                return Impl(parent)
-            }
-        }
+      override fun create(parent: ViewGroup): BillingItemComponent {
+        return Impl(parent)
+      }
     }
+  }
 }

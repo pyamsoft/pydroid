@@ -21,62 +21,50 @@ import android.os.StrictMode
 import com.pyamsoft.pydroid.util.isDebugMode
 import timber.log.Timber
 
-internal data class PYDroidInitializer internal constructor(
+internal data class PYDroidInitializer
+internal constructor(
     internal val component: PYDroidComponent,
     internal val moduleProvider: ModuleProvider
 ) {
 
-    companion object {
+  companion object {
 
-        @JvmStatic
-        internal fun create(
-            application: Application,
-            params: PYDroid.Parameters
-        ): PYDroidInitializer {
-            val enabled = params.debug?.enabled ?: application.isDebugMode()
+    @JvmStatic
+    internal fun create(application: Application, params: PYDroid.Parameters): PYDroidInitializer {
+      val enabled = params.debug?.enabled ?: application.isDebugMode()
 
-            if (enabled) {
-                setStrictMode()
-                Timber.plant(Timber.DebugTree())
-            }
+      if (enabled) {
+        setStrictMode()
+        Timber.plant(Timber.DebugTree())
+      }
 
-            Timber.d("Initializing PYDroid")
+      Timber.d("Initializing PYDroid")
 
-            val impl = PYDroidComponent.ComponentImpl.FactoryImpl().create(
-                PYDroidComponent.Component.Parameters(
-                    application = application,
-                    sourceUrl = params.viewSourceUrl,
-                    reportUrl = params.bugReportUrl,
-                    privacyPolicyUrl = params.privacyPolicyUrl,
-                    termsConditionsUrl = params.termsConditionsUrl,
-                    version = params.version,
-                    debug = PYDroidComponent.Component.DebugParameters(
-                        enabled = enabled,
-                        upgradeAvailable = params.debug?.upgradeAvailable ?: false,
-                        ratingAvailable = params.debug?.ratingAvailable ?: false
-                    )
-                )
-            )
+      val impl =
+          PYDroidComponent.ComponentImpl.FactoryImpl()
+              .create(
+                  PYDroidComponent.Component.Parameters(
+                      application = application,
+                      sourceUrl = params.viewSourceUrl,
+                      reportUrl = params.bugReportUrl,
+                      privacyPolicyUrl = params.privacyPolicyUrl,
+                      termsConditionsUrl = params.termsConditionsUrl,
+                      version = params.version,
+                      debug =
+                          PYDroidComponent.Component.DebugParameters(
+                              enabled = enabled,
+                              upgradeAvailable = params.debug?.upgradeAvailable ?: false,
+                              ratingAvailable = params.debug?.ratingAvailable ?: false)))
 
-            return PYDroidInitializer(impl, impl.moduleProvider())
-        }
-
-        @JvmStatic
-        private fun setStrictMode() {
-            StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .penaltyFlashScreen()
-                    .build()
-            )
-
-            StrictMode.setVmPolicy(
-                StrictMode.VmPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build()
-            )
-        }
+      return PYDroidInitializer(impl, impl.moduleProvider())
     }
+
+    @JvmStatic
+    private fun setStrictMode() {
+      StrictMode.setThreadPolicy(
+          StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().penaltyFlashScreen().build())
+
+      StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build())
+    }
+  }
 }

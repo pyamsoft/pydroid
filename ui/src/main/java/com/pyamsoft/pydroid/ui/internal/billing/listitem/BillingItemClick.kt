@@ -21,22 +21,14 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal class BillingItemClick internal constructor(
-    parent: ViewGroup
-) : UiView<BillingItemViewState, BillingItemViewEvent>() {
+internal class BillingItemClick internal constructor(parent: ViewGroup) :
+    UiView<BillingItemViewState, BillingItemViewEvent>() {
 
-    init {
-        doOnInflate {
-            parent.setOnDebouncedClickListener {
-                publish(BillingItemViewEvent.Purchase)
-            }
-        }
+  init {
+    doOnInflate { parent.setOnDebouncedClickListener { publish(BillingItemViewEvent.Purchase) } }
 
-        doOnTeardown {
-            parent.setOnDebouncedClickListener(null)
-        }
-    }
+    doOnTeardown { parent.setOnDebouncedClickListener(null) }
+  }
 
-    override fun render(state: UiRender<BillingItemViewState>) {
-    }
+  override fun render(state: UiRender<BillingItemViewState>) {}
 }

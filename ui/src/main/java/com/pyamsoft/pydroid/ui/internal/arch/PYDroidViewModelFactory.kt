@@ -31,38 +31,41 @@ import com.pyamsoft.pydroid.ui.internal.settings.clear.SettingsClearConfigViewMo
 import com.pyamsoft.pydroid.ui.theme.Theming
 import kotlin.reflect.KClass
 
-
 /**
  * Internal
  *
  * The main view model factory
  */
-internal class PYDroidViewModelFactory internal constructor(
+internal class PYDroidViewModelFactory
+internal constructor(
     private val params: Parameters,
 ) : ViewModelFactory() {
 
-    private val viewModelProviders = mapOf<KClass<out ViewModel>, () -> ViewModel>(
-        AboutViewModel::class to { AboutViewModel(params.aboutInteractor) },
-        ChangeLogViewModel::class to { ChangeLogViewModel(params.changeLogInteractor) },
-        OtherAppsViewModel::class to { OtherAppsViewModel(params.otherAppsInteractor) },
-        PrivacyViewModel::class to { PrivacyViewModel() },
-        AppSettingsViewModel::class to {
-            AppSettingsViewModel(params.theming, params.otherAppsInteractor)
-        },
-        SettingsClearConfigViewModel::class to {
-            SettingsClearConfigViewModel(params.settingsInteractor)
-        }
-    )
+  private val viewModelProviders =
+      mapOf<KClass<out ViewModel>, () -> ViewModel>(
+          AboutViewModel::class to { AboutViewModel(params.aboutInteractor) },
+          ChangeLogViewModel::class to { ChangeLogViewModel(params.changeLogInteractor) },
+          OtherAppsViewModel::class to { OtherAppsViewModel(params.otherAppsInteractor) },
+          PrivacyViewModel::class to { PrivacyViewModel() },
+          AppSettingsViewModel::class to
+              {
+                AppSettingsViewModel(params.theming, params.otherAppsInteractor)
+              },
+          SettingsClearConfigViewModel::class to
+              {
+                SettingsClearConfigViewModel(params.settingsInteractor)
+              })
 
-    override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
-        return viewModelProviders[modelClass.kotlin]?.invoke() ?: fail(modelClass)
-    }
+  override fun <T : ViewModel> createViewModel(modelClass: Class<T>): ViewModel {
+    return viewModelProviders[modelClass.kotlin]?.invoke() ?: fail(modelClass)
+  }
 
-    internal data class Parameters internal constructor(
-        internal val theming: Theming,
-        internal val aboutInteractor: AboutInteractor,
-        internal val changeLogInteractor: ChangeLogInteractor,
-        internal val otherAppsInteractor: OtherAppsInteractor,
-        internal val settingsInteractor: SettingsInteractor
-    )
+  internal data class Parameters
+  internal constructor(
+      internal val theming: Theming,
+      internal val aboutInteractor: AboutInteractor,
+      internal val changeLogInteractor: ChangeLogInteractor,
+      internal val otherAppsInteractor: OtherAppsInteractor,
+      internal val settingsInteractor: SettingsInteractor
+  )
 }

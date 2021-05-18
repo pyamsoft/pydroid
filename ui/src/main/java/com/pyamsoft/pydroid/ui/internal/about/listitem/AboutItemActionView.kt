@@ -23,23 +23,21 @@ import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLi
 import com.pyamsoft.pydroid.ui.internal.about.listitem.AboutItemViewEvent.OpenLicenseUrl
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal class AboutItemActionView internal constructor(
-    parent: ViewGroup
-) : BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
+internal class AboutItemActionView internal constructor(parent: ViewGroup) :
+    BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemActionsBinding>(parent) {
 
-    override val viewBinding = AboutItemActionsBinding::inflate
+  override val viewBinding = AboutItemActionsBinding::inflate
 
-    override val layoutRoot by boundView { aboutActions }
+  override val layoutRoot by boundView { aboutActions }
 
-    init {
-        doOnInflate {
-            binding.actionViewLicense.setOnDebouncedClickListener { publish(OpenLicenseUrl) }
-            binding.actionVisitHomepage.setOnDebouncedClickListener { publish(OpenLibraryUrl) }
-        }
-        doOnTeardown {
-            binding.actionViewLicense.setOnDebouncedClickListener(null)
-            binding.actionVisitHomepage.setOnDebouncedClickListener(null)
-        }
+  init {
+    doOnInflate {
+      binding.actionViewLicense.setOnDebouncedClickListener { publish(OpenLicenseUrl) }
+      binding.actionVisitHomepage.setOnDebouncedClickListener { publish(OpenLibraryUrl) }
     }
-
+    doOnTeardown {
+      binding.actionViewLicense.setOnDebouncedClickListener(null)
+      binding.actionVisitHomepage.setOnDebouncedClickListener(null)
+    }
+  }
 }

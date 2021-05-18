@@ -19,23 +19,17 @@ package com.pyamsoft.pydroid.bootstrap.settings
 import android.content.Context
 import androidx.annotation.CheckResult
 
-/**
- * Settings module
- */
+/** Settings module */
 public class SettingsModule(params: Parameters) {
 
-    private val impl = SettingsInteractorImpl(params.context)
+  private val impl = SettingsInteractorImpl(params.context)
 
-    /**
-     * Provide interactor
-     */
-    @CheckResult
-    public fun provideInteractor(): SettingsInteractor {
-        return impl
-    }
+  /** Provide interactor */
+  @CheckResult
+  public fun provideInteractor(): SettingsInteractor {
+    return impl
+  }
 
-    /**
-     * Module parameters
-     */
-    public data class Parameters(internal val context: Context)
+  /** Module parameters */
+  public data class Parameters(internal val context: Context)
 }

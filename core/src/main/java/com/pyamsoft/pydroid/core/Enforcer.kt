@@ -21,74 +21,58 @@ import androidx.annotation.CheckResult
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 
-/**
- * Interface for the enforcer
- */
+/** Interface for the enforcer */
 public interface Associate {
 
-    /**
-     * Throws an exception if the current thread is the Main or UI thread
-     */
-    public fun assertOffMainThread()
+  /** Throws an exception if the current thread is the Main or UI thread */
+  public fun assertOffMainThread()
 
-    /**
-     * Throws an exception if the current thread is not the Main or UI thread
-     */
-    public fun assertOnMainThread()
+  /** Throws an exception if the current thread is not the Main or UI thread */
+  public fun assertOnMainThread()
 }
 
-/**
- * Reggie is the normal enforcer, he expects correctly threaded contexts of execution
- */
+/** Reggie is the normal enforcer, he expects correctly threaded contexts of execution */
 internal class Reggie : Associate {
 
-    private val mainLooper by lazy { requireNotNull(Looper.getMainLooper()) }
+  private val mainLooper by lazy { requireNotNull(Looper.getMainLooper()) }
 
-    @CheckResult
-    private fun isMainThread(): Boolean {
-        return mainLooper.thread == Thread.currentThread()
-    }
+  @CheckResult
+  private fun isMainThread(): Boolean {
+    return mainLooper.thread == Thread.currentThread()
+  }
 
-    /**
-     * Throws an exception if the current thread is the Main or UI thread
-     */
-    override fun assertOffMainThread() {
-        if (isMainThread()) {
-            throw AssertionError("This operation must be OFF the Main/UI thread!")
-        }
+  /** Throws an exception if the current thread is the Main or UI thread */
+  override fun assertOffMainThread() {
+    if (isMainThread()) {
+      throw AssertionError("This operation must be OFF the Main/UI thread!")
     }
+  }
 
-    /**
-     * Throws an exception if the current thread is not the Main or UI thread
-     */
-    override fun assertOnMainThread() {
-        if (!isMainThread()) {
-            throw AssertionError("This operation must be ON the Main/UI thread!")
-        }
+  /** Throws an exception if the current thread is not the Main or UI thread */
+  override fun assertOnMainThread() {
+    if (!isMainThread()) {
+      throw AssertionError("This operation must be ON the Main/UI thread!")
     }
+  }
 }
 
-/**
- * Enforce expected threading contexts
- */
+/** Enforce expected threading contexts */
 public object Enforcer : Associate {
 
-    private var associate: Associate = Reggie()
+  private var associate: Associate = Reggie()
 
-    override fun assertOffMainThread() {
-        return associate.assertOffMainThread()
-    }
+  override fun assertOffMainThread() {
+    return associate.assertOffMainThread()
+  }
 
-    override fun assertOnMainThread() {
-        return associate.assertOnMainThread()
-    }
+  override fun assertOnMainThread() {
+    return associate.assertOnMainThread()
+  }
 
-    /**
-     * Assign a different associate for tests
-     */
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-    public fun setAssociate(associate: Associate) {
-        this.associate = associate
-    }
+  /** Assign a different associate for tests */
+  @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+  public fun setAssociate(associate: Associate) {
+    this.associate = associate
+  }
 }

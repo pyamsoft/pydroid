@@ -26,26 +26,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-internal class PlayStoreAppRatingLauncher internal constructor(
+internal class PlayStoreAppRatingLauncher
+internal constructor(
     private val preferences: RatingPreferences,
     private val manager: ReviewManager,
     private val info: ReviewInfo
 ) : AppRatingLauncher {
 
-    override suspend fun rate(activity: Activity) = withContext(context = Dispatchers.Main) {
+  override suspend fun rate(activity: Activity) =
+      withContext(context = Dispatchers.Main) {
         Enforcer.assertOnMainThread()
 
         withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
-            preferences.markRatingShown()
+          Enforcer.assertOffMainThread()
+          preferences.markRatingShown()
         }
 
         Enforcer.assertOnMainThread()
-        manager.launchReviewFlow(activity, info)
+        manager
+            .launchReviewFlow(activity, info)
             .addOnSuccessListener { Timber.d("In-app Review was a success") }
             .addOnFailureListener { throw it }
 
         // Unit
         return@withContext
-    }
+      }
 }

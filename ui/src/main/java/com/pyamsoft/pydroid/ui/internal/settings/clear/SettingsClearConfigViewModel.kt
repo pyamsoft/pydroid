@@ -24,13 +24,12 @@ import com.pyamsoft.pydroid.bootstrap.settings.SettingsInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class SettingsClearConfigViewModel internal constructor(
+internal class SettingsClearConfigViewModel
+internal constructor(
     private val interactor: SettingsInteractor,
 ) : UiViewModel<UnitViewState, UnitControllerEvent>(initialState = UnitViewState) {
 
-    internal fun reset() {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.wipeData()
-        }
-    }
+  internal fun reset() {
+    viewModelScope.launch(context = Dispatchers.Default) { interactor.wipeData() }
+  }
 }

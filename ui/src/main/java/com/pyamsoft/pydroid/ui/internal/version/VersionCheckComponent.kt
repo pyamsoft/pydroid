@@ -30,76 +30,67 @@ import com.pyamsoft.pydroid.ui.version.VersionCheckActivity
 
 internal interface VersionCheckComponent {
 
-    fun inject(activity: VersionCheckActivity)
+  fun inject(activity: VersionCheckActivity)
 
-    fun inject(dialog: VersionUpgradeDialog)
+  fun inject(dialog: VersionUpgradeDialog)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            owner: LifecycleOwner,
-            snackbarRootProvider: () -> ViewGroup
-        ): VersionCheckComponent
+    @CheckResult
+    fun create(owner: LifecycleOwner, snackbarRootProvider: () -> ViewGroup): VersionCheckComponent
 
-        data class Parameters internal constructor(
-            internal val context: Context,
-            internal val version: Int,
-            internal val isFakeUpgradeChecker: Boolean,
-            internal val isFakeUpgradeAvailable: Boolean
-        )
+    data class Parameters
+    internal constructor(
+        internal val context: Context,
+        internal val version: Int,
+        internal val isFakeUpgradeChecker: Boolean,
+        internal val isFakeUpgradeAvailable: Boolean
+    )
+  }
+
+  class Impl
+  private constructor(
+      private val snackbarRootProvider: () -> ViewGroup,
+      private val owner: LifecycleOwner,
+      params: Factory.Parameters,
+  ) : VersionCheckComponent {
+
+    private val checkFactory: ViewModelProvider.Factory
+    private val upgradeFactory: ViewModelProvider.Factory
+
+    init {
+      // Make this module each time since if it falls out of scope, the in-app update system
+      // will crash
+      val module =
+          VersionModule(
+              Parameters(
+                  context = params.context.applicationContext,
+                  version = params.version,
+                  isFakeUpgradeChecker = params.isFakeUpgradeChecker,
+                  isFakeUpgradeAvailable = params.isFakeUpgradeAvailable))
+      checkFactory = createViewModelFactory { VersionCheckViewModel(module.provideInteractor()) }
+      upgradeFactory =
+          createViewModelFactory { VersionUpgradeViewModel(module.provideInteractor()) }
     }
 
-    class Impl private constructor(
-        private val snackbarRootProvider: () -> ViewGroup,
-        private val owner: LifecycleOwner,
-        params: Factory.Parameters,
-    ) : VersionCheckComponent {
-
-        private val checkFactory: ViewModelProvider.Factory
-        private val upgradeFactory: ViewModelProvider.Factory
-
-        init {
-            // Make this module each time since if it falls out of scope, the in-app update system
-            // will crash
-            val module = VersionModule(
-                Parameters(
-                    context = params.context.applicationContext,
-                    version = params.version,
-                    isFakeUpgradeChecker = params.isFakeUpgradeChecker,
-                    isFakeUpgradeAvailable = params.isFakeUpgradeAvailable
-                )
-            )
-            checkFactory = createViewModelFactory {
-                VersionCheckViewModel(module.provideInteractor())
-            }
-            upgradeFactory = createViewModelFactory {
-                VersionUpgradeViewModel(module.provideInteractor())
-            }
-        }
-
-        override fun inject(activity: VersionCheckActivity) {
-            activity.versionFactory = checkFactory
-            activity.versionCheckView = VersionCheckView(
-                owner,
-                snackbarRootProvider
-            )
-        }
-
-        override fun inject(dialog: VersionUpgradeDialog) {
-            dialog.factory = upgradeFactory
-        }
-
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(
-                owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup
-            ): VersionCheckComponent {
-                return Impl(snackbarRootProvider, owner, params)
-            }
-        }
+    override fun inject(activity: VersionCheckActivity) {
+      activity.versionFactory = checkFactory
+      activity.versionCheckView = VersionCheckView(owner, snackbarRootProvider)
     }
+
+    override fun inject(dialog: VersionUpgradeDialog) {
+      dialog.factory = upgradeFactory
+    }
+
+    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
+        Factory {
+
+      override fun create(
+          owner: LifecycleOwner,
+          snackbarRootProvider: () -> ViewGroup
+      ): VersionCheckComponent {
+        return Impl(snackbarRootProvider, owner, params)
+      }
+    }
+  }
 }

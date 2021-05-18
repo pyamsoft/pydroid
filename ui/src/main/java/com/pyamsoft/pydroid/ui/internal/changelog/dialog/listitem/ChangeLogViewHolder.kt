@@ -26,51 +26,47 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.ListitemLinearHorizontalBinding
 
-internal class ChangeLogViewHolder private constructor(
+internal class ChangeLogViewHolder
+private constructor(
     binding: ListitemLinearHorizontalBinding,
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<ChangeLogItemViewState> {
 
-    private val binder: ViewBinder<ChangeLogItemViewState>
+  private val binder: ViewBinder<ChangeLogItemViewState>
 
-    internal var typeView: ChangeLogItemType? = null
-    internal var textView: ChangeLogItemText? = null
+  internal var typeView: ChangeLogItemType? = null
+  internal var textView: ChangeLogItemText? = null
 
-    init {
-        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
-            .plusChangeLogDialogItem()
-            .create(binding.listitemLinearH)
-            .inject(this)
+  init {
+    Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
+        .plusChangeLogDialogItem()
+        .create(binding.listitemLinearH)
+        .inject(this)
 
-        val type = requireNotNull(typeView)
-        val text = requireNotNull(textView)
-        binder = createViewBinder(
-            type,
-            text
-        ) {
+    val type = requireNotNull(typeView)
+    val text = requireNotNull(textView)
+    binder = createViewBinder(type, text) {}
+  }
 
-        }
+  override fun bindState(state: ChangeLogItemViewState) {
+    binder.bindState(state)
+  }
+
+  override fun teardown() {
+    binder.teardown()
+    typeView = null
+    textView = null
+  }
+
+  companion object {
+
+    @CheckResult
+    @JvmStatic
+    fun create(
+        inflater: LayoutInflater,
+        container: ViewGroup,
+    ): ChangeLogViewHolder {
+      val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
+      return ChangeLogViewHolder(binding)
     }
-
-    override fun bindState(state: ChangeLogItemViewState) {
-        binder.bindState(state)
-    }
-
-    override fun teardown() {
-        binder.teardown()
-        typeView = null
-        textView = null
-    }
-
-    companion object {
-
-        @CheckResult
-        @JvmStatic
-        fun create(
-            inflater: LayoutInflater,
-            container: ViewGroup,
-        ): ChangeLogViewHolder {
-            val binding = ListitemLinearHorizontalBinding.inflate(inflater, container, false)
-            return ChangeLogViewHolder(binding)
-        }
-    }
+  }
 }

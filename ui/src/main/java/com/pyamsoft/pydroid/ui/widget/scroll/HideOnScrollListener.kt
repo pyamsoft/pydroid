@@ -21,76 +21,65 @@ import androidx.annotation.CheckResult
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 
-/**
- * Floating Action Button behavior which hides button after scroll distance is passed
- */
-public class HideOnScrollListener private constructor(
+/** Floating Action Button behavior which hides button after scroll distance is passed */
+public class HideOnScrollListener
+private constructor(
     private var visible: Boolean,
     private val distanceThreshold: Int,
     private val onVisibilityChanged: (Boolean) -> Unit
 ) : RecyclerView.OnScrollListener() {
 
-    private var distanceScrolled: Int = 0
+  private var distanceScrolled: Int = 0
 
-    /**
-     * On scroll
-     */
-    override fun onScrolled(
-        recyclerView: RecyclerView,
-        dx: Int,
-        dy: Int
-    ) {
-        super.onScrolled(recyclerView, dx, dy)
-        if (distanceScrolled > distanceThreshold && visible) {
-            // Once we pass minimum distance threshold, and we are currently visible
-            // Then we hide
-            onVisibilityChanged(false)
-            visible = false
-            distanceScrolled = 0
-        } else if (distanceScrolled < -distanceThreshold && !visible) {
-            // Once we pass minimum distance threshold, and we are currently invisible
-            // Then we show
-            onVisibilityChanged(true)
-            visible = true
-            distanceScrolled = 0
-        } else {
-            // Otherwise, we track how much we have scrolled until we cross the threshold
-            if ((visible && dy > 0) || (!visible && dy < 0)) {
-                distanceScrolled += dy
-            }
-        }
+  /** On scroll */
+  override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+    super.onScrolled(recyclerView, dx, dy)
+    if (distanceScrolled > distanceThreshold && visible) {
+      // Once we pass minimum distance threshold, and we are currently visible
+      // Then we hide
+      onVisibilityChanged(false)
+      visible = false
+      distanceScrolled = 0
+    } else if (distanceScrolled < -distanceThreshold && !visible) {
+      // Once we pass minimum distance threshold, and we are currently invisible
+      // Then we show
+      onVisibilityChanged(true)
+      visible = true
+      distanceScrolled = 0
+    } else {
+      // Otherwise, we track how much we have scrolled until we cross the threshold
+      if ((visible && dy > 0) || (!visible && dy < 0)) {
+        distanceScrolled += dy
+      }
+    }
+  }
+
+  public companion object {
+
+    private const val DEFAULT_DISTANCE = 12
+
+    /** Create a new listener */
+    @JvmStatic
+    @JvmOverloads
+    @CheckResult
+    public fun create(
+        startVisible: Boolean,
+        distance: Int = DEFAULT_DISTANCE,
+        onVisibilityChanged: (Boolean) -> Unit
+    ): RecyclerView.OnScrollListener {
+      return HideOnScrollListener(startVisible, distance, onVisibilityChanged)
     }
 
-    public companion object {
-
-        private const val DEFAULT_DISTANCE = 12
-
-        /**
-         * Create a new listener
-         */
-        @JvmStatic
-        @JvmOverloads
-        @CheckResult
-        public fun create(
-            startVisible: Boolean,
-            distance: Int = DEFAULT_DISTANCE,
-            onVisibilityChanged: (Boolean) -> Unit
-        ): RecyclerView.OnScrollListener {
-            return HideOnScrollListener(startVisible, distance, onVisibilityChanged)
-        }
-
-        /**
-         * Create a new listener
-         */
-        @JvmStatic
-        @JvmOverloads
-        @CheckResult
-        public fun withView(
-            view: View,
-            distance: Int = DEFAULT_DISTANCE,
-            onVisibilityChanged: (Boolean) -> Unit
-        ): RecyclerView.OnScrollListener {
-            return HideOnScrollListener(view.isVisible, distance, onVisibilityChanged)
-        }
+    /** Create a new listener */
+    @JvmStatic
+    @JvmOverloads
+    @CheckResult
+    public fun withView(
+        view: View,
+        distance: Int = DEFAULT_DISTANCE,
+        onVisibilityChanged: (Boolean) -> Unit
+    ): RecyclerView.OnScrollListener {
+      return HideOnScrollListener(view.isVisible, distance, onVisibilityChanged)
     }
+  }
 }

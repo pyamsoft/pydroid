@@ -21,45 +21,36 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.billing.store.PlayStoreBillingInteractor
 import com.pyamsoft.pydroid.bus.EventBus
 
-/**
- * Billing module
- */
+/** Billing module */
 public class BillingModule(params: Parameters) {
 
-    private val impl = PlayStoreBillingInteractor(
-        params.context.applicationContext,
-        params.errorBus,
-    )
+  private val impl =
+      PlayStoreBillingInteractor(
+          params.context.applicationContext,
+          params.errorBus,
+      )
 
-    /**
-     * Provide a billing instance
-     */
-    @CheckResult
-    public fun provideInteractor(): BillingInteractor {
-        return impl
-    }
+  /** Provide a billing instance */
+  @CheckResult
+  public fun provideInteractor(): BillingInteractor {
+    return impl
+  }
 
-    /**
-     * Provide a launcher instance
-     */
-    @CheckResult
-    public fun provideLauncher(): BillingLauncher {
-        return impl
-    }
+  /** Provide a launcher instance */
+  @CheckResult
+  public fun provideLauncher(): BillingLauncher {
+    return impl
+  }
 
-    /**
-     * Provide a connector instance
-     */
-    @CheckResult
-    public fun provideConnector(): BillingConnector {
-        return impl
-    }
+  /** Provide a connector instance */
+  @CheckResult
+  public fun provideConnector(): BillingConnector {
+    return impl
+  }
 
-    /**
-     * Module parameters
-     */
-    public data class Parameters(
-        internal val context: Context,
-        internal val errorBus: EventBus<Throwable>
-    )
+  /** Module parameters */
+  public data class Parameters(
+      internal val context: Context,
+      internal val errorBus: EventBus<Throwable>
+  )
 }

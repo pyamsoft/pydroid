@@ -21,16 +21,14 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-internal data class OtherAppsResponse internal constructor(
-    @field:Json(name = "apps")
-    internal val apps: List<OtherAppsResponseEntry>?
-) {
+internal data class OtherAppsResponse
+internal constructor(@field:Json(name = "apps") internal val apps: List<OtherAppsResponseEntry>?) {
 
-    @CheckResult
-    fun apps(): List<OtherAppsResponseEntry> {
-        return apps ?: emptyList()
-    }
+  @CheckResult
+  fun apps(): List<OtherAppsResponseEntry> {
+    return apps ?: emptyList()
+  }
 
-    // Needed so we can generate a static adapter
-    companion object
+  // Needed so we can generate a static adapter
+  companion object
 }

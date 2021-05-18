@@ -16,17 +16,11 @@
 
 package com.pyamsoft.pydroid.bootstrap.libraries
 
-/**
- * Interface for a library's license
- */
+/** Interface for a library's license */
 public interface LibraryLicense {
-    /**
-     * License name
-     */
-    public val license: String
+  /** License name */
+  public val license: String
 
-    /**
-     * License URL
-     */
-    public val location: String
+  /** License URL */
+  public val location: String
 }

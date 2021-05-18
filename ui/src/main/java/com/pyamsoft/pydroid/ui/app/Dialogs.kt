@@ -26,56 +26,49 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 
-/**
- * Remove the title from a dialog
- */
+/** Remove the title from a dialog */
 @CheckResult
 public fun Dialog.noTitle(): Dialog {
-    requestWindowFeature(Window.FEATURE_NO_TITLE)
-    return this
+  requestWindowFeature(Window.FEATURE_NO_TITLE)
+  return this
 }
 
-/**
- * Call this from at least onCreate() but before onResume()
- */
+/** Call this from at least onCreate() but before onResume() */
 public fun DialogFragment.makeFullscreen() {
-    setSizes(fullHeight = true, fullWidth = true)
+  setSizes(fullHeight = true, fullWidth = true)
 }
 
-/**
- * Call this from at least onCreate() but before onResume()
- */
+/** Call this from at least onCreate() but before onResume() */
 public fun DialogFragment.makeFullWidth() {
-    setSizes(fullHeight = false, fullWidth = true)
+  setSizes(fullHeight = false, fullWidth = true)
 }
 
-/**
- * Call this from at least onCreate() but before onResume()
- */
+/** Call this from at least onCreate() but before onResume() */
 public fun DialogFragment.makeFullHeight() {
-    setSizes(fullHeight = true, fullWidth = false)
+  setSizes(fullHeight = true, fullWidth = false)
 }
 
 private fun DialogFragment.setSizes(fullWidth: Boolean, fullHeight: Boolean) {
-    val self = this
-    val owner = self.viewLifecycleOwner
-    owner.lifecycle.addObserver(object : LifecycleObserver {
+  val self = this
+  val owner = self.viewLifecycleOwner
+  owner.lifecycle.addObserver(
+      object : LifecycleObserver {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
         fun onResume() {
-            self.dialog?.window?.apply {
-                val match = WindowManager.LayoutParams.MATCH_PARENT
-                val wrap = WindowManager.LayoutParams.WRAP_CONTENT
-                val width = if (fullWidth) match else wrap
-                val height = if (fullHeight) match else wrap
-                setLayout(width, height)
-                setGravity(Gravity.CENTER)
-            }
+          self.dialog?.window?.apply {
+            val match = WindowManager.LayoutParams.MATCH_PARENT
+            val wrap = WindowManager.LayoutParams.WRAP_CONTENT
+            val width = if (fullWidth) match else wrap
+            val height = if (fullHeight) match else wrap
+            setLayout(width, height)
+            setGravity(Gravity.CENTER)
+          }
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         fun onDestroy() {
-            owner.lifecycle.removeObserver(this)
+          owner.lifecycle.removeObserver(this)
         }
-    })
+      })
 }

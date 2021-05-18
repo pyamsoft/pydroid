@@ -21,7 +21,8 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-internal data class AboutViewState internal constructor(
+internal data class AboutViewState
+internal constructor(
     val isLoading: Boolean,
     val licenses: List<OssLibrary>,
     val loadError: Throwable?,
@@ -30,26 +31,22 @@ internal data class AboutViewState internal constructor(
 
 internal sealed class AboutViewEvent : UiViewEvent {
 
-    internal sealed class ListItemEvent : AboutViewEvent() {
+  internal sealed class ListItemEvent : AboutViewEvent() {
 
-        data class OpenLibrary internal constructor(val index: Int) : ListItemEvent()
+    data class OpenLibrary internal constructor(val index: Int) : ListItemEvent()
 
-        data class OpenLicense internal constructor(val index: Int) : ListItemEvent()
+    data class OpenLicense internal constructor(val index: Int) : ListItemEvent()
+  }
 
-    }
+  internal sealed class ErrorEvent : AboutViewEvent() {
 
-    internal sealed class ErrorEvent : AboutViewEvent() {
+    object HideNavigationError : ErrorEvent()
 
-        object HideNavigationError : ErrorEvent()
-
-        object HideLoadError : ErrorEvent()
-
-    }
-
+    object HideLoadError : ErrorEvent()
+  }
 }
 
 internal sealed class AboutControllerEvent : UiControllerEvent {
 
-    data class OpenUrl internal constructor(val url: String) : AboutControllerEvent()
-
+  data class OpenUrl internal constructor(val url: String) : AboutControllerEvent()
 }

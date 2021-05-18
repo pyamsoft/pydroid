@@ -20,13 +20,11 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-internal data class AboutItemViewState internal constructor(
-    val library: OssLibrary
-) : UiViewState
+internal data class AboutItemViewState internal constructor(val library: OssLibrary) : UiViewState
 
 internal sealed class AboutItemViewEvent : UiViewEvent {
 
-    object OpenLicenseUrl : AboutItemViewEvent()
+  object OpenLicenseUrl : AboutItemViewEvent()
 
-    object OpenLibraryUrl : AboutItemViewEvent()
+  object OpenLibraryUrl : AboutItemViewEvent()
 }

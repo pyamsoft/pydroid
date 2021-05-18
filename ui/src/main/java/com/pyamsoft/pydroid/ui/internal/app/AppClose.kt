@@ -23,46 +23,32 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.ui.databinding.ChangelogCloseBinding
 import com.pyamsoft.pydroid.ui.util.setOnDebouncedClickListener
 
-internal abstract class AppClose<S : AppState, V : UiViewEvent> protected constructor(
-    parent: ViewGroup,
-    showRatingButton: Boolean
-) : BaseUiView<S, V, ChangelogCloseBinding>(parent) {
+internal abstract class AppClose<S : AppState, V : UiViewEvent>
+protected constructor(parent: ViewGroup, showRatingButton: Boolean) :
+    BaseUiView<S, V, ChangelogCloseBinding>(parent) {
 
-    final override val viewBinding = ChangelogCloseBinding::inflate
+  final override val viewBinding = ChangelogCloseBinding::inflate
 
-    final override val layoutRoot by boundView { changelogCloseRoot }
+  final override val layoutRoot by boundView { changelogCloseRoot }
 
-    init {
+  init {
 
-        doOnTeardown {
-            binding.changelogRate.setOnDebouncedClickListener(null)
-        }
+    doOnTeardown { binding.changelogRate.setOnDebouncedClickListener(null) }
 
-        doOnInflate {
-            if (showRatingButton) {
-                binding.changelogRate.isVisible = true
-            }
-        }
-
-        doOnInflate {
-            binding.changelogRate.setOnDebouncedClickListener {
-                publishRate()
-            }
-        }
-
-        doOnTeardown {
-            binding.changelogClose.setOnDebouncedClickListener(null)
-        }
-
-        doOnInflate {
-            binding.changelogClose.setOnDebouncedClickListener {
-                publishClose()
-            }
-        }
+    doOnInflate {
+      if (showRatingButton) {
+        binding.changelogRate.isVisible = true
+      }
     }
 
-    protected abstract fun publishRate()
+    doOnInflate { binding.changelogRate.setOnDebouncedClickListener { publishRate() } }
 
-    protected abstract fun publishClose()
+    doOnTeardown { binding.changelogClose.setOnDebouncedClickListener(null) }
 
+    doOnInflate { binding.changelogClose.setOnDebouncedClickListener { publishClose() } }
+  }
+
+  protected abstract fun publishRate()
+
+  protected abstract fun publishClose()
 }

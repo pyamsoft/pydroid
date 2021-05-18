@@ -19,6 +19,5 @@ package com.pyamsoft.pydroid.ui.internal.changelog.dialog
 import android.view.ViewGroup
 import com.pyamsoft.pydroid.ui.internal.app.AppName
 
-internal class ChangeLogName internal constructor(
-    parent: ViewGroup
-) : AppName<ChangeLogDialogViewState>(parent)
+internal class ChangeLogName internal constructor(parent: ViewGroup) :
+    AppName<ChangeLogDialogViewState>(parent)

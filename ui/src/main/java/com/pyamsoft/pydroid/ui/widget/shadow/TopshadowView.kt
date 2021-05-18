@@ -21,49 +21,39 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.arch.BaseUiView
-import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.arch.UnitViewState
 import com.pyamsoft.pydroid.ui.databinding.TopshadowBinding
 
-/**
- * Topshadow UiView
- */
-public class TopshadowView<S : UiViewState, E : UiViewEvent> private constructor(
-    parent: ViewGroup
-) : BaseUiView<S, E, TopshadowBinding>(parent) {
+/** Topshadow UiView */
+public class TopshadowView<S : UiViewState, E : UiViewEvent>
+private constructor(parent: ViewGroup) : BaseUiView<S, E, TopshadowBinding>(parent) {
 
-    /**
-     * Binding inflater
-     */
-    override val viewBinding: (LayoutInflater, ViewGroup) -> TopshadowBinding =
-        TopshadowBinding::inflate
+  /** Binding inflater */
+  override val viewBinding: (LayoutInflater, ViewGroup) -> TopshadowBinding =
+      TopshadowBinding::inflate
 
-    /**
-     * Root layout
-     */
-    override val layoutRoot: View by boundView { topshadowView }
+  /** Root layout */
+  override val layoutRoot: View by boundView { topshadowView }
 
-    public companion object {
+  public companion object {
 
-        /**
-         * Create a typed dropshadow view
-         */
-        @JvmStatic
-        @CheckResult
-        public fun create(parent: ViewGroup): BaseUiView<UnitViewState, UnitViewEvent, *> {
-            return createTyped(parent)
-        }
-
-        /**
-         * Create a typed dropshadow view
-         */
-        @JvmStatic
-        @CheckResult
-        public fun <S : UiViewState, E : UiViewEvent> createTyped(parent: ViewGroup): BaseUiView<S, E, *> {
-            return TopshadowView(parent)
-        }
+    /** Create a typed dropshadow view */
+    @JvmStatic
+    @CheckResult
+    public fun create(parent: ViewGroup): BaseUiView<UnitViewState, UnitViewEvent, *> {
+      return createTyped(parent)
     }
+
+    /** Create a typed dropshadow view */
+    @JvmStatic
+    @CheckResult
+    public fun <S : UiViewState, E : UiViewEvent> createTyped(
+        parent: ViewGroup
+    ): BaseUiView<S, E, *> {
+      return TopshadowView(parent)
+    }
+  }
 }

@@ -20,12 +20,10 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.target.Target
 import com.pyamsoft.pydroid.loader.Loaded
 
-internal class GlideLoaded internal constructor(
-    private val manager: RequestManager,
-    private val target: Target<*>
-) : Loaded {
+internal class GlideLoaded
+internal constructor(private val manager: RequestManager, private val target: Target<*>) : Loaded {
 
-    override fun dispose() {
-        manager.clear(target)
-    }
+  override fun dispose() {
+    manager.clear(target)
+  }
 }

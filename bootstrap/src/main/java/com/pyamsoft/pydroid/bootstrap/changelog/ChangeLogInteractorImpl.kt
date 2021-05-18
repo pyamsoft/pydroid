@@ -22,19 +22,17 @@ import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class ChangeLogInteractorImpl internal constructor(
-    context: Context,
-    private val preferences: ChangeLogPreferences
-) : AppInteractorImpl(context), ChangeLogInteractor {
+internal class ChangeLogInteractorImpl
+internal constructor(context: Context, private val preferences: ChangeLogPreferences) :
+    AppInteractorImpl(context), ChangeLogInteractor {
 
-    override suspend fun showChangelog(force: Boolean): Boolean =
-        withContext(context = Dispatchers.Default) {
-            Enforcer.assertOffMainThread()
-            return@withContext (force || preferences.showChangelog()).also { show ->
-                if (show) {
-                    preferences.markChangeLogShown()
-                }
-            }
+  override suspend fun showChangelog(force: Boolean): Boolean =
+      withContext(context = Dispatchers.Default) {
+        Enforcer.assertOffMainThread()
+        return@withContext (force || preferences.showChangelog()).also { show ->
+          if (show) {
+            preferences.markChangeLogShown()
+          }
         }
+      }
 }
-

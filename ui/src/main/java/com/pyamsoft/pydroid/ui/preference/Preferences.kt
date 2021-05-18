@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * Allows Preferences to use VectorDrawables as icons on API < 21
- */
+/** Allows Preferences to use VectorDrawables as icons on API < 21 */
 package com.pyamsoft.pydroid.ui.preference
 
 import android.content.Context
@@ -29,34 +27,27 @@ import androidx.core.content.withStyledAttributes
 import androidx.preference.Preference
 import com.pyamsoft.pydroid.ui.R
 
-/**
- * Load a vector drawable icon from XML
- */
+/** Load a vector drawable icon from XML */
 internal fun Preference.loadIconCompat(attrs: AttributeSet?) {
-    if (attrs != null) {
-        context.withStyledAttributes(attrs, R.styleable.PreferenceCompat) {
-            val iconResId = getResourceId(R.styleable.PreferenceCompat_iconCompat, 0)
-            if (iconResId != 0) {
-                val icon = AppCompatResources.getDrawable(context, iconResId)
-                setIcon(icon)
-            }
-        }
+  if (attrs != null) {
+    context.withStyledAttributes(attrs, R.styleable.PreferenceCompat) {
+      val iconResId = getResourceId(R.styleable.PreferenceCompat_iconCompat, 0)
+      if (iconResId != 0) {
+        val icon = AppCompatResources.getDrawable(context, iconResId)
+        setIcon(icon)
+      }
     }
+  }
 }
 
-/**
- * Get an attribute from a style
- */
+/** Get an attribute from a style */
 @AttrRes
 @CheckResult
-internal fun Context.getStyledAttr(
-    @AttrRes attr: Int,
-    @AttrRes fallbackAttr: Int
-): Int {
-    val value = TypedValue()
-    theme.resolveAttribute(attr, value, true)
-    if (value.resourceId != 0) {
-        return attr
-    }
-    return fallbackAttr
+internal fun Context.getStyledAttr(@AttrRes attr: Int, @AttrRes fallbackAttr: Int): Int {
+  val value = TypedValue()
+  theme.resolveAttribute(attr, value, true)
+  if (value.resourceId != 0) {
+    return attr
+  }
+  return fallbackAttr
 }

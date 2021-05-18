@@ -18,14 +18,9 @@ package com.pyamsoft.pydroid.bootstrap.app
 
 import androidx.annotation.CheckResult
 
-/**
- * App level interactor
- */
+/** App level interactor */
 public interface AppInteractor {
 
-    /**
-     * Gets the application display name
-     */
-    @CheckResult
-    public suspend fun getDisplayName(): CharSequence
+  /** Gets the application display name */
+  @CheckResult public suspend fun getDisplayName(): CharSequence
 }

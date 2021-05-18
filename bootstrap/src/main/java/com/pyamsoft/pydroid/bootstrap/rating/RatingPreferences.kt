@@ -18,20 +18,12 @@ package com.pyamsoft.pydroid.bootstrap.rating
 
 import androidx.annotation.CheckResult
 
-/**
- * Preferences related to in-app ratings
- */
+/** Preferences related to in-app ratings */
 public interface RatingPreferences {
 
-    /**
-     * Decide whether to show the in-app rating interface
-     */
-    @CheckResult
-    public suspend fun showRating(): Boolean
+  /** Decide whether to show the in-app rating interface */
+  @CheckResult public suspend fun showRating(): Boolean
 
-    /**
-     * Mark the in-app rating interface as shown in the current application state
-     */
-    public suspend fun markRatingShown()
+  /** Mark the in-app rating interface as shown in the current application state */
+  public suspend fun markRatingShown()
 }
-

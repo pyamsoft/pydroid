@@ -24,50 +24,45 @@ import com.pyamsoft.cachify.cachify
 import com.pyamsoft.pydroid.bootstrap.version.store.PlayStoreAppUpdater
 import java.util.concurrent.TimeUnit.MINUTES
 
-/**
- * In-App update module
- */
+/** In-App update module */
 public class VersionModule(params: Parameters) {
 
-    private val impl: VersionInteractorImpl
+  private val impl: VersionInteractorImpl
 
-    init {
-        val updater = PlayStoreAppUpdater(
+  init {
+    val updater =
+        PlayStoreAppUpdater(
             params.isFakeUpgradeChecker,
             params.context.applicationContext,
             params.version,
-            params.isFakeUpgradeAvailable
-        )
-        val network = VersionInteractorNetwork(updater)
-        impl = VersionInteractorImpl(updater, createCache(network))
-    }
+            params.isFakeUpgradeAvailable)
+    val network = VersionInteractorNetwork(updater)
+    impl = VersionInteractorImpl(updater, createCache(network))
+  }
 
-    /**
-     * Provide version interactor
-     */
+  /** Provide version interactor */
+  @CheckResult
+  public fun provideInteractor(): VersionInteractor {
+    return impl
+  }
+
+  public companion object {
+
+    @JvmStatic
     @CheckResult
-    public fun provideInteractor(): VersionInteractor {
-        return impl
+    private fun createCache(network: VersionInteractor): Cached<AppUpdateLauncher> {
+      return cachify<AppUpdateLauncher>(
+          storage = { listOf(MemoryCacheStorage.create(30, MINUTES)) }) {
+        network.checkVersion(true)
+      }
     }
+  }
 
-    public companion object {
-
-        @JvmStatic
-        @CheckResult
-        private fun createCache(network: VersionInteractor): Cached<AppUpdateLauncher> {
-            return cachify<AppUpdateLauncher>(
-                storage = { listOf(MemoryCacheStorage.create(30, MINUTES)) }
-            ) { network.checkVersion(true) }
-        }
-    }
-
-    /**
-     * Module parameters
-     */
-    public data class Parameters(
-        internal val context: Context,
-        internal val version: Int,
-        internal val isFakeUpgradeChecker: Boolean,
-        internal val isFakeUpgradeAvailable: Boolean,
-    )
+  /** Module parameters */
+  public data class Parameters(
+      internal val context: Context,
+      internal val version: Int,
+      internal val isFakeUpgradeChecker: Boolean,
+      internal val isFakeUpgradeAvailable: Boolean,
+  )
 }

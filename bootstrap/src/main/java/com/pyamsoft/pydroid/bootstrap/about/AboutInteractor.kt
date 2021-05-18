@@ -19,14 +19,9 @@ package com.pyamsoft.pydroid.bootstrap.about
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 
-/**
- * Interactor for About Libraries
- */
+/** Interactor for About Libraries */
 public interface AboutInteractor {
 
-    /**
-     * Load libraries for the application.
-     */
-    @CheckResult
-    public suspend fun loadLicenses(force: Boolean): List<OssLibrary>
+  /** Load libraries for the application. */
+  @CheckResult public suspend fun loadLicenses(force: Boolean): List<OssLibrary>
 }

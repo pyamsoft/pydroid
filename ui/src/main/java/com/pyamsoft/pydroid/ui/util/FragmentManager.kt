@@ -33,7 +33,7 @@ public inline fun FragmentManager.commit(
     immediate: Boolean = false,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-    return this.commit(owner.lifecycle, immediate, transaction)
+  return this.commit(owner.lifecycle, immediate, transaction)
 }
 
 /**
@@ -47,15 +47,13 @@ public inline fun FragmentManager.commit(
     immediate: Boolean = false,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-    lifecycle.doOnStart {
-        this.beginTransaction()
-            .run(transaction)
-            .commit()
+  lifecycle.doOnStart {
+    this.beginTransaction().run(transaction).commit()
 
-        if (immediate) {
-            this.executePendingTransactions()
-        }
+    if (immediate) {
+      this.executePendingTransactions()
     }
+  }
 }
 
 /**
@@ -67,7 +65,7 @@ public inline fun FragmentManager.commitNow(
     owner: LifecycleOwner,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-    return this.commitNow(owner.lifecycle, transaction)
+  return this.commitNow(owner.lifecycle, transaction)
 }
 
 /**
@@ -79,9 +77,5 @@ public inline fun FragmentManager.commitNow(
     lifecycle: Lifecycle,
     crossinline transaction: FragmentTransaction.() -> FragmentTransaction
 ) {
-    lifecycle.doOnStart {
-        this.beginTransaction()
-            .run(transaction)
-            .commitNow()
-    }
+  lifecycle.doOnStart { this.beginTransaction().run(transaction).commitNow() }
 }

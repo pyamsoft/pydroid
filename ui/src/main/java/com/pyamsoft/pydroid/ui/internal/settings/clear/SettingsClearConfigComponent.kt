@@ -21,32 +21,27 @@ import androidx.lifecycle.ViewModelProvider
 
 internal interface SettingsClearConfigComponent {
 
-    fun inject(dialog: SettingsClearConfigDialog)
+  fun inject(dialog: SettingsClearConfigDialog)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(): SettingsClearConfigComponent
+    @CheckResult fun create(): SettingsClearConfigComponent
 
-        data class Parameters internal constructor(
-            internal val factory: ViewModelProvider.Factory
-        )
+    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+  }
+
+  class Impl internal constructor(private val params: Factory.Parameters) :
+      SettingsClearConfigComponent {
+
+    override fun inject(dialog: SettingsClearConfigDialog) {
+      dialog.factory = params.factory
     }
 
-    class Impl internal constructor(
-        private val params: Factory.Parameters
-    ) : SettingsClearConfigComponent {
+    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-        override fun inject(dialog: SettingsClearConfigDialog) {
-            dialog.factory = params.factory
-        }
-
-        class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
-
-            override fun create(): SettingsClearConfigComponent {
-                return Impl(params)
-            }
-        }
+      override fun create(): SettingsClearConfigComponent {
+        return Impl(params)
+      }
     }
-
+  }
 }

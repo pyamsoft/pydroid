@@ -19,11 +19,9 @@ package com.pyamsoft.pydroid.util
 import android.app.Activity
 import androidx.annotation.CheckResult
 
-/**
- * Pulls an attribute from the current Activity theme
- */
+/** Pulls an attribute from the current Activity theme */
 @CheckResult
 public fun Activity.valueFromCurrentTheme(attr: Int): Int {
-    val attributes = this.obtainStyledAttributes(intArrayOf(attr))
-    return attributes.getResourceId(0, 0).also { attributes.recycle() }
+  val attributes = this.obtainStyledAttributes(intArrayOf(attr))
+  return attributes.getResourceId(0, 0).also { attributes.recycle() }
 }

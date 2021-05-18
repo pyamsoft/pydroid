@@ -31,111 +31,106 @@ import com.pyamsoft.pydroid.ui.internal.app.AppProvider
 
 internal interface BillingComponent {
 
-    fun inject(activity: ActivityBase)
+  fun inject(activity: ActivityBase)
 
-    @CheckResult
-    fun plusDialog(): DialogComponent.Factory
+  @CheckResult fun plusDialog(): DialogComponent.Factory
 
-    interface DialogComponent {
+  interface DialogComponent {
 
-        fun inject(dialog: BillingDialog)
-
-        interface Factory {
-
-            @CheckResult
-            fun create(
-                parent: ViewGroup,
-                owner: LifecycleOwner,
-                imageView: ImageView,
-                provider: AppProvider,
-            ): DialogComponent
-        }
-
-        class Impl private constructor(
-            private val module: BillingModule,
-            private val params: BillingComponent.Factory.Parameters,
-            private val owner: LifecycleOwner,
-            private val imageView: ImageView,
-            private val parent: ViewGroup,
-            provider: AppProvider,
-        ) : DialogComponent {
-
-            private val factory = createViewModelFactory {
-                BillingViewModel(
-                    params.interactor,
-                    module.provideInteractor(),
-                    provider
-                )
-            }
-
-            override fun inject(dialog: BillingDialog) {
-                dialog.purchaseClient = module.provideLauncher()
-                dialog.factory = factory
-
-                dialog.iconView = BillingIcon(params.imageLoader, imageView)
-                dialog.listView = BillingList(owner, parent)
-                dialog.closeView = BillingClose(parent)
-                dialog.nameView = BillingName(parent)
-            }
-
-            internal class FactoryImpl internal constructor(
-                private val module: BillingModule,
-                private val params: BillingComponent.Factory.Parameters,
-            ) : Factory {
-
-                override fun create(
-                    parent: ViewGroup,
-                    owner: LifecycleOwner,
-                    imageView: ImageView,
-                    provider: AppProvider,
-                ): DialogComponent {
-                    return Impl(module, params, owner, imageView, parent, provider)
-                }
-            }
-        }
-    }
+    fun inject(dialog: BillingDialog)
 
     interface Factory {
 
-        @CheckResult
-        fun create(): BillingComponent
-
-        data class Parameters internal constructor(
-            internal val context: Context,
-            internal val errorBus: EventBus<Throwable>,
-            internal val imageLoader: ImageLoader,
-            internal val interactor: ChangeLogInteractor,
-        )
+      @CheckResult
+      fun create(
+          parent: ViewGroup,
+          owner: LifecycleOwner,
+          imageView: ImageView,
+          provider: AppProvider,
+      ): DialogComponent
     }
 
-    class Impl private constructor(
-        private val params: Factory.Parameters,
-    ) : BillingComponent {
+    class Impl
+    private constructor(
+        private val module: BillingModule,
+        private val params: BillingComponent.Factory.Parameters,
+        private val owner: LifecycleOwner,
+        private val imageView: ImageView,
+        private val parent: ViewGroup,
+        provider: AppProvider,
+    ) : DialogComponent {
 
-        // Make this module each time since if it falls out of scope, the in-app billing system
-        // will crash
-        private val module = BillingModule(
+      private val factory = createViewModelFactory {
+        BillingViewModel(params.interactor, module.provideInteractor(), provider)
+      }
+
+      override fun inject(dialog: BillingDialog) {
+        dialog.purchaseClient = module.provideLauncher()
+        dialog.factory = factory
+
+        dialog.iconView = BillingIcon(params.imageLoader, imageView)
+        dialog.listView = BillingList(owner, parent)
+        dialog.closeView = BillingClose(parent)
+        dialog.nameView = BillingName(parent)
+      }
+
+      internal class FactoryImpl
+      internal constructor(
+          private val module: BillingModule,
+          private val params: BillingComponent.Factory.Parameters,
+      ) : Factory {
+
+        override fun create(
+            parent: ViewGroup,
+            owner: LifecycleOwner,
+            imageView: ImageView,
+            provider: AppProvider,
+        ): DialogComponent {
+          return Impl(module, params, owner, imageView, parent, provider)
+        }
+      }
+    }
+  }
+
+  interface Factory {
+
+    @CheckResult fun create(): BillingComponent
+
+    data class Parameters
+    internal constructor(
+        internal val context: Context,
+        internal val errorBus: EventBus<Throwable>,
+        internal val imageLoader: ImageLoader,
+        internal val interactor: ChangeLogInteractor,
+    )
+  }
+
+  class Impl
+  private constructor(
+      private val params: Factory.Parameters,
+  ) : BillingComponent {
+
+    // Make this module each time since if it falls out of scope, the in-app billing system
+    // will crash
+    private val module =
+        BillingModule(
             BillingModule.Parameters(
-                context = params.context.applicationContext,
-                errorBus = params.errorBus
-            )
-        )
+                context = params.context.applicationContext, errorBus = params.errorBus))
 
-        override fun inject(activity: ActivityBase) {
-            activity.billingConnector = module.provideConnector()
-        }
-
-        override fun plusDialog(): DialogComponent.Factory {
-            return DialogComponent.Impl.FactoryImpl(module, params)
-        }
-
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(): BillingComponent {
-                return Impl(params)
-            }
-        }
+    override fun inject(activity: ActivityBase) {
+      activity.billingConnector = module.provideConnector()
     }
+
+    override fun plusDialog(): DialogComponent.Factory {
+      return DialogComponent.Impl.FactoryImpl(module, params)
+    }
+
+    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
+        Factory {
+
+      override fun create(): BillingComponent {
+        return Impl(params)
+      }
+    }
+  }
 }

@@ -22,29 +22,26 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.databinding.BillingItemPriceBinding
 
-internal class BillingItemPrice internal constructor(
-    parent: ViewGroup
-) : BaseUiView<BillingItemViewState, Nothing, BillingItemPriceBinding>(parent) {
+internal class BillingItemPrice internal constructor(parent: ViewGroup) :
+    BaseUiView<BillingItemViewState, Nothing, BillingItemPriceBinding>(parent) {
 
-    override val viewBinding = BillingItemPriceBinding::inflate
+  override val viewBinding = BillingItemPriceBinding::inflate
 
-    override val layoutRoot by boundView { billingItemPriceRoot }
+  override val layoutRoot by boundView { billingItemPriceRoot }
 
-    init {
-        doOnTeardown {
-            clear()
-        }
-    }
+  init {
+    doOnTeardown { clear() }
+  }
 
-    private fun clear() {
-        binding.billingItemPrice.text = ""
-    }
+  private fun clear() {
+    binding.billingItemPrice.text = ""
+  }
 
-    override fun onRender(state: UiRender<BillingItemViewState>) {
-        state.mapChanged { it.sku }.render(viewScope) { handleSku(it) }
-    }
+  override fun onRender(state: UiRender<BillingItemViewState>) {
+    state.mapChanged { it.sku }.render(viewScope) { handleSku(it) }
+  }
 
-    private fun handleSku(sku: BillingSku) {
-        binding.billingItemPrice.text = sku.displayPrice
-    }
+  private fun handleSku(sku: BillingSku) {
+    binding.billingItemPrice.text = sku.displayPrice
+  }
 }

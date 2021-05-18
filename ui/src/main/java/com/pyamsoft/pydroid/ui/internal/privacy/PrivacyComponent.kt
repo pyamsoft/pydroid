@@ -24,43 +24,39 @@ import com.pyamsoft.pydroid.ui.privacy.PrivacyActivity
 
 internal interface PrivacyComponent {
 
-    fun inject(activity: PrivacyActivity)
+  fun inject(activity: PrivacyActivity)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(
-            owner: LifecycleOwner,
-            snackbarRootProvider: () -> ViewGroup
-        ): PrivacyComponent
+    @CheckResult
+    fun create(owner: LifecycleOwner, snackbarRootProvider: () -> ViewGroup): PrivacyComponent
 
+    data class Parameters internal constructor(internal val factory: ViewModelProvider.Factory)
+  }
 
-        data class Parameters internal constructor(
-            internal val factory: ViewModelProvider.Factory
-        )
+  class Impl
+  private constructor(
+      private val snackbarRootProvider: () -> ViewGroup,
+      private val owner: LifecycleOwner,
+      private val params: Factory.Parameters,
+  ) : PrivacyComponent {
+
+    override fun inject(activity: PrivacyActivity) {
+      activity.privacyFactory = params.factory
+      activity.privacyView = PrivacyView(owner, snackbarRootProvider)
     }
 
-    class Impl private constructor(
-        private val snackbarRootProvider: () -> ViewGroup,
-        private val owner: LifecycleOwner,
+    internal class FactoryImpl
+    internal constructor(
         private val params: Factory.Parameters,
-    ) : PrivacyComponent {
+    ) : Factory {
 
-        override fun inject(activity: PrivacyActivity) {
-            activity.privacyFactory = params.factory
-            activity.privacyView = PrivacyView(owner, snackbarRootProvider)
-        }
-
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters,
-        ) : Factory {
-
-            override fun create(
-                owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup
-            ): PrivacyComponent {
-                return Impl(snackbarRootProvider, owner, params)
-            }
-        }
+      override fun create(
+          owner: LifecycleOwner,
+          snackbarRootProvider: () -> ViewGroup
+      ): PrivacyComponent {
+        return Impl(snackbarRootProvider, owner, params)
+      }
     }
+  }
 }

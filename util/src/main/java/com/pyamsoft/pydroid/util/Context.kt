@@ -20,40 +20,37 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import androidx.annotation.CheckResult
 
-/**
- * The application is in debug mode if the DEBUGGABLE flag is set
- */
+/** The application is in debug mode if the DEBUGGABLE flag is set */
 @CheckResult
 public fun Context.isDebugMode(): Boolean {
-    val flags = this.applicationContext.applicationInfo.flags
-    return flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+  val flags = this.applicationContext.applicationInfo.flags
+  return flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
 }
 
 @CheckResult
 private fun nameResolver(context: Context): CharSequence {
-    val appContext = context.applicationContext
-    return appContext.applicationInfo.loadLabel(appContext.packageManager).toString()
+  val appContext = context.applicationContext
+  return appContext.applicationInfo.loadLabel(appContext.packageManager).toString()
 }
 
 @CheckResult
 private fun resolveApplicationName(): (Context) -> CharSequence {
-    return fun(context: Context): CharSequence {
-        var applicationName: CharSequence? = null
+  return fun(context: Context): CharSequence {
+    var applicationName: CharSequence? = null
 
-        if (applicationName == null) {
-            applicationName = nameResolver(context)
-        }
-
-        return applicationName
+    if (applicationName == null) {
+      applicationName = nameResolver(context)
     }
+
+    return applicationName
+  }
 }
 
 private val applicationNameResolver = resolveApplicationName()
 
-/**
- * Load the name of the Application from the package manager
- */
+/** Load the name of the Application from the package manager */
 public val Context.applicationDisplayName: CharSequence
-    @get:CheckResult get() {
-        return applicationNameResolver(this.applicationContext)
-    }
+  @get:CheckResult
+  get() {
+    return applicationNameResolver(this.applicationContext)
+  }

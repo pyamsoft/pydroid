@@ -27,78 +27,75 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-internal class VersionCheckViewModel internal constructor(
-    private val interactor: VersionInteractor
-) : UiViewModel<VersionCheckViewState, VersionCheckControllerEvent>(
-    initialState = VersionCheckViewState(
-        isLoading = false,
-        throwable = null,
-        navigationError = null,
-    )
-) {
+internal class VersionCheckViewModel
+internal constructor(private val interactor: VersionInteractor) :
+    UiViewModel<VersionCheckViewState, VersionCheckControllerEvent>(
+        initialState =
+            VersionCheckViewState(
+                isLoading = false,
+                throwable = null,
+                navigationError = null,
+            )) {
 
-    private val checkUpdateRunner = highlander<UpdateResult?, Boolean> { force ->
+  private val checkUpdateRunner =
+      highlander<UpdateResult?, Boolean> { force ->
         try {
-            val launcher = interactor.checkVersion(force)
-            return@highlander UpdateResult(force, launcher)
+          val launcher = interactor.checkVersion(force)
+          return@highlander UpdateResult(force, launcher)
         } catch (error: Throwable) {
-            error.onActualError { e ->
-                Timber.e(e, "Error checking for latest version")
-                handleVersionCheckError(e)
-            }
-            return@highlander null
+          error.onActualError { e ->
+            Timber.e(e, "Error checking for latest version")
+            handleVersionCheckError(e)
+          }
+          return@highlander null
         }
-    }
+      }
 
-    init {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.watchForDownloadComplete {
-                Timber.d("App update download ready!")
-                publish(VersionCheckControllerEvent.UpgradeReady)
-            }
-        }
+  init {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      interactor.watchForDownloadComplete {
+        Timber.d("App update download ready!")
+        publish(VersionCheckControllerEvent.UpgradeReady)
+      }
     }
+  }
 
-    private fun CoroutineScope.handleVersionCheckError(throwable: Throwable) {
-        setState { copy(throwable = throwable) }
-    }
+  private fun CoroutineScope.handleVersionCheckError(throwable: Throwable) {
+    setState { copy(throwable = throwable) }
+  }
 
-    internal fun handleClearError() {
-        setState { copy(throwable = null) }
-    }
+  internal fun handleClearError() {
+    setState { copy(throwable = null) }
+  }
 
-    internal fun handleVersionCheckComplete() {
-        setState { copy(isLoading = false) }
-    }
+  internal fun handleVersionCheckComplete() {
+    setState { copy(isLoading = false) }
+  }
 
-    internal fun handleHideNavigation() {
-        setState { copy(navigationError = null) }
-    }
+  internal fun handleHideNavigation() {
+    setState { copy(navigationError = null) }
+  }
 
-    internal fun handleNavigationSuccess() {
-        handleHideNavigation()
-    }
+  internal fun handleNavigationSuccess() {
+    handleHideNavigation()
+  }
 
-    internal fun handleNavigationFailed(error: Throwable) {
-        setState { copy(navigationError = error) }
-    }
+  internal fun handleNavigationFailed(error: Throwable) {
+    setState { copy(navigationError = error) }
+  }
 
-    internal fun handleCheckForUpdates(force: Boolean) {
-        Timber.d("Begin check for updates")
-        viewModelScope.setState(stateChange = { copy(isLoading = true) }, andThen = {
-            checkUpdateRunner.call(force)?.let { result ->
-                publish(
-                    VersionCheckControllerEvent.LaunchUpdate(
-                        result.isFallbackEnabled,
-                        result.launcher
-                    )
-                )
-            }
+  internal fun handleCheckForUpdates(force: Boolean) {
+    Timber.d("Begin check for updates")
+    viewModelScope.setState(
+        stateChange = { copy(isLoading = true) },
+        andThen = {
+          checkUpdateRunner.call(force)?.let { result ->
+            publish(
+                VersionCheckControllerEvent.LaunchUpdate(result.isFallbackEnabled, result.launcher))
+          }
         })
-    }
+  }
 
-    internal data class UpdateResult internal constructor(
-        val isFallbackEnabled: Boolean,
-        val launcher: AppUpdateLauncher
-    )
+  internal data class UpdateResult
+  internal constructor(val isFallbackEnabled: Boolean, val launcher: AppUpdateLauncher)
 }

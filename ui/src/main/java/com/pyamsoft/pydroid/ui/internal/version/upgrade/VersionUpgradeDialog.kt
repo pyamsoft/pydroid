@@ -32,58 +32,56 @@ import timber.log.Timber
 
 internal class VersionUpgradeDialog internal constructor() : AppCompatDialogFragment() {
 
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<VersionUpgradeViewModel>(activity = true) { factory }
+  internal var factory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<VersionUpgradeViewModel>(activity = true) {
+    factory
+  }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isCancelable = false
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    isCancelable = false
+  }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Injector.obtainFromActivity<VersionCheckComponent>(requireActivity())
-            .inject(this)
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    Injector.obtainFromActivity<VersionCheckComponent>(requireActivity()).inject(this)
 
-        return AlertDialog.Builder(requireActivity())
-            .setTitle("Upgrade Available")
-            .setMessage(
-                """
+    return AlertDialog.Builder(requireActivity())
+        .setTitle("Upgrade Available")
+        .setMessage(
+            """
                     A new version has been downloaded!
 
                     Click to restart the app and upgrade to the latest version!
-                """.trimIndent()
-            )
-            .setNegativeButton("Later") { _, _ -> dismiss() }
-            .setPositiveButton("Restart") { _, _ ->
-                viewModel.completeUpgrade {
-                    Timber.d("Upgrade completed, dismiss")
-                    dismiss()
-                }
-            }
-            .setCancelable(false)
-            .create()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        factory = null
-    }
-
-    companion object {
-
-        private const val TAG = "VersionUpgradeDialog"
-
-        @JvmStatic
-        @CheckResult
-        private fun newInstance(): DialogFragment {
-            return VersionUpgradeDialog().apply {
-                arguments = Bundle().apply { }
-            }
+                """.trimIndent())
+        .setNegativeButton("Later") { _, _ -> dismiss() }
+        .setPositiveButton("Restart") { _, _ ->
+          viewModel.completeUpgrade {
+            Timber.d("Upgrade completed, dismiss")
+            dismiss()
+          }
         }
+        .setCancelable(false)
+        .create()
+  }
 
-        @JvmStatic
-        fun show(activity: FragmentActivity) {
-            return newInstance().show(activity, TAG)
-        }
+  override fun onDestroyView() {
+    super.onDestroyView()
+    factory = null
+  }
+
+  companion object {
+
+    private const val TAG = "VersionUpgradeDialog"
+
+    @JvmStatic
+    @CheckResult
+    private fun newInstance(): DialogFragment {
+      return VersionUpgradeDialog().apply { arguments = Bundle().apply {} }
     }
+
+    @JvmStatic
+    fun show(activity: FragmentActivity) {
+      return newInstance().show(activity, TAG)
+    }
+  }
 }

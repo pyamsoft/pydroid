@@ -19,14 +19,9 @@ package com.pyamsoft.pydroid.bootstrap.changelog
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.bootstrap.app.AppInteractor
 
-/**
- * Interactor for displaying an application changelog
- */
+/** Interactor for displaying an application changelog */
 public interface ChangeLogInteractor : AppInteractor {
 
-    /**
-     * Show a changelog if allowed.
-     */
-    @CheckResult
-    public suspend fun showChangelog(force: Boolean): Boolean
+  /** Show a changelog if allowed. */
+  @CheckResult public suspend fun showChangelog(force: Boolean): Boolean
 }

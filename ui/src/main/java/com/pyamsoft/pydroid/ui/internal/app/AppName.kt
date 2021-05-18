@@ -21,33 +21,30 @@ import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.ui.databinding.ChangelogNameBinding
 
-internal abstract class AppName<S : AppState> protected constructor(
-    parent: ViewGroup
-) : BaseUiView<S, Nothing, ChangelogNameBinding>(parent) {
+internal abstract class AppName<S : AppState> protected constructor(parent: ViewGroup) :
+    BaseUiView<S, Nothing, ChangelogNameBinding>(parent) {
 
-    final override val viewBinding = ChangelogNameBinding::inflate
+  final override val viewBinding = ChangelogNameBinding::inflate
 
-    final override val layoutRoot by boundView { changelogName }
+  final override val layoutRoot by boundView { changelogName }
 
-    init {
-        doOnTeardown {
-            clear()
-        }
+  init {
+    doOnTeardown { clear() }
+  }
+
+  final override fun onRender(state: UiRender<S>) {
+    state.mapChanged { it.name }.render(viewScope) { handleName(it) }
+  }
+
+  private fun handleName(name: CharSequence) {
+    if (name.isBlank()) {
+      clear()
+    } else {
+      binding.changelogName.text = name
     }
+  }
 
-    final override fun onRender(state: UiRender<S>) {
-        state.mapChanged { it.name }.render(viewScope) { handleName(it) }
-    }
-
-    private fun handleName(name: CharSequence) {
-        if (name.isBlank()) {
-            clear()
-        } else {
-            binding.changelogName.text = name
-        }
-    }
-
-    private fun clear() {
-        binding.changelogName.text = ""
-    }
+  private fun clear() {
+    binding.changelogName.text = ""
+  }
 }

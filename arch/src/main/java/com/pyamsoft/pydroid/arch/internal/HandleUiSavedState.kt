@@ -19,22 +19,19 @@ package com.pyamsoft.pydroid.arch.internal
 import androidx.lifecycle.SavedStateHandle
 import com.pyamsoft.pydroid.arch.UiSavedState
 
-/**
- * SavedStateHandle backed implementation of a UiSavedState
- */
-internal class HandleUiSavedState internal constructor(
-    private val handle: SavedStateHandle
-) : UiSavedState {
+/** SavedStateHandle backed implementation of a UiSavedState */
+internal class HandleUiSavedState internal constructor(private val handle: SavedStateHandle) :
+    UiSavedState {
 
-    override fun <T : Any> put(key: String, value: T) {
-        handle.set(key, value)
-    }
+  override fun <T : Any> put(key: String, value: T) {
+    handle.set(key, value)
+  }
 
-    override fun <T : Any> remove(key: String): T? {
-        return handle.remove(key)
-    }
+  override fun <T : Any> remove(key: String): T? {
+    return handle.remove(key)
+  }
 
-    override fun <T : Any> get(key: String): T? {
-        return handle.get<T>(key)
-    }
+  override fun <T : Any> get(key: String): T? {
+    return handle.get<T>(key)
+  }
 }

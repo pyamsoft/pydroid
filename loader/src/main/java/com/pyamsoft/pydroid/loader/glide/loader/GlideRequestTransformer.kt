@@ -21,16 +21,16 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.pyamsoft.pydroid.loader.glide.GlideLoader
 
-internal abstract class GlideRequestTransformer<T : Any> protected constructor(
+internal abstract class GlideRequestTransformer<T : Any>
+protected constructor(
     context: Context,
     private val transformer: (RequestManager) -> RequestBuilder<T>
 ) : GlideLoader<T>(context) {
 
-    final override fun createRequest(request: RequestManager): RequestBuilder<T> {
-        val builder = transformer(request)
-        return onCreateRequest(builder)
-    }
+  final override fun createRequest(request: RequestManager): RequestBuilder<T> {
+    val builder = transformer(request)
+    return onCreateRequest(builder)
+  }
 
-    protected abstract fun onCreateRequest(builder: RequestBuilder<T>): RequestBuilder<T>
-
+  protected abstract fun onCreateRequest(builder: RequestBuilder<T>): RequestBuilder<T>
 }

@@ -22,45 +22,44 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
-internal class AboutErrors internal constructor(
+internal class AboutErrors
+internal constructor(
     private val owner: LifecycleOwner,
     private val parent: ViewGroup,
 ) : UiView<AboutViewState, AboutViewEvent.ErrorEvent>() {
 
-    override fun render(state: UiRender<AboutViewState>) {
-        state.mapChanged { it.loadError }.render(viewScope) { handleLoadError(it) }
-        state.mapChanged { it.navigationError }.render(viewScope) { handleNavigateError(it) }
-    }
+  override fun render(state: UiRender<AboutViewState>) {
+    state.mapChanged { it.loadError }.render(viewScope) { handleLoadError(it) }
+    state.mapChanged { it.navigationError }.render(viewScope) { handleNavigateError(it) }
+  }
 
-    private fun handleLoadError(throwable: Throwable?) {
-        if (throwable != null) {
-            showLoadError(throwable)
-        }
+  private fun handleLoadError(throwable: Throwable?) {
+    if (throwable != null) {
+      showLoadError(throwable)
     }
+  }
 
-    private fun handleNavigateError(throwable: Throwable?) {
-        if (throwable != null) {
-            showNavigationError(throwable)
-        }
+  private fun handleNavigateError(throwable: Throwable?) {
+    if (throwable != null) {
+      showNavigationError(throwable)
     }
+  }
 
-    private fun showNavigationError(error: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                parent,
-                error.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(AboutViewEvent.ErrorEvent.HideNavigationError) }
-            )
-        }
+  private fun showNavigationError(error: Throwable) {
+    Snackbreak.bindTo(owner) {
+      long(
+          parent,
+          error.message ?: "An unexpected error occurred.",
+          onHidden = { _, _ -> publish(AboutViewEvent.ErrorEvent.HideNavigationError) })
     }
+  }
 
-    private fun showLoadError(error: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                parent,
-                error.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(AboutViewEvent.ErrorEvent.HideLoadError) }
-            )
-        }
+  private fun showLoadError(error: Throwable) {
+    Snackbreak.bindTo(owner) {
+      long(
+          parent,
+          error.message ?: "An unexpected error occurred.",
+          onHidden = { _, _ -> publish(AboutViewEvent.ErrorEvent.HideLoadError) })
     }
+  }
 }

@@ -25,91 +25,75 @@ import androidx.annotation.CheckResult
  */
 public abstract class GenericLoader<T : Any> protected constructor() : Loader<T> {
 
-    private var startAction: (() -> Unit)? = null
-    private var errorAction: (() -> Unit)? = null
-    private var completeAction: ((T) -> Unit)? = null
-    private var mutator: ((T) -> T)? = null
+  private var startAction: (() -> Unit)? = null
+  private var errorAction: (() -> Unit)? = null
+  private var completeAction: ((T) -> Unit)? = null
+  private var mutator: ((T) -> T)? = null
 
-    /**
-     * Mutate a resource and return the mutated copy
-     */
-    @CheckResult
-    protected abstract fun mutateImage(resource: T): T
+  /** Mutate a resource and return the mutated copy */
+  @CheckResult protected abstract fun mutateImage(resource: T): T
 
-    /**
-     * Set an image resource onto an ImageView
-     */
-    protected abstract fun setImage(view: ImageView, image: T)
+  /** Set an image resource onto an ImageView */
+  protected abstract fun setImage(view: ImageView, image: T)
 
-    /**
-     * Load a resource immediately via blocking call
-     */
-    @CheckResult
-    @Deprecated("You almost always want to use something else.")
-    protected abstract fun immediateResource(): T?
+  /** Load a resource immediately via blocking call */
+  @CheckResult
+  @Deprecated("You almost always want to use something else.")
+  protected abstract fun immediateResource(): T?
 
-    /**
-     * Run a configured loading callback
-     */
-    protected fun notifyLoading() {
-        startAction?.invoke()
+  /** Run a configured loading callback */
+  protected fun notifyLoading() {
+    startAction?.invoke()
+  }
+
+  /** Run a configured error callback */
+  protected fun notifyError() {
+    errorAction?.invoke()
+  }
+
+  /** Run a configured completion callback */
+  protected fun notifySuccess(result: T) {
+    completeAction?.invoke(result)
+  }
+
+  /** Execute a configured mutator, or the identity if none exists */
+  @CheckResult
+  protected fun executeMutator(data: T): T {
+    return mutator?.invoke(data) ?: data
+  }
+
+  final override fun onRequest(action: () -> Unit): Loader<T> {
+    return this.also { it.startAction = action }
+  }
+
+  final override fun onError(action: () -> Unit): Loader<T> {
+    return this.also { it.errorAction = action }
+  }
+
+  final override fun onLoaded(action: (T) -> Unit): Loader<T> {
+    return this.also { it.completeAction = action }
+  }
+
+  final override fun mutate(action: (T) -> T): Loader<T> {
+    return this.also { it.mutator = action }
+  }
+
+  @Deprecated("You almost always want to use something else")
+  final override fun immediate(): T? {
+    notifyLoading()
+    try {
+      @Suppress("DEPRECATION") val resource: T? = immediateResource()
+      if (resource == null) {
+        notifyError()
+      } else {
+        val mutated = executeMutator(mutateImage(resource))
+        notifySuccess(mutated)
+        return mutated
+      }
+    } catch (e: Exception) {
+      notifyError()
     }
 
-    /**
-     * Run a configured error callback
-     */
-    protected fun notifyError() {
-        errorAction?.invoke()
-    }
-
-    /**
-     * Run a configured completion callback
-     */
-    protected fun notifySuccess(result: T) {
-        completeAction?.invoke(result)
-    }
-
-    /**
-     * Execute a configured mutator, or the identity if none exists
-     */
-    @CheckResult
-    protected fun executeMutator(data: T): T {
-        return mutator?.invoke(data) ?: data
-    }
-
-    final override fun onRequest(action: () -> Unit): Loader<T> {
-        return this.also { it.startAction = action }
-    }
-
-    final override fun onError(action: () -> Unit): Loader<T> {
-        return this.also { it.errorAction = action }
-    }
-
-    final override fun onLoaded(action: (T) -> Unit): Loader<T> {
-        return this.also { it.completeAction = action }
-    }
-
-    final override fun mutate(action: (T) -> T): Loader<T> {
-        return this.also { it.mutator = action }
-    }
-
-    @Deprecated("You almost always want to use something else")
-    final override fun immediate(): T? {
-        notifyLoading()
-        try {
-            @Suppress("DEPRECATION")
-            val resource: T? = immediateResource()
-            if (resource == null) {
-                notifyError()
-            } else {
-                val mutated = executeMutator(mutateImage(resource))
-                notifySuccess(mutated)
-                return mutated
-            }
-        } catch (e: Exception) {
-            notifyError()
-        }
-
-        return null
-    }
+    return null
+  }
 }

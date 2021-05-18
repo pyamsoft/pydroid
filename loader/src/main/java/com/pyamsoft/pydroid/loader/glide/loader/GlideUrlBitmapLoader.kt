@@ -22,24 +22,22 @@ import android.widget.ImageView
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideBitmapTransformer
 
-internal class GlideUrlBitmapLoader internal constructor(
-    context: Context,
-    private val url: String
-) : GlideBitmapTransformer(context) {
+internal class GlideUrlBitmapLoader
+internal constructor(context: Context, private val url: String) : GlideBitmapTransformer(context) {
 
-    override fun onCreateRequest(builder: RequestBuilder<Bitmap>): RequestBuilder<Bitmap> {
-        return builder.load(url)
-    }
+  override fun onCreateRequest(builder: RequestBuilder<Bitmap>): RequestBuilder<Bitmap> {
+    return builder.load(url)
+  }
 
-    override fun mutateImage(resource: Bitmap): Bitmap {
-        return resource.copy(resource.config, true)
-    }
+  override fun mutateImage(resource: Bitmap): Bitmap {
+    return resource.copy(resource.config, true)
+  }
 
-    override fun setImage(view: ImageView, image: Bitmap) {
-        view.setImageBitmap(image)
-    }
+  override fun setImage(view: ImageView, image: Bitmap) {
+    view.setImageBitmap(image)
+  }
 
-    override fun immediateResource(): Bitmap? {
-        return null
-    }
+  override fun immediateResource(): Bitmap? {
+    return null
+  }
 }

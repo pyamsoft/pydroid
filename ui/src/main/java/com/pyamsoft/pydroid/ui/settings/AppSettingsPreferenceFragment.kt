@@ -50,210 +50,183 @@ import com.pyamsoft.pydroid.ui.util.show
 import com.pyamsoft.pydroid.util.HyperlinkIntent
 import timber.log.Timber
 
-/**
- * Preference fragment level for displaying a preference screen
- */
+/** Preference fragment level for displaying a preference screen */
 public abstract class AppSettingsPreferenceFragment : PreferenceFragmentCompat() {
 
-    /**
-     * XML resource id
-     */
-    protected open val preferenceXmlResId: Int = 0
+  /** XML resource id */
+  protected open val preferenceXmlResId: Int = 0
 
-    /**
-     * Hide upgrade
-     */
-    protected open val hideUpgradeInformation: Boolean = false
+  /** Hide upgrade */
+  protected open val hideUpgradeInformation: Boolean = false
 
-    /**
-     * Hide clear button
-     */
-    protected open val hideClearAll: Boolean = false
+  /** Hide clear button */
+  protected open val hideClearAll: Boolean = false
 
-    private var settingsStateSaver: StateSaver? = null
-    private var ratingStateSaver: StateSaver? = null
-    private var versionStateSaver: StateSaver? = null
+  private var settingsStateSaver: StateSaver? = null
+  private var ratingStateSaver: StateSaver? = null
+  private var versionStateSaver: StateSaver? = null
 
-    internal var settingsView: AppSettingsView? = null
+  internal var settingsView: AppSettingsView? = null
 
-    internal var versionCheckView: VersionCheckView? = null
+  internal var versionCheckView: VersionCheckView? = null
 
-    internal var factory: ViewModelProvider.Factory? = null
-    private val settingsViewModel by fromViewModelFactory<AppSettingsViewModel>(activity = true) { factory }
-    private val versionViewModel by fromViewModelFactory<VersionCheckViewModel>(activity = true) { factory }
-    private val changeLogViewModel by fromViewModelFactory<ChangeLogViewModel>(activity = true) { factory }
+  internal var factory: ViewModelProvider.Factory? = null
+  private val settingsViewModel by fromViewModelFactory<AppSettingsViewModel>(activity = true) {
+    factory
+  }
+  private val versionViewModel by fromViewModelFactory<VersionCheckViewModel>(activity = true) {
+    factory
+  }
+  private val changeLogViewModel by fromViewModelFactory<ChangeLogViewModel>(activity = true) {
+    factory
+  }
 
-    /**
-     * On inflate preferences
-     */
-    @CallSuper
-    override fun onCreatePreferences(
-        savedInstanceState: Bundle?,
-        rootKey: String?
-    ) {
-        @XmlRes val xmlResId: Int = preferenceXmlResId
-        if (xmlResId != 0) {
-            addPreferencesFromResource(xmlResId)
-        }
-
-        addPreferencesFromResource(R.xml.settings)
-        addPreferencesFromResource(R.xml.support)
-        addPreferencesFromResource(R.xml.ad)
-        addPreferencesFromResource(R.xml.social)
+  /** On inflate preferences */
+  @CallSuper
+  override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+    @XmlRes val xmlResId: Int = preferenceXmlResId
+    if (xmlResId != 0) {
+      addPreferencesFromResource(xmlResId)
     }
 
-    /**
-     * On create
-     */
-    @CallSuper
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onViewCreated(view, savedInstanceState)
+    addPreferencesFromResource(R.xml.settings)
+    addPreferencesFromResource(R.xml.support)
+    addPreferencesFromResource(R.xml.ad)
+    addPreferencesFromResource(R.xml.social)
+  }
 
-        Injector.obtainFromApplication<PYDroidComponent>(view.context)
-            .plusSettings()
-            .create(
-                viewLifecycleOwner,
-                preferenceScreen,
-                hideClearAll,
-                hideUpgradeInformation
-            ) { listView }
-            .inject(this)
+  /** On create */
+  @CallSuper
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-        settingsStateSaver = createComponent(
+    Injector.obtainFromApplication<PYDroidComponent>(view.context)
+        .plusSettings()
+        .create(viewLifecycleOwner, preferenceScreen, hideClearAll, hideUpgradeInformation) {
+          listView
+        }
+        .inject(this)
+
+    settingsStateSaver =
+        createComponent(
             savedInstanceState,
             viewLifecycleOwner,
             settingsViewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
+            controller =
+                newUiController {
+                  return@newUiController when (it) {
                     is AppSettingsControllerEvent.DarkModeChanged -> darkThemeChanged(it.newMode)
                     is AppSettingsControllerEvent.NavigateDeveloperPage -> openDeveloperPage()
-                    is AppSettingsControllerEvent.OpenOtherAppsScreen -> openOtherAppsPage(it.others)
-                }
-            },
-            requireNotNull(settingsView)
-        ) {
-            return@createComponent when (it) {
-                is AppSettingsViewEvent.CheckUpgrade -> versionViewModel.handleCheckForUpdates(true)
-                is AppSettingsViewEvent.ClearData -> openClearDataDialog()
-                is AppSettingsViewEvent.Hyperlink -> navigateHyperlink(it.hyperlinkIntent)
-                is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps()
-                is AppSettingsViewEvent.RateApp -> openPlayStore()
-                is AppSettingsViewEvent.ShowDonate -> openDonationDialog()
-                is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(true)
-                is AppSettingsViewEvent.ToggleDarkTheme -> settingsViewModel.handleChangeDarkMode(it.mode)
-                is AppSettingsViewEvent.ViewLicense -> openLicensesPage()
-            }
+                    is AppSettingsControllerEvent.OpenOtherAppsScreen ->
+                        openOtherAppsPage(it.others)
+                  }
+                },
+            requireNotNull(settingsView)) {
+          return@createComponent when (it) {
+            is AppSettingsViewEvent.CheckUpgrade -> versionViewModel.handleCheckForUpdates(true)
+            is AppSettingsViewEvent.ClearData -> openClearDataDialog()
+            is AppSettingsViewEvent.Hyperlink -> navigateHyperlink(it.hyperlinkIntent)
+            is AppSettingsViewEvent.MoreApps -> settingsViewModel.handleSeeMoreApps()
+            is AppSettingsViewEvent.RateApp -> openPlayStore()
+            is AppSettingsViewEvent.ShowDonate -> openDonationDialog()
+            is AppSettingsViewEvent.ShowUpgrade -> changeLogViewModel.show(true)
+            is AppSettingsViewEvent.ToggleDarkTheme ->
+                settingsViewModel.handleChangeDarkMode(it.mode)
+            is AppSettingsViewEvent.ViewLicense -> openLicensesPage()
+          }
         }
 
-        settingsViewModel.handleSyncDarkThemeState(
-            viewLifecycleOwner.lifecycleScope,
-            requireActivity()
-        )
-    }
+    settingsViewModel.handleSyncDarkThemeState(viewLifecycleOwner.lifecycleScope, requireActivity())
+  }
 
-    private fun openDonationDialog() {
-        Timber.d("Launch donation dialog")
-        BillingDialog.open(requireActivity())
-    }
+  private fun openDonationDialog() {
+    Timber.d("Launch donation dialog")
+    BillingDialog.open(requireActivity())
+  }
 
-    private fun openPlayStore() {
-        MarketLinker.openAppPage(requireContext()).handleNavigation()
-    }
+  private fun openPlayStore() {
+    MarketLinker.openAppPage(requireContext()).handleNavigation()
+  }
 
-    private fun openOtherAppsPage(apps: List<OtherApp>) {
-        onViewMorePyamsoftAppsClicked(false)
-        Timber.d("Show other apps fragment: $apps")
-        OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
-    }
+  private fun openOtherAppsPage(apps: List<OtherApp>) {
+    onViewMorePyamsoftAppsClicked(false)
+    Timber.d("Show other apps fragment: $apps")
+    OtherAppsDialog().show(requireActivity(), OtherAppsDialog.TAG)
+  }
 
-    /**
-     * On destroy
-     */
-    override fun onDestroyView() {
-        super.onDestroyView()
-        settingsView = null
-        factory = null
-        settingsStateSaver = null
-        ratingStateSaver = null
-        versionStateSaver = null
+  /** On destroy */
+  override fun onDestroyView() {
+    super.onDestroyView()
+    settingsView = null
+    factory = null
+    settingsStateSaver = null
+    ratingStateSaver = null
+    versionStateSaver = null
 
-        // Clear list view
-        listView?.removeAllItemDecorations()
-    }
+    // Clear list view
+    listView?.removeAllItemDecorations()
+  }
 
-    private fun Result<Unit>.handleNavigation() {
-        this
-            .onSuccess { settingsViewModel.handleNavigationSuccess() }
-            .onFailure { settingsViewModel.handleNavigationFailed(it) }
+  private fun Result<Unit>.handleNavigation() {
+    this.onSuccess { settingsViewModel.handleNavigationSuccess() }.onFailure {
+      settingsViewModel.handleNavigationFailed(it)
     }
+  }
 
-    private fun openDeveloperPage() {
-        onViewMorePyamsoftAppsClicked(true)
-        MarketLinker.linkToDeveloperPage(requireContext()).handleNavigation()
-    }
+  private fun openDeveloperPage() {
+    onViewMorePyamsoftAppsClicked(true)
+    MarketLinker.linkToDeveloperPage(requireContext()).handleNavigation()
+  }
 
-    private fun darkThemeChanged(mode: Theming.Mode) {
-        onDarkThemeClicked(mode)
-    }
+  private fun darkThemeChanged(mode: Theming.Mode) {
+    onDarkThemeClicked(mode)
+  }
 
-    private fun openClearDataDialog() {
-        onClearAllPrompt()
-    }
+  private fun openClearDataDialog() {
+    onClearAllPrompt()
+  }
 
-    /**
-     * Logs when the Clear All option is clicked, override to use unique implementation
-     *
-     * NOTE: In the future this method will be going away as the clear all flow will be handled by the library.
-     * Custom clear logic in the middle will be supported but the UI for the prompt, and the end result of clearing
-     * user application data will be enforced by the library.
-     */
-    protected open fun onClearAllPrompt() {
-        SettingsClearConfigDialog.newInstance()
-            .show(requireActivity(), SettingsClearConfigDialog.TAG)
-    }
+  /**
+   * Logs when the Clear All option is clicked, override to use unique implementation
+   *
+   * NOTE: In the future this method will be going away as the clear all flow will be handled by the
+   * library. Custom clear logic in the middle will be supported but the UI for the prompt, and the
+   * end result of clearing user application data will be enforced by the library.
+   */
+  protected open fun onClearAllPrompt() {
+    SettingsClearConfigDialog.newInstance().show(requireActivity(), SettingsClearConfigDialog.TAG)
+  }
 
-    private fun openLicensesPage() {
-        onLicenseItemClicked()
-    }
+  private fun openLicensesPage() {
+    onLicenseItemClicked()
+  }
 
-    private fun navigateHyperlink(link: HyperlinkIntent) {
-        link.navigate().handleNavigation()
-    }
+  private fun navigateHyperlink(link: HyperlinkIntent) {
+    link.navigate().handleNavigation()
+  }
 
-    /**
-     * On save instance state
-     */
-    @CallSuper
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        settingsStateSaver?.saveState(outState)
-        ratingStateSaver?.saveState(outState)
-        versionStateSaver?.saveState(outState)
-    }
+  /** On save instance state */
+  @CallSuper
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    settingsStateSaver?.saveState(outState)
+    ratingStateSaver?.saveState(outState)
+    versionStateSaver?.saveState(outState)
+  }
 
-    /**
-     * Toggles dark theme, override or extend to use unique implementation
-     */
-    @CallSuper
-    protected open fun onDarkThemeClicked(mode: Theming.Mode) {
-        Timber.d("Dark theme set: $mode")
-    }
+  /** Toggles dark theme, override or extend to use unique implementation */
+  @CallSuper
+  protected open fun onDarkThemeClicked(mode: Theming.Mode) {
+    Timber.d("Dark theme set: $mode")
+  }
 
-    /**
-     * Shows a page for Open Source licenses, override or extend to use unique implementation
-     */
-    @CallSuper
-    protected open fun onLicenseItemClicked() {
-        Timber.d("Show about licenses fragment")
-        AboutDialog().show(requireActivity(), AboutDialog.TAG)
-    }
+  /** Shows a page for Open Source licenses, override or extend to use unique implementation */
+  @CallSuper
+  protected open fun onLicenseItemClicked() {
+    Timber.d("Show about licenses fragment")
+    AboutDialog().show(requireActivity(), AboutDialog.TAG)
+  }
 
-    /**
-     * Shows a page for  Source licenses, override or extend to use unique implementation
-     */
-    protected open fun onViewMorePyamsoftAppsClicked(navigatingAway: Boolean) {
-    }
+  /** Shows a page for Source licenses, override or extend to use unique implementation */
+  protected open fun onViewMorePyamsoftAppsClicked(navigatingAway: Boolean) {}
 }

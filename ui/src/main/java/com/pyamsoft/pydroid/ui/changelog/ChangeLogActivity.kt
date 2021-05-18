@@ -33,75 +33,60 @@ import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogViewModel
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.ChangeLogDialog
 import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
-/**
- * An activity which displays an in-app changelog
- */
+/** An activity which displays an in-app changelog */
 public abstract class ChangeLogActivity : RatingActivity(), ChangeLogProvider {
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    internal var changeLogFactory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<ChangeLogViewModel> { changeLogFactory }
+  internal var changeLogFactory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<ChangeLogViewModel> { changeLogFactory }
 
-    /**
-     * Version name of application
-     */
-    protected abstract val versionName: String
+  /** Version name of application */
+  protected abstract val versionName: String
 
-    /**
-     * On activity create
-     */
-    @CallSuper
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  /** On activity create */
+  @CallSuper
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        Injector.obtainFromApplication<PYDroidComponent>(this)
-            .plusChangeLog()
-            .create()
-            .inject(this)
+    Injector.obtainFromApplication<PYDroidComponent>(this).plusChangeLog().create().inject(this)
 
-        stateSaver = createComponent<UnitViewState, UnitViewEvent, ChangeLogControllerEvent>(
+    stateSaver =
+        createComponent<UnitViewState, UnitViewEvent, ChangeLogControllerEvent>(
             savedInstanceState,
             this,
             viewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
+            controller =
+                newUiController {
+                  return@newUiController when (it) {
                     is ChangeLogControllerEvent.ShowChangeLog -> ChangeLogDialog.open(this)
-                }
-            }
-        ) {
-            // Empty
+                  }
+                }) {
+          // Empty
         }
-    }
+  }
 
-    /**
-     * On save instance state
-     */
-    @CallSuper
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
+  /** On save instance state */
+  @CallSuper
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
 
-    /**
-     * On destroy
-     */
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
-        changeLogFactory = null
-        stateSaver = null
-    }
+  /** On destroy */
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    changeLogFactory = null
+    stateSaver = null
+  }
 
-    /**
-     * On post resume, we can show Dialogs
-     */
-    @CallSuper
-    override fun onPostResume() {
-        super.onPostResume()
+  /** On post resume, we can show Dialogs */
+  @CallSuper
+  override fun onPostResume() {
+    super.onPostResume()
 
-        // Called in onPostResume so that the DialogFragment can be shown correctly.
-        viewModel.show(false)
-    }
-
+    // Called in onPostResume so that the DialogFragment can be shown correctly.
+    viewModel.show(false)
+  }
 }

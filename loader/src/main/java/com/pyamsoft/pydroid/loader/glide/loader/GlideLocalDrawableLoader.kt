@@ -24,24 +24,23 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideDrawableTransformer
 
-internal class GlideLocalDrawableLoader internal constructor(
-    context: Context,
-    @DrawableRes private val resId: Int
-) : GlideDrawableTransformer(context) {
+internal class GlideLocalDrawableLoader
+internal constructor(context: Context, @DrawableRes private val resId: Int) :
+    GlideDrawableTransformer(context) {
 
-    override fun onCreateRequest(builder: RequestBuilder<Drawable>): RequestBuilder<Drawable> {
-        return builder.load(resId)
-    }
+  override fun onCreateRequest(builder: RequestBuilder<Drawable>): RequestBuilder<Drawable> {
+    return builder.load(resId)
+  }
 
-    override fun mutateImage(resource: Drawable): Drawable {
-        return resource.mutate()
-    }
+  override fun mutateImage(resource: Drawable): Drawable {
+    return resource.mutate()
+  }
 
-    override fun setImage(view: ImageView, image: Drawable) {
-        view.setImageDrawable(image)
-    }
+  override fun setImage(view: ImageView, image: Drawable) {
+    view.setImageDrawable(image)
+  }
 
-    override fun immediateResource(): Drawable? {
-        return AppCompatResources.getDrawable(context, resId)
-    }
+  override fun immediateResource(): Drawable? {
+    return AppCompatResources.getDrawable(context, resId)
+  }
 }

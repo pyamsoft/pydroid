@@ -19,45 +19,43 @@ package com.pyamsoft.pydroid.ui.util
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-/**
- * Apply behavior to a FAB
- */
+/** Apply behavior to a FAB */
 @JvmOverloads
-public fun FloatingActionButton.withBehavior(behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()): FloatingActionButton {
-    return this.also {
-        val params = it.layoutParams
-        if (params is CoordinatorLayout.LayoutParams) {
-            params.behavior = behavior
-        }
+public fun FloatingActionButton.withBehavior(
+    behavior: FloatingActionButton.Behavior = FloatingActionButton.Behavior()
+): FloatingActionButton {
+  return this.also {
+    val params = it.layoutParams
+    if (params is CoordinatorLayout.LayoutParams) {
+      params.behavior = behavior
     }
+  }
 }
 
-/**
- * Hide FAB
- */
+/** Hide FAB */
 public inline fun FloatingActionButton.hide(crossinline func: FloatingActionButton.() -> Unit) {
-    this.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
+  this.hide(
+      object : FloatingActionButton.OnVisibilityChangedListener() {
 
         override fun onHidden(fab: FloatingActionButton?) {
-            super.onHidden(fab)
-            if (fab != null) {
-                func(fab)
-            }
+          super.onHidden(fab)
+          if (fab != null) {
+            func(fab)
+          }
         }
-    })
+      })
 }
 
-/**
- * Show FAB
- */
+/** Show FAB */
 public inline fun FloatingActionButton.show(crossinline func: FloatingActionButton.() -> Unit) {
-    this.show(object : FloatingActionButton.OnVisibilityChangedListener() {
+  this.show(
+      object : FloatingActionButton.OnVisibilityChangedListener() {
 
         override fun onShown(fab: FloatingActionButton?) {
-            super.onShown(fab)
-            if (fab != null) {
-                func(fab)
-            }
+          super.onShown(fab)
+          if (fab != null) {
+            func(fab)
+          }
         }
-    })
+      })
 }

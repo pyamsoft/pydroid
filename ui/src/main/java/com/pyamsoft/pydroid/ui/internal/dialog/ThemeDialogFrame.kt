@@ -20,13 +20,10 @@ import android.view.ViewGroup
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.ui.databinding.ThemeDialogFrameBinding
 
-internal class ThemeDialogFrame internal constructor(
-    parent: ViewGroup
-) : BaseUiView<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogFrameBinding>(
-    parent
-) {
+internal class ThemeDialogFrame internal constructor(parent: ViewGroup) :
+    BaseUiView<ThemeDialogViewState, ThemeDialogViewEvent, ThemeDialogFrameBinding>(parent) {
 
-    override val viewBinding = ThemeDialogFrameBinding::inflate
+  override val viewBinding = ThemeDialogFrameBinding::inflate
 
-    override val layoutRoot by boundView { appSettingsFrame }
+  override val layoutRoot by boundView { appSettingsFrame }
 }

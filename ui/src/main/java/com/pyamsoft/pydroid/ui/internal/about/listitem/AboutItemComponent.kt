@@ -21,32 +21,29 @@ import androidx.annotation.CheckResult
 
 internal interface AboutItemComponent {
 
-    fun inject(viewHolder: AboutViewHolder)
+  fun inject(viewHolder: AboutViewHolder)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(parent: ViewGroup): AboutItemComponent
+    @CheckResult fun create(parent: ViewGroup): AboutItemComponent
+  }
+
+  class Impl private constructor(private val parent: ViewGroup) : AboutItemComponent {
+
+    override fun inject(viewHolder: AboutViewHolder) {
+      val title = AboutItemTitleView(parent)
+      val description = AboutItemDescriptionView(parent)
+      val action = AboutItemActionView(parent)
+      viewHolder.titleView = title
+      viewHolder.descriptionView = description
+      viewHolder.actionView = action
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup
-    ) : AboutItemComponent {
+    class FactoryImpl internal constructor() : Factory {
 
-        override fun inject(viewHolder: AboutViewHolder) {
-            val title = AboutItemTitleView(parent)
-            val description = AboutItemDescriptionView(parent)
-            val action = AboutItemActionView(parent)
-            viewHolder.titleView = title
-            viewHolder.descriptionView = description
-            viewHolder.actionView = action
-        }
-
-        class FactoryImpl internal constructor() : Factory {
-
-            override fun create(parent: ViewGroup): AboutItemComponent {
-                return Impl(parent)
-            }
-        }
+      override fun create(parent: ViewGroup): AboutItemComponent {
+        return Impl(parent)
+      }
     }
+  }
 }

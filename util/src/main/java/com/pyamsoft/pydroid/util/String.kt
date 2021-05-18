@@ -22,49 +22,38 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.CheckResult
 
-/**
- * Turn a string into a hyperlink intent
- */
+/** Turn a string into a hyperlink intent */
 @CheckResult
 public fun String.hyperlink(c: Context): HyperlinkIntent {
-    val intent = Intent(Intent.ACTION_VIEW).also {
-        it.data = Uri.parse(this)
-    }
+  val intent = Intent(Intent.ACTION_VIEW).also { it.data = Uri.parse(this) }
 
-    return HyperlinkIntent(c.applicationContext, intent)
+  return HyperlinkIntent(c.applicationContext, intent)
 }
 
-/**
- * Intent class that knows how to navigate to a given hyperlink
- */
-public data class HyperlinkIntent internal constructor(
-    /**
-     * PublishedApi internal for navigate() inline
-     */
-    @PublishedApi
-    internal val context: Context,
+/** Intent class that knows how to navigate to a given hyperlink */
+public data class HyperlinkIntent
+internal constructor(
+    /** PublishedApi internal for navigate() inline */
+    @PublishedApi internal val context: Context,
 
-    /**
-     * PublishedApi internal for navigate() inline
-     */
-    @PublishedApi
-    internal val intent: Intent
+    /** PublishedApi internal for navigate() inline */
+    @PublishedApi internal val intent: Intent
 ) {
 
-    /**
-     * Navigate to the hyperlink.
-     *
-     * On success, this will return Unit and perform navigation
-     * On failure, this will return the ActivityNotFound exception.
-     */
-    @CheckResult
-    public fun navigate(): Result<Unit> {
-        val appContext = context.applicationContext
-        return try {
-            val result = appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            Result.success(result)
-        } catch (e: ActivityNotFoundException) {
-            Result.failure(e)
-        }
+  /**
+   * Navigate to the hyperlink.
+   *
+   * On success, this will return Unit and perform navigation On failure, this will return the
+   * ActivityNotFound exception.
+   */
+  @CheckResult
+  public fun navigate(): Result<Unit> {
+    val appContext = context.applicationContext
+    return try {
+      val result = appContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+      Result.success(result)
+    } catch (e: ActivityNotFoundException) {
+      Result.failure(e)
     }
+  }
 }

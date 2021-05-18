@@ -18,14 +18,9 @@ package com.pyamsoft.pydroid.arch
 
 import androidx.annotation.UiThread
 
-/**
- * Generic interface representing something that can render a UiViewState
- */
+/** Generic interface representing something that can render a UiViewState */
 public fun interface Renderable<S : UiViewState> {
 
-    /**
-     * Render a state
-     */
-    @UiThread
-    public fun render(state: UiRender<S>)
+  /** Render a state */
+  @UiThread public fun render(state: UiRender<S>)
 }

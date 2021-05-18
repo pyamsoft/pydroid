@@ -19,16 +19,13 @@ package com.pyamsoft.pydroid.arch.internal
 import android.os.Bundle
 import com.pyamsoft.pydroid.arch.UiSavedStateReader
 
-/**
- * Bundle backed implementation of a UiSavedStateReader
- */
+/** Bundle backed implementation of a UiSavedStateReader */
 @PublishedApi
-internal class BundleUiSavedStateReader @PublishedApi internal constructor(
-    private val bundle: Bundle?
-) : UiSavedStateReader {
+internal class BundleUiSavedStateReader
+@PublishedApi
+internal constructor(private val bundle: Bundle?) : UiSavedStateReader {
 
-    override fun <T : Any> get(key: String): T? {
-        @Suppress("UNCHECKED_CAST")
-        return bundle?.get(key) as? T
-    }
+  override fun <T : Any> get(key: String): T? {
+    @Suppress("UNCHECKED_CAST") return bundle?.get(key) as? T
+  }
 }

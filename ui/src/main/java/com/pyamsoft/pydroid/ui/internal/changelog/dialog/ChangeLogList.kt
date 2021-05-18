@@ -30,91 +30,87 @@ import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
-internal class ChangeLogList internal constructor(
-    parent: ViewGroup
-) : BaseUiView<ChangeLogDialogViewState, ChangeLogDialogViewEvent, ChangelogListBinding>(parent) {
+internal class ChangeLogList internal constructor(parent: ViewGroup) :
+    BaseUiView<ChangeLogDialogViewState, ChangeLogDialogViewEvent, ChangelogListBinding>(parent) {
 
-    override val viewBinding = ChangelogListBinding::inflate
+  override val viewBinding = ChangelogListBinding::inflate
 
-    override val layoutRoot by boundView { changelogList }
+  override val layoutRoot by boundView { changelogList }
 
-    private var changeLogAdapter: ChangeLogAdapter? = null
+  private var changeLogAdapter: ChangeLogAdapter? = null
 
-    init {
-        doOnInflate {
-            setupListView()
-        }
+  init {
+    doOnInflate { setupListView() }
 
-        doOnTeardown {
-            binding.changelogList.adapter = null
-            changeLogAdapter = null
-        }
-
-        doOnInflate {
-            val margin = 8.asDp(binding.changelogList.context)
-            LinearMarginDecoration.create(margin = margin).apply {
-                binding.changelogList.addItemDecoration(this)
-            }
-        }
-
-        doOnTeardown {
-            binding.changelogList.removeAllItemDecorations()
-        }
+    doOnTeardown {
+      binding.changelogList.adapter = null
+      changeLogAdapter = null
     }
 
-    private fun setupListView() {
-        changeLogAdapter = ChangeLogAdapter()
-
-        binding.changelogList.apply {
-            adapter = changeLogAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                initialPrefetchItemCount = 3
-                isItemPrefetchEnabled = false
-            }
-        }
-
-        FastScrollerBuilder(binding.changelogList)
-            .useMd2Style()
-            .setPopupTextProvider(changeLogAdapter)
-            .build()
+    doOnInflate {
+      val margin = 8.asDp(binding.changelogList.context)
+      LinearMarginDecoration.create(margin = margin).apply {
+        binding.changelogList.addItemDecoration(this)
+      }
     }
 
-    override fun onRender(state: UiRender<ChangeLogDialogViewState>) {
-        state.mapChanged { it.changeLog }.render(viewScope) { log ->
-            handleLoading(log)
-            handleChangeLog(log)
-        }
+    doOnTeardown { binding.changelogList.removeAllItemDecorations() }
+  }
+
+  private fun setupListView() {
+    changeLogAdapter = ChangeLogAdapter()
+
+    binding.changelogList.apply {
+      adapter = changeLogAdapter
+      layoutManager =
+          LinearLayoutManager(context).apply {
+            initialPrefetchItemCount = 3
+            isItemPrefetchEnabled = false
+          }
     }
 
-    private fun handleLoading(log: List<ChangeLogLine>) {
-        if (log.isEmpty()) {
-            hide()
-        } else {
-            show()
-        }
-    }
+    FastScrollerBuilder(binding.changelogList)
+        .useMd2Style()
+        .setPopupTextProvider(changeLogAdapter)
+        .build()
+  }
 
-    private fun handleChangeLog(log: List<ChangeLogLine>) {
-        if (log.isEmpty()) {
-            clear()
-        } else {
-            loadChangeLog(log)
-        }
+  override fun onRender(state: UiRender<ChangeLogDialogViewState>) {
+    state.mapChanged { it.changeLog }.render(viewScope) { log ->
+      handleLoading(log)
+      handleChangeLog(log)
     }
+  }
 
-    private fun show() {
-        layoutRoot.isVisible = true
+  private fun handleLoading(log: List<ChangeLogLine>) {
+    if (log.isEmpty()) {
+      hide()
+    } else {
+      show()
     }
+  }
 
-    private fun hide() {
-        layoutRoot.isVisible = false
+  private fun handleChangeLog(log: List<ChangeLogLine>) {
+    if (log.isEmpty()) {
+      clear()
+    } else {
+      loadChangeLog(log)
     }
+  }
 
-    private fun loadChangeLog(changeLog: List<ChangeLogLine>) {
-        requireNotNull(changeLogAdapter).submitList(changeLog.map { ChangeLogItemViewState(it) })
-    }
+  private fun show() {
+    layoutRoot.isVisible = true
+  }
 
-    private fun clear() {
-        requireNotNull(changeLogAdapter).submitList(null)
-    }
+  private fun hide() {
+    layoutRoot.isVisible = false
+  }
+
+  private fun loadChangeLog(changeLog: List<ChangeLogLine>) {
+    requireNotNull(changeLogAdapter).submitList(changeLog.map { ChangeLogItemViewState(it) })
+  }
+
+  private fun clear() {
+    requireNotNull(changeLogAdapter).submitList(null)
+  }
 }

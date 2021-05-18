@@ -11,20 +11,16 @@ import kotlinx.coroutines.launch
  */
 private class StateUiRender<S>(private val state: S) : UiRender<S> {
 
-    override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {
-        scope.launch(context = Dispatchers.Main) {
-            onRender(state)
-        }
-    }
+  override fun render(scope: CoroutineScope, onRender: (state: S) -> Unit) {
+    scope.launch(context = Dispatchers.Main) { onRender(state) }
+  }
 
-    override fun <T> mapChanged(change: (state: S) -> T): UiRender<T> {
-        return StateUiRender(change(state))
-    }
+  override fun <T> mapChanged(change: (state: S) -> T): UiRender<T> {
+    return StateUiRender(change(state))
+  }
 }
 
-/**
- * Convert data into a UiRender<S>
- */
+/** Convert data into a UiRender<S> */
 public fun <S : UiViewState> S.asUiRender(): UiRender<S> {
-    return StateUiRender(this)
+  return StateUiRender(this)
 }

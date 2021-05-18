@@ -18,18 +18,12 @@ package com.pyamsoft.pydroid.ui.app
 
 import androidx.appcompat.widget.Toolbar
 
-/**
- * An activity which handles a global toolbar
- */
+/** An activity which handles a global toolbar */
 public interface ToolbarActivity {
 
-    /**
-     * Run the function if the toolbar is set, otherwise do nothing
-     */
-    public fun withToolbar(func: (Toolbar) -> Unit)
+  /** Run the function if the toolbar is set, otherwise do nothing */
+  public fun withToolbar(func: (Toolbar) -> Unit)
 
-    /**
-     * Run the function if the toolbar is set, otherwise throw
-     */
-    public fun requireToolbar(func: (Toolbar) -> Unit)
+  /** Run the function if the toolbar is set, otherwise throw */
+  public fun requireToolbar(func: (Toolbar) -> Unit)
 }

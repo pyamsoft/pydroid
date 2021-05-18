@@ -31,69 +31,58 @@ private var cachedIcon: Drawable? = null
 
 @CheckResult
 private fun Toolbar.loadIcon(@ColorRes customColor: Int): Drawable? {
-    // Pull icon from cache if possible
-    var icon: Drawable? = cachedIcon
+  // Pull icon from cache if possible
+  var icon: Drawable? = cachedIcon
 
-    if (icon == null) {
-        // If no icon is available, resolve it from the current theme
-        context.withStyledAttributes(
-            R.attr.toolbarStyle,
-            intArrayOf(
-                R.attr.homeAsUpIndicator,
-                R.attr.titleTextColor
-            )
-        ) {
-            @DrawableRes val iconId = getResourceId(0, 0)
-            if (iconId != 0) {
-                // May be a vector on API < 21
-                icon = AppCompatResources.getDrawable(context, iconId)
-            }
+  if (icon == null) {
+    // If no icon is available, resolve it from the current theme
+    context.withStyledAttributes(
+        R.attr.toolbarStyle, intArrayOf(R.attr.homeAsUpIndicator, R.attr.titleTextColor)) {
+      @DrawableRes val iconId = getResourceId(0, 0)
+      if (iconId != 0) {
+        // May be a vector on API < 21
+        icon = AppCompatResources.getDrawable(context, iconId)
+      }
 
-            @ColorRes val colorId: Int
-            if (customColor == 0) {
-                // This warns about not being a styleable, but its ok I guess
-                @SuppressLint("ResourceType")
-                colorId = getResourceId(1, 0)
-            } else {
-                colorId = customColor
-            }
+      @ColorRes val colorId: Int
+      if (customColor == 0) {
+        // This warns about not being a styleable, but its ok I guess
+        @SuppressLint("ResourceType") colorId = getResourceId(1, 0)
+      } else {
+        colorId = customColor
+      }
 
-            if (colorId != 0) {
-                icon = icon?.tintWith(context, colorId)
-            }
-        }
-
-        // Cache the loaded icon
-        if (icon != null) {
-            cachedIcon = icon
-        }
+      if (colorId != 0) {
+        icon = icon?.tintWith(context, colorId)
+      }
     }
 
-    return icon
+    // Cache the loaded icon
+    if (icon != null) {
+      cachedIcon = icon
+    }
+  }
+
+  return icon
 }
 
 private fun Toolbar.showUpIcon(customIcon: Drawable? = null, @ColorRes customColor: Int = 0) {
-    var icon: Drawable? = customIcon ?: navigationIcon
-    if (icon == null) {
-        icon = loadIcon(customColor)
-    }
+  var icon: Drawable? = customIcon ?: navigationIcon
+  if (icon == null) {
+    icon = loadIcon(customColor)
+  }
 
-    if (icon != null) {
-        navigationIcon = icon
-    }
+  if (icon != null) {
+    navigationIcon = icon
+  }
 }
 
-/**
- * Show the toolbar up arrow
- */
+/** Show the toolbar up arrow */
 @JvmOverloads
-public fun Toolbar.setUpEnabled(
-    up: Boolean,
-    customIcon: Drawable? = null
-) {
-    if (up) {
-        showUpIcon(customIcon)
-    } else {
-        navigationIcon = null
-    }
+public fun Toolbar.setUpEnabled(up: Boolean, customIcon: Drawable? = null) {
+  if (up) {
+    showUpIcon(customIcon)
+  } else {
+    navigationIcon = null
+  }
 }

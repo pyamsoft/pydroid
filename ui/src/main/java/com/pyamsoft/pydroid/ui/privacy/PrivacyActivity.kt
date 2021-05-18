@@ -33,77 +33,68 @@ import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewEvent
 import com.pyamsoft.pydroid.ui.internal.privacy.PrivacyViewModel
 import com.pyamsoft.pydroid.util.hyperlink
 
-/**
- * Activity which handles displaying a privacy policy via menu items
- */
+/** Activity which handles displaying a privacy policy via menu items */
 public abstract class PrivacyActivity : ActivityBase() {
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    internal var privacyView: PrivacyView? = null
+  internal var privacyView: PrivacyView? = null
 
-    internal var privacyFactory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<PrivacyViewModel> { privacyFactory }
+  internal var privacyFactory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<PrivacyViewModel> { privacyFactory }
 
-    /**
-     * Used for Activity level snackbars
-     */
-    protected abstract val snackbarRoot: ViewGroup
+  /** Used for Activity level snackbars */
+  protected abstract val snackbarRoot: ViewGroup
 
-    /**
-     * On post create before start
-     */
-    @CallSuper
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
+  /** On post create before start */
+  @CallSuper
+  override fun onPostCreate(savedInstanceState: Bundle?) {
+    super.onPostCreate(savedInstanceState)
 
-        // Need to do this in onPostCreate because the snackbarRoot will not be available until
-        // after subclass onCreate
-        Injector.obtainFromApplication<PYDroidComponent>(this)
-            .plusPrivacy()
-            .create(this) { snackbarRoot }
-            .inject(this)
+    // Need to do this in onPostCreate because the snackbarRoot will not be available until
+    // after subclass onCreate
+    Injector.obtainFromApplication<PYDroidComponent>(this)
+        .plusPrivacy()
+        .create(this) { snackbarRoot }
+        .inject(this)
 
-        stateSaver = createComponent(
+    stateSaver =
+        createComponent(
             savedInstanceState,
             this,
             viewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
+            controller =
+                newUiController {
+                  return@newUiController when (it) {
                     is PrivacyControllerEvent.OpenUrl -> openExternalPolicyPage(it.url)
-                }
-            },
-            requireNotNull(privacyView)
-        ) {
-            return@createComponent when (it) {
-                is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar()
-            }
+                  }
+                },
+            requireNotNull(privacyView)) {
+          return@createComponent when (it) {
+            is PrivacyViewEvent.SnackbarHidden -> viewModel.handleHideSnackbar()
+          }
         }
-    }
+  }
 
-    private fun openExternalPolicyPage(url: String) {
-        url.hyperlink(this).navigate()
-            .onSuccess { viewModel.handleNavigationSuccess() }
-            .onFailure { viewModel.handleNavigationFailed(it) }
+  private fun openExternalPolicyPage(url: String) {
+    url.hyperlink(this).navigate().onSuccess { viewModel.handleNavigationSuccess() }.onFailure {
+      viewModel.handleNavigationFailed(it)
     }
+  }
 
-    /**
-     * On destroy
-     */
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
-        privacyFactory = null
-        privacyView = null
-        stateSaver = null
-    }
+  /** On destroy */
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    privacyFactory = null
+    privacyView = null
+    stateSaver = null
+  }
 
-    /**
-     * On save instance state
-     */
-    @CallSuper
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
+  /** On save instance state */
+  @CallSuper
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
 }

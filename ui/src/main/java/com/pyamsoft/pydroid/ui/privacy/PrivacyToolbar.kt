@@ -24,41 +24,37 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * Add privacy policy items to a toolbar
- */
+/** Add privacy policy items to a toolbar */
 public fun Toolbar.addPrivacy(
     scope: CoroutineScope,
     privacyPolicyUrl: String,
     termsConditionsUrl: String
 ) {
-    this.inflateMenu(R.menu.privacy_menu)
+  this.inflateMenu(R.menu.privacy_menu)
 
-    this.menu.apply {
-        findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener {
-            scope.launch(context = Dispatchers.Default) {
-                PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
-            }
-            return@setOnMenuItemClickListener true
-        }
-
-        findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener {
-            scope.launch(context = Dispatchers.Default) {
-                PrivacyEventBus.send(ViewPrivacyPolicy(termsConditionsUrl))
-            }
-            return@setOnMenuItemClickListener true
-        }
+  this.menu.apply {
+    findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener {
+      scope.launch(context = Dispatchers.Default) {
+        PrivacyEventBus.send(ViewPrivacyPolicy(privacyPolicyUrl))
+      }
+      return@setOnMenuItemClickListener true
     }
+
+    findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener {
+      scope.launch(context = Dispatchers.Default) {
+        PrivacyEventBus.send(ViewPrivacyPolicy(termsConditionsUrl))
+      }
+      return@setOnMenuItemClickListener true
+    }
+  }
 }
 
-/**
- * Remove privacy policy items from a toolbar
- */
+/** Remove privacy policy items from a toolbar */
 public fun Toolbar.removePrivacy() {
-    this.menu.apply {
-        findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener(null)
-        findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener(null)
-        removeItem(R.id.menu_id_privacy_policy)
-        removeItem(R.id.menu_id_t_c)
-    }
+  this.menu.apply {
+    findItem(R.id.menu_id_privacy_policy)?.setOnMenuItemClickListener(null)
+    findItem(R.id.menu_id_t_c)?.setOnMenuItemClickListener(null)
+    removeItem(R.id.menu_id_privacy_policy)
+    removeItem(R.id.menu_id_t_c)
+  }
 }

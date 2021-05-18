@@ -20,7 +20,5 @@ import android.widget.ImageView
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.internal.app.AppIcon
 
-internal class BillingIcon internal constructor(
-    imageLoader: ImageLoader,
-    icon: ImageView
-) : AppIcon<BillingViewState>(imageLoader, icon)
+internal class BillingIcon internal constructor(imageLoader: ImageLoader, icon: ImageView) :
+    AppIcon<BillingViewState>(imageLoader, icon)

@@ -19,53 +19,44 @@ package com.pyamsoft.pydroid.util
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.annotation.CheckResult
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-/**
- * Create a preference listener for when a shared preference changes
- */
+/** Create a preference listener for when a shared preference changes */
 @CheckResult
 public fun SharedPreferences.onChange(
     key: String,
     onChange: suspend () -> Unit
 ): PreferenceListener {
-    val listener = object : ScopedPreferenceChangeListener(key) {
+  val listener =
+      object : ScopedPreferenceChangeListener(key) {
 
         override suspend fun onChange() {
-            onChange()
+          onChange()
         }
-    }
+      }
 
-    return PreferenceListenerImpl(this, listener)
+  return PreferenceListenerImpl(this, listener)
 }
 
-private abstract class ScopedPreferenceChangeListener(
-    private val watchKey: String
-) : OnSharedPreferenceChangeListener {
+private abstract class ScopedPreferenceChangeListener(private val watchKey: String) :
+    OnSharedPreferenceChangeListener {
 
-    private val scope = MainScope()
+  private val scope = MainScope()
 
-    final override fun onSharedPreferenceChanged(
-        sharedPreferences: SharedPreferences,
-        key: String
-    ) {
-        if (watchKey == key) {
-            scope.launch(context = Dispatchers.Default) {
-                onChange()
-            }
-        }
+  final override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+    if (watchKey == key) {
+      scope.launch(context = Dispatchers.Default) { onChange() }
     }
+  }
 
-    protected abstract suspend fun onChange()
+  protected abstract suspend fun onChange()
 
-    fun cancel() {
-        scope.cancel()
-    }
+  fun cancel() {
+    scope.cancel()
+  }
 }
 
 private class PreferenceListenerImpl(
@@ -73,28 +64,24 @@ private class PreferenceListenerImpl(
     listener: ScopedPreferenceChangeListener
 ) : PreferenceListener {
 
-    private var listener: ScopedPreferenceChangeListener? = listener
+  private var listener: ScopedPreferenceChangeListener? = listener
 
-    init {
-        preferences.registerOnSharedPreferenceChangeListener(listener)
-    }
+  init {
+    preferences.registerOnSharedPreferenceChangeListener(listener)
+  }
 
-    override fun cancel() {
-        listener?.let { l ->
-            preferences.unregisterOnSharedPreferenceChangeListener(l)
-            l.cancel()
-        }
-        listener = null
+  override fun cancel() {
+    listener?.let { l ->
+      preferences.unregisterOnSharedPreferenceChangeListener(l)
+      l.cancel()
     }
+    listener = null
+  }
 }
 
-/**
- * The PreferenceListener interface
- */
+/** The PreferenceListener interface */
 public interface PreferenceListener {
 
-    /**
-     * Stop listening to the preference
-     */
-    public fun cancel()
+  /** Stop listening to the preference */
+  public fun cancel()
 }

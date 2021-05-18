@@ -20,72 +20,55 @@ import android.app.Activity
 import android.os.Build
 import androidx.annotation.CheckResult
 import androidx.appcompat.app.AppCompatDelegate
-import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
-/**
- * Handles getting current dark mode state and setting dark mode state
- */
+/** Handles getting current dark mode state and setting dark mode state */
 public interface Theming {
 
-    /**
-     * Initialize the Theming module
-     */
-    public suspend fun init()
+  /** Initialize the Theming module */
+  public suspend fun init()
 
-    /**
-     * Is activity dark mode
-     */
+  /** Is activity dark mode */
+  @CheckResult public fun isDarkTheme(activity: Activity): Boolean
+
+  /** Set application wide dark mode */
+  public fun setDarkTheme(mode: Mode)
+
+  /** Dark mode enum */
+  public enum class Mode {
+    /** Light mode */
+    LIGHT,
+
+    /** Dark mode */
+    DARK,
+
+    /** System mode */
+    SYSTEM;
+
     @CheckResult
-    public fun isDarkTheme(activity: Activity): Boolean
+    internal fun toRawString(): String {
+      return name.toLowerCase(Locale.getDefault())
+    }
 
-    /**
-     * Set application wide dark mode
-     */
-    public fun setDarkTheme(mode: Mode)
-
-    /**
-     * Dark mode enum
-     */
-    public enum class Mode {
-        /**
-         * Light mode
-         */
-        LIGHT,
-
-        /**
-         * Dark mode
-         */
-        DARK,
-
-        /**
-         * System mode
-         */
-        SYSTEM;
-
-        @CheckResult
-        internal fun toRawString(): String {
-            return name.toLowerCase(Locale.getDefault())
-        }
-
-        @CheckResult
-        internal fun toAppCompatMode(): Int = when (this) {
-            LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
-            DARK -> AppCompatDelegate.MODE_NIGHT_YES
-            else -> when {
+    @CheckResult
+    internal fun toAppCompatMode(): Int =
+        when (this) {
+          LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+          DARK -> AppCompatDelegate.MODE_NIGHT_YES
+          else ->
+              when {
                 supportsFollowSystem() -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
+              }
         }
 
-        public companion object {
+    public companion object {
 
-            @JvmStatic
-            @CheckResult
-            private fun supportsFollowSystem(): Boolean {
-                return Build.VERSION.SDK_INT >= 28
-            }
-
-        }
+      @JvmStatic
+      @CheckResult
+      private fun supportsFollowSystem(): Boolean {
+        return Build.VERSION.SDK_INT >= 28
+      }
     }
+  }
 }

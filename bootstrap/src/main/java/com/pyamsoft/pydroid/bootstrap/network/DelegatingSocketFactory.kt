@@ -22,91 +22,63 @@ import java.net.InetAddress
 import java.net.Socket
 import javax.net.SocketFactory
 
-/**
- * Delegates which tags sockets for Android O Strict-Mode compatibility
- */
-public open class DelegatingSocketFactory protected constructor(
-    private val delegate: SocketFactory
-) : SocketFactory() {
+/** Delegates which tags sockets for Android O Strict-Mode compatibility */
+public open class DelegatingSocketFactory
+protected constructor(private val delegate: SocketFactory) : SocketFactory() {
 
-    /**
-     * See [SocketFactory.createSocket]
-     */
-    final override fun createSocket(): Socket {
-        return delegate.createSocket()
-            .also { configureSocket(it) }
-    }
+  /** See [SocketFactory.createSocket] */
+  final override fun createSocket(): Socket {
+    return delegate.createSocket().also { configureSocket(it) }
+  }
 
-    /**
-     * See [SocketFactory.createSocket]
-     */
-    final override fun createSocket(
-        host: String?,
-        port: Int
-    ): Socket {
-        return delegate.createSocket(host, port)
-            .also { configureSocket(it) }
-    }
+  /** See [SocketFactory.createSocket] */
+  final override fun createSocket(host: String?, port: Int): Socket {
+    return delegate.createSocket(host, port).also { configureSocket(it) }
+  }
 
-    /**
-     * See [SocketFactory.createSocket]
-     */
-    final override fun createSocket(
-        host: String?,
-        port: Int,
-        localAddress: InetAddress?,
-        localPort: Int
-    ): Socket {
-        return delegate.createSocket(host, port, localAddress, localPort)
-            .also { configureSocket(it) }
-    }
+  /** See [SocketFactory.createSocket] */
+  final override fun createSocket(
+      host: String?,
+      port: Int,
+      localAddress: InetAddress?,
+      localPort: Int
+  ): Socket {
+    return delegate.createSocket(host, port, localAddress, localPort).also { configureSocket(it) }
+  }
 
-    /**
-     * See [SocketFactory.createSocket]
-     */
-    final override fun createSocket(
-        host: InetAddress?,
-        port: Int
-    ): Socket {
-        return delegate.createSocket(host, port)
-            .also { configureSocket(it) }
-    }
+  /** See [SocketFactory.createSocket] */
+  final override fun createSocket(host: InetAddress?, port: Int): Socket {
+    return delegate.createSocket(host, port).also { configureSocket(it) }
+  }
 
-    /**
-     * See [SocketFactory.createSocket]
-     */
-    final override fun createSocket(
-        host: InetAddress?,
-        port: Int,
-        localAddress: InetAddress?,
-        localPort: Int
-    ): Socket {
-        return delegate.createSocket(host, port, localAddress, localPort)
-            .also { configureSocket(it) }
-    }
+  /** See [SocketFactory.createSocket] */
+  final override fun createSocket(
+      host: InetAddress?,
+      port: Int,
+      localAddress: InetAddress?,
+      localPort: Int
+  ): Socket {
+    return delegate.createSocket(host, port, localAddress, localPort).also { configureSocket(it) }
+  }
 
-    /**
-     * Tag each socket with traffic stats for StrictMode compliance on Android O
-     */
+  /** Tag each socket with traffic stats for StrictMode compliance on Android O */
+  @CheckResult
+  protected open fun configureSocket(socket: Socket): Socket {
+    // On Android O and above, StrictMode causes untagged socket errors
+    // Setting the ThreadStatsTag seems to fix it
+    TrafficStats.setThreadStatsTag(1)
+
+    return socket
+  }
+
+  public companion object {
+
+    /** Create a new socket factory */
+    @JvmStatic
     @CheckResult
-    protected open fun configureSocket(socket: Socket): Socket {
-        // On Android O and above, StrictMode causes untagged socket errors
-        // Setting the ThreadStatsTag seems to fix it
-        TrafficStats.setThreadStatsTag(1)
-
-        return socket
+    @JvmOverloads
+    public fun create(factory: SocketFactory = getDefault()): SocketFactory {
+      return DelegatingSocketFactory(factory)
     }
-
-    public companion object {
-
-        /**
-         * Create a new socket factory
-         */
-        @JvmStatic
-        @CheckResult
-        @JvmOverloads
-        public fun create(factory: SocketFactory = getDefault()): SocketFactory {
-            return DelegatingSocketFactory(factory)
-        }
-    }
+  }
 }

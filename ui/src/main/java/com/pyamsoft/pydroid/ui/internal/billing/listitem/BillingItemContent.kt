@@ -22,31 +22,28 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.billing.BillingSku
 import com.pyamsoft.pydroid.ui.databinding.BillingItemContentBinding
 
-internal class BillingItemContent internal constructor(
-    parent: ViewGroup
-) : BaseUiView<BillingItemViewState, Nothing, BillingItemContentBinding>(parent) {
+internal class BillingItemContent internal constructor(parent: ViewGroup) :
+    BaseUiView<BillingItemViewState, Nothing, BillingItemContentBinding>(parent) {
 
-    override val viewBinding = BillingItemContentBinding::inflate
+  override val viewBinding = BillingItemContentBinding::inflate
 
-    override val layoutRoot by boundView { billingItemContentRoot }
+  override val layoutRoot by boundView { billingItemContentRoot }
 
-    init {
-        doOnTeardown {
-            clear()
-        }
-    }
+  init {
+    doOnTeardown { clear() }
+  }
 
-    private fun clear() {
-        binding.billingItemTitle.text = ""
-        binding.billingItemDescription.text = ""
-    }
+  private fun clear() {
+    binding.billingItemTitle.text = ""
+    binding.billingItemDescription.text = ""
+  }
 
-    override fun onRender(state: UiRender<BillingItemViewState>) {
-        state.mapChanged { it.sku }.render(viewScope) { handleSku(it) }
-    }
+  override fun onRender(state: UiRender<BillingItemViewState>) {
+    state.mapChanged { it.sku }.render(viewScope) { handleSku(it) }
+  }
 
-    private fun handleSku(sku: BillingSku) {
-        binding.billingItemTitle.text = sku.title
-        binding.billingItemDescription.text = sku.description
-    }
+  private fun handleSku(sku: BillingSku) {
+    binding.billingItemTitle.text = sku.title
+    binding.billingItemDescription.text = sku.description
+  }
 }

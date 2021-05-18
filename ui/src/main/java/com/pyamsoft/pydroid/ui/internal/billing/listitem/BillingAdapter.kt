@@ -23,61 +23,54 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.ui.util.teardownAdapter
 
-internal class BillingAdapter internal constructor(
-    private val callback: Callback
-) : ListAdapter<BillingItemViewState, BillingViewHolder>(DIFFER) {
+internal class BillingAdapter internal constructor(private val callback: Callback) :
+    ListAdapter<BillingItemViewState, BillingViewHolder>(DIFFER) {
 
-    init {
-        setHasStableIds(true)
-    }
+  init {
+    setHasStableIds(true)
+  }
 
-    override fun getItemId(position: Int): Long {
-        return getItem(position).sku.hashCode()
-            .toLong()
-    }
+  override fun getItemId(position: Int): Long {
+    return getItem(position).sku.hashCode().toLong()
+  }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): BillingViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return BillingViewHolder.create(inflater, parent, callback)
-    }
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BillingViewHolder {
+    val inflater = LayoutInflater.from(parent.context)
+    return BillingViewHolder.create(inflater, parent, callback)
+  }
 
-    override fun onBindViewHolder(
-        holder: BillingViewHolder,
-        position: Int
-    ) {
-        val item = getItem(position)
-        holder.bindState(item)
-    }
+  override fun onBindViewHolder(holder: BillingViewHolder, position: Int) {
+    val item = getItem(position)
+    holder.bindState(item)
+  }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        teardownAdapter(recyclerView)
-    }
+  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+    super.onDetachedFromRecyclerView(recyclerView)
+    teardownAdapter(recyclerView)
+  }
 
-    fun interface Callback {
+  fun interface Callback {
 
-        fun onPurchase(index: Int)
-    }
+    fun onPurchase(index: Int)
+  }
 
-    companion object {
+  companion object {
 
-        private val DIFFER = object : DiffUtil.ItemCallback<BillingItemViewState>() {
-            override fun areItemsTheSame(
-                oldItem: BillingItemViewState,
-                newItem: BillingItemViewState
-            ): Boolean {
-                return oldItem.sku.id == newItem.sku.id
-            }
+    private val DIFFER =
+        object : DiffUtil.ItemCallback<BillingItemViewState>() {
+          override fun areItemsTheSame(
+              oldItem: BillingItemViewState,
+              newItem: BillingItemViewState
+          ): Boolean {
+            return oldItem.sku.id == newItem.sku.id
+          }
 
-            override fun areContentsTheSame(
-                oldItem: BillingItemViewState,
-                newItem: BillingItemViewState
-            ): Boolean {
-                return oldItem == newItem
-            }
+          override fun areContentsTheSame(
+              oldItem: BillingItemViewState,
+              newItem: BillingItemViewState
+          ): Boolean {
+            return oldItem == newItem
+          }
         }
-    }
+  }
 }

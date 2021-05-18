@@ -23,29 +23,26 @@ import com.pyamsoft.pydroid.arch.UnitViewEvent
 import com.pyamsoft.pydroid.ui.databinding.ChangelogItemTextBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 
-internal class ChangeLogItemText internal constructor(
-    parent: ViewGroup
-) : BaseUiView<ChangeLogItemViewState, UnitViewEvent, ChangelogItemTextBinding>(parent) {
+internal class ChangeLogItemText internal constructor(parent: ViewGroup) :
+    BaseUiView<ChangeLogItemViewState, UnitViewEvent, ChangelogItemTextBinding>(parent) {
 
-    override val viewBinding = ChangelogItemTextBinding::inflate
+  override val viewBinding = ChangelogItemTextBinding::inflate
 
-    override val layoutRoot by boundView { changelogItemTextRoot }
+  override val layoutRoot by boundView { changelogItemTextRoot }
 
-    init {
-        doOnTeardown {
-            clear()
-        }
-    }
+  init {
+    doOnTeardown { clear() }
+  }
 
-    private fun clear() {
-        binding.changelogItemText.text = ""
-    }
+  private fun clear() {
+    binding.changelogItemText.text = ""
+  }
 
-    override fun onRender(state: UiRender<ChangeLogItemViewState>) {
-        state.mapChanged { it.line }.render(viewScope) { handleLine(it) }
-    }
+  override fun onRender(state: UiRender<ChangeLogItemViewState>) {
+    state.mapChanged { it.line }.render(viewScope) { handleLine(it) }
+  }
 
-    private fun handleLine(line: ChangeLogLine) {
-        binding.changelogItemText.text = line.line
-    }
+  private fun handleLine(line: ChangeLogLine) {
+    binding.changelogItemText.text = line.line
+  }
 }

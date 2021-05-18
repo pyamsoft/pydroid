@@ -24,125 +24,110 @@ import android.content.Context
 import androidx.annotation.CheckResult
 import timber.log.Timber
 
-/**
- * Injects PYDroid and its managed services into a context
- */
+/** Injects PYDroid and its managed services into a context */
 public object Injector {
 
-    /**
-     * Obtain a component from the Application
-     *
-     * Calls through to Application.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public inline fun <reified T : Any> obtainFromApplication(application: Application): T {
-        return obtainFromApplication(application, T::class.java)
-    }
+  /**
+   * Obtain a component from the Application
+   *
+   * Calls through to Application.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public inline fun <reified T : Any> obtainFromApplication(application: Application): T {
+    return obtainFromApplication(application, T::class.java)
+  }
 
-    /**
-     * Obtain a component from the Application
-     *
-     * Calls through to Application.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public fun <T : Any> obtainFromApplication(
-        application: Application,
-        targetClass: Class<T>
-    ): T {
-        return resolve(application, targetClass)
-    }
+  /**
+   * Obtain a component from the Application
+   *
+   * Calls through to Application.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public fun <T : Any> obtainFromApplication(application: Application, targetClass: Class<T>): T {
+    return resolve(application, targetClass)
+  }
 
-    /**
-     * Obtain a component from the Application context
-     *
-     * Calls through to Application.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public inline fun <reified T : Any> obtainFromApplication(context: Context): T {
-        return obtainFromApplication(context, T::class.java)
-    }
+  /**
+   * Obtain a component from the Application context
+   *
+   * Calls through to Application.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public inline fun <reified T : Any> obtainFromApplication(context: Context): T {
+    return obtainFromApplication(context, T::class.java)
+  }
 
-    /**
-     * Obtain a component from the Application context
-     *
-     * Calls through to Application.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public fun <T : Any> obtainFromApplication(
-        context: Context,
-        targetClass: Class<T>
-    ): T {
-        return resolve(context.applicationContext, targetClass)
-    }
+  /**
+   * Obtain a component from the Application context
+   *
+   * Calls through to Application.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public fun <T : Any> obtainFromApplication(context: Context, targetClass: Class<T>): T {
+    return resolve(context.applicationContext, targetClass)
+  }
 
-    /**
-     * Obtain a component from the Activity
-     *
-     * Calls through to Activity.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public inline fun <reified T : Any> obtainFromActivity(activity: Activity): T {
-        return obtainFromActivity(activity, T::class.java)
-    }
+  /**
+   * Obtain a component from the Activity
+   *
+   * Calls through to Activity.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public inline fun <reified T : Any> obtainFromActivity(activity: Activity): T {
+    return obtainFromActivity(activity, T::class.java)
+  }
 
-    /**
-     * Obtain a component from the Activity
-     *
-     * Calls through to Activity.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public fun <T : Any> obtainFromActivity(
-        activity: Activity,
-        targetClass: Class<T>
-    ): T {
-        return resolve(activity, targetClass)
-    }
+  /**
+   * Obtain a component from the Activity
+   *
+   * Calls through to Activity.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public fun <T : Any> obtainFromActivity(activity: Activity, targetClass: Class<T>): T {
+    return resolve(activity, targetClass)
+  }
 
-    /**
-     * Obtain a component from the Service
-     *
-     * Calls through to Service.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public inline fun <reified T : Any> obtainFromService(service: Service): T {
-        return obtainFromService(service, T::class.java)
-    }
+  /**
+   * Obtain a component from the Service
+   *
+   * Calls through to Service.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public inline fun <reified T : Any> obtainFromService(service: Service): T {
+    return obtainFromService(service, T::class.java)
+  }
 
-    /**
-     * Obtain a component from the Service
-     *
-     * Calls through to Service.getSystemService()
-     */
-    @JvmStatic
-    @CheckResult
-    public fun <T : Any> obtainFromService(
-        service: Service,
-        targetClass: Class<T>
-    ): T {
-        return resolve(service, targetClass)
-    }
+  /**
+   * Obtain a component from the Service
+   *
+   * Calls through to Service.getSystemService()
+   */
+  @JvmStatic
+  @CheckResult
+  public fun <T : Any> obtainFromService(service: Service, targetClass: Class<T>): T {
+    return resolve(service, targetClass)
+  }
 
-    @JvmStatic
-    private fun serviceNotFound(context: Context, name: String): Nothing {
-        Timber.e("Unable to find service $name in context: $context")
-        throw IllegalArgumentException("Unable to find service: $name")
-    }
+  @JvmStatic
+  private fun serviceNotFound(context: Context, name: String): Nothing {
+    Timber.e("Unable to find service $name in context: $context")
+    throw IllegalArgumentException("Unable to find service: $name")
+  }
 
-    @JvmStatic
-    @CheckResult
-    @SuppressLint("WrongConstant")
-    private fun <T : Any> resolve(context: Context, targetClass: Class<T>): T {
-        val name = targetClass.name
-        val service = context.getSystemService(name) ?: serviceNotFound(context, name)
+  @JvmStatic
+  @CheckResult
+  @SuppressLint("WrongConstant")
+  private fun <T : Any> resolve(context: Context, targetClass: Class<T>): T {
+    val name = targetClass.name
+    val service = context.getSystemService(name) ?: serviceNotFound(context, name)
 
-        @Suppress("UNCHECKED_CAST")
-        return service as T
-    }
+    @Suppress("UNCHECKED_CAST") return service as T
+  }
 }

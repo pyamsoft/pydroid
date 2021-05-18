@@ -26,54 +26,53 @@ import com.pyamsoft.pydroid.ui.Injector
 import com.pyamsoft.pydroid.ui.PYDroidComponent
 import com.pyamsoft.pydroid.ui.databinding.AdapterItemAboutLicenseBinding
 
-internal class AboutViewHolder private constructor(
+internal class AboutViewHolder
+private constructor(
     binding: AdapterItemAboutLicenseBinding,
     callback: (event: AboutItemViewEvent, index: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root), ViewBinder<AboutItemViewState> {
 
-    private val binder: ViewBinder<AboutItemViewState>
+  private val binder: ViewBinder<AboutItemViewState>
 
-    internal var titleView: AboutItemTitleView? = null
-    internal var descriptionView: AboutItemDescriptionView? = null
-    internal var actionView: AboutItemActionView? = null
+  internal var titleView: AboutItemTitleView? = null
+  internal var descriptionView: AboutItemDescriptionView? = null
+  internal var actionView: AboutItemActionView? = null
 
-    init {
-        Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
-            .plusAboutItem()
-            .create(binding.aboutListitemRoot)
-            .inject(this)
+  init {
+    Injector.obtainFromApplication<PYDroidComponent>(itemView.context)
+        .plusAboutItem()
+        .create(binding.aboutListitemRoot)
+        .inject(this)
 
-        binder = createViewBinder(
+    binder =
+        createViewBinder(
             requireNotNull(titleView),
             requireNotNull(descriptionView),
-            requireNotNull(actionView)
-        ) {
-            callback(it, bindingAdapterPosition)
-        }
-    }
+            requireNotNull(actionView)) { callback(it, bindingAdapterPosition) }
+  }
 
-    override fun bindState(state: AboutItemViewState) {
-        binder.bindState(state)
-    }
+  override fun bindState(state: AboutItemViewState) {
+    binder.bindState(state)
+  }
 
-    override fun teardown() {
-        binder.teardown()
-        titleView = null
-        descriptionView = null
-        actionView = null
-    }
+  override fun teardown() {
+    binder.teardown()
+    titleView = null
+    descriptionView = null
+    actionView = null
+  }
 
-    companion object {
+  companion object {
 
-        @CheckResult
-        @JvmStatic
-        fun create(
-            inflater: LayoutInflater,
-            container: ViewGroup,
-            callback: (event: AboutItemViewEvent, index: Int) -> Unit
-        ): AboutViewHolder {
-            val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
-            return AboutViewHolder(binding, callback)
-        }
+    @CheckResult
+    @JvmStatic
+    fun create(
+        inflater: LayoutInflater,
+        container: ViewGroup,
+        callback: (event: AboutItemViewEvent, index: Int) -> Unit
+    ): AboutViewHolder {
+      val binding = AdapterItemAboutLicenseBinding.inflate(inflater, container, false)
+      return AboutViewHolder(binding, callback)
     }
+  }
 }

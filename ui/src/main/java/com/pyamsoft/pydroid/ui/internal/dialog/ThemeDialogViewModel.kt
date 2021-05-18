@@ -19,8 +19,9 @@ package com.pyamsoft.pydroid.ui.internal.dialog
 import com.pyamsoft.pydroid.arch.UiViewModel
 import com.pyamsoft.pydroid.arch.UnitControllerEvent
 
-internal class ThemeDialogViewModel internal constructor(
+internal class ThemeDialogViewModel
+internal constructor(
     initialName: String,
-) : UiViewModel<ThemeDialogViewState, UnitControllerEvent>(
-    initialState = ThemeDialogViewState(name = initialName)
-)
+) :
+    UiViewModel<ThemeDialogViewState, UnitControllerEvent>(
+        initialState = ThemeDialogViewState(name = initialName))

@@ -19,78 +19,50 @@ package com.pyamsoft.pydroid.notify
 import android.content.Context
 import androidx.annotation.CheckResult
 
-/**
- * Notifier manages various dispatchers and dispatches notification payloads to them
- */
+/** Notifier manages various dispatchers and dispatches notification payloads to them */
 public interface Notifier {
 
-    /**
-     * Show a notification
-     */
+  /** Show a notification */
+  @CheckResult
+  public fun <T : NotifyData> show(channelInfo: NotifyChannelInfo, notification: T): NotifyId
+
+  /** Show a notification with a given id */
+  @CheckResult
+  public fun <T : NotifyData> show(
+      id: NotifyId,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId
+
+  /** Show a notification with a given tag */
+  @CheckResult
+  public fun <T : NotifyData> show(
+      tag: NotifyTag,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId
+
+  /** Show a notification with a given id and tag */
+  @CheckResult
+  public fun <T : NotifyData> show(
+      id: NotifyId,
+      tag: NotifyTag,
+      channelInfo: NotifyChannelInfo,
+      notification: T
+  ): NotifyId
+
+  /** Cancel a notification by id */
+  public fun cancel(id: NotifyId)
+
+  /** Cancel a notification by id and tag */
+  public fun cancel(id: NotifyId, tag: NotifyTag)
+
+  public companion object {
+
+    /** Create a new instance of a default Notifier */
     @CheckResult
-    public fun <T : NotifyData> show(
-        channelInfo: NotifyChannelInfo,
-        notification: T
-    ): NotifyId
-
-    /**
-     * Show a notification with a given id
-     */
-    @CheckResult
-    public fun <T : NotifyData> show(
-        id: NotifyId,
-        channelInfo: NotifyChannelInfo,
-        notification: T
-    ): NotifyId
-
-    /**
-     * Show a notification with a given tag
-     */
-    @CheckResult
-    public fun <T : NotifyData> show(
-        tag: NotifyTag,
-        channelInfo: NotifyChannelInfo,
-        notification: T
-    ): NotifyId
-
-    /**
-     * Show a notification with a given id and tag
-     */
-    @CheckResult
-    public fun <T : NotifyData> show(
-        id: NotifyId,
-        tag: NotifyTag,
-        channelInfo: NotifyChannelInfo,
-        notification: T
-    ): NotifyId
-
-    /**
-     * Cancel a notification by id
-     */
-    public fun cancel(id: NotifyId)
-
-    /**
-     * Cancel a notification by id and tag
-     */
-    public fun cancel(
-        id: NotifyId,
-        tag: NotifyTag
-    )
-
-    public companion object {
-
-        /**
-         * Create a new instance of a default Notifier
-         */
-        @CheckResult
-        public fun createDefault(
-            context: Context,
-            dispatchers: Set<NotifyDispatcher<*>>
-        ): Notifier {
-            return DefaultNotifier(
-                context = context.applicationContext,
-                dispatchers = dispatchers
-            )
-        }
+    public fun createDefault(context: Context, dispatchers: Set<NotifyDispatcher<*>>): Notifier {
+      return DefaultNotifier(context = context.applicationContext, dispatchers = dispatchers)
     }
+  }
 }

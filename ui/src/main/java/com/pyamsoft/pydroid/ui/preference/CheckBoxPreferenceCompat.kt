@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-/**
- * Allows Preferences to use VectorDrawables as icons on API < 21
- */
+/** Allows Preferences to use VectorDrawables as icons on API < 21 */
 package com.pyamsoft.pydroid.ui.preference
 
 import android.content.Context
@@ -24,47 +22,35 @@ import android.util.AttributeSet
 import androidx.preference.CheckBoxPreference
 import androidx.preference.R
 
-/**
- * CheckBoxPreference that uses vector drawables
- */
+/** CheckBoxPreference that uses vector drawables */
 public open class CheckBoxPreferenceCompat : CheckBoxPreference {
 
-    /**
-     * Construct
-     */
-    public constructor(context: Context) : this(context, null)
+  /** Construct */
+  public constructor(context: Context) : this(context, null)
 
-    /**
-     * Construct
-     */
-    public constructor(
-        context: Context,
-        attrs: AttributeSet?
-    ) : this(
-        context, attrs, context.getStyledAttr(
-            R.attr.checkBoxPreferenceStyle,
-            android.R.attr.checkBoxPreferenceStyle
-        )
-    )
+  /** Construct */
+  public constructor(
+      context: Context,
+      attrs: AttributeSet?
+  ) : this(
+      context,
+      attrs,
+      context.getStyledAttr(R.attr.checkBoxPreferenceStyle, android.R.attr.checkBoxPreferenceStyle))
 
-    /**
-     * Construct
-     */
-    public constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ) : this(context, attrs, defStyleAttr, 0)
+  /** Construct */
+  public constructor(
+      context: Context,
+      attrs: AttributeSet?,
+      defStyleAttr: Int
+  ) : this(context, attrs, defStyleAttr, 0)
 
-    /**
-     * Construct
-     */
-    public constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
-    ) : super(context, attrs, defStyleAttr, defStyleRes) {
-        loadIconCompat(attrs)
-    }
+  /** Construct */
+  public constructor(
+      context: Context,
+      attrs: AttributeSet?,
+      defStyleAttr: Int,
+      defStyleRes: Int
+  ) : super(context, attrs, defStyleAttr, defStyleRes) {
+    loadIconCompat(attrs)
+  }
 }

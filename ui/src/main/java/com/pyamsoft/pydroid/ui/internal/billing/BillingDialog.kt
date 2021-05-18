@@ -38,35 +38,36 @@ import timber.log.Timber
 
 internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent> {
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    internal var nameView: BillingName? = null
-    internal var iconView: BillingIcon? = null
-    internal var listView: BillingList? = null
-    internal var closeView: BillingClose? = null
+  internal var nameView: BillingName? = null
+  internal var iconView: BillingIcon? = null
+  internal var listView: BillingList? = null
+  internal var closeView: BillingClose? = null
 
-    internal var purchaseClient: BillingLauncher? = null
+  internal var purchaseClient: BillingLauncher? = null
 
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<BillingViewModel>(activity = true) { factory }
+  internal var factory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<BillingViewModel>(activity = true) { factory }
 
-    @CheckResult
-    private fun getApplicationProvider(): AppProvider {
-        return requireActivity() as AppProvider
-    }
+  @CheckResult
+  private fun getApplicationProvider(): AppProvider {
+    return requireActivity() as AppProvider
+  }
 
-    override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
-        Injector.obtainFromActivity<BillingComponent>(requireActivity())
-            .plusDialog()
-            .create(
-                binding.dialogRoot,
-                viewLifecycleOwner,
-                binding.changelogIcon,
-                getApplicationProvider(),
-            )
-            .inject(this)
+  override fun onBindingCreated(binding: ChangelogDialogBinding, savedInstanceState: Bundle?) {
+    Injector.obtainFromActivity<BillingComponent>(requireActivity())
+        .plusDialog()
+        .create(
+            binding.dialogRoot,
+            viewLifecycleOwner,
+            binding.changelogIcon,
+            getApplicationProvider(),
+        )
+        .inject(this)
 
-        stateSaver = createComponent(
+    stateSaver =
+        createComponent(
             savedInstanceState,
             viewLifecycleOwner,
             viewModel,
@@ -76,65 +77,63 @@ internal class BillingDialog : IconDialog(), UiController<BillingControllerEvent
             requireNotNull(listView),
             requireNotNull(closeView),
         ) {
-            return@createComponent when (it) {
-                is BillingViewEvent.Close -> dismiss()
-                is BillingViewEvent.ClearError -> viewModel.handleClearError()
-                is BillingViewEvent.Purchase -> viewModel.handlePurchase(it.index)
-            }
+          return@createComponent when (it) {
+            is BillingViewEvent.Close -> dismiss()
+            is BillingViewEvent.ClearError -> viewModel.handleClearError()
+            is BillingViewEvent.Purchase -> viewModel.handlePurchase(it.index)
+          }
         }
+  }
+
+  override fun onControllerEvent(event: BillingControllerEvent) {
+    return when (event) {
+      is BillingControllerEvent.Purchase -> launchPurchase(event.sku)
+    }
+  }
+
+  override fun onResume() {
+    super.onResume()
+    viewModel.handleRefresh()
+  }
+
+  private fun launchPurchase(sku: BillingSku) {
+    // Enforce on main thread
+    lifecycleScope.launch(context = Dispatchers.Main) {
+      Timber.d("Start purchase flow for $sku")
+      requireNotNull(purchaseClient).purchase(requireActivity(), sku)
+    }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    factory = null
+    stateSaver = null
+    purchaseClient = null
+
+    nameView = null
+    iconView = null
+    listView = null
+    closeView = null
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
+
+  companion object {
+
+    private const val TAG = "BillingDialog"
+
+    @JvmStatic
+    fun open(activity: FragmentActivity) {
+      BillingDialog().apply { arguments = Bundle().apply {} }.show(activity, TAG)
     }
 
-    override fun onControllerEvent(event: BillingControllerEvent) {
-        return when (event) {
-            is BillingControllerEvent.Purchase -> launchPurchase(event.sku)
-        }
+    @JvmStatic
+    @CheckResult
+    fun isNotShown(activity: FragmentActivity): Boolean {
+      return activity.supportFragmentManager.findFragmentByTag(TAG) == null
     }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.handleRefresh()
-    }
-
-    private fun launchPurchase(sku: BillingSku) {
-        // Enforce on main thread
-        lifecycleScope.launch(context = Dispatchers.Main) {
-            Timber.d("Start purchase flow for $sku")
-            requireNotNull(purchaseClient).purchase(requireActivity(), sku)
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        factory = null
-        stateSaver = null
-        purchaseClient = null
-
-        nameView = null
-        iconView = null
-        listView = null
-        closeView = null
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
-
-    companion object {
-
-        private const val TAG = "BillingDialog"
-
-        @JvmStatic
-        fun open(activity: FragmentActivity) {
-            BillingDialog().apply {
-                arguments = Bundle().apply { }
-            }.show(activity, TAG)
-        }
-
-        @JvmStatic
-        @CheckResult
-        fun isNotShown(activity: FragmentActivity): Boolean {
-            return activity.supportFragmentManager.findFragmentByTag(TAG) == null
-        }
-    }
+  }
 }

@@ -23,18 +23,14 @@ import com.pyamsoft.pydroid.bus.EventBus
 
 internal val PrivacyEventBus by lazy { EventBus.create<PrivacyEvents>(emitOnlyWhenActive = true) }
 
-internal data class PrivacyViewState internal constructor(
-    val throwable: Throwable?
-) : UiViewState
+internal data class PrivacyViewState internal constructor(val throwable: Throwable?) : UiViewState
 
 internal sealed class PrivacyViewEvent : UiViewEvent {
 
-    object SnackbarHidden : PrivacyViewEvent()
+  object SnackbarHidden : PrivacyViewEvent()
 }
 
 internal sealed class PrivacyControllerEvent : UiControllerEvent {
 
-    data class OpenUrl internal constructor(val url: String) : PrivacyControllerEvent()
+  data class OpenUrl internal constructor(val url: String) : PrivacyControllerEvent()
 }
-
-

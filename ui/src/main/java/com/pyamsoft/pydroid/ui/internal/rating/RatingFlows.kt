@@ -25,13 +25,12 @@ internal data class RatingViewState(val navigationError: Throwable?) : UiViewSta
 
 internal sealed class RatingViewEvent : UiViewEvent {
 
-    object HideNavigation : RatingViewEvent()
+  object HideNavigation : RatingViewEvent()
 }
 
 internal sealed class RatingControllerEvent : UiControllerEvent {
 
-    data class LaunchRating internal constructor(
-        val isFallbackEnabled: Boolean,
-        val launcher: AppRatingLauncher
-    ) : RatingControllerEvent()
+  data class LaunchRating
+  internal constructor(val isFallbackEnabled: Boolean, val launcher: AppRatingLauncher) :
+      RatingControllerEvent()
 }

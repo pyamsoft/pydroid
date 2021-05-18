@@ -18,20 +18,15 @@ package com.pyamsoft.pydroid.notify
 
 import androidx.annotation.CheckResult
 
-/**
- * Represents a Notification Tag for a NotifyDispatcher
- */
-public data class NotifyTag internal constructor(
-    /**
-     * Notification Tag
-     */
+/** Represents a Notification Tag for a NotifyDispatcher */
+public data class NotifyTag
+internal constructor(
+    /** Notification Tag */
     val tag: String
 )
 
-/**
- * Converts an Android system Notification tag to a NotifyTag
- */
+/** Converts an Android system Notification tag to a NotifyTag */
 @CheckResult
 public fun String.toNotifyTag(): NotifyTag {
-    return NotifyTag(this)
+  return NotifyTag(this)
 }

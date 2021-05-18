@@ -20,6 +20,5 @@ import com.pyamsoft.pydroid.arch.UiControllerEvent
 
 internal sealed class ChangeLogControllerEvent : UiControllerEvent {
 
-    object ShowChangeLog : ChangeLogControllerEvent()
-
+  object ShowChangeLog : ChangeLogControllerEvent()
 }

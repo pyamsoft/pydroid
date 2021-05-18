@@ -21,37 +21,33 @@ import com.pyamsoft.pydroid.bus.internal.RealBus
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
-/**
- * A basic EventBus interface with send and receive methods
- */
+/** A basic EventBus interface with send and receive methods */
 public interface EventBus<T : Any> : EventConsumer<T> {
 
+  /** Emit an event to the event bus, suspend if needed by the implementation */
+  public suspend fun send(event: T)
+
+  public companion object {
+
     /**
-     * Emit an event to the event bus, suspend if needed by the implementation
+     * The EventBus will event the event in the following cases
+     *
+     * If [emitOnlyWhenActive] is false, the event will always emit immediately If
+     * [emitOnlyWhenActive] is true, the event will be emitted if/once a subscriber is listening on
+     * the bus
+     *
+     * If [emitOnlyWhenActive] is true, and no subscribers are present for an event emission, the
+     * event will be queued. Once a subscriber joins the bus, all subscribers will then receive all
+     * events up to that point that were queued. Once a subscriber joins the bus, events will always
+     * emit immediately.
      */
-    public suspend fun send(event: T)
-
-    public companion object {
-
-        /**
-         * The EventBus will event the event in the following cases
-         *
-         * If [emitOnlyWhenActive] is false, the event will always emit immediately
-         * If [emitOnlyWhenActive] is true, the event will be emitted if/once a subscriber is listening
-         * on the bus
-         *
-         * If [emitOnlyWhenActive] is true, and no subscribers are present for an event emission,
-         * the event will be queued. Once a subscriber joins the bus, all subscribers will
-         * then receive all events up to that point that were queued. Once a subscriber joins the
-         * bus, events will always emit immediately.
-         */
-        @JvmStatic
-        @CheckResult
-        @JvmOverloads
-        public fun <T : Any> create(
-            emitOnlyWhenActive: Boolean,
-            replayCount: Int = 0,
-            context: CoroutineContext = EmptyCoroutineContext
-        ): EventBus<T> = RealBus(emitOnlyWhenActive, replayCount, context)
-    }
+    @JvmStatic
+    @CheckResult
+    @JvmOverloads
+    public fun <T : Any> create(
+        emitOnlyWhenActive: Boolean,
+        replayCount: Int = 0,
+        context: CoroutineContext = EmptyCoroutineContext
+    ): EventBus<T> = RealBus(emitOnlyWhenActive, replayCount, context)
+  }
 }

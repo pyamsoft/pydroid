@@ -40,135 +40,121 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-/**
- * Activity that handles checking for a new version update
- */
+/** Activity that handles checking for a new version update */
 public abstract class VersionCheckActivity : PrivacyActivity() {
 
-    /**
-     * Check for updates automatically
-     */
-    protected open val checkForUpdates: Boolean = true
+  /** Check for updates automatically */
+  protected open val checkForUpdates: Boolean = true
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    internal var versionCheckView: VersionCheckView? = null
+  internal var versionCheckView: VersionCheckView? = null
 
-    internal var versionFactory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<VersionCheckViewModel> { versionFactory }
+  internal var versionFactory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<VersionCheckViewModel> { versionFactory }
 
-    private var injector: VersionCheckComponent? = null
+  private var injector: VersionCheckComponent? = null
 
-    /**
-     * On post create
-     */
-    @CallSuper
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
+  /** On post create */
+  @CallSuper
+  override fun onPostCreate(savedInstanceState: Bundle?) {
+    super.onPostCreate(savedInstanceState)
 
-        // Need to do this in onPostCreate because the snackbarRoot will not be available until
-        // after subclass onCreate
-        injector = Injector.obtainFromApplication<PYDroidComponent>(this)
+    // Need to do this in onPostCreate because the snackbarRoot will not be available until
+    // after subclass onCreate
+    injector =
+        Injector.obtainFromApplication<PYDroidComponent>(this)
             .plusVersionCheck()
             .create(this) { snackbarRoot }
-            .also { component ->
-                component.inject(this)
-            }
+            .also { component -> component.inject(this) }
 
-        stateSaver = createComponent(
+    stateSaver =
+        createComponent(
             savedInstanceState,
             this,
             viewModel,
-            controller = newUiController {
-                return@newUiController when (it) {
-                    is VersionCheckControllerEvent.LaunchUpdate -> showVersionUpgrade(
-                        it.isFallbackEnabled,
-                        it.launcher
-                    )
+            controller =
+                newUiController {
+                  return@newUiController when (it) {
+                    is VersionCheckControllerEvent.LaunchUpdate ->
+                        showVersionUpgrade(it.isFallbackEnabled, it.launcher)
                     is VersionCheckControllerEvent.UpgradeReady -> VersionUpgradeDialog.show(this)
-                }
-            },
-            requireNotNull(versionCheckView)
-        ) {
-            return@createComponent when (it) {
-                is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
-                is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
-                is VersionCheckViewEvent.NavigationHidden -> viewModel.handleHideNavigation()
-            }
+                  }
+                },
+            requireNotNull(versionCheckView)) {
+          return@createComponent when (it) {
+            is VersionCheckViewEvent.ErrorHidden -> viewModel.handleClearError()
+            is VersionCheckViewEvent.LoadingHidden -> viewModel.handleVersionCheckComplete()
+            is VersionCheckViewEvent.NavigationHidden -> viewModel.handleHideNavigation()
+          }
         }
 
-        if (checkForUpdates) {
-            checkUpdates()
-        }
+    if (checkForUpdates) {
+      checkUpdates()
     }
+  }
 
-    /**
-     * Get system service
-     */
-    // Provide this graph as a service injector
-    @CallSuper
-    override fun getSystemService(name: String): Any? = when (name) {
+  /** Get system service */
+  // Provide this graph as a service injector
+  @CallSuper
+  override fun getSystemService(name: String): Any? =
+      when (name) {
         VersionCheckComponent::class.java.name -> requireNotNull(injector)
         else -> super.getSystemService(name)
+      }
+
+  /** On save instance state */
+  @CallSuper
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    stateSaver?.saveState(outState)
+  }
+
+  /** On destroy */
+  @CallSuper
+  override fun onDestroy() {
+    super.onDestroy()
+    versionFactory = null
+    versionCheckView = null
+    stateSaver = null
+  }
+
+  private fun checkUpdates() {
+    require(checkForUpdates) {
+      "checkUpdates() will be called automatically, do not call this manually."
     }
+    viewModel.handleCheckForUpdates(false)
+  }
 
-    /**
-     * On save instance state
-     */
-    @CallSuper
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        stateSaver?.saveState(outState)
-    }
+  private fun showVersionUpgrade(isFallbackEnabled: Boolean, launcher: AppUpdateLauncher) {
+    val activity = this
 
-    /**
-     * On destroy
-     */
-    @CallSuper
-    override fun onDestroy() {
-        super.onDestroy()
-        versionFactory = null
-        versionCheckView = null
-        stateSaver = null
-    }
-
-    private fun checkUpdates() {
-        require(checkForUpdates) { "checkUpdates() will be called automatically, do not call this manually." }
-        viewModel.handleCheckForUpdates(false)
-    }
-
-    private fun showVersionUpgrade(
-        isFallbackEnabled: Boolean,
-        launcher: AppUpdateLauncher
-    ) {
-        val activity = this
-
-        // Enforce that we do this on the Main thread
-        lifecycleScope.launch(context = Dispatchers.Main) {
-            try {
-                launcher.update(activity, RC_APP_UPDATE)
-            } catch (throwable: Throwable) {
-                Timber.e(throwable, "Unable to launch in-app update flow")
-                if (isFallbackEnabled) {
-                    MarketLinker.openAppPage(activity)
-                        .onSuccess { viewModel.handleNavigationSuccess() }
-                        .onFailure { viewModel.handleNavigationFailed(it) }
-                }
-            }
+    // Enforce that we do this on the Main thread
+    lifecycleScope.launch(context = Dispatchers.Main) {
+      try {
+        launcher.update(activity, RC_APP_UPDATE)
+      } catch (throwable: Throwable) {
+        Timber.e(throwable, "Unable to launch in-app update flow")
+        if (isFallbackEnabled) {
+          MarketLinker.openAppPage(activity)
+              .onSuccess { viewModel.handleNavigationSuccess() }
+              .onFailure { viewModel.handleNavigationFailed(it) }
         }
+      }
     }
+  }
 
-    /**
-     * Call for an update manually
-     */
-    public fun checkForUpdates() {
-        require(!checkForUpdates) { "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic." }
-        viewModel.handleCheckForUpdates(false)
+  /** Call for an update manually */
+  public fun checkForUpdates() {
+    require(!checkForUpdates) {
+      "checkForUpdates() must be called manually and cannot be called when checkForUpdates is automatic."
     }
+    viewModel.handleCheckForUpdates(false)
+  }
 
-    public companion object {
+  public companion object {
 
-        // Only bottom 16 bits.
-        private const val RC_APP_UPDATE = 146
-    }
+    // Only bottom 16 bits.
+    private const val RC_APP_UPDATE = 146
+  }
 }

@@ -22,16 +22,10 @@ package com.pyamsoft.pydroid.notify
  * All notifications require a notification channel
  */
 public data class NotifyChannelInfo(
-    /**
-     * Channel id
-     */
+    /** Channel id */
     val id: String,
-    /**
-     * Human readable channel name
-     */
+    /** Human readable channel name */
     val title: String,
-    /**
-     * Human readable channel description
-     */
+    /** Human readable channel description */
     val description: String
 )

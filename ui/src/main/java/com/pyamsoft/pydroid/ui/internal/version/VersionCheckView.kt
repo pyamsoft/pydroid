@@ -22,62 +22,60 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.arch.UiView
 import com.pyamsoft.pydroid.ui.util.Snackbreak
 
-internal class VersionCheckView internal constructor(
+internal class VersionCheckView
+internal constructor(
     private val owner: LifecycleOwner,
     private val snackbarRootProvider: () -> ViewGroup
 ) : UiView<VersionCheckViewState, VersionCheckViewEvent>() {
 
-    override fun render(state: UiRender<VersionCheckViewState>) {
-        state.mapChanged { it.isLoading }.render(viewScope) { handleLoading(it) }
-        state.mapChanged { it.throwable }.render(viewScope) { handleUpdateError(it) }
-        state.mapChanged { it.navigationError }.render(viewScope) { handleNavigationError(it) }
-    }
+  override fun render(state: UiRender<VersionCheckViewState>) {
+    state.mapChanged { it.isLoading }.render(viewScope) { handleLoading(it) }
+    state.mapChanged { it.throwable }.render(viewScope) { handleUpdateError(it) }
+    state.mapChanged { it.navigationError }.render(viewScope) { handleNavigationError(it) }
+  }
 
-    private fun handleLoading(loading: Boolean) {
-        if (loading) {
-            showUpdating()
-        }
+  private fun handleLoading(loading: Boolean) {
+    if (loading) {
+      showUpdating()
     }
+  }
 
-    private fun handleUpdateError(throwable: Throwable?) {
-        if (throwable != null) {
-            showUpdatingError(throwable)
-        }
+  private fun handleUpdateError(throwable: Throwable?) {
+    if (throwable != null) {
+      showUpdatingError(throwable)
     }
+  }
 
-    private fun handleNavigationError(throwable: Throwable?) {
-        if (throwable != null) {
-            showNavigationError(throwable)
-        }
+  private fun handleNavigationError(throwable: Throwable?) {
+    if (throwable != null) {
+      showNavigationError(throwable)
     }
+  }
 
-    private fun showUpdating() {
-        Snackbreak.bindTo(owner) {
-            long(
-                snackbarRootProvider(),
-                "Checking for updates",
-                onHidden = { _, _ -> publish(VersionCheckViewEvent.LoadingHidden) }
-            )
-        }
+  private fun showUpdating() {
+    Snackbreak.bindTo(owner) {
+      long(
+          snackbarRootProvider(),
+          "Checking for updates",
+          onHidden = { _, _ -> publish(VersionCheckViewEvent.LoadingHidden) })
     }
+  }
 
-    private fun showUpdatingError(throwable: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                snackbarRootProvider(),
-                throwable.message ?: "An error occurred while checking for updates.",
-                onHidden = { _, _ -> publish(VersionCheckViewEvent.ErrorHidden) }
-            )
-        }
+  private fun showUpdatingError(throwable: Throwable) {
+    Snackbreak.bindTo(owner) {
+      long(
+          snackbarRootProvider(),
+          throwable.message ?: "An error occurred while checking for updates.",
+          onHidden = { _, _ -> publish(VersionCheckViewEvent.ErrorHidden) })
     }
+  }
 
-    private fun showNavigationError(throwable: Throwable) {
-        Snackbreak.bindTo(owner) {
-            long(
-                snackbarRootProvider(),
-                throwable.message ?: "An unexpected error occurred.",
-                onHidden = { _, _ -> publish(VersionCheckViewEvent.NavigationHidden) }
-            )
-        }
+  private fun showNavigationError(throwable: Throwable) {
+    Snackbreak.bindTo(owner) {
+      long(
+          snackbarRootProvider(),
+          throwable.message ?: "An unexpected error occurred.",
+          onHidden = { _, _ -> publish(VersionCheckViewEvent.NavigationHidden) })
     }
+  }
 }

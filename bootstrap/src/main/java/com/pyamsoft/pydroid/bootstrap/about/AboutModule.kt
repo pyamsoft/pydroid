@@ -18,18 +18,14 @@ package com.pyamsoft.pydroid.bootstrap.about
 
 import androidx.annotation.CheckResult
 
-/**
- * About module
- */
+/** About module */
 public class AboutModule {
 
-    private val impl = AboutInteractorImpl()
+  private val impl = AboutInteractorImpl()
 
-    /**
-     * Provide an instance of an AboutInteractor
-     */
-    @CheckResult
-    public fun provideInteractor(): AboutInteractor {
-        return impl
-    }
+  /** Provide an instance of an AboutInteractor */
+  @CheckResult
+  public fun provideInteractor(): AboutInteractor {
+    return impl
+  }
 }

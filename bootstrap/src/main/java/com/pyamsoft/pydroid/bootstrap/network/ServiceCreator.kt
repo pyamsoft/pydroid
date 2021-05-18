@@ -18,14 +18,9 @@ package com.pyamsoft.pydroid.bootstrap.network
 
 import androidx.annotation.CheckResult
 
-/**
- * Creates a network service
- */
+/** Creates a network service */
 public interface ServiceCreator {
 
-    /**
-     * Creates a network service
-     */
-    @CheckResult
-    public fun <S : Any> createService(serviceClass: Class<S>): S
+  /** Creates a network service */
+  @CheckResult public fun <S : Any> createService(serviceClass: Class<S>): S
 }

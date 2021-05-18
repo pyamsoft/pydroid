@@ -20,11 +20,9 @@ import com.pyamsoft.pydroid.arch.UiViewEvent
 import com.pyamsoft.pydroid.arch.UiViewState
 import com.pyamsoft.pydroid.billing.BillingSku
 
-internal data class BillingItemViewState internal constructor(
-    val sku: BillingSku
-) : UiViewState
+internal data class BillingItemViewState internal constructor(val sku: BillingSku) : UiViewState
 
 internal sealed class BillingItemViewEvent() : UiViewEvent {
 
-    object Purchase : BillingItemViewEvent()
+  object Purchase : BillingItemViewEvent()
 }

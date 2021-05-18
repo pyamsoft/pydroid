@@ -1,22 +1,14 @@
 package com.pyamsoft.pydroid.billing
 
-/**
- * Abstracts the Play Store Billing client
- */
+/** Abstracts the Play Store Billing client */
 public interface BillingInteractor {
 
-    /**
-     * Get the list of SKU
-     */
-    public suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit)
+  /** Get the list of SKU */
+  public suspend fun watchSkuList(onSkuListReceived: (BillingState, List<BillingSku>) -> Unit)
 
-    /**
-     * Watch for errors in the billing client
-     */
-    public suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit)
+  /** Watch for errors in the billing client */
+  public suspend fun watchErrors(onErrorReceived: (Throwable) -> Unit)
 
-    /**
-     * Refresh the SKU list
-     */
-    public suspend fun refresh()
+  /** Refresh the SKU list */
+  public suspend fun refresh()
 }

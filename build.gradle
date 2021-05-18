@@ -220,7 +220,7 @@ allprojects {
     }
     kotlin {
       target "src/**/*.kt"
-      ktlint()
+      ktfmt()
 
       trimTrailingWhitespace()
       endWithNewline()

@@ -26,77 +26,76 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-internal class BillingViewModel internal constructor(
+internal class BillingViewModel
+internal constructor(
     private val changeLogInteractor: ChangeLogInteractor,
     private val interactor: BillingInteractor,
     provider: AppProvider,
-) : UiViewModel<BillingViewState, BillingControllerEvent>(
-    initialState = BillingViewState(
-        skuList = emptyList(),
-        connected = BillingState.LOADING,
-        error = null,
-        icon = 0,
-        name = "",
-    )
-) {
+) :
+    UiViewModel<BillingViewState, BillingControllerEvent>(
+        initialState =
+            BillingViewState(
+                skuList = emptyList(),
+                connected = BillingState.LOADING,
+                error = null,
+                icon = 0,
+                name = "",
+            )) {
 
-    init {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            val displayName = changeLogInteractor.getDisplayName()
-            setState {
-                copy(
-                    name = displayName,
-                    icon = provider.applicationIcon,
-                )
-            }
-        }
-
-        viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.watchSkuList { connected, list ->
-                Timber.d("SKU list updated: $connected $list")
-                setState {
-                    copy(
-                        connected = connected,
-                        skuList = list.sortedBy { it.price },
-                    )
-                }
-            }
-        }
-
-        viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.watchErrors { error ->
-                Timber.e(error, "Billing error received")
-                setState { copy(error = error) }
-            }
-        }
+  init {
+    viewModelScope.launch(context = Dispatchers.Default) {
+      val displayName = changeLogInteractor.getDisplayName()
+      setState {
+        copy(
+            name = displayName,
+            icon = provider.applicationIcon,
+        )
+      }
     }
 
-    internal fun handleClearError() {
-        setState { copy(error = null) }
+    viewModelScope.launch(context = Dispatchers.Default) {
+      interactor.watchSkuList { connected, list ->
+        Timber.d("SKU list updated: $connected $list")
+        setState {
+          copy(
+              connected = connected,
+              skuList = list.sortedBy { it.price },
+          )
+        }
+      }
     }
 
-    internal fun handleRefresh() {
-        viewModelScope.launch(context = Dispatchers.Default) {
-            interactor.refresh()
-        }
+    viewModelScope.launch(context = Dispatchers.Default) {
+      interactor.watchErrors { error ->
+        Timber.e(error, "Billing error received")
+        setState { copy(error = error) }
+      }
+    }
+  }
+
+  internal fun handleClearError() {
+    setState { copy(error = null) }
+  }
+
+  internal fun handleRefresh() {
+    viewModelScope.launch(context = Dispatchers.Default) { interactor.refresh() }
+  }
+
+  internal fun handlePurchase(
+      index: Int,
+  ) {
+    val skuList = state.skuList
+    if (skuList.isEmpty() || skuList.size <= index) {
+      Timber.e("SKU index out of bounds: $index ${skuList.size}")
+      setState { copy(error = IllegalStateException("Unable to purchase in-app item")) }
+      return
     }
 
-    internal fun handlePurchase(
-        index: Int,
-    ) {
-        val skuList = state.skuList
-        if (skuList.isEmpty() || skuList.size <= index) {
-            Timber.e("SKU index out of bounds: $index ${skuList.size}")
-            setState {
-                copy(error = IllegalStateException("Unable to purchase in-app item"))
-            }
-            return
-        }
-
-        setState({ copy(error = null) }, andThen = {
-            val sku = skuList[index]
-            publish(BillingControllerEvent.Purchase(sku))
+    setState(
+        { copy(error = null) },
+        andThen = {
+          val sku = skuList[index]
+          publish(BillingControllerEvent.Purchase(sku))
         })
-    }
+  }
 }
-

@@ -22,13 +22,13 @@ import com.pyamsoft.pydroid.ui.internal.util.MarketLinker
 
 @CheckResult
 internal fun MarketLinker.openAppPage(context: Context): Result<Unit> {
-    val app = context.applicationContext
-    val link = app.packageName
-    return linkToMarketPage(app, link)
+  val app = context.applicationContext
+  val link = app.packageName
+  return linkToMarketPage(app, link)
 }
 
 @CheckResult
 internal fun MarketLinker.openDevPage(context: Context): Result<Unit> {
-    val app = context.applicationContext
-    return linkToDeveloperPage(app)
+  val app = context.applicationContext
+  return linkToDeveloperPage(app)
 }

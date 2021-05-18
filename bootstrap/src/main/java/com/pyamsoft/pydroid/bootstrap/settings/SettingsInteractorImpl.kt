@@ -21,16 +21,14 @@ import android.content.Context
 import androidx.core.content.getSystemService
 import timber.log.Timber
 
-internal class SettingsInteractorImpl internal constructor(
-    context: Context
-) : SettingsInteractor {
+internal class SettingsInteractorImpl internal constructor(context: Context) : SettingsInteractor {
 
-    private val activityManager by lazy {
-        requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
-    }
+  private val activityManager by lazy {
+    requireNotNull(context.applicationContext.getSystemService<ActivityManager>())
+  }
 
-    override suspend fun wipeData() {
-        Timber.d("Resetting all application user data")
-        activityManager.clearApplicationUserData()
-    }
+  override suspend fun wipeData() {
+    Timber.d("Resetting all application user data")
+    activityManager.clearApplicationUserData()
+  }
 }

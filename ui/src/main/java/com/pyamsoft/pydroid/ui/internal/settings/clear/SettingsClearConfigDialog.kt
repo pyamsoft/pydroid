@@ -29,46 +29,45 @@ import com.pyamsoft.pydroid.ui.arch.fromViewModelFactory
 
 internal class SettingsClearConfigDialog : AppCompatDialogFragment() {
 
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<SettingsClearConfigViewModel>(activity = true) { factory }
+  internal var factory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<SettingsClearConfigViewModel>(activity = true) {
+    factory
+  }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Injector.obtainFromApplication<PYDroidComponent>(requireContext())
-            .plusClearConfirm()
-            .create()
-            .inject(this)
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    Injector.obtainFromApplication<PYDroidComponent>(requireContext())
+        .plusClearConfirm()
+        .create()
+        .inject(this)
 
-        return AlertDialog.Builder(requireActivity())
-            .setMessage(
-                """
+    return AlertDialog.Builder(requireActivity())
+        .setMessage(
+            """
         Really reset all application settings?
-        
+
         All saved data will be cleared and all settings reset to default.
         The app will act as if you are launching it for the first time.
-        
+
         This cannot be undone.
-            """.trimIndent()
-            )
-            .setNegativeButton("Cancel") { _, _ -> dismiss() }
-            .setPositiveButton("Reset") { _, _ -> viewModel.reset() }
-            .create()
+            """.trimIndent())
+        .setNegativeButton("Cancel") { _, _ -> dismiss() }
+        .setPositiveButton("Reset") { _, _ -> viewModel.reset() }
+        .create()
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    factory = null
+  }
+
+  companion object {
+
+    internal const val TAG = "SettingsClearConfigDialog"
+
+    @JvmStatic
+    @CheckResult
+    fun newInstance(): DialogFragment {
+      return SettingsClearConfigDialog().apply { arguments = Bundle().apply {} }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        factory = null
-    }
-
-    companion object {
-
-        internal const val TAG = "SettingsClearConfigDialog"
-
-        @JvmStatic
-        @CheckResult
-        fun newInstance(): DialogFragment {
-            return SettingsClearConfigDialog().apply {
-                arguments = Bundle().apply {}
-            }
-        }
-    }
+  }
 }

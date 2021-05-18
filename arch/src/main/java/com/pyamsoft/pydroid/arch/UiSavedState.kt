@@ -16,7 +16,5 @@
 
 package com.pyamsoft.pydroid.arch
 
-/**
- * Abstraction over saving and restoring data via save-restore lifecycle
- */
+/** Abstraction over saving and restoring data via save-restore lifecycle */
 public interface UiSavedState : UiSavedStateReader, UiSavedStateWriter

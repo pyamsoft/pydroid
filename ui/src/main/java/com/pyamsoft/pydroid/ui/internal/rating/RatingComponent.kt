@@ -28,56 +28,56 @@ import com.pyamsoft.pydroid.ui.rating.RatingActivity
 
 internal interface RatingComponent {
 
-    fun inject(activity: RatingActivity)
+  fun inject(activity: RatingActivity)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(owner: LifecycleOwner, snackbarRootProvider: () -> ViewGroup): RatingComponent
+    @CheckResult
+    fun create(owner: LifecycleOwner, snackbarRootProvider: () -> ViewGroup): RatingComponent
 
-        data class Parameters internal constructor(
-            internal val context: Context,
-            internal val isFake: Boolean,
-            internal val preferences: RatingPreferences
-        )
+    data class Parameters
+    internal constructor(
+        internal val context: Context,
+        internal val isFake: Boolean,
+        internal val preferences: RatingPreferences
+    )
+  }
+
+  class Impl
+  private constructor(
+      params: Factory.Parameters,
+      private val owner: LifecycleOwner,
+      private val snackbarRootProvider: () -> ViewGroup
+  ) : RatingComponent {
+
+    private val factory: ViewModelProvider.Factory
+
+    init {
+      // Make this module each time since if it falls out of scope, the in-app rating system
+      // will crash
+      val module =
+          RatingModule(
+              RatingModule.Parameters(
+                  context = params.context.applicationContext,
+                  isFake = params.isFake,
+                  preferences = params.preferences))
+      factory = createViewModelFactory { RatingViewModel(module.provideInteractor()) }
     }
 
-    class Impl private constructor(
-        params: Factory.Parameters,
-        private val owner: LifecycleOwner,
-        private val snackbarRootProvider: () -> ViewGroup
-    ) : RatingComponent {
-
-        private val factory: ViewModelProvider.Factory
-
-        init {
-            // Make this module each time since if it falls out of scope, the in-app rating system
-            // will crash
-            val module = RatingModule(
-                RatingModule.Parameters(
-                    context = params.context.applicationContext,
-                    isFake = params.isFake,
-                    preferences = params.preferences
-                )
-            )
-            factory = createViewModelFactory { RatingViewModel(module.provideInteractor()) }
-        }
-
-        override fun inject(activity: RatingActivity) {
-            activity.ratingView = RatingView(owner, snackbarRootProvider)
-            activity.ratingFactory = factory
-        }
-
-        internal class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(
-                owner: LifecycleOwner,
-                snackbarRootProvider: () -> ViewGroup
-            ): RatingComponent {
-                return Impl(params, owner, snackbarRootProvider)
-            }
-        }
+    override fun inject(activity: RatingActivity) {
+      activity.ratingView = RatingView(owner, snackbarRootProvider)
+      activity.ratingFactory = factory
     }
+
+    internal class FactoryImpl internal constructor(private val params: Factory.Parameters) :
+        Factory {
+
+      override fun create(
+          owner: LifecycleOwner,
+          snackbarRootProvider: () -> ViewGroup
+      ): RatingComponent {
+        return Impl(params, owner, snackbarRootProvider)
+      }
+    }
+  }
 }

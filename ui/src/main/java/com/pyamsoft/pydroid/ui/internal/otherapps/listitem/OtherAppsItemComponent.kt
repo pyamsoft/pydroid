@@ -22,39 +22,36 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 
 internal interface OtherAppsItemComponent {
 
-    fun inject(viewHolder: OtherAppsViewHolder)
+  fun inject(viewHolder: OtherAppsViewHolder)
 
-    interface Factory {
+  interface Factory {
 
-        @CheckResult
-        fun create(parent: ViewGroup): OtherAppsItemComponent
+    @CheckResult fun create(parent: ViewGroup): OtherAppsItemComponent
 
-        data class Parameters internal constructor(
-            internal val imageLoader: ImageLoader,
-        )
+    data class Parameters
+    internal constructor(
+        internal val imageLoader: ImageLoader,
+    )
+  }
+
+  class Impl
+  private constructor(private val parent: ViewGroup, private val params: Factory.Parameters) :
+      OtherAppsItemComponent {
+
+    override fun inject(viewHolder: OtherAppsViewHolder) {
+      val title = OtherAppsItemTitleView(parent)
+      val icon = OtherAppsItemIconView(params.imageLoader, parent)
+      val action = OtherAppsItemActionView(parent)
+      viewHolder.titleView = title
+      viewHolder.iconView = icon
+      viewHolder.actionView = action
     }
 
-    class Impl private constructor(
-        private val parent: ViewGroup,
-        private val params: Factory.Parameters
-    ) : OtherAppsItemComponent {
+    class FactoryImpl internal constructor(private val params: Factory.Parameters) : Factory {
 
-        override fun inject(viewHolder: OtherAppsViewHolder) {
-            val title = OtherAppsItemTitleView(parent)
-            val icon = OtherAppsItemIconView(params.imageLoader, parent)
-            val action = OtherAppsItemActionView(parent)
-            viewHolder.titleView = title
-            viewHolder.iconView = icon
-            viewHolder.actionView = action
-        }
-
-        class FactoryImpl internal constructor(
-            private val params: Factory.Parameters
-        ) : Factory {
-
-            override fun create(parent: ViewGroup): OtherAppsItemComponent {
-                return Impl(parent, params)
-            }
-        }
+      override fun create(parent: ViewGroup): OtherAppsItemComponent {
+        return Impl(parent, params)
+      }
     }
+  }
 }

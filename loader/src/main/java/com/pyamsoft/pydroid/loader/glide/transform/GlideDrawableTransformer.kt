@@ -20,9 +20,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import com.pyamsoft.pydroid.loader.glide.loader.GlideRequestTransformer
 
-internal abstract class GlideDrawableTransformer protected constructor(
+internal abstract class GlideDrawableTransformer
+protected constructor(
     context: Context,
-) : GlideRequestTransformer<Drawable>(
-    context = context,
-    transformer = { it.asDrawable() }
-)
+) : GlideRequestTransformer<Drawable>(context = context, transformer = { it.asDrawable() })

@@ -25,72 +25,67 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-internal class OtherAppsViewModel internal constructor(
+internal class OtherAppsViewModel
+internal constructor(
     interactor: OtherAppsInteractor,
-) : UiViewModel<OtherAppsViewState, OtherAppsControllerEvent>(
-    initialState = OtherAppsViewState(
-        apps = emptyList(),
-        appsError = null,
-        navigationError = null
-    )
-) {
+) :
+    UiViewModel<OtherAppsViewState, OtherAppsControllerEvent>(
+        initialState =
+            OtherAppsViewState(apps = emptyList(), appsError = null, navigationError = null)) {
 
-    private val appsRunner = highlander<Unit, Boolean> { force ->
-        interactor.getApps(force)
-            .onSuccess { handleAppsLoaded(it) }
-            .onFailure { handleHideError(it) }
-    }
-
-    init {
-        // This may be cached in many cases
-        viewModelScope.launch(context = Dispatchers.Default) {
-            appsRunner.call(false)
+  private val appsRunner =
+      highlander<Unit, Boolean> { force ->
+        interactor.getApps(force).onSuccess { handleAppsLoaded(it) }.onFailure {
+          handleHideError(it)
         }
-    }
+      }
 
-    internal fun handleHideError() {
-        viewModelScope.setState(stateChange = { copy(appsError = null) }, andThen = {
-            publish(OtherAppsControllerEvent.LaunchFallback)
-        })
-    }
+  init {
+    // This may be cached in many cases
+    viewModelScope.launch(context = Dispatchers.Default) { appsRunner.call(false) }
+  }
 
-    internal fun handleOpenStoreUrl(index: Int) {
-        openUrl(index) { it.storeUrl }
-    }
+  internal fun handleHideError() {
+    viewModelScope.setState(
+        stateChange = { copy(appsError = null) },
+        andThen = { publish(OtherAppsControllerEvent.LaunchFallback) })
+  }
 
-    internal fun handleOpenSourceCodeUrl(index: Int) {
-        openUrl(index) { it.sourceUrl }
-    }
+  internal fun handleOpenStoreUrl(index: Int) {
+    openUrl(index) { it.storeUrl }
+  }
 
-    private inline fun openUrl(
-        index: Int,
-        crossinline resolveUrl: (app: OtherApp) -> String,
-    ) {
-        val a = state.apps
-        if (a.isNotEmpty()) {
-            a.getOrNull(index)?.let { app ->
-                publish(OtherAppsControllerEvent.OpenUrl(resolveUrl(app)))
-            }
-        }
-    }
+  internal fun handleOpenSourceCodeUrl(index: Int) {
+    openUrl(index) { it.sourceUrl }
+  }
 
-    private fun CoroutineScope.handleAppsLoaded(apps: List<OtherApp>) {
-        setState { copy(apps = apps) }
+  private inline fun openUrl(
+      index: Int,
+      crossinline resolveUrl: (app: OtherApp) -> String,
+  ) {
+    val a = state.apps
+    if (a.isNotEmpty()) {
+      a.getOrNull(index)?.let { app -> publish(OtherAppsControllerEvent.OpenUrl(resolveUrl(app))) }
     }
+  }
 
-    private fun CoroutineScope.handleHideError(throwable: Throwable) {
-        setState { copy(appsError = throwable) }
-    }
+  private fun CoroutineScope.handleAppsLoaded(apps: List<OtherApp>) {
+    setState { copy(apps = apps) }
+  }
 
-    internal fun handleNavigationFailed(throwable: Throwable) {
-        setState { copy(navigationError = throwable) }
-    }
+  private fun CoroutineScope.handleHideError(throwable: Throwable) {
+    setState { copy(appsError = throwable) }
+  }
 
-    fun handleNavigationSuccess() {
-        handleHideNavigation()
-    }
+  internal fun handleNavigationFailed(throwable: Throwable) {
+    setState { copy(navigationError = throwable) }
+  }
 
-    internal fun handleHideNavigation() {
-        setState { copy(navigationError = null) }
-    }
+  fun handleNavigationSuccess() {
+    handleHideNavigation()
+  }
+
+  internal fun handleHideNavigation() {
+    setState { copy(navigationError = null) }
+  }
 }

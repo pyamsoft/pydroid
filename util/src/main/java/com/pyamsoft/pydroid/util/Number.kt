@@ -28,22 +28,22 @@ private val cachedDP by lazy { SparseIntArray(10) }
 
 @CheckResult
 private inline fun SparseIntArray.getOrElse(key: Int, block: (array: SparseIntArray) -> Int): Int {
-    val fallbackValue = -1;
-    val result = this.get(key, fallbackValue)
-    return if (result != fallbackValue) result else block(this)
+  val fallbackValue = -1
+  val result = this.get(key, fallbackValue)
+  return if (result != fallbackValue) result else block(this)
 }
 
 @CheckResult
 private fun asDp(c: Context, @Px px: Int): Int {
-    return if (px <= 0) 0 else cachedDP.getOrElse(px) { array ->
+  return if (px <= 0) 0
+  else
+      cachedDP.getOrElse(px) { array ->
         val m: DisplayMetrics = c.applicationContext.resources.displayMetrics
         return@getOrElse TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px.toFloat(), m)
-            .roundToInt().also { array.put(px, it) }
-    }
+            .roundToInt()
+            .also { array.put(px, it) }
+      }
 }
 
-/**
- * Convert a number in pixels to DP
- */
-@CheckResult
-public fun Number.asDp(c: Context): Int = asDp(c, this.toInt())
+/** Convert a number in pixels to DP */
+@CheckResult public fun Number.asDp(c: Context): Int = asDp(c, this.toInt())

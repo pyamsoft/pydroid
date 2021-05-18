@@ -24,61 +24,55 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
-internal class AboutAdapter internal constructor(
-    private val callback: (event: AboutItemViewEvent, index: Int) -> Unit
-) : ListAdapter<AboutItemViewState, AboutViewHolder>(DIFFER), PopupTextProvider {
+internal class AboutAdapter
+internal constructor(private val callback: (event: AboutItemViewEvent, index: Int) -> Unit) :
+    ListAdapter<AboutItemViewState, AboutViewHolder>(DIFFER), PopupTextProvider {
 
-    init {
-        setHasStableIds(true)
-    }
+  init {
+    setHasStableIds(true)
+  }
 
-    override fun getPopupText(position: Int): String {
-        val item = getItem(position)
-        return item.library.name.first().toUpperCase().toString()
-    }
+  override fun getPopupText(position: Int): String {
+    val item = getItem(position)
+    return item.library.name.first().toUpperCase().toString()
+  }
 
-    override fun getItemId(position: Int): Long {
-        return getItem(position).library.hashCode()
-            .toLong()
-    }
+  override fun getItemId(position: Int): Long {
+    return getItem(position).library.hashCode().toLong()
+  }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): AboutViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return AboutViewHolder.create(inflater, parent, callback)
-    }
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AboutViewHolder {
+    val inflater = LayoutInflater.from(parent.context)
+    return AboutViewHolder.create(inflater, parent, callback)
+  }
 
-    override fun onBindViewHolder(
-        holder: AboutViewHolder,
-        position: Int
-    ) {
-        val item = getItem(position)
-        holder.bindState(item)
-    }
+  override fun onBindViewHolder(holder: AboutViewHolder, position: Int) {
+    val item = getItem(position)
+    holder.bindState(item)
+  }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        teardownAdapter(recyclerView)
-    }
+  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+    super.onDetachedFromRecyclerView(recyclerView)
+    teardownAdapter(recyclerView)
+  }
 
-    companion object {
+  companion object {
 
-        private val DIFFER = object : DiffUtil.ItemCallback<AboutItemViewState>() {
-            override fun areItemsTheSame(
-                oldItem: AboutItemViewState,
-                newItem: AboutItemViewState
-            ): Boolean {
-                return oldItem.library.libraryUrl == newItem.library.libraryUrl
-            }
+    private val DIFFER =
+        object : DiffUtil.ItemCallback<AboutItemViewState>() {
+          override fun areItemsTheSame(
+              oldItem: AboutItemViewState,
+              newItem: AboutItemViewState
+          ): Boolean {
+            return oldItem.library.libraryUrl == newItem.library.libraryUrl
+          }
 
-            override fun areContentsTheSame(
-                oldItem: AboutItemViewState,
-                newItem: AboutItemViewState
-            ): Boolean {
-                return oldItem == newItem
-            }
+          override fun areContentsTheSame(
+              oldItem: AboutItemViewState,
+              newItem: AboutItemViewState
+          ): Boolean {
+            return oldItem == newItem
+          }
         }
-    }
+  }
 }

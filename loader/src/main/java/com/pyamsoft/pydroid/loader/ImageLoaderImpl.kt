@@ -30,100 +30,91 @@ import com.pyamsoft.pydroid.loader.glide.loader.GlideUriDrawableLoader
 import com.pyamsoft.pydroid.loader.glide.loader.GlideUrlBitmapLoader
 import com.pyamsoft.pydroid.loader.glide.loader.GlideUrlDrawableLoader
 
-internal class ImageLoaderImpl internal constructor(
-    private val context: Context
-) : ImageLoader {
+internal class ImageLoaderImpl internal constructor(private val context: Context) : ImageLoader {
 
-    private val drawables by lazy {
-        object : ImageLoaderApi<Drawable> {
+  private val drawables by lazy {
+    object : ImageLoaderApi<Drawable> {
 
-            override fun load(@DrawableRes resource: Int): Loader<Drawable> {
-                return GlideLocalDrawableLoader(context.applicationContext, resource)
-            }
+      override fun load(@DrawableRes resource: Int): Loader<Drawable> {
+        return GlideLocalDrawableLoader(context.applicationContext, resource)
+      }
 
-            override fun load(url: String): Loader<Drawable> {
-                return GlideUrlDrawableLoader(context.applicationContext, url)
-            }
+      override fun load(url: String): Loader<Drawable> {
+        return GlideUrlDrawableLoader(context.applicationContext, url)
+      }
 
-            override fun load(uri: Uri): Loader<Drawable> {
-                return GlideUriDrawableLoader(context.applicationContext, uri)
-            }
+      override fun load(uri: Uri): Loader<Drawable> {
+        return GlideUriDrawableLoader(context.applicationContext, uri)
+      }
 
-            override fun load(data: ByteArray): Loader<Drawable> {
-                return GlideByteArrayDrawableLoader(context.applicationContext, data)
-            }
+      override fun load(data: ByteArray): Loader<Drawable> {
+        return GlideByteArrayDrawableLoader(context.applicationContext, data)
+      }
 
-            @Suppress("OverridingDeprecatedMember")
-            override fun load(bitmap: Bitmap): Loader<Drawable> {
-                // Full name to avoid deprecation warning
-                @Suppress("DEPRECATION")
-                return com.pyamsoft.pydroid.loader.glide.loader.GlideBitmapDrawableLoader(
-                    context.applicationContext,
-                    bitmap
-                )
-            }
-        }
-    }
-
-    private val bitmaps by lazy {
-        object : ImageLoaderApi<Bitmap> {
-            override fun load(resource: Int): Loader<Bitmap> {
-                return GlideLocalBitmapLoader(context.applicationContext, resource)
-            }
-
-            override fun load(uri: Uri): Loader<Bitmap> {
-                return GlideUriBitmapLoader(context.applicationContext, uri)
-            }
-
-            override fun load(url: String): Loader<Bitmap> {
-                return GlideUrlBitmapLoader(context.applicationContext, url)
-            }
-
-            override fun load(data: ByteArray): Loader<Bitmap> {
-                return GlideByteArrayBitmapLoader(context.applicationContext, data)
-            }
-
-            @Suppress("OverridingDeprecatedMember")
-            override fun load(bitmap: Bitmap): Loader<Bitmap> {
-                // Full name to avoid deprecation warning
-                @Suppress("DEPRECATION")
-                return com.pyamsoft.pydroid.loader.glide.loader.GlideBitmapBitmapLoader(
-                    context.applicationContext,
-                    bitmap
-                )
-            }
-
-        }
-    }
-
-    override fun load(@DrawableRes resource: Int): Loader<Drawable> {
-        return drawables.load(resource)
-    }
-
-    override fun load(url: String): Loader<Drawable> {
-        return drawables.load(url)
-    }
-
-    override fun load(uri: Uri): Loader<Drawable> {
-        return drawables.load(uri)
-    }
-
-    override fun load(data: ByteArray): Loader<Drawable> {
-        return drawables.load(data)
-    }
-
-    @Suppress("OverridingDeprecatedMember")
-    override fun load(bitmap: Bitmap): Loader<Drawable> {
+      @Suppress("OverridingDeprecatedMember")
+      override fun load(bitmap: Bitmap): Loader<Drawable> {
+        // Full name to avoid deprecation warning
         @Suppress("DEPRECATION")
-        return drawables.load(bitmap)
+        return com.pyamsoft.pydroid.loader.glide.loader.GlideBitmapDrawableLoader(
+            context.applicationContext, bitmap)
+      }
     }
+  }
 
-    override fun asDrawable(): ImageLoaderApi<Drawable> {
-        return drawables
+  private val bitmaps by lazy {
+    object : ImageLoaderApi<Bitmap> {
+      override fun load(resource: Int): Loader<Bitmap> {
+        return GlideLocalBitmapLoader(context.applicationContext, resource)
+      }
+
+      override fun load(uri: Uri): Loader<Bitmap> {
+        return GlideUriBitmapLoader(context.applicationContext, uri)
+      }
+
+      override fun load(url: String): Loader<Bitmap> {
+        return GlideUrlBitmapLoader(context.applicationContext, url)
+      }
+
+      override fun load(data: ByteArray): Loader<Bitmap> {
+        return GlideByteArrayBitmapLoader(context.applicationContext, data)
+      }
+
+      @Suppress("OverridingDeprecatedMember")
+      override fun load(bitmap: Bitmap): Loader<Bitmap> {
+        // Full name to avoid deprecation warning
+        @Suppress("DEPRECATION")
+        return com.pyamsoft.pydroid.loader.glide.loader.GlideBitmapBitmapLoader(
+            context.applicationContext, bitmap)
+      }
     }
+  }
 
-    override fun asBitmap(): ImageLoaderApi<Bitmap> {
-        return bitmaps
-    }
+  override fun load(@DrawableRes resource: Int): Loader<Drawable> {
+    return drawables.load(resource)
+  }
 
+  override fun load(url: String): Loader<Drawable> {
+    return drawables.load(url)
+  }
+
+  override fun load(uri: Uri): Loader<Drawable> {
+    return drawables.load(uri)
+  }
+
+  override fun load(data: ByteArray): Loader<Drawable> {
+    return drawables.load(data)
+  }
+
+  @Suppress("OverridingDeprecatedMember")
+  override fun load(bitmap: Bitmap): Loader<Drawable> {
+    @Suppress("DEPRECATION") return drawables.load(bitmap)
+  }
+
+  override fun asDrawable(): ImageLoaderApi<Drawable> {
+    return drawables
+  }
+
+  override fun asBitmap(): ImageLoaderApi<Bitmap> {
+    return bitmaps
+  }
 }

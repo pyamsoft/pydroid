@@ -16,13 +16,9 @@
 
 package com.pyamsoft.pydroid.bootstrap.settings
 
-/**
- * Application settings data interactor
- */
+/** Application settings data interactor */
 public interface SettingsInteractor {
 
-    /**
-     * Clear all application data
-     */
-    public suspend fun wipeData()
+  /** Clear all application data */
+  public suspend fun wipeData()
 }

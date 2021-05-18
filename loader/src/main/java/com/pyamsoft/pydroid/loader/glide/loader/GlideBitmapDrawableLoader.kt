@@ -25,24 +25,23 @@ import com.bumptech.glide.RequestBuilder
 import com.pyamsoft.pydroid.loader.glide.transform.GlideDrawableTransformer
 
 @Deprecated("You almost always want to use something else.")
-internal class GlideBitmapDrawableLoader internal constructor(
-    context: Context,
-    private val bitmap: Bitmap
-) : GlideDrawableTransformer(context) {
+internal class GlideBitmapDrawableLoader
+internal constructor(context: Context, private val bitmap: Bitmap) :
+    GlideDrawableTransformer(context) {
 
-    override fun onCreateRequest(builder: RequestBuilder<Drawable>): RequestBuilder<Drawable> {
-        return builder.load(bitmap)
-    }
+  override fun onCreateRequest(builder: RequestBuilder<Drawable>): RequestBuilder<Drawable> {
+    return builder.load(bitmap)
+  }
 
-    override fun mutateImage(resource: Drawable): Drawable {
-        return resource.mutate()
-    }
+  override fun mutateImage(resource: Drawable): Drawable {
+    return resource.mutate()
+  }
 
-    override fun setImage(view: ImageView, image: Drawable) {
-        view.setImageDrawable(image)
-    }
+  override fun setImage(view: ImageView, image: Drawable) {
+    view.setImageDrawable(image)
+  }
 
-    override fun immediateResource(): Drawable {
-        return BitmapDrawable(context.resources, bitmap)
-    }
+  override fun immediateResource(): Drawable {
+    return BitmapDrawable(context.resources, bitmap)
+  }
 }

@@ -31,65 +31,65 @@ import com.pyamsoft.pydroid.loader.GenericLoader
 import com.pyamsoft.pydroid.loader.ImageTarget
 import com.pyamsoft.pydroid.loader.Loaded
 
-internal abstract class GlideLoader<T : Any> protected constructor(
-    protected val context: Context
-) : GenericLoader<T>() {
+internal abstract class GlideLoader<T : Any> protected constructor(protected val context: Context) :
+    GenericLoader<T>() {
 
-    @CheckResult
-    protected abstract fun createRequest(request: RequestManager): RequestBuilder<T>
+  @CheckResult protected abstract fun createRequest(request: RequestManager): RequestBuilder<T>
 
-    final override fun into(imageView: ImageView): Loaded {
-        return glideLoad(object : CustomViewTarget<ImageView, T>(imageView) {
+  final override fun into(imageView: ImageView): Loaded {
+    return glideLoad(
+        object : CustomViewTarget<ImageView, T>(imageView) {
 
-            override fun onResourceCleared(placeholder: Drawable?) {
-                imageView.setImageDrawable(null)
-            }
+          override fun onResourceCleared(placeholder: Drawable?) {
+            imageView.setImageDrawable(null)
+          }
 
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                imageView.setImageDrawable(null)
-                notifyError()
-            }
+          override fun onLoadFailed(errorDrawable: Drawable?) {
+            imageView.setImageDrawable(null)
+            notifyError()
+          }
 
-            override fun onResourceLoading(placeholder: Drawable?) {
-                notifyLoading()
-            }
+          override fun onResourceLoading(placeholder: Drawable?) {
+            notifyLoading()
+          }
 
-            override fun onResourceReady(resource: T, transition: Transition<in T>?) {
-                val mutated: T = executeMutator(mutateImage(resource))
-                setImage(imageView, mutated)
-                notifySuccess(mutated)
-            }
+          override fun onResourceReady(resource: T, transition: Transition<in T>?) {
+            val mutated: T = executeMutator(mutateImage(resource))
+            setImage(imageView, mutated)
+            notifySuccess(mutated)
+          }
         })
-    }
+  }
 
-    final override fun into(target: ImageTarget<T>): Loaded {
-        return glideLoad(object : CustomTarget<T>() {
+  final override fun into(target: ImageTarget<T>): Loaded {
+    return glideLoad(
+        object : CustomTarget<T>() {
 
-            override fun onLoadCleared(placeholder: Drawable?) {
-                target.clear()
-            }
+          override fun onLoadCleared(placeholder: Drawable?) {
+            target.clear()
+          }
 
-            override fun onLoadFailed(errorDrawable: Drawable?) {
-                target.clear()
-                notifyError()
-            }
+          override fun onLoadFailed(errorDrawable: Drawable?) {
+            target.clear()
+            notifyError()
+          }
 
-            override fun onLoadStarted(placeholder: Drawable?) {
-                notifyLoading()
-            }
+          override fun onLoadStarted(placeholder: Drawable?) {
+            notifyLoading()
+          }
 
-            override fun onResourceReady(resource: T, transition: Transition<in T>?) {
-                val mutated: T = executeMutator(mutateImage(resource))
-                target.setImage(mutated)
-                notifySuccess(mutated)
-            }
+          override fun onResourceReady(resource: T, transition: Transition<in T>?) {
+            val mutated: T = executeMutator(mutateImage(resource))
+            target.setImage(mutated)
+            notifySuccess(mutated)
+          }
         })
-    }
+  }
 
-    @CheckResult
-    private fun glideLoad(target: Target<T>): Loaded {
-        val manager = Glide.with(context.applicationContext)
-        createRequest(manager).into(target)
-        return GlideLoaded(manager, target)
-    }
+  @CheckResult
+  private fun glideLoad(target: Target<T>): Loaded {
+    val manager = Glide.with(context.applicationContext)
+    createRequest(manager).into(target)
+    return GlideLoaded(manager, target)
+  }
 }

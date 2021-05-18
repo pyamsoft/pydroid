@@ -24,33 +24,30 @@ import com.pyamsoft.pydroid.arch.UiRender
 import com.pyamsoft.pydroid.bootstrap.libraries.OssLibrary
 import com.pyamsoft.pydroid.ui.databinding.AboutItemDescriptionBinding
 
-internal class AboutItemDescriptionView internal constructor(
-    parent: ViewGroup
-) : BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemDescriptionBinding>(parent) {
+internal class AboutItemDescriptionView internal constructor(parent: ViewGroup) :
+    BaseUiView<AboutItemViewState, AboutItemViewEvent, AboutItemDescriptionBinding>(parent) {
 
-    override val viewBinding = AboutItemDescriptionBinding::inflate
+  override val viewBinding = AboutItemDescriptionBinding::inflate
 
-    override val layoutRoot by boundView { aboutDescription }
+  override val layoutRoot by boundView { aboutDescription }
 
-    init {
-        doOnTeardown {
-            clear()
-        }
+  init {
+    doOnTeardown { clear() }
+  }
+
+  private fun clear() {
+    binding.aboutDescription.apply {
+      text = ""
+      isGone = true
     }
+  }
 
-    private fun clear() {
-        binding.aboutDescription.apply {
-            text = ""
-            isGone = true
-        }
-    }
+  override fun onRender(state: UiRender<AboutItemViewState>) {
+    state.mapChanged { it.library }.render(viewScope) { handleLibrary(it) }
+  }
 
-    override fun onRender(state: UiRender<AboutItemViewState>) {
-        state.mapChanged { it.library }.render(viewScope) { handleLibrary(it) }
-    }
-
-    private fun handleLibrary(library: OssLibrary) {
-        binding.aboutDescription.text = library.description
-        binding.aboutDescription.isVisible = library.description.isNotBlank()
-    }
+  private fun handleLibrary(library: OssLibrary) {
+    binding.aboutDescription.text = library.description
+    binding.aboutDescription.isVisible = library.description.isNotBlank()
+  }
 }

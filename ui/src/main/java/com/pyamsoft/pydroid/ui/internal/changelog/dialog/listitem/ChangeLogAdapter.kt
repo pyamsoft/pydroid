@@ -24,60 +24,54 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pyamsoft.pydroid.ui.util.teardownAdapter
 import me.zhanghai.android.fastscroll.PopupTextProvider
 
-internal class ChangeLogAdapter internal constructor(
-) : ListAdapter<ChangeLogItemViewState, ChangeLogViewHolder>(DIFFER), PopupTextProvider {
+internal class ChangeLogAdapter internal constructor() :
+    ListAdapter<ChangeLogItemViewState, ChangeLogViewHolder>(DIFFER), PopupTextProvider {
 
-    init {
-        setHasStableIds(true)
-    }
+  init {
+    setHasStableIds(true)
+  }
 
-    override fun getPopupText(position: Int): String {
-        val item = getItem(position)
-        return item.line.line.first().toUpperCase().toString()
-    }
+  override fun getPopupText(position: Int): String {
+    val item = getItem(position)
+    return item.line.line.first().toUpperCase().toString()
+  }
 
-    override fun getItemId(position: Int): Long {
-        return getItem(position).line.hashCode()
-            .toLong()
-    }
+  override fun getItemId(position: Int): Long {
+    return getItem(position).line.hashCode().toLong()
+  }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ChangeLogViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return ChangeLogViewHolder.create(inflater, parent)
-    }
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChangeLogViewHolder {
+    val inflater = LayoutInflater.from(parent.context)
+    return ChangeLogViewHolder.create(inflater, parent)
+  }
 
-    override fun onBindViewHolder(
-        holder: ChangeLogViewHolder,
-        position: Int
-    ) {
-        val item = getItem(position)
-        holder.bindState(item)
-    }
+  override fun onBindViewHolder(holder: ChangeLogViewHolder, position: Int) {
+    val item = getItem(position)
+    holder.bindState(item)
+  }
 
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        teardownAdapter(recyclerView)
-    }
+  override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+    super.onDetachedFromRecyclerView(recyclerView)
+    teardownAdapter(recyclerView)
+  }
 
-    companion object {
+  companion object {
 
-        private val DIFFER = object : DiffUtil.ItemCallback<ChangeLogItemViewState>() {
-            override fun areItemsTheSame(
-                oldItem: ChangeLogItemViewState,
-                newItem: ChangeLogItemViewState
-            ): Boolean {
-                return oldItem.line.line == newItem.line.line
-            }
+    private val DIFFER =
+        object : DiffUtil.ItemCallback<ChangeLogItemViewState>() {
+          override fun areItemsTheSame(
+              oldItem: ChangeLogItemViewState,
+              newItem: ChangeLogItemViewState
+          ): Boolean {
+            return oldItem.line.line == newItem.line.line
+          }
 
-            override fun areContentsTheSame(
-                oldItem: ChangeLogItemViewState,
-                newItem: ChangeLogItemViewState
-            ): Boolean {
-                return oldItem == newItem
-            }
+          override fun areContentsTheSame(
+              oldItem: ChangeLogItemViewState,
+              newItem: ChangeLogItemViewState
+          ): Boolean {
+            return oldItem == newItem
+          }
         }
-    }
+  }
 }

@@ -23,54 +23,54 @@ import com.pyamsoft.pydroid.bootstrap.rating.AppRatingLauncher
 import com.pyamsoft.pydroid.bootstrap.rating.RateMyApp
 import com.pyamsoft.pydroid.bootstrap.rating.RatingPreferences
 import com.pyamsoft.pydroid.core.Enforcer
+import kotlin.coroutines.resume
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.coroutines.resume
 
-internal class PlayStoreRateMyApp internal constructor(
+internal class PlayStoreRateMyApp
+internal constructor(
     private val preferences: RatingPreferences,
     private val isFake: Boolean,
     context: Context
 ) : RateMyApp {
 
-    private val manager by lazy {
-        if (isFake) {
-            FakeReviewManager(context.applicationContext)
-        } else {
-            ReviewManagerFactory.create(context.applicationContext)
-        }
+  private val manager by lazy {
+    if (isFake) {
+      FakeReviewManager(context.applicationContext)
+    } else {
+      ReviewManagerFactory.create(context.applicationContext)
     }
+  }
 
-    override suspend fun startRating(): AppRatingLauncher =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+  override suspend fun startRating(): AppRatingLauncher =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            if (isFake) {
-                Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
-                delay(2000L)
-            }
-
-            return@withContext suspendCancellableCoroutine { continuation ->
-                manager.requestReviewFlow()
-                    .addOnFailureListener { error ->
-                        Timber.e(error, "Failed to resolve app review info task")
-                        continuation.resume(AppRatingLauncher.empty())
-                    }
-                    .addOnCompleteListener { request ->
-                        Timber.d("App Review info received: $request")
-                        if (request.isSuccessful) {
-                            val info = request.result
-                            continuation.resume(
-                                PlayStoreAppRatingLauncher(preferences, manager, info)
-                            )
-                        } else {
-                            Timber.d("Review is not available")
-                            continuation.resume(AppRatingLauncher.empty())
-                        }
-                    }
-            }
+        if (isFake) {
+          Timber.d("In debug mode we fake a delay to mimic real world network turnaround time.")
+          delay(2000L)
         }
+
+        return@withContext suspendCancellableCoroutine { continuation ->
+          manager
+              .requestReviewFlow()
+              .addOnFailureListener { error ->
+                Timber.e(error, "Failed to resolve app review info task")
+                continuation.resume(AppRatingLauncher.empty())
+              }
+              .addOnCompleteListener { request ->
+                Timber.d("App Review info received: $request")
+                if (request.isSuccessful) {
+                  val info = request.result
+                  continuation.resume(PlayStoreAppRatingLauncher(preferences, manager, info))
+                } else {
+                  Timber.d("Review is not available")
+                  continuation.resume(AppRatingLauncher.empty())
+                }
+              }
+        }
+      }
 }

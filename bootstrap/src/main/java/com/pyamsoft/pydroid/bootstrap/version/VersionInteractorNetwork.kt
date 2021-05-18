@@ -20,20 +20,19 @@ import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class VersionInteractorNetwork internal constructor(
-    private val updater: AppUpdater
-) : VersionInteractor {
+internal class VersionInteractorNetwork internal constructor(private val updater: AppUpdater) :
+    VersionInteractor {
 
-    override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
-        throw IllegalStateException("This should never be called directly")
+  override suspend fun watchForDownloadComplete(onDownloadCompleted: () -> Unit) =
+      throw IllegalStateException("This should never be called directly")
 
-    override suspend fun completeUpdate() =
-        throw IllegalStateException("This should never be called directly")
+  override suspend fun completeUpdate() =
+      throw IllegalStateException("This should never be called directly")
 
-    override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+  override suspend fun checkVersion(force: Boolean): AppUpdateLauncher =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            return@withContext updater.checkForUpdate()
-        }
+        return@withContext updater.checkForUpdate()
+      }
 }

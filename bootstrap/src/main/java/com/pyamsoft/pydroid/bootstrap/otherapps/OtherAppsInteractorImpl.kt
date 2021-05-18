@@ -25,30 +25,32 @@ import com.pyamsoft.pydroid.core.Enforcer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class OtherAppsInteractorImpl internal constructor(
+internal class OtherAppsInteractorImpl
+internal constructor(
     context: Context,
     private val packageName: String,
     private val otherAppsCache: Cached<Result<List<OtherApp>>>
 ) : AppInteractorImpl(context), OtherAppsInteractor, Cache {
 
-    override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
-        withContext(context = Dispatchers.IO) {
-            Enforcer.assertOffMainThread()
+  override suspend fun getApps(force: Boolean): Result<List<OtherApp>> =
+      withContext(context = Dispatchers.IO) {
+        Enforcer.assertOffMainThread()
 
-            if (force) {
-                otherAppsCache.clear()
-            }
-
-            // Ignore the app we have open right now in the list
-            return@withContext otherAppsCache.call()
-                .map { it.asSequence() }
-                .map { apps -> apps.filterNot { it.packageName == packageName } }
-                .map { apps -> apps.sortedBy { it.name } }
-                .map { it.toList() }
+        if (force) {
+          otherAppsCache.clear()
         }
 
-    override suspend fun clear() {
-        Enforcer.assertOffMainThread()
-        otherAppsCache.clear()
-    }
+        // Ignore the app we have open right now in the list
+        return@withContext otherAppsCache
+            .call()
+            .map { it.asSequence() }
+            .map { apps -> apps.filterNot { it.packageName == packageName } }
+            .map { apps -> apps.sortedBy { it.name } }
+            .map { it.toList() }
+      }
+
+  override suspend fun clear() {
+    Enforcer.assertOffMainThread()
+    otherAppsCache.clear()
+  }
 }

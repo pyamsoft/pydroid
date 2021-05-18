@@ -28,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.R as R2
 import com.pyamsoft.pydroid.arch.BaseUiView
 import com.pyamsoft.pydroid.arch.StateSaver
 import com.pyamsoft.pydroid.arch.UiController
@@ -43,133 +44,109 @@ import com.pyamsoft.pydroid.ui.util.commit
 import com.pyamsoft.pydroid.ui.util.layout
 import com.pyamsoft.pydroid.ui.widget.shadow.DropshadowView
 import com.pyamsoft.pydroid.util.valueFromCurrentTheme
-import com.google.android.material.R as R2
 
-internal abstract class FullscreenThemeDialog protected constructor() : AppCompatDialogFragment(),
-    UiController<UnitControllerEvent> {
+internal abstract class FullscreenThemeDialog protected constructor() :
+    AppCompatDialogFragment(), UiController<UnitControllerEvent> {
 
-    internal var toolbar: ThemeDialogToolbar? = null
+  internal var toolbar: ThemeDialogToolbar? = null
 
-    internal var frame: ThemeDialogFrame? = null
+  internal var frame: ThemeDialogFrame? = null
 
-    internal var factory: ViewModelProvider.Factory? = null
-    private val viewModel by fromViewModelFactory<ThemeDialogViewModel> { factory }
+  internal var factory: ViewModelProvider.Factory? = null
+  private val viewModel by fromViewModelFactory<ThemeDialogViewModel> { factory }
 
-    private var stateSaver: StateSaver? = null
+  private var stateSaver: StateSaver? = null
 
-    final override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.layout_constraint, container, false)
-    }
+  final override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View? {
+    return inflater.inflate(R.layout.layout_constraint, container, false)
+  }
 
-    final override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {
-        super.onViewCreated(view, savedInstanceState)
-        makeFullscreen()
+  final override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    makeFullscreen()
 
-        val binding = LayoutConstraintBinding.bind(view)
-        Injector.obtainFromApplication<PYDroidComponent>(view.context)
-            .plusThemeDialog()
-            .create(getInitialTitle(), getToolbarBackground(), binding.layoutConstraint)
-            .inject(this)
+    val binding = LayoutConstraintBinding.bind(view)
+    Injector.obtainFromApplication<PYDroidComponent>(view.context)
+        .plusThemeDialog()
+        .create(getInitialTitle(), getToolbarBackground(), binding.layoutConstraint)
+        .inject(this)
 
-        val toolbar = requireNotNull(toolbar)
-        val dropshadow =
-            DropshadowView.createTyped<ThemeDialogViewState, ThemeDialogViewEvent>(
-                binding.layoutConstraint
-            )
-        val frame = requireNotNull(frame)
-        stateSaver = createComponent(
-            savedInstanceState,
-            viewLifecycleOwner,
-            viewModel,
-            this,
-            frame,
-            toolbar,
-            dropshadow
-        ) {
-            return@createComponent when (it) {
-                is ThemeDialogViewEvent.Close -> dismiss()
-            }
+    val toolbar = requireNotNull(toolbar)
+    val dropshadow =
+        DropshadowView.createTyped<ThemeDialogViewState, ThemeDialogViewEvent>(
+            binding.layoutConstraint)
+    val frame = requireNotNull(frame)
+    stateSaver =
+        createComponent(
+            savedInstanceState, viewLifecycleOwner, viewModel, this, frame, toolbar, dropshadow) {
+          return@createComponent when (it) {
+            is ThemeDialogViewEvent.Close -> dismiss()
+          }
         }
 
-        binding.layoutConstraint.layout {
-            toolbar.also {
-                connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-            }
+    binding.layoutConstraint.layout {
+      toolbar.also {
+        connect(it.id(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
 
-            dropshadow.also {
-                connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-            }
+      dropshadow.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
 
-            frame.also {
-                connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
-                connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
-                connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
-                connect(
-                    it.id(),
-                    ConstraintSet.BOTTOM,
-                    ConstraintSet.PARENT_ID,
-                    ConstraintSet.BOTTOM
-                )
-                constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-                constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
-            }
-        }
-
-        pushContents(frame)
+      frame.also {
+        connect(it.id(), ConstraintSet.TOP, toolbar.id(), ConstraintSet.BOTTOM)
+        connect(it.id(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START)
+        connect(it.id(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END)
+        connect(it.id(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constrainWidth(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+        constrainHeight(it.id(), ConstraintSet.MATCH_CONSTRAINT)
+      }
     }
 
-    final override fun onControllerEvent(event: UnitControllerEvent) {
+    pushContents(frame)
+  }
+
+  final override fun onControllerEvent(event: UnitControllerEvent) {}
+
+  private fun pushContents(container: BaseUiView<*, *, *>) {
+    val fm = childFragmentManager
+    val tag = getInitialTitle()
+    if (fm.findFragmentByTag(tag) == null) {
+      fm.commit(viewLifecycleOwner) { add(container.id(), getContents(), tag) }
     }
+  }
 
-    private fun pushContents(container: BaseUiView<*, *, *>) {
-        val fm = childFragmentManager
-        val tag = getInitialTitle()
-        if (fm.findFragmentByTag(tag) == null) {
-            fm.commit(viewLifecycleOwner) {
-                add(container.id(), getContents(), tag)
-            }
-        }
-    }
+  final override fun onSaveInstanceState(outState: Bundle) {
+    stateSaver?.saveState(outState)
+    super.onSaveInstanceState(outState)
+  }
 
-    final override fun onSaveInstanceState(outState: Bundle) {
-        stateSaver?.saveState(outState)
-        super.onSaveInstanceState(outState)
-    }
+  final override fun onDestroyView() {
+    super.onDestroyView()
+    toolbar = null
+    frame = null
+    factory = null
+    stateSaver = null
+  }
 
-    final override fun onDestroyView() {
-        super.onDestroyView()
-        toolbar = null
-        frame = null
-        factory = null
-        stateSaver = null
-    }
+  @CheckResult protected abstract fun getContents(): Fragment
 
-    @CheckResult
-    protected abstract fun getContents(): Fragment
+  @CheckResult protected abstract fun getInitialTitle(): String
 
-    @CheckResult
-    protected abstract fun getInitialTitle(): String
-
-    @CheckResult
-    protected open fun getToolbarBackground(): Drawable {
-        return ColorDrawable(
-            ContextCompat.getColor(
-                requireActivity(),
-                requireActivity().valueFromCurrentTheme(R2.attr.colorPrimary)
-            )
-        )
-    }
+  @CheckResult
+  protected open fun getToolbarBackground(): Drawable {
+    return ColorDrawable(
+        ContextCompat.getColor(
+            requireActivity(), requireActivity().valueFromCurrentTheme(R2.attr.colorPrimary)))
+  }
 }

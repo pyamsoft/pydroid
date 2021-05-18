@@ -21,16 +21,16 @@ import com.pyamsoft.pydroid.ui.internal.dialog.FullscreenThemeDialog
 
 internal class AboutDialog : FullscreenThemeDialog() {
 
-    override fun getContents(): Fragment {
-        return AboutFragment.newInstance()
-    }
+  override fun getContents(): Fragment {
+    return AboutFragment.newInstance()
+  }
 
-    override fun getInitialTitle(): String {
-        return "Open Source Licenses"
-    }
+  override fun getInitialTitle(): String {
+    return "Open Source Licenses"
+  }
 
-    companion object {
+  companion object {
 
-        internal const val TAG = "AboutDialog"
-    }
+    internal const val TAG = "AboutDialog"
+  }
 }

@@ -20,34 +20,19 @@ import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
 
-/**
- * Provide constructed objects from PYDroid to outside consumers
- */
+/** Provide constructed objects from PYDroid to outside consumers */
 public interface ModuleProvider {
 
-    /**
-     * Provide modules
-     */
-    @CheckResult
-    public fun get(): Modules
+  /** Provide modules */
+  @CheckResult public fun get(): Modules
 
-    /**
-     * Modules from PYDroid
-     */
-    public interface Modules {
+  /** Modules from PYDroid */
+  public interface Modules {
 
-        /**
-         * Provide a dark-light theming interface
-         */
-        @CheckResult
-        public fun theming(): Theming
+    /** Provide a dark-light theming interface */
+    @CheckResult public fun theming(): Theming
 
-        /**
-         * Provide an image loader interface
-         */
-        @CheckResult
-        public fun imageLoader(): ImageLoader
-
-    }
-
+    /** Provide an image loader interface */
+    @CheckResult public fun imageLoader(): ImageLoader
+  }
 }

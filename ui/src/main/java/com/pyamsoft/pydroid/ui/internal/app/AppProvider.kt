@@ -21,6 +21,6 @@ import androidx.annotation.DrawableRes
 
 internal interface AppProvider {
 
-    @get:[CheckResult DrawableRes]
-    val applicationIcon: Int
+  @get:[CheckResult DrawableRes]
+  val applicationIcon: Int
 }

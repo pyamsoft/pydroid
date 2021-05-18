@@ -20,27 +20,19 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.pyamsoft.pydroid.util.doOnDestroy
 
-/**
- * A representation of an image target which is currently loaded
- */
+/** A representation of an image target which is currently loaded */
 public interface Loaded {
 
-    /**
-     * Dispose of any data loaded into an image target
-     */
-    public fun dispose()
+  /** Dispose of any data loaded into an image target */
+  public fun dispose()
 }
 
-/**
- * Dispose the Loaded resource once the lifecycle hits destroy
- */
+/** Dispose the Loaded resource once the lifecycle hits destroy */
 public fun Loaded.disposeOnDestroy(owner: LifecycleOwner) {
-    this.disposeOnDestroy(owner.lifecycle)
+  this.disposeOnDestroy(owner.lifecycle)
 }
 
-/**
- * Dispose the Loaded resource once the lifecycle hits destroy
- */
+/** Dispose the Loaded resource once the lifecycle hits destroy */
 public fun Loaded.disposeOnDestroy(lifecycle: Lifecycle) {
-    lifecycle.doOnDestroy { this.dispose() }
+  lifecycle.doOnDestroy { this.dispose() }
 }

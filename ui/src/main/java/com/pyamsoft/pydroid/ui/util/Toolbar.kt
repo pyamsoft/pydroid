@@ -30,6 +30,7 @@ import com.pyamsoft.pydroid.util.tintWith
 private var cachedIcon: Drawable? = null
 
 @CheckResult
+@SuppressLint("ResourceType")
 private fun Toolbar.loadIcon(@ColorRes customColor: Int): Drawable? {
   // Pull icon from cache if possible
   var icon: Drawable? = cachedIcon
@@ -44,13 +45,8 @@ private fun Toolbar.loadIcon(@ColorRes customColor: Int): Drawable? {
         icon = AppCompatResources.getDrawable(context, iconId)
       }
 
-      @ColorRes val colorId: Int
-      if (customColor == 0) {
-        // This warns about not being a styleable, but its ok I guess
-        @SuppressLint("ResourceType") colorId = getResourceId(1, 0)
-      } else {
-        colorId = customColor
-      }
+      // This warns about not being a styleable, but its ok I guess
+      @ColorRes val colorId = if (customColor == 0) getResourceId(1, 0) else customColor
 
       if (colorId != 0) {
         icon = icon?.tintWith(context, colorId)

@@ -20,8 +20,8 @@ import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
-import java.util.concurrent.atomic.AtomicReference
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicReference
 
 /** PYDroid library entry point */
 public object PYDroid {
@@ -86,7 +86,7 @@ public object PYDroid {
   /** PYDroid parameters */
   public data class Parameters
   @JvmOverloads
-  constructor(
+  public constructor(
       internal val viewSourceUrl: String,
       internal val bugReportUrl: String,
       internal val privacyPolicyUrl: String,

@@ -40,8 +40,7 @@ import kotlinx.coroutines.withContext
  * Access the current state via withState and manipulate it via setState. These calls are
  * asynchronous.
  */
-public open class UiStateModel<S : UiViewState>
-constructor(
+public open class UiStateModel<S : UiViewState>(
     /** Initial state */
     public val initialState: S,
 ) {

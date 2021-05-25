@@ -90,7 +90,6 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
       backoffCount = 1
 
       querySkus()
-      queryPurchases()
     } else {
       Timber.w("Billing setup not OK: ${result.debugMessage}")
       skuFlow.value = State(BillingState.DISCONNECTED, emptyList())
@@ -117,13 +116,7 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
         }
 
         querySkus()
-        queryPurchases()
       }
-
-  private fun queryPurchases() {
-    Timber.d("Querying for past purchases")
-    client.queryPurchases(BillingClient.SkuType.INAPP)
-  }
 
   override fun onSkuDetailsResponse(result: BillingResult, skuDetails: MutableList<SkuDetails>?) {
     if (result.isOk()) {
@@ -208,7 +201,7 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
     }
   }
 
-  private data class State constructor(val state: BillingState, val list: List<BillingSku>)
+  private data class State (val state: BillingState, val list: List<BillingSku>)
 
   companion object {
 

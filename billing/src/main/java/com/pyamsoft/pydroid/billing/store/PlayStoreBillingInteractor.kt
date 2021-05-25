@@ -201,7 +201,7 @@ internal constructor(context: Context, private val errorBus: EventBus<Throwable>
     }
   }
 
-  private data class State (val state: BillingState, val list: List<BillingSku>)
+  private data class State(val state: BillingState, val list: List<BillingSku>)
 
   companion object {
 

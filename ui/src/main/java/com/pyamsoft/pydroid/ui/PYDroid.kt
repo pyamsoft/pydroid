@@ -20,8 +20,8 @@ import android.app.Application
 import androidx.annotation.CheckResult
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.theme.Theming
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicReference
+import timber.log.Timber
 
 /** PYDroid library entry point */
 public object PYDroid {

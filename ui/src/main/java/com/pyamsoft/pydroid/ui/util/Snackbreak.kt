@@ -31,8 +31,8 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.BaseCallback
 import com.google.android.material.snackbar.Snackbar
 import com.pyamsoft.pydroid.util.asDp
 import com.pyamsoft.pydroid.util.doOnDestroy
-import timber.log.Timber
 import java.util.UUID
+import timber.log.Timber
 
 /** Snackbar manager with lifecycle */
 public object Snackbreak {

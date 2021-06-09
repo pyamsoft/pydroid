@@ -37,6 +37,72 @@ private fun getAccelCubicInterpolator(context: Context): Interpolator {
       context.applicationContext, android.R.interpolator.accelerate_cubic)
 }
 
+/** Pop a view into visible state */
+@CheckResult
+@JvmOverloads
+@Deprecated(message = "Use FloatingActionButton.show() instead")
+public fun View.popShow(
+    startDelay: Long = 300L,
+    duration: Long = 500L
+): ViewPropertyAnimatorCompat {
+  val i: Interpolator = getOvershootInterpolator(context)
+  alpha = 0f
+  scaleX = 0f
+  scaleY = 0f
+  return ViewCompat.animate(this)
+      .alpha(1f)
+      .scaleX(1f)
+      .scaleY(1f)
+      .setStartDelay(startDelay)
+      .setDuration(duration)
+      .setInterpolator(i)
+      .setListener(
+          object : ViewPropertyAnimatorListener {
+            override fun onAnimationStart(view: View) {
+              view.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationEnd(view: View) {
+              view.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationCancel(view: View) {}
+          })
+}
+
+/** Pop a view out of visible state */
+@CheckResult
+@JvmOverloads
+@Deprecated(message = "Use FloatingActionButton.hide() instead")
+public fun View.popHide(
+    startDelay: Long = 300L,
+    duration: Long = 500L
+): ViewPropertyAnimatorCompat {
+  val i: Interpolator = getOvershootInterpolator(context)
+  alpha = 1f
+  scaleX = 1f
+  scaleY = 1f
+  return ViewCompat.animate(this)
+      .alpha(0f)
+      .scaleX(0f)
+      .scaleY(0f)
+      .setStartDelay(startDelay)
+      .setDuration(duration)
+      .setInterpolator(i)
+      .setListener(
+          object : ViewPropertyAnimatorListener {
+            override fun onAnimationStart(view: View) {
+              view.visibility = View.VISIBLE
+            }
+
+            override fun onAnimationEnd(view: View) {
+              view.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(view: View) {}
+          })
+}
+
 /** Fade view in animation */
 @CheckResult
 public fun View.fadeIn(): ViewPropertyAnimatorCompat {

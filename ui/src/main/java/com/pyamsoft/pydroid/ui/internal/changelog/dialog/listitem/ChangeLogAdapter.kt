@@ -55,6 +55,11 @@ internal class ChangeLogAdapter internal constructor() :
     teardownAdapter(recyclerView)
   }
 
+  override fun onViewRecycled(holder: ChangeLogViewHolder) {
+    super.onViewRecycled(holder)
+    holder.teardown()
+  }
+
   companion object {
 
     private val DIFFER =

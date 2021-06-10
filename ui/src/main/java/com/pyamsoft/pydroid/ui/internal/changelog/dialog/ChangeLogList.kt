@@ -25,9 +25,7 @@ import com.pyamsoft.pydroid.ui.databinding.ChangelogListBinding
 import com.pyamsoft.pydroid.ui.internal.changelog.ChangeLogLine
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogAdapter
 import com.pyamsoft.pydroid.ui.internal.changelog.dialog.listitem.ChangeLogItemViewState
-import com.pyamsoft.pydroid.ui.util.doOnChildRemoved
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
-import com.pyamsoft.pydroid.ui.util.teardownViewHolderAt
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -42,27 +40,7 @@ internal class ChangeLogList internal constructor(parent: ViewGroup) :
   private var changeLogAdapter: ChangeLogAdapter? = null
 
   init {
-    doOnInflate {
-      changeLogAdapter =
-          ChangeLogAdapter().apply {
-            val registration = doOnChildRemoved { binding.changelogList.teardownViewHolderAt(it) }
-            doOnTeardown { registration.unregister() }
-          }
-
-      binding.changelogList.apply {
-        adapter = changeLogAdapter
-        layoutManager =
-            LinearLayoutManager(context).apply {
-              initialPrefetchItemCount = 3
-              isItemPrefetchEnabled = false
-            }
-      }
-
-      FastScrollerBuilder(binding.changelogList)
-          .useMd2Style()
-          .setPopupTextProvider(changeLogAdapter)
-          .build()
-    }
+    doOnInflate { setupListView() }
 
     doOnTeardown {
       binding.changelogList.adapter = null
@@ -77,6 +55,24 @@ internal class ChangeLogList internal constructor(parent: ViewGroup) :
     }
 
     doOnTeardown { binding.changelogList.removeAllItemDecorations() }
+  }
+
+  private fun setupListView() {
+    changeLogAdapter = ChangeLogAdapter()
+
+    binding.changelogList.apply {
+      adapter = changeLogAdapter
+      layoutManager =
+          LinearLayoutManager(context).apply {
+            initialPrefetchItemCount = 3
+            isItemPrefetchEnabled = false
+          }
+    }
+
+    FastScrollerBuilder(binding.changelogList)
+        .useMd2Style()
+        .setPopupTextProvider(changeLogAdapter)
+        .build()
   }
 
   override fun onRender(state: UiRender<ChangeLogDialogViewState>) {

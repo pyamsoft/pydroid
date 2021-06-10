@@ -30,9 +30,7 @@ import com.pyamsoft.pydroid.ui.databinding.BillingListBinding
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingAdapter
 import com.pyamsoft.pydroid.ui.internal.billing.listitem.BillingItemViewState
 import com.pyamsoft.pydroid.ui.util.Snackbreak
-import com.pyamsoft.pydroid.ui.util.doOnChildRemoved
 import com.pyamsoft.pydroid.ui.util.removeAllItemDecorations
-import com.pyamsoft.pydroid.ui.util.teardownViewHolderAt
 import com.pyamsoft.pydroid.util.asDp
 import io.cabriole.decorator.LinearMarginDecoration
 
@@ -47,22 +45,7 @@ internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
   private var billingAdapter: BillingAdapter? = null
 
   init {
-    doOnInflate {
-      billingAdapter =
-          BillingAdapter { publish(BillingViewEvent.Purchase(it)) }.apply {
-            val registration = doOnChildRemoved { binding.billingList.teardownViewHolderAt(it) }
-            doOnTeardown { registration.unregister() }
-          }
-
-      binding.billingList.apply {
-        adapter = billingAdapter
-        layoutManager =
-            LinearLayoutManager(context).apply {
-              initialPrefetchItemCount = 3
-              isItemPrefetchEnabled = false
-            }
-      }
-    }
+    doOnInflate { setupListView() }
 
     doOnTeardown {
       binding.billingList.adapter = null
@@ -77,6 +60,19 @@ internal constructor(private val owner: LifecycleOwner, parent: ViewGroup) :
     }
 
     doOnTeardown { binding.billingList.removeAllItemDecorations() }
+  }
+
+  private fun setupListView() {
+    billingAdapter = BillingAdapter { publish(BillingViewEvent.Purchase(it)) }
+
+    binding.billingList.apply {
+      adapter = billingAdapter
+      layoutManager =
+          LinearLayoutManager(context).apply {
+            initialPrefetchItemCount = 3
+            isItemPrefetchEnabled = false
+          }
+    }
   }
 
   override fun onRender(state: UiRender<BillingViewState>) {

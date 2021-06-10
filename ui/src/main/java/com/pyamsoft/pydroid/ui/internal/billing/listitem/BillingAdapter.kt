@@ -49,11 +49,6 @@ internal class BillingAdapter internal constructor(private val callback: Callbac
     teardownAdapter(recyclerView)
   }
 
-  override fun onViewRecycled(holder: BillingViewHolder) {
-    super.onViewRecycled(holder)
-    holder.teardown()
-  }
-
   fun interface Callback {
 
     fun onPurchase(index: Int)

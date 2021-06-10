@@ -56,11 +56,6 @@ internal constructor(private val callback: (event: OtherAppsItemViewEvent, index
     teardownAdapter(recyclerView)
   }
 
-  override fun onViewRecycled(holder: OtherAppsViewHolder) {
-    super.onViewRecycled(holder)
-    holder.teardown()
-  }
-
   companion object {
 
     private val DIFFER =

@@ -24,6 +24,12 @@ import androidx.annotation.CheckResult
 import androidx.core.view.ViewCompat
 import androidx.core.view.ViewPropertyAnimatorCompat
 import androidx.core.view.ViewPropertyAnimatorListener
+import androidx.core.view.updatePadding
+import androidx.lifecycle.LifecycleOwner
+import com.pyamsoft.pydroid.ui.app.AppBarActivity
+import com.pyamsoft.pydroid.util.doOnApplyWindowInsets
+import com.pyamsoft.pydroid.util.doOnDestroy
+import timber.log.Timber
 
 @CheckResult
 private fun getOvershootInterpolator(context: Context): Interpolator {
@@ -176,4 +182,73 @@ public fun View.setOnDebouncedClickListener(listener: DebouncedOnClickListener?)
 /** Set a debounced on click listener */
 public inline fun View.setOnDebouncedClickListener(crossinline func: (View) -> Unit) {
   setOnClickListener(DebouncedOnClickListener.create(func))
+}
+
+private inline fun watchToolbarOffset(
+    view: View,
+    owner: LifecycleOwner,
+    crossinline onNewMargin: (Int) -> Unit,
+) {
+  view.doOnApplyWindowInsets(owner) { _, insets, _ ->
+    val toolbarTopMargin = insets.systemWindowInsetTop
+    onNewMargin(toolbarTopMargin)
+  }
+}
+
+private inline fun watchAppBarHeight(
+    appBar: View,
+    owner: LifecycleOwner,
+    crossinline onNewHeight: (Int) -> Unit,
+) {
+  val listener = View.OnLayoutChangeListener { v, _, _, _, _, _, _, _, _ -> onNewHeight(v.height) }
+  appBar.addOnLayoutChangeListener(listener)
+  owner.doOnDestroy { appBar.removeOnLayoutChangeListener(listener) }
+}
+
+private fun applyNewViewOffset(
+    view: View,
+    initialTopPadding: Int,
+    offset: Int?,
+    appBarHeight: Int?,
+) {
+  if (offset == null) {
+    return
+  }
+
+  if (appBarHeight == null) {
+    return
+  }
+
+  val newPadding = initialTopPadding + offset + appBarHeight
+  Timber.d("Apply new offset padding: $view $newPadding")
+  view.updatePadding(top = newPadding)
+}
+
+/** Offset the padding of the page content in relation to the existing app bar */
+public fun View.applyAppBarOffset(appBarActivity: AppBarActivity, owner: LifecycleOwner) {
+  val initialTopPadding = this.paddingTop
+  appBarActivity.withAppBar { appBar ->
+
+    // Keep track off last seen values here
+    var lastOffset: Int? = null
+    var lastHeight: Int? = null
+
+    watchAppBarHeight(appBar, owner) { newHeight ->
+      lastHeight = newHeight
+      applyNewViewOffset(this, initialTopPadding, lastOffset, lastHeight)
+    }
+
+    watchToolbarOffset(this, owner) { newOffset ->
+      lastOffset = newOffset
+      applyNewViewOffset(this, initialTopPadding, lastOffset, lastHeight)
+    }
+  }
+}
+/** Offset the padding of the page content in relation to the existing toolbar */
+public fun View.applyToolbarOffset(owner: LifecycleOwner) {
+  val initialTopPadding = this.paddingTop
+
+  watchToolbarOffset(this, owner) { newOffset ->
+    applyNewViewOffset(this, initialTopPadding, newOffset, 0)
+  }
 }
